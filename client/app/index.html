@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html ng-app="buiiltApp">
+  <head>
+    <title></title>
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/bower_components/angular-notify/angular-notify.css" />
+    <link rel="stylesheet" href="/bower_components/angular-loading-bar/build/loading-bar.css" />
+    <link rel="stylesheet" href="/bower_components/angular-material/angular-material.css" />
+    <link rel="stylesheet" href="/dist/app.full.css" data-concat="false" />
+  </head>
+  <body>
+    <!-- JS from Bower Components -->
+    <script src="/bower_components/jquery/jquery.js"></script>
+    <script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="/bower_components/lodash/dist/lodash.js"></script>
+    <script src="/bower_components/moment/moment.js"></script>
+    <script src="/bower_components/angular/angular.js"></script>
+    <script src="/bower_components/angular-cookies/angular-cookies.js"></script>
+    <script src="/bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="/bower_components/angular-animate/angular-animate.js"></script>
+    <script src="/bower_components/angular-resource/angular-resource.js"></script>
+    <script src="/bower_components/angular-ui-utils/ui-utils.js"></script>
+    <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <script src="/bower_components/es5-shim/es5-shim.min.js"></script>
+    <script src="/bower_components/angular-file-upload/angular-file-upload.js"></script>
+    <script src="/bower_components/angular-notify/angular-notify.js"></script>
+    <script src="/bower_components/angular-loading-bar/build/loading-bar.js"></script>
+    <script src="/bower_components/angular-aria/angular-aria.js"></script>
+    <script src="/bower_components/angular-material/angular-material.js"></script>
+    <!-- Add New Bower Component JS Above -->
+
+    <!-- Main App JS -->
+    <script src="/app/app.js"></script>
+
+    <script src="/app/components/filters.js"></script>
+    <script src="/app/modules/auth/main.js"></script>
+    <script src="/app/modules/auth/signup/signup-controller.js"></script>
+    <script src="/app/modules/auth/signout/signout-controller.js"></script>
+    <script src="/app/modules/home/main.js"></script>
+    <script src="/app/modules/home/home-controller.js"></script>
+
+    <script src="/app/services/auth-service.js"></script>
+    <script src="/app/services/user-service.js"></script>
+    <!-- Add New Component JS Above -->
+
+  <ss-header></ss-header>
+
+  <main class="container container-wide">
+    <div class="content" role="main">
+      <div ui-view></div>
+    </div><!--/.content-->
+  </main>
+
+  <ss-footer></ss-footer>
+</body>
+</html>

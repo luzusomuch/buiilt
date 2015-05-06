@@ -1,0 +1,233 @@
+'use strict';
+
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+var crypto = require('crypto');
+var okay = require('okay');
+var authTypes = ['github', 'twitter', 'facebook', 'google'];
+var EventBus = require('./../components/EventBus');
+
+var UserGroupSchema = new Schema({
+  _id: {
+    type: Schema.Types.ObjectId,
+    ref: 'Group'
+  },
+  role: {
+    type: String,
+    enum: ['manager', 'agent']
+  }
+});
+
+var TwilioSchema = new Schema({
+  sid: {
+    type: String,
+    required: 'Twilio sid is required'
+  },
+  friendlyName: {
+    type: String
+  },
+  status: {
+    type: String,
+    required: 'Twilio account status is required',
+    default: 'active'
+  },
+  authToken: {
+    type: String,
+    required: 'Twilio auth token is required'
+  },
+  type: {
+    type: String,
+    required: 'Twilio type is required'
+  },
+  application: {
+    type: Object
+  }
+});
+
+var UserSchema = new Schema({
+  name: String,
+  firstName: String,
+  lastName: String,
+  email: { type: String, lowercase: true },
+  emailVerified: { type: Boolean, default: false },
+  emailVerifyToken : String,
+  role: {
+    type: String,
+    default: 'user'
+  },
+  hashedPassword: String,
+  provider: String,
+  salt: String,
+  facebook: {},
+  twitter: {},
+  google: {},
+  github: {},
+  phoneNumber: {
+    type: String, required:
+    'Phone number is required'
+  },
+  country: {type: String, required: true},
+  groups: [UserGroupSchema],
+  twilioAccounts: [TwilioSchema],
+  //one user can have one workspace only
+  twilioWorkspace: {},
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now }
+});
+
+/**
+ * Virtuals
+ */
+UserSchema
+  .virtual('password')
+  .set(function(password) {
+    this._password = password;
+    this.salt = this.makeSalt();
+    this.hashedPassword = this.encryptPassword(password);
+  })
+  .get(function() {
+    return this._password;
+  });
+
+// Public profile information
+UserSchema
+  .virtual('profile')
+  .get(function() {
+    return {
+      'name': this.name,
+      'role': this.role
+    };
+  });
+
+// Non-sensitive info we'll be putting in the token
+UserSchema
+  .virtual('token')
+  .get(function() {
+    return {
+      '_id': this._id,
+      'role': this.role
+    };
+  });
+
+/**
+ * Validations
+ */
+
+// Validate empty email
+UserSchema
+  .path('email')
+  .validate(function(email) {
+    if (authTypes.indexOf(this.provider) !== -1) return true;
+    return email.length;
+  }, 'Email cannot be blank');
+
+// Validate empty password
+UserSchema
+  .path('hashedPassword')
+  .validate(function(hashedPassword) {
+    if (authTypes.indexOf(this.provider) !== -1) return true;
+    return hashedPassword.length;
+  }, 'Password cannot be blank');
+
+// Validate email is not taken
+UserSchema
+  .path('email')
+  .validate(function(value, respond) {
+    var self = this;
+    this.constructor.findOne({email: value}, function(err, user) {
+      if(err) throw err;
+      if(user) {
+        if(self.id === user.id) return respond(true);
+        return respond(false);
+      }
+      respond(true);
+    });
+}, 'The specified email address is already in use.');
+
+var validatePresenceOf = function(value) {
+  return value && value.length;
+};
+
+/**
+ * Pre-save hook
+ */
+UserSchema
+  .pre('save', function(next) {
+    this.wasNew = this.isNew;
+
+    if (!this.isNew){
+      return next();
+    }else if(this.isNew && !this.emailVerified){
+      //create email verify token
+      this.emailVerifyToken = crypto.randomBytes(20).toString('hex');
+    }
+
+    if (!validatePresenceOf(this.hashedPassword) && authTypes.indexOf(this.provider) === -1){
+      next(new Error('Invalid password'));
+    }else{
+      next();
+    }
+  });
+
+UserSchema.post('save', function (doc) {
+  var evtName = this.wasNew ? 'User.Inserted' : 'User.Updated';
+  EventBus.emit(evtName, doc);
+});
+
+/**
+ * Methods
+ */
+UserSchema.methods = {
+  /**
+   * Authenticate - check if the passwords are the same
+   *
+   * @param {String} plainText
+   * @return {Boolean}
+   * @api public
+   */
+  authenticate: function(plainText) {
+    return this.encryptPassword(plainText) === this.hashedPassword;
+  },
+
+  /**
+   * Make salt
+   *
+   * @return {String}
+   * @api public
+   */
+  makeSalt: function() {
+    return crypto.randomBytes(16).toString('base64');
+  },
+
+  /**
+   * Encrypt password
+   *
+   * @param {String} password
+   * @return {String}
+   * @api public
+   */
+  encryptPassword: function(password) {
+    if (!password || !this.salt) return '';
+    var salt = new Buffer(this.salt, 'base64');
+    return crypto.pbkdf2Sync(password, salt, 10000, 64).toString('base64');
+  }
+};
+
+UserSchema.methods.confirmEmail = function(callback){
+  //remove keychain and update email verified status
+  delete this.emailVerifyToken;
+  this.emailVerified = true;
+
+  this.save(okay(callback, function(updatedUser){
+    //create new Twilio acccount
+    EventBus.emit('User.CreateTwilioAccountAndNumberForNewUser', updatedUser);
+
+    callback(null, updatedUser);
+  }));
+};
+
+UserSchema.method.getTwilioAccount = function(){
+  return this.twilioAccounts.length ? this.twilioAccounts[0] : null;
+};
+
+module.exports = mongoose.model('User', UserSchema);
