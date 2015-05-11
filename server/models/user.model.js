@@ -12,6 +12,7 @@ var UserGroupSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Group'
   },
+  name: String,
   role: {
     type: String,
     enum: ['manager', 'agent']
