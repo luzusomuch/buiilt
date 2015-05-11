@@ -1,0 +1,9 @@
+<div ng-controller="NavCtrl" layout="row" class="md-whiteframe-z1" md-selected="0">
+	<div flex-gt-md="15">
+	</div>
+	<md-tabs>
+	  <md-tab ng-repeat="tab in tabs" md-on-select="switchTab($index)" label="{{tab}}"></md-tab>
+	</md-tabs>
+	<div flex-gt-md="15">
+	</div>
+</div>

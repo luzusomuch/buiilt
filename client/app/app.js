@@ -10,7 +10,8 @@ angular.module('buiiltApp', [
   'ngResource',
   'angular-loading-bar',
   'cgNotify',
-  'ngMaterial'
+  'ngMaterial',
+  'lumx'
 ]);
 
 angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider, $locationProvider, $urlRouterProvider, $httpProvider, $sceDelegateProvider, cfpLoadingBarProvider) {
