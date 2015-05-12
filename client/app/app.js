@@ -14,7 +14,7 @@ angular.module('buiiltApp', [
   'lumx'
 ]);
 
-angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider, $locationProvider, $urlRouterProvider, $httpProvider, $sceDelegateProvider, cfpLoadingBarProvider) {
+angular.module('buiiltApp').config(function($mdThemingProvider,$stateProvider, $urlRouterProvider, $locationProvider, $urlRouterProvider, $httpProvider, $sceDelegateProvider, cfpLoadingBarProvider) {
   $sceDelegateProvider.resourceUrlWhitelist(['^(?:http(?:s)?:\/\/)?(?:[^\.]+\.)?\(vimeo|youtube)\.com(/.*)?$', 'self']);
 
   /* Add New States Above */
@@ -22,6 +22,11 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider, 
 
   $locationProvider.html5Mode(true);
   $httpProvider.interceptors.push('authInterceptor');
+  //Setup theme material
+  $mdThemingProvider
+   .theme('default')
+      .primaryPalette('light-blue')
+      .accentPalette('amber');
 
   //angular loading bar
   cfpLoadingBarProvider.includeSpinner = true;

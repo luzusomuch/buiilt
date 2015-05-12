@@ -1,3 +1,15 @@
-<div class="full" layout="column" layout-margin>
-  <h1>Hello</h1>
-</div>
+
+<md-content>
+  <div ng-include="'app/components/layout/toolbar.html'"></div>
+  
+  <built-nav></built-nav>
+  <div layout="row" class="main-content container" style="margin-top:50px;">
+			
+	
+			<div flex-gt-lg="100" flex="100" ng-view>
+                          <div ng-include="'app/modules/dashboard/dashboard.html'"></div>
+			</div>
+	
+		</div>
+  <div ng-include="'app/components/layout/footer.html'"></div>
+</md-content>
