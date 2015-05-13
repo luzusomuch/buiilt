@@ -1,0 +1,14 @@
+.formContractors{
+  padding:20px;
+}
+.formContractors .md-chips .md-chip-input-container{
+  padding-left:0px
+}
+.md-button{margin-left:0px;}
+.formContractors md-input-container{padding-bottom:0px}
+.formContractors .md-chips .md-chip .md-chip-remove md-icon{
+  top:38%;
+}
+.formContractors .autocomplete{
+  margin:10px 0px
+}
