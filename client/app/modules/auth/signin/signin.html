@@ -1,18 +1,44 @@
-<div class="row">
-	<div class="col-sm-8">
-    <!-- login form -->
-    <div class="widget-container widget_login styled boxed">
-      <div ss-login-form></div>
-    </div>
-	</div>
+<md-content>
+    <div ng-include="'app/components/layout/toolbar.html'"></div>
+  
+    <built-nav></built-nav>
 
-	<!-- right sidebar -->
-	<div class="col-sm-4">
-		<div class="widget-container widget-join boxed">
-	    <h3 class="widget-title">
-        <a ui-sref="signup"><i class="icon-join"></i>Join us</a>
-	    </h3>
-		</div>
-	</div>
-	</div><!--/.row-->
-</div><!--/.content-->
+    <div layout="row" class="main-content container" style="margin-top:50px;">
+        <div flex="30"></div>
+        <div class="col-md-12">
+            
+            <div class="widget-container widget_login styled boxed" flex="40">
+                <div ss-login-form></div>
+                <alert type="success" close="closeSuccess()" ng-show="success">Thank you for your login.</alert>
+                <alert ng-repeat="(key, msg) in errors" type="danger" close="closeAlert(key)">{{msg}}</alert>
+                <md-content layout-padding>
+                    <md-whiteframe class="md-whiteframe-z1" layout layout-align="center center">
+                        <form method="post" ng-submit="signin()" flex="100" style="padding:10px;">
+                            <h3>Login</h3>
+                            <div layout layout-sm="column">
+                                <md-input-container flex>
+                                  <label>Email</label>
+                                  <input ng-model="user.email" required>
+                                </md-input-container>
+                            </div>
+                            <div layout layout-sm="column">
+                                <md-input-container flex>
+                                  <label>Password</label>
+                                  <input ng-model="user.password" required type="password">
+                                </md-input-container>
+                            </div>
+                        
+                            <div layout layout-sm="column">
+                                <md-button class="md-raised md-primary">Login</md-button>
+                            </div>
+                        </form>
+                    </md-whiteframe>
+                </md-content>
+            </div>
+            
+        </div>
+        <div flex="30"></div>
+    </div>
+
+    <div ng-include="'app/components/layout/footer.html'"></div>
+</md-content>

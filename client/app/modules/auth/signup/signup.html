@@ -1,76 +1,75 @@
-<div class="row">
-  <div class="col-sm-8">
-    <!-- sign-up form -->
-    <div class="add-comment contact-form boxed">
-      <alert type="success" close="closeSuccess()" ng-show="success">Thank you for your submit, you can login now and enjoy yourself.</alert>
-      <alert ng-repeat="(key, msg) in errors" type="danger" close="closeAlert(key)">{{msg}}</alert>
 
-      <div class="comment-form">
-        <form method="post" ng-submit="signup()">
-          <div class="add-comment-title"><h3>Create Account</h3></div>
-          <div class="form-inner">
-            <div class="field_text">
-              <label class="label_title">First Name</label>
-              <input type="text" name="fname" ng-model="user.firstName"
-                     class="inputtext input_middle required"
-                     placeholder="First name"
-                     required />
-            </div>
-            <div class="field_text omega">
-              <label class="label_title">Last Name</label>
-              <input type="text" ng-model="user.lastName"
-                     class="inputtext input_middle required"
-                     placeholder="Last name"
-                     required/>
-            </div>
-            <div class="clear"></div>
 
-            <div class="field_text">
-              <label class="label_title">Display Name</label>
-              <input type="text" ng-model="user.name"
-                     class="inputtext input_middle required"
-                     placeholder="Display name" />
+<md-content>
+  <div ng-include="'app/components/layout/toolbar.html'"></div>
+  
+  <built-nav></built-nav>
+  <div layout="row" class="main-content container" style="margin-top:50px;">
+    <div flex="20"></div>
+      <div flex-gt-lg="" flex="60" ng-view>
+        <div class="row">
+          
+          <div class="col-sm-12">
+            <!-- sign-up form -->
+            <div class="add-comment contact-form boxed">
+              <alert type="success" close="closeSuccess()" ng-show="success">Thank you for your submit, you can login now and enjoy yourself.</alert>
+              <alert ng-repeat="(key, msg) in errors" type="danger" close="closeAlert(key)">{{msg}}</alert>
+              <h3>Create account</h3>
+              <md-content layout-padding>
+                <form method="post" ng-submit="signup()">
+                  <div layout layout-sm="column">
+                    <md-input-container flex>
+                      <label>First name</label>
+                      <input ng-model="user.firstName" required>
+                    </md-input-container>
+                    <md-input-container flex>
+                      <label>Last Name</label>
+                      <input ng-model="user.lastName" required>
+                    </md-input-container>
+                  </div>
+                  <div layout layout-sm="column">
+                    <md-input-container flex>
+                      <label>Display name</label>
+                      <input ng-model="user.displayName">
+                    </md-input-container>
+                    <md-input-container flex>
+                      <label>Website</label>
+                      <input ng-model="user.website">
+                    </md-input-container>
+                  </div>
+                  <div layout layout-sm="column">
+                    <md-input-container flex>
+                      <label>Email</label>
+                      <input ng-model="user.email" required>
+                    </md-input-container>
+                  </div>
+                  <div layout layout-sm="column">
+                    <md-input-container flex>
+                      <label>Password</label>
+                      <input ng-model="user.password" required type="password">
+                    </md-input-container>
+                  </div>
+                  <div layout layout-sm="column">
+                    <md-checkbox ng-model="user.allowNewsletter" aria-label="">
+                      Receive news about new, trending and updated packages including site related news.
+                    </md-checkbox>
+                  </div>
+                  <div layout layout-sm="column">
+                    <md-button class="md-raised md-primary">Sign up</md-button>
+                  </div>
+                </form>
+              </md-content>
             </div>
-            <div class="field_text omega">
-              <label for="website" class="label_title">Website</label>
-              <input type="text" ng-model="user.website" class="inputtext input_middle" placeholder="Enter website url here" />              
-            </div>
-            <div class="clear"></div>
-
-            <div class="field_text">
-              <label class="label_title">Email</label>
-              <input type="text" ng-model="user.email"
-                     class="inputtext input_middle required"
-                     placeholder="Email"
-                     required />
-            </div>
-            <div class="field_text omega">
-              <label for="website" class="label_title">Password</label>
-              <input type="password" ng-model="user.password" class="inputtext input_middle" placeholder="Enter your password" required />              
-            </div>
-            <div class="clear"></div>
-
-            <div class="input_styled checklist">
-              <div class="rowCheckbox">
-                <input type="checkbox" checked ng-model="user.allowNewsletter" />
-                <label>Receive news about new, trending and updated packages including site related news.</label>
-              </div>
-            </div>
-
-            <div class="clear"></div>
+            <!--/ contact form -->
           </div>
-
-          <div class="rowSubmit">
-            <span class="btn"><input type="submit" value="Sign Up" /></span>
-          </div>
-        </form>
+          
+          <!-- right sidebar -->
+          <!-- <div class="col-sm-4">
+            <div ng-include="'/app/partials/right-sidebar-no-login.html'"></div>
+          </div> -->
+        </div><!--/.row-->
       </div>
+      <div flex="20"></div>
     </div>
-    <!--/ contact form -->
-  </div>
-
-  <!-- right sidebar -->
-  <div class="col-sm-4">
-    <div ng-include="'/app/partials/right-sidebar-no-login.html'"></div>
-  </div>
-</div><!--/.row-->
+  <div ng-include="'app/components/layout/footer.html'"></div>
+</md-content>
