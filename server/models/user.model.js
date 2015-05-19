@@ -185,6 +185,8 @@ UserSchema.methods.confirmEmail = function(callback){
   //remove keychain and update email verified status
   delete this.emailVerifyToken;
   this.emailVerified = true;
+
+  this.save(callback);
 };
 
 module.exports = mongoose.model('User', UserSchema);

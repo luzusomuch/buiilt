@@ -11,6 +11,7 @@ exports.validateCreate = function(req, cb){
   req.assert('requestedHomeBuilders', 'requestedHomeBuilders must be array').isArray();
   req.assert('requestedHomeBuilders', 'requestedHomeBuilders is required').notEmpty();
   req.assert('location.address', 'Address is required').notEmpty();
+  req.assert('dateStart', 'dateStart is required').notEmpty();
 
   //TODO get geo code base on google
 

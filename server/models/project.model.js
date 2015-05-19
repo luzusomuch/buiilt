@@ -68,4 +68,37 @@ var ProjectSchema = new Schema({
   strict: true,
   minimize: false
 });
+
+/**
+ * Virtuals
+ */
+ProjectSchema
+  .virtual('dateStart')
+  .set(function(dateStart) {
+    this._dateStart = dateStart;
+  })
+  .get(function() {
+    return this._dateStart;
+  });
+
+/**
+ * Pre-save hook
+ */
+ProjectSchema
+.pre('save', function(next) {
+  this.wasNew = this.isNew;
+
+  if (!this.isNew){
+    this.updatedAt = new Date();
+  }
+
+  next();
+});
+
+ProjectSchema.post('save', function (doc) {
+  var evtName = this.wasNew ? 'Project.Inserted' : 'Project.Updated';
+
+  EventBus.emit(evtName, doc);
+});
+
 module.exports = mongoose.model('Project', ProjectSchema);

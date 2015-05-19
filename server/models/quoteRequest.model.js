@@ -6,7 +6,7 @@ var crypto = require('crypto');
 var okay = require('okay');
 var EventBus = require('./../components/EventBus');
 
-var QuoteSchema = new Schema({
+var QuoteRequestSchema = new Schema({
   //who submit the request
   user: {
     type: Schema.Types.ObjectId,
@@ -25,17 +25,7 @@ var QuoteSchema = new Schema({
   //the quote type: ex - quote from home owner to home builder
   //quote for the package
   type: {type: String, default: ''},
-  package: {
-    _id: {
-      type: Schema.Types.ObjectId,
-      ref: 'User'
-    },
-    type: {
-      type: String,
-      //TODO - should define all package type here
-      enum: ['Builder', 'Material', 'Contractor']
-    }
-  },
+  package: { type: Schema.Types.ObjectId },
   price: { type: Number },
   //update status after home owner / home builder... selects the quotes
   status: {
@@ -48,4 +38,5 @@ var QuoteSchema = new Schema({
   strict: true,
   minimize: false
 });
-module.exports = mongoose.model('Quote', QuoteSchema);
+
+module.exports = mongoose.model('QuoteRequestSchema', QuoteRequestSchema);
