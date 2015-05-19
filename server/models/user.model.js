@@ -8,41 +8,8 @@ var authTypes = ['github', 'twitter', 'facebook', 'google'];
 var EventBus = require('./../components/EventBus');
 
 var UserGroupSchema = new Schema({
-  _id: {
-    type: Schema.Types.ObjectId,
-    ref: 'Group'
-  },
-  name: String,
-  role: {
-    type: String,
-    enum: ['manager', 'agent']
-  }
-});
-
-var TwilioSchema = new Schema({
-  sid: {
-    type: String,
-    required: 'Twilio sid is required'
-  },
-  friendlyName: {
-    type: String
-  },
-  status: {
-    type: String,
-    required: 'Twilio account status is required',
-    default: 'active'
-  },
-  authToken: {
-    type: String,
-    required: 'Twilio auth token is required'
-  },
-  type: {
-    type: String,
-    required: 'Twilio type is required'
-  },
-  application: {
-    type: Object
-  }
+  _id: { type: Schema.Types.ObjectId, ref: 'Group' },
+  role: { type: String }
 });
 
 var UserSchema = new Schema({
@@ -69,11 +36,11 @@ var UserSchema = new Schema({
   },
   country: {type: String, required: true},
   groups: [UserGroupSchema],
-  twilioAccounts: [TwilioSchema],
-  //one user can have one workspace only
-  twilioWorkspace: {},
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
+},{
+  strict: true,
+  minimize: false
 });
 
 /**
@@ -218,17 +185,6 @@ UserSchema.methods.confirmEmail = function(callback){
   //remove keychain and update email verified status
   delete this.emailVerifyToken;
   this.emailVerified = true;
-
-  this.save(okay(callback, function(updatedUser){
-    //create new Twilio acccount
-    EventBus.emit('User.CreateTwilioAccountAndNumberForNewUser', updatedUser);
-
-    callback(null, updatedUser);
-  }));
-};
-
-UserSchema.method.getTwilioAccount = function(){
-  return this.twilioAccounts.length ? this.twilioAccounts[0] : null;
 };
 
 module.exports = mongoose.model('User', UserSchema);

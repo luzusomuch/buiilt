@@ -1,0 +1,11 @@
+node_modules
+public
+.tmp
+.idea
+client/bower_components
+client/dist
+client/temp
+dist
+server/config/local.env.js
+nbproject
+docker.log

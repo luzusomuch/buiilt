@@ -14,7 +14,7 @@ var BuilderPackageSchema = new Schema({
   },
   name: String,
   description: String,
-  homeowner :{ 
+  homeowner :{
     type: Schema.Types.ObjectId,
     ref: 'User',
     required: true
