@@ -31,8 +31,8 @@ var UserSchema = new Schema({
   google: {},
   github: {},
   phoneNumber: {
-    type: String, required:
-    'Phone number is required'
+    type: String,
+    required: 'Phone number is required'
   },
   country: {type: String, required: true},
   groups: [UserGroupSchema],

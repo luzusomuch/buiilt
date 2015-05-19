@@ -1,9 +1,7 @@
 'use strict';
 
 var mongoose = require('mongoose'),
-        Schema = mongoose.Schema,
-        elasticsearch = require('../helpers/elasticsearch')(),
-        s3 = require('../helpers/s3')();
+    Schema = mongoose.Schema;
 
 var FileSchema = new Schema({
   title: {

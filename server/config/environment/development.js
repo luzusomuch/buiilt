@@ -25,10 +25,20 @@ module.exports = {
 
   emailFrom: 'Buiilt <no-reply@buiilt.com>', // sender address like ABC <abc@example.com>
   mailer: {
-    service: 'mailgun', //smtp, mailgun
+    service: 'smtp', //smtp, mailgun
     auth: {
-      user: process.env.MAILER_USER,
-      pass: process.env.MAILER_PASS
+      //user: 'postmaster@sandboxf33fddc2f2f8469fb38592948a17b274.mailgun.org',
+      //pass: '47dcb8182067dd4e4286c9c05e29a8c3'
+      host: 'hoanvusolutions.com',
+      port: 25,
+      secure: false,
+      auth: {
+          user: 'app+projects.hoanvusolutions.com',
+          pass: 'Hoanvu2014!'
+      },
+      tls: {
+        rejectUnauthorized:false
+      }
     }
   },
   logentries : {

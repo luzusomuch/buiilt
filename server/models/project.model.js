@@ -41,8 +41,7 @@ var ProjectSchema = new Schema({
   //selected home builder
   homeBuilder: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+    ref: 'User'
   },
   requestedHomeBuilders: [RequestedHomeBuilder],
   location: {

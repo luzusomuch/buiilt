@@ -13,7 +13,7 @@ var _ = require('lodash');
  *  }
  * }
  */
-exports.validationError = function(res, err, type, errorCode){
+exports.validationErrors = function(res, err, type, errorCode){
   //TODO - update me
   return res.json(422, err);
 };
