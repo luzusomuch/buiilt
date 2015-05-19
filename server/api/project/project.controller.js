@@ -25,3 +25,18 @@ exports.create = function(req, res){
     });
   });
 };
+
+/**
+ * show project detail
+ */
+exports.show = function(req, res){
+  //TODO - validate rol
+  Project.findById(req.params.id)
+  .populate('user')
+  .populate('homeBuilder')
+  .exec(function(err, project){
+    if(err){ return errorsHelper.validationErrors(res, err); }
+
+    return res.json(project);
+  });
+};
