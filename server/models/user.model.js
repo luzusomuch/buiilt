@@ -70,7 +70,7 @@ var UserSchema = new Schema({
   country: {type: String
     // , required: true
   },
-  groups: [UserGroupSchema],
+  groups: String,
   twilioAccounts: [TwilioSchema],
   //one user can have one workspace only
   twilioWorkspace: {},
@@ -123,6 +123,13 @@ UserSchema
     if (authTypes.indexOf(this.provider) !== -1) return true;
     return email.length;
   }, 'Email cannot be blank');
+
+UserSchema
+  .path('groups')
+  .validate(function(groups) {
+    if (authTypes.indexOf(this.provider) !== -1) return true;
+    return groups.length;
+  }, 'Please select group');
 
 // Validate empty password
 UserSchema

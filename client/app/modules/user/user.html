@@ -4,7 +4,33 @@
     <built-nav></built-nav>
     <div layout="row" class="main-content container" style="margin-top:50px;">
         <div flex-gt-lg="100" flex="100" ng-view>
-            this is user list
+            <md-whiteframe class="md-whiteframe-z1" layout layout-align="center center">
+                <div class="row" flex="100">
+                    <table>
+                        <thead>
+                            <tr>
+                                <td flex="20">Name</td>
+                                <td flex="20">Email</td>
+                                <td flex="20">Role</td>
+                                <td flex="20">Group</td>
+                                <td flex="20">Action</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="user in users">
+                                <td flex="20">{{user.name}}</td>
+                                <td flex="20">{{user.email}}</td>
+                                <td flex="20">{{user.role}}</td>
+                                <td flex="20">{{user.groups}}</td>
+                                <td flex="20">
+                                    <md-button class="md-raised md-warn" ng-submit="edit()">Edit</md-button>
+                                    <md-button href="/" class="md-raised md-warn" >Delete</md-button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </md-whiteframe>
         </div>
     </div>
     <div ng-include="'app/components/layout/footer.html'"></div>

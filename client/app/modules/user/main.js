@@ -3,6 +3,8 @@ angular.module('buiiltApp').config(function($stateProvider) {
   .state('user', {
     url: '/user',
     templateUrl: '/app/modules/user/user.html',
-    controller: 'UserCtrl'
+    controller: 'UserCtrl',
+    authenticate: true,
+    adminAccess: true
   });
 });

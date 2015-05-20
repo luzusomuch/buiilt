@@ -16,7 +16,7 @@
               <alert ng-repeat="(key, msg) in errors" type="danger" close="closeAlert(key)">{{msg}}</alert>
               <h3>Create account</h3>
               <md-content layout-padding>
-                <form method="post" ng-submit="signup()">
+                <form method="post" ng-submit="signup()" name="signupForm">
                   <div layout layout-sm="column">
                     <md-input-container flex>
                       <label>First name</label>
@@ -45,6 +45,17 @@
                   </div>
                   <div layout layout-sm="column">
                     <md-input-container flex>
+                      <label for="">User group</label>
+                      <md-select placeHolder="Select" ng-model="user.groups" required>
+                        <md-option value="Home owner">Home owner</md-option>
+                        <md-option value="Contractor">Contractor</md-option>
+                        <md-option value="Buider">Buider</md-option>
+                        <md-option value="Supplier">Supplier</md-option>
+                      </md-select>
+                    </md-input-container>
+                  </div>
+                  <div layout layout-sm="column">
+                    <md-input-container flex>
                       <label>Password</label>
                       <input ng-model="user.password" required type="password">
                     </md-input-container>
@@ -55,7 +66,7 @@
                     </md-checkbox>
                   </div>
                   <div layout layout-sm="column">
-                    <md-button class="md-raised md-primary">Sign up</md-button>
+                    <md-button class="md-raised md-primary" ng-disabled="signupForm.$invalid">Sign up</md-button>
                   </div>
                 </form>
               </md-content>

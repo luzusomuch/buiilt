@@ -56,7 +56,7 @@ angular.module('buiiltApp').config(function($mdThemingProvider,$stateProvider, $
     }
   };
 })
-.run(function($rootScope, $cookieStore, cfpLoadingBar) {
+.run(function($rootScope, $cookieStore, cfpLoadingBar, authService, $location) {
   cfpLoadingBar.start();
 
   $rootScope.safeApply = function(fn) {
@@ -69,5 +69,20 @@ angular.module('buiiltApp').config(function($mdThemingProvider,$stateProvider, $
       this.$apply(fn);
     }
   };
+  $rootScope.$on('$stateChangeStart', function (event, next) {
+
+      authService.isLoggedInAsync(function(loggedIn) {
+
+        if (next.authenticate && !loggedIn) {
+          
+          $location.path('/');
+        }else{
+          if(next.adminAccess && !authService.isAdmin()){
+            $location.path('/');
+          }
+
+        }
+      });
+    })
 })
 .value('$', $);

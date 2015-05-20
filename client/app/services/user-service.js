@@ -10,6 +10,8 @@ angular.module('buiiltApp')
         id: 'me'
       }
     },
-    getTheBestProviders: { method: 'GET', params: { id: 'theBestProviders'}, isArray: true }
+    getTheBestProviders: { method: 'GET', params: { id: 'theBestProviders'}, isArray: true },
+    gets:{method:'GET', params: {action: ''}, isArray: true},
+    delete: {method:'DELETE', params: {id: 'id', action: ''}}
   });
 });
