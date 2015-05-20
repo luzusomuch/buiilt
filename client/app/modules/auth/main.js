@@ -7,7 +7,8 @@ angular.module('buiiltApp').config(function($stateProvider) {
   })
   .state('signin', {
     url: '/signin',
-    templateUrl: '/app/modules/auth/signin/signin.html'
+    templateUrl: '/app/modules/auth/signin/signin.html',
+    controller: 'SigninCtrl'
   })
   .state('signout', {
     url: '/signout',

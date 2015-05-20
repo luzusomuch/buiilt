@@ -1,8 +1,11 @@
-<md-toolbar class="md-primary md-whiteframe-z3" layout="row">
+<md-toolbar ng-controller="LayoutCtrl" class="md-primary md-whiteframe-z3" layout="row">
 	<div class="container">
 	    <h2 class="md-toolbar-tools md-toolbar-tools-bottom">
 	     
-			buiilt
+			buiilt 
+            <div ng-if="currentUser" style="position: absolute;right: 60px;top: 20px;">
+                Hi, {{currentUser.name}}
+            </div>
 	    </h2>
 	</div>	
 </md-toolbar>
