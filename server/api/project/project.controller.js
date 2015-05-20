@@ -13,6 +13,7 @@ var ProjectValidator = require('./../../validators/project');
  */
 exports.create = function(req, res){
   ProjectValidator.validateCreate(req, function(err, data){
+    console.log(data);
     if(err){ return errorsHelper.validationErrors(res, err, 'Validation'); }
 
     //create a new project

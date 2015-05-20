@@ -4,5 +4,11 @@ angular.module('buiiltApp').config(function($stateProvider) {
     url: '/project',
     templateUrl: '/app/modules/project/project.html',
     controller: 'ProjectCtrl'
-  });
+  })
+  .state('project.form', {
+    url : '/add',
+    templateUrl: '/app/modules/project/create-project/form.html',
+    controller: 'FormProjectCtrl',
+  })
+  ;
 });

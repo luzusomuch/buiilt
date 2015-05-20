@@ -1,0 +1,60 @@
+<md-content layout-padding class="formProject">
+    <md-whiteframe class="md-whiteframe-z1" layout layout-align="center center">
+        <form method="post" ng-submit="create()" flex="100" style="padding:10px;">
+            <h3>New project</h3>
+            <div layout layout-sm="column">
+                <md-input-container flex>
+                  <label>Name </label>
+                  <input ng-model="project.name" required>
+                </md-input-container>
+            </div>
+            <div layout layout-sm="column">
+                <md-input-container flex>
+                  <label>Address </label>
+                  <input ng-model="project.location.address" required>
+                </md-input-container>
+            </div>
+            <div layout layout-sm="column">
+                <md-input-container flex>
+                  <label>Suburb </label>
+                  <input ng-model="project.location.suburb" required>
+                </md-input-container>
+            </div>
+            <div layout layout-sm="column">
+                <md-input-container flex>
+                  <label>Postcode </label>
+                  <input ng-model="project.location.postcode" required>
+                </md-input-container>
+            </div>
+            <div layout layout-sm="column">
+                <md-input-container flex>
+                  <label>Description </label>
+                  <input ng-model="project.description" required>
+                </md-input-container>
+            </div>
+            <div layout="column">
+              <md-content class="md-padding" layout="column">
+                <p>Client email and phone number </p>
+                <md-chips ng-model="project.requestedHomeBuilders">
+                <md-chip-template>
+                  <strong>{{$chip}}</strong>
+                </md-chip-template>
+              </md-chips>
+              </md-content>
+            </div>
+            <div layout layout-sm="column">
+                <md-input-contaner flex>
+                    <label for="">Project Subscription of $50 per Month </label>
+                    <label for="">Credit Card Number (Field to be invalid)  </label>
+
+                    <label for="">NOTE: This project is Free as we are currently running in Beta.  </label>
+                </md> 
+                
+            </div>
+        
+            <div layout layout-sm="column">
+                <md-button class="md-raised md-primary">Create project</md-button>
+            </div>
+        </form>
+    </md-whiteframe>
+</md-content>
