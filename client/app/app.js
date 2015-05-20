@@ -11,6 +11,7 @@ angular.module('buiiltApp', [
   'angular-loading-bar',
   'cgNotify',
   'ngMaterial',
+  'restangular',
   'lumx'
 ]);
 

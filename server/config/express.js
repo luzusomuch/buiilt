@@ -39,11 +39,17 @@ module.exports = function(app) {
   app.engine('html', require('ejs').renderFile);
   app.set('view engine', 'html');
   app.use(compression());
-  app.use(bodyParser.urlencoded({ extended: false }));
+  app.use(bodyParser.urlencoded({extended: false}));
   app.use(bodyParser.json());
   app.use(methodOverride());
   //express validator middleware
-  app.use(expressValidator());
+  app.use(expressValidator({
+    customValidators: {
+      isArray: function(value) {
+        return Array.isArray(value);
+      }
+    }
+  }));
   app.use(cookieParser());
   app.use(passport.initialize());
 
@@ -58,7 +64,7 @@ module.exports = function(app) {
     secret: config.secrets.session,
     resave: true,
     saveUninitialized: true,
-    store: new mongoStore({ mongoose_connection: mongoose.connection })
+    store: new mongoStore({mongoose_connection: mongoose.connection})
   }));
 
   if ('production' === env) {

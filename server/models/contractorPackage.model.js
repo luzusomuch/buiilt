@@ -14,11 +14,7 @@ var ContractorPackageSchema = new Schema({
   },
   name: String,
   description: String,
-  to: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
+  to: [],
   quote: {
     type: Schema.Types.ObjectId,
     ref: 'Quote',

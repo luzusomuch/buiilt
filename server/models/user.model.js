@@ -8,41 +8,8 @@ var authTypes = ['github', 'twitter', 'facebook', 'google'];
 var EventBus = require('./../components/EventBus');
 
 var UserGroupSchema = new Schema({
-  _id: {
-    type: Schema.Types.ObjectId,
-    ref: 'Group'
-  },
-  name: String,
-  role: {
-    type: String,
-    enum: ['manager', 'agent']
-  }
-});
-
-var TwilioSchema = new Schema({
-  sid: {
-    type: String,
-    required: 'Twilio sid is required'
-  },
-  friendlyName: {
-    type: String
-  },
-  status: {
-    type: String,
-    required: 'Twilio account status is required',
-    default: 'active'
-  },
-  authToken: {
-    type: String,
-    required: 'Twilio auth token is required'
-  },
-  type: {
-    type: String,
-    required: 'Twilio type is required'
-  },
-  application: {
-    type: Object
-  }
+  _id: { type: Schema.Types.ObjectId, ref: 'Group' },
+  role: { type: String }
 });
 
 var UserSchema = new Schema({
@@ -64,18 +31,16 @@ var UserSchema = new Schema({
   google: {},
   github: {},
   phoneNumber: {
-    type: String
-    // , required:'Phone number is required'
+    type: String,
+    required: 'Phone number is required'
   },
-  country: {type: String
-    // , required: true
-  },
-  groups: String,
-  twilioAccounts: [TwilioSchema],
-  //one user can have one workspace only
-  twilioWorkspace: {},
+  country: {type: String, required: true},
+  groups: [UserGroupSchema],
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
+},{
+  strict: true,
+  minimize: false
 });
 
 /**
@@ -123,13 +88,6 @@ UserSchema
     if (authTypes.indexOf(this.provider) !== -1) return true;
     return email.length;
   }, 'Email cannot be blank');
-
-UserSchema
-  .path('groups')
-  .validate(function(groups) {
-    if (authTypes.indexOf(this.provider) !== -1) return true;
-    return groups.length;
-  }, 'Please select group');
 
 // Validate empty password
 UserSchema
@@ -228,16 +186,7 @@ UserSchema.methods.confirmEmail = function(callback){
   delete this.emailVerifyToken;
   this.emailVerified = true;
 
-  this.save(okay(callback, function(updatedUser){
-    //create new Twilio acccount
-    EventBus.emit('User.CreateTwilioAccountAndNumberForNewUser', updatedUser);
-
-    callback(null, updatedUser);
-  }));
-};
-
-UserSchema.method.getTwilioAccount = function(){
-  return this.twilioAccounts.length ? this.twilioAccounts[0] : null;
+  this.save(callback);
 };
 
 module.exports = mongoose.model('User', UserSchema);

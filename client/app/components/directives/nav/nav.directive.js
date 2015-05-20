@@ -12,7 +12,7 @@ angular.module('buiiltApp')
             templateUrl: 'app/components/directives/nav/nav.html',
             controller: ['$scope', function($scope, $location) {
                 $scope.tabs = ['DASHBOARD', 'CLIENT', 'CONTRACTORS', 'MATERIALS', 'STAFF', 'PROJECT'];
-                console.log($scope.tabs);
+                console.log($location);
                 $scope.switchTab = function(index) {
                   switch (index) {
                     case 0:

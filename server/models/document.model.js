@@ -7,16 +7,29 @@ var okay = require('okay');
 var EventBus = require('./../components/EventBus');
 
 var DocumentSchema = new Schema({
-  owner: {
+  //creator
+  user: {
     type: Schema.Types.ObjectId,
     ref: 'User',
     required: true
   },
+  project: {
+    type: Schema.Types.ObjectId,
+    ref: 'Project'
+  },
   name: String,
   description: String,
   version: String,
-  file: String,
+  //TODO - define package ID and related data
+  file: {
+    type: Schema.Types.ObjectId,
+    ref: 'File'
+  },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
+},{
+  strict: true,
+  minimize: false
 });
+
 module.exports = mongoose.model('Document', DocumentSchema);

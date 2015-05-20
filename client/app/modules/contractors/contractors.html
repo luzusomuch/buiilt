@@ -1,60 +1,63 @@
 
-<div layout="row" layout-padding>
-    <div class="md-toolbar-tools">
-		
-		<span flex></span>
-		
-		<div class="fab">
-	        <button class="fab__primary btn btn--xl btn--amber btn--fab" lx-tooltip="New Contractor Package..." tooltip-position="bottom" >
-	        	<i class="mdi mdi-plus"></i>
-				<i class="mdi mdi-plus"></i>
-	        </button>
+<md-content>
+  <div ng-include="'app/components/layout/toolbar.html'"></div>
 
-	        <div class="fab__actions fab__actions--left">
-	            <button class="btn btn--l btn--black btn--fab" lx-tooltip="Lorem Ipsum" tooltip-position="bottom">
-					<i class="mdi mdi-delete"></i>
-				</button>
-	            <button class="btn btn--l btn--black btn--fab" lx-tooltip="Lorem Ipsum" tooltip-position="bottom">
-					<i class="mdi mdi-delete"></i>
-				</button>
-	            <button class="btn btn--l btn--black btn--fab" lx-tooltip="Lorem Ipsum" tooltip-position="bottom">
-					<i class="mdi mdi-delete"></i>
-				</button>
-	            <button class="btn btn--l btn--black btn--fab" lx-tooltip="Lorem Ipsum" tooltip-position="bottom">
-					<i class="mdi mdi-delete"></i>
-				</button>
-	        </div>
-	    </div>
+  <built-nav></built-nav>
+  
+    <div layout="row" layout-margin>
+      <div flex="15"></div>
+      <div flex="70"><div class="md-toolbar-tools">
+
+        <span flex></span>
+
+        <div class="fab">
+          <button ui-sref="contractors.form" class="fab__primary btn btn--xl btn--amber btn--fab" lx-tooltip="New Contractor Package..." tooltip-position="bottom" >
+            <i class="mdi mdi-plus"></i>
+            <i class="mdi mdi-plus"></i>
+          </button>
+        </div>
+      </div></div>
+      
+      <div flex="15"></div>
+    </div>	
+
+    <div layout="row" style="" layout-margin>
+      <div flex="15"style="text-align: right; padding-right: 60px;">
+        <p style="margin-bottom: 15px; font-size: 12px">In Progress</p>
+        <p style="margin-bottom: 15px; font-size: 12px">In Tender</p>
+        <p style="margin-bottom: 15px; font-size: 12px">Completed</p>
+
+      </div>
+      <div flex="70" style="">
+        <md-content ui-view class="md-whiteframe-z1">
+          <md-list >
+            <md-list-item layout-padding>
+              <h4>Contractor Package One</h4>
+            </md-list-item>
+            <md-divider></md-divider>
+            <md-list-item layout-padding>
+              <h4>Contractor Package Two</h4>
+            </md-list-item>
+            <md-divider></md-divider>
+            <md-list-item layout-padding>
+              <h4>Contractor Package Three</h4>
+            </md-list-item>
+            <md-divider></md-divider>
+            <md-list-item layout-padding>
+              <h4>Contractor Package Four</h4>
+            </md-list-item>
+            <md-divider></md-divider>
+          </md-list>
+        </md-content>
+      </div>
+      
+       <div flex="15"style="text-align: right; padding-right: 60px;">
+      
+      </div>
     </div>
-</div>
 
-<div layout="row" style="" layout-margin>
-	<div flex="20"style="text-align: right; padding-right: 60px;">
-		<p style="margin-bottom: 15px; font-size: 12px">In Progress</p>
-		<p style="margin-bottom: 15px; font-size: 12px">In Tender</p>
-		<p style="margin-bottom: 15px; font-size: 12px">Completed</p>
-		
-	</div>
-	<div flex="80" style="">
-		<md-content class="md-whiteframe-z1">
-			<md-list >
-				<md-list-item layout-padding>
-					<h4>Contractor Package One</h4>
-				</md-list-item>
-				<md-divider></md-divider>
-				<md-list-item layout-padding>
-					<h4>Contractor Package Two</h4>
-				</md-list-item>
-				<md-divider></md-divider>
-				<md-list-item layout-padding>
-					<h4>Contractor Package Three</h4>
-				</md-list-item>
-				<md-divider></md-divider>
-				<md-list-item layout-padding>
-					<h4>Contractor Package Four</h4>
-				</md-list-item>
-				<md-divider></md-divider>
-		    </md-list>
-		</md-content>
-	</div>
-</div>
+  <div ng-include="'app/components/layout/footer.html'"></div>
+</md-content>
+
+
+
