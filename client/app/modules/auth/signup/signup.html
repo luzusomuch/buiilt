@@ -1,9 +1,4 @@
-
-
 <md-content>
-  <div ng-include="'app/components/layout/toolbar.html'"></div>
-  
-  <built-nav></built-nav>
   <div layout="row" class="main-content container" style="margin-top:50px;">
     <div flex="20"></div>
       <div flex-gt-lg="" flex="60" ng-view>
@@ -45,12 +40,11 @@
                   </div>
                   <div layout layout-sm="column">
                     <md-input-container flex>
-                      <label for="">User group</label>
-                      <md-select placeHolder="Select" ng-model="user.groups" required>
-                        <md-option value="Home owner">Home owner</md-option>
-                        <md-option value="Contractor">Contractor</md-option>
-                        <md-option value="Buider">Buider</md-option>
-                        <md-option value="Supplier">Supplier</md-option>
+                      <md-select placeHolder="Select" ng-model="user.type" required>
+                        <md-option value="homeOwner">Home owner</md-option>
+                        <md-option value="contractor">Contractor</md-option>
+                        <md-option value="buider">Buider</md-option>
+                        <md-option value="supplier">Supplier</md-option>
                       </md-select>
                     </md-input-container>
                   </div>
@@ -82,5 +76,4 @@
       </div>
       <div flex="20"></div>
     </div>
-  <div ng-include="'app/components/layout/footer.html'"></div>
 </md-content>

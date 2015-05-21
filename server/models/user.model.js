@@ -7,21 +7,21 @@ var okay = require('okay');
 var authTypes = ['github', 'twitter', 'facebook', 'google'];
 var EventBus = require('./../components/EventBus');
 
-var UserGroupSchema = new Schema({
-  _id: { type: Schema.Types.ObjectId, ref: 'Group' },
-  role: { type: String }
-});
-
 var UserSchema = new Schema({
   name: String,
   firstName: String,
   lastName: String,
-  email: { type: String, lowercase: true },
-  emailVerified: { type: Boolean, default: false },
-  emailVerifyToken : String,
+  email: {type: String, lowercase: true},
+  emailVerified: {type: Boolean, default: false},
+  emailVerifyToken: String,
   role: {
     type: String,
     default: 'user'
+  },
+  type: {
+    type: String,
+    default: 'homeOwner',
+    enum: ['homeOwner', 'contractor', 'buider', 'supplier']
   },
   hashedPassword: String,
   provider: String,
@@ -30,15 +30,11 @@ var UserSchema = new Schema({
   twitter: {},
   google: {},
   github: {},
-  phoneNumber: {
-    type: String,
-    required: 'Phone number is required'
-  },
-  country: {type: String, required: true},
-  groups: [UserGroupSchema],
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now }
-},{
+  phoneNumber: String,
+  country: String,
+  createdAt: {type: Date, default: Date.now},
+  updatedAt: {type: Date, default: Date.now}
+}, {
   strict: true,
   minimize: false
 });
@@ -48,19 +44,19 @@ var UserSchema = new Schema({
  */
 UserSchema
   .virtual('password')
-  .set(function(password) {
+  .set(function (password) {
     this._password = password;
     this.salt = this.makeSalt();
     this.hashedPassword = this.encryptPassword(password);
   })
-  .get(function() {
+  .get(function () {
     return this._password;
   });
 
 // Public profile information
 UserSchema
   .virtual('profile')
-  .get(function() {
+  .get(function () {
     return {
       'name': this.name,
       'role': this.role
@@ -70,7 +66,7 @@ UserSchema
 // Non-sensitive info we'll be putting in the token
 UserSchema
   .virtual('token')
-  .get(function() {
+  .get(function () {
     return {
       '_id': this._id,
       'role': this.role
@@ -84,35 +80,39 @@ UserSchema
 // Validate empty email
 UserSchema
   .path('email')
-  .validate(function(email) {
-    if (authTypes.indexOf(this.provider) !== -1) return true;
+  .validate(function (email) {
+    if (authTypes.indexOf(this.provider) !== -1)
+      return true;
     return email.length;
   }, 'Email cannot be blank');
 
 // Validate empty password
 UserSchema
   .path('hashedPassword')
-  .validate(function(hashedPassword) {
-    if (authTypes.indexOf(this.provider) !== -1) return true;
+  .validate(function (hashedPassword) {
+    if (authTypes.indexOf(this.provider) !== -1)
+      return true;
     return hashedPassword.length;
   }, 'Password cannot be blank');
 
 // Validate email is not taken
 UserSchema
   .path('email')
-  .validate(function(value, respond) {
+  .validate(function (value, respond) {
     var self = this;
-    this.constructor.findOne({email: value}, function(err, user) {
-      if(err) throw err;
-      if(user) {
-        if(self.id === user.id) return respond(true);
+    this.constructor.findOne({email: value}, function (err, user) {
+      if (err)
+        throw err;
+      if (user) {
+        if (self.id === user.id)
+          return respond(true);
         return respond(false);
       }
       respond(true);
     });
-}, 'The specified email address is already in use.');
+  }, 'The specified email address is already in use.');
 
-var validatePresenceOf = function(value) {
+var validatePresenceOf = function (value) {
   return value && value.length;
 };
 
@@ -120,19 +120,19 @@ var validatePresenceOf = function(value) {
  * Pre-save hook
  */
 UserSchema
-  .pre('save', function(next) {
+  .pre('save', function (next) {
     this.wasNew = this.isNew;
 
-    if (!this.isNew){
+    if (!this.isNew) {
       return next();
-    }else if(this.isNew && !this.emailVerified){
+    } else if (this.isNew && !this.emailVerified) {
       //create email verify token
       this.emailVerifyToken = crypto.randomBytes(20).toString('hex');
     }
 
-    if (!validatePresenceOf(this.hashedPassword) && authTypes.indexOf(this.provider) === -1){
+    if (!validatePresenceOf(this.hashedPassword) && authTypes.indexOf(this.provider) === -1) {
       next(new Error('Invalid password'));
-    }else{
+    } else {
       next();
     }
   });
@@ -153,20 +153,18 @@ UserSchema.methods = {
    * @return {Boolean}
    * @api public
    */
-  authenticate: function(plainText) {
+  authenticate: function (plainText) {
     return this.encryptPassword(plainText) === this.hashedPassword;
   },
-
   /**
    * Make salt
    *
    * @return {String}
    * @api public
    */
-  makeSalt: function() {
+  makeSalt: function () {
     return crypto.randomBytes(16).toString('base64');
   },
-
   /**
    * Encrypt password
    *
@@ -174,14 +172,15 @@ UserSchema.methods = {
    * @return {String}
    * @api public
    */
-  encryptPassword: function(password) {
-    if (!password || !this.salt) return '';
+  encryptPassword: function (password) {
+    if (!password || !this.salt)
+      return '';
     var salt = new Buffer(this.salt, 'base64');
     return crypto.pbkdf2Sync(password, salt, 10000, 64).toString('base64');
   }
 };
 
-UserSchema.methods.confirmEmail = function(callback){
+UserSchema.methods.confirmEmail = function (callback) {
   //remove keychain and update email verified status
   delete this.emailVerifyToken;
   this.emailVerified = true;

@@ -15,7 +15,7 @@ angular.module('buiiltApp', [
   'lumx'
 ]);
 
-angular.module('buiiltApp').config(function($mdThemingProvider,$stateProvider, $urlRouterProvider, $locationProvider, $urlRouterProvider, $httpProvider, $sceDelegateProvider, cfpLoadingBarProvider) {
+angular.module('buiiltApp').config(function ($mdThemingProvider, $stateProvider, $urlRouterProvider, $locationProvider, $urlRouterProvider, $httpProvider, $sceDelegateProvider, cfpLoadingBarProvider) {
   $sceDelegateProvider.resourceUrlWhitelist(['^(?:http(?:s)?:\/\/)?(?:[^\.]+\.)?\(vimeo|youtube)\.com(/.*)?$', 'self']);
 
   /* Add New States Above */
@@ -25,65 +25,60 @@ angular.module('buiiltApp').config(function($mdThemingProvider,$stateProvider, $
   $httpProvider.interceptors.push('authInterceptor');
   //Setup theme material
   $mdThemingProvider
-   .theme('default')
-      .primaryPalette('light-blue')
-      .accentPalette('amber');
+    .theme('default')
+    .primaryPalette('light-blue')
+    .accentPalette('amber');
 
   //angular loading bar
   cfpLoadingBarProvider.includeSpinner = true;
 })
-.factory('authInterceptor', function ($q, $cookieStore, $location) {
-  return {
-    // Add authorization token to headers
-    request: function (config) {
-      config.headers = config.headers || {};
-      if ($cookieStore.get('token')) {
-        config.headers.Authorization = 'Bearer ' + $cookieStore.get('token');
+  .factory('authInterceptor', function ($q, $cookieStore, $location) {
+    return {
+      // Add authorization token to headers
+      request: function (config) {
+        config.headers = config.headers || {};
+        if ($cookieStore.get('token')) {
+          config.headers.Authorization = 'Bearer ' + $cookieStore.get('token');
+        }
+        return config;
+      },
+      // Intercept 401s and redirect you to login
+      responseError: function (response) {
+        if (response.status === 401) {
+          $location.path('/signin');
+          // remove any stale tokens
+          $cookieStore.remove('token');
+          return $q.reject(response);
+        }
+        else {
+          return $q.reject(response);
+        }
       }
-      return config;
-    },
+    };
+  })
+  .run(function ($rootScope, $cookieStore, cfpLoadingBar, authService, $location) {
+    cfpLoadingBar.start();
 
-    // Intercept 401s and redirect you to login
-    responseError: function(response) {
-      if(response.status === 401) {
-        $location.path('/signin');
-        // remove any stale tokens
-        $cookieStore.remove('token');
-        return $q.reject(response);
+    $rootScope.safeApply = function (fn) {
+      var phase = $rootScope.$$phase;
+      if (phase === '$apply' || phase === '$digest') {
+        if (fn && (typeof (fn) === 'function')) {
+          fn();
+        }
+      } else {
+        this.$apply(fn);
       }
-      else {
-        return $q.reject(response);
-      }
-    }
-  };
-})
-.run(function($rootScope, $cookieStore, cfpLoadingBar, authService, $location) {
-  cfpLoadingBar.start();
-
-  $rootScope.safeApply = function(fn) {
-    var phase = $rootScope.$$phase;
-    if (phase === '$apply' || phase === '$digest') {
-      if (fn && (typeof (fn) === 'function')) {
-        fn();
-      }
-    } else {
-      this.$apply(fn);
-    }
-  };
-  $rootScope.$on('$stateChangeStart', function (event, next) {
-
-      authService.isLoggedInAsync(function(loggedIn) {
-
+    };
+    $rootScope.$on('$stateChangeStart', function (event, next) {
+      authService.isLoggedInAsync(function (loggedIn) {
         if (next.authenticate && !loggedIn) {
-          
           $location.path('/');
-        }else{
-          if(next.adminAccess && !authService.isAdmin()){
+        } else {
+          if (next.adminAccess && !authService.isAdmin()) {
             $location.path('/');
           }
-
         }
       });
-    })
-})
-.value('$', $);
+    });
+  })
+  .value('$', $);

@@ -4,7 +4,9 @@ angular.module('buiiltApp')
   if ($cookieStore.get('token')) {
     currentUser = userService.get();
   }
-
+  var authUpdate=function(user){
+    $rootScope.$emit('authUpdate', user);
+  };
   return {
     /**
      * Authenticate user and save token
@@ -24,6 +26,7 @@ angular.module('buiiltApp')
       .success(function(data) {
         $cookieStore.put('token', data.token);
         currentUser = userService.get();
+        authUpdate(currentUser);
         deferred.resolve(data);
         return cb();
       })

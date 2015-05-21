@@ -13,6 +13,9 @@
     <link rel="stylesheet" href="/dist/app.full.css" data-concat="false" />
     <link rel="stylesheet" href="/bower_components/lumx/dist/lumx.css">
     <link rel="stylesheet" href="/bower_components/mdi/css/materialdesignicons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/css/materialize.min.css">
+    <link rel="stylesheet" href="/media/css/main.css">
+    <link rel="stylesheet" href="/media/css/normalize.css">
     <link rel="stylesheet" href="/media/css/style.css">
 <!--    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700">-->
   </head>
@@ -47,11 +50,12 @@
     <script src="/app/app.js"></script>
 
     <script src="/app/components/filters.js"></script>
+    <script src="/app/directives/footer/footer-directive.js"></script>
+    <script src="/app/directives/header/header-directive.js"></script>
     <script src="/app/modules/auth/main.js"></script>
     <script src="/app/modules/auth/signin/signin-controller.js"></script>
     <script src="/app/modules/auth/signup/signup-controller.js"></script>
     <script src="/app/modules/auth/signout/signout-controller.js"></script>
-    <script src="/app/components/layout/layout-controller.js"></script>
     <script src="/app/modules/home/main.js"></script>
     <script src="/app/modules/home/home-controller.js"></script>
     <script src="/app/modules/user/main.js"></script>
@@ -59,6 +63,8 @@
     
     <script src="/app/modules/dashboard/main.js"></script>
     <script src="/app/modules/dashboard/dashboard-controller.js"></script>
+    <script src="/app/modules/builder/main.js"></script>
+    <script src="/app/modules/builder/builder-controller.js"></script>
     <script src="/app/modules/contractors/main.js"></script>
     <script src="/app/modules/contractors/contractors-controller.js"></script>
     <script src="/app/modules/materials/main.js"></script>
@@ -72,22 +78,20 @@
     <script src="/app/modules/tender/main.js"></script>
     <script src="/app/modules/tender/tender-controller.js"></script>
     
-    <script src="/app/components/directives/nav/nav.directive.js"></script>
-
     <script src="/app/services/auth-service.js"></script>
     <script src="/app/services/user-service.js"></script>
     <script src="/app/services/contractors-services.js"></script>
     <script src="/app/services/project-service.js"></script>
     <!-- Add New Component JS Above -->
 
-  <ss-header></ss-header>
+  <built-header></built-header>
 
-  <main class="container-wide">
+  <main class="row container">
     <div class="content" role="main">
       <div ui-view></div>
     </div><!--/.content-->
   </main>
 
-  <ss-footer></ss-footer>
+  <built-footer></built-footer>
 </body>
 </html>

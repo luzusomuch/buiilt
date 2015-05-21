@@ -32,6 +32,7 @@ exports.create = function (req, res, next) {
     newUser.provider = 'local';
     newUser.role = 'user';
     newUser.save(function (err, user) {
+      console.log('error user',err);
       if (err){
         return validationError(res, err);
       }

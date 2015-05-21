@@ -1,0 +1,31 @@
+<header>
+  <nav>
+    <div class="nav-wrapper container">
+      <a href="#" class="brand-logo">buiilt</a>
+      
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li ng-if="!user._id"><a ui-sref="signin">Login</a></li>
+        <li ng-if="!user._id"><a ui-sref="signup">Register</a></li>
+        <li ng-if="user._id">
+          <a class="dropdown-button" href="#!" data-activates="projectSelect" data-gutter="-30">
+            Project Name<i class="mdi-navigation-arrow-drop-down right"></i></a>
+          <ul id="projectSelect" class="dropdown-content" style="margin-top: 15px">
+            <li><a href="#!">Project 1</a></li>
+            <li><a href="#!">Project 2</a></li>
+            <li class="divider"></li>
+            <li><a href="#!">Create New Project</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <div class="z-depth-1" style="background-color: white;" ng-if="tabs">
+    <div class="col s12 container">
+      <ul class="tabs" style="width: 100%;">
+        <li class="tab col s1" ng-repeat="tab in tabs">
+          <a ui-sref="{{tab}}" ui-sref-active="active">{{tab}}</a></li>
+        <div class="indicator"></div>
+      </ul>
+    </div>
+  </div>
+</header>
