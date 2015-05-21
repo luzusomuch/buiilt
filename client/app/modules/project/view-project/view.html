@@ -1,0 +1,24 @@
+<md-content layout-padding class="viewProject">
+    <md-whiteframe class="md-whiteframe-z1" layout layout-align="center center">
+    <h2>{{project.name}}</h2>
+        <form method="post" ng-submit="create()" flex="100" style="padding:10px;">
+            <div layout layout-sm="column">
+                <md-input-container flex>
+                  <label>Name </label>
+                  <input ng-model="project.name" required>
+                </md-input-container>
+            </div>
+            <div layout layout-sm="column">
+                <md-input-container flex>
+                  <label>Address </label>
+                  <input ng-model="project.location.address" required>
+                </md-input-container>
+            </div>
+            
+        
+            <div layout layout-sm="column">
+                <md-button class="md-raised md-primary">Create project</md-button>
+            </div>
+        </form>
+    </md-whiteframe>
+</md-content>

@@ -10,11 +10,9 @@ angular.module('buiiltApp').controller('FormProjectCtrl', function($scope, $time
       }
     $scope.errors = {};
     $scope.project = {
-        location : {}
+        location : {},
+        requestedHomeBuilders: []
     };
-    $scope.project = {
-        user: currentUser._id
-      };
     $scope.create = function(){
         projectService.create($scope.project).$promise.then(function(data){
           //show alert
@@ -32,4 +30,8 @@ angular.module('buiiltApp').controller('FormProjectCtrl', function($scope, $time
       $scope.closeSuccess = function(){
         $scope.success = false;
       };
+});
+
+angular.module('buiiltApp').controller('ViewProjectCtrl', function($scope, $timeout, $q, projectService, project) {
+  $scope.project=project;
 });

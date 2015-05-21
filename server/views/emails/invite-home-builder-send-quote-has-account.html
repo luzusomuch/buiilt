@@ -2,11 +2,11 @@
 
 {% block content %}
 <p>
-  {{project.user.name}} invites you to send a quote for project {{project.name}}
+  <%= project.user.name %> invites you to send a quote for project <%= project.name %>
 </p>
 
 <p>
-  Please click here to this project and send the quote
+  Please click <a href="<%= projectLink %>">here</a> to this project and send the quote
 
   <br/>
   Feel free to contact us at <a href="mailto:admin@buiilt.com">admin@buiilt.com</a> if you have any questions.

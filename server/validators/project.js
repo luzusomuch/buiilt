@@ -8,7 +8,7 @@ var _ = require('lodash');
  */
 exports.validateCreate = function(req, cb){
   req.checkBody('name', 'Project name is required').notEmpty();
-  // req.assert('requestedHomeBuilders', 'requestedHomeBuilders must be array').isArray();
+  req.assert('requestedHomeBuilders', 'requestedHomeBuilders must be array').isArray();
   req.checkBody('requestedHomeBuilders', 'requestedHomeBuilders is required').notEmpty();
   req.assert('location.address', 'Address is required').notEmpty();
   // req.assert('dateStart', 'dateStart is required').notEmpty();
@@ -16,7 +16,7 @@ exports.validateCreate = function(req, cb){
   //TODO get geo code base on google
   //populate requestedHomeBuilders
   var homeBuilers = [];
-  _.each(body.requestedHomeBuilders, function(text){
+  _.each(req.body.requestedHomeBuilders, function(text){
     //kiem tra email hop le
     if(validateEmail(text)){
         homeBuilers.push({

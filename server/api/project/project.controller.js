@@ -18,6 +18,7 @@ exports.create = function(req, res){
 
     //create a new project
     var project = new Project(data);
+    project.user = req.user;
     project.save(function(err, savedProject){
       if(err){ return errorsHelper.validationErrors(res, err); }
 

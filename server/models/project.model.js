@@ -23,9 +23,8 @@ var RequestedHomeBuilder = {
 var ProjectSchema = new Schema({
   //creator, this is home owner
   user: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+    _id : {type: Schema.Types.ObjectId, ref: 'User', required: true},
+    name : {type: String, default: ' '}
   },
   name: {
     type: String,

@@ -9,7 +9,7 @@ var router = express.Router();
 
 router.post('/', auth.isAuthenticated(), controller.create);
 // router.get('/', controller.index);
-// router.get('/:id', auth.isAuthenticated(), controller.show);
+router.get('/:id', auth.isAuthenticated(), controller.show);
 // router.post('/', controller.create);
 
 module.exports = router;
