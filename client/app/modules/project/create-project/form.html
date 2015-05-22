@@ -1,5 +1,7 @@
 <md-content layout-padding class="formProject">
     <md-whiteframe class="md-whiteframe-z1" layout layout-align="center center">
+      <alert type="success" close="closeSuccess()" ng-show="success">Thank you for your submit, you can login now and enjoy yourself.</alert>
+      <alert ng-repeat="(key, msg) in errors" type="danger" close="closeAlert(key)">{{msg}}</alert>
         <form method="post" ng-submit="create()" flex="100" style="padding:10px;">
             <h3>New project</h3>
             <div layout layout-sm="column">

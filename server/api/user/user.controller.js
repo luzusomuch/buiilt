@@ -1,11 +1,14 @@
 'use strict';
 
 var User = require('./../../models/user.model');
+var Project = require('./../../models/project.model');
 var passport = require('passport');
 var config = require('../../config/environment');
 var jwt = require('jsonwebtoken');
 var UserValidator = require('./../../validators/user');
 var okay = require('okay');
+var async = require('async');
+var _ = require('lodash');
 
 var validationError = function (res, err) {
   return res.json(422, err);
@@ -38,6 +41,32 @@ exports.create = function (req, res, next) {
       }
       var token = jwt.sign({_id: user._id}, config.secrets.session, {expiresInMinutes: 60 * 5});
       res.json({token: token});
+    });
+    var projects = Project.find({'requestedHomeBuilders.email' : req.body.email}, function(err, project) {
+      if (err) {
+        console.log(err);
+      }
+      else {
+        _.each(project, function(pj) {
+          async.each(pj.requestedHomeBuilders, function(builder, callback) {
+            // console.log(builder);
+            if (builder.email == req.body.email) {
+              builder._id = newUser._id;
+            }
+            callback();
+          }, function(err) {
+            if (err) {
+              console.log(err);
+            }
+            else {
+              pj.save(function(err, savedProject) {
+              if (err) { return errorsHelper.validationErrors(res, err)}
+              return res.json(savedProject);
+            });
+            }
+          });
+        });
+      }
     });
   }));
 };

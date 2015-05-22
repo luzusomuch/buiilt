@@ -4,7 +4,8 @@ var User = require('./../../models/user.model');
 var Project = require('./../../models/project.model');
 var errorsHelper = require('../../components/helpers/errors');
 var ProjectValidator = require('./../../validators/project');
-
+var _ = require('lodash');
+var async = require('async');
 /**
  * create a new project
  * @param {type} req
@@ -13,17 +14,31 @@ var ProjectValidator = require('./../../validators/project');
  */
 exports.create = function(req, res){
   ProjectValidator.validateCreate(req, function(err, data){
-    console.log(data);
     if(err){ return errorsHelper.validationErrors(res, err, 'Validation'); }
 
     //create a new project
     var project = new Project(data);
     project.user = req.user;
-    project.save(function(err, savedProject){
-      if(err){ return errorsHelper.validationErrors(res, err); }
 
-      //return public data of project
-      return res.json(savedProject);
+    async.each(project.requestedHomeBuilders, function(builder, callback) {
+      // console.log(requestedHomeBuilder);
+      User.findOne({'email' : builder.email}, function(err, user) {
+        if (user) {
+          builder._id=user._id;
+          builder.phoneNumber=user.phoneNumber;
+        }
+        callback();
+      });
+    }, function(err) {
+      if (err) {
+        console.log(err);
+      }
+      else {
+        project.save(function(err, savedProject) {
+          if (err) { return errorsHelper.validationErrors(res, err)}
+          return res.json(savedProject);
+        });
+      }
     });
   });
 };
@@ -41,4 +56,23 @@ exports.show = function(req, res){
 
     return res.json(project);
   });
+};
+
+exports.update = function(req, res) {
+  var quote = req.body.requestedHomeBuilders.quote;
+  var currentUser = req.user;
+  Project.findById(req.params.id, function(err, project){
+    _.each(project.requestedHomeBuilders, function(requestedHomeBuilder) {
+      if (currentUser.email == requestedHomeBuilder.email) {
+        requestedHomeBuilder.quote = 123;
+        project.save(function (err) {
+          if (err){
+            return errorsHelper.validationErrors(res, err);
+          }
+          res.send(200);
+        });
+      }
+    });
+  });
+  
 };

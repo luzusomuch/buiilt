@@ -30,7 +30,7 @@ EventBus.onSeries('Project.Inserted', function(project, next) {
         else if(_.difference(emails, [requestedHomeBuilder.email])){
             Mailer.sendMail('invite-home-builder-send-quote-no-account.html', requestedHomeBuilder.email, {
               project: project,
-              registryLink : config.baseUrl + 'user/signup/' + requestedHomeBuilder.email,
+              registryLink : config.baseUrl + 'signup/',
               subject: 'Invite home builder send quote '
             }, function(){});
         }

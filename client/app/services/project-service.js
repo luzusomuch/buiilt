@@ -10,6 +10,9 @@ angular.module('buiiltApp')
     {
         create: {
             method: 'POST'
+        },
+        update: {
+          method: 'PUT'
         }
     }
     // createProject: function(project, callback) {
