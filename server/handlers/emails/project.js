@@ -21,7 +21,7 @@ EventBus.onSeries('Project.Inserted', function(project, next) {
             _.each(users, function(user){
                 Mailer.sendMail('invite-home-builder-send-quote-has-account.html', user.email, {
                   project: project,
-                  projectLink : config.baseUrl + 'project/' + project._id,
+                  projectLink : config.baseUrl + 'quote/' + project._id,
                   subject: 'Invite home builder send quote '
                 }, function(){});
                 emails.push(user.email);

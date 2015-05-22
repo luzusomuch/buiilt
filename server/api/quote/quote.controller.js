@@ -14,30 +14,19 @@ var async = require('async');
  * @returns {undefined}
  */
 exports.create = function(req, res){
-  //create a new project
-  var project = new Project(data);
-  project.user = req.user;
+    //create a new project
+    // console.log(req.body.params);
+    var data = req.body.params;
+    var quote = new QuoteRequest(data);
+    quote.user = req.user._id;
+    quote.project = req.params.id;
+    quote.type = req.user.type;
 
-  async.each(project.requestedHomeBuilders, function(builder, callback) {
-    // console.log(requestedHomeBuilder);
-    User.findOne({'email' : builder.email}, function(err, user) {
-      if (user) {
-        builder._id=user._id;
-        builder.phoneNumber=user.phoneNumber;
-      }
-      callback();
-    });
-  }, function(err) {
-    if (err) {
-      console.log(err);
-    }
-    else {
-      project.save(function(err, savedProject) {
-        if (err) { return errorsHelper.validationErrors(res, err)}
-        return res.json(savedProject);
-      });
-    }
-  });
+    quote.save(function(err, savedQuote) {
+        if (err) { console.log(err);}
+        return res.json(savedQuote);
+    })
+
 };
 
 /**
