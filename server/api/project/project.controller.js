@@ -2,7 +2,7 @@
 
 var User = require('./../../models/user.model');
 var Project = require('./../../models/project.model');
-var QuoteRequest = require('./../../models/quoteRequest.model');
+var BuilderPackage = require('./../../models/builderPackage.model');
 var errorsHelper = require('../../components/helpers/errors');
 var ProjectValidator = require('./../../validators/project');
 var _ = require('lodash');
@@ -14,30 +14,41 @@ var async = require('async');
  * @returns {undefined}
  */
 exports.create = function(req, res){
-  //create a new project
-  var project = new Project(data);
-  project.user = req.user;
-
-  async.each(project.requestedHomeBuilders, function(builder, callback) {
-    // console.log(requestedHomeBuilder);
-    User.findOne({'email' : builder.email}, function(err, user) {
-      if (user) {
-        builder._id=user._id;
-        builder.phoneNumber=user.phoneNumber;
-      }
-      callback();
-    });
-  }, function(err) {
-    if (err) {
-      console.log(err);
-    }
-    else {
-      project.save(function(err, savedProject) {
-        if (err) { return errorsHelper.validationErrors(res, err)}
-        return res.json(savedProject);
+  ProjectValidator.validateCreate(req, function(err, data) {
+    if (err) {return errorsHelper.validationErrors(res, err, 'Validation');}
+    var project = new Project(data);
+    project.user = req.user;
+    
+    async.each(project.requestedHomeBuilders, function(builder, callback) {
+      User.findOne({'email' : builder.email}, function(err, user) {
+        if (user) {
+          console.log(user);
+          builder._id=user._id;
+          builder.phoneNumber=user.phoneNumber;
+        }
+        callback();
       });
-    }
-  });
+    }, function(err) {
+      if (err) {
+        console.log(err);
+      }
+      else {
+        project.save(function(err, savedProject) {
+          if (err) {
+            return errorsHelper.validationErrors(res, err);
+         }
+          var builderPackage = new BuilderPackage();
+          builderPackage.user = project.user._id;
+          builderPackage.description = project.description;
+          builderPackage.project = project._id;
+          builderPackage.save(function (err, savedBuilderPackage) {
+            if (err) { return errorsHelper.validationErrors(res, err);}
+            return res.json(savedBuilderPackage);
+          });
+        });
+      }
+    });
+  })
 };
 
 /**

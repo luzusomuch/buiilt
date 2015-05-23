@@ -12,7 +12,7 @@ var PackageSchema = {
   },
   type: {
     type: String,
-    required: 'Package type is required'
+    // required: 'Package type is required'
   },
   description: {
     type: String,
@@ -47,7 +47,7 @@ module.exports = exports = function(schema, options){
  schema
  .pre('save', function(next) {
    this.wasNew = this.isNew;
-
+   
    if (!this.isNew){
      this.updatedAt = new Date();
    }

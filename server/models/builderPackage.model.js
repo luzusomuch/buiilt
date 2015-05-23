@@ -6,7 +6,7 @@ var packagePlugin = require('./plugins/package');
 var EventBus = require('./../components/EventBus');
 
 var BuilderPackageSchema = new Schema({
-  dateStart: { type: Date, required: 'Date start is required' }
+  dateStart: { type: Date, default: Date.now }
 });
 
 BuilderPackageSchema.plugin(packagePlugin);
