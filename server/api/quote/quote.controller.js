@@ -29,6 +29,14 @@ exports.create = function(req, res){
 
 };
 
+exports.index = function(req, res) {
+  Project.find({'user._id': req.user._id}, function(err, projects) {
+    if (err) 
+      return res.send(500, err);
+    res.json(200, projects);
+  });
+}
+
 /**
  * show project detail
  */

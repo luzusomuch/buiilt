@@ -22,7 +22,6 @@ exports.create = function(req, res){
     async.each(project.requestedHomeBuilders, function(builder, callback) {
       User.findOne({'email' : builder.email}, function(err, user) {
         if (user) {
-          console.log(user);
           builder._id=user._id;
           builder.phoneNumber=user.phoneNumber;
         }

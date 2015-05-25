@@ -39,4 +39,20 @@ var QuoteRequestSchema = new Schema({
   minimize: false
 });
 
+QuoteRequestSchema
+.pre('save', function(next) {
+  this.wasNew = this.isNew;
+
+  if (!this.isNew){
+    this.updatedAt = new Date();
+  }
+
+  next();
+});
+
+QuoteRequestSchema.post('save', function (doc) {
+  var evtName = this.wasNew ? 'Quote.Inserted' : 'Quote.Updated';
+  EventBus.emit(evtName, doc);
+});
+
 module.exports = mongoose.model('QuoteRequestSchema', QuoteRequestSchema);

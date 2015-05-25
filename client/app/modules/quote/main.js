@@ -2,7 +2,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
   $stateProvider
   .state('quote', {
     url: '/quote',
-    templateUrl: '/app/modules/project/project.html',
+    templateUrl: '/app/modules/quote/quote.html',
     controller: 'QuoteCtrl'
   })
   .state('quote.form', {

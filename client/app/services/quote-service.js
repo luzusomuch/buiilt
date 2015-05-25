@@ -8,6 +8,10 @@ angular.module('buiiltApp')
   return $resource('/api/quotes/:id/:action',{
     id : '@_id'},
     {
+        index: {
+          method: 'GET',
+          isArray: true
+        },
         create: {
             method: 'POST'
         },

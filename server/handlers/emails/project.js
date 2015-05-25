@@ -10,7 +10,7 @@ var User = require('./../../models/user.model');
 var config = require('./../../config/environment');
 
 /**
- * event handler after creating new account
+ * event handler after creating new project
  */
 EventBus.onSeries('Project.Inserted', function(project, next) {
     //find user to send email
