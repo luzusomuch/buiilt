@@ -1,9 +1,7 @@
 angular.module('buiiltApp', [
-  'ui.bootstrap',
   'ui.utils',
   'ui.router',
   'ngAnimate',
-  'ui.bootstrap',
   'angularFileUpload',
   'ngCookies',
   'ngSanitize',

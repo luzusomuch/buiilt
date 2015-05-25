@@ -156,6 +156,7 @@
                 link: function (scope, element, attrs) {
                     $compile(element.contents())(scope);
                     $timeout(function () {
+                     console.log(element)
                         element.dropdown({
                             inDuration: (angular.isDefined(scope.inDuration)) ? scope.inDuration : undefined,
                             outDuration: (angular.isDefined(scope.outDuration)) ? scope.outDuration : undefined,
