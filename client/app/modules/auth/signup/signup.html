@@ -7,7 +7,7 @@
         <alert ng-repeat="(key, msg) in errors" type="danger" close="closeAlert(key)">{{msg}}</alert>
         <h3>Create account</h3>
         <form method="post" ng-submit="signup()" name="signupForm">
-          <div class="row">
+<!--          <div class="row">
             <div input-field class="col s6">
               <label>First name</label>
               <input type="text" ng-model="user.firstName" required>
@@ -26,14 +26,14 @@
               <label>Website</label>
               <input type="text" ng-model="user.website">
             </div>
-          </div>
+          </div>-->
           <div class="row">
             <div input-field class="col s12">
               <label>Email</label>
               <input type="text" ng-model="user.email" required>
             </div>
           </div>
-          <div class="row">
+<!--          <div class="row">
             <div input-field class="col s12">
               <select material-select ng-model="user.type" required>
                 <option value="homeOwner">Home owner</option>
@@ -42,19 +42,19 @@
                 <option value="supplier">Supplier</option>
               </select>
             </div>
-          </div>
+          </div>-->
           <div class="row">
             <div input-field class="col s12">
               <label>Password</label>
               <input ng-model="user.password" required type="password">
             </div>
           </div>
-          <div class="row">
+<!--          <div class="row">
             <div>
               <input type="checkbox" ng-model="user.allowNewsletter" />
               <label>Receive news about new, trending and updated packages including site related news.</label>
             </div>
-          </div>
+          </div>-->
           <div class="row">
             <button class="waves-effect waves-light btn" ng-disabled="signupForm.$invalid">Sign up</button>
           </div>

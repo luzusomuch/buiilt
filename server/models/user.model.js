@@ -18,11 +18,6 @@ var UserSchema = new Schema({
     type: String,
     default: 'user'
   },
-  type: {
-    type: String,
-    default: 'homeOwner',
-    enum: ['homeOwner', 'contractor', 'buider', 'supplier']
-  },
   hashedPassword: String,
   provider: String,
   salt: String,

@@ -35,38 +35,28 @@ exports.create = function (req, res, next) {
     newUser.provider = 'local';
     newUser.role = 'user';
     newUser.save(function (err, user) {
-      console.log('error user',err);
-      if (err){
+      if (err) {
         return validationError(res, err);
       }
+      //update project for user
+      Project.find({'requestedHomeBuilders.email': req.body.email}, function (err, projects) {
+        if (err) {
+          console.log(err);
+        }
+        else {
+          _.each(projects, function (pj) {
+            _.each(pj.requestedHomeBuilders, function (builder) {
+              if (builder.email === req.body.email) {
+                builder._id = newUser._id;
+                pj.save();
+              }
+            });
+          });
+        }
+      });
+
       var token = jwt.sign({_id: user._id}, config.secrets.session, {expiresInMinutes: 60 * 5});
       res.json({token: token});
-    });
-    var projects = Project.find({'requestedHomeBuilders.email' : req.body.email}, function(err, project) {
-      if (err) {
-        console.log(err);
-      }
-      else {
-        _.each(project, function(pj) {
-          async.each(pj.requestedHomeBuilders, function(builder, callback) {
-            // console.log(builder);
-            if (builder.email == req.body.email) {
-              builder._id = newUser._id;
-            }
-            callback();
-          }, function(err) {
-            if (err) {
-              console.log(err);
-            }
-            else {
-              pj.save(function(err, savedProject) {
-              if (err) { return errorsHelper.validationErrors(res, err)}
-              return res.json(savedProject);
-            });
-            }
-          });
-        });
-      }
     });
   }));
 };
@@ -78,10 +68,10 @@ exports.show = function (req, res, next) {
   var userId = req.params.id;
 
   User.findById(userId, function (err, user) {
-    if (err){
+    if (err) {
       return next(err);
     }
-    if (!user){
+    if (!user) {
       return res.send(401);
     }
     res.json(user.profile);
@@ -94,7 +84,7 @@ exports.show = function (req, res, next) {
  */
 exports.destroy = function (req, res) {
   User.findByIdAndRemove(req.params.id, function (err, user) {
-    if (err){
+    if (err) {
       return res.send(500, err);
     }
     return res.send(204);
@@ -113,7 +103,7 @@ exports.changePassword = function (req, res, next) {
     if (user.authenticate(oldPass)) {
       user.password = newPass;
       user.save(function (err) {
-        if (err){
+        if (err) {
           return validationError(res, err);
         }
         res.send(200);
@@ -132,10 +122,10 @@ exports.me = function (req, res, next) {
   User.findOne({
     _id: userId
   }, '-salt -hashedPassword', function (err, user) { // don't ever give out the password or salt
-    if (err){
+    if (err) {
       return next(err);
     }
-    if (!user){
+    if (!user) {
       return res.json(401);
     }
     res.json(user);
