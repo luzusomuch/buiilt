@@ -1,7 +1,7 @@
 angular.module('buiiltApp').config(function($stateProvider) {
   $stateProvider
   .state('home', {
-    url: '/home',
+    url: '/',
     templateUrl: '/app/modules/home/home.html',
     controller: 'HomeCtrl'
   });

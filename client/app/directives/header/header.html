@@ -1,7 +1,7 @@
 <header>
   <nav>
     <div class="nav-wrapper container">
-      <a href="#" class="brand-logo">buiilt</a>
+      <a ui-sref="dashboard" class="brand-logo">buiilt</a>
       
       <ul id="nav-mobile" class="right hide-on-med-and-down">
         <li ng-if="!user._id"><a ui-sref="signin">Login</a></li>
@@ -21,10 +21,9 @@
   </nav>
   <div class="z-depth-1" style="background-color: white;" ng-if="tabs">
     <div class="col s12 container">
-      <ul class="tabs" style="width: 100%;">
-        <li class="tab col s1" ng-repeat="tab in tabs">
-          <a ui-sref="{{tab}}" ui-sref-active="active">{{tab}}</a></li>
-        <div class="indicator"></div>
+      <ul class="tabs" tabs>
+        <li class="tab col" ng-repeat="tab in tabs">
+          <a ui-sref="{{tab.sref}}" ui-sref-active="active">{{tab.label}}</a></li>
       </ul>
     </div>
   </div>

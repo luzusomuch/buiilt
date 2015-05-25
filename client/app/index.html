@@ -9,10 +9,10 @@
     <link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.min.css" />
     <link rel="stylesheet" href="/bower_components/angular-notify/angular-notify.css" />
     <link rel="stylesheet" href="/bower_components/angular-loading-bar/build/loading-bar.css" />
-    <link rel="stylesheet" href="/bower_components/angular-material/angular-material.css" />
     <link rel="stylesheet" href="/dist/app.full.css" data-concat="false" />
     <link rel="stylesheet" href="/bower_components/lumx/dist/lumx.css">
     <link rel="stylesheet" href="/bower_components/mdi/css/materialdesignicons.css">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/0.0.1/prism.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/css/materialize.min.css">
     <link rel="stylesheet" href="/media/css/main.css">
     <link rel="stylesheet" href="/media/css/normalize.css">
@@ -21,7 +21,9 @@
   </head>
   <body>
     <!-- JS from Bower Components -->
-    <script src="/bower_components/jquery/jquery.js"></script>
+    <script src="/bower_components/jquery/dist/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/0.0.1/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/js/materialize.js"></script>
     <script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
     <script src="/bower_components/lodash/dist/lodash.js"></script>
     <script src="/bower_components/moment/min/moment.min.js"></script>
@@ -38,7 +40,6 @@
     <script src="/bower_components/angular-notify/angular-notify.js"></script>
     <script src="/bower_components/angular-loading-bar/build/loading-bar.js"></script>
     <script src="/bower_components/angular-aria/angular-aria.js"></script>
-    <script src="/bower_components/angular-material/angular-material.js"></script>
     <script src="/bower_components/velocity/velocity.js"></script>
     <script src="/bower_components/moment/min/moment-with-langs.js"></script>
     <script src="/bower_components/lumx/dist/lumx.js"></script>
@@ -49,6 +50,7 @@
     <!-- Main App JS -->
     <script src="/app/app.js"></script>
 
+    <script src="/app/components/angular-materialize/src/angular-materialize.js"></script>
     <script src="/app/components/filters.js"></script>
     <script src="/app/directives/footer/footer-directive.js"></script>
     <script src="/app/directives/header/header-directive.js"></script>
@@ -63,8 +65,6 @@
     
     <script src="/app/modules/dashboard/main.js"></script>
     <script src="/app/modules/dashboard/dashboard-controller.js"></script>
-    <script src="/app/modules/builder/main.js"></script>
-    <script src="/app/modules/builder/builder-controller.js"></script>
     <script src="/app/modules/contractors/main.js"></script>
     <script src="/app/modules/contractors/contractors-controller.js"></script>
     <script src="/app/modules/materials/main.js"></script>

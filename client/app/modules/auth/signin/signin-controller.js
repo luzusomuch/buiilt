@@ -1,22 +1,18 @@
-angular.module('buiiltApp').controller('SigninCtrl', function($scope, $state, authService) {
+angular.module('buiiltApp')
+  .controller('SigninCtrl', function ($scope, authService, $window) {
 
   $scope.errors = {};
 
-  $scope.signin = function(){
-    authService.login($scope.user).then(function(data){
+  $scope.signin = function () {
+    authService.login($scope.user).then(function () {
       //show alert
-      $scope.success = true;
-      $state.go('home');
-    }, function(res){
-        $scope.errors = res.data;
+      $window.location.href = '/dashboard';
+    }, function (res) {
+      $scope.errors = res.data;
     });
   };
 
-  $scope.closeAlert = function(key) {
+  $scope.closeAlert = function (key) {
     delete $scope.errors[key];
-  };
-
-  $scope.closeSuccess = function(){
-    $scope.success = false;
   };
 });

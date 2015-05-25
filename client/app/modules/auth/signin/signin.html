@@ -1,39 +1,29 @@
-<md-content>
-    <div layout="row" class="main-content container" style="margin-top:50px;">
-        <div flex="30"></div>
-        <div class="col-md-12">
-            
-            <div class="widget-container widget_login styled boxed" flex="40">
-                <div ss-login-form></div>
-                <alert type="success" close="closeSuccess()" ng-show="success">Thank you for your login.</alert>
-                <alert ng-repeat="(key, msg) in errors" type="danger" close="closeAlert(key)">{{msg}}</alert>
-                <md-content layout-padding>
-                    <md-whiteframe class="md-whiteframe-z1" layout layout-align="center center">
-                        <form method="post" ng-submit="signin()" flex="100" style="padding:10px;">
-                            <h3>Login</h3>
-                            <div layout layout-sm="column">
-                                <md-input-container flex>
-                                  <label>Email</label>
-                                  <input ng-model="user.email" required>
-                                </md-input-container>
-                            </div>
-                            <div layout layout-sm="column">
-                                <md-input-container flex>
-                                  <label>Password</label>
-                                  <input ng-model="user.password" required type="password">
-                                </md-input-container>
-                            </div>
-                        
-                            <div layout layout-sm="column">
-                                <md-button class="md-raised md-primary">Login</md-button>
-                            </div>
-                        </form>
-                    </md-whiteframe>
-                </md-content>
+<div layout="row" class="main-content container" style="margin-top:50px;">
+  <div class="col-md-12">
+    <div class="widget-container widget_login styled boxed" flex="40">
+      <alert ng-repeat="(key, msg) in errors" type="danger" close="closeAlert(key)">{{msg}}</alert>
+      <div class="card collection">
+          <form method="post" ng-submit="signin()" flex="100" style="padding:10px;">
+            <h3>Login</h3>
+            <div layout layout-sm="column">
+              <div input-field>
+                <label>Email</label>
+                <input ng-model="user.email" type="text" required>
+              </div>
             </div>
-            
-        </div>
-        <div flex="30"></div>
+            <div layout layout-sm="column">
+              <div input-field>
+                <label>Password</label>
+                <input ng-model="user.password" required type="password">
+              </div>
+            </div>
+
+            <div layout layout-sm="column">
+              <button class="waves-effect waves-light btn">Login</button>
+            </div>
+          </form>
+      </div>
     </div>
 
-</md-content>
+  </div>
+</div>

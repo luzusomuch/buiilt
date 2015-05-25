@@ -1,5 +1,6 @@
-angular.module('buiiltApp').controller('SignoutCtrl', function($scope, $state, authService) {
+angular.module('buiiltApp')
+  .controller('SignoutCtrl', function($scope, $window, authService) {
   authService.logout();
 
-  $state.go('home');
+  $window.location.href = '/';
 });
