@@ -1,0 +1,74 @@
+<div class="col s12 ">  
+   <ul class="collapsible popout s10" data-collapsible="accordion">
+       <li>
+         <div class="collapsible-header">Email</div>
+         <div class="collapsible-body">
+         
+         <form class="col s12">
+             <div class="row center-align">
+                 <div class="input-field col s10 offset-s1">
+                     <input disabled value="myles@buiilt.com" id="email" type="text" class="validate">
+                     <label class="active" for="email">Email Address</label>
+                     <button class="btn waves-effect waves-light" type="submit" name="action">Edit/Save
+                     </button>
+                 </div>
+                 
+             </div>
+         </form>    
+            
+         </div>
+       </li>
+       <li>
+         <div class="collapsible-header">Password</div>
+         <div class="collapsible-body">
+         
+         <form class="col s12">
+             <div class="row center-align">
+                 <div class="input-field col s10 offset-s1">
+                   <input disabled value="password" id="password" type="password" class="validate">
+                   <label class="active" for="password">New Password</label>
+                 </div>
+                 <div class="input-field col s10 offset-s1">
+                   <input disabled value="password" id="repeat_password" type="password" class="validate">
+                   <label class="active" for="repeat_password">Repeat New Password</label>
+                   
+                   <button class="btn waves-effect waves-light" type="submit" name="action">Edit/Save
+                   </button>
+                 </div>
+             </div>
+         </form>
+         
+         </div>
+       </li>
+       <li>
+         <div class="collapsible-header">Contact Details</div>
+         <div class="collapsible-body">
+         
+         <form class="col s12">
+             <div class="row center-align">
+                 <div class="input-field col s10 offset-s1">
+                   <input disabled value="password" id="password" type="password" class="validate">
+                   <label class="active" for="password">Mobile Phone Number</label>
+                   
+                   <button class="btn waves-effect waves-light" type="submit" name="action">Edit/Save
+                   </button>
+                 </div>
+                 
+             </div>
+         </form>
+         
+         </div>
+       </li>
+   </ul>
+</div>
+
+
+<script>
+  
+  $(document).ready(function(){
+    $('.collapsible').collapsible({
+      accordion : false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
+    });
+  });
+        
+</script>

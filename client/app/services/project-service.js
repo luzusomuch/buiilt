@@ -7,6 +7,10 @@ angular.module('buiiltApp')
         create: {
             method: 'POST'
         },
+        index: {
+            method: 'GET',
+            isArray: true
+        },
         update: {
           method: 'PUT'
         }

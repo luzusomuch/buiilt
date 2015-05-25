@@ -2,7 +2,65 @@
     <div flex="15"></div>
     <div flex="70">
         <md-content ui-view class="md-whiteframe-z1">
+            <div class="">
+                <div ng-repeat="project in projects">
+                    <div class="row" style="margin-top: 18px">
+                        <h5 class="col s8">{{project.name}}</h5>
+                        <div class="col s4" style="margin-top:15px">
+                             <a class='dropdown-button btn-flat right' href="#!" data-activates="itemActions">
+                                <i class="mdi-navigation-more-vert"></i>
+                             </a>
+
+                             <!-- Dropdown Structure -->
+                             <ul id='itemActions' class='dropdown-content'>
+                               <li><a>Download All Documents</a></li>
+                             </ul>
+                       </div>
+                    </div>
+                    <div class="row">
+                        <p class="col s12">{{project.description}}</p>
+                    </div>
+                    <div class="row">
+                        <div class="col s4">
+                            <div class="cards">
+                                <div class="card-image">
+                                    <img src="../../../media/img/sample-1.jpg">
+                                </div>
+                                <div class="card-action">
+                                    <p>Document Name <span><em>Revision # of #</em></span></p>
+                                    <a href='#' class="activator">Download Document</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col s4">
+                            <div class="cards">
+                                <div class="card-image">
+                                    <img src="../../../media/img/sample-1.jpg">
+                                </div>
+                                <div class="card-action">
+                                    <p>Document Name <span><em>Revision # of #</em></span></p>
+                                    <a href='#' class="activator">Download Document</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col s4">
+                            <div class="cards">
+                                <div class="card-image">
+                                    <img src="../../../media/img/sample-1.jpg">
+                                </div>
+                                <div class="card-action">
+                                    <p>Document Name <span><em>Revision # of #</em></span></p>
+                                    <a href='#' class="activator">Download Document</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </md-content>    
     </div>
-    </md-content>
+    
     <div flex="15"></div>
 </md-content>

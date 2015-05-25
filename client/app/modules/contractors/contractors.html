@@ -1,52 +1,24 @@
 <md-content>
-    <div layout="row" layout-margin>
-      <div flex="15"></div>
-      <div flex="70"><div class="md-toolbar-tools">
-
-        <span flex></span>
-
-        <div class="fab">
-          <button ui-sref="contractors.form" class="fab__primary btn btn--xl btn--amber btn--fab" lx-tooltip="New Contractor Package..." tooltip-position="bottom" >
-            <i class="mdi mdi-plus"></i>
-            <i class="mdi mdi-plus"></i>
-          </button>
-        </div>
-      </div></div>
-      
-      <div flex="15"></div>
-    </div>	
+    
 
     <div layout="row" style="" layout-margin>
-      <div flex="15"style="text-align: right; padding-right: 60px;">
-        <p style="margin-bottom: 15px; font-size: 12px">In Progress</p>
-        <p style="margin-bottom: 15px; font-size: 12px">In Tender</p>
-        <p style="margin-bottom: 15px; font-size: 12px">Completed</p>
-
-      </div>
-      <div flex="70" style="">
-        <md-content ui-view class="md-whiteframe-z1">
-          <md-list >
-            <md-list-item layout-padding>
-              <h4>Contractor Package One</h4>
-            </md-list-item>
-            <md-divider></md-divider>
-            <md-list-item layout-padding>
-              <h4>Contractor Package Two</h4>
-            </md-list-item>
-            <md-divider></md-divider>
-            <md-list-item layout-padding>
-              <h4>Contractor Package Three</h4>
-            </md-list-item>
-            <md-divider></md-divider>
-            <md-list-item layout-padding>
-              <h4>Contractor Package Four</h4>
-            </md-list-item>
-            <md-divider></md-divider>
-          </md-list>
-        </md-content>
-      </div>
-      
-       <div flex="15"style="text-align: right; padding-right: 60px;">
+      <div class="col s3">
+         <div class="collection">
+                 <a href="#!" class="collection-item">In Progress<span class="new badge">6</span></a>
+                 <a href="#!" class="collection-item">In Tender<span class="new badge">2</span></a>
+             <a href="#!" class="collection-item">Completed</a>
+             </div>
+       </div>
+       
+       <div class="col s9">
+         <ul class="collection z-depth-1">
+           <li class="collection-item">Package Name 1<span class="new badge">1</span></li>
+           <li class="collection-item">Package Name 2<span class="new badge">3</span></li>
+           <li class="collection-item">Package Name 3</li>
+           <li class="collection-item">Package Name 4<span class="new badge">2</span></li>
+           <li class="collection-item">Package Name 5</li>
+         </ul>
+       </div>
       
       </div>
     </div>

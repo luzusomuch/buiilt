@@ -16,6 +16,17 @@
             <li><a href="#!">Create New Project</a></li>
           </ul>
         </li>
+        <li ng-if="user._id">
+          <a href="#!" class="dropdown-button" data-activates="userSettings">
+            <span ng-if="!user.name">{{user.email}}<i class="mdi-navigation-arrow-drop-down right"></i></span>
+            <span ng-if="user.name">{{user.name}}<i class="mdi-navigation-arrow-drop-down right"></i></span>
+          </a>
+          <ul id="userSettings" class="dropdown-content">
+            <li><a href="">Change team</a></li>
+            <li><a href='/user/{{user._id}}'>Edit profile</a></li>
+            <li><a href="">Sign out</a></li>
+          </ul>
+        </li>
       </ul>
     </div>
   </nav>
@@ -29,3 +40,18 @@
     </div>
   </div>
 </header>
+
+<script>
+  // $(document).ready(function(){
+    $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrain_width: false, // Does not change width of dropdown to that of the activator
+        hover: true, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: false // Displays dropdown below the button
+      }
+    );
+  // });
+        
+</script>

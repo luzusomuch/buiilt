@@ -12,8 +12,8 @@
               <h3>Create account</h3>
               <md-content layout-padding>
                 <form method="post" ng-submit="signup()" name="signupForm">
-                  <div layout layout-sm="column">
-                    <md-input-container flex>
+                  <!-- <div layout layout-sm="column"> -->
+                    <!-- <md-input-container flex>
                       <label>First name</label>
                       <input ng-model="user.firstName" required>
                     </md-input-container>
@@ -31,14 +31,14 @@
                       <label>Website</label>
                       <input ng-model="user.website">
                     </md-input-container>
-                  </div>
+                  </div> -->
                   <div layout layout-sm="column">
                     <md-input-container flex>
                       <label>Email</label>
                       <input ng-model="user.email" required>
                     </md-input-container>
                   </div>
-                  <div layout layout-sm="column">
+                  <!-- <div layout layout-sm="column">
                     <md-input-container flex>
                       <md-select placeHolder="Select" ng-model="user.type" required>
                         <md-option value="homeOwner">Home owner</md-option>
@@ -47,18 +47,18 @@
                         <md-option value="supplier">Supplier</md-option>
                       </md-select>
                     </md-input-container>
-                  </div>
+                  </div> -->
                   <div layout layout-sm="column">
                     <md-input-container flex>
                       <label>Password</label>
                       <input ng-model="user.password" required type="password">
                     </md-input-container>
                   </div>
-                  <div layout layout-sm="column">
+                  <!-- <div layout layout-sm="column">
                     <md-checkbox ng-model="user.allowNewsletter" aria-label="">
                       Receive news about new, trending and updated packages including site related news.
                     </md-checkbox>
-                  </div>
+                  </div> -->
                   <div layout layout-sm="column">
                     <md-button class="md-raised md-primary" ng-disabled="signupForm.$invalid">Sign up</md-button>
                   </div>
