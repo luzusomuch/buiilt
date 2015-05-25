@@ -29,3 +29,7 @@ angular.module('buiiltApp').controller('UserCtrl', function($scope, $state, user
     $scope.success = false;
   };
 });
+
+angular.module('buiiltApp').controller('UserFormCtrl', function($scope, $state, userService) {
+
+});

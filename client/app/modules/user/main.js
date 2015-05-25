@@ -6,5 +6,11 @@ angular.module('buiiltApp').config(function($stateProvider) {
     controller: 'UserCtrl',
     authenticate: true,
     adminAccess: true
-  });
+  })
+  .state('user.form', {
+    url: '/:id',
+    templateUrl: '/app/modules/user/edit-user/form.html',
+    controller: 'UserFormCtrl'
+  })
+  ;
 });

@@ -2,10 +2,19 @@
 
 var User = require('./../../models/user.model');
 var Project = require('./../../models/project.model');
+var BuilderPackage = require('./../../models/builderPackage.model');
 var errorsHelper = require('../../components/helpers/errors');
 var ProjectValidator = require('./../../validators/project');
 var _ = require('lodash');
 var async = require('async');
+
+exports.index = function(req, res) {
+  Project.find({'user._id': req.user._id}, function(err, projects) {
+    if (err) 
+      return res.send(500, err);
+    res.json(200, projects);
+  });
+}
 /**
  * create a new project
  * @param {type} req
@@ -13,15 +22,12 @@ var async = require('async');
  * @returns {undefined}
  */
 exports.create = function(req, res){
-  ProjectValidator.validateCreate(req, function(err, data){
-    if(err){ return errorsHelper.validationErrors(res, err, 'Validation'); }
-
-    //create a new project
+  ProjectValidator.validateCreate(req, function(err, data) {
+    if (err) {return errorsHelper.validationErrors(res, err, 'Validation');}
     var project = new Project(data);
     project.user = req.user;
-
+    
     async.each(project.requestedHomeBuilders, function(builder, callback) {
-      // console.log(requestedHomeBuilder);
       User.findOne({'email' : builder.email}, function(err, user) {
         if (user) {
           builder._id=user._id;
@@ -35,12 +41,21 @@ exports.create = function(req, res){
       }
       else {
         project.save(function(err, savedProject) {
-          if (err) { return errorsHelper.validationErrors(res, err)}
-          return res.json(savedProject);
+          if (err) {
+            return errorsHelper.validationErrors(res, err);
+         }
+          var builderPackage = new BuilderPackage();
+          builderPackage.user = project.user._id;
+          builderPackage.description = project.description;
+          builderPackage.project = project._id;
+          builderPackage.save(function (err, savedBuilderPackage) {
+            if (err) { return errorsHelper.validationErrors(res, err);}
+            return res.json(savedBuilderPackage);
+          });
         });
       }
     });
-  });
+  })
 };
 
 /**

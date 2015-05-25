@@ -7,6 +7,7 @@ var jwt = require('jsonwebtoken');
 var expressJwt = require('express-jwt');
 var compose = require('composable-middleware');
 var User = require('../models/user.model');
+var Project = require('../models/project.model');
 var validateJwt = expressJwt({ secret: config.secrets.session });
 
 /**
@@ -31,6 +32,25 @@ function isAuthenticated() {
 
         req.user = user;
         next();
+      });
+    });
+}
+
+function isInProjectInvite(){
+  return compose()
+    .use(isAuthenticated())
+    .use(function(req, res, next) {
+      Project.findById(req.params.id, function (err, project) {
+        if (err) { return res.send(401);}
+        else {
+          console.log(project);
+          if (project.requestedHomeBuilders._id == req.user._id) {
+            next();
+          }
+          else {
+            return res.send('home');
+          }
+        }
       });
     });
 }
@@ -71,6 +91,7 @@ function setTokenCookie(req, res) {
 }
 
 exports.isAuthenticated = isAuthenticated;
+exports.isInProjectInvite = isInProjectInvite;
 exports.hasRole = hasRole;
 exports.signToken = signToken;
 exports.setTokenCookie = setTokenCookie;

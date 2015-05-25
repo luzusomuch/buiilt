@@ -1,57 +1,77 @@
-<div layout="row" layout-padding>
-    <div class="md-toolbar-tools">
-		
-		<span flex></span>
-		
-		<div class="fab">
-	        <button class="fab__primary btn btn--xl btn--amber btn--fab" lx-tooltip="New Material Package..." tooltip-position="bottom" >
-	        	<i class="mdi mdi-plus"></i>
-				<i class="mdi mdi-plus"></i>
-	        </button>
-
-	        <div class="fab__actions fab__actions--left">
-	            <button class="btn btn--l btn--black btn--fab" lx-tooltip="Lorem Ipsum" tooltip-position="bottom">
-					<i class="mdi mdi-delete"></i>
-				</button>
-	            <button class="btn btn--l btn--black btn--fab" lx-tooltip="Lorem Ipsum" tooltip-position="bottom">
-					<i class="mdi mdi-delete"></i>
-				</button>
-	            <button class="btn btn--l btn--black btn--fab" lx-tooltip="Lorem Ipsum" tooltip-position="bottom">
-					<i class="mdi mdi-delete"></i>
-				</button>
-	            <button class="btn btn--l btn--black btn--fab" lx-tooltip="Lorem Ipsum" tooltip-position="bottom">
-					<i class="mdi mdi-delete"></i>
-				</button>
-	        </div>
-	    </div>
-    </div>
+<div class="col s3">
+   <a class="dropdown-button btn-large col s12" href="#!" data-activates="createNew" data-gutter="15" style="margin-top: 8px; margin-bottom: 15px">Create New</a>
+		<ul id="createNew" class="dropdown-content" style="margin-top: 15px">
+		  <li><a class="modal-trigger" href="#newMaterialPackage">Material Package</a></li>
+	  <li><div class="divider"></div></li>
+	  <li><a class="modal-trigger" href="#newContractorPackage">Contractor Package</a></li>
+		  <li><a class="modal-trigger" href="#newWorkPackage">Work Package</a></li>
+		</ul>
+   
+   <div class="collection">
+           <a href="#!" class="collection-item">In Progress<span class="new badge">6</span></a>
+           <a href="#!" class="collection-item">In Tender<span class="new badge">2</span></a>
+		   <a href="#!" class="collection-item">Completed</a>
+   </div>
 </div>
 
-<div layout="row" style="" layout-margin>
-	<div flex="20"style="text-align: right; padding-right: 60px;">
-		<p style="margin-bottom: 15px; font-size: 12px">In Progress</p>
-		<p style="margin-bottom: 15px; font-size: 12px">In Tender</p>
-		<p style="margin-bottom: 15px; font-size: 12px">Completed</p>
-	</div>
-	<div flex="80" style="">
-		<md-content class="md-whiteframe-z1">
-			<md-list >
-				<md-list-item layout-padding>
-					<h4>Material Package One</h4>
-				</md-list-item>
-				<md-divider></md-divider>
-				<md-list-item layout-padding>
-					<h4>Material Package Two</h4>
-				</md-list-item>
-				<md-divider></md-divider>
-				<md-list-item layout-padding>
-					<h4>Material Package Three</h4>
-				</md-list-item>
-				<md-divider></md-divider>
-				<md-list-item layout-padding>
-					<h4>Material Package Four</h4>
-				</md-list-item>
-		    </md-list>
-		</md-content>
-	</div>
+<div class="col s9">
+   <ul class="collection z-depth-1">
+         <li class="collection-item">Package Name 1<span class="new badge">1</span></li>
+		 <li class="collection-item">Package Name 2<span class="new badge">3</span></li>
+		 <li class="collection-item">Package Name 3</li>
+		 <li class="collection-item">Package Name 4<span class="new badge">2</span></li>
+		 <li class="collection-item">Package Name 5</li>
+       </ul>
 </div>
+
+<div id="newContractorPackage" class="modal modal-fixed-footer">
+<div class="modal-content">
+<h4>New Contractor Package</h4>
+<p>A bunch of text</p>
+</div>
+<div class="modal-footer">
+<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Agree</a>
+</div>
+</div>
+
+<div id="newMaterialPackage" class="modal modal-fixed-footer">
+<div class="modal-content">
+<h4>New Material Package</h4>
+<p>A bunch of text</p>
+</div>
+<div class="modal-footer">
+<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Agree</a>
+</div>
+</div>
+
+<div id="newWorkPackage" class="modal modal-fixed-footer">
+<div class="modal-content">
+<h4>New Work Package</h4>
+<p>A bunch of text</p>
+</div>
+<div class="modal-footer">
+<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Agree</a>
+</div>
+</div>
+
+<script>
+	$(document).ready(function(){
+    
+		$('.modal-trigger').leanModal({
+		      dismissible: false, // Modal can be dismissed by clicking outside of the modal
+		      opacity: .7, // Opacity of modal background
+		      in_duration: 300, // Transition in duration
+		      out_duration: 200, // Transition out duration // Callback for Modal open
+		    }
+		  );
+	  });
+</script>
+
+
+<script>
+$(document).ready(function(){
+   $('.collapsible').collapsible({
+     accordion : true
+   });
+ });
+ </script>

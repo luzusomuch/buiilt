@@ -1,5 +1,11 @@
-angular.module('buiiltApp').controller('ProjectCtrl', function($scope, $timeout, $q) {
-  
+angular.module('buiiltApp').controller('ProjectCtrl', function($scope, $timeout, $q, projectService) {
+  $scope.errors = {};
+  $scope.projects = {};
+  projectService.index().$promise.then(function(data) {
+    $scope.projects = data;
+  }, function(res) {
+    $scope.errors = res.data;
+  })
 });
 
 angular.module('buiiltApp').controller('FormProjectCtrl', function($scope, $timeout, $q,$cookieStore,projectService, userService) {
