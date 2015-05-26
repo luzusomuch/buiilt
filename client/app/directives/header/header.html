@@ -22,7 +22,7 @@
             <span ng-if="user.name">{{user.name}}<i class="mdi-navigation-arrow-drop-down right"></i></span>
           </a>
           <ul id="userSettings" class="dropdown-content">
-            <li><a href="">Change team</a></li>
+            <li><a ui-sref="team.manager">Change team</a></li>
             <li><a href='/user/{{user._id}}'>Edit profile</a></li>
             <li><a ui-sref="signout">Sign out</a></li>
           </ul>

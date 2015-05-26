@@ -1,0 +1,38 @@
+<div id="newTeam" class="modal">
+  <form ng-submit="create(form)" name="form">
+    <div class="modal-content">
+      <h5>Create Your New Team:</h5>
+      <div class="row">
+        <div input-field class="col s8 offset-s2">
+          <select material-select ng-model="team.type">
+            <option value="" disabled selected>Type of Team:</option>
+            <option value="homeOwner">Home owner</option>
+            <option value="contractor">Contractor</option>
+            <option value="buider">Buider</option>
+            <option value="supplier">Supplier</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div input-field class="col s8 offset-s2">
+          <input type="text" ng-model="team.name" name="name" class="validate col s11" required>
+          <label>Team name</label>
+          <i class="mdi-action-help small tooltipped col s1" data-position="bottom" data-delay="50" data-tooltip="I am tooltip"></i>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="row">
+        <p class="col s8 offset-s2">Invite others to join your team:</p>
+        <div input-field class="col s8 offset-s2">
+          <input type="text" ng-model="team.emails" name="emails" class="validate col s9">
+          <label>Email Address</label>
+          <a class="btn waves-effect waves-light right" name="action"> <i class="mdi-content-add tiny"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="modal-footer">
+      <button class="modal-action modal-close waves-effect waves-green btn-flat" type="submit">Create Team</button>
+    </div>
+  </form>
+</div>

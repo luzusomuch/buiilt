@@ -18,6 +18,10 @@ var UserSchema = new Schema({
     type: String,
     default: 'user'
   },
+  teams: [{
+      _id: Schema.Types.ObjectId,
+      role: {type:String, default: 'member', enum: ['member', 'admin']}
+    }],
   hashedPassword: String,
   provider: String,
   salt: String,
