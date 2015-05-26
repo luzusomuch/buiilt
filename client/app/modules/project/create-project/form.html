@@ -1,4 +1,4 @@
-<div class="col-md-12">
+<div class="row">
   <div class="widget-container widget_login styled boxed" flex="40">
     <alert type="success" close="closeSuccess()" ng-show="success">Thank you for your submit, you can login now and enjoy yourself.</alert>
     <alert ng-repeat="(key, msg) in errors" type="danger" close="closeAlert(key)">{{msg}}</alert>
@@ -37,23 +37,27 @@
             </div>
         </div>
         <div layout="column">
-          <md-content class="md-padding" layout="column">
+          <div input-field>
+            <label for="">Client email and phone number</label>
+            <input type="text" ng-model="project.requestedHomeBuilders" required>
+          </div>
+          <!-- <md-content class="md-padding" layout="column">
             <p>Client email and phone number </p>
+
             <md-chips ng-model="project.requestedHomeBuilders">
             <md-chip-template>
               <strong>{{$chip}}</strong>
             </md-chip-template>
           </md-chips>
-          </md-content>
+          </md-content> -->
         </div>
         <div layout layout-sm="column">
-            <md-input-contaner flex>
-                <label for="">Project Subscription of $50 per Month </label>
-                <label for="">Credit Card Number (Field to be invalid)  </label>
+            <div input-field>
+                <p>Project Subscription of $50 per Month </p>
+                <p>Credit Card Number (Field to be invalid)  </p>
 
-                <label for="">NOTE: This project is Free as we are currently running in Beta.  </label>
-            </md> 
-            
+                <p>NOTE: This project is Free as we are currently running in Beta.  </p>
+            </div>
         </div>
         <div layout layout-sm="column">
             <button class="waves-effect waves-light btn" ng-disabled="createProjectForm.$invalid">Create project</button>

@@ -17,6 +17,10 @@ angular.module('buiiltApp')
         },
         update: {
           method: 'PUT'
+        },
+        get: {
+          method: 'GET',
+          isArray: true
         }
     }
     // createProject: function(project, callback) {

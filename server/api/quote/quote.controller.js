@@ -30,10 +30,10 @@ exports.create = function(req, res){
 };
 
 exports.index = function(req, res) {
-  Project.find({'user._id': req.user._id}, function(err, projects) {
+  QuoteRequest.find({}, function(err, quoteRequests) {
     if (err) 
       return res.send(500, err);
-    res.json(200, projects);
+    res.json(200, quoteRequests);
   });
 }
 
@@ -53,20 +53,20 @@ exports.show = function(req, res){
 };
 
 exports.update = function(req, res) {
-  var quote = req.body.requestedHomeBuilders.quote;
-  var currentUser = req.user;
-  Project.findById(req.params.id, function(err, project){
-    _.each(project.requestedHomeBuilders, function(requestedHomeBuilder) {
-      if (currentUser.email == requestedHomeBuilder.email) {
-        requestedHomeBuilder.quote = 123;
-        project.save(function (err) {
-          if (err){
-            return errorsHelper.validationErrors(res, err);
-          }
-          res.send(200);
-        });
-      }
-    });
-  });
+  // var quote = req.body.requestedHomeBuilders.quote;
+  // var currentUser = req.user;
+  // Project.findById(req.params.id, function(err, project){
+  //   _.each(project.requestedHomeBuilders, function(requestedHomeBuilder) {
+  //     if (currentUser.email == requestedHomeBuilder.email) {
+  //       requestedHomeBuilder.quote = 123;
+  //       project.save(function (err) {
+  //         if (err){
+  //           return errorsHelper.validationErrors(res, err);
+  //         }
+  //         res.send(200);
+  //       });
+  //     }
+  //   });
+  // });
   
 };

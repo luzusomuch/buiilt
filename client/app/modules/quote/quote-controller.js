@@ -1,11 +1,25 @@
-angular.module('buiiltApp').controller('QuoteCtrl', function($scope, $timeout, $q, quoteService) {
+angular.module('buiiltApp').controller('QuoteCtrl', function($scope, $timeout, $q, userService, quoteService, projectService) {
   $scope.errors = {};
   $scope.projects = {};
-  quoteService.index().$promise.then(function(data) {
+  $scope.quoteRequests = {};
+  $scope.user = {};
+  projectService.index().$promise.then(function(data) {
     $scope.projects = data;
   }, function(res) {
     $scope.errors = res.data;
-  })
+  });
+  quoteService.index().$promise.then(function(data) {
+    $scope.quoteRequests = data;
+    _.each(data, function(quote) {
+      userService.get({'_id': quote.user}, function(user) {
+        if (user) {
+          $scope.user = user;
+        }
+      });
+    });
+  }, function(res) {
+    $scope.errors = res.data;
+  });
 });
 
 angular.module('buiiltApp')
