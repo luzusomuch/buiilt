@@ -24,7 +24,8 @@
     "angular-notify": "~2.5",
     "angular-loading-bar": "~0.7",
     "lumx": "~0.3.31",
-    "materialize":"0.96.1"
+    "materialize":"0.96.1",
+    "angular-input-match": "master"
   },
   "resolutions": {
     "angular": "~1.3"

@@ -30,6 +30,27 @@ angular.module('buiiltApp').controller('UserCtrl', function($scope, $state, user
   };
 });
 
-angular.module('buiiltApp').controller('UserFormCtrl', function($scope, $state, userService) {
+angular.module('buiiltApp').controller('UserFormCtrl', function($scope, $state, authService) {
+  $scope.errors = {};
+  $scope.user = {};
 
+  $scope.changeEmail = function() {
+
+  };
+
+  $scope.changePw = function() {
+    authService.changePassword($scope.user.password, $scope.user.rePassword).then(function(data) {
+      $scope.user = data;
+    }, function(res) {
+      $scope.errors = res.data;
+    });
+  };
+
+  $scope.changePhoneNum = function() {
+    authService.changePhoneNum($scope.user.phoneNumber).then(function(data) {
+      $scope.user = data;
+    }, function(res) {
+      $scope.errors = res.data;
+    });
+  };
 });

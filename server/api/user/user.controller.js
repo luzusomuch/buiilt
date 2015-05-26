@@ -100,17 +100,37 @@ exports.changePassword = function (req, res, next) {
   var newPass = String(req.body.newPassword);
 
   User.findById(userId, function (err, user) {
-    if (user.authenticate(oldPass)) {
-      user.password = newPass;
-      user.save(function (err) {
-        if (err) {
-          return validationError(res, err);
-        }
-        res.send(200);
-      });
-    } else {
-      res.send(403);
-    }
+    user.password = newPass;
+    user.save(function(err) {
+      if (err) {return validationError(res, err);}
+      res.send(200);
+    });
+    // if (user.authenticate(oldPass)) {
+    //   user.password = newPass;
+    //   user.save(function (err) {
+    //     if (err) {
+    //       return validationError(res, err);
+    //     }
+    //     res.send(200);
+    //   });
+    // } else {
+    //   res.send(403);
+    // }
+  });
+};
+
+exports.changePhoneNum = function(req, res, next) {
+  var userId = req.user._id;
+  console.log(userId);
+  console.log(req.body.phoneNumber);
+  var phoneNumber = String(req.body.phoneNumber);
+  console.log(phoneNumber);
+  User.findById(userId, function(err, user) {
+    user.phoneNumber = phoneNumber;
+    user.save(function(err) {
+      if (err) {return validationError(res, err);}
+      res.send(200);
+    });
   });
 };
 

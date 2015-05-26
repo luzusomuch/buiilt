@@ -84,6 +84,18 @@ angular.module('buiiltApp')
         return cb(err);
       }).$promise;
     },
+
+    changePhoneNum: function(phoneNumber, callback) {
+      var cb = callback || angular.noop;
+
+      return userService.changePhoneNum({id: currentUser._id}, {
+        phoneNumber: phoneNumber
+      }, function(user) {
+        return cb(user);
+      }, function(err) {
+        return cb(err);
+      }).$promise;
+    },
     /**
      * Gets all available info on authenticated user
      *
