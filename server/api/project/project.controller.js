@@ -95,6 +95,7 @@ exports.selectWinner = function(req, res) {
     else {
       project.quote = req.body.quote;
       project.homeBuilder = req.body.homeBuilder;
+      project.email = req.body.email;
       project.save();
     }
   });

@@ -10,8 +10,8 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="quoteRequest in quoteRequests">
-                    <td>{{user.email}}</td>
+                <tr ng-repeat="quoteRequest in quoteRequests" ng-if="!project.homeBuilder">
+                    <td>{{quoteRequest.email}}</td>
                     <td>{{quoteRequest.description}}</td>
                     <td>{{quoteRequest.price}}</td>
                     <td>
@@ -20,6 +20,12 @@
                             <label for="{{quoteRequest._id}}">Select</label>
                         </p>
                     </td>
+                </tr>
+                <tr ng-if="project.homeBuilder">
+                    <td>{{project.email}}</td>
+                    <td>{{project.description}}</td>
+                    <td>{{project.quote}}</td>
+                    <td></td>
                 </tr>
             </tbody>
         </table>

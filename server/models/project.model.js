@@ -42,6 +42,8 @@ var ProjectSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'User'
   },
+  //winner email
+  email : {type: String},
   requestedHomeBuilders: [RequestedHomeBuilder],
   location: {
     address: {

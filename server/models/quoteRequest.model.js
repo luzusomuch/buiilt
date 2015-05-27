@@ -13,6 +13,9 @@ var QuoteRequestSchema = new Schema({
     ref: 'User',
     required: true
   },
+  email: {
+    type: String
+  },
   description: {
     type: String,
     default: ''

@@ -21,9 +21,10 @@ exports.create = function(req, res){
     quote.user = req.user._id;
     quote.project = req.params.id;
     quote.type = req.user.type;
+    quote.email = req.user.email;
 
     quote.save(function(err, savedQuote) {
-        if (err) { console.log(err);}
+        if (err) { return res.send(500, err);}
         return res.json(savedQuote);
     })
 
@@ -51,7 +52,7 @@ exports.show = function(req, res){
   //   return res.json(project);
   // });
   QuoteRequest.findById(req.params.id, function(err, quote) {
-    if (err) {console.log(err);}
+    if (err) {return res.send(500, err);}
     return res.json(quote);
   });
 };
@@ -77,7 +78,7 @@ exports.update = function(req, res) {
 
 exports.getByProjectId = function(req, res) {
   QuoteRequest.find({'project': req.params.id}, function(err, quoteRequests) {
-    if (err) {console.log(err);}
+    if (err) {return res.send(500, err);}
     else {
       return res.json(quoteRequests);
       // _.each(quoteRequests, function(quoteRequest) {
