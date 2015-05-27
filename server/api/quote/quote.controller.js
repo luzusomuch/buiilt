@@ -3,6 +3,7 @@
 var User = require('./../../models/user.model');
 var Project = require('./../../models/project.model');
 var QuoteRequest = require('./../../models/quoteRequest.model');
+var BuilderPackage = require('./../../models/builderPackage.model');
 var errorsHelper = require('../../components/helpers/errors');
 var ProjectValidator = require('./../../validators/project');
 var _ = require('lodash');
@@ -23,11 +24,16 @@ exports.create = function(req, res){
     quote.type = req.user.type;
     quote.email = req.user.email;
 
-    quote.save(function(err, savedQuote) {
-        if (err) { return res.send(500, err);}
-        return res.json(savedQuote);
-    })
-
+    BuilderPackage.findOne({'project': req.params.id}, function(err, builderPackage) {
+      if (err) {return res.send(500, err);}
+      else {
+        quote.package = builderPackage._id;
+        quote.save(function(err, savedQuote) {
+          if (err) { return res.send(500, err);}
+          return res.json(savedQuote);
+      })
+      }
+    });
 };
 
 exports.index = function(req, res) {
