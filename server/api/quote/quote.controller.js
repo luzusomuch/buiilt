@@ -42,13 +42,17 @@ exports.index = function(req, res) {
  */
 exports.show = function(req, res){
   //TODO - validate rol
-  Project.findById(req.params.id)
-  .populate('user')
-  .populate('homeBuilder')
-  .exec(function(err, project){
-    if(err){ return errorsHelper.validationErrors(res, err); }
+  // Project.findById(req.params.id)
+  // .populate('user')
+  // .populate('homeBuilder')
+  // .exec(function(err, project){
+  //   if(err){ return errorsHelper.validationErrors(res, err); }
 
-    return res.json(project);
+  //   return res.json(project);
+  // });
+  QuoteRequest.findById(req.params.id, function(err, quote) {
+    if (err) {console.log(err);}
+    return res.json(quote);
   });
 };
 
@@ -69,4 +73,16 @@ exports.update = function(req, res) {
   //   });
   // });
   
+};
+
+exports.getByProjectId = function(req, res) {
+  QuoteRequest.find({'project': req.params.id}, function(err, quoteRequests) {
+    if (err) {console.log(err);}
+    else {
+      return res.json(quoteRequests);
+      // _.each(quoteRequests, function(quoteRequest) {
+      //   console.log(quoteRequest);
+      // });
+    }
+  });
 };

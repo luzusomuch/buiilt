@@ -8,18 +8,6 @@ angular.module('buiiltApp').controller('QuoteCtrl', function($scope, $timeout, $
   }, function(res) {
     $scope.errors = res.data;
   });
-  quoteService.index().$promise.then(function(data) {
-    $scope.quoteRequests = data;
-    _.each(data, function(quote) {
-      userService.get({'_id': quote.user}, function(user) {
-        if (user) {
-          $scope.user = user;
-        }
-      });
-    });
-  }, function(res) {
-    $scope.errors = res.data;
-  });
 });
 
 angular.module('buiiltApp')

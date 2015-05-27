@@ -19,7 +19,15 @@ angular.module('buiiltApp')
           method: 'PUT'
         },
         get: {
+          method: 'GET'
+          // isArray: true
+        },
+        getByProjectId: {
           method: 'GET',
+          params: {
+            id: 'id',
+            action: 'project'
+          },
           isArray: true
         }
     }

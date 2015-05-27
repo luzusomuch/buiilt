@@ -74,7 +74,7 @@ exports.show = function (req, res, next) {
     if (!user) {
       return res.send(401);
     }
-    res.json(user.profile);
+    res.json(user);
   });
 };
 

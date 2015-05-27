@@ -11,8 +11,12 @@ angular.module('buiiltApp')
             method: 'GET',
             isArray: true
         },
-        update: {
-          method: 'PUT'
+        selectWinner: {
+          method: 'PUT',
+          params: {
+            id: 'id',
+            action: 'winner'
+          }
         }
     }
     

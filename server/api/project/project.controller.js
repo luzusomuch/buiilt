@@ -74,12 +74,10 @@ exports.show = function(req, res){
 };
 
 exports.update = function(req, res) {
-  var quote = req.body.requestedHomeBuilders.quote;
   var currentUser = req.user;
   Project.findById(req.params.id, function(err, project){
     _.each(project.requestedHomeBuilders, function(requestedHomeBuilder) {
       if (currentUser.email == requestedHomeBuilder.email) {
-        requestedHomeBuilder.quote = 123;
         project.save(function (err) {
           if (err){
             return errorsHelper.validationErrors(res, err);
@@ -89,5 +87,15 @@ exports.update = function(req, res) {
       }
     });
   });
-  
+};
+
+exports.selectWinner = function(req, res) {
+  Project.findById(req.params.id, function(err, project) {
+    if (err) {console.log(err);}
+    else {
+      project.quote = req.body.quote;
+      project.homeBuilder = req.body.homeBuilder;
+      project.save();
+    }
+  });
 };

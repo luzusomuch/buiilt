@@ -11,6 +11,7 @@ var router = express.Router();
 router.get('/', auth.isAuthenticated(), controller.index);
 router.get('/:id', auth.isAuthenticated(), controller.show);
 router.post('/:id', auth.isAuthenticated(), controller.create);
+router.get('/:id/project', auth.isAuthenticated(), controller.getByProjectId)
 // router.post('/', controller.create);
 
 module.exports = router;
