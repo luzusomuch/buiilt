@@ -17,6 +17,9 @@ var DocumentSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Project'
   },
+  package: {
+    type: Schema.Types.ObjectId
+  },
   name: String,
   description: String,
   version: String,

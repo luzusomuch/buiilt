@@ -11,13 +11,16 @@
 
                          <!-- Dropdown Structure -->
                          <ul id='itemActions' class='dropdown-content'>
-                            <li><a href="">Upload document</a></li>
+                            <li><a class="modal-trigger" data-target="upload" href="#upload">Upload document</a></li>
                             <li><a>Download All Documents</a></li>
                          </ul>
                    </div>
                 </div>
                 <div class="row">
                     <p class="col s12">{{project.description}}</p>
+                </div>
+                <div class="row">
+                    <upload project="project._id"></upload>
                 </div>
                 <div class="row">
                     <div class="col s4">
