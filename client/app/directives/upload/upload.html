@@ -1,0 +1,87 @@
+<div>
+  <div class="modal-header">
+    <button type="button" class="close pull-right" ng-click="$dismiss()" aria-hidden="true">&times;</button>
+    <h4 class="modal-title">Upload photo gallery</h4>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <div select-album profile="profile" ng-model="formData.album"></div>
+    </div>
+    <div class="form-group clearfix">
+      <label>Image date</label>
+      <div class="row">
+        <input date-dropdown ng-model="formData.date" />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="upload-drop-zone">
+        <label>Select images to upload or drag/drop here</label>
+        <input type="file" nv-file-select="" uploader="uploader" multiple />
+      </div>
+    </div>
+    <div ng-show="uploader.queue.length" class="form-group">
+      <table class="table">
+        <thead>
+          <tr>
+            <th width="150px">Thumb</th>
+            <th width="170px">Description</th>
+            <th>Tags</th>
+            <th ng-show="uploader.isHTML5">Size</th>
+            <th ng-show="uploader.isHTML5">Progress</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="item in uploader.queue">
+            <td>
+              <span contenteditable="true" ng-model="item.title" placeholder="Image name"></span>
+              <!--auto width-->
+              <div ng-show="uploader.isHTML5" ng-thumb="{ file: item._file, width: 100 }"></div>
+              <div ng-thumb="{ file: item.file, width: 100, height: 100 }"></div>
+              <div><img ng-src="{{item.src}}" width="100" /></div>
+            </td>
+            <td>
+              <span contenteditable="true" ng-model="item.file.desc" placeholder="Image description"></span>
+            </td>
+            <td>
+              <tags-input ng-model="item.file.tags" replace-spaces-with-dashes="false" ng-change="change()">
+                <auto-complete load-on-empty="true" load-on-focus="true" source="searchProfile($query, 'Organization')"></auto-complete>
+              </tags-input>
+            </td>
+        <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size / 1024 / 1024|number:2 }} MB</td>
+        <td ng-show="uploader.isHTML5">
+          <div class="progress" style="margin-bottom: 0;">
+            <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+          </div>
+        </td>
+        <td class="text-center">
+          <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+          <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+          <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+        </td>
+        <td nowrap>
+          <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+            <span class="glyphicon glyphicon-upload"></span>
+          </button>
+          <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
+            <span class="glyphicon glyphicon-ban-circle"></span>
+          </button>
+          <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+            <span class="glyphicon glyphicon-trash"></span>
+          </button>
+        </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="form-group">
+      <button type="button" class="btn btn-success" ng-click="uploadAll()" ng-disabled="uploader.isReady || uploader.isUploading || uploader.isSuccess">
+        <span class="glyphicon glyphicon-upload"></span> Upload all
+      </button>
+    </div>
+  </div>
+</div>

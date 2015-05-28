@@ -57,7 +57,13 @@ var all = {
     clientID:     process.env.GOOGLE_ID || 'id',
     clientSecret: process.env.GOOGLE_SECRET || 'secret',
     callbackURL:  (process.env.DOMAIN || '') + '/auth/google/callback'
-  }
+  },
+
+  s3Options: {
+            accessKeyId: 'AKIAI7KKFT6PBJRLBZKQ',
+            secretAccessKey: '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',
+          },
+  Bucket: 'hvs3',
 };
 
 // Export the config object based on the NODE_ENV

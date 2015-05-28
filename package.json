@@ -44,7 +44,8 @@
     "winston-logentries": "~1.0.1",
     "xml": "^1.0.0",
     "formidable": "~v1.0.17",
-    "mkdirp": "~0.5.1"
+    "mkdirp": "~0.5.1",
+    "s3": "~4.4.0"
   },
   "devDependencies": {
     "connect-livereload": "~0.4.0",

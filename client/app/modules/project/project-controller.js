@@ -20,6 +20,7 @@ angular.module('buiiltApp').controller('FormProjectCtrl', function($scope, $time
         requestedHomeBuilders: []
     };
     $scope.create = function(){
+      console.log($scope.project.requestedHomeBuilders.email);
         projectService.create($scope.project).$promise.then(function(data){
           //show alert
           $scope.success = true;
