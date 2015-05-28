@@ -34,7 +34,6 @@ exports.upload = function(req, res){
     form.keepExtensions = true;
     form.parse(req, function(err, fields, files) {
         if (err) {console.log(err);}
-        console.log('asdsad');
     });
     
     form.on('file', function (field, file) {
@@ -59,7 +58,11 @@ exports.upload = function(req, res){
                     document.save(function(err, documentSaved) {
                         if (err) {console.log(err);}
                         else {
-                            return res.json(documentSaved);
+                            // return res.json(documentSaved);
+                            s3.uploadFile(file, function(err, data) {
+                                if (err) {return validationError(res, err); };
+                                return res.json(data);
+                            });
                         }
                     });
                 });

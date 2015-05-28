@@ -9,3 +9,4 @@ dist
 server/config/local.env.js
 nbproject
 docker.log
+/client/media/file
