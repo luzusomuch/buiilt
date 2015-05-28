@@ -6,6 +6,7 @@ angular.module('buiiltApp')
       restrict: 'E',
       templateUrl: 'app/directives/header/header.html',
       controller: function ($scope, authService, $rootScope) {
+        $scope.isLoggedIn=authService.isLoggedIn;
         $scope.user = authService.getCurrentUser();
         $scope.menuTypes = {
           homeOwner: [{sref:'dashboard',label:'dashboard'},
