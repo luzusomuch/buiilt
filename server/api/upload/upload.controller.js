@@ -26,7 +26,11 @@ var validationError = function (res, err) {
 exports.upload = function(req, res){
     var root = path.normalize(__dirname + '/../../..');
     var form = new formidable.IncomingForm();
+    var files = [];
+    var uploadedFile = null;
     var uploadDir = root + "/client/media/file";
+    var usersRelatedTo;
+    var uploadedField = null;
     mkdirp(uploadDir, function(err) {
         if (err) {console.log(err);}
     });
@@ -34,41 +38,79 @@ exports.upload = function(req, res){
     form.keepExtensions = true;
     form.parse(req, function(err, fields, files) {
         if (err) {console.log(err);}
+        uploadedField = fields;
     });
     
     form.on('file', function (field, file) {
-        var file = new File({
-            title: file.name,
-            path: file.path,
-            server: 's3',
-            mimeType: file.type,
-            size: file.size,
-            user: req.user._id
-        });
-        file.save(function(err, fileSaved) {
-            if (err) {console.log(err);}
-            else {
-                BuilderPackage.findOne({'project':req.params.id}, function(err, builderPackage) {
-                    var document = new Document({
-                        user: req.user._id,
-                        project: req.params.id,
-                        package: builderPackage._id,
-                        file: fileSaved._id
-                    });
-                    document.save(function(err, documentSaved) {
+        if (field === 'file') {
+            uploadedFile = file;
+            files.push([field, file]);
+        }
+    })
+    // .on('field', function (field, value) {
+    //     console.log(field, value);
+    //     console.log('field');
+    //     if (field === 'usersRelatedTo') {
+    //         usersRelatedTo = value;
+    //     }
+    //     console.log(usersRelatedTo);
+    // })
+    .on('end', function() {
+        if (uploadedFile && uploadedField) {
+            var file = new File({
+                title: uploadedFile.name,
+                path: uploadedFile.path,
+                server: 's3',
+                mimeType: uploadedFile.type,
+                size: uploadedFile.size,
+                user: req.user._id
+            });
+
+            uploadedField.usersRelatedTo = uploadedField.usersRelatedTo.split(',');
+            async.each(uploadedField.usersRelatedTo, function(userRelated, callback) {
+                User.findOne({'email': userRelated}, function(err, user) {
+                    if (user) {
+                        file.usersRelatedTo.push({
+                            _id: user._id,
+                            email: user.email
+                        });
+                        //calbacl
+                        callback();
+                    }
+                });
+                
+            }, function(err) {
+                if (err) {console.log(err);}
+                else {
+                    file.save(function(err, fileSaved) {
                         if (err) {console.log(err);}
                         else {
-                            // return res.json(documentSaved);
-                            s3.uploadFile(file, function(err, data) {
-                                if (err) {return validationError(res, err); };
-                                return res.json(data);
+                            BuilderPackage.findOne({'project':req.params.id}, function(err, builderPackage) {
+                                var document = new Document({
+                                    user: req.user._id,
+                                    project: req.params.id,
+                                    package: builderPackage._id,
+                                    description: uploadedField.desc,
+                                    file: fileSaved._id
+                                });
+                                document.save(function(err, documentSaved) {
+                                    if (err) {console.log(err);}
+                                    else {
+                                        // return res.json(documentSaved);
+                                        s3.uploadFile(file, function(err, data) {
+                                            if (err) {return validationError(res, err); };
+                                            return res.json(data);
+                                        });
+                                    }
+                                });
                             });
                         }
                     });
-                });
-            }
-        });
+                }
+            }); 
+        }
     });
+        
     // .on('field', function (field, value) {
     //   console.log(field, value);
     // })

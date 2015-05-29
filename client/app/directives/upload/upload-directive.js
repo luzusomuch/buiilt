@@ -13,7 +13,8 @@ angular.module('buiiltApp').directive('upload', function(){
                 date: new Date(),
                 album: {},
                 title: '',
-                desc: ''
+                desc: '',
+                usersRelatedTo: []
             };
 
             $scope.safeApply = function (fn) {
@@ -64,9 +65,9 @@ angular.module('buiiltApp').directive('upload', function(){
             };
 
             uploader.onBeforeUploadItem = function (item) {
-                $scope.formData.title = item.title || "(profile.name + ' ' + profile.surname)";
+                $scope.formData.title = item.title;
                 $scope.formData.desc = item.file.desc || "";
-                $scope.formData.tags = angular.toJson(item.file.tags);
+                $scope.formData.usersRelatedTo = item.file.usersRelatedTo || "";
                 //angular.forEach(item.file.tags, function (tag) {
                 //  $scope.formData.tags.push(tag.text);
                 //});

@@ -26,7 +26,7 @@
           <tr>
             <th width="150px">Thumb</th>
             <th width="170px">Description</th>
-            <th>Tags</th>
+            <th>Related to</th>
             <th ng-show="uploader.isHTML5">Size</th>
             <th ng-show="uploader.isHTML5">Progress</th>
             <th>Status</th>
@@ -43,12 +43,15 @@
               <div><img ng-src="{{item.src}}" width="100" /></div>
             </td>
             <td>
-              <span contenteditable="true" ng-model="item.file.desc" placeholder="Image description"></span>
+              <input type="text" ng-model="item.file.desc">
+              <!-- <span contenteditable="true" ng-model="item.file.desc" placeholder="Image description"></span> -->
             </td>
             <td>
-              <tags-input ng-model="item.file.tags" replace-spaces-with-dashes="false" ng-change="change()">
+              <!-- <tags-input ng-model="item.file.tags" replace-spaces-with-dashes="false" ng-change="change()">
                 <auto-complete load-on-empty="true" load-on-focus="true" source="searchProfile($query, 'Organization')"></auto-complete>
-              </tags-input>
+              </tags-input> -->
+              <!-- <span contenteditable="true" data-ng-model="item.file.usersRelatedTo" placeholder="User related" style="cursor: pointer;"></span> -->
+              <input type="text" ng-model="item.file.usersRelatedTo">
             </td>
         <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size / 1024 / 1024|number:2 }} MB</td>
         <td ng-show="uploader.isHTML5">

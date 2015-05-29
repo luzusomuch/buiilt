@@ -16,6 +16,15 @@ var FileSchema = new Schema({
     comment: String,
     createAt: { type: Date, default: Date.now }
   }],
+  usersRelatedTo: [{
+    _id: {
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    email: {
+      type: String
+    }
+  }],
   path: {
     type: String,
     required: true // path to server

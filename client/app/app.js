@@ -10,7 +10,8 @@ angular.module('buiiltApp', [
   'cgNotify',
   'restangular',
   'lumx',
-  'ui.materialize'
+  'ui.materialize',
+  'contenteditable'
 ]);
 
 angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider, $locationProvider, $urlRouterProvider, $httpProvider, $sceDelegateProvider, cfpLoadingBarProvider) {
