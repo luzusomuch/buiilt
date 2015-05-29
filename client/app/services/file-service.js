@@ -14,6 +14,13 @@ angular.module('buiiltApp').factory('fileService', function($rootScope, $q, $res
                 params: {
                     id: 'id'
                 }
+            },
+            interested: {
+              method: 'PUT',
+              params: {
+                id: 'id',
+                action: 'interested'
+              }
             }
     });
 });

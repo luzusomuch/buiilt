@@ -6,7 +6,7 @@ angular.module('buiiltApp').directive('upload', function(){
         scope:{
             project:'='
         },
-        controller: function($scope, $cookieStore, $rootScope, $location , quoteService, userService, projectService, FileUploader) {
+        controller: function($scope, $state, $cookieStore, $rootScope, $location , quoteService, userService, projectService, FileUploader) {
             $scope.errors = {};
             $scope.success = {};
             $scope.formData = {
@@ -62,6 +62,7 @@ angular.module('buiiltApp').directive('upload', function(){
             var newPhoto = null;
             uploader.onCompleteItem = function (fileItem, response, status, headers) {
                 newPhoto = response;
+                $state.reload();
             };
 
             uploader.onBeforeUploadItem = function (item) {
@@ -84,6 +85,7 @@ angular.module('buiiltApp').directive('upload', function(){
                 if(hideModalAfterUploading){
                     // $modalInstance.close(newPhoto);
                 }
+                $state.reload();
             };
         },
     }

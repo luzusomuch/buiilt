@@ -49,13 +49,12 @@ exports.upload = function(req, res){
     })
     .on('end', function() {
         if (uploadedFile && uploadedField) {
-            console.log(uploadedFile);
-            console.log(uploadedField);
             var file = new File({
                 title: uploadedFile.name,
                 path: uploadedFile.path,
                 server: 's3',
                 mimeType: uploadedFile.type,
+                description: uploadedField.desc,
                 size: uploadedFile.size,
                 user: req.user._id
             });

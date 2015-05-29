@@ -11,7 +11,7 @@ var router = express.Router();
 router.get('/:id/document', auth.isAuthenticated(), controller.getByDocument);
 router.get('/:id', auth.isAuthenticated(), controller.show);
 // router.put('/:id', auth.isAuthenticated(), controller.update);
-// router.put('/:id/winner', auth.isAuthenticated(), controller.selectWinner);
+router.put('/:id/interested', auth.isAuthenticated(), controller.interested);
 // router.post('/', controller.create);
 
 module.exports = router;

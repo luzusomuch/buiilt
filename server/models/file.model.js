@@ -25,6 +25,15 @@ var FileSchema = new Schema({
       type: String
     }
   }],
+  usersInterestedIn: [{
+    _id: {
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    email: {
+      type: String
+    }
+  }],
   path: {
     type: String,
     required: true // path to server
@@ -40,6 +49,7 @@ var FileSchema = new Schema({
   size: {
     type: Number
   },
+  description: String,
   previewData: {//preview meta data which is generated from image, pdf, psd, videos
     type: Schema.Types.Mixed
   },
