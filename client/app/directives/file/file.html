@@ -1,10 +1,12 @@
-<div class="col s4">
+<h5>{{packageItem.type}}</h5>
+<div class="col s4" ng-if="files" ng-repeat="file in files">
     <div class="cards">
+        <h6>#{{$index + 1}} {{file.title}}</h6>
         <div class="card-image">
-            <img src="../../../media/img/sample-1.jpg">
+            <img src="{{file.fileUrl}}">
         </div>
         <div class="card-action">
-            <p>Document Name <span><em>Revision # of #</em></span></p>
+            <p>Document description <span><em>Revision # of #</em></span></p>
             <a href='#' class="activator">Download Document</a>
         </div>
     </div>

@@ -18,17 +18,17 @@ var validationError = function (res, err) {
 };
 
 /**
- * create a new project
+ * upload
  * @param {type} req
  * @param {type} res
  * @returns {undefined}
  */
 exports.upload = function(req, res){
-    var root = path.normalize(__dirname + '/../../..');
+    // var root = path.normalize(__dirname + '/../../..');
     var form = new formidable.IncomingForm();
     var files = [];
     var uploadedFile = null;
-    var uploadDir = root + "/client/media/file";
+    var uploadDir = "./client/media/files";
     var usersRelatedTo;
     var uploadedField = null;
     mkdirp(uploadDir, function(err) {
@@ -47,16 +47,10 @@ exports.upload = function(req, res){
             files.push([field, file]);
         }
     })
-    // .on('field', function (field, value) {
-    //     console.log(field, value);
-    //     console.log('field');
-    //     if (field === 'usersRelatedTo') {
-    //         usersRelatedTo = value;
-    //     }
-    //     console.log(usersRelatedTo);
-    // })
     .on('end', function() {
         if (uploadedFile && uploadedField) {
+            console.log(uploadedFile);
+            console.log(uploadedField);
             var file = new File({
                 title: uploadedFile.name,
                 path: uploadedFile.path,
@@ -111,41 +105,6 @@ exports.upload = function(req, res){
         }
     });
         
-    // .on('field', function (field, value) {
-    //   console.log(field, value);
-    // })
-    // .on('error', function(err){
-    //     console.log(err);
-    // });
-//     ImageUpload.upload(req, function(err, data){
-//       if(err){ return res.status(400).json('There are problem in the server, please try again.'); }
-//       console.log('Data');
-//       //console.log(data.fields.tags);
-//       var tags = JSON.parse(data.fields.tags);
-//       console.log(tags);
-//       //store this data to db
-//       var file = new File({
-//         title: data.fields.title,
-//         description: data.fields.desc || '',
-//         tags: tags,
-//         server: 'cloudinary',
-//         path: data.cloudinary.public_id,
-//         _serverData: data.cloudinary,
-//         type: 'image',
-//         profile: profile._id,
-//         date: data.fields.date ? (new Date(data.fields.date)).getTime() : (new Date()).getTime(),
-// //        album: data.fields.album
-//         //user
-//       });
-
-//       media.save(function(err, savedMedia){
-//         return res.json({
-//           status: err ? 'fail' : 'success',
-//           url: err ? null : savedMedia.image,
-//           data: savedMedia
-//         });
-//       });
-//     });
 };
 
 
