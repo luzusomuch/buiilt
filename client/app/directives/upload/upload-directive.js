@@ -6,14 +6,15 @@ angular.module('buiiltApp').directive('upload', function(){
         scope:{
             project:'='
         },
-        controller: function($scope, $cookieStore, $rootScope, $location , quoteService, userService, projectService, FileUploader) {
+        controller: function($scope, $state, $cookieStore, $rootScope, $location , quoteService, userService, projectService, FileUploader) {
             $scope.errors = {};
             $scope.success = {};
             $scope.formData = {
                 date: new Date(),
                 album: {},
                 title: '',
-                desc: ''
+                desc: '',
+                usersRelatedTo: []
             };
 
             $scope.safeApply = function (fn) {
@@ -61,12 +62,13 @@ angular.module('buiiltApp').directive('upload', function(){
             var newPhoto = null;
             uploader.onCompleteItem = function (fileItem, response, status, headers) {
                 newPhoto = response;
+                $state.reload();
             };
 
             uploader.onBeforeUploadItem = function (item) {
-                $scope.formData.title = item.title || "(profile.name + ' ' + profile.surname)";
+                $scope.formData.title = item.title;
                 $scope.formData.desc = item.file.desc || "";
-                $scope.formData.tags = angular.toJson(item.file.tags);
+                $scope.formData.usersRelatedTo = item.file.usersRelatedTo || "";
                 //angular.forEach(item.file.tags, function (tag) {
                 //  $scope.formData.tags.push(tag.text);
                 //});
@@ -83,6 +85,7 @@ angular.module('buiiltApp').directive('upload', function(){
                 if(hideModalAfterUploading){
                     // $modalInstance.close(newPhoto);
                 }
+                $state.reload();
             };
         },
     }

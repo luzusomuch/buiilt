@@ -6,6 +6,8 @@ var crypto = require('crypto');
 var okay = require('okay');
 var EventBus = require('./../components/EventBus');
 
+
+
 var DocumentSchema = new Schema({
   //creator
   user: {
@@ -24,6 +26,7 @@ var DocumentSchema = new Schema({
   description: String,
   version: String,
   //TODO - define package ID and related data
+  
   file: {
     type: Schema.Types.ObjectId,
     ref: 'File'
