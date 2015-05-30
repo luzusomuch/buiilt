@@ -10,6 +10,14 @@ angular.module('buiiltApp')
      */
     create: function(data){
       return $http.post(url, data).then(function(res){ return res.data; });
+    },
+
+    /**
+     * find one quote request
+     * @param {String} id
+     */
+    findOne: function(id){
+      return $http.get(url + id).then(function(res){ return res.data; });
     }
   };
 });

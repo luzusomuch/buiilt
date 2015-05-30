@@ -1,0 +1,15 @@
+<div class="row">
+  <h4>Project detail</h4>
+  <h5>{{quoteRequest.project.name}}</h5>
+
+  <p>{{quoteRequest.project.description}}</p>
+
+  <alert type="success" close="closeSuccess()" ng-show="success">Thank you for your submit, you can login now and enjoy yourself.</alert>
+  <alert ng-repeat="(key, msg) in errors" type="danger" close="closeAlert(key)">{{msg}}</alert>
+
+  <h4>Package detail</h4>
+  <h5>{{quoteRequest.package.name}}</h5>
+
+  <p>{{quoteRequest.package.description}}</p>
+  <p><b>Price </b>{{quoteRequest.package.price}}</p>
+</div>

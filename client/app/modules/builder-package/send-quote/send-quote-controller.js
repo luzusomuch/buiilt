@@ -15,6 +15,11 @@ angular.module('buiiltApp').controller('SendQuoteCtrl', function($scope, builder
   $scope.submit = function(){
     quoteRequetService.create($scope.quote).then(function(quote){
       alert('Send quote successfully.');
+
+      //restart new one
+      $scope.quote = {
+        package: builderPackage._id
+      };
     });
   };
 });

@@ -30,6 +30,9 @@ exports.create = function(req, res){
       request.save(function(err){
         if (err){ return res.send(422, err); }
 
+        builderPackage.isSendQuote = true;
+        builderPackage.save();
+
         //
         return res.json(request);
       });
@@ -43,9 +46,21 @@ exports.create = function(req, res){
 exports.show = function(req, res){
   QuoteRequest.findById(req.params.id)
   .populate('project')
-  .exec(function(err, builderPackage) {
+  .exec(function(err, quoteRequest) {
     if (err){ return res.send(500, err); }
 
-    res.json(builderPackage);
+    //get json data
+    var packageJson = quoteRequest.toJSON();
+
+    //find builder package
+    BuilderPackage.findOne({_id: packageJson.package}, function(err, builderPackage){
+      if(!err){
+        packageJson.package = builderPackage;
+      }else{
+        packageJson.package = {};
+      }
+
+      res.json(packageJson);
+    });
   });
 };
