@@ -7,7 +7,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
   .state('projects.list', {
     url: '/',
     templateUrl: '/app/modules/project/list-projects/list-projects.html',
-    controller: 'ProjectsCtrl'
+    controller: 'ProjectListCtrl'
   })
   .state('projects.create', {
     url: '/create',

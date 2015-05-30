@@ -26,6 +26,7 @@ angular.module('buiiltApp').directive('upload', function(){
                     $scope.success = true;
                 });
             };
+            console.log($scope.builderPackage);
             documentService.getByProjectAndPackage({'id' : $scope.builderPackage}).$promise.then(function(data) {
                 $scope.document = data;
             });
