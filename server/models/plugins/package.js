@@ -5,13 +5,14 @@ var Schema = mongoose.Schema;
 
 var PackageSchema = {
   //owner, it can be home owner, home builder... base on package type
+  //almost it is home builder
   user: {
     type: Schema.Types.ObjectId,
     ref: 'User',
     required: true
   },
   type: {
-    type: String,
+    type: String
     // required: 'Package type is required'
   },
   description: {
@@ -47,7 +48,7 @@ module.exports = exports = function(schema, options){
  schema
  .pre('save', function(next) {
    this.wasNew = this.isNew;
-   
+
    if (!this.isNew){
      this.updatedAt = new Date();
    }

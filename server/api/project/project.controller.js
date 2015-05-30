@@ -10,11 +10,12 @@ var async = require('async');
 
 exports.index = function(req, res) {
   Project.find({'user._id': req.user._id}, function(err, projects) {
-    if (err) 
+    if (err)
       return res.send(500, err);
     res.json(200, projects);
   });
-}
+};
+
 /**
  * create a new project
  * @param {type} req
@@ -24,38 +25,25 @@ exports.index = function(req, res) {
 exports.create = function(req, res){
   ProjectValidator.validateCreate(req, function(err, data) {
     if (err) {return errorsHelper.validationErrors(res, err, 'Validation');}
+
     var project = new Project(data);
-    project.user = req.user;
-    
-    async.each(project.requestedHomeBuilders, function(builder, callback) {
-      User.findOne({'email' : builder.email}, function(err, user) {
-        if (user) {
-          builder._id=user._id;
-          builder.phoneNumber=user.phoneNumber;
-        }
-        callback();
+    project.save(function(err, savedProject) {
+      if (err) { return errorsHelper.validationErrors(res, err); }
+
+      //create new builder package
+      var builderPackage = new BuilderPackage({
+        user: data.user,
+        project: savedProject._id,
+        description: savedProject.description
       });
-    }, function(err) {
-      if (err) {
-        console.log(err);
-      }
-      else {
-        project.save(function(err, savedProject) {
-          if (err) {
-            return errorsHelper.validationErrors(res, err);
-         }
-          var builderPackage = new BuilderPackage();
-          builderPackage.user = project.user._id;
-          builderPackage.description = project.description;
-          builderPackage.project = project._id;
-          builderPackage.save(function (err, savedBuilderPackage) {
-            if (err) { return errorsHelper.validationErrors(res, err);}
-            return res.json(savedBuilderPackage);
-          });
-        });
-      }
+
+      builderPackage.save(function (err, savedBuilderPackage) {
+        if (err) { return errorsHelper.validationErrors(res, err);}
+
+        return res.json(savedBuilderPackage);
+      });
     });
-  })
+  });
 };
 
 /**
@@ -99,4 +87,11 @@ exports.selectWinner = function(req, res) {
       project.save();
     }
   });
+};
+
+/**
+ * get default package of the project (isSendquote = false)
+ */
+exports.getDefaultPackage = function(req, res){
+  
 };

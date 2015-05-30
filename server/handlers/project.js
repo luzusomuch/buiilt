@@ -13,16 +13,5 @@ var BuilderPackage = require('./../models/builderPackage.model');
  */
 EventBus.onSeries('Project.Inserted', function(project, next) {
   //create a bulder package
-  var builderPackage = new BuilderPackage({
-    name: project.name + ' builder package',
-    description: project.description,
-    dateStart: project.dateStart,
-    user: project.user,
-    project: project._id,
-    type: 'BuilderPackage'
-  });
-
-  builderPackage.save(function(err, data){
-    return next();
-  });
+  return next();
 });
