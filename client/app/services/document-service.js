@@ -8,6 +8,12 @@ angular.module('buiiltApp').factory('documentService', function($rootScope, $q, 
                 action: 'package'
               },
               isArray: true
+            },
+            create: {
+              method: 'POST',
+              params: {
+                id: 'id'
+              }
             }
     });
 });

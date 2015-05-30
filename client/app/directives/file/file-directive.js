@@ -10,6 +10,7 @@ angular.module('buiiltApp').directive('file', function(){
             $scope.errors = {};
             $scope.success = {};
             $scope.user = {};
+            $scope.documents = [];
             $scope.files = [];
             $scope.file = {};
             $scope.currentUser = {};
@@ -18,20 +19,18 @@ angular.module('buiiltApp').directive('file', function(){
             }
 
             packageService.getPackageByProject({'id':$scope.project}).$promise.then(function(data) {
-                angular.forEach(data, function(packageItem, key){
-                    $scope.packageItem = packageItem;
-                    documentService.getByProjectAndPackage({'id':$scope.packageItem._id}).$promise.then(function(data) {
-                        $scope.documents = data;
-                        angular.forEach(data, function(documentItem, key) {
-                            fileService.get({'id': documentItem.file}).$promise.then(function(data) {
+                $scope.packageItem = data;
+                documentService.getByProjectAndPackage({'id':$scope.packageItem._id}).$promise.then(function(data) {
+                    $scope.documents.push(data);
+                    angular.forEach(data, function(documentItem) {
+                        angular.forEach(documentItem.file, function(fileId) {
+                            fileService.get({'id': fileId}).$promise.then(function(data) {
                                 $scope.files.push(data);
                             });
                         });
                     });
                 });
-                }, function(res) {
-                    $scope.errors = res.data;
-                });
+            });
             $scope.filterFunction = function(element) {
                 return element.title.match(/^Ma/) ? true : false;
             };

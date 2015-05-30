@@ -20,10 +20,17 @@
                     <p class="col s12">{{project.description}}</p>
                 </div>
                 <div class="row">
-                    <upload project="project._id"></upload>
+                    <h4>{{builderPackage.type}}</h4>
+                    <div ng-if="builderPackage">
+                        <upload project="project._id" builder-package="builderPackage._id"></upload>
+                    </div>
                 </div>
                 <div class="row">
-                    <file project="project._id"></file>
+                    <div class="col-md-12">
+                        <div class="row">
+                            <file project="project._id"></file>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

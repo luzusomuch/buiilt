@@ -24,13 +24,16 @@ var DocumentSchema = new Schema({
   },
   name: String,
   description: String,
-  version: String,
+  version: {
+    type: Number,
+    default: 0
+  },
   //TODO - define package ID and related data
   
-  file: {
+  file: [{
     type: Schema.Types.ObjectId,
     ref: 'File'
-  },
+  }],
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
 },{
