@@ -26,7 +26,8 @@
     "lumx": "~0.3.31",
     "materialize":"0.96.1",
     "angular-input-match": "master",
-    "angular-contenteditable": "~0.3.7"
+    "angular-contenteditable": "~0.3.7",
+    "prism": "git://github.com/PrismJS/prism.git"
   },
   "resolutions": {
     "angular": "~1.3"

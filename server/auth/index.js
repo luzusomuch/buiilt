@@ -31,7 +31,7 @@ router.get('/confirm-email/:token', function(req, res){
       if(err){ return res.sendStatus(500); }
 
       //redirect to success page
-      res.redirect('/login?action=verifyEmailSuccess');
+      res.redirect('/signin?action=verifyEmailSuccess');
     });
   });
 });

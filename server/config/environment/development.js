@@ -5,7 +5,7 @@
 module.exports = {
   //have to have / at the end
   //change to ngrok url to setup voice url, otherwise we have to update in the sub account manually
-  baseUrl: 'https://localhost:9000/',
+  baseUrl: 'http://localhost:9000/',
   app: {
     name: 'buiiltApp'
   },
