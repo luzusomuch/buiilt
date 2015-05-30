@@ -59,6 +59,10 @@ var FileSchema = new Schema({
     ref: 'User',
     required: true
   },
+  archive: {
+    type: Boolean,
+    default: true
+  },
   createdAt: {
     type: Date,
     default: Date.now

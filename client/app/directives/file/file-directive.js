@@ -6,12 +6,17 @@ angular.module('buiiltApp').directive('file', function(){
         scope:{
             project:'='
         },
-        controller: function($scope, $rootScope, $location, documentService, packageService, fileService) {
+        controller: function($scope, $rootScope, $cookieStore, userService, $location, documentService, packageService, fileService) {
             $scope.errors = {};
             $scope.success = {};
             $scope.user = {};
             $scope.files = [];
             $scope.file = {};
+            $scope.currentUser = {};
+            if ($cookieStore.get('token')) {
+                $scope.currentUser = userService.get();
+            }
+
             packageService.getPackageByProject({'id':$scope.project}).$promise.then(function(data) {
                 angular.forEach(data, function(packageItem, key){
                     $scope.packageItem = packageItem;
