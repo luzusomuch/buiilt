@@ -9,8 +9,7 @@ angular.module('buiiltApp')
           params: {
             id: 'id',
             action: 'project'
-          },
-          isArray: true
+          }
         }
     }
 );

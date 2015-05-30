@@ -9,7 +9,7 @@ var _ = require('lodash');
 var async = require('async');
 
 exports.getPackageByProject = function(req, res) {
-  BuilderPackage.find({'project': req.params.id}, function(err, builderPackages) {
+  BuilderPackage.findOne({'project': req.params.id}, function(err, builderPackages) {
     if (err) 
       return res.send(500, err);
     // console.log(builderPackages);

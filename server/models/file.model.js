@@ -59,6 +59,10 @@ var FileSchema = new Schema({
     ref: 'User',
     required: true
   },
+  archive: {
+    type: Boolean,
+    default: true
+  },
   createdAt: {
     type: Date,
     default: Date.now
@@ -98,6 +102,9 @@ FileSchema.methods.toJSON = function() {
     type: this.type,
     fileUrl: this.fileUrl,
     previewData: this.previewData,
+    usersRelatedTo: this.usersRelatedTo,
+    usersInterestedIn: this.usersInterestedIn,
+    archive: this.archive,
     ownerId: this.ownerId,
     groupId: this.groupId,
     updatedAt: this.updatedAt,

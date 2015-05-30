@@ -79,23 +79,49 @@ exports.upload = function(req, res){
                         if (err) {console.log(err);}
                         else {
                             BuilderPackage.findOne({'project':req.params.id}, function(err, builderPackage) {
-                                var document = new Document({
-                                    user: req.user._id,
-                                    project: req.params.id,
-                                    package: builderPackage._id,
-                                    description: uploadedField.desc,
-                                    file: fileSaved._id
-                                });
-                                document.save(function(err, documentSaved) {
-                                    if (err) {console.log(err);}
-                                    else {
-                                        // return res.json(documentSaved);
-                                        s3.uploadFile(file, function(err, data) {
-                                            if (err) {return validationError(res, err); };
-                                            return res.json(data);
-                                        });
-                                    }
-                                });
+                                if (err) {console.log(err);}
+                                else {
+                                    Document.findById(uploadedField.doc, function(err, doc) {
+                                        if (err) {console.log(err);}
+                                        else {
+                                            doc.file.push({
+                                                _id: fileSaved._id
+                                            });
+                                            doc.version = doc.version + 1;
+                                            doc.save(function(err, documentSaved){
+                                                if (err) {console.log(err);}
+                                                else {
+                                                    s3.uploadFile(fileSaved, function(err,data) {
+                                                        if (err) {console.log(err);}
+                                                        else {
+                                                            return res.json(200,data);
+                                                        }
+                                                    })
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                                
+                                // 
+
+                                // var document = new Document({
+                                //     user: req.user._id,
+                                //     project: req.params.id,
+                                //     package: builderPackage._id,
+                                //     description: uploadedField.desc
+                                // });
+                                // document.file = file;
+                                // document.save(function(err, documentSaved) {
+                                //     if (err) {console.log(err);}
+                                //     else {
+                                //         // return res.json(documentSaved);
+                                //         s3.uploadFile(fileSaved, function(err, data) {
+                                //             if (err) {return validationError(res, err); };
+                                //             return res.json(data);
+                                //         });
+                                //     }
+                                // });
                             });
                         }
                     });

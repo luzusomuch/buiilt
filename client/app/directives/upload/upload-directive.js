@@ -4,18 +4,31 @@ angular.module('buiiltApp').directive('upload', function(){
         restrict: 'EA',
         templateUrl: 'app/directives/upload/upload.html',
         scope:{
-            project:'='
+            project:'=',
+            builderPackage: '='
         },
-        controller: function($scope, $state, $cookieStore, $rootScope, $location , quoteService, userService, projectService, FileUploader) {
+        controller: function($scope, $state, $cookieStore, $rootScope, $location , quoteService, userService, projectService, FileUploader, documentService) {
             $scope.errors = {};
             $scope.success = {};
             $scope.formData = {
                 date: new Date(),
                 album: {},
                 title: '',
+                doc: {},
                 desc: '',
                 usersRelatedTo: []
             };
+            $scope.docum = {};
+
+            $scope.createDocument = function() {
+                console.log($scope.docum);
+                documentService.create({'id': $scope.project},$scope.docum).$promise.then(function(data) {
+                    $scope.success = true;
+                });
+            };
+            documentService.getByProjectAndPackage({'id' : $scope.builderPackage}).$promise.then(function(data) {
+                $scope.document = data;
+            });
 
             $scope.safeApply = function (fn) {
                 var phase = this.$root.$$phase;
@@ -62,11 +75,13 @@ angular.module('buiiltApp').directive('upload', function(){
             var newPhoto = null;
             uploader.onCompleteItem = function (fileItem, response, status, headers) {
                 newPhoto = response;
+                // console.log(fileItem);
                 $state.reload();
             };
 
             uploader.onBeforeUploadItem = function (item) {
                 $scope.formData.title = item.title;
+                $scope.formData.doc = item.file.doc;
                 $scope.formData.desc = item.file.desc || "";
                 $scope.formData.usersRelatedTo = item.file.usersRelatedTo || "";
                 //angular.forEach(item.file.tags, function (tag) {
