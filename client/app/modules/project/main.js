@@ -1,24 +1,27 @@
 angular.module('buiiltApp').config(function($stateProvider) {
   $stateProvider
-  .state('project', {
-    url: '/project',
-    templateUrl: '/app/modules/project/project.html',
-    controller: 'ProjectCtrl'
+  .state('projects', {
+    url: '/projects',
+    template: '<ui-view/>'
   })
-  .state('project.form', {
-    url : '/add',
-    templateUrl: '/app/modules/project/create-project/form.html',
-    controller: 'FormProjectCtrl',
+  .state('projects.list', {
+    url: '/',
+    templateUrl: '/app/modules/project/list-projects/list-projects.html',
+    controller: 'ProjectsCtrl'
   })
-  .state('project.view', {
-    url : '/:id',
-    templateUrl: '/app/modules/project/view-project/view.html',
+  .state('projects.create', {
+    url: '/create',
+    templateUrl: '/app/modules/project/create-project/create-project.html',
+    controller: 'CreateProjectCtrl'
+  })
+  .state('projects.view', {
+    url: '/:id',
+    templateUrl: '/app/modules/project/view-project/view-project.html',
     controller: 'ViewProjectCtrl',
     resolve: {
       project: function($stateParams, projectService) {
-        return projectService.get({ id :$stateParams.id});
+        return projectService.get({id: $stateParams.id});
       }
     }
-  })
-  ;
+  });
 });

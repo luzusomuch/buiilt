@@ -1,5 +1,3 @@
-'use strict';
-
 angular.module('buiiltApp')
   .directive('builtHeader', function () {
     return {
@@ -32,7 +30,7 @@ angular.module('buiiltApp')
 //          }
 //        };
 //        $scope.loadMenu();
-        
+
       }
     };
   });
