@@ -13,9 +13,8 @@ var QuoteRequestSchema = new Schema({
     ref: 'User',
     required: true
   },
-  email: {
-    type: String
-  },
+  //home owner email
+  email: { type: String },
   description: {
     type: String,
     default: ''
@@ -29,6 +28,7 @@ var QuoteRequestSchema = new Schema({
   //quote for the package
   type: {type: String, default: ''},
   package: { type: Schema.Types.ObjectId },
+  packageType: {type: String, default: 'builder'},
   price: { type: Number },
   //update status after home owner / home builder... selects the quotes
   status: {
@@ -54,8 +54,8 @@ QuoteRequestSchema
 });
 
 QuoteRequestSchema.post('save', function (doc) {
-  var evtName = this.wasNew ? 'Quote.Inserted' : 'Quote.Updated';
+  var evtName = this.wasNew ? 'QuoteRequest.Inserted' : 'QuoteRequest.Updated';
   EventBus.emit(evtName, doc);
 });
 
-module.exports = mongoose.model('QuoteRequestSchema', QuoteRequestSchema);
+module.exports = mongoose.model('QuoteRequest', QuoteRequestSchema);

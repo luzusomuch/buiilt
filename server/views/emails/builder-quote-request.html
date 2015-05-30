@@ -1,0 +1,32 @@
+{% extends 'layouts/default.html' %}
+
+{% block content %}
+<p>
+  <%= user.name %> has send you a quote for project <%= project.name %>
+</p>
+
+<p>
+  <b><%= project.name %></b>
+  <%= project.description %>
+</p>
+
+<p>
+  <b>Package detail</b>
+  <%= builerPackage.description %>
+</p>
+
+<p>
+  Your can click <a href="<%= quotesLink %>">here</a> to see the request.
+
+  <br/>
+  Feel free to contact us at <a href="mailto:admin@buiilt.com">admin@buiilt.com</a> if you have any questions.
+</p>
+
+<p>
+  Love, <br/>
+  Team buiilt
+  <br/>
+  <a href="http://www.buiilt.com">www.buiilt.com</a>
+</p>
+
+{% endblock %}

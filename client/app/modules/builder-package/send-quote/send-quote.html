@@ -1,0 +1,33 @@
+<div class="row">
+  <form method="post" name="createQuoteForm" ng-submit="submit()" flex="100" style="padding:10px;">
+    <h4>{{builderPackage.project.name}}</h4>
+
+    <p>{{builderPackage.project.description}}</p>
+
+    <alert type="success" close="closeSuccess()" ng-show="success">Thank you for your submit, you can login now and enjoy yourself.</alert>
+    <alert ng-repeat="(key, msg) in errors" type="danger" close="closeAlert(key)">{{msg}}</alert>
+    
+    <div layout layout-sm="column">
+      <md-input-container flex>
+        <label>Description </label>
+        <textarea ng-model="quote.description" type="text" required placeholder="Description to the quote"></textarea>
+      </md-input-container>
+    </div>
+    <div layout layout-sm="column">
+      <md-input-container flex>
+        <label>Quote</label>
+        <input ng-model="quote.price" type="number" required placeholder="Price in USD" />
+      </md-input-container>
+    </div>
+    <div layout layout-sm="column">
+      <md-input-container flex>
+        <label>Enter home owner email</label>
+        <input ng-model="quote.email" type="email" required placeholder="Home owner email who will receive this package" />
+      </md-input-container>
+    </div>
+
+    <div layout layout-sm="column">
+      <button class="waves-effect waves-light btn" ng-disabled="createQuoteForm.$invalid">Send quote</button>
+    </div>
+  </form>
+</div>

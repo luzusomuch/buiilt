@@ -17,7 +17,22 @@ exports.getDefaultPackagePackageByProject = function(req, res) {
   BuilderPackage.findOne({
     project: req.query.project,
     isSendQuote: false
-  }, function(err, builderPackage) {
+  })
+  .populate('project')
+  .exec(function(err, builderPackage) {
+    if (err){ return res.send(500, err); }
+
+    res.json(builderPackage);
+  });
+};
+
+/**
+ * get single package id
+ */
+exports.show = function(req, res){
+  BuilderPackage.findById(req.params.id)
+  .populate('project')
+  .exec(function(err, builderPackage) {
     if (err){ return res.send(500, err); }
 
     res.json(builderPackage);

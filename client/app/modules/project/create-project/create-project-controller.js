@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('CreateProjectCtrl', function($scope, projectService) {
+angular.module('buiiltApp').controller('CreateProjectCtrl', function($scope, $state, projectService) {
   $scope.errors = {};
   $scope.project = {
     location: {}
@@ -8,8 +8,8 @@ angular.module('buiiltApp').controller('CreateProjectCtrl', function($scope, pro
       //show alert
       $scope.success = true;
 
-      console.log(data);
-
+      //go to send quote form
+      $state.go('builderPackages.sendQuote', {id: data._id});
     }, function(res) {
       $scope.errors = res.data;
     });
