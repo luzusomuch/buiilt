@@ -19,8 +19,8 @@ exports.show = function(req, res) {
     File.findById(req.params.id, function(err, file) {
         if (err) 
             return res.send(500, err);
-         //console.log(documents);
-        res.json(200, file);
+        // console.log(file);
+        return res.json(file);
     });
 };
 

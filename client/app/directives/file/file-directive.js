@@ -26,6 +26,9 @@ angular.module('buiiltApp').directive('file', function(){
                         angular.forEach(documentItem.file, function(fileId) {
                             fileService.get({'id': fileId}).$promise.then(function(data) {
                                 $scope.files.push(data);
+                                angular.forEach(data.usersInterestedIn, function(userInterested){
+                                    $scope.userInterested = userInterested;
+                                });
                             });
                         });
                     });
@@ -36,7 +39,6 @@ angular.module('buiiltApp').directive('file', function(){
             };
             $scope.interested = function(value) {
                 fileService.interested({'id': value},{}).$promise.then(function(data) {
-                    console.log(data);
                 });
             };
         }

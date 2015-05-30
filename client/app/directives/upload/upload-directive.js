@@ -18,10 +18,11 @@ angular.module('buiiltApp').directive('upload', function(){
                 desc: '',
                 usersRelatedTo: []
             };
-            $scope.document = {};
+            $scope.docum = {};
 
             $scope.createDocument = function() {
-                documentService.create({'id': $scope.project},$scope.document).$promise.then(function(data) {
+                console.log($scope.docum);
+                documentService.create({'id': $scope.project},$scope.docum).$promise.then(function(data) {
                     $scope.success = true;
                 });
             };

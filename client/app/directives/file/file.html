@@ -19,8 +19,8 @@
             <form method="post" ng-submit="interested(file._id)">
                 <input type="hidden" ng-model="file._id" value="file._id">
                 <button class="waves-effect waves-light btn">
-                    <span ng-if="currentUser._id != file.usersInterestedIn._id">Like</span>
-                    <span ng-if="currentUser._id == file.usersInterestedIn._id">Liked</span>
+                    <span ng-if="currentUser._id != userInterested._id">Like</span>
+                    <span ng-if="currentUser._id == userInterested._id">Liked</span>
                 </button>
             </form>
         </div>
