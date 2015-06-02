@@ -1,24 +1,41 @@
 <!-- <h5>{{packageItem.type}}</h5> -->
 <div ng-if="documents" ng-repeat="document in documents">
-    <h5>{{document.name}}</h5>
-    <form class="form-inline">
-          <input ng-model="query" type="text"
-            placeholder="Filter by" autofocus>
-        </form>
-    <div class="col s6" ng-if="files" ng-repeat="file in files | filter: query">
-        <div class="cards">
-            <h6>#{{$index + 1}} {{file.title}}</h6>
+    <div class="col s4">
+        <div class="card">
             <div class="card-image">
-                <img ng-src="{{file.fileUrl}}">
+                <img src="../../media/img/sample-1.jpg" alt="">
             </div>
             <div class="card-action">
+                <p>{{document.name}} <span><em>Revision {{document.version}} of #</em></span></p>
+                <a href='#' class="activator">Upload Revision</a>
+            </div>
+            <div class="card-reveal">
+                <span class="card-title grey-text text-darken-4">{{document.name}} <i class="mdi-navigation-close right"></i></span>
+                <form action="#">
+                    <upload></upload>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- <form class="form-inline">
+          <input ng-model="query" type="text"
+            placeholder="Filter by" autofocus>
+        </form> -->
+    <!-- <div class="col s4" ng-if="files" ng-repeat="file in files | filter: query">
+        <div class="card">
+            <h6>#{{$index + 1}} {{file.title}}</h6>
+            <div class="card-image">
+                <img ng-src="images/sample-1.jpg">
+            </div>
+            <div class="card-action">
+                <p>{{document.name}} <span><em>Revision # of #</em></span></p>
                 <p>{{file.description}} <span><em>Revision {{document.version}} of #</em></span></p>
                 <a href='#' class="activator">Download Document</a>
             </div>
-            <div>
+            <div> -->
                 <!-- {{currentUser._id}} -->
                 <!-- {{file}} -->
-                <form method="post" ng-submit="interested(file._id)">
+                <!-- <form method="post" ng-submit="interested(file._id)">
                     <input type="hidden" ng-model="file._id" value="file._id">
                     <button class="waves-effect waves-light btn">
                         <span ng-if="currentUser._id != userInterested._id">Like</span>
@@ -27,5 +44,5 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div> -->
 </div>
