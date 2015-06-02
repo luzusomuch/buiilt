@@ -17,6 +17,14 @@ angular.module('buiiltApp')
             id: 'id',
             action: 'winner'
           }
+        },
+        getProjectsByUser: {
+          method: 'GET',
+          params: {
+            id: 'id',
+            action: 'user'
+          },
+          isArray: true
         }
     }
     

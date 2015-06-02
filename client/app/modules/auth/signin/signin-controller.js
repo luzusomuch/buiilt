@@ -7,7 +7,7 @@ angular.module('buiiltApp')
       //show alert
       $window.location.href = '/team/manager';
     }, function (res) {
-      $scope.errors = res.data;
+      $scope.errors = res;
     });
   };
 

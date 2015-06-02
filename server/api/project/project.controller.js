@@ -89,6 +89,16 @@ exports.selectWinner = function(req, res) {
   });
 };
 
+exports.getProjectsByUser = function(req, res) {
+  console.log(req.params.id);
+  Project.find({'user': req.params.id}, function(err, projects) {
+    if (err) {return res.send(500, err);}
+    else {
+      return res.json(projects);
+    }
+  })
+};
+
 /**
  * get default package of the project (isSendquote = false)
  */

@@ -4,7 +4,9 @@
       <!-- sign-up form -->
       <div class="add-comment contact-form boxed">
         <alert type="success" close="closeSuccess()" ng-show="success">Thank you for your submit, you can login now and enjoy yourself.</alert>
-        <alert ng-repeat="(key, msg) in errors" type="danger" close="closeAlert(key)">{{msg}}</alert>
+        <alert ng-repeat="(key, msg) in errors" type="danger" close="closeAlert(key)">
+          {{msg.email.message}}
+        </alert>
         <h3>Create account</h3>
         <form method="post" ng-submit="signup()" name="signupForm">
 <!--          <div class="row">
@@ -30,7 +32,7 @@
           <div class="row">
             <div input-field class="col s12">
               <label>Email</label>
-              <input type="text" ng-model="user.email" required>
+              <input type="email" ng-model="user.email" required>
             </div>
           </div>
 <!--          <div class="row">

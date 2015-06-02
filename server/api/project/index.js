@@ -9,9 +9,10 @@ var router = express.Router();
 
 router.post('/', auth.isAuthenticated(), controller.create);
 router.get('/', auth.isAuthenticated(), controller.index);
-router.get('/:id', auth.isAuthenticated(), controller.show);
+// router.get('/:id', auth.isAuthenticated(), controller.show);
 router.get('/:id', auth.isAuthenticated(), controller.show);
 router.put('/:id/winner', auth.isAuthenticated(), controller.selectWinner);
+router.get('/:id/user', auth.isAuthenticated(), controller.getProjectsByUser);
 // router.post('/', controller.create);
 
 module.exports = router;

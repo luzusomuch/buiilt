@@ -10,12 +10,12 @@
           <a class="dropdown-button" href="#!" data-activates="projectSelect" dropdown data-gutter="-30">
             Project Name<i class="mdi-navigation-arrow-drop-down right"></i></a>
           <ul id="projectSelect" class="dropdown-content" style="margin-top: 15px">
-            <li>
-              <a ui-sref="projects.list">Projects list</a>
+            <li ng-repeat="project in projects">
+              <a ui-sref="projects.list">{{project.name}}</a>
             </li>
             <li class="divider"></li>
             <li>
-              <a ui-sref="projects.create">Create New</a>
+              <a ui-sref="projects.create">Create new project</a>
             </li>
           </ul>
         </li>
@@ -26,7 +26,6 @@
           </a>
           
           <ul id="userSettings" class="dropdown-content">
-            <li><a href="">Change team</a></li>
             <li><a ui-sref="team.manager">Change team</a></li>
             <li><a ui-sref="user.form({id: id})" >Edit profile</a></li>
             <li><a ui-sref="signout">Sign out</a></li>

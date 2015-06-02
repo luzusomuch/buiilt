@@ -1,9 +1,11 @@
 <div layout="row" class="main-content container" style="margin-top:50px;">
   <div class="col-md-12">
-    <div class="widget-container widget_login styled boxed" flex="40">
-      <alert ng-repeat="(key, msg) in errors" type="danger" close="closeAlert(key)">{{msg}}</alert>
+    <div class="add-comment contact-form boxed">
+      <alert ng-repeat="(key, msg) in errors" type="danger" close="closeAlert(key)">
+        {{msg}}
+      </alert>
       <div class="card collection">
-          <form method="post" ng-submit="signin()" flex="100" style="padding:10px;">
+          <form method="post" ng-submit="signin()" style="padding:10px;">
             <h3>Login</h3>
             <div layout layout-sm="column">
               <div input-field>
