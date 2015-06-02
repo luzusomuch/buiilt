@@ -29,14 +29,15 @@ EventBus.onSeries('QuoteRequest.Inserted', function(request, next) {
     }
   }, function(err, result){
     if (!err) {
+      console.log(result);
       //do send email
       Mailer.sendMail('builder-quote-request.html', request.email, {
         quoteRequest: request,
         //project owner
         user: result.user,
         project: result.project,
-        quotesLink: config.baseUrl + 'quote-request/' + request._id,
-        buidlerPackage: result.builderPackage,
+        quotesLink: config.baseUrl + 'quote-requests/' + request._id,
+        builderPackage: result.builderPackage,
         subject: 'Quote request for ' + result.builderPackage.name
       }, function(err) {
         return next();

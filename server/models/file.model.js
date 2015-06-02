@@ -96,6 +96,7 @@ FileSchema.methods.toJSON = function() {
   return {
     _id: this._id,
     title: this.title,
+    description: this.description,
     comments: this.comments,
     mimeType: this.mimeType,
     size: this.size,

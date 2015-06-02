@@ -18,6 +18,10 @@ angular.module('buiiltApp')
      */
     findOne: function(id){
       return $http.get(url + id).then(function(res){ return res.data; });
+    },
+
+    selectQuote: function(id) {
+      return $http.put(url + id).then(function(res){ return res.data;});
     }
   };
 });

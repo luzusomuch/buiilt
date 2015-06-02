@@ -15,6 +15,10 @@ var PackageSchema = {
     type: String
     // required: 'Package type is required'
   },
+  name: {
+    type: String,
+    default: ''
+  },
   description: {
     type: String,
     default: ''

@@ -25,7 +25,6 @@ exports.index = function(req, res) {
 exports.create = function(req, res){
   ProjectValidator.validateCreate(req, function(err, data) {
     if (err) {return errorsHelper.validationErrors(res, err, 'Validation');}
-
     var project = new Project(data);
     project.save(function(err, savedProject) {
       if (err) { return errorsHelper.validationErrors(res, err); }
@@ -34,6 +33,7 @@ exports.create = function(req, res){
       var builderPackage = new BuilderPackage({
         user: data.user,
         project: savedProject._id,
+        name: savedProject.name,
         description: savedProject.description
       });
 

@@ -33,7 +33,8 @@ var QuoteRequestSchema = new Schema({
   //update status after home owner / home builder... selects the quotes
   status: {
     type: String,
-    enum: ['pending', 'selected', 'cancelled', 'closed']
+    enum: ['pending', 'selected', 'cancelled', 'closed'],
+    default: 'pending'
   },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }

@@ -21,12 +21,10 @@ angular.module('buiiltApp').directive('upload', function(){
             $scope.docum = {};
 
             $scope.createDocument = function() {
-                console.log($scope.docum);
                 documentService.create({'id': $scope.project},$scope.docum).$promise.then(function(data) {
                     $scope.success = true;
                 });
             };
-            console.log($scope.builderPackage);
             documentService.getByProjectAndPackage({'id' : $scope.builderPackage}).$promise.then(function(data) {
                 $scope.document = data;
             });

@@ -4,7 +4,7 @@ angular.module('buiiltApp').directive('file', function(){
         restrict: 'EA',
         templateUrl: 'app/directives/file/file.html',
         scope:{
-            project:'='
+            project:'=',
         },
         controller: function($scope, $rootScope, $cookieStore, userService, $location, documentService, packageService, fileService) {
             $scope.errors = {};
@@ -21,17 +21,34 @@ angular.module('buiiltApp').directive('file', function(){
             packageService.getPackageByProject({'id':$scope.project}).$promise.then(function(data) {
                 $scope.packageItem = data;
                 documentService.getByProjectAndPackage({'id':$scope.packageItem._id}).$promise.then(function(data) {
-                    $scope.documents.push(data);
-                    angular.forEach(data, function(documentItem) {
-                        angular.forEach(documentItem.file, function(fileId) {
-                            fileService.get({'id': fileId}).$promise.then(function(data) {
-                                $scope.files.push(data);
-                                angular.forEach(data.usersInterestedIn, function(userInterested){
-                                    $scope.userInterested = userInterested;
-                                });
+                    if (data !== null) {
+                        $scope.documents = data;
+                        angular.forEach(data, function(documentItem) {
+                            angular.forEach(documentItem.file, function(fileId) {
+                                if (fileId !== null) {
+                                    fileService.get({id: fileId}).$promise.then(function(data) {
+                                        $scope.files.push(data);
+                                        if (data.usersInterestedIn !== null) {
+                                            angular.forEach(data.usersInterestedIn, function(userInterested) {
+                                                $scope.userInterested = userInterested;
+                                            });    
+                                        }
+                                    });
+                                }
                             });
                         });
-                    });
+                    }
+
+                    // angular.forEach(data, function(documentItem) {
+                    //     angular.forEach(documentItem.file, function(fileId) {
+                    //         fileService.get({'id': fileId}).$promise.then(function(data) {
+                    //             $scope.files.push(data);
+                    //             angular.forEach(data.usersInterestedIn, function(userInterested){
+                    //                 $scope.userInterested = userInterested;
+                    //             });
+                    //         });
+                    //     });
+                    // });
                 });
             });
             $scope.filterFunction = function(element) {

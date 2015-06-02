@@ -11,5 +11,16 @@
   <h5>{{quoteRequest.package.name}}</h5>
 
   <p>{{quoteRequest.package.description}}</p>
-  <p><b>Price </b>{{quoteRequest.package.price}}</p>
+  <p><b>Price </b>{{quoteRequest.price}}</p>
+    <div ng-if="currentUser.email == quoteRequest.email">
+        <form method="post" ng-submit="selectQuote(quoteRequest._id)">
+            <input type="hidden" ng-model="file._id" value="filquoteRequeste._id">
+            <button class="waves-effect waves-light btn">
+                <span>Accept quote</span>
+            </button>
+        </form>
+    </div>
+    <div ng-if="currentUser.email == null || currentUser.email == ''">
+        <a ui-sref="signin" class="waves-effect waves-light btn">Login</a> or <a ui-sref="signup" class="waves-effect waves-light btn">Registry</a>
+    </div>
 </div>

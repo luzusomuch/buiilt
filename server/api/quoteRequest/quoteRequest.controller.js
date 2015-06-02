@@ -64,3 +64,18 @@ exports.show = function(req, res){
     });
   });
 };
+
+exports.selectQuote = function(req, res) {
+  QuoteRequest.findById(req.params.id, function(err, quoteRequest){
+    if (err) {return res.send(500,err);}
+    else {
+      quoteRequest.status = 'selected';
+      quoteRequest.save(function(err, quoteRequestSaved) {
+        if (err) {return res.send(500, err);}
+        else {
+          return res.json(quoteRequestSaved);
+        }
+      });
+    }
+  });
+};

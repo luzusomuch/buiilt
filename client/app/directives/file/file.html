@@ -1,28 +1,31 @@
 <!-- <h5>{{packageItem.type}}</h5> -->
-<form class="form-inline">
-      <input ng-model="query" type="text"
-        placeholder="Filter by" autofocus>
-    </form>
-<div class="col s6" ng-if="files" ng-repeat="file in files | filter: query">
-    <div class="cards">
-        <h6>#{{$index + 1}} {{file.title}}</h6>
-        <div class="card-image">
-            <img ng-src="{{file.fileUrl}}">
-        </div>
-        <div class="card-action">
-            <p>{{file.description}} <span><em>Revision # of #</em></span></p>
-            <a href='#' class="activator">Download Document</a>
-        </div>
-        <div>
-            <!-- {{currentUser._id}} -->
-            <!-- {{file}} -->
-            <form method="post" ng-submit="interested(file._id)">
-                <input type="hidden" ng-model="file._id" value="file._id">
-                <button class="waves-effect waves-light btn">
-                    <span ng-if="currentUser._id != userInterested._id">Like</span>
-                    <span ng-if="currentUser._id == userInterested._id">Liked</span>
-                </button>
-            </form>
+<div ng-if="documents" ng-repeat="document in documents">
+    <h5>{{document.name}}</h5>
+    <form class="form-inline">
+          <input ng-model="query" type="text"
+            placeholder="Filter by" autofocus>
+        </form>
+    <div class="col s6" ng-if="files" ng-repeat="file in files | filter: query">
+        <div class="cards">
+            <h6>#{{$index + 1}} {{file.title}}</h6>
+            <div class="card-image">
+                <img ng-src="{{file.fileUrl}}">
+            </div>
+            <div class="card-action">
+                <p>{{file.description}} <span><em>Revision {{document.version}} of #</em></span></p>
+                <a href='#' class="activator">Download Document</a>
+            </div>
+            <div>
+                <!-- {{currentUser._id}} -->
+                <!-- {{file}} -->
+                <form method="post" ng-submit="interested(file._id)">
+                    <input type="hidden" ng-model="file._id" value="file._id">
+                    <button class="waves-effect waves-light btn">
+                        <span ng-if="currentUser._id != userInterested._id">Like</span>
+                        <span ng-if="userInterested && currentUser._id == userInterested._id">Liked</span>
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
