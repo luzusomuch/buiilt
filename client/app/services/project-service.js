@@ -11,6 +11,12 @@ angular.module('buiiltApp')
             method: 'GET',
             isArray: true
         },
+        get: {
+          method: 'GET',
+          params: {
+            id: 'id'
+          }
+        },
         selectWinner: {
           method: 'PUT',
           params: {

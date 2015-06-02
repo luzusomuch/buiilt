@@ -11,7 +11,7 @@
             Project Name<i class="mdi-navigation-arrow-drop-down right"></i></a>
           <ul id="projectSelect" class="dropdown-content" style="margin-top: 15px">
             <li ng-repeat="project in projects">
-              <a ui-sref="projects.list">{{project.name}}</a>
+              <a ui-sref="projects.view({id: project._id})">{{project.name}}</a>
             </li>
             <li class="divider"></li>
             <li>
