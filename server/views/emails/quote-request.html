@@ -2,12 +2,12 @@
 
 {% block content %}
 <p>
-  <%= user.name %> has send you a quote for project <%= project.name %>
+  <%= user.email %> has send you a quote for project <%= project.name %>
 </p>
 <p><strong>Price: </strong><%= price%></p>
 
 <p>
-  Price: $<%= quoteRequest.price %>
+  Price: <%= quoteRequest.price %>
   <br>
   Your can click <a href="<%= quotesLink %>">here</a> to see all quotes request.
 

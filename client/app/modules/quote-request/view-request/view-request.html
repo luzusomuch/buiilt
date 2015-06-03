@@ -12,7 +12,7 @@
 
   <p>{{quoteRequest.package.description}}</p>
   <p><b>Price </b>{{quoteRequest.price}}</p>
-  <div ng-if="currentUser.email == quoteRequest.email || quoteRequest.status != 'selected'">
+  <div ng-if="currentUser.email == quoteRequest.email">
     <form method="post" ng-submit="selectQuote(quoteRequest._id)">
       <input type="hidden" ng-model="file._id" value="filquoteRequeste._id">
       <button class="waves-effect waves-light btn">

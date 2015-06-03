@@ -2,7 +2,7 @@
 
 {% block content %}
 <p>
-  <%= user.name %> has send you a quote for project <%= project.name %>
+  <%= user.email %> has send you a quote for project <%= project.name %>
 </p>
 
 <p>
@@ -14,7 +14,9 @@
   <b>Package detail</b>
   <%= builderPackage.description %>
 </p>
-
+<p>
+  Price: <%= price %>
+</p>
 <p>
   Your can click <a href="<%= quotesLink %>">here</a> to see the request.
 
