@@ -27,13 +27,12 @@ angular.module('buiiltApp')
             {sref:'contractors',label:'contractors'},
             {sref:'project',label:'project'}]
         };
-//        $scope.loadMenu = function () {
-//          console.log($scope.user);
-//          if ($scope.user._id) {
-//            $scope.tabs=$scope.menuTypes[$scope.user.type];
-//          }
-//        };
-//        $scope.loadMenu();
+       $scope.loadMenu = function () {
+         if ($scope.user._id) {
+           $scope.tabs=$scope.menuTypes[$scope.user.type];
+         }
+       };
+       $scope.loadMenu();
 
         
       }

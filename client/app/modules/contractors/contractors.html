@@ -1,4 +1,31 @@
-<md-content>
+<div class="col-md-12" ui-view>
+  <div class="col s3">
+     <a ng-if="user.type == 'buider'" class="dropdown-button btn-large col s12" href="#!" data-activates="createNew" data-gutter="15" style="margin-top: 8px; margin-bottom: 15px">Create New</a>
+      <ul id="createNew" class="dropdown-content" style="margin-top: 15px">
+        <li><a class="modal-trigger" href="#newContractorPackage">Contractor Package</a></li>
+      <li><div class="divider"></div></li>
+        <li><a class="modal-trigger" href="#newWorkPackage">Work Package</a></li>
+        <li><a class="modal-trigger" href="#newMaterialPackage">Material Package</a></li>
+      </ul>
+     
+     <div class="collection">
+             <a href="#!" class="collection-item">In Progress<span class="new badge">6</span></a>
+             <a href="#!" class="collection-item">In Tender<span class="new badge">2</span></a>
+         <a href="#!" class="collection-item">Completed</a>
+         </div>
+   </div>
+   
+   <div class="col s9">
+     <ul class="collection z-depth-1">
+           <li class="collection-item">Package Name 1<span class="new badge">1</span></li>
+       <li class="collection-item">Package Name 2<span class="new badge">3</span></li>
+       <li class="collection-item">Package Name 3</li>
+       <li class="collection-item">Package Name 4<span class="new badge">2</span></li>
+       <li class="collection-item">Package Name 5</li>
+         </ul>
+   </div>
+</div>
+<!-- <md-content>
     
 
     <div layout="row" style="" layout-margin>
@@ -22,7 +49,7 @@
       
       </div>
     </div>
-</md-content>
+</md-content> -->
 
 
 

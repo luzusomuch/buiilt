@@ -1,5 +1,5 @@
-angular.module('buiiltApp').controller('ContractorsCtrl', function($scope, contractors, $timeout, $q) {
-  console.log(contractors);
+angular.module('buiiltApp').controller('ContractorsCtrl', function($scope, $timeout, $q, authService) {
+  $scope.user = authService.getCurrentUser();
 });
 
 angular.module('buiiltApp').controller('FormContractorsCtrl', function($scope, $timeout, $q) {
