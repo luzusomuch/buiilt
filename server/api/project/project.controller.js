@@ -31,7 +31,7 @@ exports.create = function(req, res){
 
       //create new builder package
       var builderPackage = new BuilderPackage({
-        user: data.user,
+        // user: data.user,
         project: savedProject._id,
         name: savedProject.name,
         description: savedProject.description

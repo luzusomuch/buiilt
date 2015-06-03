@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('ViewQuoteRequestCtrl', function($scope, $cookieStore, userService, quoteRequest, quoteRequetService) {
+angular.module('buiiltApp').controller('ViewQuoteRequestCtrl', function($scope, $state, $cookieStore, userService, quoteRequest, quoteRequetService) {
   /**
    * quote data
    */
@@ -11,7 +11,7 @@ angular.module('buiiltApp').controller('ViewQuoteRequestCtrl', function($scope, 
 
   $scope.selectQuote = function(value) {
     quoteRequetService.selectQuote(value).then(function(quote) {
-
+      $state.go('dashboard');
     })
   };
 
