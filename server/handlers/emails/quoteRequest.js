@@ -16,34 +16,53 @@ var async = require('async');
  * event handler after creating new quote
  */
 EventBus.onSeries('QuoteRequest.Inserted', function(request, next) {
-  async.parallel({
-    user: function(cb){
-      User.findOne({_id: request.user}, cb);
-    },
-    project: function(cb){
-      //find project
-      Project.findOne({_id: request.project}, cb);
-    },
-    builderPackage: function(cb){
-      BuilderPackage.findOne({_id: request.package}, cb);
-    }
-  }, function(err, result){
-    if (!err) {
-      console.log(result);
-      //do send email
-      Mailer.sendMail('builder-quote-request.html', request.email, {
-        quoteRequest: request,
-        //project owner
-        user: result.user,
-        project: result.project,
-        quotesLink: config.baseUrl + 'quote-requests/' + request._id,
-        builderPackage: result.builderPackage,
-        subject: 'Quote request for ' + result.builderPackage.name
-      }, function(err) {
-        return next();
+  // async.parallel({
+  //   user: function(cb){
+  //     User.findOne({_id: request.user}, cb);
+  //   },
+  //   project: function(cb){
+  //     //find project
+  //     Project.findOne({_id: request.project}, cb);
+  //   },
+  //   builderPackage: function(cb){
+  //     BuilderPackage.findOne({_id: request.package}, cb);
+  //   }
+  // }, function(err, result){
+  //   if (!err) {
+  //     console.log(request.email);
+  //     console.log(result);
+  //     //do send email
+  //     Mailer.sendMail('builder-quote-request.html', request.email, {
+  //       quoteRequest: request,
+  //       //project owner
+  //       user: result.user,
+  //       project: result.project,
+  //       quotesLink: config.baseUrl + 'quote-requests/' + request._id,
+  //       builderPackage: result.builderPackage,
+  //       subject: 'Quote request for ' + result.builderPackage.name
+  //     }, function(err) {
+  //       return next();
+  //     });
+  //   } else {
+  //     return next();
+  //   }
+  // });
+  console.log(request);
+  Project.findOne({_id: request.project}, function(err, project) {
+    if (err) {console.log(err);}
+    else {
+      BuilderPackage.findOne({_id: request.package}, function(err, pack) {
+        if (err) {console.log(err);}
+        else {
+          Mailer.sendMail('builder-quote-request.html', request.email, {
+          quoteRequest: request,
+          project: project,
+          builderPackage: pack,
+          quotesLink: config.baseUrl + 'quote-requests/' + request._id,
+          subject: 'Quote request for ' + pack.name
+        },function(){});
+        }
       });
-    } else {
-      return next();
     }
   });
 });

@@ -18,7 +18,7 @@ var ContractorPackageSchema = new Schema({
   quote: {
     type: Schema.Types.ObjectId,
     ref: 'Quote',
-    required: true
+    // required: true
   },
   defact:[],
   isAccept: { type: Boolean, default: false },

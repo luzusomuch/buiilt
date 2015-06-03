@@ -10,6 +10,6 @@ var router = express.Router();
 router.get('/', controller.index);
 //router.delete('/:id', auth.hasRole('admin'), controller.destroy);
 //router.get('/:id', auth.isAuthenticated(), controller.show);
-router.post('/', controller.create);
+router.post('/', controller.createContractorPackage);
 
 module.exports = router;
