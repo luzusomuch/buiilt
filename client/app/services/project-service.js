@@ -31,6 +31,14 @@ angular.module('buiiltApp')
             action: 'user'
           },
           isArray: true
+        },
+        getProjectsByBuilder: {
+          method: 'GET',
+          params: {
+            id: 'id',
+            action: 'builder'
+          },
+          isArray: true
         }
     }
     

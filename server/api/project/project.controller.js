@@ -26,12 +26,13 @@ exports.create = function(req, res){
   ProjectValidator.validateCreate(req, function(err, data) {
     if (err) {return errorsHelper.validationErrors(res, err, 'Validation');}
     var project = new Project(data);
+    project.builder = data.user;
     project.save(function(err, savedProject) {
       if (err) { return errorsHelper.validationErrors(res, err); }
 
       //create new builder package
       var builderPackage = new BuilderPackage({
-        // user: data.user,
+        user: data.user,
         project: savedProject._id,
         name: savedProject.name,
         description: savedProject.description
@@ -90,8 +91,16 @@ exports.selectWinner = function(req, res) {
 };
 
 exports.getProjectsByUser = function(req, res) {
-  console.log(req.params.id);
   Project.find({'user': req.params.id}, function(err, projects) {
+    if (err) {return res.send(500, err);}
+    else {
+      return res.json(projects);
+    }
+  })
+};
+
+exports.getProjectsByBuilder = function(req, res) {
+  Project.find({'builder': req.params.id}, function(err, projects) {
     if (err) {return res.send(500, err);}
     else {
       return res.json(projects);

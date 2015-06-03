@@ -3,7 +3,7 @@ angular.module('buiiltApp')
     return {
       restrict: 'E',
       templateUrl: 'app/directives/header/header.html',
-      controller: function ($scope, authService, projectService, $rootScope, $cookieStore) {
+      controller: function ($scope, authService, projectService, $rootScope, $cookieStore, packageService) {
         $scope.isLoggedIn=authService.isLoggedIn;
         $scope.user = authService.getCurrentUser();
 
@@ -27,15 +27,29 @@ angular.module('buiiltApp')
         
         projectService.getProjectsByUser({'id': $scope.user._id}, function(projects) {
           $scope.projects = projects;
+          angular.forEach(projects, function(project) {
+            if ($scope.user._id == project.user) {
+              $scope.tabs = $scope.menuTypes['homeOwner'];
+            }
+          });
         });
+        projectService.getProjectsByBuilder({'id': $scope.user._id}, function(projects){
+          $scope.projects = projects;
+          angular.forEach(projects, function(project) {
+            if ($scope.user._id == project.builder) {
+              $scope.tabs = $scope.menuTypes['buider'];
+            }
+          });
+        });
+
         // $scope.user = authService.getCurrentUser();
         
-       $scope.loadMenu = function () {
-         if ($scope.user._id) {
-           $scope.tabs=$scope.menuTypes[$scope.user.type];
-         }
-       };
-       $scope.loadMenu();
+       // $scope.loadMenu = function () {
+       //   if ($scope.user._id) {
+       //     $scope.tabs=$scope.menuTypes[$scope.user.type];
+       //   }
+       // };
+       // $scope.loadMenu();
       }
     };
   });
