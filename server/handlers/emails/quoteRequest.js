@@ -37,6 +37,7 @@ EventBus.onSeries('QuoteRequest.Inserted', function(request, next) {
         quoteRequest: request,
         //project owner
         user: result.user,
+        price: request.price,
         project: result.project,
         quotesLink: config.baseUrl + 'quote-requests/' + request._id,
         builderPackage: result.builderPackage,

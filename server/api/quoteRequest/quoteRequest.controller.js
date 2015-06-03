@@ -73,7 +73,19 @@ exports.selectQuote = function(req, res) {
       quoteRequest.save(function(err, quoteRequestSaved) {
         if (err) {return res.send(500, err);}
         else {
-          return res.json(quoteRequestSaved);
+          // return res.json(quoteRequestSaved);
+          Project.findById(quoteRequestSaved.project, function(err, project) {
+            if (err) {return res.send(500, err);}
+            else {
+              project.user = req.user._id;
+              project.save(function(err, saved) {
+                if (err) {return res.send(500, err);}
+                else {
+                  return res.json(saved);
+                }
+              });
+            }
+          });
         }
       });
     }
