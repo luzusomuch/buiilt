@@ -104,6 +104,27 @@ angular.module('buiiltApp')
     getCurrentUser: function() {
       return currentUser;
     },
+
+    /**
+     * Gets all available info on authenticated user in async
+     *
+     * @param {Function} cb
+     * @returns {void}
+     */
+    getCurrentUserInAsync: function(cb) {
+      if (currentUser.hasOwnProperty('$promise')) {
+        currentUser.$promise.then(function() {
+          cb(currentUser);
+        }). catch (function() {
+          cb(null);
+        });
+      } else if (currentUser.hasOwnProperty('role')) {
+        cb(currentUser);
+      } else {
+        cb(null);
+      }
+    },
+
     /**
      * Check if a user is logged in
      *
