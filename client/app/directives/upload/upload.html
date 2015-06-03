@@ -53,9 +53,26 @@
         </div>
         <div class="row">
           <div class="input-field col s12">
+            <select class="browser-default" ng-model="item.file.doc" ng-options="doc._id as doc.name for doc in document">
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <input type="text" ng-model="item.file.usersRelatedTo" required placeholder="Email separate by comma (,)">
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
             <textarea class="materialize-textarea" ng-model="item.file.desc" id="textarea1" required></textarea>
             <!-- <input type="textArea" ng-model="item.file.desc" required placeholder="Description"> -->
             <label for="">Description</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+            Save<i class="mdi-content-send"></i>
+            </button>
           </div>
         </div>
       </div>
@@ -123,14 +140,14 @@
       </table> -->
     </div>
   </div>
-  <div class="modal-footer">
+  <!-- <div class="modal-footer">
     <div class="form-group">
       <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
             Save<i class="mdi-content-send"></i>
-      </button>
+      </button> -->
       <!-- <button type="button" class="btn btn-success" ng-click="uploadAll()" ng-disabled="uploader.isReady || uploader.isUploading || uploader.isSuccess">
         <span class="glyphicon glyphicon-upload"></span> Upload all
       </button> -->
-    </div>
-  </div>
+    <!-- </div> -->
+  <!-- </div> -->
 </div>

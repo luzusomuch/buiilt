@@ -23,21 +23,26 @@ angular.module('buiiltApp').directive('file', function(){
                 documentService.getByProjectAndPackage({'id':$scope.packageItem._id}).$promise.then(function(data) {
                     if (data !== null) {
                         $scope.documents = data;
-                        angular.forEach(data, function(documentItem) {
-                            angular.forEach(documentItem.file, function(fileId) {
-                                if (fileId !== null) {
-                                    fileService.get({id: fileId}).$promise.then(function(data) {
-                                        $scope.files.push(data);
-                                        if (data.usersInterestedIn !== null) {
-                                            angular.forEach(data.usersInterestedIn, function(userInterested) {
-                                                $scope.userInterested = userInterested;
-                                            });    
-                                        }
-                                    });
-                                }
-                            });
-                        });
                     }
+                });
+            });
+                    // if (data !== null) {
+                    //     $scope.documents = data;
+                    //     angular.forEach(data, function(documentItem) {
+                    //         angular.forEach(documentItem.file, function(fileId) {
+                    //             if (fileId !== null) {
+                    //                 fileService.get({id: fileId}).$promise.then(function(data) {
+                    //                     $scope.files.push(data);
+                    //                     if (data.usersInterestedIn !== null) {
+                    //                         angular.forEach(data.usersInterestedIn, function(userInterested) {
+                    //                             $scope.userInterested = userInterested;
+                    //                         });    
+                    //                     }
+                    //                 });
+                    //             }
+                    //         });
+                    //     });
+                    // }
 
                     // angular.forEach(data, function(documentItem) {
                     //     angular.forEach(documentItem.file, function(fileId) {
@@ -49,8 +54,7 @@ angular.module('buiiltApp').directive('file', function(){
                     //         });
                     //     });
                     // });
-                });
-            });
+                
             $scope.filterFunction = function(element) {
                 return element.title.match(/^Ma/) ? true : false;
             };

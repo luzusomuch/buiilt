@@ -7,7 +7,7 @@ angular.module('buiiltApp').directive('upload', function(){
             project:'=',
             builderPackage: '='
         },
-        controller: function($scope, $state, $cookieStore, $rootScope, $location , quoteService, userService, projectService, FileUploader, documentService) {
+        controller: function($scope, $state, $cookieStore, $stateParams, $rootScope, $location , packageService, userService, projectService, FileUploader, documentService) {
             $scope.errors = {};
             $scope.success = {};
             $scope.formData = {
@@ -19,6 +19,12 @@ angular.module('buiiltApp').directive('upload', function(){
                 usersRelatedTo: []
             };
             $scope.docum = {};
+
+            packageService.getPackageByProject({'id': $stateParams.id}, function(data) {
+                documentService.getByProjectAndPackage({'id' : data._id}).$promise.then(function(data) {
+                    $scope.document = data;
+                });
+            });
 
             $scope.createDocument = function() {
                 documentService.create({'id': $scope.project},$scope.docum).$promise.then(function(data) {
@@ -39,9 +45,8 @@ angular.module('buiiltApp').directive('upload', function(){
                   this.$apply(fn);
                 }
             };
-
             var uploader = $scope.uploader = new FileUploader({
-                url: 'api/uploads/'+ $scope.project + '/file',
+                url: 'api/uploads/'+ $stateParams.id + '/file',
                 headers : {
                   Authorization: 'Bearer ' + $cookieStore.get('token')
                 },

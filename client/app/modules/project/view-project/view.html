@@ -20,6 +20,26 @@
         <div class="row">
             <h4>{{builderPackage.type}}</h4>
             <div ng-if="builderPackage">
+                <div>
+                  <form method="POST" ng-submit="createDocument()" name="createDocumentForm">
+                    <h5>Create new document</h5>
+                    <div layout layout-sm="column">
+                        <div input-field>
+                          <label>Name </label>
+                          <input ng-model="docum.name" required type="text">
+                        </div>
+                    </div>
+                    <div layout layout-sm="column">
+                        <div input-field>
+                          <label>Description </label>
+                          <input ng-model="docum.description" required type="text">
+                        </div>
+                    </div>
+                    <div layout layout-sm="column">
+                        <button class="waves-effect waves-light btn" ng-disabled="createDocumentForm.$invalid">Create document</button>
+                    </div>
+                  </form>
+                </div>
                 <upload project="project._id" builder-package="builderPackage._id"></upload>
             </div>
         </div>

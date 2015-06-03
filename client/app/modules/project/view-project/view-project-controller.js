@@ -1,6 +1,7 @@
-angular.module('buiiltApp').controller('ViewProjectCtrl', function($scope, $stateParams, $timeout, $q, projectService, project, packageService) {
+angular.module('buiiltApp').controller('ViewProjectCtrl', function($scope, $stateParams, $timeout, $q, documentService, projectService, project, packageService) {
   $scope.errors = {};
   $scope.project=project;
+  $scope.docum = {};
   packageService.getPackageByProject({'id': $stateParams.id}).$promise.then(function(data) {
     $scope.builderPackage = data;
   });
@@ -9,6 +10,12 @@ angular.module('buiiltApp').controller('ViewProjectCtrl', function($scope, $stat
   //     console.log(data);
   //   });
   // };
+
+  $scope.createDocument = function() {
+    documentService.create({'id': $scope.project._id},$scope.docum).$promise.then(function(data) {
+      $scope.success = true;
+    });
+  };
 
   $scope.closeAlert = function (key) {
     delete $scope.errors[key];

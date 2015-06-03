@@ -49,6 +49,7 @@ exports.upload = function(req, res){
     })
     .on('end', function() {
         if (uploadedFile && uploadedField) {
+            console.log(uploadedFile, uploadedField);
             var file = new File({
                 title: uploadedFile.name,
                 path: uploadedFile.path,
@@ -102,26 +103,6 @@ exports.upload = function(req, res){
                                         }
                                     });
                                 }
-                                
-                                // 
-
-                                // var document = new Document({
-                                //     user: req.user._id,
-                                //     project: req.params.id,
-                                //     package: builderPackage._id,
-                                //     description: uploadedField.desc
-                                // });
-                                // document.file = file;
-                                // document.save(function(err, documentSaved) {
-                                //     if (err) {console.log(err);}
-                                //     else {
-                                //         // return res.json(documentSaved);
-                                //         s3.uploadFile(fileSaved, function(err, data) {
-                                //             if (err) {return validationError(res, err); };
-                                //             return res.json(data);
-                                //         });
-                                //     }
-                                // });
                             });
                         }
                     });
