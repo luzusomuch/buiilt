@@ -12,7 +12,8 @@ angular.module('buiiltApp').controller('ViewProjectCtrl', function($scope, $stat
   // };
 
   $scope.createDocument = function() {
-    documentService.create({'id': $scope.project._id},$scope.docum).$promise.then(function(data) {
+    documentService.create({'id': $scope.project._id},$scope.docum).$promise
+      .then(function(data) {
       $scope.success = true;
     });
   };

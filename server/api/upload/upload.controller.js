@@ -68,7 +68,7 @@ exports.upload = function(req, res){
                             _id: user._id,
                             email: user.email
                         });
-                        //calbacl
+                        //calback
                         callback();
                     }
                 });
