@@ -12,6 +12,7 @@ var config = require('./../../config/environment');
 /**
  * event handler after creating new project
  */
+ //remove
 // EventBus.onSeries('Project.Inserted', function(project, next) {
 //     //find user to send email
 //     var emails=[];
