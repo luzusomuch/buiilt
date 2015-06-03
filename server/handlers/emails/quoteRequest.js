@@ -30,7 +30,6 @@ EventBus.onSeries('QuoteRequest.Inserted', function(request, next) {
     }
   }, function(err, result){
     if (!err) {
-      console.log(request.email);
       console.log(result);
       //do send email
       Mailer.sendMail('builder-quote-request.html', request.email, {
