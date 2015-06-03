@@ -5,9 +5,11 @@ angular.module('buiiltApp').directive('upload', function(){
         templateUrl: 'app/directives/upload/upload.html',
         scope:{
             project:'=',
-            builderPackage: '='
+            builderPackage: '=',
+            documentId : '='
         },
         controller: function($scope, $state, $cookieStore, $stateParams, $rootScope, $location , packageService, userService, projectService, FileUploader, documentService) {
+
             $scope.errors = {};
             $scope.success = {};
             $scope.formData = {
@@ -19,7 +21,6 @@ angular.module('buiiltApp').directive('upload', function(){
                 usersRelatedTo: []
             };
             $scope.docum = {};
-
             packageService.getPackageByProject({'id': $stateParams.id}, function(data) {
                 documentService.getByProjectAndPackage({'id' : data._id}).$promise.then(function(data) {
                     $scope.document = data;
@@ -79,13 +80,12 @@ angular.module('buiiltApp').directive('upload', function(){
             var newPhoto = null;
             uploader.onCompleteItem = function (fileItem, response, status, headers) {
                 newPhoto = response;
-                // console.log(fileItem);
                 $state.reload();
             };
 
             uploader.onBeforeUploadItem = function (item) {
                 $scope.formData.title = item.title;
-                $scope.formData.doc = item.file.doc;
+                $scope.formData.doc = $scope.documentId;
                 $scope.formData.desc = item.file.desc || "";
                 $scope.formData.usersRelatedTo = item.file.usersRelatedTo || "";
                 //angular.forEach(item.file.tags, function (tag) {
