@@ -1,6 +1,6 @@
 angular.module('buiiltApp')
-  .controller('SigninCtrl', function ($scope, authService, $window) {
-
+.controller('SigninCtrl', function ($scope, authService, $window) {
+  $scope.user = {};
   $scope.errors = {};
   $scope.signin = function () {
     authService.login($scope.user).then(function () {
