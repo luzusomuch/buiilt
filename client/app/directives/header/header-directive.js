@@ -6,10 +6,7 @@ angular.module('buiiltApp')
       controller: function ($scope, authService, projectService, $rootScope, $cookieStore) {
         $scope.isLoggedIn=authService.isLoggedIn;
         $scope.user = authService.getCurrentUser();
-        projectService.getProjectsByUser({'id': $scope.user._id}, function(projects) {
-          $scope.projects = projects;
-        });
-        // $scope.user = authService.getCurrentUser();
+
         $scope.menuTypes = {
           homeOwner: [{sref:'dashboard',label:'dashboard'},
             {sref:'client',label:'builder'},
@@ -27,14 +24,18 @@ angular.module('buiiltApp')
             {sref:'contractors',label:'contractors'},
             {sref:'project',label:'project'}]
         };
+        
+        projectService.getProjectsByUser({'id': $scope.user._id}, function(projects) {
+          $scope.projects = projects;
+        });
+        // $scope.user = authService.getCurrentUser();
+        
        $scope.loadMenu = function () {
          if ($scope.user._id) {
            $scope.tabs=$scope.menuTypes[$scope.user.type];
          }
        };
        $scope.loadMenu();
-
-        
       }
     };
   });
