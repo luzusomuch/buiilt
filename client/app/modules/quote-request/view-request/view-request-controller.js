@@ -12,7 +12,6 @@ angular.module('buiiltApp').controller('ViewQuoteRequestCtrl', function($scope, 
   $scope.selectQuote = function(value) {
     quoteRequetService.selectQuote(value).then(function(quote) {
       $state.go('dashboard');
-    })
+    });
   };
-
 });
