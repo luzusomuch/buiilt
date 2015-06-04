@@ -14,6 +14,18 @@ var StaffPackageSchema = new Schema({
   },
   name: String,
   description: String,
+  to: [{
+    _id: {
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    email: {
+      type: String
+    },
+    phoneNumber: {
+      type: Number
+    }
+  }],
   staffowner :{ 
     type: Schema.Types.ObjectId,
     ref: 'User',

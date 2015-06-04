@@ -175,17 +175,21 @@
         <form>
              <div class="row">
                  <div class="col s12">
-                     <h5>New Work Package for Project Name</h5>
+                     <h5>New Work Package for {{currentProject.name}}</h5>
                  </div>
              </div>
              <div class="row">
                  <div class="input-field col s8">
-                     <input id="package_name" type="text" class="validate">
+                     <input id="package_name" type="text" class="validate" ng-model="package.name">
                      <label for="package_name">Work Package Title</label>
                  </div>
                  <div class="input-field col s4">
                       <label for="commencement_date" class="active">Commencement Date</label>
-                      <input type="date" id="commencement_date">
+                      <input type="date" id="commencement_date" ng-model="package.dateStart">
+                 </div>
+                 <div class="input-field col s12">
+                   <input id="package_description" type="text" class="validate" ng-model="package.description">
+                   <label for="package_description">Desciprtion</label>
                  </div>
              </div>
              
