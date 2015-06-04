@@ -21,7 +21,7 @@ angular.module('buiiltApp').controller('ViewQuoteRequestCtrl', function($scope, 
   $scope.signup = function () {
     authService.createUser($scope.user).then(function (data) {
       //show alert
-      $state.reload();
+      // $state.reload();
       $scope.user = {
         allowNewsletter: true
       };

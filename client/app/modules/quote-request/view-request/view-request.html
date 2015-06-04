@@ -46,7 +46,7 @@
       </div>
 
       <div layout layout-sm="column">
-        <button class="waves-effect waves-light btn">Login</button>
+        <button class="waves-effect waves-light btn" id="btn-login">Login</button>
       </div>
       <div class="divider"></div>
       <div class="modal-footer">
@@ -90,11 +90,16 @@
   $(document).ready(function(){
     
     $('.modal-trigger').leanModal({
-          dismissible: false, // Modal can be dismissed by clicking outside of the modal
+          dismissible: true, // Modal can be dismissed by clicking outside of the modal
           opacity: .5, // Opacity of modal background
           in_duration: 300, // Transition in duration
           out_duration: 200, // Transition out duration // Callback for Modal open
         }
       );
     });
+
+    $('#btn-login').click(function() {
+      location.reload();
+    });
+
 </script>

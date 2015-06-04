@@ -8,6 +8,7 @@ var Mailer = require('./../../components/Mailer');
 var EventBus = require('./../../components/EventBus');
 var Project = require('./../../models/project.model');
 var BuilderPackage = require('./../../models/builderPackage.model');
+var ContractorPackage = require('./../../models/contractorPackage.model');
 var User = require('./../../models/user.model');
 var config = require('./../../config/environment');
 var async = require('async');
@@ -16,6 +17,7 @@ var async = require('async');
  * event handler after creating new quote
  */
 EventBus.onSeries('QuoteRequest.Inserted', function(request, next) {
+  console.log(request);
   async.parallel({
     user: function(cb){
       User.findOne({_id: request.user}, cb);
@@ -26,6 +28,9 @@ EventBus.onSeries('QuoteRequest.Inserted', function(request, next) {
     },
     builderPackage: function(cb){
       BuilderPackage.findOne({_id: request.package}, cb);
+    },
+    contractorPackage: function(cb){
+      ContractorPackage.findOne({_id: request.package}, cb);
     }
   }, function(err, result){
     if (!err) {
