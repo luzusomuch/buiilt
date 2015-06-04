@@ -50,7 +50,7 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
       }
     };
   })
-  .run(function ($rootScope, $cookieStore, cfpLoadingBar, authService, $location) {
+  .run(function ($rootScope, $cookieStore, cfpLoadingBar, authService, $location,projectService) {
     cfpLoadingBar.start();
 
     $rootScope.safeApply = function (fn) {
@@ -63,7 +63,7 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
         this.$apply(fn);
       }
     };
-    $rootScope.$on('$stateChangeStart', function (event, next) {
+    $rootScope.$on('$stateChangeStart', function (event,toState, toParams, next) {
       authService.isLoggedInAsync(function (loggedIn) {
         if (next.authenticate && !loggedIn) {
           $location.path('/');
@@ -73,6 +73,16 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
           }
         }
       });
+
+      if (toState.hasCurrentProject) {
+        if (!$rootScope.currentProject || toParams.id !== $rootScope.currentProject._id) {
+          projectService.get({id: toParams.id}).$promise
+            .then(function (data) {
+              $rootScope.currentProject = data;
+            })
+        }
+      }
+
     });
   })
   .value('$', $);

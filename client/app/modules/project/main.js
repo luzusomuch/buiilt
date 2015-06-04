@@ -22,6 +22,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
       project: function($stateParams, projectService) {
         return projectService.get({id: $stateParams.id});
       }
-    }
+    },
+    hasCurrentProject : true
   });
 });

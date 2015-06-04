@@ -38,7 +38,7 @@
     <div class="col s12 container">
       <ul class="tabs" tabs>
         <li class="tab col" ng-repeat="tab in tabs">
-          <a ui-sref="{{tab.sref}}" ui-sref-active="active">{{tab.label}}</a></li>
+          <a ui-sref="{{tab.sref}}({id :  currentProject._id})" ui-sref-active="active">{{tab.label}}</a></li>
       </ul>
     </div>
   </div>

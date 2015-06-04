@@ -3,6 +3,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
   .state('dashboard', {
     url: '/dashboard',
     templateUrl: '/app/modules/dashboard/dashboard.html',
-    controller: 'DashboardCtrl'
+    controller: 'DashboardCtrl',
+    hasCurrentProject : true
   });
 });

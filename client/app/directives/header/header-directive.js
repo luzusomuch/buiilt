@@ -39,7 +39,11 @@ angular.module('buiiltApp')
       //check menu when state changes
       $rootScope.$on('$stateChangeSuccess', function (event, next) {
         queryProjects();
+        $scope.currentProject = $rootScope.currentProject;
+        console.log($scope.currentProject);
+        console.log($scope.menuTypes);
       });
+
 
       $scope.menuTypes = {
         homeOwner: [{sref: 'dashboard', label: 'dashboard'},
