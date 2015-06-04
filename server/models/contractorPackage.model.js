@@ -41,8 +41,7 @@ var ContractorPackageSchema = new Schema({
     }
   },
   quote: {
-    type: Schema.Types.ObjectId,
-    ref: 'Quote',
+    type: Number,
     // required: true
   },
   defact:[],

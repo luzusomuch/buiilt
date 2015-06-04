@@ -4,6 +4,7 @@ var User = require('./../../models/user.model');
 var Project = require('./../../models/project.model');
 var QuoteRequest = require('./../../models/quoteRequest.model');
 var BuilderPackage = require('./../../models/builderPackage.model');
+var ContractorPackage = require('./../../models/contractorPackage.model');
 var errorsHelper = require('../../components/helpers/errors');
 var ProjectValidator = require('./../../validators/project');
 var _ = require('lodash');
@@ -47,19 +48,28 @@ exports.index = function(req, res) {
 /**
  * show project detail
  */
-exports.show = function(req, res){
-  //TODO - validate rol
-  // Project.findById(req.params.id)
-  // .populate('user')
-  // .populate('homeBuilder')
-  // .exec(function(err, project){
-  //   if(err){ return errorsHelper.validationErrors(res, err); }
-
-  //   return res.json(project);
-  // });
-  QuoteRequest.findById(req.params.id, function(err, quote) {
+exports.findOne = function(req, res){
+  QuoteRequest.findById(req.params.id).populate('user').exec(function(err, quote) {
+    console.log(quote);
     if (err) {return res.send(500, err);}
-    return res.json(quote);
+    else {
+      ContractorPackage.findById(quote.package, function(err, contractorPackage) {
+        if (err) {return res.send(500, err);}
+        else {
+          contractorPackage.winner._id = quote.user._id,
+          contractorPackage.winner.email = quote.user.email,
+          contractorPackage.quote = quote.price,
+          contractorPackage.isAccept = true,
+          contractorPackage.status = false
+          contractorPackage.save(function(err, saved) {
+            if (err) {return res.send(500,err);}
+            else {
+              return res.json(200, saved);
+            }
+          });
+        }
+      });
+    }
   });
 };
 

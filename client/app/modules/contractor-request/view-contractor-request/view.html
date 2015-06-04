@@ -26,13 +26,21 @@
           <th>Action</th>
       </thead>
       <tbody>
-          <tr ng-repeat="quoteRequest in quoteRequests">
+          <tr ng-repeat="quoteRequest in quoteRequests" ng-if="winner.winner.email == null || winner.winner.email == ''">
               <td>{{quoteRequest.user.email}}</td>
               <td>{{quoteRequest.description}}</td>
               <td>{{quoteRequest.price}}</td>
               <td>
-                  <input type="radio" id='{{quoteRequest._id}}'>
-                  <label for="">Select</label>
+                  <input name="groupQuoteRequest" type="radio" id='{{quoteRequest._id}}' ng-click="selectQuote(quoteRequest._id)">
+                  <label for='{{quoteRequest._id}}'>Select</label>
+              </td>
+          </tr>
+          <tr ng-if="winner.winner.email != '' || winner.winner.email != ''">
+              <td>{{winner.winner.email}}</td>
+              <td>{{winner.description}}</td>
+              <td>{{winner.quote}}</td>
+              <td>
+                  
               </td>
           </tr>
       </tbody>
