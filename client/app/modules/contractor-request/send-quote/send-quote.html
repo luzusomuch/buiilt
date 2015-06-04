@@ -1,0 +1,46 @@
+<div class="row">
+  <h4>Project detail</h4>
+  <h5>{{contractorRequest.project.name}}</h5>
+
+  <p>{{contractorRequest.project.description}}</p>
+
+  <alert type="success" close="closeSuccess()" ng-show="success">Thank you for your submit</alert>
+  <alert ng-repeat="(key, msg) in errors" type="danger" close="closeAlert(key)">{{msg}}</alert>
+
+  <!-- <h4>Package detail</h4>
+  <h5>{{quoteRequest.package.name}}</h5>
+
+  <p>{{quoteRequest.package.description}}</p>
+  <p><b>Price </b>{{quoteRequest.price}}</p> -->
+  <h4>Quote request detail</h4>
+  <h5>{{contractorRequest.name}}</h5>
+  <p>{{contractorRequest.description}}</p>
+  <form method="POST" name="sendQuoteToBuilder" ng-submit="sendQuote()">
+      <div class="row">
+          <div class="input-field col s12">
+              <textarea name="" id="" ng-model="quoteRequest.description" required></textarea>
+              <label for="">Description</label>
+          </div>
+      </div>
+      <div class="row">
+          <div class="input-field col s12">
+              <input type="number" ng-model="quoteRequest.price" required>
+              <label for="">Price in USD</label>
+          </div>
+      </div>
+      <div class="row">
+          <button class="waves-effect waves-light btn" ng-disabled="sendQuoteToBuilder.$invalid">Send quote</button>
+      </div>
+  </form>
+  <div ng-if="currentUser.email == contractorRequest.email">
+    <form method="post" ng-submit="selectQuote(contractorRequest._id)">
+      <input type="hidden" ng-model="file._id" value="filquoteRequeste._id">
+      <button class="waves-effect waves-light btn">
+        <span>Accept quote</span>
+      </button>
+    </form>
+  </div>
+  <div ng-if="currentUser.email == null || currentUser.email == ''">
+    <a href="#signin" class="waves-effect waves-light btn modal-trigger">Login</a> or <a href="#signup" class="waves-effect waves-light btn modal-trigger">Registry</a>
+  </div>
+</div>

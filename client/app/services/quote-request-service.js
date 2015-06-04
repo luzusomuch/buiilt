@@ -12,6 +12,10 @@ angular.module('buiiltApp')
       return $http.post(url, data).then(function(res){ return res.data; });
     },
 
+    // sendQuoteFromContractorToBuilder: function(data){
+    //   return $http.post(url,data).then(function(res){return res.data;});
+    // },
+
     /**
      * find one quote request
      * @param {String} id

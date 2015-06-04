@@ -1,0 +1,40 @@
+<div class="row">
+  <h4>Project detail</h4>
+  <h5>{{contractorRequest.project.name}}</h5>
+
+  <p>{{contractorRequest.project.description}}</p>
+
+  <alert type="success" close="closeSuccess()" ng-show="success">Thank you for your submit</alert>
+  <alert ng-repeat="(key, msg) in errors" type="danger" close="closeAlert(key)">{{msg}}</alert>
+
+  <!-- <h4>Package detail</h4>
+  <h5>{{quoteRequest.package.name}}</h5>
+
+  <p>{{quoteRequest.package.description}}</p>
+  <p><b>Price </b>{{quoteRequest.price}}</p> -->
+  <h4>Package detail</h4>
+  <h5>{{contractorRequest.name}}</h5>
+  <p>{{contractorRequest.description}}</p>
+</div>
+<div class="clearfix"></div>
+<div class="row listQuoteRequest">
+  <table class="hoverable responsive-table">
+      <thead>
+          <th>Contractor name</th>
+          <th>Description</th>
+          <th>Price</th>
+          <th>Action</th>
+      </thead>
+      <tbody>
+          <tr ng-repeat="quoteRequest in quoteRequests">
+              <td>{{quoteRequest.user.email}}</td>
+              <td>{{quoteRequest.description}}</td>
+              <td>{{quoteRequest.price}}</td>
+              <td>
+                  <input type="radio" id='{{quoteRequest._id}}'>
+                  <label for="">Select</label>
+              </td>
+          </tr>
+      </tbody>
+  </table>
+</div>
