@@ -14,7 +14,27 @@ var ContractorPackageSchema = new Schema({
   },
   name: String,
   description: String,
-  to: [],
+  to: [{
+    _id: {
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    email: {
+      type: String
+    },
+    phoneNumber: {
+      type: Number
+    }
+  }],
+  winner: {
+    _id: {
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    email: {
+      type: String
+    }
+  },
   quote: {
     type: Schema.Types.ObjectId,
     ref: 'Quote',

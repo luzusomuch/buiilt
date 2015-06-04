@@ -16,7 +16,6 @@ var async = require('async');
  * event handler after creating new quote
  */
 EventBus.onSeries('QuoteRequest.Inserted', function(request, next) {
-  console.log(request);
   async.parallel({
     user: function(cb){
       User.findOne({_id: request.user}, cb);

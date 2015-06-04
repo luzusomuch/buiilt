@@ -19,9 +19,8 @@ exports.index = function (req, res) {
  * Creates a new contractor package
  */
 exports.createContractorPackage = function (req, res, next) {
-    console.log(req.body);
   var contractorPackage = new ContractorPackage({
-    owner: req.body.user,
+    owner: req.user._id,
     name: req.body.name,
     description: req.body.description,
     project: req.body.project
