@@ -12,6 +12,11 @@ var ContractorPackageSchema = new Schema({
     ref: 'User',
     required: true
   },
+  project: {
+    type: Schema.Types.ObjectId,
+    ref: 'Project',
+    required: true
+  },
   name: String,
   description: String,
   to: [{
@@ -47,4 +52,25 @@ var ContractorPackageSchema = new Schema({
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
 });
+
+/**
+ * Pre-save hook
+ */
+ContractorPackageSchema
+.pre('save', function(next) {
+  this.wasNew = this.isNew;
+
+  if (!this.isNew){
+    this.updatedAt = new Date();
+  }
+
+  next();
+});
+
+ContractorPackageSchema.post('save', function (doc) {
+  var evtName = this.wasNew ? 'ContractorPackage.Inserted' : 'ContractorPackage.Updated';
+
+  EventBus.emit(evtName, doc);
+});
+
 module.exports = mongoose.model('ContractorPackage', ContractorPackageSchema);

@@ -1,0 +1,32 @@
+{% extends 'layouts/default.html' %}
+
+{% block content %}
+<p>
+  <%= user.email %> has invited you to send quote for contractor package <%= contractorPackage.name %>
+</p>
+
+<p>
+  <b>Project detail <%= project.name %></b>
+  <%= project.description %>
+</p>
+
+<p>
+  <b>Contractor package detail</b>
+  <%= contractorPackage.description %>
+</p>
+
+<p>
+  Your can click <a href="<%= contractorPackageLink %>">here</a> to see the request.
+
+  <br/>
+  Feel free to contact us at <a href="mailto:admin@buiilt.com">admin@buiilt.com</a> if you have any questions.
+</p>
+
+<p>
+  Love, <br/>
+  Team buiilt
+  <br/>
+  <a href="http://www.buiilt.com">www.buiilt.com</a>
+</p>
+
+{% endblock %}
