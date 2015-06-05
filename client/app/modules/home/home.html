@@ -1,7 +1,9 @@
-<div ng-include="'app/modules/dashboard/dashboard.html'"></div>
-<!-- <div layout="row" class="container" style="margin-top:50px;">
-	<div ng-view>
-        
-	</div>
-</div> -->
-
+<div class="col s3">
+  <a class="btn-large col s12" ui-sref="projects.create" data-activates="createNew" data-gutter="15" >Create New</a>
+</div>
+<div class="col s9">
+  <ul class="collection z-depth-1">
+    <li class="collection-item" ng-repeat="item in projectsByBuilder"><a ui-sref="projects.view({id: item._id})">{{item.name}}</a><span class="new badge">1</span></li>
+    <li class="collection-item" ng-repeat="item in projectsByUser"><a ui-sref="projects.view({id: item._id})">{{item.name}}</a><span class="new badge">1</span></li>
+  </ul>
+</div>

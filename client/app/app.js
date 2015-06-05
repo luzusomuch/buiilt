@@ -81,8 +81,12 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
               $rootScope.currentProject = data;
             })
         }
-      }
 
+      } else {
+        $rootScope.currentProject = null;
+      }
+      $rootScope.hasCurrentProject=toState.hasCurrentProject;
     });
+
   })
   .value('$', $);

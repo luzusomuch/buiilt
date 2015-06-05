@@ -3,7 +3,7 @@ angular.module('buiiltApp')
   return {
     restrict: 'E',
     templateUrl: 'app/directives/header/header.html',
-    controller: function($scope, authService, projectService, contractorService, teamService) {
+    controller: function($scope, authService, projectService) {
 
       function queryProjects(){
         authService.isLoggedInAsync(function(isLoggedIn){
@@ -53,8 +53,7 @@ angular.module('buiiltApp')
               //   $scope.projectsHomeOwner = projects;
               // });
             });
-
-          }else{
+          } else {
             $scope.isLoggedIn = false;
           }
         });
