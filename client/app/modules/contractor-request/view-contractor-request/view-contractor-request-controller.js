@@ -4,6 +4,7 @@ angular.module('buiiltApp')
    * quote data
    */
   $scope.contractorRequest = contractorRequest;
+  console.log($scope.contractorRequest);
   $scope.currentUser = {};
   if ($cookieStore.get('token')) {
     $scope.currentUser = userService.get();
@@ -18,8 +19,6 @@ angular.module('buiiltApp')
   $scope.selectQuote = function(value) {
     quoteService.get({'id': value}).$promise.then(function(data) { 
         $scope.winner = data;
-        console.log($scope.winner);
-        console.log($scope.winner.winner.email);
     });
   };
 

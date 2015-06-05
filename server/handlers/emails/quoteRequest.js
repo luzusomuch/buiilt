@@ -17,7 +17,6 @@ var async = require('async');
  * event handler after creating new quote
  */
 EventBus.onSeries('QuoteRequest.Inserted', function(request, next) {
-  console.log(request);
   async.parallel({
     user: function(cb){
       User.findOne({_id: request.user}, cb);
@@ -50,7 +49,7 @@ EventBus.onSeries('QuoteRequest.Inserted', function(request, next) {
         });
       }
       else if (result.contractorPackage) {
-        User.findById(result.contractorPackage.owner, function(user) {
+        User.findOne({_id:result.contractorPackage.owner}, function(err, user) {
           Mailer.sendMail('view-quote-contractor-package.html', user.email, {
             quoteRequest: request,
             //project owner
@@ -62,6 +61,7 @@ EventBus.onSeries('QuoteRequest.Inserted', function(request, next) {
             contractorPackage: result.contractorPackage,
             subject: 'View quote request for contractor package' + result.contractorPackage.name
           }, function(err) {
+            console.log(err);
             return next();
           });
         });

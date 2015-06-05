@@ -17,7 +17,8 @@
   <p>{{contractorRequest.description}}</p>
 </div>
 <div class="clearfix"></div>
-<div class="row listQuoteRequest">
+
+<div class="row listQuoteRequest" ng-if="contractorRequest.owner == currentUser._id">
   <table class="hoverable responsive-table">
       <thead>
           <th>Contractor name</th>
@@ -26,23 +27,24 @@
           <th>Action</th>
       </thead>
       <tbody>
-          <tr ng-repeat="quoteRequest in quoteRequests" ng-if="winner.winner.email == null || winner.winner.email == ''">
-              <td>{{quoteRequest.user.email}}</td>
-              <td>{{quoteRequest.description}}</td>
-              <td>{{quoteRequest.price}}</td>
-              <td>
-                  <input name="groupQuoteRequest" type="radio" id='{{quoteRequest._id}}' ng-click="selectQuote(quoteRequest._id)">
-                  <label for='{{quoteRequest._id}}'>Select</label>
-              </td>
-          </tr>
-          <tr ng-if="winner.winner.email != '' || winner.winner.email != ''">
-              <td>{{winner.winner.email}}</td>
-              <td>{{winner.description}}</td>
-              <td>{{winner.quote}}</td>
-              <td>
-                  
-              </td>
-          </tr>
+        <tr ng-if="contractorRequest.winner._id != '' || contractorRequest.winner._id != ''">
+            <td>{{contractorRequest.winner.email}}</td>
+            <td>{{contractorRequest.description}}</td>
+            <td>{{contractorRequest.quote}}</td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr ng-repeat="quoteRequest in quoteRequests" ng-if="contractorRequest.winner._id == null || contractorRequest.winner._id == ''">
+            <td>{{quoteRequest.user.email}}</td>
+            <td>{{quoteRequest.description}}</td>
+            <td>{{quoteRequest.price}}</td>
+            <td>
+                <input name="groupQuoteRequest" type="radio" id='{{quoteRequest._id}}' ng-click="selectQuote(quoteRequest._id)">
+                <label for='{{quoteRequest._id}}'>Select</label>
+            </td>
+        </tr>
+          
       </tbody>
   </table>
 </div>
