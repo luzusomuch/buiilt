@@ -26,7 +26,7 @@ angular.module('buiiltApp').controller('ViewQuoteRequestCtrl', function($scope, 
       $scope.user = {
         allowNewsletter: true
       };
-      alert('Registry successfully, please comfirm your email!')
+      alert('Registry successfully, please confirm your email!')
       $state.go('dashboard');
     }, function(res) {
       $scope.errors = res.data;

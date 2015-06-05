@@ -1,11 +1,9 @@
 'use strict';
 
 var User = require('./../../models/user.model');
-var Project = require('./../../models/project.model');
 var QuoteRequest = require('./../../models/quoteRequest.model');
 var ContractorPackage = require('./../../models/contractorPackage.model');
 var errorsHelper = require('../../components/helpers/errors');
-var ProjectValidator = require('./../../validators/project');
 var UserValidator = require('./../../validators/user');
 var config = require('../../config/environment');
 var jwt = require('jsonwebtoken');

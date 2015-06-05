@@ -67,3 +67,13 @@ exports.createContractorPackage = function (req, res, next) {
   //   });
   // });
 };
+
+exports.getProjectForContractorWhoWinner = function(req, res) {
+  console.log(req.params.id);
+  ContractorPackage.find({'winner._id': req.params.id}).populate('project').exec(function(err, result){
+    if (err) {res.send(500, err);}
+    else {
+      return res.json(200, result);
+    }
+  });
+};

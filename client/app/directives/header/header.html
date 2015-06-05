@@ -16,6 +16,9 @@
             <li ng-repeat="project in projectsBuilder" ng-if="projectsBuilder">
               <a ui-sref="projects.view({id: project._id})">{{project.name}}</a>
             </li>
+            <li ng-repeat="project in projectsContractor" ng-if="projectsContractor">
+              <a ui-sref="projects.view({id: project._id})">{{project.name}}</a>
+            </li>
             <li class="divider"></li>
             <li>
               <a ui-sref="projects.create">Create project</a>

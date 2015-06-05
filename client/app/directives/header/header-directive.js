@@ -3,7 +3,7 @@ angular.module('buiiltApp')
   return {
     restrict: 'E',
     templateUrl: 'app/directives/header/header.html',
-    controller: function($scope, authService, projectService) {
+    controller: function($scope, authService, projectService, contractorService) {
 
       function queryProjects(){
         authService.isLoggedInAsync(function(isLoggedIn){
@@ -24,6 +24,14 @@ angular.module('buiiltApp')
               angular.forEach(projects, function(project) {
                 if ($scope.user._id === project.builder) {
                   $scope.tabs = $scope.menuTypes['buider'];
+                }
+              });
+            });
+            contractorService.getProjectForContractorWhoWinner({'id': $scope.user._id}, function(result) {
+              $scope.projectsContractor = result;
+              angular.forEach(result, function(subResult) {
+                if ($scope.user._id === subResult.winner._id) {
+                  $scope.tabs = $scope.menuTypes['contractor'];
                 }
               });
             });

@@ -4,6 +4,14 @@ angular.module('buiiltApp')
     id: '@_id'},{
         createContractorPackage: {
             method: 'POST'
+        },
+        getProjectForContractorWhoWinner: {
+            method: 'GET',
+            params: {
+                id: 'id',
+                action: 'winner'
+            },
+            isArray: true
         }
     });
 });

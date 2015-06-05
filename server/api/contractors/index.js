@@ -11,5 +11,6 @@ router.get('/', controller.index);
 //router.delete('/:id', auth.hasRole('admin'), controller.destroy);
 //router.get('/:id', auth.isAuthenticated(), controller.show);
 router.post('/', auth.isAuthenticated(), controller.createContractorPackage);
+router.get('/:id/winner', auth.isAuthenticated(), controller.getProjectForContractorWhoWinner);
 
 module.exports = router;
