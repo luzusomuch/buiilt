@@ -8,28 +8,31 @@ angular.module('buiiltApp')
     return $resource('/api/packages/staff/:id/:action',{
         id : '@_id'},
       {
-        index: {
+        get: {
           method: 'GET',
+          params: {
+            action : 'list'
+          },
           isArray: true
         },
         create: {
           method: 'POST'
-        },
-        update: {
-          method: 'PUT'
-        },
-        get: {
-          method: 'GET'
-          // isArray: true
-        },
-        getByProjectId: {
-          method: 'GET',
-          params: {
-            id: 'id',
-            action: 'project'
-          },
-          isArray: true
         }
+        //update: {
+        //  method: 'PUT'
+        //},
+        //get: {
+        //  method: 'GET'
+        //  // isArray: true
+        //},
+        //getByProjectId: {
+        //  method: 'GET',
+        //  params: {
+        //    id: 'id',
+        //    action: 'project'
+        //  },
+        //  isArray: true
+        //}
       }
       // createProject: function(project, callback) {
       //   var cb = callback || angular.noop;

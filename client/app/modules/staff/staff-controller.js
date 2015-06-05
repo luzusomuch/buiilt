@@ -6,7 +6,9 @@ angular.module('buiiltApp').controller('StaffCtrl', function($scope, $timeout, $
         });
     }
     $scope.currentProject = $rootScope.currentProject;
+    $scope.staffPackage = staffPackage;
   console.log($scope.currentProject)
+  console.log(staffPackage)
 
     $scope.save = function(form) {
       if (form.$valid) {

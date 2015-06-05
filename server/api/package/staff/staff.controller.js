@@ -27,6 +27,7 @@ exports.create = function(req,res) {
     }
     var staffPackage = new StaffPackage(data);
     staffPackage.owner = user;
+    staffPackage.project = project;
     staffPackage.save(function(err) {
       if (err) {
         return res.send(500, err);
@@ -34,7 +35,16 @@ exports.create = function(req,res) {
       return res.json(staffPackage)
     })
   });
+};
 
+exports.getList = function(req,res) {
+  var project = req.project;
+  StaffPackage.find({'project._id' : project._id},function(err,packages) {
+    if (err) {
+      return res.status(400).json(err);
+    }
+    return res.json(packages)
+  })
 };
 
 exports.getDefaultPackagePackageByProject = function(req, res) {
