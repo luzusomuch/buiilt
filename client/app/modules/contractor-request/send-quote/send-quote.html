@@ -32,7 +32,7 @@
           <button ng-if="toEmail.email == currentUser.email" class="waves-effect waves-light btn" ng-disabled="sendQuoteToBuilder.$invalid">Send quote</button>
       </div>
       <div ng-if="currentUser.email == null || currentUser.email == ''">
-        <a href="#signin" class="waves-effect waves-light btn modal-trigger">Login</a> or <a href="#signup" class="waves-effect waves-light btn modal-trigger">Registry</a>
+        <a href="#signin" class="waves-effect waves-light btn modal-trigger">Login</a> or <a href="#signupAndSendQuoteContractor" class="waves-effect waves-light btn modal-trigger">Registry</a>
       </div>
   </form>
 </div>
@@ -67,10 +67,10 @@
   </div>
 </div>
 
-<div id="signup" class="modal modal-fixed-footer">
+<div id="signupAndSendQuoteContractor" class="modal modal-fixed-footer">
   <div class="modal-content">
     {{user.idParams}}
-    <form method="post" ng-submit="signup()" name="signupForm" >
+    <form method="post" ng-submit="signupAndSendQuoteContractor()" name="signupForm" >
       <h3>Registry</h3>
       <div class="row">
         <div input-field class="col s12">

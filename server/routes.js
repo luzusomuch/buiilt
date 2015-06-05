@@ -15,6 +15,7 @@ module.exports = function(app) {
   app.use('/api/quotes', require('./api/quote'));
   app.use('/api/quoteRequests', require('./api/quoteRequest'));
   app.use('/api/contractorRequests', require('./api/contractorRequest'));
+  app.use('/api/registryForContractors', require('./api/registryForContractor'));
   app.use('/api/uploads', require('./api/upload'));
   app.use('/api/teams', require('./api/team'));
   app.use('/api/packages', require('./api/package'));

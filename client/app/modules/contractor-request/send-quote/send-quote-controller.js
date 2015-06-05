@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-.controller('SendQuoteContractorPackageCtrl', function($scope, $state, $cookieStore, authService, userService, contractorRequest, contractorRequestService, quoteRequetService) {
+.controller('SendQuoteContractorPackageCtrl', function($scope, $state, $stateParams, $cookieStore, authService, userService, contractorRequest, contractorRequestService, registryForContractorService) {
   /**
    * quote data
    */
@@ -31,9 +31,11 @@ angular.module('buiiltApp')
     });
   };
 
-  $scope.signup = function () {
+  $scope.signupAndSendQuoteContractor = function () {
     $scope.user.idParams = $stateParams.id;
-    quoteService.createUserForHomeBuilderRequest($scope.user).$promise.then(function(data) {
+    $scope.user.quoteRequest = $scope.quoteRequest;
+    console.log($scope.user);
+    registryForContractorService.createUserForContractorRequest($scope.user).$promise.then(function(data) {
       $scope.user = {
         allowNewsletter: true
       };
