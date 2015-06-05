@@ -1,5 +1,6 @@
-angular.module('buiiltApp').controller('ContractorsCtrl', function($scope, $timeout, $q, contractorService, userService, projectService) {
+angular.module('buiiltApp').controller('ContractorsCtrl', function($scope, $rootScope, $timeout, $q, contractorService, userService, projectService) {
   $scope.contractor = {};
+  $scope.currentProject = $rootScope.currentProject;
   $scope.emailsPhone = [];
   $scope.user = userService.get();
 

@@ -36,18 +36,34 @@ EventBus.onSeries('QuoteRequest.Inserted', function(request, next) {
     if (!err) {
       console.log(result);
       //do send email
-      Mailer.sendMail('builder-quote-request.html', request.email, {
-        quoteRequest: request,
-        //project owner
-        user: result.user,
-        price: request.price,
-        project: result.project,
-        quotesLink: config.baseUrl + 'quote-requests/' + request._id,
-        builderPackage: result.builderPackage,
-        subject: 'Quote request for ' + result.builderPackage.name
-      }, function(err) {
-        return next();
-      });
+      if (result.builderPackage) {
+        Mailer.sendMail('builder-quote-request.html', request.email, {
+          quoteRequest: request,
+          //project owner
+          user: result.user,
+          price: request.price,
+          project: result.project,
+          quotesLink: config.baseUrl + 'quote-requests/' + request._id,
+          builderPackage: result.builderPackage,
+          subject: 'Quote request for ' + result.builderPackage.name
+        }, function(err) {
+          return next();
+        });
+      }
+      else if (result.contractorPackage) {
+        Mailer.sendMail('builder-quote-request.html', request.email, {
+          quoteRequest: request,
+          //project owner
+          user: result.user,
+          price: request.price,
+          project: result.project,
+          quotesLink: config.baseUrl + 'quote-requests/' + request._id,
+          builderPackage: result.builderPackage,
+          subject: 'Quote request for ' + result.contractorPackage.name
+        }, function(err) {
+          return next();
+        });
+      }
     } else {
       return next();
     }

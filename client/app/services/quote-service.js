@@ -32,6 +32,9 @@ angular.module('buiiltApp')
             action: 'project'
           },
           isArray: true
+        },
+        createUserForHomeBuilderRequest: {
+          method: 'POST'
         }
     }
     // createProject: function(project, callback) {

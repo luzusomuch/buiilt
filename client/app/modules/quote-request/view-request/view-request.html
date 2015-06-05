@@ -60,7 +60,8 @@
 
 <div id="signup" class="modal modal-fixed-footer">
   <div class="modal-content">
-    <form method="post" ng-submit="signup()" name="signupForm">
+    {{user.idParams}}
+    <form method="post" ng-submit="signup()" name="signupForm" >
       <div class="row">
         <div input-field class="col s12">
           <label>Email</label>
@@ -74,7 +75,7 @@
         </div>
       </div>
       <div class="row">
-        <button class="waves-effect waves-light btn" ng-disabled="signupForm.$invalid">Sign up</button>
+        <button class="waves-effect waves-light btn" id="btn-signup" ng-disabled="signupForm.$invalid">Sign up</button>
       </div>
       <div class="divider"></div>
       <div class="modal-footer">
@@ -99,7 +100,11 @@
     });
 
     $('#btn-login').click(function() {
-      setTimeout(function() {location.reload();}, 2000);
+      $('.modal-trigger').closeModal();
+    });
+
+    $('#btn-signup').click(function() {
+      $('.modal-trigger').closeModal();
     });
 
 </script>
