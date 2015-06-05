@@ -6,4 +6,14 @@ angular.module('buiiltApp').controller('StaffCtrl', function($scope, $timeout, $
         });
     }
     $scope.currentProject = $rootScope.currentProject;
+  console.log($scope.currentProject)
+
+    $scope.save = function(form) {
+      if (form.$valid) {
+        staffPackageService.create({id : $scope.currentProject._id},$scope.package).$promise
+          .then(function(res) {
+            console.log(res);
+          })
+      }
+    }
 });

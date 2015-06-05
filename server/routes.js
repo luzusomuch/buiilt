@@ -22,6 +22,7 @@ module.exports = function(app) {
   app.use('/api/teams', require('./api/team'));
   app.use('/api/packages', require('./api/package'));
   app.use('/api/packages/builders', require('./api/package/builder'));
+  app.use('/api/packages/staff', require('./api/package/staff'));
   app.use('/api/documents', require('./api/document'));
   app.use('/api/files', require('./api/files'));
   app.use('/auth', require('./auth'));

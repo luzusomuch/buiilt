@@ -171,8 +171,9 @@
 </div>
 
 <div id="newWorkPackage" class="modal modal-fixed-footer">
+  <form novalidate ng-submit="save(form)" name="form">
     <div class="modal-content">
-        <form>
+
              <div class="row">
                  <div class="col s12">
                      <h5>New Work Package for {{currentProject.name}}</h5>
@@ -180,7 +181,7 @@
              </div>
              <div class="row">
                  <div class="input-field col s8">
-                     <input id="package_name" type="text" class="validate" ng-model="package.name">
+                     <input id="package_name" type="text" class="validate" ng-model="package.name" required>
                      <label for="package_name">Work Package Title</label>
                  </div>
                  <div class="input-field col s4">
@@ -188,11 +189,11 @@
                       <input type="date" id="commencement_date" ng-model="package.dateStart">
                  </div>
                  <div class="input-field col s12">
-                   <input id="package_description" type="text" class="validate" ng-model="package.description">
+                   <input id="package_description" type="text" class="validate" ng-model="package.description" required>
                    <label for="package_description">Desciprtion</label>
                  </div>
              </div>
-             
+
              <div class="row">
                  <div class="col s12">
                     <ul class="collection z-depth-1">
@@ -213,7 +214,7 @@
                     </ul>
                  </div>
              </div>
-             
+
              <div class="row">
                  <div class="col s12">
                      <div class="card-panel">
@@ -253,14 +254,15 @@
                      </div>
                  </div>
              </div>
-             
-         </form>
+
+
     </div>
     <div class="divider"></div>
     <div class="modal-footer">
-         <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Create Package!</a>
+         <button type="submit" class="modal-action modal-close waves-effect waves-green btn-flat ">Create Package!</button>
          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
     </div>
+  </form>
 </div>
 
 <script>
