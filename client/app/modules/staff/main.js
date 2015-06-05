@@ -9,10 +9,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
       staffPackage : [
         '$rootScope','staffPackageService',
         function($rootScope,staffPackageService) {
-          staffPackageService.get({id : $rootScope.currentProject._id}).$promise
-            .then(function(res) {
-              return res;
-            })
+          return staffPackageService.get({id : $rootScope.currentProject._id})
         }
       ]
     }

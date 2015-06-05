@@ -39,7 +39,7 @@ exports.create = function(req,res) {
 
 exports.getList = function(req,res) {
   var project = req.project;
-  StaffPackage.find({'project._id' : project._id},function(err,packages) {
+  StaffPackage.find({'project' : project._id},function(err,packages) {
     if (err) {
       return res.status(400).json(err);
     }

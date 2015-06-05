@@ -14,7 +14,7 @@ angular.module('buiiltApp').controller('StaffCtrl', function($scope, $timeout, $
       if (form.$valid) {
         staffPackageService.create({id : $scope.currentProject._id},$scope.package).$promise
           .then(function(res) {
-            console.log(res);
+            $scope.staffPackage.push(res);
           })
       }
     }
