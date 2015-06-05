@@ -27,7 +27,7 @@ exports.createContractorPackage = function (req, res, next) {
     owner: req.user._id,
     name: req.body.contractor.name,
     description: req.body.contractor.description,
-    project: req.body.contractor.project
+    project: req.body.project
   });
   async.each(req.body.emailsPhone, function(emailPhone, callback) {
     User.findOne({'email': emailPhone.email}, function(err, user) {

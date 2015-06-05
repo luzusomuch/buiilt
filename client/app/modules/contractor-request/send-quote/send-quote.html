@@ -28,19 +28,94 @@
               <label for="">Price in USD</label>
           </div>
       </div>
-      <div class="row">
-          <button class="waves-effect waves-light btn" ng-disabled="sendQuoteToBuilder.$invalid">Send quote</button>
+      <div class="row" ng-repeat="toEmail in contractorRequest.to">
+          <button ng-if="toEmail.email == currentUser.email" class="waves-effect waves-light btn" ng-disabled="sendQuoteToBuilder.$invalid">Send quote</button>
+      </div>
+      <div ng-if="currentUser.email == null || currentUser.email == ''">
+        <a href="#signin" class="waves-effect waves-light btn modal-trigger">Login</a> or <a href="#signup" class="waves-effect waves-light btn modal-trigger">Registry</a>
       </div>
   </form>
-  <div ng-if="currentUser.email == contractorRequest.email">
-    <form method="post" ng-submit="selectQuote(contractorRequest._id)">
-      <input type="hidden" ng-model="file._id" value="filquoteRequeste._id">
-      <button class="waves-effect waves-light btn">
-        <span>Accept quote</span>
-      </button>
+</div>
+
+<div id="signin" class="modal modal-fixed-footer">
+  <div class="modal-content">
+    <form method="post" ng-submit="signin()" style="padding:10px;">
+      <h3>Login</h3>
+      <div layout layout-sm="column">
+        <div input-field>
+          <label>Email</label>
+          <input ng-model="user.email" type="text" required>
+        </div>
+      </div>
+      <div layout layout-sm="column">
+        <div input-field>
+          <label>Password</label>
+          <input ng-model="user.password" required type="password">
+        </div>
+      </div>
+
+      <div layout layout-sm="column">
+        <button class="waves-effect waves-light btn" id="btn-login">Login</button>
+      </div>
+      <div class="divider"></div>
+      <div class="modal-footer">
+        <!-- <button class="waves-effect waves-light btn" ng-disabled="createContractorPackageForm.$invalid">Create Package!</button> -->
+           <!-- <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Create Package!</a> -->
+       <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
+      </div>
     </form>
   </div>
-  <div ng-if="currentUser.email == null || currentUser.email == ''">
-    <a href="#signin" class="waves-effect waves-light btn modal-trigger">Login</a> or <a href="#signup" class="waves-effect waves-light btn modal-trigger">Registry</a>
+</div>
+
+<div id="signup" class="modal modal-fixed-footer">
+  <div class="modal-content">
+    {{user.idParams}}
+    <form method="post" ng-submit="signup()" name="signupForm" >
+      <h3>Registry</h3>
+      <div class="row">
+        <div input-field class="col s12">
+          <label>Email</label>
+          <input type="email" ng-model="user.email" required>
+        </div>
+      </div>
+      <div class="row">
+        <div input-field class="col s12">
+          <label>Password</label>
+          <input ng-model="user.password" required type="password">
+        </div>
+      </div>
+      <div class="row">
+        <button class="waves-effect waves-light btn" id="btn-signup" ng-disabled="signupForm.$invalid">Sign up</button>
+      </div>
+      <div class="divider"></div>
+      <div class="modal-footer">
+        <!-- <button class="waves-effect waves-light btn" ng-disabled="createContractorPackageForm.$invalid">Create Package!</button> -->
+           <!-- <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Create Package!</a> -->
+       <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
+      </div>
+    </form>
   </div>
 </div>
+
+<script>
+  $(document).ready(function(){
+    
+    $('.modal-trigger').leanModal({
+          dismissible: true, // Modal can be dismissed by clicking outside of the modal
+          opacity: .5, // Opacity of modal background
+          in_duration: 300, // Transition in duration
+          out_duration: 200, // Transition out duration // Callback for Modal open
+        }
+      );
+    });
+
+    $('#btn-login').click(function() {
+      $('.modal-trigger').closeModal();
+    });
+
+    $('#btn-signup').click(function() {
+      $('.modal-trigger').closeModal();
+    });
+
+</script>
+

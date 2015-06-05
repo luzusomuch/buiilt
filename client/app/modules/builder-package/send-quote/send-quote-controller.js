@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('SendQuoteCtrl', function($scope, builderPackage, quoteRequetService) {
+angular.module('buiiltApp').controller('SendQuoteBuilderPackageCtrl', function($scope, builderPackage, quoteRequetService) {
   $scope.builderPackage = builderPackage;
 
   /**

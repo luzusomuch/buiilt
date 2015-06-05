@@ -34,7 +34,6 @@ EventBus.onSeries('QuoteRequest.Inserted', function(request, next) {
     }
   }, function(err, result){
     if (!err) {
-      console.log(result);
       //do send email
       if (result.builderPackage) {
         Mailer.sendMail('builder-quote-request.html', request.email, {
@@ -51,17 +50,20 @@ EventBus.onSeries('QuoteRequest.Inserted', function(request, next) {
         });
       }
       else if (result.contractorPackage) {
-        Mailer.sendMail('builder-quote-request.html', request.email, {
-          quoteRequest: request,
-          //project owner
-          user: result.user,
-          price: request.price,
-          project: result.project,
-          quotesLink: config.baseUrl + 'quote-requests/' + request._id,
-          builderPackage: result.builderPackage,
-          subject: 'Quote request for ' + result.contractorPackage.name
-        }, function(err) {
-          return next();
+        User.findById(result.contractorPackage.owner, function(user) {
+          Mailer.sendMail('view-quote-contractor-package.html', user.email, {
+            quoteRequest: request,
+            //project owner
+            user: result.user,
+            price: request.price,
+            description: request.description,
+            project: result.project,
+            quotesLink: config.baseUrl + 'contractor-requests/' + result.contractorPackage._id + '/view',
+            contractorPackage: result.contractorPackage,
+            subject: 'View quote request for contractor package' + result.contractorPackage.name
+          }, function(err) {
+            return next();
+          });
         });
       }
     } else {

@@ -7,7 +7,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
   .state('contractorRequest.sendQuote', {
     url: '/:id',
     templateUrl: '/app/modules/contractor-request/send-quote/send-quote.html',
-    controller: 'SendQuoteCtrl',
+    controller: 'SendQuoteContractorPackageCtrl',
     resolve: {
       contractorRequest: function($stateParams, contractorRequestService){
         return contractorRequestService.findOne({'id':$stateParams.id});

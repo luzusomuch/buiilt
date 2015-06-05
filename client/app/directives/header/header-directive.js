@@ -11,8 +11,8 @@ angular.module('buiiltApp')
             $scope.isLoggedIn = true;
             $scope.user = authService.getCurrentUser();
 
-            projectService.getProjectsByUser({id: $scope.user._id}, function(projects) {
-              $scope.projects = projects;
+            projectService.getProjectsByUser({'id': $scope.user._id}, function(projects) {
+              $scope.projectsOwner = projects;
               angular.forEach(projects, function(project) {
                 if ($scope.user._id === project.user) {
                   $scope.tabs = $scope.menuTypes['homeOwner'];
@@ -20,7 +20,7 @@ angular.module('buiiltApp')
               });
             });
             projectService.getProjectsByBuilder({'id': $scope.user._id}, function(projects) {
-              $scope.projects = projects;
+              $scope.projectsBuilder = projects;
               angular.forEach(projects, function(project) {
                 if ($scope.user._id === project.builder) {
                   $scope.tabs = $scope.menuTypes['buider'];
@@ -40,27 +40,25 @@ angular.module('buiiltApp')
       $rootScope.$on('$stateChangeSuccess', function (event, next) {
         queryProjects();
         $scope.currentProject = $rootScope.currentProject;
-        console.log($scope.currentProject);
-        console.log($scope.menuTypes);
       });
 
 
       $scope.menuTypes = {
         homeOwner: [{sref: 'dashboard', label: 'dashboard'},
           {sref: 'client', label: 'builder'},
-          {sref: 'project', label: 'project'}],
+          {sref: 'projects.view', label: 'project'}],
         contractor: [{sref: 'dashboard', label: 'dashboard'},
           {sref: 'contractors', label: 'contractors'},
-          {sref: 'project', label: 'project'}],
+          {sref: 'projects.view', label: 'project'}],
         buider: [{sref: 'dashboard', label: 'dashboard'},
           {sref: 'client', label: 'client'},
           {sref: 'contractors', label: 'contractors'},
           {sref: 'materials', label: 'materials'},
           {sref: 'staff', label: 'staff'},
-          {sref: 'project', label: 'project'}],
+          {sref: 'projects.view', label: 'project'}],
         supplier: [{sref: 'dashboard', label: 'dashboard'},
           {sref: 'contractors', label: 'contractors'},
-          {sref: 'project', label: 'project'}]
+          {sref: 'projects.view', label: 'project'}]
       };
 
       // $scope.user = authService.getCurrentUser();

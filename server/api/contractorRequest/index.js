@@ -9,7 +9,7 @@ var router = express.Router();
 //router.get('/', auth.isAuthenticated(), controller.index);
 // router.get('/', controller.index);
 //router.delete('/:id', auth.hasRole('admin'), controller.destroy);
-router.get('/:id', auth.isAuthenticated(), controller.findOne);
+router.get('/:id', controller.findOne);
 router.post('/', auth.isAuthenticated(), controller.sendQuote);
 router.get('/:id/view', auth.isAuthenticated(), controller.getQuoteRequestByContractorPackge);
 

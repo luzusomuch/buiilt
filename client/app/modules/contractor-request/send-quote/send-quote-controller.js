@@ -1,11 +1,10 @@
 angular.module('buiiltApp')
-.controller('SendQuoteCtrl', function($scope, $state, $cookieStore, authService, userService, contractorRequest, contractorRequestService, quoteRequetService) {
+.controller('SendQuoteContractorPackageCtrl', function($scope, $state, $cookieStore, authService, userService, contractorRequest, contractorRequestService, quoteRequetService) {
   /**
    * quote data
    */
   $scope.quoteRequest = {};
   $scope.contractorRequest = contractorRequest;
-  console.log($scope.contractorRequest);
   $scope.currentUser = {};
   if ($cookieStore.get('token')) {
     $scope.currentUser = userService.get();
@@ -21,6 +20,28 @@ angular.module('buiiltApp')
 
   $scope.closeSuccess = function() {
     $scope.success = false;
+  };
+
+  $scope.signin = function () {
+    authService.login($scope.user).then(function () {
+      //show alert
+      $state.reload();
+    }, function (res) {
+      $scope.errors = res;
+    });
+  };
+
+  $scope.signup = function () {
+    $scope.user.idParams = $stateParams.id;
+    quoteService.createUserForHomeBuilderRequest($scope.user).$promise.then(function(data) {
+      $scope.user = {
+        allowNewsletter: true
+      };
+      alert('Registry successfully, please comfirm your email!')
+      $state.go('dashboard');
+    }, function(res) {
+      $scope.errors = res.data;
+    });
   };
 
 });
