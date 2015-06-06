@@ -92,7 +92,6 @@ exports.selectWinner = function(req, res) {
 };
 
 exports.getProjectsByUser = function(req, res) {
-  // var userList = [];
   Team.findOne({$or: [{'user': req.params.id}, {'groupUser._id': req.params.id}]}, function(err, team) {
     if (err) {return res.send(500, err);}
     else {
@@ -102,29 +101,8 @@ exports.getProjectsByUser = function(req, res) {
           return res.json(200, projects);
         }
       });
-      // return;
-      // userList.push({owner: team.user});
-      // async.each(team.groupUser, function(user, callback) {
-      //   if (user._id) {
-      //     userList.push({invitivationUser: user._id});  
-      //   }
-      //   callback();
-      // }, function(err) {
-      //   console.log(userList);
-      //   _.each(userList, function(user) {
-      //     if (user.owner) {
-
-      //     }
-      //   });
-      // });
     }
   });
-  // Project.find({$or: [{'user': req.params.id},{'groupUser._id': req.params.id}]}, function(err, projects) {
-  //   if (err) {return res.send(500, err);}
-  //   else {
-  //     return res.json(projects);
-  //   }
-  // })
 };
 
 exports.getProjectsByBuilder = function(req, res) {

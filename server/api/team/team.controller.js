@@ -84,10 +84,10 @@ exports.update = function (req, res) {
 };
 
 exports.getTeamByUser = function(req, res) {
-  Team.findOne({'user': req.params.id}, function(err, team){
+  Team.findOne({$or: [{'user': req.params.id}, {'groupUser._id': req.params.id}]}, function(err, team){
     if (err) {return res.send(500, err);}
     else {
-      return res.json(team)
+      return res.json(team);
     }
   });
 };

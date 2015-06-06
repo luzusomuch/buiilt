@@ -1,17 +1,17 @@
-angular.module('buiiltApp').controller('ContractorsCtrl', function($scope, $stateParams, $rootScope, $timeout, $q, contractorService, userService, projectService) {
+angular.module('buiiltApp').controller('ContractorsCtrl', function($scope, $stateParams, $rootScope, $timeout, $q, contractorService, authService, projectService, teamService) {
   $scope.contractor = {};
   $scope.currentProject = $rootScope.currentProject;
   $scope.emailsPhone = [];
-  $scope.user = userService.get();
+  $scope.user = authService.getCurrentUser();
+  if ($scope.user) {
+    teamService.getTeamByUser({'id': $scope.user._id}, function(team) {
+      $scope.team = team;
+    });
+  }
 
   // projectService.getProjectsByUser({'id': $scope.user._id}, function(projects) {
   //   $scope.projects = projects;
   // });
-
-  teamService.getTeamByUser({'id': $scope.user._id}, function(team) {
-    $scope.team = team;
-  });
-  
 
   $scope.addUser = function() {
     $scope.emailsPhone.push({email: $scope.newEmail, phoneNumber: $scope.newPhoneNumber});
