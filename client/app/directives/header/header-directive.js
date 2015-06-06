@@ -3,7 +3,7 @@ angular.module('buiiltApp')
   return {
     restrict: 'E',
     templateUrl: 'app/directives/header/header.html',
-    controller: function($scope, authService, projectService, contractorService) {
+    controller: function($scope, authService, projectService, contractorService, teamService) {
 
       function queryProjects(){
         authService.isLoggedInAsync(function(isLoggedIn){
@@ -11,30 +11,40 @@ angular.module('buiiltApp')
             $scope.isLoggedIn = true;
             $scope.user = authService.getCurrentUser();
 
-            projectService.getProjectsByUser({'id': $scope.user._id}, function(projects) {
-              $scope.projectsOwner = projects;
-              angular.forEach(projects, function(project) {
-                if ($scope.user._id === project.user) {
-                  $scope.tabs = $scope.menuTypes['homeOwner'];
-                }
+            // projectService.getProjectsByUser({'id': $scope.user._id}, function(projects) {
+            //   $scope.projectsOwner = projects;
+            //   angular.forEach(projects, function(project) {
+            //     if ($scope.user._id === project.user) {
+            //       $scope.tabs = $scope.menuTypes['homeOwner'];
+            //     }
+            //   });
+            // });
+            // projectService.getProjectsByBuilder({'id': $scope.user._id}, function(projects) {
+            //   $scope.projectsBuilder = projects;
+            //   angular.forEach(projects, function(project) {
+            //     if ($scope.user._id === project.builder) {
+            //       $scope.tabs = $scope.menuTypes['buider'];
+            //     }
+            //   });
+            // });
+            // contractorService.getProjectForContractorWhoWinner({'id': $scope.user._id}, function(result) {
+            //   $scope.projectsContractor = result;
+            //   angular.forEach(result, function(subResult) {
+            //     if ($scope.user._id === subResult.winner._id) {
+            //       $scope.tabs = $scope.menuTypes['contractor'];
+            //     }
+            //   });
+            // });
+
+            teamService.getTeamByUser({'id': $scope.user._id}, function(team) {
+              if (team.type === 'homeOwner') {
+                $scope.tabs = $scope.menuTypes['homeOwner']  
+              }
+              projectService.getProjectsByUser({'id': $scope.user._id}, function(projects){
+                $scope.projectsHomeOwner = projects;
               });
             });
-            projectService.getProjectsByBuilder({'id': $scope.user._id}, function(projects) {
-              $scope.projectsBuilder = projects;
-              angular.forEach(projects, function(project) {
-                if ($scope.user._id === project.builder) {
-                  $scope.tabs = $scope.menuTypes['buider'];
-                }
-              });
-            });
-            contractorService.getProjectForContractorWhoWinner({'id': $scope.user._id}, function(result) {
-              $scope.projectsContractor = result;
-              angular.forEach(result, function(subResult) {
-                if ($scope.user._id === subResult.winner._id) {
-                  $scope.tabs = $scope.menuTypes['contractor'];
-                }
-              });
-            });
+
           }else{
             $scope.isLoggedIn = false;
           }

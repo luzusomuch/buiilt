@@ -4,6 +4,9 @@ var mongoose = require('mongoose'),
   Schema = mongoose.Schema,
   async = require('async'),
   _ = require('lodash');
+var crypto = require('crypto');
+var okay = require('okay');
+var EventBus = require('./../components/EventBus');
 
 /**
  * put your comment there...
@@ -25,6 +28,15 @@ var TeamSchema = new Schema({
     ref: 'User',
     required: true
   },
+  groupUser: [{
+    _id: {
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    email: {
+      type: String
+    }
+  }],
   createdAt: {
     type: Date,
     default: Date.now
@@ -56,5 +68,22 @@ TeamSchema.statics.load = function (id, cb) {
     _id: id
   }).exec(cb);
 };
+
+TeamSchema
+.pre('save', function(next) {
+  this.wasNew = this.isNew;
+
+  if (!this.isNew){
+    this.updatedAt = new Date();
+  }
+
+  next();
+});
+
+TeamSchema.post('save', function (doc) {
+  var evtName = this.wasNew ? 'Team.Inserted' : 'Team.Updated';
+
+  EventBus.emit(evtName, doc);
+});
 
 module.exports = mongoose.model('Team', TeamSchema);

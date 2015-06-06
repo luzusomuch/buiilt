@@ -12,6 +12,13 @@ angular.module('buiiltApp')
       },
       update: {
         method: 'PUT'
+      },
+      getTeamByUser: {
+        method: 'GET',
+        params: {
+          id: 'id',
+          action: 'user'
+        }
       }
     }
     );

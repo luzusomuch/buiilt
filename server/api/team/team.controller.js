@@ -36,17 +36,38 @@ exports.create = function (req, res) {
     }
     var team = new Team(data);
     team.user = req.user;
-    team.save(function (err) {
-      if (err) {
-        return errorsHelper.validationErrors(res, err);
-      }
-      req.user.teams.push({_id:team._id,role:'admin'});
-      req.user.save(function (err) {
-        if (err) {
-          return errorsHelper.validationErrors(res, err);
+    var listEmail = [];
+    async.each(data.emails, function(email, callback) {
+      User.findOne({'email': email.email}, function (err, user) {
+        if (err) {return res.send(500, err);}
+        if (!user) {
+          listEmail.push(email);
         }
-        return res.json(team);
+        else {
+          listEmail.push({
+            _id: user._id,
+            email: user.email
+          });
+        }
+        callback();
       });
+    }, function(err) {
+      if (err) {console.log(err);}
+      else {
+        team.groupUser = listEmail;
+        team.save(function(err){
+          if (err) {
+            return errorsHelper.validationErrors(res, err);
+          }
+          req.user.teams.push({_id:team._id,role:'admin'});
+          req.user.save(function (err) {
+            if (err) {
+              return errorsHelper.validationErrors(res, err);
+            }
+            return res.json(team);
+          });
+        });
+      }
     });
   });
 };
@@ -60,4 +81,13 @@ exports.show = function (req, res) {
 
 exports.update = function (req, res) {
   
+};
+
+exports.getTeamByUser = function(req, res) {
+  Team.findOne({'user': req.params.id}, function(err, team){
+    if (err) {return res.send(500, err);}
+    else {
+      return res.json(team)
+    }
+  });
 };
