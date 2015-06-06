@@ -40,6 +40,15 @@ angular.module('buiiltApp')
               if (team.type === 'homeOwner') {
                 $scope.tabs = $scope.menuTypes['homeOwner']  
               }
+              else if(team.type === 'buider') {
+                $scope.tabs = $scope.menuTypes['buider']   
+              }
+              else if(team.type === 'contractor') {
+                $scope.tabs = $scope.menuTypes['contractor']
+              }
+              else if(team.type === 'supplier') {
+                $scope.tabs = $scope.menuTypes['supplier']
+              }
               projectService.getProjectsByUser({'id': $scope.user._id}, function(projects){
                 $scope.projectsHomeOwner = projects;
               });

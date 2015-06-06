@@ -1,5 +1,13 @@
 angular.module('buiiltApp')
-  .controller('TeamCtrl', function ($scope, teams, teamService) {
+  .controller('TeamCtrl', function ($scope, teams, teamService, authService) {
+
+    $scope.user = authService.getCurrentUser();
+    if ($scope.user) {
+      teamService.getTeamByUser({'id': $scope.user._id}).$promise.then(function(team){
+        $scope.existedTeam = team;
+      });
+    }
+
     $scope.teams = teams;
     $scope.team = {};
     $scope.team.emails = [];

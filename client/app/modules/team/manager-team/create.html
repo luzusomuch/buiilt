@@ -1,4 +1,15 @@
 <div id="newTeam" class="modal">
+  <!-- 
+  <form ng-if="existedTeam">
+    {{existedTeam.length}}
+    <div class="modal-content">
+      <h5>You have created or joined a team, please leave this one before create new.</h5>
+    </div>
+    <div class="divider"></div>
+    <div class="modal-footer">
+      <a class="modal-action modal-close btn-flat">Close</a>
+    </div>
+  </form> -->
   <form ng-submit="create(form)" name="form">
     <div class="modal-content">
       <h5>Create Your New Team:</h5>
@@ -41,6 +52,7 @@
     <div class="divider"></div>
     <div class="modal-footer">
       <button class="modal-action modal-close waves-effect waves-green btn-flat" ng-disabled="form.$invalid" type="submit">Create Team</button>
+      <a class="modal-action modal-close btn-flat">Close</a>
     </div>
   </form>
 </div>

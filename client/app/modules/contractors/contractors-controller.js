@@ -8,6 +8,9 @@ angular.module('buiiltApp').controller('ContractorsCtrl', function($scope, $stat
   //   $scope.projects = projects;
   // });
 
+  teamService.getTeamByUser({'id': $scope.user._id}, function(team) {
+    $scope.team = team;
+  });
   
 
   $scope.addUser = function() {

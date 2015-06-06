@@ -2,6 +2,7 @@
 
 var User = require('./../../models/user.model');
 var Project = require('./../../models/project.model');
+var Team = require('./../../models/team.model');
 var passport = require('passport');
 var config = require('../../config/environment');
 var jwt = require('jsonwebtoken');
@@ -39,16 +40,31 @@ exports.create = function (req, res, next) {
         return validationError(res, err);
       }
       //update project for user
-      Project.find({'requestedHomeBuilders.email': req.body.email}, function (err, projects) {
-        if (err) {
-          console.log(err);
-        }
+      // Project.find({'requestedHomeBuilders.email': req.body.email}, function (err, projects) {
+      //   if (err) {
+      //     console.log(err);
+      //   }
+      //   else {
+      //     _.each(projects, function (pj) {
+      //       _.each(pj.requestedHomeBuilders, function (builder) {
+      //         if (builder.email === req.body.email) {
+      //           builder._id = newUser._id;
+      //           pj.save();
+      //         }
+      //       });
+      //     });
+      //   }
+      // });
+
+      //update teams for group user
+      Team.find({'groupUser.email': req.body.email}, function(err, teams) {
+        if (err) {return res.send(500, err);}
         else {
-          _.each(projects, function (pj) {
-            _.each(pj.requestedHomeBuilders, function (builder) {
-              if (builder.email === req.body.email) {
-                builder._id = newUser._id;
-                pj.save();
+          _.each(teams, function(team) {
+            _.each(team.groupUser, function(user) {
+              if (user.email === req.body.email) {
+                user._id = newUser._id;
+                team.save();
               }
             });
           });
