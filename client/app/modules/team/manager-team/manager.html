@@ -3,29 +3,60 @@
 </div>
 <div ng-include="'app/modules/team/manager-team/create.html'"></div>
 <div class="col s12">
-  <ul class="collapsible" data-collapsible="accordion" >
-    <li ng-repeat="item in teams">
-      <div class="collapsible-header">{{item.name}} - {{item.type}}<span>- Team ID: {{item._id}} (To Be Shared)</span></div>
-      <div class="collapsible-body" style="background-color:white">
-        <div class="row">
-          <div class="col s12 z-depth-1">
-            <ul class="tabs">
-              <li class="tab col s6"><a class="active" href="#details1">Details</a></li>
-              <li class="tab col s6"><a href="#members1">Members</a></li>
-            </ul>
-          </div>
-          <div id="details1" class="col s12">
-            {{item.name}}
-          </div>
-          <div id="members1" class="col s12">
-            <div class="row">
-              <ul class="col s12">
-                <li ng-repeat="member in item.groupUser"><span>{{member.email}}</span></li>
-              </ul>
-            </div>
-          </div>
+  <div class="row" ng-repeat="item in teams">
+    <div class="row">
+      <h5>Group: {{item.name}} - type {{item.type}}<span> (To Be Shared with {{item.groupUser.length}} member(s))</span></h5>
+    </div>
+    <div class="row">
+      <a class="waves-effect waves-light btn modal-trigger" href="#newMember">Add new member</a>
+      <br>
+      <div class="col s12 z-depth-1">
+        <a href=""></a>
+        <table>
+          <thead>
+            <th class="col s2">#</th>
+            <th class="col s7">Member email</th>
+            <th class="col s3">Action</th>
+          </thead>
+          <tbody>
+            <tr ng-repeat="member in item.groupUser">
+              <td class="col s2">{{$index + 1 }}</td>
+              <td class="col s7">{{member.email}}</td>
+              <td class="col s3">
+                <a class="waves-effect waves-light btn">Remove</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="newMember" class="modal">
+  <form name="newMemberForm" ng-submit="addNewMember()">
+    <div class="modal-content">
+      <div class="row">
+        <div class="input-field col s12">
+          <input type="email" ng-model="team.userEmail" required class="s9">
+          <label for="">Email</label>
+          <a class="btn waves-effect waves-light right" name="action" ng-click="addUser()"> <i class="mdi-content-add tiny"></i></a>
+
+          <ul>
+            <li class="collection-item vlalign" ng-repeat="email in team.emails">
+              <div class="row" style="margin-bottom: 0px">
+                <div class="col s8">{{email.email}}</div>
+                <div class="col s4"><a class="btn waves-effect waves-light right" name="action"> <i class="mdi-content-remove tiny"></i></a></div>
+              </div>
+            </li>
+          </ul>
+
         </div>
       </div>
-    </li>
-  </ul>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-action modal-close waves-effect waves-green btn-flat" ng-disabled="newMemberForm.$invalid" type="submit">Add new member</button>
+      <a class="modal-action modal-close btn-flat">Close</a>
+    </div>
+  </form>
 </div>

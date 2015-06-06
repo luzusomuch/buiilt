@@ -26,4 +26,8 @@ angular.module('buiiltApp')
         });
       }
     };
+
+    $scope.addNewMember = function(){
+
+    };
   });
