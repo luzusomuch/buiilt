@@ -80,7 +80,8 @@ exports.show = function (req, res) {
 };
 
 exports.update = function (req, res) {
-  
+  console.log('asdasdsad');
+  console.log(req.params.id);
 };
 
 exports.getTeamByUser = function(req, res) {

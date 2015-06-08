@@ -11,7 +11,10 @@ angular.module('buiiltApp')
         isArray: true
       },
       update: {
-        method: 'PUT'
+        method: 'PUT',
+        params: {
+          id: 'id'
+        }
       },
       getTeamByUser: {
         method: 'GET',

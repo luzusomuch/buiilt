@@ -14,7 +14,7 @@ exports.index = function (req, res) {
     if (err){
       return res.send(500, err);
     }    
-    res.json(200, {contractors : contractors});
+    res.json(200, contractors);
   });
 };
 
@@ -32,16 +32,26 @@ exports.createContractorPackage = function (req, res, next) {
   async.each(req.body.emailsPhone, function(emailPhone, callback) {
     User.findOne({'email': emailPhone.email}, function(err, user) {
       if (err) {return res.send(500,err);}
+      if (!user) {
+        to.push({
+          email: emailPhone.email,
+          phone: emailPhone.phoneNumber
+        });
+        callback();
+      }
       else {
-        emailPhone._id = user._id;
-        to.push(emailPhone);
-        contractorPackage.to = to;
+        to.push({
+          _id: user._id,
+          email: emailPhone.email,
+          phone: emailPhone.phoneNumber
+        });
         callback();
       }
     });
   }, function(err) {
     if (err) {return res.send(500,err);}
     else {
+      contractorPackage.to = to;
       contractorPackage.save(function(err, saved){
         if (err) {return res.send(500,err);}
         else {
@@ -69,7 +79,6 @@ exports.createContractorPackage = function (req, res, next) {
 };
 
 exports.getProjectForContractorWhoWinner = function(req, res) {
-  console.log(req.params.id);
   ContractorPackage.find({'winner._id': req.params.id}).populate('project').exec(function(err, result){
     if (err) {res.send(500, err);}
     else {
@@ -77,3 +86,12 @@ exports.getProjectForContractorWhoWinner = function(req, res) {
     }
   });
 };
+
+exports.getContractorByProject = function(req, res) {
+  ContractorPackage.find({'project': req.params.id}, function(err, contractors){
+    if (err) {return res.send(500, err);}
+    else {
+      return res.json(200, contractors);
+    }
+  })
+}

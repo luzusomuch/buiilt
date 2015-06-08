@@ -1,6 +1,6 @@
 angular.module('buiiltApp')
   .controller('TeamCtrl', function ($scope, teams, teamService, authService) {
-
+    $scope.existedTeam = {};
     $scope.user = authService.getCurrentUser();
     if ($scope.user) {
       teamService.getTeamByUser({'id': $scope.user._id}).$promise.then(function(team){
@@ -28,6 +28,10 @@ angular.module('buiiltApp')
     };
 
     $scope.addNewMember = function(){
-
+      teamService.update({'id': $scope.existedTeam._id}, function(team) {
+        $scope.teams.push(team);
+      }, function(err){
+        console.log(err);
+      });
     };
   });

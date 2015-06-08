@@ -12,6 +12,14 @@ angular.module('buiiltApp')
                 action: 'winner'
             },
             isArray: true
+        },
+        getContractorByProject: {
+            method: 'GET',
+            params: {
+                id: 'id',
+                action: 'project'
+            },
+            isArray: true
         }
     });
 });

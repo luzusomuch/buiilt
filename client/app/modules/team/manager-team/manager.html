@@ -9,7 +9,8 @@
     </div>
     <div class="row">
       <a class="waves-effect waves-light btn modal-trigger" href="#newMember">Add new member</a>
-      <br>
+    </div>
+    <div class="row">
       <div class="col s12 z-depth-1">
         <a href=""></a>
         <table>
@@ -23,7 +24,7 @@
               <td class="col s2">{{$index + 1 }}</td>
               <td class="col s7">{{member.email}}</td>
               <td class="col s3">
-                <a class="waves-effect waves-light btn">Remove</a>
+                <a class="btn waves-effect waves-light right" name="action"> <i class="mdi-content-remove tiny"></i></a>
               </td>
             </tr>
           </tbody>
@@ -38,7 +39,7 @@
     <div class="modal-content">
       <div class="row">
         <div class="input-field col s12">
-          <input type="email" ng-model="team.userEmail" required class="s9">
+          <input type="email" ng-model="team.userEmail" required class="col s9">
           <label for="">Email</label>
           <a class="btn waves-effect waves-light right" name="action" ng-click="addUser()"> <i class="mdi-content-add tiny"></i></a>
 

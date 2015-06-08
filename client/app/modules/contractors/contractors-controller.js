@@ -9,6 +9,10 @@ angular.module('buiiltApp').controller('ContractorsCtrl', function($scope, $stat
     });
   }
 
+  contractorService.getContractorByProject({'id': $stateParams.id}).$promise.then(function(data){
+    $scope.contractors = data;
+  });
+
   // projectService.getProjectsByUser({'id': $scope.user._id}, function(projects) {
   //   $scope.projects = projects;
   // });
@@ -22,5 +26,7 @@ angular.module('buiiltApp').controller('ContractorsCtrl', function($scope, $stat
 
     });
   };
+
+
 });
 
