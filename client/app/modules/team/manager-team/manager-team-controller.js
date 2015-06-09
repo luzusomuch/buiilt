@@ -28,10 +28,14 @@ angular.module('buiiltApp')
     };
 
     $scope.addNewMember = function(){
-      teamService.update({'id': $scope.existedTeam._id}, function(team) {
+      teamService.update({id: $scope.existedTeam._id, params: $scope.team.emails}, function(team) {
         $scope.teams.push(team);
       }, function(err){
         console.log(err);
       });
+    };
+
+    $scope.removeUser = function(value) {
+      console.log(value);
     };
   });

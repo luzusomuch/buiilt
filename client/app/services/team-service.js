@@ -13,7 +13,7 @@ angular.module('buiiltApp')
       update: {
         method: 'PUT',
         params: {
-          id: 'id'
+          id: '@id'
         }
       },
       getTeamByUser: {

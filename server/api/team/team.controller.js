@@ -80,8 +80,38 @@ exports.show = function (req, res) {
 };
 
 exports.update = function (req, res) {
-  console.log('asdasdsad');
-  console.log(req.params.id);
+  Team.findById(req.params.id, function(err, team) {
+    if (err) {return res.send(500, err);}
+    else {
+      var listEmail = team.groupUser;
+      async.each(req.body.params, function(email, callback) {
+        User.findOne({'email': email.email}, function (err, user) {
+          if (err) {return res.send(500, err);}
+          if (!user) {
+            listEmail.push(email);
+          }
+          else {
+            listEmail.push({
+              _id: user._id,
+              email: user.email
+            });
+          }
+          callback();
+        });
+      }, function(err) {
+        if (err) {return res.send(500, err);}
+        else {
+          team.groupUser = listEmail;
+          team.save(function(err, saved){
+            if (err) {return res.send(500, err);}
+            else {
+              return res.json(200, saved);
+            }
+          });
+        }
+      });
+    }
+  });
 };
 
 exports.getTeamByUser = function(req, res) {
