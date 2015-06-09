@@ -24,28 +24,118 @@ exports.index = function(req, res) {
  * @returns {undefined}
  */
 exports.create = function(req, res){
-  ProjectValidator.validateCreate(req, function(err, data) {
-    if (err) {return errorsHelper.validationErrors(res, err, 'Validation');}
-    var project = new Project(data);
-    project.builder = data.user;
-    project.save(function(err, savedProject) {
-      if (err) { return errorsHelper.validationErrors(res, err); }
-
-      //create new builder package
-      var builderPackage = new BuilderPackage({
-        user: data.user,
-        project: savedProject._id,
-        name: savedProject.name,
-        description: savedProject.description
-      });
-
-      builderPackage.save(function (err, savedBuilderPackage) {
-        if (err) { return errorsHelper.validationErrors(res, err);}
-
-        return res.json(savedBuilderPackage);
-      });
-    });
+  Team.findOne({user: req.user._id}, function(err, team){
+    if (err) {return res.send(500,err);}
+    if (!team) {return res.send(404,err);}
+    else{
+      if (team.type === 'homeOwner') {
+        var project = new Project({
+          name: req.body.name,
+          description: req.body.description,
+          user: {_id: req.user._id, email: req.user.email}
+        });
+        User.findOne({'email': req.body.email}, function(err, user){
+          if (err) {return res.send(500,err);}
+          if (!user) {
+            return res.send(404, err);
+          }
+          else {
+            project.builder._id = user._id;
+            project.builder.email = user.email;
+            project.save(function(err,saved) {
+              if (err) {return res.send(500,err);}
+              else {
+                var builderPackage = new BuilderPackage({
+                  location: {
+                    address: req.body.location.address,
+                    postcode: req.body.location.postcode,
+                    suburb: req.body.location.suburb
+                  },
+                  user: saved.builder._id,
+                  project: saved._id,
+                  name: saved.name,
+                  description: saved.description
+                });
+                builderPackage.save();
+              }
+            });
+          }
+        });
+      }
+      else if(team.type === 'buider') {
+        var project = new Project({
+          name: req.body.name,
+          description: req.body.description,
+          builder: {_id: req.user._id, email: req.user.email}
+        });
+        User.findOne({'email': req.body.email}, function(err, user){
+          if (err) {return res.send(500,err);}
+          if (!user) {
+            return res.send(404, err);
+          }
+          else {
+            project.user._id = user._id;
+            project.user.email = user.email;
+            project.save(function(err, saved){
+              if (err) {return res.send(500,err);}
+              else {
+                var builderPackage = new BuilderPackage({
+                  location: {
+                    address: req.body.location.address,
+                    postcode: req.body.location.postcode,
+                    suburb: req.body.location.suburb
+                  },
+                  user: saved.builder._id,
+                  project: saved._id,
+                  name: saved.name,
+                  description: saved.description
+                });
+                builderPackage.save();
+              }
+            });
+          }
+        });
+      }
+    }
   });
+  
+
+  // ProjectValidator.validateCreate(req, function(err, data) {
+  //   if (err) {return errorsHelper.validationErrors(res, err, 'Validation');}
+  //   var project = new Project(data);
+
+  //   //get current user team type
+  //   Team.findOne({user: req.user._id}, function(err, team) {
+  //     if (err) {return res.send(500, err);}
+  //     if (!team) {return res.send(404, err);}
+  //     else {
+  //       if (team.type === 'homeOwner' ) {
+
+  //       }
+  //       else if(team.type === 'buider') {
+
+  //       }
+  //     }
+  //   });
+  //   project.builder = data.user;
+  //   project.save(function(err, savedProject) {
+  //     if (err) { return errorsHelper.validationErrors(res, err); }
+
+  //     //create new builder package
+  //     var builderPackage = new BuilderPackage({
+  //       user: data.user,
+  //       project: savedProject._id,
+  //       name: savedProject.name,
+  //       description: savedProject.description
+  //     });
+
+  //     builderPackage.save(function (err, savedBuilderPackage) {
+  //       if (err) { return errorsHelper.validationErrors(res, err);}
+
+  //       return res.json(savedBuilderPackage);
+  //     });
+  //   });
+  // });
 };
 
 /**
@@ -94,6 +184,7 @@ exports.selectWinner = function(req, res) {
 exports.getProjectsByUser = function(req, res) {
   Team.findOne({$or: [{'user': req.params.id}, {'groupUser._id': req.params.id}]}, function(err, team) {
     if (err) {return res.send(500, err);}
+    if (!team) {return res.send(500, err);}
     else {
       Project.find({'user': team.user}, function(err, projects){
         if (err) {return res.send(500, err);}

@@ -9,6 +9,10 @@ var EventBus = require('./../../components/EventBus');
 var User = require('./../../models/user.model');
 var config = require('./../../config/environment');
 
+EventBus.onSeries('Project.Inserted', function(project, next){
+    console.log(project);
+});
+
 /**
  * event handler after creating new project
  */

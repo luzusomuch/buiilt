@@ -8,8 +8,8 @@ var EventBus = require('./../components/EventBus');
 
 var ProjectSchema = new Schema({
   //creator, this is home owner
-  user: {type: Schema.Types.ObjectId, ref: 'User'},
-  builder: {type: Schema.Types.ObjectId},
+  user: {_id: {type: Schema.Types.ObjectId, ref: 'User'}, email: {type:String}},
+  builder: {_id: {type: Schema.Types.ObjectId, ref: 'User'}, email: {type:String}},
   name: {
     type: String,
     default: '',
@@ -19,6 +19,7 @@ var ProjectSchema = new Schema({
     type: String,
     default: ''
   },
+  type : {type: String},
   status: {
     type: String,
     enum: ['open', 'close'],

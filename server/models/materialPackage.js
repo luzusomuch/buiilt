@@ -14,15 +14,43 @@ var MaterialPackageSchema = new Schema({
   },
   name: String,
   description: String,
-  suppliers :{ 
+  project: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'Project',
     required: true
   },
+  winnerTeam: {
+    _id: {
+      type: Schema.Types.ObjectId,
+      ref: 'Team'
+    },
+    name: {
+      type: String
+    }
+  },
+  to: [{
+    _id: {
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    email: {
+      type: String
+    },
+    phoneNumber: {
+      type: Number
+    }
+  }],
+  requirements: [{
+    description: {
+      type: String
+    },
+    quantity: {
+      type: Number
+    }
+  }],
   quote: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+    type: Number,
+    // required: true
   },
   defact:[],
   isSelect: { type: Boolean, default: false },
@@ -31,4 +59,22 @@ var MaterialPackageSchema = new Schema({
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
 });
+
+MaterialPackageSchema
+.pre('save', function(next) {
+  this.wasNew = this.isNew;
+
+  if (!this.isNew){
+    this.updatedAt = new Date();
+  }
+
+  next();
+});
+
+MaterialPackageSchema.post('save', function (doc) {
+  var evtName = this.wasNew ? 'MaterialPackage.Inserted' : 'MaterialPackage.Updated';
+
+  EventBus.emit(evtName, doc);
+});
+
 module.exports = mongoose.model('MaterialPackage', MaterialPackageSchema);

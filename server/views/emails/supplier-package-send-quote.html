@@ -1,0 +1,47 @@
+{% extends 'layouts/default.html' %}
+
+{% block content %}
+<p>
+  <%= user.email %> has invited you to send quote for material package <%= materialPackage.name %>
+</p>
+
+<p>
+  <b>Project detail <%= project.name %></b>
+  <%= project.description %>
+</p>
+
+<div>
+  <h6>Material package detail</h6>
+  <%= materialPackage.requirements %>
+    <table>
+        <thead>
+            <th>#</th>
+            <th>Description</th>
+            <th>Quantity</th>
+        </thead>
+        <tbody>
+            {% for requirement in materialPackage.requirements %}
+            <tr>
+                <td></td>
+                <td>{{requirement.description}}</td>
+                <td>{{requirement.quantity}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<p>
+  Your can click <a href="<%= link %>">here</a> to send the request.
+
+  <br/>
+  Feel free to contact us at <a href="mailto:admin@buiilt.com">admin@buiilt.com</a> if you have any questions.
+</p>
+
+<p>
+  Love, <br/>
+  Team buiilt
+  <br/>
+  <a href="http://www.buiilt.com">www.buiilt.com</a>
+</p>
+
+{% endblock %}

@@ -1,0 +1,50 @@
+<div class="row">
+  <h4>Project detail</h4>
+  <h5>{{contractorRequest.project.name}}</h5>
+
+  <p>{{contractorRequest.project.description}}</p>
+
+  <alert type="success" close="closeSuccess()" ng-show="success">Thank you for your submit</alert>
+  <alert ng-repeat="(key, msg) in errors" type="danger" close="closeAlert(key)">{{msg}}</alert>
+
+  <!-- <h4>Package detail</h4>
+  <h5>{{quoteRequest.package.name}}</h5>
+
+  <p>{{quoteRequest.package.description}}</p>
+  <p><b>Price </b>{{quoteRequest.price}}</p> -->
+  <h4>Package detail</h4>
+  <h5>{{contractorRequest.name}}</h5>
+  <p>{{contractorRequest.description}}</p>
+</div>
+<div class="clearfix"></div>
+
+<div class="row listQuoteRequest" ng-if="contractorRequest.owner == currentUser._id">
+  <table class="hoverable responsive-table">
+      <thead>
+          <th>Contractor name</th>
+          <th>Description</th>
+          <th>Price</th>
+          <th>Action</th>
+      </thead>
+      <tbody>
+        <tr ng-if="contractorRequest.winner._id != '' || contractorRequest.winner._id != ''">
+            <td>{{contractorRequest.winner.email}}</td>
+            <td>{{contractorRequest.description}}</td>
+            <td>{{contractorRequest.quote}}</td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr ng-repeat="quoteRequest in quoteRequests" ng-if="contractorRequest.winner._id == null || contractorRequest.winner._id == ''">
+            <td>{{quoteRequest.user.email}}</td>
+            <td>{{quoteRequest.description}}</td>
+            <td>{{quoteRequest.price}}</td>
+            <td>
+                <input name="groupQuoteRequest" type="radio" id='{{quoteRequest._id}}' ng-click="selectQuote(quoteRequest._id)">
+                <label for='{{quoteRequest._id}}'>Select</label>
+            </td>
+        </tr>
+          
+      </tbody>
+  </table>
+</div>
