@@ -77,7 +77,7 @@ exports.selectQuote = function(req, res) {
           Project.findById(quoteRequestSaved.project, function(err, project) {
             if (err) {return res.send(500, err);}
             else {
-              project.user = req.user._id;
+              project.user._id = req.user._id;
               project.save(function(err, saved) {
                 if (err) {return res.send(500, err);}
                 else {

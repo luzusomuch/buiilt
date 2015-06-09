@@ -20,14 +20,38 @@
       </md-input-container>
     </div>
     <div layout layout-sm="column">
-      <md-input-container flex>
-        <label>Enter home owner email</label>
-        <input ng-model="quote.email" type="email" required placeholder="Home owner email who will receive this package" />
-      </md-input-container>
-    </div>
-
-    <div layout layout-sm="column">
-      <button class="waves-effect waves-light btn" ng-disabled="createQuoteForm.$invalid">Send quote</button>
+      <button ng-if="currentUser.email" class="waves-effect waves-light btn" ng-disabled="createQuoteForm.$invalid">Send quote</button>
+      <a ng-if="!currentUser.email" class="waves-effect waves-light btn modal-trigger" href="#login">Login</a>
     </div>
   </form>
+</div>
+
+<div id="login" class="modal">
+  <div class="modal-content">
+    <form method="post" ng-submit="signin()" style="padding:10px;">
+      <h3>Login</h3>
+      <div layout layout-sm="column">
+        <div input-field>
+          <label>Email</label>
+          <input ng-model="user.email" type="text" required>
+        </div>
+      </div>
+      <div layout layout-sm="column">
+        <div input-field>
+          <label>Password</label>
+          <input ng-model="user.password" required type="password">
+        </div>
+      </div>
+
+      <div layout layout-sm="column">
+        <button class="waves-effect waves-light btn modal-action modal-close" id="btn-login">Login</button>
+      </div>
+      <div class="divider"></div>
+      <div class="modal-footer">
+        <!-- <button class="waves-effect waves-light btn" ng-disabled="createContractorPackageForm.$invalid">Create Package!</button> -->
+           <!-- <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Create Package!</a> -->
+       <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
+      </div>
+    </form>
+  </div>
 </div>

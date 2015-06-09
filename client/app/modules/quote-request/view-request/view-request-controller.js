@@ -1,9 +1,8 @@
-angular.module('buiiltApp').controller('ViewQuoteRequestCtrl', function($scope, $state, $stateParams, $cookieStore, authService, userService, quoteRequest, quoteRequetService, quoteService) {
+angular.module('buiiltApp').controller('ViewQuoteRequestCtrl', function($scope, $window, $state, $stateParams, $cookieStore, authService, userService, quoteRequest, quoteRequetService, quoteService) {
   /**
    * quote data
    */
   $scope.quoteRequest = quoteRequest;
-
   $scope.currentUser = {};
   if ($cookieStore.get('token')) {
     $scope.currentUser = userService.get();
@@ -44,7 +43,7 @@ angular.module('buiiltApp').controller('ViewQuoteRequestCtrl', function($scope, 
 
   $scope.selectQuote = function(value) {
     quoteRequetService.selectQuote(value).then(function(quote) {
-      $state.go('dashboard');
+      $window.location.href = $scope.quoteRequest.project._id + '/dashboard';
     });
   };
 });

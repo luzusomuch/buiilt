@@ -1,6 +1,8 @@
-angular.module('buiiltApp').controller('SendQuoteBuilderPackageCtrl', function($scope, builderPackage, quoteRequetService) {
+angular.module('buiiltApp').controller('SendQuoteBuilderPackageCtrl', function($scope, authService, builderPackage, quoteRequetService) {
   $scope.builderPackage = builderPackage;
-
+  $scope.currentUser = authService.getCurrentUser();
+  console.log($scope.currentUser);
+  $scope.user = {};
   /**
    * quote data
    */
@@ -20,6 +22,15 @@ angular.module('buiiltApp').controller('SendQuoteBuilderPackageCtrl', function($
       $scope.quote = {
         package: builderPackage._id
       };
+    });
+  };
+
+  $scope.signin = function () {
+    authService.login($scope.user).then(function () {
+      //show alert
+      $state.reload();
+    }, function (res) {
+      $scope.errors = res;
     });
   };
 });

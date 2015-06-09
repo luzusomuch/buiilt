@@ -10,10 +10,10 @@ var BuilderPackage = require('./../models/builderPackage.model');
 exports.validateCreate = function(req, cb) {
   req.checkBody('description', 'Description is required').notEmpty();
   req.checkBody('price', 'Description is required').notEmpty();
-  req.checkBody('email', 'Email is required').notEmpty();
+  // req.checkBody('email', 'Email is required').notEmpty();
   req.checkBody('package', 'Package is required').notEmpty();
 
-  return cb(req.validationErrors(), _.assign(_.pick(req.body, 'description', 'price', 'email', 'package'), {
+  return cb(req.validationErrors(), _.assign(_.pick(req.body, 'description', 'price', 'package'), {
     user: req.user._id
   }));
 };

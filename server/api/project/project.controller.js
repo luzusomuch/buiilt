@@ -32,7 +32,8 @@ exports.create = function(req, res){
         var project = new Project({
           name: req.body.name,
           description: req.body.description,
-          user: {_id: req.user._id, email: req.user.email}
+          user: {_id: req.user._id, email: req.user.email},
+          type: 'FromHomeOwnerToBuilder'
         });
         User.findOne({'email': req.body.email}, function(err, user){
           if (err) {return res.send(500,err);}
@@ -56,7 +57,12 @@ exports.create = function(req, res){
                   name: saved.name,
                   description: saved.description
                 });
-                builderPackage.save();
+                builderPackage.save(function(err, saved){
+                  if (err) {return res.send(500, err);}
+                  else {
+                    return res.json(200,saved);
+                  }
+                });
               }
             });
           }
@@ -66,7 +72,8 @@ exports.create = function(req, res){
         var project = new Project({
           name: req.body.name,
           description: req.body.description,
-          builder: {_id: req.user._id, email: req.user.email}
+          builder: {_id: req.user._id, email: req.user.email},
+          type: 'FromBuilderToHomeOwner'
         });
         User.findOne({'email': req.body.email}, function(err, user){
           if (err) {return res.send(500,err);}
@@ -74,7 +81,7 @@ exports.create = function(req, res){
             return res.send(404, err);
           }
           else {
-            project.user._id = user._id;
+            // project.user._id = user._id;
             project.user.email = user.email;
             project.save(function(err, saved){
               if (err) {return res.send(500,err);}
@@ -90,7 +97,12 @@ exports.create = function(req, res){
                   name: saved.name,
                   description: saved.description
                 });
-                builderPackage.save();
+                builderPackage.save(function(err, saved){
+                  if (err) {return res.send(500, err);}
+                  else {
+                    return res.json(200,saved);
+                  }
+                });
               }
             });
           }

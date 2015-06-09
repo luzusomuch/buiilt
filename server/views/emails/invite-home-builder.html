@@ -1,0 +1,22 @@
+{% extends 'layouts/default.html' %}
+
+{% block content %}
+<p>
+  Home owner <%= project.user.email %> invites you to send a quote for project <%= project.name %>
+</p>
+
+<p>
+  Please click <a href="<%= link %>">here</a> to send the quote for this project.
+
+  <br/>
+  Feel free to contact us at <a href="mailto:admin@buiilt.com">admin@buiilt.com</a> if you have any questions.
+</p>
+
+<p>
+    Love, <br/>
+    Team buiilt
+    <br/>
+    <a href="http://www.buiilt.com">www.buiilt.com</a>
+  </p>
+
+{% endblock %}

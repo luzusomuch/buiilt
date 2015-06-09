@@ -1,0 +1,22 @@
+{% extends 'layouts/default.html' %}
+
+{% block content %}
+<p>
+  Home builder <%= project.builder.email %> invites you to become a home owner for project <%= project.name %>
+</p>
+
+<p>
+  Please click <a href="<%= link %>">here</a> to go to this project.
+
+  <br/>
+  Feel free to contact us at <a href="mailto:admin@buiilt.com">admin@buiilt.com</a> if you have any questions.
+</p>
+
+<p>
+    Love, <br/>
+    Team buiilt
+    <br/>
+    <a href="http://www.buiilt.com">www.buiilt.com</a>
+  </p>
+
+{% endblock %}

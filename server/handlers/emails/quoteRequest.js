@@ -35,7 +35,7 @@ EventBus.onSeries('QuoteRequest.Inserted', function(request, next) {
     if (!err) {
       //do send email
       if (result.builderPackage) {
-        Mailer.sendMail('builder-quote-request.html', request.email, {
+        Mailer.sendMail('builder-quote-request.html', result.project.user.email, {
           quoteRequest: request,
           //project owner
           user: result.user,

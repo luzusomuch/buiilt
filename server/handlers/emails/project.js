@@ -9,36 +9,23 @@ var EventBus = require('./../../components/EventBus');
 var User = require('./../../models/user.model');
 var config = require('./../../config/environment');
 
-EventBus.onSeries('Project.Inserted', function(project, next){
-    console.log(project);
+EventBus.onSeries('Project.Inserted', function(request, next){
+    if (request.type === 'FromHomeOwnerToBuilder') {
+        Mailer.sendMail('invite-home-builder.html', request.builder.email, {
+            project: request,
+            link: config.baseUrl + 'builder-packages/' + request._id + '/send-quote',
+            subject: 'Invite home builder send quote for ' + request.name
+        },function(err){
+            return next();
+        });
+    }
+    else if(request.type === 'FromBuilderToHomeOwner') {
+        Mailer.sendMail('invite-home-owner.html', request.user.email, {
+            project: request,
+            link: config.baseUrl + request._id + '/dashboard',
+            subject: 'Invite home builder for ' + request.name
+        },function(err){
+            return next();
+        });
+    }
 });
-
-/**
- * event handler after creating new project
- */
- //remove
-// EventBus.onSeries('Project.Inserted', function(project, next) {
-//     //find user to send email
-//     var emails=[];
-//     _.each(project.requestedHomeBuilders, function(requestedHomeBuilder) {
-//         User.find({'email' : requestedHomeBuilder.email}, function(err, users){
-//         if(users.length){
-//             _.each(users, function(user){
-//                 Mailer.sendMail('invite-home-builder-send-quote-has-account.html', user.email, {
-//                   project: project,
-//                   projectLink : config.baseUrl + 'quote/' + project._id,
-//                   subject: 'Invite home builder send quote '
-//                 }, function(){});
-//                 emails.push(user.email);
-//             });
-//         }
-//         else if(_.difference(emails, [requestedHomeBuilder.email])){
-//             Mailer.sendMail('invite-home-builder-send-quote-no-account.html', requestedHomeBuilder.email, {
-//               project: project,
-//               registryLink : config.baseUrl + 'signup/',
-//               subject: 'Invite home builder send quote '
-//             }, function(){});
-//         }
-//     });
-// });
-// });

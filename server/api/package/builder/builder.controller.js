@@ -30,7 +30,7 @@ exports.getDefaultPackagePackageByProject = function(req, res) {
  * get single package id
  */
 exports.show = function(req, res){
-  BuilderPackage.findById(req.params.id)
+  BuilderPackage.findOne({project: req.params.id})
   .populate('project')
   .exec(function(err, builderPackage) {
     if (err){ return res.send(500, err); }
