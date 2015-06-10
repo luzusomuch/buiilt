@@ -3,10 +3,7 @@ angular.module('buiiltApp').controller('ViewQuoteRequestCtrl', function($scope, 
    * quote data
    */
   $scope.quoteRequest = quoteRequest;
-  $scope.currentUser = {};
-  if ($cookieStore.get('token')) {
-    $scope.currentUser = userService.get();
-  }
+  $scope.currentUser = authService.getCurrentUser();
 
   $scope.user = {};
 
@@ -43,7 +40,7 @@ angular.module('buiiltApp').controller('ViewQuoteRequestCtrl', function($scope, 
 
   $scope.selectQuote = function(value) {
     quoteRequetService.selectQuote(value).then(function(quote) {
-      $window.location.href = $scope.quoteRequest.project._id + '/dashboard';
+      // $window.location.href = $scope.quoteRequest.project._id + '/dashboard';
     });
   };
 });

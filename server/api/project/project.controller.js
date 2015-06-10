@@ -38,7 +38,28 @@ exports.create = function(req, res){
         User.findOne({'email': req.body.email}, function(err, user){
           if (err) {return res.send(500,err);}
           if (!user) {
-            return res.send(404, err);
+            project.builder.email = req.body.email;
+            project.save(function(err,saved) {
+              if (err) {return res.send(500,err);}
+              else {
+                var builderPackage = new BuilderPackage({
+                  location: {
+                    address: req.body.location.address,
+                    postcode: req.body.location.postcode,
+                    suburb: req.body.location.suburb
+                  },
+                  project: saved._id,
+                  name: saved.name,
+                  description: saved.description
+                });
+                builderPackage.save(function(err, saved){
+                  if (err) {return res.send(500, err);}
+                  else {
+                    return res.json(200,saved);
+                  }
+                });
+              }
+            });
           }
           else {
             project.builder._id = user._id;
@@ -46,6 +67,7 @@ exports.create = function(req, res){
             project.save(function(err,saved) {
               if (err) {return res.send(500,err);}
               else {
+                console.log(saved);
                 var builderPackage = new BuilderPackage({
                   location: {
                     address: req.body.location.address,
@@ -78,7 +100,29 @@ exports.create = function(req, res){
         User.findOne({'email': req.body.email}, function(err, user){
           if (err) {return res.send(500,err);}
           if (!user) {
-            return res.send(404, err);
+            project.user.email = req.body.email;
+            project.save(function(err, saved){
+              if (err) {return res.send(500,err);}
+              else {
+                var builderPackage = new BuilderPackage({
+                  location: {
+                    address: req.body.location.address,
+                    postcode: req.body.location.postcode,
+                    suburb: req.body.location.suburb
+                  },
+                  user: saved.builder._id,
+                  project: saved._id,
+                  name: saved.name,
+                  description: saved.description
+                });
+                builderPackage.save(function(err, saved){
+                  if (err) {return res.send(500, err);}
+                  else {
+                    return res.json(200,saved);
+                  }
+                });
+              }
+            });
           }
           else {
             // project.user._id = user._id;

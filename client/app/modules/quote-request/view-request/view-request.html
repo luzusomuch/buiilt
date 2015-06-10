@@ -14,6 +14,7 @@
   <p><b>Price </b>{{quoteRequest.price}}</p> -->
   <h4>Quote request detail</h4>
   <p>{{quoteRequest.description}}</p>
+  <h6>Price: {{quoteRequest.price}}</h6>
   <div ng-if="currentUser.email == quoteRequest.project.user.email">
     <form method="post" ng-submit="selectQuote(quoteRequest._id)">
       <input type="hidden" ng-model="file._id" value="filquoteRequeste._id">
@@ -22,8 +23,8 @@
       </button>
     </form>
   </div>
-  <div ng-if="currentUser.email == null || currentUser.email == ''">
-    <a href="#signin" class="waves-effect waves-light btn modal-trigger modal">Login</a>
+  <div ng-if="!currentUser.email">
+    <a href="#signin" class="waves-effect waves-light btn modal-trigger">Login</a>
      <!-- or <a href="#signup" class="waves-effect waves-light btn modal-trigger modal">Registry</a> -->
   </div>
 </div>

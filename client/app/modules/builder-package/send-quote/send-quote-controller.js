@@ -1,7 +1,6 @@
-angular.module('buiiltApp').controller('SendQuoteBuilderPackageCtrl', function($scope, authService, builderPackage, quoteRequetService) {
+angular.module('buiiltApp').controller('SendQuoteBuilderPackageCtrl', function($scope, $state, authService, builderPackage, quoteRequetService) {
   $scope.builderPackage = builderPackage;
   $scope.currentUser = authService.getCurrentUser();
-  console.log($scope.currentUser);
   $scope.user = {};
   /**
    * quote data

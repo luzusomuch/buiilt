@@ -8,8 +8,7 @@ var PackageSchema = {
   //almost it is home builder
   user: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+    ref: 'User'
   },
   type: {
     type: String

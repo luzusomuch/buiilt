@@ -18,24 +18,43 @@ exports.create = function(req, res){
     if (err){ return res.send(422, err); }
 
     //check package
-    BuilderPackage.findById(data.package, function(err, builderPackage){
+    BuilderPackage.findById(data.package).populate('project').exec(function(err, builderPackage){
       if (err){ return res.send(422, err); }
       if(!builderPackage){ return res.status(404).send(); }
+      if (builderPackage.project.type === 'FromHomeOwnerToBuilder') {
+        var request = new QuoteRequest(_.assign(data, {
+          project: builderPackage.project,
+          packageType: 'builder',
+          type: 'QuoteFromBuilderToHomeOwner'
+        }));  
+        request.save(function(err, saved) {
+          if (err) {return res.send(500, err);}
+          else {
+            builderPackage.isSendQuote = true;
+            builderPackage.save(function(err, saved) {
+              if (err) {return res.send(500, err);}
+              else {
+                return res.json(200, saved);
+              }
+            });
+          }
+        });
+      } else {
+        var request = new QuoteRequest(_.assign(data, {
+          project: builderPackage.project,
+          packageType: 'other'
+        }));
 
-      var request = new QuoteRequest(_.assign(data, {
-        project: builderPackage.project,
-        packageType: 'builder'
-      }));
+        request.save(function(err){
+          if (err){ return res.send(422, err); }
 
-      request.save(function(err){
-        if (err){ return res.send(422, err); }
+          builderPackage.isSendQuote = true;
+          builderPackage.save();
 
-        builderPackage.isSendQuote = true;
-        builderPackage.save();
-
-        //
-        return res.json(request);
-      });
+          //
+          return res.json(request);
+        });
+      }
     });
   });
 };
@@ -77,6 +96,21 @@ exports.selectQuote = function(req, res) {
           Project.findById(quoteRequestSaved.project, function(err, project) {
             if (err) {return res.send(500, err);}
             else {
+              if (project.type === 'FromHomeOwnerToBuilder') {
+                User.findOne({'email': project.builder.email}, function(err, user) {
+                  if (err) {return res.send(500,err);}
+                  if (!user) {return res.send(404, err);}
+                  else {
+                    project.builder._id = user._id;
+                    project.save(function(err, saved) {
+                      if (err) {return res.send(500, err);}
+                      else {
+                        return res.json(saved);
+                      }
+                    });
+                  }
+                });
+              }
               project.user._id = req.user._id;
               project.save(function(err, saved) {
                 if (err) {return res.send(500, err);}

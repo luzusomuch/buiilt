@@ -40,21 +40,27 @@ exports.create = function (req, res, next) {
         return validationError(res, err);
       }
       //update project for user
-      // Project.find({'requestedHomeBuilders.email': req.body.email}, function (err, projects) {
-      //   if (err) {
-      //     console.log(err);
-      //   }
-      //   else {
-      //     _.each(projects, function (pj) {
-      //       _.each(pj.requestedHomeBuilders, function (builder) {
-      //         if (builder.email === req.body.email) {
-      //           builder._id = newUser._id;
-      //           pj.save();
-      //         }
-      //       });
-      //     });
-      //   }
-      // });
+      Project.find({'user.email': req.body.email}, function (err, projects) {
+        if (err) {
+          console.log(err);
+        }
+        else {
+          _.each(projects, function (project) {
+            if (project.type === 'FromBuilderToHomeOwner') {
+              User.findOne({'email': project.user.email},function(err, user) {
+                if (err) {return res.send(500, err);}
+                if (!user) {return res.send(404,err);}
+                else {
+                  if (user.email === req.body.email && !project.user._id) {
+                    project.user._id = user._id;
+                    project.save();
+                  }
+                }
+              });
+            }
+          });
+        }
+      });
 
       //update teams for group user
       Team.find({'groupUser.email': req.body.email}, function(err, teams) {
