@@ -13,6 +13,7 @@ var EventBus = require('./../components/EventBus');
  *
  * @type Schema
  */
+
 var TeamSchema = new Schema({
   name: {
     type: String,
@@ -39,7 +40,8 @@ var TeamSchema = new Schema({
     },
     email: {
       type: String
-    }
+    },
+    status: {type:String, enum: ['waiting', 'active']}
   }],
   createdAt: {
     type: Date,

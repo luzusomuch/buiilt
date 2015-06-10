@@ -65,17 +65,16 @@ exports.create = function (req, res) {
       User.findOne({'email': email.email}, function (err, user) {
         if (err) {return res.send(500, err);}
         if (!user) {
-          listEmail.push(email);
+          listEmail.push({
+            email : email.email,
+            statue : 'waiting'
+          });
         }
         else {
           listEmail.push({
-            user: user._id
+            user: user._id,
+            status : 'waiting'
           });
-          user.team = {
-            _id : team._id,
-            role : 'member'
-          };
-          user.save();
         }
         callback();
       });
@@ -121,17 +120,16 @@ exports.addMember = function(req,res) {
         return res.send(500, err);
       }
       if (!user) {
-        team.member.push({email : email.email});
+        team.member.push({
+          email : email.email,
+          status : 'waiting'
+        });
       }
       else {
         team.member.push({
-          user: user._id
+          user: user._id,
+          status : 'waiting'
         });
-        user.team = {
-          _id : team._id,
-          role : 'member'
-        };
-        user.save();
       }
       callback();
     });

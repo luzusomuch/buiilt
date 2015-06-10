@@ -66,20 +66,13 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
     };
     $rootScope.$on('$stateChangeStart', function (event,toState, toParams, next) {
       authService.isLoggedInAsync(function (loggedIn) {
-        if (next.authenticate && !loggedIn) {
+        if (toState.authenticate && !loggedIn) {
           $location.path('/');
         } else {
-          if (next.adminAccess && !authService.isAdmin()) {
-            $location.path('/');
-          }
         }
       });
 
-      authService.getCurrentTeam().$promise
-        .then(function(data) {
-          $rootScope.currentTeam = data;
-          console.log($rootScope.currentTeam)
-        });
+
 
       if (toState.hasCurrentProject) {
         if (!$rootScope.currentProject || toParams.id !== $rootScope.currentProject._id) {
