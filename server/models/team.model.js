@@ -28,6 +28,10 @@ var TeamSchema = new Schema({
     ref: 'User',
     required: true
   }],
+  project: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Project'
+  }],
   member: [{
     user: {
       type: Schema.Types.ObjectId,

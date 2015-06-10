@@ -1,10 +1,10 @@
-angular.module('buiiltApp').controller('UserCtrl', function($scope, $state, userService) {
+angular.module('buiiltApp').controller('UserCtrl', function($scope, $state, userService,authService) {
 
   $scope.errors = {};
-  $scope.users = {};
-  userService.gets().$promise.then(function(data){
+  $scope.currentUser = {};
+  userService.get().$promise.then(function(data){
     //show alert
-    $scope.users = data;
+    $scope.currentUser = data;
     $scope.success = true;
   }, function(res){
       $scope.errors = res.data;

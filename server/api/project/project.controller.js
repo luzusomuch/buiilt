@@ -24,7 +24,7 @@ exports.index = function(req, res) {
  * @returns {undefined}
  */
 exports.create = function(req, res){
-  Team.findOne({user: req.user._id}, function(err, team){
+  Team.findOne({leader: req.user._id}, function(err, team){
     if (err) {return res.send(500,err);}
     if (!team) {return res.send(404,err);}
     else{
@@ -238,7 +238,7 @@ exports.selectWinner = function(req, res) {
 };
 
 exports.getProjectsByUser = function(req, res) {
-  Team.findOne({$or: [{'user': req.params.id}, {'groupUser._id': req.params.id}]}, function(err, team) {
+  Team.findOne({$or: [{'leader': req.params.id}, {'member._id': req.params.id}]}, function(err, team) {
     if (err) {return res.send(500, err);}
     if (!team) {return res.send(404, err);}
     else {
@@ -253,10 +253,11 @@ exports.getProjectsByUser = function(req, res) {
 };
 
 exports.getProjectsByBuilder = function(req, res) {
-  Team.findOne({$or: [{'user': req.params.id}, {'groupUser._id': req.params.id}]}, function(err, team) {
+  Team.findOne({$or: [{'leader': req.params.id}, {'member._id': req.params.id}]}, function(err, team) {
     if (err) {return res.send(500, err);}
     if (!team) {return res.send(404, err);}
     else {
+      console.log(team);
       Project.find({'builder._id': team.user}, function(err, projects){
         if (err) {return res.send(500, err);}
         else {

@@ -35,8 +35,8 @@
           </a>
           
           <ul id="userSettings" class="dropdown-content">
-            <li><a ui-sref="team.manager">Change team</a></li>
-            <li><a ui-sref="user.form({id: id})" >Edit profile</a></li>
+            <!-- <li><a ui-sref="team.manager">Change team</a></li> -->
+            <!-- <li><a ui-sref="user.form({id: id})" >Edit profile</a></li> -->
             <li><a ui-sref="signout">Sign out</a></li>
           </ul>
         </li>
@@ -47,7 +47,9 @@
     <div class="col s12 container">
       <ul class="tabs" tabs>
         <li class="tab col" ng-repeat="tab in tabs">
-          <a ui-sref="{{tab.sref}}({id :  currentProject._id})" ui-sref-active="active">{{tab.label}}</a></li>
+          <a ng-if="currentProject._id" ui-sref="{{tab.sref}}({id :  currentProject._id})" ui-sref-active="active">{{tab.label}}</a>
+          <a ng-if="!currentProject._id" ui-sref="{{tab.sref}}" ui-sref-active="active">{{tab.label}}</a>
+        </li>
       </ul>
     </div>
   </div>
