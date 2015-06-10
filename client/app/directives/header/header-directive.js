@@ -8,8 +8,10 @@ angular.module('buiiltApp')
       function queryProjects(){
         authService.isLoggedInAsync(function(isLoggedIn){
           if(isLoggedIn){
+            $scope.projectParamId = $stateParams.id;
             $scope.isLoggedIn = true;
             $scope.user = authService.getCurrentUser();
+            $scope.currentTeam = {};
             $rootScope.$on('$stateChangeSuccess', function () {
               $scope.currentTeam = $rootScope.currentTeam;
             });
@@ -21,11 +23,15 @@ angular.module('buiiltApp')
               $scope.projectsBuilder = projects;
             });
 
-            if (!$stateParams.id) {
+            if (!$scope.projectParamId) {
               var userId = $scope.user._id;
               $scope.tabs = [{sref: 'team.manager', label: 'team manager'},
                             {sref: 'user.form({id: userId})', label: 'edit profile'}];
             }
+            else if($scope.projectParamId) {
+              $scope.tabs = $scope.menuTypes['homeOwner']
+            }
+            
             // contractorService.getProjectForContractorWhoWinner({'id': $scope.user._id}, function(result) {
             //   $scope.projectsContractor = result;
             //   angular.forEach(result, function(subResult) {
