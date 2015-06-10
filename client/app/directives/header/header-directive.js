@@ -3,13 +3,14 @@ angular.module('buiiltApp')
   return {
     restrict: 'E',
     templateUrl: 'app/directives/header/header.html',
-    controller: function($scope, authService, projectService) {
+    controller: function($scope, authService, projectService,teamService) {
 
       function queryProjects(){
         authService.isLoggedInAsync(function(isLoggedIn){
           if(isLoggedIn){
             $scope.isLoggedIn = true;
             $scope.user = authService.getCurrentUser();
+            $scope.currentTeam = authService.getCurrentTeam();
 
             projectService.getProjectsByUser({'id': $scope.user._id}, function(projects) {
               $scope.projectsOwner = projects;
@@ -36,23 +37,23 @@ angular.module('buiiltApp')
             //   });
             // });
 
-            teamService.getTeamByUser({'id': $scope.user._id}, function(team) {
-              if (team.type === 'homeOwner') {
-                $scope.tabs = $scope.menuTypes['homeOwner']  
-              }
-              else if(team.type === 'buider') {
-                $scope.tabs = $scope.menuTypes['buider']   
-              }
-              else if(team.type === 'contractor') {
-                $scope.tabs = $scope.menuTypes['contractor']
-              }
-              else if(team.type === 'supplier') {
-                $scope.tabs = $scope.menuTypes['supplier']
-              }
-              // projectService.getProjectsByUser({'id': $scope.user._id}, function(projects){
-              //   $scope.projectsHomeOwner = projects;
-              // });
-            });
+            //teamService.getTeamByUser({'id': $scope.user._id}, function(team) {
+            //  if (team.type === 'homeOwner') {
+            //    $scope.tabs = $scope.menuTypes['homeOwner']
+            //  }
+            //  else if(team.type === 'buider') {
+            //    $scope.tabs = $scope.menuTypes['buider']
+            //  }
+            //  else if(team.type === 'contractor') {
+            //    $scope.tabs = $scope.menuTypes['contractor']
+            //  }
+            //  else if(team.type === 'supplier') {
+            //    $scope.tabs = $scope.menuTypes['supplier']
+            //  }
+            //  // projectService.getProjectsByUser({'id': $scope.user._id}, function(projects){
+            //  //   $scope.projectsHomeOwner = projects;
+            //  // });
+            //});
           } else {
             $scope.isLoggedIn = false;
           }
@@ -65,6 +66,7 @@ angular.module('buiiltApp')
       //check menu when state changes
       $rootScope.$on('$stateChangeSuccess', function (event, next) {
         queryProjects();
+
         $scope.currentProject = $rootScope.currentProject;
       });
 

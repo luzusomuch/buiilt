@@ -21,9 +21,38 @@ EventBus.onSeries('Team.Inserted', function(request, next){
             callback()
           });
       } else  {
-         callback()
+        Mailer.sendMail('invite-team-has-account.html', user.email, {
+          request: request,
+          subject: 'Group invitation ' + request.name
+        }, function(err) {
+          callback();
+        });
       }
     },function() {
       next();
     });
+});
+
+EventBus.onSeries('Team.Updated', function(request, next){
+  async.each(request.member, function(user,callback) {
+    if (!user.user && user.status == 'waiting') {
+      console.log(user);
+      Mailer.sendMail('invite-team-has-no-account.html', user.email, {
+        request: request,
+        link: config.baseUrl + 'signup',
+        subject: 'Group invitation ' + request.name
+      }, function(err) {
+        callback()
+      });
+    } else if (user.user && user.status == 'waiting')  {
+      Mailer.sendMail('invite-team-has-account.html', user.email, {
+        request: request,
+        subject: 'Group invitation ' + request.name
+      }, function(err) {
+        callback();
+      });
+    }
+  },function() {
+    next();
+  });
 });

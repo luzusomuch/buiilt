@@ -29,7 +29,7 @@
               <td class="col s3 center-align">
               </td>
             </tr>
-            <tr ng-repeat="member in currentTeam.member">
+            <tr ng-repeat="member in currentTeam.member | filter : {status : 'active'}">
               <td class="col s1">{{$index + 1 }}</td>
               <td class="col s7">{{(member.email) ? member.email : member.user.email}}</td>
               <td class="col s1">Member</td>

@@ -63,20 +63,15 @@ exports.create = function (req, res, next) {
       });
 
       //update teams for group user
-      Team.find({'groupUser.email': req.body.email}, function(err, teams) {
-        if (err || !teams) {return res.send(500, err);}
-        else {
-          console.log(teams);
-          _.each(teams, function(team) {
-            _.each(team.groupUser, function(user) {
-              if (user.email === req.body.email) {
-                user._id = newUser._id;
-                team.save();
-              }
-            });
-          });
-        }
-      });
+      //Team.update({'member.email': req.body.email},
+      //            {"$set" : {
+      //              "member.$.user" : user,
+      //              "member.$.status" : 'active',
+      //              "member.$.email" : undefined
+      //            }}, function(err, team) {
+      //  if (err || !team) {return res.send(500, err);}
+      //  console.log(team);
+      //});
 
       var token = jwt.sign({_id: user._id}, config.secrets.session, {expiresInMinutes: 60 * 5});
       res.json({token: token});

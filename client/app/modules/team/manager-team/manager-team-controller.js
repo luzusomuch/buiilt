@@ -2,11 +2,12 @@ angular.module('buiiltApp')
   .controller('TeamCtrl', function ($scope,$rootScope, currentTeam, teamService, authService) {
     $scope.existedTeam = {};
     $scope.user = authService.getCurrentUser();
-
-    $rootScope.$on('$stateChangeSuccess', function () {
-      $scope.currentTeam = $rootScope.currentTeam;
-    });
     $scope.isLeader = $scope.user.team.role == 'admin' ? true : false;
+
+    //$rootScope.$on('$stateChangeSuccess', function () {
+    //
+    //});
+
 
 
     $scope.team = {
