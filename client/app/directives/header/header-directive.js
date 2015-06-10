@@ -11,22 +11,22 @@ angular.module('buiiltApp')
             $scope.isLoggedIn = true;
             $scope.user = authService.getCurrentUser();
 
-            // projectService.getProjectsByUser({'id': $scope.user._id}, function(projects) {
-            //   $scope.projectsOwner = projects;
-            //   angular.forEach(projects, function(project) {
-            //     if ($scope.user._id === project.user) {
-            //       $scope.tabs = $scope.menuTypes['homeOwner'];
-            //     }
-            //   });
-            // });
-            // projectService.getProjectsByBuilder({'id': $scope.user._id}, function(projects) {
-            //   $scope.projectsBuilder = projects;
-            //   angular.forEach(projects, function(project) {
-            //     if ($scope.user._id === project.builder) {
-            //       $scope.tabs = $scope.menuTypes['buider'];
-            //     }
-            //   });
-            // });
+            projectService.getProjectsByUser({'id': $scope.user._id}, function(projects) {
+              $scope.projectsOwner = projects;
+              // angular.forEach(projects, function(project) {
+              //   if ($scope.user._id === project.user) {
+              //     $scope.tabs = $scope.menuTypes['homeOwner'];
+              //   }
+              // });
+            });
+            projectService.getProjectsByBuilder({'id': $scope.user._id}, function(projects) {
+              $scope.projectsBuilder = projects;
+              // angular.forEach(projects, function(project) {
+              //   if ($scope.user._id === project.builder) {
+              //     $scope.tabs = $scope.menuTypes['buider'];
+              //   }
+              // });
+            });
             // contractorService.getProjectForContractorWhoWinner({'id': $scope.user._id}, function(result) {
             //   $scope.projectsContractor = result;
             //   angular.forEach(result, function(subResult) {
@@ -49,9 +49,9 @@ angular.module('buiiltApp')
               else if(team.type === 'supplier') {
                 $scope.tabs = $scope.menuTypes['supplier']
               }
-              projectService.getProjectsByUser({'id': $scope.user._id}, function(projects){
-                $scope.projectsHomeOwner = projects;
-              });
+              // projectService.getProjectsByUser({'id': $scope.user._id}, function(projects){
+              //   $scope.projectsHomeOwner = projects;
+              // });
             });
 
           }else{
