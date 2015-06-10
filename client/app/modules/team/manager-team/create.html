@@ -1,4 +1,4 @@
-<div id="newTeam" class="modal">
+<div id="newTeam" class="modal modal-fixed-footer">
   <!-- 
   <form ng-if="existedTeam">
     {{existedTeam.length}}
@@ -35,14 +35,16 @@
       <div class="row">
         <p class="col s8 offset-s2">Invite others to join your team:</p>
         <div input-field class="col s8 offset-s2">
-          <input type="email" ng-model="team.userEmail" name="emails" class="validate col s9">
+          <input type="email" ng-model="member.email" name="emails" class="validate col s9">
           <label>Email Address</label>
-          <a class="btn waves-effect waves-light right" name="action" ng-click="addUser()"> <i class="mdi-content-add tiny"></i></a>
+          <a class="btn waves-effect waves-light right" name="action"
+                  ng-click="form.emails.$invalid || form.emails.$viewValue == '' || addUser()"
+                  ng-disabled="form.emails.$invalid || form.emails.$viewValue == ''"> <i class="mdi-content-add tiny"></i></a>
           <ul>
             <li class="collection-item vlalign" ng-repeat="email in team.emails">
               <div class="row" style="margin-bottom: 0px">
                 <div class="col s10">{{email.email}}</div>
-                <div class="col s2"><a class="btn-flat btn-flat">Remove</a></div>
+                <div class="col s2"><a class="btn-flat btn-flat" ng-click="removeUser($index)" >Remove</a></div>
               </div>
             </li>
           </ul>
@@ -51,8 +53,8 @@
     </div>
     <div class="divider"></div>
     <div class="modal-footer">
-      <button class="modal-action modal-close waves-effect waves-green btn-flat" ng-disabled="form.$invalid" type="submit">Create Team</button>
-      <a class="modal-action modal-close btn-flat">Close</a>
+      <button class="modal-action modal-close waves-effect waves-green btn-flat" type="submit">Create Team</button>
+      <button class="modal-action modal-close btn-flat" type="button">Close</a>
     </div>
   </form>
 </div>

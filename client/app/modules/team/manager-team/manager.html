@@ -1,30 +1,43 @@
 <div class="col s12" style="margin-bottom: 8px">
-  <a class="waves-effect waves-light btn modal-trigger" href="#newTeam" >Create New Team</a>
+  <a class="waves-effect waves-light btn modal-trigger" href="#newTeam" ng-if="!currentTeam._id">Create New Team</a>
 </div>
 <div ng-include="'app/modules/team/manager-team/create.html'"></div>
-<div class="col s12">
-  <div class="row" ng-repeat="item in teams">
+<div class="col s12" ng-if="currentTeam._id">
+  <div class="row">
     <div class="row">
-      <h5>Group: {{item.name}} - type {{item.type}}<span> (To Be Shared with {{item.groupUser.length}} member(s))</span></h5>
+      <h5>Group: {{currentTeam.name}} - type {{currentTeam.type}}<span> (To Be Shared with {{currentTeam.member.length + currentTeam.leader.length }} member(s))</span></h5>
     </div>
     <div class="row">
       <a class="waves-effect waves-light btn modal-trigger" href="#newMember">Add new member</a>
+      <a class="waves-effect waves-light btn modal-trigger" href="#assignLeader">Assign Leader</a>
     </div>
     <div class="row">
-      <div class="col s12 z-depth-1">
+      <div class="z-depth-1">
         <a href=""></a>
-        <table>
+        <table class="team">
           <thead>
-            <th class="col s2">#</th>
+            <th class="col s1">#</th>
             <th class="col s7">Member email</th>
-            <th class="col s3">Action</th>
+            <th class="col s1">Type</th>
+            <th class="col s3 center-align">Action</th>
           </thead>
           <tbody>
-            <tr ng-repeat="member in item.groupUser">
-              <td class="col s2">{{$index + 1 }}</td>
-              <td class="col s7">{{member.email}}</td>
-              <td class="col s3">
-                <a class="btn waves-effect waves-light right" name="action"> <i class="mdi-content-remove tiny"></i></a>
+            <tr ng-repeat="leader in currentTeam.leader">
+              <td class="col s1">{{$index + 1 }}</td>
+              <td class="col s7">{{leader.email}}</td>
+              <td class="col s1">Leader</td>
+              <td class="col s3 center-align">
+              </td>
+            </tr>
+            <tr ng-repeat="member in currentTeam.member">
+              <td class="col s1">{{$index + 1 }}</td>
+              <td class="col s7">{{(member.email) ? member.email : member.user.email}}</td>
+              <td class="col s1">Member</td>
+              <td class="col s3 center-align">
+                <a class="waves-effect waves-light" name="action" ng-click="removeMember(member,$index)"
+                   ng-if="isLeader && leader._id != user._id" tooltips title="tooltip">
+                  <i class="mdi-content-remove tiny"></i>
+                </a>
               </td>
             </tr>
           </tbody>
@@ -39,16 +52,16 @@
     <div class="modal-content">
       <div class="row">
         <div class="input-field col s12">
-          <input type="email" ng-model="team.userEmail" required class="col s9">
-          <label for="">Email</label>
+          <input id="email" type="email" ng-model="member.email" class="col s9">
+          <label for="email">Email</label>
           <a class="btn waves-effect waves-light right" name="action" ng-click="addUser()"> <i class="mdi-content-add tiny"></i></a>
 
           <ul>
-            <li class="collection-item vlalign" ng-repeat="email in team.emails">
-              <div class="row" style="margin-bottom: 0px">
+            <li class="collection-item vlalign" ng-repeat="email in member.emails">
+              <div class="row" style="margin-bottom: 5px">
                 <div class="col s8">{{email.email}}</div>
                 <div class="col s4">
-                  <a class="btn waves-effect waves-light right" name="action" > <i class="mdi-content-remove tiny"></i></a>
+                  <a class="btn waves-effect waves-light right" name="action" ng-click="removeUser($index)"> <i class="mdi-content-remove tiny"></i></a>
                 </div>
               </div>
             </li>
@@ -58,8 +71,38 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button class="modal-action modal-close waves-effect waves-green btn-flat" ng-disabled="newMemberForm.$invalid" type="submit">Add new member</button>
-      <a class="modal-action modal-close btn-flat">Close</a>
+      <button class="modal-action modal-close waves-effect waves-green btn-flat" ng-disabled="team.emails.length <= 0" type="submit">Add new member</button>
+      <button class="modal-action modal-close btn-flat" type="button">Close</button>
     </div>
   </form>
 </div>
+
+  <div id="assignLeader" class="modal">
+    <form name="newMemberForm" ng-submit="addNewMember()">
+      <div class="modal-content">
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="email" type="email" ng-model="member.email" class="col s9">
+            <label for="email">Email</label>
+            <a class="btn waves-effect waves-light right" name="action" ng-click="addUser()"> <i class="mdi-content-add tiny"></i></a>
+
+            <ul>
+              <li class="collection-item vlalign" ng-repeat="email in member.emails">
+                <div class="row" style="margin-bottom: 5px">
+                  <div class="col s8">{{email.email}}</div>
+                  <div class="col s4">
+                    <a class="btn waves-effect waves-light right" name="action" ng-click="removeUser($index)"> <i class="mdi-content-remove tiny"></i></a>
+                  </div>
+                </div>
+              </li>
+            </ul>
+
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-action modal-close waves-effect waves-green btn-flat" ng-disabled="team.emails.length <= 0" type="submit">Add new member</button>
+        <button class="modal-action modal-close btn-flat" type="button">Close</button>
+      </div>
+    </form>
+  </div>

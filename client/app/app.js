@@ -11,7 +11,8 @@ angular.module('buiiltApp', [
   'restangular',
   'lumx',
   'ui.materialize',
-  'contenteditable'
+  'contenteditable',
+  '720kb.tooltips'
 ]);
 
 angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider, $locationProvider, $urlRouterProvider, $httpProvider, $sceDelegateProvider, cfpLoadingBarProvider) {
@@ -73,6 +74,12 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
           }
         }
       });
+
+      authService.getCurrentTeam().$promise
+        .then(function(data) {
+          $rootScope.currentTeam = data;
+          console.log($rootScope.currentTeam)
+        });
 
       if (toState.hasCurrentProject) {
         if (!$rootScope.currentProject || toParams.id !== $rootScope.currentProject._id) {

@@ -64,8 +64,9 @@ exports.create = function (req, res, next) {
 
       //update teams for group user
       Team.find({'groupUser.email': req.body.email}, function(err, teams) {
-        if (err) {return res.send(500, err);}
+        if (err || !teams) {return res.send(500, err);}
         else {
+          console.log(teams);
           _.each(teams, function(team) {
             _.each(team.groupUser, function(user) {
               if (user.email === req.body.email) {
@@ -170,6 +171,7 @@ exports.me = function (req, res, next) {
     if (!user) {
       return res.json(401);
     }
+    console.log(user);
     res.json(user);
   });
 };

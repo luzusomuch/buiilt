@@ -10,10 +10,11 @@ angular.module('buiiltApp')
         templateUrl: '/app/modules/team/manager-team/manager.html',
         controller: 'TeamCtrl',
         resolve: {
-          teams: function (teamService) {
-            return teamService.index();
+          currentTeam: function (authService) {
+            return
           }
-        }
+        },
+        hasCurrenrProject : false
       })
       .state('team.create', {
         url: '/create',

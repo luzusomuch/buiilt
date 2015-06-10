@@ -24,3 +24,7 @@ EventBus.onSeries('User.Inserted', function(user, next) {
     return next();
   }
 });
+
+EventBus.onSeries('User.Updated', function(user, next) {
+  return next();
+});

@@ -11,23 +11,19 @@ var config = require('./../../config/environment');
 var async = require('async');
 
 EventBus.onSeries('Team.Inserted', function(request, next){
-    _.each(request.groupUser, function(user) {
-        if (!user._id) {
-            Mailer.sendMail('invite-team-has-no-account.html', user.email, {
-                request: request,
-                link: config.baseUrl + 'signup',
-                subject: 'Group invitation ' + request.name
-            }, function(err) {
-              return next();
-            });
-        }
-        else if(user._id) {
-            Mailer.sendMail('invite-team-has-account.html', user.email, {
-                request: request,
-                subject: 'Group invitation ' + request.name
-            }, function(err) {
-              return next();
-            });
-        }
+    async.each(request.member, function(user,callback) {
+      if (!user.user) {
+          Mailer.sendMail('invite-team-has-no-account.html', user.email, {
+              request: request,
+              link: config.baseUrl + 'signup',
+              subject: 'Group invitation ' + request.name
+          }, function(err) {
+            callback()
+          });
+      } else  {
+         callback()
+      }
+    },function() {
+      next();
     });
 });

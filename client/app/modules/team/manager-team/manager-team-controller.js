@@ -1,26 +1,38 @@
 angular.module('buiiltApp')
-  .controller('TeamCtrl', function ($scope, teams, teamService, authService) {
+  .controller('TeamCtrl', function ($scope,$rootScope, currentTeam, teamService, authService) {
     $scope.existedTeam = {};
     $scope.user = authService.getCurrentUser();
-    if ($scope.user) {
-      teamService.getTeamByUser({'id': $scope.user._id}).$promise.then(function(team){
-        $scope.existedTeam = team;
-      });
-    }
 
-    $scope.teams = teams;
-    $scope.team = {};
-    $scope.team.emails = [];
+    $rootScope.$on('$stateChangeSuccess', function () {
+      $scope.currentTeam = $rootScope.currentTeam;
+    });
+    $scope.isLeader = $scope.user.team.role == 'admin' ? true : false;
 
+
+    $scope.team = {
+      emails : []
+    };
+    $scope.member = {
+      email : "",
+      emails : []
+    };
     $scope.addUser = function() {
-      $scope.team.emails.push({email: $scope.team.userEmail});
+      $scope.member.emails.push({email: $scope.member.email});
+      $scope.team.emails.push({email: $scope.member.email});
+      $scope.member.email = "";
+    };
+
+    $scope.removeUser = function(index) {
+      $scope.member.emails.splice(index, 1);
+      $scope.team.emails.splice(index, 1);
     };
 
     $scope.create = function (form) {
       $scope.submitted = true;
       if (form.$valid) {
         teamService.create($scope.team, function (team) {
-          $scope.teams.push(team);
+          $scope.currentTeam = team;
+          $scope.isLeader = true;
         }, function (err) {
           console.log(err);
         });
@@ -28,14 +40,25 @@ angular.module('buiiltApp')
     };
 
     $scope.addNewMember = function(){
-      teamService.update({id: $scope.existedTeam._id, params: $scope.team.emails}, function(team) {
-        $scope.teams.push(team);
-      }, function(err){
-        console.log(err);
-      });
+      teamService.addMember({id: $scope.currentTeam._id},$scope.member.emails).$promise
+        .then(function(team) {
+          $scope.currentTeam = team;
+          $scope.member.emails = [];
+
+        }, function(err){
+          console.log(err);
+        }
+      );
     };
 
-    $scope.removeUser = function(value) {
-      console.log(value);
+    $scope.removeMember = function(member,index){
+      if (confirm("Are you sure you want to remove this member")) {
+        teamService.removeMember({id: $scope.currentTeam._id}, member).$promise
+          .then(function () {
+            $scope.currentTeam.member.splice(index, 1);
+          }, function (err) {
+            console.log(err);
+          });
+      }
     };
   });

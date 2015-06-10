@@ -7,8 +7,7 @@ angular.module('buiiltApp')
         method: 'POST'
       },
       index: {
-        method: 'GET',
-        isArray: true
+        method: 'GET'
       },
       update: {
         method: 'PUT',
@@ -16,11 +15,23 @@ angular.module('buiiltApp')
           id: '@id'
         }
       },
-      getTeamByUser: {
+      addMember : {
+        method : 'POST',
+        isArray : true,
+        params: {
+          action : 'add-member'
+        }
+      },
+      removeMember : {
+        method : 'POST',
+        params: {
+          action : 'remove-member'
+        }
+      },
+      getCurrentTeam: {
         method: 'GET',
         params: {
-          id: 'id',
-          action: 'user'
+          id: 'me'
         }
       }
     }

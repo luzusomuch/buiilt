@@ -27,7 +27,8 @@
     "materialize":"0.96.1",
     "angular-input-match": "master",
     "angular-contenteditable": "~0.3.7",
-    "prism": "git://github.com/PrismJS/prism.git"
+    "prism": "git://github.com/PrismJS/prism.git",
+    "angular-tooltips" : "~0.1.10"
   },
   "resolutions": {
     "angular": "~1.3"

@@ -23,13 +23,13 @@ var TeamSchema = new Schema({
     required: 'Team type is required'
   },
   //creator
-  user: {
+  leader: [{
     type: Schema.Types.ObjectId,
     ref: 'User',
     required: true
-  },
-  groupUser: [{
-    _id: {
+  }],
+  member: [{
+    user: {
       type: Schema.Types.ObjectId,
       ref: 'User'
     },

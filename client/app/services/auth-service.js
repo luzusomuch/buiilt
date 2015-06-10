@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-.factory('authService', function($location, $rootScope, $http, userService, $cookieStore, $q) {
+.factory('authService', function($location, $rootScope, $http, userService,teamService, $cookieStore, $q) {
   var currentUser = {};
   if ($cookieStore.get('token')) {
     currentUser = userService.get();
@@ -104,7 +104,13 @@ angular.module('buiiltApp')
     getCurrentUser: function() {
       return currentUser;
     },
-
+    /**
+     * Get team on authenticated user
+     * @returns {*}
+     */
+    getCurrentTeam : function() {
+        return teamService.getCurrentTeam();
+    },
     /**
      * Gets all available info on authenticated user in async
      *
