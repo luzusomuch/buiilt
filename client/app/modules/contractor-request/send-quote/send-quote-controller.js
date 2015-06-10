@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-.controller('SendQuoteContractorPackageCtrl', function($scope, $state, $stateParams, $cookieStore, authService, userService, contractorRequest, contractorRequestService, registryForContractorService) {
+.controller('SendQuoteContractorPackageCtrl', function($scope, $window, $state, $stateParams, $cookieStore, authService, userService, contractorRequest, contractorRequestService, registryForContractorService) {
   /**
    * quote data
    */
@@ -40,7 +40,7 @@ angular.module('buiiltApp')
         allowNewsletter: true
       };
       alert('Registry successfully, please confirm your email!')
-      $state.go('dashboard');
+      $window.location.href = $scope.quoteRequest.project._id + '/dashboard';
     }, function(res) {
       $scope.errors = res.data;
     });

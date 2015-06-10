@@ -7,6 +7,7 @@ var _ = require('lodash');
 var Mailer = require('./../../components/Mailer');
 var EventBus = require('./../../components/EventBus');
 var Project = require('./../../models/project.model');
+var Team = require('./../../models/team.model');
 var User = require('./../../models/user.model');
 var ContractorPackage = require('./../../models/contractorPackage.model');
 var config = require('./../../config/environment');
@@ -27,19 +28,36 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
     }
   }, function(err, result){
     if (!err) {
-      console.log(result);
+      console.log(request,result);
       //do send email
       _.each(request.to,function(toEmail) {
-          Mailer.sendMail('contractor-package-request.html', toEmail.email, {
-          contractorPackage: request,
-          //project owner
-          user: result.user,
-          project: result.project,
-          contractorPackageLink: config.baseUrl + 'contractor-requests/' + request._id,
-          subject: 'Quote request for ' + request.name
-        }, function(err) {
-          return next();
-        });
+        Team.findOne({'groupUser.email': toEmail.email}).populate('user').exec(function(err, team) {
+          if (err) {return res.send(500, err);}
+          if (!team) {
+            Mailer.sendMail('contractor-package-request.html', toEmail.email, {
+              contractorPackage: request,
+              //project owner
+              user: result.user,
+              project: result.project,
+              contractorPackageLink: config.baseUrl + 'contractor-requests/' + request._id,
+              subject: 'Quote request for ' + request.name
+            }, function(err) {
+              return next();
+            });
+          }
+          else {
+            Mailer.sendMail('contractor-package-request.html', team.user.email, {
+              contractorPackage: request,
+              //project owner
+              user: result.user,
+              project: result.project,
+              contractorPackageLink: config.baseUrl + 'contractor-requests/' + request._id,
+              subject: 'Quote request for ' + request.name
+            }, function(err) {
+              return next();
+            });
+          }
+        })
       });
     } else {
       return next();

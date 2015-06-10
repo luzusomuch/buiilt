@@ -33,7 +33,6 @@ exports.createUserForContractorRequest = function(req, res, next) {
       ContractorPackage.findOne({'_id': data.idParams}, function(err, contractorPackage) {
         if (err) {return res.send(500, err);}
         else {
-            console.log(contractorPackage);
             quoteRequest.project = contractorPackage.project;
             quoteRequest.save(function(err, saved) {
                 if (err) {return res.send(500, err);}

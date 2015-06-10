@@ -40,7 +40,7 @@ angular.module('buiiltApp').controller('ViewQuoteRequestCtrl', function($scope, 
 
   $scope.selectQuote = function(value) {
     quoteRequetService.selectQuote(value).then(function(quote) {
-      // $window.location.href = $scope.quoteRequest.project._id + '/dashboard';
+      $window.location.href = $scope.quoteRequest.project._id + '/dashboard';
     });
   };
 });
