@@ -25,7 +25,7 @@ angular.module('buiiltApp').controller('ContractorsCtrl', function($scope, $stat
 
   $scope.createContractorPackage = function(){
     contractorService.createContractorPackage({contractor: $scope.contractor,emailsPhone: $scope.emailsPhone, project: $stateParams.id}).$promise.then(function(data) {
-      $scope.contractors = data;
+      $scope.contractors.push(data);
     });
   };
 

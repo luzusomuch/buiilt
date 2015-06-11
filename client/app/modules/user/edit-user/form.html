@@ -1,12 +1,12 @@
 <div class="col s12 ">  
 
    <ul class="collapsible popout s10" data-collapsible="accordion">
-      <li>
+      <!-- <li>
          <div class="collapsible-header">User information</div>
          <div class="collapsible-body">
             <p>Email: {{currentUser.email}}</p>
          </div>
-       </li>
+       </li> -->
        <li>
          <div class="collapsible-header">Email</div>
          <div class="collapsible-body">
@@ -15,7 +15,7 @@
              <div class="row center-align">
                  <div class="input-field col s10 offset-s1">
                      <input ng-model="user.email" id="email" type="email" class="validate">
-                     <label class="active" for="email">Email Address</label>
+                     <label class="active" for="email">{{currentUser.email}}</label>
                      <button class="btn waves-effect waves-light" ng-disable="changeEmailForm.$invalid" name="action">Edit/Save
                      </button>
                  </div>
@@ -55,7 +55,7 @@
              <div class="row center-align">
                  <div class="input-field col s10 offset-s1">
                    <input ng-model="user.phoneNumber" id="password" type="number" class="validate">
-                   <label class="active" for="password">Mobile Phone Number</label>
+                   <label class="active" for="password">Mobile Phone Number {{currentUser.phoneNumber}}</label>
                    
                    <button class="btn waves-effect waves-light" ng-disable="chagePhoneNumber.$invalid" name="action">Edit/Save
                    </button>

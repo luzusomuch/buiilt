@@ -24,7 +24,7 @@
             </li> -->
             <li class="divider"></li>
             <li>
-              <a ui-sref="projects.create">Create project</a>
+              <a href="#createProject" class="modal-trigger">Create project</a>
             </li>
           </ul>
         </li>
@@ -55,4 +55,5 @@
       </ul>
     </div>
   </div>
+  <div ng-include="'app/modules/project/create-project/create-project.html'"></div>
 </header>

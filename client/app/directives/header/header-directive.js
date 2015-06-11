@@ -9,6 +9,9 @@ angular.module('buiiltApp')
         authService.isLoggedInAsync(function(isLoggedIn){
           if(isLoggedIn){
             $scope.isLoggedIn = true;
+            $scope.project = {
+              location: {}
+            };
             $scope.user = authService.getCurrentUser();
             $scope.currentTeam = authService.getCurrentTeam();
             $scope.isLeader = $scope.user.team.role == 'admin' ? true : false;
@@ -99,6 +102,16 @@ angular.module('buiiltApp')
       //   }
       // };
       // $scope.loadMenu();
+      $scope.create = function() {
+        projectService.create($scope.project).$promise.then(function(data) {
+          //show alert
+          // $scope.success = true;
+          alert('Create project successfully!');
+
+        }, function(res) {
+          $scope.errors = res.data;
+        });
+      };
     }
   };
 });

@@ -1,8 +1,4 @@
-<div class="row">
-  <div class="widget-container widget_login styled boxed" flex="40">
-    <alert type="success" close="closeSuccess()" ng-show="success">Thank you for your submit, you can login now and enjoy yourself.</alert>
-    <alert ng-repeat="(key, msg) in errors" type="danger" close="closeAlert(key)">{{msg}}</alert>
-  </div>
+<div class="row modal" id="createProject">
   <div class="card collection">
     <form method="post" ng-submit="create()" flex="100" style="padding:10px;" name="createProjectForm">
       <h3>New project</h3>
@@ -51,7 +47,7 @@
         </div>
       </div>
       <div layout layout-sm="column">
-        <button class="waves-effect waves-light btn" ng-disabled="createProjectForm.$invalid">Create project</button>
+        <button class="waves-effect waves-light btn modal-action modal-close" ng-disabled="createProjectForm.$invalid">Create project</button>
       </div>        
     </form>
   </div>
