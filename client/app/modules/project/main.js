@@ -15,7 +15,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
     controller: 'CreateProjectCtrl'
   })
   .state('projects.view', {
-    url: '/:id/project',
+    url: '/:id',
     templateUrl: '/app/modules/project/view-project/view.html',
     controller: 'ViewProjectCtrl',
     resolve: {

@@ -30,6 +30,7 @@ exports.create = function(req, res){
     else{
       if (team.type === 'homeOwner') {
         var project = new Project({
+          owner: team._id,
           name: req.body.name,
           description: req.body.description,
           user: {_id: req.user._id, email: req.user.email},
@@ -42,6 +43,8 @@ exports.create = function(req, res){
             project.save(function(err,saved) {
               if (err) {return res.send(500,err);}
               else {
+                team.project.push(saved._id);
+                team.save();
                 var builderPackage = new BuilderPackage({
                   location: {
                     address: req.body.location.address,
@@ -67,7 +70,8 @@ exports.create = function(req, res){
             project.save(function(err,saved) {
               if (err) {return res.send(500,err);}
               else {
-                console.log(saved);
+                team.project.push(saved._id);
+                team.save();
                 var builderPackage = new BuilderPackage({
                   location: {
                     address: req.body.location.address,
@@ -92,6 +96,7 @@ exports.create = function(req, res){
       }
       else if(team.type === 'buider') {
         var project = new Project({
+          owner: team._id,
           name: req.body.name,
           description: req.body.description,
           builder: {_id: req.user._id, email: req.user.email},
@@ -104,6 +109,8 @@ exports.create = function(req, res){
             project.save(function(err, saved){
               if (err) {return res.send(500,err);}
               else {
+                team.project.push(saved._id);
+                team.save();
                 var builderPackage = new BuilderPackage({
                   location: {
                     address: req.body.location.address,
@@ -130,6 +137,8 @@ exports.create = function(req, res){
             project.save(function(err, saved){
               if (err) {return res.send(500,err);}
               else {
+                team.project.push(saved._id);
+                team.save();
                 var builderPackage = new BuilderPackage({
                   location: {
                     address: req.body.location.address,
@@ -199,13 +208,15 @@ exports.create = function(req, res){
  */
 exports.show = function(req, res){
   //TODO - validate rol
+  console.log(req.params.id);
   Project.findById(req.params.id)
-  .populate('user')
-  .populate('homeBuilder')
+  .populate('owner')
   .exec(function(err, project){
-    if(err){ return errorsHelper.validationErrors(res, err); }
-
-    return res.json(project);
+    if(err){ return res.send(500, err); }
+    else {
+      console.log(' ------- '+ project);
+      return res.json(project);
+    }
   });
 };
 

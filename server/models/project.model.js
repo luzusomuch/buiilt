@@ -7,6 +7,8 @@ var okay = require('okay');
 var EventBus = require('./../components/EventBus');
 
 var ProjectSchema = new Schema({
+  //owner of project
+  owner: {type: Schema.Types.ObjectId, ref: 'Team'},
   //creator, this is home owner
   user: {_id: {type: Schema.Types.ObjectId, ref: 'User'}, email: {type:String}},
   builder: {_id: {type: Schema.Types.ObjectId, ref: 'User'}, email: {type:String}},

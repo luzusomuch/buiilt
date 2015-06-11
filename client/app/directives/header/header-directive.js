@@ -12,8 +12,10 @@ angular.module('buiiltApp')
             $scope.isLoggedIn = true;
             $scope.user = authService.getCurrentUser();
             $scope.currentTeam = {};
+            $scope.currentProject = {};
             $rootScope.$on('$stateChangeSuccess', function () {
               $scope.currentTeam = $rootScope.currentTeam;
+              $scope.currentProject = $rootScope.currentProject;
             });
 
             projectService.getProjectsByUser({'id': $scope.user._id}, function(projects) {
@@ -26,10 +28,23 @@ angular.module('buiiltApp')
             if (!$scope.projectParamId) {
               var userId = $scope.user._id;
               $scope.tabs = [{sref: 'team.manager', label: 'team manager'},
-                            {sref: 'user.form({id: userId})', label: 'edit profile'}];
+                            {sref: 'user.form({id: userId})', label: 'edit profile'},
+                            {sref: 'notification.view({id: userId})', label: 'notification'}];
             }
             else if($scope.projectParamId) {
-              $scope.tabs = $scope.menuTypes['homeOwner']
+              projectService.get({id: $scope.projectParamId}).$promise.then(function(project) {
+                if (project) {
+                  console.log('has project');
+                  $scope.project = project;
+                  $scope.tabs = $scope.menuTypes['homeOwner'];
+                }
+                else {
+                  console.log('no project');
+                  $scope.tabs = [{sref: 'team.manager', label: 'team manager'},
+                            {sref: 'user.form({id: userId})', label: 'edit profile'},
+                            {sref: 'notification.view({id: userId})', label: 'notification'}];
+                }
+              });
             }
             
             // contractorService.getProjectForContractorWhoWinner({'id': $scope.user._id}, function(result) {
@@ -72,7 +87,7 @@ angular.module('buiiltApp')
       //check menu when state changes
       $rootScope.$on('$stateChangeSuccess', function (event, next) {
         queryProjects();
-        $scope.currentProject = $rootScope.currentProject;
+        // $scope.currentProject = $rootScope.currentProject;
         // $scope.currentTeam = $rootScope.currentTeam;
       });
 
