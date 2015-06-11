@@ -34,7 +34,7 @@ angular.module('buiiltApp')
                     $scope.tabs = $scope.menuTypes['homeOwner'];  
                   }
                   else if($scope.currentTeam.type === 'buider') {
-                    $scope.tabs = $scope.menuTypes['homeOwner'];
+                    $scope.tabs = $scope.menuTypes['buider'];
                   }
                   else if($scope.currentTeam.type === 'contractor') {
                     $scope.tabs = $scope.menuTypes['contractor']; 

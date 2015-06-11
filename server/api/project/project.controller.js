@@ -251,14 +251,41 @@ exports.getProjectsByUser = function(req, res) {
     if (err) {return res.send(500, err);}
     if (!team) {return res.send(404, err);}
     else {
-      Project.find({'user._id': team.user}, function(err, projects){
-        if (err) {return res.send(500, err);}
-        else {
-          return res.json(200, projects);
-        }
+      console.log('------team home owner------- ');
+      console.log(team);
+      async.each(team.leader, function(leader, callback) {
+        Project.find({'user._id': leader}, function(err, projects) {
+          if (err) {return res.send(500, err);}
+          if (!projects) {return res.send(404, err);}
+          else {
+            console.log(projects);
+            return res.json(200, projects);
+          }
+          callback();
+        });
+      }, function(err){
+        callback();
       });
+      // Project.find({'builder._id': team._id}, function(err, projects){
+      //   if (err) {return res.send(500, err);}
+      //   else {
+      //     return res.json(200, projects);
+      //   }
+      // });
     }
   });
+  // Team.findOne({$or: [{'leader': req.params.id}, {'member._id': req.params.id}]}, function(err, team) {
+  //   if (err) {return res.send(500, err);}
+  //   if (!team) {return res.send(404, err);}
+  //   else {
+  //     Project.find({'user._id': team.user}, function(err, projects){
+  //       if (err) {return res.send(500, err);}
+  //       else {
+  //         return res.json(200, projects);
+  //       }
+  //     });
+  //   }
+  // });
 };
 
 exports.getProjectsByBuilder = function(req, res) {
@@ -266,13 +293,27 @@ exports.getProjectsByBuilder = function(req, res) {
     if (err) {return res.send(500, err);}
     if (!team) {return res.send(404, err);}
     else {
+      console.log('------team home builder-------');
       console.log(team);
-      Project.find({'builder._id': team.user}, function(err, projects){
-        if (err) {return res.send(500, err);}
-        else {
-          return res.json(200, projects);
-        }
+      async.each(team.leader, function(leader, callback) {
+        Project.find({'builder._id': leader}, function(err, projects) {
+          if (err) {return res.send(500, err);}
+          if (!projects) {return res.send(404, err);}
+          else {
+            console.log(projects);
+            return res.json(200, projects);
+          }
+          callback();
+        });
+      }, function(err){
+        callback();
       });
+      // Project.find({'builder._id': team._id}, function(err, projects){
+      //   if (err) {return res.send(500, err);}
+      //   else {
+      //     return res.json(200, projects);
+      //   }
+      // });
     }
   });
   // Project.find({'builder._id': req.params.id}, function(err, projects) {
