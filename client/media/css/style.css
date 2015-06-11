@@ -27,3 +27,26 @@ main.container{
 table.team {
     background-color: #FFF;
 }
+
+.overlay-bg {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    background: #000;
+    opacity: .25;
+    z-index: 999;
+    text-align: center;
+    overflow: hidden;
+}
+
+.overlay-bg i {
+    font-size: 100px;
+    color : #FFF;
+    z-index: 1000;
+    margin-top:20%
+}
+
+.header {
+    color : #ee6e73;
+    font-weight: bold;
+}

@@ -1,13 +1,12 @@
 angular.module('buiiltApp')
-  .controller('TeamCtrl', function ($scope,$rootScope, teamService, authService) {
+  .controller('TeamCtrl', function ($scope,$rootScope, invitations, teamService, authService) {
     $scope.existedTeam = {};
-    $scope.user = authService.getCurrentUser();
+    $scope.invitations = invitations;
 
-    // $rootScope.$on('$stateChangeSuccess', function () {
-    //   $scope.currentTeam = $rootScope.currentTeam;
-    // });
-    // $scope.isLeader = $scope.user.team.role == 'admin' ? true : false;
 
+    $scope.filterByStatus = function (item) {
+      return item.status === 'waiting' || item.status === 'reject';
+    };
 
     $scope.team = {
       emails : []
@@ -51,14 +50,48 @@ angular.module('buiiltApp')
       );
     };
 
-    $scope.removeMember = function(member,index){
+    $scope.removeMember = function(member){
       if (confirm("Are you sure you want to remove this member")) {
         teamService.removeMember({id: $scope.currentTeam._id}, member).$promise
-          .then(function () {
-            $scope.currentTeam.member.splice(index, 1);
+          .then(function (team) {
+            $scope.currentTeam = team;
           }, function (err) {
             console.log(err);
           });
       }
     };
+
+    $scope.removeInvitation = function(member) {
+      if (confirm("Are you sure you want to remove this invitation")) {
+        teamService.removeMember({id: $scope.currentTeam._id}, member).$promise
+          .then(function (team) {
+            $scope.currentTeam = team;
+          }, function (err) {
+            console.log(err);
+          });
+      }
+    };
+
+    $scope.accept = function(invitation) {
+      console.log(invitation._id);
+      if (confirm("Are you sure you want to join this team")) {
+        teamService.acceptTeam({_id: invitation._id}).$promise
+          .then(function (res) {
+            $scope.currentTeam = res;
+          }, function (err) {
+            console.log(err);
+          });
+      }
+    };
+
+    $scope.reject = function(invitation,index) {
+      if (confirm("Are you sure you want to join this team")) {
+        teamService.rejectTeam({_id: invitation._id}).$promise
+          .then(function () {
+            $scope.invitations.splice(index, 1);
+          }, function (err) {
+            console.log(err);
+          });
+      }
+    }
   });

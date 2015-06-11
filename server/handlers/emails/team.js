@@ -12,10 +12,10 @@ var async = require('async');
 
 EventBus.onSeries('Team.Inserted', function(request, next){
     async.each(request.member, function(user,callback) {
-      if (!user.user) {
+      if (!user._id) {
           Mailer.sendMail('invite-team-has-no-account.html', user.email, {
               request: request,
-              link: config.baseUrl + 'signup',
+              link: config.baseUrl + 'signup?inviteToken=' + request.inviteToken,
               subject: 'Group invitation ' + request.name
           }, function(err) {
             callback()
@@ -39,7 +39,7 @@ EventBus.onSeries('Team.Updated', function(request, next){
       console.log(user);
       Mailer.sendMail('invite-team-has-no-account.html', user.email, {
         request: request,
-        link: config.baseUrl + 'signup',
+        link: config.baseUrl + 'signup?teamInviteToken=' + request.teamInviteToken,
         subject: 'Group invitation ' + request.name
       }, function(err) {
         callback()

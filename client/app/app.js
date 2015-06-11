@@ -88,5 +88,7 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
       $rootScope.hasCurrentProject=toState.hasCurrentProject;
     });
 
+    $rootScope.overlay = false;
+
   })
   .value('$', $);

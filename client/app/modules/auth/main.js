@@ -1,7 +1,7 @@
 angular.module('buiiltApp').config(function($stateProvider) {
   $stateProvider
   .state('signup', {
-    url: '/signup',
+    url: '/signup?teamInviteToken',
     templateUrl: '/app/modules/auth/signup/signup.html',
     controller: 'SignupCtrl'
   })

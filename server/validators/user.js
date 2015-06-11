@@ -10,7 +10,7 @@ exports.validateNewUser = function(req, callback){
   req.checkBody('email', 'Email is required').notEmpty();
   req.checkBody('password', 'Password is required').notEmpty();
   if(validateEmail(req.body.email)){
-    return callback(req.validationErrors(), _.omit(req.body, 'role'));
+    return callback(req.validationErrors(), _.omit(req.body, 'role','teamInviteToken'));
   }
   else{
     return callback('The email iuput not look like a valid email.');

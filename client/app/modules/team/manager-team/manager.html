@@ -8,9 +8,11 @@
       <h5>Group: {{currentTeam.name}} - type {{currentTeam.type}}<span> (To Be Shared with {{currentTeam.member.length + currentTeam.leader.length }} member(s))</span></h5>
     </div>
     <div class="row">
-      <a class="waves-effect waves-light btn modal-trigger" href="#newMember">Add new member</a>
-      <a class="waves-effect waves-light btn modal-trigger" href="#assignLeader">Assign Leader</a>
+      <a class="waves-effect waves-light btn modal-trigger" href="#newMember" ng-if="isLeader">Add new member</a>
+      <a class="waves-effect waves-light btn modal-trigger" href="#assignLeader" ng-if="isLeader">Assign Leader</a>
     </div>
+
+    <h5 class="header">List of Member</h5>
     <div class="row">
       <div class="z-depth-1">
         <a href=""></a>
@@ -31,15 +33,85 @@
             </tr>
             <tr ng-repeat="member in currentTeam.member | filter : {status : 'active'}">
               <td class="col s1">{{$index + 1 }}</td>
-              <td class="col s7">{{(member.email) ? member.email : member.user.email}}</td>
+              <td class="col s7">{{(member.email) ? member.email : member._id.email}}</td>
               <td class="col s1">Member</td>
               <td class="col s3 center-align">
-                <a class="waves-effect waves-light" name="action" ng-click="removeMember(member,$index)"
-                   ng-if="isLeader && leader._id != user._id" tooltips title="tooltip">
+                <a class="waves-effect waves-light" name="action" ng-click="removeMember(member)"
+                   ng-if="isLeader && leader._id != user._id" tooltips title="Remove this Member">
                   <i class="mdi-content-remove tiny"></i>
                 </a>
               </td>
             </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="col s12" ng-if="isLeader">
+  <div class="row">
+    <h5 class="header">List of Invited email</h5>
+    <div class="row">
+      <div class="z-depth-1">
+        <a href=""></a>
+        <table class="team">
+          <thead>
+          <th class="col s1">#</th>
+          <th class="col s6">Email</th>
+          <th class="col s2">Status</th>
+          <th class="col s3 center-align">Action</th>
+          </thead>
+          <tbody>
+            <tr ng-repeat="member in currentTeam.member | filter : filterByStatus ">
+              <td class="col s1">{{$index + 1 }}</td>
+              <td class="col s6">{{(member.email) ? member.email : member._id.email}}</td>
+              <td class="col s2">{{member.status}}</td>
+              <td class="col s3 center-align">
+                <a class="waves-effect waves-light" name="action" ng-click="removeInvitation(member)"
+                   ng-if="isLeader && leader._id != user._id" tooltips title="Remove invitation">
+                  <i class="mdi-content-remove tiny"></i>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="col s12" ng-if="!currentTeam._id">
+  <div class="row">
+    <h5 class="header">List of Invitation</h5>
+    <div class="row">
+      <div class="z-depth-1">
+        <a href=""></a>
+        <table class="team">
+          <thead>
+          <th class="col s1">#</th>
+          <th class="col s5">Team name</th>
+          <th class="col s1">Type</th>
+          <th class="col s3">Number of members</th>
+          <th class="col s2 center-align">Action</th>
+          </thead>
+          <tbody>
+          <tr ng-repeat="invitation in invitations">
+            <td class="col s1">{{$index + 1 }}</td>
+            <td class="col s5">{{invitation.name}}</td>
+            <td class="col s1">{{invitation.type}}</td>
+            <td class="col s3">{{invitation.member.length}}</td>
+            <td class="col s2 center-align">
+              <a class="waves-effect waves-light" name="action" ng-click="accept(invitation,$index)"
+                 tooltips title="Accept">
+                <i class="mdi-navigation-check tiny"></i>
+              </a>
+              <a class="waves-effect waves-light" name="action" ng-click="reject(invitation,$index)"
+                 tooltips title="Reject">
+                <i class="mdi-navigation-cancel tiny"></i>
+              </a>
+            </td>
+          </tr>
           </tbody>
         </table>
       </div>

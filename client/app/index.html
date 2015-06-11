@@ -19,6 +19,9 @@
   </head>
   <body>
     <!-- JS from Bower Components -->
+    <div class="overlay-bg" ng-class="{'hidden' : !overlay}">
+      <i class="fa fa-spinner fa-pulse"></i>
+    </div>
     <script src="/bower_components/jquery/dist/jquery.js"></script>
     <script src="/bower_components/materialize/bin/materialize.js"></script>
     <script src="/bower_components/prism/prism.js"></script>
@@ -121,6 +124,7 @@
   <built-header></built-header>
 
   <main class="row container">
+
     <div ui-view></div>
   </main>
 

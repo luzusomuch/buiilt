@@ -17,7 +17,6 @@ angular.module('buiiltApp')
       },
       addMember : {
         method : 'POST',
-        isArray : true,
         params: {
           action : 'add-member'
         }
@@ -28,10 +27,29 @@ angular.module('buiiltApp')
           action : 'remove-member'
         }
       },
+      acceptTeam : {
+        method : 'PUT',
+        params : {
+          action : 'accept'
+        }
+      },
+      rejectTeam : {
+        method : 'PUT',
+        params : {
+          action : 'reject'
+        }
+      },
       getCurrentTeam: {
         method: 'GET',
         params: {
           id: 'me'
+        }
+      },
+      getCurrentInvitation : {
+        method: 'GET',
+        isArray: true,
+        params : {
+          action : 'invitation'
         }
       }
     }

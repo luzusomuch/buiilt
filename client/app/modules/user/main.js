@@ -12,5 +12,17 @@ angular.module('buiiltApp').config(function($stateProvider) {
     templateUrl: '/app/modules/user/edit-user/form.html',
     controller: 'UserFormCtrl'
   })
-  ;
+  .state('user.teamInvitation', {
+    url: '/team/invitation',
+    templateUrl: '/app/modules/user/team-invitation/index.html',
+    controller: 'TeamInvitationCtrl',
+    resolve : {
+      invitations : [
+        'teamService',
+        function(authService) {
+          return authService.getCurrentInvitation();
+        }
+      ]
+    }
+  })
 });

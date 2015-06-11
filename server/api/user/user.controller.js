@@ -31,6 +31,8 @@ exports.index = function (req, res) {
  * Creates a new user
  */
 exports.create = function (req, res, next) {
+  var teamInviteToken = (req.body.teamInviteToken) ? req.body.teamInviteToken : null
+  console.log(req.body);
   UserValidator.validateNewUser(req, okay(next, function (data) {
     var newUser = new User(data);
     newUser.provider = 'local';
@@ -42,7 +44,6 @@ exports.create = function (req, res, next) {
       //update project for user
       Project.find({'user.email': req.body.email}, function (err, projects) {
         if (err) {
-          console.log(err);
         }
         else {
           _.each(projects, function (project) {
@@ -61,18 +62,18 @@ exports.create = function (req, res, next) {
           });
         }
       });
-
-      //update teams for group user
-      //Team.update({'member.email': req.body.email},
-      //            {"$set" : {
-      //              "member.$.user" : user,
-      //              "member.$.status" : 'active',
-      //              "member.$.email" : undefined
-      //            }}, function(err, team) {
-      //  if (err || !team) {return res.send(500, err);}
-      //  console.log(team);
-      //});
-
+      if (teamInviteToken) {
+        //update teams for group user
+        Team.update({teamInviteToken : teamInviteToken,'member.email': req.body.email},
+          {"$set" : {
+            "member.$._id" : user._id,
+            "member.$.status" : 'active',
+            "member.$.email" : null
+          }}, function(err, team) {
+            if (err) {console.log(err);return res.send(500, err);}
+            console.log(team);
+          });
+      }
       var token = jwt.sign({_id: user._id}, config.secrets.session, {expiresInMinutes: 60 * 5});
       res.json({token: token});
     });
