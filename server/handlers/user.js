@@ -14,5 +14,5 @@ var config = require('./../config/environment');
  * create new Twilio number for new user
  */
 EventBus.onSeries('User.Created', function (user, next) {
-  next();
+  return next();
 });

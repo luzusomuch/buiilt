@@ -23,6 +23,7 @@ EventBus.onSeries('Quote.Inserted', function(quote, next) {
       User.findById(project.user._id, function(err, user) {
         if (err) {
           console.log(err);
+          return next();
         }
         else {
           Mailer.sendMail('quote-request.html', user.email, {
@@ -31,7 +32,9 @@ EventBus.onSeries('Quote.Inserted', function(quote, next) {
             project: project,
             quotesLink: config.baseUrl + 'quote',
             subject: 'Homebuilder send you a quote'
-          }, next);
+          }, function(err) {
+            return next();
+          });
         }
       });
     }

@@ -29,7 +29,7 @@ EventBus.onSeries('Team.Inserted', function(request, next){
         });
       }
     },function() {
-      next();
+      return next();
     });
 });
 
@@ -53,6 +53,6 @@ EventBus.onSeries('Team.Updated', function(request, next){
       });
     }
   },function() {
-    next();
+    return next();
   });
 });
