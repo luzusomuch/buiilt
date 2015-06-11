@@ -24,7 +24,8 @@ angular.module('buiiltApp')
             if (!$scope.projectParamId) {
               var userId = $scope.user._id;
               $scope.tabs = [{sref: 'team.manager', label: 'team manager'},
-                            {sref: 'user.form({id: userId})', label: 'edit profile'}];
+                            {sref: 'user.form({id: userId})', label: 'edit profile'},
+                            {sref: 'notification.view({id: userId})', label: 'notification'}];
             }
             else if($scope.projectParamId) {
               $scope.tabs = $scope.menuTypes['homeOwner']
