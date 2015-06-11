@@ -118,13 +118,13 @@ exports.addMember = function(req,res) {
       if (err) {
         return res.send(500, err);
       }
-      if (!user) {
+      if (!user && !(_.find(team.member,{email : email.email}))) {
         team.member.push({
           email : email.email,
           status : 'Pending'
         });
       }
-      else {
+      else if (user && !(team.member.id(user._id)) && team.leader.indexOf(user._id) == -1){
         team.member.push({
           _id: user._id,
           status : 'Pending'

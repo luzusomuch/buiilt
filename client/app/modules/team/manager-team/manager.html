@@ -54,7 +54,7 @@
                       <td class="col s2 center-align">
                         <a class="waves-effect waves-light" name="action" ng-click="removeMember(member)"
                            ng-if="isLeader && leader._id != user._id" tooltips title="Remove this Member">
-                          <i class="mdi-content-remove tiny"></i>
+                          <i class="mdi-action-highlight-remove tiny"></i>
                         </a>
                       </td>
                     </tr>
@@ -70,7 +70,7 @@
   </ul>
 </div>
 
-<div class="col s12" ng-if="!currentTeam._id">
+<div class="col s12" ng-if="!currentTeam._id && invitations.length > 0">
   <div class="row">
     <h5 class="header">List of Invitation</h5>
     <div class="row">
