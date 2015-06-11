@@ -1,84 +1,73 @@
 <div class="col s12" style="margin-bottom: 8px">
   <a class="waves-effect waves-light btn modal-trigger" href="#newTeam" ng-if="!currentTeam._id">Create New Team</a>
 </div>
-<div ng-include="'app/modules/team/manager-team/create.html'"></div>
 <div class="col s12" ng-if="currentTeam._id">
-  <div class="row">
-    <div class="row">
-      <h5>Group: {{currentTeam.name}} - type {{currentTeam.type}}<span> (To Be Shared with {{currentTeam.member.length + currentTeam.leader.length }} member(s))</span></h5>
-    </div>
-    <div class="row">
-      <a class="waves-effect waves-light btn modal-trigger" href="#newMember" ng-if="isLeader">Add new member</a>
-      <a class="waves-effect waves-light btn modal-trigger" href="#assignLeader" ng-if="isLeader">Assign Leader</a>
-    </div>
+  <ul class="collapsible popout s10" data-collapsible="accordion">
 
-    <h5 class="header">List of Member</h5>
-    <div class="row">
-      <div class="z-depth-1">
-        <a href=""></a>
-        <table class="team">
-          <thead>
-            <th class="col s1">#</th>
-            <th class="col s7">Member email</th>
-            <th class="col s1">Type</th>
-            <th class="col s3 center-align">Action</th>
-          </thead>
-          <tbody>
-            <tr ng-repeat="leader in currentTeam.leader">
-              <td class="col s1">{{$index + 1 }}</td>
-              <td class="col s7">{{leader.email}}</td>
-              <td class="col s1">Leader</td>
-              <td class="col s3 center-align">
-              </td>
-            </tr>
-            <tr ng-repeat="member in currentTeam.member | filter : {status : 'active'}">
-              <td class="col s1">{{$index + 1 }}</td>
-              <td class="col s7">{{(member.email) ? member.email : member._id.email}}</td>
-              <td class="col s1">Member</td>
-              <td class="col s3 center-align">
-                <a class="waves-effect waves-light" name="action" ng-click="removeMember(member)"
-                   ng-if="isLeader && leader._id != user._id" tooltips title="Remove this Member">
-                  <i class="mdi-content-remove tiny"></i>
-                </a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
+    <li class="active">
+      <div class="collapsible-header active">{{currentTeam.name}} - {{currentTeam.type}} (To Be Shared) - This user is admin of this team</div>
+      <div class="collapsible-body" style="display: block; background-color: white;">
+        <div class="row">
+          <div class="col s12  z-depth-1">
+            <ul class="tabs" style="width: 100%;" tabs>
+              <li class="tab col s3" style="width: 50%;"><a class="" href="#details1">Details</a></li>
+              <li class="tab col s3" style="width: 50%;"><a href="#members1" class="active">Members</a></li>
+              <div class="indicator" style="right: -1px; left: 504px;"></div></ul>
+          </div>
+          <div id="details1" class="col s12">
+            <div class="row">
+              <div class="col s12">
+                <p>Hi</p>
+              </div>
+            </div>
+          </div>
+          <div id="members1" class="col s12">
+            <div class="tab-content">
+              <div class="row">
+                  <a class="waves-effect waves-light btn modal-trigger" href="#newMember" ng-if="isLeader">Add new member</a>
+                  <a class="waves-effect waves-light btn modal-trigger" href="#assignLeader" ng-if="isLeader">Assign Leader</a>
+                    <a class="waves-effect waves-light btn" ng-if="!isLeader || currentTeam.leader.length > 1" ng-click="leaveTeam()">Leave this team</a>
+              </div>
 
-<div class="col s12" ng-if="isLeader">
-  <div class="row">
-    <h5 class="header">List of Invited email</h5>
-    <div class="row">
-      <div class="z-depth-1">
-        <a href=""></a>
-        <table class="team">
-          <thead>
-            <th class="col s1">#</th>
-            <th class="col s6">Email</th>
-            <th class="col s2">Status</th>
-            <th class="col s3 center-align">Action</th>
-          </thead>
-          <tbody>
-            <tr ng-repeat="member in currentTeam.member | filter : filterByStatus ">
-              <td class="col s1">{{$index + 1 }}</td>
-              <td class="col s6">{{(member.email) ? member.email : member._id.email}}</td>
-              <td class="col s2">{{member.status}}</td>
-              <td class="col s3 center-align">
-                <a class="waves-effect waves-light" name="action" ng-click="removeInvitation(member)"
-                   ng-if="isLeader && leader._id != user._id" tooltips title="Remove invitation">
-                  <i class="mdi-content-remove tiny"></i>
-                </a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+              <div class="row">
+                <div class="z-depth-1">
+                  <a href=""></a>
+                  <table class="team">
+                    <thead>
+                    <th class="col s6">Member email</th>
+                    <th class="col s2">Type</th>
+                    <th class="col s2">Status</th>
+                    <th class="col s2 center-align">Action</th>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="leader in currentTeam.leader">
+                      <td class="col s6">{{leader.email}}</td>
+                      <td class="col s2">Leader</td>
+                      <td class="col s2">Active</td>
+                      <td class="col s2 center-align">
+                      </td>
+                    </tr>
+                    <tr ng-repeat="member in currentTeam.member">
+                      <td class="col s6">{{(member.email) ? member.email : member._id.email}}</td>
+                      <td class="col s2">Member</td>
+                      <td class="col s2">{{member.status}}</td>
+                      <td class="col s2 center-align">
+                        <a class="waves-effect waves-light" name="action" ng-click="removeMember(member)"
+                           ng-if="isLeader && leader._id != user._id" tooltips title="Remove this Member">
+                          <i class="mdi-content-remove tiny"></i>
+                        </a>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
+    </li>
+  </ul>
 </div>
 
 <div class="col s12" ng-if="!currentTeam._id">
@@ -118,6 +107,8 @@
     </div>
   </div>
 </div>
+        <!-------------------------------------------------->
+<div ng-include="'app/modules/team/manager-team/create.html'"></div>
 
 <div id="newMember" class="modal">
   <form name="newMemberForm" ng-submit="addNewMember()">
@@ -150,30 +141,18 @@
 </div>
 
   <div id="assignLeader" class="modal">
-    <form name="newMemberForm" ng-submit="addNewMember()">
+    <form name="newMemberForm" ng-submit="assignLeader()">
       <div class="modal-content">
+        <h4 class="header">Assign member to leader</h4>
         <div class="row">
-          <div class="input-field col s12">
-            <input id="email" type="email" ng-model="member.email" class="col s9">
-            <label for="email">Email</label>
-            <a class="btn waves-effect waves-light right" name="action" ng-click="addUser()"> <i class="mdi-content-add tiny"></i></a>
-
-            <ul>
-              <li class="collection-item vlalign" ng-repeat="email in member.emails">
-                <div class="row" style="margin-bottom: 5px">
-                  <div class="col s8">{{email.email}}</div>
-                  <div class="col s4">
-                    <a class="btn waves-effect waves-light right" name="action" ng-click="removeUser($index)"> <i class="mdi-content-remove tiny"></i></a>
-                  </div>
-                </div>
-              </li>
-            </ul>
-
-          </div>
+          <p ng-repeat="member in currentTeam.member | filter : {status : 'active'}">
+            <input type="checkbox" name="newLeader" class="filled-in" id="{{member._id._id}}" value="{{member._id._id}" ng-click="toggleSelection(member._id._id)"/>
+            <label for="{{member._id._id}}">{{member._id.email}}</label>
+          </p>
         </div>
       </div>
       <div class="modal-footer">
-        <button class="modal-action modal-close waves-effect waves-green btn-flat" ng-disabled="team.emails.length <= 0" type="submit">Add new member</button>
+        <button class="modal-action modal-close waves-effect waves-green btn-flat" type="submit">Submit</button>
         <button class="modal-action modal-close btn-flat" type="button">Close</button>
       </div>
     </form>

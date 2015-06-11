@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-.factory('authService', function($location, $rootScope, $http, userService,teamService, $cookieStore, $q) {
+.factory('authService', function($location, $rootScope, $http, userService,teamService, $cookieStore, $q,$state) {
   var currentUser = {};
   if ($cookieStore.get('token')) {
     currentUser = userService.get();
@@ -55,8 +55,11 @@ angular.module('buiiltApp')
 
       return userService.save(user,
       function(data) {
-        //$cookieStore.put('token', data.token);
-        //currentUser = userService.get();
+        if (data.emailVerified) {
+          $cookieStore.put('token', data.token);
+          currentUser = userService.get();
+          $state.go('team.manager')
+        }
         return cb(user);
       },
       function(err) {

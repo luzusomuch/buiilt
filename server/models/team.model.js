@@ -42,7 +42,7 @@ var TeamSchema = new Schema({
     email: {
       type: String
     },
-    status: {type:String, enum: ['waiting', 'active','reject']}
+    status: {type:String, enum: ['Pending', 'Active','Reject']}
   }],
   createdAt: {
     type: Date,

@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-  .controller('TeamCtrl', function ($scope,$rootScope, invitations, teamService, authService) {
+  .controller('TeamCtrl', function ($scope,$rootScope, invitations, teamService, authService,$state) {
     $scope.existedTeam = {};
     $scope.invitations = invitations;
 
@@ -26,17 +26,51 @@ angular.module('buiiltApp')
       $scope.team.emails.splice(index, 1);
     };
 
+    $scope.selection = [];
+    $scope.toggleSelection = function(id) {
+      var idx = $scope.selection.indexOf(id);
+
+      // is currently selected
+      if (idx > -1) {
+        $scope.selection.splice(idx, 1);
+      }
+
+      // is newly selected
+      else {
+        $scope.selection.push(id);
+      }
+    };
+
     $scope.create = function (form) {
       $scope.submitted = true;
       if (form.$valid) {
         teamService.create($scope.team, function (team) {
           $scope.currentTeam = team;
+          $scope.member.emails = [];
+          $scope.team.emails = [];
           $scope.isLeader = true;
         }, function (err) {
           console.log(err);
         });
       }
     };
+
+
+    $scope.assignLeader = function() {
+      teamService.assignLeader({id : $scope.currentTeam._id},$scope.selection).$promise
+        .then(function(team) {
+          $scope.currentTeam = team;
+        })
+    };
+
+    $scope.leaveTeam = function() {
+      if (confirm("Are you sure you want to leave this team")) {
+        teamService.leaveTeam({_id: $scope.currentTeam._id}).$promise
+          .then(function (team) {
+            $state.go($state.current, {}, {reload: true});
+          })
+      }
+    }
 
     $scope.addNewMember = function(){
       teamService.addMember({id: $scope.currentTeam._id},$scope.member.emails).$promise

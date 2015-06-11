@@ -50,3 +50,7 @@ table.team {
     color : #ee6e73;
     font-weight: bold;
 }
+
+.tab-content {
+    padding : 20px
+}

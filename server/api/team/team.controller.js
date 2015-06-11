@@ -67,13 +67,13 @@ exports.create = function (req, res) {
         if (!user) {
           listEmail.push({
             email : email.email,
-            statue : 'waiting'
+            status : 'Pending'
           });
         }
         else {
           listEmail.push({
             _id: user._id,
-            status : 'waiting'
+            status : 'Pending'
           });
         }
         callback();
@@ -113,7 +113,6 @@ exports.create = function (req, res) {
 exports.addMember = function(req,res) {
   var team = req.team;
   var emails = req.body;
-  console.log(emails);
   async.each(emails, function(email, callback) {
     User.findOne({'email': email.email}, function (err, user) {
       if (err) {
@@ -122,13 +121,13 @@ exports.addMember = function(req,res) {
       if (!user) {
         team.member.push({
           email : email.email,
-          status : 'waiting'
+          status : 'Pending'
         });
       }
       else {
         team.member.push({
           _id: user._id,
-          status : 'waiting'
+          status : 'Pending'
         });
       }
       callback();
@@ -188,7 +187,7 @@ exports.removeMember = function(req,res) {
  */
 exports.invitation = function(req,res) {
   var user = req.user;
-  Team.find({'member._id' : user._id, 'member.status' : 'waiting'})
+  Team.find({'member._id' : user._id, 'member.status' : 'Pending'})
     .populate('leader')
     .exec(function(err,teams) {
       if (err || !teams) {
@@ -207,7 +206,7 @@ exports.accept = function(req,res) {
   var user = req.user;
   var team = req.team;
   var member = team.member.id(user);
-  member.status = 'active';
+  member.status = 'Active';
   team.save(function(err) {
     if (err) {
       errorsHelper.validationErrors(res, err);
@@ -216,10 +215,12 @@ exports.accept = function(req,res) {
       _id : team._id,
       role : 'member'
     };
-    user.save();
-    Team.populate(team, [{path:"leader"},{path:"member.user"}], function(err, team ) {
-      return res.json(team);
+    user.save(function(err) {
+      Team.populate(team, [{path:"leader"},{path:"member._id"}], function(err, team ) {
+        return res.json(team);
+      });
     });
+
   })
 
 };
@@ -233,12 +234,89 @@ exports.reject = function(req,res) {
   var user = req.user;
   var team = req.team;
   var member = team.member.id(user);
-  member.status = 'reject';
+  member.status = 'Reject';
   team.save(function(err) {
     if (err) {
       errorsHelper.validationErrors(res, err);
     }
     return res.json(true);
+  })
+};
+
+exports.assignLeader = function(req,res) {
+  var team = req.team;
+  var members = req.body;
+  async.each(members,function(member,callback) {
+    var _member = team.member.id(member);
+    team.member.remove(_member);
+    team.leader.push(_member);
+    team.save(function(err) {
+      if (err) {
+        callback(err,null);
+      }
+      User.findById(member,function(err,user) {
+        user.team.role = "admin";
+        user.save(function(err) {
+          if (err) {
+            callback(err,null);
+          }
+          callback(null,null)
+        })
+      });
+    })
+  },function(err, result) {
+    if (err) {
+      return errorsHelper.validationErrors(err,res)
+    }
+    Team.populate(team, [{path:"leader"},{path:"member._id"}], function(err, team ) {
+      return res.json(team);
+    });
+  });
+};
+
+exports.leaveTeam = function(req,res) {
+  var team = req.team;
+  var user = req.user;
+  async.parallel([
+    function(callback) {
+       var member = team.member.id(user._id);
+      console.log(member);
+      if (member) {
+        team.member.remove(member);
+        team.save(function(err){
+          if (err) {
+            callback(err,null);
+          }
+          callback(null,null)
+        })
+      } else {
+        callback(null,null);
+      }
+    },
+    function(callback) {
+      var leader = team.leader.indexOf(user._id);
+      if (leader != -1) {
+        team.leader.remove(user._id);
+        team.save(function(err){
+          if (err) {
+            callback(err,null);
+          }
+          callback(null,null);
+        })
+      } else {
+        callback(null,null);
+      }
+    }
+  ],function(err,result) {
+    if (err) {
+      return errorsHelper.validationErrors(err,res)
+    }
+    user.set('team', undefined);
+    user.markModified('team');
+    user.save();
+    Team.populate(team, [{path:"leader"},{path:"member._id"}], function(err, team ) {
+      return res.json(team);
+    });
   })
 };
 

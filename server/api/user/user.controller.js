@@ -26,13 +26,11 @@ exports.index = function (req, res) {
     res.json(200, users);
   });
 };
-
 /**
  * Creates a new user
  */
 exports.create = function (req, res, next) {
-  var teamInviteToken = (req.body.teamInviteToken) ? req.body.teamInviteToken : null
-  console.log(req.body);
+  var teamInviteToken = (req.body.teamInviteToken) ? req.body.teamInviteToken : null;
   UserValidator.validateNewUser(req, okay(next, function (data) {
     var newUser = new User(data);
     newUser.provider = 'local';
@@ -67,15 +65,22 @@ exports.create = function (req, res, next) {
         Team.update({teamInviteToken : teamInviteToken,'member.email': req.body.email},
           {"$set" : {
             "member.$._id" : user._id,
-            "member.$.status" : 'active',
+            "member.$.status" : 'Active',
             "member.$.email" : null
           }}, function(err, team) {
             if (err) {console.log(err);return res.send(500, err);}
-            console.log(team);
+            Team.findOne({teamInviteToken : teamInviteToken},function(err,team) {
+              newUser.team = {
+                _id : team._id,
+                role : 'member'
+              };
+              newUser.emailVerified = true;
+              newUser.save();
+            })
           });
       }
       var token = jwt.sign({_id: user._id}, config.secrets.session, {expiresInMinutes: 60 * 5});
-      res.json({token: token});
+      res.json({token: token,emailVerified : true});
     });
   }));
 };

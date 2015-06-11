@@ -12,15 +12,15 @@ var async = require('async');
 
 EventBus.onSeries('Team.Inserted', function(request, next){
     async.each(request.member, function(user,callback) {
-      if (!user._id) {
+      if (!user._id && user.status == 'Pending') {
           Mailer.sendMail('invite-team-has-no-account.html', user.email, {
               request: request,
-              link: config.baseUrl + 'signup?inviteToken=' + request.inviteToken,
+              link: config.baseUrl + 'signup?inviteToken=' + request.teamInviteToken,
               subject: 'Group invitation ' + request.name
           }, function(err) {
             callback()
           });
-      } else  {
+      } else if (user._id && user.status == 'Pending')  {
         Mailer.sendMail('invite-team-has-account.html', user.email, {
           request: request,
           subject: 'Group invitation ' + request.name
@@ -34,9 +34,10 @@ EventBus.onSeries('Team.Inserted', function(request, next){
 });
 
 EventBus.onSeries('Team.Updated', function(request, next){
+  console.log(request);
   async.each(request.member, function(user,callback) {
-    if (!user.user && user.status == 'waiting') {
-      console.log(user);
+    if (!user._id && user.status == 'Pending') {
+
       Mailer.sendMail('invite-team-has-no-account.html', user.email, {
         request: request,
         link: config.baseUrl + 'signup?teamInviteToken=' + request.teamInviteToken,
@@ -44,8 +45,8 @@ EventBus.onSeries('Team.Updated', function(request, next){
       }, function(err) {
         callback()
       });
-    } else if (user.user && user.status == 'waiting')  {
-      Mailer.sendMail('invite-team-has-account.html', user.email, {
+    } else if (user._id && user.status == 'Pending')  {
+      Mailer.sendMail('invite-team-has-account.html', user._id.email, {
         request: request,
         subject: 'Group invitation ' + request.name
       }, function(err) {

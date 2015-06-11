@@ -27,6 +27,18 @@ angular.module('buiiltApp')
           action : 'remove-member'
         }
       },
+      assignLeader : {
+        method : 'PUT',
+        params : {
+          action : 'assign-leader'
+        }
+      },
+      leaveTeam : {
+        method : 'PUT',
+        params : {
+          action : 'leave-team'
+        }
+      },
       acceptTeam : {
         method : 'PUT',
         params : {
