@@ -45,14 +45,13 @@
   </nav>
   <div class="z-depth-1" style="background-color: white;" ng-if="tabs">
     <div class="col s12 container">
-      {{project._id}}
       <ul class="tabs" tabs>
-        <li class="tab col" ng-repeat="tab in tabs" ng-if="projectParamId">
-          <a ui-sref="{{tab.sref}}({id :  project._id})" ui-sref-active="active">{{tab.label}}</a>
-        </li>
-        <li class="tab col" ng-repeat="tab in tabs" ng-if="!projectParamId">
+        <li class="tab col" ng-repeat="tab in tabs">
           <a ui-sref="{{tab.sref}}" ui-sref-active="active">{{tab.label}}</a>
         </li>
+        <!-- <li class="tab col" ng-repeat="tab in tabs" ng-if="!projectParamId">
+          <a ui-sref="{{tab.sref}}" ui-sref-active="active">{{tab.label}}</a>
+        </li> -->
       </ul>
     </div>
   </div>

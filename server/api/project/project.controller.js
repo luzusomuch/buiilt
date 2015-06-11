@@ -208,13 +208,11 @@ exports.create = function(req, res){
  */
 exports.show = function(req, res){
   //TODO - validate rol
-  console.log(req.params.id);
   Project.findById(req.params.id)
   .populate('owner')
   .exec(function(err, project){
     if(err){ return res.send(500, err); }
     else {
-      console.log(' ------- '+ project);
       return res.json(project);
     }
   });

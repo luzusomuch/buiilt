@@ -8,7 +8,6 @@ angular.module('buiiltApp')
       function queryProjects(){
         authService.isLoggedInAsync(function(isLoggedIn){
           if(isLoggedIn){
-            $scope.projectParamId = $stateParams.id;
             $scope.isLoggedIn = true;
             $scope.user = authService.getCurrentUser();
             $scope.currentTeam = authService.getCurrentTeam();
@@ -21,16 +20,37 @@ angular.module('buiiltApp')
               $scope.projectsBuilder = projects;
             });
 
-            if (!$scope.projectParamId) {
-              var userId = $scope.user._id;
-              $scope.tabs = [{sref: 'team.manager', label: 'team manager'},
+            if ($stateParams.id) {
+              projectService.get({'id': $stateParams.id}).$promise.then(function(project) {
+                $scope.project = project; 
+                if (!project) {
+                  var userId = $scope.user._id;
+                  $scope.tabs = [{sref: 'team.manager', label: 'team manager'},
                             {sref: 'user.form({id: userId})', label: 'edit profile'},
                             {sref: 'notification.view({id: userId})', label: 'notification'}];
+                }
+                else {
+                  if ($scope.currentTeam.type === 'homeOwner') {
+                    $scope.tabs = $scope.menuTypes['homeOwner'];  
+                  }
+                  else if($scope.currentTeam.type === 'buider') {
+                    $scope.tabs = $scope.menuTypes['homeOwner'];
+                  }
+                  else if($scope.currentTeam.type === 'contractor') {
+                    $scope.tabs = $scope.menuTypes['contractor']; 
+                  }
+                  else if($scope.currentTeam.type === 'supplier') {
+                    $scope.tabs = $scope.menuTypes['supplier']; 
+                  }
+                }
+              });
             }
-            else if($scope.projectParamId) {
-              $scope.tabs = $scope.menuTypes['homeOwner']
+            else {
+              var userId = $scope.user._id;
+              $scope.tabs = [{sref: 'team.manager', label: 'team manager'},
+                        {sref: 'user.form({id: userId})', label: 'edit profile'},
+                        {sref: 'notification.view({id: userId})', label: 'notification'}];
             }
-            
             // contractorService.getProjectForContractorWhoWinner({'id': $scope.user._id}, function(result) {
             //   $scope.projectsContractor = result;
             //   angular.forEach(result, function(subResult) {
@@ -41,24 +61,6 @@ angular.module('buiiltApp')
             // });
 
 
-            // teamService.getTeamByUser({'id': $scope.user._id}, function(team) {
-            //   if (team.type === 'homeOwner') {
-            //     $scope.tabs = $scope.menuTypes['homeOwner']  
-            //   }
-            //   else if(team.type === 'buider') {
-            //     $scope.tabs = $scope.menuTypes['buider']   
-            //   }
-            //   else if(team.type === 'contractor') {
-            //     $scope.tabs = $scope.menuTypes['contractor']
-            //   }
-            //   else if(team.type === 'supplier') {
-            //     $scope.tabs = $scope.menuTypes['supplier']
-            //   }
-            //   // projectService.getProjectsByUser({'id': $scope.user._id}, function(projects){
-            //   //   $scope.projectsHomeOwner = projects;
-            //   // });
-            // });
-            
           } else {
             $scope.isLoggedIn = false;
           }
@@ -76,21 +78,21 @@ angular.module('buiiltApp')
 
 
       $scope.menuTypes = {
-        homeOwner: [{sref: 'dashboard', label: 'dashboard'},
-          {sref: 'client', label: 'builder'},
-          {sref: 'projects.view', label: 'project'}],
-        contractor: [{sref: 'dashboard', label: 'dashboard'},
-          {sref: 'contractors', label: 'contractors'},
-          {sref: 'projects.view', label: 'project'}],
-        buider: [{sref: 'dashboard', label: 'dashboard'},
-          {sref: 'client', label: 'client'},
-          {sref: 'contractors', label: 'contractors'},
-          {sref: 'materials', label: 'materials'},
-          {sref: 'staff', label: 'staff'},
-          {sref: 'projects.view', label: 'project'}],
-        supplier: [{sref: 'dashboard', label: 'dashboard'},
-          {sref: 'contractors', label: 'contractors'},
-          {sref: 'projects.view', label: 'project'}]
+        homeOwner: [{sref: 'dashboard({id :  project._id})', label: 'dashboard'},
+          {sref: 'client({id :  project._id})', label: 'builder'},
+          {sref: 'projects.view({id :  project._id})', label: 'project'}],
+        contractor: [{sref: 'dashboard({id :  project._id})', label: 'dashboard'},
+          {sref: 'contractors({id :  project._id})', label: 'contractors'},
+          {sref: 'projects.view({id :  project._id})', label: 'project'}],
+        buider: [{sref: 'dashboard({id :  project._id})', label: 'dashboard'},
+          {sref: 'client({id :  project._id})', label: 'client'},
+          {sref: 'contractors({id :  project._id})', label: 'contractors'},
+          {sref: 'materials({id :  project._id})', label: 'materials'},
+          {sref: 'staff({id :  project._id})', label: 'staff'},
+          {sref: 'projects.view({id :  project._id})', label: 'project'}],
+        supplier: [{sref: 'dashboard({id :  project._id})', label: 'dashboard'},
+          {sref: 'contractors({id :  project._id})', label: 'contractors'},
+          {sref: 'projects.view({id :  project._id})', label: 'project'}]
       };
 
       // $scope.user = authService.getCurrentUser();
