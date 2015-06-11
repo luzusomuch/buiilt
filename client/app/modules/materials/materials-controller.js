@@ -3,11 +3,7 @@ angular.module('buiiltApp').controller('MaterialsCtrl', function($scope, $stateP
     $scope.requirements = [];
     $scope.emailsPhone = [];
     $scope.user = authService.getCurrentUser();
-    if ($scope.user) {
-        teamService.getTeamByUser({'id': $scope.user._id}, function(team) {
-            $scope.team = team;
-        });
-    }
+    $scope.team = authService.getCurrentTeam();
     $scope.currentProject = $rootScope.currentProject;
 
     $scope.addNewRequire = function() {

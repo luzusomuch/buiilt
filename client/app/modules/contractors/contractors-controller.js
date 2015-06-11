@@ -3,11 +3,7 @@ angular.module('buiiltApp').controller('ContractorsCtrl', function($scope, $stat
   $scope.currentProject = $rootScope.currentProject;
   $scope.emailsPhone = [];
   $scope.user = authService.getCurrentUser();
-  if ($scope.user) {
-    teamService.getTeamByUser({'id': $scope.user._id}, function(team) {
-      $scope.team = team;
-    });
-  }
+  $scope.team = authService.getCurrentTeam();
 
   contractorService.getContractorByProject({'id': $stateParams.id}).$promise.then(function(data){
     $scope.contractors = data;
@@ -19,11 +15,17 @@ angular.module('buiiltApp').controller('ContractorsCtrl', function($scope, $stat
 
   $scope.addUser = function() {
     $scope.emailsPhone.push({email: $scope.newEmail, phoneNumber: $scope.newPhoneNumber});
+    $scope.newEmail = null;
+    $scope.newPhoneNumber = null;
+  };
+
+  $scope.removeUser = function(index) {
+    $scope.emailsPhone.splice(index, 1);
   };
 
   $scope.createContractorPackage = function(){
     contractorService.createContractorPackage({contractor: $scope.contractor,emailsPhone: $scope.emailsPhone, project: $stateParams.id}).$promise.then(function(data) {
-
+      $scope.contractors = data;
     });
   };
 

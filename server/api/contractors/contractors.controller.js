@@ -1,6 +1,7 @@
 'use strict';
 
 var ContractorPackage = require('./../../models/contractorPackage.model');
+var Team = require('./../../models/team.model');
 var User = require('./../../models/user.model');
 var _ = require('lodash');
 var async = require('async');
@@ -79,12 +80,30 @@ exports.createContractorPackage = function (req, res, next) {
 };
 
 exports.getProjectForContractorWhoWinner = function(req, res) {
-  ContractorPackage.find({'winner._id': req.params.id}).populate('project').exec(function(err, result){
-    if (err) {res.send(500, err);}
+  Team.findOne({$or:[{'leader': req.params.id}, {'member._id': req.params.id}]}, function(err, team) {
+    if (err) {return res.send(500,err);}
+    if (!team) {return res.send(404,err);}
     else {
-      return res.json(200, result);
+      async.each(team.leader, function(leader, callback) {
+        ContractorPackage.find({'winner._id': leader}).populate('project').exec(function(err, contractor) {
+          if (err) {return res.send(500, err);}
+          if (!contractor) {return res.send(404,err);}
+          else {
+            return res.json(200, contractor);
+          }
+          callback();
+        });
+      }, function(err) {
+        callback();
+      });
     }
   });
+  // ContractorPackage.find({'winner._id': req.params.id}).populate('project').exec(function(err, result){
+  //   if (err) {res.send(500, err);}
+  //   else {
+  //     return res.json(200, result);
+  //   }
+  // });
 };
 
 exports.getContractorByProject = function(req, res) {

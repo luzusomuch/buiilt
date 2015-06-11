@@ -24,7 +24,7 @@
           </div>
       </div>
       <div class="row" ng-repeat="toEmail in contractorRequest.to">
-          <button ng-if="toEmail.email == currentUser.email" class="waves-effect waves-light btn" ng-disabled="sendQuoteToBuilder.$invalid">Send quote</button>
+          <button ng-if="currentUser.email" class="waves-effect waves-light btn" ng-disabled="sendQuoteToBuilder.$invalid">Send quote</button>
       </div>
       <div ng-if="currentUser.email == null || currentUser.email == ''">
         <a href="#signin" class="waves-effect waves-light btn modal-trigger">Login</a> or <a href="#signupAndSendQuoteContractor" class="waves-effect waves-light btn modal-trigger">Registry</a>

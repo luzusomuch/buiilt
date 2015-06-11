@@ -3,7 +3,7 @@ angular.module('buiiltApp')
   return {
     restrict: 'E',
     templateUrl: 'app/directives/header/header.html',
-    controller: function($scope, $stateParams, $rootScope, authService, projectService) {
+    controller: function($scope, $stateParams, $rootScope, authService, projectService, contractorService) {
 
       function queryProjects(){
         authService.isLoggedInAsync(function(isLoggedIn){
@@ -19,11 +19,14 @@ angular.module('buiiltApp')
             projectService.getProjectsByBuilder({'id': $scope.user._id}, function(projects) {
               $scope.projectsBuilder = projects;
             });
+            contractorService.getProjectForContractorWhoWinner({'id': $scope.user._id}, function(result) {
+              $scope.projectsContractor = result;
+            });
 
             if ($stateParams.id) {
               projectService.get({'id': $stateParams.id}).$promise.then(function(project) {
                 $scope.project = project; 
-                if (!project) {
+                if (!project && project == null) {
                   var userId = $scope.user._id;
                   $scope.tabs = [{sref: 'team.manager', label: 'team manager'},
                             {sref: 'user.form({id: userId})', label: 'edit profile'},
@@ -51,14 +54,7 @@ angular.module('buiiltApp')
                         {sref: 'user.form({id: userId})', label: 'edit profile'},
                         {sref: 'notification.view({id: userId})', label: 'notification'}];
             }
-            // contractorService.getProjectForContractorWhoWinner({'id': $scope.user._id}, function(result) {
-            //   $scope.projectsContractor = result;
-            //   angular.forEach(result, function(subResult) {
-            //     if ($scope.user._id === subResult.winner._id) {
-            //       $scope.tabs = $scope.menuTypes['contractor'];
-            //     }
-            //   });
-            // });
+            
 
 
           } else {

@@ -11,14 +11,14 @@
             {{(currentProject) ? currentProject.name : 'Project name'}}<i class="mdi-navigation-arrow-drop-down right"></i></a>
           <ul id="projectSelect" class="dropdown-content" style="margin-top: 15px">
             <li ng-repeat="project in projectsOwner" ng-if="projectsOwner">
-              <a ui-sref="projects.view({id: project._id})">{{project.name}}</a>
+              <a ui-sref="dashboard({id: project._id})">{{project.name}}</a>
             </li>
             <li ng-repeat="project in projectsBuilder" ng-if="projectsBuilder">
-              <a ui-sref="projects.view({id: project._id})">{{project.name}}</a>
+              <a ui-sref="dashboard({id: project._id})">{{project.name}}</a>
             </li>
-            <!-- <li ng-repeat="project in projectsContractor" ng-if="projectsContractor">
-              <a ui-sref="projects.view({id: project._id})">{{project.name}}</a>
-            </li> -->
+            <li ng-repeat="project in projectsContractor" ng-if="projectsContractor">
+              <a ui-sref="dashboard({id: project.project._id})">{{project.project.name}}</a>
+            </li>
             <!-- <li ng-repeat="project in projectsHomeOwner" ng-if="projectsHomeOwner">
               <a ui-sref="projects.view({id: project._id})">{{project.name}}</a>
             </li> -->

@@ -19,6 +19,7 @@
 <div class="clearfix"></div>
 
 <div class="row listQuoteRequest" ng-if="contractorRequest.owner == currentUser._id">
+  <h4 ng-if="contractorRequest.winner._id != ''">Winner</h4>
   <table class="hoverable responsive-table">
       <thead>
           <th>Contractor name</th>

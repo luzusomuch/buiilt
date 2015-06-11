@@ -28,11 +28,10 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
     }
   }, function(err, result){
     if (!err) {
-      console.log(request,result);
       //do send email
       _.each(request.to,function(toEmail) {
-        Team.findOne({'groupUser.email': toEmail.email}).populate('user').exec(function(err, team) {
-          if (err) {return res.send(500, err);}
+        Team.findOne({$or: [{'leader': toEmail._id}, {'member._id': toEmail._id}]}, function(err, team) {
+          if (err) {return console.log(err);}
           if (!team) {
             Mailer.sendMail('contractor-package-request.html', toEmail.email, {
               contractorPackage: request,
@@ -46,18 +45,25 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
             });
           }
           else {
-            Mailer.sendMail('contractor-package-request.html', team.user.email, {
-              contractorPackage: request,
-              //project owner
-              user: result.user,
-              project: result.project,
-              contractorPackageLink: config.baseUrl + 'contractor-requests/' + request._id,
-              subject: 'Quote request for ' + request.name
-            }, function(err) {
+            console.log(team);
+            async.each(team.leader, function(leader, callback) {
+              User.findById(leader, function(err,user) {
+                Mailer.sendMail('contractor-package-request.html', user.email, {
+                  contractorPackage: request,
+                  //project owner
+                  user: result.user,
+                  project: result.project,
+                  contractorPackageLink: config.baseUrl + 'contractor-requests/' + request._id,
+                  subject: 'Quote request for ' + request.name
+                }, function(err) {
+                  return next();
+                });
+              });
+            }, function(err){
               return next();
             });
           }
-        })
+        });
       });
     } else {
       return next();
