@@ -19,6 +19,7 @@ var TeamSchema = new Schema({
     type: String,
     required: true
   },
+  teamInviteToken : String,
   type: {
     type: String,
     required: 'Team type is required'
@@ -34,14 +35,14 @@ var TeamSchema = new Schema({
     ref: 'Project'
   }],
   member: [{
-    user: {
+    _id: {
       type: Schema.Types.ObjectId,
       ref: 'User'
     },
     email: {
       type: String
     },
-    status: {type:String, enum: ['waiting', 'active']}
+    status: {type:String, enum: ['waiting', 'active','reject']}
   }],
   createdAt: {
     type: Date,
@@ -81,6 +82,8 @@ TeamSchema
 
   if (!this.isNew){
     this.updatedAt = new Date();
+  } else {
+    this.teamInviteToken = crypto.randomBytes(20).toString('hex');
   }
 
   next();

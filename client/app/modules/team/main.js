@@ -9,6 +9,14 @@ angular.module('buiiltApp')
         url: '/manager',
         templateUrl: '/app/modules/team/manager-team/manager.html',
         controller: 'TeamCtrl',
+        resolve: {
+          invitations : [
+            'teamService',
+            function(authService) {
+              return authService.getCurrentInvitation();
+            }
+          ]
+        },
         hasCurrenrProject : false
       })
       .state('team.create', {

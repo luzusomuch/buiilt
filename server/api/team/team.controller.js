@@ -38,7 +38,7 @@ exports.me = function(req,res) {
   }
   Team.findById(user.team._id)
     .populate('leader')
-    .populate('member.user')
+    .populate('member._id')
     .exec(function (err,team) {
     if (err) {
       return errorsHelper.validationErrors(res, err);
@@ -72,7 +72,7 @@ exports.create = function (req, res) {
         }
         else {
           listEmail.push({
-            user: user._id,
+            _id: user._id,
             status : 'waiting'
           });
         }
@@ -94,7 +94,7 @@ exports.create = function (req, res) {
             if (err) {
               return errorsHelper.validationErrors(res, err);
             }
-            Team.populate(team, [{path:"leader"},{path:"member.user"}], function(err, team ) {
+            Team.populate(team, [{path:"leader"},{path:"member._id"}], function(err, team ) {
               return res.json(team);
             });
 
@@ -127,7 +127,7 @@ exports.addMember = function(req,res) {
       }
       else {
         team.member.push({
-          user: user._id,
+          _id: user._id,
           status : 'waiting'
         });
       }
@@ -141,7 +141,7 @@ exports.addMember = function(req,res) {
       if (err) {
         return errorsHelper.validationErrors(res, err);
       }
-      Team.populate(team, [{path:"leader"},{path:"member.user"}], function(err, team ) {
+      Team.populate(team, [{path:"leader"},{path:"member._id"}], function(err, team ) {
         return res.json(team);
       });
     })
@@ -174,9 +174,72 @@ exports.removeMember = function(req,res) {
     var index =_.findIndex(team.member,{email : member.email});
     team.member.splice(index,1);
     team.save(function() {
-      return res.json(true);
+      Team.populate(team, [{path:"leader"},{path:"member._id"}], function(err, team ) {
+        return res.json(team);
+      });
     });
   }
+};
+
+/**
+ * Get all team invitation for auth user
+ * @param req
+ * @param res
+ */
+exports.invitation = function(req,res) {
+  var user = req.user;
+  Team.find({'member._id' : user._id, 'member.status' : 'waiting'})
+    .populate('leader')
+    .exec(function(err,teams) {
+      if (err || !teams) {
+        errorsHelper.validationErrors(res, err);
+      }
+      return res.json(teams);
+    })
+};
+
+/**
+ * Accept invitation
+ * @param req
+ * @param res
+ */
+exports.accept = function(req,res) {
+  var user = req.user;
+  var team = req.team;
+  var member = team.member.id(user);
+  member.status = 'active';
+  team.save(function(err) {
+    if (err) {
+      errorsHelper.validationErrors(res, err);
+    }
+    user.team = {
+      _id : team._id,
+      role : 'member'
+    };
+    user.save();
+    Team.populate(team, [{path:"leader"},{path:"member.user"}], function(err, team ) {
+      return res.json(team);
+    });
+  })
+
+};
+
+/**
+ * Reject invitation
+ * @param req
+ * @param res
+ */
+exports.reject = function(req,res) {
+  var user = req.user;
+  var team = req.team;
+  var member = team.member.id(user);
+  member.status = 'reject';
+  team.save(function(err) {
+    if (err) {
+      errorsHelper.validationErrors(res, err);
+    }
+    return res.json(true);
+  })
 };
 
 /**

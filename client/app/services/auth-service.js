@@ -109,7 +109,10 @@ angular.module('buiiltApp')
      * @returns {*}
      */
     getCurrentTeam : function() {
-        return teamService.getCurrentTeam();
+      return teamService.getCurrentTeam();
+    },
+    getCurrentInvitation : function() {
+      return teamService.getCurrentInvitation();
     },
     /**
      * Gets all available info on authenticated user in async

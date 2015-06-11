@@ -11,10 +11,8 @@ angular.module('buiiltApp')
             $scope.projectParamId = $stateParams.id;
             $scope.isLoggedIn = true;
             $scope.user = authService.getCurrentUser();
-            $scope.currentTeam = {};
-            $rootScope.$on('$stateChangeSuccess', function () {
-              $scope.currentTeam = $rootScope.currentTeam;
-            });
+            $scope.currentTeam = authService.getCurrentTeam();
+            $scope.isLeader = $scope.user.team.role == 'admin' ? true : false;
 
             projectService.getProjectsByUser({'id': $scope.user._id}, function(projects) {
               $scope.projectsOwner = projects;
@@ -73,7 +71,6 @@ angular.module('buiiltApp')
       $rootScope.$on('$stateChangeSuccess', function (event, next) {
         queryProjects();
         $scope.currentProject = $rootScope.currentProject;
-        // $scope.currentTeam = $rootScope.currentTeam;
       });
 
 

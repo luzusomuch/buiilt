@@ -54,3 +54,8 @@ angular.module('buiiltApp').controller('UserFormCtrl', function($scope, $state, 
     });
   };
 });
+
+angular.module('buiiltApp').controller('TeamInvitationCtrl', function($scope, $state, authService,invitations) {
+  $scope.invitations = invitations;
+  console.log(invitations);
+});
