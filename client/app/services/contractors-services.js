@@ -20,6 +20,22 @@ angular.module('buiiltApp')
                 action: 'project'
             },
             isArray: true
+        },
+        getContractorPackageTenderByProject: {
+            method: 'GET',
+            params: {
+                id: 'id',
+                action: 'tender'
+            },
+            isArray: true
+        },
+        getContractorPackageInProcessByProject: {
+            method: 'GET',
+            params: {
+                id: 'id',
+                action: 'processing'
+            },
+            isArray: true
         }
     });
 });

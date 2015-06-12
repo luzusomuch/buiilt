@@ -4,7 +4,6 @@ angular.module('buiiltApp')
    * quote data
    */
   $scope.contractorRequest = contractorRequest;
-  console.log($scope.contractorRequest);
   $scope.currentUser = {};
   if ($cookieStore.get('token')) {
     $scope.currentUser = userService.get();
@@ -17,9 +16,13 @@ angular.module('buiiltApp')
   })
 
   $scope.selectQuote = function(value) {
-    quoteService.get({'id': value}).$promise.then(function(data) { 
-        $scope.winner = data;
-    });
+    console.log(value);
+    if (confirm("Are you sure you want to select this quote?")) {
+      quoteService.get({'id': value}).$promise.then(function(data) { 
+          $scope.winner = data;
+          $state.reload();
+      });
+    }
   };
 
   $scope.closeSuccess = function() {

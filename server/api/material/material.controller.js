@@ -38,7 +38,8 @@ exports.createMaterialPackage = function (req, res, next) {
         var validateInvite = new ValidateInvite({
           email: emailPhone.email,
           inviteType: 'supplier'
-        })
+        });
+        validateInvite.save();
         to.push({
           email: emailPhone.email,
           phone: emailPhone.phoneNumber

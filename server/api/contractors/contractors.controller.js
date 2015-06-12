@@ -38,7 +38,8 @@ exports.createContractorPackage = function (req, res, next) {
         var validateInvite = new ValidateInvite({
           email: emailPhone.email,
           inviteType: 'contractor'
-        })
+        });
+        validateInvite.save();
         to.push({
           email: emailPhone.email,
           phone: emailPhone.phoneNumber
@@ -118,4 +119,24 @@ exports.getContractorByProject = function(req, res) {
       return res.json(200, contractors);
     }
   })
-}
+};
+
+exports.getContractorPackageTenderByProject = function(req, res) {
+  ContractorPackage.find({$and:[{'project' : req.params.id},{status: true}]}, function(err, contractors) {
+    if (err) {return res.send(500, err);}
+    if (!contractors) {return res.send(404, err);}
+    else {
+      return res.json(200, contractors);
+    }
+  });
+};
+
+exports.getContractorPackageInProcessByProject = function(req, res) {
+  ContractorPackage.find({$and:[{'project' : req.params.id},{status: false}]}, function(err, contractors) {
+    if (err) {return res.send(500, err);}
+    if (!contractors) {return res.send(404, err);}
+    else {
+      return res.json(200, contractors);
+    }
+  });
+};

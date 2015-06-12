@@ -1,24 +1,168 @@
-<div class="row">
-  <h4>Project detail</h4>
-  <h5>{{contractorRequest.project.name}}</h5>
+<div class="row" style="margin-top: 18px">
+  <h5 class="col s8">Contractor Package in Tender</h5>
+  <div class="col s4" style="margin-top:15px">
+   <a class='dropdown-button btn-flat right tooltipped' data-position="top" data-delay="1" data-tooltip="Attach..." data-gutter="-16" href='#' data-activates='itemActions'>
+    <i class="mdi-navigation-more-vert"></i>
+  </a>
 
-  <p>{{contractorRequest.project.description}}</p>
-
-  <alert type="success" close="closeSuccess()" ng-show="success">Thank you for your submit</alert>
-  <alert ng-repeat="(key, msg) in errors" type="danger" close="closeAlert(key)">{{msg}}</alert>
-
-  <!-- <h4>Package detail</h4>
-  <h5>{{quoteRequest.package.name}}</h5>
-
-  <p>{{quoteRequest.package.description}}</p>
-  <p><b>Price </b>{{quoteRequest.price}}</p> -->
-  <h4>Package detail</h4>
-  <h5>{{contractorRequest.name}}</h5>
-  <p>{{contractorRequest.description}}</p>
+  <!-- Dropdown Structure -->
+  <ul id='itemActions' class='dropdown-content left'>
+   <li><a class="modal-trigger" href="#modal_attachAddendum">Attach Addendum</a></li>
+   <li><a class="modal-trigger" href="#modal_inviteContractor">Invite Contractor</a></li>
+   <li><div class="divider"></div></li>
+   <li><a href="#">Cancel Package</a></li>
+ </ul>
 </div>
-<div class="clearfix"></div>
 
-<div class="row listQuoteRequest" ng-if="contractorRequest.owner == currentUser._id">
+<div class="row">
+ <p class="col s12">{{contractorRequest.description}}</p>
+</div>
+
+<div class="row" ng-if="contractorRequest.winner._id">
+  <div class="col s12">
+    <ul class="collapsible popup" data-collapsible="accordion">
+      <li>
+        <div class="collapsible-header">
+          User {{contractorRequest.winner.email}} and his team has won this package.
+        </div>
+        <div class="collapsible-body">
+          <div class="row">
+          <div class="col s5">
+            <p>This is the detail area for the winner tender.</p>
+            <p>
+              Price <strong>{{contractorRequest.quote}}</strong>
+            </p>
+            <p>{{contractorRequest.description}}</p>
+          </div>
+          <div class="col s6">
+             <ul class="collection">
+               <div style="height: 300px; background-color: white;">
+
+                 <li class="collection-item">
+                   <div class="row valign-wrapper" style="margin-bottom: -5px">
+                     <a href="#!" class="btn-flat col s1">
+                       <i class="mdi-toggle-radio-button-on valign center-align" ></i>
+                     </a>
+
+                     <p class="col s11 valign">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.<br /> Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
+                   </div>
+                 </li>
+                 <li class="collection-item">
+                   <div class="row valign-wrapper" style="margin-bottom: -5px">
+                     <a href="#!" class="btn-flat col s1">
+                       <i class="mdi-toggle-radio-button-on valign center-align" ></i>
+                     </a>
+
+                     <p class="col s11 valign">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.<br /> Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
+                   </div>
+                 </li>
+
+               </div>
+               <div class="divider"></div>
+               <div class="col s12 card-footer" style="background-color: white">
+                 <div class="row">
+                   <form class="valign-wrapper">
+                     <div class="input-field col s9">
+                       <textarea id="textarea1" class="materialize-textarea"></textarea>
+                       <label for="textarea1">Textarea</label>
+                     </div>
+                     <div class="col s3">
+                       <button class="btn-flat btn-flat valign" type="submit" name="action">
+                         Send
+                       </button>
+                     </div>
+                   </form>
+                 </div>
+               </div>
+             </ul>
+           </div>
+        </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="row" ng-if="!contractorRequest.winner._id">
+ <div class="col s12">
+  <ul class="collapsible popout" data-collapsible="accordion">
+    <li ng-repeat="quoteRequest in quoteRequests">
+      <div class="collapsible-header">
+        Tenderer #{{$index + 1}}
+        <a class="btn-flat btn-flat secondary-content modal-trigger" href='#modal_viewQuote_{{quoteRequest._id}}' style="font-size:12px; margin-top: 8px">View Quote</a>
+      </div>
+      <div class="collapsible-body">
+        <div class="row">
+          <div class="col s5">
+            <p>This is the detail area for the tender #{{$index + 1}}.</p>
+            <p>{{quoteRequest.description}}</p>
+          </div>
+          <div class="col s6">
+             <ul class="collection">
+               <div style="height: 300px; background-color: white;">
+
+                 <li class="collection-item">
+                   <div class="row valign-wrapper" style="margin-bottom: -5px">
+                     <a href="#!" class="btn-flat col s1">
+                       <i class="mdi-toggle-radio-button-on valign center-align" ></i>
+                     </a>
+
+                     <p class="col s11 valign">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.<br /> Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
+                   </div>
+                 </li>
+                 <li class="collection-item">
+                   <div class="row valign-wrapper" style="margin-bottom: -5px">
+                     <a href="#!" class="btn-flat col s1">
+                       <i class="mdi-toggle-radio-button-on valign center-align" ></i>
+                     </a>
+
+                     <p class="col s11 valign">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.<br /> Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
+                   </div>
+                 </li>
+
+               </div>
+               <div class="divider"></div>
+               <div class="col s12 card-footer" style="background-color: white">
+                 <div class="row">
+                   <form class="valign-wrapper">
+                     <div class="input-field col s9">
+                       <textarea id="textarea1" class="materialize-textarea"></textarea>
+                       <label for="textarea1">Textarea</label>
+                     </div>
+                     <div class="col s3">
+                       <button class="btn-flat btn-flat valign" type="submit" name="action">
+                         Send
+                       </button>
+                     </div>
+                   </form>
+                 </div>
+               </div>
+             </ul>
+           </div>
+        </div>
+      </div>
+
+        
+    </li>
+  </ul>
+ </div>
+</div>
+
+<div ng-repeat="quoteRequest in quoteRequests">
+  <div id='modal_viewQuote_{{quoteRequest._id}}' class="modal modal-fixed-footer">
+    <div class="modal-content">
+      <h4>View Quote</h4>
+      <p><strong>{{quoteRequest.price}}</strong></p>
+      <p>{{quoteRequest.description}}</p>
+    </div>
+    <div class="modal-footer">
+      <a ng-click="selectQuote(quoteRequest._id)" class="modal-action modal-close waves-effect waves-green btn-flat ">Select this quote</a>
+      <a class="modal-action modal-close waves-effect waves-green btn-flat ">Decline</a>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="row listQuoteRequest" ng-if="contractorRequest.owner == currentUser._id">
   <h4 ng-if="contractorRequest.winner._id != ''">Winner</h4>
   <table class="hoverable responsive-table">
       <thead>
@@ -48,4 +192,65 @@
           
       </tbody>
   </table>
+</div> -->
+
+
+
+<div id="modal_inviteContractor" class="modal modal-fixed-footer">
+  <div class="modal-content">
+    <form>
+     <div class="row">
+       <div class="col s12">
+         <h5>Invite More Sub-Contractors to Package Name</h5>
+       </div>
+     </div>
+
+     <div class="row">
+       <div class="col s12">
+        <ul class="collection z-depth-1">
+          <li class="collection-item vlalign-wrapper">
+            <div class="row form" style="margin-bottom: 0px">
+              <div class="col s12"><p>Enter tradesmen's details below:</p></div>
+              <div class="input-field col s7">
+                <input id="email_address" type="text" class="validate">
+                <label for="email_address">Email</label>
+              </div>
+              <div class="input-field col s3">
+                <input id="phone_number" type="text" class="validate">
+                <label for="phone_number">Phone Number</label>
+              </div>
+              <div class="valign col s2">
+                <button class="btn" type="submit" name="action" style="margin-top: 28px">Add</button>
+              </div>
+            </div>
+          </li>
+          <li class="collection-item vlalign"><div class="row" style="margin-bottom: 0px"><div class="col s7">someone@somedomain.com.au</div><div class="col s3">Phone Number</div><div class="col s2"><button class="btn-flat btn-flat">Remove</button></div></div></li>
+          <li class="collection-item vlalign"><div class="row" style="margin-bottom: 0px"><div class="col s7">someone@somedomain.com.au</div><div class="col s3">Phone Number</div><div class="col s2"><button class="btn-flat btn-flat">Remove</button></div></div></li>
+          <li class="collection-item vlalign"><div class="row" style="margin-bottom: 0px"><div class="col s7">someone@somedomain.com.au</div><div class="col s3">Phone Number</div><div class="col s2"></div></div></li>
+          <li class="collection-item vlalign"><div class="row" style="margin-bottom: 0px"><div class="col s7">someone@somedomain.com.au</div><div class="col s3">Phone Number</div><div class="col s2"></div></div></li>
+        </ul>
+      </div>
+    </div>
+
+  </form>
 </div>
+<div class="divider"></div>
+<div class="modal-footer">
+ <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Send Invitations!</a>
+ <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
+</div>
+</div>  
+
+<div id="modal_cancelPackage" class="modal">
+  <div class="modal-content">
+   <div class="row">
+     <div class="col s12">
+       <h5>Confirm the Cancelation of Package Name</h5>
+     </div>
+   </div>
+   <div class="divider"></div>
+   <div class="modal-footer">
+     <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel This Package</a>
+     <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Go Back</a>
+   </div>
+ </div>  

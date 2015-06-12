@@ -15,6 +15,8 @@ angular.module('buiiltApp')
   $scope.sendQuote = function() {
     contractorRequestService.sendQuote({contractorRequest: $scope.contractorRequest,quoteRequest: $scope.quoteRequest}).$promise.then(function(data){
         $scope.success = data;
+        alert('You have send quote successfully!');
+        $state.go("team.manager");
     });
   };
 

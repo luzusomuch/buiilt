@@ -29,6 +29,18 @@ angular.module('buiiltApp').controller('ContractorsCtrl', function($scope, $stat
     });
   };
 
+  $scope.getContractorPackageTenderByProject = function() {
+    contractorService.getContractorPackageTenderByProject({'id': $stateParams.id})
+    .$promise.then(function(data) {
+      $scope.contractorsInTender = data;
+    }); 
+  };
 
+  $scope.getContractorPackageInProcessByProject = function() {
+    contractorService.getContractorPackageInProcessByProject({'id': $stateParams.id})
+    .$promise.then(function(data) {
+      $scope.contractorsInProcess = data;
+    }); 
+  };
 });
 

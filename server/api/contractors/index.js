@@ -12,6 +12,8 @@ router.get('/', controller.index);
 //router.get('/:id', auth.isAuthenticated(), controller.show);
 router.post('/', auth.isAuthenticated(), controller.createContractorPackage);
 router.get('/:id/winner', auth.isAuthenticated(), controller.getProjectForContractorWhoWinner);
-router.get('/:id/project', auth.isAuthenticated(), controller.getContractorByProject)
+router.get('/:id/project', auth.isAuthenticated(), controller.getContractorByProject);
+router.get('/:id/tender', auth.isAuthenticated(), controller.getContractorPackageTenderByProject);
+router.get('/:id/processing', auth.isAuthenticated(), controller.getContractorPackageInProcessByProject);
 
 module.exports = router;

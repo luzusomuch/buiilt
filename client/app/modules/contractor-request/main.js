@@ -23,5 +23,15 @@ angular.module('buiiltApp').config(function($stateProvider) {
         return contractorRequestService.findOne({'id':$stateParams.id});
       }
     }
+  })
+  .state('contractorRequest.contractorPackageInProcess', {
+    url: '/:id/processing',
+    templateUrl: '/app/modules/contractor-request/contractor-package-in-process/view.html',
+    controller: 'ContractorPackageInProcessCtrl',
+    resolve: {
+      contractorRequest: function($stateParams, contractorRequestService){
+        return contractorRequestService.findOne({'id':$stateParams.id});
+      }
+    }
   });
 });
