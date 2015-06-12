@@ -19,8 +19,8 @@ var UserSchema = new Schema({
     default: 'user'
   },
   team: {
-      _id: Schema.Types.ObjectId,
-      role: {type:String, enum: ['member', 'admin']}
+    _id: Schema.Types.ObjectId,
+    role: {type:String, enum: ['member', 'admin']}
   },
   hashedPassword: String,
   provider: String,

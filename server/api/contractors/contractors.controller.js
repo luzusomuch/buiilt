@@ -1,6 +1,7 @@
 'use strict';
 
 var ContractorPackage = require('./../../models/contractorPackage.model');
+var ValidateInvite = require('./../../models/validateInvite.model');
 var Team = require('./../../models/team.model');
 var User = require('./../../models/user.model');
 var _ = require('lodash');
@@ -34,6 +35,10 @@ exports.createContractorPackage = function (req, res, next) {
     User.findOne({'email': emailPhone.email}, function(err, user) {
       if (err) {return res.send(500,err);}
       if (!user) {
+        var validateInvite = new ValidateInvite({
+          email: emailPhone.email,
+          inviteType: 'contractor'
+        })
         to.push({
           email: emailPhone.email,
           phone: emailPhone.phoneNumber

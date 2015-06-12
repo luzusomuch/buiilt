@@ -15,7 +15,11 @@
       <h5>Create Your New Team:</h5>
       <div class="row">
         <div input-field class="col s8 offset-s2">
-          <select material-select ng-model="team.type">
+          <select material-select ng-model="team.type" ng-if="validateInvite != null">
+            <option value="" disabled selected>Type of Team:</option>
+            <option value='{{validateInvite.inviteType}}'>{{validateInvite.inviteType}}</option>
+          <select>
+          <select material-select ng-model="team.type" ng-if="validateInvite == null && !validateInvite">
             <option value="" disabled selected>Type of Team:</option>
             <option value="homeOwner">Home owner</option>
             <option value="contractor">Contractor</option>

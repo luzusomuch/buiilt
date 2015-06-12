@@ -25,6 +25,7 @@ module.exports = function(app) {
   app.use('/api/packages/staff', require('./api/package/staff'));
   app.use('/api/documents', require('./api/document'));
   app.use('/api/files', require('./api/files'));
+  app.use('/api/validateInvites', require('./api/validateInvite'));
   app.use('/auth', require('./auth'));
 
 

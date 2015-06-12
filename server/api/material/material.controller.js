@@ -1,6 +1,7 @@
 'use strict';
 
 var MaterialPackage = require('./../../models/materialPackage');
+var ValidateInvite = require('./../../models/validateInvite.model');
 var User = require('./../../models/user.model');
 var _ = require('lodash');
 var async = require('async');
@@ -34,6 +35,10 @@ exports.createMaterialPackage = function (req, res, next) {
     User.findOne({'email': emailPhone.email}, function(err, user) {
       if (err) {return res.send(500,err);}
       if (!user) {
+        var validateInvite = new ValidateInvite({
+          email: emailPhone.email,
+          inviteType: 'supplier'
+        })
         to.push({
           email: emailPhone.email,
           phone: emailPhone.phoneNumber

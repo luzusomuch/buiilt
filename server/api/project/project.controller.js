@@ -4,6 +4,7 @@ var User = require('./../../models/user.model');
 var Team = require('./../../models/team.model');
 var Project = require('./../../models/project.model');
 var BuilderPackage = require('./../../models/builderPackage.model');
+var ValidateInvite = require('./../../models/validateInvite.model');
 var errorsHelper = require('../../components/helpers/errors');
 var ProjectValidator = require('./../../validators/project');
 var _ = require('lodash');
@@ -39,6 +40,11 @@ exports.create = function(req, res){
         User.findOne({'email': req.body.email}, function(err, user){
           if (err) {return res.send(500,err);}
           if (!user) {
+            var validateInvite = new ValidateInvite({
+              email: req.body.email,
+              inviteType: 'buider'
+            })
+            validateInvite.save();
             project.builder.email = req.body.email;
             project.save(function(err,saved) {
               if (err) {return res.send(500,err);}
@@ -105,6 +111,11 @@ exports.create = function(req, res){
         User.findOne({'email': req.body.email}, function(err, user){
           if (err) {return res.send(500,err);}
           if (!user) {
+            var validateInvite = new ValidateInvite({
+              email: req.body.email,
+              inviteType: 'homeOwner'
+            })
+            validateInvite.save();
             project.user.email = req.body.email;
             project.save(function(err, saved){
               if (err) {return res.send(500,err);}

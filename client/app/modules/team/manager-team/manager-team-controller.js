@@ -1,7 +1,12 @@
 angular.module('buiiltApp')
-  .controller('TeamCtrl', function ($scope,$rootScope, invitations, teamService, authService,$state) {
+  .controller('TeamCtrl', function ($scope,$rootScope, validateInviteService, invitations, teamService, authService,$state) {
     $scope.existedTeam = {};
+    $scope.validateInvite = null;
     $scope.invitations = invitations;
+
+    validateInviteService.getByUser().$promise.then(function(data) {
+      $scope.validateInvite = data;
+    });
 
 
     $scope.filterByStatus = function (item) {

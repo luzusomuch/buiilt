@@ -3,6 +3,7 @@
 var User = require('./../../models/user.model');
 var Team = require('./../../models/team.model');
 var errorsHelper = require('../../components/helpers/errors');
+var ValidateInvite = require('./../../models/validateInvite.model');
 var TeamValidator = require('./../../validators/team');
 var _ = require('lodash');
 var async = require('async');
@@ -86,6 +87,12 @@ exports.create = function (req, res) {
           if (err) {
             return errorsHelper.validationErrors(res, err);
           }
+          ValidateInvite.findOne({'email': req.user.email}, function(err, validateInvite) {
+            if (err) {return res.send(500,err);}
+            else {
+              validateInvite.remove();
+            }
+          });
           req.user.team = {
             _id:team._id,
             role:'admin'
