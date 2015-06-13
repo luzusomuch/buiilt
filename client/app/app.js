@@ -12,7 +12,8 @@ angular.module('buiiltApp', [
   'lumx',
   'ui.materialize',
   'contenteditable',
-  '720kb.tooltips'
+  '720kb.tooltips',
+  'autocomplete'
 ]);
 
 angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider, $locationProvider, $urlRouterProvider, $httpProvider, $sceDelegateProvider, cfpLoadingBarProvider) {

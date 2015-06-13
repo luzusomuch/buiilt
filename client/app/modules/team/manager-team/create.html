@@ -39,6 +39,7 @@
       <div class="row">
         <p class="col s8 offset-s2">Invite others to join your team:</p>
         <div input-field class="col s8 offset-s2">
+          <autocomplete ng-model="member.email" data="movies"></autocomplete>
           <input type="email" ng-model="member.email" name="emails" class="validate col s9">
           <label>Email Address</label>
           <a class="btn waves-effect waves-light right" name="action"
