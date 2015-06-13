@@ -19,6 +19,13 @@ angular.module('buiiltApp')
             action: 'view'
         },
         isArray: true
+      },
+      sendInvitationInContractor: {
+        method: 'POST',
+        params: {
+          id: '@id',
+          action: 'invite'
+        }
       }
     }
     );

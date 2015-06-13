@@ -3,6 +3,7 @@ angular.module('buiiltApp')
   /**
    * quote data
    */
+  $scope.emailsPhone = [];
   $scope.contractorRequest = contractorRequest;
   $scope.currentUser = {};
   if ($cookieStore.get('token')) {
@@ -13,7 +14,17 @@ angular.module('buiiltApp')
 
   contractorRequestService.getQuoteRequestByContractorPackge({'id':$stateParams.id}).$promise.then(function(data){
     $scope.quoteRequests = data;
-  })
+  });
+
+  $scope.addUser = function() {
+    $scope.emailsPhone.push({email: $scope.newEmail, phoneNumber: $scope.newPhoneNumber});
+    $scope.newEmail = null;
+    $scope.newPhoneNumber = null;
+  };
+
+  $scope.removeUser = function(index) {
+    $scope.emailsPhone.splice(index, 1);
+  };
 
   $scope.selectQuote = function(value) {
     console.log(value);
@@ -23,6 +34,13 @@ angular.module('buiiltApp')
           $state.reload();
       });
     }
+  };
+
+  $scope.sendInvitationInContractor = function() {
+    contractorRequestService.sendInvitationInContractor({id: $stateParams.id, toContractor: $scope.emailsPhone})
+    .$promise.then(function(data){
+      console.log(data);
+    });
   };
 
   $scope.closeSuccess = function() {

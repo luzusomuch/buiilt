@@ -75,3 +75,62 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
     }
   });
 });
+
+EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
+  async.parallel({
+    user: function(cb){
+      User.findOne({_id: request.owner}, cb);
+    },
+    project: function(cb){
+      //find project
+      Project.findOne({_id: request.project}, cb);
+    }
+  }, function(err, result){
+    if (!err) {
+      //do send email
+      _.each(request.newInvatation,function(toEmail) {
+        if (!toEmail._id) {
+          Mailer.sendMail('contractor-package-request-no-account.html', toEmail.email, {
+            contractorPackage: request,
+            //project owner
+            user: result.user,
+            project: result.project,
+            registryLink: config.baseUrl + 'signup',
+            contractorPackageLink: config.baseUrl + 'contractor-requests/' + request._id,
+            subject: 'Quote request for ' + request.name
+          }, function(err) {
+            return next();
+          });
+        }
+        else {
+          Team.findOne({$or: [{'leader': toEmail._id}, {'member._id': toEmail._id}]}, function(err, team) {
+          if (err) {return console.log(err);}
+          if (!team) {
+            return next();
+          }
+          else {
+            async.each(team.leader, function(leader, callback) {
+              User.findById(leader, function(err,user) {
+                Mailer.sendMail('contractor-package-request.html', user.email, {
+                  contractorPackage: request,
+                  //project owner
+                  user: result.user,
+                  project: result.project,
+                  contractorPackageLink: config.baseUrl + 'contractor-requests/' + request._id,
+                  subject: 'Quote request for ' + request.name
+                }, function(err) {
+                  return next();
+                });
+              });
+            }, function(err){
+              return next();
+            });
+          }
+        });
+        }
+      });
+    } else {
+      return next();
+    }
+  });
+});

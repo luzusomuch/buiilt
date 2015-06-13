@@ -31,6 +31,18 @@ var ContractorPackageSchema = new Schema({
       type: Number
     }
   }],
+  newInvitation: [{
+    _id: {
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    email: {
+      type: String
+    },
+    phoneNumber: {
+      type: Number
+    }
+  }],
   winner: {
     _id: {
       type: Schema.Types.ObjectId,

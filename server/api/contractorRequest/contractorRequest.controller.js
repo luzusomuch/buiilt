@@ -1,6 +1,7 @@
 'use strict';
 
 var ContractorPackage = require('./../../models/contractorPackage.model');
+var ValidateInvite = require('./../../models/validateInvite.model');
 var QuoteRequest = require('./../../models/quoteRequest.model');
 var User = require('./../../models/user.model');
 var _ = require('lodash');
@@ -38,6 +39,63 @@ exports.getQuoteRequestByContractorPackge = function(req, res) {
         if (err) {return res.send(500, err);}
         else {
             return res.json(quoteRequests);
+        }
+    });
+};
+
+exports.sendInvitationInContractor = function(req, res) {
+    
+    ContractorPackage.findById(req.body.id, function(err, contractorPackage) {
+        if (err) {return res.send(500, err);}
+        else {
+            var newContractor = [];
+            var to = contractorPackage.to;
+            async.each(req.body.toContractor, function(emailPhone, callback) {
+            User.findOne({'email': emailPhone.email}, function(err, user) {
+              if (err) {return res.send(500,err);}
+              if (!user) {
+                var validateInvite = new ValidateInvite({
+                  email: emailPhone.email,
+                  inviteType: 'contractor'
+                });
+                validateInvite.save();
+                to.push({
+                  email: emailPhone.email,
+                  phone: emailPhone.phoneNumber
+                });
+                newContractor.push({
+                  email: emailPhone.email,
+                  phone: emailPhone.phoneNumber
+                });
+                callback();
+            }
+            else {
+                to.push({
+                  _id: user._id,
+                  email: emailPhone.email,
+                  phone: emailPhone.phoneNumber
+              });
+                newContractor.push({
+                  _id: user._id,
+                  email: emailPhone.email,
+                  phone: emailPhone.phoneNumber
+                });
+                callback();
+            }
+        });
+        }, function(err) {
+            if (err) {return res.send(500,err);}
+            else {
+              contractorPackage.to = to;
+              contractorPackage.newInvitation = newContractor;
+              contractorPackage.save(function(err, saved){
+                if (err) {return res.send(500,err);}
+                else {
+                  return res.json(200,saved);
+              }
+              });
+            }
+        });
         }
     });
 };
