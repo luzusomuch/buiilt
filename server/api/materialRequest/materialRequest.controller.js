@@ -33,7 +33,7 @@ exports.sendQuote =function(req, res) {
     });
 };
 
-exports.getQuoteRequestByContractorPackge = function(req, res) {
+exports.getQuoteRequestByMaterialPackge = function(req, res) {
     QuoteRequest.find({'package': req.params.id}).populate('user').exec(function(err, quoteRequests) {
         if (err) {return res.send(500, err);}
         else {

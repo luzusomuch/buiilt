@@ -12,7 +12,7 @@ angular.module('buiiltApp')
             id: 'id'
         }
       },
-      getQuoteRequestByContractorPackge: {
+      getQuoteRequestByMaterialPackge: {
         method: 'GET',
         params: {
             id: 'id',

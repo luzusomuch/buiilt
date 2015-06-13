@@ -11,6 +11,6 @@ var router = express.Router();
 //router.delete('/:id', auth.hasRole('admin'), controller.destroy);
 router.get('/:id', controller.findOne);
 router.post('/', auth.isAuthenticated(), controller.sendQuote);
-router.get('/:id/view', auth.isAuthenticated(), controller.getQuoteRequestByContractorPackge);
+router.get('/:id/view', auth.isAuthenticated(), controller.getQuoteRequestByMaterialPackge);
 
 module.exports = router;

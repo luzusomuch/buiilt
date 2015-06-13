@@ -40,6 +40,18 @@ var MaterialPackageSchema = new Schema({
       type: Number
     }
   }],
+  newInvitation: [{
+    _id: {
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    email: {
+      type: String
+    },
+    phoneNumber: {
+      type: Number
+    }
+  }],
   requirements: [{
     description: {
       type: String

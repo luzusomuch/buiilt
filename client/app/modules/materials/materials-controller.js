@@ -1,5 +1,6 @@
 angular.module('buiiltApp').controller('MaterialsCtrl', function($scope, $stateParams, $rootScope, $timeout, $q, authService, teamService, materialPackageService) {
     $scope.material = {};
+    $scope.materialPackages = [];
     $scope.requirements = [];
     $scope.emailsPhone = [];
     $scope.user = authService.getCurrentUser();
@@ -16,8 +17,21 @@ angular.module('buiiltApp').controller('MaterialsCtrl', function($scope, $stateP
 
     $scope.createMaterialPackage = function() {
         materialPackageService.createMaterialPackage({material: $scope.material, requirements: $scope.requirements, suppliers: $scope.emailsPhone, project: $stateParams.id}).$promise.then(function(data){
-
+            $scope.materialPackages.push(data);
         });
     };
 
+    $scope.getMaterialPackageTenderByProject = function() {
+        materialPackageService.getMaterialPackageTenderByProject({'id': $stateParams.id})
+        .$promise.then(function(data) {
+            $scope.materialPackagesInTender = data;
+        }); 
+    };
+
+    $scope.getMaterialPackageInProcessByProject = function() {
+        materialPackageService.getMaterialPackageInProcessByProject({'id': $stateParams.id})
+        .$promise.then(function(data) {
+            $scope.materialPackagesInProcess = data;
+        }); 
+    };
 });

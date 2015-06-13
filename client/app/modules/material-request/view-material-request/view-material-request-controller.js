@@ -12,7 +12,7 @@ angular.module('buiiltApp')
 
   $scope.user = {};
 
-  materialRequestService.getQuoteRequestBymaterialPackge({'id':$stateParams.id}).$promise.then(function(data){
+  materialRequestService.getQuoteRequestByMaterialPackge({'id':$stateParams.id}).$promise.then(function(data){
     $scope.quoteRequests = data;
   })
 

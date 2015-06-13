@@ -28,11 +28,29 @@ EventBus.onSeries('MaterialPackage.Inserted', function(request, next) {
     }
   }, function(err, result){
     if (!err) {
-        _.each(request.to, function(supplier) {
-            Team.findOne({$or: [{'leader': supplier._id}, {'member._id': supplier._id}]},function(err,team){
-                if (err) {return res.send(500,err);}
-                if (!team) {
-                  Mailer.sendMail('supplier-package-send-quote.html', supplier.email, {
+      _.each(request.to, function(supplier) {
+        if (!supplier._id) {
+          Mailer.sendMail('supplier-package-send-quote-no-account.html', supplier.email, {
+            materialPackage: request,
+            //project owner
+            user: result.user,
+            project: result.project,
+            registryLink: config.baseUrl + 'signup',
+            link: config.baseUrl + 'material-request/' + request._id,
+            subject: 'Quote request for ' + request.name
+          }, function(err) {
+            console.log(err);
+            return next();
+          });
+        }
+        else {
+          Team.findOne({$or: [{'leader': supplier._id}, {'member._id': supplier._id}]}, function(err, team) {
+            if (err) {return res.send(500,err);}
+            if (!team) {return next();}
+            else {
+              async.each(team.leader, function(leader, callback) {
+                User.findById(leader, function(err,user) {
+                  Mailer.sendMail('supplier-package-send-quote.html', user.email, {
                     materialPackage: request,
                     //project owner
                     user: result.user,
@@ -40,29 +58,19 @@ EventBus.onSeries('MaterialPackage.Inserted', function(request, next) {
                     link: config.baseUrl + 'material-request/' + request._id,
                     subject: 'Quote request for ' + request.name
                   }, function(err) {
+                    console.log(err);
                     return next();
                   });
-                }
-                else {
-                  async.each(team.leader, function(leader, callback) {
-                    User.findById(leader, function(err,user) {
-                      Mailer.sendMail('supplier-package-send-quote.html', user.email, {
-                        materialPackage: request,
-                        //project owner
-                        user: result.user,
-                        project: result.project,
-                        link: config.baseUrl + 'material-request/' + request._id,
-                        subject: 'Quote request for ' + request.name
-                      }, function(err) {
-                        return next();
-                      });
-                    });
-                  }, function(err){
-                    return next();
-                  }); 
-                }
-            });
-        });
+                });
+                callback();
+              }, function(err){
+                console.log(err);
+                return next();
+              }); 
+            }
+          });
+        }
+      });
     } else {
       return next();
     }

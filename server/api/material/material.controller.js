@@ -69,3 +69,23 @@ exports.createMaterialPackage = function (req, res, next) {
   });
 };
 
+exports.getMaterialPackageTenderByProject = function(req, res) {
+  MaterialPackage.find({$and:[{'project' : req.params.id},{status: true}]}, function(err, materialPackages) {
+    if (err) {return res.send(500, err);}
+    if (!materialPackages) {return res.send(404, err);}
+    else {
+      return res.json(200, materialPackages);
+    }
+  });
+};
+
+exports.getMaterialPackageInProcessByProject = function(req, res) {
+  MaterialPackage.find({$and:[{'project' : req.params.id},{status: false}]}, function(err, materialPackages) {
+    if (err) {return res.send(500, err);}
+    if (!materialPackages) {return res.send(404, err);}
+    else {
+      return res.json(200, materialPackages);
+    }
+  });
+};
+

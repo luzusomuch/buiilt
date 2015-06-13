@@ -63,6 +63,7 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
                   return next();
                 });
               });
+              callback();
             }, function(err){
               return next();
             });
@@ -122,6 +123,7 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
                   return next();
                 });
               });
+              callback();
             }, function(err){
               return next();
             });
