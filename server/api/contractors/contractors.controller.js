@@ -152,7 +152,7 @@ exports.getContractorPackageTenderByProjectForContractor = function(req, res) {
         else {
           var contractors = [];
           async.each(teamMemberId, function(id, callback) {
-            ContractorPackage.findOne({$and:[{'project' : req.params.id},{'to._id': req.user._id},{status: true}]}, function(err, contractor){
+            ContractorPackage.findOne({$and:[{'project' : req.params.id},{'to._id': id},{status: true}]}, function(err, contractor){
               if (err) {return res.send(500,err);}
               if (!contractor) {return res.send(404,err);}
               else {
