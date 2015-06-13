@@ -24,6 +24,21 @@ var QuoteRequestSchema = new Schema({
     ref: 'Project',
     required: 'Project is required'
   },
+  quoteRate: [{
+    description: {type: String},
+    rate: {type: Number},
+    quantity: {type: Number},
+    total: {type: Number}
+  }],
+  quotePrice: [{
+    description: {type: String},
+    price: {type: Number},
+    quantity: {type: Number},
+    total: {type: Number}
+  }],
+  subTotal: {type: Number},
+  gst: {type: Number},
+  file: {type: Schema.Types.ObjectId, ref:'File'},
   //the quote type: ex - quote from home owner to home builder
   //quote for the package
   type: {type: String, default: ''},

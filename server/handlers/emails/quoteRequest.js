@@ -34,7 +34,6 @@ EventBus.onSeries('QuoteRequest.Updated', function(request, next) {
   }, function(err, result){
     if (!err) {
       if (result.builderPackage) {
-        console.log(result.builderPackage);
         Mailer.sendMail('become-home-builder.html', result.project.builder.email, {
           //project owner
           user: result.user,

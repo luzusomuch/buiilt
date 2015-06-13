@@ -13,27 +13,43 @@ angular.module('buiiltApp')
             },
             isArray: true
         },
-        getContractorByProject: {
+        getContractorByProjectForBuilder: {
             method: 'GET',
             params: {
                 id: 'id',
-                action: 'project'
+                action: 'projectb'
             },
             isArray: true
         },
-        getContractorPackageTenderByProject: {
+        getContractorPackageTenderByProjectForBuilder: {
             method: 'GET',
             params: {
                 id: 'id',
-                action: 'tender'
+                action: 'tenderb'
             },
             isArray: true
         },
-        getContractorPackageInProcessByProject: {
+        getContractorPackageInProcessByProjectForBuilder: {
             method: 'GET',
             params: {
                 id: 'id',
-                action: 'processing'
+                action: 'processingb'
+            },
+            isArray: true
+        },
+        getContractorPackageTenderByProjectForContractor: {
+            method: 'GET',
+            params: {
+                id: 'id',
+                action: 'tenderc'
+            },
+            isArray: true
+        },
+        getContractorPackageInProcessByProjectForContractor: {
+            method: 'GET',
+            params: {
+                id: 'id',
+                action: 'processingc'
             },
             isArray: true
         }

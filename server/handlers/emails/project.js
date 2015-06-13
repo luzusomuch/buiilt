@@ -11,7 +11,6 @@ var config = require('./../../config/environment');
 
 EventBus.onSeries('Project.Inserted', function(request, next){
     if (request.type === 'FromHomeOwnerToBuilder') {
-        console.log(request.builder);
         if (!request.builder._id) {
             Mailer.sendMail('invite-home-builder-send-quote-no-account.html', request.builder.email, {
                 project: request,

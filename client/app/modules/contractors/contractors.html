@@ -8,12 +8,18 @@
         <li><a class="modal-trigger" href="#newMaterialPackage">Material Package</a></li>
       </ul>
      
-     <div class="collection">
-         <a ng-click="getContractorPackageInProcessByProject(); showContractorInProcess = true; hideContractor = true; showContractorInTender = false" class="collection-item">In Progress<span class="new badge">{{contractorsInProcess.length}}</span></a>
+     <div class="collection" ng-if="team.type === 'buider'">
+         <a ng-click="getContractorPackageInProcessByProjectForBuilder(); showContractorInProcess = true; hideContractor = true; showContractorInTender = false" class="collection-item">In Progress<span class="new badge">{{contractorsInProcess.length}}</span></a>
 
-         <a ng-click="getContractorPackageTenderByProject(); showContractorInTender = true; hideContractor = true; showContractorInProcess = false" class="collection-item">In Tender<span class="new badge">{{contractorsInTender.length}}</span></a>
+         <a ng-click="getContractorPackageTenderByProjectForBuilder(); showContractorInTender = true; hideContractor = true; showContractorInProcess = false" class="collection-item">In Tender<span class="new badge">{{contractorsInTender.length}}</span></a>
          <a href="#!" class="collection-item">Completed</a>
-         </div>
+     </div>
+     <div class="collection" ng-if="team.type === 'contractor'">
+         <a ng-click="getContractorPackageInProcessByProjectForContractor(); showContractorInProcess = true; hideContractor = true; showContractorInTender = false" class="collection-item">In Progress<span class="new badge">{{contractorsInProcess.length}}</span></a>
+
+         <a ng-click="getContractorPackageTenderByProjectForContractor(); showContractorInTender = true; hideContractor = true; showContractorInProcess = false" class="collection-item">In Tender<span class="new badge">{{contractorsInTender.length}}</span></a>
+         <a href="#!" class="collection-item">Completed</a>
+     </div>
    </div>
    
    <div class="col s9">

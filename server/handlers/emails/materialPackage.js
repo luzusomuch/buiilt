@@ -28,7 +28,6 @@ EventBus.onSeries('MaterialPackage.Inserted', function(request, next) {
     }
   }, function(err, result){
     if (!err) {
-      console.log(result);
       _.each(request.to, function(supplier) {
         if (!supplier._id) {
           Mailer.sendMail('supplier-package-send-quote-no-account.html', supplier.email, {
@@ -90,7 +89,6 @@ EventBus.onSeries('MaterialPackage.Updated', function(request, next) {
     if (!err) {
       _.each(request.newInvitation, function(supplier) {
         if (!supplier._id) {
-          console.log(supplier.email);
           Mailer.sendMail('supplier-package-send-quote-no-account.html', supplier.email, {
             materialPackage: request,
             //project owner
