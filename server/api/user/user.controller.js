@@ -177,6 +177,15 @@ exports.me = function (req, res, next) {
   });
 };
 
+exports.all = function (req, res, next) {
+  User.find({},function(err,users) {
+    if (err) {
+      return validationError(res,err);
+    }
+    res.json(users);
+  });
+};
+
 /**
  * Authentication callback
  */

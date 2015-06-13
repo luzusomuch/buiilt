@@ -1,8 +1,22 @@
 angular.module('buiiltApp')
-  .controller('TeamCtrl', function ($scope,$rootScope, validateInviteService, invitations, teamService, authService,$state) {
+  .controller('TeamCtrl', function ($scope,$rootScope, validateInviteService, invitations, teamService, authService,$state,userService) {
     $scope.existedTeam = {};
     $scope.validateInvite = null;
     $scope.invitations = invitations;
+    $scope.users = userService.getAll();
+    $scope.clear = false;
+    $scope.isEdit = false;
+    $scope.editDetail = function() {
+      $scope.isEdit = true;
+    };
+
+    $scope.saveDetail = function() {
+      teamService.update({_id : $scope.currentTeam._id},$scope.currentTeam).$promise
+        .then(function(team) {
+          $scope.currentTeam = team;
+          $scope.isEdit = false;
+        })
+    };
 
     validateInviteService.getByUser().$promise.then(function(data) {
       $scope.validateInvite = data;
@@ -17,13 +31,23 @@ angular.module('buiiltApp')
       emails : []
     };
     $scope.member = {
-      email : "",
+      email : {},
       emails : []
     };
     $scope.addUser = function() {
-      $scope.member.emails.push({email: $scope.member.email});
-      $scope.team.emails.push({email: $scope.member.email});
-      $scope.member.email = "";
+      if ($scope.member.email.title) {
+        $scope.member.emails.push({email: $scope.member.email.title});
+        $scope.team.emails.push({email: $scope.member.email.title});
+      } else {
+        $scope.member.emails.push({email: $scope.textString});
+        $scope.team.emails.push({email: $scope.textString});
+      }
+      $scope.$broadcast('angucomplete-alt:clearInput');
+    };
+
+    $scope.inputChanged = function(str) {
+      $scope.textString = str;
+
     };
 
     $scope.removeUser = function(index) {

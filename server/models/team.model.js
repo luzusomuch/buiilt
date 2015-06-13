@@ -24,6 +24,13 @@ var TeamSchema = new Schema({
     type: String,
     required: 'Team type is required'
   },
+  detail : {
+    companyName : String,
+    companyAddress : String,
+    contactNumber : String,
+    licenseNumber : String,
+    billingAddress : String
+  },
   //creator
   leader: [{
     type: Schema.Types.ObjectId,

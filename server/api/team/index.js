@@ -14,7 +14,7 @@ router.get('/invitation', auth.isAuthenticated(), controller.invitation);
 router.get('/:id', auth.isAuthenticated(), controller.show);
 router.post('/:id/add-member',auth.isAuthenticated(), controller.team, controller.addMember);
 router.post('/:id/remove-member',auth.isAuthenticated(), controller.team, controller.removeMember);
-router.put('/:id', auth.isAuthenticated(), controller.update);
+router.put('/:id', auth.isAuthenticated(),controller.team, controller.update);
 router.put('/:id/accept', auth.isAuthenticated(), controller.team, controller.accept);
 router.put('/:id/reject', auth.isAuthenticated(), controller.team, controller.reject);
 router.put('/:id/assign-leader', auth.isAuthenticated(), controller.team, controller.assignLeader);

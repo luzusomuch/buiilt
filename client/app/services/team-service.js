@@ -12,7 +12,6 @@ angular.module('buiiltApp')
       update: {
         method: 'PUT',
         params: {
-          id: '@id'
         }
       },
       addMember : {

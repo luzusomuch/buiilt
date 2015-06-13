@@ -89,7 +89,7 @@ exports.create = function (req, res) {
           }
           ValidateInvite.findOne({'email': req.user.email}, function(err, validateInvite) {
             if (err) {return res.send(500,err);}
-            else {
+            else if (validateInvite) {
               validateInvite.remove();
             }
           });
@@ -162,29 +162,31 @@ exports.addMember = function(req,res) {
 exports.removeMember = function(req,res) {
   var team = req.team;
   var member = req.body;
-  if (member.user) {
-    User.findById(member.user._id, function (err, user) {
+  console.log(member._id);
+  if (member._id) {
+    User.findById(member._id._id, function (err, user) {
       if (err) {
         return res.send(500, err);
       }
-      var index =_.findIndex(team.member,{user : member.user});
+      var index =_.findIndex(team.member,{user : member._id});
       team.member.splice(index,1);
       team.save();
       user.set('team', undefined);
-      user.save(function() {
-        console.log(user);
-        return res.json(true);
+      user.markModified('team');
+      user.save(function(err) {
+        if (err)
+          console.log(err);
       });
     })
   } else {
-    var index =_.findIndex(team.member,{email : member.email});
-    team.member.splice(index,1);
-    team.save(function() {
-      Team.populate(team, [{path:"leader"},{path:"member._id"}], function(err, team ) {
-        return res.json(team);
-      });
-    });
+    var index = _.findIndex(team.member, {email: member.email});
+    team.member.splice(index, 1);
   }
+  team.save(function() {
+    Team.populate(team, [{path:"leader"},{path:"member._id"}], function(err, team ) {
+      return res.json(team);
+    });
+  });
 };
 
 /**
@@ -335,38 +337,19 @@ exports.show = function (req, res) {
 };
 
 exports.update = function (req, res) {
-  Team.findById(req.params.id, function(err, team) {
-    if (err) {return res.send(500, err);}
-    else {
-      var listEmail = team.groupUser;
-      async.each(req.body.params, function(email, callback) {
-        User.findOne({'email': email.email}, function (err, user) {
-          if (err) {return res.send(500, err);}
-          if (!user) {
-            listEmail.push(email);
-          }
-          else {
-            listEmail.push({
-              _id: user._id,
-              email: user.email
-            });
-          }
-          callback();
-        });
-      }, function(err) {
-        if (err) {return res.send(500, err);}
-        else {
-          team.groupUser = listEmail;
-          team.save(function(err, saved){
-            if (err) {return res.send(500, err);}
-            else {
-              return res.json(200, saved);
-            }
-          });
-        }
-      });
+  var team = req.team;
+
+  TeamValidator.validateUpdate(req,function(err,data) {
+    if (err) {
+      return errorsHelper.validationErrors(res, err, 'Validation');
     }
-  });
+    team = _.merge(team,data);
+    team.save(function() {
+      Team.populate(team, [{path:"leader"},{path:"member._id"}], function(err, team ) {
+        return res.json(team);
+      });
+    });
+  })
 };
 
 exports.getTeamByUser = function(req, res) {

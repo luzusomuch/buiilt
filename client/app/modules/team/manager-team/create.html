@@ -1,4 +1,4 @@
-<div id="newTeam" class="modal modal-fixed-footer">
+<div id="newTeam" class="modal">
   <!-- 
   <form ng-if="existedTeam">
     {{existedTeam.length}}
@@ -39,9 +39,17 @@
       <div class="row">
         <p class="col s8 offset-s2">Invite others to join your team:</p>
         <div input-field class="col s8 offset-s2">
-          <autocomplete ng-model="member.email" data="movies"></autocomplete>
-          <input type="email" ng-model="member.email" name="emails" class="validate col s9">
-          <label>Email Address</label>
+
+          <angucomplete-alt id="ex1"
+                            pause="100"
+                            selected-object="member.email"
+                            local-data="users"
+                            search-fields="email"
+                            title-field="email"
+                            minlength="1"
+                            input-changed="inputChanged"
+                            template-url="/my-custom-template.html"
+                            input-class="col s9"></angucomplete-alt>
           <a class="btn waves-effect waves-light right" name="action"
                   ng-click="form.emails.$invalid || form.emails.$viewValue == '' || addUser()"
                   ng-disabled="form.emails.$invalid || form.emails.$viewValue == ''"> <i class="mdi-content-add tiny"></i></a>

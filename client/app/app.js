@@ -13,7 +13,7 @@ angular.module('buiiltApp', [
   'ui.materialize',
   'contenteditable',
   '720kb.tooltips',
-  'autocomplete'
+  'angucomplete-alt',
 ]);
 
 angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider, $locationProvider, $urlRouterProvider, $httpProvider, $sceDelegateProvider, cfpLoadingBarProvider) {

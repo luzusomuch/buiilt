@@ -14,21 +14,40 @@
               <li class="tab col s3" style="width: 50%;"><a href="#members1" class="active">Members</a></li>
               <div class="indicator" style="right: -1px; left: 504px;"></div></ul>
           </div>
-          <div id="details1" class="col s12">
+          <div id="details1" class="col s12" style="padding-top:15px">
             <div class="row">
-              <div class="col s12">
-                <p>Hi</p>
-              </div>
+              <form ng-submit="saveDetail()">
+                <div class="col s12">
+                  <div class="input-field col s10 offset-s1" ng-if="currentTeam.type != 'homeOwner'">
+                    <input ng-disabled="!isEdit" ng-model="currentTeam.detail.companyName" id="companyName" type="text">
+                    <label class="active" for="companyName">Company Name</label>
+                  </div>
+                  <div class="input-field col s10 offset-s1" ng-if="currentTeam.type != 'homeOwner'">
+                    <input ng-disabled="!isEdit" ng-model="currentTeam.detail.companyAddress" id="companyAddress" type="text">
+                    <label class="active" for="companyAddress">Company Address</label>
+                  </div>
+                  <div class="input-field col s10 offset-s1" ng-if="currentTeam.type != 'homeOwner'">
+                    <input ng-disabled="!isEdit" ng-model="currentTeam.detail.contactNumber" id="contactNumber" type="text">
+                    <label class="active" for="contactNumber">Contact Number</label>
+                  </div>
+                  <div class="input-field col s10 offset-s1" ng-if="currentTeam.type != 'homeOwner'">
+                    <input ng-disabled="!isEdit" ng-model="currentTeam.detail.licenseNumber"  id="licenseNumber" type="text">
+                    <label class="active" for="licenseNumber">License Number</label>
+                  </div>
+                  <div class="input-field col s10 offset-s1" ng-if="currentTeam.type == 'homeOwner'">
+                    <input ng-disabled="!isEdit" ng-model="currentTeam.detail.billingAddress  " id="billingAddress" type="text" >
+                    <label class="active" for="billingAddress">Billing address</label>
+                  </div>
+                  <button ng-if="isLeader" ng-hide="isEdit" class="col offset-s1 btn waves-effect waves-light" type="button" ng-click="editDetail()" name="action">Edit
+                  </button>
+                  <button ng-if="isEdit" class="col offset-s1 btn waves-effect waves-light" type="submit" name="action">Save
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
           <div id="members1" class="col s12">
             <div class="tab-content">
-              <div class="row">
-                  <a class="waves-effect waves-light btn modal-trigger" href="#newMember" ng-if="isLeader">Add new member</a>
-                  <a class="waves-effect waves-light btn modal-trigger" href="#assignLeader" ng-if="isLeader">Assign Leader</a>
-                    <a class="waves-effect waves-light btn" ng-if="!isLeader || currentTeam.leader.length > 1" ng-click="leaveTeam()">Leave this team</a>
-              </div>
-
               <div class="row">
                 <div class="z-depth-1">
                   <a href=""></a>
@@ -61,6 +80,11 @@
                     </tbody>
                   </table>
                 </div>
+              </div>
+              <div class="row">
+                <a class="waves-effect waves-light btn modal-trigger" href="#newMember" ng-if="isLeader">Add new member</a>
+                <a class="waves-effect waves-light btn modal-trigger" href="#assignLeader" ng-if="isLeader">Assign Leader</a>
+                <a class="waves-effect waves-light btn" ng-if="!isLeader || currentTeam.leader.length > 1" ng-click="leaveTeam()">Leave this team</a>
               </div>
             </div>
           </div>
@@ -115,8 +139,17 @@
     <div class="modal-content">
       <div class="row">
         <div class="input-field col s12">
-          <input id="email" type="email" ng-model="member.email" class="col s9">
-          <label for="email">Email</label>
+          <angucomplete-alt id="ex1"
+                            pause="100"
+                            selected-object="member.email"
+                            local-data="users"
+                            search-fields="email"
+                            title-field="email"
+                            minlength="1"
+                            input-changed="inputChanged"
+                            template-url="/my-custom-template.html"
+                            input-class="col s9"></angucomplete-alt>
+
           <a class="btn waves-effect waves-light right" name="action" ng-click="addUser()"> <i class="mdi-content-add tiny"></i></a>
 
           <ul>
@@ -157,3 +190,38 @@
       </div>
     </form>
   </div>
+
+<script type="text/ng-template" id="/my-custom-template.html">
+  <div class="angucomplete-holder" ng-class="{'angucomplete-dropdown-visible': showDropdown}">
+    <input ng-model="searchStr"
+           id="email"
+           ng-disabled="disableInput"
+           type="text"
+           placeholder="{{placeholder}}"
+           ng-focus="onFocusHandler()"
+           class="{{inputClass}}"
+           ng-focus="resetHideResults()"
+           ng-blur="hideResults($event)"
+
+           autocapitalize="off"
+           autocorrect="off"
+           autocomplete="off"
+           ng-change="inputChangeHandler(searchStr)"/>
+    <label for="email">Email</label>
+    <div class="angucomplete-dropdown col s9" ng-show="showDropdown">
+      <div class="angucomplete-searching" ng-show="searching" ng-bind="textSearching"></div>
+      <div class="angucomplete-searching" ng-show="!searching && (!results || results.length == 0)" ng-bind="textNoResults"></div>
+      <div class="angucomplete-row" ng-repeat="result in results" ng-click="selectResult(result)" ng-mouseenter="hoverRow($index)" ng-class="{'angucomplete-selected-row': $index == currentIndex}">
+        <div ng-if="imageField" class="angucomplete-image-holder">
+          <img ng-if="result.image && result.image != ''" ng-src="{{result.image}}" class="angucomplete-image"/>
+          <div ng-if="!result.image && result.image != ''" class="angucomplete-image-default"></div>
+        </div>
+        <div class="angucomplete-title" ng-if="matchClass" ng-bind-html="result.title"></div>
+        <div class="angucomplete-title" ng-if="!matchClass">{{ result.title }}</div>
+        <div ng-if="matchClass && result.description && result.description != ''" class="angucomplete-description" ng-bind-html="result.description"></div>
+        <div ng-if="!matchClass && result.description && result.description != ''" class="angucomplete-description">{{result.description}}</div>
+      </div>
+
+    </div>
+  </div>
+</script>
