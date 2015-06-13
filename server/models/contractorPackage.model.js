@@ -43,12 +43,12 @@ var ContractorPackageSchema = new Schema({
       type: Number
     }
   }],
-  winner: {
+  winnerTeam: {
     _id: {
       type: Schema.Types.ObjectId,
-      ref: 'User'
+      ref: 'Team'
     },
-    email: {
+    name: {
       type: String
     }
   },

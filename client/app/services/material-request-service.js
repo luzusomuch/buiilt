@@ -19,7 +19,14 @@ angular.module('buiiltApp')
             action: 'view'
         },
         isArray: true
+      },
+      sendInvitationInMaterial: {
+        method: 'POST',
+        params: {
+          id: '@id',
+          action: 'invite'
+        }
       }
-    }
-    );
+      
+    });
   });

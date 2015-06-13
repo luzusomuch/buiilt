@@ -63,7 +63,6 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
                   return next();
                 });
               });
-              callback();
             }, function(err){
               return next();
             });
@@ -89,7 +88,7 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
   }, function(err, result){
     if (!err) {
       //do send email
-      _.each(request.newInvatation,function(toEmail) {
+      _.each(request.newInvitation,function(toEmail) {
         if (!toEmail._id) {
           Mailer.sendMail('contractor-package-request-no-account.html', toEmail.email, {
             contractorPackage: request,
@@ -123,7 +122,6 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
                   return next();
                 });
               });
-              callback();
             }, function(err){
               return next();
             });

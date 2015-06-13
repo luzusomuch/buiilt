@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-.controller('SendQuoteMaterialPackageCtrl', function($scope, $state, $stateParams, $cookieStore, authService, userService, materialRequest, materialRequestService, registryFormaterialService) {
+.controller('SendQuoteMaterialPackageCtrl', function($scope, $state, $stateParams, $cookieStore, authService, userService, materialRequest, materialRequestService) {
   /**
    * quote data
    */
@@ -13,9 +13,12 @@ angular.module('buiiltApp')
   $scope.user = {};
 
   $scope.sendQuote = function() {
-    materialRequestService.sendQuote({materialRequest: $scope.materialRequest,quoteRequest: $scope.quoteRequest}).$promise.then(function(data){
-        $scope.success = data;
-    });
+    if (confirm("Are you sure you want to leave this team")) {
+      materialRequestService.sendQuote({materialRequest: $scope.materialRequest,quoteRequest: $scope.quoteRequest}).$promise.then(function(data){
+          $scope.success = data;
+          $state.go('team.manager');
+      });
+    }
   };
 
   $scope.closeSuccess = function() {
@@ -31,19 +34,19 @@ angular.module('buiiltApp')
     });
   };
 
-  $scope.signupAndSendQuotematerial = function () {
-    $scope.user.idParams = $stateParams.id;
-    $scope.user.quoteRequest = $scope.quoteRequest;
-    console.log($scope.user);
-    registryFormaterialService.createUserFormaterialRequest($scope.user).$promise.then(function(data) {
-      $scope.user = {
-        allowNewsletter: true
-      };
-      alert('Registry successfully, please confirm your email!')
-      $state.go('dashboard');
-    }, function(res) {
-      $scope.errors = res.data;
-    });
-  };
+  // $scope.signupAndSendQuotematerial = function () {
+  //   $scope.user.idParams = $stateParams.id;
+  //   $scope.user.quoteRequest = $scope.quoteRequest;
+  //   console.log($scope.user);
+  //   registryFormaterialService.createUserFormaterialRequest($scope.user).$promise.then(function(data) {
+  //     $scope.user = {
+  //       allowNewsletter: true
+  //     };
+  //     alert('Registry successfully, please confirm your email!')
+  //     $state.go('dashboard');
+  //   }, function(res) {
+  //     $scope.errors = res.data;
+  //   });
+  // };
 
 });

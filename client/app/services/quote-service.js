@@ -25,6 +25,14 @@ angular.module('buiiltApp')
           }
           // isArray: true
         },
+        getForMaterial: {
+          method: 'GET',
+          params: {
+            id: 'id',
+            action: 'material'
+          }
+          // isArray: true
+        },
         getByProjectId: {
           method: 'GET',
           params: {

@@ -3,8 +3,8 @@ angular.module('buiiltApp')
   /**
    * quote data
    */
+  $scope.emailsPhone = [];
   $scope.materialRequest = materialRequest;
-  console.log($scope.materialRequest);
   $scope.currentUser = {};
   if ($cookieStore.get('token')) {
     $scope.currentUser = userService.get();
@@ -14,11 +14,31 @@ angular.module('buiiltApp')
 
   materialRequestService.getQuoteRequestByMaterialPackge({'id':$stateParams.id}).$promise.then(function(data){
     $scope.quoteRequests = data;
-  })
+  });
+
+  $scope.addUser = function() {
+    $scope.emailsPhone.push({email: $scope.newEmail, phoneNumber: $scope.newPhoneNumber});
+    $scope.newEmail = null;
+    $scope.newPhoneNumber = null;
+  };
+
+  $scope.removeUser = function(index) {
+    $scope.emailsPhone.splice(index, 1);
+  };
 
   $scope.selectQuote = function(value) {
-    quoteService.get({'id': value}).$promise.then(function(data) { 
-        $scope.winner = data;
+    if (confirm("Are you sure you want to select this quote?")) {
+      quoteService.getForMaterial({'id': value}).$promise.then(function(data) { 
+          $scope.winner = data;
+          $state.reload();
+      });
+    }
+  };
+
+  $scope.sendInvitationInMaterial = function() {
+    materialRequestService.sendInvitationInMaterial({id: $stateParams.id, toSupplier: $scope.emailsPhone})
+    .$promise.then(function(data){
+      console.log(data);
     });
   };
 

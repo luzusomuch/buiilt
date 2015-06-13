@@ -12,5 +12,6 @@ var router = express.Router();
 router.get('/:id', controller.findOne);
 router.post('/', auth.isAuthenticated(), controller.sendQuote);
 router.get('/:id/view', auth.isAuthenticated(), controller.getQuoteRequestByMaterialPackge);
+router.post('/:id/invite', auth.isAuthenticated(), controller.sendInvitationInMaterial);
 
 module.exports = router;

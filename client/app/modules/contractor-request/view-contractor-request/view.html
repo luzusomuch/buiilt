@@ -18,7 +18,7 @@
  <p class="col s12">{{contractorRequest.description}}</p>
 </div>
 
-<div class="row" ng-if="contractorRequest.winner._id">
+<div class="row" ng-if="contractorRequest.winnerTeam._id">
   <div class="col s12">
     <ul class="collapsible popup" data-collapsible="accordion">
       <li>
@@ -83,7 +83,7 @@
   </div>
 </div>
 
-<div class="row" ng-if="!contractorRequest.winner._id">
+<div class="row" ng-if="!contractorRequest.winnerTeam._id">
  <div class="col s12">
   <ul class="collapsible popout" data-collapsible="accordion">
     <li ng-repeat="quoteRequest in quoteRequests">

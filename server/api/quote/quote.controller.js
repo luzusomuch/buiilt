@@ -5,6 +5,8 @@ var Project = require('./../../models/project.model');
 var QuoteRequest = require('./../../models/quoteRequest.model');
 var BuilderPackage = require('./../../models/builderPackage.model');
 var ContractorPackage = require('./../../models/contractorPackage.model');
+var MaterialPackage = require('./../../models/materialPackage');
+var Team = require('./../../models/team.model');
 var errorsHelper = require('../../components/helpers/errors');
 var ProjectValidator = require('./../../validators/project');
 var UserValidator = require('./../../validators/user');
@@ -54,23 +56,58 @@ exports.index = function(req, res) {
  */
 exports.findOne = function(req, res){
   QuoteRequest.findById(req.params.id).populate('user').exec(function(err, quote) {
-    console.log(quote);
     if (err) {return res.send(500, err);}
     else {
-      ContractorPackage.findById(quote.package, function(err, contractorPackage) {
-        if (err) {return res.send(500, err);}
+      Team.findOne({$or:[{leader: quote.user}, {'member._id': quote.user}]}, function(err, team) {
+        if (err) {return res.send(500,err);}
+        if (!team) {return res.send(404,err);}
         else {
-          contractorPackage.winner._id = quote.user._id,
-          contractorPackage.winner.email = quote.user.email,
-          contractorPackage.quote = quote.price,
-          contractorPackage.isAccept = true,
-          contractorPackage.status = false
-          contractorPackage.save(function(err, saved) {
-            if (err) {return res.send(500,err);}
-            else {
-              return res.json(200, saved);
-            }
-          });
+          ContractorPackage.findById(quote.package, function(err, contractorPackage) {
+          if (err) {return res.send(500, err);}
+          else {
+            contractorPackage.winnerTeam._id = team._id,
+            contractorPackage.winnerTeam.name = team.name,
+            contractorPackage.quote = quote.price,
+            contractorPackage.isAccept = true,
+            contractorPackage.status = false
+            contractorPackage.save(function(err, saved) {
+              if (err) {return res.send(500,err);}
+              else {
+                return res.json(200, saved);
+              }
+            });
+          }
+        });
+        }
+      })
+    }
+  });
+};
+
+exports.getByMaterial = function(req, res){
+  QuoteRequest.findById(req.params.id).populate('user').exec(function(err, quote) {
+    if (err) {return res.send(500, err);}
+    else {
+      Team.findOne({$or:[{leader: quote.user}, {'member._id': quote.user}]}, function(err, team) {
+        if (err) {return res.send(500, err);}
+        if (!team) {return res.send(404, err);}
+        else {
+          MaterialPackage.findById(quote.package, function(err, materialPackage) {
+          if (err) {return res.send(500, err);}
+          else {
+            materialPackage.winnerTeam._id = team._id,
+            materialPackage.winnerTeam.name = team.email,
+            materialPackage.quote = quote.price,
+            materialPackage.isAccept = true,
+            materialPackage.status = false
+            materialPackage.save(function(err, saved) {
+              if (err) {return res.send(500,err);}
+              else {
+                return res.json(200, saved);
+              }
+            });
+          }
+        });
         }
       });
     }

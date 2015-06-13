@@ -1,16 +1,104 @@
+<div class="row" style="margin-top: 18px">
+   <h5 class="col s8">Contractor Package {{materialRequest.name}} in Progress</h5>
+   
+   <div class="col s4" style="margin-top:15px">
+       <a class='dropdown-button btn-flat right tooltipped' data-position="top" data-delay="1" data-tooltip="Attach..." href='#' data-activates='itemActions' data-gutter="-30">
+        <i class="mdi-navigation-more-vert"></i>
+       </a>
+
+       <!-- Dropdown Structure -->
+       <ul id='itemActions' class='dropdown-content'>
+       <li><a class="modal-trigger" href="#attachQuote">Attach Quote</a></li>
+       </ul>
+   </div>
+ </div>
+ 
+ <div class="row">
+   <p class="col s12">{{materialRequest.description}}</p>
+ </div>
+ 
+ <div class="row">
+   <div class="col s12">
+     <ul class="card collection">
+       
+       <div style="height: 500px">
+         
+       <li class="collection-item">
+         <div class="row valign-wrapper" style="margin-bottom: -5px">
+           <a href="#!" class="btn-flat col s1">
+             <i class="mdi-toggle-radio-button-on valign center-align" ></i>
+           </a>
+           
+           <p class="col s9 valign">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.<br /> Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
+           
+           <img src="images/yuna.jpg" alt="" class="circle col s2 right valign center-align" />
+         </div>
+         </li>
+       
+       <li class="collection-item">
+         <div class="row valign-wrapper" style="margin-bottom: -5px">
+           <a href="#!" class="btn-flat col s1">
+             <i class="mdi-toggle-radio-button-on valign center-align" ></i>
+           </a>
+           
+           <p class="col s9 valign">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.<br /> Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
+           
+           <img src="images/yuna.jpg" alt="" class="circle col s2 right valign center-align" />
+         </div>
+         </li>
+       
+       <li class="collection-item">
+         <div class="row valign-wrapper" style="margin-bottom: -5px">
+           <a href="#!" class="btn-flat col s1">
+             <i class="mdi-toggle-radio-button-on valign center-align" ></i>
+           </a>
+           
+           <p class="col s9 valign">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.<br /> Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
+           
+           <img src="images/yuna.jpg" alt="" class="circle col s2 right valign center-align" />
+         </div>
+         </li>
+       
+       </div>
+       <div class="divider"></div>
+       <div class="col s12 card-footer" style="height: 150px">
+         <div class="row">
+             <form class="col s10 offset-s1">
+                 <div class="input-field col s9">
+                   <textarea id="textarea1" class="materialize-textarea"></textarea>
+                   <label for="textarea1">Send a Message...</label>
+             </div>
+             <div class="input-field col s3">
+                 <button class="btn-large waves-effect waves-light" type="submit" style="margin-top: 47px" name="action">Send
+                   <i class="mdi-content-send right"></i>
+                 </button>
+                 </div>
+             </form>
+         </div>
+       </div>
+         <div class="card-reveal">
+               <span class="card-title grey-text text-darken-4">New Thread<i class="mdi-navigation-close right"></i></span>
+       <form class="col s12">
+          <div class="input-field col s12">
+                  <input id="thread_name" type="text">
+                  <label for="thread_name">Name</label>
+               </div>
+        </form>
+             </div>
+       </ul>
+   </div>
+ </div>
+
 <div class="row">
   <h4>Project detail</h4>
-  <h5>{{contractorRequest.project.name}}</h5>
+  <h5>{{materialRequest.project.name}}</h5>
 
-  <p>{{contractorRequest.project.description}}</p>
-
-  <alert type="success" close="closeSuccess()" ng-show="success">Thank you for your submit</alert>
-  <alert ng-repeat="(key, msg) in errors" type="danger" close="closeAlert(key)">{{msg}}</alert>
+  <p>{{materialRequest.project.description}}</p>
 
   <h4>Quote request detail</h4>
-  <h5>{{contractorRequest.name}}</h5>
-  <p>{{contractorRequest.description}}</p>
-  <form method="POST" name="sendQuoteToBuilder" ng-submit="sendQuote()">
+  <h5>{{materialRequest.name}}</h5>
+  <p>{{materialRequest.description}}</p>
+  <form method="POST" name="sendQuoteToBuilder" ng-submit="sendQuote()" ng-if="currentUser">
       <div class="row">
           <div class="input-field col s12">
               <textarea name="" id="" ng-model="quoteRequest.description" required></textarea>
@@ -23,13 +111,15 @@
               <label for="">Price in USD</label>
           </div>
       </div>
-      <div class="row" ng-repeat="toEmail in contractorRequest.to">
-          <button ng-if="toEmail.email == currentUser.email" class="waves-effect waves-light btn" ng-disabled="sendQuoteToBuilder.$invalid">Send quote</button>
+      <div class="row" ng-if="currentUser">
+          <button class="waves-effect waves-light btn" ng-disabled="sendQuoteToBuilder.$invalid">Send quote</button>
       </div>
-      <div ng-if="currentUser.email == null || currentUser.email == ''">
-        <a href="#signin" class="waves-effect waves-light btn modal-trigger">Login</a> or <a href="#signupAndSendQuoteContractor" class="waves-effect waves-light btn modal-trigger">Registry</a>
-      </div>
+      
   </form>
+  <div ng-if="currentUser.email == null || currentUser.email == ''">
+    <a href="#signin" class="waves-effect waves-light btn modal-trigger">Login</a>
+     <!-- or <a href="#signupAndSendQuoteContractor" class="waves-effect waves-light btn modal-trigger">Registry</a> -->
+  </div>
 </div>
 
 <div id="signin" class="modal modal-fixed-footer">

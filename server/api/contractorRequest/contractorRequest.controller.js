@@ -44,7 +44,6 @@ exports.getQuoteRequestByContractorPackge = function(req, res) {
 };
 
 exports.sendInvitationInContractor = function(req, res) {
-    
     ContractorPackage.findById(req.body.id, function(err, contractorPackage) {
         if (err) {return res.send(500, err);}
         else {
