@@ -28,7 +28,7 @@ angular.module('buiiltApp')
 
             if ($stateParams.id) {
               projectService.get({'id': $stateParams.id}).$promise.then(function(project) {
-                $scope.project = project; 
+                var project = project;
                 
                 if (!project && project == null) {
                   var userId = $scope.user._id;
@@ -78,21 +78,21 @@ angular.module('buiiltApp')
 
 
       $scope.menuTypes = {
-        homeOwner: [{sref: 'dashboard({id :  project._id})', label: 'dashboard'},
-          {sref: 'client({id :  project._id})', label: 'builder'},
-          {sref: 'projects.view({id :  project._id})', label: 'project'}],
-        contractor: [{sref: 'dashboard({id :  project._id})', label: 'dashboard'},
-          {sref: 'contractors({id :  project._id})', label: 'contractors'},
-          {sref: 'projects.view({id :  project._id})', label: 'project'}],
-        buider: [{sref: 'dashboard({id :  project._id})', label: 'dashboard'},
-          {sref: 'client({id :  project._id})', label: 'client'},
-          {sref: 'contractors({id :  project._id})', label: 'contractors'},
-          {sref: 'materials({id :  project._id})', label: 'materials'},
-          {sref: 'staff({id :  project._id})', label: 'staff'},
-          {sref: 'projects.view({id :  project._id})', label: 'project'}],
-        supplier: [{sref: 'dashboard({id :  project._id})', label: 'dashboard'},
-          {sref: 'contractors({id :  project._id})', label: 'contractors'},
-          {sref: 'projects.view({id :  project._id})', label: 'project'}]
+        homeOwner: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
+          {sref: 'client({id :  currentProject._id})', label: 'builder'},
+          {sref: 'projects.view({id :  currentProject._id})', label: 'project'}],
+        contractor: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
+          {sref: 'contractors({id :  currentProject._id})', label: 'contractors'},
+          {sref: 'projects.view({id :  currentProject._id})', label: 'project'}],
+        buider: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
+          {sref: 'client({id :  currentProject._id})', label: 'client'},
+          {sref: 'contractors({id :  currentProject._id})', label: 'contractors'},
+          {sref: 'materials({id :  currentProject._id})', label: 'materials'},
+          {sref: 'staff({id :  currentProject._id})', label: 'staff'},
+          {sref: 'projects.view({id :  currentProject._id})', label: 'project'}],
+        supplier: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
+          {sref: 'contractors({id :  currentProject._id})', label: 'contractors'},
+          {sref: 'projects.view({id :  currentProject._id})', label: 'project'}]
       };
 
       // $scope.user = authService.getCurrentUser();
