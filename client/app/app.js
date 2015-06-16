@@ -54,7 +54,7 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
   })
   .run(function ($rootScope, $cookieStore, cfpLoadingBar, authService, $location,projectService) {
     cfpLoadingBar.start();
-
+    $rootScope.currentProject = null;
     $rootScope.safeApply = function (fn) {
       var phase = $rootScope.$$phase;
       if (phase === '$apply' || phase === '$digest') {

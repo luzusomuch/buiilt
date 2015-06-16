@@ -10,16 +10,16 @@ var packagePlugin = require('./plugins/package');
 var StaffPackageSchema = new Schema({
   owner: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'Team',
     required: true
   },
   name: String,
   description: String,
-  staffowner :{
+  staffs :[{
     type: Schema.Types.ObjectId,
     ref: 'User',
     //required: true
-  },
+  }],
   defact:[],
   isComplete: { type: Boolean, default: false },
   status: { type: Boolean, default: true },

@@ -5,11 +5,12 @@ angular.module('buiiltApp').config(function($stateProvider) {
     templateUrl: '/app/modules/staff/staff.html',
     controller: 'StaffCtrl',
     hasCurrentProject : true,
-    resolve: {
-      staffPackage : [
-        '$rootScope','staffPackageService',
-        function($rootScope,staffPackageService) {
-          return staffPackageService.get({id : $rootScope.currentProject._id})
+    authenticate : true,
+    resolve : {
+      currentTeam : [
+        'authService',
+        function(authService) {
+          return authService.getCurrentTeam();
         }
       ]
     }

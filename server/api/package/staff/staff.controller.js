@@ -26,8 +26,12 @@ exports.create = function(req,res) {
       return res.send(500, err);
     }
     var staffPackage = new StaffPackage(data);
-    staffPackage.owner = user;
+    staffPackage.owner = user.team._id;
     staffPackage.project = project;
+    staffPackage.staffs = [];
+    _.forEach(req.body.staffs,function(item) {
+      staffPackage.staffs.push(item._id._id);
+    });
     staffPackage.save(function(err) {
       if (err) {
         return res.send(500, err);
