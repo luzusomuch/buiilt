@@ -55,7 +55,7 @@ angular.module('buiiltApp')
 
       return userService.save(user,
       function(data) {
-        if (data.emailVerified) {
+        if (data.emailVerified == true) {
           $cookieStore.put('token', data.token);
           currentUser = userService.get();
           $state.go('team.manager')
