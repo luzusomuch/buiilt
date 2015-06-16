@@ -10,11 +10,20 @@ angular.module('buiiltApp')
     $scope.currentUser = userService.get();
   }
 
+  $scope.formData = {
+      title: ''
+  };
+
   $scope.user = {};
   $scope.rate = {};
   $scope.price = {};
   $scope.lineWithRates = [];
   $scope.lineWithPrices = [];
+
+  contractorRequestService.getMessageForContractor({'id': $stateParams.id})
+  .$promise.then(function(data) {
+    $scope.messages = data;
+  });
 
   $scope.addLineWithRate = function() {
     $scope.lineWithRates.length = $scope.lineWithRates.length + 1;
@@ -41,6 +50,19 @@ angular.module('buiiltApp')
         $scope.success = data;
         alert('You have send quote successfully!');
         // $state.go("team.manager");
+    });
+  };
+
+  $scope.getSubTotal = function() {
+    var subTotal = 0;
+    // subTotal = $scope.rate.lineWithRate.rate * $scope.rate.lineWithRate.rateQuantity;
+    return subTotal;
+  };
+
+  $scope.sendMessage = function() {
+    contractorRequestService.sendMessage({id: $stateParams.id, message: $scope.message})
+    .$promise.then(function(data) {
+      $scope.messages = data;
     });
   };
 

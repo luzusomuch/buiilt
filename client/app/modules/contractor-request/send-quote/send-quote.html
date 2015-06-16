@@ -23,7 +23,19 @@
      
      <div style="height: 500px">
        
-     <li class="collection-item">
+     <li class="collection-item" ng-repeat = "message in messages.messages">
+       <div class="row valign-wrapper" style="margin-bottom: -5px">
+         <a href="#!" class="btn-flat col s1">
+           <i class="mdi-toggle-radio-button-on valign center-align" ></i>
+         </a>
+         
+         <p class="col s9 valign">{{message.message}}</p>
+         
+         <img src="images/yuna.jpg" alt="" class="circle col s2 right valign center-align" />
+       </div>
+       </li>
+     
+     <!-- <li class="collection-item">
        <div class="row valign-wrapper" style="margin-bottom: -5px">
          <a href="#!" class="btn-flat col s1">
            <i class="mdi-toggle-radio-button-on valign center-align" ></i>
@@ -45,27 +57,15 @@
          
          <img src="images/yuna.jpg" alt="" class="circle col s2 right valign center-align" />
        </div>
-       </li>
-     
-     <li class="collection-item">
-       <div class="row valign-wrapper" style="margin-bottom: -5px">
-         <a href="#!" class="btn-flat col s1">
-           <i class="mdi-toggle-radio-button-on valign center-align" ></i>
-         </a>
-         
-         <p class="col s9 valign">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.<br /> Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
-         
-         <img src="images/yuna.jpg" alt="" class="circle col s2 right valign center-align" />
-       </div>
-       </li>
+       </li> -->
      
      </div>
      <div class="divider"></div>
      <div class="col s12 card-footer" style="height: 150px">
        <div class="row">
-           <form class="col s10 offset-s1">
+           <form class="col s10 offset-s1" ng-submit="sendMessage()">
                <div class="input-field col s9">
-                 <textarea id="textarea1" class="materialize-textarea"></textarea>
+                 <textarea id="textarea1" class="materialize-textarea" ng-model="message"></textarea>
                  <label for="textarea1">Send a Message...</label>
            </div>
            <div class="input-field col s3">
@@ -167,14 +167,13 @@
              </div>
          </div>
          <div class="input-field col s2 offset-s3" style="margin-top: -40px">
-                <p>Sub-Total</p>
+                <p>Sub-Total: {{getSubTotal()}}</p>
             <p>GST</p>
             <p>Total</p>
              </div>
        </div>
        <div class="divider"></div>
     <div class="modal-footer">
-      <input type="submit" value="Send Quote!"/>
       <button class="modal-action modal-close waves-effect waves-green btn-flat "> Send quote!</button>
          <!-- <a href="#!" ng-click="sendQuote()" class="modal-action modal-close waves-effect waves-green btn-flat ">Send Quote!</a> -->
      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
@@ -184,7 +183,7 @@
   
 </div>
 
-<div class="row">
+<!-- <div class="row">
   <h4>Project detail</h4>
   <h5>{{contractorRequest.project.name}}</h5>
 
@@ -214,7 +213,6 @@
       </div>
       <div ng-if="currentUser.email == null || currentUser.email == ''">
         <a href="#signin" class="waves-effect waves-light btn modal-trigger">Login</a> 
-        <!-- or <a href="#signupAndSendQuoteContractor" class="waves-effect waves-light btn modal-trigger">Registry</a> -->
       </div>
   </form>
 </div>
@@ -241,8 +239,6 @@
       </div>
       <div class="divider"></div>
       <div class="modal-footer">
-        <!-- <button class="waves-effect waves-light btn" ng-disabled="createContractorPackageForm.$invalid">Create Package!</button> -->
-           <!-- <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Create Package!</a> -->
        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
       </div>
     </form>
@@ -270,33 +266,10 @@
       </div>
       <div class="divider"></div>
       <div class="modal-footer">
-        <!-- <button class="waves-effect waves-light btn" ng-disabled="createContractorPackageForm.$invalid">Create Package!</button> -->
-           <!-- <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Create Package!</a> -->
        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
       </div>
     </form>
   </div>
 </div>
-
-<script>
-  $(document).ready(function(){
-    
-    $('.modal-trigger').leanModal({
-          dismissible: true, // Modal can be dismissed by clicking outside of the modal
-          opacity: .5, // Opacity of modal background
-          in_duration: 300, // Transition in duration
-          out_duration: 200, // Transition out duration // Callback for Modal open
-        }
-      );
-    });
-
-    $('#btn-login').click(function() {
-      $('.modal-trigger').closeModal();
-    });
-
-    $('#btn-signup').click(function() {
-      $('.modal-trigger').closeModal();
-    });
-
-</script>
+ -->
 

@@ -18,7 +18,8 @@ EventBus.onSeries('Team.Inserted', function(request, next){
               link: config.baseUrl + 'signup?inviteToken=' + request.teamInviteToken,
               subject: 'Group invitation ' + request.name
           }, function(err) {
-            callback()
+            callback();
+            return next();
           });
       } else if (user._id && user.status == 'Pending')  {
         Mailer.sendMail('invite-team-has-account.html', user.email, {
@@ -26,6 +27,7 @@ EventBus.onSeries('Team.Inserted', function(request, next){
           subject: 'Group invitation ' + request.name
         }, function(err) {
           callback();
+          return next();
         });
       }
     },function() {
@@ -43,7 +45,8 @@ EventBus.onSeries('Team.Updated', function(request, next){
         link: config.baseUrl + 'signup?teamInviteToken=' + request.teamInviteToken,
         subject: 'Group invitation ' + request.name
       }, function(err) {
-        callback()
+        callback();
+        return next();
       });
     } else if (user._id && user.status == 'Pending')  {
       Mailer.sendMail('invite-team-has-account.html', user._id.email, {
@@ -51,6 +54,7 @@ EventBus.onSeries('Team.Updated', function(request, next){
         subject: 'Group invitation ' + request.name
       }, function(err) {
         callback();
+        return next();
       });
     }
   },function() {

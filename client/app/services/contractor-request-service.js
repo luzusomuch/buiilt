@@ -26,6 +26,20 @@ angular.module('buiiltApp')
           id: '@id',
           action: 'invite'
         }
+      },
+      sendMessage: {
+        method: 'POST',
+        params: {
+          id: '@id',
+          action: 'message'
+        }
+      },
+      getMessageForContractor: {
+        method: 'GET',
+        params: {
+          id: 'id',
+          action: 'messagecontractor'
+        }
       }
     }
     );

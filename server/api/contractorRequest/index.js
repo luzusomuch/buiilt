@@ -12,6 +12,8 @@ var router = express.Router();
 router.get('/:id', controller.findOne);
 router.post('/', auth.isAuthenticated(), controller.sendQuote);
 router.post('/:id/invite', auth.isAuthenticated(), controller.sendInvitationInContractor);
+router.post('/:id/message', auth.isAuthenticated(), controller.sendMessage);
+router.get('/:id/messagecontractor', auth.isAuthenticated(), controller.getMessageForContractor);
 router.get('/:id/view', auth.isAuthenticated(), controller.getQuoteRequestByContractorPackge);
 
 module.exports = router;
