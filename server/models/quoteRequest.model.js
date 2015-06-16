@@ -37,14 +37,13 @@ var QuoteRequestSchema = new Schema({
     total: {type: Number}
   }],
   subTotal: {type: Number},
-  gst: {type: Number},
   file: {type: Schema.Types.ObjectId, ref:'File'},
   //the quote type: ex - quote from home owner to home builder
   //quote for the package
   type: {type: String, default: ''},
   package: { type: Schema.Types.ObjectId },
   packageType: {type: String, default: 'builder'},
-  price: { type: Number },
+  total: { type: Number },
   //update status after home owner / home builder... selects the quotes
   status: {
     type: String,

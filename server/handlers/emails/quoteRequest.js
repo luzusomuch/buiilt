@@ -57,6 +57,7 @@ EventBus.onSeries('QuoteRequest.Updated', function(request, next) {
 
 
 EventBus.onSeries('QuoteRequest.Inserted', function(request, next) {
+  console.log(request);
   async.parallel({
     user: function(cb){
       User.findOne({_id: request.user}, cb);

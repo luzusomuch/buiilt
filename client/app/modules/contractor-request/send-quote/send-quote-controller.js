@@ -11,7 +11,8 @@ angular.module('buiiltApp')
   }
 
   $scope.user = {};
-  // $scope.lineWithRate = {};
+  $scope.rate = {};
+  $scope.price = {};
   $scope.lineWithRates = [];
   $scope.lineWithPrices = [];
 
@@ -24,21 +25,22 @@ angular.module('buiiltApp')
   };
 
   $scope.sendQuote = function() {
-    console.log($scope.rateDescription);
-    // console.log($scope.rateLineWithRate);
-    return;
     $scope.lineWithRates.push({
-      description: $scope.lineWithRate.description, 
-      rate: $scope.lineWithRate.rate,
-      quantity: $scope.lineWithRate.quantity,
-      total: $scope.lineWithRate.rate * $scope.lineWithRate.quantity
+      description: $scope.rate.lineWithRate.rateDescription,
+      rate: $scope.rate.lineWithRate.rate,
+      quantity: $scope.rate.lineWithRate.rateQuantity,
+      total: $scope.rate.lineWithRate.rate * $scope.rate.lineWithRate.rateQuantity
     });
-    console.log($scope.lineWithRates);
-    return;
-    contractorRequestService.sendQuote({contractorRequest: $scope.contractorRequest,quoteRequest: $scope.quoteRequest}).$promise.then(function(data){
+    $scope.lineWithPrices.push({
+      description: $scope.price.lineWithPrice.description,
+      price: $scope.price.lineWithPrice.price,
+      quantity: 1,
+      total: $scope.price.lineWithPrice.price
+    });
+    contractorRequestService.sendQuote({contractorRequest: $scope.contractorRequest,quoteRequest: $scope.quoteRequest, rate: $scope.lineWithRates, price: $scope.lineWithPrices}).$promise.then(function(data){
         $scope.success = data;
         alert('You have send quote successfully!');
-        $state.go("team.manager");
+        // $state.go("team.manager");
     });
   };
 
