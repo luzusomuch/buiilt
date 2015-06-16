@@ -141,6 +141,7 @@ exports.getContractorPackageTenderByProjectForContractor = function(req, res) {
     if (err) {return res.send(500, err);}
     if (!team) {return res.send(404,err);}
     else {
+      var contractors = [];
       var teamMemberId = team.leader;
       async.each(team.member, function(member, callback) {
         if (member._id) {
@@ -150,23 +151,18 @@ exports.getContractorPackageTenderByProjectForContractor = function(req, res) {
       }, function(err) {
         if (err) {return res.send(500,err)}
         else {
-          var contractors = [];
           async.each(teamMemberId, function(id, callback) {
             ContractorPackage.findOne({$and:[{'project' : req.params.id},{'to._id': id},{status: true}]}, function(err, contractor){
               if (err) {return res.send(500,err);}
               // if (!contractor) {console.log('-----');return res.send(404,err);}
-              else {
-                if (contractor) {
-                  contractors.push(contractor);  
-                  console.log(contractors);  
-                }
+              else if (contractor){
+                contractors.push(contractor);  
               }
+              callback();
             });
-            callback();
           }, function(err) {
             if (err) {return res.send(500, err)}
             else {
-              console.log(contractors);
               return res.send(200, contractors);
             }
           });

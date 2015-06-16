@@ -1,9 +1,46 @@
-angular.module('buiiltApp').controller('ContractorsCtrl', function($scope, $stateParams, $rootScope, $timeout, $q, contractorService, authService, projectService, teamService) {
+angular.module('buiiltApp').controller('ContractorsCtrl', function($scope, $stateParams, $rootScope, $timeout, $q, team, contractorService, authService, projectService, teamService) {
   $scope.contractor = {};
   $scope.currentProject = $rootScope.currentProject;
   $scope.emailsPhone = [];
   $scope.user = authService.getCurrentUser();
   $scope.team = authService.getCurrentTeam();
+  teamService.getCurrentTeam().$promise.then(function(data) {
+    $scope.team = data;
+    if ($scope.team) {
+      if ($scope.team.type == 'buider') {
+        $scope.getContractorPackageTenderByProject = function() {
+          alert('sdsdsdsdsds');
+          contractorService.getContractorPackageTenderByProjectForBuilder({'id': $stateParams.id})
+          .$promise.then(function(data) {
+            $scope.contractorsInTender = data;
+          }); 
+        };
+
+        $scope.getContractorPackageInProcessByProject = function() {
+          contractorService.getContractorPackageInProcessByProjectForBuilder({'id': $stateParams.id})
+          .$promise.then(function(data) {
+            $scope.contractorsInProcess = data;
+          }); 
+        };
+      }
+      else if($scope.team.type === 'contractor') {
+        $scope.getContractorPackageTenderByProject = function() {
+          contractorService.getContractorPackageTenderByProjectForContractor({'id': $stateParams.id})
+          .$promise.then(function(data) {
+            $scope.contractorsInTender = data;
+          }); 
+        };
+
+        $scope.getContractorPackageInProcessByProject = function() {
+          contractorService.getContractorPackageInProcessByProjectForContractor({'id': $stateParams.id})
+          .$promise.then(function(data) {
+            $scope.contractorsInProcess = data;
+          }); 
+        };
+      }
+    }
+  });
+  
 
   contractorService.getContractorByProjectForBuilder({'id': $stateParams.id}).$promise.then(function(data){
     $scope.contractors = data;
@@ -29,33 +66,6 @@ angular.module('buiiltApp').controller('ContractorsCtrl', function($scope, $stat
     });
   };
 
-  $scope.getContractorPackageTenderByProjectForBuilder = function() {
-    contractorService.getContractorPackageTenderByProjectForBuilder({'id': $stateParams.id})
-    .$promise.then(function(data) {
-      $scope.contractorsInTender = data;
-    }); 
-  };
-
-  $scope.getContractorPackageInProcessByProjectForBuilder = function() {
-    contractorService.getContractorPackageInProcessByProjectForBuilder({'id': $stateParams.id})
-    .$promise.then(function(data) {
-      $scope.contractorsInProcess = data;
-    }); 
-  };
-
-  //get contractor package for contractor
-  $scope.getContractorPackageTenderByProjectForContractor = function() {
-    contractorService.getContractorPackageTenderByProjectForContractor({'id': $stateParams.id})
-    .$promise.then(function(data) {
-      $scope.contractorsInTender = data;
-    }); 
-  };
-
-  $scope.getContractorPackageInProcessByProjectForContractor = function() {
-    contractorService.getContractorPackageInProcessByProjectForContractor({'id': $stateParams.id})
-    .$promise.then(function(data) {
-      $scope.contractorsInProcess = data;
-    }); 
-  };
+  
 });
 

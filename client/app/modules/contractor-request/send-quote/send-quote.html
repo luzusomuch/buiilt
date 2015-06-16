@@ -2,7 +2,7 @@
  <h5 class="col s8">Contractor Package {{contractorRequest.name}} in Progress</h5>
  
  <div class="col s4" style="margin-top:15px">
-     <a class='dropdown-button btn-flat right tooltipped' data-position="top" data-delay="1" data-tooltip="Attach..." href='#' data-activates='itemActions' data-gutter="-30">
+     <a class='dropdown-button btn-flat right tooltipped' data-position="top" data-delay="1" data-tooltip="Attach..." href='#' data-activates='itemActions' data-gutter="-30" dropdown>
       <i class="mdi-navigation-more-vert"></i>
      </a>
 
@@ -91,7 +91,7 @@
 
 <div id="attachQuote" class="modal modal-fixed-footer">
     <div class="modal-content">
-    <form>
+    <form name="sendQuoteForm" ng-submit="sendQuote()" method="POST">
       <div class="row">
         <h5 class="col s12">New Quote for Contractor Package Name</h5>
       </div>
@@ -101,30 +101,30 @@
             <li class="collection-item vlalign-wrapper">
               <div class="row" style="margin-bottom: 0px">
                 <div class="col s6 valign center-align background-hover">
-                  <a class="waves-effect waves-light btn-flat">Add Line with Rate</a>
+                  <a ng-click="addLineWithRate()" class="waves-effect waves-light btn-flat">Add Line with Rate</a>
                 </div>
-                <div class="col s6 valign center-align background-hover">
+                <div ng-click="addLineWithPrice()" class="col s6 valign center-align background-hover">
                   <a class="waves-effect waves-light btn-flat">Add Line with Price</a>
                 </div>
               </div>
             </li>
             <li class="collection-item vlalign-wrapper">
-              <div class="row form" style="margin-bottom: 0px">
+              <div class="row form" style="margin-bottom: 0px" ng-repeat="lineWithRate in lineWithRates track by $index">
                 <div class="input-field col s6">
-                   <textarea value="This is a line item with Rate - note the field for qty is editable"id="description" class="materialize-textarea"></textarea>
+                   <textarea value="This is a line item with Rate - note the field for qty is editable"id="description" class="materialize-textarea" ng-model="rateDescription"></textarea>
                        <label for="description">Description of Item</label>
                     </div>
                 <div class="input-field col s2" style="margin-top: 67px">
-                        <input id="rate" type="text" class="validate">
+                        <input id="rate" type="text" class="validate" ng-model="rate">
                         <label for="rate">Rate</label>
                     </div>
                 <div class="input-field col s1" style="margin-top: 67px">
-                        <input id="quantity" type="text" class="validate">
+                        <input id="quantity" type="text" class="validate" ng-model="rateQuantity">
                         <label for="quantity">Qty</label>
                     </div>
                 <div class="input-field col s2" style="margin-top: 67px">
-                        <input disabled id="quantity" type="text" class="validate">
-                        <label for="quantity">Line Total</label>
+                        <input disabled id="quantity" type="text" class="validate" ng-model="rateTotal">
+                        <label for="quantity">Line Total {{rate * rateQuantity}}</label>
                     </div>
                 <div class="input-field col s1" style="margin-top: 67px">
                         <i class="small mdi-action-highlight-remove"></i>
@@ -132,22 +132,22 @@
               </div>
             </li>
             <li class="collection-item vlalign-wrapper">
-              <div class="row form" style="margin-bottom: 0px">
+              <div class="row form" style="margin-bottom: 0px" ng-repeat="lineWithPrice in lineWithPrices track by $index">
                 <div class="input-field col s6">
-                   <textarea value="This is a line item with Price - the Qty field is set to 1 and only price can be changed."id="description" class="materialize-textarea"></textarea>
+                   <textarea value="This is a line item with Price - the Qty field is set to 1 and only price can be changed."id="description" class="materialize-textarea" ng-model="lineWithPrice.description"></textarea>
                        <label for="description">Description of Item</label>
                     </div>
                 <div class="input-field col s2" style="margin-top: 67px">
-                        <input id="rate" type="text" class="validate">
+                        <input id="rate" type="text" class="validate" ng-model="lineWithPrice.price">
                         <label for="rate">Price</label>
                     </div>
                 <div class="input-field col s1" style="margin-top: 67px">
-                        <input disabled value="1" id="quantity" type="text" class="validate">
+                        <input disabled value="1" id="quantity" type="text" class="validate" ng-model="lineWithPrice.quantity">
                         <label for="quantity"></label>
                     </div>
                 <div class="input-field col s2" style="margin-top: 67px">
-                        <input disabled id="quantity" type="text" class="validate">
-                        <label for="quantity">Line Total</label>
+                        <input disabled id="quantity" type="text" class="validate" ng-model="lineWithPrice.total">
+                        <label for="quantity">Line Total {{lineWithPrice.rate * lineWithPrice.quantity}}</label>
                     </div>
                 <div class="input-field col s1" style="margin-top: 67px">
                         <i class="small mdi-action-highlight-remove"></i>
@@ -172,14 +172,16 @@
             <p>Total</p>
              </div>
        </div>
-       
-     </form>
-    </div>
-  <div class="divider"></div>
+       <div class="divider"></div>
     <div class="modal-footer">
-         <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Send Quote!</a>
+      <input type="submit" value="Send Quote!"/>
+      <button class="modal-action modal-close waves-effect waves-green btn-flat "> Send quote!</button>
+         <!-- <a href="#!" ng-click="sendQuote()" class="modal-action modal-close waves-effect waves-green btn-flat ">Send Quote!</a> -->
      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
     </div>
+     </form>
+    </div>
+  
 </div>
 
 <div class="row">

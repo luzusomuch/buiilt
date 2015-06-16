@@ -11,8 +11,30 @@ angular.module('buiiltApp')
   }
 
   $scope.user = {};
+  // $scope.lineWithRate = {};
+  $scope.lineWithRates = [];
+  $scope.lineWithPrices = [];
+
+  $scope.addLineWithRate = function() {
+    $scope.lineWithRates.length = $scope.lineWithRates.length + 1;
+  };
+
+  $scope.addLineWithPrice = function() {
+    $scope.lineWithPrices.length = $scope.lineWithPrices.length + 1;
+  };
 
   $scope.sendQuote = function() {
+    console.log($scope.rateDescription);
+    // console.log($scope.rateLineWithRate);
+    return;
+    $scope.lineWithRates.push({
+      description: $scope.lineWithRate.description, 
+      rate: $scope.lineWithRate.rate,
+      quantity: $scope.lineWithRate.quantity,
+      total: $scope.lineWithRate.rate * $scope.lineWithRate.quantity
+    });
+    console.log($scope.lineWithRates);
+    return;
     contractorRequestService.sendQuote({contractorRequest: $scope.contractorRequest,quoteRequest: $scope.quoteRequest}).$promise.then(function(data){
         $scope.success = data;
         alert('You have send quote successfully!');

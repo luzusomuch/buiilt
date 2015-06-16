@@ -8,35 +8,32 @@
         <li><a class="modal-trigger" href="#newMaterialPackage">Material Package</a></li>
       </ul>
      
-     <div class="collection" ng-if="team.type === 'buider'">
-         <a ng-click="getContractorPackageInProcessByProjectForBuilder(); showContractorInProcess = true; hideContractor = true; showContractorInTender = false" class="collection-item">In Progress<span class="new badge">{{contractorsInProcess.length}}</span></a>
+     <div class="collection" >
+         <a ng-click="getContractorPackageInProcessByProject(); showContractorInProcess = true; hideContractor = true; showContractorInTender = false" class="collection-item">In Progress<span class="new badge">{{contractorsInProcess.length}}</span></a>
 
-         <a ng-click="getContractorPackageTenderByProjectForBuilder(); showContractorInTender = true; hideContractor = true; showContractorInProcess = false" class="collection-item">In Tender<span class="new badge">{{contractorsInTender.length}}</span></a>
+         <a ng-click="getContractorPackageTenderByProject(); showContractorInTender = true; hideContractor = true; showContractorInProcess = false" class="collection-item">In Tender<span class="new badge">{{contractorsInTender.length}}</span></a>
          <a href="#!" class="collection-item">Completed</a>
      </div>
-     <div class="collection" ng-if="team.type === 'contractor'">
+     <!-- <div class="collection" ng-if="team.type === 'contractor'">
          <a ng-click="getContractorPackageInProcessByProjectForContractor(); showContractorInProcess = true; hideContractor = true; showContractorInTender = false" class="collection-item">In Progress<span class="new badge">{{contractorsInProcess.length}}</span></a>
 
          <a ng-click="getContractorPackageTenderByProjectForContractor(); showContractorInTender = true; hideContractor = true; showContractorInProcess = false" class="collection-item">In Tender<span class="new badge">{{contractorsInTender.length}}</span></a>
          <a href="#!" class="collection-item">Completed</a>
-     </div>
+     </div> -->
    </div>
    
    <div class="col s9">
      <ul class="collection z-depth-1">
       <li class="collection-item" ng-hide="hideContractor" ng-repeat="contractor in contractors">#{{$index + 1}} -  {{contractor.name}}</li>
       <li class="collection-item" ng-show="showContractorInTender" ng-repeat="contractor in contractorsInTender">
-        <a ui-sref='contractorRequest.viewContractorRequest({id: contractor._id})'>#{{$index + 1}} -  {{contractor.name}}</a>
+        <a ng-if="team.type == 'buider'" ui-sref='contractorRequest.viewContractorRequest({id: contractor._id})'>#{{$index + 1}} -  {{contractor.name}}</a>
+        <a ng-if="team.type == 'contractor'" ui-sref='contractorRequest.sendQuote({id: contractor._id})'>#{{$index + 1}} -  {{contractor.name}}</a>
       </li>
       <li class="collection-item" ng-show="showContractorInProcess" ng-repeat="contractor in contractorsInProcess">
         <a ui-sref='contractorRequest.contractorPackageInProcess({id: contractor._id})'>#{{$index + 1}} -  {{contractor.name}}</a>
       </li>
-       <!-- <li class="collection-item">Package Name 1<span class="new badge">1</span></li>
-       <li class="collection-item">Package Name 2<span class="new badge">3</span></li>
-       <li class="collection-item">Package Name 3</li>
-       <li class="collection-item">Package Name 4<span class="new badge">2</span></li>
-       <li class="collection-item">Package Name 5</li> -->
      </ul>
+
    </div>
 </div>
 
