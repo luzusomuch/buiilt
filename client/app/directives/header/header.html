@@ -23,7 +23,7 @@
               <a ui-sref="projects.view({id: project._id})">{{project.name}}</a>
             </li> -->
             <li class="divider"></li>
-            <li>
+            <li ng-if="currentTeam.type == 'homeOwner' || currentTeam.type == 'buider'">
               <a href="#createProject" class="modal-trigger">Create project</a>
             </li>
           </ul>

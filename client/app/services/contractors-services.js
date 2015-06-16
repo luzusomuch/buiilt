@@ -25,7 +25,7 @@ angular.module('buiiltApp')
             method: 'GET',
             params: {
                 id: 'id',
-                action: 'tenderb'
+                action: 'tenderbuilder'
             },
             isArray: true
         },
@@ -33,7 +33,7 @@ angular.module('buiiltApp')
             method: 'GET',
             params: {
                 id: 'id',
-                action: 'processingb'
+                action: 'processingbuilder'
             },
             isArray: true
         },
@@ -41,7 +41,7 @@ angular.module('buiiltApp')
             method: 'GET',
             params: {
                 id: 'id',
-                action: 'tenderc'
+                action: 'tendercontractor'
             },
             isArray: true
         },
@@ -49,7 +49,7 @@ angular.module('buiiltApp')
             method: 'GET',
             params: {
                 id: 'id',
-                action: 'processingc'
+                action: 'processingcontractor'
             },
             isArray: true
         }

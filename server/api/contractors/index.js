@@ -15,11 +15,11 @@ router.get('/:id/winner', auth.isAuthenticated(), controller.getProjectForContra
 
 //get contractor package by project for builder
 router.get('/:id/projectb', auth.isAuthenticated(), controller.getContractorByProjectForBuilder);
-router.get('/:id/tenderb', auth.isAuthenticated(), controller.getContractorPackageTenderByProjectForBuilder);
-router.get('/:id/processingb', auth.isAuthenticated(), controller.getContractorPackageInProcessByProjectForBuilder);
+router.get('/:id/tenderbuilder', auth.isAuthenticated(), controller.getContractorPackageTenderByProjectForBuilder);
+router.get('/:id/processingbuilder', auth.isAuthenticated(), controller.getContractorPackageInProcessByProjectForBuilder);
 
 //get contractor package by project for contractor
-router.get('/:id/tenderc', auth.isAuthenticated(), controller.getContractorPackageTenderByProjectForContractor);
-router.get('/:id/processingc', auth.isAuthenticated(), controller.getContractorPackageInProcessByProjectForContractor);
+router.get('/:id/tendercontractor', auth.isAuthenticated(), controller.getContractorPackageTenderByProjectForContractor);
+router.get('/:id/processingcontractor', auth.isAuthenticated(), controller.getContractorPackageInProcessByProjectForContractor);
 
 module.exports = router;
