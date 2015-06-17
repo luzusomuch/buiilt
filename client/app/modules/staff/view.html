@@ -1,0 +1,160 @@
+
+<div class="row" style="margin-top: 18px">
+  <h5 class="col s8">Staff package in Progress</h5>
+
+  <div class="col s4" style="margin-top:15px">
+    <a class="dropdown-button btn-flat right tooltipped" data-position="top" data-delay="1" data-tooltip="Attach..." href="#" data-activates="itemActions">
+      <i class="mdi-navigation-more-vert"></i>
+    </a>
+
+    <!-- Dropdown Structure -->
+    <ul id="itemActions" class="dropdown-content">
+      <li><a class="modal-trigger" href="#modal_attachDefect">Attach Defect</a></li>
+      <li><a class="modal-trigger" href="#modal_attachDocument">Attach Document</a></li>
+    </ul>
+  </div>
+</div>
+
+<div class="row">
+  <p class="col s12">Package name : {{staffPackage.name}}</p>
+  <p class="col s12">Package description : {{staffPackage.description}}</p>
+  <p class="col s12">Package staffs list :
+    <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="staff in staffPackage.staffs">
+      {{staff.email}}
+    </div>
+  </p>
+</div>
+
+<div class="row">
+  <div task package="staffPackage" type="staff" current-user="currentUser"></div>
+
+  <div class="col s5">
+    <ul class="card collection">
+      <div class="card-header">
+        <div class="row">
+          <div class="col s6">
+            <a class="dropdown-button btn-flat" style="margin-top: 15px" href="#" data-gutter="15" data-activates="itemFilter">ALL ITEMS<i class="mdi-navigation-arrow-drop-down"></i></a>
+            <ul id="itemFilter" class="dropdown-content" style="margin-top: 15px">
+              <li><a href="#!">DEFECTS</a></li>
+              <li><a href="#!">INVOICES</a></li>
+              <li><a href="#!">DOCUMENTS</a></li>
+            </ul>
+          </div>
+          <div class="col s6">
+            <a class="dropdown-button btn-flat btn-flat right" style="margin-top: 15px;" data-gutter="-30" href="#" data-activates="relatedActions">
+              <i class="mdi-navigation-more-vert"></i>
+            </a>
+            <ul id="relatedActions" class="dropdown-content" style="margin-top: 15px">
+              <li><a class="modal-trigger" href="#modal_attachDefect">Attach Defect</a></li>
+              <li><a class="modal-trigger" href="#modal_attachDocument">Attach Document</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div style="height: 300px">
+        <li class="collection-item">Alvin</li>
+        <li class="collection-item">Alvin</li>
+        <li class="collection-item">Alvin</li>
+        <li class="collection-item">Alvin</li>
+      </div>
+    </ul>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col s12">
+    <ul class="card collection">
+      <div class="card-header">
+        <div class="row">
+          <div class="col s6">
+            <div class="col s6">
+              <a class="dropdown-button btn-flat" data-gutter="5" style="margin-top: 15px" href="#" data-activates="threadSelector">THREAD NAME<i class="mdi-navigation-arrow-drop-down"></i></a>
+              <ul id="threadSelector" style="margin-top: 15px" class="dropdown-content">
+                <li><a href="#!">THREAD 1<span class="new badge">4</span></a></li>
+                <li><a href="#!">THREAD 2</a></li>
+                <li><a href="#!">THREAD 3<span class="new badge">1</span></a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col s6">
+            <a class="dropdown-button btn-flat btn-flat right" style="margin-top:15px" data-gutter="-30" href="#" data-activates="chatActions">
+              <i class="mdi-navigation-more-vert"></i>
+            </a>
+
+            <ul id="chatActions" class="dropdown-content" style="margin-top:15px">
+              <li><a href="#!" class="activator">New Thread</a></li>
+              <li><a href="#!">two</a></li>
+              <li><a href="#!">three</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div style="height: 500px">
+
+        <li class="collection-item">
+          <div class="row valign-wrapper" style="margin-bottom: -5px">
+            <a href="#!" class="btn-flat col s1">
+              <i class="mdi-toggle-radio-button-on valign center-align"></i>
+            </a>
+
+            <p class="col s9 valign">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.<br> Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
+
+            <img src="images/yuna.jpg" alt="" class="circle col s2 right valign center-align">
+          </div>
+        </li>
+
+        <li class="collection-item">
+          <div class="row valign-wrapper" style="margin-bottom: -5px">
+            <a href="#!" class="btn-flat col s1">
+              <i class="mdi-toggle-radio-button-on valign center-align"></i>
+            </a>
+
+            <p class="col s9 valign">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.<br> Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
+
+            <img src="images/yuna.jpg" alt="" class="circle col s2 right valign center-align">
+          </div>
+        </li>
+
+        <li class="collection-item">
+          <div class="row valign-wrapper" style="margin-bottom: -5px">
+            <a href="#!" class="btn-flat col s1">
+              <i class="mdi-toggle-radio-button-on valign center-align"></i>
+            </a>
+
+            <p class="col s9 valign">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.<br> Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
+
+            <img src="images/yuna.jpg" alt="" class="circle col s2 right valign center-align">
+          </div>
+        </li>
+
+      </div>
+      <div class="divider"></div>
+      <div class="col s12 card-footer" style="height: 150px">
+        <div class="row">
+          <form class="col s10 offset-s1">
+            <div class="input-field col s9">
+              <textarea id="textarea1" class="materialize-textarea"></textarea>
+              <label for="textarea1">Send a Message...</label>
+            </div>
+            <div class="input-field col s3">
+              <button class="btn-large waves-effect waves-light" type="submit" style="margin-top: 47px" name="action">Send
+                <i class="mdi-content-send right"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="card-reveal">
+        <span class="card-title grey-text text-darken-4">New Thread<i class="mdi-navigation-close right"></i></span>
+        <form class="col s12">
+          <div class="input-field col s12">
+            <input id="thread_name" type="text">
+            <label for="thread_name">Name</label>
+          </div>
+        </form>
+      </div>
+    </ul>
+  </div>
+</div>
