@@ -67,7 +67,7 @@ exports.findOne = function(req, res){
           else {
             contractorPackage.winnerTeam._id = team._id,
             contractorPackage.winnerTeam.name = team.name,
-            contractorPackage.quote = quote.price,
+            contractorPackage.quote = quote.total,
             contractorPackage.isAccept = true,
             contractorPackage.status = false
             contractorPackage.save(function(err, saved) {

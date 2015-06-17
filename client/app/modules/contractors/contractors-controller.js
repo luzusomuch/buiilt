@@ -9,7 +9,6 @@ angular.module('buiiltApp').controller('ContractorsCtrl', function($scope, $stat
     if ($scope.team) {
       if ($scope.team.type == 'buider') {
         $scope.getContractorPackageTenderByProject = function() {
-          alert('sdsdsdsdsds');
           contractorService.getContractorPackageTenderByProjectForBuilder({'id': $stateParams.id})
           .$promise.then(function(data) {
             $scope.contractorsInTender = data;

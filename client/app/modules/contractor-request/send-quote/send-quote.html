@@ -24,7 +24,7 @@
      <div style="height: 500px">
        
      <li class="collection-item" ng-repeat = "message in messages.messages">
-       <div class="row valign-wrapper" style="margin-bottom: -5px">
+       <div class="row valign-wrapper" style="margin-bottom: -5px" ng-if="message.owner == currentUser._id || message.owner == messages.owner">
          <a href="#!" class="btn-flat col s1">
            <i class="mdi-toggle-radio-button-on valign center-align" ></i>
          </a>

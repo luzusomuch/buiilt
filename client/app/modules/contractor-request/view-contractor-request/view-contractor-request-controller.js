@@ -10,10 +10,17 @@ angular.module('buiiltApp')
     $scope.currentUser = userService.get();
   }
 
+  $scope.message = {};
+
   $scope.user = {};
 
   contractorRequestService.getQuoteRequestByContractorPackge({'id':$stateParams.id}).$promise.then(function(data){
     $scope.quoteRequests = data;
+  });
+
+  contractorRequestService.getMessageForContractor({'id': $stateParams.id})
+  .$promise.then(function(data) {
+    $scope.messages = data;
   });
 
   $scope.addUser = function() {
@@ -45,6 +52,14 @@ angular.module('buiiltApp')
 
   $scope.closeSuccess = function() {
     $scope.success = false;
+  };
+
+  $scope.sendMessage = function() {
+    console.log($scope.message.message);
+    contractorRequestService.sendMessage({id: $stateParams.id, message: $scope.message.message})
+    .$promise.then(function(data) {
+      $scope.messages = data;
+    });
   };
 
 });

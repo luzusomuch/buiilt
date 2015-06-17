@@ -23,7 +23,7 @@
     <ul class="collapsible popup" data-collapsible="accordion">
       <li>
         <div class="collapsible-header">
-          User {{contractorRequest.winner.email}} and his team has won this package.
+          Team {{contractorRequest.winnerTeam.name}} has won this package.
         </div>
         <div class="collapsible-body">
           <div class="row">
@@ -38,32 +38,22 @@
              <ul class="collection">
                <div style="height: 300px; background-color: white;">
 
-                 <li class="collection-item">
+                 <li class="collection-item" ng-repeat = "message in messages.messages">
                    <div class="row valign-wrapper" style="margin-bottom: -5px">
                      <a href="#!" class="btn-flat col s1">
                        <i class="mdi-toggle-radio-button-on valign center-align" ></i>
                      </a>
 
-                     <p class="col s11 valign">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.<br /> Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
+                     <p class="col s11 valign">{{message.message}}</p>
                    </div>
                  </li>
-                 <li class="collection-item">
-                   <div class="row valign-wrapper" style="margin-bottom: -5px">
-                     <a href="#!" class="btn-flat col s1">
-                       <i class="mdi-toggle-radio-button-on valign center-align" ></i>
-                     </a>
-
-                     <p class="col s11 valign">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.<br /> Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
-                   </div>
-                 </li>
-
                </div>
                <div class="divider"></div>
                <div class="col s12 card-footer" style="background-color: white">
                  <div class="row">
-                   <form class="valign-wrapper">
+                   <form class="valign-wrapper" ng-submit="sendMessage()">
                      <div class="input-field col s9">
-                       <textarea id="textarea1" class="materialize-textarea"></textarea>
+                       <textarea id="textarea1" class="materialize-textarea" ng-model="message.message"></textarea>
                        <label for="textarea1">Textarea</label>
                      </div>
                      <div class="col s3">
@@ -152,7 +142,7 @@
   <div id='modal_viewQuote_{{quoteRequest._id}}' class="modal modal-fixed-footer">
     <div class="modal-content">
       <h4>View Quote</h4>
-      <p><strong>{{quoteRequest.price}}</strong></p>
+      <p><strong>{{quoteRequest.total}}</strong></p>
       <p>{{quoteRequest.description}}</p>
     </div>
     <div class="modal-footer">

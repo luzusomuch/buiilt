@@ -91,13 +91,17 @@ EventBus.onSeries('QuoteRequest.Inserted', function(request, next) {
         });
       }
       else if (result.contractorPackage) {
+        console.log('sdsdsdsdsdsds');
+        console.log(result.contractorPackage.owner);
+        
         User.findOne({_id:result.contractorPackage.owner}, function(err, user) {
+          console.log(user);
           Mailer.sendMail('view-quote-contractor-package.html', user.email, {
             quoteRequest: request,
             //project owner
             user: result.user,
             price: request.price,
-            description: request.description,
+            // description: request.description,
             project: result.project,
             quotesLink: config.baseUrl + 'contractor-requests/' + result.contractorPackage._id + '/view',
             contractorPackage: result.contractorPackage,

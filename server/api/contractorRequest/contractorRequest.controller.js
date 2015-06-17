@@ -17,6 +17,7 @@ exports.findOne = function(req, res) {
 };
 
 exports.sendMessage = function(req, res) {
+  console.log(req.body.message);
   ContractorPackage.findById(req.params.id, function(err, contractorPackage) {
     if (err) {return res.send(500,err)}
     if (!contractorPackage) {return res.send(404,err)}
