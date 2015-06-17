@@ -12,3 +12,4 @@ docker.log
 /client/media/file
 /client/media/files
 /server/config/environment/development.js
+/client/media/img

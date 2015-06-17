@@ -91,7 +91,7 @@
                        <div class="card-header">
                            <div class="row">
                                <div class="col s6">
-                                   <a class='dropdown-button btn-flat' style="margin-top: 15px" href='#' data-gutter="15" data-activates='itemFilter'>ALL ITEMS<i class="mdi-navigation-arrow-drop-down"></i></a>
+                                   <a class='dropdown-button btn-flat' style="margin-top: 15px" href='#' data-gutter="15" data-activates='itemFilter'>ALL ITEMS<i class="mdi-navigation-arrow-drop-down" dropdown></i></a>
                                      <ul id='itemFilter' class='dropdown-content' style="margin-top: 15px">
                                        <li><a href="#!">VARIATIONS</a></li>
                                        <li><a href="#!">DEFECTS</a></li>
@@ -100,7 +100,7 @@
                                      </ul>
                                </div>
                                <div class="col s6">
-                                   <a class='dropdown-button btn-flat btn-flat right' style="margin-top: 15px;" data-gutter="-30" href='#' data-activates='relatedActions'>
+                                   <a class='dropdown-button btn-flat btn-flat right' style="margin-top: 15px;" data-gutter="-30" href='#' data-activates='relatedActions' dropdown>
                                        <i class="mdi-navigation-more-vert"></i>
                                    </a>
                                     <ul id='relatedActions' class='dropdown-content' style="margin-top: 15px">
@@ -129,7 +129,7 @@
                            <div class="row">
                                <div class="col s6">
                                    <div class="col s6">
-                                       <a class='dropdown-button btn-flat' data-gutter="5" style="margin-top: 15px" href='#' data-activates='threadSelector'>THREAD NAME<i class="mdi-navigation-arrow-drop-down"></i></a>
+                                       <a class='dropdown-button btn-flat' data-gutter="5" style="margin-top: 15px" href='#' data-activates='threadSelector' dropdown>THREAD NAME<i class="mdi-navigation-arrow-drop-down"></i></a>
                                          <ul id='threadSelector' style="margin-top: 15px"  class='dropdown-content'>
                                            <li><a href="#!">THREAD 1<span class="new badge">4</span></a></li>
                                            <li><a href="#!">THREAD 2</a></li>
@@ -138,7 +138,7 @@
                                    </div>
                                </div>
                                <div class="col s6">
-                                   <a class='dropdown-button btn-flat btn-flat right' style="margin-top:15px" data-gutter="-30" href='#' data-activates='chatActions'>
+                                   <a class='dropdown-button btn-flat btn-flat right' style="margin-top:15px" data-gutter="-30" href='#' data-activates='chatActions' dropdown>
                                        <i class="mdi-navigation-more-vert"></i>
                                    </a>
                              
@@ -153,37 +153,13 @@
                        <div class="divider"></div>
                        <div style="height: 500px">
                            
-                         <li class="collection-item">
+                         <li class="collection-item" ng-repeat="message in messages.messages">
                              <div class="row valign-wrapper" style="margin-bottom: -5px">
                                  <a href="#!" class="btn-flat col s1">
                                      <i class="mdi-toggle-radio-button-on valign center-align" ></i>
                                  </a>
                                  
-                                 <p class="col s9 valign">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.<br /> Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
-                                 
-                                 <img src="images/yuna.jpg" alt="" class="circle col s2 right valign center-align" />
-                             </div>
-                         </li>
-                         
-                         <li class="collection-item">
-                             <div class="row valign-wrapper" style="margin-bottom: -5px">
-                                 <a href="#!" class="btn-flat col s1">
-                                     <i class="mdi-toggle-radio-button-on valign center-align" ></i>
-                                 </a>
-                                 
-                                 <p class="col s9 valign">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.<br /> Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
-                                 
-                                 <img src="images/yuna.jpg" alt="" class="circle col s2 right valign center-align" />
-                             </div>
-                         </li>
-                         
-                         <li class="collection-item">
-                             <div class="row valign-wrapper" style="margin-bottom: -5px">
-                                 <a href="#!" class="btn-flat col s1">
-                                     <i class="mdi-toggle-radio-button-on valign center-align" ></i>
-                                 </a>
-                                 
-                                 <p class="col s9 valign">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.<br /> Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
+                                 <p class="col s9 valign">{{message.message}}</p>
                                  
                                  <img src="images/yuna.jpg" alt="" class="circle col s2 right valign center-align" />
                              </div>
@@ -193,9 +169,9 @@
                        <div class="divider"></div>
                        <div class="col s12 card-footer" style="height: 150px">
                            <div class="row">
-                               <form class="col s10 offset-s1">
+                               <form class="col s10 offset-s1" ng-submit="sendMessage()">
                                    <div class="input-field col s9">
-                                     <textarea id="textarea1" class="materialize-textarea"></textarea>
+                                     <textarea id="textarea1" class="materialize-textarea" ng-model="message"></textarea>
                                      <label for="textarea1">Send a Message...</label>
                                    </div>
                                    <div class="input-field col s3">

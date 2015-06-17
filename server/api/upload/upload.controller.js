@@ -12,6 +12,7 @@ var path = require('path');
 var s3 = require('../../components/S3');
 var _ = require('lodash');
 var async = require('async');
+var gm = require('gm');
 
 var validationError = function (res, err) {
   return res.json(422, err);
@@ -49,70 +50,97 @@ exports.upload = function(req, res){
     })
     .on('end', function() {
         if (uploadedFile && uploadedField) {
-            var file = new File({
-                title: uploadedFile.name,
-                path: uploadedFile.path,
-                server: 's3',
-                mimeType: uploadedFile.type,
-                description: uploadedField.desc,
-                size: uploadedFile.size,
-                user: req.user._id,
-                belongTo: uploadedField.belongTo
-            });
+            console.log(uploadedFile, uploadedField);
+            if (uploadedField._id != 'undefined') {
+                File.findById(uploadedField._id, function(err, file) {
+                    if (err) {console.log(err);}
+                    file.title = uploadedFile.name;
+                    file.path = uploadedFile.path;
+                    file.mimeType = uploadedFile.type;
+                    file.description = uploadedField.description;
+                    file.size = uploadedFile.size;
+                    file.version = file.version + 1;
 
-            uploadedField.usersRelatedTo = uploadedField.usersRelatedTo.split(',');
-            async.each(uploadedField.usersRelatedTo, function(userRelated, callback) {
-                User.findOne({'email': userRelated}, function(err, user) {
-                    if (user) {
-                        file.usersRelatedTo.push({
-                            _id: user._id,
-                            email: user.email
+                    uploadedField.usersRelatedTo = uploadedField.usersRelatedTo.split(',');
+                    async.each(uploadedField.usersRelatedTo, function(userRelated, callback) {
+                        User.findOne({'email': userRelated}, function(err, user) {
+                            if (user) {
+                                file.usersRelatedTo.push({
+                                    _id: user._id,
+                                    email: user.email
+                                });
+                                //calback
+                                callback();
+                            }
                         });
-                        //calback
-                        callback();
-                    }
-                });
-                
-            }, function(err) {
-                if (err) {console.log(err);}
-                else {
-                    file.save(function(err, fileSaved) {
+                    }, function(err) {
                         if (err) {console.log(err);}
                         else {
-                            console.log(fileSaved);
-                            return res.json(200, fileSaved);
-                            // BuilderPackage.findOne({'project':req.params.id}, function(err, builderPackage) {
-                            //     if (err) {console.log(err);}
-                            //     else {
-                            //         Document.findById(uploadedField.doc, function(err, doc) {
-                            //             if (err) {console.log(err);}
-                            //             else {
-                            //                 doc.file.push({
-                            //                     _id: fileSaved._id
-                            //                 });
-                            //                 doc.version = doc.version + 1;
-                            //                 doc.save(function(err, documentSaved){
-                            //                     if (err) {console.log(err);}
-                            //                     else {
-                            //                         s3.uploadFile(fileSaved, function(err,data) {
-                            //                             if (err) {console.log(err);}
-                            //                             else {
-                            //                                 return res.json(200,data);
-                            //                             }
-                            //                         })
-                            //                     }
-                            //                 });
-                            //             }
-                            //         });
-                            //     }
-                            // });
+                            file.save(function(err, saved) {
+                                if (err) {console.log(err);}
+                                else {
+                                    s3.uploadFile(saved, function(err, data) {
+                                        if (err) {console.log(err);}
+                                        else {
+                                            return res.json(200,data);
+                                        }
+                                    })
+                                }
+                            });      
                         }
                     });
-                }
-            }); 
+                });
+            }
+            else {
+                var file = new File({
+                    title: uploadedFile.name,
+                    path: uploadedFile.path,
+                    server: 's3',
+                    mimeType: uploadedFile.type,
+                    description: uploadedField.desc,
+                    size: uploadedFile.size,
+                    user: req.user._id,
+                    belongTo: uploadedField.belongTo
+                });
+
+                uploadedField.usersRelatedTo = uploadedField.usersRelatedTo.split(',');
+                async.each(uploadedField.usersRelatedTo, function(userRelated, callback) {
+                    User.findOne({'email': userRelated}, function(err, user) {
+                        if (user) {
+                            file.usersRelatedTo.push({
+                                _id: user._id,
+                                email: user.email
+                            });
+                            //calback
+                            callback();
+                        }
+                    });
+                    
+                }, function(err) {
+                    if (err) {console.log(err);}
+                    else {
+                        file.save(function(err, fileSaved) {
+                            if (err) {console.log(err);}
+                            else {
+                                s3.uploadFile(fileSaved, function(err, data) {
+                                    if (err) {console.log(err);}
+                                    else {
+                                        gm(__dirname + "\\..\\..\\..\\" + fileSaved.path)
+                                        .resize(320, 480)
+                                        .write(__dirname + "\\..\\..\\..\\" + "client\\media\\img\\"+fileSaved._id + '-' +fileSaved.title, function(err) {
+                                            if (err) {console.log(err);}
+                                            else
+                                                return res.json(200,data);        
+                                        });
+                                    }
+                                })
+                            }
+                        });
+                    }
+                });
+            }
         }
-    });
-        
+    })
 };
 
 

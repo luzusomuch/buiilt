@@ -45,7 +45,8 @@
     "xml": "^1.0.0",
     "formidable": "~v1.0.17",
     "mkdirp": "~0.5.1",
-    "s3": "~4.4.0"
+    "s3": "~4.4.0",
+    "gm": "~v0.5.0"
   },
   "devDependencies": {
     "connect-livereload": "~0.4.0",

@@ -51,6 +51,10 @@ var FileSchema = new Schema({
   size: {
     type: Number
   },
+  version: {
+    type: Number,
+    default: 0
+  },
   description: String,
   previewData: {//preview meta data which is generated from image, pdf, psd, videos
     type: Schema.Types.Mixed
@@ -108,6 +112,7 @@ FileSchema.methods.toJSON = function() {
     usersRelatedTo: this.usersRelatedTo,
     usersInterestedIn: this.usersInterestedIn,
     belongTo: this.belongTo,
+    version: this.version,
     archive: this.archive,
     ownerId: this.ownerId,
     groupId: this.groupId,
