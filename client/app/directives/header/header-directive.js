@@ -88,7 +88,7 @@ angular.module('buiiltApp')
           {sref: 'client({id :  currentProject._id})', label: 'client'},
           {sref: 'contractors({id :  currentProject._id})', label: 'contractors'},
           {sref: 'materials({id :  currentProject._id})', label: 'materials'},
-          {sref: 'staff({id :  currentProject._id})', label: 'staff'},
+          {sref: 'staff.index({id :  currentProject._id})', label: 'staff'},
           {sref: 'projects.view({id :  currentProject._id})', label: 'project'}],
         supplier: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
           {sref: 'contractors({id :  currentProject._id})', label: 'contractors'},

@@ -8,12 +8,18 @@ angular.module('buiiltApp')
     return $resource('/api/packages/staff/:id/:action',{
         id : '@_id'},
       {
-        get: {
+        getAll: {
           method: 'GET',
           params: {
             action : 'list'
           },
           isArray: true
+        },
+        get : {
+          method : 'GET',
+          params: {
+            action : 'get'
+          }
         },
         create: {
           method: 'POST'

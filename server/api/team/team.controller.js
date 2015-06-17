@@ -168,7 +168,7 @@ exports.removeMember = function(req,res) {
       if (err) {
         return res.send(500, err);
       }
-      var index =_.findIndex(team.member,{user : member._id});
+      var index =_.findIndex(team.member,{user : member._id._id});
       team.member.splice(index,1);
       team.save();
       user.set('team', undefined);

@@ -2,8 +2,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
   $stateProvider
   .state('staff', {
     url: '/:id/staff',
-    templateUrl: '/app/modules/staff/staff.html',
-    controller: 'StaffCtrl',
+    template: '<ui-view></ui-view>',
     hasCurrentProject : true,
     authenticate : true,
     resolve : {
@@ -12,7 +11,44 @@ angular.module('buiiltApp').config(function($stateProvider) {
         function(authService) {
           return authService.getCurrentTeam();
         }
+      ],
+      currentUser : [
+        'authService',
+        function(authService) {
+          return authService.getCurrentUser();
+        }
       ]
     }
-  });
+  })
+  .state('staff.index', {
+    url: '/index',
+    templateUrl: '/app/modules/staff/staff.html',
+    controller: 'StaffCtrl',
+    hasCurrentProject : true,
+    authenticate : true,
+    resolve : {
+      staffPackages : [
+        'staffPackageService','$stateParams',
+        function(staffPackageService,$stateParams) {
+          return staffPackageService.getAll({id : $stateParams.id})
+        }
+      ]
+    }
+  })
+  .state('staff.view', {
+    url: '/:packageId/view',
+    templateUrl: '/app/modules/staff/view.html',
+    controller: 'StaffViewCtrl',
+    hasCurrentProject : true,
+    authenticate : true,
+    resolve : {
+      staffPackage : [
+        'staffPackageService','$stateParams',
+        function(staffPackageService,$stateParams) {
+          return staffPackageService.get({id : $stateParams.packageId})
+        }
+      ]
+
+    }
+  })
 });

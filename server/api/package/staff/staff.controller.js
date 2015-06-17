@@ -8,6 +8,12 @@ var errorsHelper = require('./../../../components/helpers/errors');
 var _ = require('lodash');
 var async = require('async');
 
+/**
+ * Get a single project
+ * @param req
+ * @param res
+ * @param next
+ */
 exports.project = function(req,res,next) {
   Project.findById(req.params.id,function(err,project) {
     if (err) {
@@ -18,6 +24,27 @@ exports.project = function(req,res,next) {
   })
 };
 
+/**
+ * Get a single staff package
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.staffPackage = function(req,res,next) {
+  StaffPackage.findById(req.params.id,function(err,staffPackage) {
+    if (err || !staffPackage) {
+      return res.send(500, err);
+    }
+    req.staffPackage = staffPackage;
+    next();
+  })
+}
+
+/**
+ * Create a new staff package
+ * @param req
+ * @param res
+ */
 exports.create = function(req,res) {
   var user = req.user;
   var project = req.project;
@@ -41,7 +68,12 @@ exports.create = function(req,res) {
   });
 };
 
-exports.getList = function(req,res) {
+/**
+ * Get all staff pacakge
+ * @param req
+ * @param res
+ */
+exports.getAll = function(req,res) {
   var project = req.project;
   StaffPackage.find({'project' : project._id},function(err,packages) {
     if (err) {
@@ -49,6 +81,22 @@ exports.getList = function(req,res) {
     }
     return res.json(packages)
   })
+};
+
+/**
+ * Get a staff package
+ * @param req
+ * @param res
+ */
+exports.getOne = function(req,res) {
+  var staffPackage = req.staffPackage;
+  StaffPackage.populate(staffPackage,
+    [{path:"project"},
+      {path:"owner"},
+      {path:"staffs"}
+    ], function(err, staffPakacge ) {
+    return res.json(staffPackage);
+  });
 };
 
 exports.getDefaultPackagePackageByProject = function(req, res) {

@@ -10,10 +10,22 @@ var EventBus = require('./../components/EventBus');
 
 var TaskSchema = new Schema({
   //creator
+  team : {
+    type : Schema.Types.ObjectId,
+    ref : 'Team'
+  },
   user: {
     type: Schema.Types.ObjectId,
     ref: 'User',
     required: true
+  },
+  package : {
+    type : Schema.Types.ObjectId,
+    required : true
+  },
+  type : {
+    type : String,
+    enum : ['staff','contractor','builder']
   },
   assignees: [{
     type: Schema.Types.ObjectId,
@@ -34,6 +46,7 @@ var TaskSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'User'
   },
+  completedAt: { type: Date },
   remindAt: {type: Date},
   files: [{
     type: Schema.Types.ObjectId,

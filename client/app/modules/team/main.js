@@ -15,6 +15,24 @@ angular.module('buiiltApp')
             function(authService) {
               return authService.getCurrentInvitation();
             }
+          ],
+          users : [
+            'userService',
+            function(userService) {
+              return userService.getAll();
+            }
+          ],
+          currentTeam : [
+            'authService',
+            function(authService) {
+              return authService.getCurrentTeam();
+            }
+          ],
+          currentUser : [
+            'authService',
+            function(authService) {
+              return authService.getCurrentUser();
+            }
           ]
         },
         hasCurrenrProject : false

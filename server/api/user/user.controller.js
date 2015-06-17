@@ -31,6 +31,7 @@ exports.index = function (req, res) {
  */
 exports.create = function (req, res, next) {
   var teamInviteToken = (req.body.teamInviteToken) ? req.body.teamInviteToken : null;
+  var emailVerified = false;
   UserValidator.validateNewUser(req, okay(next, function (data) {
     var newUser = new User(data);
     newUser.provider = 'local';
@@ -75,12 +76,18 @@ exports.create = function (req, res, next) {
                 role : 'member'
               };
               newUser.emailVerified = true;
-              newUser.save();
+              emailVerified = true;
+              newUser.save(function() {
+                var token = jwt.sign({_id: user._id}, config.secrets.session, {expiresInMinutes: 60 * 5});
+                res.json({token: token,emailVerified : true});
+              });
             })
           });
+      } else {
+        var token = jwt.sign({_id: user._id}, config.secrets.session, {expiresInMinutes: 60 * 5});
+        res.json({token: token,emailVerified : false});
       }
-      var token = jwt.sign({_id: user._id}, config.secrets.session, {expiresInMinutes: 60 * 5});
-      res.json({token: token,emailVerified : newUser.emailVerified});
+
     });
   }));
 };
