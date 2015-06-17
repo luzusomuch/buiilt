@@ -9,7 +9,7 @@
 
                  <!-- Dropdown Structure -->
                  <ul id='itemActions' class='dropdown-content'>
-                    <li><a class="modal-trigger" data-target="upload" href="#upload">Upload document</a></li>
+                    <li><a class="modal-trigger" data-target="upload" href="#attachDocument">Upload document</a></li>
                     <li><a>Download All Documents</a></li>
                  </ul>
            </div>
@@ -17,7 +17,7 @@
         <div class="row">
             <p class="col s12">{{project.description}}</p>    
         </div>      
-        <div class="row">
+        <!-- <div class="row">
             <h4>{{builderPackage.type}}</h4>
             <div ng-if="builderPackage">
                 <div>
@@ -42,30 +42,15 @@
                 </div>
                 <upload project="project._id" builder-package="builderPackage._id"></upload>
             </div>
-        </div>
+        </div> -->
         <div class="row">
-            <div class="col-md-12">
-                <div class="row">
-                    <file project="project._id"></file>
-                </div>
-            </div>
+          <file></file>   
         </div>
-        
-        
-            <!-- <alert type="success" close="closeSuccess()" ng-show="success">Thank you for your submit, you can login now and enjoy yourself.</alert>
-            <alert ng-repeat="(key, msg) in errors" type="danger" close="closeAlert(key)">{{msg}}</alert>
-            
-            <form method="post" name="createQuoteForm" ng-submit="sendQuote()" flex="100" style="padding:10px;">
-                <div layout layout-sm="column">
-                    <md-input-container flex>
-                      <label>Quote </label>
-                      <input ng-model="project.requestedHomeBuilders.quote" required>
-                    </md-input-container>
-                </div>
-            
-                <div layout layout-sm="column">
-                    <button class="waves-effect waves-light btn" ng-disabled="createQuoteForm.$invalid">Send quote</button>
-                </div>
-            </form> -->
     </div>
+</div>
+
+<div id="attachDocument" class="modal modal-fixed-footer">
+  <div class="modal-content">
+    <upload></upload>
+  </div>
 </div>

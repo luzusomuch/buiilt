@@ -49,7 +49,6 @@ exports.upload = function(req, res){
     })
     .on('end', function() {
         if (uploadedFile && uploadedField) {
-            console.log(uploadedFile, uploadedField);
             var file = new File({
                 title: uploadedFile.name,
                 path: uploadedFile.path,
@@ -57,7 +56,8 @@ exports.upload = function(req, res){
                 mimeType: uploadedFile.type,
                 description: uploadedField.desc,
                 size: uploadedFile.size,
-                user: req.user._id
+                user: req.user._id,
+                belongTo: uploadedField.belongTo
             });
 
             uploadedField.usersRelatedTo = uploadedField.usersRelatedTo.split(',');
@@ -79,31 +79,33 @@ exports.upload = function(req, res){
                     file.save(function(err, fileSaved) {
                         if (err) {console.log(err);}
                         else {
-                            BuilderPackage.findOne({'project':req.params.id}, function(err, builderPackage) {
-                                if (err) {console.log(err);}
-                                else {
-                                    Document.findById(uploadedField.doc, function(err, doc) {
-                                        if (err) {console.log(err);}
-                                        else {
-                                            doc.file.push({
-                                                _id: fileSaved._id
-                                            });
-                                            doc.version = doc.version + 1;
-                                            doc.save(function(err, documentSaved){
-                                                if (err) {console.log(err);}
-                                                else {
-                                                    s3.uploadFile(fileSaved, function(err,data) {
-                                                        if (err) {console.log(err);}
-                                                        else {
-                                                            return res.json(200,data);
-                                                        }
-                                                    })
-                                                }
-                                            });
-                                        }
-                                    });
-                                }
-                            });
+                            console.log(fileSaved);
+                            return res.json(200, fileSaved);
+                            // BuilderPackage.findOne({'project':req.params.id}, function(err, builderPackage) {
+                            //     if (err) {console.log(err);}
+                            //     else {
+                            //         Document.findById(uploadedField.doc, function(err, doc) {
+                            //             if (err) {console.log(err);}
+                            //             else {
+                            //                 doc.file.push({
+                            //                     _id: fileSaved._id
+                            //                 });
+                            //                 doc.version = doc.version + 1;
+                            //                 doc.save(function(err, documentSaved){
+                            //                     if (err) {console.log(err);}
+                            //                     else {
+                            //                         s3.uploadFile(fileSaved, function(err,data) {
+                            //                             if (err) {console.log(err);}
+                            //                             else {
+                            //                                 return res.json(200,data);
+                            //                             }
+                            //                         })
+                            //                     }
+                            //                 });
+                            //             }
+                            //         });
+                            //     }
+                            // });
                         }
                     });
                 }

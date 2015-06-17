@@ -6,7 +6,7 @@ angular.module('buiiltApp').directive('file', function(){
         scope:{
             project:'=',
         },
-        controller: function($scope, $rootScope, $cookieStore, userService, $location, documentService, packageService, fileService) {
+        controller: function($scope, $stateParams, $rootScope, $cookieStore, userService, $location, documentService, packageService, fileService) {
             $scope.errors = {};
             $scope.success = {};
             $scope.user = {};
@@ -18,14 +18,20 @@ angular.module('buiiltApp').directive('file', function(){
                 $scope.currentUser = userService.get();
             }
 
-            packageService.getPackageByProject({'id':$scope.project}).$promise.then(function(data) {
-                $scope.packageItem = data;
-                documentService.getByProjectAndPackage({'id':$scope.packageItem._id}).$promise.then(function(data) {
-                    if (data !== null) {
-                        $scope.documents = data;
-                    }
-                });
+            fileService.getFileByStateParam({'id': $stateParams.id}).$promise.then(function(data) {
+                $scope.files = data;
             });
+
+
+
+            // packageService.getPackageByProject({'id':$scope.project}).$promise.then(function(data) {
+            //     $scope.packageItem = data;
+            //     documentService.getByProjectAndPackage({'id':$scope.packageItem._id}).$promise.then(function(data) {
+            //         if (data !== null) {
+            //             $scope.documents = data;
+            //         }
+            //     });
+            // });
                     // if (data !== null) {
                     //     $scope.documents = data;
                     //     angular.forEach(data, function(documentItem) {

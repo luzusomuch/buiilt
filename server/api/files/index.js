@@ -12,6 +12,7 @@ router.get('/:id/document', auth.isAuthenticated(), controller.getByDocument);
 router.get('/:id', auth.isAuthenticated(), controller.show);
 // router.put('/:id', auth.isAuthenticated(), controller.update);
 router.put('/:id/interested', auth.isAuthenticated(), controller.interested);
+router.get('/:id/params', auth.isAuthenticated(), controller.getFileByStateParam);
 // router.post('/', controller.create);
 
 module.exports = router;

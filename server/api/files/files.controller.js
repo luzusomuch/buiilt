@@ -39,3 +39,12 @@ exports.interested = function(req, res) {
         }
     });
 };
+
+exports.getFileByStateParam = function(req, res) {
+    File.find({'belongTo': req.params.id}, function(err, files) {
+        if (err) {return res.send(500,err)}
+        else {
+            return res.json(200,files);
+        }
+    });
+};

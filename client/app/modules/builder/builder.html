@@ -2,7 +2,7 @@
  <h5 class="col s8">Builder Package</h5>
  
  <div class="col s4" style="margin-top:15px">
-     <a class='dropdown-button btn-flat right tooltipped' data-position="top" data-delay="1" data-tooltip="Attach..." href='#' data-activates='itemActions'>
+     <a class='dropdown-button btn-flat right tooltipped' data-position="top" data-delay="1" data-tooltip="Attach..." href='#' data-activates='itemActions' dropdown>
       <i class="mdi-navigation-more-vert"></i>
      </a>
 
@@ -91,7 +91,7 @@
      <div class="card-header">
        <div class="row">
          <div class="col s6">
-           <a class='dropdown-button btn-flat' style="margin-top: 15px" href='#' data-gutter="15" data-activates='itemFilter'>ALL ITEMS<i class="mdi-navigation-arrow-drop-down"></i></a>
+           <a class='dropdown-button btn-flat' style="margin-top: 15px" href='#' data-gutter="15" data-activates='itemFilter'>ALL ITEMS<i class="mdi-navigation-arrow-drop-down" dropdown></i></a>
              <ul id='itemFilter' class='dropdown-content' style="margin-top: 15px">
                <li><a href="#!">VARIATIONS</a></li>
                <li><a href="#!">INVOICES</a></li>
@@ -100,7 +100,7 @@
              </ul>
          </div>
          <div class="col s6">
-           <a class='dropdown-button btn-flat btn-flat right' style="margin-top: 15px;" data-gutter="-80" href='#' data-activates='relatedActions'>
+           <a class='dropdown-button btn-flat btn-flat right' style="margin-top: 15px;" data-gutter="-80" href='#' data-activates='relatedActions' dropdown>
              <i class="mdi-navigation-more-vert"></i>
            </a>
           <ul id='relatedActions' class='dropdown-content' style="margin-top: 15px">
@@ -217,4 +217,10 @@
            </div>
      </ul>
  </div>
+</div>
+
+<div id="modal_attachDocument" class="modal modal-fixed-footer">
+  <div class="modal-content">
+    <upload></upload>
+  </div>
 </div>

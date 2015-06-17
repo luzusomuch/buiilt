@@ -25,6 +25,8 @@ var FileSchema = new Schema({
       type: String
     }
   }],
+  //Maybe project or package ...
+  belongTo: {type: Schema.Types.ObjectId},
   usersInterestedIn: [{
     _id: {
       type: Schema.Types.ObjectId,
@@ -105,6 +107,7 @@ FileSchema.methods.toJSON = function() {
     previewData: this.previewData,
     usersRelatedTo: this.usersRelatedTo,
     usersInterestedIn: this.usersInterestedIn,
+    belongTo: this.belongTo,
     archive: this.archive,
     ownerId: this.ownerId,
     groupId: this.groupId,

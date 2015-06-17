@@ -1,5 +1,4 @@
-<!-- <h5>{{packageItem.type}}</h5> -->
-<div ng-if="documents || documents == null || documents == ''" ng-repeat="document in documents">
+<!-- <div ng-if="documents || documents == null || documents == ''" ng-repeat="document in documents">
     <div class="col s4">
         <div class="card">
             <div class="card-image">
@@ -17,32 +16,23 @@
             </div>
         </div>
     </div>
-    <!-- <form class="form-inline">
-          <input ng-model="query" type="text"
-            placeholder="Filter by" autofocus>
-        </form> -->
-    <!-- <div class="col s4" ng-if="files" ng-repeat="file in files | filter: query">
+</div> -->
+<div ng-repeat="file in files">
+    <div class="col s4">
         <div class="card">
-            <h6>#{{$index + 1}} {{file.title}}</h6>
             <div class="card-image">
-                <img ng-src="images/sample-1.jpg">
+                <img src="../../media/img/sample-1.jpg" alt="">
             </div>
             <div class="card-action">
-                <p>{{document.name}} <span><em>Revision # of #</em></span></p>
-                <p>{{file.description}} <span><em>Revision {{document.version}} of #</em></span></p>
-                <a href='#' class="activator">Download Document</a>
+                <p>{{file.title}} <span><em>Revision {{file.version}} of #</em></span></p>
+                <a href='#!' class="activator">Upload Revision</a>
             </div>
-            <div> -->
-                <!-- {{currentUser._id}} -->
-                <!-- {{file}} -->
-                <!-- <form method="post" ng-submit="interested(file._id)">
-                    <input type="hidden" ng-model="file._id" value="file._id">
-                    <button class="waves-effect waves-light btn">
-                        <span ng-if="currentUser._id != userInterested._id">Like</span>
-                        <span ng-if="userInterested && currentUser._id == userInterested._id">Liked</span>
-                    </button>
+            <div class="card-reveal">
+                <span class="card-title grey-text text-darken-4">{{file.title}} <i class="mdi-navigation-close right"></i></span>
+                <form action="#">
+                    <upload file-id="file._id"></upload>
                 </form>
             </div>
         </div>
-    </div> -->
+    </div>
 </div>

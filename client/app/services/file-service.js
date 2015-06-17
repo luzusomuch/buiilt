@@ -21,6 +21,14 @@ angular.module('buiiltApp').factory('fileService', function($rootScope, $q, $res
                 id: 'id',
                 action: 'interested'
               }
+            },
+            getFileByStateParam: {
+              method: 'GET',
+              params: {
+                id: 'id',
+                action: 'params'
+              },
+              isArray: true
             }
     });
 });

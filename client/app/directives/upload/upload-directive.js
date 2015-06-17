@@ -8,33 +8,34 @@ angular.module('buiiltApp').directive('upload', function(){
             builderPackage: '=',
             documentId : '='
         },
-        controller: function($scope, $state, $cookieStore, $stateParams, $rootScope, $location , packageService, userService, projectService, FileUploader, documentService) {
+        controller: function($scope, $state, $cookieStore, $stateParams, $rootScope, $location, fileService, packageService, userService, projectService, FileUploader, documentService) {
 
             $scope.errors = {};
             $scope.success = {};
             $scope.formData = {
                 date: new Date(),
-                album: {},
+                // album: {},
                 title: '',
-                doc: {},
+                belongTo: {},
+                // doc: {},
                 desc: '',
                 usersRelatedTo: []
             };
-            $scope.docum = {};
-            packageService.getPackageByProject({'id': $stateParams.id}, function(data) {
-                documentService.getByProjectAndPackage({'id' : data._id}).$promise.then(function(data) {
-                    $scope.document = data;
-                });
-            });
+            // $scope.docum = {};
+            // packageService.getPackageByProject({'id': $stateParams.id}, function(data) {
+            //     documentService.getByProjectAndPackage({'id' : data._id}).$promise.then(function(data) {
+            //         $scope.document = data;
+            //     });
+            // });
 
-            $scope.createDocument = function() {
-                documentService.create({'id': $scope.project},$scope.docum).$promise.then(function(data) {
-                    $scope.success = true;
-                });
-            };
-            documentService.getByProjectAndPackage({'id' : $scope.builderPackage}).$promise.then(function(data) {
-                $scope.document = data;
-            });
+            // $scope.createDocument = function() {
+            //     documentService.create({'id': $scope.project},$scope.docum).$promise.then(function(data) {
+            //         $scope.success = true;
+            //     });
+            // };
+            // documentService.getByProjectAndPackage({'id' : $scope.builderPackage}).$promise.then(function(data) {
+            //     $scope.document = data;
+            // });
 
             $scope.safeApply = function (fn) {
                 var phase = this.$root.$$phase;
@@ -81,11 +82,15 @@ angular.module('buiiltApp').directive('upload', function(){
             uploader.onCompleteItem = function (fileItem, response, status, headers) {
                 newPhoto = response;
                 $state.reload();
+                // fileService.getFileByStateParam({'id': $stateParams.id}).$promise.then(function(data) {
+                //     $scope.files = data;
+                // });
             };
 
             uploader.onBeforeUploadItem = function (item) {
                 $scope.formData.title = item.title;
-                $scope.formData.doc = $scope.documentId;
+                $scope.formData.belongTo = $stateParams.id;
+                // $scope.formData.doc = $scope.documentId;
                 $scope.formData.desc = item.file.desc || "";
                 $scope.formData.usersRelatedTo = item.file.usersRelatedTo || "";
                 //angular.forEach(item.file.tags, function (tag) {
@@ -104,7 +109,7 @@ angular.module('buiiltApp').directive('upload', function(){
                 if(hideModalAfterUploading){
                     // $modalInstance.close(newPhoto);
                 }
-                $state.reload();
+                // $state.reload();
             };
         },
     }
