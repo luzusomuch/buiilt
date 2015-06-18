@@ -18,6 +18,7 @@ EventBus.onSeries('User.Inserted', function(user, next) {
       confirmation: config.baseUrl + 'auth/confirm-email/' + user.emailVerifyToken,
       subject: 'Confirm email from buiilt.com'
     }, function(err){
+      console.log(err);
       return next();
     });
   }else{

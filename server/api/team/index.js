@@ -11,6 +11,7 @@ router.post('/', auth.isAuthenticated(), controller.create);
 router.get('/', auth.isAuthenticated(), controller.index);
 router.get('/me', auth.isAuthenticated(), controller.me);
 router.get('/invitation', auth.isAuthenticated(), controller.invitation);
+router.get('/home-owner', auth.isAuthenticated(), controller.getHomeOwnerTeam);
 router.get('/:id', auth.isAuthenticated(), controller.show);
 router.post('/:id/add-member',auth.isAuthenticated(), controller.team, controller.addMember);
 router.post('/:id/remove-member',auth.isAuthenticated(), controller.team, controller.removeMember);

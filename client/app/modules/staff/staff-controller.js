@@ -4,6 +4,7 @@ angular.module('buiiltApp')
     $scope.user = authService.getCurrentUser();
     $scope.currentProject = $rootScope.currentProject;
     $scope.currentTeam =  currentTeam;
+    console.log($scope.currentTeam.member);
     $scope.staffPackages = staffPackages;
     $scope.package = {
       staffs : []

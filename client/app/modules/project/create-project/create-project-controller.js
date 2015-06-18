@@ -1,8 +1,10 @@
-angular.module('buiiltApp').controller('CreateProjectCtrl', function($scope, $state, projectService) {
+angular.module('buiiltApp').controller('CreateProjectCtrl', function($scope, $state, projectService,filterFilter,homeOwnerTeam) {
   $scope.errors = {};
   $scope.project = {
     location: {}
   };
+  $scope.homeOwnerTeam = homeOwnerTeam;
+  $scope.homeOwnerTeam.member  = filterFilter($scope.homeOwnerTeam.member, {status : 'Active'});
   $scope.create = function() {
     projectService.create($scope.project).$promise.then(function(data) {
       //show alert

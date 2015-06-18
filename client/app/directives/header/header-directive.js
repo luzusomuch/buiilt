@@ -3,7 +3,7 @@ angular.module('buiiltApp')
   return {
     restrict: 'E',
     templateUrl: 'app/directives/header/header.html',
-    controller: function($scope, $stateParams, $rootScope, authService, projectService, contractorService) {
+    controller: function($scope, $stateParams, $rootScope, authService, projectService, contractorService,teamService,filterFilter) {
 
       function queryProjects(){
         authService.isLoggedInAsync(function(isLoggedIn){
@@ -15,6 +15,22 @@ angular.module('buiiltApp')
             $scope.user = authService.getCurrentUser();
             $scope.currentTeam = authService.getCurrentTeam();
             $scope.isLeader = $scope.user.team.role == 'admin' ? true : false;
+
+            teamService.getHomeOwnerTeam().$promise.then(function(data){
+              $scope.homeOwnerTeams = data; 
+              $scope.homeOwnerTeamMember = [];
+              angular.forEach($scope.homeOwnerTeams, function(homeOwnerTeam) {
+                _.each(homeOwnerTeam.member, function(member) {
+                  if (member._id) {
+                    $scope.homeOwnerTeamMember.push({_id: member._id, email: member.email});  
+                  }
+                })
+              }); 
+              $scope.homeOwnerTeamMember = $scope.homeOwnerTeamMember;
+            });
+            
+            // console.log($scope.homeOwnerTeams.member);
+            // $scope.homeOwnerTeams.member  = filterFilter($scope.homeOwnerTeams.member, {status : 'Active'});
 
             projectService.getProjectsByUser({'id': $scope.user._id}, function(projects) {
               $scope.projectsOwner = projects;

@@ -2,7 +2,15 @@ angular.module('buiiltApp').config(function($stateProvider) {
   $stateProvider
   .state('projects', {
     url: '/projects',
-    template: '<ui-view/>'
+    template: '<ui-view/>',
+    resolve: {
+      homeOwnerTeam : [
+        'teamService',
+        function(teamService) {
+          return teamService.getHomeOwnerTeam();
+        }
+      ]
+    }
   })
   .state('projects.list', {
     url: '/',

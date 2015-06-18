@@ -55,8 +55,22 @@ angular.module('buiiltApp')
 
   $scope.getSubTotal = function() {
     var subTotal = 0;
-    // subTotal = $scope.rate.lineWithRate.rate * $scope.rate.lineWithRate.rateQuantity;
     return subTotal;
+    // if ($scope.rate && $scope.rate !== null && $scope.rate.length > 0) {
+    //   console.log($scope.rate);  
+    //   $scope.$watch('rate', function(value) {
+    //     if (value) {
+    //       console.log(value);
+    //     }
+    //   }); 
+    //   return subTotal;
+    // }
+    
+    // $scope.$watch('rate.lineWithRate.rate', function(value) {
+    //   console.log(value);
+    // });
+    // subTotal = $scope.rate.lineWithRate.rate;
+    // return subTotal;
   };
 
   $scope.sendMessage = function() {

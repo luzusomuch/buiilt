@@ -62,6 +62,13 @@ angular.module('buiiltApp')
         params : {
           action : 'invitation'
         }
+      },
+      getHomeOwnerTeam: {
+        method: 'GET',
+        isArray: true,
+        params: {
+          action: 'home-owner'
+        }
       }
     }
     );

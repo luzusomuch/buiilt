@@ -12,7 +12,6 @@ angular.module('buiiltApp')
       $scope.isEdit = true;
     };
     $scope.users  = filterFilter($scope.users, {emailVerified : true});
-    console.log($scope.currentTeam)
     angular.forEach($scope.currentTeam.member,function(member) {
       //console.log(member);
       if (member._id)

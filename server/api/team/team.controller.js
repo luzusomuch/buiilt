@@ -360,3 +360,12 @@ exports.getTeamByUser = function(req, res) {
     }
   });
 };
+
+exports.getHomeOwnerTeam = function(req, res) {
+  Team.find({'type': 'homeOwner'}).populate('user').exec(function(err, teams) {
+    if (err) {return res.send(500,err);}
+    else {
+      return res.json(200,teams);
+    }
+  });
+};

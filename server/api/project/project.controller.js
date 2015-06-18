@@ -37,7 +37,7 @@ exports.create = function(req, res){
           user: {_id: req.user._id, email: req.user.email},
           type: 'FromHomeOwnerToBuilder'
         });
-        User.findOne({'email': req.body.email}, function(err, user){
+        User.findOne({'email': req.body.email.originalObject.email}, function(err, user){
           if (err) {return res.send(500,err);}
           if (!user) {
             var validateInvite = new ValidateInvite({
@@ -108,7 +108,7 @@ exports.create = function(req, res){
           builder: {_id: req.user._id, email: req.user.email},
           type: 'FromBuilderToHomeOwner'
         });
-        User.findOne({'email': req.body.email}, function(err, user){
+        User.findOne({'email': req.body.email.originalObject.email}, function(err, user){
           if (err) {return res.send(500,err);}
           if (!user) {
             var validateInvite = new ValidateInvite({
@@ -143,7 +143,7 @@ exports.create = function(req, res){
             });
           }
           else {
-            // project.user._id = user._id;
+            project.user._id = user._id;
             project.user.email = user.email;
             project.save(function(err, saved){
               if (err) {return res.send(500,err);}
@@ -262,14 +262,11 @@ exports.getProjectsByUser = function(req, res) {
     if (err) {return res.send(500, err);}
     if (!team) {return res.send(404, err);}
     else {
-      console.log('------team home owner------- ');
-      console.log(team);
       async.each(team.leader, function(leader, callback) {
         Project.find({'user._id': leader}, function(err, projects) {
           if (err) {return res.send(500, err);}
           if (!projects) {return res.send(404, err);}
           else {
-            console.log(projects);
             return res.json(200, projects);
           }
           callback();
@@ -304,14 +301,11 @@ exports.getProjectsByBuilder = function(req, res) {
     if (err) {return res.send(500, err);}
     if (!team) {return res.send(404, err);}
     else {
-      console.log('------team home builder-------');
-      console.log(team);
       async.each(team.leader, function(leader, callback) {
         Project.find({'builder._id': leader}, function(err, projects) {
           if (err) {return res.send(500, err);}
           if (!projects) {return res.send(404, err);}
           else {
-            console.log(projects);
             return res.json(200, projects);
           }
           callback();

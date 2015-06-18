@@ -90,13 +90,41 @@ exports.getProjectForContractorWhoWinner = function(req, res) {
     if (err) {return res.send(500,err);}
     if (!team) {return res.send(404,err);}
     else {
-      ContractorPackage.find({'winnerTeam._id': team._id}).populate('project').exec(function(err, contractors) {
-        if (err) {return res.send(500, err);}
-        if (!contractors) {return res.send(404,err);}
+      var contractors;
+      var memberId = team.leader;
+      async.each(team.member, function(member, callback) {
+        if (member._id) {
+          memberId.push(member._id);
+        }
+        callback();
+      }, function(err) {
+        if (err) {console.log(err);}
         else {
-          return res.json(200, contractors);
+          async.each(memberId, function(member, callback) {
+            ContractorPackage.find({'to._id': member}).populate('project').exec(function(err, contractorPackage){
+              if (err) {return res.send(500,err);}
+              if (!contractorPackage) {callback();}
+              else {
+                contractors = contractorPackage;
+                callback();
+              }
+            });
+          }, function(err) {
+            if (err) {return res.send(500,err);}
+            else {
+              return res.json(200,contractors);
+            }
+          });
         }
       });
+      // return;
+      // ContractorPackage.find({'winnerTeam._id': team._id}).populate('project').exec(function(err, contractors) {
+      //   if (err) {return res.send(500, err);}
+      //   if (!contractors) {return res.send(404,err);}
+      //   else {
+      //     return res.json(200, contractors);
+      //   }
+      // });
     }
   });
   // ContractorPackage.find({'winner._id': req.params.id}).populate('project').exec(function(err, result){
@@ -165,7 +193,6 @@ exports.getContractorPackageTenderByProjectForContractor = function(req, res) {
           }, function(err) {
             if (err) {return res.send(500, err)}
             else {
-              console.log(contractors);
               return res.send(200, contractors);
             }
           });
