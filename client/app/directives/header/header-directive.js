@@ -29,6 +29,19 @@ angular.module('buiiltApp')
               $scope.homeOwnerTeamMember = $scope.homeOwnerTeamMember;
             });
             
+            teamService.getHomeBuilderTeam().$promise.then(function(data) {
+              $scope.homeBuilderTeams = data;
+              $scope.homeBuilderTeamMember = [];
+              angular.forEach($scope.homeBuilderTeams, function(homeBuilderTeam) {
+                _.each(homeBuilderTeam.member, function(member){
+                  if (member._id) {
+                    $scope.homeBuilderTeamMember.push({_id: member._id, email: member.email});
+                  }
+                })
+              });
+              $scope.homeBuilderTeamMember = $scope.homeBuilderTeamMember;
+            });
+            
             // console.log($scope.homeOwnerTeams.member);
             // $scope.homeOwnerTeams.member  = filterFilter($scope.homeOwnerTeams.member, {status : 'Active'});
 

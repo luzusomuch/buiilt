@@ -111,15 +111,15 @@
             <li class="collection-item vlalign-wrapper">
               <div class="row form" style="margin-bottom: 0px" ng-repeat="lineWithRate in lineWithRates track by $index">
                 <div class="input-field col s6">
-                   <textarea value="This is a line item with Rate - note the field for qty is editable"id="description" class="materialize-textarea" ng-model="rate.lineWithRate.rateDescription[$index]"></textarea>
+                   <textarea value="This is a line item with Rate - note the field for qty is editable"id="description" class="materialize-textarea" ng-model="rate.lineWithRate.rateDescription[$index]" required></textarea>
                        <label for="description">Description of Item</label>
                     </div>
                 <div class="input-field col s2" style="margin-top: 67px">
-                        <input id="rate" type="text" class="validate" ng-model="rate.lineWithRate.rate[$index]">
+                        <input id="rate" type="number" class="validate" ng-model="rate.lineWithRate.rate[$index]" required>
                         <label for="rate">Rate</label>
                     </div>
                 <div class="input-field col s1" style="margin-top: 67px">
-                        <input id="quantity" type="text" class="validate" ng-model="rate.lineWithRate.rateQuantity[$index]">
+                        <input id="quantity" type="text" class="validate" ng-model="rate.lineWithRate.rateQuantity[$index]" required>
                         <label for="quantity">Qty</label>
                     </div>
                 <div class="input-field col s2" style="margin-top: 67px">
@@ -127,18 +127,18 @@
                         <label for="quantity">Line Total {{rate.lineWithRate.rate[$index] * rate.lineWithRate.rateQuantity[$index]}}</label>
                     </div>
                 <div class="input-field col s1" style="margin-top: 67px">
-                        <i class="small mdi-action-highlight-remove"></i>
+                        <i class="small mdi-action-highlight-remove" ng-click="removeLineWithRate($index)"></i>
                     </div>
               </div>
             </li>
             <li class="collection-item vlalign-wrapper">
               <div class="row form" style="margin-bottom: 0px" ng-repeat="lineWithPrice in lineWithPrices track by $index">
                 <div class="input-field col s6">
-                   <textarea value="This is a line item with Price - the Qty field is set to 1 and only price can be changed."id="description" class="materialize-textarea" ng-model="price.lineWithPrice.description[$index]"></textarea>
+                   <textarea value="This is a line item with Price - the Qty field is set to 1 and only price can be changed."id="description" class="materialize-textarea" ng-model="price.lineWithPrice.description[$index]" required></textarea>
                        <label for="description">Description of Item</label>
                     </div>
                 <div class="input-field col s2" style="margin-top: 67px">
-                        <input id="rate" type="text" class="validate" ng-model="price.lineWithPrice.price[$index]">
+                        <input id="rate" type="number" class="validate" ng-model="price.lineWithPrice.price[$index]" required>
                         <label for="rate">Price</label>
                     </div>
                 <div class="input-field col s1" style="margin-top: 67px">
@@ -150,7 +150,7 @@
                         <label for="quantity">Line Total {{price.lineWithPrice.price[$index]}}</label>
                     </div>
                 <div class="input-field col s1" style="margin-top: 67px">
-                        <i class="small mdi-action-highlight-remove"></i>
+                        <i class="small mdi-action-highlight-remove" ng-click="removeLineWithPrice($index)"></i>
                     </div>
               </div>
             </li>
@@ -174,7 +174,7 @@
        </div>
        <div class="divider"></div>
     <div class="modal-footer">
-      <button class="modal-action modal-close waves-effect waves-green btn-flat "> Send quote!</button>
+      <button class="modal-action modal-close waves-effect waves-green btn-flat" ng-disable="sendQuoteForm.$invalid"> Send quote!</button>
          <!-- <a href="#!" ng-click="sendQuote()" class="modal-action modal-close waves-effect waves-green btn-flat ">Send Quote!</a> -->
      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
     </div>
