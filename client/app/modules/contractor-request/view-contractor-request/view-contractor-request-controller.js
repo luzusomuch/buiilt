@@ -55,7 +55,6 @@ angular.module('buiiltApp')
   };
 
   $scope.sendMessage = function() {
-    console.log($scope.message.message);
     contractorRequestService.sendMessage({id: $stateParams.id, message: $scope.message.message})
     .$promise.then(function(data) {
       $scope.messages = data;

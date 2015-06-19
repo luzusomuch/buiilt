@@ -24,18 +24,18 @@ angular.module('buiiltApp').controller('MaterialsCtrl', function($scope, $stateP
                     }); 
                 };
             }
-            else if($scope.team.type === 'contractor') {
-                $scope.getContractorPackageTenderByProject = function() {
-                    materialPackageService.getMaterialPackageTenderByProjectForSupplier({'id': $stateParams.id})
+            else if($scope.team.type === 'supplier') {
+                $scope.getMaterialPackageTenderByProject = function() {
+                    materialPackageService.getMaterialPackageInTenderByProjectForSupplier({'id': $stateParams.id})
                     .$promise.then(function(data) {
-                        $scope.contractorsInTender = data;
+                        $scope.materialPackagesInTender = data;
                     }); 
                 };
 
-                $scope.getContractorPackageInProcessByProject = function() {
+                $scope.getMaterialPackageInProcessByProject = function() {
                     materialPackageService.getMaterialPackageInProcessByProjectForSupplier({'id': $stateParams.id})
                     .$promise.then(function(data) {
-                        $scope.contractorsInProcess = data;
+                        $scope.materialPackagesInProcess = data;
                     }); 
                 };
             }

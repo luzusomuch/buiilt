@@ -17,7 +17,6 @@ exports.findOne = function(req, res) {
 };
 
 exports.sendMessage = function(req, res) {
-  console.log(req.body.message);
   ContractorPackage.findById(req.params.id, function(err, contractorPackage) {
     if (err) {return res.send(500,err)}
     if (!contractorPackage) {return res.send(404,err)}
@@ -37,12 +36,10 @@ exports.sendMessage = function(req, res) {
 };
 
 exports.getMessageForContractor = function(req, res) {
-  console.log(req.params.id, req.user._id);
   ContractorPackage.findOne({$and:[{_id: req.params.id},{'messages.owner': req.user._id}]}, function(err, contractorPackage) {
     if (err) {console.log(err);}
     if (!contractorPackage) {return res.send(404,err)}
     else {
-      console.log(contractorPackage);
       return res.json(200,contractorPackage);
     }
   });

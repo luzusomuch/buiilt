@@ -54,9 +54,6 @@ var ContractorPackageSchema = new Schema({
     _id: {
       type: Schema.Types.ObjectId,
       ref: 'Team'
-    },
-    name: {
-      type: String
     }
   },
   quote: {

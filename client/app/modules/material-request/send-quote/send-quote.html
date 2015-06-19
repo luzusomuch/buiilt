@@ -2,7 +2,7 @@
    <h5 class="col s8">Contractor Package {{materialRequest.name}} in Progress</h5>
    
    <div class="col s4" style="margin-top:15px">
-       <a class='dropdown-button btn-flat right tooltipped' data-position="top" data-delay="1" data-tooltip="Attach..." href='#' data-activates='itemActions' data-gutter="-30">
+       <a class='dropdown-button btn-flat right tooltipped' data-position="top" data-delay="1" data-tooltip="Attach..." href='#' data-activates='itemActions' data-gutter="-30" dropdown>
         <i class="mdi-navigation-more-vert"></i>
        </a>
 
@@ -89,39 +89,6 @@
    </div>
  </div>
 
-<div class="row">
-  <h4>Project detail</h4>
-  <h5>{{materialRequest.project.name}}</h5>
-
-  <p>{{materialRequest.project.description}}</p>
-
-  <h4>Quote request detail</h4>
-  <h5>{{materialRequest.name}}</h5>
-  <p>{{materialRequest.description}}</p>
-  <form method="POST" name="sendQuoteToBuilder" ng-submit="sendQuote()" ng-if="currentUser">
-      <div class="row">
-          <div class="input-field col s12">
-              <textarea name="" id="" ng-model="quoteRequest.description" required></textarea>
-              <label for="">Description</label>
-          </div>
-      </div>
-      <div class="row">
-          <div class="input-field col s12">
-              <input type="number" ng-model="quoteRequest.price" required>
-              <label for="">Price in USD</label>
-          </div>
-      </div>
-      <div class="row" ng-if="currentUser">
-          <button class="waves-effect waves-light btn" ng-disabled="sendQuoteToBuilder.$invalid">Send quote</button>
-      </div>
-      
-  </form>
-  <div ng-if="currentUser.email == null || currentUser.email == ''">
-    <a href="#signin" class="waves-effect waves-light btn modal-trigger">Login</a>
-     <!-- or <a href="#signupAndSendQuoteContractor" class="waves-effect waves-light btn modal-trigger">Registry</a> -->
-  </div>
-</div>
-
 <div id="signin" class="modal modal-fixed-footer">
   <div class="modal-content">
     <form method="post" ng-submit="signin()" style="padding:10px;">
@@ -181,25 +148,97 @@
   </div>
 </div>
 
-<script>
-  $(document).ready(function(){
-    
-    $('.modal-trigger').leanModal({
-          dismissible: true, // Modal can be dismissed by clicking outside of the modal
-          opacity: .5, // Opacity of modal background
-          in_duration: 300, // Transition in duration
-          out_duration: 200, // Transition out duration // Callback for Modal open
-        }
-      );
-    });
-
-    $('#btn-login').click(function() {
-      $('.modal-trigger').closeModal();
-    });
-
-    $('#btn-signup').click(function() {
-      $('.modal-trigger').closeModal();
-    });
-
-</script>
+<div id="attachQuote" class="modal modal-fixed-footer">
+    <div class="modal-content">
+    <form name="sendQuoteForm" ng-submit="sendQuote()" method="POST">
+      <div class="row">
+        <h5 class="col s12">New Quote for Contractor Package Name</h5>
+      </div>
+       <div class="row">
+         <div class="col s12">
+          <ul class="collection z-depth-1">
+            <li class="collection-item vlalign-wrapper">
+              <div class="row" style="margin-bottom: 0px">
+                <div class="col s6 valign center-align background-hover">
+                  <a ng-click="addLineWithRate()" class="waves-effect waves-light btn-flat">Add Line with Rate</a>
+                </div>
+                <div ng-click="addLineWithPrice()" class="col s6 valign center-align background-hover">
+                  <a class="waves-effect waves-light btn-flat">Add Line with Price</a>
+                </div>
+              </div>
+            </li>
+            <li class="collection-item vlalign-wrapper">
+              <div class="row form" style="margin-bottom: 0px" ng-repeat="lineWithRate in lineWithRates track by $index">
+                <div class="input-field col s6">
+                   <textarea value="This is a line item with Rate - note the field for qty is editable"id="description" class="materialize-textarea" ng-model="rate.lineWithRate.rateDescription[$index]" required></textarea>
+                       <label for="description">Description of Item</label>
+                    </div>
+                <div class="input-field col s2" style="margin-top: 67px">
+                        <input id="rate" type="number" class="validate" ng-model="rate.lineWithRate.rate[$index]" required>
+                        <label for="rate">Rate</label>
+                    </div>
+                <div class="input-field col s1" style="margin-top: 67px">
+                        <input id="quantity" type="text" class="validate" ng-model="rate.lineWithRate.rateQuantity[$index]" required>
+                        <label for="quantity">Qty</label>
+                    </div>
+                <div class="input-field col s2" style="margin-top: 67px">
+                        <input disabled id="quantity" type="text" class="validate" ng-model="rate.lineWithRate.rateTotal[$index]">
+                        <label for="quantity">Line Total {{rate.lineWithRate.rate[$index] * rate.lineWithRate.rateQuantity[$index]}}</label>
+                    </div>
+                <div class="input-field col s1" style="margin-top: 67px">
+                        <i class="small mdi-action-highlight-remove" ng-click="removeLineWithRate($index)"></i>
+                    </div>
+              </div>
+            </li>
+            <li class="collection-item vlalign-wrapper">
+              <div class="row form" style="margin-bottom: 0px" ng-repeat="lineWithPrice in lineWithPrices track by $index">
+                <div class="input-field col s6">
+                   <textarea value="This is a line item with Price - the Qty field is set to 1 and only price can be changed."id="description" class="materialize-textarea" ng-model="price.lineWithPrice.description[$index]" required></textarea>
+                       <label for="description">Description of Item</label>
+                    </div>
+                <div class="input-field col s2" style="margin-top: 67px">
+                        <input id="rate" type="number" class="validate" ng-model="price.lineWithPrice.price[$index]" required>
+                        <label for="rate">Price</label>
+                    </div>
+                <div class="input-field col s1" style="margin-top: 67px">
+                        <input disabled value="1" id="quantity" type="text" class="validate" ng-model="price.lineWithPrice.quantity[$index]">
+                        <label for="quantity">1</label>
+                    </div>
+                <div class="input-field col s2" style="margin-top: 67px">
+                        <input disabled id="quantity" type="text" class="validate" ng-model="price.lineWithPrice.total[$index]">
+                        <label for="quantity">Line Total {{price.lineWithPrice.price[$index]}}</label>
+                    </div>
+                <div class="input-field col s1" style="margin-top: 67px">
+                        <i class="small mdi-action-highlight-remove" ng-click="removeLineWithPrice($index)"></i>
+                    </div>
+              </div>
+            </li>
+            </ul>
+         </div>
+       </div>
+       <div class="row" style="margin-top: 50px">
+         <div class="col s6 valign">
+           <div class="file-field input-field">
+               <input class="file-path validate" type="text"/>
+               <div class="btn tooltipped" data-position="top" data-delay="1" data-tooltip="Attach a File"><i class="mdi-editor-attach-file"></i>
+                 <input type="file" />
+               </div>
+             </div>
+         </div>
+         <div class="input-field col s2 offset-s3" style="margin-top: -40px">
+                <p>Sub-Total: {{getSubTotal()}}</p>
+            <p>GST</p>
+            <p>Total</p>
+             </div>
+       </div>
+       <div class="divider"></div>
+    <div class="modal-footer">
+      <button class="modal-action modal-close waves-effect waves-green btn-flat" ng-disable="sendQuoteForm.$invalid"> Send quote!</button>
+         <!-- <a href="#!" ng-click="sendQuote()" class="modal-action modal-close waves-effect waves-green btn-flat ">Send Quote!</a> -->
+     <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
+    </div>
+     </form>
+    </div>
+  
+</div>
 

@@ -2,7 +2,7 @@
    <h5 class="col s8">Material Package {{materialRequest.name}} in Tender</h5>
    
    <div class="col s4" style="margin-top:15px">
-       <a class='dropdown-button btn-flat right tooltipped' dropdown data-position="top" data-delay="1" data-tooltip="Attach..." data-gutter="-16" href='#' data-activates='itemActions'>
+       <a class='dropdown-button btn-flat right tooltipped' dropdown data-position="top" data-delay="1" data-tooltip="Attach..." data-gutter="-16" href='#' data-activates='itemActions' dropdown>
         <i class="mdi-navigation-more-vert"></i>
        </a>
 
@@ -60,32 +60,22 @@
              <ul class="collection">
                <div style="height: 300px; background-color: white;">
 
-                 <li class="collection-item">
+                 <li class="collection-item" ng-repeat = "message in messages.messages">
                    <div class="row valign-wrapper" style="margin-bottom: -5px">
                      <a href="#!" class="btn-flat col s1">
                        <i class="mdi-toggle-radio-button-on valign center-align" ></i>
                      </a>
 
-                     <p class="col s11 valign">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.<br /> Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
+                     <p class="col s11 valign">{{message.message}}</p>
                    </div>
                  </li>
-                 <li class="collection-item">
-                   <div class="row valign-wrapper" style="margin-bottom: -5px">
-                     <a href="#!" class="btn-flat col s1">
-                       <i class="mdi-toggle-radio-button-on valign center-align" ></i>
-                     </a>
-
-                     <p class="col s11 valign">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.<br /> Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
-                   </div>
-                 </li>
-
                </div>
                <div class="divider"></div>
                <div class="col s12 card-footer" style="background-color: white">
                  <div class="row">
-                   <form class="valign-wrapper">
+                   <form class="valign-wrapper" ng-submit="sendMessage()">
                      <div class="input-field col s9">
-                       <textarea id="textarea1" class="materialize-textarea"></textarea>
+                       <textarea id="textarea1" class="materialize-textarea" ng-model="message.message"></textarea>
                        <label for="textarea1">Textarea</label>
                      </div>
                      <div class="col s3">
@@ -110,7 +100,7 @@
   <ul class="collapsible popout" data-collapsible="accordion">
     <li ng-repeat="quoteRequest in quoteRequests">
       <div class="collapsible-header">
-        Tenderer #{{$index + 1}}
+        Tenderer #{{$index + 1}} - {{quoteRequest.user.email}}
         <a class="btn-flat btn-flat secondary-content modal-trigger" href='#modal_viewQuote_{{quoteRequest._id}}' style="font-size:12px; margin-top: 8px">View Quote</a>
       </div>
       <div class="collapsible-body">
@@ -216,8 +206,52 @@
   <div id='modal_viewQuote_{{quoteRequest._id}}' class="modal modal-fixed-footer">
     <div class="modal-content">
       <h4>View Quote</h4>
-      <p><strong>{{quoteRequest.price}}</strong></p>
-      <p>{{quoteRequest.description}}</p>
+      <div class="row">
+        <p><strong>{{quoteRequest.total}}</strong></p>
+      </div>
+      <div class="row" ng-if="quoteRequest.quoteRate">
+        <h6>Rate</h6>
+        <table>
+          <thead>
+            <th>#</th>
+            <th>Description</th>
+            <th>Rate</th>
+            <th>Quantity</th>
+            <th>Total</th>
+          </thead>
+          <tbody>
+            <tr ng-repeat="rate in quoteRequest.quoteRate">
+              <td>{{$index + 1}}</td>
+              <td>{{rate.description}}</td>
+              <td>{{rate.rate}}</td>
+              <td>{{rate.quantity}}</td>
+              <td>{{rate.total}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="row" ng-if="quoteRequest.quotePrice">
+        <h6>Price</h6>
+        <table>
+          <thead>
+            <th>#</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+          </thead>
+          <tbody>
+            <tr ng-repeat="price in quoteRequest.quotePrice">
+              <td>{{$index + 1}}</td>
+              <td>{{price.description}}</td>
+              <td>{{price.rate}}</td>
+              <td>1</td>
+              <td>{{price.total}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
     <div class="modal-footer">
       <a ng-click="selectQuote(quoteRequest._id)" class="modal-action modal-close waves-effect waves-green btn-flat ">Select this quote</a>
@@ -287,35 +321,3 @@
      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Go Back</a>
     </div>
 </div>
-
-<!-- <div class="row listQuoteRequest" ng-if="contractorRequest.owner == currentUser._id">
-  <table class="hoverable responsive-table">
-      <thead>
-          <th>Contractor name</th>
-          <th>Description</th>
-          <th>Price</th>
-          <th>Action</th>
-      </thead>
-      <tbody>
-        <tr ng-if="contractorRequest.winner._id != '' || contractorRequest.winner._id != ''">
-            <td>{{contractorRequest.winner.email}}</td>
-            <td>{{contractorRequest.description}}</td>
-            <td>{{contractorRequest.quote}}</td>
-            <td>
-                
-            </td>
-        </tr>
-        <tr ng-repeat="quoteRequest in quoteRequests" ng-if="contractorRequest.winner._id == null || contractorRequest.winner._id == ''">
-            <td>{{quoteRequest.user.email}}</td>
-            <td>{{quoteRequest.description}}</td>
-            <td>{{quoteRequest.price}}</td>
-            <td>
-                <input name="groupQuoteRequest" type="radio" id='{{quoteRequest._id}}' ng-click="selectQuote(quoteRequest._id)">
-                <label for='{{quoteRequest._id}}'>Select</label>
-            </td>
-        </tr>
-          
-      </tbody>
-  </table>
-</div>
- -->

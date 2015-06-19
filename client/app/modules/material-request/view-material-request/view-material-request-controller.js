@@ -16,6 +16,11 @@ angular.module('buiiltApp')
     $scope.quoteRequests = data;
   });
 
+  materialRequestService.getMessageForSupplier({'id': $stateParams.id})
+  .$promise.then(function(data) {
+    $scope.messages = data;
+  });
+
   $scope.addUser = function() {
     $scope.emailsPhone.push({email: $scope.newEmail, phoneNumber: $scope.newPhoneNumber});
     $scope.newEmail = null;
@@ -39,6 +44,13 @@ angular.module('buiiltApp')
     materialRequestService.sendInvitationInMaterial({id: $stateParams.id, toSupplier: $scope.emailsPhone})
     .$promise.then(function(data){
       console.log(data);
+    });
+  };
+
+  $scope.sendMessage = function() {
+    materialRequestService.sendMessage({id: $stateParams.id, message: $scope.message.message})
+    .$promise.then(function(data) {
+      $scope.messages = data;
     });
   };
 

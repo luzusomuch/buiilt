@@ -66,14 +66,18 @@ exports.findOne = function(req, res){
           if (err) {return res.send(500, err);}
           else {
             contractorPackage.winnerTeam._id = team._id,
-            contractorPackage.winnerTeam.name = team.name,
             contractorPackage.quote = quote.total,
             contractorPackage.isAccept = true,
             contractorPackage.status = false
             contractorPackage.save(function(err, saved) {
               if (err) {return res.send(500,err);}
               else {
-                return res.json(200, saved);
+                ContractorPackage.findById(saved._id).populate('winnerTeam._id').exec(function(err,contractorPackage) {
+                  if (err) {return res.send(500,err);}
+                  else {
+                    return res.json(200,contractorPackage);
+                  }
+                }); 
               }
             });
           }
@@ -96,14 +100,18 @@ exports.getByMaterial = function(req, res){
           if (err) {return res.send(500, err);}
           else {
             materialPackage.winnerTeam._id = team._id,
-            materialPackage.winnerTeam.name = team.email,
-            materialPackage.quote = quote.price,
+            materialPackage.quote = quote.total,
             materialPackage.isAccept = true,
             materialPackage.status = false
             materialPackage.save(function(err, saved) {
               if (err) {return res.send(500,err);}
               else {
-                return res.json(200, saved);
+                MaterialPackage.findById(saved._id).populate('winnerTeam._id').exec(function(err,materialPackage) {
+                  if (err) {return res.send(500,err);}
+                  else {
+                    return res.json(200,materialPackage);
+                  }
+                }); 
               }
             });
           }

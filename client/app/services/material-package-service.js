@@ -25,7 +25,7 @@ angular.module('buiiltApp')
             method: 'GET',
             params: {
                 id: 'id',
-                action: 'processing-supplier'
+                action: 'tender-supplier'
             },
             isArray: true
         },
