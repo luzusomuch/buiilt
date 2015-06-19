@@ -69,7 +69,7 @@ exports.createMaterialPackage = function (req, res, next) {
   });
 };
 
-exports.getMaterialPackageTenderByProject = function(req, res) {
+exports.getMaterialPackageTenderByProjectForBuilder = function(req, res) {
   MaterialPackage.find({$and:[{'project' : req.params.id},{status: true}]}, function(err, materialPackages) {
     if (err) {return res.send(500, err);}
     if (!materialPackages) {return res.send(404, err);}
@@ -79,7 +79,27 @@ exports.getMaterialPackageTenderByProject = function(req, res) {
   });
 };
 
-exports.getMaterialPackageInProcessByProject = function(req, res) {
+exports.getMaterialPackageInProcessByProjectForBuilder = function(req, res) {
+  MaterialPackage.find({$and:[{'project' : req.params.id},{status: false}]}, function(err, materialPackages) {
+    if (err) {return res.send(500, err);}
+    if (!materialPackages) {return res.send(404, err);}
+    else {
+      return res.json(200, materialPackages);
+    }
+  });
+};
+
+exports.getMaterialPackageInTenderByProjectForSupplier = function(req, res) {
+  MaterialPackage.find({$and:[{'project' : req.params.id},{status: false}]}, function(err, materialPackages) {
+    if (err) {return res.send(500, err);}
+    if (!materialPackages) {return res.send(404, err);}
+    else {
+      return res.json(200, materialPackages);
+    }
+  });
+};
+
+exports.getMaterialPackageInProcessByProjectForSupplier = function(req, res) {
   MaterialPackage.find({$and:[{'project' : req.params.id},{status: false}]}, function(err, materialPackages) {
     if (err) {return res.send(500, err);}
     if (!materialPackages) {return res.send(404, err);}

@@ -5,19 +5,35 @@ angular.module('buiiltApp')
         createMaterialPackage: {
             method: 'POST'
         },
-        getMaterialPackageTenderByProject: {
+        getMaterialPackageTenderByProjectForBuilder: {
             method: 'GET',
             params: {
                 id: 'id',
-                action: 'tender'
+                action: 'tender-builder'
             },
             isArray: true
         },
-        getMaterialPackageInProcessByProject: {
+        getMaterialPackageInProcessByProjectForBuilder: {
             method: 'GET',
             params: {
                 id: 'id',
-                action: 'processing'
+                action: 'processing-builder'
+            },
+            isArray: true
+        },
+        getMaterialPackageInTenderByProjectForSupplier: {
+            method: 'GET',
+            params: {
+                id: 'id',
+                action: 'processing-supplier'
+            },
+            isArray: true
+        },
+        getMaterialPackageInProcessByProjectForSupplier: {
+            method: 'GET',
+            params: {
+                id: 'id',
+                action: 'processing-supplier'
             },
             isArray: true
         }

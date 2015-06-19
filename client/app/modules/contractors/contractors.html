@@ -90,16 +90,14 @@
                     <!-- <input id="email_address" ng-model="newEmail" type="email" name="email" class="validate"> -->
                     <angucomplete-alt id="ex1"
                                   pause="100"
-                                  selected-object="newEmail"
+                                  selected-object="member.email"
                                   local-data="contractorTeamMember"
                                   search-fields="email"
                                   title-field="email"
                                   minlength="1"
                                   input-changed="inputChanged"
                                   template-url="/my-custom-template.html"
-                                  clear-selected="true"
                                   input-class="col s12"></angucomplete-alt>
-                    <label for="email_address">Email</label>
                 </div>
                 <div class="input-field col s3">
                     <input id="phone_number" ng-model="newPhoneNumber" type="text" name="phoneNumber" class="validate">
@@ -112,7 +110,7 @@
               </div>
             </li>
 
-            <li class="collection-item vlalign" ng-repeat="emailPhone in emailsPhone">
+            <li class="collection-item vlalign" ng-repeat="emailPhone in member.emailsPhone">
               <div class="row" style="margin-bottom: 0px">
                 <div class="col s7">{{emailPhone.email}}</div>
                 <div class="col s3">{{emailPhone.phoneNumber}}</div>
@@ -324,12 +322,7 @@
     </div>
 </div>
 
-<script>
-  $('.datepicker').pickadate({
-    selectMonths: true, // Creates a dropdown to control month
-    selectYears: 15 // Creates a dropdown of 15 years to control year
-  });
-</script>
+
 <script type="text/ng-template" id="/my-custom-template.html">
   <div class="angucomplete-holder" ng-class="{'angucomplete-dropdown-visible': showDropdown}">
     <input ng-model="searchStr"

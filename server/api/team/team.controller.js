@@ -389,3 +389,12 @@ exports.getContractorTeam = function(req, res) {
     }
   });
 };
+
+exports.getSupplierTeam = function(req, res) {
+  Team.find({'type': 'supplier'}).populate('leader').populate('member._id').exec(function(err, teams) {
+    if (err) {return res.send(500,err);}
+    else {
+      return res.json(200,teams);
+    }
+  });
+};

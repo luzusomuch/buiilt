@@ -34,9 +34,9 @@
       </div>
       <div clas="row">
         <div class="input-field col s12" ng-if="currentTeam.type == 'buider'">
-          <!-- <label>Partner email </label> -->
           <angucomplete-alt id="ex1"
                                   pause="100"
+                                  placeHolder="Home owner email"
                                   selected-object="project.email"
                                   local-data="homeOwnerTeamMember"
                                   search-fields="email"
@@ -45,12 +45,11 @@
                                   input-changed="inputChanged"
                                   template-url="/my-custom-template.html"
                                   input-class="col s12"></angucomplete-alt>
-          <!-- <input ng-model="project.email" required type="email"> -->
         </div>
         <div class="input-field col s12" ng-if="currentTeam.type == 'homeOwner'">
-          <!-- <label>Partner email </label> -->
           <angucomplete-alt id="ex1"
                                   pause="100"
+                                  placeHolder="Home builder email"
                                   selected-object="project.email"
                                   local-data="homeBuilderTeamMember"
                                   search-fields="email"
@@ -59,7 +58,6 @@
                                   input-changed="inputChanged"
                                   template-url="/my-custom-template.html"
                                   input-class="col s12"></angucomplete-alt>
-          <!-- <input ng-model="project.email" required type="email"> -->
         </div>
       </div>
       <div clas="row">
@@ -94,7 +92,7 @@
            autocorrect="off"
            autocomplete="off"
            ng-change="inputChangeHandler(searchStr)"/>
-    <label for="email">Email</label>
+    
     <div class="angucomplete-dropdown col s12" ng-show="showDropdown">
       <div class="angucomplete-searching" ng-show="searching" ng-bind="textSearching"></div>
       <div class="angucomplete-searching" ng-show="!searching && (!results || results.length == 0)" ng-bind="textNoResults"></div>

@@ -1,7 +1,6 @@
 angular.module('buiiltApp').controller('ContractorsCtrl', function($scope, $stateParams, $rootScope, $timeout, $q, team, contractorService, authService, projectService, teamService) {
   $scope.contractor = {};
   $scope.currentProject = $rootScope.currentProject;
-  $scope.emailsPhone = [];
   $scope.user = authService.getCurrentUser();
   $scope.team = authService.getCurrentTeam();
   teamService.getCurrentTeam().$promise.then(function(data) {
@@ -65,10 +64,28 @@ angular.module('buiiltApp').controller('ContractorsCtrl', function($scope, $stat
   //   $scope.projects = projects;
   // });
 
+  $scope.member = {
+    email :{},
+    emailsPhone: []
+  };
   $scope.addUser = function() {
-    $scope.emailsPhone.push({email: $scope.newEmail, phoneNumber: $scope.newPhoneNumber});
-    $scope.newEmail = null;
+    if ($scope.member.email.title) {
+      if (!(_.find($scope.member.emailsPhone,{email : $scope.member.email.title}))) {
+        $scope.member.emailsPhone.push({email: $scope.member.email.title, phoneNumber: $scope.newPhoneNumber});    
+      }
+    }
+    else {
+      if (!(_.find($scope.member.emailsPhone,{email : $scope.textString}))) {
+        $scope.member.emailsPhone.push({email: $scope.textString, phoneNumber: $scope.newPhoneNumber}); 
+      }
+    }
+    // $scope.emailsPhone.newEmail = null;
     $scope.newPhoneNumber = null;
+    $scope.$broadcast('angucomplete-alt:clearInput');
+  };
+
+  $scope.inputChanged = function(str) {
+    $scope.textString = str;
   };
 
   $scope.removeUser = function(index) {
@@ -76,7 +93,7 @@ angular.module('buiiltApp').controller('ContractorsCtrl', function($scope, $stat
   };
 
   $scope.createContractorPackage = function(){
-    contractorService.createContractorPackage({contractor: $scope.contractor,emailsPhone: $scope.emailsPhone, project: $stateParams.id}).$promise.then(function(data) {
+    contractorService.createContractorPackage({contractor: $scope.contractor,emailsPhone: $scope.member.emailsPhone, project: $stateParams.id}).$promise.then(function(data) {
       $scope.contractors.push(data);
     });
   };

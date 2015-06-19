@@ -10,7 +10,8 @@ angular.module('buiiltApp')
           if(isLoggedIn){
             $scope.isLoggedIn = true;
             $scope.project = {
-              location: {}
+              location: {},
+              email: {}
             };
             $scope.user = authService.getCurrentUser();
             $scope.currentTeam = authService.getCurrentTeam();
@@ -130,23 +131,27 @@ angular.module('buiiltApp')
           {sref: 'projects.view({id :  currentProject._id})', label: 'project'}]
       };
 
-      // $scope.user = authService.getCurrentUser();
-
-      // $scope.loadMenu = function () {
-      //   if ($scope.user._id) {
-      //     $scope.tabs=$scope.menuTypes[$scope.user.type];
-      //   }
-      // };
-      // $scope.loadMenu();
       $scope.create = function() {
-        projectService.create($scope.project).$promise.then(function(data) {
-          //show alert
-          // $scope.success = true;
-          alert('Create project successfully!');
+        if ($scope.project.email.title) {
+          $scope.project.email = $scope.project.email.title;
+          projectService.create($scope.project).$promise.then(function(data) {
+            alert('Create project successfully!');
+          }, function(res) {
+            $scope.errors = res.data;
+          });
+        }
+        else {
+          $scope.project.email = $scope.textString;
+          projectService.create($scope.project).$promise.then(function(data) {
+            alert('Create project successfully!');
+          }, function(res) {
+            $scope.errors = res.data;
+          });
+        }
+      };
 
-        }, function(res) {
-          $scope.errors = res.data;
-        });
+      $scope.inputChanged = function(str) {
+        $scope.textString = str;
       };
     }
   };

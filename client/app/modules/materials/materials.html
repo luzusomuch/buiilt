@@ -151,8 +151,16 @@
                           <div class="row form" style="margin-bottom: 0px">
                               <div class="col s12"><p>Enter supplier details below:</p></div>
                               <div class="input-field col s7">
-                                    <input id="email_address" type="text" class="validate" ng-model="newEmail">
-                                    <label for="email_address">Email</label>
+                                    <angucomplete-alt id="ex1"
+                                      pause="100"
+                                      selected-object="member.email"
+                                      local-data="supplierTeamMember"
+                                      search-fields="email"
+                                      title-field="email"
+                                      minlength="1"
+                                      input-changed="inputChanged"
+                                      template-url="/my-custom-template.html"
+                                      input-class="col s12"></angucomplete-alt>
                               </div>
                               <div class="input-field col s3">
                                     <input id="phone_number" type="text" class="validate" ng-model="newPhoneNumber">
@@ -163,7 +171,7 @@
                               </div>
                           </div>
                       </li>
-                      <li class="collection-item vlalign" ng-repeat="emailPhone in emailsPhone">
+                      <li class="collection-item vlalign" ng-repeat="emailPhone in member.emailsPhone">
                         <div class="row" style="margin-bottom: 0px">
                           <div class="col s7">{{emailPhone.email}}</div>
                           <div class="col s3">{{emailPhone.phoneNumber}}</div>
@@ -272,15 +280,37 @@
     </div>
 </div>
 
-<script>
-    $(document).ready(function(){
+<script type="text/ng-template" id="/my-custom-template.html">
+  <div class="angucomplete-holder" ng-class="{'angucomplete-dropdown-visible': showDropdown}">
+    <input ng-model="searchStr"
+           id="email"
+           ng-disabled="disableInput"
+           type="text"
+           placeholder="{{placeholder}}"
+           ng-focus="onFocusHandler()"
+           class="{{inputClass}}"
+           ng-focus="resetHideResults()"
+           ng-blur="hideResults($event)"
 
-        $('.modal-trigger').leanModal({
-              dismissible: false, // Modal can be dismissed by clicking outside of the modal
-              opacity: .5, // Opacity of modal background
-              in_duration: 300, // Transition in duration
-              out_duration: 200, // Transition out duration // Callback for Modal open
-            }
-          );
-      });
-</script>   
+           autocapitalize="off"
+           autocorrect="off"
+           autocomplete="off"
+           ng-change="inputChangeHandler(searchStr)"/>
+    <label for="email">Email</label>
+    <div class="angucomplete-dropdown col s12" ng-show="showDropdown">
+      <div class="angucomplete-searching" ng-show="searching" ng-bind="textSearching"></div>
+      <div class="angucomplete-searching" ng-show="!searching && (!results || results.length == 0)" ng-bind="textNoResults"></div>
+      <div class="angucomplete-row" ng-repeat="result in results" ng-click="selectResult(result)" ng-mouseenter="hoverRow($index)" ng-class="{'angucomplete-selected-row': $index == currentIndex}">
+        <div ng-if="imageField" class="angucomplete-image-holder">
+          <img ng-if="result.image && result.image != ''" ng-src="{{result.image}}" class="angucomplete-image"/>
+          <div ng-if="!result.image && result.image != ''" class="angucomplete-image-default"></div>
+        </div>
+        <div class="angucomplete-title" ng-if="matchClass" ng-bind-html="result.title"></div>
+        <div class="angucomplete-title" ng-if="!matchClass">{{ result.title }}</div>
+        <div ng-if="matchClass && result.description && result.description != ''" class="angucomplete-description" ng-bind-html="result.description"></div>
+        <div ng-if="!matchClass && result.description && result.description != ''" class="angucomplete-description">{{result.description}}</div>
+      </div>
+
+    </div>
+  </div>
+</script> 

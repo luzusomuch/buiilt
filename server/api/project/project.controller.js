@@ -37,7 +37,7 @@ exports.create = function(req, res){
           user: {_id: req.user._id, email: req.user.email},
           type: 'FromHomeOwnerToBuilder'
         });
-        User.findOne({'email': req.body.email.originalObject.email}, function(err, user){
+        User.findOne({'email': req.body.email}, function(err, user){
           if (err) {return res.send(500,err);}
           if (!user) {
             var validateInvite = new ValidateInvite({
@@ -108,7 +108,7 @@ exports.create = function(req, res){
           builder: {_id: req.user._id, email: req.user.email},
           type: 'FromBuilderToHomeOwner'
         });
-        User.findOne({'email': req.body.email.originalObject.email}, function(err, user){
+        User.findOne({'email': req.body.email}, function(err, user){
           if (err) {return res.send(500,err);}
           if (!user) {
             var validateInvite = new ValidateInvite({

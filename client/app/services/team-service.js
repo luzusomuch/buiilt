@@ -83,6 +83,13 @@ angular.module('buiiltApp')
         params: {
           action: 'contractor-team'
         }
+      },
+      getSupplierTeam: {
+        method: 'GET',
+        isArray: true,
+        params: {
+          action: 'supplier-team'
+        }
       }
     }
     );
