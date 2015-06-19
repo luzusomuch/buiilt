@@ -4,6 +4,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
     url: '/:id/client',
     templateUrl: '/app/modules/client/client.html',
     controller: 'ClientCtrl',
-    hasCurrentProject : true
+    hasCurrentProject : true,
+    authenticate : true
   });
 });

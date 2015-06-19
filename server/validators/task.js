@@ -23,7 +23,7 @@ exports.validateUpdate = function (req, cb) {
   _.forEach(req.body.assignees,function(item) {
     assignees.push(item._id)
   });
-  return cb(req.validationErrors(), _.assign(_.pick(req.body, 'title'),{
+  return cb(req.validationErrors(), _.assign(_.pick(req.body, 'title','completed'),{
     assignees : assignees
   }));
 };

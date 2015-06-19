@@ -4,6 +4,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
     url: '/:id/materials',
     templateUrl: '/app/modules/materials/materials.html',
     controller: 'MaterialsCtrl',
-    hasCurrentProject : true
+    hasCurrentProject : true,
+    authenticate : true
   });
 });

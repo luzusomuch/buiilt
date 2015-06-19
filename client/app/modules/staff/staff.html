@@ -15,7 +15,7 @@
 
 <div class="col s9">
    <ul class="collection z-depth-1">
-     <li class="collection-item" ng-repeat="item in staffPackages"><a ui-sref="staff.view({packageId : item._id})">{{item.name}}</a></li>
+     <li class="collection-item" ng-repeat="item in staffPackages" ng-if="item.canSee || isLeader"><a ui-sref="staff.view({packageId : item._id})">{{item.name}}</a></li>
    </ul>
 </div>
 

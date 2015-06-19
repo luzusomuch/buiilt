@@ -1,4 +1,5 @@
-angular.module('buiiltApp').directive('task', function(){
+angular.module('buiiltApp')
+  .directive('task', function(){
   return {
     restrict: 'EA',
     templateUrl: 'app/directives/task/task.html',
@@ -8,10 +9,14 @@ angular.module('buiiltApp').directive('task', function(){
       currentUser : '='
     },
     controller:
-      function($scope,$rootScope,taskService, $state, $cookieStore, $stateParams, $rootScope, $location , packageService, userService, projectService, FileUploader, documentService) {
+      function($scope,$rootScope,taskService, authService, $cookieStore, $stateParams, $rootScope, $location , packageService, userService, projectService, FileUploader, documentService) {
         $scope.currentProject = $rootScope.currentProject;
+         authService.getCurrentUser().$promise.then(function(res) {
+           $scope.currentUser = res;
+        });
         $scope.isNew = true;
-
+        $scope.filter = 'all';
+        $scope.customFilter = {};
         var getAvailableAssignee = function(type) {
           switch(type) {
             case 'staff' :
@@ -20,16 +25,20 @@ angular.module('buiiltApp').directive('task', function(){
             default :
               break
           }
-
         };
-
         getAvailableAssignee($scope.type);
-
 
         var updateTasks = function() {
           taskService.get({id : $scope.package._id, type : $scope.type}).$promise
             .then(function(res) {
               $scope.tasks = res;
+              _.forEach($scope.tasks,function(task) {
+                if (_.findIndex(task.assignees,{_id : $scope.currentUser._id}) != -1) {
+                  task.isOwner = true;
+                } else {
+                  task.isOwner = false
+                }
+              })
             });
         }
         updateTasks();
@@ -58,10 +67,19 @@ angular.module('buiiltApp').directive('task', function(){
           $scope.available.push(assignee);
           $scope.task.assignees.splice(index,1);
         };
+
+        $scope.complete = function(task) {
+          task.completed = !task.completed
+          taskService.update({id : task._id, type : $scope.type},task).$promise
+            .then(function(res) {
+              //$('.card-title').trigger('click');
+              updateTasks();
+            })
+        };
+
         $scope.save = function(form) {
           if (form.$valid) {
             if ($scope.isNew) {
-              console.log($scope.task);
               taskService.create({id : $scope.package._id, type : $scope.type},$scope.task).$promise
                 .then(function(res) {
                   $('.card-title').trigger('click');

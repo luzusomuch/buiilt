@@ -1,15 +1,28 @@
 angular.module('buiiltApp')
   .controller('StaffCtrl',
-  function($scope, $timeout, $q, authService, $rootScope,staffPackageService,filterFilter,currentTeam,staffPackages) {
-    $scope.user = authService.getCurrentUser();
+  function($scope, $timeout, $q, authService, $rootScope,staffPackageService,filterFilter,currentTeam,currentUser,staffPackages) {
+    $scope.user = currentUser
     $scope.currentProject = $rootScope.currentProject;
     $scope.currentTeam =  currentTeam;
-    console.log($scope.currentTeam.member);
+    $scope.isLeader = (_.find(currentTeam.leader,{_id : currentUser._id})) ? true : false;
     $scope.staffPackages = staffPackages;
+      if (!$scope.isLeader) {
+        _.forEach($scope.staffPackages,function(item) {
+          if (_.indexOf(item.staffs,currentUser._id) != -1) {
+            item.canSee = true;
+          } else {
+            item.canSee = false
+          }
+
+        })
+      }
+
+
     $scope.package = {
       staffs : []
     };
     $scope.submitted = false;
+
     $scope.staffSelectedFunction = function(selected) {
       $scope.package.staffs.push(selected.originalObject);
     };

@@ -9,13 +9,13 @@ angular.module('buiiltApp').config(function($stateProvider) {
       currentTeam : [
         'authService',
         function(authService) {
-          return authService.getCurrentTeam();
+          return authService.getCurrentTeam().$promise;
         }
       ],
       currentUser : [
         'authService',
         function(authService) {
-          return authService.getCurrentUser();
+          return authService.getCurrentUser().$promise;
         }
       ]
     }

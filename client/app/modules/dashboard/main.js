@@ -4,6 +4,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
     url: '/:id/dashboard',
     templateUrl: '/app/modules/dashboard/dashboard.html',
     controller: 'DashboardCtrl',
-    hasCurrentProject : true
+    hasCurrentProject : true,
+    authenticate : true
   });
 });

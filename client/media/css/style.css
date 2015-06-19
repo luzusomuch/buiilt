@@ -1,8 +1,8 @@
 ._720kb-tooltip {
-    background: rgb(238, 110, 115)
+    background: #03A9F4
 }
 ._720kb-tooltip-caret:before {
-    border: 6px solid rgb(238, 110, 115);
+    border: #03A9F4;
 }
 .formContractors{
   padding:20px;
@@ -67,4 +67,8 @@ table.team {
     position: absolute;
     margin-top: 45px;
     background-color: #ffffff;
+}
+
+.completed {
+    text-decoration: line-through;
 }

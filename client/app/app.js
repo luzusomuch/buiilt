@@ -69,7 +69,8 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
       authService.isLoggedInAsync(function (loggedIn) {
         if (toState.authenticate && !loggedIn) {
           $location.path('/');
-        } else {
+        } else if (!toState.authenticate && loggedIn){
+          $location.path('/team/manager');
         }
       });
 

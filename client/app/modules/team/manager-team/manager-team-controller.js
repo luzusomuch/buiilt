@@ -48,11 +48,13 @@ angular.module('buiiltApp')
         if (!(_.find($scope.member.emails,{email : $scope.member.email.title}))) {
           $scope.member.emails.push({email: $scope.member.email.title});
           $scope.team.emails.push({email: $scope.member.email.title});
+          $scope.member.email = {};
         }
       } else {
         if (!(_.find($scope.member.emails,{email : $scope.textString}))) {
           $scope.member.emails.push({email: $scope.textString});
           $scope.team.emails.push({email: $scope.textString});
+          $scope.member.email = {};
         }
       }
       $scope.$broadcast('angucomplete-alt:clearInput');
