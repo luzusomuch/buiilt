@@ -21,16 +21,32 @@ exports.sendMessage = function(req, res) {
     if (err) {return res.send(500,err)}
     if (!contractorPackage) {return res.send(404,err)}
     else {
-      contractorPackage.messages.push({
-        owner: req.user._id,
-        message: req.body.message
-      });
-      contractorPackage.save(function(err, saved) {
-        if (err) {return res.send(500, err)}
-        else {
-          return res.json(200,saved);
-        }
-      });
+      if (!contractorPackage.messages) {
+        var messages = [];
+        messages.push({
+          owner: req.user._id,
+          message: req.body.message
+        });
+        contractorPackage.messages = messages;
+        contractorPackage.save(function(err, saved) {
+          if (err) {return res.send(500, err)}
+          else {
+            return res.json(200,saved);
+          }
+        });
+      }
+      else {
+        contractorPackage.messages.push({
+          owner: req.user._id,
+          message: req.body.message
+        });
+        contractorPackage.save(function(err, saved) {
+          if (err) {return res.send(500, err)}
+          else {
+            return res.json(200,saved);
+          }
+        });
+      }
     }
   });
 };

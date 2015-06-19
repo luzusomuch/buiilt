@@ -147,16 +147,32 @@ exports.sendMessage = function(req, res) {
     if (err) {return res.send(500,err)}
     if (!materialPackage) {return res.send(404,err)}
     else {
-      materialPackage.messages.push({
-        owner: req.user._id,
-        message: req.body.message
-      });
-      materialPackage.save(function(err, saved) {
-        if (err) {return res.send(500, err)}
-        else {
-          return res.json(200,saved);
-        }
-      });
+      if (!materialPackage.messages) {
+        var messages = [];
+        messages.push({
+          owner: req.user._id,
+          message: req.body.message
+        });
+        materialPackage.messages = messages;
+        materialPackage.save(function(err, saved) {
+          if (err) {return res.send(500, err)}
+          else {
+            return res.json(200,saved);
+          }
+        });
+      }
+      else {
+        materialPackage.messages.push({
+          owner: req.user._id,
+          message: req.body.message
+        });
+        materialPackage.save(function(err, saved) {
+          if (err) {return res.send(500, err)}
+          else {
+            return res.json(200,saved);
+          }
+        });
+      }
     }
   });
 };

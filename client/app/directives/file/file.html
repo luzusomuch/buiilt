@@ -20,8 +20,11 @@
 <div ng-repeat="file in files">
     <div class="col s4">
         <div class="card">
-            <div class="card-image">
+            <div class="card-image" ng-if="file.mimeType == 'image/jpeg' || file.mimeType =='image/png'">
                 <img src="../../media/img/{{file._id}}-{{file.title}}" alt="">
+            </div>
+            <div class="card-image" ng-if="file.mimeType != 'image/jpeg' || file.mimeType !='image/png'">
+                <img src="../../media/img/sample-1.jpg" alt="">
             </div>
             <div class="card-action">
                 <p>{{file.title}} <span><em>Revision {{file.version}} of #</em></span></p>
