@@ -76,6 +76,13 @@ angular.module('buiiltApp')
         params: {
           action: 'home-builder'
         }
+      },
+      getContractorTeam: {
+        method: 'GET',
+        isArray: true,
+        params: {
+          action: 'contractor-team'
+        }
       }
     }
     );

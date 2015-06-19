@@ -87,7 +87,18 @@
               <div class="row form" style="margin-bottom: 0px">
                 <div class="col s12"><p>Enter tradesmen's details below:</p></div>
                 <div class="input-field col s7">
-                    <input id="email_address" ng-model="newEmail" type="email" name="email" class="validate">
+                    <!-- <input id="email_address" ng-model="newEmail" type="email" name="email" class="validate"> -->
+                    <angucomplete-alt id="ex1"
+                                  pause="100"
+                                  selected-object="newEmail"
+                                  local-data="contractorTeamMember"
+                                  search-fields="email"
+                                  title-field="email"
+                                  minlength="1"
+                                  input-changed="inputChanged"
+                                  template-url="/my-custom-template.html"
+                                  clear-selected="true"
+                                  input-class="col s12"></angucomplete-alt>
                     <label for="email_address">Email</label>
                 </div>
                 <div class="input-field col s3">
@@ -318,6 +329,40 @@
     selectMonths: true, // Creates a dropdown to control month
     selectYears: 15 // Creates a dropdown of 15 years to control year
   });
+</script>
+<script type="text/ng-template" id="/my-custom-template.html">
+  <div class="angucomplete-holder" ng-class="{'angucomplete-dropdown-visible': showDropdown}">
+    <input ng-model="searchStr"
+           id="email"
+           ng-disabled="disableInput"
+           type="text"
+           placeholder="{{placeholder}}"
+           ng-focus="onFocusHandler()"
+           class="{{inputClass}}"
+           ng-focus="resetHideResults()"
+           ng-blur="hideResults($event)"
+
+           autocapitalize="off"
+           autocorrect="off"
+           autocomplete="off"
+           ng-change="inputChangeHandler(searchStr)"/>
+    <label for="email">Email</label>
+    <div class="angucomplete-dropdown col s12" ng-show="showDropdown">
+      <div class="angucomplete-searching" ng-show="searching" ng-bind="textSearching"></div>
+      <div class="angucomplete-searching" ng-show="!searching && (!results || results.length == 0)" ng-bind="textNoResults"></div>
+      <div class="angucomplete-row" ng-repeat="result in results" ng-click="selectResult(result)" ng-mouseenter="hoverRow($index)" ng-class="{'angucomplete-selected-row': $index == currentIndex}">
+        <div ng-if="imageField" class="angucomplete-image-holder">
+          <img ng-if="result.image && result.image != ''" ng-src="{{result.image}}" class="angucomplete-image"/>
+          <div ng-if="!result.image && result.image != ''" class="angucomplete-image-default"></div>
+        </div>
+        <div class="angucomplete-title" ng-if="matchClass" ng-bind-html="result.title"></div>
+        <div class="angucomplete-title" ng-if="!matchClass">{{ result.title }}</div>
+        <div ng-if="matchClass && result.description && result.description != ''" class="angucomplete-description" ng-bind-html="result.description"></div>
+        <div ng-if="!matchClass && result.description && result.description != ''" class="angucomplete-description">{{result.description}}</div>
+      </div>
+
+    </div>
+  </div>
 </script>
 
 

@@ -380,3 +380,12 @@ exports.getHomeBuilderTeam = function(req, res) {
     }
   });
 };
+
+exports.getContractorTeam = function(req, res) {
+  Team.find({'type': 'contractor'}).populate('leader').populate('member._id').exec(function(err, teams) {
+    if (err) {return res.send(500,err);}
+    else {
+      return res.json(200,teams);
+    }
+  });
+};

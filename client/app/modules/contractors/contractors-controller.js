@@ -39,6 +39,22 @@ angular.module('buiiltApp').controller('ContractorsCtrl', function($scope, $stat
       }
     }
   });
+
+  teamService.getContractorTeam().$promise.then(function(data) {
+    $scope.contractorTeams = data;
+    var contractorTeamMember = [];
+    angular.forEach($scope.contractorTeams, function(contractorTeam) {
+      _.each(contractorTeam.leader, function(leader) {
+        contractorTeamMember.push({_id: leader._id, email: leader.email});
+      });
+      _.each(contractorTeam.member, function(member){
+        if (member._id) {
+          contractorTeamMember.push({_id: member._id._id, email: member._id.email});
+        }
+      })
+    });
+    $scope.contractorTeamMember = contractorTeamMember;
+  });
   
 
   contractorService.getContractorByProjectForBuilder({'id': $stateParams.id}).$promise.then(function(data){
