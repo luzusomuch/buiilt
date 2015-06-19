@@ -91,12 +91,12 @@
                        <div class="card-header">
                            <div class="row">
                                <div class="col s6">
-                                   <a class='dropdown-button btn-flat' style="margin-top: 15px" href='#' data-gutter="15" data-activates='itemFilter'>ALL ITEMS<i class="mdi-navigation-arrow-drop-down" dropdown></i></a>
+                                   <a class='dropdown-button btn-flat' style="margin-top: 15px" data-gutter="15" data-activates='itemFilter' dropdown>ALL ITEMS<i class="mdi-navigation-arrow-drop-down"></i></a>
                                      <ul id='itemFilter' class='dropdown-content' style="margin-top: 15px">
-                                       <li><a href="#!">VARIATIONS</a></li>
-                                       <li><a href="#!">DEFECTS</a></li>
-                                       <li><a href="#!">INVOICES</a></li>
-                                       <li><a href="#!" ng-click="showDocument(); showDocument = true; showVariation = false;">DOCUMENTS</a></li>
+                                       <li><a>VARIATIONS</a></li>
+                                       <li><a>DEFECTS</a></li>
+                                       <li><a>INVOICES</a></li>
+                                       <li><a ng-click="showDocument(); showDocument = true; hideVariation = true;">DOCUMENTS</a></li>
                                      </ul>
                                </div>
                                <div class="col s6">
@@ -112,7 +112,7 @@
                            </div>
                        </div>
                        <div class="divider"></div>
-                         <div style="height: 300px" ng-show="showVariation">
+                         <div style="height: 300px" ng-hide="hideVariation">
                              <li class="collection-item">Alvin</li>
                              <li class="collection-item">Alvin</li>
                              <li class="collection-item">Alvin</li>
