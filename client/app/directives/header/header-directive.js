@@ -17,30 +17,35 @@ angular.module('buiiltApp')
             $scope.isLeader = $scope.user.team.role == 'admin' ? true : false;
 
             teamService.getHomeOwnerTeam().$promise.then(function(data){
-              console.log(data);
               $scope.homeOwnerTeams = data; 
-              $scope.homeOwnerTeamMember = [];
+              var homeOwnerTeamMember = [];
               angular.forEach($scope.homeOwnerTeams, function(homeOwnerTeam) {
+                _.each(homeOwnerTeam.leader, function(leader) {
+                  homeOwnerTeamMember.push({_id: leader._id, email: leader.email});
+                });
                 _.each(homeOwnerTeam.member, function(member) {
                   if (member._id) {
-                    $scope.homeOwnerTeamMember.push({_id: member._id, email: member.email});  
+                    homeOwnerTeamMember.push({_id: member._id._id, email: member._id.email});  
                   }
                 })
               }); 
-              $scope.homeOwnerTeamMember = $scope.homeOwnerTeamMember;
+              $scope.homeOwnerTeamMember = homeOwnerTeamMember;
             });
             
             teamService.getHomeBuilderTeam().$promise.then(function(data) {
               $scope.homeBuilderTeams = data;
-              $scope.homeBuilderTeamMember = [];
+              var homeBuilderTeamMember = [];
               angular.forEach($scope.homeBuilderTeams, function(homeBuilderTeam) {
+                _.each(homeBuilderTeam.leader, function(leader) {
+                  homeBuilderTeamMember.push({_id: leader._id, email: leader.email});
+                });
                 _.each(homeBuilderTeam.member, function(member){
                   if (member._id) {
-                    $scope.homeBuilderTeamMember.push({_id: member._id, email: member.email});
+                    homeBuilderTeamMember.push({_id: member._id._id, email: member._id.email});
                   }
                 })
               });
-              $scope.homeBuilderTeamMember = $scope.homeBuilderTeamMember;
+              $scope.homeBuilderTeamMember = homeBuilderTeamMember;
             });
             
             // console.log($scope.homeOwnerTeams.member);

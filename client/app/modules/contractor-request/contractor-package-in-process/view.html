@@ -96,7 +96,7 @@
                                        <li><a href="#!">VARIATIONS</a></li>
                                        <li><a href="#!">DEFECTS</a></li>
                                        <li><a href="#!">INVOICES</a></li>
-                                       <li><a href="#!">DOCUMENTS</a></li>
+                                       <li><a href="#!" ng-click="showDocument(); showDocument = true; showVariation = false;">DOCUMENTS</a></li>
                                      </ul>
                                </div>
                                <div class="col s6">
@@ -112,11 +112,14 @@
                            </div>
                        </div>
                        <div class="divider"></div>
-                         <div style="height: 300px">
+                         <div style="height: 300px" ng-show="showVariation">
                              <li class="collection-item">Alvin</li>
                              <li class="collection-item">Alvin</li>
                              <li class="collection-item">Alvin</li>
                              <li class="collection-item">Alvin</li>
+                         </div>
+                         <div style="height: 300px" ng-show="showDocument" ng-if="files">
+                            <li class="collection-item" ng-repeat="file in files">{{file.title}}</li>
                          </div>
                    </ul>
                </div>

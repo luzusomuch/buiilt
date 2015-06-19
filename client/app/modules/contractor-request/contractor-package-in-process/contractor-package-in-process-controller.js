@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-.controller('ContractorPackageInProcessCtrl', function($scope, $state, $stateParams, $cookieStore, authService, userService, contractorRequest, contractorRequestService, quoteService) {
+.controller('ContractorPackageInProcessCtrl', function($scope, $state, $stateParams, $cookieStore, fileService, authService, userService, contractorRequest, contractorRequestService, quoteService) {
   /**
    * quote data
    */
@@ -13,6 +13,13 @@ angular.module('buiiltApp')
   .$promise.then(function(data) {
     $scope.messages = data;
   });
+
+  $scope.showDocument = function() {
+    fileService.getFileByStateParam({'id': $stateParams.id})
+    .$promise.then(function(data) {
+      $scope.files = data;
+    });
+  };
 
   $scope.sendMessage = function() {
     contractorRequestService.sendMessage({id: $stateParams.id, message: $scope.message})
