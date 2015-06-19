@@ -33,6 +33,7 @@ EventBus.onSeries('Project.Inserted', function(request, next){
                     _.each(team.leader, function(leader) {
                         User.findById(leader, function(err, user) {
                             if (err) {console.log(err); return next();}
+                            if (!user) {console.log(err); return next();}
                             else {
                                 Mailer.sendMail('invite-home-builder.html', user.email, {
                                     project: request,
@@ -66,6 +67,7 @@ EventBus.onSeries('Project.Inserted', function(request, next){
                     _.each(team.leader, function(leader) {
                         User.findById(leader, function(err, user) {
                             if (err) {console.log(err); return next();}
+                            if (!user) {console.log(err); return next();}
                             else {
                                 Mailer.sendMail('invite-home-owner.html', user.email, {
                                     project: request,
