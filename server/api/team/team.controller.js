@@ -362,7 +362,17 @@ exports.getTeamByUser = function(req, res) {
 };
 
 exports.getHomeOwnerTeam = function(req, res) {
-  Team.find({'type': 'homeOwner'}).populate('user').exec(function(err, teams) {
+  Team.find({'type': 'homeOwner'}).populate('leader', 'member._id').exec(function(err, teams) {
+    if (err) {return res.send(500,err);}
+    else {
+      console.log(teams);
+      return res.json(200,teams);
+    }
+  });
+};
+
+exports.getHomeBuilderTeam = function(req, res) {
+  Team.find({'type': 'homeBuilder'}).populate('leader').exec(function(err, teams) {
     if (err) {return res.send(500,err);}
     else {
       return res.json(200,teams);

@@ -46,9 +46,6 @@ var TeamSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: 'User'
     },
-    email: {
-      type: String
-    },
     status: {type:String, enum: ['Pending','Active','Reject']}
   }],
   createdAt: {

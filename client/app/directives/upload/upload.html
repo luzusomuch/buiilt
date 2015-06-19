@@ -1,15 +1,6 @@
 
   <div class="row" style="margin-top: 50px">
     <div class="col s8 offset-s2">
-      <div class="row" style="display:none;">
-        <input date-dropdown ng-model="formData.date" />
-      </div>
-      <div class="row">
-        <div class="input-field col s8 offset-s2">
-          <textarea class="materialize-textarea" ng-model="formData.desc" id="textarea1" required></textarea>
-          <label for="">Description</label>
-        </div>
-      </div>
       <div class="file-field input-field">
         <div class="btn tooltipped" data-position="top" data-delay="1" data-tooltip="Attach a File">
           <i class="mdi-editor-attach-file"></i>
@@ -28,17 +19,28 @@
             <div class="input-field col s8 offset-s2">
             </div>
           </div>
-          <div class="row">
-            <div class="input-field col s8 offset-s2">
-              <input type="text" ng-model="item.file.usersRelatedTo" required placeholder="Email separate by comma (,)">
-            </div>
-          </div>
-          
-          <div class="row">
-            <div class="input-field col s8 offset-s2">
-              <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">>Attach Document!</a>
-              <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
-            </div>
+        </div>
+      </div>
+      
+      <div class="row" style="display:none;">
+        <input date-dropdown ng-model="formData.date" />
+      </div>
+      <div class="row">
+        <div class="input-field col s8 offset-s2">
+          <textarea class="materialize-textarea" ng-model="formData.desc" id="textarea1" required></textarea>
+          <label for="">Description</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s8 offset-s2">
+          <input type="text" ng-model="formData.usersRelatedTo" required placeholder="Email separate by comma (,)">
+        </div>
+      </div>
+      <div class="file-field input-field">
+        <div class="row">
+          <div class="input-field col s8 offset-s2">
+            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="uploadAll()" ng-disabled="uploader.isReady || uploader.isUploading || uploader.isSuccess">>Attach Document!</a>
+            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
           </div>
         </div>
       </div>

@@ -17,6 +17,7 @@ angular.module('buiiltApp')
             $scope.isLeader = $scope.user.team.role == 'admin' ? true : false;
 
             teamService.getHomeOwnerTeam().$promise.then(function(data){
+              console.log(data);
               $scope.homeOwnerTeams = data; 
               $scope.homeOwnerTeamMember = [];
               angular.forEach($scope.homeOwnerTeams, function(homeOwnerTeam) {

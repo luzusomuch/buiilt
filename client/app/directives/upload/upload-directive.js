@@ -95,7 +95,7 @@ angular.module('buiiltApp').directive('upload', function(){
                 $scope.formData.belongTo = $stateParams.id;
                 // $scope.formData.doc = $scope.documentId;
                 // $scope.formData.desc = item.file.desc || "";
-                $scope.formData.usersRelatedTo = item.file.usersRelatedTo || "";
+                // $scope.formData.usersRelatedTo = item.file.usersRelatedTo || "";
                 //angular.forEach(item.file.tags, function (tag) {
                 //  $scope.formData.tags.push(tag.text);
                 //});
