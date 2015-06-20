@@ -40,6 +40,20 @@ angular.module('buiiltApp')
           id: 'id',
           action: 'message-supplier'
         }
+      },
+      sendDefect: {
+        method: 'POST',
+        params: {
+          id: '@id',
+          action: 'sendDefect'
+        }
+      },
+      sendInvoice: {
+        method: 'POST',
+        params: {
+          id: '@id',
+          action: 'sendInvoice'
+        }
       }
       
     });

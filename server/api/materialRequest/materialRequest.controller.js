@@ -186,3 +186,107 @@ exports.getMessageForSupplier = function(req, res) {
     }
   });
 };
+
+exports.sendDefect = function(req, res) {
+  MaterialPackage.findById(req.params.id, function(err, materialPackage) {
+    if (err) {return res.send(500,err)}
+    if (!materialPackage) {return res.send(404,err)}
+    else {
+      if (!materialPackage.defects) {
+        var defects = [];
+        defects.push({
+          owner: req.user._id,
+          title: req.body.defect.title,
+          location: req.body.defect.location,
+          description: req.body.defect.description
+        });
+        materialPackage.defects = defects;
+        materialPackage.save(function(err, saved) {
+          if (err) {return res.send(500, err)}
+          else {
+            return res.json(200,saved);
+          }
+        });
+      }
+      else {
+        materialPackage.defects.push({
+          owner: req.user._id,
+          title: req.body.defect.title,
+          location: req.body.defect.location,
+          description: req.body.defect.description
+        });
+        materialPackage.save(function(err, saved) {
+          if (err) {return res.send(500, err)}
+          else {
+            return res.json(200,saved);
+          }
+        });
+      }
+    }
+  });
+};
+
+exports.sendInvoice = function(req, res) {
+  MaterialPackage.findById(req.params.id, function(err, materialPackage) {
+    if (err) {return res.send(500,err);}
+    if (!materialPackage) {return res.send(404,err);}
+    else {
+      var invoices = materialPackage.invoices;
+      var quoteRate = [];
+      var quotePrice = [];
+      var subTotal = 0;
+      async.each(req.body.rate, function(rate, callback){
+        if (rate !== null) {
+          for (var i = 0; i < req.body.rate.length -1; i++) {
+            quoteRate.push({
+              description: rate.description[i],
+              rate: rate.rate[i],
+              quantity: rate.quantity[i],
+              total: rate.rate[i] * rate.quantity[i]
+            });
+            subTotal += rate.rate[i] * rate.quantity[i];
+          };
+        }
+        callback();
+      }, function(err) {
+        if (err) {return res.send(500,err);}
+        else {
+          async.each(req.body.price, function(price, callback){
+            if (price !== null) {
+              for (var i = 0; i < req.body.price.length -1; i++) {
+                quotePrice.push({
+                  description: price.description[i],
+                  price: price.price[i],
+                  quantity: 1,
+                  total: price.price[i]
+                });
+                subTotal += price.price[i] * 1;
+              };
+            }
+            callback();
+          }, function(err){
+            if (err) {return res.send(500,err);}
+            else {
+              invoices.push({
+                owner: req.user._id,
+                title: req.body.invoice.title,
+                quoteRate: quoteRate,
+                quotePrice: quotePrice,
+                subTotal: subTotal,
+                total: subTotal * 0.1 + subTotal
+              });
+              materialPackage.invoices = invoices;
+              materialPackagew.save(function(err, saved) {
+                if (err) {return res.send(500,err);}
+                else {
+                  return res.json(200, saved);
+                }
+              });
+            }
+          });
+        }
+      });
+    }
+  });
+  
+};

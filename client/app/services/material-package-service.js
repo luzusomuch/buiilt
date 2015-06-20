@@ -13,6 +13,22 @@ angular.module('buiiltApp')
             },
             isArray: true
         },
+        getMaterialByProjectForBuilder: {
+            method: 'GET',
+            params: {
+                id: 'id',
+                action: 'projectb'
+            },
+            isArray: true
+        },
+        getMaterialByProjectForSupplier: {
+            method: 'GET',
+            params: {
+                id: 'id',
+                action: 'project-supplier'
+            },
+            isArray: true
+        },
         getMaterialPackageTenderByProjectForBuilder: {
             method: 'GET',
             params: {

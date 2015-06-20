@@ -102,7 +102,6 @@ angular.module('buiiltApp')
     });
     if ($scope.lineWithPrices.length == 0 || $scope.lineWithRates.length == 0) {
       alert('Please review your quote');
-      return;
     }
     else {
       contractorRequestService.sendInvoice({id: $stateParams.packageId, invoice: $scope.invoice, rate: $scope.lineWithRates, price: $scope.lineWithPrices}).$promise.then(function(data){

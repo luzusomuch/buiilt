@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-.controller('SendQuoteMaterialPackageCtrl', function($scope, $state, $stateParams, $cookieStore, authService, userService, materialRequest, materialRequestService) {
+.controller('SendQuoteMaterialPackageCtrl', function($scope, $state, $stateParams, FileUploader, $cookieStore, authService, userService, materialRequest, materialRequestService) {
   /**
    * quote data
    */
@@ -64,7 +64,7 @@ angular.module('buiiltApp')
       else {
         materialRequestService.sendQuote({materialRequest: $scope.materialRequest,quoteRequest: $scope.quoteRequest, rate: $scope.lineWithRates, price: $scope.lineWithPrices}).$promise.then(function(data){
           $scope.success = data;
-          $state.go('team.manager');
+          alert('Send quote successfully!');
         });
       }
     }
@@ -99,7 +99,7 @@ angular.module('buiiltApp')
   };
 
   var uploader = $scope.uploader = new FileUploader({
-    url: 'api/uploads/'+ $stateParams.packageId + '/file',
+    url: 'api/uploads/'+ $stateParams.packageId + '/file-package',
     headers : {
       Authorization: 'Bearer ' + $cookieStore.get('token')
     },

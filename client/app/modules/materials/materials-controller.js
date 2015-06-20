@@ -3,6 +3,7 @@ angular.module('buiiltApp').controller('MaterialsCtrl', function($scope, $stateP
     $scope.materialPackages = [];
     $scope.requirements = [];
     $scope.user = authService.getCurrentUser();
+    $scope.team = authService.getCurrentTeam();
     // $scope.team = authService.getCurrentTeam();
     $scope.currentProject = $rootScope.currentProject;
 
@@ -10,6 +11,9 @@ angular.module('buiiltApp').controller('MaterialsCtrl', function($scope, $stateP
         $scope.team = data;
         if ($scope.team) {
             if ($scope.team.type == 'buider') {
+                materialPackageService.getMaterialByProjectForBuilder({'id': $stateParams.id}).$promise.then(function(data){
+                    $scope.materials = data;
+                });
                 $scope.getMaterialPackageTenderByProject = function() {
                     materialPackageService.getMaterialPackageTenderByProjectForBuilder({'id': $stateParams.id})
                     .$promise.then(function(data) {
@@ -25,6 +29,10 @@ angular.module('buiiltApp').controller('MaterialsCtrl', function($scope, $stateP
                 };
             }
             else if($scope.team.type === 'supplier') {
+                materialPackageService.getMaterialByProjectForSupplier({'id': $stateParams.id})
+                    .$promise.then(function(data) {
+                    $scope.materials = data;
+                });
                 $scope.getMaterialPackageTenderByProject = function() {
                     materialPackageService.getMaterialPackageInTenderByProjectForSupplier({'id': $stateParams.id})
                     .$promise.then(function(data) {

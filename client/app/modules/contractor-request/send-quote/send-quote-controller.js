@@ -40,7 +40,7 @@ angular.module('buiiltApp')
   };
 
   var uploader = $scope.uploader = new FileUploader({
-    url: 'api/uploads/'+ $stateParams.packageId + '/file',
+    url: 'api/uploads/'+ $stateParams.packageId + '/file-package',
     headers : {
       Authorization: 'Bearer ' + $cookieStore.get('token')
     },

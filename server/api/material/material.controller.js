@@ -130,14 +130,38 @@ exports.getMaterialPackageInProcessByProjectForSupplier = function(req, res) {
     if (err) {return res.send(500, err)}
     if (!team) {return res.send(404,err)}
     else {
-      MaterialPackage.find({$and:[{'project' : req.params.id}, {'winnerTeam._id': team._id},{status: false}]}, function(err, contractors) {
+      MaterialPackage.find({$and:[{'project' : req.params.id}, {'winnerTeam._id': team._id},{status: false}]}, function(err, materialPackages) {
         if (err) {return res.send(500, err);}
-        if (!contractors) {return res.send(404, err);}
+        if (!materialPackages) {return res.send(404, err);}
         else {
-          return res.json(200, contractors);
+          return res.json(200, materialPackages);
         }
       });
     }
   });
 };
 
+exports.getMaterialByProjectForBuilder = function(req, res) {
+  MaterialPackage.find({'project': req.params.id}, function(err, materialPackages){
+    if (err) {return res.send(500, err);}
+    else {
+      return res.json(200, materialPackages);
+    }
+  })
+};
+
+exports.getMaterialByProjectForSupplier = function(req, res) {
+  Team.findOne({$or: [{'leader': req.user._id}, {'member._id': req.user._id}]}, function(err, team) {
+    if (err) {return res.send(500, err);}
+    if (!team) {return res.send(404,err);}
+    else {
+      MaterialPackage.find({'project': req.params.id, 'to._id' : team._id}, function(err, materialPackages){
+        if (err) {return res.send(500, err);}
+        else {
+          return res.json(200, materialPackages);
+        }
+      });
+    }
+  });
+  
+};

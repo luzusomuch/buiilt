@@ -15,5 +15,7 @@ router.get('/:id/view', auth.isAuthenticated(), controller.getQuoteRequestByMate
 router.post('/:id/invite', auth.isAuthenticated(), controller.sendInvitationInMaterial);
 router.post('/:id/message', auth.isAuthenticated(), controller.sendMessage);
 router.get('/:id/message-supplier', auth.isAuthenticated(), controller.getMessageForSupplier);
+router.post('/:id/sendDefect', auth.isAuthenticated(), controller.sendDefect);
+router.post('/:id/sendInvoice', auth.isAuthenticated(), controller.sendInvoice);
 
 module.exports = router;
