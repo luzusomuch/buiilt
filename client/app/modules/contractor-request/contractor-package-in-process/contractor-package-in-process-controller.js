@@ -151,7 +151,7 @@ angular.module('buiiltApp')
   var newPhoto = null;
   uploader.onCompleteItem = function (fileItem, response, status, headers) {
       newPhoto = response;
-      $state.reload();
+      // $state.reload();
       // fileService.getFileByStateParam({'id': $stateParams.id}).$promise.then(function(data) {
       //     $scope.files = data;
       // });

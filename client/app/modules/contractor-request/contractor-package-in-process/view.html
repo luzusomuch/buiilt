@@ -124,8 +124,8 @@
                          <div style="height: 300px" ng-show="showDefect" ng-if="defects">
                              <li class="collection-item" ng-repeat="defect in defects.defects">{{defect.title}}</li>
                          </div>
-                         <div style="height: 300px" ng-show="showDefect" ng-if="invoices">
-                             <li class="collection-item" ng-repeat="invoice in invoices.invoices">{{invoice.title}}</li>
+                         <div style="height: 300px" ng-show="showInvoice" ng-if="invoices">
+                             <li class="collection-item" ng-repeat="invoice in invoices.invoices">{{invoice.title}} - Total {{invoice.total}}</li>
                          </div>
                          <div style="height: 300px" ng-show="showDocument" ng-if="files">
                             <li class="collection-item" ng-repeat="file in files">{{file.title}}</li>
