@@ -160,11 +160,25 @@
        <div class="row" style="margin-top: 50px">
          <div class="col s6 valign">
            <div class="file-field input-field">
-               <input class="file-path validate" type="text"/>
-               <div class="btn tooltipped" data-position="top" data-delay="1" data-tooltip="Attach a File"><i class="mdi-editor-attach-file"></i>
-                 <input type="file" />
-               </div>
-             </div>
+              <div ng-show="uploader.queue.length" class="form-group">
+                <div ng-repeat="item in uploader.queue">
+                  <div class="row">
+                    <div class="input-field col s8 offset-s2">
+                      <input type="text" ng-model="item.file.name">
+                      <label for="">File name</label>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="input-field col s8 offset-s2">
+                    </div>
+                  </div>
+                </div>
+              </div>
+               <!-- <input class="file-path validate" type="text"/> -->
+              <div class="btn tooltipped" data-position="top" data-delay="1" data-tooltip="Attach a File"><i class="mdi-editor-attach-file"></i>
+               <input type="file" nv-file-select="" uploader="uploader"/>
+              </div>
+            </div>
          </div>
          <div class="input-field col s2 offset-s3" style="margin-top: -40px">
                 <p>Sub-Total: {{getSubTotal()}}</p>
@@ -174,7 +188,7 @@
        </div>
        <div class="divider"></div>
     <div class="modal-footer">
-      <button class="modal-action modal-close waves-effect waves-green btn-flat" ng-disable="sendQuoteForm.$invalid"> Send quote!</button>
+      <button class="modal-action modal-close waves-effect waves-green btn-flat" ng-disable="sendQuoteForm.$invalid" ng-click="uploadAll()"> Send quote!</button>
          <!-- <a href="#!" ng-click="sendQuote()" class="modal-action modal-close waves-effect waves-green btn-flat ">Send Quote!</a> -->
      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
     </div>

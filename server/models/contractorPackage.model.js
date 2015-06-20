@@ -20,6 +20,23 @@ var ContractorPackageSchema = new Schema({
   name: String,
   description: String,
   category: String,
+  variations : [{
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    title: {type: String},
+    description: {type: String}
+  }],
+  defects : [{
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    title: {type: String},
+    location: {type: String},
+    description: {type: String}
+  }],
   messages: [{
     owner: {
       type: Schema.Types.ObjectId,
@@ -61,6 +78,24 @@ var ContractorPackageSchema = new Schema({
     type: Number,
     // required: true
   },
+  invoices: [{
+    owner: {type: Schema.Types.ObjectId, ref: 'User'},
+    title: String,
+    quoteRate: [{
+      description: {type: String},
+      rate: {type: Number},
+      quantity: {type: Number},
+      subTotal: {type: Number},
+      total: {type: Number}
+    }],
+    quotePrice: [{
+      description: {type: String},
+      price: {type: Number},
+      quantity: {type: Number},
+      total: {type: Number}
+    }],
+    total: Number
+  }],
   defact:[],
   isAccept: { type: Boolean, default: false },
   status: { type: Boolean, default: true },

@@ -18,7 +18,7 @@ angular.module('buiiltApp').directive('upload', function(){
                 date: new Date(),
                 // album: {},
                 title: '',
-                belongTo: {},
+                // belongTo: {},
                 // doc: {},
                 desc: '',
                 usersRelatedTo: []
@@ -49,13 +49,26 @@ angular.module('buiiltApp').directive('upload', function(){
                   this.$apply(fn);
                 }
             };
-            var uploader = $scope.uploader = new FileUploader({
-                url: 'api/uploads/'+ $stateParams.id + '/file',
-                headers : {
-                  Authorization: 'Bearer ' + $cookieStore.get('token')
-                },
-                formData: [$scope.formData]
-            });
+
+            if ($stateParams.packageId) {
+                var uploader = $scope.uploader = new FileUploader({
+                    url: 'api/uploads/'+ $stateParams.packageId + '/file',
+                    headers : {
+                      Authorization: 'Bearer ' + $cookieStore.get('token')
+                    },
+                    formData: [$scope.formData]
+                });
+            }
+            else {
+                var uploader = $scope.uploader = new FileUploader({
+                    url: 'api/uploads/'+ $stateParams.id + '/file',
+                    headers : {
+                      Authorization: 'Bearer ' + $cookieStore.get('token')
+                    },
+                    formData: [$scope.formData]
+                });
+            }
+            
 
             // uploader.filters.push({
             //     name: 'imageFilter',
@@ -92,7 +105,7 @@ angular.module('buiiltApp').directive('upload', function(){
             uploader.onBeforeUploadItem = function (item) {
                 $scope.formData._id = $scope.fileId;
                 $scope.formData.title = item.title;
-                $scope.formData.belongTo = $stateParams.id;
+                // $scope.formData.belongTo = $stateParams.id;
                 // $scope.formData.doc = $scope.documentId;
                 // $scope.formData.desc = item.file.desc || "";
                 // $scope.formData.usersRelatedTo = item.file.usersRelatedTo || "";

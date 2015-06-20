@@ -3,7 +3,7 @@ angular.module('buiiltApp')
   return {
     restrict: 'E',
     templateUrl: 'app/directives/header/header.html',
-    controller: function($scope, $stateParams, $rootScope, authService, projectService, contractorService,teamService,filterFilter) {
+    controller: function($scope, $stateParams, $rootScope,materialPackageService, authService, projectService, contractorService,teamService,filterFilter) {
 
       function queryProjects(){
         authService.isLoggedInAsync(function(isLoggedIn){
@@ -60,6 +60,9 @@ angular.module('buiiltApp')
             });
             contractorService.getProjectForContractor({'id': $scope.user._id}, function(result) {
               $scope.projectsContractor = result;
+            });
+            materialPackageService.getProjectForSupplier({'id': $scope.user._id}, function(result) {
+              $scope.projectsSupplier = result;
             });
 
             if ($stateParams.id) {

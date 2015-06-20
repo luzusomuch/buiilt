@@ -14,6 +14,13 @@ var MaterialPackageSchema = new Schema({
   },
   name: String,
   description: String,
+  messages: [{
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    message: {type: String}
+  }],
   project: {
     type: Schema.Types.ObjectId,
     ref: 'Project',

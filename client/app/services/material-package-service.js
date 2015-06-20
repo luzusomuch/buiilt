@@ -5,6 +5,14 @@ angular.module('buiiltApp')
         createMaterialPackage: {
             method: 'POST'
         },
+        getProjectForSupplier: {
+            method: 'GET',
+            params: {
+                id: 'id',
+                action: 'supplier'
+            },
+            isArray: true
+        },
         getMaterialPackageTenderByProjectForBuilder: {
             method: 'GET',
             params: {

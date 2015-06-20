@@ -12,6 +12,8 @@ angular.module('buiiltApp')
 
   $scope.user = {};
 
+  $scope.message = {};
+
   materialRequestService.getQuoteRequestByMaterialPackge({'id':$stateParams.packageId}).$promise.then(function(data){
     $scope.quoteRequests = data;
   });

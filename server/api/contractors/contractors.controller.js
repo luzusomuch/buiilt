@@ -97,52 +97,12 @@ exports.getProjectForContractor = function(req, res) {
     if (err) {return res.send(500,err);}
     if (!team) {return res.send(404,err);}
     else {
-      var contractors = [];
-      var memberId = team.leader;
-      async.each(team.member, function(member, callback) {
-        if (member._id) {
-          memberId.push(member._id);
-        }
-        callback();
-      }, function(err) {
-        if (err) {console.log(err);}
+      ContractorPackage.find({'to._id': team._id}).populate('project').exec(function(err, contractorPackage){
+        if (err) {return res.send(500,err);}
         else {
-          ContractorPackage.find({}, function(err, contractorPackageList) {
-            if (err) {return res.send(500,err);}
-            else {
-              async.each(memberId, function(member, callback) {
-                _.each(contractorPackageList, function(contractorPackage) {
-                  ContractorPackage.findOne({'_id':contractorPackage._id, 'to._id': member}).populate('project').exec(function(err, contractorPackage){
-                    if (err) {return res.send(500,err);}
-                    // if (!contractorPackage) {console.log('sdsdsd');}
-                    else {
-                      if (contractorPackage !== null) {
-                        contractors.push(contractorPackage);
-                        // callback();
-                      }
-                    }
-                  });
-                });
-                callback();
-              }, function(err) {
-                if (err) {return res.send(500,err);}
-                else {
-                  console.log(contractors);
-                  return res.json(200,contractors);
-                }
-              });
-            }
-          });
+          return res.json(200, contractorPackage);
         }
       });
-      // return;
-      // ContractorPackage.find({'winnerTeam._id': team._id}).populate('project').exec(function(err, contractors) {
-      //   if (err) {return res.send(500, err);}
-      //   if (!contractors) {return res.send(404,err);}
-      //   else {
-      //     return res.json(200, contractors);
-      //   }
-      // });
     }
   });
 };
@@ -181,33 +141,10 @@ exports.getContractorPackageTenderByProjectForContractor = function(req, res) {
     if (err) {return res.send(500, err);}
     if (!team) {return res.send(404,err);}
     else {
-      var contractors;
-      var teamMemberId = team.leader;
-      async.each(team.member, function(member, callback) {
-        if (member._id) {
-          teamMemberId.push(member._id);
-        }
-        callback();
-      }, function(err) {
-        if (err) {return res.send(500,err)}
+      ContractorPackage.find({$and:[{'project' : req.params.id},{'to._id': team._id},{status: true}]}, function(err, contractor){
+        if (err) {return res.send(500,err);}
         else {
-          async.each(teamMemberId, function(id, callback) {
-            ContractorPackage.find({$and:[{'project' : req.params.id},{'to._id': id},{status: true}]}, function(err, contractor){
-              if (err) {return res.send(500,err);}
-              if (!contractor) {callback();}
-              else {
-                if (contractor !== null) {
-                  contractors = contractor;  
-                  callback();  
-                }
-              }
-            });
-          }, function(err) {
-            if (err) {return res.send(500, err)}
-            else {
-              return res.send(200, contractors);
-            }
-          });
+          return res.json(200,contractor)
         }
       });
     }

@@ -5,6 +5,7 @@ angular.module('buiiltApp')
    */
   $scope.quoteRequest = {};
   $scope.materialRequest = materialRequest;
+  console.log($scope.materialRequest);
   $scope.currentUser = {};
   if ($cookieStore.get('token')) {
     $scope.currentUser = userService.get();

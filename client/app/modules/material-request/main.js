@@ -14,7 +14,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
     authenticate : true,
     resolve: {
       materialRequest: function($stateParams, materialRequestService){
-        return materialRequestService.findOne({'id':$stateParams.id});
+        return materialRequestService.findOne({'id':$stateParams.packageId});
       }
     }
   })
@@ -26,7 +26,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
     authenticate : true,
     resolve: {
       materialRequest: function($stateParams, materialRequestService){
-        return materialRequestService.findOne({'id':$stateParams.id});
+        return materialRequestService.findOne({'id':$stateParams.packageId});
       }
     }
   })
@@ -38,7 +38,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
     authenticate : true,
     resolve: {
       materialRequest: function($stateParams, materialRequestService){
-        return materialRequestService.findOne({'id':$stateParams.id});
+        return materialRequestService.findOne({'id':$stateParams.packageId});
       }
     }
   });

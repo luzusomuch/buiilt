@@ -28,7 +28,7 @@ exports.createMaterialPackage = function (req, res, next) {
   var materialPackage = new MaterialPackage({
     owner: req.user._id,
     name: req.body.material.name,
-    // description: req.body.contractor.description,
+    dateStart: req.body.material.dateStart,
     project: req.body.project,
     requirements: req.body.requirements
   });
@@ -48,12 +48,17 @@ exports.createMaterialPackage = function (req, res, next) {
         callback();
       }
       else {
-        to.push({
-          _id: user._id,
-          email: emailPhone.email,
-          phone: emailPhone.phoneNumber
+        Team.findOne({$or:[{'leader': user._id}, {'member._id': user._id}]}, function(err, team){
+          if (err) {return res.send(500,err);}
+          else {
+            to.push({
+              _id: team._id,
+              email: emailPhone.email,
+              phone: emailPhone.phoneNumber
+            });
+            callback();
+          }
         });
-        callback();
       }
     });
   }, function(err) {
@@ -64,6 +69,21 @@ exports.createMaterialPackage = function (req, res, next) {
         if (err) {return res.send(500,err);}
         else {
           return res.json(200,saved);
+        }
+      });
+    }
+  });
+};
+
+exports.getProjectForSupplier = function(req, res) {
+  Team.findOne({$or:[{'leader': req.params.id}, {'member._id': req.params.id}]}, function(err, team) {
+    if (err) {return res.send(500,err);}
+    if (!team) {return res.send(404,err);}
+    else {
+      MaterialPackage.find({'to._id': team._id}).populate('project').exec(function(err, materialPackage){
+        if (err) {return res.send(500,err);}
+        else {
+          return res.json(200, materialPackage);
         }
       });
     }
@@ -95,33 +115,10 @@ exports.getMaterialPackageInTenderByProjectForSupplier = function(req, res) {
     if (err) {return res.send(500, err);}
     if (!team) {return res.send(404,err);}
     else {
-      var suppliers;
-      var teamMemberId = team.leader;
-      async.each(team.member, function(member, callback) {
-        if (member._id) {
-          teamMemberId.push(member._id);
-        }
-        callback();
-      }, function(err) {
-        if (err) {return res.send(500,err)}
+      MaterialPackage.find({$and:[{'project' : req.params.id},{'to._id': team._id},{status: true}]}, function(err, materialPackages){
+        if (err) {return res.send(500,err);}
         else {
-          async.each(teamMemberId, function(id, callback) {
-            MaterialPackage.find({$and:[{'project' : req.params.id},{'to._id': id},{status: true}]}, function(err, supplier){
-              if (err) {return res.send(500,err);}
-              if (!supplier) {callback();}
-              else {
-                if (supplier !== null) {
-                  suppliers = supplier;  
-                  callback();  
-                }
-              }
-            });
-          }, function(err) {
-            if (err) {return res.send(500, err)}
-            else {
-              return res.send(200, suppliers);
-            }
-          });
+          return res.json(200, materialPackages)
         }
       });
     }

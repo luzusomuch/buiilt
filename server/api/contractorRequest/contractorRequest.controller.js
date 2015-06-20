@@ -187,3 +187,144 @@ exports.sendInvitationInContractor = function(req, res) {
         }
     });
 };
+
+exports.sendVariation = function(req, res) {
+  ContractorPackage.findById(req.params.id, function(err, contractorPackage) {
+    if (err) {return res.send(500,err)}
+    if (!contractorPackage) {return res.send(404,err)}
+    else {
+      if (!contractorPackage.variations) {
+        var variations = [];
+        variations.push({
+          owner: req.user._id,
+          title: req.body.variation.title,
+          description: req.body.variation.description
+        });
+        contractorPackage.variations = variations;
+        contractorPackage.save(function(err, saved) {
+          if (err) {return res.send(500, err)}
+          else {
+            return res.json(200,saved);
+          }
+        });
+      }
+      else {
+        contractorPackage.variations.push({
+          owner: req.user._id,
+          title: req.body.variation.title,
+          description: req.body.variation.description
+        });
+        contractorPackage.save(function(err, saved) {
+          if (err) {return res.send(500, err)}
+          else {
+            return res.json(200,saved);
+          }
+        });
+      }
+    }
+  });
+};
+
+exports.sendDefect = function(req, res) {
+  ContractorPackage.findById(req.params.id, function(err, contractorPackage) {
+    if (err) {return res.send(500,err)}
+    if (!contractorPackage) {return res.send(404,err)}
+    else {
+      if (!contractorPackage.defects) {
+        var defects = [];
+        defects.push({
+          owner: req.user._id,
+          title: req.body.defect.title,
+          location: req.body.defect.location,
+          description: req.body.defect.description
+        });
+        contractorPackage.defects = defects;
+        contractorPackage.save(function(err, saved) {
+          if (err) {return res.send(500, err)}
+          else {
+            return res.json(200,saved);
+          }
+        });
+      }
+      else {
+        contractorPackage.defects.push({
+          owner: req.user._id,
+          title: req.body.defect.title,
+          location: req.body.defect.location,
+          description: req.body.defect.description
+        });
+        contractorPackage.save(function(err, saved) {
+          if (err) {return res.send(500, err)}
+          else {
+            return res.json(200,saved);
+          }
+        });
+      }
+    }
+  });
+};
+
+exports.sendInvoice = function(req, res) {
+  ContractorPackage.findById(req.params.id, function(err, contractorPackage) {
+    if (err) {return res.send(500,err);}
+    if (!contractorPackage) {return res.send(404,err);}
+    else {
+      var invoices = contractorPackage.invoices;
+      var quoteRate = [];
+      var quotePrice = [];
+      var subTotal = 0;
+      async.each(req.body.rate, function(rate, callback){
+        if (rate !== null) {
+          for (var i = 0; i < req.body.rate.length -1; i++) {
+            quoteRate.push({
+              description: rate.description[i],
+              rate: rate.rate[i],
+              quantity: rate.quantity[i],
+              total: rate.rate[i] * rate.quantity[i]
+            });
+            subTotal += rate.rate[i] * rate.quantity[i];
+          };
+        }
+        callback();
+      }, function(err) {
+        if (err) {return res.send(500,err);}
+        else {
+          async.each(req.body.price, function(price, callback){
+            if (price !== null) {
+              for (var i = 0; i < req.body.price.length -1; i++) {
+                quotePrice.push({
+                  description: price.description[i],
+                  price: price.price[i],
+                  quantity: 1,
+                  total: price.price[i]
+                });
+                subTotal += price.price[i] * 1;
+              };
+            }
+            callback();
+          }, function(err){
+            if (err) {return res.send(500,err);}
+            else {
+              invoices.push({
+                owner: req.user._id,
+                title: req.body.invoice.title,
+                quoteRate: quoteRate,
+                quotePrice: quotePrice,
+                subTotal: subTotal,
+                total: subTotal * 0.1 + subTotal
+              });
+              contractorPackage.invoices = invoices;
+              contractorPackage.save(function(err, saved) {
+                if (err) {return res.send(500,err);}
+                else {
+                  return res.json(200, saved);
+                }
+              });
+            }
+          });
+        }
+      });
+    }
+  });
+  
+};

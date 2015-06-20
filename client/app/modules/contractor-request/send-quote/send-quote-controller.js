@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-.controller('SendQuoteContractorPackageCtrl', function($scope, $window, $state, $stateParams, $cookieStore, authService, userService, contractorRequest, contractorRequestService, registryForContractorService) {
+.controller('SendQuoteContractorPackageCtrl', function($scope, $window, $state, $stateParams, $cookieStore, authService, userService, contractorRequest, contractorRequestService,FileUploader, registryForContractorService) {
   /**
    * quote data
    */
@@ -19,6 +19,74 @@ angular.module('buiiltApp')
   $scope.price = {};
   $scope.lineWithRates = [];
   $scope.lineWithPrices = [];
+
+  $scope.formData = {
+    fileId: '',
+    date: new Date(),
+    title: '',
+    desc: '',
+    usersRelatedTo: []
+  };
+
+  $scope.safeApply = function (fn) {
+    var phase = this.$root.$$phase;
+    if (phase == '$apply' || phase == '$digest') {
+      if (fn && (typeof (fn) === 'function')) {
+        fn();
+      }
+    } else {
+      this.$apply(fn);
+    }
+  };
+
+  var uploader = $scope.uploader = new FileUploader({
+    url: 'api/uploads/'+ $stateParams.packageId + '/file',
+    headers : {
+      Authorization: 'Bearer ' + $cookieStore.get('token')
+    },
+    formData: [$scope.formData]
+  });
+  uploader.onProgressAll = function (progress) {
+      $scope.progress = progress;
+  };
+  uploader.onAfterAddingFile = function (item) {
+      //item.file.name = ''; try to change file name
+      var reader = new FileReader();
+
+      reader.onload = function (e) {
+          item.src = e.target.result;
+          $scope.safeApply();
+      };
+
+      reader.readAsDataURL(item._file);
+  };
+  var newPhoto = null;
+  uploader.onCompleteItem = function (fileItem, response, status, headers) {
+      newPhoto = response;
+      $state.reload();
+      // fileService.getFileByStateParam({'id': $stateParams.id}).$promise.then(function(data) {
+      //     $scope.files = data;
+      // });
+  };
+
+  uploader.onBeforeUploadItem = function (item) {
+      $scope.formData._id = $scope.fileId;
+      $scope.formData.title = item.title;
+      item.formData.push($scope.formData);
+  };
+
+  var hideModalAfterUploading = false;
+  $scope.uploadAll = function(){
+      hideModalAfterUploading = true;
+      uploader.uploadAll();
+  };
+
+  uploader.onCompleteAll = function () {
+      if(hideModalAfterUploading){
+          // $modalInstance.close(newPhoto);
+      }
+      // $state.reload();
+  };
 
   contractorRequestService.getMessageForContractor({'id': $stateParams.packageId})
   .$promise.then(function(data) {

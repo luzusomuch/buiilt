@@ -112,7 +112,28 @@
                  </div>
                  <div class="input-field col s4">
                       <label for="date_required" class="active">Date Required</label>
-                      <input type="date" id="date_required" class="datapicker" ng-model="material.dateStart">
+                      <input input-date 
+                        ng-model="material.dateStart"
+                        type="text"
+                        name="created"
+                        id="inputCreated"
+                        ng-model="currentTime"
+                        container="body"
+                        format="mm/dd/yyyy"
+                        months-full="{{ month }}"
+                        months-short="{{ monthShort }}"
+                        weekdays-full="{{ weekdaysFull }}"
+                        weekdays-short="{{ weekdaysShort }}"
+                        weekdays-letter="{{ weekdaysLetter }}"
+                        today="today"
+                        clear="clear"
+                        close="close"
+                        on-start="onStart()"
+                        on-render="onRender()"
+                        on-open="onOpen()"
+                        on-close="onClose()"
+                        on-set="onSet()"
+                        on-stop="onStop()" />
                  </div>
              </div>
              <div class="row">

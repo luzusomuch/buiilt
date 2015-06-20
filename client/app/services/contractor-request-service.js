@@ -40,6 +40,27 @@ angular.module('buiiltApp')
           id: 'id',
           action: 'messagecontractor'
         }
+      },
+      sendVariation: {
+        method: 'POST',
+        params: {
+          id: '@id',
+          action: 'sendVariation'
+        }
+      },
+      sendDefect: {
+        method: 'POST',
+        params: {
+          id: '@id',
+          action: 'sendDefect'
+        }
+      },
+      sendInvoice: {
+        method: 'POST',
+        params: {
+          id: '@id',
+          action: 'sendInvoice'
+        }
       }
     }
     );

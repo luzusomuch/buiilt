@@ -37,6 +37,12 @@ angular.module('buiiltApp').config(function($stateProvider) {
     hasCurrentProject : true,
     authenticate : true,
     resolve: {
+      currentTeam : [
+        'authService',
+        function(authService) {
+          return authService.getCurrentTeam();
+        }
+      ],
       contractorRequest: function($stateParams, contractorRequestService){
         return contractorRequestService.findOne({'id':$stateParams.packageId});
       }

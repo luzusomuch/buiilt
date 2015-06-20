@@ -1,8 +1,9 @@
 angular.module('buiiltApp')
-.controller('MaterialPackageInProcessCtrl', function($scope, $state, $stateParams, $cookieStore, fileService, authService, userService,materialRequestService) {
+.controller('MaterialPackageInProcessCtrl', function($scope, $state, $stateParams, $cookieStore, materialRequest, fileService, authService, userService,materialRequestService) {
   /**
    * quote data
    */
+  $scope.materialRequest = materialRequest;
   $scope.currentUser = {};
   if ($cookieStore.get('token')) {
     $scope.currentUser = userService.get();
