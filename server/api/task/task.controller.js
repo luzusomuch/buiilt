@@ -56,6 +56,7 @@ exports.create = function(req,res) {
     task.package = aPackage;
     task.user = user;
     task.project = aPackage.project;
+    task.dateStart = new Date();
     task.save(function(err) {
       if (err) {
         return res.send(500,err)

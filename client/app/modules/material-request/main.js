@@ -4,7 +4,8 @@ angular.module('buiiltApp').config(function($stateProvider) {
     url: '/:id/material-request',
     hasCurrentProject : true,
     authenticate : true,
-    template: '<ui-view/>'
+    template: '<ui-view/>',
+    authenticate : true
   })
   .state('materialRequest.sendQuote', {
     url: '/:packageId',

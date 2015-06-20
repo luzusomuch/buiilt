@@ -6,17 +6,24 @@ angular.module('buiiltApp')
     scope:{
       package: '=',
       type : '@',
-      currentUser : '='
     },
     controller:
       function($scope,$rootScope,taskService, authService, $cookieStore, $stateParams, $rootScope, $location , packageService, userService, projectService, FileUploader, documentService) {
+        //Init Params
         $scope.currentProject = $rootScope.currentProject;
-         authService.getCurrentUser().$promise.then(function(res) {
+        authService.getCurrentUser().$promise.then(function(res) {
            $scope.currentUser = res;
+            authService.getCurrentTeam().$promise.then(function(res) {
+              $scope.currentTeam = res;
+              $scope.isLeader = (_.find($scope.currentTeam.leader,{_id : $scope.currentUser._id})) ? true : false;
+            });
         });
+
         $scope.isNew = true;
         $scope.filter = 'all';
         $scope.customFilter = {};
+
+        //Get Available assignee to assign to task
         var getAvailableAssignee = function(type) {
           switch(type) {
             case 'staff' :
@@ -26,8 +33,10 @@ angular.module('buiiltApp')
               break
           }
         };
+
         getAvailableAssignee($scope.type);
 
+        //Update Task List
         var updateTasks = function() {
           taskService.get({id : $scope.package._id, type : $scope.type}).$promise
             .then(function(res) {
@@ -40,8 +49,10 @@ angular.module('buiiltApp')
                 }
               })
             });
-        }
+        };
         updateTasks();
+
+        //Function fired when click new task
         $scope.newTask = function() {
           $scope.task = {
             assignees : []
@@ -50,26 +61,39 @@ angular.module('buiiltApp')
           $scope.isNew = true;
         };
 
+        //Function fired when click edit task
         $scope.editTask = function(task) {
           $scope.task = angular.copy(task);
+          getAvailableAssignee($scope.type);
           _.forEach($scope.task.assignees,function(item) {
             _.remove($scope.available,{_id : item._id});
-          })
+          });
           $scope.isNew = false;
+
         };
 
+        //Assign people to task
         $scope.assign = function(staff,index) {
           $scope.task.assignees.push(staff);
           $scope.available.splice(index,1);
         };
 
+        //Revoke people to task
         $scope.revoke = function(assignee,index) {
           $scope.available.push(assignee);
           $scope.task.assignees.splice(index,1);
         };
 
+        //Complete task
         $scope.complete = function(task) {
-          task.completed = !task.completed
+          task.completed = !task.completed;
+          if (task.completed) {
+            task.completedBy = $scope.currentUser._id;
+            task.completedAt = new Date();
+          } else {
+            task.completedBy = null;
+            task.completedAt = null;
+          }
           taskService.update({id : task._id, type : $scope.type},task).$promise
             .then(function(res) {
               //$('.card-title').trigger('click');
@@ -77,6 +101,7 @@ angular.module('buiiltApp')
             })
         };
 
+        //Submit form function
         $scope.save = function(form) {
           if (form.$valid) {
             if ($scope.isNew) {
