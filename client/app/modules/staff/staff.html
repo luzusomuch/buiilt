@@ -14,9 +14,12 @@
 </div>
 
 <div class="col s9">
-   <ul class="collection z-depth-1">
-     <li class="collection-item" ng-repeat="item in staffPackages" ng-if="item.canSee || isLeader"><a ui-sref="staff.view({packageId : item._id})">{{item.name}}</a></li>
-   </ul>
+   <!--<ul class="collection z-depth-1">-->
+     <!--<li class="collection-item" ng-repeat="item in staffPackages" ng-if="item.canSee || isLeader"><a ui-sref="staff.view({packageId : item._id})">{{item.name}}</a></li>-->
+   <!--</ul>-->
+  <div class="collection z-depth-1 with-header">
+    <a ui-sref="staff.view({packageId : item._id})" ng-repeat="item in staffPackages"  ng-if="item.canSee || isLeader" class="collection-item">{{item.name}}</a>
+  </div>
 </div>
 
 <div id="newWorkPackage" class="modal modal-fixed-footer">

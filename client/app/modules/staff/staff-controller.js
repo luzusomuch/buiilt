@@ -48,5 +48,4 @@ angular.module('buiiltApp')
     function($scope, $rootScope,filterFilter,currentTeam,staffPackage,currentUser) {
       $scope.staffPackage = staffPackage;
       $scope.currentUser = currentUser;
-
   });

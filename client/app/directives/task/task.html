@@ -3,9 +3,9 @@
     <div class="card-header">
       <div class="row">
         <div class="col s10" style="padding-top: 15px">
-          <a class="btn-flat" style="font-size: 12px" ng-click="filter = 'all'">All Tasks</a>
-          <a class="btn-flat" style="font-size: 12px" ng-click="filter = {'myTask' : currentUser._id} ">My Tasks</a>
-          <a class="btn-flat" style="font-size: 12px" ng-click="filter = 'completed'">Completed Tasks</a>
+          <a class="btn-flat waves-effect waves-yellow" style="font-size: 12px" ng-click="filter = 'all'">All Tasks</a>
+          <a class="btn-flat waves-effect waves-yellow" style="font-size: 12px" ng-click="filter = {'myTask' : currentUser._id} ">My Tasks</a>
+          <a class="btn-flat waves-effect waves-yellow" style="font-size: 12px" ng-click="filter = 'completed'">Completed Tasks</a>
         </div>
         <div class="col s2">
           <a class="dropdown-button btn-flat btn-flat right activator" style="margin-top: 15px" href="#!" ng-click="newTask()">
@@ -18,15 +18,19 @@
     <div style="height:300px; overflow-y: auto">
       <li class="collection-item" ng-repeat="task in tasks | taskFilter : filter ">
         <div>
-          <a class="btn-flat" style="margin-top: -3px; font-size: 12px;" ng-click="!task.isOwner || complete(task)" ng-class="{'disabled' : !task.isOwner}"
-             data-tooltip="nghia"
+          <a class="btn-flat"
+             ng-click="(!task.isOwner && !isLeader) || complete(task)"
+             ng-class="{'disabled' : !task.isOwner && !isLeader}"
+             data-tooltip="Attach..."
              data-position="top"
              data-delay="1">
             <i ng-if="!task.completed" class="mdi-toggle-check-box-outline-blank"></i>
             <i ng-if="task.completed" class="mdi-toggle-check-box"></i>
           </a>
             <span ng-class="{'completed' : task.completed}">{{task.title}}</span>
-          <a href="#!" class="btn-flat activator secondary-content" style="margin-top: -3px; font-size: 12px;" ng-click="!task.isOwner || editTask(task)" ng-if="task.isOwner">
+          <a href="#!" class="btn-flat activator secondary-content" style="margin-top: -3px; font-size: 12px;"
+             ng-click="(!task.isOwner && !isLeader) || editTask(task)"
+             ng-if="task.isOwner || isLeader">
           Edit
           </a>
         </div>
@@ -39,25 +43,49 @@
         <div class="input-field col s12">
           <input id="task_description" type="text" ng-model="task.title">
           <label for="task_description">Task</label>
-          <div class="row">
-            <p style="">Current Assignee's:</p>
-            <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="assignee in task.assignees">
-              {{assignee.email}} <span><a href="#!" ng-click="revoke(assignee,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
+        </div>
+        <div class="input-field col s12">
+          <input input-date
+                 type="text"
+                 name="created"
+                 id="dueDate"
+                 ng-model="task.dateEnd"
+                 container="body"
+                 format="mm/dd/yyyy"/>
+          <label for="dueDate">Due date</label>
+        </div>
+        <div class="input-field col s12">
+          <input input-date
+                 type="text"
+                 name="created"
+                 id="remindAt"
+                 ng-model="task.remindAt"
+                 container="body"
+                 format="mm/dd/yyyy" />
+          <label for="dueDate">Remind At</label>
+        </div>
+
+        <div class="row">
+          <p style="">Current Assignee's:</p>
+          <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="assignee in task.assignees">
+            {{assignee.email}} <span><a href="#!" ng-click="revoke(assignee,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="row">
+          <p style="">Available Assignee's:</p>
+          <a href="#!" ng-click="assign(staff,$index)" ng-repeat="staff in available">
+            <div class="card col" style="padding: 5px; margin-left: 10px" >
+              {{staff.email}}
             </div>
-          </div>
-          <div class="divider"></div>
-          <div class="row">
-            <p style="">Available Assignee's:</p>
-            <a href="#!" ng-click="assign(staff,$index)" ng-repeat="staff in available">
-              <div class="card col" style="padding: 5px; margin-left: 10px" >
-                {{staff.email}}
-              </div>
-            </a>
-          </div>
-          <div class="row">
-            <button class="btn right" type="submit" name="action">Save
-            </button>
-          </div>
+          </a>
+        </div>
+
+        <div class="row">
+          <button class="btn right" type="submit" name="action">Save
+          </button>
         </div>
       </form>
     </div>
