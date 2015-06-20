@@ -8,11 +8,25 @@ var _ = require('lodash');
 var async = require('async');
 
 exports.findOne = function(req, res) {
-    ContractorPackage.findById(req.params.id).populate('project').exec(function(err, contractorPackage) {
-        if (err) {return res.send(500, err);}
-        else {
-            return res.json(contractorPackage);
+    ContractorPackage.findById(req.params.id)
+      .populate('project')
+      .populate('winnerTeam._id')
+      .exec(function(err, contractorPackage) {
+        if (err) {
+          return res.send(500, err);
         }
+
+        User.populate(contractorPackage, [{
+            path : 'winnerTeam._id.member._id'
+        },{path : 'winnerTeam._id.leader'}],function(err,_contractorPackage) {
+          if (err) {
+            return res.send(500, err);
+          }
+          console.log(contractorPackage)
+          console.log("--------------------------------")
+          console.log(_contractorPackage.winnerTeam.member);
+          return res.json(contractorPackage);
+        })
     });
 };
 

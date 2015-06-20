@@ -125,7 +125,8 @@ angular.module('buiiltApp')
       return;
     }
     else {
-      contractorRequestService.sendQuote({contractorRequest: $scope.contractorRequest,quoteRequest: $scope.quoteRequest, rate: $scope.lineWithRates, price: $scope.lineWithPrices}).$promise.then(function(data){
+      contractorRequestService.sendQuote({contractorRequest: $scope.contractorRequest,quoteRequest: $scope.quoteRequest, rate: $scope.lineWithRates, price: $scope.lineWithPrices}).$promise
+        .then(function(data){
         $scope.success = data;
         alert('You have send quote successfully!');
         $state.go("team.manager");

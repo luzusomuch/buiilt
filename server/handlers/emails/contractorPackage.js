@@ -37,7 +37,7 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
             user: result.user,
             project: result.project,
             registryLink: config.baseUrl + 'signup',
-            contractorPackageLink: config.baseUrl + 'contractor-requests/' + request._id,
+            contractorPackageLink: config.baseUrl  + result.project._id + '/contractor-requests/' + request._id,
             subject: 'Quote request for ' + request.name
           }, function(err) {
             return next();
@@ -57,7 +57,7 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
                   //project owner
                   user: result.user,
                   project: result.project,
-                  contractorPackageLink: config.baseUrl + 'contractor-requests/' + request._id,
+                  contractorPackageLink: config.baseUrl + result.project._id  + '/contractor-requests/' + request._id,
                   subject: 'Quote request for ' + request.name
                 }, function(err) {
                   return next();

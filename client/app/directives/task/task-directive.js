@@ -8,7 +8,7 @@ angular.module('buiiltApp')
       type : '@',
     },
     controller:
-      function($scope,$rootScope,taskService, authService, $cookieStore, $stateParams, $rootScope, $location , packageService, userService, projectService, FileUploader, documentService) {
+      function($scope,$rootScope,taskService, authService,filterFilter, $cookieStore, $stateParams, $rootScope, $location , packageService, userService, projectService, FileUploader, documentService) {
         //Init Params
         $scope.currentProject = $rootScope.currentProject;
         authService.getCurrentUser().$promise.then(function(res) {
@@ -28,6 +28,17 @@ angular.module('buiiltApp')
           switch(type) {
             case 'staff' :
               $scope.available =  angular.copy($scope.package.staffs);
+              break;
+            case 'contractor' :
+              $scope.available = [];
+              _.forEach($scope.package.winnerTeam._id.member,function(member) {
+                if (member.status == 'Active') {
+                  $scope.available.push(member._id);
+                }
+              });
+              _.forEach($scope.package.winnerTeam._id.leader,function(leader) {
+                  $scope.available.push(leader);
+              });
               break;
             default :
               break
