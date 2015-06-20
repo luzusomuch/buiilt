@@ -30,7 +30,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
       staffPackages : [
         'staffPackageService','$stateParams',
         function(staffPackageService,$stateParams) {
-          return staffPackageService.getAll({id : $stateParams.id})
+          return staffPackageService.getAll({id : $stateParams.id}).$promise
         }
       ]
     }
@@ -45,7 +45,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
       staffPackage : [
         'staffPackageService','$stateParams',
         function(staffPackageService,$stateParams) {
-          return staffPackageService.get({id : $stateParams.packageId})
+          return staffPackageService.get({id : $stateParams.packageId}).$promise
         }
       ]
 

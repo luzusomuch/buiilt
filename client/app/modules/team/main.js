@@ -13,25 +13,25 @@ angular.module('buiiltApp')
           invitations : [
             'teamService',
             function(authService) {
-              return authService.getCurrentInvitation();
+              return authService.getCurrentInvitation().$promise;
             }
           ],
           users : [
             'userService',
             function(userService) {
-              return userService.getAll();
+              return userService.getAll().$promise;
             }
           ],
           currentTeam : [
             'authService',
             function(authService) {
-              return authService.getCurrentTeam();
+              return authService.getCurrentTeam().$promise;
             }
           ],
           currentUser : [
             'authService',
             function(authService) {
-              return authService.getCurrentUser();
+              return authService.getCurrentUser().$promise;
             }
           ]
         },

@@ -162,31 +162,39 @@ exports.addMember = function(req,res) {
 exports.removeMember = function(req,res) {
   var team = req.team;
   var member = req.body;
-  console.log(member._id);
-  if (member._id) {
-    User.findById(member._id._id, function (err, user) {
-      if (err) {
-        return res.send(500, err);
+  async.waterfall([
+    function(callback) {
+      if (member._id) {
+        User.findById(member._id._id, function (err, user) {
+          if (err) {
+            return res.send(500, err);
+          }
+          team.member.remove(member._id._id);
+          console.log(team.member);
+          user.set('team', undefined);
+          user.markModified('team');
+          user.save(function(err) {
+            if (err)
+              console.log(err);
+            callback();
+          });
+        })
+      } else {
+        var index = _.findIndex(team.member, {email: member.email});
+        team.member.splice(index, 1);
+        callback();
       }
-      var index =_.findIndex(team.member,{user : member._id._id});
-      team.member.splice(index,1);
-      team.save();
-      user.set('team', undefined);
-      user.markModified('team');
-      user.save(function(err) {
-        if (err)
-          console.log(err);
+    }
+  ],function() {
+    team.markModified('member');
+    team.save(function() {
+      Team.populate(team, [{path:"leader"},{path:"member._id"}], function(err, team ) {
+        return res.json(team);
       });
-    })
-  } else {
-    var index = _.findIndex(team.member, {email: member.email});
-    team.member.splice(index, 1);
-  }
-  team.save(function() {
-    Team.populate(team, [{path:"leader"},{path:"member._id"}], function(err, team ) {
-      return res.json(team);
     });
-  });
+  })
+
+
 };
 
 /**
@@ -289,7 +297,6 @@ exports.leaveTeam = function(req,res) {
   async.parallel([
     function(callback) {
        var member = team.member.id(user._id);
-      console.log(member);
       if (member) {
         team.member.remove(member);
         team.save(function(err){

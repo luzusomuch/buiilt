@@ -36,7 +36,6 @@ EventBus.onSeries('Team.Inserted', function(request, next){
 });
 
 EventBus.onSeries('Team.Updated', function(request, next){
-  console.log(request);
   async.each(request.member, function(user,callback) {
     if (!user._id && user.status == 'Pending') {
 

@@ -8,16 +8,22 @@ angular.module('buiiltApp')
     $scope.users = users;
     $scope.clear = false;
     $scope.isEdit = false;
+
+    var getLocalData = function() {
+      $scope.users  = filterFilter($scope.users, {emailVerified : true});
+      _.forEach($scope.currentTeam.member,function(member) {
+        //console.log(member);
+        if (member._id)
+          _.remove($scope.users, {_id : member._id._id});
+      });
+      _.remove($scope.users, {_id : $scope.currentUser._id});
+    }
+
+    getLocalData();
+
     $scope.editDetail = function() {
       $scope.isEdit = true;
     };
-    $scope.users  = filterFilter($scope.users, {emailVerified : true});
-    angular.forEach($scope.currentTeam.member,function(member) {
-      //console.log(member);
-      if (member._id)
-        _.remove($scope.users, {_id : member._id._id});
-    });
-    _.remove($scope.users, {_id : $scope.currentUser._id});
 
     $scope.saveDetail = function() {
       teamService.update({_id : $scope.currentTeam._id},$scope.currentTeam).$promise
@@ -45,16 +51,17 @@ angular.module('buiiltApp')
     };
     $scope.addUser = function() {
       if ($scope.member.email.title) {
-        if (!(_.find($scope.member.emails,{email : $scope.member.email.title}))) {
-          $scope.member.emails.push({email: $scope.member.email.title});
-          $scope.team.emails.push({email: $scope.member.email.title});
-          $scope.member.email = {};
-        }
+          if (!(_.find($scope.member.emails,{email : $scope.member.email.title}))) {
+            $scope.member.emails.push({email: $scope.member.email.title});
+            $scope.team.emails.push({email: $scope.member.email.title});
+            _.remove($scope.users, {email : $scope.member.email.title});
+            $scope.member.email = {};
+          }
       } else {
         if (!(_.find($scope.member.emails,{email : $scope.textString}))) {
           $scope.member.emails.push({email: $scope.textString});
           $scope.team.emails.push({email: $scope.textString});
-          $scope.member.email = {};
+         // $scope.member.email = {};
         }
       }
       $scope.$broadcast('angucomplete-alt:clearInput');
@@ -62,7 +69,8 @@ angular.module('buiiltApp')
 
     $scope.inputChanged = function(str) {
       $scope.textString = str;
-
+      console.log(str);
+      console.log($scope.textString);
     };
 
     $scope.removeUser = function(index) {
@@ -93,6 +101,7 @@ angular.module('buiiltApp')
           $scope.member.emails = [];
           $scope.team.emails = [];
           $scope.isLeader = true;
+          getLocalData();
         }, function (err) {
           console.log(err);
         });
@@ -104,6 +113,7 @@ angular.module('buiiltApp')
       teamService.assignLeader({id : $scope.currentTeam._id},$scope.selection).$promise
         .then(function(team) {
           $scope.currentTeam = team;
+          getLocalData();
         })
     };
 
@@ -117,11 +127,11 @@ angular.module('buiiltApp')
     }
 
     $scope.addNewMember = function(){
-      console.log($scope.member.emails);
       teamService.addMember({id: $scope.currentTeam._id},$scope.member.emails).$promise
         .then(function(team) {
           $scope.currentTeam = team;
           $scope.member.emails = [];
+          getLocalData();
 
         }, function(err){
           console.log(err);
@@ -135,6 +145,7 @@ angular.module('buiiltApp')
         teamService.removeMember({id: $scope.currentTeam._id}, member).$promise
           .then(function (team) {
             $scope.currentTeam = team;
+            getLocalData();
           }, function (err) {
             console.log(err);
           });
@@ -158,6 +169,7 @@ angular.module('buiiltApp')
         teamService.acceptTeam({_id: invitation._id}).$promise
           .then(function (res) {
             $scope.currentTeam = res;
+            getLocalData();
           }, function (err) {
             console.log(err);
           });
@@ -169,6 +181,7 @@ angular.module('buiiltApp')
         teamService.rejectTeam({_id: invitation._id}).$promise
           .then(function () {
             $scope.invitations.splice(index, 1);
+            getLocalData();
           }, function (err) {
             console.log(err);
           });
