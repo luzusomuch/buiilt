@@ -21,6 +21,14 @@ angular.module('buiiltApp')
             },
             isArray: true
         },
+        getContractorByProjectForContractor: {
+            method: 'GET',
+            params: {
+                id: 'id',
+                action: 'project-contractor'
+            },
+            isArray: true
+        },
         getContractorPackageTenderByProjectForBuilder: {
             method: 'GET',
             params: {

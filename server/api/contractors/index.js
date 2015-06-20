@@ -15,6 +15,7 @@ router.get('/:id/winner', auth.isAuthenticated(), controller.getProjectForContra
 
 //get contractor package by project for builder
 router.get('/:id/projectb', auth.isAuthenticated(), controller.getContractorByProjectForBuilder);
+router.get('/:id/project-contractor', auth.isAuthenticated(), controller.getContractorByProjectForContractor);
 router.get('/:id/tenderbuilder', auth.isAuthenticated(), controller.getContractorPackageTenderByProjectForBuilder);
 router.get('/:id/processingbuilder', auth.isAuthenticated(), controller.getContractorPackageInProcessByProjectForBuilder);
 

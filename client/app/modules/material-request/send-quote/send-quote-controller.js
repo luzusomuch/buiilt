@@ -5,17 +5,29 @@ angular.module('buiiltApp')
    */
   $scope.quoteRequest = {};
   $scope.materialRequest = materialRequest;
-  console.log($scope.materialRequest);
   $scope.currentUser = {};
   if ($cookieStore.get('token')) {
     $scope.currentUser = userService.get();
   }
 
   $scope.user = {};
+  $scope.message = {};
   $scope.rate = {};
   $scope.price = {};
   $scope.lineWithRates = [];
   $scope.lineWithPrices = [];
+
+  materialRequestService.getMessageForSupplier({'id': $stateParams.packageId})
+  .$promise.then(function(data) {
+    $scope.messages = data;
+  });
+
+  $scope.sendMessage = function() {
+    materialRequestService.sendMessage({id: $stateParams.packageId, message: $scope.message.message})
+    .$promise.then(function(data) {
+      $scope.messages = data;
+    });
+  };
 
   $scope.addLineWithRate = function() {
     $scope.lineWithRates.length = $scope.lineWithRates.length + 1;
@@ -69,6 +81,70 @@ angular.module('buiiltApp')
     }, function (res) {
       $scope.errors = res;
     });
+  };
+
+  //upload file
+  $scope.formData = {
+      title: ''
+  };
+  $scope.safeApply = function (fn) {
+    var phase = this.$root.$$phase;
+    if (phase == '$apply' || phase == '$digest') {
+      if (fn && (typeof (fn) === 'function')) {
+        fn();
+      }
+    } else {
+      this.$apply(fn);
+    }
+  };
+
+  var uploader = $scope.uploader = new FileUploader({
+    url: 'api/uploads/'+ $stateParams.packageId + '/file',
+    headers : {
+      Authorization: 'Bearer ' + $cookieStore.get('token')
+    },
+    formData: [$scope.formData]
+  });
+  uploader.onProgressAll = function (progress) {
+      $scope.progress = progress;
+  };
+  uploader.onAfterAddingFile = function (item) {
+      //item.file.name = ''; try to change file name
+      var reader = new FileReader();
+
+      reader.onload = function (e) {
+          item.src = e.target.result;
+          $scope.safeApply();
+      };
+
+      reader.readAsDataURL(item._file);
+  };
+  var newPhoto = null;
+  uploader.onCompleteItem = function (fileItem, response, status, headers) {
+      newPhoto = response;
+      $state.reload();
+      // fileService.getFileByStateParam({'id': $stateParams.id}).$promise.then(function(data) {
+      //     $scope.files = data;
+      // });
+  };
+
+  uploader.onBeforeUploadItem = function (item) {
+      $scope.formData._id = $scope.fileId;
+      $scope.formData.title = item.title;
+      item.formData.push($scope.formData);
+  };
+
+  var hideModalAfterUploading = false;
+  $scope.uploadAll = function(){
+      hideModalAfterUploading = true;
+      uploader.uploadAll();
+  };
+
+  uploader.onCompleteAll = function () {
+      if(hideModalAfterUploading){
+          // $modalInstance.close(newPhoto);
+      }
+      // $state.reload();
   };
 
   // $scope.signupAndSendQuotematerial = function () {

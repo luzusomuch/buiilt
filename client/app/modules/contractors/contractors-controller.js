@@ -7,6 +7,9 @@ angular.module('buiiltApp').controller('ContractorsCtrl', function($scope, $stat
     $scope.team = data;
     if ($scope.team) {
       if ($scope.team.type == 'buider') {
+        contractorService.getContractorByProjectForBuilder({'id': $stateParams.id}).$promise.then(function(data){
+          $scope.contractors = data;
+        });
         $scope.getContractorPackageTenderByProject = function() {
           contractorService.getContractorPackageTenderByProjectForBuilder({'id': $stateParams.id})
           .$promise.then(function(data) {
@@ -22,6 +25,11 @@ angular.module('buiiltApp').controller('ContractorsCtrl', function($scope, $stat
         };
       }
       else if($scope.team.type === 'contractor') {
+        contractorService.getContractorByProjectForContractor({'id': $stateParams.id})
+        .$promise.then(function(data) {
+          $scope.contractors = data;
+        });
+        
         $scope.getContractorPackageTenderByProject = function() {
           contractorService.getContractorPackageTenderByProjectForContractor({'id': $stateParams.id})
           .$promise.then(function(data) {
@@ -56,9 +64,7 @@ angular.module('buiiltApp').controller('ContractorsCtrl', function($scope, $stat
   });
   
 
-  contractorService.getContractorByProjectForBuilder({'id': $stateParams.id}).$promise.then(function(data){
-    $scope.contractors = data;
-  });
+  
 
   // projectService.getProjectsByUser({'id': $scope.user._id}, function(projects) {
   //   $scope.projects = projects;

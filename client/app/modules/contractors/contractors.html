@@ -14,19 +14,25 @@
          <a ng-click="getContractorPackageTenderByProject(); showContractorInTender = true; hideContractor = true; showContractorInProcess = false" class="collection-item">In Tender<span class="new badge">{{contractorsInTender.length}}</span></a>
          <a href="#!" class="collection-item">Completed</a>
      </div>
-     <!-- <div class="collection" ng-if="team.type === 'contractor'">
-         <a ng-click="getContractorPackageInProcessByProjectForContractor(); showContractorInProcess = true; hideContractor = true; showContractorInTender = false" class="collection-item">In Progress<span class="new badge">{{contractorsInProcess.length}}</span></a>
-
-         <a ng-click="getContractorPackageTenderByProjectForContractor(); showContractorInTender = true; hideContractor = true; showContractorInProcess = false" class="collection-item">In Tender<span class="new badge">{{contractorsInTender.length}}</span></a>
-         <a href="#!" class="collection-item">Completed</a>
-     </div> -->
    </div>
    
    <div class="col s9">
      <ul class="collection z-depth-1">
-      <li class="collection-item" ng-hide="hideContractor" ng-repeat="contractor in contractors">
-        <a ng-if="contractor.status == 'true'" ui-sref='contractorRequest.contractorPackageInProcess({id: contractor._id, packageId: contractor._id})'>#{{$index + 1}} -  {{contractor.name}} {{contractor.status}}</a>
-        <a ng-if="contractor.status == 'false'" ui-sref='contractorRequest.viewContractorRequest({id: contractor.project, packageId: contractor._id})'>#{{$index + 1}} -  {{contractor.name}} {{contractor.status}}</a>
+      <li class="collection-item" ng-if="team.type == 'buider'" ng-hide="hideContractor" ng-repeat="contractor in contractors">
+        <span ng-if="contractor.status == false">
+          <a ui-sref='contractorRequest.contractorPackageInProcess({id: contractor._id, packageId: contractor._id})'>#{{$index + 1}} -  {{contractor.name}}</a>
+        </span>
+        <span ng-if="contractor.status == true">
+          <a ui-sref='contractorRequest.viewContractorRequest({id: contractor.project, packageId: contractor._id})'>#{{$index + 1}} -  {{contractor.name}}</a>
+        </span>
+      </li>
+      <li class="collection-item" ng-if="team.type == 'contractor'" ng-hide="hideContractor" ng-repeat="contractor in contractors">
+        <span ng-if="contractor.status == false">
+          <a ui-sref='contractorRequest.contractorPackageInProcess({id: contractor._id, packageId: contractor._id})'>#{{$index + 1}} -  {{contractor.name}}</a>
+        </span>
+        <span ng-if="contractor.status == true">
+          <a ui-sref='contractorRequest.sendQuote({id: contractor.project, packageId: contractor._id})'>#{{$index + 1}} -  {{contractor.name}}</a>
+        </span>
       </li>
       <li class="collection-item" ng-show="showContractorInTender" ng-repeat="contractor in contractorsInTender">
         <a ng-if="team.type == 'buider'" ui-sref='contractorRequest.viewContractorRequest({id: contractor.project, packageId: contractor._id})'>#{{$index + 1}} -  {{contractor.name}}</a>

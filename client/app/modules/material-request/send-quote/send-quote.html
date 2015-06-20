@@ -23,49 +23,24 @@
        
        <div style="height: 500px">
          
-       <li class="collection-item">
+       <li class="collection-item" ng-repeat="message in messages.messages">
          <div class="row valign-wrapper" style="margin-bottom: -5px">
            <a href="#!" class="btn-flat col s1">
              <i class="mdi-toggle-radio-button-on valign center-align" ></i>
            </a>
            
-           <p class="col s9 valign">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.<br /> Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
+           <p class="col s9 valign">{{message.message}}</p>
            
            <img src="images/yuna.jpg" alt="" class="circle col s2 right valign center-align" />
          </div>
          </li>
-       
-       <li class="collection-item">
-         <div class="row valign-wrapper" style="margin-bottom: -5px">
-           <a href="#!" class="btn-flat col s1">
-             <i class="mdi-toggle-radio-button-on valign center-align" ></i>
-           </a>
-           
-           <p class="col s9 valign">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.<br /> Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
-           
-           <img src="images/yuna.jpg" alt="" class="circle col s2 right valign center-align" />
-         </div>
-         </li>
-       
-       <li class="collection-item">
-         <div class="row valign-wrapper" style="margin-bottom: -5px">
-           <a href="#!" class="btn-flat col s1">
-             <i class="mdi-toggle-radio-button-on valign center-align" ></i>
-           </a>
-           
-           <p class="col s9 valign">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.<br /> Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
-           
-           <img src="images/yuna.jpg" alt="" class="circle col s2 right valign center-align" />
-         </div>
-         </li>
-       
        </div>
        <div class="divider"></div>
        <div class="col s12 card-footer" style="height: 150px">
          <div class="row">
-             <form class="col s10 offset-s1">
+             <form class="col s10 offset-s1" ng-submit="sendMessage()">
                  <div class="input-field col s9">
-                   <textarea id="textarea1" class="materialize-textarea"></textarea>
+                   <textarea id="textarea1" class="materialize-textarea" ng-model="message.message"></textarea>
                    <label for="textarea1">Send a Message...</label>
              </div>
              <div class="input-field col s3">
@@ -219,9 +194,23 @@
        <div class="row" style="margin-top: 50px">
          <div class="col s6 valign">
            <div class="file-field input-field">
-               <input class="file-path validate" type="text"/>
+               <!-- <input class="file-path validate" type="text"/> -->
+               <div ng-show="uploader.queue.length" class="form-group">
+                <div ng-repeat="item in uploader.queue">
+                  <div class="row">
+                    <div class="input-field col s8 offset-s2">
+                      <input type="text" ng-model="item.file.name">
+                      <label for="">File name</label>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="input-field col s8 offset-s2">
+                    </div>
+                  </div>
+                </div>
+              </div>
                <div class="btn tooltipped" data-position="top" data-delay="1" data-tooltip="Attach a File"><i class="mdi-editor-attach-file"></i>
-                 <input type="file" />
+                 <input type="file" nv-file-select="" uploader="uploader"/>
                </div>
              </div>
          </div>
@@ -233,7 +222,7 @@
        </div>
        <div class="divider"></div>
     <div class="modal-footer">
-      <button class="modal-action modal-close waves-effect waves-green btn-flat" ng-disable="sendQuoteForm.$invalid"> Send quote!</button>
+      <button class="modal-action modal-close waves-effect waves-green btn-flat" ng-disable="sendQuoteForm.$invalid" ng-click="uploadAll()"> Send quote!</button>
          <!-- <a href="#!" ng-click="sendQuote()" class="modal-action modal-close waves-effect waves-green btn-flat ">Send Quote!</a> -->
      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
     </div>
