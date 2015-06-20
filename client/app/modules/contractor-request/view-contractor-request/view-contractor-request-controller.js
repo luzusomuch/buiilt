@@ -14,11 +14,11 @@ angular.module('buiiltApp')
 
   $scope.user = {};
 
-  contractorRequestService.getQuoteRequestByContractorPackge({'id':$stateParams.id}).$promise.then(function(data){
+  contractorRequestService.getQuoteRequestByContractorPackge({'id':$stateParams.packageId}).$promise.then(function(data){
     $scope.quoteRequests = data;
   });
 
-  contractorRequestService.getMessageForContractor({'id': $stateParams.id})
+  contractorRequestService.getMessageForContractor({'id': $stateParams.packageId})
   .$promise.then(function(data) {
     $scope.messages = data;
   });
@@ -44,7 +44,7 @@ angular.module('buiiltApp')
   };
 
   $scope.sendInvitationInContractor = function() {
-    contractorRequestService.sendInvitationInContractor({id: $stateParams.id, toContractor: $scope.emailsPhone})
+    contractorRequestService.sendInvitationInContractor({id: $stateParams.packageId, toContractor: $scope.emailsPhone})
     .$promise.then(function(data){
       console.log(data);
     });
@@ -55,7 +55,7 @@ angular.module('buiiltApp')
   };
 
   $scope.sendMessage = function() {
-    contractorRequestService.sendMessage({id: $stateParams.id, message: $scope.message.message})
+    contractorRequestService.sendMessage({id: $stateParams.packageId, message: $scope.message.message})
     .$promise.then(function(data) {
       $scope.messages = data;
     });

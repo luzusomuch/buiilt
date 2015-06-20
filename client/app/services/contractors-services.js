@@ -5,7 +5,7 @@ angular.module('buiiltApp')
         createContractorPackage: {
             method: 'POST'
         },
-        getProjectForContractorWhoWinner: {
+        getProjectForContractor: {
             method: 'GET',
             params: {
                 id: 'id',

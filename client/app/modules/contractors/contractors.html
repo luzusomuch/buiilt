@@ -26,11 +26,11 @@
      <ul class="collection z-depth-1">
       <li class="collection-item" ng-hide="hideContractor" ng-repeat="contractor in contractors">#{{$index + 1}} -  {{contractor.name}}</li>
       <li class="collection-item" ng-show="showContractorInTender" ng-repeat="contractor in contractorsInTender">
-        <a ng-if="team.type == 'buider'" ui-sref='contractorRequest.viewContractorRequest({id: contractor._id})'>#{{$index + 1}} -  {{contractor.name}}</a>
-        <a ng-if="team.type == 'contractor'" ui-sref='contractorRequest.sendQuote({id: contractor._id})'>#{{$index + 1}} -  {{contractor.name}}</a>
+        <a ng-if="team.type == 'buider'" ui-sref='contractorRequest.viewContractorRequest({id: contractor.project, packageId: contractor._id})'>#{{$index + 1}} -  {{contractor.name}}</a>
+        <a ng-if="team.type == 'contractor'" ui-sref='contractorRequest.sendQuote({id: contractor.project, packageId: contractor._id})'>#{{$index + 1}} -  {{contractor.name}}</a>
       </li>
       <li class="collection-item" ng-show="showContractorInProcess" ng-repeat="contractor in contractorsInProcess">
-        <a ui-sref='contractorRequest.contractorPackageInProcess({id: contractor._id})'>#{{$index + 1}} -  {{contractor.name}}</a>
+        <a ui-sref='contractorRequest.contractorPackageInProcess({id: contractor._id, packageId: contractor._id})'>#{{$index + 1}} -  {{contractor.name}}</a>
       </li>
      </ul>
 
@@ -60,7 +60,7 @@
        </div>
        <div class="row">
          <div class="input-field col s6">
-             <select material-select>
+             <select material-select ng-model="contractor.category">
                <option value="" disabled selected>Category</option>
                <option value="1">Option 1</option>
                <option value="2">Option 2</option>
@@ -70,7 +70,28 @@
          </div>
          <div class="input-field col s6">
             <label for="date_required" class="active">Date Required</label>
-              <input type="date" class="datepicker" ng-model="contractor.dateStart">
+            <input input-date 
+              ng-model="contractor.dateStart"
+              type="text"
+              name="created"
+              id="inputCreated"
+              ng-model="currentTime"
+              container="body"
+              format="mm/dd/yyyy"
+              months-full="{{ month }}"
+              months-short="{{ monthShort }}"
+              weekdays-full="{{ weekdaysFull }}"
+              weekdays-short="{{ weekdaysShort }}"
+              weekdays-letter="{{ weekdaysLetter }}"
+              today="today"
+              clear="clear"
+              close="close"
+              on-start="onStart()"
+              on-render="onRender()"
+              on-open="onOpen()"
+              on-close="onClose()"
+              on-set="onSet()"
+              on-stop="onStop()" />
          </div>
        </div>
        <div class="row">

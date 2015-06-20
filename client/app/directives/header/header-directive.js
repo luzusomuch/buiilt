@@ -58,7 +58,7 @@ angular.module('buiiltApp')
             projectService.getProjectsByBuilder({'id': $scope.user._id}, function(projects) {
               $scope.projectsBuilder = projects;
             });
-            contractorService.getProjectForContractorWhoWinner({'id': $scope.user._id}, function(result) {
+            contractorService.getProjectForContractor({'id': $scope.user._id}, function(result) {
               $scope.projectsContractor = result;
             });
 

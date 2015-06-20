@@ -18,11 +18,11 @@
    <ul class="collection z-depth-1">
     <li class="collection-item" ng-hide="hideMaterial" ng-repeat="materialPackage in materialPackages">#{{$index + 1}} -  {{materialPackage.name}}</li>
     <li class="collection-item" ng-show="showMaterialInTender" ng-repeat="materialPackage in materialPackagesInTender">
-      <a ng-if="team.type == 'buider'" ui-sref='materialRequest.viewmaterialRequest({id: materialPackage._id})'>#{{$index + 1}} -  {{materialPackage.name}}</a>
-      <a ng-if="team.type == 'supplier'" ui-sref='materialRequest.sendQuote({id: materialPackage._id})'>#{{$index + 1}} -  {{materialPackage.name}}</a>
+      <a ng-if="team.type == 'buider'" ui-sref='materialRequest.viewmaterialRequest({id: materialPackage.project, packageId: materialPackage._id})'>#{{$index + 1}} -  {{materialPackage.name}}</a>
+      <a ng-if="team.type == 'supplier'" ui-sref='materialRequest.sendQuote({id: materialPackage.project, packageId: materialPackage._id})'>#{{$index + 1}} -  {{materialPackage.name}}</a>
     </li>
     <li class="collection-item" ng-show="showMaterialInProcess" ng-repeat="materialPackage in materialPackagesInProcess">
-      <a ui-sref='materialRequest.materialPackageInProcess({id: materialPackage._id})'>#{{$index + 1}} -  {{materialPackage.name}}</a>
+      <a ui-sref='materialRequest.materialPackageInProcess({id: materialPackage.project, packageId: materialPackage._id})'>#{{$index + 1}} -  {{materialPackage.name}}</a>
     </li>
    </ul>
 </div>

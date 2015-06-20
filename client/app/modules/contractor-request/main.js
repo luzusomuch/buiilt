@@ -1,36 +1,44 @@
 angular.module('buiiltApp').config(function($stateProvider) {
   $stateProvider
   .state('contractorRequest', {
-    url: '/contractor-requests',
+    url: '/:id/contractor-requests',
+    hasCurrentProject : true,
+    authenticate : true,
     template: '<ui-view/>'
   })
   .state('contractorRequest.sendQuote', {
-    url: '/:id',
+    url: '/:packageId',
     templateUrl: '/app/modules/contractor-request/send-quote/send-quote.html',
     controller: 'SendQuoteContractorPackageCtrl',
+    hasCurrentProject : true,
+    authenticate : true,
     resolve: {
       contractorRequest: function($stateParams, contractorRequestService){
-        return contractorRequestService.findOne({'id':$stateParams.id});
+        return contractorRequestService.findOne({'id':$stateParams.packageId});
       }
     }
   })
   .state('contractorRequest.viewContractorRequest', {
-    url: '/:id/view',
+    url: '/:packageId/view',
     templateUrl: '/app/modules/contractor-request/view-contractor-request/view.html',
     controller: 'ViewContractorRequestCtrl',
+    hasCurrentProject : true,
+    authenticate : true,
     resolve: {
       contractorRequest: function($stateParams, contractorRequestService){
-        return contractorRequestService.findOne({'id':$stateParams.id});
+        return contractorRequestService.findOne({'id':$stateParams.packageId});
       }
     }
   })
   .state('contractorRequest.contractorPackageInProcess', {
-    url: '/:id/processing',
+    url: '/:packageId/processing',
     templateUrl: '/app/modules/contractor-request/contractor-package-in-process/view.html',
     controller: 'ContractorPackageInProcessCtrl',
+    hasCurrentProject : true,
+    authenticate : true,
     resolve: {
       contractorRequest: function($stateParams, contractorRequestService){
-        return contractorRequestService.findOne({'id':$stateParams.id});
+        return contractorRequestService.findOne({'id':$stateParams.packageId});
       }
     }
   });

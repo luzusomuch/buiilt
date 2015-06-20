@@ -20,7 +20,7 @@ angular.module('buiiltApp')
   $scope.lineWithRates = [];
   $scope.lineWithPrices = [];
 
-  contractorRequestService.getMessageForContractor({'id': $stateParams.id})
+  contractorRequestService.getMessageForContractor({'id': $stateParams.packageId})
   .$promise.then(function(data) {
     $scope.messages = data;
   });
@@ -86,7 +86,7 @@ angular.module('buiiltApp')
   };
 
   $scope.sendMessage = function() {
-    contractorRequestService.sendMessage({id: $stateParams.id, message: $scope.message})
+    contractorRequestService.sendMessage({id: $stateParams.packageId, message: $scope.message})
     .$promise.then(function(data) {
       $scope.messages = data;
     });

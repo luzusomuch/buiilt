@@ -12,11 +12,11 @@ angular.module('buiiltApp')
 
   $scope.user = {};
 
-  materialRequestService.getQuoteRequestByMaterialPackge({'id':$stateParams.id}).$promise.then(function(data){
+  materialRequestService.getQuoteRequestByMaterialPackge({'id':$stateParams.packageId}).$promise.then(function(data){
     $scope.quoteRequests = data;
   });
 
-  materialRequestService.getMessageForSupplier({'id': $stateParams.id})
+  materialRequestService.getMessageForSupplier({'id': $stateParams.packageId})
   .$promise.then(function(data) {
     $scope.messages = data;
   });
@@ -41,14 +41,14 @@ angular.module('buiiltApp')
   };
 
   $scope.sendInvitationInMaterial = function() {
-    materialRequestService.sendInvitationInMaterial({id: $stateParams.id, toSupplier: $scope.emailsPhone})
+    materialRequestService.sendInvitationInMaterial({id: $stateParams.packageId, toSupplier: $scope.emailsPhone})
     .$promise.then(function(data){
       console.log(data);
     });
   };
 
   $scope.sendMessage = function() {
-    materialRequestService.sendMessage({id: $stateParams.id, message: $scope.message.message})
+    materialRequestService.sendMessage({id: $stateParams.packageId, message: $scope.message.message})
     .$promise.then(function(data) {
       $scope.messages = data;
     });

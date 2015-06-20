@@ -9,20 +9,20 @@ angular.module('buiiltApp')
     $scope.currentUser = userService.get();
   }
 
-  contractorRequestService.getMessageForContractor({'id': $stateParams.id})
+  contractorRequestService.getMessageForContractor({'id': $stateParams.packageId})
   .$promise.then(function(data) {
     $scope.messages = data;
   });
 
   $scope.showDocument = function() {
-    fileService.getFileByStateParam({'id': $stateParams.id})
+    fileService.getFileByStateParam({'id': $stateParams.packageId})
     .$promise.then(function(data) {
       $scope.files = data;
     });
   };
 
   $scope.sendMessage = function() {
-    contractorRequestService.sendMessage({id: $stateParams.id, message: $scope.message})
+    contractorRequestService.sendMessage({id: $stateParams.packageId, message: $scope.message})
     .$promise.then(function(data) {
       $scope.messages = data;
     });

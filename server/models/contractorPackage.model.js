@@ -19,6 +19,7 @@ var ContractorPackageSchema = new Schema({
   },
   name: String,
   description: String,
+  category: String,
   messages: [{
     owner: {
       type: Schema.Types.ObjectId,

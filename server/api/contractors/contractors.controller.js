@@ -29,7 +29,9 @@ exports.createContractorPackage = function (req, res, next) {
     owner: req.user._id,
     name: req.body.contractor.name,
     description: req.body.contractor.description,
-    project: req.body.project
+    project: req.body.project,
+    category: req.body.contractor.category,
+    dateStart: req.body.contractor.dateStart
   });
   async.each(req.body.emailsPhone, function(emailPhone, callback) {
     User.findOne({'email': emailPhone.email}, function(err, user) {
@@ -47,12 +49,17 @@ exports.createContractorPackage = function (req, res, next) {
         callback();
       }
       else {
-        to.push({
-          _id: user._id,
-          email: emailPhone.email,
-          phone: emailPhone.phoneNumber
+        Team.findOne({$or:[{'leader': user._id}, {'member._id': user._id}]}, function(err, team){
+          if (err) {return res.send(500, err);}
+          else {
+            to.push({
+              _id: team._id,
+              email: emailPhone.email,
+              phone: emailPhone.phoneNumber
+            });
+            callback();
+          }
         });
-        callback();
       }
     });
   }, function(err) {
@@ -85,12 +92,12 @@ exports.createContractorPackage = function (req, res, next) {
   // });
 };
 
-exports.getProjectForContractorWhoWinner = function(req, res) {
+exports.getProjectForContractor = function(req, res) {
   Team.findOne({$or:[{'leader': req.params.id}, {'member._id': req.params.id}]}, function(err, team) {
     if (err) {return res.send(500,err);}
     if (!team) {return res.send(404,err);}
     else {
-      var contractors;
+      var contractors = [];
       var memberId = team.leader;
       async.each(team.member, function(member, callback) {
         if (member._id) {
@@ -100,19 +107,30 @@ exports.getProjectForContractorWhoWinner = function(req, res) {
       }, function(err) {
         if (err) {console.log(err);}
         else {
-          async.each(memberId, function(member, callback) {
-            ContractorPackage.find({'to._id': member}).populate('project').exec(function(err, contractorPackage){
-              if (err) {return res.send(500,err);}
-              if (!contractorPackage) {callback();}
-              else {
-                contractors = contractorPackage;
-                callback();
-              }
-            });
-          }, function(err) {
+          ContractorPackage.find({}, function(err, contractorPackageList) {
             if (err) {return res.send(500,err);}
             else {
-              return res.json(200,contractors);
+              async.each(memberId, function(member, callback) {
+                _.each(contractorPackageList, function(contractorPackage) {
+                  ContractorPackage.findOne({'_id':contractorPackage._id, 'to._id': member}).populate('project').exec(function(err, contractorPackage){
+                    if (err) {return res.send(500,err);}
+                    // if (!contractorPackage) {console.log('sdsdsd');}
+                    else {
+                      if (contractorPackage !== null) {
+                        contractors.push(contractorPackage);
+                        // callback();
+                      }
+                    }
+                  });
+                });
+                callback();
+              }, function(err) {
+                if (err) {return res.send(500,err);}
+                else {
+                  console.log(contractors);
+                  return res.json(200,contractors);
+                }
+              });
             }
           });
         }
@@ -127,12 +145,6 @@ exports.getProjectForContractorWhoWinner = function(req, res) {
       // });
     }
   });
-  // ContractorPackage.find({'winner._id': req.params.id}).populate('project').exec(function(err, result){
-  //   if (err) {res.send(500, err);}
-  //   else {
-  //     return res.json(200, result);
-  //   }
-  // });
 };
 
 exports.getContractorByProjectForBuilder = function(req, res) {
