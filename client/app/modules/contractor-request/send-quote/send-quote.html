@@ -182,8 +182,8 @@
          </div>
          <div class="input-field col s2 offset-s3" style="margin-top: -40px">
                 <p>Sub-Total: {{subTotalRate + subTotalPrice}}</p>
-            <p>GST</p>
-            <p>Total</p>
+            <p>GST: {{(subTotalRate + subTotalPrice) * 0.1}}</p>
+            <p>Total: {{(subTotalRate + subTotalPrice) * 0.1 + (subTotalRate + subTotalPrice)}}</p>
              </div>
        </div>
        <div class="divider"></div>

@@ -54,7 +54,13 @@ angular.module('buiiltApp')
           id: '@id',
           action: 'sendInvoice'
         }
+      },
+      sendAddendum: {
+        method: 'POST',
+        params: {
+          id: '@id',
+          action: 'send-addendum'
+        }
       }
-      
     });
   });

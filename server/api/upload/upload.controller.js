@@ -61,45 +61,27 @@ exports.upload = function(req, res){
                     file.size = uploadedFile.size;
                     file.version = file.version + 1;
                     file.belongTo = req.params.id;
-
-                    uploadedField.usersRelatedTo = uploadedField.usersRelatedTo.split(',');
-                    async.each(uploadedField.usersRelatedTo, function(userRelated, callback) {
-                        User.findOne({'email': userRelated}, function(err, user) {
-                            if (user) {
-                                file.usersRelatedTo.push({
-                                    _id: user._id,
-                                    email: user.email
-                                });
-                                //calback
-                                callback();
-                            }
-                        });
-                    }, function(err) {
+                    file.save(function(err, saved) {
                         if (err) {console.log(err);}
                         else {
-                            file.save(function(err, saved) {
+                            s3.uploadFile(saved, function(err, data) {
                                 if (err) {console.log(err);}
                                 else {
-                                    s3.uploadFile(saved, function(err, data) {
-                                        if (err) {console.log(err);}
-                                        else {
-                                            if (saved.mimeType == 'image/png' || saved.mimeType == 'image/jpeg') {
-                                                gm(__dirname + "\\..\\..\\..\\" + fileSaved.path)
-                                                .resize(320, 480)
-                                                .write(__dirname + "\\..\\..\\..\\" + "client\\media\\img\\"+fileSaved._id + '-' +fileSaved.title, function(err) {
-                                                    if (err) {console.log(err);}
-                                                    else {
-                                                        return res.json(200,data);        
-                                                    }
-                                                });
-                                            }
+                                    if (saved.mimeType == 'image/png' || saved.mimeType == 'image/jpeg') {
+                                        gm(__dirname + "\\..\\..\\..\\" + fileSaved.path)
+                                        .resize(320, 480)
+                                        .write(__dirname + "\\..\\..\\..\\" + "client\\media\\img\\"+fileSaved._id + '-' +fileSaved.title, function(err) {
+                                            if (err) {console.log(err);}
                                             else {
-                                                return res.json(200,data);
+                                                return res.json(200,data);        
                                             }
-                                        }
-                                    })
+                                        });
+                                    }
+                                    else {
+                                        return res.json(200,data);
+                                    }
                                 }
-                            });      
+                            });
                         }
                     });
                 });
@@ -115,46 +97,29 @@ exports.upload = function(req, res){
                     user: req.user._id,
                     belongTo: req.params.id
                 });
-
-                uploadedField.usersRelatedTo = uploadedField.usersRelatedTo.split(',');
-                async.each(uploadedField.usersRelatedTo, function(userRelated, callback) {
-                    User.findOne({'email': userRelated}, function(err, user) {
-                        if (user) {
-                            file.usersRelatedTo.push({
-                                _id: user._id,
-                                email: user.email
-                            });
-                            //calback
-                            callback();
+                file.save(function(err, saved){
+                    file.save(function(err, fileSaved) {
+                        if (err) {console.log(err);}
+                        else {
+                            s3.uploadFile(fileSaved, function(err, data) {
+                                if (err) {console.log(err);}
+                                else {
+                                    if (fileSaved.mimeType == 'image/png' || fileSaved.mimeType == 'image/jpeg') {
+                                        gm(__dirname + "\\..\\..\\..\\" + fileSaved.path)
+                                        .resize(320, 480)
+                                        .write(__dirname + "\\..\\..\\..\\" + "client\\media\\img\\"+fileSaved._id + '-' +fileSaved.title, function(err) {
+                                            if (err) {console.log(err);}
+                                            else
+                                                return res.json(200,data);        
+                                        });
+                                    }
+                                    else {
+                                        return res.json(200,data);  
+                                    }
+                                }
+                            })
                         }
                     });
-                    
-                }, function(err) {
-                    if (err) {console.log(err);}
-                    else {
-                        file.save(function(err, fileSaved) {
-                            if (err) {console.log(err);}
-                            else {
-                                s3.uploadFile(fileSaved, function(err, data) {
-                                    if (err) {console.log(err);}
-                                    else {
-                                        if (fileSaved.mimeType == 'image/png' || fileSaved.mimeType == 'image/jpeg') {
-                                            gm(__dirname + "\\..\\..\\..\\" + fileSaved.path)
-                                            .resize(320, 480)
-                                            .write(__dirname + "\\..\\..\\..\\" + "client\\media\\img\\"+fileSaved._id + '-' +fileSaved.title, function(err) {
-                                                if (err) {console.log(err);}
-                                                else
-                                                    return res.json(200,data);        
-                                            });
-                                        }
-                                        else {
-                                            return res.json(200,data);  
-                                        }
-                                    }
-                                })
-                            }
-                        });
-                    }
                 });
             }
         }

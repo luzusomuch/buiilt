@@ -20,8 +20,8 @@ angular.module('buiiltApp').directive('upload', function(){
                 title: '',
                 // belongTo: {},
                 // doc: {},
-                desc: '',
-                usersRelatedTo: []
+                desc: ''
+                // usersRelatedTo: []
             };
             // $scope.docum = {};
             // packageService.getPackageByProject({'id': $stateParams.id}, function(data) {

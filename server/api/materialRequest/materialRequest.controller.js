@@ -290,3 +290,55 @@ exports.sendInvoice = function(req, res) {
   });
   
 };
+
+exports.sendAddendum = function(req, res) {
+  MaterialPackage.findById(req.body.id, function(err, materialPackage) {
+    if (err) {return res.send(500,err)}
+    if (!materialPackage) {return res.send(404,err)}
+    else {
+      console.log(req.body);
+      if (materialPackage.addendums) {
+        var addendums = materialPackage.addendums;
+        var addendumsScope = [];
+        _.each(req.body.addendumScope, function(addendumScope) {
+          addendumsScope.push({
+            description: addendumScope.scopeDescription,
+            quantity: addendumScope.quantity
+          });
+        });
+        addendums.push({
+          description: req.body.description.description,
+          addendumsScope: addendumsScope
+        });
+        materialPackage.addendums = addendums;
+        materialPackage.save(function(err, saved){
+          if (err) {return res.send(500, err);}
+          else {
+            return res.json(200,saved);
+          }
+        });
+      }
+      else {
+        var addendums = [];
+        var addendumsScope = [];
+        _.each(req.body.addendumScope, function(addendumScope) {
+          addendumsScope.push({
+            description: addendumScope.scopeDescription,
+            quantity: addendumScope.quantity
+          });
+        });
+        addendums.push({
+          description: req.body.description.description,
+          addendumsScope: addendumsScope
+        });
+        materialPackage.addendums = addendums;
+        materialPackage.save(function(err, saved){
+          if (err) {return res.send(500, err);}
+          else {
+            return res.json(200,saved);
+          }
+        });
+      }
+    }
+  });
+};

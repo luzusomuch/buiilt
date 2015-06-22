@@ -23,9 +23,6 @@ exports.findOne = function(req, res) {
           if (err) {
             return res.send(500, err);
           }
-          console.log(contractorPackage)
-          console.log("--------------------------------")
-          console.log(_contractorPackage.winnerTeam.member);
           return res.json(contractorPackage);
         })
     });
@@ -353,11 +350,53 @@ exports.sendInvoice = function(req, res) {
 };
 
 exports.sendAddendum = function(req, res) {
-  ContractorPackage.findById(req.params.id, function(err, contractorPackage) {
+  ContractorPackage.findById(req.body.id, function(err, contractorPackage) {
     if (err) {return res.send(500,err)}
     if (!contractorPackage) {return res.send(404,err)}
     else {
       console.log(req.body);
+      if (contractorPackage.addendums) {
+        var addendums = contractorPackage.addendums;
+        var addendumsScope = [];
+        _.each(req.body.addendumScope, function(addendumScope) {
+          addendumsScope.push({
+            description: addendumScope.scopeDescription,
+            quantity: addendumScope.quantity
+          });
+        });
+        addendums.push({
+          description: req.body.description.description,
+          addendumsScope: addendumsScope
+        });
+        contractorPackage.addendums = addendums;
+        contractorPackage.save(function(err, saved){
+          if (err) {return res.send(500, err);}
+          else {
+            return res.json(200,saved);
+          }
+        });
+      }
+      else {
+        var addendums = [];
+        var addendumsScope = [];
+        _.each(req.body.addendumScope, function(addendumScope) {
+          addendumsScope.push({
+            description: addendumScope.scopeDescription,
+            quantity: addendumScope.quantity
+          });
+        });
+        addendums.push({
+          description: req.body.description.description,
+          addendumsScope: addendumsScope
+        });
+        contractorPackage.addendums = addendums;
+        contractorPackage.save(function(err, saved){
+          if (err) {return res.send(500, err);}
+          else {
+            return res.json(200,saved);
+          }
+        });
+      }
     }
   });
 };

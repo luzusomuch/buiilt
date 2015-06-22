@@ -5,6 +5,7 @@ angular.module('buiiltApp')
    */
   $scope.currentTeam = currentTeam;
   $scope.contractorRequest = contractorRequest;
+  console.log(contractorRequest);
   $scope.variation = {};
   $scope.defect = {};
   $scope.invoice = {};
@@ -50,6 +51,7 @@ angular.module('buiiltApp')
     contractorRequestService.sendMessage({id: $stateParams.packageId, message: $scope.message})
     .$promise.then(function(data) {
       $scope.messages = data;
+      alert('Send message successfully!');
     });
   };
 
@@ -57,6 +59,7 @@ angular.module('buiiltApp')
     contractorRequestService.sendVariation({id: $stateParams.packageId, variation: $scope.variation})
     .$promise.then(function(data) {
       $scope.variations = data;
+      alert('Send variation successfully!');
     });
   };
 
@@ -64,6 +67,7 @@ angular.module('buiiltApp')
     contractorRequestService.sendDefect({id: $stateParams.packageId, defect: $scope.defect})
     .$promise.then(function(data) {
       $scope.defects = data;
+      alert('Send defect successfully!');
     });
   };
 
