@@ -126,6 +126,16 @@ angular.module('buiiltApp').directive('upload', function(){
                     // $modalInstance.close(newPhoto);
                 }
                 // $state.reload();
+                if ($stateParams.id) {
+                    fileService.getFileByStateParam({'id': $stateParams.id}).$promise.then(function(data) {
+                        $scope.files = data;
+                    });    
+                }
+                else {
+                    fileService.getFileByStateParam({'id': $stateParams.packageId}).$promise.then(function(data) {
+                        $scope.files = data;
+                    });       
+                }
             };
         },
     }

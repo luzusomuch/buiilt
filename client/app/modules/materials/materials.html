@@ -18,15 +18,15 @@
    <ul class="collection z-depth-1">
     <li class="collection-item" ng-if="team.type == 'buider'" ng-hide="hideMaterial" ng-repeat="material in materials">
       <span ng-if="material.status == false">
-        <a ui-sref='materialRequest.contractorPackageInProcess({id: material._id, packageId: material._id})'>#{{$index + 1}} -  {{material.name}}</a>
+        <a ui-sref='materialRequest.materialPackageInProcess({id: material.project, packageId: material._id})'>#{{$index + 1}} -  {{material.name}}</a>
       </span>
       <span ng-if="material.status == true">
-        <a ui-sref='materialRequest.viewContractorRequest({id: material.project, packageId: material._id})'>#{{$index + 1}} -  {{material.name}}</a>
+        <a ui-sref='materialRequest.viewmaterialRequest({id: material.project, packageId: material._id})'>#{{$index + 1}} -  {{material.name}}</a>
       </span>
     </li>
     <li class="collection-item" ng-if="team.type == 'supplier'" ng-hide="hideMaterial" ng-repeat="material in materials">
       <span ng-if="material.status == false">
-        <a ui-sref='materialRequest.contractorPackageInProcess({id: material._id, packageId: material._id})'>#{{$index + 1}} -  {{material.name}}</a>
+        <a ui-sref='materialRequest.materialPackageInProcess({id: material.project, packageId: material._id})'>#{{$index + 1}} -  {{material.name}}</a>
       </span>
       <span ng-if="material.status == true">
         <a ui-sref='materialRequest.sendQuote({id: material.project, packageId: material._id})'>#{{$index + 1}} -  {{material.name}}</a>
