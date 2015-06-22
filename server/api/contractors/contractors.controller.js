@@ -27,6 +27,7 @@ exports.createContractorPackage = function (req, res, next) {
   var to = [];
   var contractorPackage = new ContractorPackage({
     owner: req.user._id,
+    packageType: 'contractor',
     name: req.body.contractor.name,
     description: req.body.contractor.description,
     project: req.body.project,
@@ -97,7 +98,7 @@ exports.getProjectForContractor = function(req, res) {
     if (err) {return res.send(500,err);}
     if (!team) {return res.send(404,err);}
     else {
-      ContractorPackage.find({'to._id': team._id}).populate('project').exec(function(err, contractorPackage){
+      ContractorPackage.find({$or:[{'to._id': team._id},{'to.email': req.user.email}]}).populate('project').exec(function(err, contractorPackage){
         if (err) {return res.send(500,err);}
         else {
           return res.json(200, contractorPackage);

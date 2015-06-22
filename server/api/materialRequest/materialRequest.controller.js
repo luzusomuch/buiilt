@@ -96,11 +96,11 @@ exports.sendInvitationInMaterial = function(req, res) {
             User.findOne({'email': emailPhone.email}, function(err, user) {
               if (err) {return res.send(500,err);}
               if (!user) {
-                var validateInvite = new ValidateInvite({
-                  email: emailPhone.email,
-                  inviteType: 'supplier'
-                });
-                validateInvite.save();
+                // var validateInvite = new ValidateInvite({
+                //   email: emailPhone.email,
+                //   inviteType: 'supplier'
+                // });
+                // validateInvite.save();
                 to.push({
                   email: emailPhone.email,
                   phone: emailPhone.phoneNumber

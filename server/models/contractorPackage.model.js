@@ -12,14 +12,23 @@ var ContractorPackageSchema = new Schema({
     ref: 'User',
     required: true
   },
+  packageType: String,
   project: {
     type: Schema.Types.ObjectId,
     ref: 'Project',
     required: true
   },
+  packageInviteToken: String,
   name: String,
   description: String,
   category: String,
+  addendums: [{
+    description: String,
+    addendumsScope: [{
+      description: String,
+      quantity: Number
+    }]
+  }],
   variations : [{
     owner: {
       type: Schema.Types.ObjectId,
@@ -113,6 +122,8 @@ ContractorPackageSchema
 
   if (!this.isNew){
     this.updatedAt = new Date();
+  } else {
+    this.packageInviteToken = crypto.randomBytes(20).toString('hex');
   }
 
   next();

@@ -12,6 +12,7 @@ var MaterialPackageSchema = new Schema({
     ref: 'User',
     required: true
   },
+  packageType: String,
   name: String,
   description: String,
   messages: [{

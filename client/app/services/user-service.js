@@ -22,5 +22,6 @@ angular.module('buiiltApp')
     delete: {method:'DELETE', params: {id: 'id', action: ''}},
     changePassword: { method: 'PUT', params: {id: 'id', action: 'password'}},
     changePhoneNum: { method: 'PUT', params: {id: 'id', action: 'phone'}},
+    createUserWithInviteToken: {method: 'POST', params: {action: 'invite-token'}}
   });
 });

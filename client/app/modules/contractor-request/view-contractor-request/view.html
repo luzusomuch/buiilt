@@ -1,5 +1,5 @@
 <div class="row" style="margin-top: 18px">
-  <h5 class="col s8">Contractor Package in Tender</h5>
+  <h5 class="col s8">Contractor Package {{contractorRequest.name}} in Tender</h5>
   <div class="col s4" style="margin-top:15px">
    <a class='dropdown-button btn-flat right tooltipped' dropdown data-position="top" data-delay="1" data-tooltip="Attach..." data-gutter="-16" href='#' data-activates='itemActions'>
     <i class="mdi-navigation-more-vert"></i>
@@ -91,32 +91,22 @@
              <ul class="collection">
                <div style="height: 300px; background-color: white;">
 
-                 <li class="collection-item">
+                 <li class="collection-item" ng-repeat = "message in messages.messages">
                    <div class="row valign-wrapper" style="margin-bottom: -5px">
                      <a href="#!" class="btn-flat col s1">
                        <i class="mdi-toggle-radio-button-on valign center-align" ></i>
                      </a>
 
-                     <p class="col s11 valign">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.<br /> Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
+                     <p class="col s11 valign">message.message</p>
                    </div>
                  </li>
-                 <li class="collection-item">
-                   <div class="row valign-wrapper" style="margin-bottom: -5px">
-                     <a href="#!" class="btn-flat col s1">
-                       <i class="mdi-toggle-radio-button-on valign center-align" ></i>
-                     </a>
-
-                     <p class="col s11 valign">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.<br /> Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
-                   </div>
-                 </li>
-
                </div>
                <div class="divider"></div>
                <div class="col s12 card-footer" style="background-color: white">
                  <div class="row">
-                   <form class="valign-wrapper">
+                   <form class="valign-wrapper" ng-submit="sendMessage()">
                      <div class="input-field col s9">
-                       <textarea id="textarea1" class="materialize-textarea"></textarea>
+                       <textarea id="textarea1" class="materialize-textarea" ng-model="message.message"></textarea>
                        <label for="textarea1">Textarea</label>
                      </div>
                      <div class="col s3">
@@ -131,8 +121,6 @@
            </div>
         </div>
       </div>
-
-        
     </li>
   </ul>
  </div>
@@ -243,7 +231,7 @@
   <div class="modal-content">
    <div class="row">
      <div class="col s12">
-       <h5>Confirm the Cancelation of Package Name</h5>
+       <h5>Confirm the Cancelation of Package {{contractorRequest.name}}</h5>
      </div>
    </div>
    <div class="divider"></div>
@@ -252,3 +240,59 @@
      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Go Back</a>
    </div>
  </div>  
+</div>
+<div id="modal_attachAddendum" class="modal modal-fixed-footer">
+    <div class="modal-content">
+    <h5>Attach an Addenda to Package {{contractorRequest.name}}</h5>
+    <form ng-submit="sendAddendum()">
+      <div class="row">
+        <div class="input-field col s12">
+           <textarea id="addenda_description" class="materialize-textarea" ng-model="addendum.description"></textarea>
+               <label for="addenda_description">Describe the addendum...</label>
+            </div>
+      </div>
+      
+       <div class="row">
+         <div class="col s12">
+          <ul class="collection z-depth-1">
+            <li class="collection-item vlalign-wrapper">
+              <div class="row form" style="margin-bottom: 0px">
+                <div class="col s12"><p>Edit your scope of work below:</p></div>
+                <div class="input-field col s7">
+                   <textarea id="description" class="materialize-textarea" ng-model="addendum.descriptionScope"></textarea>
+                       <label for="description">Description</label>
+                    </div>
+                <div class="input-field col s3" style="margin-top: 67px">
+                        <input id="quantity" type="text" class="validate" ng-model="addendum.quantity">
+                        <label for="quantity">Quantity</label>
+                    </div>
+                <div class="valign col s2">
+                  <a ng-click="addAddendum()" class="btn" type="submit" name="action" style="margin-top: 78px;">Add</a>
+                </div>
+              </div>
+            </li>
+              <li class="collection-item vlalign" ng-repeat="addendum in scopeAddendums">
+                <div class="row" style="margin-bottom: 0px">
+                  <div class="col s7">
+                    <p>{{addendum.description}}</p>
+                  </div>
+                  <div class="col s3">
+                    <p>{{addendum.quantity}}</p>
+                  </div>
+                  <div class="col s2">
+                    <a class="btn-flat btn-flat" ng-click="removeAddendum($index)">Remove</a>
+                  </div>
+                </div>
+              </li>
+            </ul>
+         </div>
+       </div>
+       
+     </form>
+    </div>
+  <div class="divider"></div>
+    <div class="modal-footer">
+         <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Send Addendum!</a>
+     <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
+    </div>
+</div>

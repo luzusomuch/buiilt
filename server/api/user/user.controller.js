@@ -2,6 +2,9 @@
 
 var User = require('./../../models/user.model');
 var Project = require('./../../models/project.model');
+var PackageInvite = require('./../../models/packageInvite.model');
+var ContractorPackage = require('./../../models/contractorPackage.model');
+var MaterialPackage = require('./../../models/materialPackage');
 var Team = require('./../../models/team.model');
 var passport = require('passport');
 var config = require('../../config/environment');
@@ -90,6 +93,93 @@ exports.create = function (req, res, next) {
 
     });
   }));
+};
+
+//create user with invite token
+exports.createUserWithInviteToken = function(req, res, next) {
+  console.log(req.body);
+  PackageInvite.findById(req.body.packageInviteToken, function(err, packageInvite) {
+    if (err) {return res.send(500,err);}
+    else {
+      var newUser = new User();
+      newUser.email = packageInvite.to;
+      newUser.password = req.body.password;
+      newUser.provider = 'local';
+      newUser.role = 'user';
+      newUser.emailVerified = true;
+      newUser.save(function(err, user){
+        if (err) {return validationError(res, err);}
+        else {
+          var token = jwt.sign({_id: user._id}, config.secrets.session, {expiresInMinutes: 60 * 5});
+          // res.json({token: token,emailVerified : true});  
+          var team = new Team({
+            name: req.body.teamName,
+            type: packageInvite.inviteType
+          });
+          team.leader.push(user._id);
+          team.save(function(err, savedTeam){
+            if (err) {return res.send(500,err);}
+            else {
+              if (packageInvite.inviteType == 'contractor') {
+                ContractorPackage.findById(packageInvite.package, function(err, contractorPackge){
+                  if (err) {return res.send(500);}
+                  else {
+                    var packageTo = contractorPackge.to;
+                    _.each(contractorPackge.to, function(to) {
+                      if (to.email === packageInvite.to) {
+                        packageTo.push({
+                          _id: savedTeam._id,
+                          email: packageInvite.to
+                        });
+                      }
+                    });
+                    contractorPackge.to = packageTo;
+                    contractorPackge.save(function(err, saved) {
+                      if (err) {return res.send(500,err);}
+                      else {
+                        var data = {
+                          token: token,
+                          package: saved
+                        };
+                        return res.json(200,data);
+                      }
+                    });
+                  }
+                });
+              }
+              else if(packageInvite.inviteType == 'supplier') {
+                MaterialPackage.findById(packageInvite.package, function(err, materialPackage){
+                  if (err) {return res.send(500);}
+                  else {
+                    var packageTo = materialPackage.to;
+                    _.each(materialPackage.to, function(to) {
+                      if (to.email === packageInvite.to) {
+                        packageTo.push({
+                          _id: savedTeam._id,
+                          email: packageInvite.to
+                        });
+                      }
+                    });
+                    materialPackage.to = packageTo;
+                    materialPackage.save(function(err, saved) {
+                      if (err) {return res.send(500,err);}
+                      else {
+                        var data = {
+                          token: token,
+                          package: saved
+                        };
+                        return res.json(200,data);
+                      }
+                    });
+                  }
+                });
+              }
+            }
+          });
+        }
+      });
+    }
+  });
 };
 
 /**

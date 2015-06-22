@@ -1,6 +1,7 @@
 'use strict';
 
 var ContractorPackage = require('./../../models/contractorPackage.model');
+var PackageInvite = require('./../../models/packageInvite.model');
 var ValidateInvite = require('./../../models/validateInvite.model');
 var QuoteRequest = require('./../../models/quoteRequest.model');
 var User = require('./../../models/user.model');
@@ -156,11 +157,11 @@ exports.sendInvitationInContractor = function(req, res) {
             User.findOne({'email': emailPhone.email}, function(err, user) {
               if (err) {return res.send(500,err);}
               if (!user) {
-                var validateInvite = new ValidateInvite({
-                  email: emailPhone.email,
-                  inviteType: 'contractor'
-                });
-                validateInvite.save();
+                // var validateInvite = new ValidateInvite({
+                //   email: emailPhone.email,
+                //   inviteType: 'contractor'
+                // });
+                // validateInvite.save();
                 to.push({
                   email: emailPhone.email,
                   phone: emailPhone.phoneNumber
@@ -193,8 +194,17 @@ exports.sendInvitationInContractor = function(req, res) {
               contractorPackage.save(function(err, saved){
                 if (err) {return res.send(500,err);}
                 else {
-                  return res.json(200,saved);
-              }
+                  _.each(req.body.toContractor, function(email){
+                    var packageInvite = new PackageInvite({
+                      owner: req.user._id,
+                      inviteType: 'contractor',
+                      package: saved._id,
+                      to: email.email
+                    });
+                    packageInvite.save();
+                    return res.json(200,saved);
+                  });
+                }
               });
             }
         });
@@ -340,5 +350,14 @@ exports.sendInvoice = function(req, res) {
       });
     }
   });
-  
+};
+
+exports.sendAddendum = function(req, res) {
+  ContractorPackage.findById(req.params.id, function(err, contractorPackage) {
+    if (err) {return res.send(500,err)}
+    if (!contractorPackage) {return res.send(404,err)}
+    else {
+      console.log(req.body);
+    }
+  });
 };

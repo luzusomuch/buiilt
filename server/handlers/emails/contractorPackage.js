@@ -10,6 +10,7 @@ var Project = require('./../../models/project.model');
 var Team = require('./../../models/team.model');
 var User = require('./../../models/user.model');
 var ContractorPackage = require('./../../models/contractorPackage.model');
+var PackageInvite = require('./../../models/packageInvite.model');
 var config = require('./../../config/environment');
 var async = require('async');
 
@@ -31,12 +32,13 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
       //do send email
       _.each(request.to,function(toEmail) {
         if (!toEmail._id) {
+
           Mailer.sendMail('contractor-package-request-no-account.html', toEmail.email, {
             contractorPackage: request,
             //project owner
             user: result.user,
             project: result.project,
-            registryLink: config.baseUrl + 'signup',
+            registryLink: config.baseUrl + 'signup-invite?packageInviteToken=' + request._id,
             contractorPackageLink: config.baseUrl  + result.project._id + '/contractor-requests/' + request._id,
             subject: 'Quote request for ' + request.name
           }, function(err) {
@@ -44,7 +46,7 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
           });
         }
         else {
-          Team.findOne({$or: [{'leader': toEmail._id}, {'member._id': toEmail._id}]}, function(err, team) {
+          Team.findOne({'_id': toEmail._id}, function(err, team) {
           if (err) {return console.log(err);}
           if (!team) {
             return next();
@@ -90,20 +92,29 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
       //do send email
       _.each(request.newInvitation,function(toEmail) {
         if (!toEmail._id) {
-          Mailer.sendMail('contractor-package-request-no-account.html', toEmail.email, {
-            contractorPackage: request,
-            //project owner
-            user: result.user,
-            project: result.project,
-            registryLink: config.baseUrl + 'signup',
-            contractorPackageLink: config.baseUrl + 'contractor-requests/' + request._id,
-            subject: 'Quote request for ' + request.name
-          }, function(err) {
-            return next();
+          PackageInvite.find({package: request._id}, function(err, packageInvites) {
+            if (err) {return next();}
+            else {
+              _.each(packageInvites, function(packageInvite){
+                console.log(packageInvite);
+                Mailer.sendMail('contractor-package-request-no-account.html', packageInvite.to, {
+                  contractorPackage: request,
+                  //project owner
+                  user: result.user,
+                  project: result.project,
+                  registryLink: config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
+                  contractorPackageLink: config.baseUrl + 'contractor-requests/' + request._id,
+                  subject: 'Quote request for ' + request.name
+                }, function(err) {
+                  console.log(err);
+                  return next();
+                });
+              });
+            }
           });
         }
         else {
-          Team.findOne({$or: [{'leader': toEmail._id}, {'member._id': toEmail._id}]}, function(err, team) {
+          Team.findOne({'_id': toEmail._id}, function(err, team) {
           if (err) {return console.log(err);}
           if (!team) {
             return next();

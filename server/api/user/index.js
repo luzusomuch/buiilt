@@ -15,5 +15,6 @@ router.put('/:id/password', auth.isAuthenticated(), controller.changePassword);
 router.put('/:id/phone', auth.isAuthenticated(), controller.changePhoneNum);
 router.get('/:id', auth.isAuthenticated(), controller.show);
 router.post('/', controller.create);
+router.post('/invite-token', controller.createUserWithInviteToken);
 
 module.exports = router;

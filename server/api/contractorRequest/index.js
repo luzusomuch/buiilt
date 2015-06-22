@@ -17,6 +17,7 @@ router.get('/:id/messagecontractor', auth.isAuthenticated(), controller.getMessa
 router.post('/:id/sendVariation', auth.isAuthenticated(), controller.sendVariation);
 router.post('/:id/sendDefect', auth.isAuthenticated(), controller.sendDefect);
 router.post('/:id/sendInvoice', auth.isAuthenticated(), controller.sendInvoice);
+router.post('/:id/send-addendum', auth.isAuthenticated(), controller.sendAddendum);
 // router.get('/:id/getVariation', auth.isAuthenticated(), controller.getVariation);
 router.get('/:id/view', auth.isAuthenticated(), controller.getQuoteRequestByContractorPackge);
 

@@ -31,6 +31,7 @@ var UserSchema = new Schema({
   github: {},
   phoneNumber: String,
   country: String,
+  packageToken: String,
   createdAt: {type: Date, default: Date.now},
   updatedAt: {type: Date, default: Date.now}
 }, {

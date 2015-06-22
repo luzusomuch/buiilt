@@ -12,6 +12,7 @@ var config = require('./../../config/environment');
  * event handler after creating new account
  */
 EventBus.onSeries('User.Inserted', function(user, next) {
+  console.log(user);
   if(!user.emailVerified){
     Mailer.sendMail('confirm-email.html', user.email, {
       user: user,

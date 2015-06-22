@@ -11,7 +11,8 @@ angular.module('buiiltApp')
   }
 
   $scope.message = {};
-
+  $scope.addendum = {};
+  $scope.addendumsScope = [];
   $scope.user = {};
 
   contractorRequestService.getQuoteRequestByContractorPackge({'id':$stateParams.packageId}).$promise.then(function(data){
@@ -46,7 +47,7 @@ angular.module('buiiltApp')
   $scope.sendInvitationInContractor = function() {
     contractorRequestService.sendInvitationInContractor({id: $stateParams.packageId, toContractor: $scope.emailsPhone})
     .$promise.then(function(data){
-      console.log(data);
+      // console.log(data);
     });
   };
 
@@ -58,7 +59,23 @@ angular.module('buiiltApp')
     contractorRequestService.sendMessage({id: $stateParams.packageId, message: $scope.message.message})
     .$promise.then(function(data) {
       $scope.messages = data;
+      $scope.message.message = null;
     });
   };
 
+  //Send addendum
+  $scope.addAddendum = function() {
+    $scope.addendumsScope.push({scopeDescription: $scope.addendum.scopeDescription, quantity: $scope.addendum.quantity});
+    $scope.addendum.scopeDescription = null;
+    $scope.addendum.quantity = null;
+  };
+  $scope.removeAddendum = function(index) {
+    $scope.addendumsScope.splice(index, 1);
+  };
+  $scope.sendAddendum = function() {
+    contractorRequestService.sendAddendum({id: $stateParams.packageId, description: $scope.addendum, addendumScope: $scope.addendumsScope})
+    .$promise.then(function(data) {
+      // $scope.messages = data;
+    });
+  };
 });
