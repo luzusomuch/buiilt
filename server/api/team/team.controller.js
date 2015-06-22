@@ -166,11 +166,10 @@ exports.removeMember = function(req,res) {
     function(callback) {
       if (member._id) {
         User.findById(member._id._id, function (err, user) {
-          if (err) {
+          if (err || !user) {
             return res.send(500, err);
           }
           team.member.remove(member._id._id);
-          console.log(team.member);
           user.set('team', undefined);
           user.markModified('team');
           user.save(function(err) {

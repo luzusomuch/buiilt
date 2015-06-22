@@ -74,6 +74,9 @@ exports.create = function (req, res, next) {
           }}, function(err, team) {
             if (err) {console.log(err);return res.send(500, err);}
             Team.findOne({teamInviteToken : teamInviteToken},function(err,team) {
+              if (err || !team) {
+                return validationError(res,err);
+              }
               newUser.team = {
                 _id : team._id,
                 role : 'member'

@@ -14,11 +14,39 @@ angular.module('buiiltApp')
       title: ''
   };
 
+
+  $scope.subTotalPrice = 0;
+  $scope.subTotalRate = 0;
   $scope.user = {};
   $scope.rate = {};
   $scope.price = {};
   $scope.lineWithRates = [];
   $scope.lineWithPrices = [];
+  $scope.$watch('rate.lineWithRate',function(value) {
+    $scope.subTotalRate = 0;
+    if (value && value.rateTotal) {
+      _.forEach(value.rateTotal, function (item) {
+
+        if (!isNaN(item)) {
+          $scope.subTotalRate += parseFloat(item);
+        }
+      })
+    }
+
+  },true)
+
+  $scope.$watch('price.lineWithPrice',function(value) {
+    $scope.subTotalPrice = 0;
+    if (value && value.price) {
+      _.forEach(value.price, function (item) {
+
+        if (!isNaN(item)) {
+          $scope.subTotalPrice += parseFloat(item);
+        }
+      })
+    }
+
+  },true);
 
   $scope.formData = {
     fileId: '',
@@ -95,6 +123,7 @@ angular.module('buiiltApp')
 
   $scope.addLineWithRate = function() {
     $scope.lineWithRates.length = $scope.lineWithRates.length + 1;
+
   };
   $scope.addLineWithPrice = function() {
     $scope.lineWithPrices.length = $scope.lineWithPrices.length + 1;
@@ -103,6 +132,7 @@ angular.module('buiiltApp')
   $scope.removeLineWithRate = function(index) {
     $scope.lineWithRates.splice(index, 1);
   };
+
   $scope.removeLineWithPrice = function(index) {
     $scope.lineWithPrices.splice(index, 1);
   };
@@ -122,9 +152,9 @@ angular.module('buiiltApp')
     });
     if ($scope.lineWithPrices.length == 0 || $scope.lineWithRates.length == 0) {
       alert('Please review your quote');
-      return;
     }
     else {
+
       contractorRequestService.sendQuote({contractorRequest: $scope.contractorRequest,quoteRequest: $scope.quoteRequest, rate: $scope.lineWithRates, price: $scope.lineWithPrices}).$promise
         .then(function(data){
         $scope.success = data;

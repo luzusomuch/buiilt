@@ -1,6 +1,6 @@
 'use strict';
 
-var MaterialPackage = require('./../../models/materialPackage');
+var MaterialPackage = require('./../../models/materialPackage.model');
 var QuoteRequest = require('./../../models/quoteRequest.model');
 var ValidateInvite = require('./../../models/validateInvite.model');
 var User = require('./../../models/user.model');

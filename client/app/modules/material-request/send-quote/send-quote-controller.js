@@ -10,12 +10,40 @@ angular.module('buiiltApp')
     $scope.currentUser = userService.get();
   }
 
+  $scope.subTotalPrice = 0;
+  $scope.subTotalRate = 0;
   $scope.user = {};
   $scope.message = {};
   $scope.rate = {};
   $scope.price = {};
   $scope.lineWithRates = [];
   $scope.lineWithPrices = [];
+
+  $scope.$watch('rate.lineWithRate',function(value) {
+    $scope.subTotalRate = 0;
+    if (value && value.rateTotal) {
+      _.forEach(value.rateTotal, function (item) {
+
+        if (!isNaN(item)) {
+          $scope.subTotalRate += parseFloat(item);
+        }
+      })
+    }
+
+  },true)
+
+  $scope.$watch('price.lineWithPrice',function(value) {
+    $scope.subTotalPrice = 0;
+    if (value && value.price) {
+      _.forEach(value.price, function (item) {
+
+        if (!isNaN(item)) {
+          $scope.subTotalPrice += parseFloat(item);
+        }
+      })
+    }
+
+  },true);
 
   materialRequestService.getMessageForSupplier({'id': $stateParams.packageId})
   .$promise.then(function(data) {

@@ -9,7 +9,7 @@ var EventBus = require('./../../components/EventBus');
 var Project = require('./../../models/project.model');
 var Team = require('./../../models/team.model');
 var User = require('./../../models/user.model');
-var MaterialPackage = require('./../../models/materialPackage');
+var MaterialPackage = require('./../../models/materialPackage.model');
 var config = require('./../../config/environment');
 var async = require('async');
 

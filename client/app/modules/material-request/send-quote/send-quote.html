@@ -158,7 +158,7 @@
                     </div>
                 <div class="input-field col s2" style="margin-top: 67px">
                         <input disabled id="quantity" type="text" class="validate" ng-model="rate.lineWithRate.rateTotal[$index]">
-                        <label for="quantity">Line Total {{rate.lineWithRate.rate[$index] * rate.lineWithRate.rateQuantity[$index]}}</label>
+                        <label for="quantity">{{rate.lineWithRate.rateTotal[$index] = rate.lineWithRate.rate[$index] * rate.lineWithRate.rateQuantity[$index]}}</label>
                     </div>
                 <div class="input-field col s1" style="margin-top: 67px">
                         <i class="small mdi-action-highlight-remove" ng-click="removeLineWithRate($index)"></i>
@@ -181,7 +181,7 @@
                     </div>
                 <div class="input-field col s2" style="margin-top: 67px">
                         <input disabled id="quantity" type="text" class="validate" ng-model="price.lineWithPrice.total[$index]">
-                        <label for="quantity">Line Total {{price.lineWithPrice.price[$index]}}</label>
+                        <label for="quantity">{{price.lineWithPrice.price[$index]}}</label>
                     </div>
                 <div class="input-field col s1" style="margin-top: 67px">
                         <i class="small mdi-action-highlight-remove" ng-click="removeLineWithPrice($index)"></i>
@@ -215,7 +215,7 @@
              </div>
          </div>
          <div class="input-field col s2 offset-s3" style="margin-top: -40px">
-                <p>Sub-Total: {{getSubTotal()}}</p>
+                <p>Sub-Total: {{subTotalRate + subTotalPrice}}</p>
             <p>GST</p>
             <p>Total</p>
              </div>
