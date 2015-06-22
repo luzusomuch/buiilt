@@ -92,7 +92,7 @@ exports.getProjectForSupplier = function(req, res) {
 };
 
 exports.getMaterialPackageTenderByProjectForBuilder = function(req, res) {
-  MaterialPackage.find({$and:[{'project' : req.params.id},{status: true}]}, function(err, materialPackages) {
+  MaterialPackage.find({$and:[{'project' : req.params.id},{status: true}, {isCancel: false}]}, function(err, materialPackages) {
     if (err) {return res.send(500, err);}
     if (!materialPackages) {return res.send(404, err);}
     else {
@@ -102,7 +102,7 @@ exports.getMaterialPackageTenderByProjectForBuilder = function(req, res) {
 };
 
 exports.getMaterialPackageInProcessByProjectForBuilder = function(req, res) {
-  MaterialPackage.find({$and:[{'project' : req.params.id},{status: false}]}, function(err, materialPackages) {
+  MaterialPackage.find({$and:[{'project' : req.params.id},{status: false}, {isCancel: false}]}, function(err, materialPackages) {
     if (err) {return res.send(500, err);}
     if (!materialPackages) {return res.send(404, err);}
     else {
@@ -116,7 +116,7 @@ exports.getMaterialPackageInTenderByProjectForSupplier = function(req, res) {
     if (err) {return res.send(500, err);}
     if (!team) {return res.send(404,err);}
     else {
-      MaterialPackage.find({$and:[{'project' : req.params.id},{'to._id': team._id},{status: true}]}, function(err, materialPackages){
+      MaterialPackage.find({$and:[{'project' : req.params.id},{'to._id': team._id},{status: true}, {isCancel: false}]}, function(err, materialPackages){
         if (err) {return res.send(500,err);}
         else {
           return res.json(200, materialPackages)
@@ -131,7 +131,7 @@ exports.getMaterialPackageInProcessByProjectForSupplier = function(req, res) {
     if (err) {return res.send(500, err)}
     if (!team) {return res.send(404,err)}
     else {
-      MaterialPackage.find({$and:[{'project' : req.params.id}, {'winnerTeam._id': team._id},{status: false}]}, function(err, materialPackages) {
+      MaterialPackage.find({$and:[{'project' : req.params.id}, {'winnerTeam._id': team._id},{status: false}, {isCancel: false}]}, function(err, materialPackages) {
         if (err) {return res.send(500, err);}
         if (!materialPackages) {return res.send(404, err);}
         else {

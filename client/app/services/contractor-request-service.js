@@ -68,6 +68,13 @@ angular.module('buiiltApp')
           id: '@id',
           action: 'send-addendum'
         }
+      },
+      cancelPackage: {
+        method: 'PUT',
+        params: {
+          id: '@id',
+          action: 'cancel-package'
+        }
       }
     }
     );

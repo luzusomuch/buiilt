@@ -400,3 +400,19 @@ exports.sendAddendum = function(req, res) {
     }
   });
 };
+
+//cancel package
+exports.cancelPackage = function(req, res) {
+  ContractorPackage.findById(req.body.id, function(err, contractorPackage) {
+    if (err) {return res.send(500,err);}
+    else {
+      contractorPackage.isCancel = true;
+      contractorPackage.save(function(err, saved) {
+        if (err) {return res.send(500,err);}
+        else {
+          return res.json(200, saved);
+        }
+      });
+    }
+  });
+};

@@ -15,6 +15,13 @@ var MaterialPackageSchema = new Schema({
   packageType: String,
   name: String,
   description: String,
+  addendums: [{
+    description: String,
+    addendumsScope: [{
+      description: String,
+      quantity: Number
+    }]
+  }],
   messages: [{
     owner: {
       type: Schema.Types.ObjectId,
@@ -96,6 +103,7 @@ var MaterialPackageSchema = new Schema({
     type: Number,
     // required: true
   },
+  isCancel: {type: Boolean, default: false},
   defact:[],
   isSelect: { type: Boolean, default: false },
   status: { type: Boolean, default: true },

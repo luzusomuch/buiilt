@@ -78,4 +78,15 @@ angular.module('buiiltApp')
       // $scope.messages = data;
     });
   };
+
+  //Cancel package
+  $scope.cancelPackage = function() {
+    if (confirm('Cancel this package?!')) {
+      contractorRequestService.cancelPackage({id: $stateParams.packageId})
+      .$promise.then(function(data) {
+        alert('Cancel successfully!');
+        $state.go('contractors, ({id: '+ data.project +'})');
+      });
+    }
+  };
 });

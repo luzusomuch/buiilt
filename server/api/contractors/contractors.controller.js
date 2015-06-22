@@ -134,7 +134,7 @@ exports.getContractorByProjectForBuilder = function(req, res) {
 };
 
 exports.getContractorPackageTenderByProjectForBuilder = function(req, res) {
-  ContractorPackage.find({$and:[{'project' : req.params.id},{status: true}]}, function(err, contractors) {
+  ContractorPackage.find({$and:[{'project' : req.params.id},{status: true}, {isCancel: false}]}, function(err, contractors) {
     if (err) {return res.send(500, err);}
     if (!contractors) {return res.send(404, err);}
     else {
@@ -144,7 +144,7 @@ exports.getContractorPackageTenderByProjectForBuilder = function(req, res) {
 };
 
 exports.getContractorPackageInProcessByProjectForBuilder = function(req, res) {
-  ContractorPackage.find({$and:[{'project' : req.params.id},{status: false}]}, function(err, contractors) {
+  ContractorPackage.find({$and:[{'project' : req.params.id},{status: false}, {isCancel: false}]}, function(err, contractors) {
     if (err) {return res.send(500, err);}
     if (!contractors) {return res.send(404, err);}
     else {
@@ -158,7 +158,7 @@ exports.getContractorPackageTenderByProjectForContractor = function(req, res) {
     if (err) {return res.send(500, err);}
     if (!team) {return res.send(404,err);}
     else {
-      ContractorPackage.find({$and:[{'project' : req.params.id},{'to._id': team._id},{status: true}]}, function(err, contractor){
+      ContractorPackage.find({$and:[{'project' : req.params.id},{'to._id': team._id},{status: true}, {isCancel: false}]}, function(err, contractor){
         if (err) {return res.send(500,err);}
         else {
           return res.json(200,contractor)
@@ -173,7 +173,7 @@ exports.getContractorPackageInProcessByProjectForContractor = function(req, res)
     if (err) {return res.send(500, err)}
     if (!team) {return res.send(404,err)}
     else {
-      ContractorPackage.find({$and:[{'project' : req.params.id}, {'winnerTeam._id': team._id},{status: false}]}, function(err, contractors) {
+      ContractorPackage.find({$and:[{'project' : req.params.id}, {'winnerTeam._id': team._id},{status: false}, {isCancel: false}]}, function(err, contractors) {
         if (err) {return res.send(500, err);}
         if (!contractors) {return res.send(404, err);}
         else {
