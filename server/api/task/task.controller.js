@@ -4,7 +4,8 @@ var User = require('./../../models/user.model');
 var Task = require('./../../models/task.model');
 var StaffPackage = require('./../../models/staffPackage.model'),
     BuilderPackage = require('./../../models/builderPackage.model'),
-    ContractorPackage = require('./../../models/contractorPackage.model');
+    ContractorPackage = require('./../../models/contractorPackage.model'),
+    MaterialPackage = require('./../../models/materialPackage.model');
 var errorsHelper = require('../../components/helpers/errors');
 var TaskValidator = require('./../../validators/task');
 var _ = require('lodash');
@@ -21,6 +22,9 @@ var getPackage = function(type) {
       break;
     case 'contractor' :
       _package = ContractorPackage;
+      break;
+    case 'material' :
+      _package = MaterialPackage;
       break;
     default :
       break;
