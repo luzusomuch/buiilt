@@ -146,6 +146,7 @@ exports.createUserWithInviteToken = function(req, res, next) {
                       else {
                         var data = {
                           token: token,
+                          emailVerified: true,
                           package: saved
                         };
                         return res.json(200,data);
@@ -173,6 +174,7 @@ exports.createUserWithInviteToken = function(req, res, next) {
                       else {
                         var data = {
                           token: token,
+                          emailVerified: true,
                           package: saved
                         };
                         return res.json(200,data);
@@ -191,6 +193,7 @@ exports.createUserWithInviteToken = function(req, res, next) {
                       else {
                         var data = {
                           token: token,
+                          emailVerified: true,
                           package: saved
                         };
                         return res.json(200, data);

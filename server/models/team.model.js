@@ -101,7 +101,9 @@ TeamSchema
 });
 
 TeamSchema.post('save', function (doc) {
-  doc.oldMember = this._original.member.slice();
+  if (this._original) {
+    doc.oldMember = this._original.member.slice();  
+  }
   var evtName = this.wasNew ? 'Team.Inserted' : 'Team.Updated';
 
   EventBus.emit(evtName, doc);
