@@ -106,12 +106,14 @@ angular.module('buiiltApp')
     };
 
 
-    $scope.assignLeader = function() {
-      teamService.assignLeader({id : $scope.currentTeam._id},$scope.selection).$promise
-        .then(function(team) {
-          $scope.currentTeam = team;
-          getLocalData();
-        })
+    $scope.assignLeader = function(member) {
+      if (confirm("Are you sure you want to assign this member as leader of team")) {
+        teamService.assignLeader({id: $scope.currentTeam._id}, member).$promise
+          .then(function (team) {
+            $scope.currentTeam = team;
+            getLocalData();
+          })
+      }
     };
 
     $scope.leaveTeam = function() {

@@ -261,31 +261,28 @@ exports.reject = function(req,res) {
 
 exports.assignLeader = function(req,res) {
   var team = req.team;
-  var members = req.body;
-  async.each(members,function(member,callback) {
-    var _member = team.member.id(member);
-    team.member.remove(_member);
-    team.leader.push(_member);
-    team.save(function(err) {
-      if (err) {
-        callback(err,null);
-      }
-      User.findById(member,function(err,user) {
-        user.team.role = "admin";
-        user.save(function(err) {
-          if (err) {
-            callback(err,null);
-          }
-          callback(null,null)
-        })
-      });
-    })
-  },function(err, result) {
+
+  var member = team.member.id(req.body._id._id);
+  console.log(member);
+  team.member.remove(member);
+  team.leader.push(member);
+  team.save(function(err) {
     if (err) {
-      return errorsHelper.validationErrors(err,res)
+      return res.send(500,err);
     }
-    Team.populate(team, [{path:"leader"},{path:"member._id"}], function(err, team ) {
-      return res.json(team);
+    User.findById(member._id,function(err,user) {
+      if (err || !user) {
+        return res.send(500,err);
+      }
+      user.team.role = "admin";
+      user.save(function(err) {
+        if (err) {
+          return res.send(500,err);
+        }
+        Team.populate(team, [{path:"leader"},{path:"member._id"}], function(err, team ) {
+          return res.json(team);
+        });
+      })
     });
   });
 };

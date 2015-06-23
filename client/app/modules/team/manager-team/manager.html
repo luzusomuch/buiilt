@@ -51,7 +51,7 @@
               <div class="row">
                 <div class="z-depth-1">
                   <a href=""></a>
-                  <table class="team">
+                  <table class="team bordered">
                     <thead>
                     <th class="col s6">Member email</th>
                     <th class="col s2">Type</th>
@@ -66,11 +66,15 @@
                       <td class="col s2 center-align">
                       </td>
                     </tr>
-                    <tr ng-repeat="member in currentTeam.member">
+                    <tr ng-repeat="member in currentTeam.member | orderBy : ['status']">
                       <td class="col s6">{{(member.email) ? member.email : member._id.email}}</td>
                       <td class="col s2">Member</td>
                       <td class="col s2">{{member.status}}</td>
                       <td class="col s2 center-align">
+                        <a class="waves-effect waves-light" name="action" ng-click="assignLeader(member)"
+                           ng-if="isLeader && leader._id != user._id && member._id" tooltips title="Assign Leader">
+                          <i class="material-icons">supervisor_account</i>
+                        </a>
                         <a class="waves-effect waves-light" name="action" ng-click="removeMember(member)"
                            ng-if="isLeader && leader._id != user._id" tooltips title="Remove this Member">
                           <i class="mdi-action-highlight-remove tiny"></i>
@@ -83,7 +87,6 @@
               </div>
               <div class="row">
                 <a class="waves-effect waves-light btn modal-trigger" href="#newMember" ng-if="isLeader">Add new member</a>
-                <a class="waves-effect waves-light btn modal-trigger" href="#assignLeader" ng-if="isLeader">Assign Leader</a>
                 <a class="waves-effect waves-light btn" ng-if="!isLeader || currentTeam.leader.length > 1" ng-click="leaveTeam()">Leave this team</a>
               </div>
             </div>
@@ -173,23 +176,6 @@
   </form>
 </div>
 
-  <div id="assignLeader" class="modal">
-    <form name="newMemberForm" ng-submit="assignLeader()">
-      <div class="modal-content">
-        <h4 class="header">Assign member to leader</h4>
-        <div class="row">
-          <p ng-repeat="member in currentTeam.member | filter : {status : 'active'}">
-            <input type="checkbox" name="newLeader" class="filled-in" id="{{member._id._id}}" value="{{member._id._id}" ng-click="toggleSelection(member._id._id)"/>
-            <label for="{{member._id._id}}">{{member._id.email}}</label>
-          </p>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="modal-action modal-close waves-effect waves-green btn-flat" type="submit">Submit</button>
-        <button class="modal-action modal-close btn-flat" type="button">Close</button>
-      </div>
-    </form>
-  </div>
 
 <script type="text/ng-template" id="/my-custom-template.html">
   <div class="angucomplete-holder" ng-class="{'angucomplete-dropdown-visible': showDropdown}">

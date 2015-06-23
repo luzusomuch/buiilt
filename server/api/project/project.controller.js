@@ -272,15 +272,14 @@ exports.getProjectsByUser = function(req, res) {
     else {
       async.each(team.leader, function(leader, callback) {
         Project.find({'user._id': leader}, function(err, projects) {
-          if (err) {return res.send(500, err);}
-          if (!projects) {return res.send(404, err);}
+          if (err) {return callback(err, null);}
+          if (!projects) {return callback(err, null);}
           else {
-            return res.json(200, projects);
+            return callback(null, projects);
           }
-          callback();
         });
-      }, function(err){
-        callback();
+      }, function(err,projects){
+        return res.json(200, projects);
       });
       // Project.find({'builder._id': team._id}, function(err, projects){
       //   if (err) {return res.send(500, err);}
@@ -311,15 +310,14 @@ exports.getProjectsByBuilder = function(req, res) {
     else {
       async.each(team.leader, function(leader, callback) {
         Project.find({'builder._id': leader}, function(err, projects) {
-          if (err) {return res.send(500, err);}
-          if (!projects) {return res.send(404, err);}
+          if (err) {return callback(err,null);}
+          if (!projects) {return callback(err, null);}
           else {
-            return res.json(200, projects);
+            return callback(null, projects);
           }
-          callback();
         });
-      }, function(err){
-        callback();
+      }, function(err,result){
+        return res.json(result);
       });
       // Project.find({'builder._id': team._id}, function(err, projects){
       //   if (err) {return res.send(500, err);}
