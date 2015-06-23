@@ -5,8 +5,17 @@ angular.module('buiiltApp').config(function($stateProvider) {
     template: '<ui-view/>'
   })
   .state('notification.view', {
-    url: '/:id',
+    url: '/',
     templateUrl: '/app/modules/notification/view-notification/view.html',
-    controller: 'ViewNotificationCtrl'
+    controller: 'ViewNotificationCtrl',
+    authenticate : true,
+    resolve : {
+      notifications : [
+        'notificationService',
+        function(notificationService) {
+          return notificationService.get().$promise;
+        }
+      ]
+    }
   });
 });

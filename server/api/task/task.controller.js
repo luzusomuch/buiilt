@@ -6,8 +6,8 @@ var StaffPackage = require('./../../models/staffPackage.model'),
     BuilderPackage = require('./../../models/builderPackage.model'),
     ContractorPackage = require('./../../models/contractorPackage.model'),
     MaterialPackage = require('./../../models/materialPackage.model');
-var errorsHelper = require('../../components/helpers/errors');
 var TaskValidator = require('./../../validators/task');
+var errorsHelper = require('../../components/helpers/errors');
 var _ = require('lodash');
 var async = require('async');
 
@@ -62,8 +62,10 @@ exports.create = function(req,res) {
     }
     var task = new Task(data);
     task.package = aPackage;
+    task.project = aPackage.project;
     task.user = user;
     task.project = aPackage.project;
+    task.type = req.params.type;
     task.dateStart = new Date();
     task.save(function(err) {
       if (err) {
@@ -85,6 +87,7 @@ exports.update = function(req,res) {
     task = _.merge(task,data);
     task.assignees = data.assignees;
     task.markModified('assignees');
+    task._editUser = req.user;
     task.save(function(err) {
       if (err) {
         return res.send(500,err)

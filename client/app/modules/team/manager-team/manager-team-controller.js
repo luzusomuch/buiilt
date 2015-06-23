@@ -12,7 +12,6 @@ angular.module('buiiltApp')
     var getLocalData = function() {
       $scope.users  = filterFilter($scope.users, {emailVerified : true});
       _.forEach($scope.currentTeam.member,function(member) {
-        //console.log(member);
         if (member._id)
           _.remove($scope.users, {_id : member._id._id});
       });
@@ -69,8 +68,6 @@ angular.module('buiiltApp')
 
     $scope.inputChanged = function(str) {
       $scope.textString = str;
-      console.log(str);
-      console.log($scope.textString);
     };
 
     $scope.removeUser = function(index) {

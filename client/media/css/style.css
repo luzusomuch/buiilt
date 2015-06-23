@@ -72,3 +72,17 @@ table.team {
 .completed {
     text-decoration: line-through;
 }
+
+ul.notifications li .highlight, .highlight {
+    color :#FFC107
+}
+ul.notifications li div.read {
+    opacity: 0.4;
+}
+
+p.validate-message {
+    color: #F44336;
+    opacity: 1;
+    transition: .2s opacity ease-out, .2s color ease-out;
+    font-size: 0.8rem;
+}

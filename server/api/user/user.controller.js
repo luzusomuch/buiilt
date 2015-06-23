@@ -7,6 +7,7 @@ var ContractorPackage = require('./../../models/contractorPackage.model');
 var BuilderPackage = require('./../../models/builderPackage.model');
 var MaterialPackage = require('./../../models/materialPackage.model');
 var Team = require('./../../models/team.model');
+var TeamInvite = require('./../../models/teamInvite.model');
 var passport = require('passport');
 var config = require('../../config/environment');
 var jwt = require('jsonwebtoken');
@@ -34,8 +35,8 @@ exports.index = function (req, res) {
  * Creates a new user
  */
 exports.create = function (req, res, next) {
-  var teamInviteToken = (req.body.teamInviteToken) ? req.body.teamInviteToken : null;
-  var emailVerified = false;
+  var acceptTeam = req.body.acceptTeam;
+
   UserValidator.validateNewUser(req, okay(next, function (data) {
     var newUser = new User(data);
     newUser.provider = 'local';
@@ -45,6 +46,7 @@ exports.create = function (req, res, next) {
         return validationError(res, err);
       }
       //update project for user
+      var token = jwt.sign({_id: user._id}, config.secrets.session, {expiresInMinutes: 60 * 5});
       Project.find({'user.email': req.body.email}, function (err, projects) {
         if (err) {
         }
@@ -65,34 +67,35 @@ exports.create = function (req, res, next) {
           });
         }
       });
-      if (teamInviteToken) {
+      if (acceptTeam) {
+        var team = req.body.invite.team;
         //update teams for group user
-        Team.update({teamInviteToken : teamInviteToken,'member.email': req.body.email},
+        Team.update({_id : team._id,'member.email': req.body.email},
           {"$set" : {
             "member.$._id" : user._id,
             "member.$.status" : 'Active',
             "member.$.email" : null
-          }}, function(err, team) {
-            if (err) {console.log(err);return res.send(500, err);}
-            Team.findOne({teamInviteToken : teamInviteToken},function(err,team) {
-              if (err || !team) {
-                return validationError(res,err);
-              }
-              newUser.team = {
-                _id : team._id,
-                role : 'member'
-              };
-              newUser.emailVerified = true;
-              emailVerified = true;
-              newUser.save(function() {
-                var token = jwt.sign({_id: user._id}, config.secrets.session, {expiresInMinutes: 60 * 5});
-                res.json({token: token,emailVerified : true});
+          }}, function(err) {
+            if (err) {
+              return res.send(500, err);
+            }
+            newUser.team = {
+              _id : team._id,
+              role : 'member'
+            };
+            newUser.emailVerified = true;
+            newUser.save(function() {
+              TeamInvite.remove({_id : req.body.invite._id},function(err) {
+                if (err) {
+                  return res.send(500,err);
+                }
+                return res.json({token: token,emailVerified : true});
               });
-            })
-          });
+
+            });
+          })
       } else {
-        var token = jwt.sign({_id: user._id}, config.secrets.session, {expiresInMinutes: 60 * 5});
-        res.json({token: token,emailVerified : false});
+        return res.json({token: token,emailVerified : false});
       }
 
     });

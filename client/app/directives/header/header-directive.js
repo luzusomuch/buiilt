@@ -72,8 +72,8 @@ angular.module('buiiltApp')
                 if (!project && project == null) {
                   var userId = $scope.user._id;
                   $scope.tabs = [{sref: 'team.manager', label: 'team manager'},
-                            {sref: 'user.form({id: userId})', label: 'edit profile'},
-                            {sref: 'notification.view({id: userId})', label: 'notification'}];
+                            {sref: 'user.form()', label: 'edit profile'},
+                            {sref: 'notification.view', label: 'notification'}];
                 }
                 else {
                   if ($scope.currentTeam.type === 'homeOwner') {
