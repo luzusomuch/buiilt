@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-.controller('ViewContractorRequestCtrl', function($scope, $state, $stateParams, $cookieStore, authService, userService, contractorRequest, contractorRequestService, quoteService) {
+.controller('ViewContractorRequestCtrl', function($scope, $window, $state, $stateParams, $cookieStore, authService, userService, contractorRequest, contractorRequestService, quoteService) {
   /**
    * quote data
    */
@@ -85,7 +85,9 @@ angular.module('buiiltApp')
       contractorRequestService.cancelPackage({id: $stateParams.packageId})
       .$promise.then(function(data) {
         alert('Cancel successfully!');
-        $state.go('contractors, ({id: '+ data.project +'})');
+        // console.log($state.get());
+        $window.location.href = data.project + '/contractors';
+        // $state.go('^.contractors, {id: '+ data.project +'}');
       });
     }
   };

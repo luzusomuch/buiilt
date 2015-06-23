@@ -1,8 +1,8 @@
-angular.module('buiiltApp').controller('ContractorsCtrl', function($scope, $stateParams, $rootScope, $timeout, $q, team, contractorService, authService, projectService, teamService) {
+angular.module('buiiltApp').controller('ContractorsCtrl', function($scope, $stateParams, $rootScope, $timeout, $q, contractorService, authService, projectService, teamService) {
   $scope.contractor = {};
   $scope.currentProject = $rootScope.currentProject;
   $scope.user = authService.getCurrentUser();
-  $scope.team = authService.getCurrentTeam();
+  // $scope.team = authService.getCurrentTeam();
   teamService.getCurrentTeam().$promise.then(function(data) {
     $scope.team = data;
     if ($scope.team) {

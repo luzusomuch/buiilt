@@ -28,7 +28,7 @@
                        <div class="card-header">
                            <div class="row">
                                <div class="col s6">
-                                   <a class='dropdown-button btn-flat' style="margin-top: 15px" data-gutter="15" data-activates='itemFilter' dropdown>ALL ITEMS<i class="mdi-navigation-arrow-drop-down"></i></a>
+                                   <a class='dropdown-button btn-flat' style="margin-top: 15px" data-gutter="15" data-activates='itemFilter' dropdown>{{(allItemsText) ? allItemsText : 'All items'}}<i class="mdi-navigation-arrow-drop-down"></i></a>
                                      <ul id='itemFilter' class='dropdown-content' style="margin-top: 15px">
                                        <li>
                                         <a ng-click="showVariations(); hideAll = true; showVariation = true; showDocument = false; showDefect = false; showDocument = false; showInvoice = false;">VARIATIONS
@@ -53,9 +53,20 @@
                        </div>
                        <div class="divider"></div>
                          <div style="height: 300px;" ng-hide="hideAll">
+                          
+                          <li class="collection-item" ng-repeat="item in contractorRequest.variations" ng-if="contractorRequest.variations">
+                            {{item.title}}
+                          </li>
+                          <li class="collection-item" ng-repeat="item in contractorRequest.defects" ng-if="contractorRequest.defects">
+                            {{item.title}}
+                          </li>
+                          <li class="collection-item" ng-repeat="item in contractorRequest.invoices" ng-if="contractorRequest.invoices">
+                            {{item.title}}
+                          </li>
+                          <li class="collection-item" ng-repeat="file in documents" ng-if="documents">{{file.title}}</li>
                          </div>
                          <div style="height: 300px" ng-show="showVariation" ng-if="variations">
-                             <li class="collection-item" ng-repeat="variation in variations.variations">{{variation.title}}</li>
+                             <li class="collection-item" ng-repeat="variation in variations.va riations">{{variation.title}}</li>
                          </div>
                          <div style="height: 300px" ng-show="showDefect" ng-if="defects">
                              <li class="collection-item" ng-repeat="defect in defects.defects">{{defect.title}}</li>

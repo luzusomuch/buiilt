@@ -32,6 +32,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
       authenticate : true,
     resolve: {
       project: function($stateParams, projectService) {
+        console.log($stateParams.id);
         return projectService.get({id: $stateParams.id});
       }
     },

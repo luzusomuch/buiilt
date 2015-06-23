@@ -3,9 +3,14 @@ angular.module('buiiltApp')
   /**
    * quote data
    */
+  $scope.allItemsText = 'All items';
   $scope.currentTeam = currentTeam;
   $scope.contractorRequest = contractorRequest;
-  console.log(contractorRequest);
+  $scope.documents = [];
+  fileService.getFileByStateParam({'id': $stateParams.packageId})
+  .$promise.then(function(data) {
+    $scope.documents = data;
+  });
   $scope.variation = {};
   $scope.defect = {};
   $scope.invoice = {};
@@ -20,31 +25,23 @@ angular.module('buiiltApp')
   });
 
   $scope.showVariations = function() {
-  contractorRequestService.findOne({'id': $stateParams.packageId})
-    .$promise.then(function(data) {
-      $scope.variations = data;
-    });
+    $scope.variations = $scope.contractorRequest;
+    $scope.allItemsText = 'Variations';
   };
 
   $scope.showDefects = function() {
-  contractorRequestService.findOne({'id': $stateParams.packageId})
-    .$promise.then(function(data) {
-      $scope.defects = data;
-    });
+    $scope.defects = $scope.contractorRequest;
+    $scope.allItemsText = 'Defects';
   };
 
   $scope.showInvoices = function() {
-  contractorRequestService.findOne({'id': $stateParams.packageId})
-    .$promise.then(function(data) {
-      $scope.invoices = data;
-    });
+    $scope.invoices = $scope.contractorRequest;
+    $scope.allItemsText = 'Invoices';
   };
 
   $scope.showDocument = function() {
-    fileService.getFileByStateParam({'id': $stateParams.packageId})
-    .$promise.then(function(data) {
-      $scope.files = data;
-    });
+    $scope.files = $scope.documents;
+    $scope.allItemsText = 'Documents';
   };
 
   $scope.sendMessage = function() {

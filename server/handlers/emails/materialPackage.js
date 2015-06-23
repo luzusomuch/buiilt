@@ -35,7 +35,7 @@ EventBus.onSeries('MaterialPackage.Inserted', function(request, next) {
             //project owner
             user: result.user,
             project: result.project,
-            registryLink: config.baseUrl + 'signup',
+            registryLink: config.baseUrl + 'signup-invite?packageInviteToken=' + request._id,
             link: config.baseUrl + 'material-request/' + request._id,
             subject: 'Quote request for ' + request.name
           }, function(err) {
@@ -94,7 +94,7 @@ EventBus.onSeries('MaterialPackage.Updated', function(request, next) {
             //project owner
             user: result.user,
             project: result.project,
-            registryLink: config.baseUrl + 'signup',
+            registryLink: config.baseUrl + 'signup-invite?packageInviteToken=' + request._id,
             link: config.baseUrl + 'material-request/' + request._id,
             subject: 'Quote request for ' + request.name
           }, function(err) {

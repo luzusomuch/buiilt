@@ -108,12 +108,12 @@ exports.getProjectForContractor = function(req, res) {
   });
 };
 
-exports.getContractorByProjectForContractor = function(req, res) {
+exports.getContractorPackageByProjectForContractor = function(req, res) {
   Team.findOne({$or: [{'leader': req.user._id}, {'member._id': req.user._id}]}, function(err, team) {
     if (err) {return res.send(500, err);}
     if (!team) {return res.send(404,err);}
     else {
-      ContractorPackage.find({'project': req.params.id, 'to._id' : team._id}, function(err, contractors){
+      ContractorPackage.find({'project': req.params.id, 'to._id' : team._id, 'isCancel': false}, function(err, contractors){
         if (err) {return res.send(500, err);}
         else {
           return res.json(200, contractors);
@@ -124,8 +124,8 @@ exports.getContractorByProjectForContractor = function(req, res) {
   
 };
 
-exports.getContractorByProjectForBuilder = function(req, res) {
-  ContractorPackage.find({'project': req.params.id}, function(err, contractors){
+exports.getContractorPackageByProjectForBuilder = function(req, res) {
+  ContractorPackage.find({$and:[{'project': req.params.id}, {isCancel: false}]}, function(err, contractors){
     if (err) {return res.send(500, err);}
     else {
       return res.json(200, contractors);

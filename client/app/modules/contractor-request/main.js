@@ -44,7 +44,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
         }
       ],
       contractorRequest: function($stateParams, contractorRequestService){
-        return contractorRequestService.findOne({'id':$stateParams.packageId});
+        return contractorRequestService.findOne({'id':$stateParams.packageId}).$promise;
       }
     }
   });
