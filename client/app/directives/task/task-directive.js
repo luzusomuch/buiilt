@@ -102,8 +102,8 @@ angular.module('buiiltApp')
             task.completedBy = $scope.currentUser._id;
             task.completedAt = new Date();
           } else {
-            task.completedBy = $scope.currentUser._id;
-            task.completedAt = new Date();
+            task.completedBy = null;
+            task.completedAt = null;
           }
           taskService.update({id : task._id, type : $scope.type},task).$promise
             .then(function(res) {

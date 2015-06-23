@@ -7,7 +7,7 @@
         <li ng-if="!user._id"><a ui-sref="signin">Login</a></li>
         <li ng-if="!user._id"><a ui-sref="signup">Register</a></li>
         <li ng-if="user._id">
-          <a class="dropdown-button" href="#!" data-activates="projectSelect" dropdown data-gutter="-30">
+          <a class="dropdown-button" href="#!" data-activates="projectSelect" dropdown data-gutter="-30" data-constrainwidth="false">
             {{(currentProject) ? currentProject.name : 'Project name'}}<i class="mdi-navigation-arrow-drop-down right"></i></a>
           <ul id="projectSelect" class="dropdown-content" style="margin-top: 15px">
             <li ng-repeat="project in projectsOwner" ng-if="projectsOwner">
@@ -32,14 +32,13 @@
           </ul>
         </li>
         <li ng-if="user._id">
-          <a href="javascript:void(0);" class="dropdown-button" data-activates="userSettings" dropdown >
+          <a href="#!" class="dropdown-button" data-activates="userSettings" dropdown data-gutter="-30">
             <span ng-if="!user.name">{{user.email}}<i class="mdi-navigation-arrow-drop-down right"></i></span>
             <span ng-if="user.name">{{user.name}}<i class="mdi-navigation-arrow-drop-down right"></i></span>
           </a>
           
-          <ul id="userSettings" class="dropdown-content">
-            <li><a ui-sref="team.manager">Change team</a></li>
-            <li><a ui-sref="user.form({id: id})" >Edit profile</a></li>
+          <ul id="userSettings" class="dropdown-content"  style="margin-top: 15px">
+            <li><a ui-sref="team.manager">Setting</a></li>
             <li><a ui-sref="signout">Sign out</a></li>
           </ul>
         </li>

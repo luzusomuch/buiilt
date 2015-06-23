@@ -5722,7 +5722,7 @@ button.btn-flat:hover, button.btn-small:hover {
 .dropdown-content li:hover, .dropdown-content li.active {
     background-color: #eee; }
 .dropdown-content li > a, .dropdown-content li > span {
-    /*font-size: 1.2rem;*/
+    font-size: 1rem;
     color: #03A9F4;
     display: block;
     text-transform: uppercase;

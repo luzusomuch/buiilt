@@ -16,7 +16,7 @@
     </div>
     <div class="divider"></div>
     <div style="height:300px; overflow-y: auto">
-      <li class="collection-item" ng-repeat="task in tasks | taskFilter : filter ">
+      <li class="collection-item" ng-repeat="task in tasks | taskFilter : filter | orderBy : ['-completed','-createdAt'] ">
         <div>
           <a class="btn-flat"
              ng-click="(!task.isOwner && !isLeader) || complete(task)"
@@ -45,24 +45,12 @@
           <label for="task_description">Task</label>
         </div>
         <div class="input-field col s12">
-          <input input-date
-                 type="text"
+          <input type="date"
                  name="created"
                  id="dueDate"
                  ng-model="task.dateEnd"
-                 container="body"
                  format="mm/dd/yyyy"/>
-          <label for="dueDate">Due date</label>
-        </div>
-        <div class="input-field col s12">
-          <input input-date
-                 type="text"
-                 name="created"
-                 id="remindAt"
-                 ng-model="task.remindAt"
-                 container="body"
-                 format="mm/dd/yyyy" />
-          <label for="dueDate">Remind At</label>
+          <label for="dueDate" class="active">Due date</label>
         </div>
 
         <div class="row">

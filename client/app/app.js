@@ -68,9 +68,11 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
     $rootScope.$on('$stateChangeStart', function (event,toState, toParams, next) {
       authService.isLoggedInAsync(function (loggedIn) {
         if (toState.authenticate && !loggedIn) {
-          $location.path('/');
+          $location.path('/signin');
         } else if (!toState.authenticate && loggedIn){
           $location.path('/team/manager');
+        } else {
+
         }
       });
 

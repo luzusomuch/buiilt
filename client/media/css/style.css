@@ -86,3 +86,14 @@ p.validate-message {
     transition: .2s opacity ease-out, .2s color ease-out;
     font-size: 0.8rem;
 }
+
+ul#itemActions {
+    left : 986.0625px !important;
+}
+
+ul#relatedActions {
+    left :212.265625px !important
+}
+ul#chatActions {
+    left : 875.671875px !important
+}

@@ -4,6 +4,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
     url: '/',
     templateUrl: '/app/modules/home/home.html',
     controller: 'HomeCtrl',
+    authenticate : true,
     resolve : {
       projectsByUser : [
         'projectService',
