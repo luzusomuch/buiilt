@@ -41,7 +41,6 @@ EventBus.onSeries('Task.Updated', function(task, next){
         }
       });
     });
-    console.log(task.assignees.indexOf(task.user));
     if (task.assignees.indexOf(task.user) == -1) {
       var notification = new Notification({
         owner : task.user,
@@ -92,8 +91,8 @@ EventBus.onSeries('Task.Updated', function(task, next){
         return callback();
       },
       function(callback) {
-        task._oldAssignees = task.oldAssignees.map(function (e) { return e.toString(); })
-          task.assignees.forEach(function(assignee) {
+
+        task.assignees.forEach(function(assignee) {
           if (task._oldAssignees.indexOf(assignee.toString()) == -1) {
             task.assignees.forEach(function(_assignee) {
               var notification = new Notification({

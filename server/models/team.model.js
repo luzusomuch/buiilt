@@ -83,6 +83,10 @@ TeamSchema.statics.load = function (id, cb) {
   }).exec(cb);
 };
 
+TeamSchema.post( 'init', function() {
+  this._original = this.toJSON();
+})
+
 TeamSchema
 .pre('save', function(next) {
   this.wasNew = this.isNew;
@@ -97,6 +101,7 @@ TeamSchema
 });
 
 TeamSchema.post('save', function (doc) {
+  doc.oldMember = this._original.member.slice();
   var evtName = this.wasNew ? 'Team.Inserted' : 'Team.Updated';
 
   EventBus.emit(evtName, doc);
