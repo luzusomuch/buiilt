@@ -266,20 +266,22 @@ exports.selectWinner = function(req, res) {
 };
 
 exports.getProjectsByUser = function(req, res) {
+  var _projects = [];
   Team.findOne({$or: [{'leader': req.params.id}, {'member._id': req.params.id}]}, function(err, team) {
     if (err) {return res.send(500, err);}
     if (!team) {return res.send(404, err);}
     else {
       async.each(team.leader, function(leader, callback) {
         Project.find({'user._id': leader}, function(err, projects) {
-          if (err) {return callback(err, null);}
-          if (!projects) {return callback(err, null);}
+          if (err) {callback(err);}
+          if (!projects) {callback(err);}
           else {
-            return callback(null, projects);
+            _projects = _.merge(_projects,projects);
+            callback();
           }
         });
-      }, function(err,projects){
-        return res.json(200, projects);
+      }, function(err){
+        return res.json(_projects);
       });
       // Project.find({'builder._id': team._id}, function(err, projects){
       //   if (err) {return res.send(500, err);}
@@ -304,20 +306,22 @@ exports.getProjectsByUser = function(req, res) {
 };
 
 exports.getProjectsByBuilder = function(req, res) {
+  var _projects = [];
   Team.findOne({$or: [{'leader': req.params.id}, {'member._id': req.params.id}]}, function(err, team) {
     if (err) {return res.send(500, err);}
     if (!team) {return res.send(404, err);}
     else {
       async.each(team.leader, function(leader, callback) {
         Project.find({'builder._id': leader}, function(err, projects) {
-          if (err) {return callback(err,null);}
-          if (!projects) {return callback(err, null);}
+          if (err) {callback(err);}
+          if (!projects) {callback(err);}
           else {
-            return callback(null, projects);
+            _projects = _.merge(_projects,projects);
+            callback();
           }
         });
-      }, function(err,result){
-        return res.json(result);
+      }, function(err){
+        return res.json(_projects);
       });
       // Project.find({'builder._id': team._id}, function(err, projects){
       //   if (err) {return res.send(500, err);}
