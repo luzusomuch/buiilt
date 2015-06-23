@@ -13,6 +13,11 @@ var QuoteRequestSchema = new Schema({
     ref: 'User',
     required: true
   },
+  team: {
+    type: Schema.Types.ObjectId,
+    ref: 'Team',
+    required: true
+  },
   //home owner email
   email: { type: String },
   description: {

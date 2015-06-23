@@ -35,7 +35,6 @@ angular.module('buiiltApp')
   };
 
   $scope.selectQuote = function(value) {
-    console.log(value);
     if (confirm("Are you sure you want to select this quote?")) {
       quoteService.get({'id': value}).$promise.then(function(data) { 
           $scope.winner = data;

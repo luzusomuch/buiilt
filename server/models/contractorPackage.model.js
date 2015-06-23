@@ -56,7 +56,7 @@ var ContractorPackageSchema = new Schema({
   to: [{
     _id: {
       type: Schema.Types.ObjectId,
-      ref: 'User'
+      ref: 'Team'
     },
     email: {
       type: String
@@ -68,7 +68,7 @@ var ContractorPackageSchema = new Schema({
   newInvitation: [{
     _id: {
       type: Schema.Types.ObjectId,
-      ref: 'User'
+      ref: 'Team'
     },
     email: {
       type: String
