@@ -6,8 +6,8 @@ var StaffPackage = require('./../../models/staffPackage.model'),
     BuilderPackage = require('./../../models/builderPackage.model'),
     ContractorPackage = require('./../../models/contractorPackage.model'),
     MaterialPackage = require('./../../models/materialPackage.model');
-var errorsHelper = require('../../components/helpers/errors');
 var TaskValidator = require('./../../validators/task');
+var errorsHelper = require('../../components/helpers/errors');
 var _ = require('lodash');
 var async = require('async');
 
