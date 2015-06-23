@@ -107,7 +107,6 @@ exports.createUserWithInviteToken = function(req, res, next) {
   PackageInvite.findById(req.body.packageInviteToken, function(err, packageInvite) {
     if (err) {return res.send(500,err);}
     else {
-      console.log(packageInvite);
       var newUser = new User();
       newUser.email = packageInvite.to;
       newUser.password = req.body.password;
@@ -131,16 +130,16 @@ exports.createUserWithInviteToken = function(req, res, next) {
                 ContractorPackage.findById(packageInvite.package, function(err, contractorPackge){
                   if (err) {return res.send(500);}
                   else {
-                    var packageTo = contractorPackge.to;
+                    // var packageTo = contractorPackge.to;
                     _.each(contractorPackge.to, function(to) {
                       if (to.email === packageInvite.to) {
-                        packageTo.push({
+                        contractorPackge.to.push({
                           _id: savedTeam._id,
                           email: packageInvite.to
                         });
                       }
                     });
-                    contractorPackge.to = packageTo;
+                    // contractorPackge.to = packageTo;
                     contractorPackge.save(function(err, saved) {
                       if (err) {return res.send(500,err);}
                       else {
@@ -159,16 +158,16 @@ exports.createUserWithInviteToken = function(req, res, next) {
                 MaterialPackage.findById(packageInvite.package, function(err, materialPackage){
                   if (err) {return res.send(500);}
                   else {
-                    var packageTo = materialPackage.to;
+                    // var packageTo = materialPackage.to;
                     _.each(materialPackage.to, function(to) {
                       if (to.email === packageInvite.to) {
-                        packageTo.push({
+                        materialPackage.to.push({
                           _id: savedTeam._id,
                           email: packageInvite.to
                         });
                       }
                     });
-                    materialPackage.to = packageTo;
+                    // materialPackage.to = packageTo;
                     materialPackage.save(function(err, saved) {
                       if (err) {return res.send(500,err);}
                       else {

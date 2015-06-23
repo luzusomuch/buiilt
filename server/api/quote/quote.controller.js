@@ -22,25 +22,70 @@ var async = require('async');
  * @returns {undefined}
  */
 exports.create = function(req, res){
-    //create a new project
-    // console.log(req.body.params);
-    var data = req.body.params;
-    var quote = new QuoteRequest(data);
-    quote.user = req.user._id;
-    quote.project = req.params.id;
-    quote.type = req.user.type;
-    quote.email = req.user.email;
-
-    BuilderPackage.findOne({'project': req.params.id}, function(err, builderPackage) {
-      if (err) {return res.send(500, err);}
-      else {
-        quote.package = builderPackage._id;
-        quote.save(function(err, savedQuote) {
-          if (err) { return res.send(500, err);}
-          return res.json(savedQuote);
-      })
-      }
-    });
+    Team.findOne({$or:[{leader: req.user._id},{'member._id': req.user._id}]}, function(err, team){
+    if (err) {return res.send(500,err);}
+    else {
+      var quoteRequest = new QuoteRequest({
+        user: req.user._id,
+        team: team._id,
+        description: req.body.quoteRequest.description,
+        project: req.body.builderPackage.project._id,
+        type: 'contractor to builder',
+        package: req.body.builderPackage._id,
+        packageType: 'builder',
+        price: req.body.quoteRequest.price
+      });
+      var quoteRate = [];
+      var quotePrice = [];
+      var subTotal = 0;
+      async.each(req.body.rate, function(rate, callback){
+        if (rate !== null) {
+          for (var i = 0; i < req.body.rate.length -1; i++) {
+            quoteRate.push({
+              description: rate.description[i],
+              rate: rate.rate[i],
+              quantity: rate.quantity[i],
+              total: rate.rate[i] * rate.quantity[i]
+            });
+            subTotal += rate.rate[i] * rate.quantity[i];
+          };
+        }
+        callback();
+      }, function(err) {
+        if (err) {return res.send(500,err);}
+        else {
+          quoteRequest.quoteRate = quoteRate;
+          async.each(req.body.price, function(price, callback){
+            if (price !== null) {
+              for (var i = 0; i < req.body.price.length -1; i++) {
+                quotePrice.push({
+                  description: price.description[i],
+                  price: price.price[i],
+                  quantity: 1,
+                  total: price.price[i]
+                });
+                subTotal += price.price[i] * 1;
+              };
+            }
+            callback();
+          }, function(err){
+            if (err) {return res.send(500,err);}
+            else {
+              quoteRequest.quotePrice = quotePrice;
+              quoteRequest.subTotal = subTotal;
+              quoteRequest.total = subTotal * 0.1 + subTotal;
+              quoteRequest.save(function(err, saved) {
+                if (err) {return res.send(500,err);}
+                else {
+                  return res.json(200, saved);
+                }
+              });
+            }
+          });
+        }
+      });
+    }
+  });
 };
 
 exports.index = function(req, res) {

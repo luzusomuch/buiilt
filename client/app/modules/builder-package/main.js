@@ -8,7 +8,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
     url: '/:id/send-quote/:packageId',
     templateUrl: '/app/modules/builder-package/send-quote/send-quote.html',
     controller: 'SendQuoteBuilderPackageCtrl',
-    authenticate : true,
+    // authenticate : true,
     hasCurrentProject : true,
     resolve: {
       builderPackage: function($stateParams, builderPackageService){

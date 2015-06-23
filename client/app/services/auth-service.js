@@ -214,6 +214,10 @@ angular.module('buiiltApp')
       }.bind(this));
 
       return deferred.promise;
+    },
+
+    setCurrentUser: function(user){
+      currentUser = user;
     }
   };
 });
