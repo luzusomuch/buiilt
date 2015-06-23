@@ -4,6 +4,7 @@ var User = require('./../../models/user.model');
 var Project = require('./../../models/project.model');
 var PackageInvite = require('./../../models/packageInvite.model');
 var ContractorPackage = require('./../../models/contractorPackage.model');
+var BuilderPackage = require('./../../models/builderPackage.model');
 var MaterialPackage = require('./../../models/materialPackage.model');
 var Team = require('./../../models/team.model');
 var passport = require('passport');
@@ -100,10 +101,10 @@ exports.create = function (req, res, next) {
 
 //create user with invite token
 exports.createUserWithInviteToken = function(req, res, next) {
-  console.log(req.body);
   PackageInvite.findById(req.body.packageInviteToken, function(err, packageInvite) {
     if (err) {return res.send(500,err);}
     else {
+      console.log(packageInvite);
       var newUser = new User();
       newUser.email = packageInvite.to;
       newUser.password = req.body.password;
@@ -176,6 +177,24 @@ exports.createUserWithInviteToken = function(req, res, next) {
                     });
                   }
                 });
+              }
+              else if(packageInvite.inviteType == 'buider') {
+                BuilderPackage.findById(packageInvite.package, function(err, builderPackage){
+                  if (err) {return res.send(500);}
+                  else {
+                    builderPackage.owner = savedTeam._id;
+                    builderPackage.save(function(err, saved){
+                      if (err) {return res.send(500,err);}
+                      else {
+                        var data = {
+                          token: token,
+                          package: saved
+                        };
+                        return res.json(200, data);
+                      }
+                    });
+                  }
+                }); 
               }
             }
           });

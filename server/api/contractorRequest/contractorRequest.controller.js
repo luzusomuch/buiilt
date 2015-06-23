@@ -154,9 +154,9 @@ exports.sendInvitationInContractor = function(req, res) {
     ContractorPackage.findById(req.body.id, function(err, contractorPackage) {
         if (err) {return res.send(500, err);}
         else {
-            var newContractor = [];
-            var to = contractorPackage.to;
-            async.each(req.body.toContractor, function(emailPhone, callback) {
+          var newContractor = [];
+          var to = contractorPackage.to;
+          async.each(req.body.toContractor, function(emailPhone, callback) {
             User.findOne({'email': emailPhone.email}, function(err, user) {
               if (err) {return res.send(500,err);}
               if (!user) {

@@ -6,13 +6,13 @@ angular.module('buiiltApp').controller('SignupWithInviteCtrl', function ($scope,
   $scope.errors = {};
 
   $scope.signup = function () {
-    console.log($stateParams);
     if ($stateParams.packageInviteToken) {
       $scope.user.packageInviteToken = $stateParams.packageInviteToken;
     }
     var deferred = $q.defer();
     userService.createUserWithInviteToken($scope.user).$promise.then(function (data) {
       //show alert
+      console.log(data);
       $scope.success = true;
       $scope.user = {
         allowNewsletter: true
@@ -25,6 +25,9 @@ angular.module('buiiltApp').controller('SignupWithInviteCtrl', function ($scope,
       }
       else if (data.package.type === 'material') {
         $state.go('materialRequest.sendQuote, ({id:'+ data.package.project +', packageId: '+ data.package._id+'})');
+      }
+      else if (data.package.type === 'BuilderPackage') {
+        $state.go('builderPackages.sendQuote', {id: data.package.project, packageId: data.package._id});
       }
     }, function (res) {
       $scope.errors = res.data;

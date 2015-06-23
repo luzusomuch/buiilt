@@ -5,14 +5,10 @@ angular.module('buiiltApp').config(function($stateProvider) {
     template: '<ui-view/>'
   })
   .state('builderPackages.sendQuote', {
-    url: '/:id/send-quote',
+    url: '/:id/send-quote/:packageId',
     templateUrl: '/app/modules/builder-package/send-quote/send-quote.html',
     controller: 'SendQuoteBuilderPackageCtrl',
     authenticate : true,
-    resolve: {
-      builderPackage: function($stateParams, builderPackageService){
-        return builderPackageService.findOne($stateParams.id);
-      }
-    }
+    hasCurrentProject : true
   });
 });
