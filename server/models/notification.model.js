@@ -6,6 +6,11 @@ var EventBus = require('./../components/EventBus');
 
 var NotificationSchema = new Schema({
   text: String,
+  owner : {
+    type : Schema.Types.ObjectId,
+    ref : 'User',
+    required : true
+  },
   fromUser: {
     type: Schema.Types.ObjectId,
     ref: 'User',
@@ -16,9 +21,8 @@ var NotificationSchema = new Schema({
     ref: 'User',
     required: true
   }, //object of user receive
-  elementId : {
-    type : Schema.Types.ObjectId,
-    required : true
+  element : {
+
   },
   referenceTo : String, // reference of element
   type:{

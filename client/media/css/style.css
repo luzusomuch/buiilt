@@ -72,3 +72,10 @@ table.team {
 .completed {
     text-decoration: line-through;
 }
+
+ul.notifications li .highlight {
+    color :#FFC107
+}
+ul.notifications li div.read {
+    opacity: 0.4;
+}

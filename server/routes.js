@@ -27,6 +27,7 @@ module.exports = function(app) {
   app.use('/api/documents', require('./api/document'));
   app.use('/api/files', require('./api/files'));
   app.use('/api/validateInvites', require('./api/validateInvite'));
+  app.use('/api/notifications', require('./api/notification'));
   app.use('/auth', require('./auth'));
 
 

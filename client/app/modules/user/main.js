@@ -8,7 +8,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
     adminAccess: true
   })
   .state('user.form', {
-    url: '/:id',
+    url: '/',
     templateUrl: '/app/modules/user/edit-user/form.html',
     controller: 'UserFormCtrl'
   })
