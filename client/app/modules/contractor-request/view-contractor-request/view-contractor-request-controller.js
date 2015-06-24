@@ -1,10 +1,11 @@
 angular.module('buiiltApp')
-.controller('ViewContractorRequestCtrl', function($scope, $window, $state, $stateParams, $cookieStore, authService, userService, contractorRequest, contractorRequestService, quoteService) {
+.controller('ViewContractorRequestCtrl', function($scope, $window, $state, $stateParams,currentTeam, $cookieStore, authService, userService, contractorRequest, contractorRequestService, quoteService) {
   /**
    * quote data
    */
   $scope.emailsPhone = [];
   $scope.contractorRequest = contractorRequest;
+  $scope.currentTeam = currentTeam;
   $scope.currentUser = {};
   if ($cookieStore.get('token')) {
     $scope.currentUser = userService.get();
@@ -17,9 +18,12 @@ angular.module('buiiltApp')
 
   contractorRequestService.getQuoteRequestByContractorPackge({'id':$stateParams.packageId}).$promise.then(function(data){
     $scope.quoteRequests = data;
+    _.each(data.to, function(toContractor){
+      $scope.toContractor = toContractor;
+    });
   });
 
-  contractorRequestService.getMessageForContractor({'id': $stateParams.packageId})
+  contractorRequestService.getMessageForBuilder({'id': $stateParams.packageId})
   .$promise.then(function(data) {
     $scope.messages = data;
   });
@@ -47,7 +51,7 @@ angular.module('buiiltApp')
   $scope.sendInvitationInContractor = function() {
     contractorRequestService.sendInvitationInContractor({id: $stateParams.packageId, toContractor: $scope.emailsPhone})
     .$promise.then(function(data){
-      // console.log(data);
+      $scope.contractorRequest = data;
     });
   };
 
@@ -55,12 +59,18 @@ angular.module('buiiltApp')
     $scope.success = false;
   };
 
-  $scope.sendMessage = function() {
-    contractorRequestService.sendMessage({id: $stateParams.packageId, message: $scope.message.message})
-    .$promise.then(function(data) {
-      $scope.messages = data;
-      $scope.message.message = null;
-    });
+  $scope.sendMessage = function(value) {
+    console.log(value);
+    if (value == 'undefined' || !value) {
+      alert('This user not registry');
+    }
+    else if (value != 'undefined' || value){
+      contractorRequestService.sendMessage({id: $stateParams.packageId, to: value, team: $scope.currentTeam._id, message: $scope.message.message})
+      .$promise.then(function(data) {
+        $scope.messages = data;
+        $scope.message.message = null;
+      });
+    }
   };
 
   //Send addendum

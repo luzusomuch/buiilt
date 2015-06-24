@@ -5,11 +5,11 @@ angular.module('buiiltApp').config(function($stateProvider) {
     templateUrl: '/app/modules/contractors/contractors.html',
     controller: 'ContractorsCtrl',
     hasCurrentProject : true,
-    authenticate : true
-    // resolve: {
-    //   team: function(authService){
-    //     return authService.getCurrentTeam();
-    //   }
-    // }
+    authenticate : true,
+    resolve: {
+      team: function(authService){
+        return authService.getCurrentTeam();
+      }
+    }
   })
 });

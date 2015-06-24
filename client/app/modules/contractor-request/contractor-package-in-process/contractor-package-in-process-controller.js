@@ -19,10 +19,10 @@ angular.module('buiiltApp')
     $scope.currentUser = userService.get();
   }
 
-  contractorRequestService.getMessageForContractor({'id': $stateParams.packageId})
-  .$promise.then(function(data) {
-    $scope.messages = data;
-  });
+  // contractorRequestService.getMessageForBuilder({'id': $stateParams.packageId})
+  // .$promise.then(function(data) {
+  //   $scope.messages = data;
+  // });
 
   $scope.showAll = function() {
     $scope.allItemsText = 'All items';
@@ -49,13 +49,13 @@ angular.module('buiiltApp')
     $scope.allItemsText = 'Documents';
   };
 
-  $scope.sendMessage = function() {
-    contractorRequestService.sendMessage({id: $stateParams.packageId, message: $scope.message})
-    .$promise.then(function(data) {
-      $scope.messages = data;
-      alert('Send message successfully!');
-    });
-  };
+  // $scope.sendMessage = function() {
+  //   contractorRequestService.sendMessage({id: $stateParams.packageId, message: $scope.message})
+  //   .$promise.then(function(data) {
+  //     $scope.messages = data;
+  //     alert('Send message successfully!');
+  //   });
+  // };
 
   $scope.sendVariation = function() {
     contractorRequestService.sendVariation({id: $stateParams.packageId, variation: $scope.variation})

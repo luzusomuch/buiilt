@@ -1,6 +1,7 @@
 'use strict';
 
 var MaterialPackage = require('./../../models/materialPackage.model');
+var PackageInvite = require('./../../models/packageInvite.model');
 var ValidateInvite = require('./../../models/validateInvite.model');
 var User = require('./../../models/user.model');
 var Team = require('./../../models/team.model');
@@ -37,11 +38,11 @@ exports.createMaterialPackage = function (req, res, next) {
     User.findOne({'email': emailPhone.email}, function(err, user) {
       if (err) {return res.send(500,err);}
       if (!user) {
-        var validateInvite = new ValidateInvite({
-          email: emailPhone.email,
-          inviteType: 'supplier'
-        });
-        validateInvite.save();
+        // var validateInvite = new ValidateInvite({
+        //   email: emailPhone.email,
+        //   inviteType: 'supplier'
+        // });
+        // validateInvite.save();
         to.push({
           email: emailPhone.email,
           phone: emailPhone.phoneNumber
@@ -69,6 +70,15 @@ exports.createMaterialPackage = function (req, res, next) {
       materialPackage.save(function(err, saved){
         if (err) {return res.send(500,err);}
         else {
+          _.each(req.body.suppliers, function(emailPhone){
+            var packageInvite = new PackageInvite({
+              owner: req.user._id,
+              inviteType: 'supplier',
+              package: saved._id,
+              to: emailPhone.email
+            });
+            packageInvite.save();
+          });
           return res.json(200,saved);
         }
       });

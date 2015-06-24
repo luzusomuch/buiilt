@@ -1,6 +1,7 @@
-angular.module('buiiltApp').controller('ContractorsCtrl', function($scope, $stateParams, $rootScope, $timeout, $q, contractorService, authService, projectService, teamService) {
+angular.module('buiiltApp').controller('ContractorsCtrl', function($scope, team, $stateParams, $rootScope, $timeout, $q, contractorService, authService, projectService, teamService) {
   $scope.contractor = {};
   $scope.currentProject = $rootScope.currentProject;
+  $scope.currentTeam = team;
   $scope.user = authService.getCurrentUser();
   // $scope.team = authService.getCurrentTeam();
   teamService.getCurrentTeam().$promise.then(function(data) {
@@ -99,7 +100,7 @@ angular.module('buiiltApp').controller('ContractorsCtrl', function($scope, $stat
   };
 
   $scope.createContractorPackage = function(){
-    contractorService.createContractorPackage({contractor: $scope.contractor,emailsPhone: $scope.member.emailsPhone, project: $stateParams.id}).$promise.then(function(data) {
+    contractorService.createContractorPackage({contractor: $scope.contractor, team: $scope.currentTeam._id,emailsPhone: $scope.member.emailsPhone, project: $stateParams.id}).$promise.then(function(data) {
       $scope.contractors.push(data);
     });
   };

@@ -27,7 +27,7 @@ exports.index = function (req, res) {
 exports.createContractorPackage = function (req, res, next) {
   var to = [];
   var contractorPackage = new ContractorPackage({
-    owner: req.user._id,
+    owner: req.body.team,
     packageType: 'contractor',
     name: req.body.contractor.name,
     description: req.body.contractor.description,
@@ -73,13 +73,19 @@ exports.createContractorPackage = function (req, res, next) {
         if (err) {return res.send(500,err);}
         else {
           _.each(req.body.emailsPhone, function(emailPhone){
-            var packageInvite = new PackageInvite({
-              owner: req.user._id,
-              inviteType: 'contractor',
-              package: saved._id,
-              to: emailPhone.email
-            });
-            packageInvite.save();
+            User.findOne({email: emailPhone.email}, function(err, user){
+              if (err) {return res.send(500,err);}
+              if (!user) {
+                var packageInvite = new PackageInvite({
+                  owner: req.user._id,
+                  inviteType: 'contractor',
+                  project: req.body.project,
+                  package: saved._id,
+                  to: emailPhone.email
+                });
+                packageInvite.save();
+              }
+            })
           });
           return res.json(200,saved);
         }

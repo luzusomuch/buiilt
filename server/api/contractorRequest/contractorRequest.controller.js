@@ -37,7 +37,8 @@ exports.sendMessage = function(req, res) {
       if (!contractorPackage.messages) {
         var messages = [];
         messages.push({
-          owner: req.user._id,
+          owner: req.body.team,
+          to: req.body.to,
           message: req.body.message
         });
         contractorPackage.messages = messages;
@@ -50,7 +51,8 @@ exports.sendMessage = function(req, res) {
       }
       else {
         contractorPackage.messages.push({
-          owner: req.user._id,
+          owner: req.body.team,
+          to: req.body.to,
           message: req.body.message
         });
         contractorPackage.save(function(err, saved) {
@@ -64,14 +66,73 @@ exports.sendMessage = function(req, res) {
   });
 };
 
-exports.getMessageForContractor = function(req, res) {
-  ContractorPackage.findOne({$and:[{_id: req.params.id},{'messages.owner': req.user._id}]}, function(err, contractorPackage) {
-    if (err) {console.log(err);}
+exports.sendMessageToBuilder = function(req, res) {
+  ContractorPackage.findById(req.params.id, function(err, contractorPackage) {
+    if (err) {return res.send(500,err)}
     if (!contractorPackage) {return res.send(404,err)}
     else {
-      return res.json(200,contractorPackage);
+      if (!contractorPackage.messages) {
+        var messages = [];
+        messages.push({
+          owner: contractorPackage.owner,
+          to: req.body.team,
+          message: req.body.message
+        });
+        contractorPackage.messages = messages;
+        contractorPackage.save(function(err, saved) {
+          if (err) {return res.send(500, err)}
+          else {
+            return res.json(200,saved);
+          }
+        });
+      }
+      else {
+        contractorPackage.messages.push({
+          owner: contractorPackage.owner,
+          to: req.body.team,
+          message: req.body.message
+        });
+        contractorPackage.save(function(err, saved) {
+          if (err) {return res.send(500, err)}
+          else {
+            return res.json(200,saved);
+          }
+        });
+      }
     }
   });
+};
+
+exports.getMessageForBuilder = function(req, res) {
+  Team.findOne({$or:[{leader: req.user._id},{'member._id': req.user._id}]}, function(err, team){
+    if (err) {return res.send(500,err);}
+    else {
+      ContractorPackage.findOne({$and:[{_id: req.params.id},{'messages.owner': team._id}]}, function(err, contractorPackage) {
+        if (err) {console.log(err);}
+        if (!contractorPackage) {return res.send(404,err)}
+        else {
+          return res.json(200,contractorPackage);
+        }
+      });
+    }
+  });
+  
+};
+
+exports.getMessageForContractor = function(req, res) {
+  Team.findOne({$or:[{leader: req.user._id},{'member._id': req.user._id}]}, function(err, team){
+    if (err) {return res.send(500,err);}
+    else {
+      ContractorPackage.findOne({$and:[{_id: req.params.id},{'messages.to': team._id}]}, function(err, contractorPackage) {
+        if (err) {console.log(err);}
+        if (!contractorPackage) {return res.send(404,err)}
+        else {
+          return res.json(200,contractorPackage);
+        }
+      });
+    }
+  });
+  
 };
 
 exports.sendQuote =function(req, res) {
@@ -223,6 +284,7 @@ exports.sendInvitationInContractor = function(req, res) {
                       owner: req.user._id,
                       inviteType: 'contractor',
                       package: saved._id,
+                      project: saved.project,
                       to: email.email
                     });
                     packageInvite.save();

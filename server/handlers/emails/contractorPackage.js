@@ -32,29 +32,11 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
       //do send email
       _.each(request.to,function(toEmail) {
         if (!toEmail._id) {
-          PackageInvite.find({package: request._id}, function(err, packageInvites) {
-            if (err) {return next();}
-            if (!packageInvites) {return next();}
-            else {
-              _.each(packageInvites, function(packageInvite){
-                Mailer.sendMail('contractor-package-request-no-account.html', packageInvite.to, {
-                  contractorPackage: request,
-                  //project owner
-                  user: result.user,
-                  project: result.project,
-                  registryLink: config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
-                  contractorPackageLink: config.baseUrl  + result.project._id + '/contractor-requests/' + request._id,
-                  subject: 'Quote request for ' + request.name
-                }, function(err) {
-                  return next();
-                });
-              });
-            }
-          });
+          return next();
         }
         else {
           Team.findOne({'_id': toEmail._id}, function(err, team) {
-          if (err) {return console.log(err);}
+          if (err) {return next();}
           if (!team) {
             return next();
           }
@@ -99,30 +81,31 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
       //do send email
       _.each(request.newInvitation,function(toEmail) {
         if (!toEmail._id) {
-          PackageInvite.find({package: request._id}, function(err, packageInvites) {
-            if (err) {return next();}
-            else {
-              _.each(packageInvites, function(packageInvite){
-                console.log(packageInvite);
-                Mailer.sendMail('contractor-package-request-no-account.html', packageInvite.to, {
-                  contractorPackage: request,
-                  //project owner
-                  user: result.user,
-                  project: result.project,
-                  registryLink: config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
-                  contractorPackageLink: config.baseUrl + 'contractor-requests/' + request._id,
-                  subject: 'Quote request for ' + request.name
-                }, function(err) {
-                  console.log(err);
-                  return next();
-                });
-              });
-            }
-          });
+          // PackageInvite.find({package: request._id}, function(err, packageInvites) {
+          //   if (err) {return next();}
+          //   if (!packageInvites) {return next();}
+          //   else {
+          //     _.each(packageInvites, function(packageInvite){
+          //       Mailer.sendMail('contractor-package-request-no-account.html', packageInvite.to, {
+          //         contractorPackage: request,
+          //         //project owner
+          //         user: result.user,
+          //         project: result.project,
+          //         registryLink: config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
+          //         contractorPackageLink: config.baseUrl + 'contractor-requests/' + request._id,
+          //         subject: 'Quote request for ' + request.name
+          //       }, function(err) {
+          //         console.log(err);
+          //         return next();
+          //       });
+          //     });
+          //   }
+          // });
+          return next();
         }
         else {
           Team.findOne({'_id': toEmail._id}, function(err, team) {
-          if (err) {return console.log(err);}
+          if (err) {return next();}
           if (!team) {
             return next();
           }

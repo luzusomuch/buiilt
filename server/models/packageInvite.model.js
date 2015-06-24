@@ -15,6 +15,7 @@ var PackageInviteSchema = new Schema({
   to: String,
   inviteType: String,
   package: { type: Schema.Types.ObjectId },
+  project: { type: Schema.Types.ObjectId, ref: 'Project' },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
 });

@@ -126,6 +126,11 @@ exports.createUserWithInviteToken = function(req, res, next) {
           team.save(function(err, savedTeam){
             if (err) {return res.send(500,err);}
             else {
+              user.team = {
+                _id : savedTeam._id,
+                role : 'admin'
+              };
+              user.save();
               if (packageInvite.inviteType == 'contractor') {
                 ContractorPackage.findById(packageInvite.package, function(err, contractorPackge){
                   if (err) {return res.send(500);}

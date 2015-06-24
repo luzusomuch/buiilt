@@ -77,7 +77,8 @@ var MaterialPackageSchema = new Schema({
     },
     phoneNumber: {
       type: Number
-    }
+    },
+    quote: {type: Schema.Types.ObjectId, ref: 'QuoteRequest'}
   }],
   newInvitation: [{
     _id: {

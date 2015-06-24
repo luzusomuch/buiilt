@@ -126,13 +126,13 @@
                        <div class="divider"></div>
                        <div style="height: 500px">
                            
-                         <li class="collection-item" ng-repeat="message in messages.messages">
+                         <li class="collection-item">
                              <div class="row valign-wrapper" style="margin-bottom: -5px">
                                  <a href="#!" class="btn-flat col s1">
                                      <i class="mdi-toggle-radio-button-on valign center-align" ></i>
                                  </a>
                                  
-                                 <p class="col s9 valign">{{message.message}}</p>
+                                 <p class="col s9 valign"></p>
                                  
                                  <img src="images/yuna.jpg" alt="" class="circle col s2 right valign center-align" />
                              </div>
@@ -142,9 +142,9 @@
                        <div class="divider"></div>
                        <div class="col s12 card-footer" style="height: 150px">
                            <div class="row">
-                               <form class="col s10 offset-s1" ng-submit="sendMessage()">
+                               <form class="col s10 offset-s1">
                                    <div class="input-field col s9">
-                                     <textarea id="textarea1" class="materialize-textarea" ng-model="message"></textarea>
+                                     <textarea id="textarea1" class="materialize-textarea"></textarea>
                                      <label for="textarea1">Send a Message...</label>
                                    </div>
                                    <div class="input-field col s3">

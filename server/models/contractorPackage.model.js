@@ -49,7 +49,11 @@ var ContractorPackageSchema = new Schema({
   messages: [{
     owner: {
       type: Schema.Types.ObjectId,
-      ref: 'User'
+      ref: 'Team'
+    },
+    to: {
+      type: Schema.Types.ObjectId,
+      ref: 'Team'
     },
     message: {type: String}
   }],

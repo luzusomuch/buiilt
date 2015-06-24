@@ -1,10 +1,11 @@
 angular.module('buiiltApp')
-.controller('SendQuoteContractorPackageCtrl', function($scope, $window, $state, $stateParams, $cookieStore, authService, userService, contractorRequest, contractorRequestService,FileUploader, registryForContractorService) {
+.controller('SendQuoteContractorPackageCtrl', function($scope, $window, $state, currentTeam, $stateParams, $cookieStore, authService, userService, contractorRequest, contractorRequestService,FileUploader, registryForContractorService) {
   /**
    * quote data
    */
   $scope.quoteRequest = {};
   $scope.contractorRequest = contractorRequest;
+  $scope.currentTeam = currentTeam;
   $scope.currentUser = {};
   if ($cookieStore.get('token')) {
     $scope.currentUser = userService.get();
@@ -185,7 +186,7 @@ angular.module('buiiltApp')
   };
 
   $scope.sendMessage = function() {
-    contractorRequestService.sendMessage({id: $stateParams.packageId, message: $scope.message})
+    contractorRequestService.sendMessageToBuilder({id: $stateParams.packageId, team: $scope.currentTeam._id, message: $scope.message})
     .$promise.then(function(data) {
       $scope.messages = data;
     });

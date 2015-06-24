@@ -34,11 +34,25 @@ angular.module('buiiltApp')
           action: 'message'
         }
       },
+      sendMessageToBuilder: {
+        method: 'POST',
+        params: {
+          id: '@id',
+          action: 'send-message-to-builder'
+        }
+      },
+      getMessageForBuilder: {
+        method: 'GET',
+        params: {
+          id: 'id',
+          action: 'message-builder'
+        }
+      },
       getMessageForContractor: {
         method: 'GET',
         params: {
           id: 'id',
-          action: 'messagecontractor'
+          action: 'message-contractor'
         }
       },
       sendVariation: {
