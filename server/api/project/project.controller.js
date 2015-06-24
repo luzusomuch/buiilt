@@ -41,11 +41,6 @@ exports.create = function(req, res){
         User.findOne({'email': req.body.email}, function(err, user){
           if (err) {return res.send(500,err);}
           if (!user) {
-            // var validateInvite = new ValidateInvite({
-            //   email: req.body.email,
-            //   inviteType: 'buider'
-            // })
-            // validateInvite.save();
             project.builder.email = req.body.email;
             project.save(function(err,saved) {
               if (err) {return res.send(500,err);}
@@ -68,6 +63,7 @@ exports.create = function(req, res){
                     var packageInvite = new PackageInvite({
                       owner: req.user._id,
                       inviteType: 'buider',
+                      project: saved.project,
                       package: saved._id,
                       to: req.body.email
                     });
@@ -79,28 +75,45 @@ exports.create = function(req, res){
             });
           }
           else {
-            project.builder._id = user._id;
-            project.builder.email = user.email;
-            project.save(function(err,saved) {
+            Team.findOne({$or:[{leader: user._id},{'member._id': user._id}]}, function(err, team){
               if (err) {return res.send(500,err);}
               else {
-                team.project.push(saved._id);
-                team.save();
-                var builderPackage = new BuilderPackage({
-                  location: {
-                    address: req.body.location.address,
-                    postcode: req.body.location.postcode,
-                    suburb: req.body.location.suburb
-                  },
-                  user: saved.builder._id,
-                  project: saved._id,
-                  name: saved.name,
-                  description: saved.description
-                });
-                builderPackage.save(function(err, saved){
-                  if (err) {return res.send(500, err);}
+                project.builder._id = team._id;
+                project.builder.email = user.email;
+                project.save(function(err,saved) {
+                  if (err) {return res.send(500,err);}
                   else {
-                    return res.json(200,saved);
+                    team.project.push(saved._id);
+                    team.save();
+                    var builderPackage = new BuilderPackage({
+                      location: {
+                        address: req.body.location.address,
+                        postcode: req.body.location.postcode,
+                        suburb: req.body.location.suburb
+                      },
+                      user: saved.builder._id,
+                      project: saved._id,
+                      name: saved.name,
+                      description: saved.description
+                    });
+                    builderPackage.save(function(err, savedBuilderPackage){
+                      if (err) {return res.send(500, err);}
+                      else {
+                        // var packageInvite = new PackageInvite({
+                        //   owner: req.user._id,
+                        //   inviteType: 'buider',
+                        //   project: savedBuilderPackage.project,
+                        //   package: savedBuilderPackage._id,
+                        //   to: user.email
+                        // });
+                        packageInvite.save(function(err, savedPackageInvite){
+                          if (err) {return res.send(500,err);}
+                          else {
+                            return res.json(200,savedBuilderPackage);
+                          }
+                        });
+                      }
+                    });
                   }
                 });
               }
@@ -119,11 +132,11 @@ exports.create = function(req, res){
         User.findOne({'email': req.body.email}, function(err, user){
           if (err) {return res.send(500,err);}
           if (!user) {
-            var validateInvite = new ValidateInvite({
-              email: req.body.email,
-              inviteType: 'homeOwner'
-            })
-            validateInvite.save();
+            // var validateInvite = new ValidateInvite({
+            //   email: req.body.email,
+            //   inviteType: 'homeOwner'
+            // })
+            // validateInvite.save();
             project.user.email = req.body.email;
             project.save(function(err, saved){
               if (err) {return res.send(500,err);}
@@ -144,6 +157,14 @@ exports.create = function(req, res){
                 builderPackage.save(function(err, saved){
                   if (err) {return res.send(500, err);}
                   else {
+                    var packageInvite = new PackageInvite({
+                      owner: req.user._id,
+                      inviteType: 'homeOwner',
+                      project: saved.project,
+                      package: saved._id,
+                      to: req.body.email
+                    });
+                    packageInvite.save();
                     return res.json(200,saved);
                   }
                 });
@@ -151,31 +172,33 @@ exports.create = function(req, res){
             });
           }
           else {
-            project.user._id = user._id;
-            project.user.email = user.email;
-            project.save(function(err, saved){
-              if (err) {return res.send(500,err);}
-              else {
-                team.project.push(saved._id);
-                team.save();
-                var builderPackage = new BuilderPackage({
-                  location: {
-                    address: req.body.location.address,
-                    postcode: req.body.location.postcode,
-                    suburb: req.body.location.suburb
-                  },
-                  user: saved.builder._id,
-                  project: saved._id,
-                  name: saved.name,
-                  description: saved.description
-                });
-                builderPackage.save(function(err, saved){
-                  if (err) {return res.send(500, err);}
-                  else {
-                    return res.json(200,saved);
-                  }
-                });
-              }
+            Team.findOne({$or:[{leader: user._id},{'member._id': user._id}]}, function(err, team){
+              project.user._id = team._id;
+              project.user.email = user.email;
+              project.save(function(err, saved){
+                if (err) {return res.send(500,err);}
+                else {
+                  team.project.push(saved._id);
+                  team.save();
+                  var builderPackage = new BuilderPackage({
+                    location: {
+                      address: req.body.location.address,
+                      postcode: req.body.location.postcode,
+                      suburb: req.body.location.suburb
+                    },
+                    user: saved.builder._id,
+                    project: saved._id,
+                    name: saved.name,
+                    description: saved.description
+                  });
+                  builderPackage.save(function(err, saved){
+                    if (err) {return res.send(500, err);}
+                    else {
+                      return res.json(200,saved);
+                    }
+                  });
+                }
+              });
             });
           }
         });

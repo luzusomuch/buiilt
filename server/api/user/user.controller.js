@@ -196,7 +196,12 @@ exports.createUserWithInviteToken = function(req, res, next) {
                   if (err) {return res.send(500);}
                   else {
                     Project.findById(packageInvite.project, function(err,project){
-                      
+                      if (err) {return res.send(500,err);}
+                      else {
+                        project.builder._id = savedTeam._id;
+                        project.builder.email = packageInvite.to;
+                        project.save();
+                      }
                     });
                     builderPackage.owner = savedTeam._id;
                     builderPackage.save(function(err, saved){
@@ -212,6 +217,33 @@ exports.createUserWithInviteToken = function(req, res, next) {
                     });
                   }
                 }); 
+              }
+              else {
+                BuilderPackage.findById(packageInvite.package, function(err, builderPackage){
+                  if (err) {return res.send(500);}
+                  else {
+                    Project.findById(packageInvite.project, function(err,project){
+                      if (err) {return res.send(500,err);}
+                      else {
+                        project.user._id = savedTeam._id;
+                        project.user.email = packageInvite.to;
+                        project.save();
+                      }
+                    });
+                    builderPackage.owner = savedTeam._id;
+                    builderPackage.save(function(err, saved){
+                      if (err) {return res.send(500,err);}
+                      else {
+                        var data = {
+                          token: token,
+                          emailVerified: true,
+                          package: saved
+                        };
+                        return res.json(200, data);
+                      }
+                    });
+                  }
+                });
               }
             }
           });
