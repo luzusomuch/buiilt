@@ -59,10 +59,12 @@ angular.module('buiiltApp')
   // };
 
   $scope.sendVariation = function() {
+    console.log('asdasdasd');
     contractorRequestService.sendVariation({id: $stateParams.packageId, variation: $scope.variation})
     .$promise.then(function(data) {
       $scope.variations = data;
       $scope.contractorRequest = data;
+      $scope.variation = {};
       alert('Send variation successfully!');
     });
   };
@@ -72,6 +74,7 @@ angular.module('buiiltApp')
     .$promise.then(function(data) {
       $scope.defects = data;
       $scope.contractorRequest = data;
+      $scope.defect = {};
       alert('Send defect successfully!');
     });
   };
