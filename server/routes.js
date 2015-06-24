@@ -30,6 +30,7 @@ module.exports = function(app) {
   app.use('/api/files', require('./api/files'));
   app.use('/api/validateInvites', require('./api/validateInvite'));
   app.use('/api/notifications', require('./api/notification'));
+  app.use('/api/messages', require('./api/message'));
   app.use('/auth', require('./auth'));
 
 
