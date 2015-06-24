@@ -83,7 +83,7 @@ angular.module('buiiltApp')
             $state.go('materialRequest.sendQuote', {id: data.package.project, packageId: data.package._id});
           }
           else if (data.package.type === 'BuilderPackage') {
-            $state.go('builderPackages.sendQuote', {id: data.package.project, packageId: data.package._id});
+            $state.go('dashboard', {id: data.package.project});
           }
           // $state.go('team.manager')
 

@@ -34,13 +34,17 @@
                                      {{(allItemsText) ? allItemsText : 'All items'}}<i class="mdi-navigation-arrow-drop-down"></i>
                                    </a>
                                      <ul id='itemFilter' class='dropdown-content' style="margin-top: 15px">
+                                      <li>
+                                      <a ng-click="showAll(); hideAll = true; showAll = true; showVariation = false; showDocument = false; showDefect = false; showDocument = false; showInvoice = false;">All ITEMS
+                                      </a>
+                                       </li>
                                        <li>
-                                        <a ng-click="showVariations(); hideAll = true; showVariation = true; showDocument = false; showDefect = false; showDocument = false; showInvoice = false;">VARIATIONS
+                                        <a ng-click="showVariations(); hideAll = true; showAll = false; showVariation = true; showDocument = false; showDefect = false; showDocument = false; showInvoice = false;">VARIATIONS
                                         </a>
                                        </li>
-                                       <li><a ng-click="showDefects(); hideAll = true; showDefect = true; showDocument = false; showVariation = false; showInvoice = false;">DEFECTS</a></li>
-                                       <li><a ng-click="showInvoices(); hideAll = true; showInvoice = true; showDefect = false; showDocument = false;">INVOICES</a></li>
-                                       <li><a ng-click="showDocument(); hideAll = true; showDocument = true; showVariation = false; showDefect = false; showInvoice = false;">DOCUMENTS</a></li>
+                                       <li><a ng-click="showDefects(); hideAll = true; showAll = false; showDefect = true; showDocument = false; showVariation = false; showInvoice = false;">DEFECTS</a></li>
+                                       <li><a ng-click="showInvoices(); hideAll = true; showAll = false; showInvoice = true; showDefect = false; showVariation = false; showDocument = false;">INVOICES</a></li>
+                                       <li><a ng-click="showDocument(); hideAll = true; showAll = false; showDocument = true; showVariation = false; showDefect = false; showInvoice = false;">DOCUMENTS</a></li>
                                      </ul>
                                </div>
                                <div class="col s6">
@@ -57,21 +61,22 @@
                            </div>
                        </div>
                        <div class="divider"></div>
-                         <div style="height: 300px;" ng-hide="hideAll">
+                         <div style="height: 300px;" ng-hide="hideAll" ng-show="showAll">
                           
                           <li class="collection-item" ng-repeat="item in contractorRequest.variations" ng-if="contractorRequest.variations">
-                            {{item.title}}
+                            Variation - {{item.title}}
                           </li>
                           <li class="collection-item" ng-repeat="item in contractorRequest.defects" ng-if="contractorRequest.defects">
-                            {{item.title}}
+                            Defect - {{item.title}}
                           </li>
                           <li class="collection-item" ng-repeat="item in contractorRequest.invoices" ng-if="contractorRequest.invoices">
-                            {{item.title}}
+                            Invoices - {{item.title}}
                           </li>
-                          <li class="collection-item" ng-repeat="file in documents" ng-if="documents">{{file.title}}</li>
+                          <li class="collection-item" ng-repeat="file in documents" ng-if="documents">
+                            Document - {{file.title}}</li>
                          </div>
                          <div style="height: 300px" ng-show="showVariation" ng-if="variations">
-                             <li class="collection-item" ng-repeat="variation in variations.va riations">{{variation.title}}</li>
+                             <li class="collection-item" ng-repeat="variation in variations.variations">{{variation.title}}</li>
                          </div>
                          <div style="height: 300px" ng-show="showDefect" ng-if="defects">
                              <li class="collection-item" ng-repeat="defect in defects.defects">{{defect.title}}</li>

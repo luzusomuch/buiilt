@@ -159,7 +159,7 @@ angular.module('buiiltApp')
         .then(function(data){
         $scope.success = data;
         alert('You have send quote successfully!');
-        $state.go("team.manager");
+        // $state.go("team.manager");
       });
     }
   };

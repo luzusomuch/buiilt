@@ -24,6 +24,11 @@ angular.module('buiiltApp')
     $scope.messages = data;
   });
 
+  $scope.showAll = function() {
+    $scope.allItemsText = 'All items';
+    $sope.contractorRequest = $scope.contractorRequest;
+  };
+
   $scope.showVariations = function() {
     $scope.variations = $scope.contractorRequest;
     $scope.allItemsText = 'Variations';
@@ -56,6 +61,7 @@ angular.module('buiiltApp')
     contractorRequestService.sendVariation({id: $stateParams.packageId, variation: $scope.variation})
     .$promise.then(function(data) {
       $scope.variations = data;
+      $scope.contractorRequest = data;
       alert('Send variation successfully!');
     });
   };
@@ -64,6 +70,7 @@ angular.module('buiiltApp')
     contractorRequestService.sendDefect({id: $stateParams.packageId, defect: $scope.defect})
     .$promise.then(function(data) {
       $scope.defects = data;
+      $scope.contractorRequest = data;
       alert('Send defect successfully!');
     });
   };

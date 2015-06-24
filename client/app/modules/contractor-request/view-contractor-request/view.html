@@ -79,7 +79,7 @@
       <li ng-repeat="toContractor in contractorRequest.to">
         <div class="collapsible-header">
           Tenderer #{{$index+1}} - {{toContractor.email}}
-          <a class="btn-flat btn-flat secondary-content modal-trigger" href='#modal_viewQuote_{{toContractor._id}}' style="font-size:12px; margin-top: 8px">View Quote</a>
+          <a ng-if="toContractor.quote" class="btn-flat btn-flat secondary-content modal-trigger" href='#modal_viewQuote_{{toContractor.quote}}' style="font-size:12px; margin-top: 8px">View Quote</a>
         </div>
         <div class="collapsible-body">
           <div class="row">
@@ -94,7 +94,7 @@
                      <a href="#!" class="btn-flat col s1">
                        <i class="mdi-toggle-radio-button-on valign center-align" ></i>
                      </a>
-                     <p class="col s11 valign">message.message</p>
+                     <p class="col s11 valign">{{message.message}}</p>
                    </div>
                  </li>
                </div>
@@ -175,7 +175,7 @@
 </div> -->
 
 <div ng-repeat="quoteRequest in quoteRequests">
-  <div id='modal_viewQuote_{{quoteRequest.team}}' class="modal modal-fixed-footer">
+  <div id='modal_viewQuote_{{quoteRequest._id}}' class="modal modal-fixed-footer">
     <div class="modal-content">
       <h4>View Quote</h4>
       <p>Total: <strong>{{quoteRequest.total}}</strong></p>

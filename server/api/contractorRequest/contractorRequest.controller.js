@@ -130,7 +130,28 @@ exports.sendQuote =function(req, res) {
               quoteRequest.save(function(err, saved) {
                 if (err) {return res.send(500,err);}
                 else {
-                  return res.json(200, saved);
+                  ContractorPackage.findById(req.body.contractorRequest._id, function(err, contractorPackage){
+                    if (err) {return res.send(500,err);}
+                    else {
+                      _.each(contractorPackage.to, function(to){
+                        console.log(to._id, team._id);
+                        if (to._id) {
+                          if (to._id.toString() == team._id.toString()) {
+                            to._id = team._id,
+                            to.email = to.email,
+                            to.quote = saved._id;
+                          }
+                        }
+                      });
+                      contractorPackage.save(function(err, savedContractorPackage){
+                        if (err) {return res.send(500,err);}
+                        else {
+                          console.log(savedContractorPackage);
+                          return res.json(200, saved);
+                        }
+                      });
+                    }
+                  });
                 }
               });
             }
