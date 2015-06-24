@@ -133,10 +133,12 @@ exports.createUserWithInviteToken = function(req, res, next) {
                     // var packageTo = contractorPackge.to;
                     _.each(contractorPackge.to, function(to) {
                       if (to.email === packageInvite.to) {
-                        contractorPackge.to.push({
-                          _id: savedTeam._id,
-                          email: packageInvite.to
-                        });
+                        to._id = savedTeam._id;
+                        to.email = packageInvite.to;
+                        // contractorPackge.to.push({
+                        //   _id: savedTeam._id,
+                        //   email: packageInvite.to
+                        // });
                       }
                     });
                     // contractorPackge.to = packageTo;
@@ -161,10 +163,12 @@ exports.createUserWithInviteToken = function(req, res, next) {
                     // var packageTo = materialPackage.to;
                     _.each(materialPackage.to, function(to) {
                       if (to.email === packageInvite.to) {
-                        materialPackage.to.push({
-                          _id: savedTeam._id,
-                          email: packageInvite.to
-                        });
+                        to._id = savedTeam._id;
+                        to.email = packageInvite.to;
+                        // materialPackage.to.push({
+                        //   _id: savedTeam._id,
+                        //   email: packageInvite.to
+                        // });
                       }
                     });
                     // materialPackage.to = packageTo;

@@ -67,6 +67,34 @@ angular.module('buiiltApp')
         return cb(err);
       }.bind(this)).$promise;
     },
+
+    createUserWithInvite: function(user, callback){
+      var cb = callback || angular.noop;
+
+      return userService.createUserWithInviteToken(user,
+      function(data) {
+        if (data.emailVerified == true) {
+          $cookieStore.put('token', data.token);
+          currentUser = userService.get();
+          if (data.package.packageType === 'contractor') {
+            $state.go('contractorRequest.sendQuote', {id:data.package.project, packageId: data.package._id});  
+          }
+          else if (data.package.packageType === 'material') {
+            $state.go('materialRequest.sendQuote', {id: data.package.project, packageId: data.package._id});
+          }
+          else if (data.package.type === 'BuilderPackage') {
+            $state.go('builderPackages.sendQuote', {id: data.package.project, packageId: data.package._id});
+          }
+          // $state.go('team.manager')
+
+        }
+        return cb(user);
+      },
+      function(err) {
+        this.logout();
+        return cb(err);
+      }.bind(this)).$promise;
+    },
     /**
      * Change password
      *

@@ -1,6 +1,7 @@
 'use strict';
 
 var ContractorPackage = require('./../../models/contractorPackage.model');
+var PackageInvite = require('./../../models/packageInvite.model');
 var ValidateInvite = require('./../../models/validateInvite.model');
 var Team = require('./../../models/team.model');
 var User = require('./../../models/user.model');
@@ -38,11 +39,12 @@ exports.createContractorPackage = function (req, res, next) {
     User.findOne({'email': emailPhone.email}, function(err, user) {
       if (err) {return res.send(500,err);}
       if (!user) {
-        var validateInvite = new ValidateInvite({
-          email: emailPhone.email,
-          inviteType: 'contractor'
-        });
-        validateInvite.save();
+        // var validateInvite = new ValidateInvite({
+        //   email: emailPhone.email,
+        //   inviteType: 'contractor'
+        // });
+        // validateInvite.save();
+        
         to.push({
           email: emailPhone.email,
           phone: emailPhone.phoneNumber
@@ -70,6 +72,15 @@ exports.createContractorPackage = function (req, res, next) {
       contractorPackage.save(function(err, saved){
         if (err) {return res.send(500,err);}
         else {
+          _.each(req.body.emailsPhone, function(emailPhone){
+            var packageInvite = new PackageInvite({
+              owner: req.user._id,
+              inviteType: 'contractor',
+              package: saved._id,
+              to: emailPhone.email
+            });
+            packageInvite.save();
+          });
           return res.json(200,saved);
         }
       });

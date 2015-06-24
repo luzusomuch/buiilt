@@ -35,6 +35,12 @@
               <input type="text" ng-model="user.teamName" required>
             </div>
           </div>
+          <div class="row">
+            <div class="input-field col s12">
+              <label for="">Team type</label>
+              <input type="text" ng-model="packageInvite.inviteType" disabled>
+            </div>
+          </div>
 <!--          <div class="row">
             <div input-field class="col s12">
               <select material-select ng-model="user.type" required>
@@ -45,6 +51,13 @@
               </select>
             </div>
           </div>-->
+          <div class="row">
+            <div input-field class="col s12">
+              <label>Email</label>
+              <input ng-model="packageInvite.to" required type="text" disabled>
+            </div>
+          </div>
+
           <div class="row">
             <div input-field class="col s12">
               <label>Password</label>

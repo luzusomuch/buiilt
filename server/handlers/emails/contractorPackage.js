@@ -32,17 +32,24 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
       //do send email
       _.each(request.to,function(toEmail) {
         if (!toEmail._id) {
-
-          Mailer.sendMail('contractor-package-request-no-account.html', toEmail.email, {
-            contractorPackage: request,
-            //project owner
-            user: result.user,
-            project: result.project,
-            registryLink: config.baseUrl + 'signup-invite?packageInviteToken=' + request._id,
-            contractorPackageLink: config.baseUrl  + result.project._id + '/contractor-requests/' + request._id,
-            subject: 'Quote request for ' + request.name
-          }, function(err) {
-            return next();
+          PackageInvite.find({package: request._id}, function(err, packageInvites) {
+            if (err) {return next();}
+            if (!packageInvites) {return next();}
+            else {
+              _.each(packageInvites, function(packageInvite){
+                Mailer.sendMail('contractor-package-request-no-account.html', packageInvite.to, {
+                  contractorPackage: request,
+                  //project owner
+                  user: result.user,
+                  project: result.project,
+                  registryLink: config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
+                  contractorPackageLink: config.baseUrl  + result.project._id + '/contractor-requests/' + request._id,
+                  subject: 'Quote request for ' + request.name
+                }, function(err) {
+                  return next();
+                });
+              });
+            }
           });
         }
         else {
