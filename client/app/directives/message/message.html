@@ -15,7 +15,7 @@
                   </li>
               </ul>
             </div>
-            <div class="col s8">
+            <div class="col s8" ng-if="currentThread.user">
               <p style="">Available user:</p>
               <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="user in currentThread.users">
                 {{user.email}}

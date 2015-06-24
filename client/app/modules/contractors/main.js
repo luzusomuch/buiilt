@@ -8,7 +8,10 @@ angular.module('buiiltApp').config(function($stateProvider) {
     authenticate : true,
     resolve: {
       team: function(authService){
-        return authService.getCurrentTeam();
+        return authService.getCurrentTeam().$promise;
+      },
+      contractorPackages : function(contractorService,$stateParams) {
+        return contractorService.get({id : $stateParams.id}).$promise;
       }
     }
   })

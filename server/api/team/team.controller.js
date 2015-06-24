@@ -40,6 +40,7 @@ exports.me = function(req,res) {
   Team.findById(user.team._id)
     .populate('leader')
     .populate('member._id')
+    .populate('project')
     .exec(function (err,team) {
     if (err) {
       return errorsHelper.validationErrors(res, err);

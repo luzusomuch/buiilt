@@ -17,6 +17,13 @@ angular.module('buiiltApp')
             id: 'id'
           }
         },
+        getByTeam : {
+          method : 'get',
+          isArray : true,
+          params : {
+            action : 'team'
+          }
+        },
         selectWinner: {
           method: 'PUT',
           params: {

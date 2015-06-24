@@ -3,7 +3,7 @@ angular.module('buiiltApp')
   return {
     restrict: 'E',
     templateUrl: 'app/directives/header/header.html',
-    controller: function($scope, $stateParams, $rootScope,materialPackageService, authService, projectService, contractorService,teamService,filterFilter) {
+    controller: function($scope,$state, $stateParams, $rootScope,materialPackageService, authService, projectService, contractorService,teamService,filterFilter) {
 
       function queryProjects(){
         authService.isLoggedInAsync(function(isLoggedIn){
@@ -13,91 +13,101 @@ angular.module('buiiltApp')
               location: {},
               email: {}
             };
-            $scope.user = authService.getCurrentUser();
-            $scope.currentTeam = authService.getCurrentTeam();
-            $scope.isLeader = $scope.user.team.role == 'admin' ? true : false;
+            authService.getCurrentUser().$promise
+              .then(function(res) {
+                $scope.user = res;
+                $scope.isLeader = $scope.user.team.role == 'admin' ? true : false;
+                authService.getCurrentTeam().$promise
+                  .then(function(res) {
+                    $scope.currentTeam = res;
+                    $scope.projects = $scope.currentTeam.project;
+                    if ($stateParams.id) {
+                      projectService.get({'id': $stateParams.id}).$promise.then(function(project) {
+                        var project = project;
 
-            teamService.getHomeOwnerTeam().$promise.then(function(data){
-              $scope.homeOwnerTeams = data; 
-              var homeOwnerTeamMember = [];
-              angular.forEach($scope.homeOwnerTeams, function(homeOwnerTeam) {
-                _.each(homeOwnerTeam.leader, function(leader) {
-                  homeOwnerTeamMember.push({_id: leader._id, email: leader.email});
-                });
-                _.each(homeOwnerTeam.member, function(member) {
-                  if (member._id) {
-                    homeOwnerTeamMember.push({_id: member._id._id, email: member._id.email});  
-                  }
-                })
-              }); 
-              $scope.homeOwnerTeamMember = homeOwnerTeamMember;
-            });
-            
-            teamService.getHomeBuilderTeam().$promise.then(function(data) {
-              $scope.homeBuilderTeams = data;
-              var homeBuilderTeamMember = [];
-              angular.forEach($scope.homeBuilderTeams, function(homeBuilderTeam) {
-                _.each(homeBuilderTeam.leader, function(leader) {
-                  homeBuilderTeamMember.push({_id: leader._id, email: leader.email});
-                });
-                _.each(homeBuilderTeam.member, function(member){
-                  if (member._id) {
-                    homeBuilderTeamMember.push({_id: member._id._id, email: member._id.email});
-                  }
-                })
+                        if (!project && project == null) {
+                          var userId = $scope.user._id;
+                          $scope.tabs = [{sref: 'team.manager', label: 'team manager'},
+                            {sref: 'user.form({id: userId})', label: 'edit profile'},
+                            {sref: 'notification.view({id: userId})', label: 'notification'}];
+                        }
+                        else {
+                          console.log(false);
+                          if ($scope.currentTeam.type === 'homeOwner') {
+                            $scope.tabs = $scope.menuTypes['homeOwner'];
+                          }
+                          else if($scope.currentTeam.type === 'buider') {
+                            $scope.tabs = $scope.menuTypes['buider'];
+                          }
+                          else if($scope.currentTeam.type === 'contractor') {
+                            $scope.tabs = $scope.menuTypes['contractor'];
+                          }
+                          else if($scope.currentTeam.type === 'supplier') {
+                            $scope.tabs = $scope.menuTypes['supplier'];
+                          }
+                        }
+                      });
+                    }
+                    else {
+                      var userId = $scope.user._id;
+                      $scope.tabs = [{sref: 'team.manager', label: 'team manager'},
+                        {sref: 'user.form', label: 'edit profile'},
+                        {sref: 'notification.view', label: 'notification'}];
+                    }
+                  });
               });
-              $scope.homeBuilderTeamMember = homeBuilderTeamMember;
-            });
-            
-            // console.log($scope.homeOwnerTeams.member);
-            // $scope.homeOwnerTeams.member  = filterFilter($scope.homeOwnerTeams.member, {status : 'Active'});
 
-            projectService.getProjectsByUser({'id': $scope.user._id}, function(projects) {
-              $scope.projectsOwner = projects;
-            });
-            projectService.getProjectsByBuilder({'id': $scope.user._id}, function(projects) {
-              $scope.projectsBuilder = projects;
-            });
-            contractorService.getProjectForContractor({'id': $scope.user._id}, function(result) {
-              $scope.projectsContractor = result;
-            });
-            materialPackageService.getProjectForSupplier({'id': $scope.user._id}, function(result) {
-              $scope.projectsSupplier = result;
-            });
 
-            if ($stateParams.id) {
-              projectService.get({'id': $stateParams.id}).$promise.then(function(project) {
-                var project = project;
-                
-                if (!project && project == null) {
-                  var userId = $scope.user._id;
-                  $scope.tabs = [{sref: 'team.manager', label: 'team manager'},
-                            {sref: 'user.form()', label: 'edit profile'},
-                            {sref: 'notification.view', label: 'notification'}];
-                }
-                else {
-                  if ($scope.currentTeam.type === 'homeOwner') {
-                    $scope.tabs = $scope.menuTypes['homeOwner'];  
-                  }
-                  else if($scope.currentTeam.type === 'buider') {
-                    $scope.tabs = $scope.menuTypes['buider'];
-                  }
-                  else if($scope.currentTeam.type === 'contractor') {
-                    $scope.tabs = $scope.menuTypes['contractor']; 
-                  }
-                  else if($scope.currentTeam.type === 'supplier') {
-                    $scope.tabs = $scope.menuTypes['supplier']; 
-                  }
-                }
-              });
-            }
-            else {
-              var userId = $scope.user._id;
-              $scope.tabs = [{sref: 'team.manager', label: 'team manager'},
-                        {sref: 'user.form({id: userId})', label: 'edit profile'},
-                        {sref: 'notification.view({id: userId})', label: 'notification'}];
-            }
-            
+            //teamService.getHomeOwnerTeam().$promise.then(function(data){
+            //  $scope.homeOwnerTeams = data;
+            //  var homeOwnerTeamMember = [];
+            //  angular.forEach($scope.homeOwnerTeams, function(homeOwnerTeam) {
+            //    _.each(homeOwnerTeam.leader, function(leader) {
+            //      homeOwnerTeamMember.push({_id: leader._id, email: leader.email});
+            //    });
+            //    _.each(homeOwnerTeam.member, function(member) {
+            //      if (member._id) {
+            //        homeOwnerTeamMember.push({_id: member._id._id, email: member._id.email});
+            //      }
+            //    })
+            //  });
+            //  $scope.homeOwnerTeamMember = homeOwnerTeamMember;
+            //});
+            //
+            //teamService.getHomeBuilderTeam().$promise.then(function(data) {
+            //  $scope.homeBuilderTeams = data;
+            //  var homeBuilderTeamMember = [];
+            //  angular.forEach($scope.homeBuilderTeams, function(homeBuilderTeam) {
+            //    _.each(homeBuilderTeam.leader, function(leader) {
+            //      homeBuilderTeamMember.push({_id: leader._id, email: leader.email});
+            //    });
+            //    _.each(homeBuilderTeam.member, function(member){
+            //      if (member._id) {
+            //        homeBuilderTeamMember.push({_id: member._id._id, email: member._id.email});
+            //      }
+            //    })
+            //  });
+            //  $scope.homeBuilderTeamMember = homeBuilderTeamMember;
+            //});
+            //
+            //// console.log($scope.homeOwnerTeams.member);
+            //// $scope.homeOwnerTeams.member  = filterFilter($scope.homeOwnerTeams.member, {status : 'Active'});
+            //
+            //projectService.getProjectsByUser({'id': $scope.user._id}, function(projects) {
+            //  $scope.projectsOwner = projects;
+            //});
+            //projectService.getProjectsByBuilder({'id': $scope.user._id}, function(projects) {
+            //  $scope.projectsBuilder = projects;
+            //});
+            //contractorService.getProjectForContractor({'id': $scope.user._id}, function(result) {
+            //  $scope.projectsContractor = result;
+            //});
+            //materialPackageService.getProjectForSupplier({'id': $scope.user._id}, function(result) {
+            //  $scope.projectsSupplier = result;
+            //});
+
+
+
 
 
           } else {

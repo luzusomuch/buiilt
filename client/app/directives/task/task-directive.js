@@ -41,6 +41,7 @@ angular.module('buiiltApp')
               _.forEach($scope.package.winnerTeam._id.leader,function(leader) {
                   $scope.available.push(leader);
               });
+              $scope.available = _.union($scope.available,$scope.currentTeam.leader);
               break;
             default :
               break

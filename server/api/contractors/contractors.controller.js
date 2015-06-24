@@ -13,7 +13,7 @@ var async = require('async');
  * restriction: 'admin'
  */
 exports.index = function (req, res) {
-  ContractorPackage.find(function (err, contractors) {
+  ContractorPackage.find({project : req.params.id},function (err, contractors) {
     if (err){
       return res.send(500, err);
     }    

@@ -10,7 +10,7 @@ angular.module('buiiltApp')
         var params = {
           fromUser : '<span class="highlight">{{notification.fromUser.email}}</span> ',
           toUser : '<span class="highlight">{{notification.toUser.email}}</span>',
-          element : '<span class="highlight">{{notification.element.title}}</span> ',
+          element : '<span class="highlight">{{notification.element.name}}</span> ',
           time : '<span class="highlight">{{notification.createdAt | date : "yyyy/MM/dd hh:mm a"}}</span>'
         };
 

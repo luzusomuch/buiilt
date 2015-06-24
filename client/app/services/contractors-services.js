@@ -5,6 +5,10 @@ angular.module('buiiltApp')
         createContractorPackage: {
             method: 'POST'
         },
+        get : {
+          method : 'GET',
+          isArray : true
+        },
         getProjectForContractor: {
             method: 'GET',
             params: {

@@ -8,7 +8,7 @@
 		</ul>
 
    <div class="collection">
-           <a href="#!" class="collection-item">In Progress<span class="new badge">6</span></a>
+       <a href="#!" class="collection-item">In Progress<span class="new badge">6</span></a>
 		   <a href="#!" class="collection-item">Completed</a>
    </div>
 </div>
@@ -17,7 +17,7 @@
    <!--<ul class="collection z-depth-1">-->
      <!--<li class="collection-item" ng-repeat="item in staffPackages" ng-if="item.canSee || isLeader"><a ui-sref="staff.view({packageId : item._id})">{{item.name}}</a></li>-->
    <!--</ul>-->
-  <div class="collection z-depth-1 with-header">
+  <div class="collection z-depth-1">
     <a ui-sref="staff.view({packageId : item._id})" ng-repeat="item in staffPackages"  ng-if="item.canSee || isLeader" class="collection-item">{{item.name}}</a>
   </div>
 </div>

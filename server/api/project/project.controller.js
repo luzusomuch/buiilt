@@ -19,6 +19,17 @@ exports.index = function(req, res) {
   });
 };
 
+exports.team = function(req,res,next) {
+  Team.findById(req.params.id,function(err,team) {
+    if (err || !team) {
+      return res.send(422,err);
+    }
+    req.team = team;
+    next();
+  })
+};
+
+
 /**
  * create a new project
  * @param {type} req
@@ -35,7 +46,10 @@ exports.create = function(req, res){
           owner: team._id,
           name: req.body.name,
           description: req.body.description,
-          user: {_id: req.user._id, email: req.user.email},
+          user: {
+            _id: req.user._id,
+            email: req.user.email
+          },
           type: 'FromHomeOwnerToBuilder'
         });
         User.findOne({'email': req.body.email}, function(err, user){
