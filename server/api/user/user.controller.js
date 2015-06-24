@@ -202,7 +202,13 @@ exports.createUserWithInviteToken = function(req, res, next) {
                       else {
                         project.builder._id = savedTeam._id;
                         project.builder.email = packageInvite.to;
-                        project.save();
+                        project.save(function(err, savedProject){
+                          if (err) {return res.send(500,err);}
+                          else {
+                            savedTeam.project.push(savedProject._id);
+                            savedTeam.save();
+                          }
+                        });
                       }
                     });
                     builderPackage.owner = savedTeam._id;
@@ -229,7 +235,10 @@ exports.createUserWithInviteToken = function(req, res, next) {
                       else {
                         project.user._id = savedTeam._id;
                         project.user.email = packageInvite.to;
-                        project.save();
+                        project.save(function(err, savedProject){
+                          savedTeam.project.push(savedProject._id);
+                          savedTeam.save();
+                        });
                       }
                     });
                     builderPackage.owner = savedTeam._id;
