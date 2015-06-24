@@ -108,7 +108,7 @@ exports.create = function(req, res){
                       user: saved.builder._id,
                       project: saved._id,
                       name: saved.name,
-                      description: saved.description
+         x`             description: saved.description
                     });
                     builderPackage.save(function(err, savedBuilderPackage){
                       if (err) {return res.send(500, err);}

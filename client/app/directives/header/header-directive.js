@@ -58,40 +58,40 @@ angular.module('buiiltApp')
               });
 
 
-            //teamService.getHomeOwnerTeam().$promise.then(function(data){
-            //  $scope.homeOwnerTeams = data;
-            //  var homeOwnerTeamMember = [];
-            //  angular.forEach($scope.homeOwnerTeams, function(homeOwnerTeam) {
-            //    _.each(homeOwnerTeam.leader, function(leader) {
-            //      homeOwnerTeamMember.push({_id: leader._id, email: leader.email});
-            //    });
-            //    _.each(homeOwnerTeam.member, function(member) {
-            //      if (member._id) {
-            //        homeOwnerTeamMember.push({_id: member._id._id, email: member._id.email});
-            //      }
-            //    })
-            //  });
-            //  $scope.homeOwnerTeamMember = homeOwnerTeamMember;
-            //});
-            //
-            //teamService.getHomeBuilderTeam().$promise.then(function(data) {
-            //  $scope.homeBuilderTeams = data;
-            //  var homeBuilderTeamMember = [];
-            //  angular.forEach($scope.homeBuilderTeams, function(homeBuilderTeam) {
-            //    _.each(homeBuilderTeam.leader, function(leader) {
-            //      homeBuilderTeamMember.push({_id: leader._id, email: leader.email});
-            //    });
-            //    _.each(homeBuilderTeam.member, function(member){
-            //      if (member._id) {
-            //        homeBuilderTeamMember.push({_id: member._id._id, email: member._id.email});
-            //      }
-            //    })
-            //  });
-            //  $scope.homeBuilderTeamMember = homeBuilderTeamMember;
-            //});
+            teamService.getHomeOwnerTeam().$promise.then(function(data){
+             $scope.homeOwnerTeams = data;
+             var homeOwnerTeamMember = [];
+             angular.forEach($scope.homeOwnerTeams, function(homeOwnerTeam) {
+               _.each(homeOwnerTeam.leader, function(leader) {
+                 homeOwnerTeamMember.push({_id: leader._id, email: leader.email});
+               });
+               _.each(homeOwnerTeam.member, function(member) {
+                 if (member._id) {
+                   homeOwnerTeamMember.push({_id: member._id._id, email: member._id.email});
+                 }
+               })
+             });
+             $scope.homeOwnerTeamMember = homeOwnerTeamMember;
+            });
+            
+            teamService.getHomeBuilderTeam().$promise.then(function(data) {
+             $scope.homeBuilderTeams = data;
+             var homeBuilderTeamMember = [];
+             angular.forEach($scope.homeBuilderTeams, function(homeBuilderTeam) {
+               _.each(homeBuilderTeam.leader, function(leader) {
+                 homeBuilderTeamMember.push({_id: leader._id, email: leader.email});
+               });
+               _.each(homeBuilderTeam.member, function(member){
+                 if (member._id) {
+                   homeBuilderTeamMember.push({_id: member._id._id, email: member._id.email});
+                 }
+               })
+             });
+             $scope.homeBuilderTeamMember = homeBuilderTeamMember;
+            });
             //
             //// console.log($scope.homeOwnerTeams.member);
-            //// $scope.homeOwnerTeams.member  = filterFilter($scope.homeOwnerTeams.member, {status : 'Active'});
+             $scope.homeOwnerTeams.member  = filterFilter($scope.homeOwnerTeams.member, {status : 'Active'});
             //
             //projectService.getProjectsByUser({'id': $scope.user._id}, function(projects) {
             //  $scope.projectsOwner = projects;
