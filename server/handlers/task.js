@@ -11,7 +11,7 @@ var _ = require('lodash');
 EventBus.onSeries('Task.Inserted', function(task, next){
   task.assignees.forEach(function(assignee) {
     var notification = new Notification({
-      owner : task.user,
+      owner : assignee,
       fromUser : task.user,
       toUser : assignee,
       element : task,
@@ -24,7 +24,6 @@ EventBus.onSeries('Task.Inserted', function(task, next){
 });
 
 EventBus.onSeries('Task.Updated', function(task, next){
-
   if (task._modifiedPaths.indexOf('completed') != -1) {
     task.assignees.forEach(function(assignee) {
       var notification = new Notification({
@@ -60,7 +59,7 @@ EventBus.onSeries('Task.Updated', function(task, next){
   } else if (task._modifiedPaths.indexOf('assignees') != -1) {
     async.parallel([
       function(callback) {
-        task.oldAssignees.forEach(function(assignee) {
+        task._oldAssignees.forEach(function(assignee) {
           if (task.assignees.indexOf(assignee) == -1) {
             var notification = new Notification({
               owner : assignee,
@@ -92,6 +91,7 @@ EventBus.onSeries('Task.Updated', function(task, next){
       },
       function(callback) {
         if (task._oldAssignees) {
+          task._oldAssignees = task._oldAssignees.map(function (e) { return e.toString(); })
           task.assignees.forEach(function(assignee) {
             if (task._oldAssignees.indexOf(assignee.toString()) == -1) {
               task.assignees.forEach(function(_assignee) {

@@ -15,6 +15,7 @@ angular.module('buiiltApp')
            $scope.currentUser = res;
             authService.getCurrentTeam().$promise.then(function(res) {
               $scope.currentTeam = res;
+              getAvailableAssignee($scope.type);
               $scope.isLeader = (_.find($scope.currentTeam.leader,{_id : $scope.currentUser._id})) ? true : false;
             });
         });
@@ -28,6 +29,7 @@ angular.module('buiiltApp')
           switch(type) {
             case 'staff' :
               $scope.available =  angular.copy($scope.package.staffs);
+              $scope.available = _.union($scope.available,$scope.currentTeam.leader);
               break;
             case 'contractor' :
               $scope.available = [];
@@ -45,7 +47,7 @@ angular.module('buiiltApp')
           }
         };
 
-        getAvailableAssignee($scope.type);
+
 
         //Update Task List
         var updateTasks = function() {

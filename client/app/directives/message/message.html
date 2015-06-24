@@ -96,8 +96,9 @@
         <span class="card-title grey-text text-darken-4" ng-if="!isNew">Edit Thread<i class="mdi-navigation-close right"></i></span>
         <form class="col s12" name="form" novalidate ng-submit="saveThread(form)">
           <div class="input-field col s12">
-            <input id="thread_name" type="text" ng-model="thread.name">
+            <input id="thread_name" type="text" ng-model="thread.name" required name="name" ng-class="{'invalid' : form.name.$invalid && submitted}">
             <label for="thread_name">Name</label>
+            <p class="validate-message" ng-show="form.name.$error.required && submitted">Thread name is required</p>
           </div>
           <div class="row">
             <p style="">Current user:</p>

@@ -16,18 +16,19 @@ angular.module('buiiltApp')
             authService.getCurrentTeam().$promise.then(function(res) {
               $scope.currentTeam = res;
               $scope.isLeader = (_.find($scope.currentTeam.leader,{_id : $scope.currentUser._id})) ? true : false;
+              getAvailableUser($scope.type);
             });
           });
           $scope.submitted = false;
           $scope.isNew = true;
-          $scope.filter = 'all';
-          $scope.customFilter = {};
 
           //Get Available assignee to assign to task
           var getAvailableUser = function(type) {
             switch(type) {
               case 'staff' :
                 $scope.available =  angular.copy($scope.package.staffs);
+                $scope.available = _.union($scope.available,$scope.currentTeam.leader);
+                _.remove($scope.available,{_id : $scope.currentUser._id});
                 break;
               case 'contractor' :
                 $scope.available = [];
@@ -45,8 +46,6 @@ angular.module('buiiltApp')
             }
           };
 
-          getAvailableUser($scope.type);
-
           //Update Thread List
           var updateThread = function() {
             messageService.get({id : $scope.package._id, type : $scope.type}).$promise
@@ -63,7 +62,7 @@ angular.module('buiiltApp')
                     thread.canSee = false;
                     thread.isOwner = false
                   }
-                })
+                });
                 if ($scope.currentThread) {
                   $scope.currentThread = _.find($scope.threads,{_id : $scope.currentThread._id});
                 }
@@ -117,12 +116,13 @@ angular.module('buiiltApp')
           };
 
           $scope.saveThread = function(form) {
-            $scope.submitted = false;
+            $scope.submitted = true;
             if (form.$valid) {
               if ($scope.isNew) {
                 messageService.create({id: $scope.package._id, type: $scope.type}, $scope.thread).$promise
                   .then(function (res) {
                     $('.card-title').trigger('click');
+                    $scope.currentThread = res;
                     updateThread();
                   })
               } else {
@@ -134,43 +134,6 @@ angular.module('buiiltApp')
               }
             }
           };
-
-          //Complete task
-          $scope.complete = function(task) {
-            task.completed = !task.completed;
-            if (task.completed) {
-              task.completedBy = $scope.currentUser._id;
-              task.completedAt = new Date();
-            } else {
-              task.completedBy = null;
-              task.completedAt = null;
-            }
-            taskService.update({id : task._id, type : $scope.type},task).$promise
-              .then(function(res) {
-                //$('.card-title').trigger('click');
-                updateTasks();
-              })
-          };
-
-          //Submit form function
-          $scope.save = function(form) {
-            if (form.$valid) {
-              if ($scope.isNew) {
-                taskService.create({id : $scope.package._id, type : $scope.type},$scope.task).$promise
-                  .then(function(res) {
-                    $('.card-title').trigger('click');
-                    updateTasks();
-                  })
-              } else {
-                taskService.update({id : $scope.task._id, type : $scope.type},$scope.task).$promise
-                  .then(function(res) {
-                    $('.card-title').trigger('click');
-                    updateTasks();
-                  })
-              }
-
-            }
-          }
         }
     }
   });

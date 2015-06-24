@@ -2,7 +2,6 @@ angular.module('buiiltApp')
   .directive('notification', function($compile){
     return {
       restrict: 'EA',
-
       replace : true,
       scope: {
         notification: '='

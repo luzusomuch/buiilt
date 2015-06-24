@@ -27,7 +27,7 @@
             <i ng-if="!task.completed" class="mdi-toggle-check-box-outline-blank"></i>
             <i ng-if="task.completed" class="mdi-toggle-check-box"></i>
           </a>
-            <span ng-class="{'completed' : task.completed}">{{task.title}}</span>
+            <span ng-class="{'completed' : task.completed}">{{task.name}}</span>
           <a href="#!" class="btn-flat activator secondary-content" style="margin-top: -3px; font-size: 12px;"
              ng-click="(!task.isOwner && !isLeader) || editTask(task)"
              ng-if="task.isOwner || isLeader">
@@ -41,8 +41,9 @@
       <span class="card-title grey-text text-darken-4"><i class="mdi-navigation-close right"></i></span>
       <form name="form" class="col s12" ng-submit="save(form)">
         <div class="input-field col s12">
-          <input id="task_description" type="text" ng-model="task.title">
+          <input id="task_description" type="text" ng-model="task.name" name="name" ng-class="{'invalid' : form.name.$invalid && submitted}">
           <label for="task_description">Task</label>
+          <p class="validate-message" ng-show="form.name.$error.required && submitted">Task name is required</p>
         </div>
         <div class="input-field col s12">
           <input type="date"
