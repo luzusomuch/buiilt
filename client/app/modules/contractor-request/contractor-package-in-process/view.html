@@ -34,17 +34,17 @@
                                      {{(allItemsText) ? allItemsText : 'All items'}}<i class="mdi-navigation-arrow-drop-down"></i>
                                    </a>
                                      <ul id='itemFilter' class='dropdown-content' style="margin-top: 15px">
-                                      <li>
+                                      <!-- <li>
                                       <a ng-click="showAll(); hideAll = true; showAll = true; showVariation = false; showDocument = false; showDefect = false; showDocument = false; showInvoice = false;">All ITEMS
                                       </a>
-                                       </li>
+                                       </li> -->
                                        <li>
-                                        <a ng-click="showVariations(); hideAll = true; showAll = false; showVariation = true; showDocument = false; showDefect = false; showDocument = false; showInvoice = false;">VARIATIONS
+                                        <a ng-click="showVariations(); hideAll = true; showVariation = true; showDocument = false; showDefect = false; showDocument = false; showInvoice = false;">VARIATIONS
                                         </a>
                                        </li>
-                                       <li><a ng-click="showDefects(); hideAll = true; showAll = false; showDefect = true; showDocument = false; showVariation = false; showInvoice = false;">DEFECTS</a></li>
-                                       <li><a ng-click="showInvoices(); hideAll = true; showAll = false; showInvoice = true; showDefect = false; showVariation = false; showDocument = false;">INVOICES</a></li>
-                                       <li><a ng-click="showDocument(); hideAll = true; showAll = false; showDocument = true; showVariation = false; showDefect = false; showInvoice = false;">DOCUMENTS</a></li>
+                                       <li><a ng-click="showDefects(); hideAll = true; showDefect = true; showDocument = false; showVariation = false; showInvoice = false;">DEFECTS</a></li>
+                                       <li><a ng-click="showInvoices(); hideAll = true; showInvoice = true; showDefect = false; showVariation = false; showDocument = false;">INVOICES</a></li>
+                                       <li><a ng-click="showDocument(); hideAll = true; showDocument = true; showVariation = false; showDefect = false; showInvoice = false;">DOCUMENTS</a></li>
                                      </ul>
                                </div>
                                <div class="col s6">
@@ -54,8 +54,9 @@
                                    </a>
                                     <ul id='relatedActions' class='dropdown-content' style="margin-top: 15px">
                                        <li><a class="modal-trigger" href="#modal_attachVariation">Attach Variation</a></li>
-                                       <li><a class="modal-trigger" href="#modal_attachDefect">Attach Defect</a></li>
+                                       <li ng-if="currentTeam.type == 'buider'"><a class="modal-trigger" href="#modal_attachDefect">Attach Defect</a></li>
                                        <li><a class="modal-trigger" href="#modal_attachDocument">Attach Document</a></li>
+                                       <li ng-if="currentTeam.type == 'contractor'"><a class="modal-trigger" href="#attachInvoice">Attach Invoice</a></li>
                                     </ul>
                                </div>
                            </div>
@@ -338,9 +339,9 @@
              </div>
          </div>
          <div class="input-field col s2 offset-s3" style="margin-top: -40px">
-                <p>Sub-Total</p>
-            <p>GST</p>
-            <p>Total</p>
+                <p>Sub-Total: {{subTotalRate + subTotalPrice}}</p>
+            <p>GST: {{(subTotalRate + subTotalPrice) * 0.1}}</p>
+            <p>Total: {{(subTotalRate + subTotalPrice) * 0.1 + (subTotalRate + subTotalPrice)}}</p>
              </div>
        </div>
        

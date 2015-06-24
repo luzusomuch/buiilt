@@ -195,6 +195,9 @@ exports.createUserWithInviteToken = function(req, res, next) {
                 BuilderPackage.findById(packageInvite.package, function(err, builderPackage){
                   if (err) {return res.send(500);}
                   else {
+                    Project.findById(packageInvite.project, function(err,project){
+                      
+                    });
                     builderPackage.owner = savedTeam._id;
                     builderPackage.save(function(err, saved){
                       if (err) {return res.send(500,err);}

@@ -24,10 +24,11 @@ angular.module('buiiltApp')
   //   $scope.messages = data;
   // });
 
-  $scope.showAll = function() {
-    $scope.allItemsText = 'All items';
-    $sope.contractorRequest = $scope.contractorRequest;
-  };
+  // $scope.showAll = function() {
+  //   $scope.contractorRequest = $scope.contractorRequest;
+  //   $scope.allItemsText = 'All items';
+  //   console.log($scope.allItemsText);
+  // };
 
   $scope.showVariations = function() {
     $scope.variations = $scope.contractorRequest;
@@ -76,6 +77,8 @@ angular.module('buiiltApp')
   };
 
   //Send invoice
+  $scope.subTotalPrice = 0;
+  $scope.subTotalRate = 0;
   $scope.rate = {};
   $scope.price = {};
   $scope.lineWithRates = [];
@@ -113,11 +116,38 @@ angular.module('buiiltApp')
     }
     else {
       contractorRequestService.sendInvoice({id: $stateParams.packageId, invoice: $scope.invoice, rate: $scope.lineWithRates, price: $scope.lineWithPrices}).$promise.then(function(data){
-        $scope.success = data;
+        $scope.invoices = data;
+        $scope.contractorRequest = data;
         alert('You have send invoice successfully!');
       });
     }
   };
+
+  $scope.$watch('rate.lineWithRate',function(value) {
+    $scope.subTotalRate = 0;
+    if (value && value.rateTotal) {
+      _.forEach(value.rateTotal, function (item) {
+
+        if (!isNaN(item)) {
+          $scope.subTotalRate += parseFloat(item);
+        }
+      })
+    }
+
+  },true)
+
+  $scope.$watch('price.lineWithPrice',function(value) {
+    $scope.subTotalPrice = 0;
+    if (value && value.price) {
+      _.forEach(value.price, function (item) {
+
+        if (!isNaN(item)) {
+          $scope.subTotalPrice += parseFloat(item);
+        }
+      })
+    }
+
+  },true);
 
   //upload file
   $scope.formData = {
