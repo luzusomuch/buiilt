@@ -99,7 +99,9 @@ TaskSchema.post('save', function (doc) {
   if (this._modifiedPaths) {
     doc._modifiedPaths = this._modifiedPaths
   }
-  doc.oldAssignees = this._original.assignees.slice(0);
+  if (this._original) {
+    doc._oldAssignees = this._original.assignees.slice(0);
+  }
   doc.editUser = this._editUser;
   EventBus.emit(evtName, doc);
 });

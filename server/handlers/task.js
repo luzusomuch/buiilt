@@ -91,26 +91,27 @@ EventBus.onSeries('Task.Updated', function(task, next){
         return callback();
       },
       function(callback) {
-
-        task.assignees.forEach(function(assignee) {
-          if (task._oldAssignees.indexOf(assignee.toString()) == -1) {
-            task.assignees.forEach(function(_assignee) {
-              var notification = new Notification({
-                owner: _assignee,
-                fromUser: task.editUser,
-                toUser: assignee,
-                element: task,
-                referenceTo: 'task',
-                type: 'taskAssign'
-              });
-              notification.save(function (err) {
-                if (err) {
-                  console.log(err);
-                }
-              });
-            })
-          }
-        });
+        if (task._oldAssignees) {
+          task.assignees.forEach(function(assignee) {
+            if (task._oldAssignees.indexOf(assignee.toString()) == -1) {
+              task.assignees.forEach(function(_assignee) {
+                var notification = new Notification({
+                  owner: _assignee,
+                  fromUser: task.editUser,
+                  toUser: assignee,
+                  element: task,
+                  referenceTo: 'task',
+                  type: 'taskAssign'
+                });
+                notification.save(function (err) {
+                  if (err) {
+                    console.log(err);
+                  }
+                });
+              })
+            }
+          });
+        }
         return callback();
       }
     ],function() {

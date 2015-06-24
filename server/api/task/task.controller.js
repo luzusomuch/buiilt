@@ -64,7 +64,6 @@ exports.create = function(req,res) {
     task.package = aPackage;
     task.project = aPackage.project;
     task.user = user;
-    task.project = aPackage.project;
     task.type = req.params.type;
     task.dateStart = new Date();
     task.save(function(err) {

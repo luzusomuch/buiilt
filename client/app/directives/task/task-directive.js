@@ -5,7 +5,7 @@ angular.module('buiiltApp')
     templateUrl: 'app/directives/task/task.html',
     scope:{
       package: '=',
-      type : '@',
+      type : '@'
     },
     controller:
       function($scope,$rootScope,taskService, authService,filterFilter, $cookieStore, $stateParams, $rootScope, $location , packageService, userService, projectService, FileUploader, documentService) {

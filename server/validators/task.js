@@ -12,7 +12,7 @@ exports.validateCreate = function (req, cb) {
   _.forEach(req.body.assignees,function(item) {
     assignees.push(item._id)
   });
-  return cb(req.validationErrors(), _.assign(_.pick(req.body, 'title','dateEnd','remindAt'),{
+  return cb(req.validationErrors(), _.assign(_.pick(req.body, 'title','dateEnd'),{
     assignees : assignees
   }));
 };
@@ -23,7 +23,7 @@ exports.validateUpdate = function (req, cb) {
   _.forEach(req.body.assignees,function(item) {
     assignees.push(item._id)
   });
-  return cb(req.validationErrors(), _.assign(_.pick(req.body, 'title','completed','completedBy','completedAt','dueDate','remindAt'),{
+  return cb(req.validationErrors(), _.assign(_.pick(req.body, 'title','completed','completedBy','completedAt','dueDate'),{
     assignees : assignees
   }));
 };
