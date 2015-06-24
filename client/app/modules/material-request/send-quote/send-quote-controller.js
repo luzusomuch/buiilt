@@ -87,7 +87,6 @@ angular.module('buiiltApp')
       });
       if ($scope.lineWithPrices.length == 0 || $scope.lineWithRates.length == 0) {
         alert('Please review your quote');
-        return;
       }
       else {
         materialRequestService.sendQuote({materialRequest: $scope.materialRequest,quoteRequest: $scope.quoteRequest, rate: $scope.lineWithRates, price: $scope.lineWithPrices}).$promise.then(function(data){

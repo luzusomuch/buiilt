@@ -19,6 +19,7 @@ exports.findOne = function(req, res) {
 exports.sendQuote =function(req, res) {
     var quoteRequest = new QuoteRequest({
         user: req.user._id,
+        team : req.user.team._id,
         description: req.body.quoteRequest.description,
         project: req.body.materialRequest.project._id,
         type: 'supplier to builder',

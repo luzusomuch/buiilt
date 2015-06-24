@@ -1,11 +1,13 @@
-angular.module('buiiltApp').controller('MaterialsCtrl', function($scope, $stateParams, $rootScope, $timeout, $q, authService, teamService, materialPackageService) {
+angular.module('buiiltApp').controller('MaterialsCtrl',
+  function($scope, $stateParams, $rootScope, $timeout, $q, authService, teamService, materialPackageService,materialPackages,team) {
     $scope.material = {};
-    $scope.materialPackages = [];
-    $scope.requirements = [];
-    $scope.user = authService.getCurrentUser();
-    $scope.team = authService.getCurrentTeam();
-    // $scope.team = authService.getCurrentTeam();
+    $scope.materialPackages = materialPackages;
     $scope.currentProject = $rootScope.currentProject;
+    $scope.currentTeam = team;
+    $scope.filter = {isSelect : true};
+    $scope.user = authService.getCurrentUser();
+    // $scope.team = authService.getCurrentTeam();
+
 
     teamService.getCurrentTeam().$promise.then(function(data) {
         $scope.team = data;

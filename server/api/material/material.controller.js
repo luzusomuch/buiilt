@@ -13,11 +13,11 @@ var async = require('async');
  * restriction: 'admin'
  */
 exports.index = function (req, res) {
-  MaterialPackage.find(function (err, contractors) {
+  MaterialPackage.find({project : req.params.id},function (err, materials) {
     if (err){
       return res.send(500, err);
-    }    
-    res.json(200, contractors);
+    }
+    res.json(200, materials);
   });
 };
 

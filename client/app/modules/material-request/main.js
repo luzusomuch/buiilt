@@ -19,7 +19,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
       }
     }
   })
-  .state('materialRequest.viewmaterialRequest', {
+  .state('materialRequest.viewMaterialRequest', {
     url: '/:packageId/view',
     templateUrl: '/app/modules/material-request/view-material-request/view.html',
     controller: 'ViewMaterialRequestCtrl',

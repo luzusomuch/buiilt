@@ -2,6 +2,10 @@ angular.module('buiiltApp')
 .factory('materialPackageService', function($resource) {
   return $resource('/api/materials/:id/:action', {
     id: '@_id'},{
+        get : {
+          method : 'GET',
+          isArray : true
+        },
         createMaterialPackage: {
             method: 'POST'
         },

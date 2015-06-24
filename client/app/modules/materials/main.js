@@ -5,6 +5,14 @@ angular.module('buiiltApp').config(function($stateProvider) {
     templateUrl: '/app/modules/materials/materials.html',
     controller: 'MaterialsCtrl',
     hasCurrentProject : true,
-    authenticate : true
+    authenticate : true,
+    resolve: {
+      team: function(authService){
+        return authService.getCurrentTeam().$promise;
+      },
+      materialPackages : function(materialPackageService,$stateParams) {
+        return materialPackageService.get({id : $stateParams.id}).$promise;
+      }
+    }
   });
 });
