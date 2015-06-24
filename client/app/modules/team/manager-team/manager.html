@@ -61,7 +61,7 @@
                     <tbody>
                     <tr ng-repeat="leader in currentTeam.leader">
                       <td class="col s6">{{leader.email}}</td>
-                      <td class="col s2">Leader</td>
+                      <td class="col s2">Admin</td>
                       <td class="col s2">Active</td>
                       <td class="col s2 center-align">
                       </td>
@@ -72,7 +72,7 @@
                       <td class="col s2">{{member.status}}</td>
                       <td class="col s2 center-align">
                         <a class="waves-effect waves-light" name="action" ng-click="assignLeader(member)"
-                           ng-if="isLeader && leader._id != user._id && member._id" tooltips title="Assign Leader">
+                           ng-if="isLeader && leader._id != user._id && member._id" tooltips title="Assign Admin">
                           <i class="material-icons">supervisor_account</i>
                         </a>
                         <a class="waves-effect waves-light" name="action" ng-click="removeMember(member)"
