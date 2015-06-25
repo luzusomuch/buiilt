@@ -1,128 +1,124 @@
-<div class="row">
-  <div class="col s12">
-    <ul class="card collection">
-      <div class="card-header">
-        <div class="row">
-          <div class="col s10">
-            <div class="col s4">
-              <a class="dropdown-button btn-flat ng-isolate-scope" data-gutter="5" style="margin-top: 15px" href="#" data-activates="threadSelector" dropdown="" data-beloworigin="true"><span class="ng-scope">
-                {{(currentThread) ? currentThread.name : 'no Thread'}}
-                </span><i class="mdi-navigation-arrow-drop-down ng-scope"></i>
-              </a>
-                <ul id="threadSelector" style="margin-top: 15px" class="dropdown-content">
-                  <li ng-repeat="thread in threads " >
-                    <a ng-if="thread.canSee" href="#!" ng-click="selectThread(thread)">{{thread.name}}</a>
-                  </li>
-              </ul>
-            </div>
-            <div class="col s8" ng-if="currentThread.user">
-              <p style="">Available user:</p>
-              <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="user in currentThread.users">
-                {{user.email}}
-              </div>
-            </div>
-          </div>
-          <div class="col s2">
-            <a class="dropdown-button btn-flat btn-flat right ng-isolate-scope" style="margin-top:15px" data-gutter="-30" href="#" data-activates="chatActions" dropdown="" data-beloworigin="true" data-constrainwidth="false">
-              <i class="mdi-navigation-more-vert ng-scope"></i>
-            </a><ul id="chatActions" class="dropdown-content" style="margin-top:15px">
-            <li><a href="#!" class="activator" ng-click="newThread()">New Thread</a></li>
-            <li><a href="#!" class="activator" ng-click="editThread(currentThread)" ng-if="currentThread">Edit Thread</a></li>
+<ul class="card collection">
+  <div class="card-header">
+    <div class="row">
+      <div class="col s10">
+        <div class="col s4">
+          <a class="dropdown-button btn-flat ng-isolate-scope" data-gutter="5" style="margin-top: 15px" href="#" data-activates="threadSelector" dropdown="" data-beloworigin="true"><span class="ng-scope">
+            {{(currentThread) ? currentThread.name : 'no Thread'}}
+            </span><i class="mdi-navigation-arrow-drop-down ng-scope"></i>
+          </a>
+            <ul id="threadSelector" style="margin-top: 15px" class="dropdown-content">
+              <li ng-repeat="thread in threads " >
+                <a ng-if="thread.canSee" href="#!" ng-click="selectThread(thread)">{{thread.name}}</a>
+              </li>
           </ul>
-
-
+        </div>
+        <div class="col s8" ng-if="currentThread.users">
+          <p style="">Current user in thread:</p>
+          <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="user in currentThread.users">
+            {{user.email}}
           </div>
         </div>
       </div>
-      <div class="divider"></div>
-      <div style="height: 500px; overflow-y: auto">
+      <div class="col s2">
+        <a class="dropdown-button btn-flat btn-flat right ng-isolate-scope" style="margin-top:15px" data-gutter="-30" href="#" data-activates="chatActions" dropdown="" data-beloworigin="true" data-constrainwidth="false">
+          <i class="mdi-navigation-more-vert ng-scope"></i>
+        </a><ul id="chatActions" class="dropdown-content" style="margin-top:15px">
+        <li><a href="#!" class="activator" ng-click="newThread()">New Thread</a></li>
+        <li><a href="#!" class="activator" ng-click="editThread(currentThread)" ng-if="currentThread">Edit Thread</a></li>
+      </ul>
 
-        <li class="collection-item" ng-repeat="message in currentThread.messages">
-          <div class="row valign-wrapper" style="margin-bottom: -5px">
-            <!--<a href="#!" class="btn-flat col s1">-->
-              <!--<i class="mdi-toggle-radio-button-on valign center-align"></i>-->
-            <!--</a>-->
-
-            <p class="col s9 valign">{{message.text}}</p>
-            <div class="card col" style="padding: 5px; margin-left: 10px">
-              {{message.user.email}}
-            </div>
-          </div>
-        </li>
-
-        <!--<li class="collection-item">-->
-          <!--<div class="row valign-wrapper" style="margin-bottom: -5px">-->
-            <!--<a href="#!" class="btn-flat col s1">-->
-              <!--<i class="mdi-toggle-radio-button-on valign center-align"></i>-->
-            <!--</a>-->
-
-            <!--<p class="col s9 valign">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.<br> Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>-->
-
-            <!--<img src="images/yuna.jpg" alt="" class="circle col s2 right valign center-align">-->
-          <!--</div>-->
-        <!--</li>-->
-
-        <!--<li class="collection-item">-->
-          <!--<div class="row valign-wrapper" style="margin-bottom: -5px">-->
-            <!--<a href="#!" class="btn-flat col s1">-->
-              <!--<i class="mdi-toggle-radio-button-on valign center-align"></i>-->
-            <!--</a>-->
-
-            <!--<p class="col s9 valign">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.<br> Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>-->
-
-            <!--<img src="images/yuna.jpg" alt="" class="circle col s2 right valign center-align">-->
-          <!--</div>-->
-        <!--</li>-->
 
       </div>
-      <div class="divider"></div>
-      <div class="col s12 card-footer" style="height: 150px">
-        <div class="row">
-          <form class="col s10 offset-s1 ng-pristine ng-valid" name="form" novalidate ng-submit="sendMessage(form)">
-            <div class="input-field col s9">
-              <textarea id="textarea1" class="materialize-textarea" ng-model="message.text"></textarea>
-              <label for="textarea1">Send a Message...</label>
-            </div>
-            <div class="input-field col s3">
-              <button class="btn-large waves-effect waves-light" type="submit" style="margin-top: 47px" name="action">Send
-                <i class="mdi-content-send right"></i>
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-      <div class="card-reveal">
-        <span class="card-title grey-text text-darken-4" ng-if="isNew">New Thread<i class="mdi-navigation-close right"></i></span>
-        <span class="card-title grey-text text-darken-4" ng-if="!isNew">Edit Thread<i class="mdi-navigation-close right"></i></span>
-        <form class="col s12" name="form" novalidate ng-submit="saveThread(form)">
-          <div class="input-field col s12">
-            <input id="thread_name" type="text" ng-model="thread.name" required name="name" ng-class="{'invalid' : form.name.$invalid && submitted}">
-            <label for="thread_name">Name</label>
-            <p class="validate-message" ng-show="form.name.$error.required && submitted">Thread name is required</p>
-          </div>
-          <div class="row">
-            <p style="">Current user:</p>
-            <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="user in thread.users">
-              {{user.email}} <span><a href="#!" ng-click="revoke(user,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
-            </div>
-          </div>
-
-          <div class="divider"></div>
-
-          <div class="row">
-            <p style="">Available user:</p>
-            <a href="#!" ng-click="assign(user,$index)" ng-repeat="user in available">
-              <div class="card col" style="padding: 5px; margin-left: 10px" >
-                {{user.email}}
-              </div>
-            </a>
-          </div>
-          <div class="row">
-            <button class="btn right" type="submit" name="action">Save
-            </button>
-          </div>
-        </form>
-      </div>
-    </ul>
+    </div>
   </div>
-</div>
+  <div class="divider"></div>
+  <div style="height: 500px; overflow-y: auto">
+
+    <li class="collection-item" ng-repeat="message in currentThread.messages">
+      <div class="row valign-wrapper" style="margin-bottom: -5px">
+        <!--<a href="#!" class="btn-flat col s1">-->
+          <!--<i class="mdi-toggle-radio-button-on valign center-align"></i>-->
+        <!--</a>-->
+
+        <p class="col s9 valign">{{message.text}}</p>
+        <div class="card col" style="padding: 5px; margin-left: 10px">
+          {{message.user.email}}
+        </div>
+      </div>
+    </li>
+
+    <!--<li class="collection-item">-->
+      <!--<div class="row valign-wrapper" style="margin-bottom: -5px">-->
+        <!--<a href="#!" class="btn-flat col s1">-->
+          <!--<i class="mdi-toggle-radio-button-on valign center-align"></i>-->
+        <!--</a>-->
+
+        <!--<p class="col s9 valign">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.<br> Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>-->
+
+        <!--<img src="images/yuna.jpg" alt="" class="circle col s2 right valign center-align">-->
+      <!--</div>-->
+    <!--</li>-->
+
+    <!--<li class="collection-item">-->
+      <!--<div class="row valign-wrapper" style="margin-bottom: -5px">-->
+        <!--<a href="#!" class="btn-flat col s1">-->
+          <!--<i class="mdi-toggle-radio-button-on valign center-align"></i>-->
+        <!--</a>-->
+
+        <!--<p class="col s9 valign">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.<br> Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>-->
+
+        <!--<img src="images/yuna.jpg" alt="" class="circle col s2 right valign center-align">-->
+      <!--</div>-->
+    <!--</li>-->
+
+  </div>
+  <div class="divider"></div>
+  <div class="col s12 card-footer" style="height: 150px">
+    <div class="row">
+      <form class="col s10 offset-s1 ng-pristine ng-valid" name="form" novalidate ng-submit="sendMessage(form)">
+        <div class="input-field col s9">
+          <textarea id="textarea1" class="materialize-textarea" ng-model="message.text"></textarea>
+          <label for="textarea1">Send a Message...</label>
+        </div>
+        <div class="input-field col s3">
+          <button class="btn-large waves-effect waves-yellow" type="submit" style="margin-top: 47px" name="action">Send
+            <i class="mdi-content-send right"></i>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="card-reveal">
+    <span class="card-title grey-text text-darken-4" ng-if="isNew">New Thread<i class="mdi-navigation-close right"></i></span>
+    <span class="card-title grey-text text-darken-4" ng-if="!isNew">Edit Thread<i class="mdi-navigation-close right"></i></span>
+    <form class="col s12" name="form" novalidate ng-submit="saveThread(form)">
+      <div class="input-field col s12">
+        <input id="thread_name" type="text" ng-model="thread.name" required name="name" ng-class="{'invalid' : form.name.$invalid && submitted}">
+        <label for="thread_name">Name</label>
+        <p class="validate-message" ng-show="form.name.$error.required && submitted">Thread name is required</p>
+      </div>
+      <div class="row current-assign">
+        <p style="">Current user:</p>
+        <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="user in thread.users">
+          {{user.email}} <span><a href="#!" ng-click="revoke(user,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="row available-assign">
+        <p style="">Available user:</p>
+        <a href="#!" ng-click="assign(user,$index)" ng-repeat="user in available">
+          <div class="card col" style="padding: 5px; margin-left: 10px" >
+            {{user.email}}
+          </div>
+        </a>
+      </div>
+      <div class="row">
+        <button class="btn right waves-effect waves-yellow" type="submit" name="action">Save
+        </button>
+      </div>
+    </form>
+  </div>
+</ul>

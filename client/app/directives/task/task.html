@@ -20,14 +20,11 @@
         <div>
           <a class="btn-flat"
              ng-click="(!task.isOwner && !isLeader) || complete(task)"
-             ng-class="{'disabled' : !task.isOwner && !isLeader}"
-             data-tooltip="Attach..."
-             data-position="top"
-             data-delay="1">
+             ng-class="{ 'disabled' : !task.isOwner && !isLeader}">
             <i ng-if="!task.completed" class="mdi-toggle-check-box-outline-blank"></i>
             <i ng-if="task.completed" class="mdi-toggle-check-box"></i>
           </a>
-            <span ng-class="{'completed' : task.completed}">{{task.name}}</span>
+            <span ng-class="{'completed' : task.completed, 'disabled' : !task.isOwner && !isLeader}">{{task.name}}</span>
           <a href="#!" class="btn-flat activator secondary-content" style="margin-top: -3px; font-size: 12px;"
              ng-click="(!task.isOwner && !isLeader) || editTask(task)"
              ng-if="task.isOwner || isLeader">
@@ -40,21 +37,23 @@
     <div class="card-reveal">
       <span class="card-title grey-text text-darken-4"><i class="mdi-navigation-close right"></i></span>
       <form name="form" class="col s12" ng-submit="save(form)">
-        <div class="input-field col s12">
-          <input id="task_description" type="text" ng-model="task.name" name="name" ng-class="{'invalid' : form.name.$invalid && submitted}">
-          <label for="task_description">Task</label>
-          <p class="validate-message" ng-show="form.name.$error.required && submitted">Task name is required</p>
-        </div>
-        <div class="input-field col s12">
-          <input type="date"
-                 name="created"
-                 id="dueDate"
-                 ng-model="task.dateEnd"
-                 format="mm/dd/yyyy"/>
-          <label for="dueDate" class="active">Due date</label>
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="task_description" type="text" ng-model="task.name" name="name" ng-class="{'invalid' : form.name.$invalid && submitted}">
+            <label for="task_description">Task</label>
+            <p class="validate-message" ng-show="form.name.$error.required && submitted">Task name is required</p>
+          </div>
+          <div class="input-field col s12">
+            <input type="date"
+                   name="created"
+                   id="dueDate"
+                   ng-model="task.dateEnd"
+                   format="mm/dd/yyyy"/>
+            <label for="dueDate" class="active">Due date</label>
+          </div>
         </div>
 
-        <div class="row">
+        <div class="row current-assign">
           <p style="">Current Assignee's:</p>
           <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="assignee in task.assignees">
             {{assignee.email}} <span><a href="#!" ng-click="revoke(assignee,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
@@ -63,7 +62,7 @@
 
         <div class="divider"></div>
 
-        <div class="row">
+        <div class="row available-assign">
           <p style="">Available Assignee's:</p>
           <a href="#!" ng-click="assign(staff,$index)" ng-repeat="staff in available">
             <div class="card col" style="padding: 5px; margin-left: 10px" >

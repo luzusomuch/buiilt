@@ -50,15 +50,13 @@ exports.create = function(req,res) {
   var project = req.project;
   Validator.validateCreate(req,function(err,data) {
     if (err) {
-      return res.send(500, err);
+      return res.send(422, err);
     }
     var staffPackage = new StaffPackage(data);
     staffPackage.owner = user.team._id;
     staffPackage.project = project;
-    staffPackage.staffs = [];
-    _.forEach(req.body.staffs,function(item) {
-      staffPackage.staffs.push(item._id._id);
-    });
+    staffPackage.staffs = data.staffs;
+    staffPackage.markModified('staffs');
     staffPackage.save(function(err) {
       if (err) {
         return res.send(500, err);

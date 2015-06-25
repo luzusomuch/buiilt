@@ -14,13 +14,13 @@ var StaffPackageSchema = new Schema({
     required: true
   },
   name: String,
-  description: String,
+  descriptions: [String],
   staffs :[{
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'User'
     //required: true
   }],
-  defact:[],
+  defect:[],
   isComplete: { type: Boolean, default: false },
   status: { type: Boolean, default: true },
   dateStart: { type: Date, default: Date.now },

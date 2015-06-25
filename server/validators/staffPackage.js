@@ -1,16 +1,15 @@
 var _ = require('lodash');
 
-/**
- *
- * @param {type} req
- * @param {type} cb
- * @returns {unresolved}validate for creation
- */
-exports.validateCreate = function(req, cb) {
-  req.checkBody('name', 'Project name is required').notEmpty();
-  req.checkBody('description', 'Project description is required').notEmpty();
 
-  return cb(req.validationErrors(), _.assign(_.pick(req.body, 'name', 'description'), {
-    user: req.user._id
+exports.validateCreate = function(req, cb) {
+  req.checkBody('name', 'Package name is required').notEmpty();
+  req.checkBody('descriptions', 'Package description is required').notEmpty();
+  var staffs = []
+  _.forEach(req.body.staffs,function(staff) {
+    console.log(staff);
+    staffs.push(staff._id);
+  })
+  return cb(req.validationErrors(), _.assign(_.pick(req.body, 'name', 'descriptions'), {
+    staffs : staffs
   }));
 };

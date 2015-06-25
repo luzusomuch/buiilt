@@ -97,3 +97,15 @@ ul#relatedActions {
 ul#chatActions {
     left : 875.671875px !important
 }
+
+.current-assign {
+    min-height: 87.5px;
+}
+.available-assign {
+    min-height: 87.5px;
+    margin-top: 10px;
+}
+
+span.disabled {
+    color : #b3b3b3
+}
