@@ -47,7 +47,7 @@ exports.create = function(req, res){
           name: req.body.name,
           description: req.body.description,
           user: {
-            _id: req.user._id,
+            _id: req.user.team._id,
             email: req.user.email
           },
           type: 'FromHomeOwnerToBuilder'
@@ -97,6 +97,13 @@ exports.create = function(req, res){
                 project.save(function(err,saved) {
                   if (err) {return res.send(500,err);}
                   else {
+                    Team.findById(req.user.team._id, function(err, homeOwnerTeam){
+                      if (err) {return res.send(500,err);}
+                      else {
+                        homeOwnerTeam.project.push(saved._id);
+                        homeOwnerTeam.save();
+                      }
+                    });
                     team.project.push(saved._id);
                     team.save();
                     var builderPackage = new BuilderPackage({
@@ -140,7 +147,7 @@ exports.create = function(req, res){
           owner: team._id,
           name: req.body.name,
           description: req.body.description,
-          builder: {_id: req.user._id, email: req.user.email},
+          builder: {_id: req.user.team._id, email: req.user.email},
           type: 'FromBuilderToHomeOwner'
         });
         User.findOne({'email': req.body.email}, function(err, user){
@@ -156,30 +163,35 @@ exports.create = function(req, res){
               if (err) {return res.send(500,err);}
               else {
                 team.project.push(saved._id);
-                team.save();
-                var builderPackage = new BuilderPackage({
-                  location: {
-                    address: req.body.location.address,
-                    postcode: req.body.location.postcode,
-                    suburb: req.body.location.suburb
-                  },
-                  user: saved.builder._id,
-                  project: saved._id,
-                  name: saved.name,
-                  description: saved.description
-                });
-                builderPackage.save(function(err, saved){
-                  if (err) {return res.send(500, err);}
+                team.save(function(err, savedTeam){
+                  if (err) {return res.send(500,err);}
                   else {
-                    var packageInvite = new PackageInvite({
-                      owner: req.user._id,
-                      inviteType: 'homeOwner',
-                      project: saved.project,
-                      package: saved._id,
-                      to: req.body.email
+                    console.log(savedTeam);
+                    var builderPackage = new BuilderPackage({
+                      location: {
+                        address: req.body.location.address,
+                        postcode: req.body.location.postcode,
+                        suburb: req.body.location.suburb
+                      },
+                      user: saved.builder._id,
+                      project: saved._id,
+                      name: saved.name,
+                      description: saved.description
                     });
-                    packageInvite.save();
-                    return res.json(200,saved);
+                    builderPackage.save(function(err, saved){
+                      if (err) {return res.send(500, err);}
+                      else {
+                        var packageInvite = new PackageInvite({
+                          owner: req.user._id,
+                          inviteType: 'homeOwner',
+                          project: saved.project,
+                          package: saved._id,
+                          to: req.body.email
+                        });
+                        packageInvite.save();
+                        return res.json(200,saved);
+                      }
+                    });
                   }
                 });
               }
@@ -192,23 +204,35 @@ exports.create = function(req, res){
               project.save(function(err, saved){
                 if (err) {return res.send(500,err);}
                 else {
-                  team.project.push(saved._id);
-                  team.save();
-                  var builderPackage = new BuilderPackage({
-                    location: {
-                      address: req.body.location.address,
-                      postcode: req.body.location.postcode,
-                      suburb: req.body.location.suburb
-                    },
-                    user: saved.builder._id,
-                    project: saved._id,
-                    name: saved.name,
-                    description: saved.description
-                  });
-                  builderPackage.save(function(err, saved){
-                    if (err) {return res.send(500, err);}
+                  Team.findById(req.user.team._id, function(err, builderTeam){
+                    if (err) {return res.send(500,err);}
                     else {
-                      return res.json(200,saved);
+                      builderTeam.project.push(saved._id);
+                      builderTeam.save();
+                    }
+                  });
+                  team.project.push(saved._id);
+                  team.save(function(err, savedTeam){
+                    if (err) {return res.send(500,err);}
+                    else {
+                      console.log(savedTeam);
+                      var builderPackage = new BuilderPackage({
+                        location: {
+                          address: req.body.location.address,
+                          postcode: req.body.location.postcode,
+                          suburb: req.body.location.suburb
+                        },
+                        user: saved.builder._id,
+                        project: saved._id,
+                        name: saved.name,
+                        description: saved.description
+                      });
+                      builderPackage.save(function(err, saved){
+                        if (err) {return res.send(500, err);}
+                        else {
+                          return res.json(200,saved);
+                        }
+                      });
                     }
                   });
                 }

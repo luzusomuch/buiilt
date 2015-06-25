@@ -4,7 +4,7 @@ angular.module('buiiltApp')
     restrict: 'E',
     templateUrl: 'app/directives/header/header.html',
     controller: function($scope,$state, $stateParams, $rootScope,materialPackageService, authService, projectService, contractorService,teamService,filterFilter) {
-
+      $scope.projects = [];
       function queryProjects(){
         authService.isLoggedInAsync(function(isLoggedIn){
           if(isLoggedIn){
@@ -152,6 +152,7 @@ angular.module('buiiltApp')
           $scope.project.email = $scope.project.email.title;
           projectService.create($scope.project).$promise.then(function(data) {
             alert('Create project successfully!');
+            $scope.projects.push(data);
           }, function(res) {
             $scope.errors = res.data;
           });
@@ -160,6 +161,7 @@ angular.module('buiiltApp')
           $scope.project.email = $scope.textString;
           projectService.create($scope.project).$promise.then(function(data) {
             alert('Create project successfully!');
+            $scope.projects.push(data);
           }, function(res) {
             $scope.errors = res.data;
           });

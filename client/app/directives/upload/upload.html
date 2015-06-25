@@ -21,10 +21,6 @@
           </div>
         </div>
       </div>
-
-      <div class="row" style="display:none;">
-        <input date-dropdown ng-model="formData.date" />
-      </div>
       <div class="row">
         <div class="input-field col s8 offset-s2">
           <textarea class="materialize-textarea" ng-model="formData.desc" id="textarea1" required></textarea>
@@ -36,14 +32,19 @@
           <input type="text" ng-model="formData.usersRelatedTo" required placeholder="Email separate by comma (,)">
         </div>
       </div> -->
-      <div class="file-field input-field">
+      <!-- <div class="file-field input-field">
         <div class="row">
           <div class="input-field col s8 offset-s2">
+            
             <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="uploadAll()" ng-disabled="uploader.isReady || uploader.isUploading || uploader.isSuccess">>Attach Document!</a>
             <a class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
+  </div>
+  <div class="modal-footer">
+    <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="uploadAll()" ng-disabled="uploader.isReady || uploader.isUploading || uploader.isSuccess">Attach Document!</a>
+    <a class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
   </div>
 

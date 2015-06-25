@@ -33,7 +33,7 @@ var BuilderPackageSchema = new Schema({
 BuilderPackageSchema.plugin(packagePlugin);
 
 BuilderPackageSchema.pre('save', function(next) {
-  this.type = 'BuilderPackage';
+  this.packageType = 'BuilderPackage';
 
   next();
 });

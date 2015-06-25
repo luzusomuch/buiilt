@@ -10,7 +10,7 @@ var PackageSchema = {
     type: Schema.Types.ObjectId,
     ref: 'User'
   },
-  type: {
+  packageType: {
     type: String
     // required: 'Package type is required'
   },

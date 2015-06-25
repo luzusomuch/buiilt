@@ -79,7 +79,7 @@ angular.module('buiiltApp').directive('addon', function(){
                 addOnPackageService.sendVariation({id: $scope.package._id, packageType: $scope.package.packageType, variation: $scope.variation})
                 .$promise.then(function(data) {
                     $scope.variations = data;
-                    $scope.contractorRequest = data;
+                    $scope.package.variations = data.variations;
                     $scope.variation = {};
                     alert('Send variation successfully!');
                   // $scope.messages = data;
@@ -92,7 +92,7 @@ angular.module('buiiltApp').directive('addon', function(){
                 addOnPackageService.sendDefect({id: $scope.package._id, packageType: $scope.package.packageType, defect: $scope.defect})
                 .$promise.then(function(data) {
                     $scope.defects = data;
-                    $scope.contractorRequest = data;
+                    $scope.package.defects = data.defects;
                     $scope.defect = {};
                     alert('Send defect successfully!');
                 });
@@ -165,7 +165,7 @@ angular.module('buiiltApp').directive('addon', function(){
                 else {
                     addOnPackageService.sendInvoice({id: $scope.package._id, packageType: $scope.package.packageType, invoice: $scope.invoice, rate: $scope.lineWithRates, price: $scope.lineWithPrices}).$promise.then(function(data){
                         $scope.invoices = data;
-                        $scope.contractorRequest = data;
+                        $scope.package.invoices = data.invoices;
                         alert('You have send invoice successfully!');
                     });
                 }
