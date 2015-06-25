@@ -56,6 +56,7 @@ angular.module('buiiltApp')
   //   });
   // };
 
+<<<<<<< HEAD
   // $scope.sendVariation = function() {
   //   contractorRequestService.sendVariation({id: $stateParams.packageId, variation: $scope.variation})
   //   .$promise.then(function(data) {
@@ -75,6 +76,27 @@ angular.module('buiiltApp')
   //     alert('Send defect successfully!');
   //   });
   // };
+=======
+  $scope.sendVariation = function() {
+    contractorRequestService.sendVariation({id: $stateParams.packageId, variation: $scope.variation})
+    .$promise.then(function(data) {
+      $scope.variations = data;
+      $scope.contractorRequest = data;
+      $scope.variation = {};
+      alert('Send variation successfully!');
+    });
+  };
+
+  $scope.sendDefect = function() {
+    contractorRequestService.sendDefect({id: $stateParams.packageId, defect: $scope.defect})
+    .$promise.then(function(data) {
+      $scope.defects = data;
+      $scope.contractorRequest = data;
+      $scope.defect = {};
+      alert('Send defect successfully!');
+    });
+  };
+>>>>>>> [-] Fix something in staff package
 
   //Send invoice
   // $scope.subTotalPrice = 0;
