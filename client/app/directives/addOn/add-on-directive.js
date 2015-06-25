@@ -6,7 +6,7 @@ angular.module('buiiltApp').directive('addon', function(){
         scope: {
             package: '='
         },
-        controller: function($scope, authService,addOnPackageService, FileUploader, $cookieStore, fileService, contractorRequestService, materialRequestService) {
+        controller: function($scope, $stateParams, authService,addOnPackageService, FileUploader, $cookieStore, fileService, contractorRequestService, materialRequestService) {
             $scope.allItemsText = 'All items';
             $scope.currentTeam = authService.getCurrentTeam();
             $scope.documents = [];

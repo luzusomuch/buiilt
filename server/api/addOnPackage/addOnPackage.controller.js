@@ -3,6 +3,7 @@
 var ContractorPackage = require('./../../models/contractorPackage.model');
 var MaterialPackage = require('./../../models/materialPackage.model');
 var PackageInvite = require('./../../models/packageInvite.model');
+var BuilderPackage = require('./../../models/builderPackage.model');
 var ValidateInvite = require('./../../models/validateInvite.model');
 var QuoteRequest = require('./../../models/quoteRequest.model');
 var User = require('./../../models/user.model');
@@ -50,6 +51,25 @@ exports.sendDefect = function(req, res) {
             }
         });
     }
+    else if (packageType == 'BuilderPackage') {
+        BuilderPackage.findById(req.params.id, function(err, builderPackage){
+            if (err) {return res.send(500,err);}
+            else {
+                builderPackage.defects.push({
+                    owner: req.user._id,
+                    title: req.body.defect.title,
+                    location: req.body.defect.location,
+                    description: req.body.defect.description
+                });
+                builderPackage.save(function(err, savedBuilderPackage){
+                    if (err) {return res.send(500,err);}
+                    else {
+                        return res.json(builderPackage);
+                    }
+                });
+            }
+        });
+    }
     else {
         return res.send(500);
     }
@@ -88,6 +108,24 @@ exports.sendVariation = function(req, res) {
                     if (err) {return res.send(500,err);}
                     else {
                         return res.json(savedMaterialPacakge);
+                    }
+                });
+            }
+        });
+    }
+    else if (packageType == 'BuilderPackage') {
+        BuilderPackage.findById(req.params.id, function(err, builderPackage){
+            if (err) {return res.send(500,err);}
+            else {
+                builderPackage.variations.push({
+                    owner: req.user._id,
+                    title: req.body.variation.title,
+                    description: req.body.variation.description
+                });
+                builderPackage.save(function(err, savedBuilderPackage){
+                    if (err) {return res.send(500,err);}
+                    else {
+                        return res.json(savedBuilderPackage);
                     }
                 });
             }
@@ -208,6 +246,66 @@ exports.sendInvoice = function(req, res) {
                                 total: subTotal * 0.1 + subTotal
                             });
                             materialPackage.save(function(err, saved) {
+                                if (err) {return res.send(500,err);}
+                                else {
+                                    return res.json(200, saved);
+                                }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+    else if (packageType == 'BuilderPackage'){
+        BuilderPackage.findById(req.params.id, function(err, builderPackage) {
+            if (err) {return res.send(500,err);}
+            else {
+                var quoteRate = [];
+                var quotePrice = [];
+                var subTotal = 0;
+                async.each(req.body.rate, function(rate, callback){
+                    if (rate !== null) {
+                        for (var i = 0; i < req.body.rate.length -1; i++) {
+                            quoteRate.push({
+                            description: rate.description[i],
+                            rate: rate.rate[i],
+                            quantity: rate.quantity[i],
+                            total: rate.rate[i] * rate.quantity[i]
+                        });
+                            subTotal += rate.rate[i] * rate.quantity[i];
+                        };
+                    }
+                    callback();
+                }, function(err) {
+                    if (err) {return res.send(500,err);}
+                    else {
+                      async.each(req.body.price, function(price, callback){
+                        if (price !== null) {
+                            for (var i = 0; i < req.body.price.length -1; i++) {
+                                quotePrice.push({
+                                    description: price.description[i],
+                                    price: price.price[i],
+                                    quantity: 1,
+                                    total: price.price[i]
+                                });
+                                subTotal += price.price[i] * 1;
+                            };
+                        }
+                        callback();
+                      }, function(err){
+                        if (err) {return res.send(500,err);}
+                        else {
+                            builderPackage.invoices.push({
+                                owner: req.user._id,
+                                title: req.body.invoice.title,
+                                quoteRate: quoteRate,
+                                quotePrice: quotePrice,
+                                subTotal: subTotal,
+                                total: subTotal * 0.1 + subTotal
+                            });
+                            builderPackage.save(function(err, saved) {
                                 if (err) {return res.send(500,err);}
                                 else {
                                     return res.json(200, saved);

@@ -27,7 +27,42 @@ var BuilderPackageSchema = new Schema({
   //home owner email
   homeOwnerEmail: {type: String},
   homeOwnerPhoneNumber: {type: String},
-  location: location
+  location: location,
+  variations : [{
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    title: {type: String},
+    description: {type: String}
+  }],
+  defects : [{
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    title: {type: String},
+    location: {type: String},
+    description: {type: String}
+  }],
+  invoices: [{
+    owner: {type: Schema.Types.ObjectId, ref: 'User'},
+    title: String,
+    quoteRate: [{
+      description: {type: String},
+      rate: {type: Number},
+      quantity: {type: Number},
+      subTotal: {type: Number},
+      total: {type: Number}
+    }],
+    quotePrice: [{
+      description: {type: String},
+      price: {type: Number},
+      quantity: {type: Number},
+      total: {type: Number}
+    }],
+    total: Number
+  }],
 });
 
 BuilderPackageSchema.plugin(packagePlugin);

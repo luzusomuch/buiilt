@@ -1,4 +1,4 @@
-
+<form ng-submit="uploadAll()">
   <div class="row" style="margin-top: 50px">
     <div class="col s8 offset-s2">
       <div class="file-field input-field">
@@ -44,7 +44,9 @@
     </div>
   </div>
   <div class="modal-footer">
-    <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="uploadAll()" ng-disabled="uploader.isReady || uploader.isUploading || uploader.isSuccess">Attach Document!</a>
+    <button type="submit" class="modal-action modal-close waves-effect waves-green btn-flat" ng-disabled="uploader.isReady || uploader.isUploading || uploader.isSuccess">Attach Document!</button>
+    <!-- <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="uploadAll()" ng-disabled="uploader.isReady || uploader.isUploading || uploader.isSuccess">Attach Document!</a> -->
     <a class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
   </div>
+</form>
 

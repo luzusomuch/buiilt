@@ -7,7 +7,8 @@ angular.module('buiiltApp').directive('upload', function(){
             project:'=',
             builderPackage: '=',
             documentId : '=',
-            fileId: '='
+            fileId: '=',
+            package: '='
         },
         controller: function($scope, $state, $cookieStore, $stateParams, $rootScope, $location, fileService, packageService, userService, projectService, FileUploader, documentService) {
 
@@ -53,6 +54,15 @@ angular.module('buiiltApp').directive('upload', function(){
             if ($stateParams.packageId) {
                 var uploader = $scope.uploader = new FileUploader({
                     url: 'api/uploads/'+ $stateParams.packageId + '/file',
+                    headers : {
+                      Authorization: 'Bearer ' + $cookieStore.get('token')
+                    },
+                    formData: [$scope.formData]
+                });
+            }
+            else if($scope.package._id) {
+                var uploader = $scope.uploader = new FileUploader({
+                    url: 'api/uploads/'+ $scope.package._id + '/file',
                     headers : {
                       Authorization: 'Bearer ' + $cookieStore.get('token')
                     },
