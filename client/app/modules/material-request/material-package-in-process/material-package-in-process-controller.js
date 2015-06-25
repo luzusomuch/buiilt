@@ -3,7 +3,7 @@ angular.module('buiiltApp')
   /**
    * quote data
    */
-  // $scope.materialRequest = materialRequest;
+  $scope.materialRequest = materialRequest;
   $scope.currentTeam = currentTeam;
   // $scope.defect = {};
   // $scope.invoice = {};

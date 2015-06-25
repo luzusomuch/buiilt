@@ -5,6 +5,11 @@ angular.module('buiiltApp').config(function($stateProvider) {
     templateUrl: '/app/modules/client/client.html',
     controller: 'ClientCtrl',
     hasCurrentProject : true,
-    authenticate : true
+    authenticate : true,
+    resolve: {
+        buiderPackageRequest: function(builderPackageService, $stateParams) {
+            return builderPackageService.findDefaultByProject($stateParams.id);
+        }
+    }
   });
 });

@@ -38,39 +38,43 @@
          <div class="divider"></div>
            <div style="height: 300px;" ng-hide="hideAll" ng-show="showAll">
             
-            <li class="collection-item" ng-repeat="item in contractorRequest.variations" ng-if="contractorRequest.variations">
-              Variation - {{item.title}}
+            <li class="collection-item" ng-repeat="item in package.variations" ng-if="package.variations">
+              <a class="modal-trigger" href="#modal-contractor-package-variation-{{item._id}}">Variation - {{item.title}}</a>
             </li>
-            <li class="collection-item" ng-repeat="item in contractorRequest.defects" ng-if="contractorRequest.defects">
-              Defect - {{item.title}}
+            <li class="collection-item" ng-repeat="item in package.defects" ng-if="package.defects">
+              <a class="modal-trigger" href="#modal-contractor-package-defect-{{item._id}}">Defect - {{item.title}}</a>
             </li>
-            <li class="collection-item" ng-repeat="item in contractorRequest.invoices" ng-if="contractorRequest.invoices">
-              Invoices - {{item.title}}
+            <li class="collection-item" ng-repeat="item in package.invoices" ng-if="package.invoices">
+              <a class="modal-trigger" href="#modal-contractor-package-invoice-{{item._id}}">Invoices - {{item.title}}</a>
             </li>
             <li class="collection-item" ng-repeat="file in documents" ng-if="documents">
-              Document - {{file.title}}</li>
+              <a class="modal-trigger" href="#modal-contractor-package-file-{{file._id}}">Document - {{file.title}}</a></li>
            </div>
            <div style="height: 300px" ng-show="showVariation" ng-if="variations">
-               <li class="collection-item" ng-repeat="variation in variations.variations">{{variation.title}}</li>
+               <li class="collection-item" ng-repeat="variation in variations.variations">
+                <a class="modal-trigger" href="#modal-contractor-package-variation-{{variation._id}}">{{variation.title}}</a></li>
            </div>
            <div style="height: 300px" ng-show="showDefect" ng-if="defects">
-               <li class="collection-item" ng-repeat="defect in defects.defects">{{defect.title}}</li>
+               <li class="collection-item" ng-repeat="defect in defects.defects">
+                <a class="modal-trigger" href="#modal-contractor-package-defect-{{defect._id}}">{{defect.title}}</a></li>
            </div>
            <div style="height: 300px" ng-show="showInvoice" ng-if="invoices">
-               <li class="collection-item" ng-repeat="invoice in invoices.invoices">{{invoice.title}} - Total {{invoice.total}}</li>
+               <li class="collection-item" ng-repeat="invoice in invoices.invoices">
+                <a class="modal-trigger" href="#modal-contractor-package-invoice-{{invoice._id}}">{{invoice.title}} - Total {{invoice.total}}</a></li>
            </div>
            <div style="height: 300px" ng-show="showDocument" ng-if="files">
-              <li class="collection-item" ng-repeat="file in files">{{file.title}}</li>
+              <li class="collection-item" ng-repeat="file in files">
+                <a class="modal-trigger" href="#modal-contractor-package-file-{{item._id}}">{{file.title}}</a></li>
            </div>
      </ul>
 
-     <ul class="card collection" ng-if="package.packageType == 'supplier'">
+     <ul class="card collection" ng-if="package.packageType == 'material'">
            <div class="card-header">
                <div class="row">
                    <div class="col s6">
                        <a class='dropdown-button btn-flat' style="margin-top: 15px" href='#' data-gutter="15"
                           data-activates='itemFilter' dropdown data-beloworigin="true" data-constrainwidth="false">
-                         ALL ITEMS<i class="mdi-navigation-arrow-drop-down"></i>
+                         {{(allItemsText) ? allItemsText : 'All items'}}<i class="mdi-navigation-arrow-drop-down"></i>
                        </a>
                          <ul id='itemFilter' class='dropdown-content' style="margin-top: 15px">
                            <li><a ng-click="showDefects(); hideAll = true; showDefect = true; showDocument = false; showInvoice = false;">DEFECTS</a></li>
@@ -92,15 +96,28 @@
            </div>
            <div class="divider"></div>
              <div style="height: 300px;" ng-hide="hideAll">
+            <li class="collection-item" ng-repeat="item in package.defects" ng-if="package.defects">
+              <a class="modal-trigger" href="#modal-material-package-defect-{{item._id}}">Defect - {{item.title}}</a>
+            </li>
+            <li class="collection-item" ng-repeat="item in package.invoices" ng-if="package.invoices">
+              <a class="modal-trigger" href="#modal-material-package-invoice-{{item._id}}">Invoices - {{item.title}} - Total {{item.total}}</a>
+            </li>
+            <li class="collection-item" ng-repeat="file in documents" ng-if="documents">
+              <a class="modal-trigger" href="#modal-material-package-file-{{file._id}}">Document - {{file.title}}</a></li>
              </div>
              <div style="height: 300px" ng-show="showDefect" ng-if="defects">
-                 <li class="collection-item" ng-repeat="defect in defects.defects">{{defect.title}}</li>
+                 <li class="collection-item" ng-repeat="defect in defects.defects">
+                  <a class="modal-trigger" href="#modal-material-package-defect-{{item._id}}">Defect - {{defect.title}}</a>
+                </li>
              </div>
              <div style="height: 300px" ng-show="showInvoice" ng-if="invoices">
-                 <li class="collection-item" ng-repeat="invoice in invoices.invoices">{{invoice.title}} - Total {{invoice.total}}</li>
+                 <li class="collection-item" ng-repeat="invoice in invoices.invoices">
+                  <a class="modal-trigger" href="#modal-material-package-invoice-{{item._id}}">Invoices - {{invoice.title}} - Total {{invoice.total}}</a></li>
              </div>
              <div style="height: 300px" ng-show="showDocument" ng-if="files">
-                <li class="collection-item" ng-repeat="file in files">{{file.title}}</li>
+                <li class="collection-item" ng-repeat="file in files">
+                  <a class="modal-trigger" href="#modal-material-package-file-{{file._id}}">Document - {{file.title}}</a>
+                </li>
              </div>
        </ul>
  </div> 
@@ -282,4 +299,190 @@
       <button type="button" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</button>
     </div>
   </form>
+</div>
+
+<!-- modal for contractor variations -->
+<div ng-repeat="variation in package.variations">
+  <div class="modal modal-fixed-footer" id="modal-contractor-package-variation-{{variation._id}}">
+    <div class="modal-content">
+      <div class="col s12">
+        <h6>{{variation.title}}</h6>
+      </div>
+      <div class="col s12">
+        <p>{{variation.description}}</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+    </div>
+  </div>
+</div>
+
+<!-- modal for contractor defects -->
+<div ng-repeat="defect in package.defects" class="modal modal-fixed-footer" id="modal-contractor-package-defect-{{defect._id}}">
+  <div class="modal-content">
+    <div class="col s12">
+      <h5>Defect {{defect.title}}</h5>
+    </div>
+    <div class="col s12">
+      <p>In {{defect.location}}, with description {{defect.description}}</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+  </div>
+</div>
+
+<!-- modal for contractor invoice -->
+<div ng-repeat="invoice in package.invoices" class="modal modal-fixed-footer" id="modal-contractor-package-invoice-{{invoice._id}}">
+  <div class="modal-content">
+    <div class="col s12">
+      <h5>Invoice {{invoice.title}} with total {{invoice.total}}</h5>
+    </div>
+    <div class="col s12" ng-if="invoice.quotePrice">
+      <h5>Quote price</h5>
+      <table>
+        <thead>
+          <th>#</th>
+          <th>Description</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Total</th>
+        </thead>
+        <tbody>
+          <tr ng-repeat="price in invoice.quotePrice">
+            <td>{{$index + 1}}</td>
+            <td>{{price.description}}</td>
+            <td>{{price.price}}</td>
+            <td>1</td>
+            <td>{{price.total}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col s12" ng-if="invoice.quoteRate">
+      <h5>Quote rate</h5>
+      <table>
+        <thead>
+          <th>#</th>
+          <th>Description</th>
+          <th>Rate</th>
+          <th>Quantity</th>
+          <th>Total</th>
+        </thead>
+        <tbody>
+          <tr ng-repeat="rate in invoices.quoteRate">
+            <td>{{$index + 1}}</td>
+            <td>{{rate.description}}</td>
+            <td>{{rate.price}}</td>
+            <td>{{rate.quantity}}</td>
+            <td>{{rate.total}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+  </div>
+</div>
+
+<!-- modal for supplier defects -->
+<div ng-repeat="file in documents" class="modal modal-fixed-footer" id="modal-contractor-package-file-{{file._id}}">
+  <div class="modal-content">
+    <div class="col s12">
+      <h5>File {{file.title}}</h5>
+    </div>
+    <div class="col s12">
+      <p>{{file.description}}</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+  </div>
+</div>
+
+
+<!-- modal for supplier defects -->
+<div ng-repeat="defect in package.defects" class="modal modal-fixed-footer" id="modal-material-package-defect-{{defect._id}}">
+  <div class="modal-content">
+    <div class="col s12">
+      <h5>Defect {{defect.title}}</h5>
+    </div>
+    <div class="col s12">
+      <p>In {{defect.location}}, with description {{defect.description}}</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+  </div>
+</div>
+
+<!-- modal for supplier invoice -->
+<div ng-repeat="invoice in package.invoices" class="modal modal-fixed-footer" id="modal-material-package-invoice-{{invoice._id}}">
+  <div class="modal-content">
+    <div class="col s12">
+      <h5>Invoice {{invoice.title}} with total {{invoice.total}}</h5>
+    </div>
+    <div class="col s12" ng-if="invoice.quotePrice">
+      <h5>Quote price</h5>
+      <table>
+        <thead>
+          <th>#</th>
+          <th>Description</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Total</th>
+        </thead>
+        <tbody>
+          <tr ng-repeat="price in invoice.quotePrice">
+            <td>{{$index + 1}}</td>
+            <td>{{price.description}}</td>
+            <td>{{price.price}}</td>
+            <td>1</td>
+            <td>{{price.total}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col s12" ng-if="invoice.quoteRate">
+      <h5>Quote rate</h5>
+      <table>
+        <thead>
+          <th>#</th>
+          <th>Description</th>
+          <th>Rate</th>
+          <th>Quantity</th>
+          <th>Total</th>
+        </thead>
+        <tbody>
+          <tr ng-repeat="rate in invoices.quoteRate">
+            <td>{{$index + 1}}</td>
+            <td>{{rate.description}}</td>
+            <td>{{rate.price}}</td>
+            <td>{{rate.quantity}}</td>
+            <td>{{rate.total}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+  </div>
+</div>
+
+<!-- modal for supplier defects -->
+<div ng-repeat="file in documents" class="modal modal-fixed-footer" id="modal-material-package-file-{{file._id}}">
+  <div class="modal-content">
+    <div class="col s12">
+      <h5>File {{file.title}}</h5>
+    </div>
+    <div class="col s12">
+      <p>{{file.description}}</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+  </div>
 </div>

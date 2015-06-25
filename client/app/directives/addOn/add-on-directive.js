@@ -6,7 +6,8 @@ angular.module('buiiltApp').directive('addon', function(){
         scope: {
             package: '='
         },
-        controller: function($scope, authService,addOnPackageService, FileUploader, $cookieStore, fileService, contractorRequestService) {
+        controller: function($scope, authService,addOnPackageService, FileUploader, $cookieStore, fileService, contractorRequestService, materialRequestService) {
+            $scope.allItemsText = 'All items';
             $scope.currentTeam = authService.getCurrentTeam();
             $scope.documents = [];
             fileService.getFileByStateParam({'id': $scope.package._id})
@@ -14,29 +15,63 @@ angular.module('buiiltApp').directive('addon', function(){
                 $scope.documents = data;
             });
 
-            contractorRequestService.findOne({'id': $scope.package._id}).$promise.then(function(data){
-                $scope.contractorRequest = data;
-            })
-            $scope.allItemsText = 'All items';
-            $scope.showVariations = function() {
-                $scope.variations = $scope.contractorRequest;
-                $scope.allItemsText = 'Variations';
-            };
-
-            $scope.showDefects = function() {
-                $scope.defects = $scope.contractorRequest;
-                $scope.allItemsText = 'Defects';
-            };
-
-            $scope.showInvoices = function() {
-                $scope.invoices = $scope.contractorRequest;
-                $scope.allItemsText = 'Invoices';
-            };
-
             $scope.showDocument = function() {
                 $scope.files = $scope.documents;
                 $scope.allItemsText = 'Documents';
             };
+
+            $scope.showVariations = function() {
+                $scope.variations = $scope.package;
+                $scope.allItemsText = 'Variations';
+            };
+
+            $scope.showDefects = function() {
+                $scope.defects = $scope.package;
+                $scope.allItemsText = 'Defects';
+            };
+
+            $scope.showInvoices = function() {
+                $scope.invoices = $scope.package;
+                $scope.allItemsText = 'Invoices';
+            };
+
+            // if ($scope.package.packageType == 'contractor') {
+            //     contractorRequestService.findOne({'id': $scope.package._id}).$promise.then(function(data){
+            //         $scope.contractorRequest = data;
+            //     });
+            //     $scope.showVariations = function() {
+            //         $scope.variations = $scope.contractorRequest;
+            //         $scope.allItemsText = 'Variations';
+            //     };
+
+            //     $scope.showDefects = function() {
+            //         $scope.defects = $scope.contractorRequest;
+            //         $scope.allItemsText = 'Defects';
+            //     };
+
+            //     $scope.showInvoices = function() {
+            //         $scope.invoices = $scope.contractorRequest;
+            //         $scope.allItemsText = 'Invoices';
+            //     };
+            // }
+            // else if($scope.package.packageType == 'material') {
+            //     materialRequestService.findOne({id: $scope.package._id}).$promise.then(function(data) {
+            //         $scope.materialRequest = data;
+            //     });
+            //     $scope.showDefects = function() {
+            //         $scope.defects = $scope.materialRequest;
+            //         $scope.allItemsText = 'Defects';
+            //     };
+
+            //     $scope.showInvoices = function() {
+            //         $scope.invoices = $scope.materialRequest;
+            //         $scope.allItemsText = 'Invoices';
+            //     };
+            // }
+            
+            
+            
+            
 
             //send variation
             $scope.variation = {};
