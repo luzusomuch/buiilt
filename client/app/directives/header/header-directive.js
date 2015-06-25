@@ -32,7 +32,6 @@ angular.module('buiiltApp')
                             {sref: 'notification.view({id: userId})', label: 'notification'}];
                         }
                         else {
-                          console.log(false);
                           if ($scope.currentTeam.type === 'homeOwner') {
                             $scope.tabs = $scope.menuTypes['homeOwner'];
                           }
@@ -91,7 +90,7 @@ angular.module('buiiltApp')
             });
             //
             //// console.log($scope.homeOwnerTeams.member);
-             $scope.homeOwnerTeams.member  = filterFilter($scope.homeOwnerTeams.member, {status : 'Active'});
+             // $scope.homeOwnerTeams.member  = filterFilter($scope.homeOwnerTeams.member, {status : 'Active'});
             //
             //projectService.getProjectsByUser({'id': $scope.user._id}, function(projects) {
             //  $scope.projectsOwner = projects;

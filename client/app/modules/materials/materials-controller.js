@@ -6,6 +6,7 @@ angular.module('buiiltApp').controller('MaterialsCtrl',
     $scope.currentTeam = team;
     $scope.filter = {isSelect : true};
     $scope.user = authService.getCurrentUser();
+    $scope.requirements = [];
     // $scope.team = authService.getCurrentTeam();
 
 
@@ -79,7 +80,6 @@ angular.module('buiiltApp').controller('MaterialsCtrl',
         emailsPhone: []
     };
     $scope.addNewSupplier = function() {
-        console.log($scope.member.email);
         if ($scope.member.email.title) {
             if (!(_.find($scope.member.emailsPhone,{email : $scope.member.email.title}))) {
                 $scope.member.emailsPhone.push({email: $scope.member.email.title, phoneNumber: $scope.newPhoneNumber});    
