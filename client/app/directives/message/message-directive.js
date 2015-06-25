@@ -41,6 +41,17 @@ angular.module('buiiltApp')
                   $scope.available.push(leader);
                 });
                 break;
+              case 'material' :
+                $scope.available = [];
+                _.forEach($scope.package.winnerTeam._id.member,function(member) {
+                  if (member.status == 'Active') {
+                    $scope.available.push(member._id);
+                  }
+                });
+                _.forEach($scope.package.winnerTeam._id.leader,function(leader) {
+                  $scope.available.push(leader);
+                });
+                break;
               default :
                 break
             }

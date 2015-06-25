@@ -16,6 +16,7 @@ angular.module('buiiltApp')
             authService.getCurrentTeam().$promise.then(function(res) {
               $scope.currentTeam = res;
               getAvailableAssignee($scope.type);
+              updateTasks();
               $scope.isLeader = (_.find($scope.currentTeam.leader,{_id : $scope.currentUser._id})) ? true : false;
             });
         });
@@ -43,6 +44,18 @@ angular.module('buiiltApp')
               });
               $scope.available = _.union($scope.available,$scope.currentTeam.leader);
               break;
+            case 'material' :
+              $scope.available = [];
+              _.forEach($scope.package.winnerTeam._id.member,function(member) {
+                if (member.status == 'Active') {
+                  $scope.available.push(member._id);
+                }
+              });
+              _.forEach($scope.package.winnerTeam._id.leader,function(leader) {
+                $scope.available.push(leader);
+              });
+              $scope.available = _.union($scope.available,$scope.currentTeam.leader);
+              break;
             default :
               break
           }
@@ -64,7 +77,7 @@ angular.module('buiiltApp')
               })
             });
         };
-        updateTasks();
+
 
         //Function fired when click new task
         $scope.newTask = function() {

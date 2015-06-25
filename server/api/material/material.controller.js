@@ -30,6 +30,7 @@ exports.createMaterialPackage = function (req, res, next) {
     owner: req.user._id,
     type: 'material',
     name: req.body.material.name,
+    descriptions : req.body.material.descriptions,
     dateStart: req.body.material.dateStart,
     project: req.body.project,
     requirements: req.body.requirements
