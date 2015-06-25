@@ -14,7 +14,7 @@ var MaterialPackageSchema = new Schema({
   },
   type: String,
   name: String,
-  description: String,
+  descriptions: [String],
   addendums: [{
     description: String,
     addendumsScope: [{

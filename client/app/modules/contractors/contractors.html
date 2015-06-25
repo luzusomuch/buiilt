@@ -7,7 +7,7 @@
         <li><a class="modal-trigger" href="#newWorkPackage">Work Package</a></li>
         <li><a class="modal-trigger" href="#newMaterialPackage">Material Package</a></li>
       </ul>
-     
+
      <div class="collection" >
        <a href="#!" ng-click="filter = {isAccept : true}" class="collection-item" ng-class="{'active' : filter.isAccept}">In Progress<span class="new badge">{{contractorsInProcess.length}}</span></a>
        <a href="#!" ng-click="filter = {isAccept : false}" class="collection-item" ng-class="{'active' : !filter.isAccept}">In Tender<span class="new badge">{{contractorsInTender.length}}</span></a>
@@ -44,7 +44,8 @@
        </div> -->
        <div class="row">
          <div class="input-field col s12">
-           <input id="project_name" name="name" type="text" class="validate" ng-model="contractor.name" required ng-class="{'invalid' : form.name.$invalid && submitted}">
+           <input id="project_name" name="name" type="text" class="validate" ng-model="contractor.name" required
+                  ng-class="{'invalid' : form.name.$invalid && submitted}">
            <label for="project_name">Contractor Package Title</label>
            <p class="validate-message" ng-if="form.name.$error.required && submitted">Pacakge name is required</p>
          </div>
@@ -138,7 +139,7 @@
            </ul>
          </div>
        </div>
-       
+
        <!-- <div class="row">
          <div class="col s12">
           <ul class="collection z-depth-1">
@@ -216,7 +217,7 @@
             </ul>
          </div>
        </div>
-       
+
        <div class="row">
          <div class="col s12">
           <ul class="collection z-depth-1">
@@ -241,7 +242,7 @@
             </ul>
          </div>
        </div>
-       
+
      </form>
     </div>
   <div class="divider"></div>
@@ -269,7 +270,7 @@
                   <input type="date" id="commencement_date">
              </div>
        </div>
-       
+
        <div class="row">
          <div class="col s12">
           <ul class="collection z-depth-1">
@@ -290,7 +291,7 @@
             </ul>
          </div>
        </div>
-       
+
        <div class="row">
          <div class="col s12">
            <div class="card-panel">
@@ -330,7 +331,7 @@
            </div>
          </div>
        </div>
-       
+
      </form>
     </div>
   <div class="divider"></div>

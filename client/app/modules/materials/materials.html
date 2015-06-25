@@ -6,7 +6,7 @@
     	  <li><a class="modal-trigger" href="#newContractorPackage">Contractor Package</a></li>
 		  <li><a class="modal-trigger" href="#newWorkPackage">Work Package</a></li>
 		</ul>
-   
+
    <div class="collection">
            <a href="#!" ng-click="filter = {isSelect : true}" class="collection-item" ng-class="{'active' : filter.isSelect}">In Progress<span class="new badge">{{materialPackagesInProcess.length}}</span></a>
            <a href="#!" ng-click="filter = {isSelect : false}" class="collection-item"  ng-class="{'active' : !filter.isSelect}">In Tender<span class="new badge">{{materialPackagesInTender.length}}</span></a>
@@ -60,7 +60,7 @@
                       <label for="contractor_scope">Scope of Work Required</label>
                  </div>
              </div>
-             
+
              <div class="row">
                  <div class="col s12">
                     <ul class="collection z-depth-1">
@@ -85,7 +85,7 @@
                     </ul>
                  </div>
              </div>
-             
+
          </form>
     </div>
     <div class="divider"></div>
@@ -97,7 +97,7 @@
 
 <div id="newMaterialPackage" class="modal modal-fixed-footer">
     <div class="modal-content">
-        <form method="post" ng-submit="createMaterialPackage()" name="createMaterialPackageForm">
+        <form method="post" name="form" ng-submit="createMaterialPackage(form)">
              <div class="row">
                  <div class="col s12">
                      <h5>New Material Package for Project Name</h5>
@@ -105,35 +105,51 @@
              </div>
              <div class="row">
                  <div class="input-field col s8">
-                     <input id="project_name" type="text" class="validate" required ng-model="material.name">
+                     <input id="project_name" name="name" type="text" class="validate" required ng-model="material.name"
+                            ng-class="{'invalid' : form.name.$invalid && submitted}">
                      <label for="project_name">Material Package Title</label>
+                     <p class="validate-message" ng-if="form.name.$error.required && submitted">Pacakge name is required</p>
                  </div>
                  <div class="input-field col s4">
                       <label for="date_required" class="active">Date Required</label>
-                      <input input-date 
+                      <input
                         ng-model="material.dateStart"
-                        type="text"
+                        type="date"
                         name="created"
                         id="inputCreated"
-                        ng-model="currentTime"
-                        container="body"
-                        format="mm/dd/yyyy"
-                        months-full="{{ month }}"
-                        months-short="{{ monthShort }}"
-                        weekdays-full="{{ weekdaysFull }}"
-                        weekdays-short="{{ weekdaysShort }}"
-                        weekdays-letter="{{ weekdaysLetter }}"
-                        today="today"
-                        clear="clear"
-                        close="close"
-                        on-start="onStart()"
-                        on-render="onRender()"
-                        on-open="onOpen()"
-                        on-close="onClose()"
-                        on-set="onSet()"
-                        on-stop="onStop()" />
+                        ng-model="currentTime"/>
                  </div>
              </div>
+            <div class="row">
+                <div class="col s12">
+                    <ul class="collection z-depth-1">
+                        <li class="collection-item vlalign-wrapper">
+                            <div class="row form" style="margin-bottom: 0px">
+                                <div class="col s12"><p>Enter work descriptions below:</p></div>
+                                <div class="input-field col s10">
+                                    <textarea id="description" class="materialize-textarea" ng-model="description" ng-class="{'invalid' : descriptionError}"></textarea>
+                                    <label for="description" class="">Description</label>
+                                    <p class="validate-message" ng-if="descriptionError">Scope of work at least 1 item</p>
+                                </div>
+                                <div class="valign col s2">
+                                    <button class="btn" type="button" name="action" style="margin-top: 78px" ng-click="addDescription(description)">Add</button>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="collection-item vlalign" ng-repeat="description in contractor.descriptions track by $index">
+                            <div class="row" style="margin-bottom: 0px">
+                                <div class="col s10">
+                                    <p>{{description}}</p>
+                                </div>
+                                <div class="col s2">
+                                    <button class="btn-flat btn-flat" ng-click="removeDescription($index)">Remove</button>
+                                </div>
+                            </div>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
              <div class="row">
                  <div class="col s12">
                     <ul class="collection z-depth-1">
@@ -163,13 +179,14 @@
                     </ul>
                  </div>
              </div>
-             
+
              <div class="row">
                  <div class="col s12">
                     <ul class="collection z-depth-1">
                       <li class="collection-item vlalign-wrapper">
                           <div class="row form" style="margin-bottom: 0px">
                               <div class="col s12"><p>Enter supplier details below:</p></div>
+                              <p class="validate-message" ng-if="supplierError">Supplier details at least 1 item</p>
                               <div class="input-field col s7">
                                     <angucomplete-alt id="ex1"
                                       pause="100"
@@ -201,10 +218,10 @@
                     </ul>
                  </div>
              </div>
-             
+
              <div class="divider"></div>
               <div class="modal-footer">
-                <button class="modal-action modal-close waves-effect waves-green btn-flat">Create Package!</button>
+                <button class="modal-action waves-effect waves-green btn-flat">Create Package!</button>
                 <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
               </div>
          </form>
@@ -229,7 +246,7 @@
                       <input type="date" id="commencement_date">
                  </div>
              </div>
-             
+
              <div class="row">
                  <div class="col s12">
                     <ul class="collection z-depth-1">
@@ -250,7 +267,7 @@
                     </ul>
                  </div>
              </div>
-             
+
              <div class="row">
                  <div class="col s12">
                      <div class="card-panel">
@@ -290,7 +307,7 @@
                      </div>
                  </div>
              </div>
-             
+
          </form>
     </div>
     <div class="divider"></div>
@@ -333,4 +350,4 @@
 
     </div>
   </div>
-</script> 
+</script>
