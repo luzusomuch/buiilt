@@ -2331,12 +2331,18 @@ td, th {
     position: absolute;
     top: 16px;
     right: 16px; }
-.collection .collection-item:last-child, .collection span:last-child .collection-item{
+.collection span a.collection-item:last-child {
+    border-bottom: 1px solid #e0e0e0;
+}
+.collection span:last-child a.collection-item:last-child {
+    border-bottom: none;
+}
+.collection .collection-item:last-child{
     border-bottom: none; }
 .collection .collection-item.active {
     background-color: #FFC107;
     color: white; }
-.collection a.collection-item, .collection span a.collection-item{
+.collection a.collection-item{
     display: block;
     -webkit-transition: 0.25s;
     -moz-transition: 0.25s;

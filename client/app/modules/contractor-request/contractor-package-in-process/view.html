@@ -8,9 +8,9 @@
         <ul style="margin-left: 50px">
           <li ng-repeat="description in contractorRequest.descriptions">{{description}}</li>
         </ul>
-        <p class="col s12">Package staffs list :</p>
-        <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="staff in staffPackage.staffs">
-          {{staff.email}}
+        <p class="col s12">Contractor team: <span class="highlight">{{contractorRequest.winnerTeam._id.name}}</span></p>
+        <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="member in contractorRequest.winnerTeam._id.member">
+          {{member._id.email}}
         </div>
         <p  class="col s12">
 
