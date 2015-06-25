@@ -14,6 +14,12 @@ angular.module('buiiltApp').config(function($stateProvider) {
     hasCurrentProject : true,
     authenticate : true,
     resolve: {
+      currentTeam : [
+        'authService',
+        function(authService) {
+          return authService.getCurrentTeam();
+        }
+      ],
       materialRequest: function($stateParams, materialRequestService){
         return materialRequestService.findOne({'id':$stateParams.packageId});
       }
@@ -26,6 +32,12 @@ angular.module('buiiltApp').config(function($stateProvider) {
     hasCurrentProject : true,
     authenticate : true,
     resolve: {
+      currentTeam : [
+        'authService',
+        function(authService) {
+          return authService.getCurrentTeam();
+        }
+      ],
       materialRequest: function($stateParams, materialRequestService){
         return materialRequestService.findOne({'id':$stateParams.packageId});
       }

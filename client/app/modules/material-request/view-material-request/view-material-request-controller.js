@@ -1,10 +1,11 @@
 angular.module('buiiltApp')
-.controller('ViewMaterialRequestCtrl', function($scope, $state, $stateParams, $cookieStore, authService, userService, materialRequest, materialRequestService, quoteService) {
+.controller('ViewMaterialRequestCtrl', function($scope, $state, $stateParams,currentTeam, $cookieStore, authService, userService, materialRequest, materialRequestService, quoteService) {
   /**
    * quote data
    */
   $scope.emailsPhone = [];
   $scope.materialRequest = materialRequest;
+  $scope.currentTeam = currentTeam;
   $scope.currentUser = {};
   if ($cookieStore.get('token')) {
     $scope.currentUser = userService.get();
@@ -18,7 +19,7 @@ angular.module('buiiltApp')
     $scope.quoteRequests = data;
   });
 
-  materialRequestService.getMessageForSupplier({'id': $stateParams.packageId})
+  materialRequestService.getMessageForBuilder({'id': $stateParams.packageId})
   .$promise.then(function(data) {
     $scope.messages = data;
   });
@@ -49,11 +50,16 @@ angular.module('buiiltApp')
     });
   };
 
-  $scope.sendMessage = function() {
-    materialRequestService.sendMessage({id: $stateParams.packageId, message: $scope.message.message})
-    .$promise.then(function(data) {
-      $scope.messages = data;
-    });
+  $scope.sendMessage = function(value) {
+    if (value == 'undefined' || !value) {
+      alert('This user not registry');
+    }
+    else if(value != 'undefined' || value) {
+      materialRequestService.sendMessage({id: $stateParams.packageId, to: value, team: $scope.currentTeam._id, message: $scope.message.message})
+      .$promise.then(function(data) {
+        $scope.messages = data;
+      });  
+    }
   };
 
   $scope.closeSuccess = function() {

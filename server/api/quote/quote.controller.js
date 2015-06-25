@@ -146,7 +146,7 @@ exports.getByMaterial = function(req, res){
           else {
             materialPackage.winnerTeam._id = team._id,
             materialPackage.quote = quote.total,
-            materialPackage.isAccept = true,
+            materialPackage.isSelect = true,
             materialPackage.status = false
             materialPackage.save(function(err, saved) {
               if (err) {return res.send(500,err);}

@@ -27,11 +27,11 @@ angular.module('buiiltApp')
           action: 'invite'
         }
       },
-      sendMessage: {
-        method: 'POST',
+        getMessageForBuilder: {
+        method: 'GET',
         params: {
-          id: '@id',
-          action: 'message'
+          id: 'id',
+          action: 'message-builder'
         }
       },
       getMessageForSupplier: {
@@ -60,6 +60,20 @@ angular.module('buiiltApp')
         params: {
           id: '@id',
           action: 'send-addendum'
+        }
+      },
+      sendMessage: {
+        method: 'POST',
+        params: {
+          id: '@id',
+          action: 'message'
+        }
+      },
+      sendMessageToBuilder: {
+        method: 'POST',
+        params: {
+          id: '@id',
+          action: 'send-message-to-builder'
         }
       }
     });

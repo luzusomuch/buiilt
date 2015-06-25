@@ -21,6 +21,14 @@ angular.module('buiiltApp')
                   .then(function(res) {
                     $scope.currentTeam = res;
                     $scope.projects = $scope.currentTeam.project;
+
+                    contractorService.getProjectForContractor({'id': $scope.user._id}, function(result) {
+                     $scope.projectsContractor = result;
+                    });
+                    materialPackageService.getProjectForSupplier({'id': $scope.user._id}, function(result) {
+                     $scope.projectsSupplier = result;
+                    });
+                    
                     if ($stateParams.id) {
                       projectService.get({'id': $stateParams.id}).$promise.then(function(project) {
                         var project = project;
@@ -93,18 +101,13 @@ angular.module('buiiltApp')
             //// console.log($scope.homeOwnerTeams.member);
              // $scope.homeOwnerTeams.member  = filterFilter($scope.homeOwnerTeams.member, {status : 'Active'});
             //
-            //projectService.getProjectsByUser({'id': $scope.user._id}, function(projects) {
+            // projectService.getProjectsByUser({'id': $scope.user._id}, function(projects) {
             //  $scope.projectsOwner = projects;
-            //});
-            //projectService.getProjectsByBuilder({'id': $scope.user._id}, function(projects) {
+            // });
+            // projectService.getProjectsByBuilder({'id': $scope.user._id}, function(projects) {
             //  $scope.projectsBuilder = projects;
-            //});
-            //contractorService.getProjectForContractor({'id': $scope.user._id}, function(result) {
-            //  $scope.projectsContractor = result;
-            //});
-            //materialPackageService.getProjectForSupplier({'id': $scope.user._id}, function(result) {
-            //  $scope.projectsSupplier = result;
-            //});
+            // });
+            
 
 
 

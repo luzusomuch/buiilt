@@ -1,10 +1,11 @@
 angular.module('buiiltApp')
-.controller('SendQuoteMaterialPackageCtrl', function($scope, $state, $stateParams, FileUploader, $cookieStore, authService, userService, materialRequest, materialRequestService) {
+.controller('SendQuoteMaterialPackageCtrl', function($scope, $state, $stateParams,currentTeam, FileUploader, $cookieStore, authService, userService, materialRequest, materialRequestService) {
   /**
    * quote data
    */
   $scope.quoteRequest = {};
   $scope.materialRequest = materialRequest;
+  $scope.currentTeam = currentTeam;
   $scope.currentUser = {};
   if ($cookieStore.get('token')) {
     $scope.currentUser = userService.get();
@@ -51,7 +52,7 @@ angular.module('buiiltApp')
   });
 
   $scope.sendMessage = function() {
-    materialRequestService.sendMessage({id: $stateParams.packageId, message: $scope.message.message})
+    materialRequestService.sendMessageToBuilder({id: $stateParams.packageId, team: $scope.currentTeam._id, message: $scope.message.message})
     .$promise.then(function(data) {
       $scope.messages = data;
     });

@@ -4,6 +4,7 @@ var MaterialPackage = require('./../../models/materialPackage.model');
 var QuoteRequest = require('./../../models/quoteRequest.model');
 var ValidateInvite = require('./../../models/validateInvite.model');
 var User = require('./../../models/user.model');
+var Team = require('./../../models/team.model');
 var _ = require('lodash');
 var async = require('async');
 
@@ -69,7 +70,26 @@ exports.sendQuote =function(req, res) {
           quoteRequest.save(function(err, saved) {
             if (err) {return res.send(500,err);}
             else {
-              return res.json(200, saved);
+              MaterialPackage.findById(req.body.materialRequest._id, function(err, materialPackage){
+                if (err) {return res.send(500,err);}
+                else {
+                  _.each(materialPackage.to, function(to){
+                    if (to._id) {
+                      if (to._id.toString() == req.user.team._id.toString()) {
+                        to._id = req.user.team._id,
+                        to.email = to.email,
+                        to.quote = saved._id;
+                      }
+                    }
+                  });
+                  materialPackage.save(function(err, savedMaterialPackage){
+                    if (err) {return res.send(500,err);}
+                    else {
+                      return res.json(200, saved);
+                    }
+                  });
+                }
+              });
             }
           });
         }
@@ -161,7 +181,8 @@ exports.sendMessage = function(req, res) {
       if (!materialPackage.messages) {
         var messages = [];
         messages.push({
-          owner: req.user._id,
+          owner: req.user.team._id,
+          to: req.body.to,
           message: req.body.message
         });
         materialPackage.messages = messages;
@@ -174,7 +195,8 @@ exports.sendMessage = function(req, res) {
       }
       else {
         materialPackage.messages.push({
-          owner: req.user._id,
+          owner: req.user.team._id,
+          to: req.body.to,
           message: req.body.message
         });
         materialPackage.save(function(err, saved) {
@@ -188,8 +210,60 @@ exports.sendMessage = function(req, res) {
   });
 };
 
+exports.sendMessageToBuilder = function(req, res) {
+  MaterialPackage.findById(req.params.id, function(err, materialPackage) {
+    if (err) {return res.send(500,err)}
+    if (!materialPackage) {return res.send(404,err)}
+    else {
+      if (!materialPackage.messages) {
+        var messages = [];
+        messages.push({
+          owner: materialPackage.owner,
+          to: req.body.team,
+          message: req.body.message
+        });
+        materialPackage.messages = messages;
+        materialPackage.save(function(err, saved) {
+          if (err) {return res.send(500, err)}
+          else {
+            return res.json(200,saved);
+          }
+        });
+      }
+      else {
+        materialPackage.messages.push({
+          owner: materialPackage.owner,
+          to: req.body.team,
+          message: req.body.message
+        });
+        materialPackage.save(function(err, saved) {
+          if (err) {return res.send(500, err)}
+          else {
+            return res.json(200,saved);
+          }
+        });
+      }
+    }
+  });
+};
+
+exports.getMessageForBuilder = function(req, res) {
+  Team.findOne({$or:[{leader: req.user._id},{'member._id': req.user._id}]}, function(err, team){
+    if (err) {return res.send(500,err);}
+    else {
+      MaterialPackage.findOne({$and:[{_id: req.params.id},{'messages.owner': team._id}]}, function(err, materialPackage) {
+        if (err) {return res.send(500,err);}
+        if (!materialPackage) {return res.send(404,err)}
+        else {
+          return res.json(200,materialPackage);
+        }
+      });
+    }
+  });
+};
+
 exports.getMessageForSupplier = function(req, res) {
-  MaterialPackage.findOne({$and:[{_id: req.params.id},{'messages.owner': req.user._id}]}, function(err, materialPackage) {
+  MaterialPackage.findOne({$and:[{_id: req.params.id},{'messages.to': req.user.team._id}]}, function(err, materialPackage) {
     if (err) {console.log(err);}
     if (!materialPackage) {return res.send(404,err)}
     else {

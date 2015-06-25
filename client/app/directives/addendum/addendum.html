@@ -1,0 +1,57 @@
+<div id="modal_attachAddendum" class="modal modal-fixed-footer">
+    <form ng-submit="sendAddendum()">
+    <div class="modal-content">
+    <h5>Attach an Addenda to Package {{package.name}}</h5>
+      <div class="row">
+        <div class="input-field col s12">
+           <textarea id="addenda_description" class="materialize-textarea" ng-model="addendum.description"></textarea>
+               <label for="addenda_description">Describe the addendum...</label>
+            </div>
+      </div>
+      
+       <div class="row">
+         <div class="col s12">
+          <ul class="collection z-depth-1">
+            <li class="collection-item vlalign-wrapper">
+              <div class="row form" style="margin-bottom: 0px">
+                <div class="col s12"><p>Edit your scope of work below:</p></div>
+                <div class="input-field col s7">
+                   <textarea id="description" class="materialize-textarea" ng-model="addendum.scopeDescription"></textarea>
+                       <label for="description">Description</label>
+                    </div>
+                <div class="input-field col s3" style="margin-top: 67px">
+                        <input id="quantity" type="text" class="validate" ng-model="addendum.quantity">
+                        <label for="quantity">Quantity</label>
+                    </div>
+                <div class="valign col s2">
+                  <a ng-click="addAddendum()" class="btn" type="submit" name="action" style="margin-top: 78px;">Add</a>
+                </div>
+              </div>
+            </li>
+              <li class="collection-item vlalign" ng-repeat="addendum in addendumsScope">
+                <div class="row" style="margin-bottom: 0px">
+                  <div class="col s7">
+                    <p>{{addendum.scopeDescription}}</p>
+                  </div>
+                  <div class="col s3">
+                    <p>{{addendum.quantity}}</p>
+                  </div>
+                  <div class="col s2">
+                    <a class="btn-flat btn-flat" ng-click="removeAddendum($index)">Remove</a>
+                  </div>
+                </div>
+              </li>
+            </ul>
+         </div>
+       </div>
+       
+     
+    </div>
+  <div class="divider"></div>
+    <div class="modal-footer">
+        <button type="submit" class="modal-action modal-close waves-effect waves-green btn-flat ">Send Addendum!</button>
+         <!-- <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Send Addendum!</a> -->
+     <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
+    </div>
+    </form>
+</div>

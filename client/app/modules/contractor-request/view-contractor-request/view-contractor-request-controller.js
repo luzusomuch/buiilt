@@ -60,7 +60,6 @@ angular.module('buiiltApp')
   };
 
   $scope.sendMessage = function(value) {
-    console.log(value);
     if (value == 'undefined' || !value) {
       alert('This user not registry');
     }
@@ -74,20 +73,20 @@ angular.module('buiiltApp')
   };
 
   //Send addendum
-  $scope.addAddendum = function() {
-    $scope.addendumsScope.push({scopeDescription: $scope.addendum.scopeDescription, quantity: $scope.addendum.quantity});
-    $scope.addendum.scopeDescription = null;
-    $scope.addendum.quantity = null;
-  };
-  $scope.removeAddendum = function(index) {
-    $scope.addendumsScope.splice(index, 1);
-  };
-  $scope.sendAddendum = function() {
-    contractorRequestService.sendAddendum({id: $stateParams.packageId, description: $scope.addendum, addendumScope: $scope.addendumsScope})
-    .$promise.then(function(data) {
-      // $scope.messages = data;
-    });
-  };
+  // $scope.addAddendum = function() {
+  //   $scope.addendumsScope.push({scopeDescription: $scope.addendum.scopeDescription, quantity: $scope.addendum.quantity});
+  //   $scope.addendum.scopeDescription = null;
+  //   $scope.addendum.quantity = null;
+  // };
+  // $scope.removeAddendum = function(index) {
+  //   $scope.addendumsScope.splice(index, 1);
+  // };
+  // $scope.sendAddendum = function() {
+  //   contractorRequestService.sendAddendum({id: $stateParams.packageId, description: $scope.addendum, addendumScope: $scope.addendumsScope})
+  //   .$promise.then(function(data) {
+  //     // $scope.messages = data;
+  //   });
+  // };
 
   //Cancel package
   $scope.cancelPackage = function() {

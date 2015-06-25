@@ -14,9 +14,11 @@ router.post('/', auth.isAuthenticated(), controller.sendQuote);
 router.get('/:id/view', auth.isAuthenticated(), controller.getQuoteRequestByMaterialPackge);
 router.post('/:id/invite', auth.isAuthenticated(), controller.sendInvitationInMaterial);
 router.post('/:id/message', auth.isAuthenticated(), controller.sendMessage);
+router.post('/:id/send-message-to-builder', auth.isAuthenticated(), controller.sendMessageToBuilder);
 router.get('/:id/message-supplier', auth.isAuthenticated(), controller.getMessageForSupplier);
 router.post('/:id/sendDefect', auth.isAuthenticated(), controller.sendDefect);
 router.post('/:id/sendInvoice', auth.isAuthenticated(), controller.sendInvoice);
 router.post('/:id/send-addendum', auth.isAuthenticated(), controller.sendAddendum);
+router.get('/:id/message-builder', auth.isAuthenticated(), controller.getMessageForBuilder);
 
 module.exports = router;
