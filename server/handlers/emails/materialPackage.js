@@ -31,45 +31,29 @@ EventBus.onSeries('MaterialPackage.Inserted', function(request, next) {
     if (!err) {
       _.each(request.to, function(supplier) {
         if (!supplier._id) {
-          PackageInvite.find({package: request._id}, function(err, packageInvites) {
-            if (err) {return next();}
-            if(!packageInvites) {return next();}
-            else {
-              _.each(packageInvites, function(packageInvite){
-                Mailer.sendMail('supplier-package-send-quote-no-account.html', packageInvite.to, {
-                  materialPackage: request,
-                  //project owner
-                  user: result.user,
-                  project: result.project,
-                  registryLink: config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
-                  link: config.baseUrl + result.project._id + '/material-request/' + request._id,
-                  subject: 'Quote request for ' + request.name
-                }, function(err) {
-                  console.log(err);
-                  return next();
-                });
-              });
-            }
-          });
+          return next();
         }
         else {
-          Team.findOne({$or: [{'leader': supplier._id}, {'member._id': supplier._id}]}, function(err, team) {
+          Team.findOne({_id: supplier._id}, function(err, team) {
             if (err) {return next();}
             if (!team) {return next();}
             else {
               async.each(team.leader, function(leader, callback) {
                 User.findById(leader, function(err,user) {
-                  Mailer.sendMail('supplier-package-send-quote.html', user.email, {
-                    materialPackage: request,
-                    //project owner
-                    user: result.user,
-                    project: result.project,
-                    link: config.baseUrl + result.project._id + '/material-request/' + request._id,
-                    subject: 'Quote request for ' + request.name
-                  }, function(err) {
-                    console.log(err);
-                    return next();
-                  });
+                  if (err) {return next();}
+                  else {
+                    Mailer.sendMail('supplier-package-send-quote.html', user.email, {
+                      materialPackage: request,
+                      //project owner
+                      user: result.user,
+                      project: result.project,
+                      link: config.baseUrl + result.project._id + '/material-request/' + request._id,
+                      subject: 'Quote request for ' + request.name
+                    }, function(err) {
+                      console.log(err);
+                      return next();
+                    });
+                  }
                 });
                 callback();
               }, function(err){
@@ -98,29 +82,30 @@ EventBus.onSeries('MaterialPackage.Updated', function(request, next) {
     if (!err) {
       _.each(request.newInvitation, function(supplier) {
         if (!supplier._id) {
-          PackageInvite.find({package: request._id}, function(err, packageInvites){
-            if (err) {return next();}
-            if (!packageInvites) {return next();}
-            else {
-              _.each(packageInvites, function(packageInvite){
-                Mailer.sendMail('supplier-package-send-quote-no-account.html', packageInvite.to, {
-                  materialPackage: request,
-                  //project owner
-                  user: result.user,
-                  project: result.project,
-                  registryLink: config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
-                  link: config.baseUrl + result.project._id +  '/material-request/' + request._id,
-                  subject: 'Quote request for ' + request.name
-                }, function(err) {
-                  console.log(err);
-                  return next();
-                });
-              });
-            }
-          });
+          // PackageInvite.find({package: request._id}, function(err, packageInvites){
+          //   if (err) {return next();}
+          //   if (!packageInvites) {return next();}
+          //   else {
+          //     _.each(packageInvites, function(packageInvite){
+          //       Mailer.sendMail('supplier-package-send-quote-no-account.html', packageInvite.to, {
+          //         materialPackage: request,
+          //         //project owner
+          //         user: result.user,
+          //         project: result.project,
+          //         registryLink: config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
+          //         link: config.baseUrl + result.project._id +  '/material-request/' + request._id,
+          //         subject: 'Quote request for ' + request.name
+          //       }, function(err) {
+          //         console.log(err);
+          //         return next();
+          //       });
+          //     });
+          //   }
+          // });
+          return next();
         }
         else {
-          Team.findOne({$or: [{'leader': supplier._id}, {'member._id': supplier._id}]}, function(err, team) {
+          Team.findOne({_id: leader._id}, function(err, team) {
             if (err) {return res.send(500,err);}
             if (!team) {return next();}
             else {

@@ -134,8 +134,18 @@ exports.sendInvitationInMaterial = function(req, res) {
               materialPackage.save(function(err, saved){
                 if (err) {return res.send(500,err);}
                 else {
-                  return res.json(200,saved);
-              }
+                  _.each(req.body.toSupplier, function(email){
+                    var packageInvite = new PackageInvite({
+                      owner: req.user._id,
+                      inviteType: 'supplier',
+                      package: saved._id,
+                      project: saved.project,
+                      to: email.email
+                    });
+                    packageInvite.save();
+                    return res.json(200,saved);
+                  });
+                }
               });
             }
         });

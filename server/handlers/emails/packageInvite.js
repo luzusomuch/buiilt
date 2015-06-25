@@ -42,6 +42,20 @@ EventBus.onSeries('PackageInvite.Inserted', function(request, next) {
                                 return next();
                             });
                         }
+                        else if(packageInvite.inviteType == 'supplier') {
+                            Mailer.sendMail('supplier-package-send-quote-no-account.html', packageInvite.to, {
+                              materialPackage: request,
+                              //project owner
+                              user: result.user,
+                              project: result.project,
+                              registryLink: config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
+                              link: config.baseUrl + result.project._id + '/material-request/' + request._id,
+                              subject: 'Quote request for ' + request.name
+                            }, function(err) {
+                              console.log(err);
+                              return next();
+                            });
+                        }
                         else {
                             return next();
                         }

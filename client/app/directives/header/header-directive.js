@@ -65,12 +65,13 @@ angular.module('buiiltApp')
                  homeOwnerTeamMember.push({_id: leader._id, email: leader.email});
                });
                _.each(homeOwnerTeam.member, function(member) {
-                 if (member._id) {
+                 if (member._id && member.status === 'Active') {
                    homeOwnerTeamMember.push({_id: member._id._id, email: member._id.email});
                  }
                })
              });
              $scope.homeOwnerTeamMember = homeOwnerTeamMember;
+             // console.log($scope.homeOwnerTeamMember);
             });
             
             teamService.getHomeBuilderTeam().$promise.then(function(data) {

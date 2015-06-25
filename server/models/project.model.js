@@ -24,7 +24,7 @@ var ProjectSchema = new Schema({
   type : {type: String},
   status: {
     type: String,
-    enum: ['open', 'close'],
+    enum: ['open', 'close', 'waiting'],
     default: 'open'
   },
   //TODO - store subscription data
