@@ -30,7 +30,7 @@ exports.createContractorPackage = function (req, res, next) {
     owner: req.body.team,
     packageType: 'contractor',
     name: req.body.contractor.name,
-    description: req.body.contractor.description,
+    descriptions: req.body.contractor.descriptions,
     project: req.body.project,
     category: req.body.contractor.category,
     dateStart: req.body.contractor.dateStart

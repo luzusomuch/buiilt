@@ -20,7 +20,7 @@ var ContractorPackageSchema = new Schema({
   },
   packageInviteToken: String,
   name: String,
-  description: String,
+  descriptions: [String],
   category: String,
   addendums: [{
     description: String,
