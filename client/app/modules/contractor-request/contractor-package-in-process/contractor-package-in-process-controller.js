@@ -1,12 +1,12 @@
 angular.module('buiiltApp')
-  .controller('ContractorPackageInProcessCtrl', function($scope, $state, $stateParams, FileUploader, currentTeam, $cookieStore, fileService, authService, userService, contractorRequest, contractorRequestService, quoteService) {
+  .controller('ContractorPackageInProcessCtrl', function($scope, $state, $stateParams, filterFilter, currentTeam, $cookieStore, fileService, authService, userService, contractorRequest, contractorRequestService, quoteService) {
     /**
      * quote data
      */
     // $scope.allItemsText = 'All items';
     $scope.currentTeam = currentTeam;
     $scope.contractorRequest = contractorRequest;
-      console.log($scope.contractorRequest)
+    $scope.contractorRequest.winnerTeam._id.member  = filterFilter($scope.contractorRequest.winnerTeam._id.member , {status : 'Active'});
     // $scope.documents = [];
 
     // fileService.getFileByStateParam({'id': $stateParams.packageId})

@@ -27,6 +27,10 @@
           <ul style="margin-left: 50px">
             <li ng-repeat="description in materialRequest.descriptions">{{description}}</li>
           </ul>
+          <p class="col s12">Requirements : </p>
+          <ul style="margin-left: 50px">
+            <li ng-repeat="requirement in materialRequest.requirements"><span class="highlight">{{requirement.description}} : </span>{{requirement.quantity}}</li>
+          </ul>
           <p class="col s12">Supplier team: <span class="highlight">{{materialRequest.winnerTeam._id.name}}</span></p>
           <p class="col s12">Member: </p>
           <div class="card col " style="padding: 5px; margin-left: 10px" ng-repeat="leader in materialRequest.winnerTeam._id.leader">

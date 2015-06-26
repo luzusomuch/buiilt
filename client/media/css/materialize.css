@@ -2340,7 +2340,7 @@ td, th {
 .collection .collection-item:last-child{
     border-bottom: none; }
 .collection .collection-item.active {
-    background-color: #FFC107;
+    background-color: #03A9F4;
     color: white; }
 .collection a.collection-item{
     display: block;

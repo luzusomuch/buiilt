@@ -13,11 +13,13 @@ angular.module('buiiltApp')
         $scope.currentProject = $rootScope.currentProject;
         authService.getCurrentUser().$promise.then(function(res) {
            $scope.currentUser = res;
+
             authService.getCurrentTeam().$promise.then(function(res) {
               $scope.currentTeam = res;
+              $scope.isLeader = (_.find($scope.currentTeam.leader,{_id : $scope.currentUser._id})) ? true : false;
               getAvailableAssignee($scope.type);
               updateTasks();
-              $scope.isLeader = (_.find($scope.currentTeam.leader,{_id : $scope.currentUser._id})) ? true : false;
+
             });
         });
 
@@ -34,11 +36,13 @@ angular.module('buiiltApp')
               break;
             case 'contractor' :
               $scope.available = [];
-              _.forEach($scope.package.winnerTeam._id.member,function(member) {
-                if (member.status == 'Active') {
-                  $scope.available.push(member._id);
-                }
-              });
+              if ($scope.currentTeam.type == 'contractor') {
+                _.forEach($scope.package.winnerTeam._id.member,function(member) {
+                  if (member.status == 'Active') {
+                    $scope.available.push(member._id);
+                  }
+                });
+              }
               _.forEach($scope.package.winnerTeam._id.leader,function(leader) {
                   $scope.available.push(leader);
               });
