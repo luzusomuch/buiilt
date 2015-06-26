@@ -66,7 +66,7 @@ exports.create = function (req, res, next) {
           });
         }
       });
-
+      if (req.body.invite) {
       if (acceptTeam) {
         var team = req.body.invite.team;
         //update teams for group user
@@ -94,7 +94,7 @@ exports.create = function (req, res, next) {
 
             });
           })
-      } else if (acceptTeam == false) {
+      } else  {
         Team.update({'member.email': req.body.email},
           {"$set" : {
             "member.$._id" : user._id,
@@ -113,7 +113,9 @@ exports.create = function (req, res, next) {
               });
             })
           })
-      } else {
+      }
+      }
+      else {
         return res.json({token: token,emailVerified : false});
       }
     });
