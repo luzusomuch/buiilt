@@ -5,13 +5,16 @@ angular.module('buiiltApp')
     templateUrl: 'app/directives/header/header.html',
     controller: function($scope,$state, $stateParams, $rootScope,materialPackageService, authService, projectService, contractorService,teamService,filterFilter) {
       $scope.projects = [];
+      $scope.submitted = false;
       function queryProjects(){
         authService.isLoggedInAsync(function(isLoggedIn){
           if(isLoggedIn){
             $scope.isLoggedIn = true;
             $scope.project = {
-              location: {},
-              email: {}
+              package : {
+                location: {},
+                to : ''
+              }
             };
             authService.getCurrentUser().$promise
               .then(function(res) {
@@ -21,7 +24,6 @@ angular.module('buiiltApp')
                   .then(function(res) {
                     $scope.currentTeam = res;
                     $scope.projects = $scope.currentTeam.project;
-
                     contractorService.getProjectForContractor({'id': $scope.user._id}, function(result) {
                      $scope.projectsContractor = result;
                     });
@@ -145,24 +147,15 @@ angular.module('buiiltApp')
           {sref: 'projects.view({id :  currentProject._id})', label: 'project'}]
       };
 
-      $scope.create = function() {
-        if ($scope.project.email.title) {
-          $scope.project.email = $scope.project.email.title;
-          projectService.create($scope.project).$promise.then(function(data) {
-            alert('Create project successfully!');
-            $scope.projects.push(data);
-          }, function(res) {
-            $scope.errors = res.data;
-          });
-        }
-        else {
-          $scope.project.email = $scope.textString;
-          projectService.create($scope.project).$promise.then(function(data) {
-            alert('Create project successfully!');
-            $scope.projects.push(data);
-          }, function(res) {
-            $scope.errors = res.data;
-          });
+      $scope.create = function(form) {
+        $scope.submitted = true;
+        if (form.$valid) {
+            projectService.create($scope.project).$promise.then(function(data) {
+              alert('Create project successfully!');
+              $scope.projects.push(data);
+            }, function(res) {
+              $scope.errors = res.data;
+            });
         }
       };
 

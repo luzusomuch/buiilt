@@ -17,6 +17,14 @@ var location = {
   suburb: {type: String, default: ''}
 };
 
+var TeamSchema = new Schema({
+  team : {
+    type : Schema.Types.ObjectId,
+    ref : 'Team'
+  },
+  email : String
+},{_id : false});
+
 var BuilderPackageSchema = new Schema({
   dateStart: {type: Date, default: Date.now},
   //the quote send to home owner
@@ -27,7 +35,23 @@ var BuilderPackageSchema = new Schema({
   //home owner email
   homeOwnerEmail: {type: String},
   homeOwnerPhoneNumber: {type: String},
+  owner : {
+    type : Schema.Types.ObjectId,
+    ref : 'Team',
+    require : true
+  },
   location: location,
+  to : {
+    team : {
+      type : Schema.Types.ObjectId,
+      ref : 'Team'
+    },
+    email : String,
+    type : {
+      type : String,
+      enum : ['homeowner','builder']
+    }
+  },
   variations : [{
     owner: {
       type: Schema.Types.ObjectId,
@@ -68,8 +92,6 @@ var BuilderPackageSchema = new Schema({
 BuilderPackageSchema.plugin(packagePlugin);
 
 BuilderPackageSchema.pre('save', function(next) {
-  this.type = 'BuilderPackage';
-
   next();
 });
 

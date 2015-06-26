@@ -6,7 +6,7 @@ angular.module('buiiltApp').controller('CreateProjectCtrl', function($scope, $st
   teamService.getCurrentTeam().$promise.then(function(data) {
     $scope.currentTeam = data;
   });
-  $scope.submitted = false
+  $scope.submitted = false;
   
   //$scope.inputChanged = function(str) {
   //  $scope.textString = str;
@@ -17,13 +17,13 @@ angular.module('buiiltApp').controller('CreateProjectCtrl', function($scope, $st
   $scope.create = function(form) {
     $scope.submitted = true;
     if (form.$valid) {
-      projectService.create($scope.project).$promise.then(function(data) {
-        //show alert
-        $scope.success = true;
-
-      }, function(res) {
-        $scope.errors = res.data;
-      });
+      //projectService.create($scope.project).$promise.then(function(data) {
+      //  //show alert
+      //  $scope.success = true;
+      //
+      //}, function(res) {
+      //  $scope.errors = res.data;
+      //});
     }
   };
 
