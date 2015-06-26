@@ -211,7 +211,7 @@ exports.createUserWithInviteToken = function(req, res, next) {
                   }
                 });
               }
-              else if(packageInvite.inviteType == 'buider') {
+              else if(packageInvite.inviteType == 'builder') {
                 BuilderPackage.findById(packageInvite.package, function(err, builderPackage){
                   if (err) {return res.send(500);}
                   else {
@@ -244,7 +244,7 @@ exports.createUserWithInviteToken = function(req, res, next) {
                   }
                 }); 
               }
-              else {
+              else if(packageInvite.inviteType == 'homeOwner'){
                 BuilderPackage.findById(packageInvite.package, function(err, builderPackage){
                   if (err) {return res.send(500);}
                   else {

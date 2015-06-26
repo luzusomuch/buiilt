@@ -76,7 +76,7 @@ exports.create = function(req, res){
                   else {
                     var packageInvite = new PackageInvite({
                       owner: req.user._id,
-                      inviteType: 'buider',
+                      inviteType: 'builder',
                       project: saved.project,
                       package: saved._id,
                       to: req.body.email
@@ -142,7 +142,7 @@ exports.create = function(req, res){
           }
         });
       }
-      else if(team.type === 'buider') {
+      else if(team.type === 'builder') {
         var project = new Project({
           owner: team._id,
           name: req.body.name,

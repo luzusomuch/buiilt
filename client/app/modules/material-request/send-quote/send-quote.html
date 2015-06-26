@@ -16,6 +16,38 @@
  <div class="row">
    <p class="col s12">{{materialRequest.description}}</p>
  </div>
+
+ <div class="row">
+   <div class="col s12">
+     <ul class="collapsible" data-collapsible="accordion">
+       <li>
+         <div class="collapsible-header">Detail</div>
+         <div class="collapsible-body">
+          <div class="col s12">{{materialRequest.description}}</div>
+          <div class="col s12" ng-if="materialRequest.addendums">
+            <h5>Addendum</h5>
+              <div class="row" ng-repeat="addendum in materialRequest.addendums" ng-if="$last">
+                <h6>{{addendum.description}}</h6>
+                <h6>Addendum scope</h6>
+                <table>
+                   <thead>
+                      <th>Description</th>
+                      <th>Quantity</th>
+                   </thead>
+                   <tbody>
+                     <tr ng-repeat="addendumScope in addendum.addendumsScope">
+                       <td>{{addendumScope.description}}</td>
+                       <td>{{addendumScope.quantity}}</td>
+                     </tr>
+                   </tbody>
+                </table>
+              </div>
+          </div>
+         </div>
+       </li>
+     </ul>
+   </div>
+ </div>
  
  <div class="row">
    <div class="col s12">
