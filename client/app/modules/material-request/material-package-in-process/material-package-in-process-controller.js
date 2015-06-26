@@ -1,10 +1,11 @@
 angular.module('buiiltApp')
-.controller('MaterialPackageInProcessCtrl', function($scope, $state, $stateParams, FileUploader, $cookieStore, currentTeam, materialRequest, fileService, authService, userService,materialRequestService) {
+.controller('MaterialPackageInProcessCtrl', function($scope, $state, $stateParams, filterFilter, $cookieStore, currentTeam, materialRequest, fileService, authService, userService,materialRequestService) {
   /**
    * quote data
    */
   $scope.materialRequest = materialRequest;
   $scope.currentTeam = currentTeam;
+  $scope.materialRequest.winnerTeam._id.member  = filterFilter($scope.materialRequest.winnerTeam._id.member , {status : 'Active'});
   // $scope.defect = {};
   // $scope.invoice = {};
   // $scope.currentUser = {};

@@ -111,6 +111,21 @@ angular.module('buiiltApp')
           };
           getAvailableAssignee($scope.type);
           $scope.isNew = true;
+          $scope.isShow = false;
+        };
+
+        $scope.showTask = function(task) {
+          $scope.task = angular.copy(task);
+          getAvailableAssignee($scope.type);
+          _.forEach($scope.task.assignees,function(item) {
+            if (!_.find($scope.available,{_id : item._id})) {
+              item.canRevoke = false;
+            } else {
+              item.canRevoke = true;
+            }
+            _.remove($scope.available,{_id : item._id});
+          });
+          $scope.isShow = true;
         };
 
         //Function fired when click edit task
@@ -126,6 +141,7 @@ angular.module('buiiltApp')
             _.remove($scope.available,{_id : item._id});
           });
           $scope.isNew = false;
+          $scope.isShow = false;
 
         };
 
@@ -133,6 +149,7 @@ angular.module('buiiltApp')
         $scope.assign = function(staff,index) {
           staff.canRevoke = true;
           $scope.task.assignees.push(staff);
+          console.log($scope.task.assignees);
           $scope.available.splice(index,1);
         };
 

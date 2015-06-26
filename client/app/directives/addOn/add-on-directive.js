@@ -23,7 +23,6 @@ angular.module('buiiltApp').directive('addon', function(){
             });
 
             $scope.showDocument = function() {
-                console.log('adasdads');
                 $scope.files = $scope.documents;
                 $scope.allItemsText = 'Documents';
             };

@@ -30,7 +30,6 @@ angular.module('buiiltApp')
                     });
                     
                     if ($stateParams.id) {
-                      console.log($stateParams.id)
                       projectService.get({'id': $stateParams.id}).$promise.then(function(project) {
 
 

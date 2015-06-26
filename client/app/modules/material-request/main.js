@@ -21,7 +21,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
         }
       ],
       materialRequest: function($stateParams, materialRequestService){
-        return materialRequestService.findOne({'id':$stateParams.packageId});
+        return materialRequestService.findOne({'id':$stateParams.packageId}).$promise;
       }
     }
   })
@@ -39,7 +39,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
         }
       ],
       materialRequest: function($stateParams, materialRequestService){
-        return materialRequestService.findOne({'id':$stateParams.packageId});
+        return materialRequestService.findOne({'id':$stateParams.packageId}).$promise;
       }
     }
   })
@@ -57,7 +57,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
         }
       ],
       materialRequest: function($stateParams, materialRequestService){
-        return materialRequestService.findOne({'id':$stateParams.packageId});
+        return materialRequestService.findOne({'id':$stateParams.packageId}).$promise;
       }
     }
   });

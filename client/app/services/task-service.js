@@ -22,6 +22,13 @@ angular.module('buiiltApp')
           params: {
           }
         },
+        myTask : {
+          method : 'GET',
+          isArray : true,
+          params : {
+            id : 'me'
+          }
+        },
         create: {
           method: 'POST'
         },
