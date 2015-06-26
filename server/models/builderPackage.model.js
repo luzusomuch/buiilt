@@ -49,7 +49,7 @@ var BuilderPackageSchema = new Schema({
     email : String,
     type : {
       type : String,
-      enum : ['homeowner','builder']
+      enum : ['homeOwner','builder']
     }
   },
   variations : [{

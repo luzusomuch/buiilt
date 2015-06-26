@@ -221,13 +221,7 @@ exports.createUserWithInviteToken = function(req, res, next) {
                       if (err) {return res.send(500,err);}
                       else {
                         project.status = 'open';
-                        project.save(function(err, savedProject){
-                          if (err) {return res.send(500,err);}
-                          else {
-                            savedTeam.project.push(savedProject._id);
-                            savedTeam.save();
-                          }
-                        });
+                        project.save()
                       }
                     });
                     builderPackage.to.team = savedTeam._id;
@@ -254,15 +248,15 @@ exports.createUserWithInviteToken = function(req, res, next) {
                     Project.findById(packageInvite.project, function(err,project){
                       if (err) {return res.send(500,err);}
                       else {
-                        project.user._id = savedTeam._id;
-                        project.user.email = packageInvite.to;
+                        project.status = 'open';
                         project.save(function(err, savedProject){
                           savedTeam.project.push(savedProject._id);
                           savedTeam.save();
                         });
                       }
                     });
-                    builderPackage.user = savedTeam._id;
+                    builderPackage.to.team = savedTeam._id;
+                    builderPackage.to.email = null;
                     builderPackage.save(function(err, saved){
                       if (err) {return res.send(500,err);}
                       else {
