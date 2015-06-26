@@ -16,7 +16,7 @@ angular.module('buiiltApp')
             authService.getCurrentUser().$promise
               .then(function(res) {
                 $scope.user = res;
-                $scope.isLeader = $scope.user.team.role == 'admin' ? true : false;
+                $scope.isLeader = $scope.user.team.role == 'admin';
                 authService.getCurrentTeam().$promise
                   .then(function(res) {
                     $scope.currentTeam = res;
@@ -31,7 +31,7 @@ angular.module('buiiltApp')
                     
                     if ($stateParams.id) {
                       projectService.get({'id': $stateParams.id}).$promise.then(function(project) {
-                        var project = project;
+
 
                         if (!project && project == null) {
                           var userId = $scope.user._id;
@@ -43,8 +43,8 @@ angular.module('buiiltApp')
                           if ($scope.currentTeam.type === 'homeOwner') {
                             $scope.tabs = $scope.menuTypes['homeOwner'];
                           }
-                          else if($scope.currentTeam.type === 'buider') {
-                            $scope.tabs = $scope.menuTypes['buider'];
+                          else if($scope.currentTeam.type === 'builder') {
+                            $scope.tabs = $scope.menuTypes['builder'];
                           }
                           else if($scope.currentTeam.type === 'contractor') {
                             $scope.tabs = $scope.menuTypes['contractor'];
@@ -136,7 +136,7 @@ angular.module('buiiltApp')
         contractor: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
           {sref: 'contractors({id :  currentProject._id})', label: 'contractors'},
           {sref: 'projects.view({id :  currentProject._id})', label: 'project'}],
-        buider: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
+        builder: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
           {sref: 'client({id :  currentProject._id})', label: 'client'},
           {sref: 'contractors({id :  currentProject._id})', label: 'contractors'},
           {sref: 'materials({id :  currentProject._id})', label: 'materials'},
