@@ -12,104 +12,33 @@ var config = require('./../../config/environment');
 var async = require('async');
 
 EventBus.onSeries('BuilderPackage.Inserted', function(request, next) {
-    Project.findById(request.project).populate('owner').exec(function(err, project){
-        if (err) {return next();}
-        else {
-            if (project.type === 'FromHomeOwnerToBuilder') {
-                if (!project.builder._id) {
-                    PackageInvite.find({package: request._id}, function(err, packageInvites) {
-                        if (err) {return next();}
-                        if (!packageInvites) {return next();}
-                        else {
-                            _.each(packageInvites, function(packageInvite){
-                                Mailer.sendMail('invite-home-builder-send-quote-no-account.html', packageInvite.to, {
-                                    project: project,
-                                    registryLink: config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
-                                    link: config.baseUrl + 'builder-packages/' + project._id + '/send-quote',
-                                    subject: 'Invite home builder send quote for ' + project.name
-                                },function(err){
-                                    console.log(err);
-                                    return next();
-                                });
-                            });
-                        }
-                    });
-                    
-                }
-                else if(project.builder._id){
-                    console.log('-----------------');
-                    console.log(project.builder._id);
-                    Team.findById(project.builder._id, function(err, team) {
-                        if (err) {return next();}
-                        if (!team) {return next();}
-                        else {
-                            console.log(team);
-                            _.each(team.leader, function(leader) {
-                                User.findById(leader, function(err, user) {
-                                    if (err) {console.log(err); return next();}
-                                    if (!user) {console.log(err); return next();}
-                                    else {
-                                        console.log(user);
-                                        Mailer.sendMail('invite-home-builder.html', user.email, {
-                                            project: project,
-                                            link: config.baseUrl + project._id + '/dashboard',
-                                            subject: 'Invite home builder send quote for ' + project.name
-                                        },function(err){
-                                            console.log(err);
-                                            return next();
-                                        });
-                                    }
-                                });
-                            })
-                        }
-                    });
-                }
-            }
-            else if(project.type === 'FromBuilderToHomeOwner') {
-                if (!project.user._id) {
-                    PackageInvite.find({package: request._id}, function(err, packageInvites) {
-                        if (err) {return next();}
-                        if (!packageInvites) {return next();}
-                        else {
-                            _.each(packageInvites, function(packageInvite){
-                                Mailer.sendMail('invite-home-owner-has-no-account.html', packageInvite.to, {
-                                    project: project,
-                                    link: config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
-                                    subject: 'Invite home owner for ' + project.name
-                                },function(err){
-                                    return next();
-                                });
-                            });
-                        }
-                    });
-                }
-                else if(project.user._id) {
-                    Team.findById(project.user._id, function(err, team) {
-                        if (err) {return next();}
-                        if (!team) {return next();}
-                        else {
-                            _.each(team.leader, function(leader) {
-                                User.findById(leader, function(err, user) {
-                                    if (err) {console.log(err); return next();}
-                                    if (!user) {console.log(err); return next();}
-                                    else {
-                                        Mailer.sendMail('invite-home-owner.html', user.email, {
-                                            project: project,
-                                            link: config.baseUrl + request._id + '/dashboard',
-                                            subject: 'Invite home owner for ' + request.name
-                                        },function(err){
-                                            return next();
-                                        });
-                                    }
-                                });
-                            });
-                        }
-                    });
-                }
-            }
-            else {
-                return next();
-            }
-        }
+  var subjectType = (request.to.type == 'homeOwner') ? 'home owner' : 'builder';
+  if (request.to.email) {
+    var packageInvite = new PackageInvite({
+      owner: request.owner,
+      project: request.project,
+      package: request._id,
+      inviteType : request.to.type,
+      to: request.to.email
     });
+    packageInvite.save(function(err) {
+      console.log(err);
+      Mailer.sendMail('invite-' + request.to.type + '-has-no-account.html', request.to.email, {
+        project: request.project,
+        registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
+        subject: 'Invite ' + subjectType + ' send quote for ' + request.name
+      },function(err){
+        next();
+      });
+    });
+  }
+  else {
+    Mailer.sendMail('invite-'+ request.to.type + '.html', user.email, {
+      project: request.project,
+      link: config.baseUrl + request.project._id + '/dashboard',
+      subject: 'Invite ' + subjectType + ' send quote for ' + request.name
+    },function(err){
+      next();
+    });
+  }
 });

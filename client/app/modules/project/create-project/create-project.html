@@ -1,87 +1,89 @@
 <div class="modal modal-fixed-footer" id="createProject">
-  <div class="modal-content">
-    <form method="post" name="form" ng-submit="create(form)" style="padding:10px;">
-      <h3>New project</h3>
-      <div clas="row">
-        <div class="input-field col s12">
-          <label>Name </label>
-          <input name="name" ng-model="project.name" required type="text"
-                 ng-class="{'invalid' : form.name.$invalid && sumbitted}">
-          <p class="validate-message" ng-if=" form.name.$error.required && sumbitted">Project name is required</p>
-        </div>
-      </div>
-      <div clas="row">
-        <div class="input-field col s12">
-          <label>Description </label>
-          <input name="description" ng-model="project.description" required type="text"
-                 ng-class="{'invalid' : form.description.$invalid && sumbitted}">
-          <p class="validate-message" ng-if=" form.description.$error.required && sumbitted">Project description is required</p>
-        </div>
-      </div>
-      <div clas="row">
-        <div class="input-field col s12">
-          <label>Address </label>
-          <input ng-model="project.package.location.address" type="text">
-        </div>
-      </div>
-      <div class="row">
-        <div class="input-field col s6">
-          <label>Suburb </label>
-          <input ng-model="project.package.location.suburb" type="text">
-        </div>
-        <div class="input-field col s6">
-          <label>Postcode </label>
-          <input ng-model="project.package.location.postcode" type="text">
-        </div>
-      </div>
-      <div clas="row">
-        <div class="input-field col s12">
-          <label>Email: </label>
-          <input name="email" ng-model="project.package.to" required type="text"
-                 ng-class="{'invalid' : form.email.$invalid && sumbitted}">
-          <p class="validate-message" ng-if=" form.email.$error.required && sumbitted">Project description is required</p>
-        </div>
-        <!--<div class="input-field col s12" ng-if="currentTeam.type == 'builder'">-->
-          <!--<angucomplete-alt id="ex1"-->
-                                  <!--pause="100"-->
-                                  <!--placeHolder="Home owner email"-->
-                                  <!--selected-object="project.email"-->
-                                  <!--local-data="homeOwnerTeamMember"-->
-                                  <!--search-fields="email"-->
-                                  <!--title-field="email"-->
-                                  <!--minlength="1"-->
-                                  <!--input-changed="inputChanged"-->
-                                  <!--template-url="/my-custom-template.html"-->
-                                  <!--input-class="col s12"></angucomplete-alt>-->
-        <!--</div>-->
-        <!--<div class="input-field col s12" ng-if="currentTeam.type == 'homeOwner'">-->
-          <!--<angucomplete-alt id="ex1"-->
-                                  <!--pause="100"-->
-                                  <!--placeHolder="Home builder email"-->
-                                  <!--selected-object="project.email"-->
-                                  <!--local-data="homeBuilderTeamMember"-->
-                                  <!--search-fields="email"-->
-                                  <!--title-field="email"-->
-                                  <!--minlength="1"-->
-                                  <!--input-changed="inputChanged"-->
-                                  <!--template-url="/my-custom-template.html"-->
-                                  <!--input-class="col s12"></angucomplete-alt>-->
-        <!--</div>-->
-      </div>
-      <div clas="row">
-        <div class="input-field col s12">
-          <p>Project Subscription of $50 per Month </p>
-          <p>Credit Card Number (Field to be invalid)  </p>
+  <form method="post" name="form" ng-submit="create(form)"  novalidate>
+    <div class="modal-content">
 
-          <p>NOTE: This project is Free as we are currently running in Beta.  </p>
+        <h3>New project</h3>
+        <div clas="row">
+          <div class="input-field col s12">
+            <label>Name </label>
+            <input name="name" ng-model="project.name" required type="text"
+                   ng-class="{'invalid' : form.name.$invalid && submitted}">
+            <p class="validate-message" ng-if=" form.name.$error.required && submitted">Project name is required</p>
+          </div>
         </div>
-      </div>
-    </form>
-  </div>
-  <div class="modal-footer">
-    <button class="waves-effect waves-light btn modal-action" ng-disabled="createProjectForm.$invalid">Create project</button>
-    <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
-  </div>
+        <div clas="row">
+          <div class="input-field col s12">
+            <label>Description </label>
+            <input name="description" ng-model="project.description" required type="text"
+                   ng-class="{'invalid' : form.description.$invalid && submitted}">
+            <p class="validate-message" ng-if=" form.description.$error.required && submitted">Project description is required</p>
+          </div>
+        </div>
+        <div clas="row">
+          <div class="input-field col s12">
+            <label>Address </label>
+            <input ng-model="project.package.location.address" type="text">
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s6">
+            <label>Suburb </label>
+            <input ng-model="project.package.location.suburb" type="text">
+          </div>
+          <div class="input-field col s6">
+            <label>Postcode </label>
+            <input ng-model="project.package.location.postcode" type="text">
+          </div>
+        </div>
+        <div clas="row">
+          <div class="input-field col s12">
+            <label>Email: </label>
+            <input name="email" ng-model="project.package.to" required type="text"
+                   ng-class="{'invalid' : form.email.$invalid && submitted}">
+            <p class="validate-message" ng-if=" form.email.$error.required && submitted">Email is required</p>
+          </div>
+          <!--<div class="input-field col s12" ng-if="currentTeam.type == 'builder'">-->
+            <!--<angucomplete-alt id="ex1"-->
+                                    <!--pause="100"-->
+                                    <!--placeHolder="Home owner email"-->
+                                    <!--selected-object="project.email"-->
+                                    <!--local-data="homeOwnerTeamMember"-->
+                                    <!--search-fields="email"-->
+                                    <!--title-field="email"-->
+                                    <!--minlength="1"-->
+                                    <!--input-changed="inputChanged"-->
+                                    <!--template-url="/my-custom-template.html"-->
+                                    <!--input-class="col s12"></angucomplete-alt>-->
+          <!--</div>-->
+          <!--<div class="input-field col s12" ng-if="currentTeam.type == 'homeOwner'">-->
+            <!--<angucomplete-alt id="ex1"-->
+                                    <!--pause="100"-->
+                                    <!--placeHolder="Home builder email"-->
+                                    <!--selected-object="project.email"-->
+                                    <!--local-data="homeBuilderTeamMember"-->
+                                    <!--search-fields="email"-->
+                                    <!--title-field="email"-->
+                                    <!--minlength="1"-->
+                                    <!--input-changed="inputChanged"-->
+                                    <!--template-url="/my-custom-template.html"-->
+                                    <!--input-class="col s12"></angucomplete-alt>-->
+          <!--</div>-->
+        </div>
+        <div clas="row">
+          <div class="input-field col s12">
+            <p>Project Subscription of $50 per Month </p>
+            <p>Credit Card Number (Field to be invalid)  </p>
+
+            <p>NOTE: This project is Free as we are currently running in Beta.  </p>
+          </div>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="waves-effect waves-light btn modal-action">Create project</button>
+      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
+    </div>
+  </form>
 </div>
 
 <script type="text/ng-template" id="/my-custom-template.html">
