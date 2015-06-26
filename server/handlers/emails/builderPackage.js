@@ -22,22 +22,22 @@ EventBus.onSeries('BuilderPackage.Inserted', function(request, next) {
       to: request.to.email
     });
     packageInvite.save(function(err) {
-      console.log(err);
       Mailer.sendMail('invite-' + request.to.type + '-has-no-account.html', request.to.email, {
         project: request.project,
         registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
         subject: 'Invite ' + subjectType + ' send quote for ' + request.name
       },function(err){
+        console.log(err);
         next();
       });
     });
-  }
-  else {
+  } else {
     Mailer.sendMail('invite-'+ request.to.type + '.html', user.email, {
       project: request.project,
       link: config.baseUrl + request.project._id + '/dashboard',
       subject: 'Invite ' + subjectType + ' send quote for ' + request.name
     },function(err){
+      console.log(err);
       next();
     });
   }

@@ -24,7 +24,6 @@ angular.module('buiiltApp')
                   .then(function(res) {
                     $scope.currentTeam = res;
                     $scope.projects = $scope.currentTeam.project;
-
                     contractorService.getProjectForContractor({'id': $scope.user._id}, function(result) {
                      $scope.projectsContractor = result;
                     });
