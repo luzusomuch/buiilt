@@ -209,7 +209,6 @@ angular.module('buiiltApp')
   $scope.signupAndSendQuoteContractor = function () {
     $scope.user.idParams = $stateParams.id;
     $scope.user.quoteRequest = $scope.quoteRequest;
-    console.log($scope.user);
     registryForContractorService.createUserForContractorRequest($scope.user).$promise.then(function(data) {
       $scope.user = {
         allowNewsletter: true
