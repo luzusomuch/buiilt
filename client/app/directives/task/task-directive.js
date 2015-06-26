@@ -27,7 +27,6 @@ angular.module('buiiltApp')
         $scope.isNew = true;
         $scope.filter = 'all';
         $scope.customFilter = {};
-        console.log($scope.currentProject);
         //Get Available assignee to assign to task
         var getAvailableAssignee = function(type) {
           switch(type) {

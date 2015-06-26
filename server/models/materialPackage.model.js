@@ -9,7 +9,7 @@ var EventBus = require('./../components/EventBus');
 var MaterialPackageSchema = new Schema({
   owner: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'Team',
     required: true
   },
   type: String,
