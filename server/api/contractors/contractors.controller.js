@@ -28,7 +28,7 @@ exports.createContractorPackage = function (req, res, next) {
   var to = [];
   var contractorPackage = new ContractorPackage({
     owner: req.body.team,
-    packageType: 'contractor',
+    type: 'contractor',
     name: req.body.contractor.name,
     descriptions: req.body.contractor.descriptions,
     project: req.body.project,

@@ -68,7 +68,7 @@ var BuilderPackageSchema = new Schema({
 BuilderPackageSchema.plugin(packagePlugin);
 
 BuilderPackageSchema.pre('save', function(next) {
-  this.packageType = 'BuilderPackage';
+  this.type = 'BuilderPackage';
 
   next();
 });

@@ -12,7 +12,7 @@ var ContractorPackageSchema = new Schema({
     ref: 'User',
     required: true
   },
-  packageType: String,
+  type: String,
   project: {
     type: Schema.Types.ObjectId,
     ref: 'Project',

@@ -76,7 +76,7 @@ angular.module('buiiltApp').directive('addon', function(){
             //send variation
             $scope.variation = {};
             $scope.sendVariation = function() {
-                addOnPackageService.sendVariation({id: $scope.package._id, packageType: $scope.package.packageType, variation: $scope.variation})
+                addOnPackageService.sendVariation({id: $scope.package._id, packageType: $scope.package.type, variation: $scope.variation})
                 .$promise.then(function(data) {
                     $scope.variations = data;
                     $scope.package.variations = data.variations;
@@ -89,7 +89,7 @@ angular.module('buiiltApp').directive('addon', function(){
             //send defect
             $scope.defect = {};
             $scope.sendDefect = function() {
-                addOnPackageService.sendDefect({id: $scope.package._id, packageType: $scope.package.packageType, defect: $scope.defect})
+                addOnPackageService.sendDefect({id: $scope.package._id, packageType: $scope.package.type, defect: $scope.defect})
                 .$promise.then(function(data) {
                     $scope.defects = data;
                     $scope.package.defects = data.defects;
@@ -163,7 +163,7 @@ angular.module('buiiltApp').directive('addon', function(){
                     alert('Please review your quote');
                 }
                 else {
-                    addOnPackageService.sendInvoice({id: $scope.package._id, packageType: $scope.package.packageType, invoice: $scope.invoice, rate: $scope.lineWithRates, price: $scope.lineWithPrices}).$promise.then(function(data){
+                    addOnPackageService.sendInvoice({id: $scope.package._id, packageType: $scope.package.type, invoice: $scope.invoice, rate: $scope.lineWithRates, price: $scope.lineWithPrices}).$promise.then(function(data){
                         $scope.invoices = data;
                         $scope.package.invoices = data.invoices;
                         alert('You have send invoice successfully!');

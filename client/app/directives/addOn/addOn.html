@@ -1,6 +1,6 @@
 <div class="col s5">
   <!-- when package type is builder package -->
-    <ul class="card collection" ng-if="package.packageType == 'BuilderPackage'">
+    <ul class="card collection" ng-if="package.type == 'BuilderPackage'">
      <div class="card-header">
        <div class="row">
          <div class="col s6">
@@ -59,7 +59,7 @@
      </ul>
 
      <!-- when package type is contractor -->
-     <ul class="card collection" ng-if="package.packageType == 'contractor'">
+     <ul class="card collection" ng-if="package.type == 'contractor'">
          <div class="card-header">
              <div class="row">
                  <div class="col s6">
@@ -129,7 +129,7 @@
      </ul>
 
   <!-- when package type is material -->
-     <ul class="card collection" ng-if="package.packageType == 'material'">
+     <ul class="card collection" ng-if="package.type == 'material'">
            <div class="card-header">
                <div class="row">
                    <div class="col s6">
@@ -182,6 +182,8 @@
              </div>
        </ul>
  </div> 
+
+ 
 
 <div id="modal_attachDefect" class="modal modal-fixed-footer">
   <form method="POST" ng-submit="sendDefect()" >

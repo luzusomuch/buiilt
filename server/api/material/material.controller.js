@@ -28,7 +28,7 @@ exports.createMaterialPackage = function (req, res, next) {
   var to = [];
   var materialPackage = new MaterialPackage({
     owner: req.user._id,
-    packageType: 'material',
+    type: 'material',
     name: req.body.material.name,
     dateStart: req.body.material.dateStart,
     project: req.body.project,

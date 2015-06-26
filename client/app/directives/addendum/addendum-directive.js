@@ -21,7 +21,7 @@ angular.module('buiiltApp').directive('addendum', function(){
 
             $scope.sendAddendum = function() {
                 addOnPackageService.sendAddendum({id: $scope.package._id, 
-                    packageType: $scope.package.packageType, description: $scope.addendum, 
+                    packageType: $scope.package.type, description: $scope.addendum, 
                     addendumScope: $scope.addendumsScope})
                 .$promise.then(function(data) {
                     $scope.addendums = data;
