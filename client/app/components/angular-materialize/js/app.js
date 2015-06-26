@@ -38,7 +38,7 @@ var app = angular.module('materializeApp', ['ui.materialize'])
         $scope.today = 'Today';
         $scope.clear = 'Clear';
         $scope.close = 'Close';
-        1$scope.onStart = function () {
+        $scope.onStart = function () {
             console.log('onStart');
         };
         $scope.onRender = function () {
