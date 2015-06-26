@@ -104,7 +104,7 @@ angular.module('buiiltApp').controller('ContractorsCtrl',
             $scope.contractor = {
               descriptions : []
             };
-          $('#newContractorPackage').closeModal();
+            $('#newContractorPackage').closeModal();
         });
       }
     };

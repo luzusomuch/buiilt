@@ -31,7 +31,7 @@ var TaskSchema = new Schema({
   },
   type : {
     type : String,
-    enum : ['staff','contractor','builder']
+    enum : ['staff','contractor','builder','material']
   },
   assignees: [{
     type: Schema.Types.ObjectId,

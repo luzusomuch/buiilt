@@ -1,38 +1,44 @@
 <div class="row" style="margin-top: 18px">
-  <ul class="collapsible popout col s12" data-collapsible="accordion">
-    <li>
-      <div class="collapsible-header active"><i class=""></i>Contractor package in Progress</div>
-      <div class="collapsible-body" style="background-color: #FFF; padding:10px">
-        <p class="col s12">Package name : <span class="highlight">{{contractorRequest.name}}</span></p>
-        <p class="col s12">Scope of Work : </p>
-        <ul style="margin-left: 50px">
-          <li ng-repeat="description in contractorRequest.descriptions">{{description}}</li>
-        </ul>
-        <p class="col s12">Contractor team: <span class="highlight">{{contractorRequest.winnerTeam._id.name}}</span></p>
-        <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="member in contractorRequest.winnerTeam._id.member">
-          {{member._id.email}}
+  <h5 class="col s8">Contractor Package in Progress</h5>
+ <div class="col s4" style="margin-top:15px">
+   <a class='dropdown-button btn-flat right tooltipped' data-position="top" data-delay="1" data-tooltip="Attach..." href='#'
+      data-activates='itemActions' dropdown data-beloworigin="true" data-constrainwidth="false">
+      <i class="mdi-navigation-more-vert"></i>
+   </a>
+
+   <!-- Dropdown Structure -->
+   <ul id='itemActions' class='dropdown-content'>
+     <li><a class="modal-trigger" href="#modal_attachVariation">Attach Variation</a></li>
+     <li ng-if="currentTeam.type == 'buider'"><a class="modal-trigger" href="#modal_attachDefect">Attach Defect</a></li>
+     <li><a class="modal-trigger" href="#modal_attachDocument">Attach Document</a></li>
+     <li ng-if="currentTeam.type == 'contractor'"><a class="modal-trigger" href="#attachInvoice">Attach Invoice</a></li>
+   </ul>
+ </div>
+</div>
+<div class="row">
+  <div class="col s12">
+    <ul class="collapsible" data-collapsible="accordion">
+      <li>
+        <div class="collapsible-header"><i class=""></i>Details</div>
+        <div class="collapsible-body" style="background-color: #FFF; padding:10px">
+          <p class="col s12">Package name : <span class="highlight">{{contractorRequest.name}}</span></p>
+          <p class="col s12">Scope of Work : </p>
+          <ul style="margin-left: 50px">
+            <li ng-repeat="description in contractorRequest.descriptions">{{description}}</li>
+          </ul>
+          <p class="col s12">Contractor team: <span class="highlight">{{contractorRequest.winnerTeam._id.name}}</span></p>
+          <p class="col s12">Member: </p>
+          <div class="card col " style="padding: 5px; margin-left: 10px" ng-repeat="leader in contractorRequest.winnerTeam._id.leader">
+            {{leader.email}}
+          </div>
+          <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="member in contractorRequest.winnerTeam._id.member">
+            {{member._id.email}}
+          </div>
         </div>
-        <p  class="col s12">
-
-          <button class="btn waves-effect waves-light" type="submit" name="action">Complete this package</button>
-        </p>
-      </div>
-    </li>
-  </ul>
-   <!--<div class="col s1" style="margin-top:15px">-->
-     <!--<a class='dropdown-button btn-flat right tooltipped' data-position="top" data-delay="1" data-tooltip="Attach..." href='#'-->
-        <!--data-activates='itemActions' dropdown data-beloworigin="true" data-constrainwidth="false">-->
-        <!--<i class="mdi-navigation-more-vert"></i>-->
-     <!--</a>-->
-
-     <!-- Dropdown Structure -->
-     <ul id='itemActions' class='dropdown-content'>
-       <li><a class="modal-trigger" href="#modal_attachVariation">Attach Variation</a></li>
-       <li ng-if="currentTeam.type == 'buider'"><a class="modal-trigger" href="#modal_attachDefect">Attach Defect</a></li>
-       <li><a class="modal-trigger" href="#modal_attachDocument">Attach Document</a></li>
-       <li ng-if="currentTeam.type == 'contractor'"><a class="modal-trigger" href="#attachInvoice">Attach Invoice</a></li>
-     </ul>
-   </div>
+      </li>
+    </ul>
+  </div>
+</div>
 
            
            <div class="row">

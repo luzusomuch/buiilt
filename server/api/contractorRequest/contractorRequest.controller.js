@@ -13,14 +13,18 @@ exports.findOne = function(req, res) {
     ContractorPackage.findById(req.params.id)
       .populate('project')
       .populate('winnerTeam._id')
+      .populate('owner')
       .exec(function(err, contractorPackage) {
         if (err) {
           return res.send(500, err);
         }
 
-        User.populate(contractorPackage, [{
-            path : 'winnerTeam._id.member._id'
-        },{path : 'winnerTeam._id.leader'}],function(err,_contractorPackage) {
+        User.populate(contractorPackage, [
+          {path : 'winnerTeam._id.member._id'},
+          {path : 'winnerTeam._id.leader'},
+          {path : 'owner.member._id'},
+          {path : 'owner.leader'}
+        ],function(err,_contractorPackage) {
           if (err) {
             return res.send(500, err);
           }

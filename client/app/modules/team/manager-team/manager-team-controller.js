@@ -100,7 +100,6 @@ angular.module('buiiltApp')
           $scope.isLeader = true;
           getLocalData();
         }, function (err) {
-          console.log(err);
         });
       }
     };
@@ -123,7 +122,7 @@ angular.module('buiiltApp')
             $state.go($state.current, {}, {reload: true});
           })
       }
-    }
+    };
 
     $scope.addNewMember = function(){
       teamService.addMember({id: $scope.currentTeam._id},$scope.member.emails).$promise
@@ -133,20 +132,17 @@ angular.module('buiiltApp')
           getLocalData();
 
         }, function(err){
-          console.log(err);
         }
       );
     };
 
     $scope.removeMember = function(member){
-      console.log(member);
       if (confirm("Are you sure you want to remove this member")) {
         teamService.removeMember({id: $scope.currentTeam._id}, member).$promise
           .then(function (team) {
             $scope.currentTeam = team;
             getLocalData();
           }, function (err) {
-            console.log(err);
           });
       }
     };
@@ -157,20 +153,17 @@ angular.module('buiiltApp')
           .then(function (team) {
             $scope.currentTeam = team;
           }, function (err) {
-            console.log(err);
           });
       }
     };
 
     $scope.accept = function(invitation) {
-      console.log(invitation._id);
       if (confirm("Are you sure you want to join this team")) {
         teamService.acceptTeam({_id: invitation._id}).$promise
           .then(function (res) {
             $scope.currentTeam = res;
             getLocalData();
           }, function (err) {
-            console.log(err);
           });
       }
     };
@@ -182,7 +175,6 @@ angular.module('buiiltApp')
             $scope.invitations.splice(index, 1);
             getLocalData();
           }, function (err) {
-            console.log(err);
           });
       }
     }

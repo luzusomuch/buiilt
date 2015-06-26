@@ -17,192 +17,37 @@
 </div>
 
 <div class="row">
-   <p class="col s12">{{materialRequest.description}} </p>
+  <div class="col s12">
+    <ul class="collapsible" data-collapsible="accordion">
+      <li>
+        <div class="collapsible-header"><i class=""></i>Details</div>
+        <div class="collapsible-body" style="background-color: #FFF; padding:10px">
+          <p class="col s12">Package name : <span class="highlight">{{materialRequest.name}}</span></p>
+          <p class="col s12">Scope of Work : </p>
+          <ul style="margin-left: 50px">
+            <li ng-repeat="description in materialRequest.descriptions">{{description}}</li>
+          </ul>
+          <p class="col s12">Requirements : </p>
+          <ul style="margin-left: 50px">
+            <li ng-repeat="requirement in materialRequest.requirements"><span class="highlight">{{requirement.description}} : </span>{{requirement.quantity}}</li>
+          </ul>
+          <p class="col s12">Supplier team: <span class="highlight">{{materialRequest.winnerTeam._id.name}}</span></p>
+          <p class="col s12">Member: </p>
+          <div class="card col " style="padding: 5px; margin-left: 10px" ng-repeat="leader in materialRequest.winnerTeam._id.leader">
+            {{leader.email}}
+          </div>
+          <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="member in materialRequest.winnerTeam._id.member">
+            {{member._id.email}}
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
 </div>
 
-<div class="row">
-   <div class="col s7">
-       <ul class="card collection">
-           <div class="card-header">
-               <div class="row">
-                   <div class="col s10" style="padding-top: 15px">
-                       <a class="btn-flat" style="font-size: 12px">All Tasks</a>
-                       <a class="btn-flat" style="font-size: 12px">My Tasks</a>
-                       <a class="btn-flat" style="font-size: 12px">Completed Tasks</a>
-                   </div>
-                   <div class="col s2">
-                       <a class='dropdown-button btn-flat btn-flat right activator' style="margin-top: 15px" href='#'>
-                           <i class=" mdi-content-add"></i>
-                       </a>
-                   </div>
-                </div>
-           </div>
-           <div class="divider"></div>
-             <div style="height:300px">
-                 <li class="collection-item">
-                     <div>
-                         <a href="#!" class="btn-flat" style="margin-top: -3px; font-size: 12px;">
-                             <i class="mdi-toggle-check-box-outline-blank"></i>
-                         </a>
-                         Alvin
-                         <a href="#!" class="btn-flat activator secondary-content" style="margin-top: -3px; font-size: 12px;">
-                             Edit
-                         </a>
-                     </div>
-                 </li>
-                 <li class="collection-item">
-                     <div>
-                         <a href="#!" class="btn-flat" style="margin-top: -3px; font-size: 12px;">
-                             <i class="mdi-toggle-check-box-outline-blank"></i>
-                         </a>
-                         Alvin
-                         <a href="#!" class="btn-flat activator secondary-content" style="margin-top: -3px; font-size: 12px;">
-                             Edit
-                         </a>
-                     </div>
-                 </li>
-                 <li class="collection-item">
-                     <div>
-                         <a href="#!" class="btn-flat" style="margin-top: -3px; font-size: 12px;">
-                             <i class="mdi-toggle-check-box-outline-blank"></i>
-                         </a>
-                         Alvin
-                         <a href="#!" class="btn-flat activator secondary-content" style="margin-top: -3px; font-size: 12px;">
-                             Edit
-                         </a>
-                     </div>
-                 </li>
-             </div>
-             
-           <div class="card-reveal">
-             <span class="card-title grey-text text-darken-4"><i class="mdi-navigation-close right"></i></span>
-             <form class="col s12">
-                    <div class="input-field col s12">
-                        <input id="task_description" type="text">
-                        <label for="ltask_description">Task</label>
-                   </div>
-              </form>
-           </div>
-       </ul>
-       
-   </div>
-   <addOn package="materialRequest" type="material"></addOn>
-   <!-- <div class="col s5">
-       <ul class="card collection">
-           <div class="card-header">
-               <div class="row">
-                   <div class="col s6">
-                       <a class='dropdown-button btn-flat' style="margin-top: 15px" href='#' data-gutter="15"
-                          data-activates='itemFilter' dropdown data-beloworigin="true" data-constrainwidth="false">
-                         ALL ITEMS<i class="mdi-navigation-arrow-drop-down"></i>
-                       </a>
-                         <ul id='itemFilter' class='dropdown-content' style="margin-top: 15px">
-                           <li><a ng-click="showDefects(); hideAll = true; showDefect = true; showDocument = false; showInvoice = false;">DEFECTS</a></li>
-                           <li><a ng-click="showInvoices(); hideAll = true; showInvoice = true; showDefect = false; showDocument = false;">INVOICES</a></li>
-                           <li><a ng-click="showDocument(); hideAll = true; showDocument = true; showDefect = false; showInvoice = false;">DOCUMENTS</a></li>
-                         </ul>
-                   </div>
-                   <div class="col s6">
-                       <a class='dropdown-button btn-flat btn-flat right' style="margin-top: 15px;" data-gutter="-30" href='#' data-activates='relatedActions' dropdown>
-                           <i class="mdi-navigation-more-vert"></i>
-                       </a>
-                        <ul id='relatedActions' class='dropdown-content' style="margin-top: 15px">
-                           <li ng-if="currentTeam.type == 'buider'"><a class="modal-trigger" href="#modal_attachDefect">Attach Defect</a></li>
-                           <li ng-if="currentTeam.type == 'supplier'"><a class="modal-trigger" href="#attachInvoice">Attach Invoice</a></li>
-                           <li><a class="modal-trigger" href="#modal_attachDocument">Attach Document</a></li>
-                        </ul>
-                   </div>
-               </div>
-           </div>
-           <div class="divider"></div>
-             <div style="height: 300px;" ng-hide="hideAll">
-             </div>
-             <div style="height: 300px" ng-show="showDefect" ng-if="defects">
-                 <li class="collection-item" ng-repeat="defect in defects.defects">{{defect.title}}</li>
-             </div>
-             <div style="height: 300px" ng-show="showInvoice" ng-if="invoices">
-                 <li class="collection-item" ng-repeat="invoice in invoices.invoices">{{invoice.title}} - Total {{invoice.total}}</li>
-             </div>
-             <div style="height: 300px" ng-show="showDocument" ng-if="files">
-                <li class="collection-item" ng-repeat="file in files">{{file.title}}</li>
-             </div>
-       </ul>
-   </div> -->
-</div>
 
 <div class="row">
-   <div class="col s12">
-       <ul class="card collection">
-           <div class="card-header">
-               <div class="row">
-                   <div class="col s6">
-                       <div class="col s6">
-                           <a class='dropdown-button btn-flat' data-gutter="5" style="margin-top: 15px" href='#'
-                              data-activates='threadSelector'  dropdown data-beloworigin="true">
-                             THREAD NAME<i class="mdi-navigation-arrow-drop-down"></i></a>
-                             <ul id='threadSelector' style="margin-top: 15px"  class='dropdown-content'>
-                               <li><a href="#!">THREAD 1<span class="new badge">4</span></a></li>
-                               <li><a href="#!">THREAD 2</a></li>
-                               <li><a href="#!">THREAD 3<span class="new badge">1</span></a></li>
-                             </ul>
-                       </div>
-                   </div>
-                   <div class="col s6">
-                       <a class='dropdown-button btn-flat btn-flat right' style="margin-top:15px" data-gutter="-30" href='#'
-                          data-activates='chatActions' dropdown data-beloworigin="true" data-constrainwidth="false">
-                           <i class="mdi-navigation-more-vert"></i>
-                       </a>
-                 
-                        <ul id='chatActions' class='dropdown-content' style="margin-top:15px">
-                           <li><a href="#!" class="activator">New Thread</a></li>
-                           <li><a href="#!">two</a></li>
-                           <li><a href="#!">three</a></li>
-                        </ul>
-                   </div>
-               </div>
-           </div>
-           <div class="divider"></div>
-           <div style="height: 500px">
-               
-             <li class="collection-item" ng-repeat="message in messages.messages">
-                 <div class="row valign-wrapper" style="margin-bottom: -5px">
-                     <a href="#!" class="btn-flat col s1">
-                         <i class="mdi-toggle-radio-button-on valign center-align" ></i>
-                     </a>
-                     
-                     <p class="col s9 valign">{{message.message}}</p>
-                     
-                     <img src="images/yuna.jpg" alt="" class="circle col s2 right valign center-align" />
-                 </div>
-             </li>
-           </div>
-           <div class="divider"></div>
-           <div class="col s12 card-footer" style="height: 150px">
-               <div class="row">
-                   <form class="col s10 offset-s1" ng-submit="sendMessage()">
-                       <div class="input-field col s9">
-                         <textarea id="textarea1" class="materialize-textarea" ng-model="message"></textarea>
-                         <label for="textarea1">Send a Message...</label>
-                       </div>
-                       <div class="input-field col s3">
-                           <button class="btn-large waves-effect waves-light" type="submit" style="margin-top: 47px" name="action">Send
-                             <i class="mdi-content-send right"></i>
-                           </button>
-                       </div>
-                   </form>
-               </div>
-           </div>
-           <div class="card-reveal">
-             <span class="card-title grey-text text-darken-4">New Thread<i class="mdi-navigation-close right"></i></span>
-             <form class="col s12">
-                    <div class="input-field col s12">
-                        <input id="thread_name" type="text">
-                        <label for="thread_name">Name</label>
-                   </div>
-              </form>
-           </div>
-       </ul>
-   </div>
+  <div task package="materialRequest" type="material"></div>
 </div>
 
 

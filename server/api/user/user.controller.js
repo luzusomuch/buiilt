@@ -36,7 +36,6 @@ exports.index = function (req, res) {
  */
 exports.create = function (req, res, next) {
   var acceptTeam = req.body.acceptTeam;
-
   UserValidator.validateNewUser(req, okay(next, function (data) {
     var newUser = new User(data);
     newUser.provider = 'local';
@@ -47,26 +46,27 @@ exports.create = function (req, res, next) {
       }
       //update project for user
       var token = jwt.sign({_id: user._id}, config.secrets.session, {expiresInMinutes: 60 * 5});
-      // Project.find({'user.email': req.body.email}, function (err, projects) {
-      //   if (err) {
-      //   }
-      //   else {
-      //     _.each(projects, function (project) {
-      //       if (project.type === 'FromBuilderToHomeOwner') {
-      //         User.findOne({'email': project.user.email},function(err, user) {
-      //           if (err) {return res.send(500, err);}
-      //           if (!user) {return res.send(404,err);}
-      //           else {
-      //             if (user.email === req.body.email && !project.user._id) {
-      //               project.user._id = user._id;
-      //               project.save();
-      //             }
-      //           }
-      //         });
-      //       }
-      //     });
-      //   }
-      // });
+      Project.find({'user.email': req.body.email}, function (err, projects) {
+        if (err) {
+        }
+        else {
+          _.each(projects, function (project) {
+            if (project.type === 'FromBuilderToHomeOwner') {
+              User.findOne({'email': project.user.email},function(err, user) {
+                if (err) {return res.send(500, err);}
+                if (!user) {return res.send(404,err);}
+                else {
+                  if (user.email === req.body.email && !project.user._id) {
+                    project.user._id = user._id;
+                    project.save();
+                  }
+                }
+              });
+            }
+          });
+        }
+      });
+
       if (acceptTeam) {
         var team = req.body.invite.team;
         //update teams for group user
@@ -94,10 +94,28 @@ exports.create = function (req, res, next) {
 
             });
           })
+      } else if (acceptTeam == false) {
+        Team.update({'member.email': req.body.email},
+          {"$set" : {
+            "member.$._id" : user._id,
+            "member.$.status" : 'Reject'
+          }}, function(err) {
+            if (err) {
+              return res.send(500, err);
+            }
+            newUser.emailVerified = true;
+            newUser.save(function () {
+              TeamInvite.remove({_id: req.body.invite._id}, function (err) {
+                if (err) {
+                  return res.send(500, err);
+                }
+                return res.json({token: token, emailVerified: true});
+              });
+            })
+          })
       } else {
         return res.json({token: token,emailVerified : false});
       }
-
     });
   }));
 };

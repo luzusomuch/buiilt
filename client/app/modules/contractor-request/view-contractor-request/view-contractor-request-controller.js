@@ -32,7 +32,6 @@ angular.module('buiiltApp')
     $scope.emailsPhone.push({email: $scope.user.newEmail, phoneNumber: $scope.user.newPhoneNumber});
     $scope.user.newEmail = null;
     $scope.user.newPhoneNumber = null;
-    console.log($scope.emailsPhone);
   };
 
   $scope.removeUser = function(index) {

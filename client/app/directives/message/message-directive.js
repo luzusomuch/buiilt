@@ -41,6 +41,17 @@ angular.module('buiiltApp')
                   $scope.available.push(leader);
                 });
                 break;
+              case 'material' :
+                $scope.available = [];
+                _.forEach($scope.package.winnerTeam._id.member,function(member) {
+                  if (member.status == 'Active') {
+                    $scope.available.push(member._id);
+                  }
+                });
+                _.forEach($scope.package.winnerTeam._id.leader,function(leader) {
+                  $scope.available.push(leader);
+                });
+                break;
               default :
                 break
             }
@@ -111,6 +122,7 @@ angular.module('buiiltApp')
             messageService.sendMessage({id : $scope.currentThread._id, type : $scope.type},$scope.message).$promise
               .then(function(res) {
                 $scope.currentThread = res;
+                updateThread();
                 $scope.message.text = '';
               });
           };
