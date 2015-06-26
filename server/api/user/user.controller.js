@@ -342,10 +342,7 @@ exports.changePassword = function (req, res, next) {
 
 exports.changePhoneNum = function(req, res, next) {
   var userId = req.user._id;
-  console.log(userId);
-  console.log(req.body.phoneNumber);
   var phoneNumber = String(req.body.phoneNumber);
-  console.log(phoneNumber);
   User.findById(userId, function(err, user) {
     user.phoneNumber = phoneNumber;
     user.save(function(err) {
