@@ -11,7 +11,6 @@ angular.module('buiiltApp').directive('upload', function(){
             package: '='
         },
         controller: function($scope, $state, $cookieStore, $stateParams, $rootScope, $location, fileService, packageService, userService, projectService, FileUploader, documentService) {
-
             $scope.errors = {};
             $scope.success = {};
             $scope.formData = {
@@ -60,7 +59,7 @@ angular.module('buiiltApp').directive('upload', function(){
                     formData: [$scope.formData]
                 });
             }
-            else if($scope.package._id) {
+            else if($scope.package && $scope.package != '') {
                 var uploader = $scope.uploader = new FileUploader({
                     url: 'api/uploads/'+ $scope.package._id + '/file',
                     headers : {

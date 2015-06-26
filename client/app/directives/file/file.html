@@ -1,30 +1,18 @@
-<!-- <div ng-if="documents || documents == null || documents == ''" ng-repeat="document in documents">
-    <div class="col s4">
-        <div class="card">
-            <div class="card-image">
-                <img src="../../media/img/sample-1.jpg" alt="">
-            </div>
-            <div class="card-action">
-                <p>{{document.name}} <span><em>Revision {{document.version}} of #</em></span></p>
-                <a href='#' class="activator">Upload Revision</a>
-            </div>
-            <div class="card-reveal">
-                <span class="card-title grey-text text-darken-4">{{document.name}} <i class="mdi-navigation-close right"></i></span>
-                <form action="#">
-                    <upload document-id="document._id"></upload>
-                </form>
-            </div>
-        </div>
-    </div>
-</div> -->
+
 <div ng-repeat="file in files">
     <div class="col s4">
         <div class="card">
-            <div class="card-image" ng-if="file.mimeType == 'image/jpeg' || file.mimeType =='image/png'">
+            <div class="card-image" ng-switch="file.mimeType">
+              {{file.mimeType}}
+              <span ng-switch-when="image/jpeg">
                 <img src="../../media/img/{{file._id}}-{{file.title}}" alt="">
-            </div>
-            <div class="card-image" ng-if="file.mimeType != 'image/jpeg' || file.mimeType !='image/png'">
+              </span>
+              <span ng-switch-when="image/png">
+                <img src="../../media/img/{{file._id}}-{{file.title}}" alt="">
+              </span>
+              <span ng-switch-default>
                 <img src="../../media/img/sample-1.jpg" alt="">
+              </span>
             </div>
             <div class="card-action">
                 <p>{{file.title}} <span><em>Revision {{file.version}} of #</em></span></p>
@@ -32,9 +20,40 @@
             </div>
             <div class="card-reveal">
                 <span class="card-title grey-text text-darken-4">{{file.title}} <i class="mdi-navigation-close right"></i></span>
-                <form action="#">
-                    <upload file-id="file._id"></upload>
-                </form>
+                    <form ng-submit="uploadAll()">
+                        <div class="file-field input-field">
+                          <div class="btn tooltipped" data-position="top" data-delay="1" data-tooltip="Attach a File">
+                            <i class="mdi-editor-attach-file"></i>
+                            <input type="file" nv-file-select="" uploader="uploader"/>
+                          </div>
+                        </div>
+                        <div class="file-field input-field" style="display:none;">
+                            <input type="text" value="{{file._id}}" ng-model="file.fileId">
+                        </div>
+                        <div ng-show="uploader.queue.length" class="form-group">
+                          <div ng-repeat="item in uploader.queue">
+                            <div class="row">
+                              <div class="input-field col s8 offset-s2">
+                                <input type="text" ng-model="item.file.name">
+                                <label for="">File name</label>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s8 offset-s2">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="input-field col s8 offset-s2">
+                            <textarea class="materialize-textarea" ng-model="formData.desc" id="textarea1" required></textarea>
+                            <label for="">Description</label>
+                          </div>
+                          <button class="btn waves-effect waves-light" ng-click="getFileId(file._id)" type="submit" name="action">Save
+                            <i class="mdi-content-send"></i>
+                          </button>
+                        </div>
+                    </form>
             </div>
         </div>
     </div>
