@@ -4,7 +4,8 @@ angular.module('buiiltApp').directive('addendum', function(){
         restrict: 'EA',
         templateUrl: 'app/directives/addendum/addendum.html',
         scope: {
-            package: '='
+            package: '=',
+            type: '@'
         },
         controller: function($scope,addOnPackageService) {
             $scope.addendum = {};
@@ -21,7 +22,7 @@ angular.module('buiiltApp').directive('addendum', function(){
 
             $scope.sendAddendum = function() {
                 addOnPackageService.sendAddendum({id: $scope.package._id, 
-                    packageType: $scope.package.type, description: $scope.addendum, 
+                    packageType: $scope.type, description: $scope.addendum, 
                     addendumScope: $scope.addendumsScope})
                 .$promise.then(function(data) {
                     $scope.addendums = data;
