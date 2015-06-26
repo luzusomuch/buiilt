@@ -22,7 +22,8 @@ angular.module('buiiltApp')
     password : '',
     repassword : '',
     allowNewsletter: true,
-    type: 'homeOwner'
+    type: 'homeOwner',
+    acceptTeam : false
   };
   $scope.acceptTeam = false
   $scope.hasInviteToken = ($stateParams.teamInviteToken) ? true : false;
@@ -39,9 +40,10 @@ angular.module('buiiltApp')
   $scope.signup = function (form) {
     $scope.submitted = true;
     if (form.$valid) {
-      if ($scope.user.acceptTeam) {
+      if ($scope.inviteData) {
         $scope.user.invite = $scope.inviteData;
       }
+
 
       authService.createUser($scope.user).then(function (data) {
         //show alert

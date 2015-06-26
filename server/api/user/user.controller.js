@@ -36,7 +36,6 @@ exports.index = function (req, res) {
  */
 exports.create = function (req, res, next) {
   var acceptTeam = req.body.acceptTeam;
-
   UserValidator.validateNewUser(req, okay(next, function (data) {
     var newUser = new User(data);
     newUser.provider = 'local';
@@ -67,6 +66,10 @@ exports.create = function (req, res, next) {
       //     });
       //   }
       // });
+
+
+
+
       if (acceptTeam) {
         var team = req.body.invite.team;
         //update teams for group user
@@ -94,10 +97,28 @@ exports.create = function (req, res, next) {
 
             });
           })
+      } else if (acceptTeam == false) {
+        Team.update({'member.email': req.body.email},
+          {"$set" : {
+            "member.$._id" : user._id,
+            "member.$.status" : 'Reject'
+          }}, function(err) {
+            if (err) {
+              return res.send(500, err);
+            }
+            newUser.emailVerified = true;
+            newUser.save(function () {
+              TeamInvite.remove({_id: req.body.invite._id}, function (err) {
+                if (err) {
+                  return res.send(500, err);
+                }
+                return res.json({token: token, emailVerified: true});
+              });
+            })
+          })
       } else {
         return res.json({token: token,emailVerified : false});
       }
-
     });
   }));
 };

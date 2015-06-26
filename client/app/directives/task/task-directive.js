@@ -10,6 +10,7 @@ angular.module('buiiltApp')
     controller:
       function($scope,$rootScope,taskService, authService,filterFilter, $cookieStore, $stateParams, $rootScope, $location , packageService, userService, projectService, FileUploader, documentService) {
         //Init Params
+
         $scope.currentProject = $rootScope.currentProject;
         authService.getCurrentUser().$promise.then(function(res) {
            $scope.currentUser = res;
@@ -36,16 +37,23 @@ angular.module('buiiltApp')
               break;
             case 'contractor' :
               $scope.available = [];
+              _.forEach($scope.currentTeam.member,function(member) {
+                if (member.status == 'Active') {
+                  $scope.available.push(member._id);
+                }
+              });
               if ($scope.currentTeam.type == 'contractor') {
-                _.forEach($scope.package.winnerTeam._id.member,function(member) {
-                  if (member.status == 'Active') {
-                    $scope.available.push(member._id);
-                  }
+                _.forEach($scope.package.owner.leader,function(leader) {
+                    $scope.available.push(leader);
                 });
               }
-              _.forEach($scope.package.winnerTeam._id.leader,function(leader) {
+              console.log($scope.currentTeam.type);
+              console.log($scope.currentTeam.type == 'builder' );
+              if ($scope.currentTeam.type == 'builder') {
+                _.forEach($scope.package.winnerTeam._id.leader,function(leader) {
                   $scope.available.push(leader);
-              });
+                });
+              }
               $scope.available = _.union($scope.available,$scope.currentTeam.leader);
               break;
             case 'material' :
@@ -97,6 +105,11 @@ angular.module('buiiltApp')
           $scope.task = angular.copy(task);
           getAvailableAssignee($scope.type);
           _.forEach($scope.task.assignees,function(item) {
+            if (!_.find($scope.available,{_id : item._id})) {
+              item.canRevoke = false;
+            } else {
+              item.canRevoke = true;
+            }
             _.remove($scope.available,{_id : item._id});
           });
           $scope.isNew = false;
@@ -105,6 +118,7 @@ angular.module('buiiltApp')
 
         //Assign people to task
         $scope.assign = function(staff,index) {
+          staff.canRevoke = true;
           $scope.task.assignees.push(staff);
           $scope.available.splice(index,1);
         };

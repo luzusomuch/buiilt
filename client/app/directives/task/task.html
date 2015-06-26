@@ -56,7 +56,7 @@
         <div class="row current-assign">
           <p style="">Current Assignee's:</p>
           <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="assignee in task.assignees">
-            {{assignee.email}} <span><a href="#!" ng-click="revoke(assignee,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
+            {{assignee.email}} <span  ng-show ="assignee.canRevoke" ><a href="#!" ng-click="revoke(assignee,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
           </div>
         </div>
 
