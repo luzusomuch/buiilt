@@ -55,6 +55,8 @@ exports.createContractorPackage = function (req, res, next) {
         Team.findOne({$or:[{'leader': user._id}, {'member._id': user._id}]}, function(err, team){
           if (err) {return res.send(500, err);}
           else {
+            team.project.push(req.body.project);
+            team.save();
             to.push({
               _id: team._id,
               email: emailPhone.email,
@@ -69,6 +71,7 @@ exports.createContractorPackage = function (req, res, next) {
     if (err) {return res.send(500,err);}
     else {
       contractorPackage.to = to;
+      contractorPackage._ownerUser = req.user;
       contractorPackage.save(function(err, saved){
         if (err) {return res.send(500,err);}
         else {

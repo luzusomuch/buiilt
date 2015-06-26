@@ -45,6 +45,26 @@
          </div>
        </div>
        
+       <div class="row" ng-if="package.addendums">
+         <div class="col s12">
+           <div class="row" ng-repeat="addendum in package.addendums">
+                <h6>{{addendum.description}}</h6>
+                <h6>Addendum scope</h6>
+                <table>
+                   <thead>
+                      <th>Description</th>
+                      <th>Quantity</th>
+                   </thead>
+                   <tbody>
+                     <tr ng-repeat="addendumScope in addendum.addendumsScope">
+                       <td>{{addendumScope.description}}</td>
+                       <td>{{addendumScope.quantity}}</td>
+                     </tr>
+                   </tbody>
+                </table>
+              </div>
+         </div>
+       </div>
      
     </div>
   <div class="divider"></div>

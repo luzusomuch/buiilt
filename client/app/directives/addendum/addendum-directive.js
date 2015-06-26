@@ -26,7 +26,7 @@ angular.module('buiiltApp').directive('addendum', function(){
                     addendumScope: $scope.addendumsScope})
                 .$promise.then(function(data) {
                     $scope.addendums = data;
-                    $scope.contractorRequest = data;
+                    $scope.package = data;
                     $scope.addendum = {};
                     alert('Send Addendum successfully!');
                 });

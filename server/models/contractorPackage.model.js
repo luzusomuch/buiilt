@@ -122,22 +122,37 @@ var ContractorPackageSchema = new Schema({
 /**
  * Pre-save hook
  */
+ContractorPackageSchema.post( 'init', function() {
+  this._original = this.toJSON();
+});
+
 ContractorPackageSchema
 .pre('save', function(next) {
+  this._modifiedPaths = this.modifiedPaths();
   this.wasNew = this.isNew;
-
+  this.editUser = this._editUser;
+  this.ownerUser = this._ownerUser;
+  this.quote = this._quote;
   if (!this.isNew){
     this.updatedAt = new Date();
   } else {
     this.packageInviteToken = crypto.randomBytes(20).toString('hex');
   }
-
   next();
 });
 
 ContractorPackageSchema.post('save', function (doc) {
   var evtName = this.wasNew ? 'ContractorPackage.Inserted' : 'ContractorPackage.Updated';
-
+  if (this._modifiedPaths) {
+    doc._modifiedPaths = this._modifiedPaths
+  }
+  if (this._original) {
+    doc._oldContractor = this._original.to.slice(0);
+    doc._newInvitation = this._original.newInvitation.slice(0);
+  }
+  doc.ownerUser = this._ownerUser;
+  doc.editUser = this._editUser;
+  doc.quote = this._quote;
   EventBus.emit(evtName, doc);
 });
 

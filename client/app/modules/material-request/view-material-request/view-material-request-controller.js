@@ -12,7 +12,7 @@ angular.module('buiiltApp')
   }
 
   $scope.user = {};
-
+  $scope.toSupplier = {};
   $scope.message = {};
 
   materialRequestService.getQuoteRequestByMaterialPackge({'id':$stateParams.packageId}).$promise.then(function(data){
@@ -25,9 +25,9 @@ angular.module('buiiltApp')
   });
 
   $scope.addUser = function() {
-    $scope.emailsPhone.push({email: $scope.newEmail, phoneNumber: $scope.newPhoneNumber});
-    $scope.newEmail = null;
-    $scope.newPhoneNumber = null;
+    $scope.emailsPhone.push({email: $scope.toSupplier.newEmail, phoneNumber: $scope.toSupplier.newPhoneNumber});
+    $scope.toSupplier.newEmail = null;
+    $scope.toSupplier.newPhoneNumber = null;
   };
 
   $scope.removeUser = function(index) {

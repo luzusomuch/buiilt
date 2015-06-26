@@ -3,7 +3,6 @@
     <div class="col s4">
         <div class="card">
             <div class="card-image" ng-switch="file.mimeType">
-              {{file.mimeType}}
               <span ng-switch-when="image/jpeg">
                 <img src="../../media/img/{{file._id}}-{{file.title}}" alt="">
               </span>
@@ -27,13 +26,10 @@
                             <input type="file" nv-file-select="" uploader="uploader"/>
                           </div>
                         </div>
-                        <div class="file-field input-field" style="display:none;">
-                            <input type="text" value="{{file._id}}" ng-model="file.fileId">
-                        </div>
                         <div ng-show="uploader.queue.length" class="form-group">
                           <div ng-repeat="item in uploader.queue">
                             <div class="row">
-                              <div class="input-field col s8 offset-s2">
+                              <div class="input-field col s8 offset-s2" style="margin-top: 65px;">
                                 <input type="text" ng-model="item.file.name">
                                 <label for="">File name</label>
                               </div>
@@ -45,7 +41,7 @@
                           </div>
                         </div>
                         <div class="row">
-                          <div class="input-field col s8 offset-s2">
+                          <div class="input-field col s8 offset-s2" style="margin-top: 25px">
                             <textarea class="materialize-textarea" ng-model="formData.desc" id="textarea1" required></textarea>
                             <label for="">Description</label>
                           </div>

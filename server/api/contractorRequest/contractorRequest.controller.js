@@ -206,6 +206,9 @@ exports.sendQuote =function(req, res) {
                           }
                         }
                       });
+                      contractorPackage._quote = saved.total;
+                      contractorPackage._editUser = req.user;
+                      contractorPackage.markModified('sendQuote');
                       contractorPackage.save(function(err, savedContractorPackage){
                         if (err) {return res.send(500,err);}
                         else {
@@ -277,6 +280,8 @@ exports.sendInvitationInContractor = function(req, res) {
             else {
               contractorPackage.to = to;
               contractorPackage.newInvitation = newContractor;
+              contractorPackage._ownerUser = req.user;
+              contractorPackage.markModified('inviteContractor');
               contractorPackage.save(function(err, saved){
                 if (err) {return res.send(500,err);}
                 else {

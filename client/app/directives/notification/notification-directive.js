@@ -11,6 +11,8 @@ angular.module('buiiltApp')
           fromUser : '<span class="highlight">{{notification.fromUser.email}}</span> ',
           toUser : '<span class="highlight">{{notification.toUser.email}}</span>',
           element : '<span class="highlight">{{notification.element.name}}</span> ',
+          quote: '<span class="highlight">{{notification.element.quote}}</span> ',
+          packageName: '<span class="highlight">{{notification.element.package.name}}</span> ',
           time : '<span class="highlight">{{notification.createdAt | date : "yyyy/MM/dd hh:mm a"}}</span>'
         };
 
@@ -26,6 +28,12 @@ angular.module('buiiltApp')
         }
         if (scope.notification.type === 'taskCompleted') {
           text = params.fromUser + ' has completed task ' + params.element + ' at ' + params.time;
+        }
+        if (scope.notification.type === 'CreateContractorPackage') {
+          text = params.fromUser + ' has invited ' + params.toUser + 'to send a quote for ' + params.element.name;
+        }
+        if (scope.notification.type === 'SendQuoteToContractorPackage') {
+          text = params.fromUser + ' has send quote ' + params.quote + ' to ' + params.toUser + ' in ' + param.packageName;
         }
         text += ' Click <a href="#!" ng-click="goToDetail(notification)">here</a> for more infomation';
         element.html(text).show();

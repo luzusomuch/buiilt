@@ -90,7 +90,6 @@ angular.module('buiiltApp').directive('file', function(){
                     //  $scope.formData.tags.push(tag.text);
                     //});
                     item.formData.push($scope.formData);
-                    console.log(fileId);
                 };
 
                 var hideModalAfterUploading = false;
