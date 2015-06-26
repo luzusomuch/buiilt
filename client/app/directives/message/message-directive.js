@@ -25,6 +25,15 @@ angular.module('buiiltApp')
           //Get Available assignee to assign to task
           var getAvailableUser = function(type) {
             switch(type) {
+              case 'builder' :
+                $scope.available = [];
+                _.forEach($scope.currentProject.owner.member,function(member) {
+                  if (member.status == 'Active') {
+                    $scope.available.push(member._id);
+                  }
+                });
+                $scope.available = _.union($scope.available,$scope.currentProject.owner.leader);
+                break;
               case 'staff' :
                 $scope.available =  angular.copy($scope.package.staffs);
                 $scope.available = _.union($scope.available,$scope.currentTeam.leader);

@@ -27,10 +27,19 @@ angular.module('buiiltApp')
         $scope.isNew = true;
         $scope.filter = 'all';
         $scope.customFilter = {};
-
+        console.log($scope.currentProject);
         //Get Available assignee to assign to task
         var getAvailableAssignee = function(type) {
           switch(type) {
+            case 'builder' :
+              $scope.available = [];
+              _.forEach($scope.currentProject.owner.member,function(member) {
+                if (member.status == 'Active') {
+                  $scope.available.push(member._id);
+                }
+              });
+              $scope.available = _.union($scope.available,$scope.currentProject.owner.leader);
+              break;
             case 'staff' :
               $scope.available =  angular.copy($scope.package.staffs);
               $scope.available = _.union($scope.available,$scope.currentTeam.leader);
@@ -47,8 +56,6 @@ angular.module('buiiltApp')
                     $scope.available.push(leader);
                 });
               }
-              console.log($scope.currentTeam.type);
-              console.log($scope.currentTeam.type == 'builder' );
               if ($scope.currentTeam.type == 'builder') {
                 _.forEach($scope.package.winnerTeam._id.leader,function(leader) {
                   $scope.available.push(leader);
@@ -58,14 +65,21 @@ angular.module('buiiltApp')
               break;
             case 'material' :
               $scope.available = [];
-              _.forEach($scope.package.winnerTeam._id.member,function(member) {
+              _.forEach($scope.currentTeam.member,function(member) {
                 if (member.status == 'Active') {
                   $scope.available.push(member._id);
                 }
               });
-              _.forEach($scope.package.winnerTeam._id.leader,function(leader) {
-                $scope.available.push(leader);
-              });
+              if ($scope.currentTeam.type == 'supplier') {
+                _.forEach($scope.package.owner.leader,function(leader) {
+                  $scope.available.push(leader);
+                });
+              }
+              if ($scope.currentTeam.type == 'builder') {
+                _.forEach($scope.package.winnerTeam._id.leader,function(leader) {
+                  $scope.available.push(leader);
+                });
+              }
               $scope.available = _.union($scope.available,$scope.currentTeam.leader);
               break;
             default :

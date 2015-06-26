@@ -1,6 +1,6 @@
 <div class="col-md-12" ui-view>
   <div class="col s3">
-     <a ng-if="currentTeam.type == 'buider'" class="dropdown-button btn-large col s12" href="#!" data-activates="createNew" dropdown data-gutter="15" style="margin-top: 8px; margin-bottom: 15px">Create New</a>
+     <a ng-if="currentTeam.type == 'builder'" class="dropdown-button btn-large col s12" href="#!" data-activates="createNew" dropdown data-gutter="15" style="margin-top: 8px; margin-bottom: 15px">Create New</a>
       <ul id="createNew" class="dropdown-content" style="margin-top: 15px">
         <li><a class="modal-trigger" href="#newContractorPackage">Contractor Package</a></li>
         <li><div class="divider"></div></li>
@@ -18,8 +18,8 @@
   <div class="col s9">
     <div class="collection z-depth-1">
       <span ng-repeat="contractorPackage in contractorPackages | filter : filter">
-        <a class="collection-item" ng-if="currentTeam.type == 'buider' && contractorPackage.isAccept" ui-sref='contractorRequest.contractorPackageInProcess({id: contractorPackage.project, packageId: contractorPackage._id})'>#{{$index + 1}} -  {{contractorPackage.name}}<span class="new badge">{{contractorPackage.__v}}</span></a>
-        <a class="collection-item" ng-if="currentTeam.type == 'buider' && !contractorPackage.isAccept" ui-sref='contractorRequest.viewContractorRequest({id: contractorPackage.project, packageId: contractorPackage._id})'>#{{$index + 1}} -  {{contractorPackage.name}}<span class="new badge">{{contractorPackage.__v}}</span></a>
+        <a class="collection-item" ng-if="currentTeam.type == 'builder' && contractorPackage.isAccept" ui-sref='contractorRequest.contractorPackageInProcess({id: contractorPackage.project, packageId: contractorPackage._id})'>#{{$index + 1}} -  {{contractorPackage.name}}<span class="new badge">{{contractorPackage.__v}}</span></a>
+        <a class="collection-item" ng-if="currentTeam.type == 'builder' && !contractorPackage.isAccept" ui-sref='contractorRequest.viewContractorRequest({id: contractorPackage.project, packageId: contractorPackage._id})'>#{{$index + 1}} -  {{contractorPackage.name}}<span class="new badge">{{contractorPackage.__v}}</span></a>
         <a class="collection-item" ng-if="currentTeam.type == 'contractor' && contractorPackage.isAccept" ui-sref='contractorRequest.contractorPackageInProcess({id: contractorPackage.project, packageId: contractorPackage._id})'>#{{$index + 1}} -  {{contractorPackage.name}}<span class="new badge">{{contractorPackage.__v}}</span></a>
         <a class="collection-item" ng-if="currentTeam.type == 'contractor' && !contractorPackage.isAccept" ui-sref='contractorRequest.sendQuote({id: contractorPackage.project, packageId: contractorPackage._id})'>#{{$index + 1}} -  {{contractorPackage.name}}<span class="new badge">{{contractorPackage.__v}}</span></a>
       </span>

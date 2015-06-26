@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('ClientCtrl', function($scope, $rootScope, $timeout, $q, buiderPackageRequest) {
+angular.module('buiiltApp').controller('ClientCtrl', function($scope, $rootScope, $timeout, $q, builderPackageRequest) {
     $scope.currentProject = $rootScope.currentProject;
-    $scope.buiderPackageRequest = buiderPackageRequest;
+    $scope.builderPackageRequest = builderPackageRequest;
 });

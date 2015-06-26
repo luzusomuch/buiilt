@@ -7,7 +7,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
     hasCurrentProject : true,
     authenticate : true,
     resolve: {
-        buiderPackageRequest: function(builderPackageService, $stateParams) {
+      builderPackageRequest: function(builderPackageService, $stateParams) {
             return builderPackageService.findDefaultByProject($stateParams.id);
         }
     }

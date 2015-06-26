@@ -293,7 +293,15 @@ exports.show = function(req, res){
   .exec(function(err, project){
     if(err){ return res.send(500, err); }
     else {
-      return res.json(project);
+      User.populate(project, [
+        {path : 'owner.member._id'},
+        {path : 'owner.leader'}
+      ],function(err,_project) {
+        if (err) {
+          return res.send(500, err);
+        }
+        return res.json(_project);
+      })
     }
   });
 };

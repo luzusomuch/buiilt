@@ -14,9 +14,12 @@ exports.findOne = function(req, res) {
       .populate('project').exec(function(err, materialPackage) {
         if (err) {return res.send(500, err);}
         else {
-          User.populate(materialPackage, [{
-            path : 'winnerTeam._id.member._id'
-          },{path : 'winnerTeam._id.leader'}],function(err,_materialPackage) {
+          User.populate(materialPackage, [
+            {path : 'winnerTeam._id.member._id'},
+            {path : 'winnerTeam._id.leader'},
+            {path : 'owner.member._id'},
+            {path : 'owner.leader'}
+          ],function(err,_materialPackage) {
             if (err) {
               return res.send(500, err);
             }
