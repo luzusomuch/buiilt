@@ -76,10 +76,10 @@ angular.module('buiiltApp')
         if (data.emailVerified == true) {
           $cookieStore.put('token', data.token);
           currentUser = userService.get();
-          if (data.package.packageType === 'contractor') {
+          if (data.package.type === 'contractor') {
             $state.go('contractorRequest.sendQuote', {id:data.package.project, packageId: data.package._id});  
           }
-          else if (data.package.packageType === 'material') {
+          else if (data.package.type === 'material') {
             $state.go('materialRequest.sendQuote', {id: data.package.project, packageId: data.package._id});
           }
           else if (data.package.type === 'BuilderPackage') {
