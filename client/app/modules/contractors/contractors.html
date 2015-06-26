@@ -1,347 +1,311 @@
-<div class="col-md-12" ui-view>
-  <div class="col s3">
-     <a ng-if="currentTeam.type == 'builder'" class="dropdown-button btn-large col s12" href="#!" data-activates="createNew" dropdown data-gutter="15" style="margin-top: 8px; margin-bottom: 15px">Create New</a>
-      <ul id="createNew" class="dropdown-content" style="margin-top: 15px">
-        <li><a class="modal-trigger" href="#newContractorPackage">Contractor Package</a></li>
-        <li><div class="divider"></div></li>
-        <li><a class="modal-trigger" href="#newWorkPackage">Work Package</a></li>
-        <li><a class="modal-trigger" href="#newMaterialPackage">Material Package</a></li>
-      </ul>
 
-     <div class="collection" >
-       <a href="#!" ng-click="filter = {isAccept : true}" class="collection-item" ng-class="{'active' : filter.isAccept}">In Progress<span class="new badge">{{contractorsInProcess.length}}</span></a>
-       <a href="#!" ng-click="filter = {isAccept : false}" class="collection-item" ng-class="{'active' : !filter.isAccept}">In Tender<span class="new badge">{{contractorsInTender.length}}</span></a>
-       <a href="#!" class="collection-item">Completed</a>
-     </div>
+<div class="col s3">
+   <a ng-if="currentTeam.type == 'builder'" class="dropdown-button btn-large col s12" href="#!" data-activates="createNew" dropdown data-gutter="15" style="margin-top: 8px; margin-bottom: 15px">Create New</a>
+    <ul id="createNew" class="dropdown-content" style="margin-top: 15px">
+      <li><a class="modal-trigger" href="#newContractorPackage">Contractor Package</a></li>
+      <li><div class="divider"></div></li>
+      <li><a class="modal-trigger" href="#newWorkPackage">Work Package</a></li>
+      <li><a class="modal-trigger" href="#newMaterialPackage">Material Package</a></li>
+    </ul>
+
+   <div class="collection"  >
+     <a href="#!" ng-click="filter = {isAccept : true}" class="collection-item" ng-class="{'active' : filter.isAccept}">In Progress<span class="new badge">{{contractorsInProcess.length}}</span></a>
+     <a href="#!" ng-click="filter = {isAccept : false}" class="collection-item" ng-class="{'active' : !filter.isAccept}">In Tender<span class="new badge">{{contractorsInTender.length}}</span></a>
+     <a href="#!" class="collection-item">Completed</a>
    </div>
+ </div>
 
-  <div class="col s9">
-    <div class="collection z-depth-1">
-      <span ng-repeat="contractorPackage in contractorPackages | filter : filter">
-        <a class="collection-item" ng-if="currentTeam.type == 'builder' && contractorPackage.isAccept" ui-sref='contractorRequest.contractorPackageInProcess({id: contractorPackage.project, packageId: contractorPackage._id})'>#{{$index + 1}} -  {{contractorPackage.name}}<span class="new badge">{{contractorPackage.__v}}</span></a>
-        <a class="collection-item" ng-if="currentTeam.type == 'builder' && !contractorPackage.isAccept" ui-sref='contractorRequest.viewContractorRequest({id: contractorPackage.project, packageId: contractorPackage._id})'>#{{$index + 1}} -  {{contractorPackage.name}}<span class="new badge">{{contractorPackage.__v}}</span></a>
-        <a class="collection-item" ng-if="currentTeam.type == 'contractor' && contractorPackage.isAccept" ui-sref='contractorRequest.contractorPackageInProcess({id: contractorPackage.project, packageId: contractorPackage._id})'>#{{$index + 1}} -  {{contractorPackage.name}}<span class="new badge">{{contractorPackage.__v}}</span></a>
-        <a class="collection-item" ng-if="currentTeam.type == 'contractor' && !contractorPackage.isAccept" ui-sref='contractorRequest.sendQuote({id: contractorPackage.project, packageId: contractorPackage._id})'>#{{$index + 1}} -  {{contractorPackage.name}}<span class="new badge">{{contractorPackage.__v}}</span></a>
-      </span>
-    </div>
+<div class="col s9">
+  <div class="collection z-depth-1">
+    <span ng-repeat="contractorPackage in contractorPackages | filter : filter">
+      <a class="collection-item" ng-if="currentTeam.type == 'builder' && contractorPackage.isAccept" ui-sref='contractorRequest.contractorPackageInProcess({id: contractorPackage.project, packageId: contractorPackage._id})'>#{{$index + 1}} -  {{contractorPackage.name}}<span class="new badge">{{contractorPackage.__v}}</span></a>
+      <a class="collection-item" ng-if="currentTeam.type == 'builder' && !contractorPackage.isAccept" ui-sref='contractorRequest.viewContractorRequest({id: contractorPackage.project, packageId: contractorPackage._id})'>#{{$index + 1}} -  {{contractorPackage.name}}<span class="new badge">{{contractorPackage.__v}}</span></a>
+      <a class="collection-item" ng-if="currentTeam.type == 'contractor' && contractorPackage.isAccept" ui-sref='contractorRequest.contractorPackageInProcess({id: contractorPackage.project, packageId: contractorPackage._id})'>#{{$index + 1}} -  {{contractorPackage.name}}<span class="new badge">{{contractorPackage.__v}}</span></a>
+      <a class="collection-item" ng-if="currentTeam.type == 'contractor' && !contractorPackage.isAccept" ui-sref='contractorRequest.sendQuote({id: contractorPackage.project, packageId: contractorPackage._id})'>#{{$index + 1}} -  {{contractorPackage.name}}<span class="new badge">{{contractorPackage.__v}}</span></a>
+    </span>
   </div>
+</div>
 </div>
 
 <div id="newContractorPackage" class="modal modal-fixed-footer">
-    <div class="modal-content">
-    <form method="post" name="form" ng-submit="createContractorPackage(form)" novalidate>
-       <div class="row">
-         <div class="col s12">
-           <h5>New Contractor Package</h5>
-         </div>
-       </div>
-       <!-- <div class="row">
-         <div class="input-field col s12">
-           <select class="browser-default" ng-model="contractor.project" ng-options="project._id as project.name for project in projects">
-            <option value="" selected>Select project</option>
-           </select>
-         </div>
-       </div> -->
-       <div class="row">
-         <div class="input-field col s12">
-           <input id="project_name" name="name" type="text" class="validate" ng-model="contractor.name" required
-                  ng-class="{'invalid' : form.name.$invalid && submitted}">
-           <label for="project_name">Contractor Package Title</label>
-           <p class="validate-message" ng-if="form.name.$error.required && submitted">Pacakge name is required</p>
-         </div>
-       </div>
-       <div class="row">
-         <div class="input-field col s6">
-             <select material-select ng-model="contractor.category">
-               <option value="" disabled selected>Category</option>
-               <option value="1">Option 1</option>
-               <option value="2">Option 2</option>
-               <option value="3">Option 3</option>
-             </select>
-             <label>Category</label>
-         </div>
-         <div class="input-field col s6">
-            <label for="date_required" class="active">Date Required</label>
-            <input type="date"
-              ng-model="contractor.dateStart"
-              format="mm/dd/yyyy"/>
-         </div>
-       </div>
-      <div class="row">
-        <div class="col s12">
-          <ul class="collection z-depth-1">
-            <li class="collection-item vlalign-wrapper">
-              <div class="row form" style="margin-bottom: 0px">
-                <div class="col s12"><p>Enter work descriptions below:</p></div>
-                <div class="input-field col s10">
-                  <textarea id="description" class="materialize-textarea" ng-model="description" ng-class="{'invalid' : descriptionError}"></textarea>
-                  <label for="description" class="">Description</label>
-                  <p class="validate-message" ng-if="descriptionError">Scope of work at least 1 item</p>
-                </div>
-                <div class="valign col s2">
-                  <button class="btn" type="button" name="action" style="margin-top: 78px" ng-click="addDescription(description)">Add</button>
-                </div>
-              </div>
-            </li>
-            <li class="collection-item vlalign" ng-repeat="description in contractor.descriptions track by $index">
-              <div class="row" style="margin-bottom: 0px">
-                <div class="col s10">
-                  <p>{{description}}</p>
-                </div>
-                <div class="col s2">
-                  <button class="btn-flat btn-flat" ng-click="removeDescription($index)">Remove</button>
-                </div>
-              </div>
-            </li>
-
-          </ul>
-        </div>
-      </div>
-
-       <div class="row">
-         <div class="col s12">
-           <ul class="collection z-depth-1">
-            <li class="collection-item vlalign-wrapper">
-              <div class="row form" style="margin-bottom: 0px">
-                <div class="col s12"><p>Enter tradesmen's details below:</p></div>
-                <p class="validate-message" ng-if="trademenError">Tradesmen's details at least 1 item</p>
-                <div class="input-field col s7">
-                    <!-- <input id="email_address" ng-model="newEmail" type="email" name="email" class="validate"> -->
-                    <angucomplete-alt id="ex1"
-                                  pause="100"
-                                  selected-object="member.email"
-                                  local-data="contractorTeamMember"
-                                  search-fields="email"
-                                  title-field="email"
-                                  minlength="1"
-                                  input-changed="inputChanged"
-                                  template-url="/my-custom-template.html"
-                                  input-class="col s12"></angucomplete-alt>
-                </div>
-                <div class="input-field col s3">
-                    <input id="phone_number" ng-model="newPhoneNumber" type="text" name="phoneNumber" class="validate">
-                    <label for="phone_number">Phone Number</label>
-                </div>
-                <div class="valign col s2">
-                  <a href="#" ng-click="addUser()" class="btn" style="margin-top: 28px">Add</a>
-                  <!-- <button class="btn" type="submit" ng-submit="addUser()" name="action" style="margin-top: 28px">Add</button> -->
-                </div>
-              </div>
-            </li>
-
-            <li class="collection-item vlalign" ng-repeat="emailPhone in member.emailsPhone">
-              <div class="row" style="margin-bottom: 0px">
-                <div class="col s7">{{emailPhone.email}}</div>
-                <div class="col s3">{{emailPhone.phoneNumber}}</div>
-                <div class="col s2"><a class="btn-flat btn-flat" ng-click="removeUser($index)" >Remove</a></div>
-              </div>
-            </li>
-           </ul>
-         </div>
-       </div>
-
-
-
-       <!-- <div class="row">
-         <div class="col s12">
-          <ul class="collection z-depth-1">
-            <li class="collection-item vlalign-wrapper">
-              <div class="row form" style="margin-bottom: 0px">
-                <div class="col s12"><p>Enter tradesmen's details below:</p></div>
-                <div class="input-field col s7">
-                        <input id="email_address" type="text" class="validate">
-                        <label for="email_address">Email</label>
-                    </div>
-                <div class="input-field col s3">
-                        <input id="phone_number" type="text" class="validate">
-                        <label for="phone_number">Phone Number</label>
-                    </div>
-                <div class="valign col s2">
-                  <button class="btn" type="submit" name="action" style="margin-top: 28px">Add</button>
-                </div>
-              </div>
-            </li>
-              <li class="collection-item vlalign"><div class="row" style="margin-bottom: 0px"><div class="col s7">someone@somedomain.com.au</div><div class="col s3">Phone Number</div><div class="col s2"><button class="btn-flat btn-flat">Remove</button></div></div></li>
-            <li class="collection-item vlalign"><div class="row" style="margin-bottom: 0px"><div class="col s7">someone@somedomain.com.au</div><div class="col s3">Phone Number</div><div class="col s2"><button class="btn-flat btn-flat">Remove</button></div></div></li>
-            </ul>
-         </div>
-       </div> -->
-       <div class="divider"></div>
-        <div class="modal-footer">
-          <button class="waves-effect waves-light btn modal-action">Create Package!</button>
-             <!-- <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Create Package!</a> -->
-         <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
-        </div>
-     </form>
+<form method="post" name="form" ng-submit="createContractorPackage(form)" novalidate>
+  <div class="row">
+    <div class="col s12">
+      <h5>New Contractor Package</h5>
     </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s12">
+      <input id="project_name" name="name" type="text" class="validate" ng-model="contractor.name" required
+             ng-class="{'invalid' : form.name.$invalid && submitted}">
+      <label for="project_name">Contractor Package Title</label>
+      <p class="validate-message" ng-if="form.name.$error.required && submitted">Pacakge name is required</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s6">
+      <select material-select ng-model="contractor.category">
+        <option value="" disabled selected>Category</option>
+        <option value="1">Option 1</option>
+        <option value="2">Option 2</option>
+        <option value="3">Option 3</option>
+      </select>
+      <label>Category</label>
+    </div>
+    <div class="input-field col s6">
+      <label for="date_required" class="active">Date Required</label>
+      <input type="date"
+             ng-model="contractor.dateStart"
+             format="mm/dd/yyyy"/>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col s12">
+      <ul class="collection z-depth-1">
+        <li class="collection-item vlalign-wrapper">
+          <div class="row form" style="margin-bottom: 0px">
+            <div class="col s12"><p>Enter work descriptions below:</p></div>
+            <div class="input-field col s10">
+              <textarea id="description" class="materialize-textarea" ng-model="description" ng-class="{'invalid' : descriptionError}"></textarea>
+              <label for="description" class="">Description</label>
+              <p class="validate-message" ng-if="descriptionError">Scope of work at least 1 item</p>
+            </div>
+            <div class="valign col s2">
+              <button class="btn" type="button" name="action" style="margin-top: 78px" ng-click="addDescription(description)">Add</button>
+            </div>
+          </div>
+        </li>
+        <li class="collection-item vlalign" ng-repeat="description in contractor.descriptions track by $index">
+          <div class="row" style="margin-bottom: 0px">
+            <div class="col s10">
+              <p>{{description}}</p>
+            </div>
+            <div class="col s2">
+              <button class="btn-flat btn-flat" ng-click="removeDescription($index)">Remove</button>
+            </div>
+          </div>
+        </li>
 
+      </ul>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col s12">
+      <ul class="collection z-depth-1">
+        <li class="collection-item vlalign-wrapper">
+          <div class="row form" style="margin-bottom: 0px">
+            <div class="col s12"><p>Enter tradesmen's details below:</p></div>
+            <p class="validate-message" ng-if="trademenError">Tradesmen's details at least 1 item</p>
+            <div class="input-field col s7">
+              <!-- <input id="email_address" ng-model="newEmail" type="email" name="email" class="validate"> -->
+              <angucomplete-alt id="ex1"
+                                pause="100"
+                                selected-object="member.email"
+                                local-data="contractorTeamMember"
+                                search-fields="email"
+                                title-field="email"
+                                minlength="1"
+                                input-changed="inputChanged"
+                                template-url="/my-custom-template.html"
+                                input-class="col s12"></angucomplete-alt>
+            </div>
+            <div class="input-field col s3">
+              <input id="phone_number" ng-model="newPhoneNumber" type="text" name="phoneNumber" class="validate">
+              <label for="phone_number">Phone Number</label>
+            </div>
+            <div class="valign col s2">
+              <a href="#" ng-click="addUser()" class="btn" style="margin-top: 28px">Add</a>
+              <!-- <button class="btn" type="submit" ng-submit="addUser()" name="action" style="margin-top: 28px">Add</button> -->
+            </div>
+          </div>
+        </li>
+
+        <li class="collection-item vlalign" ng-repeat="emailPhone in member.emailsPhone">
+          <div class="row" style="margin-bottom: 0px">
+            <div class="col s7">{{emailPhone.email}}</div>
+            <div class="col s3">{{emailPhone.phoneNumber}}</div>
+            <div class="col s2"><a class="btn-flat btn-flat" ng-click="removeUser($index)" >Remove</a></div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+<div class="modal-content">
+  <div class="modal-footer">
+    <button class="waves-effect waves-light btn modal-action">Create Package!</button>
+    <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
+  </div>
+</form>
 </div>
 
 <div id="newMaterialPackage" class="modal modal-fixed-footer">
-    <div class="modal-content">
-    <form>
-       <div class="row">
-         <div class="col s12">
-           <h5>New Material Package for Project Name</h5>
-         </div>
+  <div class="modal-content">
+  <form>
+     <div class="row">
+       <div class="col s12">
+         <h5>New Material Package for Project Name</h5>
        </div>
-       <div class="row">
-         <div class="input-field col s8">
-                 <input id="project_name" type="text" class="validate">
-                 <label for="project_name">Material Package Title</label>
-             </div>
-         <div class="input-field col s4">
-            <label for="date_required" class="active">Date Required</label>
-                  <input type="date" id="date_required">
-             </div>
-       </div>
-       <div class="row">
-         <div class="col s12">
-          <ul class="collection z-depth-1">
-            <li class="collection-item vlalign-wrapper">
-              <div class="row form" style="margin-bottom: 0px">
-                <div class="col s12"><p>Enter materials required below:</p></div>
-                <div class="input-field col s7">
-                   <textarea id="description" class="materialize-textarea"></textarea>
-                       <label for="description">Description</label>
-                    </div>
-                <div class="input-field col s3" style="margin-top: 67px">
-                        <input id="quantity" type="text" class="validate">
-                        <label for="quantity">Quantity</label>
-                    </div>
-                <div class="valign col s2">
-                  <button class="btn" type="submit" name="action" style="margin-top: 78px">Add</button>
-                </div>
+     </div>
+     <div class="row">
+       <div class="input-field col s8">
+               <input id="project_name" type="text" class="validate">
+               <label for="project_name">Material Package Title</label>
+           </div>
+       <div class="input-field col s4">
+          <label for="date_required" class="active">Date Required</label>
+                <input type="date" id="date_required">
+           </div>
+     </div>
+     <div class="row">
+       <div class="col s12">
+        <ul class="collection z-depth-1">
+          <li class="collection-item vlalign-wrapper">
+            <div class="row form" style="margin-bottom: 0px">
+              <div class="col s12"><p>Enter materials required below:</p></div>
+              <div class="input-field col s7">
+                 <textarea id="description" class="materialize-textarea"></textarea>
+                     <label for="description">Description</label>
+                  </div>
+              <div class="input-field col s3" style="margin-top: 67px">
+                      <input id="quantity" type="text" class="validate">
+                      <label for="quantity">Quantity</label>
+                  </div>
+              <div class="valign col s2">
+                <button class="btn" type="submit" name="action" style="margin-top: 78px">Add</button>
               </div>
-            </li>
-              <li class="collection-item vlalign"><div class="row" style="margin-bottom: 0px"><div class="col s7"><p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p></div><div class="col s3"><p>Quantity</p></div><div class="col s2"><button class="btn-flat btn-flat">Remove</button></div></div></li>
+            </div>
+          </li>
             <li class="collection-item vlalign"><div class="row" style="margin-bottom: 0px"><div class="col s7"><p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p></div><div class="col s3"><p>Quantity</p></div><div class="col s2"><button class="btn-flat btn-flat">Remove</button></div></div></li>
-            </ul>
-         </div>
+          <li class="collection-item vlalign"><div class="row" style="margin-bottom: 0px"><div class="col s7"><p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p></div><div class="col s3"><p>Quantity</p></div><div class="col s2"><button class="btn-flat btn-flat">Remove</button></div></div></li>
+          </ul>
        </div>
+     </div>
 
-       <div class="row">
-         <div class="col s12">
-          <ul class="collection z-depth-1">
-            <li class="collection-item vlalign-wrapper">
-              <div class="row form" style="margin-bottom: 0px">
-                <div class="col s12"><p>Enter supplier details below:</p></div>
-                <div class="input-field col s7">
-                        <input id="email_address" type="text" class="validate">
-                        <label for="email_address">Email</label>
-                    </div>
-                <div class="input-field col s3">
-                        <input id="phone_number" type="text" class="validate">
-                        <label for="phone_number">Phone Number</label>
-                    </div>
-                <div class="valign col s2">
-                  <button class="btn" type="submit" name="action" style="margin-top: 28px">Add</button>
-                </div>
+     <div class="row">
+       <div class="col s12">
+        <ul class="collection z-depth-1">
+          <li class="collection-item vlalign-wrapper">
+            <div class="row form" style="margin-bottom: 0px">
+              <div class="col s12"><p>Enter supplier details below:</p></div>
+              <div class="input-field col s7">
+                      <input id="email_address" type="text" class="validate">
+                      <label for="email_address">Email</label>
+                  </div>
+              <div class="input-field col s3">
+                      <input id="phone_number" type="text" class="validate">
+                      <label for="phone_number">Phone Number</label>
+                  </div>
+              <div class="valign col s2">
+                <button class="btn" type="submit" name="action" style="margin-top: 28px">Add</button>
               </div>
-            </li>
-              <li class="collection-item vlalign"><div class="row" style="margin-bottom: 0px"><div class="col s7">someone@somedomain.com.au</div><div class="col s3">Phone Number</div><div class="col s2"><button class="btn-flat btn-flat">Remove</button></div></div></li>
+            </div>
+          </li>
             <li class="collection-item vlalign"><div class="row" style="margin-bottom: 0px"><div class="col s7">someone@somedomain.com.au</div><div class="col s3">Phone Number</div><div class="col s2"><button class="btn-flat btn-flat">Remove</button></div></div></li>
-            </ul>
-         </div>
+          <li class="collection-item vlalign"><div class="row" style="margin-bottom: 0px"><div class="col s7">someone@somedomain.com.au</div><div class="col s3">Phone Number</div><div class="col s2"><button class="btn-flat btn-flat">Remove</button></div></div></li>
+          </ul>
        </div>
+     </div>
 
-     </form>
-    </div>
-  <div class="divider"></div>
-    <div class="modal-footer">
-         <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Create Package!</a>
-     <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
-    </div>
+   </form>
+  </div>
+<div class="divider"></div>
+  <div class="modal-footer">
+       <button href="#!" class="modal-action modal-close waves-effect waves-green btn modal-action">Create Package!</button>
+   <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
+  </div>
 </div>
 
 <div id="newWorkPackage" class="modal modal-fixed-footer">
-    <div class="modal-content">
-    <form>
-       <div class="row">
-         <div class="col s12">
-           <h5>New Work Package for Project Name</h5>
-         </div>
+  <div class="modal-content">
+  <form>
+     <div class="row">
+       <div class="col s12">
+         <h5>New Work Package for Project Name</h5>
        </div>
-       <div class="row">
-         <div class="input-field col s8">
-                 <input id="package_name" type="text" class="validate">
-                 <label for="package_name">Work Package Title</label>
-             </div>
-         <div class="input-field col s4">
-            <label for="commencement_date" class="active">Commencement Date</label>
-                  <input type="date" id="commencement_date">
-             </div>
-       </div>
+     </div>
+     <div class="row">
+       <div class="input-field col s8">
+               <input id="package_name" type="text" class="validate">
+               <label for="package_name">Work Package Title</label>
+           </div>
+       <div class="input-field col s4">
+          <label for="commencement_date" class="active">Commencement Date</label>
+                <input type="date" id="commencement_date">
+           </div>
+     </div>
 
-       <div class="row">
-         <div class="col s12">
-          <ul class="collection z-depth-1">
-            <li class="collection-item vlalign-wrapper">
-              <div class="row form" style="margin-bottom: 0px">
-                <div class="col s12"><p>Enter work descriptions below:</p></div>
-                <div class="input-field col s10">
-                   <textarea id="description" class="materialize-textarea"></textarea>
-                       <label for="description">Description</label>
-                    </div>
-                <div class="valign col s2">
-                  <button class="btn" type="submit" name="action" style="margin-top: 78px">Add</button>
-                </div>
+     <div class="row">
+       <div class="col s12">
+        <ul class="collection z-depth-1">
+          <li class="collection-item vlalign-wrapper">
+            <div class="row form" style="margin-bottom: 0px">
+              <div class="col s12"><p>Enter work descriptions below:</p></div>
+              <div class="input-field col s10">
+                 <textarea id="description" class="materialize-textarea"></textarea>
+                     <label for="description">Description</label>
+                  </div>
+              <div class="valign col s2">
+                <button class="btn" type="submit" name="action" style="margin-top: 78px">Add</button>
               </div>
-            </li>
-              <li class="collection-item vlalign"><div class="row" style="margin-bottom: 0px"><div class="col s10"><p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p></div><div class="col s2"><button class="btn-flat btn-flat">Remove</button></div></div></li>
+            </div>
+          </li>
             <li class="collection-item vlalign"><div class="row" style="margin-bottom: 0px"><div class="col s10"><p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p></div><div class="col s2"><button class="btn-flat btn-flat">Remove</button></div></div></li>
-            </ul>
-         </div>
+          <li class="collection-item vlalign"><div class="row" style="margin-bottom: 0px"><div class="col s10"><p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p></div><div class="col s2"><button class="btn-flat btn-flat">Remove</button></div></div></li>
+          </ul>
        </div>
+     </div>
 
-       <div class="row">
-         <div class="col s12">
-           <div class="card-panel">
-             <div class="chips">
-              <p class="col s12">Assigned To:</p>
-              <div class="chips-head row">
-                <div class="card col" style="padding: 5px; margin-left: 10px">
-                  Megan Smith <span><a href="#"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
-                </div>
-                <div class="card col" style="padding: 5px; margin-left: 10px">
-                  Tsvetko Metzger <span><a href="#"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
-                </div>
-                <div class="card col" style="padding: 5px; margin-left: 10px">
-                  Hector Simek <span><a href="#"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
-                </div>
+     <div class="row">
+       <div class="col s12">
+         <div class="card-panel">
+           <div class="chips">
+            <p class="col s12">Assigned To:</p>
+            <div class="chips-head row">
+              <div class="card col" style="padding: 5px; margin-left: 10px">
+                Megan Smith <span><a href="#"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
               </div>
-              <p class="col s12">Available Contacts</p>
-              <div class="row">
-                <div class="chips-contact col s2" style="padding: 5px; margin-left: 10px">
-                  <div class="chips-title">Marina Augustine</div>
-                  <div class="chips-text">m.augustine@example.com</div>
-                </div>
-                <div class="chips-contact col s2" style="padding: 5px; margin-left: 10px">
-                  <div class="chips-title">Nick Giannopoulos</div>
-                  <div class="chips-text">n.giannopoulos@example.com</div>
-                </div>
-                <div class="chips-contact col s2" style="padding: 5px; margin-left: 10px">
-                  <div class="chips-title">Narayana Garner</div>
-                  <div class="chips-text">n.garner@example.com</div>
-                </div>
-                <div class="chips-contact col s2" style="padding: 5px; margin-left: 10px">
-                  <div class="chips-title">Anita Gros</div>
-                  <div class="chips-text">a.gros@example.com</div>
-                </div>
-               </div>
+              <div class="card col" style="padding: 5px; margin-left: 10px">
+                Tsvetko Metzger <span><a href="#"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
+              </div>
+              <div class="card col" style="padding: 5px; margin-left: 10px">
+                Hector Simek <span><a href="#"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
+              </div>
+            </div>
+            <p class="col s12">Available Contacts</p>
+            <div class="row">
+              <div class="chips-contact col s2" style="padding: 5px; margin-left: 10px">
+                <div class="chips-title">Marina Augustine</div>
+                <div class="chips-text">m.augustine@example.com</div>
+              </div>
+              <div class="chips-contact col s2" style="padding: 5px; margin-left: 10px">
+                <div class="chips-title">Nick Giannopoulos</div>
+                <div class="chips-text">n.giannopoulos@example.com</div>
+              </div>
+              <div class="chips-contact col s2" style="padding: 5px; margin-left: 10px">
+                <div class="chips-title">Narayana Garner</div>
+                <div class="chips-text">n.garner@example.com</div>
+              </div>
+              <div class="chips-contact col s2" style="padding: 5px; margin-left: 10px">
+                <div class="chips-title">Anita Gros</div>
+                <div class="chips-text">a.gros@example.com</div>
+              </div>
              </div>
            </div>
          </div>
        </div>
+     </div>
 
-     </form>
-    </div>
-  <div class="divider"></div>
-    <div class="modal-footer">
-         <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Create Package!</a>
-     <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
-    </div>
-</div>
+   </form>
+  </div>
+<div class="divider"></div>
+  <div class="modal-footer">
+       <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Create Package!</a>
+   <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
+  </div>
+
 
 
 <script type="text/ng-template" id="/my-custom-template.html">

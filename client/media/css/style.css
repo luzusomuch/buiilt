@@ -114,3 +114,7 @@ span.disabled {
   background-color: #FFC107;
   color: #FFF;
 }
+
+.modal {
+  top : 5% !important;
+}

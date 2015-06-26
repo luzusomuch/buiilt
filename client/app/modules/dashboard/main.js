@@ -5,11 +5,6 @@ angular.module('buiiltApp').config(function($stateProvider) {
     templateUrl: '/app/modules/dashboard/dashboard.html',
     controller: 'DashboardCtrl',
     hasCurrentProject : true,
-    authenticate : true,
-    resolve : {
-      myTask : function(taskService) {
-        return taskService.myTask().$promise
-      }
-    }
+    authenticate : true
   });
 });

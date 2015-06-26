@@ -31,8 +31,6 @@ angular.module('buiiltApp')
                     
                     if ($stateParams.id) {
                       projectService.get({'id': $stateParams.id}).$promise.then(function(project) {
-
-
                         if (!project && project == null) {
                           var userId = $scope.user._id;
                           $scope.tabs = [{sref: 'team.manager', label: 'team manager'},
