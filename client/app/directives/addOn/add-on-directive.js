@@ -4,11 +4,18 @@ angular.module('buiiltApp').directive('addon', function(){
         restrict: 'EA',
         templateUrl: 'app/directives/addOn/addOn.html',
         scope: {
-            package: '='
+            package: '=',
+            type: '@'
         },
         controller: function($scope, $stateParams, authService,addOnPackageService, FileUploader, $cookieStore, fileService, contractorRequestService, materialRequestService) {
+            console.log($scope.type);
             $scope.allItemsText = 'All items';
+            authService.getCurrentUser().$promise.then(function(data){
+                $scope.currentUser = data;
+                $scope.isStaff = (_.find($scope.package.staffs,{_id: data._id})) ? true: false;
+            });
             $scope.currentTeam = authService.getCurrentTeam();
+            
             $scope.documents = [];
             fileService.getFileByStateParam({'id': $scope.package._id})
                 .$promise.then(function(data) {
@@ -16,6 +23,7 @@ angular.module('buiiltApp').directive('addon', function(){
             });
 
             $scope.showDocument = function() {
+                console.log('adasdads');
                 $scope.files = $scope.documents;
                 $scope.allItemsText = 'Documents';
             };
@@ -35,39 +43,7 @@ angular.module('buiiltApp').directive('addon', function(){
                 $scope.allItemsText = 'Invoices';
             };
 
-            // if ($scope.package.packageType == 'contractor') {
-            //     contractorRequestService.findOne({'id': $scope.package._id}).$promise.then(function(data){
-            //         $scope.contractorRequest = data;
-            //     });
-            //     $scope.showVariations = function() {
-            //         $scope.variations = $scope.contractorRequest;
-            //         $scope.allItemsText = 'Variations';
-            //     };
-
-            //     $scope.showDefects = function() {
-            //         $scope.defects = $scope.contractorRequest;
-            //         $scope.allItemsText = 'Defects';
-            //     };
-
-            //     $scope.showInvoices = function() {
-            //         $scope.invoices = $scope.contractorRequest;
-            //         $scope.allItemsText = 'Invoices';
-            //     };
-            // }
-            // else if($scope.package.packageType == 'material') {
-            //     materialRequestService.findOne({id: $scope.package._id}).$promise.then(function(data) {
-            //         $scope.materialRequest = data;
-            //     });
-            //     $scope.showDefects = function() {
-            //         $scope.defects = $scope.materialRequest;
-            //         $scope.allItemsText = 'Defects';
-            //     };
-
-            //     $scope.showInvoices = function() {
-            //         $scope.invoices = $scope.materialRequest;
-            //         $scope.allItemsText = 'Invoices';
-            //     };
-            // }
+            
             
             
             
@@ -76,7 +52,7 @@ angular.module('buiiltApp').directive('addon', function(){
             //send variation
             $scope.variation = {};
             $scope.sendVariation = function() {
-                addOnPackageService.sendVariation({id: $scope.package._id, packageType: $scope.package.type, variation: $scope.variation})
+                addOnPackageService.sendVariation({id: $scope.package._id, packageType: $scope.type, variation: $scope.variation})
                 .$promise.then(function(data) {
                     $scope.variations = data;
                     $scope.package.variations = data.variations;
@@ -89,7 +65,7 @@ angular.module('buiiltApp').directive('addon', function(){
             //send defect
             $scope.defect = {};
             $scope.sendDefect = function() {
-                addOnPackageService.sendDefect({id: $scope.package._id, packageType: $scope.package.type, defect: $scope.defect})
+                addOnPackageService.sendDefect({id: $scope.package._id, packageType: $scope.type, defect: $scope.defect})
                 .$promise.then(function(data) {
                     $scope.defects = data;
                     $scope.package.defects = data.defects;
@@ -163,7 +139,7 @@ angular.module('buiiltApp').directive('addon', function(){
                     alert('Please review your quote');
                 }
                 else {
-                    addOnPackageService.sendInvoice({id: $scope.package._id, packageType: $scope.package.type, invoice: $scope.invoice, rate: $scope.lineWithRates, price: $scope.lineWithPrices}).$promise.then(function(data){
+                    addOnPackageService.sendInvoice({id: $scope.package._id, packageType: $scope.type, invoice: $scope.invoice, rate: $scope.lineWithRates, price: $scope.lineWithPrices}).$promise.then(function(data){
                         $scope.invoices = data;
                         $scope.package.invoices = data.invoices;
                         alert('You have send invoice successfully!');

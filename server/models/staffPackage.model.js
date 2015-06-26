@@ -20,6 +20,33 @@ var StaffPackageSchema = new Schema({
     ref: 'User'
     //required: true
   }],
+  defects : [{
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    title: {type: String},
+    location: {type: String},
+    description: {type: String}
+  }],
+  invoices: [{
+    owner: {type: Schema.Types.ObjectId, ref: 'User'},
+    title: String,
+    quoteRate: [{
+      description: {type: String},
+      rate: {type: Number},
+      quantity: {type: Number},
+      subTotal: {type: Number},
+      total: {type: Number}
+    }],
+    quotePrice: [{
+      description: {type: String},
+      price: {type: Number},
+      quantity: {type: Number},
+      total: {type: Number}
+    }],
+    total: Number
+  }],
   defect:[],
   isComplete: { type: Boolean, default: false },
   status: { type: Boolean, default: true },

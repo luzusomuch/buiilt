@@ -132,6 +132,7 @@ angular.module('buiiltApp').directive('upload', function(){
             };
 
             uploader.onCompleteAll = function () {
+                alert('Upload successfully!');
                 if(hideModalAfterUploading){
                     // $modalInstance.close(newPhoto);
                 }

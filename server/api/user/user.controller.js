@@ -211,7 +211,7 @@ exports.createUserWithInviteToken = function(req, res, next) {
                         });
                       }
                     });
-                    builderPackage.owner = savedTeam._id;
+                    builderPackage.user = savedTeam._id;
                     builderPackage.save(function(err, saved){
                       if (err) {return res.send(500,err);}
                       else {
@@ -241,7 +241,7 @@ exports.createUserWithInviteToken = function(req, res, next) {
                         });
                       }
                     });
-                    builderPackage.owner = savedTeam._id;
+                    builderPackage.user = savedTeam._id;
                     builderPackage.save(function(err, saved){
                       if (err) {return res.send(500,err);}
                       else {

@@ -4,6 +4,7 @@ var ContractorPackage = require('./../../models/contractorPackage.model');
 var MaterialPackage = require('./../../models/materialPackage.model');
 var PackageInvite = require('./../../models/packageInvite.model');
 var BuilderPackage = require('./../../models/builderPackage.model');
+var StaffPackage = require('./../../models/staffPackage.model');
 var ValidateInvite = require('./../../models/validateInvite.model');
 var QuoteRequest = require('./../../models/quoteRequest.model');
 var User = require('./../../models/user.model');
@@ -64,7 +65,26 @@ exports.sendDefect = function(req, res) {
                 builderPackage.save(function(err, savedBuilderPackage){
                     if (err) {return res.send(500,err);}
                     else {
-                        return res.json(builderPackage);
+                        return res.json(savedBuilderPackage);
+                    }
+                });
+            }
+        });
+    }
+    else if (packageType == 'staffPackage') {
+        StaffPackage.findById(req.params.id, function(err, staffPackage){
+            if (err) {return res.send(500,err);}
+            else {
+                staffPackage.defects.push({
+                    owner: req.user._id,
+                    title: req.body.defect.title,
+                    location: req.body.defect.location,
+                    description: req.body.defect.description
+                });
+                staffPackage.save(function(err, savedStaffPackage){
+                    if (err) {return res.send(500,err);}
+                    else {
+                        return res.json(savedStaffPackage);
                     }
                 });
             }
@@ -306,6 +326,66 @@ exports.sendInvoice = function(req, res) {
                                 total: subTotal * 0.1 + subTotal
                             });
                             builderPackage.save(function(err, saved) {
+                                if (err) {return res.send(500,err);}
+                                else {
+                                    return res.json(200, saved);
+                                }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+    else if (packageType == 'staffPackage'){
+        StaffPackage.findById(req.params.id, function(err, staffPackage) {
+            if (err) {return res.send(500,err);}
+            else {
+                var quoteRate = [];
+                var quotePrice = [];
+                var subTotal = 0;
+                async.each(req.body.rate, function(rate, callback){
+                    if (rate !== null) {
+                        for (var i = 0; i < req.body.rate.length -1; i++) {
+                            quoteRate.push({
+                            description: rate.description[i],
+                            rate: rate.rate[i],
+                            quantity: rate.quantity[i],
+                            total: rate.rate[i] * rate.quantity[i]
+                        });
+                            subTotal += rate.rate[i] * rate.quantity[i];
+                        };
+                    }
+                    callback();
+                }, function(err) {
+                    if (err) {return res.send(500,err);}
+                    else {
+                      async.each(req.body.price, function(price, callback){
+                        if (price !== null) {
+                            for (var i = 0; i < req.body.price.length -1; i++) {
+                                quotePrice.push({
+                                    description: price.description[i],
+                                    price: price.price[i],
+                                    quantity: 1,
+                                    total: price.price[i]
+                                });
+                                subTotal += price.price[i] * 1;
+                            };
+                        }
+                        callback();
+                      }, function(err){
+                        if (err) {return res.send(500,err);}
+                        else {
+                            staffPackage.invoices.push({
+                                owner: req.user._id,
+                                title: req.body.invoice.title,
+                                quoteRate: quoteRate,
+                                quotePrice: quotePrice,
+                                subTotal: subTotal,
+                                total: subTotal * 0.1 + subTotal
+                            });
+                            staffPackage.save(function(err, saved) {
                                 if (err) {return res.send(500,err);}
                                 else {
                                     return res.json(200, saved);

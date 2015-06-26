@@ -21,9 +21,9 @@ angular.module('buiiltApp')
           $scope.available.push(member._id);
         }
       });
-      console.log($scope.available)
-      console.log($scope.currentUser._id)
-      _.remove($scope.available,{_id : $scope.currentUser._id});
+      // console.log($scope.available)
+      // console.log($scope.currentUser._id)
+      // _.remove($scope.available,{_id : $scope.currentUser._id});
     }
 
 
