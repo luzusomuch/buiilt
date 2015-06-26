@@ -53,6 +53,10 @@ exports.task = function(req,res,next) {
   })
 };
 
+exports.myTask = function(req,res) {
+  Task.find({})
+}
+
 exports.create = function(req,res) {
   var aPackage = req.aPackage;
   var user = req.user;

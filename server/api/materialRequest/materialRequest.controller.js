@@ -11,6 +11,7 @@ var async = require('async');
 exports.findOne = function(req, res) {
     MaterialPackage.findById(req.params.id)
       .populate('winnerTeam._id')
+      .populate('owner')
       .populate('project').exec(function(err, materialPackage) {
         if (err) {return res.send(500, err);}
         else {

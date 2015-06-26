@@ -33,10 +33,10 @@
           </ul>
           <p class="col s12">Supplier team: <span class="highlight">{{materialRequest.winnerTeam._id.name}}</span></p>
           <p class="col s12">Member: </p>
-          <div class="card col " style="padding: 5px; margin-left: 10px" ng-repeat="leader in materialRequest.winnerTeam._id.leader">
+          <div class="card col admin" style="padding: 5px; margin-left: 10px" ng-repeat="leader in materialRequest.winnerTeam._id.leader">
             {{leader.email}}
           </div>
-          <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="member in materialRequest.winnerTeam._id.member">
+          <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="member in materialRequest.winnerTeam._id.member" >
             {{member._id.email}}
           </div>
         </div>
@@ -48,6 +48,11 @@
 
 <div class="row">
   <div task package="materialRequest" type="material"></div>
+  <addOn package="materialRequest" type="material"></addOn>
+</div>
+
+<div class="row">
+  <div message package="materialRequest" type="material"></div>
 </div>
 
 

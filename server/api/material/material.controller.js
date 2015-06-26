@@ -27,7 +27,7 @@ exports.index = function (req, res) {
 exports.createMaterialPackage = function (req, res, next) {
   var to = [];
   var materialPackage = new MaterialPackage({
-    owner: req.user._id,
+    owner: req.user.team._id,
     type: 'material',
     name: req.body.material.name,
     descriptions : req.body.material.descriptions,

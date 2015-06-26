@@ -109,3 +109,12 @@ ul#chatActions {
 span.disabled {
     color : #b3b3b3
 }
+
+.card.admin, .card.admin a {
+  background-color: #FFC107;
+  color: #FFF;
+}
+
+.modal {
+  top : 5% !important;
+}
