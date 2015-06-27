@@ -2,6 +2,8 @@
 
 var User = require('./../../models/user.model');
 var Team = require('./../../models/team.model');
+var Task = require('./../../models/task.model');
+var StaffPackage = require('./../../models/staffPackage.model');
 var errorsHelper = require('../../components/helpers/errors');
 var ValidateInvite = require('./../../models/validateInvite.model');
 var TeamValidator = require('./../../validators/team');
@@ -174,9 +176,10 @@ exports.removeMember = function(req,res) {
           user.set('team', undefined);
           user.markModified('team');
           user.save(function(err) {
-            if (err)
+            if (err) {
               console.log(err);
-            callback();
+            }
+
           });
         })
       } else {
@@ -204,7 +207,7 @@ exports.removeMember = function(req,res) {
  */
 exports.invitation = function(req,res) {
   var user = req.user;
-  Team.find({'member._id' : user._id, 'member.status' : 'Pending'})
+  Team.find({'member' : {"$elemMatch": { "_id": user._id,  "status": 'Pending' }}})
     .populate('leader')
     .exec(function(err,teams) {
       if (err || !teams) {
@@ -264,7 +267,6 @@ exports.assignLeader = function(req,res) {
   var team = req.team;
 
   var member = team.member.id(req.body._id._id);
-  console.log(member);
   team.member.remove(member);
   team.leader.push(member);
   team.save(function(err) {
@@ -300,7 +302,17 @@ exports.leaveTeam = function(req,res) {
           if (err) {
             callback(err,null);
           }
-          callback(null,null)
+          Task.update({assignees : user._id},{'$pull' : {'assignees' : user._id}},function(err) {
+            if (err) {
+              callback(err,null);
+            }
+            StaffPackage.update({staffs : user._id},{'$pull' : {'staffs' : user._id}},function(err,team) {
+              if (err) {
+                callback(err,null);
+              }
+              callback(null,null)
+            });
+          })
         })
       } else {
         callback(null,null);
@@ -314,7 +326,17 @@ exports.leaveTeam = function(req,res) {
           if (err) {
             callback(err,null);
           }
-          callback(null,null);
+          Task.update({assignees : user._id},{'$pull' : {'assignees' : user._id}},function(err) {
+            if (err) {
+              callback(err,null);
+            }
+            StaffPackage.update({staffs : user._id},{'$pull' : {'staffs' : user._id}},function(err,team) {
+              if (err) {
+                callback(err,null);
+              }
+              callback(null,null)
+            });
+          })
         })
       } else {
         callback(null,null);

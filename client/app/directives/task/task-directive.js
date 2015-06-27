@@ -50,12 +50,12 @@ angular.module('buiiltApp')
                   $scope.available.push(member._id);
                 }
               });
-              if ($scope.currentTeam.type == 'contractor') {
+              if ($scope.currentTeam.type == 'contractor' && $scope.isLeader) {
                 _.forEach($scope.package.owner.leader,function(leader) {
                     $scope.available.push(leader);
                 });
               }
-              if ($scope.currentTeam.type == 'builder') {
+              if ($scope.currentTeam.type == 'builder' && $scope.isLeader) {
                 _.forEach($scope.package.winnerTeam._id.leader,function(leader) {
                   $scope.available.push(leader);
                 });
@@ -69,12 +69,12 @@ angular.module('buiiltApp')
                   $scope.available.push(member._id);
                 }
               });
-              if ($scope.currentTeam.type == 'supplier') {
+              if ($scope.currentTeam.type == 'supplier' && $scope.isLeader) {
                 _.forEach($scope.package.owner.leader,function(leader) {
                   $scope.available.push(leader);
                 });
               }
-              if ($scope.currentTeam.type == 'builder') {
+              if ($scope.currentTeam.type == 'builder' && $scope.isLeader) {
                 _.forEach($scope.package.winnerTeam._id.leader,function(leader) {
                   $scope.available.push(leader);
                 });

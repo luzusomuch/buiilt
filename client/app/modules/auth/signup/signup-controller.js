@@ -17,20 +17,20 @@ angular.module('buiiltApp')
       }
     };
   })
-  .controller('SignupCtrl', function ($scope, authService,$stateParams,teamInviteService) {
+  .controller('SignupCtrl', function ($scope, authService,$stateParams,inviteTokenService) {
   $scope.user = {
     password : '',
     repassword : '',
     allowNewsletter: true,
     type: 'homeOwner',
-    acceptTeam : false
   };
-  $scope.acceptTeam = false
-  $scope.hasInviteToken = ($stateParams.teamInviteToken) ? true : false;
+  $scope.acceptTeam = false;
+  $scope.hasInviteToken = ($stateParams.inviteToken) ? true : false;
   if ($scope.hasInviteToken) {
-    teamInviteService.get({id : $stateParams.teamInviteToken}).$promise
+    inviteTokenService.get({id : $stateParams.inviteToken}).$promise
       .then(function(res) {
-        $scope.inviteData = res;
+        $scope.user.invite = res;
+        $scope.user.invite
         $scope.user.email = res.email;
       })
   }
@@ -40,11 +40,6 @@ angular.module('buiiltApp')
   $scope.signup = function (form) {
     $scope.submitted = true;
     if (form.$valid) {
-      if ($scope.inviteData) {
-        $scope.user.invite = $scope.inviteData;
-      }
-
-
       authService.createUser($scope.user).then(function (data) {
         //show alert
         $scope.success = true;

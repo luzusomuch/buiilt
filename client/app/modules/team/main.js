@@ -9,6 +9,7 @@ angular.module('buiiltApp')
         url: '/manager',
         templateUrl: '/app/modules/team/manager-team/manager.html',
         controller: 'TeamCtrl',
+        authenticate : true,
         resolve: {
           invitations : [
             'teamService',
@@ -40,6 +41,7 @@ angular.module('buiiltApp')
       .state('team.create', {
         url: '/create',
         templateUrl: '/app/modules/team/create-team/create.html',
-        controller: 'CreateTeamCtrl'
+        controller: 'CreateTeamCtrl',
+        authenticate : true
       });
   });

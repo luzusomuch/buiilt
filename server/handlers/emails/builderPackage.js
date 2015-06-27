@@ -32,13 +32,21 @@ EventBus.onSeries('BuilderPackage.Inserted', function(request, next) {
       });
     });
   } else {
-    Mailer.sendMail('invite-'+ request.to.type + '.html', user.email, {
-      project: request.project,
-      link: config.baseUrl + request.project._id + '/dashboard',
-      subject: 'Invite ' + subjectType + ' send quote for ' + request.name
-    },function(err){
-      console.log(err);
-      next();
-    });
+    console.log(request.to.team);
+    Team.findById(request.to.team)
+      .populate('leader')
+      .exec(function(err, team) {
+
+      team.leader.forEach(function(leader) {
+        Mailer.sendMail('invite-' + request.to.type + '.html', leader.email, {
+          project: request.project,
+          link: config.baseUrl + request.project._id + '/dashboard',
+          subject: 'Invite ' + subjectType + ' send quote for ' + request.name
+        }, function (err) {
+          console.log(err);
+          next();
+        });
+      })
+    })
   }
 });

@@ -22,7 +22,7 @@ module.exports = function(app) {
   app.use('/api/uploads', require('./api/upload'));
   app.use('/api/tasks', require('./api/task'));
   app.use('/api/teams', require('./api/team'));
-  app.use('/api/team-invite', require('./api/teamInvite'));
+  app.use('/api/invite-token', require('./api/inviteToken'));
   app.use('/api/packages', require('./api/package'));
   app.use('/api/packages/builders', require('./api/package/builder'));
   app.use('/api/packages/staff', require('./api/package/staff'));

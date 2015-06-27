@@ -1,4 +1,4 @@
-'use strict';
+  'use strict';
 
 var MaterialPackage = require('./../../models/materialPackage.model');
 var PackageInvite = require('./../../models/packageInvite.model');

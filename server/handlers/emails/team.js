@@ -3,7 +3,7 @@ var _ = require('lodash');
 
 var Mailer = require('./../../components/Mailer');
 var EventBus = require('./../../components/EventBus');
-var TeamInvite = require('./../../models/teamInvite.model');
+var InviteToken = require('./../../models/inviteToken.model');
 var User = require('./../../models/user.model');
 var config = require('./../../config/environment');
 var async = require('async');
@@ -11,17 +11,18 @@ var async = require('async');
 EventBus.onSeries('Team.Inserted', function(request, next){
     async.each(request.member, function(user,callback) {
       if (!user._id && user.status == 'Pending') {
-        var teamInvite = new TeamInvite({
+        var inviteToken = new InviteToken({
           email : user.email,
-          team : request
+          element : request,
+          type : 'team-invite'
         });
-        teamInvite.save(function(err) {
+        inviteToken.save(function(err) {
           if (err) {
             throw err;
           }
           Mailer.sendMail('invite-team-has-no-account.html', user.email, {
             request: request,
-            link: config.baseUrl + 'signup?teamInviteToken=' + teamInvite.teamInviteToken,
+            link: config.baseUrl + 'signup?inviteToken=' + inviteToken.inviteToken,
             subject: 'Group invitation ' + request.name
           },function(err) {
             if (err) {
@@ -46,17 +47,18 @@ EventBus.onSeries('Team.Inserted', function(request, next){
 EventBus.onSeries('Team.Updated', function(request, next){
   request.member.forEach(function(user) {
     if (!user._id && user.status == 'Pending' && !(_.find(request.oldMember,{ email : user.email}))) {
-      var teamInvite = new TeamInvite({
+      var inviteToken = new InviteToken({
         email : user.email,
-        team : request
+        element : request,
+        type : 'team-invite'
       });
-      teamInvite.save(function(err) {
+      inviteToken.save(function(err) {
         if (err) {
           throw err;
         }
         Mailer.sendMail('invite-team-has-no-account.html', user.email, {
           request: request,
-          link: config.baseUrl + 'signup?teamInviteToken=' + teamInvite.teamInviteToken,
+          link: config.baseUrl + 'signup?inviteToken=' + inviteToken.inviteToken,
           subject: 'Group invitation ' + request.name
         }, function(err) {
           if (err) {
