@@ -15,7 +15,7 @@
             <a ng-click="showDefects(); hideAll = true; showDefect = true; showDocument = false; showVariation = false; showInvoice = false;">DEFECTS</a>
           </li>
           <li>
-            <a ng-click="showDocument(); hideAll = true; showDocument = true; showVariation = false; showDefect = false; showInvoice = false;">DOCUMENTS</a>
+            <a ng-click="showDocuments(); hideAll = true; showDocument = true; showVariation = false; showDefect = false; showInvoice = false;">DOCUMENTS</a>
           </li>
         </ul>
       </div>
@@ -24,7 +24,7 @@
          <i class="mdi-navigation-more-vert"></i>
        </a>
        <ul id='relatedActions' class='dropdown-content' style="margin-top: 15px" ng-if="type == 'BuilderPackage'">
-         <li ng-if="currentTeam.type == 'f'"><a class="modal-trigger" href="#attachInvoice">Attach Invoice</a></li>
+         <li ng-if="currentTeam.type == 'builder'"><a class="modal-trigger" href="#attachInvoice">Attach Invoice</a></li>
          <li ng-if="currentTeam.type == 'homeOwner'"><a class="modal-trigger" href="#modal_attachDefect">Attach Defect</a></li>
          <li><a class="modal-trigger" href="#modal_attachVariation">Attach Variation</a></li>
          <li><a class="modal-trigger" href="#modal_attachDocument">Attach Document</a></li>
@@ -77,9 +77,8 @@
    <li class="collection-item" ng-repeat="invoice in data.invoices">
     <a class="modal-trigger" href="#modal-invoice-{{invoice._id}}">{{invoice.title}} - Total {{invoice.total}}</a></li>
   </div>
-  <div class="scrollbar-dynamic" style="height: 300px" ng-show="showDocument" ng-if="files">
-    <li class="collection-item" ng-repeat="file in files">
-      {{file}}
+  <div class="scrollbar-dynamic" style="height: 300px" ng-show="showDocument" ng-if="data">
+    <li class="collection-item" ng-repeat="file in data">
       <a class="modal-trigger" href="#modal-file-{{item._id}}">{{file.title}}</a></li>
     </div>
   </ul>

@@ -22,9 +22,10 @@ angular.module('buiiltApp').directive('addon', function(){
                 // $scope.packageItemArray = _.union($scope.package.variations, $scope.package.defects, $scope.package.invoices, data);
             });
 
-            $scope.showDocument = function() {
-                console.log($scope.documents);
-                $scope.files = $scope.documents;
+            $scope.showDocuments = function() {
+                // console.log($scope.documents);
+                // $scope.files = $scope.abc;
+                $scope.data = $scope.documents;
                 $scope.allItemsText = 'Documents';
             };
 
