@@ -35,17 +35,17 @@
               <p class="validate-message" ng-show="form.repassword.$error.compareTo && submitted">Confirm password dose not match</p>
             </div>
           </div>
-          <div ng-if="hasInviteToken">
+          <div ng-if="hasInviteToken && user.invite.type == 'team-invite'">
             <h3>Team invitation</h3>
             <div class="row">
               <p>You have been invited by : </p>
-              <p style="margin-left: 15px">Team <span class="highlight">{{inviteData.team.name}}</span></p>
-              <p style="margin-left: 15px">Type <span class="highlight">{{inviteData.team.type}}</span> team</p>
+              <p style="margin-left: 15px">Team <span class="highlight">{{user.invite.element.name}}</span></p>
+              <p style="margin-left: 15px">Type <span class="highlight">{{user.invite.element.type}}</span> team</p>
               <p>Do you want to join to that team </p>
               <div class="switch">
                 <label>
                   Reject
-                  <input type="checkbox" ng-model="user.acceptTeam">
+                  <input type="checkbox" ng-model="user.invite.accept">
                   <span class="lever"></span>
                   Accept
                 </label>

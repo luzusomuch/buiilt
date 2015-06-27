@@ -32,9 +32,6 @@ angular.module('buiiltApp')
         })
     };
 
-    validateInviteService.getByUser().$promise.then(function(data) {
-      $scope.validateInvite = data;
-    });
 
 
     $scope.filterByStatus = function (item) {

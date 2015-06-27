@@ -118,3 +118,7 @@ span.disabled {
 .modal {
   top : 5% !important;
 }
+
+.btn-flat.active {
+  background-color: rgba(255, 235, 59, 0.7);
+}

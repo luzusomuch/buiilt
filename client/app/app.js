@@ -52,7 +52,7 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
       }
     };
   })
-  .run(function ($rootScope, $cookieStore, cfpLoadingBar, authService, $location,projectService) {
+  .run(function ($rootScope, $cookieStore, cfpLoadingBar, authService, $location,projectService,$state) {
     cfpLoadingBar.start();
     $rootScope.currentProject = null;
     $rootScope.safeApply = function (fn) {
@@ -66,15 +66,13 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
       }
     };
     $rootScope.$on('$stateChangeStart', function (event,toState, toParams, next) {
-      authService.isLoggedInAsync(function (loggedIn) {
-        if (toState.authenticate && !loggedIn) {
-          $location.path('/signin');
-        } else if (!toState.authenticate && loggedIn){
-          $location.path('/team/manager');
-        } else {
-
-        }
-      });
+      if (toState.authenticate) {
+        authService.isLoggedInAsync(function (loggedIn) {
+          if (!loggedIn) {
+            $state.go('signin');
+          }
+        });
+      }
 
 
 

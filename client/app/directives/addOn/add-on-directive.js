@@ -8,7 +8,6 @@ angular.module('buiiltApp').directive('addon', function(){
             type: '@'
         },
         controller: function($scope, $stateParams, authService,addOnPackageService, FileUploader, $cookieStore, fileService, contractorRequestService, materialRequestService) {
-            console.log($scope.type);
             $scope.allItemsText = 'All items';
             authService.getCurrentUser().$promise.then(function(data){
                 $scope.currentUser = data;

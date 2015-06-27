@@ -1,6 +1,6 @@
 angular.module('buiiltApp')
-  .factory('teamInviteService', function ($resource) {
-    return $resource('/api/team-invite/:id/:action', {
+  .factory('inviteTokenService', function ($resource) {
+    return $resource('/api/invite-token/:id/:action', {
         id: '@_id'},
       {
         get : {

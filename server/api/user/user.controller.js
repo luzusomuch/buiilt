@@ -7,7 +7,7 @@ var ContractorPackage = require('./../../models/contractorPackage.model');
 var BuilderPackage = require('./../../models/builderPackage.model');
 var MaterialPackage = require('./../../models/materialPackage.model');
 var Team = require('./../../models/team.model');
-var TeamInvite = require('./../../models/teamInvite.model');
+var InviteToken = require('./../../models/inviteToken.model');
 var passport = require('passport');
 var config = require('../../config/environment');
 var jwt = require('jsonwebtoken');
@@ -35,7 +35,7 @@ exports.index = function (req, res) {
  * Creates a new user
  */
 exports.create = function (req, res, next) {
-  var acceptTeam = req.body.acceptTeam;
+  var invite = req.body.invite;
   UserValidator.validateNewUser(req, okay(next, function (data) {
     var newUser = new User(data);
     newUser.provider = 'local';
@@ -66,26 +66,26 @@ exports.create = function (req, res, next) {
           });
         }
       });
-      if (req.body.invite) {
-      if (acceptTeam) {
-        var team = req.body.invite.team;
-        //update teams for group user
-        Team.update({_id : team._id,'member.email': req.body.email},
-          {"$set" : {
-            "member.$._id" : user._id,
-            "member.$.status" : 'Active',
-            "member.$.email" : null
-          }}, function(err) {
+      // If has invite token
+      if (invite) {
+        if (invite.type == 'team-invite') {
+          var update = {
+            "member.$._id" : newUser._id,
+            "member.$.status" : (invite.accept) ? 'Active' : 'Reject'
+          };
+          Team.update({_id : invite.element._id,'member.email' : req.body.email},{'$set' : update,'$unset' : {'member.$.email' : 1}},function(err) {
             if (err) {
               return res.send(500, err);
             }
-            newUser.team = {
-              _id : team._id,
-              role : 'member'
-            };
             newUser.emailVerified = true;
+            if (invite.accept) {
+              newUser.team = {
+                _id : invite.element._id,
+                role : 'member'
+              }
+            }
             newUser.save(function() {
-              TeamInvite.remove({_id : req.body.invite._id},function(err) {
+              InviteToken.remove({_id : invite._id},function(err) {
                 if (err) {
                   return res.send(500,err);
                 }
@@ -94,26 +94,7 @@ exports.create = function (req, res, next) {
 
             });
           })
-      } else  {
-        Team.update({'member.email': req.body.email},
-          {"$set" : {
-            "member.$._id" : user._id,
-            "member.$.status" : 'Reject'
-          }}, function(err) {
-            if (err) {
-              return res.send(500, err);
-            }
-            newUser.emailVerified = true;
-            newUser.save(function () {
-              TeamInvite.remove({_id: req.body.invite._id}, function (err) {
-                if (err) {
-                  return res.send(500, err);
-                }
-                return res.json({token: token, emailVerified: true});
-              });
-            })
-          })
-      }
+        }
       }
       else {
         return res.json({token: token,emailVerified : false});
