@@ -47,21 +47,53 @@
        
        <div class="row" ng-if="package.addendums">
          <div class="col s12">
-           <div class="row" ng-repeat="addendum in package.addendums">
-                <h6>{{addendum.description}}</h6>
-                <h6>Addendum scope</h6>
-                <table>
-                   <thead>
-                      <th>Description</th>
-                      <th>Quantity</th>
-                   </thead>
-                   <tbody>
-                     <tr ng-repeat="addendumScope in addendum.addendumsScope">
-                       <td>{{addendumScope.description}}</td>
-                       <td>{{addendumScope.quantity}}</td>
-                     </tr>
-                   </tbody>
-                </table>
+           <div class="row" ng-repeat="addendum in package.addendums | filter:{isHidden: 'false'}">
+                <div class="row" ng-hide="hideAddendum">
+                  <h6>{{addendum.description}}</h6>
+                  <li class="collection-item vlalign">
+                    <div class="col s9" style="margin-bottom: 0px" ng-repeat="addendumScope in addendum.addendumsScope">
+                      <div class="row">
+                        <div class="col s8">
+                          <p>{{addendumScope.description}}</p>
+                        </div>
+                        <div class="col s4">
+                          <p>{{addendumScope.quantity}}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col s3">
+                      <a class="btn-flat btn-flat" ng-click="remove(addendum._id)">Remove</a>
+                      <a class="btn-flat btn-flat" ng-click="hideAddendum = true; showEdit = true">Edit</a>
+                    </div>
+                  </li>
+                </div>
+                <div class="row" ng-show="showEdit">
+                  <form>
+                    <div class="row">
+                      <div class="form-field col s12">
+                        Description: <span contentEditable="true" ng-model="addendum.description" strip-br="true">{{addendum.description}}</span>
+                      </div>
+                    </div>
+                    <div class="row" ng-repeat="addendumScope in addendum.addendumsScope">
+                      <div class="form-field col s8">
+                        Description: <span contentEditable="true" ng-model="addendumScope.description" strip-br="true">{{addendumScope.description}}</span>
+                        <!-- <div contenteditable="true" ng-model="addendumScope.description">{{addendumScope.description}}</div> -->
+                        <!-- <input type="text" contentEditable="true" ng-model="editAddendum.scopeDescription"> -->
+                        <!-- <label for="">Scope description</label> -->
+                      </div>
+                      <div class="form-field col s4">
+                        <!-- Quantity: <span contentEditable="true" ng-model="addendumScope.quantity" strip-br="true">{{addendumScope.quantity}}</span> -->
+                        <!-- <div contenteditable="true" ng-model="addendumScope.quantity">{{addendumScope.quantity}}</div> -->
+                        <!-- <input type="text" value="{{addendumScope.quantity}}" ng-model="editAddendum.quantity">
+                        <label for="">Scope quantity</label> -->
+                      </div>
+                    </div>
+                    <div class="row">
+                      <a class="btn-flat btn-flat" ng-click="edit(addendum._id);showEdit = false; hideAddendum = false">Save</a>
+                      <a class="btn-flat btn-flat" ng-click="showEdit = false; hideAddendum = false">Cancel</a>
+                    </div>
+                  </form>
+                </div>
               </div>
          </div>
        </div>
@@ -74,4 +106,29 @@
      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
     </div>
     </form>
+</div>
+
+<div ng-repeat="addendum in package.addendums | filter:{isHidden: 'false'}" id="modal-edit-addendum-{{addendum._id}}" class="modal">
+  <h5>Edit addendum</h5>
+  <form ng-submit="editAddendum(addendum._id)" method="POST">
+    <div class="modal-content">
+      <div class="row">
+        <div class="input-field col s12">
+          <input type="text" ng-model="addendum.description">
+        </div>
+      </div>
+      <div class="row" ng-repeat="addendumScope in addendum.addendumsScope">
+        <div class="input-field col s8">
+          <input type="text" ng-model="addendumScope.description">
+        </div>
+        <div class="input-field col s4">
+          <input type="text" ng-model="addendumScope.quantity">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="modal-action modal-close">Save</button>
+      <a class="modal-action modal-close">Close</a>
+    </div>
+  </form>
 </div>

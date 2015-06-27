@@ -266,7 +266,7 @@ exports.getMessageForBuilder = function(req, res) {
     else {
       MaterialPackage.findOne({$and:[{_id: req.params.id},{'messages.owner': team._id}]}, function(err, materialPackage) {
         if (err) {return res.send(500,err);}
-        if (!materialPackage) {return res.send(404,err)}
+        if (!materialPackage) {return res.send(500,err)}
         else {
           return res.json(200,materialPackage);
         }
@@ -278,7 +278,7 @@ exports.getMessageForBuilder = function(req, res) {
 exports.getMessageForSupplier = function(req, res) {
   MaterialPackage.findOne({$and:[{_id: req.params.id},{'messages.to': req.user.team._id}]}, function(err, materialPackage) {
     if (err) {console.log(err);}
-    if (!materialPackage) {return res.send(404,err)}
+    if (!materialPackage) {return res.send(500,err)}
     else {
       return res.json(200,materialPackage);
     }

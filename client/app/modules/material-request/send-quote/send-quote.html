@@ -26,7 +26,7 @@
           <div class="col s12">{{materialRequest.description}}</div>
           <div class="col s12" ng-if="materialRequest.addendums">
             <h5>Addendum</h5>
-              <div class="row" ng-repeat="addendum in materialRequest.addendums" ng-if="$last">
+              <div class="row" ng-repeat="addendum in materialRequest.addendums | filter:{isHidden: true}" ng-if="$last">
                 <h6>{{addendum.description}}</h6>
                 <h6>Addendum scope</h6>
                 <table>

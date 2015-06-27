@@ -4,8 +4,8 @@
     <ul id="createNew" class="dropdown-content" style="margin-top: 15px">
       <li><a class="modal-trigger" href="#newContractorPackage">Contractor Package</a></li>
       <li><div class="divider"></div></li>
-      <li><a class="modal-trigger" href="#newWorkPackage">Work Package</a></li>
-      <li><a class="modal-trigger" href="#newMaterialPackage">Material Package</a></li>
+      <!-- <li><a class="modal-trigger" href="#newWorkPackage">Work Package</a></li> -->
+      <!-- <li><a class="modal-trigger" href="#newMaterialPackage">Material Package</a></li> -->
     </ul>
 
    <div class="collection"  >
@@ -29,6 +29,7 @@
 
 <div id="newContractorPackage" class="modal modal-fixed-footer">
 <form method="post" name="form" ng-submit="createContractorPackage(form)" novalidate>
+  <div class="modal-content">
   <div class="row">
     <div class="col s12">
       <h5>New Contractor Package</h5>
@@ -131,7 +132,6 @@
       </ul>
     </div>
   </div>
-</form>
 </div>
 
 <div class="modal-content">
@@ -141,7 +141,8 @@
   </div>
 
 </div>
-
+</form>
+</div>
 
 
 <div id="newMaterialPackage" class="modal modal-fixed-footer">

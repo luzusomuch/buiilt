@@ -28,5 +28,12 @@ angular.module('buiiltApp').factory('addOnPackageService', function($rootScope, 
                 action: 'send-invoice'
             }
         },
+        removeAddendum: {
+            method: 'PUT',
+            params: {
+                id: '@id',
+                action: 'remove-addendum'
+            }
+        }
     });
 });

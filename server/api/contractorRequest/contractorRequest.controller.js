@@ -113,7 +113,7 @@ exports.getMessageForBuilder = function(req, res) {
     else {
       ContractorPackage.findOne({$and:[{_id: req.params.id},{'messages.owner': team._id}]}, function(err, contractorPackage) {
         if (err) {console.log(err);}
-        if (!contractorPackage) {return res.send(404,err)}
+        if (!contractorPackage) {return res.send(500,err)}
         else {
           return res.json(200,contractorPackage);
         }
@@ -128,7 +128,7 @@ exports.getMessageForContractor = function(req, res) {
     else {
       ContractorPackage.findOne({$and:[{_id: req.params.id},{'messages.to': team._id}]}, function(err, contractorPackage) {
         if (err) {console.log(err);}
-        if (!contractorPackage) {return res.send(404,err)}
+        if (!contractorPackage) {return res.send(500,err)}
         else {
           return res.json(200,contractorPackage);
         }

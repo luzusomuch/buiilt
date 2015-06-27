@@ -459,3 +459,59 @@ exports.sendAddendum = function(req, res) {
         return res.send(500);
     }
 };
+
+exports.removeAddendum = function(req, res){
+    console.log(req.body);
+    var packageType = req.body.packageType;
+    if (packageType == 'contractor') {
+        ContractorPackage.findById(req.params.id, function(err, contractorPackage){
+            if (err) {return res.send(500,err);}
+            else {
+                var pack = _.findWhere(contractorPackage.addendums, function(id){
+                    return id._id.toString() === req.body.addendumId;
+                });
+                if (pack._id == req.body.addendumId) {
+                    pack.isHidden = true;
+                    contractorPackage.save(function(err, saved){
+                        if (err) {
+                            return res.send(500,err);
+                        }
+                        else {
+                            return res.send(200,saved);
+                        }
+                    });
+                }
+                else {
+                    return res.send(500,err);
+                }
+            }
+        });
+    }
+    else if(packageType == 'material') {
+        MaterialPackage.findById(req.params.id, function(err, materialPackage){
+            if (err) {return res.send(500,err);}
+            else {
+                var pack = _.findWhere(materialPackage.addendums, function(id){
+                    return id._id.toString() === req.body.addendumId;
+                });
+                if (pack._id == req.body.addendumId) {
+                    pack.isHidden = true;
+                    materialPackage.save(function(err, saved){
+                        if (err) {
+                            return res.send(500,err);
+                        }
+                        else {
+                            return res.send(200,saved);
+                        }
+                    });
+                }
+                else {
+                    return res.send(500,err);
+                }
+            }
+        });
+    }
+    else {
+        return res.send(500);
+    }
+};

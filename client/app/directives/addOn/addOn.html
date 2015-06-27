@@ -1,242 +1,89 @@
 <div class="col s5">
-  <!-- when package type is builder package -->
-    <ul class="card collection" ng-if="type == 'BuilderPackage'">
-     <div class="card-header">
-       <div class="row">
-         <div class="col s6">
-           <a class='dropdown-button btn-flat' style="margin-top: 15px" href='#' data-gutter="15" data-activates='itemFilter' dropdown data-beloworigin="true">{{(allItemsText) ? allItemsText : 'All items'}}<i class="mdi-navigation-arrow-drop-down"></i></a>
-             <ul id='itemFilter' class='dropdown-content' style="margin-top: 15px">
-               <li><a ng-click="showVariations(); hideAll = true; showVariation = true; showDocument = false; showDefect = false; showDocument = false; showInvoice = false;">VARIATIONS</a></li>
-               <li><a ng-click="showInvoices(); hideAll = true; showInvoice = true; showDefect = false; showVariation = false; showDocument = false;">INVOICES</a></li>
-             <li><a ng-click="showDefects(); hideAll = true; showDefect = true; showDocument = false; showVariation = false; showInvoice = false;">DEFECTS</a></li>
-               <li><a ng-click="showDocument(); hideAll = true; showDocument = true; showVariation = false; showDefect = false; showInvoice = false;">DOCUMENTS</a></li>
-             </ul>
-         </div>
-         <div class="col s6">
-           <a class='dropdown-button btn-flat btn-flat right' style="margin-top: 15px;" data-gutter="-30" href='#' data-activates='relatedActions' dropdown data-beloworigin="true" data-constrainwidth="false">
-             <i class="mdi-navigation-more-vert"></i>
-           </a>
-          <ul id='relatedActions' class='dropdown-content' style="margin-top: 15px">
-               <li ng-if="currentTeam.type == 'buider'"><a class="modal-trigger" href="#attachInvoice">Attach Invoice</a></li>
-               <li ng-if="currentTeam.type == 'homeOwner'"><a class="modal-trigger" href="#modal_attachDefect">Attach Defect</a></li>
-               <li><a class="modal-trigger" href="#modal_attachVariation">Attach Variation</a></li>
-               <li><a class="modal-trigger" href="#modal_attachDocument">Attach Document</a></li>
-            </ul>
-         </div>
-       </div>
-     </div>
-     <div class="divider"></div>
-       <div style="height: 300px;" ng-hide="hideAll" ng-show="showAll">
-            
-        <li class="collection-item" ng-repeat="item in package.variations" ng-if="package.variations">
-          <a class="modal-trigger" href="#modal-variation-{{item._id}}">Variation - {{item.title}}</a>
-        </li>
-        <li class="collection-item" ng-repeat="item in package.defects" ng-if="package.defects">
-          <a class="modal-trigger" href="#modal-defect-{{item._id}}">Defect - {{item.title}}</a>
-        </li>
-        <li class="collection-item" ng-repeat="item in package.invoices" ng-if="package.invoices">
-          <a class="modal-trigger" href="#modal-invoice-{{item._id}}">Invoices - {{item.title}}</a>
-        </li>
-        <li class="collection-item" ng-repeat="file in documents" ng-if="documents">
-          <a class="modal-trigger" href="#modal-file-{{file._id}}">Document - {{file.title}}</a></li>
-       </div>
-       <div style="height: 300px" ng-show="showVariation" ng-if="variations">
-           <li class="collection-item" ng-repeat="variation in variations.variations">
-            <a class="modal-trigger" href="#modal-variation-{{variation._id}}">{{variation.title}}</a></li>
-       </div>
-       <div style="height: 300px" ng-show="showDefect" ng-if="defects">
-           <li class="collection-item" ng-repeat="defect in defects.defects">
-            <a class="modal-trigger" href="#modal-defect-{{defect._id}}">{{defect.title}}</a></li>
-       </div>
-       <div style="height: 300px" ng-show="showInvoice" ng-if="invoices">
-           <li class="collection-item" ng-repeat="invoice in invoices.invoices">
-            <a class="modal-trigger" href="#modal-invoice-{{invoice._id}}">{{invoice.title}} - Total {{invoice.total}}</a></li>
-       </div>
-       <div style="height: 300px" ng-show="showDocument" ng-if="files">
-          <li class="collection-item" ng-repeat="file in files">
-            <a class="modal-trigger" href="#modal-file-{{item._id}}">{{file.title}}</a></li>
-       </div>
-     </ul>
-
-     <!-- when package type is contractor -->
-     <ul class="card collection" ng-if="type == 'contractor'">
-         <div class="card-header">
-             <div class="row">
-                 <div class="col s6">
-                     <a class='dropdown-button btn-flat' style="margin-top: 15px" data-gutter="15"
-                        data-activates='itemFilter' dropdown data-beloworigin="true" data-constrainwidth="false">
-                       {{(allItemsText) ? allItemsText : 'All items'}}<i class="mdi-navigation-arrow-drop-down"></i>
-                     </a>
-                       <ul id='itemFilter' class='dropdown-content' style="margin-top: 15px">
-                        <!-- <li>
-                        <a ng-click="showAll(); hideAll = true; showAll = true; showVariation = false; showDocument = false; showDefect = false; showDocument = false; showInvoice = false;">All ITEMS
-                        </a>
-                         </li> -->
-                         <li>
-                          <a ng-click="showVariations(); hideAll = true; showVariation = true; showDocument = false; showDefect = false; showDocument = false; showInvoice = false;">VARIATIONS
-                          </a>
-                         </li>
-                         <li><a ng-click="showDefects(); hideAll = true; showDefect = true; showDocument = false; showVariation = false; showInvoice = false;">DEFECTS</a></li>
-                         <li><a ng-click="showInvoices(); hideAll = true; showInvoice = true; showDefect = false; showVariation = false; showDocument = false;">INVOICES</a></li>
-                         <li><a ng-click="showDocument(); hideAll = true; showDocument = true; showVariation = false; showDefect = false; showInvoice = false;">DOCUMENTS</a></li>
-                       </ul>
-                 </div>
-                 <div class="col s6">
-                     <a class='dropdown-button btn-flat btn-flat right' style="margin-top: 15px;" data-gutter="-30" href='#'
-                        data-activates='relatedActions' dropdown data-beloworigin="true" data-constrainwidth="false">
-                         <i class="mdi-navigation-more-vert"></i>
-                     </a>
-                      <ul id='relatedActions' class='dropdown-content' style="margin-top: 15px">
-                         <li><a class="modal-trigger" href="#modal_attachVariation">Attach Variation</a></li>
-                         <li ng-if="currentTeam.type == 'buider'"><a class="modal-trigger" href="#modal_attachDefect">Attach Defect</a></li>
-                         <li><a class="modal-trigger" href="#modal_attachDocument">Attach Document</a></li>
-                         <li ng-if="currentTeam.type == 'contractor'"><a class="modal-trigger" href="#attachInvoice">Attach Invoice</a></li>
-                      </ul>
-                 </div>
-             </div>
-         </div>
-         <div class="divider"></div>
-           <div style="height: 300px;" ng-hide="hideAll" ng-show="showAll">
-            
-            <li class="collection-item" ng-repeat="item in package.variations" ng-if="package.variations">
-              <a class="modal-trigger" href="#modal-variation-{{item._id}}">Variation - {{item.title}}</a>
-            </li>
-            <li class="collection-item" ng-repeat="item in package.defects" ng-if="package.defects">
-              <a class="modal-trigger" href="#modal-defect-{{item._id}}">Defect - {{item.title}}</a>
-            </li>
-            <li class="collection-item" ng-repeat="item in package.invoices" ng-if="package.invoices">
-              <a class="modal-trigger" href="#modal-invoice-{{item._id}}">Invoices - {{item.title}}</a>
-            </li>
-            <li class="collection-item" ng-repeat="file in documents" ng-if="documents">
-              <a class="modal-trigger" href="#modal-file-{{file._id}}">Document - {{file.title}}</a></li>
-           </div>
-           <div style="height: 300px" ng-show="showVariation" ng-if="variations">
-               <li class="collection-item" ng-repeat="variation in variations.variations">
-                <a class="modal-trigger" href="#modal-variation-{{variation._id}}">{{variation.title}}</a></li>
-           </div>
-           <div style="height: 300px" ng-show="showDefect" ng-if="defects">
-               <li class="collection-item" ng-repeat="defect in defects.defects">
-                <a class="modal-trigger" href="#modal-defect-{{defect._id}}">{{defect.title}}</a></li>
-           </div>
-           <div style="height: 300px" ng-show="showInvoice" ng-if="invoices">
-               <li class="collection-item" ng-repeat="invoice in invoices.invoices">
-                <a class="modal-trigger" href="#modal-invoice-{{invoice._id}}">{{invoice.title}} - Total {{invoice.total}}</a></li>
-           </div>
-           <div style="height: 300px" ng-show="showDocument" ng-if="files">
-              <li class="collection-item" ng-repeat="file in files">
-                <a class="modal-trigger" href="#modal-file-{{item._id}}">{{file.title}}</a></li>
-           </div>
-     </ul>
-
-  <!-- when package type is material -->
-     <ul class="card collection" ng-if="type == 'material'">
-           <div class="card-header">
-               <div class="row">
-                   <div class="col s6">
-                       <a class='dropdown-button btn-flat' style="margin-top: 15px" href='#' data-gutter="15"
-                          data-activates='itemFilter' dropdown data-beloworigin="true" data-constrainwidth="false">
-                         {{(allItemsText) ? allItemsText : 'All items'}}<i class="mdi-navigation-arrow-drop-down"></i>
-                       </a>
-                         <ul id='itemFilter' class='dropdown-content' style="margin-top: 15px">
-                           <li><a ng-click="showDefects(); hideAll = true; showDefect = true; showDocument = false; showInvoice = false;">DEFECTS</a></li>
-                           <li><a ng-click="showInvoices(); hideAll = true; showInvoice = true; showDefect = false; showDocument = false;">INVOICES</a></li>
-                           <li><a ng-click="showDocument(); hideAll = true; showDocument = true; showDefect = false; showInvoice = false;">DOCUMENTS</a></li>
-                         </ul>
-                   </div>
-                   <div class="col s6">
-                       <a class='dropdown-button btn-flat btn-flat right' style="margin-top: 15px;" data-gutter="-30" href='#' data-activates='relatedActions' dropdown>
-                           <i class="mdi-navigation-more-vert"></i>
-                       </a>
-                        <ul id='relatedActions' class='dropdown-content' style="margin-top: 15px">
-                           <li ng-if="currentTeam.type == 'buider'"><a class="modal-trigger" href="#modal_attachDefect">Attach Defect</a></li>
-                           <li ng-if="currentTeam.type == 'supplier'"><a class="modal-trigger" href="#attachInvoice">Attach Invoice</a></li>
-                           <li><a class="modal-trigger" href="#modal_attachDocument">Attach Document</a></li>
-                        </ul>
-                   </div>
-               </div>
-           </div>
-           <div class="divider"></div>
-             <div style="height: 300px;" ng-hide="hideAll">
-            <li class="collection-item" ng-repeat="item in package.defects" ng-if="package.defects">
-              <a class="modal-trigger" href="#modal-defect-{{item._id}}">Defect - {{item.title}}</a>
-            </li>
-            <li class="collection-item" ng-repeat="item in package.invoices" ng-if="package.invoices">
-              <a class="modal-trigger" href="#modal-invoice-{{item._id}}">Invoices - {{item.title}} - Total {{item.total}}</a>
-            </li>
-            <li class="collection-item" ng-repeat="file in documents" ng-if="documents">
-              <a class="modal-trigger" href="#modal-file-{{file._id}}">Document - {{file.title}}</a></li>
-             </div>
-             <div style="height: 300px" ng-show="showDefect" ng-if="defects">
-                 <li class="collection-item" ng-repeat="defect in defects.defects">
-                  <a class="modal-trigger" href="#modal-defect-{{item._id}}">Defect - {{defect.title}}</a>
-                </li>
-             </div>
-             <div style="height: 300px" ng-show="showInvoice" ng-if="invoices">
-                 <li class="collection-item" ng-repeat="invoice in invoices.invoices">
-                  <a class="modal-trigger" href="#modal-invoice-{{item._id}}">Invoices - {{invoice.title}} - Total {{invoice.total}}</a></li>
-             </div>
-             <div style="height: 300px" ng-show="showDocument" ng-if="files">
-                <li class="collection-item" ng-repeat="file in files">
-                  <a class="modal-trigger" href="#modal-file-{{file._id}}">Document - {{file.title}}</a>
-                </li>
-             </div>
+  <ul class="card collection">
+   <div class="card-header">
+     <div class="row">
+       <div class="col s6">
+         <a class='dropdown-button btn-flat' style="margin-top: 15px" href='#' data-gutter="15" data-activates='itemFilter' dropdown data-beloworigin="true">{{(allItemsText) ? allItemsText : 'All items'}}<i class="mdi-navigation-arrow-drop-down"></i></a>
+         <ul id='itemFilter' class='dropdown-content' style="margin-top: 15px">
+          <li>
+            <a ng-click="showVariations(); hideAll = true; showVariation = true; showDocument = false; showDefect = false; showDocument = false; showInvoice = false;">VARIATIONS</a>
+          </li>
+          <li>
+            <a ng-click="showInvoices(); hideAll = true; showInvoice = true; showDefect = false; showVariation = false; showDocument = false;">INVOICES</a>
+          </li>
+          <li>
+            <a ng-click="showDefects(); hideAll = true; showDefect = true; showDocument = false; showVariation = false; showInvoice = false;">DEFECTS</a>
+          </li>
+          <li>
+            <a ng-click="showDocument(); hideAll = true; showDocument = true; showVariation = false; showDefect = false; showInvoice = false;">DOCUMENTS</a>
+          </li>
+        </ul>
+      </div>
+      <div class="col s6">
+       <a class='dropdown-button btn-flat btn-flat right' style="margin-top: 15px;" data-gutter="-30" href='#' data-activates='relatedActions' dropdown data-beloworigin="true" data-constrainwidth="false">
+         <i class="mdi-navigation-more-vert"></i>
+       </a>
+       <ul id='relatedActions' class='dropdown-content' style="margin-top: 15px" ng-if="type == 'BuilderPackage'">
+         <li ng-if="currentTeam.type == 'f'"><a class="modal-trigger" href="#attachInvoice">Attach Invoice</a></li>
+         <li ng-if="currentTeam.type == 'homeOwner'"><a class="modal-trigger" href="#modal_attachDefect">Attach Defect</a></li>
+         <li><a class="modal-trigger" href="#modal_attachVariation">Attach Variation</a></li>
+         <li><a class="modal-trigger" href="#modal_attachDocument">Attach Document</a></li>
        </ul>
-        
-        <!-- when package type is staff -->
-       <ul class="card collection" ng-if="type=='staffPackage'">
-        <div class="card-header">
-          <div class="row">
-            <div class="col s6">
-              <a class="dropdown-button btn-flat" style="margin-top: 15px" href="#" data-gutter="15"
-                 data-activates="itemFilter" dropdown data-beloworigin="true">
-                {{(allItemsText) ? allItemsText : 'All items'}}<i class="mdi-navigation-arrow-drop-down"></i>
-              </a>
-              <ul id='itemFilter' class='dropdown-content' style="margin-top: 15px">
-               <li><a ng-click="showDefects(); hideAll = true; showDefect = true; showDocument = false; showInvoice = false;">DEFECTS</a></li>
-               <li><a ng-click="showInvoices(); hideAll = true; showInvoice = true; showDefect = false; showDocument = false;">INVOICES</a></li>
-               <li><a ng-click="showDocument(); hideAll = true; showDocument = true; showDefect = false; showInvoice = false;">DOCUMENTS</a></li>
-             </ul>
-            </div>
-            <div class="col s6">
-              <a class="dropdown-button btn-flat btn-flat right" style="margin-top: 15px;" data-gutter="-30" href="#"
-                 data-activates="relatedActions" dropdown data-beloworigin="true" data-constrainwidth="false">
-                <i class="mdi-navigation-more-vert"></i>
-              </a>
-              <ul id="relatedActions" class="dropdown-content" style="margin-top: 15px">
-                <li ng-if="currentUser._id == package.owner.leader"><a class="modal-trigger" href="#modal_attachDefect">Attach Defect</a></li>
-                <li ng-if="isStaff == true"><a class="modal-trigger" href="#attachInvoice">Attach Invoice</a></li>
-                <li><a class="modal-trigger" href="#modal_attachDocument">Attach Document</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="divider"></div>
-        <div style="height: 300px;" ng-hide="hideAll">
-          <li class="collection-item" ng-repeat="item in package.defects" ng-if="package.defects">
-            <a class="modal-trigger" href="#modal-defect-{{item._id}}">Defect - {{item.title}}</a>
-          </li>
-          <li class="collection-item" ng-repeat="item in package.invoices" ng-if="package.invoices">
-            <a class="modal-trigger" href="#modal-invoice-{{item._id}}">Invoices - {{item.title}} - Total {{item.total}}</a>
-          </li>
-          <li class="collection-item" ng-repeat="file in documents" ng-if="documents">
-            <a class="modal-trigger" href="#modal-file-{{file._id}}">Document - {{file.title}}</a></li>
-           </div>
-           <div style="height: 300px" ng-show="showDefect" ng-if="defects">
-               <li class="collection-item" ng-repeat="defect in defects.defects">
-                <a class="modal-trigger" href="#modal-defect-{{item._id}}">Defect - {{defect.title}}</a>
-              </li>
-           </div>
-           <div style="height: 300px" ng-show="showInvoice" ng-if="invoices">
-               <li class="collection-item" ng-repeat="invoice in invoices.invoices">
-                <a class="modal-trigger" href="#modal-invoice-{{item._id}}">Invoices - {{invoice.title}} - Total {{invoice.total}}</a></li>
-           </div>
-           <div style="height: 300px" ng-show="showDocument" ng-if="files">
-              <li class="collection-item" ng-repeat="file in files">
-                <a class="modal-trigger" href="#modal-file-{{file._id}}">Document - {{file.title}}</a>
-              </li>
-           </div>
+
+       <ul id='relatedActions' class='dropdown-content' style="margin-top: 15px" ng-if="type == 'contractor' || type == 'material'">
+         <li ng-if="currentTeam.type == 'builder'">
+          <a class="modal-trigger" href="#modal_attachVariation">Attach Variation</a>
+        </li>
+        <li ng-if="currentTeam.type == 'builder'">
+          <a class="modal-trigger" href="#modal_attachDefect">Attach Defect</a>
+        </li>
+        <li>
+          <a class="modal-trigger" href="#modal_attachDocument">Attach Document</a>
+        </li>
+        <li ng-if="currentTeam.type == 'contractor' || currentTeam.type == 'supplier' || isStaff == true">
+          <a class="modal-trigger" href="#attachInvoice">Attach Invoice</a>
+        </li>
       </ul>
- </div> 
+    </div>
+  </div>
+</div>
+
+
+<div class="divider"></div>
+<div class="scrollbar-dynamic" style="height: 300px;" ng-hide="hideAll">
+
+  <li class="collection-item" ng-repeat="item in package.variations" ng-if="package.variations">
+    <a class="modal-trigger" href="#modal-variation-{{item._id}}">Variation - {{item.title}}</a>
+  </li>
+  <li class="collection-item" ng-repeat="item in package.defects" ng-if="package.defects">
+    <a class="modal-trigger" href="#modal-defect-{{item._id}}">Defect - {{item.title}}</a>
+  </li>
+  <li class="collection-item" ng-repeat="item in package.invoices" ng-if="package.invoices">
+    <a class="modal-trigger" href="#modal-invoice-{{item._id}}">Invoices - {{item.title}}</a>
+  </li>
+  <li class="collection-item" ng-repeat="file in documents" ng-if="documents">
+    <a class="modal-trigger" href="#modal-file-{{file._id}}">Document - {{file.title}}</a></li>
+  </div>
+
+  <div class="scrollbar-dynamic" style="height: 300px" ng-show="showVariation" ng-if="data">
+   <li class="collection-item" ng-repeat="variation in data.variations">
+    <a class="modal-trigger" href="#modal-variation-{{variation._id}}">{{variation.title}}</a></li>
+  </div>
+  <div class="scrollbar-dynamic" style="height: 300px" ng-show="showDefect" ng-if="data">
+   <li class="collection-item" ng-repeat="defect in data.defects">
+    <a class="modal-trigger" href="#modal-defect-{{defect._id}}">{{defect.title}}</a></li>
+  </div>
+  <div class="scrollbar-dynamic" style="height: 300px" ng-show="showInvoice" ng-if="data">
+   <li class="collection-item" ng-repeat="invoice in data.invoices">
+    <a class="modal-trigger" href="#modal-invoice-{{invoice._id}}">{{invoice.title}} - Total {{invoice.total}}</a></li>
+  </div>
+  <div class="scrollbar-dynamic" style="height: 300px" ng-show="showDocument" ng-if="files">
+    <li class="collection-item" ng-repeat="file in files">
+      {{file}}
+      <a class="modal-trigger" href="#modal-file-{{item._id}}">{{file.title}}</a></li>
+    </div>
+  </ul>
+</div> 
 
 <div id="modal_attachDocument" class="modal">
   <div class="modal-content">
@@ -279,119 +126,119 @@
 <div id="attachInvoice" class="modal modal-fixed-footer">
   <form method="POST" ng-submit="sendInvoice()">
     <div class="modal-content">
-    
-       <div class="row">
-         <div class="col s12">
-           <h5>New Invoice for Builder Package {{package.name}}</h5>
-         </div>
+
+     <div class="row">
+       <div class="col s12">
+         <h5>New Invoice for Builder Package {{package.name}}</h5>
        </div>
-       <div class="row">
-         <div class="input-field col s12">
-                 <input id="project_name" type="text" class="validate" ng-model="invoice.title">
-                 <label for="project_name">Invoice Title</label>
+     </div>
+     <div class="row">
+       <div class="input-field col s12">
+         <input id="project_name" type="text" class="validate" ng-model="invoice.title">
+         <label for="project_name">Invoice Title</label>
+       </div>
+     </div>
+     <div class="row">
+       <div class="col s12">
+        <ul class="collection z-depth-1">
+          <li class="collection-item vlalign-wrapper">
+            <div class="row" style="margin-bottom: 0px">
+              <div class="col s6 valign center-align background-hover">
+                <a ng-click="addLineWithRate()" class="waves-effect waves-light btn-flat">Add Line with Rate</a>
+              </div>
+              <div class="col s6 valign center-align background-hover">
+                <a ng-click="addLineWithPrice()" class="waves-effect waves-light btn-flat">Add Line with Price</a>
+              </div>
+            </div>
+          </li>
+          <li class="collection-item vlalign-wrapper">
+            <div class="row form" style="margin-bottom: 0px" ng-repeat="lineWithRate in lineWithRates track by $index">
+              <div class="input-field col s6">
+               <textarea value="This is a line item with Rate - note the field for qty is editable"id="description" class="materialize-textarea" ng-model="rate.lineWithRate.rateDescription[$index]" required></textarea>
+               <label for="description">Description of Item</label>
              </div>
-       </div>
-       <div class="row">
-         <div class="col s12">
-          <ul class="collection z-depth-1">
-            <li class="collection-item vlalign-wrapper">
-              <div class="row" style="margin-bottom: 0px">
-                <div class="col s6 valign center-align background-hover">
-                  <a ng-click="addLineWithRate()" class="waves-effect waves-light btn-flat">Add Line with Rate</a>
-                </div>
-                <div class="col s6 valign center-align background-hover">
-                  <a ng-click="addLineWithPrice()" class="waves-effect waves-light btn-flat">Add Line with Price</a>
-                </div>
-              </div>
-            </li>
-            <li class="collection-item vlalign-wrapper">
-              <div class="row form" style="margin-bottom: 0px" ng-repeat="lineWithRate in lineWithRates track by $index">
-                <div class="input-field col s6">
-                   <textarea value="This is a line item with Rate - note the field for qty is editable"id="description" class="materialize-textarea" ng-model="rate.lineWithRate.rateDescription[$index]" required></textarea>
-                       <label for="description">Description of Item</label>
-                    </div>
-                <div class="input-field col s2" style="margin-top: 67px">
-                        <input id="rate" type="text" class="validate" ng-model="rate.lineWithRate.rate[$index]" required>
-                        <label for="rate">Rate</label>
-                    </div>
-                <div class="input-field col s1" style="margin-top: 67px">
-                        <input id="quantity" type="text" class="validate" ng-model="rate.lineWithRate.rateQuantity[$index]" required>
-                        <label for="quantity">Qty</label>
-                    </div>
-                <div class="input-field col s2" style="margin-top: 67px">
-                        <input disabled id="quantity" type="text" class="validate" ng-model="rate.lineWithRate.rateTotal[$index]">
-                        <label for="quantity">Line Total {{rate.lineWithRate.rate[$index] * rate.lineWithRate.rateQuantity[$index]}}</label>
-                    </div>
-                <div class="input-field col s1" style="margin-top: 67px">
-                        <i class="small mdi-action-highlight-remove" ng-click="removeLineWithRate($index)"></i>
-                    </div>
-              </div>
-            </li>
-            <li class="collection-item vlalign-wrapper">
-              <div class="row form" style="margin-bottom: 0px" ng-repeat="lineWithPrice in lineWithPrices track by $index">
-                <div class="input-field col s6">
-                   <textarea value="This is a line item with Price - the Qty field is set to 1 and only price can be changed."id="description" class="materialize-textarea" ng-model="price.lineWithPrice.description[$index]" required></textarea>
-                       <label for="description">Description of Item</label>
-                    </div>
-                <div class="input-field col s2" style="margin-top: 67px">
-                        <input id="rate" type="text" class="validate" ng-model="price.lineWithPrice.price[$index]" required>
-                        <label for="rate">Price</label>
-                    </div>
-                <div class="input-field col s1" style="margin-top: 67px">
-                        <input disabled value="1" id="quantity" type="text" class="validate" ng-model="price.lineWithPrice.quantity[$index]">
-                        <label for="quantity">1</label>
-                    </div>
-                <div class="input-field col s2" style="margin-top: 67px">
-                        <input disabled id="quantity" type="text" class="validate" ng-model="price.lineWithPrice.total[$index]">
-                        <label for="quantity">Line Total {{price.lineWithPrice.price[$index]}}</label>
-                    </div>
-                <div class="input-field col s1" style="margin-top: 67px">
-                        <i class="small mdi-action-highlight-remove" ng-click="removeLineWithPrice($index)"></i>
-                    </div>
-              </div>
-            </li>
-            </ul>
-         </div>
-       </div>
-       <div class="row" style="margin-top: 50px">
-         <div class="col s6 valign">
-           <div class="file-field input-field">
-               <!-- <input class="file-path validate" type="text"/> -->
-               <div ng-show="uploader.queue.length" class="form-group">
-                <div ng-repeat="item in uploader.queue">
-                  <div class="row">
-                    <div class="input-field col s8 offset-s2">
-                      <input type="text" ng-model="item.file.name">
-                      <label for="">File name</label>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="input-field col s8 offset-s2">
-                    </div>
-                  </div>
-                </div>
-              </div>
-               <div class="btn tooltipped" data-position="top" data-delay="1" data-tooltip="Attach a File"><i class="mdi-editor-attach-file"></i>
-                 <input type="file" nv-file-select="" uploader="uploader" />
-               </div>
-             </div>
-         </div>
-         <div class="input-field col s2 offset-s3" style="margin-top: -40px">
-                <p>Sub-Total: {{subTotalRate + subTotalPrice}}</p>
-            <p>GST: {{(subTotalRate + subTotalPrice) * 0.1}}</p>
-            <p>Total: {{(subTotalRate + subTotalPrice) * 0.1 + (subTotalRate + subTotalPrice)}}</p>
-             </div>
-       </div>
-       
-     
+             <div class="input-field col s2" style="margin-top: 67px">
+              <input id="rate" type="text" class="validate" ng-model="rate.lineWithRate.rate[$index]" required>
+              <label for="rate">Rate</label>
+            </div>
+            <div class="input-field col s1" style="margin-top: 67px">
+              <input id="quantity" type="text" class="validate" ng-model="rate.lineWithRate.rateQuantity[$index]" required>
+              <label for="quantity">Qty</label>
+            </div>
+            <div class="input-field col s2" style="margin-top: 67px">
+              <input disabled id="quantity" type="text" class="validate" ng-model="rate.lineWithRate.rateTotal[$index]">
+              <label for="quantity">Line Total {{rate.lineWithRate.rate[$index] * rate.lineWithRate.rateQuantity[$index]}}</label>
+            </div>
+            <div class="input-field col s1" style="margin-top: 67px">
+              <i class="small mdi-action-highlight-remove" ng-click="removeLineWithRate($index)"></i>
+            </div>
+          </div>
+        </li>
+        <li class="collection-item vlalign-wrapper">
+          <div class="row form" style="margin-bottom: 0px" ng-repeat="lineWithPrice in lineWithPrices track by $index">
+            <div class="input-field col s6">
+             <textarea value="This is a line item with Price - the Qty field is set to 1 and only price can be changed."id="description" class="materialize-textarea" ng-model="price.lineWithPrice.description[$index]" required></textarea>
+             <label for="description">Description of Item</label>
+           </div>
+           <div class="input-field col s2" style="margin-top: 67px">
+            <input id="rate" type="text" class="validate" ng-model="price.lineWithPrice.price[$index]" required>
+            <label for="rate">Price</label>
+          </div>
+          <div class="input-field col s1" style="margin-top: 67px">
+            <input disabled value="1" id="quantity" type="text" class="validate" ng-model="price.lineWithPrice.quantity[$index]">
+            <label for="quantity">1</label>
+          </div>
+          <div class="input-field col s2" style="margin-top: 67px">
+            <input disabled id="quantity" type="text" class="validate" ng-model="price.lineWithPrice.total[$index]">
+            <label for="quantity">Line Total {{price.lineWithPrice.price[$index]}}</label>
+          </div>
+          <div class="input-field col s1" style="margin-top: 67px">
+            <i class="small mdi-action-highlight-remove" ng-click="removeLineWithPrice($index)"></i>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="row" style="margin-top: 50px">
+ <div class="col s6 valign">
+   <div class="file-field input-field">
+     <!-- <input class="file-path validate" type="text"/> -->
+     <div ng-show="uploader.queue.length" class="form-group">
+      <div ng-repeat="item in uploader.queue">
+        <div class="row">
+          <div class="input-field col s8 offset-s2">
+            <input type="text" ng-model="item.file.name">
+            <label for="">File name</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s8 offset-s2">
+          </div>
+        </div>
+      </div>
     </div>
-  <div class="divider"></div>
-    <div class="modal-footer">
-      <button type="submit" ng-click="uploadAll()" class="modal-action modal-close waves-effect waves-green btn-flat ">Send Invoice!</button>
-     <!-- <a href="#!" ng-click="uploadAll();" >Send Invoice!</a> -->
-     <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
-    </div>
-    </form>
+    <div class="btn tooltipped" data-position="top" data-delay="1" data-tooltip="Attach a File"><i class="mdi-editor-attach-file"></i>
+     <input type="file" nv-file-select="" uploader="uploader" />
+   </div>
+ </div>
+</div>
+<div class="input-field col s2 offset-s3" style="margin-top: -40px">
+  <p>Sub-Total: {{subTotalRate + subTotalPrice}}</p>
+  <p>GST: {{(subTotalRate + subTotalPrice) * 0.1}}</p>
+  <p>Total: {{(subTotalRate + subTotalPrice) * 0.1 + (subTotalRate + subTotalPrice)}}</p>
+</div>
+</div>
+
+
+</div>
+<div class="divider"></div>
+<div class="modal-footer">
+  <button type="submit" ng-click="uploadAll()" class="modal-action modal-close waves-effect waves-green btn-flat ">Send Invoice!</button>
+  <!-- <a href="#!" ng-click="uploadAll();" >Send Invoice!</a> -->
+  <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
+</div>
+</form>
 </div>
 
 <div id="modal_attachVariation" class="modal modal-fixed-footer">

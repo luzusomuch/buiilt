@@ -118,3 +118,8 @@ span.disabled {
 .modal {
   top : 5% !important;
 }
+
+.scrollbar-dynamic {
+    max-height: 300px;
+    overflow: auto;
+}

@@ -9,6 +9,8 @@ angular.module('buiiltApp').directive('addendum', function(){
         },
         controller: function($scope,addOnPackageService) {
             $scope.addendum = {};
+            $scope.editAddendum = {};
+            $scope.addendumScope = {};
             $scope.addendumsScope = [];
 
             $scope.addAddendum = function() {
@@ -31,6 +33,19 @@ angular.module('buiiltApp').directive('addendum', function(){
                     alert('Send Addendum successfully!');
                 });
             };
+
+            $scope.remove = function(value){
+                addOnPackageService.removeAddendum({id: $scope.package._id, packageType: $scope.type, addendumId: value})
+                .$promise.then(function(data){
+                    $scope.addendums = data;
+                    $scope.package = data;
+                });
+            };
+
+            $scope.edit = function(value) {
+                console.log(value);
+                console.log($scope.editAddendum);
+            }
         }
     }
 });
