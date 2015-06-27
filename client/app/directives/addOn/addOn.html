@@ -78,7 +78,7 @@
     <a class="modal-trigger" href="#modal-invoice-{{invoice._id}}">{{invoice.title}} - Total {{invoice.total}}</a></li>
   </div>
   <div class="scrollbar-dynamic" style="height: 300px" ng-show="showDocument" ng-if="data">
-    <li class="collection-item" ng-repeat="file in data">
+    <li class="collection-item" ng-repeat="file in documents">
       <a class="modal-trigger" href="#modal-file-{{item._id}}">{{file.title}}</a></li>
     </div>
   </ul>

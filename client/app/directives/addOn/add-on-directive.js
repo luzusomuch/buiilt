@@ -25,7 +25,7 @@ angular.module('buiiltApp').directive('addon', function(){
             $scope.showDocuments = function() {
                 // console.log($scope.documents);
                 // $scope.files = $scope.abc;
-                $scope.data = $scope.documents;
+                $scope.documents = $scope.documents;
                 $scope.allItemsText = 'Documents';
             };
 
