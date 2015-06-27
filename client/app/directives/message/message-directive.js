@@ -8,7 +8,7 @@ angular.module('buiiltApp')
         type : '@'
       },
       controller:
-        function($scope,$rootScope,messageService, authService,filterFilter, $cookieStore, $stateParams, $rootScope, $location , packageService, userService, projectService, FileUploader, documentService) {
+        function($scope,$rootScope,messageService, authService,filterFilter, $cookieStore, $stateParams, $location , packageService, userService, projectService, FileUploader, documentService) {
           //Init Params
           $scope.currentProject = $rootScope.currentProject;
           authService.getCurrentUser().$promise.then(function(res) {
