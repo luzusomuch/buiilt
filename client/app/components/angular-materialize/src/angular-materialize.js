@@ -132,11 +132,6 @@
             setTimeout(function () {
               element.tabs();
             }, 1000);
-            scope.$on('$stateChangeSuccess', function (event, next) {
-              setTimeout(function () {
-                element.tabs();
-              }, 500);
-            });
           }
         };
       }]);

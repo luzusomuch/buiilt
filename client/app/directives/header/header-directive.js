@@ -48,14 +48,20 @@ angular.module('buiiltApp')
           }
         });
       };
+      $rootScope.states = {};
+
 
       //first load
       queryProjects();
-
       //check menu when state changes
       $rootScope.$on('$stateChangeSuccess', function (event, next) {
         queryProjects();
         $scope.currentProject = $rootScope.currentProject;
+        if ($state.current.name == 'team.manager' || $state.current.name == 'dashboard'){
+          setTimeout(function () {
+            $('#tabsMenu').tabs();
+          }, 500);
+        }
       });
 
 

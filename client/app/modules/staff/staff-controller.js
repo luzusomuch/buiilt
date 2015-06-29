@@ -5,6 +5,7 @@ angular.module('buiiltApp')
     $scope.currentUser = currentUser;
     $scope.currentProject = $rootScope.currentProject;
     $scope.currentTeam =  currentTeam;
+    $scope.available = [];
     $scope.isLeader = (_.find(currentTeam.leader,{_id : $scope.currentUser._id})) ? true : false;
     $scope.staffPackages = staffPackages;
     $scope.package = {
@@ -15,7 +16,6 @@ angular.module('buiiltApp')
 
     //Get available user to assign to staff package
     var getAvailableAssign =  function() {
-      $scope.available =  angular.copy(currentTeam.leader);
       _.forEach($scope.currentTeam.member, function(member) {
         if (member.status == 'Active') {
           $scope.available.push(member._id);
@@ -24,17 +24,12 @@ angular.module('buiiltApp')
       // console.log($scope.available)
       // console.log($scope.currentUser._id)
       // _.remove($scope.available,{_id : $scope.currentUser._id});
-    }
+    };
 
 
     if (!$scope.isLeader) {
       _.forEach($scope.staffPackages,function(item) {
-        if (_.indexOf(item.staffs,$scope.currentUser._id) != -1) {
-          item.canSee = true;
-        } else {
-          item.canSee = false
-        }
-
+        item.canSee =  (_.indexOf(item.staffs,$scope.currentUser._id) != -1);
       })
     }
 

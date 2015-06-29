@@ -1,5 +1,5 @@
 <div class="col s3">
-  <a ng-if="team.type == 'builder'" class="dropdown-button btn-large col s12" href="#!" data-activates="createNew"
+  <a ng-if="team.type == 'builder' && isLeader" class="modal-trigger btn-large col s12" href="#newMaterialPackage"
      dropdown data-gutter="15" style="margin-top: 8px; margin-bottom: 15px">Create New</a>
   <ul id="createNew" class="dropdown-content" style="margin-top: 15px">
     <li><a class="modal-trigger" href="#newMaterialPackage">Material Package</a></li>
@@ -24,18 +24,18 @@
 <div class="col s9">
   <div class="collection z-depth-1">
     <span ng-repeat="materialPackage in materialPackages | filter : filter">
-      <a class="collection-item" ng-if="currentTeam.type == 'builder' && materialPackage.isSelect"
-         ui-sref='materialRequest.materialPackageInProcess({id: materialPackage.project, packageId: materialPackage._id})'>#{{$index
-        + 1}} - {{materialPackage.name}}<span class="new badge">{{materialPackage.__v}}</span></a>
-      <a class="collection-item" ng-if="currentTeam.type == 'builder' && !materialPackage.isSelect"
-         ui-sref='materialRequest.viewMaterialRequest({id: materialPackage.project, packageId: materialPackage._id})'>#{{$index
-        + 1}} - {{materialPackage.name}}<span class="new badge">{{materialPackage.__v}}</span></a>
+      <a class="collection-item" ng-if="(currentTeam.type == 'builder' || currentTeam.type == 'homeOwner') && materialPackage.isSelect"
+         ui-sref='materialRequest.materialPackageInProcess({id: materialPackage.project, packageId: materialPackage._id})'>
+        #{{$index + 1}} - {{materialPackage.name}}<span class="new badge">{{materialPackage.__v}}</span></a>
+      <a class="collection-item" ng-if="(currentTeam.type == 'builder' || currentTeam.type == 'homeOwner') && !materialPackage.isSelect"
+         ui-sref='materialRequest.viewMaterialRequest({id: materialPackage.project, packageId: materialPackage._id})'>
+        #{{$index + 1}} - {{materialPackage.name}}<span class="new badge">{{materialPackage.__v}}</span></a>
       <a class="collection-item" ng-if="currentTeam.type == 'supplier' && materialPackage.isSelect"
-         ui-sref='materialRequest.materialPackageInProcess({id: materialPackage.project, packageId: materialPackage._id})'>#{{$index
-        + 1}} - {{materialPackage.name}}<span class="new badge">{{materialPackage.__v}}</span></a>
+         ui-sref='materialRequest.materialPackageInProcess({id: materialPackage.project, packageId: materialPackage._id})'>
+        #{{$index + 1}} - {{materialPackage.name}}<span class="new badge">{{materialPackage.__v}}</span></a>
       <a class="collection-item" ng-if="currentTeam.type == 'supplier' && !materialPackage.isSelect"
-         ui-sref='materialRequest.sendQuote({id: materialPackage.project, packageId: materialPackage._id})'>#{{$index
-        + 1}} - {{materialPackage.name}}<span class="new badge">{{materialPackage.__v}}</span></a>
+         ui-sref='materialRequest.sendQuote({id: materialPackage.project, packageId: materialPackage._id})'>
+        #{{$index + 1}} - {{materialPackage.name}}<span class="new badge">{{materialPackage.__v}}</span></a>
     </span>
   </div>
 </div>

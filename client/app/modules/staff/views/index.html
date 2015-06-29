@@ -1,6 +1,6 @@
 <div class="col-md-12">
   <div class="col s3">
-     <a class="modal-trigger btn-large col s12" ng-if="currentTeam.type == 'builder'" href="#newWorkPackage" style="margin-top: 8px; margin-bottom: 15px">Create New</a>
+     <a class="modal-trigger btn-large col s12" ng-if="currentTeam.type == 'builder' && isLeader" href="#newWorkPackage" style="margin-top: 8px; margin-bottom: 15px">Create New</a>
       <ul id="createNew" class="dropdown-content" style="margin-top: 15px">
       <li><a class="modal-trigger" href="#newWorkPackage">Work Package</a></li>
       <li><div class="divider"></div></li>

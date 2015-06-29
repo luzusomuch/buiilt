@@ -47,7 +47,7 @@
   </nav>
   <div class="z-depth-1" style="background-color: white;" ng-if="tabs">
     <div class="col s12 container">
-      <ul class="tabs" tabs>
+      <ul class="tabs" tabs id="tabsMenu">
         <li class="tab col" ng-repeat="tab in tabs">
           <a ui-sref="{{tab.sref}}" ui-sref-active="active">{{tab.label}}</a>
         </li>
