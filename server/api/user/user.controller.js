@@ -115,6 +115,9 @@ exports.createUserWithInviteToken = function(req, res, next) {
       newUser.provider = 'local';
       newUser.role = 'user';
       newUser.emailVerified = true;
+      newUser.firstName = req.body.firstName;
+      newUser.lastName = req.body.lastName;
+      newUser.name = req.body.firstName + ' ' + req.body.lastName;
       newUser.save(function(err, user){
         if (err) {return validationError(res, err);}
         else {
@@ -329,6 +332,10 @@ exports.changePhoneNum = function(req, res, next) {
       res.send(200);
     });
   });
+};
+
+exports.changeFirstLastName = function(req, res) {
+
 };
 
 /**
