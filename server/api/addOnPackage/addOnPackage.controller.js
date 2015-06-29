@@ -421,6 +421,8 @@ exports.sendAddendum = function(req, res) {
                     description: req.body.description.description,
                     addendumsScope: addendumsScope
                 });
+                contractorPackage.markModified('sendAddendum');
+                contractorPackage._editUser = req.user;
                 contractorPackage.save(function(err, saved){
                     if (err) {return res.send(500, err);}
                     else {

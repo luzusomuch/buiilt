@@ -23,6 +23,7 @@ angular.module('buiiltApp').directive('addendum', function(){
             };
 
             $scope.sendAddendum = function() {
+                console.log('asdsadsadsads');
                 addOnPackageService.sendAddendum({id: $scope.package._id, 
                     packageType: $scope.type, description: $scope.addendum, 
                     addendumScope: $scope.addendumsScope})
