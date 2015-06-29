@@ -37,7 +37,10 @@
         </div>
         <div clas="row">
           <div class="input-field col s12">
-            <label>Email: </label>
+            <label>
+              <span ng-if="currentTeam.type == 'builder'">Client's Email: </span>
+              <span ng-if="currentTeam.type == 'homeOwner'">Builder's Email: </span>
+            </label>
             <input name="email" ng-model="project.package.to" required type="text"
                    ng-class="{'invalid' : form.email.$invalid && submitted}">
             <p class="validate-message" ng-if=" form.email.$error.required && submitted">Email is required</p>
