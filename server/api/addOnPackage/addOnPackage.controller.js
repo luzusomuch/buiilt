@@ -45,6 +45,8 @@ exports.sendDefect = function(req, res) {
                     location: req.body.defect.location,
                     description: req.body.defect.description
                 });
+                materialPackage.markModified('sendDefect');
+                materialPackage._editUser = req.user;
                 materialPackage.save(function(err, savedMaterialPacakge){
                     if (err) {return res.send(500,err);}
                     else {
@@ -128,6 +130,8 @@ exports.sendVariation = function(req, res) {
                     title: req.body.variation.title,
                     description: req.body.variation.description
                 });
+                materialPackage.markModified('sendVariation');
+                materialPackage._editUser = req.user;
                 materialPackage.save(function(err, savedMaterialPacakge){
                     if (err) {return res.send(500,err);}
                     else {
@@ -271,6 +275,8 @@ exports.sendInvoice = function(req, res) {
                                 subTotal: subTotal,
                                 total: subTotal * 0.1 + subTotal
                             });
+                            materialPackage.markModified('sendInvoice');
+                            materialPackage._editUser = req.user;
                             materialPackage.save(function(err, saved) {
                                 if (err) {return res.send(500,err);}
                                 else {
@@ -454,6 +460,8 @@ exports.sendAddendum = function(req, res) {
                     description: req.body.description.description,
                     addendumsScope: addendumsScope
                 });
+                materialPackage.markModified('sendAddendum');
+                materialPackage._editUser = req.user;
                 materialPackage.save(function(err, saved){
                     if (err) {return res.send(500, err);}
                     else {
@@ -612,6 +620,8 @@ exports.editAddendum = function(req, res) {
                         });
                         return false;
                     });
+                    materialPackage.markModified('editAddendum');
+                    materialPackage._editUser = req.user;
                     materialPackage.save(function(err, saved) {
                         if (err) {return res.send(500,err);}
                         else {

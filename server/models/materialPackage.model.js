@@ -121,7 +121,10 @@ var MaterialPackageSchema = new Schema({
 MaterialPackageSchema
 .pre('save', function(next) {
   this.wasNew = this.isNew;
-
+  this._modifiedPaths = this.modifiedPaths();
+  this.editUser = this._editUser;
+  this.ownerUser = this._ownerUser;
+  this.quote = this._quote;
   if (!this.isNew){
     this.updatedAt = new Date();
   }
@@ -131,7 +134,17 @@ MaterialPackageSchema
 
 MaterialPackageSchema.post('save', function (doc) {
   var evtName = this.wasNew ? 'MaterialPackage.Inserted' : 'MaterialPackage.Updated';
-
+  if (this._modifiedPaths) {
+    doc._modifiedPaths = this._modifiedPaths
+  }
+  if (this._original) {
+    doc._oldSupplier = this._original.to.slice(0);
+    doc._newInvitation = this._original.newInvitation.slice(0);
+    doc._oldAddendum = this._original.addendums.slice(0);
+  }
+  doc.ownerUser = this._ownerUser;
+  doc.editUser = this._editUser;
+  doc.quote = this._quote;
   EventBus.emit(evtName, doc);
 });
 

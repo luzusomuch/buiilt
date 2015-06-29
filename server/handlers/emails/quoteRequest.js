@@ -48,6 +48,10 @@ EventBus.onSeries('QuoteRequest.Updated', function(request, next) {
       }
       else if(result.contractorPackage) {
         console.log(result.contractorPackage);
+        return next();
+      }
+      else {
+        return next();
       }
     }
     else {
@@ -58,7 +62,6 @@ EventBus.onSeries('QuoteRequest.Updated', function(request, next) {
 
 
 EventBus.onSeries('QuoteRequest.Inserted', function(request, next) {
-  console.log(request);
   async.parallel({
     user: function(cb){
       User.findOne({_id: request.user}, cb);
@@ -76,7 +79,6 @@ EventBus.onSeries('QuoteRequest.Inserted', function(request, next) {
   }, function(err, result){
     if (!err) {
       //do send email
-      console.log(request);
       if (result.builderPackage) {
         Mailer.sendMail('builder-quote-request.html', result.project.user.email, {
           quoteRequest: request,
@@ -94,6 +96,7 @@ EventBus.onSeries('QuoteRequest.Inserted', function(request, next) {
       else if (result.contractorPackage) {
         Team.findById(result.contractorPackage.owner).populate('leader').exec(function(err, team) {
           if (err) {return next();}
+          if (!team) {return next();}
           else {
             _.each(team.leader, function(leader){
               Mailer.sendMail('view-quote-contractor-package.html', leader.email, {
@@ -113,6 +116,9 @@ EventBus.onSeries('QuoteRequest.Inserted', function(request, next) {
             });
           }
         });
+      }
+      else {
+        return next();
       }
     } else {
       return next();

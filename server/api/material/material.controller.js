@@ -70,6 +70,7 @@ exports.createMaterialPackage = function (req, res, next) {
     if (err) {return res.send(500,err);}
     else {
       materialPackage.to = to;
+      materialPackage._ownerUser = req.user;
       materialPackage.save(function(err, saved){
         if (err) {return res.send(500,err);}
         else {
