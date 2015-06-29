@@ -67,6 +67,7 @@ exports.upload = function(req, res){
                             s3.uploadFile(saved, function(err, data) {
                                 if (err) {console.log(err);}
                                 else {
+                                    console.log(path.resolve(fileSaved.path));
                                     if (saved.mimeType == 'image/png' || saved.mimeType == 'image/jpeg') {
                                         gm(__dirname + "/../../../" + fileSaved.path)
                                         .resize(320, 480)

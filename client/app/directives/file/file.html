@@ -4,13 +4,13 @@
         <div class="card">
             <div class="card-image" ng-switch="file.mimeType">
               <span ng-switch-when="image/jpeg">
-                <img src="../../media/img/{{file._id}}-{{file.title}}" alt="">
+                <img src="../../media/files/{{file._id}}-{{file.title}}" alt="">
               </span>
               <span ng-switch-when="image/png">
-                <img src="../../media/img/{{file._id}}-{{file.title}}" alt="">
+                <img src="../../media/files/{{file._id}}-{{file.title}}" alt="">
               </span>
               <span ng-switch-default>
-                <img src="../../media/img/sample-1.jpg" alt="">
+                <img src="../../media/sample-1.jpg" alt="">
               </span>
             </div>
             <div class="card-action">
