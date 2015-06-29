@@ -24,6 +24,8 @@ exports.sendDefect = function(req, res) {
                     location: req.body.defect.location,
                     description: req.body.defect.description
                 });
+                contractorPackage.markModified('sendDefect');
+                contractorPackage._editUser = req.user;
                 contractorPackage.save(function(err, savedContractorPacakge){
                     if (err) {return res.send(500,err);}
                     else {
@@ -106,6 +108,8 @@ exports.sendVariation = function(req, res) {
                     title: req.body.variation.title,
                     description: req.body.variation.description
                 });
+                contractorPackage.markModified('sendVariation');
+                contractorPackage._editUser = req.user;
                 contractorPackage.save(function(err, savedContractorPacakge){
                     if (err) {return res.send(500,err);}
                     else {
@@ -205,6 +209,8 @@ exports.sendInvoice = function(req, res) {
                                 subTotal: subTotal,
                                 total: subTotal * 0.1 + subTotal
                             });
+                            contractorPackage.markModified('sendInvoice');
+                            contractorPackage._editUser = req.user;
                             contractorPackage.save(function(err, saved) {
                                 if (err) {return res.send(500,err);}
                                 else {

@@ -113,6 +113,9 @@ exports.findOne = function(req, res){
             contractorPackage.winnerTeam._id = team._id;
             contractorPackage.quote = quote.total;
             contractorPackage.isAccept = true;
+            contractorPackage.markModified('selectQuote');
+            contractorPackage._ownerUser = quote.user;
+            contractorPackage._editUser = req.user;
             contractorPackage.save(function(err, saved) {
               if (err) {return res.send(500,err);}
               else {

@@ -53,6 +53,18 @@ angular.module('buiiltApp')
         if (scope.notification.type === 'sendMessageToBuilder') {
           text = params.fromUser  + 'has send you a message in package ' + params.element;
         }
+        if (scope.notification.type === 'selectQuote') {
+          text = params.fromUser  + 'has select you as a contractor for package ' + params.element;
+        }
+        if (scope.notification.type === 'sendDefect') {
+          text = params.fromUser  + 'has add new defect in package ' + params.element;
+        }
+        if (scope.notification.type === 'sendVariation') {
+          text = params.fromUser  + 'has add new variation in package ' + params.element;
+        }
+        if (scope.notification.type === 'sendInvoice') {
+          text = params.fromUser  + 'has add new invoice in package ' + params.element;
+        }
         text += ' Click <a href="#!" ng-click="goToDetail(notification)">here</a> for more infomation';
         element.html(text).show();
         $compile(element.contents())(scope);

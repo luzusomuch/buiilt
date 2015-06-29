@@ -31,6 +31,7 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
 });
 
 EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
+    console.log(request._modifiedPaths);
     if (request._modifiedPaths.indexOf('sendQuote') != -1) {
         Team.findById(request.owner, function(err, team) {
             if (err) {return next();}
@@ -169,6 +170,89 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
                     element : request,
                     referenceTo : 'ContractorPackage',
                     type : 'sendMessageToBuilder'
+                };
+                NotificationHelper.create(params,function(err) {
+                  if (err) {
+                    console.log(err);
+                  }
+                  next();
+                });
+            }
+        });
+    }
+    else if(request._modifiedPaths.indexOf('selectQuote') != -1) {
+        var notification = new Notification({
+            owner: request.ownerUser,
+            fromUser: request.editUser,
+            toUser: request.ownerUser,
+            element: request,
+            referenceTo: 'ContractorPackage',
+            type: 'selectQuote'
+        });
+        notification.save();
+    }
+    else if(request._modifiedPaths.indexOf('sendDefect') != -1) {
+        var owners = [];
+        ContractorPackage.findById(request._id).populate('owner')
+        .populate('winnerTeam._id').exec(function(err, contractorPackage){
+            if (err) {return next();}
+            if (!contractorPackage) {return next();}
+            else {
+                owners = _.union(contractorPackage.owner.leader, contractorPackage.winnerTeam._id.leader);
+                var params = {
+                    owners : owners,
+                    fromUser : request.editUser,
+                    element : request,
+                    referenceTo : 'ContractorPackage',
+                    type : 'sendDefect'
+                };
+                NotificationHelper.create(params,function(err) {
+                  if (err) {
+                    console.log(err);
+                  }
+                  next();
+                });
+            }
+        });
+    }
+    else if(request._modifiedPaths.indexOf('sendVariation') != -1) {
+        var owners = [];
+        ContractorPackage.findById(request._id).populate('owner')
+        .populate('winnerTeam._id').exec(function(err, contractorPackage){
+            if (err) {return next();}
+            if (!contractorPackage) {return next();}
+            else {
+                owners = _.union(contractorPackage.owner.leader, contractorPackage.winnerTeam._id.leader);
+                var params = {
+                    owners : owners,
+                    fromUser : request.editUser,
+                    element : request,
+                    referenceTo : 'ContractorPackage',
+                    type : 'sendVariation'
+                };
+                NotificationHelper.create(params,function(err) {
+                  if (err) {
+                    console.log(err);
+                  }
+                  next();
+                });
+            }
+        });
+    }
+    else if(request._modifiedPaths.indexOf('sendInvoice') != -1) {
+        var owners = [];
+        ContractorPackage.findById(request._id).populate('owner')
+        .populate('winnerTeam._id').exec(function(err, contractorPackage){
+            if (err) {return next();}
+            if (!contractorPackage) {return next();}
+            else {
+                owners = _.union(contractorPackage.owner.leader, contractorPackage.winnerTeam._id.leader);
+                var params = {
+                    owners : owners,
+                    fromUser : request.editUser,
+                    element : request,
+                    referenceTo : 'ContractorPackage',
+                    type : 'sendInvoice'
                 };
                 NotificationHelper.create(params,function(err) {
                   if (err) {
