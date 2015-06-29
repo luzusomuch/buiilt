@@ -33,6 +33,19 @@ exports.findOne = function(req, res) {
     });
 };
 
+exports.contractorPackage = function(req,res,next) {
+  ContractorPackage.findById(req.params.id)
+    .populate('project')
+    .populate('winnerTeam._id')
+    .populate('owner')
+    .exec(function(err, contractorPackage) {
+      if (err) {return res.send(500,err)}
+      if (!contractorPackage) {return res.send(404,err)}
+      req.contractorPackage = contractorPackage;
+      next();
+  })
+}
+
 exports.sendMessage = function(req, res) {
   ContractorPackage.findById(req.params.id, function(err, contractorPackage) {
     if (err) {return res.send(500,err)}
@@ -520,4 +533,25 @@ exports.cancelPackage = function(req, res) {
       });
     }
   });
+};
+
+exports.complete = function(req,res) {
+  var contractorPackage = req.contractorPackage
+  contractorPackage.isCompleted = !contractorPackage.isCompleted
+  contractorPackage.save(function(err) {
+    if (err) {
+      return res.send(500,err);
+    }
+    User.populate(contractorPackage, [
+      {path : 'winnerTeam._id.member._id'},
+      {path : 'winnerTeam._id.leader'},
+      {path : 'owner.member._id'},
+      {path : 'owner.leader'}
+    ],function(err,contractorPackage) {
+      if (err) {
+        return res.send(500, err);
+      }
+      return res.json(contractorPackage);
+    })
+  })
 };

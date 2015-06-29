@@ -30,6 +30,18 @@ exports.findOne = function(req, res) {
     });
 };
 
+exports.materialPackage = function(req,res,next) {
+  MaterialPackage.findById(req.params.id)
+    .populate('winnerTeam._id')
+    .populate('owner')
+    .populate('project')
+    .exec(function(err, materialPackage) {
+      if (err) {return res.send(500, err);}
+      req.materialPackage = materialPackage;
+      next();
+    })
+}
+
 exports.sendQuote =function(req, res) {
     var quoteRequest = new QuoteRequest({
         user: req.user._id,
@@ -439,4 +451,25 @@ exports.sendAddendum = function(req, res) {
       }
     }
   });
+};
+
+exports.complete = function(req,res) {
+  var materialPackage = req.materialPackage
+  materialPackage.isCompleted = !materialPackage.isCompleted
+  materialPackage.save(function(err) {
+    if (err) {
+      return res.send(500,err);
+    }
+    User.populate(materialPackage, [
+      {path : 'winnerTeam._id.member._id'},
+      {path : 'winnerTeam._id.leader'},
+      {path : 'owner.member._id'},
+      {path : 'owner.leader'}
+    ],function(err,materialPackage) {
+      if (err) {
+        return res.send(500, err);
+      }
+      return res.json(materialPackage);
+    })
+  })
 };

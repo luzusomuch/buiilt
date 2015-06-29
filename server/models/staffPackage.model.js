@@ -48,7 +48,7 @@ var StaffPackageSchema = new Schema({
     total: Number
   }],
   defect:[],
-  isComplete: { type: Boolean, default: false },
+  isCompleted: { type: Boolean, default: false },
   status: { type: Boolean, default: true },
   dateStart: { type: Date, default: Date.now },
   createdAt: { type: Date, default: Date.now },

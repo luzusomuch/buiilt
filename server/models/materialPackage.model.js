@@ -112,7 +112,7 @@ var MaterialPackageSchema = new Schema({
   isCancel: {type: Boolean, default: false},
   defact:[],
   isSelect: { type: Boolean, default: false },
-  status: { type: Boolean, default: true },
+  isCompleted: { type: Boolean, default: false },
   dateStart: { type: Date, default: Date.now },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }

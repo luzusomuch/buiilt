@@ -75,6 +75,12 @@ angular.module('buiiltApp')
           id: '@id',
           action: 'send-message-to-builder'
         }
+      },
+      complete : {
+        method : 'PUT',
+        params : {
+          action : 'complete'
+        }
       }
     });
   });

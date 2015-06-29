@@ -12,6 +12,9 @@
       <ul id="itemActions" class="dropdown-content">
         <li><a class="modal-trigger" href="#modal_attachDefect">Attach Defect</a></li>
         <li><a class="modal-trigger" href="#modal_attachDocument">Attach Document</a></li>
+        <div class="divider"  ng-if="isLeader"></div>
+        <li><a class="modal-trigger" ng-if="isLeader && !staffPackage.isCompleted" href="#modal_complete">Mark as complete</a></li>
+        <li><a class="modal-trigger" ng-if="isLeader && staffPackage.isCompleted" href="#modal_complete">Mark as in progress</a></li>
       </ul>
     </div>
   </div>
@@ -30,7 +33,7 @@
             <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="staff in staffPackage.staffs">
               {{staff.email}}
             </div>
-
+            <p class="col s12">Package status : <span class="highlight">{{(!staffPackage.isCompleted) ? 'In progress' : 'Completed'}}</span></p>
           </div>
         </li>
       </ul>
@@ -48,4 +51,5 @@
       <div message package="staffPackage" type="staff"></div>
     </div>
   </div>
+  <div ng-include="'app/modules/staff/views/complete.modal.html'"></div>
 </div>

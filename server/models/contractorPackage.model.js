@@ -114,7 +114,7 @@ var ContractorPackageSchema = new Schema({
   defact:[],
   isCancel: {type: Boolean, default: false},
   isAccept: { type: Boolean, default: false },
-  status: { type: Boolean, default: true },
+  isCompleted: { type: Boolean, default: false },
   dateStart: { type: Date, default: Date.now },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }

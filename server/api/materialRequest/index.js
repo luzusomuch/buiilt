@@ -20,5 +20,6 @@ router.post('/:id/sendDefect', auth.isAuthenticated(), controller.sendDefect);
 router.post('/:id/sendInvoice', auth.isAuthenticated(), controller.sendInvoice);
 router.post('/:id/send-addendum', auth.isAuthenticated(), controller.sendAddendum);
 router.get('/:id/message-builder', auth.isAuthenticated(), controller.getMessageForBuilder);
+router.put('/:id/complete', auth.isAuthenticated(), controller.materialPackage, controller.complete);
 
 module.exports = router;

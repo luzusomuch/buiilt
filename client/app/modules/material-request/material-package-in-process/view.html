@@ -12,6 +12,9 @@
            <li ng-if="currentTeam.type == 'buider'"><a class="modal-trigger" href="#modal_attachDefect">Attach Defect</a></li>
            <li ng-if="currentTeam.type == 'supplier'"><a class="modal-trigger" href="#attachInvoice">Attach Invoice</a></li>
            <li><a class="modal-trigger" href="#modal_attachDocument">Attach Document</a></li>
+           <div class="divider"  ng-if="isLeader"></div>
+           <li><a class="modal-trigger" ng-if="isLeader && !materialRequest.isCompleted" href="#modal_complete">Mark as complete</a></li>
+           <li><a class="modal-trigger" ng-if="isLeader && materialRequest.isCompleted" href="#modal_complete">Mark as in progress</a></li>
          </ul>
    </div>
 </div>
@@ -39,6 +42,7 @@
           <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="member in materialRequest.winnerTeam._id.member" >
             {{member._id.email}}
           </div>
+          <p class="col s12">Package status : <span class="highlight">{{(!materialRequest.isCompleted) ? 'In progress' : 'Completed'}}</span></p>
         </div>
       </li>
     </ul>
@@ -54,6 +58,8 @@
 <div class="row">
   <div message package="materialRequest" type="material"></div>
 </div>
+
+<div ng-include="'app/modules/material-request/material-package-in-process/complete.modal.html'"></div>
 
 
 

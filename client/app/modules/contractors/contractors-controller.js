@@ -7,7 +7,7 @@ angular.module('buiiltApp').controller('ContractorsCtrl',
     $scope.currentProject = $rootScope.currentProject;
     $scope.currentTeam = team;
     $scope.user = authService.getCurrentUser();
-    $scope.filter = {isAccept : true};
+    $scope.filter = {isCompleted : false, isAccept : true};
     $scope.submitted = false;
 
     // $scope.team = authService.getCurrentTeam();

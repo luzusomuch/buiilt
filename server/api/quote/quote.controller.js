@@ -110,10 +110,9 @@ exports.findOne = function(req, res){
           ContractorPackage.findById(quote.package, function(err, contractorPackage) {
           if (err) {return res.send(500, err);}
           else {
-            contractorPackage.winnerTeam._id = team._id,
-            contractorPackage.quote = quote.total,
-            contractorPackage.isAccept = true,
-            contractorPackage.status = false
+            contractorPackage.winnerTeam._id = team._id;
+            contractorPackage.quote = quote.total;
+            contractorPackage.isAccept = true;
             contractorPackage.save(function(err, saved) {
               if (err) {return res.send(500,err);}
               else {
@@ -144,10 +143,9 @@ exports.getByMaterial = function(req, res){
           MaterialPackage.findById(quote.package, function(err, materialPackage) {
           if (err) {return res.send(500, err);}
           else {
-            materialPackage.winnerTeam._id = team._id,
-            materialPackage.quote = quote.total,
-            materialPackage.isSelect = true,
-            materialPackage.status = false
+            materialPackage.winnerTeam._id = team._id;
+            materialPackage.quote = quote.total;
+            materialPackage.isSelect = true;
             materialPackage.save(function(err, saved) {
               if (err) {return res.send(500,err);}
               else {

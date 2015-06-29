@@ -12,6 +12,9 @@
      <li ng-if="currentTeam.type == 'buider'"><a class="modal-trigger" href="#modal_attachDefect">Attach Defect</a></li>
      <li><a class="modal-trigger" href="#modal_attachDocument">Attach Document</a></li>
      <li ng-if="currentTeam.type == 'contractor'"><a class="modal-trigger" href="#attachInvoice">Attach Invoice</a></li>
+     <div class="divider"  ng-if="isLeader"></div>
+     <li><a class="modal-trigger" ng-if="isLeader && !contractorRequest.isCompleted" href="#modal_complete">Mark as complete</a></li>
+     <li><a class="modal-trigger" ng-if="isLeader && contractorRequest.isCompleted" href="#modal_complete">Mark as in progress</a></li>
    </ul>
  </div>
 </div>
@@ -28,12 +31,13 @@
           </ul>
           <p class="col s12">Contractor team: <span class="highlight">{{contractorRequest.winnerTeam._id.name}}</span></p>
           <p class="col s12">Member: </p>
-          <div class="card col " style="padding: 5px; margin-left: 10px" ng-repeat="leader in contractorRequest.winnerTeam._id.leader">
+          <div class="card col admin" style="padding: 5px; margin-left: 10px" ng-repeat="leader in contractorRequest.winnerTeam._id.leader">
             {{leader.email}}
           </div>
           <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="member in contractorRequest.winnerTeam._id.member">
             {{member._id.email}}
           </div>
+          <p class="col s12">Package status : <span class="highlight">{{(!contractorRequest.isCompleted) ? 'In progress' : 'Completed'}}</span></p>
         </div>
       </li>
     </ul>
@@ -41,11 +45,12 @@
 </div>
 
            
-           <div class="row">
-             <div task package="contractorRequest" type="contractor"></div>
-              <addOn package="contractorRequest" type="contractor"></addOn>
-            </div>
+<div class="row">
+ <div task package="contractorRequest" type="contractor"></div>
+  <addOn package="contractorRequest" type="contractor"></addOn>
+</div>
                
 
 <div message package="contractorRequest" type="contractor"></div>
+<div ng-include="'app/modules/contractor-request/contractor-package-in-process/complete.modal.html'"></div>
 
