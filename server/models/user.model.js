@@ -52,7 +52,7 @@ UserSchema
   .get(function () {
     return this._password;
   });
-
+  
 // Public profile information
 UserSchema
   .virtual('profile')

@@ -20,6 +20,8 @@ angular.module('buiiltApp')
   .controller('SignupCtrl', function ($scope, authService,$stateParams,inviteTokenService) {
   $scope.user = {
     password : '',
+    lastName: '',
+    firstName: '',
     repassword : '',
     allowNewsletter: true,
     type: 'homeOwner',

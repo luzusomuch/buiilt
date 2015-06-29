@@ -20,6 +20,18 @@
             </div>
           </div>
           <div class="row">
+            <div class="input-field col s12">
+              <input type="text" name="firstName" ng-model="user.firstName" required>
+              <label for="firstName">First name</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s12">
+              <input type="text" name="lastName" ng-model="user.lastName" required>
+              <label for="lastName">Last name</label>
+            </div>
+          </div>
+          <div class="row">
             <div input-field class="col s12">
               <input id="password" name="password" ng-model="user.password" required type="password"
                      ng-class="{'invalid' : form.password.$invalid && submitted}">

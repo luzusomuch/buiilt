@@ -40,6 +40,7 @@ exports.create = function (req, res, next) {
     var newUser = new User(data);
     newUser.provider = 'local';
     newUser.role = 'user';
+    newUser.name = data.firstName + ' ' + data.lastName;
     newUser.save(function (err, user) {
       if (err) {
         return validationError(res, err);
