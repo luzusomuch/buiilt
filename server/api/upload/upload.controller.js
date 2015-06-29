@@ -70,7 +70,7 @@ exports.upload = function(req, res){
                                     if (saved.mimeType == 'image/png' || saved.mimeType == 'image/jpeg') {
                                         gm(__dirname + "/../../../" + fileSaved.path)
                                         .resize(320, 480)
-                                        .write(__dirname + "/../../../" + "client/media/img/"+fileSaved._id + '-' +fileSaved.title, function(err) {
+                                        .write(__dirname + "/../../../" + "client/media/files/"+fileSaved._id + '-' +fileSaved.title, function(err) {
                                             if (err) {console.log(err);}
                                             else {
                                                 return res.json(200,data);        
@@ -107,7 +107,7 @@ exports.upload = function(req, res){
                                     if (fileSaved.mimeType == 'image/png' || fileSaved.mimeType == 'image/jpeg') {
                                         gm(__dirname + "/../../../" + fileSaved.path)
                                         .resize(320, 480)
-                                        .write(__dirname + "/../../../" + "client/media/img/"+fileSaved._id + '-' +fileSaved.title, function(err) {
+                                        .write(__dirname + "/../../../" + "client/media/files/"+fileSaved._id + '-' +fileSaved.title, function(err) {
                                             if (err) {console.log(err);}
                                             else
                                                 return res.json(200,data);        
@@ -172,7 +172,7 @@ exports.uploadInPackge = function(req, res){
                                     if (saved.mimeType == 'image/png' || saved.mimeType == 'image/jpeg') {
                                         gm(__dirname + "/../../../" + fileSaved.path)
                                         .resize(320, 480)
-                                        .write(__dirname + "/../../../" + "client/media/img/"+fileSaved._id + '-' +fileSaved.title, function(err) {
+                                        .write(__dirname + "/../../../" + "client/media/files/"+fileSaved._id + '-' +fileSaved.title, function(err) {
                                             if (err) {console.log(err);}
                                             else {
                                                 return res.json(200,data);        
@@ -208,7 +208,7 @@ exports.uploadInPackge = function(req, res){
                                 if (fileSaved.mimeType == 'image/png' || fileSaved.mimeType == 'image/jpeg') {
                                     gm(__dirname + "/../../../" + fileSaved.path)
                                     .resize(320, 480)
-                                    .write(__dirname + "/../../../" + "client/media/img/"+fileSaved._id + '-' +fileSaved.title, function(err) {
+                                    .write(__dirname + "/../../../" + "client/media/files/"+fileSaved._id + '-' +fileSaved.title, function(err) {
                                         if (err) {console.log(err);}
                                         else
                                             return res.json(200,data);        
