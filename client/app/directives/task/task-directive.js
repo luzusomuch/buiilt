@@ -19,6 +19,7 @@ angular.module('buiiltApp')
               $scope.currentTeam = res;
               $scope.isLeader = (_.find($scope.currentTeam.leader,{_id : $scope.currentUser._id})) ? true : false;
               getAvailableAssignee($scope.type);
+              console.log(getAvailableAssignee);
               updateTasks();
 
             });
@@ -34,11 +35,13 @@ angular.module('buiiltApp')
               $scope.available = [];
               $scope.available = _.union($scope.available,$scope.currentTeam.leader);
               if ($scope.currentTeam._id == $scope.package.owner._id && $scope.isLeader) {
-                _.forEach($scope.package.to.team.leader, function (leader) {
-                  $scope.available.push(leader);
-                })
+                if ($scope.package.to.team) {
+                    _.forEach($scope.package.to.team.leader, function (leader) {
+                      $scope.available.push(leader);
+                    })
+                }
               }
-              if ($scope.currentTeam._id == $scope.package.to.team._id && $scope.isLeader) {
+              if ($scope.package.to.team && $scope.currentTeam._id == $scope.package.to.team._id && $scope.isLeader) {
                 _.forEach($scope.package.owner.leader, function (leader) {
                   $scope.available.push(leader);
                 })
