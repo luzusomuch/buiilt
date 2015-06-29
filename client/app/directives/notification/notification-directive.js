@@ -29,16 +29,19 @@ angular.module('buiiltApp')
         if (scope.notification.type === 'taskCompleted') {
           text = params.fromUser + ' has completed task ' + params.element + ' at ' + params.time;
         }
-        if (scope.notification.type === 'CreateContractorPackage') {
-          text = params.fromUser + ' has invited ' + params.toUser + 'to send a quote for ' + params.element.name;
+        if (scope.notification.type === 'create-contractor-package') {
+          text = params.fromUser + ' has invited ' + params.toUser + 'to send a quote for ' + params.element;
         }
-        if (scope.notification.type === 'sendQuote') {
+        if (scope.notification.type === 'create-material-package') {
+          text = params.fromUser + ' has invited ' + params.toUser + 'to send a quote for ' + params.element;
+        }
+        if (scope.notification.type === 'send-quote') {
           text = params.fromUser + ' has send quote ' + params.quote + ' to ' + params.toUser + ' in ' + param.packageName;
         }
-        if (scope.notification.type === 'sendAddendum') {
+        if (scope.notification.type === 'send-addendum') {
           text = params.fromUser  + 'has add new addendum in pacakge ' + params.element;
         }
-        if (scope.notification.type === 'editAddendum') {
+        if (scope.notification.type === 'edit-addendum') {
           text = params.fromUser  + 'has edit addendum in pacakge ' + params.element;
         }
         if (scope.notification.type === 'invite') {
@@ -47,22 +50,22 @@ angular.module('buiiltApp')
         if (scope.notification.type === 'invitation') {
           text = params.fromUser  + 'has invited you to send quote for package ' + params.element;
         }
-        if (scope.notification.type === 'sendMessage') {
+        if (scope.notification.type === 'send-message') {
           text = params.fromUser  + 'has send you a message in package ' + params.element;
         }
-        if (scope.notification.type === 'sendMessageToBuilder') {
+        if (scope.notification.type === 'send-message-to-builder') {
           text = params.fromUser  + 'has send you a message in package ' + params.element;
         }
-        if (scope.notification.type === 'selectQuote') {
+        if (scope.notification.type === 'select-quote') {
           text = params.fromUser  + 'has select you as a contractor for package ' + params.element;
         }
-        if (scope.notification.type === 'sendDefect') {
+        if (scope.notification.type === 'send-defect') {
           text = params.fromUser  + 'has add new defect in package ' + params.element;
         }
-        if (scope.notification.type === 'sendVariation') {
+        if (scope.notification.type === 'send-variation') {
           text = params.fromUser  + 'has add new variation in package ' + params.element;
         }
-        if (scope.notification.type === 'sendInvoice') {
+        if (scope.notification.type === 'send-invoice') {
           text = params.fromUser  + 'has add new invoice in package ' + params.element;
         }
         text += ' Click <a href="#!" ng-click="goToDetail(notification)">here</a> for more infomation';

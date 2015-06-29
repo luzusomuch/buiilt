@@ -107,6 +107,9 @@ exports.sendQuote =function(req, res) {
                       }
                     }
                   });
+                  materialPackage._quote = saved.total;
+                  materialPackage._editUser = req.user;
+                  materialPackage.markModified('sendQuote');
                   materialPackage.save(function(err, savedMaterialPackage){
                     if (err) {return res.send(500,err);}
                     else {
@@ -176,6 +179,8 @@ exports.sendInvitationInMaterial = function(req, res) {
             else {
               materialPackage.to = to;
               materialPackage.newInvitation = newSuppliers;
+              materialPackage._ownerUser = req.user;
+              materialPackage.markModified('inviteMaterial');
               materialPackage.save(function(err, saved){
                 if (err) {return res.send(500,err);}
                 else {

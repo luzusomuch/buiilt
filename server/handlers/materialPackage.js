@@ -3,14 +3,14 @@
 var EventBus = require('./../components/EventBus');
 var User = require('./../models/user.model');
 var Project = require('./../models/project.model');
-var ContractorPackage = require('./../models/contractorPackage.model');
+var MaterialPackage = require('./../models/materialPackage.model');
 var Team = require('./../models/team.model');
 var Notification = require('./../models/notification.model');
 var NotificationHelper = require('./../components/helpers/notification');
 var _ = require('lodash');
 var async = require('async');
 
-EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
+EventBus.onSeries('MaterialPackage.Inserted', function(request, next) {
     _.each(request.to, function(toSupplier){
         User.findOne({email: toSupplier.email}, function(err, user){
             if (err) {return next();}
@@ -21,8 +21,8 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
                     fromUser: request._ownerUser,
                     toUser: user._id,
                     element: request,
-                    referenceTo: 'ContractorPackage',
-                    type: 'create-contractor-package'
+                    referenceTo: 'MaterialPackage',
+                    type: 'create-material-package'
                 });
                 notification.save();
             }
@@ -30,7 +30,9 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
     });
 });
 
-EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
+EventBus.onSeries('MaterialPackage.Updated', function(request, next) {
+    console.log('adasdasdasdasd');
+    console.log(request);
     console.log(request._modifiedPaths);
     if (request._modifiedPaths.indexOf('sendQuote') != -1) {
         Team.findById(request.owner, function(err, team) {
@@ -60,7 +62,7 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
                         fromUser: request.ownerUser,
                         toUser: leader,
                         element: request,
-                        referenceTo: 'ContractorPackage',
+                        referenceTo: 'MaterialPackage',
                         type: 'invite'
                     });
                     notification.save();
@@ -79,7 +81,7 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
                                 fromUser: request.ownerUser,
                                 toUser: leader,
                                 element: request,
-                                referenceTo: 'ContractorPackage',
+                                referenceTo: 'MaterialPackage',
                                 type: 'invitation'
                             });
                             notification.save();
@@ -103,7 +105,7 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
                             fromUser: request.editUser,
                             toUser: leader,
                             element: request,
-                            referenceTo: 'ContractorPackage',
+                            referenceTo: 'MaterialPackage',
                             type: 'send-addendum'
                         });
                         notification.save();
@@ -125,7 +127,7 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
                                 fromUser: request.editUser,
                                 toUser: leader,
                                 element: request,
-                                referenceTo: 'ContractorPackage',
+                                referenceTo: 'MaterialPackage',
                                 type: 'edit-addendum'
                             });
                             notification.save();
@@ -147,7 +149,7 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
                     owners : team.leader,
                     fromUser : request.ownerUser,
                     element : request,
-                    referenceTo : 'ContractorPackage',
+                    referenceTo : 'MaterialPackage',
                     type : 'send-message'
                 };
                 NotificationHelper.create(params,function(err) {
@@ -168,7 +170,7 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
                     owners : team.leader,
                     fromUser : request.editUser,
                     element : request,
-                    referenceTo : 'ContractorPackage',
+                    referenceTo : 'MaterialPackage',
                     type : 'send-message-to-builder'
                 };
                 NotificationHelper.create(params,function(err) {
@@ -186,24 +188,24 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
             fromUser: request.editUser,
             toUser: request.ownerUser,
             element: request,
-            referenceTo: 'ContractorPackage',
+            referenceTo: 'MaterialPackage',
             type: 'select-quote'
         });
         notification.save();
     }
     else if(request._modifiedPaths.indexOf('sendDefect') != -1) {
         var owners = [];
-        ContractorPackage.findById(request._id).populate('owner')
-        .populate('winnerTeam._id').exec(function(err, contractorPackage){
+        MaterialPackage.findById(request._id).populate('owner')
+        .populate('winnerTeam._id').exec(function(err, MaterialPackage){
             if (err) {return next();}
-            if (!contractorPackage) {return next();}
+            if (!MaterialPackage) {return next();}
             else {
-                owners = _.union(contractorPackage.owner.leader, contractorPackage.winnerTeam._id.leader);
+                owners = _.union(MaterialPackage.owner.leader, MaterialPackage.winnerTeam._id.leader);
                 var params = {
                     owners : owners,
                     fromUser : request.editUser,
                     element : request,
-                    referenceTo : 'ContractorPackage',
+                    referenceTo : 'MaterialPackage',
                     type : 'send-defect'
                 };
                 NotificationHelper.create(params,function(err) {
@@ -217,17 +219,17 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
     }
     else if(request._modifiedPaths.indexOf('sendVariation') != -1) {
         var owners = [];
-        ContractorPackage.findById(request._id).populate('owner')
-        .populate('winnerTeam._id').exec(function(err, contractorPackage){
+        MaterialPackage.findById(request._id).populate('owner')
+        .populate('winnerTeam._id').exec(function(err, MaterialPackage){
             if (err) {return next();}
-            if (!contractorPackage) {return next();}
+            if (!MaterialPackage) {return next();}
             else {
-                owners = _.union(contractorPackage.owner.leader, contractorPackage.winnerTeam._id.leader);
+                owners = _.union(MaterialPackage.owner.leader, MaterialPackage.winnerTeam._id.leader);
                 var params = {
                     owners : owners,
                     fromUser : request.editUser,
                     element : request,
-                    referenceTo : 'ContractorPackage',
+                    referenceTo : 'MaterialPackage',
                     type : 'send-variation'
                 };
                 NotificationHelper.create(params,function(err) {
@@ -241,17 +243,17 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
     }
     else if(request._modifiedPaths.indexOf('sendInvoice') != -1) {
         var owners = [];
-        ContractorPackage.findById(request._id).populate('owner')
-        .populate('winnerTeam._id').exec(function(err, contractorPackage){
+        MaterialPackage.findById(request._id).populate('owner')
+        .populate('winnerTeam._id').exec(function(err, MaterialPackage){
             if (err) {return next();}
-            if (!contractorPackage) {return next();}
+            if (!MaterialPackage) {return next();}
             else {
-                owners = _.union(contractorPackage.owner.leader, contractorPackage.winnerTeam._id.leader);
+                owners = _.union(MaterialPackage.owner.leader, MaterialPackage.winnerTeam._id.leader);
                 var params = {
                     owners : owners,
                     fromUser : request.editUser,
                     element : request,
-                    referenceTo : 'ContractorPackage',
+                    referenceTo : 'MaterialPackage',
                     type : 'send-invoice'
                 };
                 NotificationHelper.create(params,function(err) {

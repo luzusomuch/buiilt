@@ -60,6 +60,100 @@
       <label for="project_name">Contractor Package Title</label>
       <p class="validate-message" ng-if="form.name.$error.required && submitted">Pacakge name is required</p>
     </div>
+    <div class="row">
+    <div class="input-field col s6">
+      <select material-select ng-model="contractor.category">
+        <option value="" disabled selected>Category</option>
+        <option value="1">Option 1</option>
+        <option value="2">Option 2</option>
+        <option value="3">Option 3</option>
+      </select>
+      <label>Category</label>
+    </div>
+    <div class="input-field col s6">
+      <label for="date_required" class="active">Date Required</label>
+      <input type="date"
+             ng-model="contractor.dateStart"
+             format="mm/dd/yyyy"/>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col s12">
+      <ul class="collection z-depth-1">
+        <li class="collection-item vlalign-wrapper">
+          <div class="row form" style="margin-bottom: 0px">
+            <div class="col s12"><p>Enter work descriptions below:</p></div>
+            <div class="input-field col s10">
+              <textarea id="description" class="materialize-textarea" ng-model="description" ng-class="{'invalid' : descriptionError}"></textarea>
+              <label for="description" class="">Description</label>
+              <p class="validate-message" ng-if="descriptionError">Scope of work at least 1 item</p>
+            </div>
+            <div class="valign col s2">
+              <button class="btn" type="button" name="action" style="margin-top: 78px" ng-click="addDescription(description)">Add</button>
+            </div>
+          </div>
+        </li>
+        <li class="collection-item vlalign" ng-repeat="description in contractor.descriptions track by $index">
+          <div class="row" style="margin-bottom: 0px">
+            <div class="col s10">
+              <p>{{description}}</p>
+            </div>
+            <div class="col s2">
+              <button class="btn-flat btn-flat" ng-click="removeDescription($index)">Remove</button>
+            </div>
+          </div>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col s12">
+      <ul class="collection z-depth-1">
+        <li class="collection-item vlalign-wrapper">
+          <div class="row form" style="margin-bottom: 0px">
+            <div class="col s12"><p>Enter tradesmen's details below:</p></div>
+            <p class="validate-message" ng-if="trademenError">Tradesmen's details at least 1 item</p>
+            <div class="input-field col s7">
+              <!-- <input id="email_address" ng-model="newEmail" type="email" name="email" class="validate"> -->
+              <angucomplete-alt id="ex1"
+                                pause="100"
+                                selected-object="member.email"
+                                local-data="contractorTeamMember"
+                                search-fields="email"
+                                title-field="email"
+                                minlength="1"
+                                input-changed="inputChanged"
+                                template-url="/my-custom-template.html"
+                                input-class="col s12"></angucomplete-alt>
+            </div>
+            <div class="input-field col s3">
+              <input id="phone_number" ng-model="newPhoneNumber" type="text" name="phoneNumber" class="validate">
+              <label for="phone_number">Phone Number</label>
+            </div>
+            <div class="valign col s2">
+              <a href="#" ng-click="addUser()" class="btn" style="margin-top: 28px">Add</a>
+              <!-- <button class="btn" type="submit" ng-submit="addUser()" name="action" style="margin-top: 28px">Add</button> -->
+            </div>
+          </div>
+        </li>
+
+        <li class="collection-item vlalign" ng-repeat="emailPhone in member.emailsPhone">
+          <div class="row" style="margin-bottom: 0px">
+            <div class="col s7">{{emailPhone.email}}</div>
+            <div class="col s3">{{emailPhone.phoneNumber}}</div>
+            <div class="col s2"><a class="btn-flat btn-flat" ng-click="removeUser($index)" >Remove</a></div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+  <div class="modal-footer">
+    <button class="waves-effect waves-light btn modal-action">Create Package!</button>
+    <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
+  </div>
   </form>
 </div>
 

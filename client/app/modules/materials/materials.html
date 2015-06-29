@@ -78,7 +78,7 @@
                   <p class="validate-message" ng-if="descriptionError">Scope of work at least 1 item</p>
                 </div>
                 <div class="valign col s2">
-                  <button class="btn" type="button" name="action" style="margin-top: 78px" ng-click="addDescription(description1)">Add</button>
+                  <a class="btn" name="action" style="margin-top: 78px" ng-click="addDescription(description1)">Add</a>
                 </div>
               </div>
             </li>
@@ -88,7 +88,7 @@
                   <p>{{description}}</p>
                 </div>
                 <div class="col s2">
-                  <button class="btn-flat btn-flat" ng-click="removeDescription($index)">Remove</button>
+                  <a class="btn-flat btn-flat" ng-click="removeDescription($index)">Remove</a>
                 </div>
               </div>
             </li>
@@ -123,7 +123,7 @@
                 <div class="col s7">{{requirement.description}}</div>
                 <div class="col s3">{{requirement.quantity}}</div>
                 <div class="col s2">
-                  <button class="btn-flat btn-flat" ng-click="removeRequire($index)">Remove</button>
+                  <a class="btn-flat btn-flat" ng-click="removeRequire($index)">Remove</a>
                 </div>
               </div>
             </li>
@@ -165,7 +165,7 @@
                 <div class="col s7">{{emailPhone.email}}</div>
                 <div class="col s3">{{emailPhone.phoneNumber}}</div>
                 <div class="col s2">
-                  <button class="btn-flat btn-flat" ng-click="removeSupplier($index)">Remove</button>
+                  <a class="btn-flat btn-flat" ng-click="removeSupplier($index)">Remove</a>
                 </div>
               </div>
             </li>
@@ -174,7 +174,7 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button class="modal-action waves-effect waves-green btn modal-action">Create Package!</button>
+      <button type="submit" class="modal-action waves-effect waves-green btn modal-action">Create Package!</button>
       <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
     </div>
   </form>
