@@ -17,18 +17,13 @@ EventBus.onSeries('Team.Inserted', function(request, next){
           type : 'team-invite'
         });
         inviteToken.save(function(err) {
-          if (err) {
-            throw err;
-          }
+          if (err) { return callback(err);}
           Mailer.sendMail('invite-team-has-no-account.html', user.email, {
             request: request,
             link: config.baseUrl + 'signup?inviteToken=' + inviteToken.inviteToken,
             subject: 'Group invitation ' + request.name
           },function(err) {
-            if (err) {
-              throw err;
-              callback();
-            }
+            return callback(err);
           });
         })
       } else if (user._id && user.status == 'Pending')  {
@@ -36,9 +31,11 @@ EventBus.onSeries('Team.Inserted', function(request, next){
           request: request,
           subject: 'Group invitation ' + request.name
         }, function(err) {
-          callback();
+          callback(err);
         });
-      }
+      }else{
+		return callback();
+	  }
     },function() {
       return next();
     });

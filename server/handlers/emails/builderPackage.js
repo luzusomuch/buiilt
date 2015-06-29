@@ -13,6 +13,7 @@ var async = require('async');
 
 EventBus.onSeries('BuilderPackage.Inserted', function(request, next) {
   var subjectType = (request.to.type == 'homeOwner') ? 'home owner' : 'builder';
+
   if (request.to.email) {
     var packageInvite = new PackageInvite({
       owner: request.owner,
@@ -21,32 +22,37 @@ EventBus.onSeries('BuilderPackage.Inserted', function(request, next) {
       inviteType : request.to.type,
       to: request.to.email
     });
+
     packageInvite.save(function(err) {
+      if(err){ return next(); }
+
       Mailer.sendMail('invite-' + request.to.type + '-has-no-account.html', request.to.email, {
         project: request.project,
         registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
         subject: 'Invite ' + subjectType + ' send quote for ' + request.name
-      },function(err){
-        console.log(err);
-        next();
+      },function(){
+        return next();
       });
     });
   } else {
     Team.findById(request.to.team)
       .populate('leader')
       .exec(function(err, team) {
+        if(err || !team){ return next(); }
+
         if (team.type == request.to.type) {
           team.leader.forEach(function(leader) {
             Mailer.sendMail('invite-' + request.to.type + '.html', leader.email, {
               project: request.project,
               link: config.baseUrl + request.project._id + '/dashboard',
               subject: 'Invite ' + subjectType + ' send quote for ' + request.name
-            }, function (err) {
-              console.log(err);
+            }, function () {
               next();
             });
-          })
+          });
+        }else{
+          return next();
         }
-    })
+    });
   }
 });

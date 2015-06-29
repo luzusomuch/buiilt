@@ -42,19 +42,13 @@ EventBus.onSeries('QuoteRequest.Updated', function(request, next) {
           link: config.baseUrl + request.project +'/dashboard',
           builderPackage: result.builderPackage,
           subject: 'Become home builder for project ' + result.project.name
-        }, function(err) {
+        }, function() {
           return next();
         });
-      }
-      else if(result.contractorPackage) {
-        console.log(result.contractorPackage);
+      } else {
         return next();
       }
-      else {
-        return next();
-      }
-    }
-    else {
+    } else {
       return next();
     }
   });
@@ -89,11 +83,10 @@ EventBus.onSeries('QuoteRequest.Inserted', function(request, next) {
           quotesLink: config.baseUrl + 'quote-requests/' + request._id,
           builderPackage: result.builderPackage,
           subject: 'Quote request for ' + result.builderPackage.name
-        }, function(err) {
+        }, function() {
           return next();
         });
-      }
-      else if (result.contractorPackage) {
+      } else if (result.contractorPackage) {
         Team.findById(result.contractorPackage.owner).populate('leader').exec(function(err, team) {
           if (err) {return next();}
           if (!team) {return next();}
@@ -110,14 +103,12 @@ EventBus.onSeries('QuoteRequest.Inserted', function(request, next) {
                 contractorPackage: result.contractorPackage,
                 subject: 'View quote request for contractor package' + result.contractorPackage.name
               }, function(err) {
-                console.log(err);
                 return next();
               });
             });
           }
         });
-      }
-      else {
+      } else {
         return next();
       }
     } else {

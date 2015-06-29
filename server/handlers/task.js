@@ -10,7 +10,7 @@ var async = require('async');
 var _ = require('lodash');
 
 EventBus.onSeries('Task.Inserted', function(task, next){
-  if (task.assignees.length > 0) {
+  if (task.assignees.length) {
     var params = {
       owners : task.assignees,
       fromUser : task.user,
@@ -18,10 +18,7 @@ EventBus.onSeries('Task.Inserted', function(task, next){
       referenceTo : 'task',
       type : 'taskAssign'
     };
-    NotificationHelper.create(params,function(err) {
-      if (err) {
-        console.log(err);
-      }
+    NotificationHelper.create(params, function() {
       next();
     });
   } else {
@@ -35,6 +32,7 @@ EventBus.onSeries('Task.Updated', function(task, next){
     if (task.assignees.indexOf(task.user) == -1) {
       owners.push(task.user);
     }
+
     var params = {
       owners : owners,
       fromUser : task.editUser,
@@ -42,18 +40,15 @@ EventBus.onSeries('Task.Updated', function(task, next){
       referenceTo : 'task',
       type : task.completed ? 'taskCompleted' : 'taskReopened'
     };
-    NotificationHelper.create(params,function(err) {
-      if (err) {
-        console.log(err);
-      }
-      next();
+    NotificationHelper.create(params, function() {
+      return next();
     });
   } else if (task._modifiedPaths.indexOf('assignees') != -1) {
     async.parallel([
       function(callback) {
         if (task._oldAssignees.length > 0) {
           var owners = task.assignees.slice();
-          task._oldAssignees.forEach(function (assignee) {
+          async.each(task._oldAssignees, function (assignee, cb) {
             if (task.assignees.indexOf(assignee) == -1) {
               owners.push(assignee);
               var params = {
@@ -63,15 +58,13 @@ EventBus.onSeries('Task.Updated', function(task, next){
                 referenceTo: 'task',
                 type: 'taskRevoke'
               };
-              NotificationHelper.create(params, function (err) {
-                if (err) {
-                  return callback(err, null);
-                }
 
-              });
+              NotificationHelper.create(params, cb);
+            }else{
+              return cb();
             }
-          });
-          return callback(null, null);
+          }, callback);
+
         } else {
           var params = {
             owners : task.assignees,
@@ -80,41 +73,35 @@ EventBus.onSeries('Task.Updated', function(task, next){
             referenceTo : 'task',
             type : 'taskAssign'
           };
-          NotificationHelper.create(params,function(err) {
-            if (err) {
-              console.log(err);
-            }
-            next();
-          });
+          NotificationHelper.create(params, callback);
         }
       },
       function(callback) {
         if (task._oldAssignees.length > 0) {
           task._oldAssignees = task._oldAssignees.map(function (e) { return e.toString(); });
-          task.assignees.forEach(function(assignee) {
-            if (task._oldAssignees.indexOf(assignee.toString()) == -1) {
-              var params = {
-                owners : task.assignees,
-                fromUser : task.editUser,
-                toUser: assignee,
-                element : task,
-                referenceTo: 'task',
-                type: 'taskAssign'
-              };
-              NotificationHelper.create(params,function(err) {
-                if (err) {
-                  callback(err,null);
-                }
-              });
+          async.each(task.assignees, function(assignee, cb) {
+            if (task._oldAssignees.indexOf(assignee.toString()) != -1) {
+              return cb();
             }
-          });
+            
+            var params = {
+              owners : task.assignees,
+              fromUser : task.editUser,
+              toUser: assignee,
+              element : task,
+              referenceTo: 'task',
+              type: 'taskAssign'
+            };
+            NotificationHelper.create(params, cb);
+          }, callback);
+        }else{
+          return callback();
         }
-        return callback();
       }
     ],function() {
       next();
-    })
+    });
   } else {
-    next();
+    return next();
   }
 });

@@ -12,14 +12,12 @@ var config = require('./../../config/environment');
  * event handler after creating new account
  */
 EventBus.onSeries('User.Inserted', function(user, next) {
-  console.log(user);
   if(!user.emailVerified){
     Mailer.sendMail('confirm-email.html', user.email, {
       user: user,
       confirmation: config.baseUrl + 'auth/confirm-email/' + user.emailVerifyToken,
       subject: 'Confirm email from buiilt.com'
     }, function(err){
-      console.log(err);
       return next();
     });
   }else{

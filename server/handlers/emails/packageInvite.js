@@ -12,7 +12,6 @@ var config = require('./../../config/environment');
 var async = require('async');
 
 EventBus.onSeries('PackageInvite.Inserted', function(request, next) {
-    console.log(request);
     async.parallel({
         user: function(cb){
             User.findOne({_id: request.owner}, cb);
@@ -24,10 +23,10 @@ EventBus.onSeries('PackageInvite.Inserted', function(request, next) {
     }, function(err, result){
         if (!err) {
             PackageInvite.find({package: request.package}, function(err, packageInvites) {
-                if (err) {console.log(err); return next();}
-                if (!packageInvites) {console.log(err); return next();}
+                if (err) {return next();}
+                if (!packageInvites) {return next();}
                 else {
-                    _.each(packageInvites, function(packageInvite){
+                    async.each(packageInvites, function(packageInvite, cb){
                         if (packageInvite.inviteType == 'contractor') {
                             Mailer.sendMail('contractor-package-request-no-account.html', packageInvite.to, {
                                 contractorPackage: request,
@@ -38,11 +37,9 @@ EventBus.onSeries('PackageInvite.Inserted', function(request, next) {
                                 contractorPackageLink: config.baseUrl  + result.project._id + '/contractor-requests/' + request._id,
                                 subject: 'Quote request for ' + request.name
                             }, function(err) {
-                                console.log(err);
-                                return next();
+                                return cb();
                             });
-                        }
-                        else if(packageInvite.inviteType == 'supplier') {
+                        }else if(packageInvite.inviteType == 'supplier') {
                             Mailer.sendMail('supplier-package-send-quote-no-account.html', packageInvite.to, {
                               materialPackage: request,
                               //project owner
@@ -52,14 +49,14 @@ EventBus.onSeries('PackageInvite.Inserted', function(request, next) {
                               link: config.baseUrl + result.project._id + '/material-request/' + request._id,
                               subject: 'Quote request for ' + request.name
                             }, function(err) {
-                              console.log(err);
-                              return next();
+                              return cb();
                             });
+                        }else {
+                            return cb();
                         }
-                        else {
-                            return next();
-                        }
-                    });
+                    }, function(){
+						return next();
+					});
                 }
             });
         }
