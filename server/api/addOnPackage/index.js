@@ -11,5 +11,6 @@ router.post('/:id/send-addendum', auth.isAuthenticated(), controller.sendAddendu
 router.post('/:id/send-invoice', auth.isAuthenticated(), controller.sendInvoice);
 router.post('/:id/send-variation', auth.isAuthenticated(), controller.sendVariation);
 router.put('/:id/remove-addendum', auth.isAuthenticated(), controller.removeAddendum);
+router.put('/:id/edit-addendum', auth.isAuthenticated(), controller.editAddendum);
 
 module.exports = router;

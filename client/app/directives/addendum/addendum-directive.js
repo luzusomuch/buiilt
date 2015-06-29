@@ -30,7 +30,6 @@ angular.module('buiiltApp').directive('addendum', function(){
                     $scope.addendums = data;
                     $scope.package = data;
                     $scope.addendum = {};
-                    alert('Send Addendum successfully!');
                 });
             };
 
@@ -43,8 +42,11 @@ angular.module('buiiltApp').directive('addendum', function(){
             };
 
             $scope.edit = function(value) {
-                console.log(value);
-                console.log($scope.editAddendum);
+                addOnPackageService.editAddendum({id: $scope.package._id, packageType: $scope.type, addendumId: value, addendum: $scope.editAddendum})
+                .$promise.then(function(data){
+                    $scope.addendums = data;
+                    $scope.package = data;
+                });
             }
         }
     }

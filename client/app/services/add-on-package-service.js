@@ -34,6 +34,13 @@ angular.module('buiiltApp').factory('addOnPackageService', function($rootScope, 
                 id: '@id',
                 action: 'remove-addendum'
             }
+        },
+        editAddendum: {
+            method: 'PUT',
+            params: {
+                id: '@id',
+                action: 'edit-addendum'
+            }
         }
     });
 });
