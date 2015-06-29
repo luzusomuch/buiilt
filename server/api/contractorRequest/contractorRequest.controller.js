@@ -59,6 +59,9 @@ exports.sendMessage = function(req, res) {
           to: req.body.to,
           message: req.body.message
         });
+        contractorPackage.markModified('sendMessage');
+        contractorPackage._editUser = req.body.to;
+        contractorPackage._ownerUser = req.user;
         contractorPackage.save(function(err, saved) {
           if (err) {return res.send(500, err)}
           else {
@@ -96,6 +99,8 @@ exports.sendMessageToBuilder = function(req, res) {
           to: req.body.team,
           message: req.body.message
         });
+        contractorPackage.markModified('sendMessageToBuilder');
+        contractorPackage._editUser = req.user;
         contractorPackage.save(function(err, saved) {
           if (err) {return res.send(500, err)}
           else {
@@ -263,12 +268,12 @@ exports.sendInvitationInContractor = function(req, res) {
             }
             else {
                 to.push({
-                  _id: user._id,
+                  _id: user.team._id,
                   email: emailPhone.email,
                   phone: emailPhone.phoneNumber
               });
                 newContractor.push({
-                  _id: user._id,
+                  _id: user.team._id,
                   email: emailPhone.email,
                   phone: emailPhone.phoneNumber
                 });
@@ -285,16 +290,21 @@ exports.sendInvitationInContractor = function(req, res) {
               contractorPackage.save(function(err, saved){
                 if (err) {return res.send(500,err);}
                 else {
-                  _.each(req.body.toContractor, function(email){
-                    var packageInvite = new PackageInvite({
-                      owner: req.user._id,
-                      inviteType: 'contractor',
-                      package: saved._id,
-                      project: saved.project,
-                      to: email.email
-                    });
-                    packageInvite.save();
-                    return res.json(200,saved);
+                  _.each(saved.newInvitation, function(invitation){
+                    if (!invitation._id) {
+                      var packageInvite = new PackageInvite({
+                        owner: req.user._id,
+                        inviteType: 'contractor',
+                        package: saved._id,
+                        project: saved.project,
+                        to: email.email
+                      });
+                      packageInvite.save();
+                      return res.json(200,saved);
+                    }
+                    else {
+                      return res.json(200,saved);
+                    }
                   });
                 }
               });

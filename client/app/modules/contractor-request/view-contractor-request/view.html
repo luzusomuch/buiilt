@@ -229,6 +229,7 @@
 </div>
 
 <div id="modal_inviteContractor" class="modal modal-fixed-footer">
+  <form ng-submit="sendInvitationInContractor()">
   <div class="modal-content">
     <form>
      <div class="row">
@@ -267,13 +268,14 @@
       </div>
     </div>
 
-  </form>
 </div>
 <div class="divider"></div>
 <div class="modal-footer">
- <a ng-click="sendInvitationInContractor()" class="modal-action modal-close waves-effect waves-green btn-flat ">Send Invitations!</a>
+  <button type="submit" class="modal-action modal-close waves-effect waves-green btn-flat ">Send Invitations!</button>
+ <!-- <a class="modal-action modal-close waves-effect waves-green btn-flat ">Send Invitations!</a> -->
  <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
 </div>
+</form>
 </div>  
 
 <div id="modal_cancelPackage" class="modal">

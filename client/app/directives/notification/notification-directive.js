@@ -32,8 +32,26 @@ angular.module('buiiltApp')
         if (scope.notification.type === 'CreateContractorPackage') {
           text = params.fromUser + ' has invited ' + params.toUser + 'to send a quote for ' + params.element.name;
         }
-        if (scope.notification.type === 'SendQuoteToContractorPackage') {
+        if (scope.notification.type === 'sendQuote') {
           text = params.fromUser + ' has send quote ' + params.quote + ' to ' + params.toUser + ' in ' + param.packageName;
+        }
+        if (scope.notification.type === 'sendAddendum') {
+          text = params.fromUser  + 'has add new addendum in pacakge ' + params.element;
+        }
+        if (scope.notification.type === 'editAddendum') {
+          text = params.fromUser  + 'has edit addendum in pacakge ' + params.element;
+        }
+        if (scope.notification.type === 'invite') {
+          text = params.fromUser  + 'has invited new contractor in package ' + params.element;
+        }
+        if (scope.notification.type === 'invitation') {
+          text = params.fromUser  + 'has invited you to send quote for package ' + params.element;
+        }
+        if (scope.notification.type === 'sendMessage') {
+          text = params.fromUser  + 'has send you a message in package ' + params.element;
+        }
+        if (scope.notification.type === 'sendMessageToBuilder') {
+          text = params.fromUser  + 'has send you a message in package ' + params.element;
         }
         text += ' Click <a href="#!" ng-click="goToDetail(notification)">here</a> for more infomation';
         element.html(text).show();

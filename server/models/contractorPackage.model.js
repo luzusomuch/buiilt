@@ -150,6 +150,7 @@ ContractorPackageSchema.post('save', function (doc) {
   if (this._original) {
     doc._oldContractor = this._original.to.slice(0);
     doc._newInvitation = this._original.newInvitation.slice(0);
+    doc._oldAddendum = this._original.addendums.slice(0);
   }
   doc.ownerUser = this._ownerUser;
   doc.editUser = this._editUser;

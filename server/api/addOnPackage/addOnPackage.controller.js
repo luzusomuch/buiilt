@@ -555,6 +555,8 @@ exports.editAddendum = function(req, res) {
                         });
                         return false;
                     });
+                    contractorPackage.markModified('editAddendum');
+                    contractorPackage._editUser = req.user;
                     contractorPackage.save(function(err, saved) {
                         if (err) {return res.send(500,err);}
                         else {

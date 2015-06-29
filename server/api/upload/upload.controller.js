@@ -68,9 +68,9 @@ exports.upload = function(req, res){
                                 if (err) {console.log(err);}
                                 else {
                                     if (saved.mimeType == 'image/png' || saved.mimeType == 'image/jpeg') {
-                                        gm(__dirname + "/../../../" + fileSaved.path)
+                                        gm(__dirname + "/../../../" + saved.path)
                                         .resize(320, 480)
-                                        .write(__dirname + "/../../../" + "client/media/files/"+fileSaved._id + '-' +fileSaved.title, function(err) {
+                                        .write(__dirname + "/../../../" + "client/media/files/"+saved._id + '-' +saved.title, function(err) {
                                             if (err) {console.log(err);}
                                             else {
                                                 return res.json(200,data);        
@@ -170,9 +170,9 @@ exports.uploadInPackge = function(req, res){
                                 if (err) {console.log(err);}
                                 else {
                                     if (saved.mimeType == 'image/png' || saved.mimeType == 'image/jpeg') {
-                                        gm(__dirname + "/../../../" + fileSaved.path)
+                                        gm(__dirname + "/../../../" + saved.path)
                                         .resize(320, 480)
-                                        .write(__dirname + "/../../../" + "client/media/files/"+fileSaved._id + '-' +fileSaved.title, function(err) {
+                                        .write(__dirname + "/../../../" + "client/media/files/"+saved._id + '-' +saved.title, function(err) {
                                             if (err) {console.log(err);}
                                             else {
                                                 return res.json(200,data);        
