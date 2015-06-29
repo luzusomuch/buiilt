@@ -63,7 +63,7 @@
                     </div>
                     <div class="col s3">
                       <a class="btn-flat btn-flat" ng-click="remove(addendum._id)">Remove</a>
-                      <a class="btn-flat btn-flat" ng-click="">Edit</a>
+                      <a class="btn-flat btn-flat" ng-click="hideAddendum='true'; showEdit='true'">Edit</a>
                     </div>
                   </li>
                 </div>
@@ -71,18 +71,21 @@
                   <form>
                     <div class="row">
                       <div class="form-field col s12">
-                        Description: <span contentEditable="true" ng-model="addendum.description" strip-br="true">{{addendum.description}}</span>
+                        <div contentEditable="true" ng-model="editAddendum.description">{{addendum.description}}</div>
+                        <!-- Description: <span contenteditable ng-model="addendum.description" strip-br="true">{{addendum.description}}</span> -->
                       </div>
                     </div>
                     <div class="row" ng-repeat="addendumScope in addendum.addendumsScope">
                       <div class="form-field col s8">
-                        Description: <span contentEditable="true" ng-model="addendumScope.description" strip-br="true">{{addendumScope.description}}</span>
+                        <div contentEditable="true" ng-model="editAddendum.scopeDescription[$index]">{{addendumScope.description}}</div>
+                        <!-- Description: <span contenteditable ng-model="addendumScope.description" strip-br="true">{{addendumScope.description}}</span> -->
                         <!-- <div contenteditable="true" ng-model="addendumScope.description">{{addendumScope.description}}</div> -->
                         <!-- <input type="text" contentEditable="true" ng-model="editAddendum.scopeDescription"> -->
                         <!-- <label for="">Scope description</label> -->
                       </div>
                       <div class="form-field col s4">
-                        <!-- Quantity: <span contentEditable="true" ng-model="addendumScope.quantity" strip-br="true">{{addendumScope.quantity}}</span> -->
+                        <div contentEditable="true" ng-model="editAddendum.quantity[$index]">{{addendumScope.quantity}}</div>
+                        <!-- Quantity: <span contentEditable ng-model="addendumScope.quantity" strip-br="true">{{addendumScope.quantity}}</span> -->
                         <!-- <div contenteditable="true" ng-model="addendumScope.quantity">{{addendumScope.quantity}}</div> -->
                         <!-- <input type="text" value="{{addendumScope.quantity}}" ng-model="editAddendum.quantity">
                         <label for="">Scope quantity</label> -->
