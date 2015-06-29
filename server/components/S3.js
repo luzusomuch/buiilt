@@ -44,4 +44,22 @@ s3Aws.prototype.uploadFile = function (file, callback) {
     callback(null, data);
   });
 };
+
+//download from s3
+s3Aws.prototype.downloadFile = function(file, callback) {
+  var self = this.client;
+  var downloader = self.downloadFile({
+    localFile: file.path,
+    s3Params: {
+      Bucket: config.Bucket,
+      Key: file.title
+    }
+  });
+  downloader.on('error', function(err) {
+    callback(err);
+  });
+  downloader.on('end', function(data) {
+    callback(null, data);
+  });
+};
 module.exports = new s3Aws();

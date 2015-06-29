@@ -92,7 +92,6 @@ angular.module('buiiltApp')
     if (confirm('Cancel this package?!')) {
       contractorRequestService.cancelPackage({id: $stateParams.packageId})
       .$promise.then(function(data) {
-        alert('Cancel successfully!');
         // console.log($state.get());
         $window.location.href = data.project + '/contractors';
         // $state.go('^.contractors, {id: '+ data.project +'}');

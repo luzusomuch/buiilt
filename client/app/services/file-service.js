@@ -29,6 +29,13 @@ angular.module('buiiltApp').factory('fileService', function($rootScope, $q, $res
                 action: 'params'
               },
               isArray: true
+            },
+            downloadFile: {
+              method: 'GET',
+              params: {
+                id: 'id',
+                action: 'download'
+              }
             }
     });
 });

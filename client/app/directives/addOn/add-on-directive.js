@@ -44,11 +44,12 @@ angular.module('buiiltApp').directive('addon', function(){
                 $scope.allItemsText = 'Invoices';
             };
 
-            
-            
-            
-            
-            
+            $scope.downloadFile = function(value) {
+                fileService.downloadFile({id: value})
+                .$promise.then(function(data){
+                    console.log(data);
+                });
+            };
 
             //send variation
             $scope.variation = {};
@@ -58,7 +59,6 @@ angular.module('buiiltApp').directive('addon', function(){
                     $scope.data = data;
                     $scope.package.variations = data.variations;
                     $scope.variation = {};
-                    alert('Send variation successfully!');
                   // $scope.messages = data;
                 });
             };
@@ -71,7 +71,6 @@ angular.module('buiiltApp').directive('addon', function(){
                     $scope.data = data;
                     $scope.package.defects = data.defects;
                     $scope.defect = {};
-                    alert('Send defect successfully!');
                 });
             };
             
@@ -96,7 +95,6 @@ angular.module('buiiltApp').directive('addon', function(){
                     $scope.addendums = data;
                     $scope.contractorRequest = data;
                     $scope.addendum = {};
-                    alert('Send Addendum successfully!');
                 });
             };
 
@@ -143,7 +141,6 @@ angular.module('buiiltApp').directive('addon', function(){
                     addOnPackageService.sendInvoice({id: $scope.package._id, packageType: $scope.type, invoice: $scope.invoice, rate: $scope.lineWithRates, price: $scope.lineWithPrices}).$promise.then(function(data){
                         $scope.data = data;
                         $scope.package.invoices = data.invoices;
-                        alert('You have send invoice successfully!');
                     });
                 }
             };

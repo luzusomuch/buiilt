@@ -13,6 +13,7 @@ router.get('/:id', auth.isAuthenticated(), controller.show);
 // router.put('/:id', auth.isAuthenticated(), controller.update);
 router.put('/:id/interested', auth.isAuthenticated(), controller.interested);
 router.get('/:id/params', auth.isAuthenticated(), controller.getFileByStateParam);
+router.get('/:id/download', auth.isAuthenticated(), controller.downloadFile);
 // router.post('/', controller.create);
 
 module.exports = router;

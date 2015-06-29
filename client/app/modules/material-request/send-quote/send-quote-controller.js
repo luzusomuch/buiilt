@@ -92,7 +92,6 @@ angular.module('buiiltApp')
       else {
         materialRequestService.sendQuote({materialRequest: $scope.materialRequest,quoteRequest: $scope.quoteRequest, rate: $scope.lineWithRates, price: $scope.lineWithPrices}).$promise.then(function(data){
           $scope.success = data;
-          alert('Send quote successfully!');
         });
       }
     }

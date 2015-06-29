@@ -5,6 +5,7 @@ var errorsHelper = require('../../components/helpers/errors');
 var ProjectValidator = require('./../../validators/project');
 var _ = require('lodash');
 var async = require('async');
+var s3 = require('../../components/S3');
 
 exports.getByDocument = function(req, res) {
     File.find({package: req.params.id}, function(err, files) {
@@ -45,6 +46,20 @@ exports.getFileByStateParam = function(req, res) {
         if (err) {return res.send(500,err)}
         else {
             return res.json(200,files);
+        }
+    });
+};
+
+exports.downloadFile = function(req, res) {
+    File.findById(req.params.id, function(err, file){
+        if (err) {return res.send(500,err);}
+        else {
+            s3.downloadFile(file, function(err, data) {
+                if (err) {return res.send(500,err);}
+                else {
+                    return res.json(200,data);
+                }
+            });
         }
     });
 };

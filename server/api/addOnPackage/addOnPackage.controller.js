@@ -567,7 +567,53 @@ exports.editAddendum = function(req, res) {
         });
     }
     else if(packageType == 'material') {
-
+        MaterialPackage.findById(req.params.id, function(err, materialPackage){
+            if (err) {return res.send(500,err);}
+            else {
+                var pack = _.findWhere(materialPackage.addendums, function(id){
+                    return id._id.toString() === req.body.addendumId;
+                });
+                if (pack._id == req.body.addendumId) {
+                    if (pack.description != req.body.addendum.description &&
+                        req.body.addendum.description != '{{addendum.description}}') {
+                        pack.description = req.body.addendum.description;
+                    }
+                    else {
+                        pack.description = pack.description;
+                    }
+                    _.each(pack.addendumsScope, function(addendumScope) {
+                        _.forEach(req.body.addendum.scopeDescription, function(value, key){
+                            if (addendumScope.description != value
+                                && value != '{{addendumScope.description}}') {
+                                addendumScope.description = value;
+                            }
+                            else {
+                                addendumScope.description = addendumScope.description;   
+                            }
+                        });
+                        _.forEach(req.body.addendum.quantity, function(value,key){
+                            if (addendumScope.quantity != value
+                                && value != '{{addendumScope.quantity}}') {
+                                addendumScope.quantity = value;
+                            }
+                            else {
+                                addendumScope.quantity = addendumScope.quantity;   
+                            }
+                        });
+                        return false;
+                    });
+                    materialPackage.save(function(err, saved) {
+                        if (err) {return res.send(500,err);}
+                        else {
+                            return res.json(200,saved);
+                        }
+                    });
+                }
+                else {
+                    return res.send(500);
+                }
+            }
+        });
     }
     else {
         return res.send(500);
