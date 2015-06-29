@@ -13,6 +13,14 @@ angular.module('buiiltApp')
     $scope.currentUser = userService.get();
   }
 
+  $scope.complete = function() {
+    materialRequestService.complete({_id : $scope.materialRequest._id}).$promise
+      .then(function(res) {
+        $scope.materialRequest = res;
+        $('#modal_complete').closeModal();
+      })
+  }
+
   // materialRequestService.getMessageForSupplier({'id': $stateParams.packageId})
   // .$promise.then(function(data) {
     // $scope.messages = data;

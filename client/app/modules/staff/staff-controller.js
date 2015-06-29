@@ -13,6 +13,7 @@ angular.module('buiiltApp')
       descriptions: []
     };
     $scope.submitted = false;
+    $scope.filter = {isComplete : false};
 
     //Get available user to assign to staff package
     var getAvailableAssign =  function() {
@@ -90,9 +91,18 @@ angular.module('buiiltApp')
           })
       }
     }
+
+
 })
   .controller('StaffViewCtrl',
-    function($scope, $rootScope,filterFilter,currentTeam,staffPackage,currentUser) {
+    function($scope, $rootScope,filterFilter,currentTeam,staffPackage,staffPackageService,currentUser) {
       $scope.staffPackage = staffPackage;
       $scope.currentUser = currentUser;
+      $scope.complete = function() {
+        staffPackageService.complete({_id : $scope.staffPackage._id}).$promise
+          .then(function(res) {
+            $scope.staffPackage = res;
+            $('#modal_complete').closeModal();
+          })
+      }
   });

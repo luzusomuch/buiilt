@@ -6,7 +6,7 @@ angular.module('buiiltApp').controller('MaterialsCtrl',
     $scope.materialPackages = materialPackages;
     $scope.currentProject = $rootScope.currentProject;
     $scope.currentTeam = team;
-    $scope.filter = {isSelect: true};
+    $scope.filter = {isCompleted : false,isSelect: true};
     $scope.user = authService.getCurrentUser();
     $scope.requirements = [];
     $scope.submitted = false;

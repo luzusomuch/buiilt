@@ -23,6 +23,12 @@ angular.module('buiiltApp')
         },
         create: {
           method: 'POST'
+        },
+        complete : {
+          method: 'PUT',
+          params : {
+            action : 'complete'
+          }
         }
         //update: {
         //  method: 'PUT'

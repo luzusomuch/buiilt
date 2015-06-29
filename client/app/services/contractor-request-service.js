@@ -89,6 +89,12 @@ angular.module('buiiltApp')
           id: '@id',
           action: 'cancel-package'
         }
+      },
+      complete : {
+        method : 'PUT',
+        params : {
+          action : 'complete'
+        }
       }
     }
     );

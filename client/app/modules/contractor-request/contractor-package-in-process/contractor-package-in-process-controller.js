@@ -18,6 +18,14 @@ angular.module('buiiltApp')
       $scope.currentUser = userService.get();
     }
 
+    $scope.complete = function() {
+      contractorRequestService.complete({_id : $scope.contractorRequest._id}).$promise
+        .then(function(res) {
+          $scope.contractorRequest = res;
+          $('#modal_complete').closeModal();
+        })
+    }
+
     // contractorRequestService.getMessageForBuilder({'id': $stateParams.packageId})
     // .$promise.then(function(data) {
     //   $scope.messages = data;

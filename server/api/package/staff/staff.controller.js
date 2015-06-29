@@ -16,7 +16,7 @@ var async = require('async');
  */
 exports.project = function(req,res,next) {
   Project.findById(req.params.id,function(err,project) {
-    if (err) {
+    if (err || !project) {
       return res.send(500, err);
     }
     req.project = project;
@@ -93,37 +93,29 @@ exports.getOne = function(req,res) {
       {path:"owner"},
       {path:"staffs"}
     ], function(err, staffPakacge ) {
-    return res.json(staffPackage);
+      if (err) {
+        return res.status(400).json(err);
+      }
+      return res.json(staffPackage);
   });
 };
 
-exports.getDefaultPackagePackageByProject = function(req, res) {
-  if (!req.query.project) {
-    return res.status(400).json({msg: 'Missing project.'});
-  }
-  //TODO - validate user rol in the project
-
-  BuilderPackage.findOne({
-    project: req.query.project,
-    isSendQuote: false
+exports.complete = function(req,res) {
+  var staffPackage = req.staffPackage;
+  staffPackage.isCompleted = !staffPackage.isCompleted;
+  staffPackage.save(function(err) {
+    if (err) {
+      return res.status(400).json(err);
+    }
+    StaffPackage.populate(staffPackage,
+      [{path:"project"},
+        {path:"owner"},
+        {path:"staffs"}
+      ], function(err, staffPakacge ) {
+        if (err) {
+          return res.status(400).json(err);
+        }
+        return res.json(staffPackage);
+      });
   })
-    .populate('project')
-    .exec(function(err, builderPackage) {
-      if (err){ return res.send(500, err); }
-
-      res.json(builderPackage);
-    });
-};
-
-/**
- * get single package id
- */
-exports.show = function(req, res){
-  BuilderPackage.findById(req.params.id)
-    .populate('project')
-    .exec(function(err, builderPackage) {
-      if (err){ return res.send(500, err); }
-
-      res.json(builderPackage);
-    });
 };

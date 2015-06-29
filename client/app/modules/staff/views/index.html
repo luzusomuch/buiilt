@@ -1,16 +1,18 @@
 <div class="col-md-12">
   <div class="col s3">
      <a class="modal-trigger btn-large col s12" ng-if="currentTeam.type == 'builder' && isLeader" href="#newWorkPackage" style="margin-top: 8px; margin-bottom: 15px">Create New</a>
-      <ul id="createNew" class="dropdown-content" style="margin-top: 15px">
-      <li><a class="modal-trigger" href="#newWorkPackage">Work Package</a></li>
-      <li><div class="divider"></div></li>
-      <li><a class="modal-trigger" href="#newContractorPackage">Contractor Package</a></li>
-      <li><a class="modal-trigger" href="#newMaterialPackage">Material Package</a></li>
-      </ul>
+    <ul id="createNew" class="dropdown-content" style="margin-top: 15px">
+    <li><a class="modal-trigger" href="#newWorkPackage">Work Package</a></li>
+    <li><div class="divider"></div></li>
+    <li><a class="modal-trigger" href="#newContractorPackage">Contractor Package</a></li>
+    <li><a class="modal-trigger" href="#newMaterialPackage">Material Package</a></li>
+    </ul>
 
      <div class="collection" style="margin-top:10px">
-         <a href="#!" class="collection-item">In Progress<span class="new badge">6</span></a>
-         <a href="#!" class="collection-item">Completed</a>
+         <a href="#!" ng-click="filter = {isCompleted : false}" class="collection-item"
+            ng-class="{'active' : !filter.isCompleted}">In Progress</a>
+         <a href="#!" ng-click="filter = {isCompleted : true}" class="collection-item"
+            ng-class="{'active' : filter.isCompleted}">Completed</a>
      </div>
   </div>
 
@@ -19,7 +21,7 @@
        <!--<li class="collection-item" ng-repeat="item in staffPackages" ng-if="item.canSee || isLeader"><a ui-sref="staff.view({packageId : item._id})">{{item.name}}</a></li>-->
      <!--</ul>-->
     <div class="collection z-depth-1">
-      <a ui-sref="staff.view({packageId : item._id})" ng-repeat="item in staffPackages"  ng-if="item.canSee || isLeader" class="collection-item">{{item.name}}</a>
+      <a ui-sref="staff.view({packageId : item._id})" ng-repeat="item in staffPackages | filter : filter"  ng-if="item.canSee || isLeader" class="collection-item">{{item.name}}</a>
     </div>
   </div>
 
@@ -106,4 +108,5 @@
       </div>
     </form>
   </div>
+
 </div>
