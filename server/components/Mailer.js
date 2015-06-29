@@ -1,6 +1,7 @@
 var nodemailer = require('nodemailer'),
   htmlToText = require('nodemailer-html-to-text').htmlToText,
   smtpTransport = require('nodemailer-smtp-transport'),
+  mailgunTransport = require('nodemailer-mailgun-transport'),
   config = require('./../config/environment'),
   okay = require('okay'),
   path = require('path'),
@@ -55,7 +56,9 @@ Mailer.prototype.close = function() {
 var mailer;
 if(config.mailer.service === 'smtp'){
   mailer = new Mailer(smtpTransport(config.mailer.auth));
-}else{
+} else if(config.mailer.service === 'mailgun'){
+  mailer = new Mailer(mailgunTransport({auth: config.mailer.auth}));
+} else{
   mailer = new Mailer(config.mailer);
 }
 

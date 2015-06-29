@@ -5,7 +5,7 @@
 module.exports = {
   //have to have / at the end
   //change to ngrok url to setup voice url, otherwise we have to update in the sub account manually
-  baseUrl: 'http://localhost:9000/',
+  baseUrl: 'http://ec2-52-25-224-160.us-west-2.compute.amazonaws.com:9000/',
   app: {
     name: 'buiiltApp'
   },
@@ -25,20 +25,10 @@ module.exports = {
 
   emailFrom: 'Buiilt <no-reply@buiilt.com>', // sender address like ABC <abc@example.com>
   mailer: {
-    service: 'smtp', //smtp, mailgun
+    service: 'mailgun',
     auth: {
-      //user: 'postmaster@sandboxf33fddc2f2f8469fb38592948a17b274.mailgun.org',
-      //pass: '47dcb8182067dd4e4286c9c05e29a8c3'
-      host: 'hoanvusolutions.com',
-      port: 25,
-      secure: false,
-      auth: {
-        user: 'app+projects.hoanvusolutions.com',
-        pass: 'Hoanvu2014!'
-      },
-      tls: {
-        rejectUnauthorized:false
-      }
+      api_key: 'key-0245b8bd3122b95cef10c8a5df83079b',
+	  domain: 'mg.buiilt.com.au'
     }
   },
   logentries : {

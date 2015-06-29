@@ -27,6 +27,7 @@
     "nodemailer": "^1.2.2",
     "nodemailer-html-to-text": "^1.0.0",
     "nodemailer-smtp-transport": "~0.1.13",
+    "nodemailer-mailgun-transport": "git+https://github.com/orliesaurus/nodemailer-mailgun-transport.git",
     "okay": "^1.0.0",
     "passport": "~0.2.0",
     "passport-facebook": "latest",
