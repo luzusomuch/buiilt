@@ -18,10 +18,10 @@ var PackageSchema = {
     type: String,
     default: ''
   },
-  description: {
+  descriptions: [{
     type: String,
     default: ''
-  },
+  }],
   project: {
     type: Schema.Types.ObjectId,
     ref: 'Project',

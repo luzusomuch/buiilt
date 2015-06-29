@@ -26,8 +26,8 @@
           </a>
             <span ng-class="{'completed' : task.completed, 'disabled' : !task.isOwner && !isLeader}"><a class="activator" href="#!" ng-click="showTask(task)">{{task.name}}</a></span>
           <a href="#!" class="btn-flat activator secondary-content" style="margin-top: -3px; font-size: 12px;"
-             ng-click="(!task.isOwner && !isLeader) || editTask(task)"
-             ng-if="task.isOwner || isLeader">
+             ng-click="(!task.isOwner && !isLeader && !task.completed) || editTask(task)"
+             ng-if="task.isOwner || isLeader && !task.completed ">
           Edit
           </a>
         </div>
