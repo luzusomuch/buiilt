@@ -118,7 +118,7 @@ exports.createUserWithInviteToken = function(req, res, next) {
         if (err) {return validationError(res, err);}
         else {
           var token = jwt.sign({_id: user._id}, config.secrets.session, {expiresInMinutes: 60 * 5});
-          // res.json({token: token,emailVerified : true});  
+          // res.json({token: token,emailVerified : true});
           var team = new Team({
             name: req.body.teamName,
             type: packageInvite.inviteType
@@ -220,7 +220,7 @@ exports.createUserWithInviteToken = function(req, res, next) {
                       }
                     });
                   }
-                }); 
+                });
               }
               else if(packageInvite.inviteType == 'homeOwner'){
                 BuilderPackage.findById(packageInvite.package, function(err, builderPackage){
@@ -344,7 +344,6 @@ exports.me = function (req, res, next) {
     if (!user) {
       return res.json(401);
     }
-    console.log(user);
     res.json(user);
   });
 };
