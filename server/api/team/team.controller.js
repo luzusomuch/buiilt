@@ -179,7 +179,7 @@ exports.removeMember = function(req,res) {
             if (err) {
               console.log(err);
             }
-
+            callback();
           });
         })
       } else {

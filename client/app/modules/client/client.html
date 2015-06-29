@@ -16,19 +16,73 @@
 		     </ul>
 	   </div>
    </div>
+
+  <div class="row" style="margin-top: 18px">
+    <div class="col s12">
+      <ul class="collapsible" data-collapsible="accordion">
+        <li>
+          <div class="collapsible-header"><i class=""></i>Details</div>
+          <div class="collapsible-body" style="background-color: #FFF; padding:10px">
+            <p class="col s12">Package name : <span class="highlight">{{builderPackage.name}}</span></p>
+            <p class="col s12">Package description : <span class="highlight">{{builderPackage.description}}</span></p>
+            <p class="col s12">Location : </p>
+            <ul style="margin-left: 50px">
+              <li>Address : <span class="highlight">{{builderPackage.location.address}}</span></li>
+              <li>Suburb : <span class="highlight">{{builderPackage.location.suburb}}</span></li>
+              <li>Postcode: <span class="highlight">{{builderPackage.location.postcode}}</span></li>
+            </ul>
+            <div ng-if="builderPackage.to.type == 'homeOwner'">
+              <p class="col s12">Builder team : <span class="highlight">{{builderPackage.owner.name}}</span> </p>
+              <p class="col s12">Builder team member : <span class="highlight"></span> </p>
+              <div class="card col admin" style="padding: 5px; margin-left: 10px" ng-repeat="leader in builderPackage.owner.leader">
+                {{leader.email}}
+              </div>
+              <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="member in builderPackage.owner.member | filter : {status : 'Active'}">
+                {{member._id.email}}
+              </div>
+              <p class="col s12">Home owner team : <span class="highlight">{{builderPackage.to.team.name}}</span> </p>
+              <p class="col s12">Home owner team member : <span class="highlight"></span> </p>
+              <div class="card col admin" style="padding: 5px; margin-left: 10px" ng-repeat="leader in builderPackage.to.team.leader">
+                {{leader.email}}
+              </div>
+              <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="member in builderPackage.to.team.member | filter : {status : 'Active'}">
+                {{member._id.email}}
+              </div>
+            </div>
+
+            <div ng-if="builderPackage.to.type == 'builder'">
+              <p class="col s12">Builder team : <span class="highlight">{{builderPackage.to.team.name}}</span> </p>
+              <p class="col s12">Builder team member : <span class="highlight"></span> </p>
+              <div class="card col admin" style="padding: 5px; margin-left: 10px" ng-repeat="leader in builderPackage.to.team.leader">
+                {{leader.email}}
+              </div>
+              <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="member in builderPackage.to.team.member | filter : {status : 'Active'}">
+                {{member._id.email}}
+              </div>
+              <p class="col s12">Home owner team : <span class="highlight">{{builderPackage.owner.name}}</span> </p>
+              <p class="col s12">Home owner team member : <span class="highlight"></span> </p>
+              <div class="card col admin" style="padding: 5px; margin-left: 10px" ng-repeat="leader in builderPackage.owner.leader">
+                {{leader.email}}
+              </div>
+              <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="member in builderPackage.owner.member | filter : {status : 'Active'}">
+                {{member._id.email}}
+              </div>
+            </div>
+
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
    
    <div class="row">
-	   <p class="col s12">{{buiderPackageRequest.description}}</p>
-   </div>
-   
-   <div class="row">
-	   <div task package="builderPackageRequest" type="builder"></div>
+	   <div task package="builderPackage" type="builder"></div>
 	   
-	   <addon package="builderPackageRequest" type="BuilderPackage"></addon>
+	   <addon package="builderPackage" type="BuilderPackage"></addon>
    </div>
    
    <div class="row">
-	   <div message package="builderPackageRequest" type="builder"></div>
+	   <div message package="builderPackage" type="builder"></div>
    </div>
 	
 </div>

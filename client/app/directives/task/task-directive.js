@@ -32,12 +32,22 @@ angular.module('buiiltApp')
           switch(type) {
             case 'builder' :
               $scope.available = [];
-              _.forEach($scope.currentProject.owner.member,function(member) {
+              $scope.available = _.union($scope.available,$scope.currentTeam.leader);
+              if ($scope.currentTeam._id == $scope.package.owner._id && $scope.isLeader) {
+                _.forEach($scope.package.to.team.leader, function (leader) {
+                  $scope.available.push(leader);
+                })
+              }
+              if ($scope.currentTeam._id == $scope.package.to.team._id && $scope.isLeader) {
+                _.forEach($scope.package.owner.leader, function (leader) {
+                  $scope.available.push(leader);
+                })
+              }
+              _.forEach($scope.currentTeam.member,function(member) {
                 if (member.status == 'Active') {
                   $scope.available.push(member._id);
                 }
               });
-              $scope.available = _.union($scope.available,$scope.currentProject.owner.leader);
               break;
             case 'staff' :
               $scope.available =  angular.copy($scope.package.staffs);
@@ -45,41 +55,41 @@ angular.module('buiiltApp')
               break;
             case 'contractor' :
               $scope.available = [];
-              _.forEach($scope.currentTeam.member,function(member) {
-                if (member.status == 'Active') {
-                  $scope.available.push(member._id);
-                }
-              });
-              if ($scope.currentTeam.type == 'contractor' && $scope.isLeader) {
+              $scope.available = _.union($scope.available,$scope.currentTeam.leader);
+              if ($scope.currentTeam._id == $scope.package.winnerTeam._id && $scope.isLeader) {
                 _.forEach($scope.package.owner.leader,function(leader) {
                     $scope.available.push(leader);
                 });
               }
-              if ($scope.currentTeam.type == 'builder' && $scope.isLeader) {
+              if ($scope.currentTeam._id == $scope.package.owner._id && $scope.isLeader) {
                 _.forEach($scope.package.winnerTeam._id.leader,function(leader) {
                   $scope.available.push(leader);
                 });
               }
-              $scope.available = _.union($scope.available,$scope.currentTeam.leader);
-              break;
-            case 'material' :
-              $scope.available = [];
               _.forEach($scope.currentTeam.member,function(member) {
                 if (member.status == 'Active') {
                   $scope.available.push(member._id);
                 }
               });
-              if ($scope.currentTeam.type == 'supplier' && $scope.isLeader) {
+              break;
+            case 'material' :
+              $scope.available = [];
+              $scope.available = _.union($scope.available,$scope.currentTeam.leader);
+              if ($scope.currentTeam._id == $scope.package.winnerTeam._id && $scope.isLeader) {
                 _.forEach($scope.package.owner.leader,function(leader) {
                   $scope.available.push(leader);
                 });
               }
-              if ($scope.currentTeam.type == 'builder' && $scope.isLeader) {
+              if ($scope.currentTeam._id == $scope.package.owner._id  && $scope.isLeader) {
                 _.forEach($scope.package.winnerTeam._id.leader,function(leader) {
                   $scope.available.push(leader);
                 });
               }
-              $scope.available = _.union($scope.available,$scope.currentTeam.leader);
+              _.forEach($scope.currentTeam.member,function(member) {
+                if (member.status == 'Active') {
+                  $scope.available.push(member._id);
+                }
+              });
               break;
             default :
               break

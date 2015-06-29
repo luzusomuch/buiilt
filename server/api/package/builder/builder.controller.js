@@ -8,21 +8,37 @@ var ProjectValidator = require('./../../../validators/project');
 var _ = require('lodash');
 var async = require('async');
 
-exports.getDefaultPackagePackageByProject = function(req, res) {
-  if (!req.query.project) {
-    return res.status(400).json({msg: 'Missing project.'});
-  }
-  //TODO - validate user rol in the project
+exports.project = function(req, res, next) {
+  Project.findById(req.params.id,function(err,project) {
+    if (err || !project) {
+      return res.send(500,{msg: 'Missing project.'})
+    }
+    req.project = project;
+    next();
+  })
+};
 
+exports.getDefaultPackageByProject = function(req, res) {
+  var project = req.project;
   BuilderPackage.findOne({
-    project: req.query.project,
+    project: project._id,
     isSendQuote: false
   })
   .populate('project')
+  .populate('owner')
+  .populate('to.team')
   .exec(function(err, builderPackage) {
     if (err){ return res.send(500, err); }
+    User.populate(builderPackage,[
+      {path : 'owner.member._id'},
+      {path : 'owner.leader'},
+      {path : 'to.team.member._id'},
+      {path : 'to.team.leader'}
+    ],function(err,builderPackage) {
+      if (err){ return res.send(500, err); }
+      return res.json(builderPackage);
+    })
 
-    res.json(builderPackage);
   });
 };
 
