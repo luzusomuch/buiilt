@@ -162,12 +162,12 @@ exports.sendInvitationInMaterial = function(req, res) {
             }
             else {
                 to.push({
-                  _id: user._id,
+                  _id: user.team._id,
                   email: emailPhone.email,
                   phone: emailPhone.phoneNumber
               });
                 newSuppliers.push({
-                  _id: user._id,
+                  _id: user.team._id,
                   email: emailPhone.email,
                   phone: emailPhone.phoneNumber
                 });
