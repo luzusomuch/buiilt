@@ -64,6 +64,10 @@ angular.module('buiiltApp')
         }
       });
 
+      $rootScope.$on('TeamUpdate',function(event,data) {
+        queryProjects();
+      });
+
 
       $scope.menuTypes = {
         homeOwner: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
