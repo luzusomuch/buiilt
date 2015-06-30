@@ -88,10 +88,9 @@ EventBus.onSeries('QuoteRequest.Inserted', function(request, next) {
         });
       } else if (result.contractorPackage) {
         Team.findById(result.contractorPackage.owner).populate('leader').exec(function(err, team) {
-          if (err) {return next();}
-          if (!team) {return next();}
+          if (err || !team) {return next();}
           else {
-            _.each(team.leader, function(leader){
+            async.each(team.leader, function(leader, cb){
               Mailer.sendMail('view-quote-contractor-package.html', leader.email, {
                 quoteRequest: request,
                 //project owner
@@ -102,9 +101,11 @@ EventBus.onSeries('QuoteRequest.Inserted', function(request, next) {
                 quotesLink: config.baseUrl + 'contractor-requests/' + result.contractorPackage._id + '/view',
                 contractorPackage: result.contractorPackage,
                 subject: 'View quote request for contractor package' + result.contractorPackage.name
-              }, function(err) {
-                return next();
+              }, function() {
+                return cb();
               });
+            }, function(){
+              return next();
             });
           }
         });

@@ -74,21 +74,6 @@ exports.createMaterialPackage = function (req, res, next) {
       materialPackage.save(function(err, saved){
         if (err) {return res.send(500,err);}
         else {
-          _.each(req.body.suppliers, function(emailPhone){
-            User.findOne({email: emailPhone.email}, function(err, user){
-              if (err) {return res.send(500,err);}
-              if (!user) {
-                var packageInvite = new PackageInvite({
-                  owner: req.user._id,
-                  project: saved.project,
-                  inviteType: 'supplier',
-                  package: saved._id,
-                  to: emailPhone.email
-                });
-                packageInvite.save();
-              }
-            });
-          });
           return res.json(200,saved);
         }
       });

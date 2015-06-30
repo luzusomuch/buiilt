@@ -59,7 +59,7 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
       function(cb){
         Team.findById(request.owner, function(err, team) {
           if (err || !team) {
-            return cb();
+            return cb(err);
           }
           else {
             async.each(team.leader, function(leader,cb) {
@@ -96,15 +96,19 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
                     type: 'invitation'
                   });
                   notification.save(cb);
-                }, cb);
+                }, function(){ return callback();});
               }
             });
           } else {
-            cb();
+            return callback();
           }
-        }, cb);
+        }, function(){
+          return cb();
+        });
       }
-    ])
+    ], function(){
+      return next();
+    })
   }
   else if (request._modifiedPaths.indexOf('sendAddendum') != -1) {
     async.each(request.to, function(toContractor, cb) {

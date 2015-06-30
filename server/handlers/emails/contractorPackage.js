@@ -44,7 +44,8 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
             else {
               Mailer.sendMail('contractor-package-request-no-account.html', saved.to, {
                 contractorPackage: request,
-                project: request.project,
+                user: result.user,
+                project: result.project,
                 registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + saved._id,
                 subject: 'Invite contractor send quote for ' + request.name
               },function(err){
@@ -88,7 +89,7 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
 EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
   async.parallel({
     user: function(cb){
-      User.findOne({_id: request.owner}, cb);
+      User.findOne({_id: request.ownerUser._id}, cb);
     },
     project: function(cb){
       //find project
@@ -99,15 +100,35 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
       //do send email
       async.each(request.newInvitation,function(toEmail, cb) {
         if (!toEmail._id) {
-          return next();
+          var packageInvite = new PackageInvite({
+            owner: result.user._id,
+            inviteType: 'contractor',
+            package: request._id,
+            project: result.project._id,
+            to: toEmail.email
+          });
+          packageInvite.save(function(err,saved){
+            if (err) {return cb(err);}
+            else {
+              Mailer.sendMail('contractor-package-request-no-account.html', saved.to, {
+                contractorPackage: request,
+                user: result.user,
+                project: result.project,
+                registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + saved._id,
+                subject: 'Invite contractor send quote for ' + request.name
+              },function(err){
+               return cb(err);
+              });
+            }
+          });
         }
         else {
           Team.findOne({'_id': toEmail._id}, function(err, team) {
-          if (err || !team) {return cb();}
+          if (err || !team) {return cb(err);}
           else {
             async.each(team.leader, function(leader, callback) {
               User.findById(leader, function(err,user) {
-                if (err || !user) {return cb();}
+                if (err || !user) {return cb(err);}
                 Mailer.sendMail('contractor-package-request.html', user.email, {
                   contractorPackage: request,
                   //project owner
@@ -115,8 +136,8 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
                   project: result.project,
                   contractorPackageLink: config.baseUrl + 'contractor-requests/' + request._id,
                   subject: 'Quote request for ' + request.name
-                }, function() {
-                  return callback();
+                }, function(err) {
+                  return callback(err);
                 });
               });
             }, function(){

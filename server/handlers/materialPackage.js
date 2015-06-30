@@ -11,10 +11,9 @@ var _ = require('lodash');
 var async = require('async');
 
 EventBus.onSeries('MaterialPackage.Inserted', function(request, next) {
-    _.each(request.to, function(toSupplier){
+    async.each(request.to, function(toSupplier, cb){
         User.findOne({email: toSupplier.email}, function(err, user){
-            if (err) {next();}
-            if (!user) {next();}
+            if (err || !user) {return cb(err);}
             else {
                 var notification = new Notification({
                     owner: user._id,
@@ -24,9 +23,11 @@ EventBus.onSeries('MaterialPackage.Inserted', function(request, next) {
                     referenceTo: 'MaterialPackage',
                     type: 'create-material-package'
                 });
-                notification.save();
+                notification.save(cb);
             }
         });
+    }, function(){
+      return next();
     });
 });
 
@@ -54,7 +55,7 @@ EventBus.onSeries('MaterialPackage.Updated', function(request, next) {
         async.parallel([
           function(cb){
             Team.findById(request.owner, function(err, team) {
-              if (err || team) { return cb(); }
+              if (err || !team) { return cb(err); }
               else {
                 async.each(team.leader, function(leader, cb) {
                   var notification = new Notification({
