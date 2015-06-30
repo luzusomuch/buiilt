@@ -72,7 +72,7 @@ exports.create = function(req, res){
           if (err) {
             return res.send(500,err)
           }
-          return res.json(builderPackage);
+          return res.json(project);
         })
       })
     })

@@ -21,7 +21,7 @@
 </div>
 
 <div class="col s9">
-  <div class="collection z-depth-1">
+  <div class="collection z-depth-1 list">
     <span ng-repeat="materialPackage in materialPackages | filter : filter">
       <a class="collection-item" ng-if="(currentTeam.type == 'builder' || currentTeam.type == 'homeOwner') && materialPackage.isSelect"
          ui-sref='materialRequest.materialPackageInProcess({id: materialPackage.project, packageId: materialPackage._id})'>

@@ -127,3 +127,7 @@ span.disabled {
     max-height: 300px;
     overflow: auto;
 }
+
+.collection.list span a, .collection.list a{
+  color: #000 !important;
+}

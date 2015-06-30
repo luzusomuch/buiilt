@@ -95,6 +95,7 @@ angular.module('buiiltApp')
         if (form.$valid) {
             projectService.create($scope.project).$promise.then(function(data) {
               $scope.projects.push(data);
+              $state.go('dashboard',{id : data._id});
               $scope.project = {
                 package : {
                   location: {},

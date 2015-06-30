@@ -8,7 +8,7 @@
     <li><a class="modal-trigger" href="#newMaterialPackage">Material Package</a></li>
     </ul>
 
-     <div class="collection" style="margin-top:10px">
+     <div class="collection"  style="margin-top:10px">
          <a href="#!" ng-click="filter = {isCompleted : false}" class="collection-item"
             ng-class="{'active' : !filter.isCompleted}">In Progress</a>
          <a href="#!" ng-click="filter = {isCompleted : true}" class="collection-item"
@@ -20,7 +20,7 @@
      <!--<ul class="collection z-depth-1">-->
        <!--<li class="collection-item" ng-repeat="item in staffPackages" ng-if="item.canSee || isLeader"><a ui-sref="staff.view({packageId : item._id})">{{item.name}}</a></li>-->
      <!--</ul>-->
-    <div class="collection z-depth-1">
+    <div class="collection z-depth-1 list">
       <a ui-sref="staff.view({packageId : item._id})" ng-repeat="item in staffPackages | filter : filter"  ng-if="item.canSee || isLeader" class="collection-item">{{item.name}}</a>
     </div>
   </div>
