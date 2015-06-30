@@ -76,19 +76,24 @@ exports.upload = function(req, res){
                                     .populate('owner').populate("project").populate('to.team').exec(function(err,builderPackage){
                                         if (err || !builderPackage) {return cb(err);}
                                         else {
-                                            owners = _.union(builderPackage.owner.leader, builderPackage.to.team.leader);
-                                            _.each(owners, function(leader){
-                                                var notification = new Notification({
-                                                    owner: leader,
-                                                    fromUser: req.user._id,
-                                                    toUser: leader,
-                                                    element: {file: saved, 
-                                                        uploadIn: builderPackage.project},
-                                                    referenceTo: "DocumentPackage",
-                                                    type: 'uploadNewDocumentVersion'
+                                            if (builderPackage.to.team) {
+                                                owners = _.union(builderPackage.owner.leader, builderPackage.to.team.leader);
+                                                _.each(owners, function(leader){
+                                                    var notification = new Notification({
+                                                        owner: leader,
+                                                        fromUser: req.user._id,
+                                                        toUser: leader,
+                                                        element: {file: saved, 
+                                                            uploadIn: builderPackage.project},
+                                                        referenceTo: "DocumentPackage",
+                                                        type: 'uploadNewDocumentVersion'
+                                                    });
+                                                    notification.save(cb);
                                                 });
-                                                notification.save(cb);
-                                            });
+                                            }
+                                            else {
+                                                return cb();
+                                            }
                                         }
                                     });
                                 },
@@ -130,7 +135,7 @@ exports.upload = function(req, res){
                 });
                 file.save(function(err, saved){
                     file.save(function(err, fileSaved) {
-                        if (err) {console.log(err);}
+                        if (err) {return res.send(500,err);}
                         else {
                             var owners = [];
                             async.parallel([
@@ -139,19 +144,24 @@ exports.upload = function(req, res){
                                     .populate('owner').populate("project").populate('to.team').exec(function(err,builderPackage){
                                         if (err || !builderPackage) {return cb(err);}
                                         else {
-                                            owners = _.union(builderPackage.owner.leader, builderPackage.to.team.leader);
-                                            _.each(owners, function(leader){
-                                                var notification = new Notification({
-                                                    owner: leader,
-                                                    fromUser: req.user._id,
-                                                    toUser: leader,
-                                                    element: {file: saved, 
-                                                        uploadIn: builderPackage.project},
-                                                    referenceTo: "DocumentPackage",
-                                                    type: 'uploadDocument'
+                                            if (builderPackage.to.team) {
+                                                owners = _.union(builderPackage.owner.leader, builderPackage.to.team.leader);
+                                                _.each(owners, function(leader){
+                                                    var notification = new Notification({
+                                                        owner: leader,
+                                                        fromUser: req.user._id,
+                                                        toUser: leader,
+                                                        element: {file: saved, 
+                                                            uploadIn: builderPackage.project},
+                                                        referenceTo: "DocumentPackage",
+                                                        type: 'uploadDocument'
+                                                    });
+                                                    notification.save(cb);
                                                 });
-                                                notification.save(cb);
-                                            });
+                                            }
+                                            else {
+                                                return cb();
+                                            }
                                         }
                                     });
                                 },

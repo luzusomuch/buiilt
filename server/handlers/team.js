@@ -30,7 +30,7 @@ EventBus.onSeries('Team.Inserted', function(team, next){
       next();
     });
   } else {
-    next();
+    return next();
   }
 });
 
@@ -87,7 +87,7 @@ EventBus.onSeries('Team.MemberRemoved', function(team, next) {
       next();
     });
   } else {
-    next();
+    return next();
   }
 });
 
