@@ -5,6 +5,20 @@ angular.module('buiiltApp').config(function($stateProvider) {
     templateUrl: '/app/modules/dashboard/dashboard.html',
     controller: 'DashboardCtrl',
     hasCurrentProject : true,
-    authenticate : true
+    authenticate : true,
+    resolve : {
+      myTasks : [
+        'taskService',
+        function(taskService) {
+         return taskService.myTask().$promise
+        }
+      ],
+      myThreads : [
+        'messageService',
+        function(messageService) {
+          return messageService.myThread().$promise
+        }
+      ]
+    }
   });
 });

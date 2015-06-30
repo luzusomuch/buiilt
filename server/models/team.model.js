@@ -67,9 +67,6 @@ var TeamSchema = new Schema({
 /**
  * Pre-save hook
  */
-TeamSchema.pre('save', function (next) {
-  next();
-});
 
 /**
  * Load group by id
@@ -85,7 +82,7 @@ TeamSchema.statics.load = function (id, cb) {
 
 TeamSchema.post( 'init', function() {
   this._original = this.toJSON();
-})
+});
 
 TeamSchema
 .pre('save', function(next) {

@@ -25,13 +25,13 @@ var TaskSchema = new Schema({
     ref : 'Project',
     required : true
   },
-  package : {
-    type : Schema.Types.ObjectId,
-    required : true
-  },
   type : {
     type : String,
     enum : ['staff','contractor','builder','material']
+  },
+  package : {
+    type : Schema.Types.ObjectId,
+    required : true
   },
   assignees: [{
     type: Schema.Types.ObjectId,

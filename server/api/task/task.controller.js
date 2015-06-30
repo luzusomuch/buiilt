@@ -5,7 +5,8 @@ var Task = require('./../../models/task.model');
 var StaffPackage = require('./../../models/staffPackage.model'),
     BuilderPackage = require('./../../models/builderPackage.model'),
     ContractorPackage = require('./../../models/contractorPackage.model'),
-    MaterialPackage = require('./../../models/materialPackage.model');
+    MaterialPackage = require('./../../models/materialPackage.model'),
+    Notification = require('./../../models/notification.model');
 var TaskValidator = require('./../../validators/task');
 var errorsHelper = require('../../components/helpers/errors');
 var _ = require('lodash');
@@ -54,8 +55,69 @@ exports.task = function(req,res,next) {
 };
 
 exports.myTask = function(req,res) {
-  Task.find({})
-}
+  var user = req.user;
+  var result = [];
+  Task.find({$or : [{'user' : user._id}, {assignees : user._id}],completed : false})
+    .populate('assignees')
+    .populate('user')
+
+    .exec(function(err,tasks) {
+      if (err) {
+        return res.send(500,err);
+      }
+      async.each(tasks,function(task,callback) {
+        if (task.type == 'builder') {
+          Task.populate(task,{path : 'package',model : 'BuilderPackage'},function(err,task) {
+            Task.populate(task,[{path : 'package.owner',model : 'Team'},{path : 'package.to.team',model : 'Team'}],function(err,task) {
+              Task.populate(task,[
+                {path : 'package.owner.leader',model : 'User'},{path : 'package.owner.member._id',model : 'User'},
+                {path : 'package.to.team.leader',model : 'User'},{path : 'package.to.team.member._id',model : 'User'}
+              ],function(err,task) {
+                result.push(task);
+                callback(null)
+              })
+            })
+          });
+        } else if (task.type == 'contractor') {
+          Task.populate(task,{path : 'package',model : 'ContractorPackage'},function(err,task) {
+            Task.populate(task,[{path : 'package.owner',model : 'Team'},{path : 'package.winnerTeam._id',model : 'Team'}],function(err,task) {
+              Task.populate(task,[
+                {path : 'package.owner.leader',model : 'User'},{path : 'package.owner.member._id',model : 'User'},
+                {path : 'package.winnerTeam._id.leader',model : 'User'},{path : 'package.winnerTeam._id.member._id',model : 'User'}
+              ],function(err,task) {
+                result.push(task);
+                callback(null)
+              })
+            })
+          });
+        } else if (task.type == 'material') {
+          Task.populate(task,{path : 'package',model : 'MaterialPackage'},function(err,task) {
+            Task.populate(task,[{path : 'package.owner',model : 'Team'},{path : 'package.winnerTeam._id',model : 'Team'}],function(err,task) {
+              Task.populate(task,[
+                {path : 'package.owner.leader',model : 'User'},{path : 'package.owner.member._id',model : 'User'},
+                {path : 'package.winnerTeam._id.leader',model : 'User'},{path : 'package.winnerTeam._id.member._id',model : 'User'}
+              ],function(err,task) {
+                result.push(task);
+                callback(null)
+              })
+            })
+          });
+        } else if (task.type == 'staff') {
+          Task.populate(task,{path : 'package',model : 'StaffPackage'},function(err,task) {
+            Task.populate(task,{path : 'package.staffs'},function(err,task) {
+              result.push(task);
+              callback(null)
+            })
+          });
+        }
+      },function(err) {
+        if (err) {
+          return res.send(500,err);
+        }
+        return res.json(result)
+      });
+    })
+};
 
 exports.create = function(req,res) {
   var aPackage = req.aPackage;
