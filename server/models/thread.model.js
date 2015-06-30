@@ -65,12 +65,6 @@ var ThreadSchema = new Schema({
   minimize: false
 });
 
-/**
- * Pre-save hook
- */
-ThreadSchema.pre('save', function (next) {
-  next();
-});
 
 /**
  * Load group by id
@@ -84,15 +78,29 @@ ThreadSchema.statics.load = function (id, cb) {
   }).exec(cb);
 };
 
+ThreadSchema.post( 'init', function() {
+  this._original = this.toJSON();
+});
 
-ThreadSchema
-  .pre('save', function(next) {
+ThreadSchema.pre('save', function(next) {
     this.wasNew = this.isNew;
+    this.editUser = this._editUser;
+    this.evtName = this._evtName;
+    this.message = this._message;
     next();
   });
 
 ThreadSchema.post('save', function (doc) {
-  var evtName = this.wasNew ? 'Thread.Inserted' : 'Thread.Updated';
+  if (this._original) {
+    doc.oldUsers = this._original.users.slice();
+  }
+  doc.editUser = this.editUser;
+  doc.message = this.message;
+  if (this.evtName ) {
+    var evtName = this.evtName;
+  } else {
+    var evtName = this.wasNew ? 'Thread.Inserted' : 'Thread.Updated';
+  }
 
   EventBus.emit(evtName, doc);
 });

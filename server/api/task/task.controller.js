@@ -66,7 +66,19 @@ exports.myTask = function(req,res) {
         return res.send(500,err);
       }
       async.each(tasks,function(task,callback) {
-        if (task.type == 'contractor') {
+        if (task.type == 'builder') {
+          Task.populate(task,{path : 'package',model : 'BuilderPackage'},function(err,task) {
+            Task.populate(task,[{path : 'package.owner',model : 'Team'},{path : 'package.to.team',model : 'Team'}],function(err,task) {
+              Task.populate(task,[
+                {path : 'package.owner.leader',model : 'User'},{path : 'package.owner.member._id',model : 'User'},
+                {path : 'package.to.team.leader',model : 'User'},{path : 'package.to.team.member._id',model : 'User'}
+              ],function(err,task) {
+                result.push(task);
+                callback(null)
+              })
+            })
+          });
+        } else if (task.type == 'contractor') {
           Task.populate(task,{path : 'package',model : 'ContractorPackage'},function(err,task) {
             Task.populate(task,[{path : 'package.owner',model : 'Team'},{path : 'package.winnerTeam._id',model : 'Team'}],function(err,task) {
               Task.populate(task,[

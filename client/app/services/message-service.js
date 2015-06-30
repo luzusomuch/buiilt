@@ -9,6 +9,19 @@ angular.module('buiiltApp')
         id : '@_id',
         type : '@_type'},
       {
+        myThread : {
+          method : 'GET',
+          isArray : true,
+          params : {
+            id : 'me'
+          }
+        },
+        getOne : {
+          method : 'GET',
+          params : {
+            action : 'one'
+          }
+        },
         get : {
           method : 'GET',
           isArray : true,

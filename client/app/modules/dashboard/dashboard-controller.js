@@ -1,24 +1,26 @@
 angular.module('buiiltApp')
-  .controller('DashboardCtrl', function($scope, $timeout, $q, userService, $rootScope,myTasks,taskService) {
+  .controller('DashboardCtrl', function($scope, $timeout, $q, userService, $rootScope,myTasks,myThreads,taskService,messageService) {
     $scope.currentUser = userService.get();
     $scope.currentProject = $rootScope.currentProject;
     $scope.myTasks = myTasks;
+    $scope.myThreads = myThreads;
     $scope.currentList = 'tasks';
+    $scope.currentThread = {};
 
     var getAvailableAssignee = function($package,type) {
       switch(type) {
         case 'builder' :
           $scope.available = [];
           $scope.available = _.union($scope.available,$scope.currentTeam.leader);
-          if ($scope.currentTeam._id == $scope.package.owner._id && $scope.isLeader) {
-            if ($scope.package.to.team) {
-              _.forEach($scope.package.to.team.leader, function (leader) {
+          if ($scope.currentTeam._id == $package.owner._id && $scope.isLeader) {
+            if ($package.to.team) {
+              _.forEach($package.to.team.leader, function (leader) {
                 $scope.available.push(leader);
               })
             }
           }
-          if ($scope.package.to.team && $scope.currentTeam._id == $scope.package.to.team._id && $scope.isLeader) {
-            _.forEach($scope.package.owner.leader, function (leader) {
+          if ($package.to.team && $scope.currentTeam._id == $package.to.team._id && $scope.isLeader) {
+            _.forEach($package.owner.leader, function (leader) {
               $scope.available.push(leader);
             })
           }
@@ -101,8 +103,22 @@ angular.module('buiiltApp')
       });
     };
 
+    $scope.showChat = function(thread) {
+      $scope.message = {text : ''};
+      $timeout(function() {
+        updateMessage(thread)
+      },1000);
+      $scope.currentThread = thread;
+    };
+
+    $scope.$watch('scrollHeight',function(newVal) {
+      console.log($('#messages')[0].scrollHeight);
+      if (newVal)
+        $('#messages').scrollTop($('#messages')[0].scrollHeight)
+    });
+
     $scope.complete = function(task,index) {
-      task.completed = true
+      task.completed = true;
       task.completedBy = $scope.currentUser._id;
       task.completedAt = new Date();
 
@@ -110,8 +126,41 @@ angular.module('buiiltApp')
         .then(function(res) {
           //$('.card-title').trigger('click');
           //updateTasks();
-          $scope.myTasks.splice(index,1);
+          task.completed = true;
+          $timeout(function() {
+            $scope.myTasks.splice(index,1);
+          },500)
+
         })
-    }
-    console.log(myTasks)
+    };
+
+    $scope.sendMessage = function(form) {
+      $scope.messageFormSubmitted = true;
+      var index = _.findIndex($scope.myThreads,{_id : $scope.currentThread._id})
+      if (form.$valid) {
+        messageService.sendMessage({id : $scope.currentThread._id, type : $scope.currentThread.type},$scope.message).$promise
+          .then(function() {
+
+            //$scope.myThreads[index].messages = res.messages;
+            $scope.message.text = '';
+            console.log($scope.currentThread);
+            console.log($scope.myThreads[1]);
+            $scope.messageFormSubmitted = false;
+          });
+      }
+    };
+
+    var updateMessage = function(thread) {
+      var index = _.findIndex($scope.myThread,{_id : thread._id});
+      messageService.getOne({id : thread._id, type : thread.type}).$promise
+        .then(function(res) {
+          thread.messages = res.messages;
+          $timeout(function() {
+            updateMessage(thread)
+          },1000)
+          $scope.scrollHeight = $('#messages')[0].scrollHeight;
+        })
+
+    };
+    console.log(myThreads)
 });

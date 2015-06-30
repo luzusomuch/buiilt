@@ -12,6 +12,12 @@ angular.module('buiiltApp').config(function($stateProvider) {
         function(taskService) {
          return taskService.myTask().$promise
         }
+      ],
+      myThreads : [
+        'messageService',
+        function(messageService) {
+          return messageService.myThread().$promise
+        }
       ]
     }
   });

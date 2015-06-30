@@ -1,14 +1,14 @@
 angular.module('buiiltApp')
   .directive('message', function(){
     return {
-      restrict: 'EA',
+      restrict: 'A',
       templateUrl: 'app/directives/message/message.html',
       scope:{
         package: '=',
         type : '@'
       },
       controller:
-        function($scope,$rootScope,messageService, authService,filterFilter, $cookieStore, $stateParams, $location , packageService, userService, projectService, FileUploader, documentService) {
+        function($scope,$rootScope,messageService, authService,$timeout,$anchorScroll,$location,filterFilter, $cookieStore, $stateParams, $location , packageService, userService, projectService, FileUploader, documentService) {
           //Init Params
           $scope.currentProject = $rootScope.currentProject;
           authService.getCurrentUser().$promise.then(function(res) {
@@ -53,25 +53,43 @@ angular.module('buiiltApp')
                 break;
               case 'contractor' :
                 $scope.available = [];
-                _.forEach($scope.package.winnerTeam._id.member,function(member) {
+                $scope.available = _.union($scope.available,$scope.currentTeam.leader);
+                if ($scope.currentTeam._id == $scope.package.winnerTeam._id._id && $scope.isLeader) {
+                  _.forEach($scope.package.owner.leader,function(leader) {
+                    $scope.available.push(leader);
+                  });
+                }
+                if ($scope.currentTeam._id == $scope.package.owner._id && $scope.isLeader) {
+                  _.forEach($scope.package.winnerTeam._id.leader,function(leader) {
+                    $scope.available.push(leader);
+                  });
+                }
+                _.forEach($scope.currentTeam.member,function(member) {
                   if (member.status == 'Active') {
                     $scope.available.push(member._id);
                   }
                 });
-                _.forEach($scope.package.winnerTeam._id.leader,function(leader) {
-                  $scope.available.push(leader);
-                });
+                _.remove($scope.available,{_id : $scope.currentUser._id});
                 break;
               case 'material' :
                 $scope.available = [];
-                _.forEach($scope.package.winnerTeam._id.member,function(member) {
+                $scope.available = _.union($scope.available,$scope.currentTeam.leader);
+                if ($scope.currentTeam._id == $scope.package.winnerTeam._id._id && $scope.isLeader) {
+                  _.forEach($scope.package.owner.leader,function(leader) {
+                    $scope.available.push(leader);
+                  });
+                }
+                if ($scope.currentTeam._id == $scope.package.owner._id  && $scope.isLeader) {
+                  _.forEach($scope.package.winnerTeam._id.leader,function(leader) {
+                    $scope.available.push(leader);
+                  });
+                }
+                _.forEach($scope.currentTeam.member,function(member) {
                   if (member.status == 'Active') {
                     $scope.available.push(member._id);
                   }
                 });
-                _.forEach($scope.package.winnerTeam._id.leader,function(leader) {
-                  $scope.available.push(leader);
-                });
+                _.remove($scope.available,{_id : $scope.currentUser._id});
                 break;
               default :
                 break
@@ -102,6 +120,21 @@ angular.module('buiiltApp')
           };
           updateThread();
 
+          var getMessage = function() {
+            if ($scope.currentThread)
+              updateThread();
+            $timeout(getMessage,1000);
+            if ($('#messages')[0])
+             $scope.scrollHeight = $('#messages')[0].scrollHeight;
+          };
+
+          $timeout(getMessage,1000);
+
+          $scope.$watch('scrollHeight',function(newVal) {
+            console.log(newVal);
+            if (newVal)
+              $('#messages').scrollTop($('#messages')[0].scrollHeight)
+          })
 
           //Function fired when click new task
           $scope.newThread = function() {

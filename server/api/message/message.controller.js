@@ -5,7 +5,8 @@ var Thread = require('./../../models/thread.model');
 var StaffPackage = require('./../../models/staffPackage.model'),
   BuilderPackage = require('./../../models/builderPackage.model'),
   ContractorPackage = require('./../../models/contractorPackage.model'),
-  MaterialPackage = require('./../../models/materialPackage.model');
+  MaterialPackage = require('./../../models/materialPackage.model'),
+  Notification = require('./../../models/notification.model');
 var ThreadValidator = require('./../../validators/thread');
 var errorsHelper = require('../../components/helpers/errors');
 var _ = require('lodash');
@@ -50,6 +51,34 @@ exports.thread = function(req,res,next) {
     }
     req.thread = thread;
     next();
+  })
+};
+
+exports.getOne = function(req,res) {
+  var thread = req.thread;
+  Thread.populate(thread,{path : 'messages.user'},function(err,thread) {
+    return res.json(thread);
+  })
+}
+
+exports.myThread = function(req,res) {
+  var user = req.user;
+  var result = [];
+  var query = Notification.find(
+    {$or : [{owner : user._id},{users : user._id}],unread : true, referenceTo : 'thread'}
+  );
+  query.distinct('element._id');
+  query.exec(function(err, threads) {
+    async.each(threads,function(thread,callback) {
+      Thread.findById(thread)
+        .populate('messages.user')
+        .exec(function(err,thread) {
+          result.push(thread);
+          callback();
+        })
+    },function() {
+      return res.json(result);
+    })
   })
 };
 
@@ -104,6 +133,8 @@ exports.saveMessage = function(req,res) {
       user : user
     };
     thread.messages.push(message);
+    thread._evtName = 'Thread.NewMessage';
+    thread._message = message;
     thread.save(function(err) {
       if (err) {
         return res.send(422,err);

@@ -15,7 +15,7 @@
         </div>
         <div class="col s8" ng-if="currentThread.users">
           <p style="">Current user in thread:</p>
-          <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="user in currentThread.users">
+          <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="user in currentThread.users" ng-class="{'admin' : user.team.role == 'admin'}">
             {{user.email}}
           </div>
         </div>
@@ -33,45 +33,17 @@
     </div>
   </div>
   <div class="divider"></div>
-  <div style="height: 500px; overflow-y: auto">
+  <div id="messages" style="height: 500px; overflow-y: auto">
 
     <li class="collection-item" ng-repeat="message in currentThread.messages">
       <div class="row valign-wrapper" style="margin-bottom: -5px">
-        <!--<a href="#!" class="btn-flat col s1">-->
-          <!--<i class="mdi-toggle-radio-button-on valign center-align"></i>-->
-        <!--</a>-->
-
         <p class="col s9 valign">{{message.text}}</p>
         <div class="card col" style="padding: 5px; margin-left: 10px">
           {{message.user.email}}
         </div>
       </div>
     </li>
-
-    <!--<li class="collection-item">-->
-      <!--<div class="row valign-wrapper" style="margin-bottom: -5px">-->
-        <!--<a href="#!" class="btn-flat col s1">-->
-          <!--<i class="mdi-toggle-radio-button-on valign center-align"></i>-->
-        <!--</a>-->
-
-        <!--<p class="col s9 valign">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.<br> Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>-->
-
-        <!--<img src="images/yuna.jpg" alt="" class="circle col s2 right valign center-align">-->
-      <!--</div>-->
-    <!--</li>-->
-
-    <!--<li class="collection-item">-->
-      <!--<div class="row valign-wrapper" style="margin-bottom: -5px">-->
-        <!--<a href="#!" class="btn-flat col s1">-->
-          <!--<i class="mdi-toggle-radio-button-on valign center-align"></i>-->
-        <!--</a>-->
-
-        <!--<p class="col s9 valign">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.<br> Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>-->
-
-        <!--<img src="images/yuna.jpg" alt="" class="circle col s2 right valign center-align">-->
-      <!--</div>-->
-    <!--</li>-->
-
+    <div ng-if="currentThread" id="bottom111"></div>
   </div>
   <div class="divider"></div>
   <div class="col s12 card-footer" style="height: 150px" ng-show="currentThread">
