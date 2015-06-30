@@ -43,7 +43,7 @@ EventBus.onSeries('Team.Inserted', function(request, next){
 
 EventBus.onSeries('Team.Updated', function(request, next){
   request.member.forEach(function(user) {
-    if (!user._id && user.status == 'Pending' && !(_.find(request.oldMember,{ _id : user._id}))) {
+    if (!user._id && user.status == 'Pending' && !(_.find(request.oldMember,{ email : user.email}))) {
       var inviteToken = new InviteToken({
         email : user.email,
         element : request,
@@ -64,7 +64,7 @@ EventBus.onSeries('Team.Updated', function(request, next){
         });
       })
 
-    } else if (user._id && user.status == 'Pending' && !(_.find(request.oldMember,{ email : user.email})))  {
+    } else if (user._id && user.status == 'Pending' && !(_.find(request.oldMember,{ _id : user._id})))  {
       Mailer.sendMail('invite-team-has-account.html', user._id.email, {
         request: request,
         subject: 'Group invitation ' + request.name

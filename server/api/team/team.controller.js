@@ -195,7 +195,7 @@ exports.removeMember = function(req,res) {
     team.markModified('member');
     team._evtName = 'Team.MemberRemoved';
     team._user = user;
-    team._toUser = member._id;
+    team._toUser = member;
     team.save(function() {
       Team.populate(team, [{path:"leader"},{path:"member._id"}], function(err, team ) {
         return res.json(team);
@@ -281,7 +281,7 @@ exports.assignLeader = function(req,res) {
   team.leader.push(member);
   team._evtName = 'Team.LeaderAssigned';
   team._user = user;
-  team._toUser = member._id;
+  team._toUser = member;
   team.save(function(err) {
     if (err) {
       return res.send(500,err);

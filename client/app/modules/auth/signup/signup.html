@@ -1,4 +1,4 @@
-<div class="main-content container" style="margin-top:50px;">
+
   <div class="row">
     <div class="col-sm-12">
       <!-- sign-up form -->
@@ -7,27 +7,26 @@
         <alert ng-repeat="(key, msg) in errors" type="danger" close="closeAlert(key)">
           {{msg.email.message}}
         </alert>
-        <form method="post" ng-submit="signup(form)" name="form" novalidate>
+        <div class="card collection">
+        <form method="post" ng-submit="signup(form)" name="form" novalidate style="padding:10px">
           <h3>Create account</h3>
           <div class="row">
             <div input-field class="col s12">
               <input id="email" type="email" name="email" ng-model="user.email" required
                      ng-class="{'invalid' : form.email.$invalid && submitted}"
-                     ng-disabled="hasInviteToken">
+                     ng-if="!hasInviteToken">
               <label for="email">Email</label>
               <p class="validate-message" ng-show="form.email.$error.required && submitted">Email is required</p>
               <p class="validate-message" ng-show="form.email.$error.email && submitted">Wrong email format</p>
             </div>
           </div>
           <div class="row">
-            <div class="input-field col s12">
-              <input type="text" name="firstName" ng-model="user.firstName" required>
+            <div class="input-field col s6">
+              <input id="firstName" type="text" name="firstName" ng-model="user.firstName" required>
               <label for="firstName">First name</label>
             </div>
-          </div>
-          <div class="row">
-            <div class="input-field col s12">
-              <input type="text" name="lastName" ng-model="user.lastName" required>
+            <div class="input-field col s6">
+              <input id="lastName" type="text" name="lastName" ng-model="user.lastName" required>
               <label for="lastName">Last name</label>
             </div>
           </div>
@@ -50,25 +49,15 @@
           <div ng-if="hasInviteToken && user.invite.type == 'team-invite'">
             <h3>Team invitation</h3>
             <div class="row">
-              <p>You have been invited by : </p>
-              <p style="margin-left: 15px">Team <span class="highlight">{{user.invite.element.name}}</span></p>
-              <p style="margin-left: 15px">Type <span class="highlight">{{user.invite.element.type}}</span> team</p>
-              <p>Do you want to join to that team </p>
-              <div class="switch">
-                <label>
-                  Reject
-                  <input type="checkbox" ng-model="user.invite.accept">
-                  <span class="lever"></span>
-                  Accept
-                </label>
-              </div>
+              <p>Team <span class="highlight">{{user.invite.element.name}}</span> has invited you to join them on Buiilt</p>
+              <p>Accept their invitation by signing up below</p>
             </div>
           </div>
           <div class="row">
-            <button class="waves-effect waves-light btn">Sign up</button>
+            <button style="margin-left:10px" class="waves-effect waves-light btn">Sign up</button>
           </div>
         </form>
+        </div>
       </div>
     </div>
   </div>
-</div>

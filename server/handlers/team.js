@@ -63,24 +63,24 @@ EventBus.onSeries('Team.Updated', function(team, next){
 });
 
 EventBus.onSeries('Team.MemberRemoved', function(team, next) {
-  if (team.member.length > 0) {
-    var toUser = team.toUser;
+  if (team.member.length > 0 && team.toUser.status == 'Active') {
+    var toUser = team.toUser._id;
     var owners = team.leader.slice();
-    _.forEach(team.member,function(member) {
+    _.forEach(team.member, function (member) {
       if (member.status == 'Active') {
         owners.push(member._id);
       }
     });
     owners.push(toUser);
     var params = {
-      owners : owners,
-      fromUser : team.user,
-      toUser : toUser._id,
-      element : team,
-      referenceTo : 'team',
-      type : 'team-remove'
+      owners: owners,
+      fromUser: team.user,
+      toUser: toUser._id,
+      element: team,
+      referenceTo: 'team',
+      type: 'team-remove'
     };
-    NotificationHelper.create(params,function(err) {
+    NotificationHelper.create(params, function (err) {
       if (err) {
         console.log(err);
       }
@@ -161,7 +161,7 @@ EventBus.onSeries('Team.Leaved', function(team, next) {
 
 EventBus.onSeries('Team.LeaderAssigned', function(team, next) {
   var owners = team.leader.slice();
-  var toUser = team.toUser;
+  var toUser = team.toUser._id;
   _.forEach(team.member,function(member) {
     if (member.status == 'Active') {
       owners.push(member._id);
