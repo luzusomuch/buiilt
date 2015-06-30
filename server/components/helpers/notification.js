@@ -22,7 +22,7 @@ exports.create = function(params,cb){
       fromUser : params.fromUser,
       toUser : (params.toUser) ? params.toUser : owner,
       element : params.element,
-      referenceTo : params.ref,
+      referenceTo : params.referenceTo,
       type : params.type
     });
     notification.save(function(err) {

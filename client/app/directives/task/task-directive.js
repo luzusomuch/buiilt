@@ -19,7 +19,6 @@ angular.module('buiiltApp')
               $scope.currentTeam = res;
               $scope.isLeader = (_.find($scope.currentTeam.leader,{_id : $scope.currentUser._id})) ? true : false;
               getAvailableAssignee($scope.type);
-              console.log(getAvailableAssignee);
               updateTasks();
 
             });
@@ -59,7 +58,7 @@ angular.module('buiiltApp')
             case 'contractor' :
               $scope.available = [];
               $scope.available = _.union($scope.available,$scope.currentTeam.leader);
-              if ($scope.currentTeam._id == $scope.package.winnerTeam._id && $scope.isLeader) {
+              if ($scope.currentTeam._id == $scope.package.winnerTeam._id._id && $scope.isLeader) {
                 _.forEach($scope.package.owner.leader,function(leader) {
                     $scope.available.push(leader);
                 });
@@ -78,7 +77,7 @@ angular.module('buiiltApp')
             case 'material' :
               $scope.available = [];
               $scope.available = _.union($scope.available,$scope.currentTeam.leader);
-              if ($scope.currentTeam._id == $scope.package.winnerTeam._id && $scope.isLeader) {
+              if ($scope.currentTeam._id == $scope.package.winnerTeam._id._id && $scope.isLeader) {
                 _.forEach($scope.package.owner.leader,function(leader) {
                   $scope.available.push(leader);
                 });
@@ -162,7 +161,6 @@ angular.module('buiiltApp')
         $scope.assign = function(staff,index) {
           staff.canRevoke = true;
           $scope.task.assignees.push(staff);
-          console.log($scope.task.assignees);
           $scope.available.splice(index,1);
         };
 

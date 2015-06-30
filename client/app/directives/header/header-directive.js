@@ -57,6 +57,10 @@ angular.module('buiiltApp')
       $rootScope.$on('$stateChangeSuccess', function (event, next) {
         queryProjects();
         $scope.currentProject = $rootScope.currentProject;
+        if ($scope.currentProject && !_.find($scope.currentTeam.project,{_id : $scope.currentProject._id}))
+        {
+          $state.go('team.manager');
+        }
         if ($state.current.name == 'team.manager' || $state.current.name == 'dashboard'){
           setTimeout(function () {
             $('#tabsMenu').tabs();

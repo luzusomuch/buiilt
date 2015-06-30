@@ -9,7 +9,7 @@ var async = require('async');
 var _ = require('lodash');
 
 EventBus.onSeries('Task.Inserted', function(task, next){
-  if (task.assignees.length) {
+  if (task.assignees.length > 0) {
     var params = {
       owners : task.assignees,
       fromUser : task.user,

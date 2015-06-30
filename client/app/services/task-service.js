@@ -34,7 +34,7 @@ angular.module('buiiltApp')
         },
         update : {
           method : 'PUT'
-        }
+        },
         //update: {
         //  method: 'PUT'
         //},

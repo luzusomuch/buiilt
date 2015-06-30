@@ -7,76 +7,75 @@
     <li><a class="modal-trigger" href="#newMaterialPackage">Material Package</a></li>
   </ul>
   <div class="collection">
-    <a href="#" class="collection-item">Tasks<span class="new badge">1</span></a>
-    <a href="#" class="collection-item">Chats<span class="new badge">4</span></a>
-    <a href="#" class="collection-item">Docs<span class="new badge">2</span></a>
+    <a href="#" class="collection-item" ng-click="showTasks()" ng-class="{'active' : currentList == 'tasks'}">Tasks<span class="new badge">1</span></a>
+    <a href="#" class="collection-item" ng-click="showChats()" ng-class="{'active' : currentList == 'chats'}">Chats<span class="new badge">4</span></a>
+    <a href="#" class="collection-item" ng-click="showDocs()" ng-class="{'active' : currentList == 'docs'}">Docs<span class="new badge">2</span></a>
   </div>
 </div>
 <div class="col s9">
-  <ul class="collapsible" data-collapsible="accordian">
-    <li class="">
-      <div class="collapsible-header">
-        <a href="#!" class="btn-flat" style="margin-top: -3px; font-size: 12px;">
+  <ul class="collapsible" data-collapsible="accordion" ng-if="currentList == 'tasks'">
+    <li class="" ng-repeat="task in myTasks">
+      <div class="collapsible-header" ng-click="showTask(task)">
+        <a href="#!" class="btn-flat" style="margin-top: -3px; font-size: 12px;" ng-click="complete(task,$index)">
           <i class="mdi-toggle-check-box-outline-blank"></i>
         </a>
-        Alvin
-        <a href="#!" class="btn-flat secondary-content new badge" style="font-size: 12px;">
+        {{task.name}}
+        <a ng-if="task.type == 'contractor'"
+           ui-sref="contractorRequest.contractorPackageInProcess({id : task.project, packageId : task.package})"
+           class="btn-flat secondary-content new badge" style="font-size: 12px;">
           Go to Task
         </a>
-        <a href="#!" class="btn-flat secondary-content" style="font-size: 12px;">
-          Edit
+        <a ng-if="task.type == 'staff'"
+           ui-sref="staff.view({id : task.project, packageId : task.package._id})"
+           class="btn-flat secondary-content new badge" style="font-size: 12px;">
+          Go to Task
         </a>
+        <a ng-if="task.type == 'material'"
+           ui-sref="materialRequest.materialPackageInProcess({id : task.project, packageId : task.package._id})"
+           class="btn-flat secondary-content new badge" style="font-size: 12px;">
+          Go to Task
+        </a>
+        <!--<a href="#!" class="btn-flat secondary-content" style="font-size: 12px;">-->
+          <!--Edit-->
+        <!--</a>-->
       </div>
       <div class="collapsible-body" style="display: none;">
         <div class="row">
           <div class="input-field col s10 offset-s1">
-            <input id="task_description" value="Existing task description ready for editing" type="text" class="validate valid" style="margin-bottom: -20px">
+            <input id="task_description" value="{{task.name}}" type="text" class="validate" style="margin-bottom: -20px" ng-disabled="isShow">
           </div>
         </div>
-        <div class="row container">
-          <p style="margin-bottom: -20px">Current Assignee's:</p>
-          <div class="card col" style="padding: 5px; margin-left: 10px">
-            Test Name <span><a href="#"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
+
+        <div class="row container current-assign">
+          <p style="">Current Assignee's:</p>
+          <div class="card col"  ng-if="!isShow"  style="padding: 5px; margin-left: 10px" ng-repeat="assignee in task.assignees" ng-class="{'admin' : assignee.team.role == 'admin'}">
+            {{assignee.email}} <span ng-if="assignee.canRevoke"><a href="#!" ng-click="revoke(assignee,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
           </div>
-          <div class="card col" style="padding: 5px; margin-left: 10px">
-            Test Name <span><a href="#"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
-          </div>
-          <div class="card col" style="padding: 5px; margin-left: 10px">
-            Test Name <span><a href="#"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
-          </div>
-          <div class="card col" style="padding: 5px; margin-left: 10px">
-            Test Name <span><a href="#"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
-          </div>
-          <div class="card col" style="padding: 5px; margin-left: 10px">
-            Test Name <span><a href="#"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
-          </div>
-          <div class="card col" style="padding: 5px; margin-left: 10px">
-            Test Name <span><a href="#"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
+          <div class="card col"  ng-if="isShow"  style="padding: 5px; margin-left: 10px" ng-repeat="assignee in task.assignees" ng-class="{'admin' : assignee.team.role == 'admin'}">
+            {{assignee.email}}
           </div>
         </div>
 
         <div class="divider"></div>
 
-        <div class="row container">
-          <p style="margin-bottom: -20px">Available Assignee's:</p>
-          <div class="card col" style="padding: 5px; margin-left: 10px">
-            Test Name
-          </div>
-          <div class="card col" style="padding: 5px; margin-left: 10px">
-            Test Name
-          </div>
-          <div class="card col" style="padding: 5px; margin-left: 10px">
-            Test Name
-          </div>
+        <div class="row container available-assign"  ng-if="!isShow" >
+          <p style="">Available Assignee's:</p>
+          <a href="#!" ng-click="assign(staff,$index)" ng-repeat="staff in available">
+            <div class="card col" style="padding: 5px; margin-left: 10px"  ng-class="{'admin' : staff.team.role == 'admin'}">
+              {{staff.email}}
+            </div>
+          </a>
         </div>
 
-        <div class="row container">
-          <button class="btn right" type="submit" name="action">Save
+        <div class="row">
+          <button class="btn right" type="submit" name="action" ng-if="!isShow">Save
           </button>
         </div>
 
       </div>
     </li>
+  </ul>
+  <ul class="collapsible" data-collapsible="accordion" ng-if="currentList == 'chats'">
     <li class="">
       <div class="collapsible-header">
         Name of Thread
@@ -137,33 +136,34 @@
 
       </div>
     </li>
-    <li>
-      <div class="collapsible-header">
-        Name of Document
-        <a href="#!" class="btn-flat secondary-content" style="font-size: 12px;">
-          Go to Document
-        </a>
-        <a href="#!" class="btn-flat secondary-content" style="font-size: 12px;">
-          New Revision/Document
-        </a>
-      </div>
-      <div class="collapsible-body">
+  </ul>
+    <!--<li>-->
+      <!--<div class="collapsible-header">-->
+        <!--Name of Document-->
+        <!--<a href="#!" class="btn-flat secondary-content" style="font-size: 12px;">-->
+          <!--Go to Document-->
+        <!--</a>-->
+        <!--<a href="#!" class="btn-flat secondary-content" style="font-size: 12px;">-->
+          <!--New Revision/Document-->
+        <!--</a>-->
+      <!--</div>-->
+      <!--<div class="collapsible-body">-->
 
-        <div class="row container">
+        <!--<div class="row container">-->
 
-          <div class="card">
-            <div class="card-image">
-              <img src="images/sample-1.jpg">
-              <span class="card-title">Name of Document</span>
-            </div>
-            <div class="card-content">
-              <p>Description of Document, or description of revisions to existing document.</p>
-            </div>
-          </div>
+          <!--<div class="card">-->
+            <!--<div class="card-image">-->
+              <!--<img src="images/sample-1.jpg">-->
+              <!--<span class="card-title">Name of Document</span>-->
+            <!--</div>-->
+            <!--<div class="card-content">-->
+              <!--<p>Description of Document, or description of revisions to existing document.</p>-->
+            <!--</div>-->
+          <!--</div>-->
 
-        </div>        
-      </div>
-    </li>
+        <!--</div>        -->
+      <!--</div>-->
+    <!--</li>-->
   </ul>
 </div>
 

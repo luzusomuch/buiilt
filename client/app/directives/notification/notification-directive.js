@@ -19,16 +19,16 @@ angular.module('buiiltApp')
         };
 
         var text;
-        if (scope.notification.type === 'taskAssign') {
+        if (scope.notification.type === 'task-assign') {
           text = params.fromUser + ' has assigned ' + params.toUser + ' to task ' + params.element + ' at ' + params.time;
         }
-        if (scope.notification.type === 'taskRevoke') {
+        if (scope.notification.type === 'task-revoke') {
           text = params.fromUser + ' has revoked ' + params.toUser + ' from task ' + params.element + ' at ' + params.time;
         }
-        if (scope.notification.type === 'taskReopened') {
+        if (scope.notification.type === 'task-reopened') {
           text = params.fromUser + ' has reopened task ' + params.element + ' at ' + params.time;
         }
-        if (scope.notification.type === 'taskCompleted') {
+        if (scope.notification.type === 'task-completed') {
           text = params.fromUser + ' has completed task ' + params.element + ' at ' + params.time;
         }
         if (scope.notification.type === 'create-contractor-package') {
