@@ -59,7 +59,7 @@ EventBus.onSeries('Task.Updated', function(task, next){
               };
 
               NotificationHelper.create(params, cb);
-            }else{
+            } else{
               return cb();
             }
           }, callback);
@@ -89,7 +89,7 @@ EventBus.onSeries('Task.Updated', function(task, next){
               toUser: assignee,
               element : task,
               referenceTo: 'task',
-              type: 'taskAssign'
+              type: 'task-assign'
             };
             NotificationHelper.create(params, cb);
           }, callback);
