@@ -27,6 +27,8 @@ var FileSchema = new Schema({
   }],
   //Maybe project or package ...
   belongTo: {type: Schema.Types.ObjectId},
+  //Maybe contractor package or material package ...
+  belongToType: {type: String},
   usersInterestedIn: [{
     _id: {
       type: Schema.Types.ObjectId,

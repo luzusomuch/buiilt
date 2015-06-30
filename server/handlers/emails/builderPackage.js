@@ -24,21 +24,21 @@ EventBus.onSeries('BuilderPackage.Inserted', function(request, next) {
     });
 
     packageInvite.save(function(err) {
-      if(err){ return next(); }
+      if(err){ next(); }
 
       Mailer.sendMail('invite-' + request.to.type + '-has-no-account.html', request.to.email, {
         project: request.project,
         registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
         subject: 'Invite ' + subjectType + ' send quote for ' + request.name
       },function(){
-        return next();
+       return next();
       });
     });
   } else {
     Team.findById(request.to.team)
       .populate('leader')
       .exec(function(err, team) {
-        if(err || !team){ return next(); }
+        if(err || !team){ next(); }
 
         if (team.type == request.to.type) {
           team.leader.forEach(function(leader) {
@@ -47,7 +47,7 @@ EventBus.onSeries('BuilderPackage.Inserted', function(request, next) {
               link: config.baseUrl + request.project._id + '/dashboard',
               subject: 'Invite ' + subjectType + ' send quote for ' + request.name
             }, function () {
-              next();
+              return next();
             });
           });
         }else{

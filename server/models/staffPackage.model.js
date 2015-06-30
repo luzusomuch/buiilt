@@ -15,6 +15,7 @@ var StaffPackageSchema = new Schema({
   },
   name: String,
   descriptions: [String],
+  type: {type: String, default: 'staffPackage'},
   staffs :[{
     type: Schema.Types.ObjectId,
     ref: 'User'

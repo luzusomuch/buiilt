@@ -23,8 +23,7 @@ EventBus.onSeries('PackageInvite.Inserted', function(request, next) {
     }, function(err, result){
         if (!err) {
             PackageInvite.find({package: request.package}, function(err, packageInvites) {
-                if (err) {return next();}
-                if (!packageInvites) {return next();}
+                if (err || !packageInvites) {next();}
                 else {
                     async.each(packageInvites, function(packageInvite, cb){
                         if (packageInvite.inviteType == 'contractor') {
@@ -36,7 +35,7 @@ EventBus.onSeries('PackageInvite.Inserted', function(request, next) {
                                 registryLink: config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
                                 contractorPackageLink: config.baseUrl  + result.project._id + '/contractor-requests/' + request._id,
                                 subject: 'Quote request for ' + request.name
-                            }, function(err) {
+                            }, function() {
                                 return cb();
                             });
                         }else if(packageInvite.inviteType == 'supplier') {

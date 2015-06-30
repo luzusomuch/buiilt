@@ -59,7 +59,7 @@ s3Aws.prototype.downloadFile = function(file, callback) {
     callback(err);
   });
   downloader.on('end', function(data) {
-    callback(null, data);
+    callback(data);
   });
 };
 module.exports = new s3Aws();

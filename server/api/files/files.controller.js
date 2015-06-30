@@ -54,13 +54,15 @@ exports.downloadFile = function(req, res) {
     File.findById(req.params.id, function(err, file){
         if (err) {return res.send(500,err);}
         else {
-            s3.downloadFile(file, function(err, data) {
-                if (err) {return res.send(500,err);}
-                else {
-                    console.log(data)
-                    return res.json(200,data);
-                }
-            });
+            var fileUrl = {url: s3.getPublicUrl(file.title)};
+            return res.json(200,fileUrl);
+            // s3.downloadFile(file, function(err, data) {
+            //     if (err) {return res.send(500,err);}
+            //     else {
+            //         console.log(data)
+            //         return res.json(200,data);
+            //     }
+            // });
         }
     });
 };

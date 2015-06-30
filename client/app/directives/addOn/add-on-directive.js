@@ -7,7 +7,7 @@ angular.module('buiiltApp').directive('addon', function(){
             package: '=',
             type: '@'
         },
-        controller: function($scope, $stateParams, authService,addOnPackageService, FileUploader, $cookieStore, fileService, contractorRequestService, materialRequestService) {
+        controller: function($scope,$window, $stateParams, authService,addOnPackageService, FileUploader, $cookieStore, fileService, contractorRequestService, materialRequestService) {
             $scope.allItemsText = 'All items';
             authService.getCurrentUser().$promise.then(function(data){
                 $scope.currentUser = data;
@@ -47,7 +47,7 @@ angular.module('buiiltApp').directive('addon', function(){
             $scope.downloadFile = function(value) {
                 fileService.downloadFile({id: value})
                 .$promise.then(function(data){
-                    console.log(data);
+                    $window.open(data.url);
                 });
             };
 
@@ -172,7 +172,8 @@ angular.module('buiiltApp').directive('addon', function(){
             },true);
 
             $scope.formData = {
-                title: ''
+                title: '',
+                belongToType: ''
             };
             $scope.safeApply = function (fn) {
                 var phase = this.$root.$$phase;
@@ -214,10 +215,11 @@ angular.module('buiiltApp').directive('addon', function(){
               //     $scope.files = data;
               // });
             };
-
+            console.log($scope.type);
             uploader.onBeforeUploadItem = function (item) {
                 $scope.formData._id = $scope.fileId;
                 $scope.formData.title = item.title;
+                $scope.formData.belongToType = $scope.type;
                 item.formData.push($scope.formData);
             };
 

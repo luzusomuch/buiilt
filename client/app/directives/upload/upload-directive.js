@@ -16,28 +16,10 @@ angular.module('buiiltApp').directive('upload', function(){
             $scope.formData = {
                 fileId: '',
                 date: new Date(),
-                // album: {},
                 title: '',
-                // belongTo: {},
-                // doc: {},
+                belongToType: '',
                 desc: ''
-                // usersRelatedTo: []
             };
-            // $scope.docum = {};
-            // packageService.getPackageByProject({'id': $stateParams.id}, function(data) {
-            //     documentService.getByProjectAndPackage({'id' : data._id}).$promise.then(function(data) {
-            //         $scope.document = data;
-            //     });
-            // });
-
-            // $scope.createDocument = function() {
-            //     documentService.create({'id': $scope.project},$scope.docum).$promise.then(function(data) {
-            //         $scope.success = true;
-            //     });
-            // };
-            // documentService.getByProjectAndPackage({'id' : $scope.builderPackage}).$promise.then(function(data) {
-            //     $scope.document = data;
-            // });
 
             $scope.safeApply = function (fn) {
                 var phase = this.$root.$$phase;
@@ -52,7 +34,7 @@ angular.module('buiiltApp').directive('upload', function(){
 
             if ($stateParams.packageId) {
                 var uploader = $scope.uploader = new FileUploader({
-                    url: 'api/uploads/'+ $stateParams.packageId + '/file',
+                    url: 'api/uploads/'+ $stateParams.packageId + '/file-package',
                     headers : {
                       Authorization: 'Bearer ' + $cookieStore.get('token')
                     },
@@ -61,7 +43,7 @@ angular.module('buiiltApp').directive('upload', function(){
             }
             else if($scope.package && $scope.package != '') {
                 var uploader = $scope.uploader = new FileUploader({
-                    url: 'api/uploads/'+ $scope.package._id + '/file',
+                    url: 'api/uploads/'+ $scope.package._id + '/file-package',
                     headers : {
                       Authorization: 'Bearer ' + $cookieStore.get('token')
                     },
@@ -77,15 +59,6 @@ angular.module('buiiltApp').directive('upload', function(){
                     formData: [$scope.formData]
                 });
             }
-            
-
-            // uploader.filters.push({
-            //     name: 'imageFilter',
-            //     fn: function (item /*{File|FileLikeObject}*/, options) {
-            //       var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
-            //       return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
-            //     }
-            // });
 
               // CALLBACKS
             uploader.onProgressAll = function (progress) {
@@ -114,6 +87,7 @@ angular.module('buiiltApp').directive('upload', function(){
             uploader.onBeforeUploadItem = function (item) {
                 $scope.formData._id = $scope.fileId;
                 $scope.formData.title = item.title;
+                $scope.formData.belongToType = $scope.package.type;
                 // $scope.formData.belongTo = $stateParams.id;
                 // $scope.formData.doc = $scope.documentId;
                 // $scope.formData.desc = item.file.desc || "";

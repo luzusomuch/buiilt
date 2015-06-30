@@ -12,6 +12,7 @@ angular.module('buiiltApp')
           toUser : '<span class="highlight">{{notification.toUser.email}}</span>',
           element : '<span class="highlight">{{notification.element.name}}</span> ',
           quote: '<span class="highlight">{{notification.element.quote}}</span> ',
+          fileName: '<span class="highlight">{{notification.element.title}}</span> ',
           packageName: '<span class="highlight">{{notification.element.package.name}}</span> ',
           time : '<span class="highlight">{{notification.createdAt | date : "yyyy/MM/dd hh:mm a"}}</span>'
         };
@@ -36,7 +37,7 @@ angular.module('buiiltApp')
           text = params.fromUser + ' has invited ' + params.toUser + 'to send a quote for ' + params.element;
         }
         if (scope.notification.type === 'send-quote') {
-          text = params.fromUser + ' has send quote ' + params.quote + ' to ' + params.toUser + ' in ' + param.packageName;
+          text = params.fromUser + ' has send quote ' + params.quote + ' to ' + params.toUser + ' in ' + params.packageName;
         }
         if (scope.notification.type === 'send-addendum') {
           text = params.fromUser  + 'has add new addendum in pacakge ' + params.element;
@@ -67,6 +68,9 @@ angular.module('buiiltApp')
         }
         if (scope.notification.type === 'send-invoice') {
           text = params.fromUser  + 'has add new invoice in package ' + params.element;
+        }
+        if (scope.notification.type === 'uploadDocument') {
+          text = params.fromUser  + 'has add new document ' + params.fileName;
         }
         text += ' Click <a href="#!" ng-click="goToDetail(notification)">here</a> for more infomation';
         element.html(text).show();
