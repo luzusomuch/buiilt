@@ -13,7 +13,7 @@
   <div class="collection">
     <a href="#!" ng-click="filter = {isCompleted : false, isSelect : true}" class="collection-item"
        ng-class="{'active' : !filter.isCompleted && filter.isSelect}">In Progress</a>
-    <a href="#!" ng-click="filter = {isCompleted : false, isSelect : false} " class="collection-item"
+    <a href="#!" ng-click="filter = {isCompleted : false, isSelect : false, isCancel:false} " class="collection-item"
        ng-class="{'active' : !filter.isAccept && !filter.isSelect}">In Tender</a>
     <a href="#!" ng-click="filter = {isCompleted : true, isSelect : true}" class="collection-item"
        ng-class="{'active' : filter.isCompleted  && filter.isSelect}">Completed</a>
@@ -109,11 +109,12 @@
                   <p class="validate-message" ng-if="requireError">Material require details at least 1 item</p>
                 </div>
                 <div class="input-field col s3" style="margin-top: 67px">
-                  <input id="quantity" type="number" class="validate" ng-model="quantity">
+                  <input id="quantity" type="number" name="requiredQuantity" class="validate" ng-model="quantity">
                   <label for="quantity">Quantity</label>
+                  <p class="validate-message" ng-if="form.requiredQuantity.$valid == false">Please input number</p>
                 </div>
                 <div class="valign col s2">
-                  <a name="action" class="btn" style="margin-top:78px;"
+                  <a ng-if="form.requiredQuantity.$valid == true" name="action" class="btn" style="margin-top:78px;"
                      ng-click="addNewRequire()">Add</a>
                 </div>
               </div>
@@ -152,11 +153,12 @@
                                     input-class="col s12"></angucomplete-alt>
                 </div>
                 <div class="input-field col s3">
-                  <input id="phone_number" type="number" class="validate" ng-model="newPhoneNumber">
+                  <input id="phone_number" type="number" name="phoneNumber" class="validate" ng-model="newPhoneNumber">
                   <label for="phone_number">Phone Number</label>
+                  <p class="validate-message" ng-if="form.phoneNumber.$valid == false">Please input number</p>
                 </div>
                 <div class="valign col s2">
-                  <a name="action" class="btn" style="margin-top:28px;" ng-click="addNewSupplier()">Add</a>
+                  <a ng-if="form.phoneNumber.$valid == true" name="action" class="btn" style="margin-top:28px;" ng-click="addNewSupplier()">Add</a>
                 </div>
               </div>
             </li>

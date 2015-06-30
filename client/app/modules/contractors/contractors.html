@@ -11,7 +11,7 @@
    <div class="collection"  >
      <a href="#!" ng-click="filter = {isCompleted : false, isAccept : true}" class="collection-item"
         ng-class="{'active' : !filter.isCompleted && filter.isAccept}">In Progress</a>
-     <a href="#!" ng-click="filter = {isCompleted : false, isAccept : false} " class="collection-item"
+     <a href="#!" ng-click="filter = {isCompleted : false, isAccept : false, isCancel:false} " class="collection-item"
         ng-class="{'active' : !filter.isAccept && !filter.isAccept}">In Tender</a>
      <a href="#!" ng-click="filter = {isCompleted : true, isAccept : true}" class="collection-item"
         ng-class="{'active' : filter.isCompleted  && filter.isAccept}">Completed</a>
@@ -129,11 +129,12 @@
                                 input-class="col s12"></angucomplete-alt>
             </div>
             <div class="input-field col s3">
-              <input id="phone_number" ng-model="newPhoneNumber" type="text" name="phoneNumber" class="validate">
+              <input id="phone_number" ng-model="newPhoneNumber" type="number" name="phoneNumber" class="validate">
               <label for="phone_number">Phone Number</label>
+              <p class="validate-message" ng-if="form.phoneNumber.$valid == false">Please input number</p>
             </div>
             <div class="valign col s2">
-              <a href="#" ng-click="addUser()" class="btn" style="margin-top: 28px">Add</a>
+              <a ng-if="form.phoneNumber.$valid == true" href="#" ng-click="addUser()" class="btn" style="margin-top: 28px">Add</a>
               <!-- <button class="btn" type="submit" ng-submit="addUser()" name="action" style="margin-top: 28px">Add</button> -->
             </div>
           </div>

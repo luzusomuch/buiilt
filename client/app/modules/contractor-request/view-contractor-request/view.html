@@ -229,7 +229,7 @@
 </div>
 
 <div id="modal_inviteContractor" class="modal modal-fixed-footer">
-  <form ng-submit="sendInvitationInContractor()">
+  <form ng-submit="sendInvitationInContractor()" name="form">
   <div class="modal-content">
     <form>
      <div class="row">
@@ -249,11 +249,12 @@
                 <label for="email_address">Email</label>
               </div>
               <div class="input-field col s3">
-                <input id="phone_number" type="number" class="validate" ng-model="user.newPhoneNumber">
+                <input id="phone_number" type="number" name="phoneNumber" class="validate" ng-model="user.newPhoneNumber">
                 <label for="phone_number">Phone Number</label>
+                <p class="validate-message" ng-if="form.phoneNumber.$valid == false">Please input number</p>
               </div>
               <div class="valign col s2">
-                <a href="#" ng-click="addUser()" class="btn" style="margin-top: 28px">Add</a>
+                <a ng-if="form.phoneNumber.$valid == true" href="#" ng-click="addUser()" class="btn" style="margin-top: 28px">Add</a>
               </div>
             </div>
           </li>
