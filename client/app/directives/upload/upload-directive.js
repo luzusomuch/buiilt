@@ -13,6 +13,7 @@ angular.module('buiiltApp').directive('upload', function(){
         controller: function($scope, $state, $cookieStore, $stateParams, $rootScope, $location, fileService, packageService, userService, projectService, FileUploader, documentService) {
             $scope.errors = {};
             $scope.success = {};
+            $scope.file = {};
             $scope.formData = {
                 fileId: '',
                 date: new Date(),
@@ -87,7 +88,7 @@ angular.module('buiiltApp').directive('upload', function(){
             uploader.onBeforeUploadItem = function (item) {
                 $scope.formData._id = $scope.fileId;
                 $scope.formData.title = item.title;
-                $scope.formData.belongToType = $scope.package.type;
+                $scope.formData.belongToType =  ($scope.package) ? $scope.package.type : '';
                 // $scope.formData.belongTo = $stateParams.id;
                 // $scope.formData.doc = $scope.documentId;
                 // $scope.formData.desc = item.file.desc || "";

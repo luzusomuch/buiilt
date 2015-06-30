@@ -69,24 +69,50 @@ exports.upload = function(req, res){
                     file.save(function(err, saved) {
                         if (err) {console.log(err);}
                         else {
-                            s3.uploadFile(saved, function(err, data) {
-                                if (err) {console.log(err);}
-                                else {
-                                    if (saved.mimeType == 'image/png' || saved.mimeType == 'image/jpeg') {
-                                        gm(__dirname + "/../../../" + saved.path)
-                                        .resize(320, 480)
-                                        .write(__dirname + "/../../../" + "client/media/files/"+saved._id + '-' +saved.title, function(err) {
-                                            if (err) {console.log(err);}
-                                            else {
-                                                return res.json(200,data);        
+                            var owners = [];
+                            async.parallel([
+                                function(cb) {
+                                    BuilderPackage.findOne({project: saved.belongTo})
+                                    .populate('owner').populate("project").populate('to.team').exec(function(err,builderPackage){
+                                        if (err || !builderPackage) {return cb(err);}
+                                        else {
+                                            owners = _.union(builderPackage.owner.leader, builderPackage.to.team);
+                                            _.each(owners, function(leader){
+                                                var notification = new Notification({
+                                                    owner: leader,
+                                                    fromUser: req.user._id,
+                                                    toUser: leader,
+                                                    element: {file: saved, 
+                                                        uploadIn: builderPackage.project},
+                                                    referenceTo: "DocumentPackage",
+                                                    type: 'uploadNewDocumentVersion'
+                                                });
+                                                notification.save(cb);
+                                            });
+                                        }
+                                    });
+                                },
+                                function(cb) {
+                                    s3.uploadFile(saved, function(err, data) {
+                                        if (err) {return cb(err);}
+                                        else {
+                                            if (saved.mimeType == 'image/png' || saved.mimeType == 'image/jpeg') {
+                                                gm(__dirname + "/../../../" + saved.path)
+                                                .resize(320, 480)
+                                                .write(__dirname + "/../../../" + "client/media/files/"+saved._id + '-' +saved.title, function(err) {
+                                                    if (err) {return cb(err);}
+                                                    else {
+                                                        return res.json(200,data);        
+                                                    }
+                                                });
                                             }
-                                        });
-                                    }
-                                    else {
-                                        return res.json(200,data);
-                                    }
+                                            else {
+                                                return res.json(200,data);
+                                            }
+                                        }
+                                    });
                                 }
-                            });
+                            ])
                         }
                     });
                 });
@@ -106,23 +132,50 @@ exports.upload = function(req, res){
                     file.save(function(err, fileSaved) {
                         if (err) {console.log(err);}
                         else {
-                            s3.uploadFile(fileSaved, function(err, data) {
-                                if (err) {console.log(err);}
-                                else {
-                                    if (fileSaved.mimeType == 'image/png' || fileSaved.mimeType == 'image/jpeg') {
-                                        gm(__dirname + "/../../../" + fileSaved.path)
-                                        .resize(320, 480)
-                                        .write(__dirname + "/../../../" + "client/media/files/"+fileSaved._id + '-' +fileSaved.title, function(err) {
-                                            if (err) {console.log(err);}
-                                            else
-                                                return res.json(200,data);        
-                                        });
-                                    }
-                                    else {
-                                        return res.json(200,data);  
-                                    }
+                            var owners = [];
+                            async.parallel([
+                                function(cb) {
+                                    BuilderPackage.findOne({project: saved.belongTo})
+                                    .populate('owner').populate("project").populate('to.team').exec(function(err,builderPackage){
+                                        if (err || !builderPackage) {return cb(err);}
+                                        else {
+                                            owners = _.union(builderPackage.owner.leader, builderPackage.to.team);
+                                            _.each(owners, function(leader){
+                                                var notification = new Notification({
+                                                    owner: leader,
+                                                    fromUser: req.user._id,
+                                                    toUser: leader,
+                                                    element: {file: saved, 
+                                                        uploadIn: builderPackage.project},
+                                                    referenceTo: "DocumentPackage",
+                                                    type: 'uploadDocument'
+                                                });
+                                                notification.save(cb);
+                                            });
+                                        }
+                                    });
+                                },
+                                function(cb) {
+                                    s3.uploadFile(saved, function(err, data) {
+                                        if (err) {return cb(err);}
+                                        else {
+                                            if (saved.mimeType == 'image/png' || saved.mimeType == 'image/jpeg') {
+                                                gm(__dirname + "/../../../" + saved.path)
+                                                .resize(320, 480)
+                                                .write(__dirname + "/../../../" + "client/media/files/"+saved._id + '-' +saved.title, function(err) {
+                                                    if (err) {return cb(err);}
+                                                    else {
+                                                        return res.json(200,data);        
+                                                    }
+                                                });
+                                            }
+                                            else {
+                                                return res.json(200,data);
+                                            }
+                                        }
+                                    });
                                 }
-                            })
+                            ])
                         }
                     });
                 });
@@ -185,7 +238,8 @@ exports.uploadInPackge = function(req, res){
                                             owner: leader,
                                             fromUser: req.user._id,
                                             toUser: leader,
-                                            element: saved,
+                                            element: {file: saved,
+                                                uploadIn: contractorPackage},
                                             referenceTo: "DocumentPackage",
                                             type: 'uploadDocument'
                                         });
@@ -203,7 +257,8 @@ exports.uploadInPackge = function(req, res){
                                             owner: leader,
                                             fromUser: req.user._id,
                                             toUser: leader,
-                                            element: saved,
+                                            element: {file:saved,
+                                                uploadIn: materialPackage},
                                             referenceTo: "DocumentPackage",
                                             type: 'uploadDocument'
                                         });
@@ -220,7 +275,8 @@ exports.uploadInPackge = function(req, res){
                                             owner: leader,
                                             fromUser: req.user._id,
                                             toUser: leader,
-                                            element: saved,
+                                            element: {file:saved,
+                                                uploadIn: staffPackage},
                                             referenceTo: "DocumentPackage",
                                             type: 'uploadDocument'
                                         });
@@ -236,7 +292,8 @@ exports.uploadInPackge = function(req, res){
                                             owner: leader,
                                             fromUser: req.user._id,
                                             toUser: leader,
-                                            element: saved,
+                                            element: {file:saved,
+                                                uploadIn: builderPackage},
                                             referenceTo: "DocumentPackage",
                                             type: 'uploadDocument'
                                         });

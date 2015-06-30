@@ -27,7 +27,7 @@
                           </div>
                         </div>
                         <div ng-show="uploader.queue.length" class="form-group">
-                          <div ng-repeat="item in uploader.queue">
+                          <div ng-repeat="item in uploader.queue" ng-if="$last">
                             <div class="row">
                               <div class="input-field col s8 offset-s2" style="margin-top: 65px;">
                                 <input type="text" ng-model="item.file.name">
