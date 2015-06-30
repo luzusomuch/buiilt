@@ -11,10 +11,10 @@ var _ = require('lodash');
 var async = require('async');
 
 EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
-  _.each(request.to, function(toSupplier) {
+  async.each(request.to, function(toSupplier, cb) {
     User.findOne({email: toSupplier.email}, function(err, user) {
       if (err || !user) {
-        next();
+        return cb(err);
       }
       var notification = new Notification({
         owner: user._id,
@@ -24,10 +24,10 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
         referenceTo: 'ContractorPackage',
         type: 'create-contractor-package'
       });
-      notification.save(function(){
-        next();
-      });
+      notification.save(cb);
     });
+  }, function(){
+    return next();
   });
 });
 
@@ -278,5 +278,8 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
         });
       }
     });
+  }
+  else {
+    return next();
   }
 });

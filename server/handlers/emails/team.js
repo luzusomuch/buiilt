@@ -31,18 +31,18 @@ EventBus.onSeries('Team.Inserted', function(request, next){
           request: request,
           subject: 'Group invitation ' + request.name
         }, function(err) {
-          callback(err);
+          return callback(err);
         });
       }else{
-		return callback();
-	  }
+		    return callback();
+      }
     },function() {
       return next();
     });
 });
 
 EventBus.onSeries('Team.Updated', function(request, next){
-  request.member.forEach(function(user) {
+  async.each(request.member, function(user, cb) {
     if (!user._id && user.status == 'Pending' && !(_.find(request.oldMember,{ email : user.email}))) {
       var inviteToken = new InviteToken({
         email : user.email,
@@ -51,26 +51,29 @@ EventBus.onSeries('Team.Updated', function(request, next){
       });
       inviteToken.save(function(err) {
         if (err) {
-          throw err;
+          return cb(err);
         }
         Mailer.sendMail('invite-team-has-no-account.html', user.email, {
           request: request,
           link: config.baseUrl + 'signup?inviteToken=' + inviteToken.inviteToken,
           subject: 'Group invitation ' + request.name
-        }, function(err) {
-          if (err) {
-            throw err;
-          }
+        }, function() {
+          return cb();
         });
-      })
+      });
 
     } else if (user._id && user.status == 'Pending' && !(_.find(request.oldMember,{ _id : user._id})))  {
       Mailer.sendMail('invite-team-has-account.html', user._id.email, {
         request: request,
         subject: 'Group invitation ' + request.name
-      }, function(err) {
+      }, function() {
+        return cb();
       });
     }
+    else {
+      return cb();
+    }
+  }, function(){
+    return next();
   });
-  return next();
 });

@@ -12,8 +12,7 @@ var config = require('./../../config/environment');
 var async = require('async');
 
 EventBus.onSeries('BuilderPackage.Inserted', function(request, next) {
-  var subjectType = (request.to.type == 'homeOwner') ? 'home owner' : 'builder';
-
+  var subjectType = (request.to.type == 'homeOwner') ? 'homeowner' : 'builder';
   if (request.to.email) {
     var packageInvite = new PackageInvite({
       owner: request.owner,
@@ -22,10 +21,8 @@ EventBus.onSeries('BuilderPackage.Inserted', function(request, next) {
       inviteType : request.to.type,
       to: request.to.email
     });
-
     packageInvite.save(function(err) {
       if(err){ next(); }
-
       Mailer.sendMail('invite-' + request.to.type + '-has-no-account.html', request.to.email, {
         project: request.project,
         registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,

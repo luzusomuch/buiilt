@@ -43,6 +43,9 @@ EventBus.onSeries('Team.Updated', function(team, next){
       if (member._id && !(_.find(team.oldMember,{ _id : member._id})))  {
         owners.push(member._id)
       }
+      else {
+        next();
+      }
     });
     var params = {
       owners : owners,
@@ -51,14 +54,11 @@ EventBus.onSeries('Team.Updated', function(team, next){
       referenceTo : 'team',
       type : 'team-invite'
     };
-    NotificationHelper.create(params,function(err) {
-      if (err) {
-        console.log(err);
-      }
+    NotificationHelper.create(params,function() {
       next();
     });
   } else {
-    next();
+    return next();
   }
 });
 

@@ -66,6 +66,8 @@ exports.sendDefect = function(req, res) {
                     location: req.body.defect.location,
                     description: req.body.defect.description
                 });
+                builderPackage.markModified('sendDefect');
+                builderPackage._editUser = req.user;
                 builderPackage.save(function(err, savedBuilderPackage){
                     if (err) {return res.send(500,err);}
                     else {
@@ -85,6 +87,8 @@ exports.sendDefect = function(req, res) {
                     location: req.body.defect.location,
                     description: req.body.defect.description
                 });
+                staffPackage.markModified('sendDefect');
+                staffPackage._editUser = req.user;
                 staffPackage.save(function(err, savedStaffPackage){
                     if (err) {return res.send(500,err);}
                     else {
@@ -150,6 +154,8 @@ exports.sendVariation = function(req, res) {
                     title: req.body.variation.title,
                     description: req.body.variation.description
                 });
+                builderPackage.markModified('sendVariation');
+                builderPackage._editUser = req.user;
                 builderPackage.save(function(err, savedBuilderPackage){
                     if (err) {return res.send(500,err);}
                     else {
@@ -337,6 +343,8 @@ exports.sendInvoice = function(req, res) {
                                 subTotal: subTotal,
                                 total: subTotal * 0.1 + subTotal
                             });
+                            builderPackage.markModified('sendInvoice');
+                            builderPackage._editUser = req.user;
                             builderPackage.save(function(err, saved) {
                                 if (err) {return res.send(500,err);}
                                 else {
@@ -397,6 +405,8 @@ exports.sendInvoice = function(req, res) {
                                 subTotal: subTotal,
                                 total: subTotal * 0.1 + subTotal
                             });
+                            staffPackage.markModified('sendInvoice');
+                            staffPackage._editUser = req.user;
                             staffPackage.save(function(err, saved) {
                                 if (err) {return res.send(500,err);}
                                 else {

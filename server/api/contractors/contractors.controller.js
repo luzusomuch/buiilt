@@ -39,12 +39,6 @@ exports.createContractorPackage = function (req, res, next) {
     User.findOne({'email': emailPhone.email}, function(err, user) {
       if (err) {return res.send(500,err);}
       if (!user) {
-        // var validateInvite = new ValidateInvite({
-        //   email: emailPhone.email,
-        //   inviteType: 'contractor'
-        // });
-        // validateInvite.save();
-        
         to.push({
           email: emailPhone.email,
           phone: emailPhone.phoneNumber
@@ -75,42 +69,11 @@ exports.createContractorPackage = function (req, res, next) {
       contractorPackage.save(function(err, saved){
         if (err) {return res.send(500,err);}
         else {
-          _.each(req.body.emailsPhone, function(emailPhone){
-            User.findOne({email: emailPhone.email}, function(err, user){
-              if (err) {return res.send(500,err);}
-              if (!user) {
-                var packageInvite = new PackageInvite({
-                  owner: req.user._id,
-                  inviteType: 'contractor',
-                  project: req.body.project,
-                  package: saved._id,
-                  to: emailPhone.email
-                });
-                packageInvite.save();
-              }
-            })
-          });
           return res.json(200,saved);
         }
       });
     }
   });
-  // _.each(req.body.emailsPhone, function(emailPhone){
-  //   User.findOne({'email': emailPhone.email}, function(err, user) {
-  //     if (err) {return res.send(500,err);}
-  //     else {
-  //       emailPhone._id = user._id
-  //       to.push(emailPhone);
-  //       contractorPackage.to = to;
-  //       contractorPackage.save(function(err, saved) {
-  //         if (err) {return res.send(500,err);}
-  //         else {
-  //           return res.json(200,saved);
-  //         }
-  //       })
-  //     }
-  //   });
-  // });
 };
 
 exports.getProjectForContractor = function(req, res) {

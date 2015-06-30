@@ -76,7 +76,7 @@ exports.upload = function(req, res){
                                     .populate('owner').populate("project").populate('to.team').exec(function(err,builderPackage){
                                         if (err || !builderPackage) {return cb(err);}
                                         else {
-                                            owners = _.union(builderPackage.owner.leader, builderPackage.to.team);
+                                            owners = _.union(builderPackage.owner.leader, builderPackage.to.team.leader);
                                             _.each(owners, function(leader){
                                                 var notification = new Notification({
                                                     owner: leader,
@@ -139,7 +139,7 @@ exports.upload = function(req, res){
                                     .populate('owner').populate("project").populate('to.team').exec(function(err,builderPackage){
                                         if (err || !builderPackage) {return cb(err);}
                                         else {
-                                            owners = _.union(builderPackage.owner.leader, builderPackage.to.team);
+                                            owners = _.union(builderPackage.owner.leader, builderPackage.to.team.leader);
                                             _.each(owners, function(leader){
                                                 var notification = new Notification({
                                                     owner: leader,

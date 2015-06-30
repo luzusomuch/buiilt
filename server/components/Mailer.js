@@ -28,7 +28,6 @@ Mailer.prototype.send = function(options, callback) {
     from : config.emailFrom,
     bcc : config.bccEmails || []
   });
-
   this.transport.sendMail(options, function(err, data){
     if(err){
       return console.log('mailer error', err);

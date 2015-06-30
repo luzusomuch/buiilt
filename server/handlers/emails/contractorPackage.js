@@ -21,7 +21,7 @@ var async = require('async');
 EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
   async.parallel({
     user: function(cb){
-      User.findOne({_id: request.owner}, cb);
+      User.findOne({_id: request.ownerUser._id}, cb);
     },
     project: function(cb){
       //find project
@@ -32,11 +32,30 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
       //do send email
       async.each(request.to,function(toEmail,cb) {
         if (!toEmail._id) {
-          return cb();
+          var packageInvite = new PackageInvite({
+            owner: result.user._id,
+            inviteType: 'contractor',
+            project: result.project._id,
+            package: request._id,
+            to: toEmail.email
+          });
+          packageInvite.save(function(err, saved){
+            if (err) {return cb(err);}
+            else {
+              Mailer.sendMail('contractor-package-request-no-account.html', saved.to, {
+                contractorPackage: request,
+                project: request.project,
+                registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + saved._id,
+                subject: 'Invite contractor send quote for ' + request.name
+              },function(err){
+               return cb(err);
+              });
+            }
+          });
         }
         else {
           Team.findOne({'_id': toEmail._id}, function(err, team) {
-          if (err || !team) {return cb();}
+          if (err || !team) {return cb(err);}
           else {
             async.each(team.leader, function(leader, callback) {
               User.findById(leader, function(err,user) {
