@@ -334,8 +334,20 @@ exports.changePhoneNum = function(req, res, next) {
   });
 };
 
-exports.changeFirstLastName = function(req, res) {
-
+exports.changeProfile = function(req, res) {
+  User.findById(req.user._id, function(err, user){
+    if (err) {return res.send(500,err);}
+    if (!user) {return res.send(404,err);}
+    else {
+      user.firstName = req.body.firstName;
+      user.lastName = req.body.lastName;
+      user.name = req.body.firstName +' '+req.body.lastName;
+      user.save(function(err,saved){
+        if (err) {return res.send(500,err);}
+        return res.json(200,saved);
+      })
+    }
+  })
 };
 
 /**

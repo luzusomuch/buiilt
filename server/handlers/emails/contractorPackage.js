@@ -30,16 +30,13 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
   }, function(err, result){
     if (!err) {
       //do send email
-      _.each(request.to,function(toEmail) {
+      async.each(request.to,function(toEmail,cb) {
         if (!toEmail._id) {
-          return next();
+          return cb();
         }
         else {
           Team.findOne({'_id': toEmail._id}, function(err, team) {
-          if (err) {return next();}
-          if (!team) {
-            return next();
-          }
+          if (err || !team) {return cb();}
           else {
             async.each(team.leader, function(leader, callback) {
               User.findById(leader, function(err,user) {
@@ -50,16 +47,18 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
                   project: result.project,
                   contractorPackageLink: config.baseUrl + result.project._id  + '/contractor-requests/' + request._id,
                   subject: 'Quote request for ' + request.name
-                }, function(err) {
-                  return next();
+                }, function() {
+                  return callback();
                 });
               });
-            }, function(err){
-              return next();
+            }, function(){
+              return cb();
             });
           }
         });
         }
+      }, function(){
+        return next();
       });
     } else {
       return next();
@@ -79,39 +78,17 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
   }, function(err, result){
     if (!err) {
       //do send email
-      _.each(request.newInvitation,function(toEmail) {
+      async.each(request.newInvitation,function(toEmail, cb) {
         if (!toEmail._id) {
-          // PackageInvite.find({package: request._id}, function(err, packageInvites) {
-          //   if (err) {return next();}
-          //   if (!packageInvites) {return next();}
-          //   else {
-          //     _.each(packageInvites, function(packageInvite){
-          //       Mailer.sendMail('contractor-package-request-no-account.html', packageInvite.to, {
-          //         contractorPackage: request,
-          //         //project owner
-          //         user: result.user,
-          //         project: result.project,
-          //         registryLink: config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
-          //         contractorPackageLink: config.baseUrl + 'contractor-requests/' + request._id,
-          //         subject: 'Quote request for ' + request.name
-          //       }, function(err) {
-          //         console.log(err);
-          //         return next();
-          //       });
-          //     });
-          //   }
-          // });
           return next();
         }
         else {
           Team.findOne({'_id': toEmail._id}, function(err, team) {
-          if (err) {return next();}
-          if (!team) {
-            return next();
-          }
+          if (err || !team) {return cb();}
           else {
             async.each(team.leader, function(leader, callback) {
               User.findById(leader, function(err,user) {
+                if (err || !user) {return cb();}
                 Mailer.sendMail('contractor-package-request.html', user.email, {
                   contractorPackage: request,
                   //project owner
@@ -119,16 +96,18 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
                   project: result.project,
                   contractorPackageLink: config.baseUrl + 'contractor-requests/' + request._id,
                   subject: 'Quote request for ' + request.name
-                }, function(err) {
-                  return next();
+                }, function() {
+                  return callback();
                 });
               });
-            }, function(err){
-              return next();
+            }, function(){
+              return cb();
             });
           }
         });
         }
+      }, function(){
+        return next();
       });
     } else {
       return next();

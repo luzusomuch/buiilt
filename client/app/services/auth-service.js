@@ -127,6 +127,18 @@ angular.module('buiiltApp')
         return cb(err);
       }).$promise;
     },
+
+    changeProfile: function(firstName, lastName, callback) {
+      var cb = callback || angular.noop;
+      return userService.changeProfile({id: currentUser._id}, {
+        firstName: firstName,
+        lastName: lastName
+      }, function(user) {
+        return cb(user);
+      }, function(err){
+        return cb(err);
+      }).$promise;
+    },
     /**
      * Gets all available info on authenticated user
      *

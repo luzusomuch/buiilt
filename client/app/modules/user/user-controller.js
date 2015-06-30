@@ -33,7 +33,6 @@ angular.module('buiiltApp').controller('UserCtrl', function($scope, $state, user
 angular.module('buiiltApp').controller('UserFormCtrl', function($scope, $state, authService) {
   $scope.errors = {};
   $scope.user = {};
-
   $scope.changeEmail = function() {
 
   };
@@ -53,6 +52,12 @@ angular.module('buiiltApp').controller('UserFormCtrl', function($scope, $state, 
       $scope.errors = res.data;
     });
   };
+
+  $scope.changeProfile = function() {
+    authService.changeProfile($scope.user.firstName, $scope.user.lastName).then(function(data){
+      $scope.user = data;
+    });
+  }
 });
 
 angular.module('buiiltApp').controller('TeamInvitationCtrl', function($scope, $state, authService,invitations) {

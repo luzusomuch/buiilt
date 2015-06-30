@@ -57,6 +57,7 @@ exports.downloadFile = function(req, res) {
             s3.downloadFile(file, function(err, data) {
                 if (err) {return res.send(500,err);}
                 else {
+                    console.log(data)
                     return res.json(200,data);
                 }
             });

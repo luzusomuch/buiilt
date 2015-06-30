@@ -13,36 +13,32 @@ var async = require('async');
 EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
   _.each(request.to, function(toSupplier) {
     User.findOne({email: toSupplier.email}, function(err, user) {
-      if (err) {
-        return next();
+      if (err || !user) {
+        next();
       }
-      if (!user) {
-        return next();
-      }
-      else {
-        var notification = new Notification({
-          owner: user._id,
-          fromUser: request._ownerUser,
-          toUser: user._id,
-          element: request,
-          referenceTo: 'ContractorPackage',
-          type: 'create-contractor-package'
-        });
-        notification.save();
-      }
+      var notification = new Notification({
+        owner: user._id,
+        fromUser: request._ownerUser,
+        toUser: user._id,
+        element: request,
+        referenceTo: 'ContractorPackage',
+        type: 'create-contractor-package'
+      });
+      notification.save(function(){
+        next();
+      });
     });
   });
 });
 
 EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
-  console.log(request._modifiedPaths);
   if (request._modifiedPaths.indexOf('sendQuote') != -1) {
     Team.findById(request.owner, function(err, team) {
-      if (err) {
-        return next();
+      if (err || !team) {
+        next();
       }
       else {
-        _.each(team.leader, function(leader) {
+        async.each(team.leader, function(leader, cb) {
           var notification = new Notification({
             owner: leader,
             fromUser: request._editUser,
@@ -51,67 +47,73 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
             referenceTo: 'SendQuote',
             type: 'send-quote'
           });
-          notification.save();
+          notification.save(cb);
+        }, function(){
+          return next();
         });
       }
     });
   }
   else if (request._modifiedPaths.indexOf('inviteContractor') != -1) {
-    Team.findById(request.owner, function(err, team) {
-      if (err) {
-        return next();
-      }
-      else {
-        _.each(team.leader, function(leader) {
-          var notification = new Notification({
-            owner: leader,
-            fromUser: request.ownerUser,
-            toUser: leader,
-            element: request,
-            referenceTo: 'ContractorPackage',
-            type: 'invite'
-          });
-          notification.save();
-        });
-      }
-    });
-    _.each(request.newInvitation, function(invite) {
-      if (invite._id) {
-        Team.findById(invite._id, function(err, team) {
-          if (err) {
-            return next();
-          }
-          if (!team) {
-            return next();
+    async.parallel([
+      function(cb){
+        Team.findById(request.owner, function(err, team) {
+          if (err || !team) {
+            return cb();
           }
           else {
-            _.each(team.leader, function(leader) {
+            async.each(team.leader, function(leader,cb) {
               var notification = new Notification({
                 owner: leader,
                 fromUser: request.ownerUser,
                 toUser: leader,
                 element: request,
                 referenceTo: 'ContractorPackage',
-                type: 'invitation'
+                type: 'invite'
               });
-              notification.save();
+              notification.save(cb);
+            }, function(){
+              return cb();
             });
           }
         });
+      },
+      function(cb){
+        async.each(request.newInvitation, function(invite, callback) {
+          if (invite._id) {
+            Team.findById(invite._id, function(err, team) {
+              if (err || !team) {
+                return cb();
+              }          
+              else {
+                async.each(team.leader, function(leader, cb) {
+                  var notification = new Notification({
+                    owner: leader,
+                    fromUser: request.ownerUser,
+                    toUser: leader,
+                    element: request,
+                    referenceTo: 'ContractorPackage',
+                    type: 'invitation'
+                  });
+                  notification.save(cb);
+                }, cb);
+              }
+            });
+          } else {
+            cb();
+          }
+        }, cb);
       }
-      else {
-        return next();
-      }
-    });
+    ])
   }
   else if (request._modifiedPaths.indexOf('sendAddendum') != -1) {
-    _.each(request.to, function(toContractor) {
+    async.each(request.to, function(toContractor, cb) {
       Team.findById(toContractor, function(err, team) {
         if (err) {
-          return next();
+          return cb();
         }
         else {
-          _.each(team.leader, function(leader) {
+          async.each(team.leader, function(leader, cb) {
             var notification = new Notification({
               owner: leader,
               fromUser: request.editUser,
@@ -120,24 +122,23 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
               referenceTo: 'ContractorPackage',
               type: 'send-addendum'
             });
-            notification.save();
-          });
+            notification.save(cb);
+          }, cb);
         }
       })
+    }, function(){
+      return next();
     });
   }
   else if (request._modifiedPaths.indexOf('editAddendum') != -1) {
-    _.each(request.to, function(toContractor) {
+    async.each(request.to, function(toContractor, cb) {
       if (toContractor._id) {
         Team.findById(toContractor, function(err, team) {
-          if (err) {
-            return next();
-          }
-          if (!team) {
-            return next();
+          if (err || !team) {
+            return cb();
           }
           else {
-            _.each(team.leader, function(leader) {
+            async.each(team.leader, function(leader,cb) {
               var notification = new Notification({
                 owner: leader,
                 fromUser: request.editUser,
@@ -146,23 +147,22 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
                 referenceTo: 'ContractorPackage',
                 type: 'edit-addendum'
               });
-              notification.save();
-            });
+              notification.save(cb);
+            }, cb);
           }
         });
       }
       else {
-        return next();
+        return cb();
       }
+    }, function(){
+      return next();
     });
   }
   else if (request._modifiedPaths.indexOf('sendMessage') != -1) {
     Team.findById(request.editUser, function(err, team) {
-      if (err) {
-        return next();
-      }
-      if (!team) {
-        return next();
+      if (err || !team) {
+        next();
       }
       else {
         var params = {
@@ -183,11 +183,8 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
   }
   else if (request._modifiedPaths.indexOf('sendMessageToBuilder') != -1) {
     Team.findById(request.owner, function(err, team) {
-      if (err) {
-        return next();
-      }
-      if (!team) {
-        return next();
+      if (err || !tema) {
+        next();
       }
       else {
         var params = {
@@ -221,11 +218,8 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
     var owners = [];
     ContractorPackage.findById(request._id).populate('owner')
             .populate('winnerTeam._id').exec(function(err, contractorPackage) {
-      if (err) {
-        return next();
-      }
-      if (!contractorPackage) {
-        return next();
+      if (err || !contractorPackage) {
+        next();
       }
       else {
         owners = _.union(contractorPackage.owner.leader, contractorPackage.winnerTeam._id.leader);
@@ -236,10 +230,7 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
           referenceTo: 'ContractorPackage',
           type: 'send-defect'
         };
-        NotificationHelper.create(params, function(err) {
-          if (err) {
-            console.log(err);
-          }
+        NotificationHelper.create(params, function() {
           next();
         });
       }
@@ -249,11 +240,8 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
     var owners = [];
     ContractorPackage.findById(request._id).populate('owner')
             .populate('winnerTeam._id').exec(function(err, contractorPackage) {
-      if (err) {
-        return next();
-      }
-      if (!contractorPackage) {
-        return next();
+      if (err || !contractorPackage) {
+        next();
       }
       else {
         owners = _.union(contractorPackage.owner.leader, contractorPackage.winnerTeam._id.leader);
@@ -264,10 +252,7 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
           referenceTo: 'ContractorPackage',
           type: 'send-variation'
         };
-        NotificationHelper.create(params, function(err) {
-          if (err) {
-            console.log(err);
-          }
+        NotificationHelper.create(params, function() {
           next();
         });
       }
@@ -277,13 +262,9 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
     var owners = [];
     ContractorPackage.findById(request._id).populate('owner')
             .populate('winnerTeam._id').exec(function(err, contractorPackage) {
-      if (err) {
-        return next();
-      }
-      if (!contractorPackage) {
-        return next();
-      }
-      else {
+      if (err || !contractorPackage) {
+        next();
+      }else {
         owners = _.union(contractorPackage.owner.leader, contractorPackage.winnerTeam._id.leader);
         var params = {
           owners: owners,
@@ -292,10 +273,7 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
           referenceTo: 'ContractorPackage',
           type: 'send-invoice'
         };
-        NotificationHelper.create(params, function(err) {
-          if (err) {
-            console.log(err);
-          }
+        NotificationHelper.create(params, function() {
           next();
         });
       }

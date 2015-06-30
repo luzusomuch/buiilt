@@ -10,7 +10,8 @@ angular.module('buiiltApp').config(function($stateProvider) {
   .state('user.form', {
     url: '/',
     templateUrl: '/app/modules/user/edit-user/form.html',
-    controller: 'UserFormCtrl'
+    controller: 'UserFormCtrl',
+    authenticate: true
   })
   .state('user.teamInvitation', {
     url: '/team/invitation',
