@@ -43,9 +43,10 @@ angular.module('buiiltApp')
     }
   };
 
-  $scope.sendInvitationInMaterial = function() {
+  $scope.sendInvitation = function() {
     materialRequestService.sendInvitationInMaterial({id: $stateParams.packageId, toSupplier: $scope.emailsPhone})
     .$promise.then(function(data){
+      $scope.materialRequest = data;
     });
   };
 

@@ -315,8 +315,9 @@
 </div> 
 
 <div id="modal_inviteSupplier" class="modal modal-fixed-footer">
+  <form ng-submit="sendInvitation()" name="form">
     <div class="modal-content">
-    <form ng-submit="sendInvitationInMaterial()" name="form">
+    
        <div class="row">
          <div class="col s12">
            <h5>Invite More Suppliers to Package Name</h5>
@@ -354,7 +355,7 @@
          </div>
        </div>
        
-     </form>
+     
     </div>
   <div class="divider"></div>
     <div class="modal-footer">
@@ -362,6 +363,7 @@
          <!-- <a class="modal-action modal-close waves-effect waves-green btn-flat ">Send Invitations!</a> -->
      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
     </div>
+    </form>
 </div>
   
 <div id="modal_cancelPackage" class="modal">
