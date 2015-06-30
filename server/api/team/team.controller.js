@@ -58,12 +58,13 @@ exports.me = function(req,res) {
  * @returns {undefined}
  */
 exports.create = function (req, res) {
+  var user = req.user;
   TeamValidator.validateCreate(req, function (err, data) {
     if (err) {
       return errorsHelper.validationErrors(res, err, 'Validation');
     }
     var team = new Team(data);
-    team.leader.push(req.user);
+    team.leader.push(user);
     var listEmail = [];
     async.each(data.emails, function(email, callback) {
       User.findOne({'email': email.email}, function (err, user) {
@@ -123,6 +124,7 @@ exports.create = function (req, res) {
 exports.addMember = function(req,res) {
   var team = req.team;
   var emails = req.body;
+  var user = req.user;
   async.each(emails, function(email, callback) {
     User.findOne({'email': email.email}, function (err, user) {
       if (err) {
@@ -144,7 +146,7 @@ exports.addMember = function(req,res) {
     });
   },function(err,result) {
     team.markModified('member');
-
+    team._user = user;
     team.save(function(err) {
 
       if (err) {
@@ -164,6 +166,7 @@ exports.addMember = function(req,res) {
  */
 exports.removeMember = function(req,res) {
   var team = req.team;
+  var user = req.user;
   var member = req.body;
   async.waterfall([
     function(callback) {
@@ -190,6 +193,9 @@ exports.removeMember = function(req,res) {
     }
   ],function() {
     team.markModified('member');
+    team._evtName = 'Team.MemberRemoved';
+    team._user = user;
+    team._toUser = member;
     team.save(function() {
       Team.populate(team, [{path:"leader"},{path:"member._id"}], function(err, team ) {
         return res.json(team);
@@ -227,6 +233,8 @@ exports.accept = function(req,res) {
   var team = req.team;
   var member = team.member.id(user);
   member.status = 'Active';
+  team._user = user;
+  team._evtName = 'Team.Accepted';
   team.save(function(err) {
     if (err) {
       errorsHelper.validationErrors(res, err);
@@ -255,6 +263,8 @@ exports.reject = function(req,res) {
   var team = req.team;
   var member = team.member.id(user);
   member.status = 'Reject';
+  team._user = user;
+  team._evtName = 'Team.Rejected';
   team.save(function(err) {
     if (err) {
       errorsHelper.validationErrors(res, err);
@@ -265,10 +275,13 @@ exports.reject = function(req,res) {
 
 exports.assignLeader = function(req,res) {
   var team = req.team;
-
+  var user = req.user
   var member = team.member.id(req.body._id._id);
   team.member.remove(member);
   team.leader.push(member);
+  team._evtName = 'Team.LeaderAssigned';
+  team._user = user;
+  team._toUser = member;
   team.save(function(err) {
     if (err) {
       return res.send(500,err);
@@ -298,6 +311,8 @@ exports.leaveTeam = function(req,res) {
        var member = team.member.id(user._id);
       if (member) {
         team.member.remove(member);
+        team._user = user;
+        team._evtName = 'Team.Leaved';
         team.save(function(err){
           if (err) {
             callback(err,null);
@@ -322,6 +337,8 @@ exports.leaveTeam = function(req,res) {
       var leader = team.leader.indexOf(user._id);
       if (leader != -1) {
         team.leader.remove(user._id);
+        team._user = user;
+        team._evtName = 'Team.Leaved';
         team.save(function(err){
           if (err) {
             callback(err,null);

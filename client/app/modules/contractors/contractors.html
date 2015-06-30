@@ -19,7 +19,7 @@
  </div>
 
 <div class="col s9">
-  <div class="collection z-depth-1">
+  <div class="collection z-depth-1 list">
     <span ng-repeat="contractorPackage in contractorPackages | filter : filter">
       <a class="collection-item" ng-if="(currentTeam.type == 'builder' || currentTeam.type == 'homeOwner') && contractorPackage.isAccept"
          ui-sref='contractorRequest.contractorPackageInProcess({id: contractorPackage.project, packageId: contractorPackage._id})'>

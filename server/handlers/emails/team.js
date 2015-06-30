@@ -64,7 +64,7 @@ EventBus.onSeries('Team.Updated', function(request, next){
         });
       })
 
-    } else if (user._id && user.status == 'Pending')  {
+    } else if (user._id && user.status == 'Pending' && !(_.find(request.oldMember,{ _id : user._id})))  {
       Mailer.sendMail('invite-team-has-account.html', user._id.email, {
         request: request,
         subject: 'Group invitation ' + request.name

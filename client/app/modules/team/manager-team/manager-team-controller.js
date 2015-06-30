@@ -28,6 +28,7 @@ angular.module('buiiltApp')
       teamService.update({_id : $scope.currentTeam._id},$scope.currentTeam).$promise
         .then(function(team) {
           $scope.currentTeam = team;
+          $rootScope.$emit('TeamUpdate',team);
           $scope.isEdit = false;
         })
     };
@@ -92,6 +93,7 @@ angular.module('buiiltApp')
       if (form.$valid) {
         teamService.create($scope.team, function (team) {
           $scope.currentTeam = team;
+          $rootScope.$emit('TeamUpdate',team);
           $scope.member.emails = [];
           $scope.team.emails = [];
           $scope.isLeader = true;
@@ -107,6 +109,7 @@ angular.module('buiiltApp')
         teamService.assignLeader({id: $scope.currentTeam._id}, member).$promise
           .then(function (team) {
             $scope.currentTeam = team;
+            $rootScope.$emit('TeamUpdate',team);
             getLocalData();
           })
       }
@@ -116,6 +119,7 @@ angular.module('buiiltApp')
       if (confirm("Are you sure you want to leave this team")) {
         teamService.leaveTeam({_id: $scope.currentTeam._id}).$promise
           .then(function (team) {
+
             $state.go($state.current, {}, {reload: true});
           })
       }
@@ -125,6 +129,7 @@ angular.module('buiiltApp')
       teamService.addMember({id: $scope.currentTeam._id},$scope.member.emails).$promise
         .then(function(team) {
           $scope.currentTeam = team;
+          $rootScope.$emit('TeamUpdate',team);
           $scope.member.emails = [];
           getLocalData();
 
@@ -138,6 +143,7 @@ angular.module('buiiltApp')
         teamService.removeMember({id: $scope.currentTeam._id}, member).$promise
           .then(function (team) {
             $scope.currentTeam = team;
+            $rootScope.$emit('TeamUpdate',team);
             getLocalData();
           }, function (err) {
           });
@@ -149,6 +155,7 @@ angular.module('buiiltApp')
         teamService.removeMember({id: $scope.currentTeam._id}, member).$promise
           .then(function (team) {
             $scope.currentTeam = team;
+            $rootScope.$emit('TeamUpdate',team);
           }, function (err) {
           });
       }
@@ -159,6 +166,7 @@ angular.module('buiiltApp')
         teamService.acceptTeam({_id: invitation._id}).$promise
           .then(function (res) {
             $scope.currentTeam = res;
+            $rootScope.$emit('TeamUpdate',res);
             getLocalData();
           }, function (err) {
           });

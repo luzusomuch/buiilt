@@ -1,4 +1,3 @@
-var _ = require('lodash');
 'use strict';
 
 var EventBus = require('./../components/EventBus');
@@ -16,7 +15,7 @@ EventBus.onSeries('Task.Inserted', function(task, next){
       fromUser : task.user,
       element : task,
       referenceTo : 'task',
-      type : 'taskAssign'
+      type : 'task-assign'
     };
     NotificationHelper.create(params, function() {
       next();
@@ -38,7 +37,7 @@ EventBus.onSeries('Task.Updated', function(task, next){
       fromUser : task.editUser,
       element : task,
       referenceTo : 'task',
-      type : task.completed ? 'taskCompleted' : 'taskReopened'
+      type : task.completed ? 'task-completed' : 'task-reopened'
     };
     NotificationHelper.create(params, function() {
       return next();
@@ -56,11 +55,11 @@ EventBus.onSeries('Task.Updated', function(task, next){
                 fromUser: task.editUser,
                 element: task,
                 referenceTo: 'task',
-                type: 'taskRevoke'
+                type: 'task-revoke'
               };
 
               NotificationHelper.create(params, cb);
-            }else{
+            } else{
               return cb();
             }
           }, callback);
@@ -71,7 +70,7 @@ EventBus.onSeries('Task.Updated', function(task, next){
             fromUser : task.user,
             element : task,
             referenceTo : 'task',
-            type : 'taskAssign'
+            type : 'task-assign'
           };
           NotificationHelper.create(params, callback);
         }
@@ -90,7 +89,7 @@ EventBus.onSeries('Task.Updated', function(task, next){
               toUser: assignee,
               element : task,
               referenceTo: 'task',
-              type: 'taskAssign'
+              type: 'task-assign'
             };
             NotificationHelper.create(params, cb);
           }, callback);

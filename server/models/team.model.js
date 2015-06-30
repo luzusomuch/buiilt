@@ -90,7 +90,9 @@ TeamSchema.post( 'init', function() {
 TeamSchema
 .pre('save', function(next) {
   this.wasNew = this.isNew;
-
+  this.evtName = this._evtName;
+  this.user = this._user;
+  this.toUser = this._toUser;
   if (!this.isNew){
     this.updatedAt = new Date();
   } else {
@@ -104,7 +106,13 @@ TeamSchema.post('save', function (doc) {
   if (this._original) {
     doc.oldMember = this._original.member.slice();  
   }
-  var evtName = this.wasNew ? 'Team.Inserted' : 'Team.Updated';
+  doc.user = this.user;
+  doc.toUser = this.toUser;
+  if (this.evtName) {
+    var evtName = this.evtName;
+  } else {
+    var evtName = this.wasNew ? 'Team.Inserted' : 'Team.Updated';
+  }
 
   EventBus.emit(evtName, doc);
 });

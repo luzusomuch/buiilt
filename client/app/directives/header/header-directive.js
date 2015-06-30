@@ -64,6 +64,10 @@ angular.module('buiiltApp')
         }
       });
 
+      $rootScope.$on('TeamUpdate',function(event,data) {
+        queryProjects();
+      });
+
 
       $scope.menuTypes = {
         homeOwner: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
@@ -91,6 +95,7 @@ angular.module('buiiltApp')
         if (form.$valid) {
             projectService.create($scope.project).$promise.then(function(data) {
               $scope.projects.push(data);
+              $state.go('dashboard',{id : data._id});
               $scope.project = {
                 package : {
                   location: {},
