@@ -6,6 +6,7 @@ var auth = require('../../auth/auth.service');
 
 var router = express.Router();
 router.get('/', auth.isAuthenticated(), controller.get);
+router.get('/me', auth.isAuthenticated(), controller.getMyFile);
 router.put('/:id/mark-as-read', auth.isAuthenticated(),controller.notification, controller.update);
 router.put('/mark-all-as-read', auth.isAuthenticated(), controller.allRead);
 //router.get('/:id/get', auth.isAuthenticated(), controller.staffPackage, controller.getOne);

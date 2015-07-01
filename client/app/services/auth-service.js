@@ -125,7 +125,7 @@ angular.module('buiiltApp')
         return cb(user);
       }, function(err) {
         return cb(err);
-      }).$promise;
+      }.bind(this)).$promise;
     },
 
     changeProfile: function(firstName, lastName, callback) {

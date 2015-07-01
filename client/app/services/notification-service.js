@@ -34,6 +34,13 @@ angular.module('buiiltApp')
         },
         create: {
           method: 'POST'
+        },
+        getMyFile: {
+          method: 'GET',
+          params: {
+            action: 'me'
+          },
+          isArray: true
         }
         //update: {
         //  method: 'PUT'

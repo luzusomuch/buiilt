@@ -29,7 +29,7 @@ var UserSchema = new Schema({
   twitter: {},
   google: {},
   github: {},
-  phoneNumber: String,
+  phoneNumber: Number,
   country: String,
   packageToken: String,
   createdAt: {type: Date, default: Date.now},

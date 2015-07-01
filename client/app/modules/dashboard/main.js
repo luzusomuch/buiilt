@@ -18,6 +18,12 @@ angular.module('buiiltApp').config(function($stateProvider) {
         function(messageService) {
           return messageService.myThread().$promise
         }
+      ],
+      myFiles : [
+        'notificationService',
+        function(notificationService) {
+         return notificationService.getMyFile().$promise
+        }
       ]
     }
   });

@@ -1,9 +1,10 @@
 angular.module('buiiltApp')
-  .controller('DashboardCtrl', function($scope, $timeout, $q, userService, $rootScope,myTasks,myThreads,taskService,messageService) {
+  .controller('DashboardCtrl', function($scope,$state, $timeout, $q, userService, $rootScope,myFiles,myTasks,myThreads,taskService,messageService) {
     $scope.currentUser = userService.get();
     $scope.currentProject = $rootScope.currentProject;
     $scope.myTasks = myTasks;
     $scope.myThreads = myThreads;
+    $scope.myFiles = myFiles;
     $scope.currentList = 'tasks';
     $scope.currentThread = {};
 
@@ -89,6 +90,22 @@ angular.module('buiiltApp')
       $scope.currentList = 'docs';
     };
 
+    $scope.goToDocument = function(value){
+      console.log(value);
+      if (value.referenceTo == 'DocumentContractorPackage') {
+        $state.go('contractors', {id: value.element.file.belongTo});
+      }
+      else if (value.referenceTo == 'DocumentMaterialPackage') {
+        $state.go('materials', {id: value.element.file.belongTo});
+      }
+      else if (value.referenceTo == 'DocumentStaffPackage') {
+        $state.go('staff', {id: value.element.file.belongTo});
+      }
+      else {
+        $state.go('client', {id: value.element.file.belongTo});
+      }
+    };
+
     $scope.showTask = function(task) {
       $scope.isShow = true;
       $scope.available = [];
@@ -116,6 +133,10 @@ angular.module('buiiltApp')
       if (newVal)
         $('#messages').scrollTop($('#messages')[0].scrollHeight)
     });
+
+    $scope.showDoc = function() {
+      console.log($scope.myFiles);
+    };
 
     $scope.complete = function(task,index) {
       task.completed = true;

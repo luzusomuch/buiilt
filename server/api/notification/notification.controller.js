@@ -79,4 +79,16 @@ exports.allRead = function(req,res) {
         return res.json(notifications);
       })
   })
+};
+
+exports.getMyFile = function(req, res) {
+  var user = req.user;
+    Notification.find({$or:[{owner: user._id},{toUser: user._id}], unread: true, referenceTo: 'DocumentPackage'})
+    .populate('element.uploadIn.project').exec(function(err, notification){
+      if (err) {console.log(err);return res.send(500,err);}
+      if (!notification) {return res.send(404,err);}
+      else {
+        return res.send(200,notification);
+      }
+  });
 }

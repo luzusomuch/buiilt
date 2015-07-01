@@ -133,33 +133,47 @@
       </div>
     </li>
   </ul>
-    <!--<li>-->
-      <!--<div class="collapsible-header">-->
-        <!--Name of Document-->
-        <!--<a href="#!" class="btn-flat secondary-content" style="font-size: 12px;">-->
-          <!--Go to Document-->
-        <!--</a>-->
-        <!--<a href="#!" class="btn-flat secondary-content" style="font-size: 12px;">-->
-          <!--New Revision/Document-->
-        <!--</a>-->
-      <!--</div>-->
-      <!--<div class="collapsible-body">-->
+  <ul class="collapsible" data-collapsible="accordion" ng-if="currentList == 'docs'">
+    <li ng-repeat="file in myFiles" ng-if="$last">
+      <div class="collapsible-header">
+        {{file.element.file.title}}
+        <a ng-if="file.referenceTo == 'DocumentInProject'" href="#!" class="btn-flat secondary-content" style="font-size: 12px;" ui-sref="projects.view({id: file.element.file.belongTo})">
+          Go to Document
+        </a>
+        <a class="btn-flat secondary-content" style="font-size: 12px;" ng-click="goToDocument(file)">
+          Go to Document
+        </a>
 
-        <!--<div class="row container">-->
+        <a href="#!" class="btn-flat secondary-content" style="font-size: 12px;">
+          <span ng-if="file.element.file.version == 0">New document</span>
+          <span ng-if="file.element.file.version > 0">Reversion {{file.element.file.version +1}}</span>
+        </a>
+      </div>
+      <div class="collapsible-body">
 
-          <!--<div class="card">-->
-            <!--<div class="card-image">-->
-              <!--<img src="images/sample-1.jpg">-->
-              <!--<span class="card-title">Name of Document</span>-->
-            <!--</div>-->
-            <!--<div class="card-content">-->
-              <!--<p>Description of Document, or description of revisions to existing document.</p>-->
-            <!--</div>-->
-          <!--</div>-->
+        <div class="row container">
 
-        <!--</div>        -->
-      <!--</div>-->
-    <!--</li>-->
+          <div class="card">
+            <div class="card-image" ng-switch="file.element.file.mimeType">
+              <span ng-switch-when="image/jpeg">
+                <img src="../../media/files/{{file.element.file._id}}-{{file.element.file.title}}" alt="">
+              </span>
+              <span ng-switch-when="image/png">
+                <img src="../../media/files/{{file.element.file._id}}-{{file.element.file.title}}" alt="">
+              </span>
+              <span ng-switch-default>
+                <img src="../../media/sample-1.jpg" alt="">
+              </span>
+              <span class="card-title">{{file.element.file.title}}</span>
+            </div>
+            <div class="card-content">
+              <p>{{file.element.file.description}}</p>
+            </div>
+          </div>
+
+        </div>        
+      </div>
+    </li>
   </ul>
 </div>
 

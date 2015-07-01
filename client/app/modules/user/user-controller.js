@@ -32,7 +32,7 @@ angular.module('buiiltApp').controller('UserCtrl', function($scope, $state, user
 
 angular.module('buiiltApp').controller('UserFormCtrl', function($scope, $state, authService) {
   $scope.errors = {};
-  $scope.user = {};
+  $scope.user = authService.getCurrentUser();
   $scope.changeEmail = function() {
 
   };

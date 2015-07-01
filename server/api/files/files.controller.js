@@ -1,6 +1,7 @@
 'use strict';
 var User = require('./../../models/user.model');
 var File = require('./../../models/file.model');
+var Notification = require('./../../models/notification.model');
 var errorsHelper = require('../../components/helpers/errors');
 var ProjectValidator = require('./../../validators/project');
 var _ = require('lodash');
@@ -45,22 +46,6 @@ exports.interested = function(req, res) {
         }
     });
 };
-// exports.disinterested = function(req, res) {
-//     File.findById(req.params.id, function(err, file) {
-//         if (err) {return res.send(500, err);}
-//         else {
-//             _.remove(file.usersInterestedIn, {_id: req.user._id});
-//             file.save(function(err, savedFile) {
-//                 if (err) {return res.send(500, err);}
-//                 else {
-//                     console.log(savedFile);
-//                     return res.json(savedFile);
-//                 }
-//             });
-//         }
-//     });
-// };
-
 
 exports.getFileByStateParam = function(req, res) {
     File.find({'belongTo': req.params.id}, function(err, files) {

@@ -83,8 +83,8 @@ exports.upload = function(req, res){
                                                         fromUser: req.user._id,
                                                         toUser: leader,
                                                         element: {file: saved, 
-                                                            uploadIn: builderPackage.project},
-                                                        referenceTo: "DocumentPackage",
+                                                            uploadIn: builderPackage},
+                                                        referenceTo: "DocumentInProject",
                                                         type: 'uploadNewDocumentVersion'
                                                     });
                                                     notification.save(callback);
@@ -153,8 +153,8 @@ exports.upload = function(req, res){
                                                         fromUser: req.user._id,
                                                         toUser: leader,
                                                         element: {file: saved, 
-                                                            uploadIn: builderPackage.project},
-                                                        referenceTo: "DocumentPackage",
+                                                            uploadIn: builderPackage},
+                                                        referenceTo: "DocumentInProject",
                                                         type: 'uploadDocument'
                                                     });
                                                     notification.save(callback);
@@ -252,7 +252,7 @@ exports.uploadInPackge = function(req, res){
                                             toUser: leader,
                                             element: {file: saved,
                                                 uploadIn: contractorPackage},
-                                            referenceTo: "DocumentPackage",
+                                            referenceTo: "DocumentContractorPackage",
                                             type: 'uploadDocument'
                                         });
                                         notification.save(callback);
@@ -271,7 +271,7 @@ exports.uploadInPackge = function(req, res){
                                             toUser: leader,
                                             element: {file:saved,
                                                 uploadIn: materialPackage},
-                                            referenceTo: "DocumentPackage",
+                                            referenceTo: "DocumentMaterialPackage",
                                             type: 'uploadDocument'
                                         });
                                         notification.save(callback);
@@ -289,7 +289,7 @@ exports.uploadInPackge = function(req, res){
                                             toUser: leader,
                                             element: {file:saved,
                                                 uploadIn: staffPackage},
-                                            referenceTo: "DocumentPackage",
+                                            referenceTo: "DocumentStaffPackage",
                                             type: 'uploadDocument'
                                         });
                                         notification.save(callback);
@@ -306,7 +306,7 @@ exports.uploadInPackge = function(req, res){
                                             toUser: leader,
                                             element: {file:saved,
                                                 uploadIn: builderPackage},
-                                            referenceTo: "DocumentPackage",
+                                            referenceTo: "DocumentBuilderPackage",
                                             type: 'uploadDocument'
                                         });
                                         notification.save(callback);
