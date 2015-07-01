@@ -83,7 +83,7 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
           if (invite._id) {
             Team.findById(invite._id, function(err, team) {
               if (err || !team) {
-                return cb();
+                return callback(err);
               }          
               else {
                 async.each(team.leader, function(leader, cb) {

@@ -55,7 +55,6 @@ exports.upload = function(req, res){
     })
     .on('end', function() {
         if (uploadedFile && uploadedField) {
-            console.log(uploadedFile, uploadedField);
             if (uploadedField._id != 'undefined') {
                 File.findById(uploadedField._id, function(err, file) {
                     if (err) {console.log(err);}
@@ -78,7 +77,7 @@ exports.upload = function(req, res){
                                         else {
                                             if (builderPackage.to.team) {
                                                 owners = _.union(builderPackage.owner.leader, builderPackage.to.team.leader);
-                                                _.each(owners, function(leader){
+                                                async.each(owners, function(leader, callback){
                                                     var notification = new Notification({
                                                         owner: leader,
                                                         fromUser: req.user._id,
@@ -88,8 +87,8 @@ exports.upload = function(req, res){
                                                         referenceTo: "DocumentPackage",
                                                         type: 'uploadNewDocumentVersion'
                                                     });
-                                                    notification.save(cb);
-                                                });
+                                                    notification.save(callback);
+                                                }, cb);
                                             }
                                             else {
                                                 return cb();
@@ -99,7 +98,7 @@ exports.upload = function(req, res){
                                 },
                                 function(cb) {
                                     s3.uploadFile(saved, function(err, data) {
-                                        if (err) {return cb(err);}
+                                        if (err || !data) {return cb(err);}
                                         else {
                                             if (saved.mimeType == 'image/png' || saved.mimeType == 'image/jpeg') {
                                                 gm(__dirname + "/../../../" + saved.path)
@@ -107,12 +106,12 @@ exports.upload = function(req, res){
                                                 .write(__dirname + "/../../../" + "client/media/files/"+saved._id + '-' +saved.title, function(err) {
                                                     if (err) {return cb(err);}
                                                     else {
-                                                        return cb(data);        
+                                                        return cb(null, data);        
                                                     }
                                                 });
                                             }
                                             else {
-                                                return cb(data);
+                                                return cb(null, data); 
                                             }
                                         }
                                     });
@@ -148,7 +147,7 @@ exports.upload = function(req, res){
                                         else {
                                             if (builderPackage.to.team) {
                                                 owners = _.union(builderPackage.owner.leader, builderPackage.to.team.leader);
-                                                _.each(owners, function(leader){
+                                                async.each(owners, function(leader,callback){
                                                     var notification = new Notification({
                                                         owner: leader,
                                                         fromUser: req.user._id,
@@ -158,8 +157,8 @@ exports.upload = function(req, res){
                                                         referenceTo: "DocumentPackage",
                                                         type: 'uploadDocument'
                                                     });
-                                                    notification.save(cb);
-                                                });
+                                                    notification.save(callback);
+                                                }, cb);
                                             }
                                             else {
                                                 return cb();
@@ -177,17 +176,19 @@ exports.upload = function(req, res){
                                                 .write(__dirname + "/../../../" + "client/media/files/"+saved._id + '-' +saved.title, function(err) {
                                                     if (err) {return cb(err);}
                                                     else {
-                                                        return res.json(200,data);        
+                                                        return cb(null,data);        
                                                     }
                                                 });
                                             }
                                             else {
-                                                return res.json(200,data);
+                                                return cb(null,data);
                                             }
                                         }
                                     });
                                 }
-                            ])
+                            ],function(){
+                                return res.send(200,saved);
+                            })
                         }
                     });
                 });
@@ -222,7 +223,6 @@ exports.uploadInPackge = function(req, res){
     })
     .on('end', function() {
         if (uploadedFile && uploadedField) {
-            console.log(uploadedFile, uploadedField);
             var file = new File();
             file.title = uploadedFile.name;
             file.server = 's3';
@@ -235,7 +235,7 @@ exports.uploadInPackge = function(req, res){
             file.belongTo = req.params.id;
             file.belongToType = uploadedField.belongToType;
             file.save(function(err, saved) {
-                if (err) {console.log(err);}
+                if (err) {return res.send(500,err);}
                 else {
                     async.parallel([
                         function(cb) {
@@ -245,7 +245,7 @@ exports.uploadInPackge = function(req, res){
                                 .populate('winnerTeam._id').exec(function(err, contractorPackage) {
                                     if (err || !contractorPackage) {return cb();}
                                     owners = _.union(contractorPackage.owner.leader, contractorPackage.winnerTeam._id.leader);
-                                    _.each(owners, function(leader){
+                                    async.each(owners, function(leader, callback){
                                         var notification = new Notification({
                                             owner: leader,
                                             fromUser: req.user._id,
@@ -255,8 +255,8 @@ exports.uploadInPackge = function(req, res){
                                             referenceTo: "DocumentPackage",
                                             type: 'uploadDocument'
                                         });
-                                        notification.save(cb);
-                                    });
+                                        notification.save(callback);
+                                    },cb);
                                 });
                             }
                             else if (saved.belongToType == 'material') {
@@ -264,7 +264,7 @@ exports.uploadInPackge = function(req, res){
                                 .populate('winnerTeam._id').exec(function(err, materialPackage) {
                                     if (err || !materialPackage) {return cb();}
                                     owners = _.union(materialPackage.owner.leader, materialPackage.winnerTeam._id.leader);
-                                    _.each(owners, function(leader){
+                                    async.each(owners, function(leader, callback){
                                         var notification = new Notification({
                                             owner: leader,
                                             fromUser: req.user._id,
@@ -274,15 +274,15 @@ exports.uploadInPackge = function(req, res){
                                             referenceTo: "DocumentPackage",
                                             type: 'uploadDocument'
                                         });
-                                        notification.save(cb);
-                                    });
+                                        notification.save(callback);
+                                    },cb);
                                 });
                             }
                             else if (saved.belongToType == 'staffPackage') {
                                 StaffPackage.findById(saved.belongTo).populate('owner').exec(function(err, staffPackage) {
                                     if (err || !staffPackage) {return cb();}
                                     owners = _.union(staffPackage.owner.leader, staffPackage.staffs);
-                                    _.each(owners, function(leader){
+                                    async.each(owners, function(leader,callback){
                                         var notification = new Notification({
                                             owner: leader,
                                             fromUser: req.user._id,
@@ -292,14 +292,14 @@ exports.uploadInPackge = function(req, res){
                                             referenceTo: "DocumentPackage",
                                             type: 'uploadDocument'
                                         });
-                                        notification.save(cb);
-                                    });
+                                        notification.save(callback);
+                                    },cb);
                                 });
                             }
                             else {
                                 BuilderPackage.findById(saved.belongTo).populate('owner').exec(function(err, builderPackage){
                                     if (err || !builderPackage) {return cb();}
-                                    _.each(builderPackage.owner.leader, function(leader){
+                                    async.each(builderPackage.owner.leader, function(leader,callback){
                                         var notification = new Notification({
                                             owner: leader,
                                             fromUser: req.user._id,
@@ -309,8 +309,8 @@ exports.uploadInPackge = function(req, res){
                                             referenceTo: "DocumentPackage",
                                             type: 'uploadDocument'
                                         });
-                                        notification.save(cb);
-                                    });
+                                        notification.save(callback);
+                                    },cb);
                                 });
                             }
                         },
