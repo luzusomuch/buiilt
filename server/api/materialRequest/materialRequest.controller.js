@@ -143,7 +143,7 @@ exports.sendInvitationInMaterial = function(req, res) {
             var to = materialPackage.to;
             async.each(req.body.toSupplier, function(emailPhone, callback) {
             User.findOne({'email': emailPhone.email}, function(err, user) {
-              if (err) {return res.send(500,err);}
+              if (err) {return callback(err);}
               if (!user) {
                 to.push({
                   email: emailPhone.email,
@@ -396,7 +396,6 @@ exports.sendAddendum = function(req, res) {
     if (err) {return res.send(500,err)}
     if (!materialPackage) {return res.send(404,err)}
     else {
-      console.log(req.body);
       if (materialPackage.addendums) {
         var addendums = materialPackage.addendums;
         var addendumsScope = [];

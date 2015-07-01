@@ -262,7 +262,7 @@ exports.sendInvitationInContractor = function(req, res) {
           var to = contractorPackage.to;
           async.each(req.body.toContractor, function(emailPhone, callback) {
             User.findOne({'email': emailPhone.email}, function(err, user) {
-              if (err) {return res.send(500,err);}
+              if (err) {return callback(err);}
               if (!user) {
                 to.push({
                   email: emailPhone.email,
@@ -452,7 +452,6 @@ exports.sendAddendum = function(req, res) {
     if (err) {return res.send(500,err)}
     if (!contractorPackage) {return res.send(404,err)}
     else {
-      console.log(req.body);
       if (contractorPackage.addendums) {
         var addendums = contractorPackage.addendums;
         var addendumsScope = [];

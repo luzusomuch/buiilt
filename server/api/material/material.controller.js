@@ -37,13 +37,8 @@ exports.createMaterialPackage = function (req, res, next) {
   });
   async.each(req.body.suppliers, function(emailPhone, callback) {
     User.findOne({'email': emailPhone.email}, function(err, user) {
-      if (err) {return res.send(500,err);}
+      if (err) {return callback(err);}
       if (!user) {
-        // var validateInvite = new ValidateInvite({
-        //   email: emailPhone.email,
-        //   inviteType: 'supplier'
-        // });
-        // validateInvite.save();
         to.push({
           email: emailPhone.email,
           phone: emailPhone.phoneNumber
@@ -52,7 +47,7 @@ exports.createMaterialPackage = function (req, res, next) {
       }
       else {
         Team.findOne({$or:[{'leader': user._id}, {'member._id': user._id}]}, function(err, team){
-          if (err) {return res.send(500,err);}
+          if (err) {return callback(err);}
           else {
             team.project.push(req.body.project);
             team.save();
