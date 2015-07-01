@@ -18,7 +18,7 @@ angular.module('buiiltApp')
             };
             authService.getCurrentUser().$promise
               .then(function(res) {
-                $scope.user = res;
+                $rootScope.user = res;
                 $scope.isLeader = $scope.user.team.role == 'admin';
                 authService.getCurrentTeam().$promise
                   .then(function(res) {
@@ -57,6 +57,8 @@ angular.module('buiiltApp')
       $rootScope.$on('$stateChangeSuccess', function (event, next) {
         queryProjects();
         $scope.currentProject = $rootScope.currentProject;
+        $rootScope.currentUser = $scope.user;
+        $rootScope.currentTeam = $scope.currentTeam;
         if ($scope.currentProject && !_.find($scope.currentTeam.project,{_id : $scope.currentProject._id}))
         {
           $state.go('team.manager');

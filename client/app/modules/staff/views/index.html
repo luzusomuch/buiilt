@@ -1,7 +1,10 @@
 <div class="col-md-12">
   <div class="col s3">
-     <a class="modal-trigger btn-large col s12" ng-if="currentTeam.type == 'builder' && isLeader" href="#newWorkPackage" style="margin-top: 8px; margin-bottom: 15px">Create New</a>
-    <ul id="createNew" class="dropdown-content" style="margin-top: 15px">
+     <a class="dropdown-button btn-large col s12" ng-if="currentTeam.type == 'builder' && isLeader" href="#newWorkPackage" style="margin-top: 8px; margin-bottom: 15px"
+        data-activates="createNew" dropdown data-gutter="15" data-beloworigin="true">
+       Create New
+     </a>
+    <ul id="createNew" class="dropdown-content">
     <li><a class="modal-trigger" href="#newWorkPackage">Work Package</a></li>
     <li><div class="divider"></div></li>
     <li><a class="modal-trigger" href="#newContractorPackage">Contractor Package</a></li>
@@ -21,92 +24,12 @@
        <!--<li class="collection-item" ng-repeat="item in staffPackages" ng-if="item.canSee || isLeader"><a ui-sref="staff.view({packageId : item._id})">{{item.name}}</a></li>-->
      <!--</ul>-->
     <div class="collection z-depth-1 list">
-      <a ui-sref="staff.view({packageId : item._id})" ng-repeat="item in staffPackages | filter : filter"  ng-if="item.canSee || isLeader" class="collection-item">{{item.name}}</a>
+      <span ng-repeat="item in staffPackages | filter : filter">
+        <a ui-sref="staff.view({packageId : item._id})"  ng-show="item.canSee || isLeader" class="collection-item">{{item.name}}</a>
+      </span>
     </div>
   </div>
 
-  <div id="newWorkPackage" class="modal modal-fixed-footer">
-    <form novalidate ng-submit="save(form)" name="form">
-      <div class="modal-content">
-
-        <div class="row">
-           <div class="col s12">
-             <h5>New Work Package for {{currentProject.name}}</h5>
-           </div>
-        </div>
-        <div class="row">
-           <div class="input-field col s8">
-             <input id="package_name" type="text" name="name" class="validate invalid" ng-model="package.name" required ng-class="{'invalid' : form.name.$invalid && submitted}">
-             <label for="package_name">Work Package Title</label>
-             <p class="validate-message" ng-if="form.name.$error.required && submitted">Pacakge name is required</p>
-           </div>
-           <div class="input-field col s4">
-              <label for="commencement_date" class="active">Commencement Date</label>
-              <input type="date" id="commencement_date" ng-model="package.dateStart">
-           </div>
-        </div>
-        <div class="row">
-          <div class="col s12">
-            <ul class="collection z-depth-1">
-              <li class="collection-item vlalign-wrapper">
-                <div class="row form" style="margin-bottom: 0px">
-                  <div class="col s12"><p>Enter work descriptions below:</p></div>
-                  <div class="input-field col s10">
-                    <textarea id="description" class="materialize-textarea" ng-model="description" ng-class="{'invalid' : descriptionError}"></textarea>
-                    <label for="description" class="">Description</label>
-                    <p class="validate-message" ng-if="descriptionError">Scope of work at least 1 item</p>
-                  </div>
-                  <div class="valign col s2">
-                    <button class="btn" type="button" name="action" style="margin-top: 78px" ng-click="addDescription(description)">Add</button>
-                  </div>
-                </div>
-              </li>
-              <li class="collection-item vlalign" ng-repeat="description in package.descriptions track by $index">
-                <div class="row" style="margin-bottom: 0px">
-                  <div class="col s10">
-                    <p>{{description}}</p>
-                  </div>
-                  <div class="col s2">
-                    <button class="btn-flat btn-flat" ng-click="removeDescription($index)">Remove</button>
-                  </div>
-                </div>
-              </li>
-
-            </ul>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col s12">
-            <div class="card-panel">
-              <div class="chips">
-                <div class="chips-head row current-assign">
-                  <p style="">Current Assignees:</p>
-                  <p class="validate-message" ng-if="assgineesError">Current assignees must be at least 1 item</p>
-                  <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="staff in package.staffs">
-                    {{staff.email}} <span><a href="#!" ng-click="revoke(staff,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
-                  </div>
-                </div>
-
-                <div class="divider"></div>
-
-                <div class="row available-assign">
-                  <p style="">Available Assignee's:</p>
-                  <a href="#!" ng-click="assign(staff,$index)" ng-repeat="staff in available">
-                    <div class="card col" style="padding: 5px; margin-left: 10px" >
-                      {{staff.email}}
-                    </div>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-           <button type="submit" class="modal-action waves-effect waves-green btn modal-action">Create Package!</button>
-           <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
-      </div>
-    </form>
-  </div>
-
 </div>
+
+<div create-package></div>
