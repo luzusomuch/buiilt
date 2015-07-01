@@ -13,39 +13,32 @@ angular.module('buiiltApp').directive('file', function(){
             $scope.isInterested = false;
             authService.getCurrentUser().$promise.then(function(data){
                 $scope.currentUser = data;
-                // fileService.getFileByStateParam({'id': $stateParams.id}).$promise.then(function(data) {
-                //     $scope.files = data;
-                //     console.log($scope.files);
-                //     _.each($scope.files, function(file){
-                //         if (_.find(file.usersInterestedIn,{_id: $scope.currentUser._id})) {
-                //             $scope.isInterested = true;
-                //         }
-                //         else {
-                //             $scope.isInterested = false;
-                //         }
-                //     })
-                // });
+                fileService.getFileByStateParam({'id': $stateParams.id}).$promise.then(function(data) {
+                    $scope.files = data;
+                    _.each($scope.files, function(file){
+                        if (_.find(file.usersInterestedIn,{_id: $scope.currentUser._id})) {
+                            file.isInterested = true;
+                        }
+                        else {
+                            file.isInterested = false;
+                        }
+                    })
+                });
             });
 
-            fileService.getFileByStateParam({'id': $stateParams.id}).$promise.then(function(data) {
-                $scope.files = data;
-            });
+            // fileService.getFileByStateParam({'id': $stateParams.id}).$promise.then(function(data) {
+            //     $scope.files = data;
+            // });
                 
             $scope.filterFunction = function(element) {
                 return element.title.match(/^Ma/) ? true : false;
             };
             $scope.likeDocument = function(value) {
-                fileService.interested({'id': value},{}).$promise.then(function(data) {
-                    _.remove($scope.files, {_id: data._id});
-                    $scope.files.push(data);
+                fileService.interested({'id': value._id, isInterested: value.isInterested}).$promise.then(function(data) {
+                   value.isInterested = !value.isInterested;
                 });
             };
-            $scope.disLikeDocument = function(value) {
-                fileService.disinterested({'id': value},{}).$promise.then(function(data) {
-                    _.remove($scope.files, {_id: data._id});
-                    $scope.files.push(data);
-                });
-            };
+            
             var fileId;
             var uploader = $scope.uploader = new FileUploader({
                 url: 'api/uploads/'+ $stateParams.id + '/file',

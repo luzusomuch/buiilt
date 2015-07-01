@@ -67,7 +67,7 @@ exports.upload = function(req, res){
                     file.version = file.version + 1;
                     file.belongTo = req.params.id;
                     file.save(function(err, saved) {
-                        if (err) {console.log(err);}
+                        if (err) {return res.send(500,err);}
                         else {
                             var owners = [];
                             async.parallel([
@@ -107,17 +107,19 @@ exports.upload = function(req, res){
                                                 .write(__dirname + "/../../../" + "client/media/files/"+saved._id + '-' +saved.title, function(err) {
                                                     if (err) {return cb(err);}
                                                     else {
-                                                        return res.json(200,data);        
+                                                        return cb(data);        
                                                     }
                                                 });
                                             }
                                             else {
-                                                return res.json(200,data);
+                                                return cb(data);
                                             }
                                         }
                                     });
                                 }
-                            ])
+                            ], function(){
+                                return res.send(200,saved);
+                            });
                         }
                     });
                 });

@@ -12,7 +12,7 @@ router.get('/:id/document', auth.isAuthenticated(), controller.getByDocument);
 router.get('/:id', auth.isAuthenticated(), controller.show);
 // router.put('/:id', auth.isAuthenticated(), controller.update);
 router.put('/:id/interested', auth.isAuthenticated(), controller.interested);
-router.put('/:id/disinterested', auth.isAuthenticated(), controller.disinterested);
+// router.put('/:id/disinterested', auth.isAuthenticated(), controller.disinterested);
 router.get('/:id/params', auth.isAuthenticated(), controller.getFileByStateParam);
 router.get('/:id/download', auth.isAuthenticated(), controller.downloadFile);
 // router.post('/', controller.create);
