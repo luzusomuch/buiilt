@@ -211,9 +211,9 @@ angular.module('buiiltApp').directive('addon', function(){
             uploader.onCompleteItem = function (fileItem, response, status, headers) {
                 newPhoto = response;
               // $state.reload();
-              // fileService.getFileByStateParam({'id': $stateParams.id}).$promise.then(function(data) {
-              //     $scope.files = data;
-              // });
+              fileService.getFileByStateParam({'id': $scope.package._id}).$promise.then(function(data) {
+                  $scope.files = data;
+              });
             };
             console.log($scope.type);
             uploader.onBeforeUploadItem = function (item) {

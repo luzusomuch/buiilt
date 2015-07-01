@@ -61,6 +61,7 @@ exports.create = function(req, res){
           to.team = _user.team._id;
         }
         var builderPackage = new BuilderPackage({
+          type: 'BuilderPackage',
           location : req.body.package.location,
           owner : user.team._id,
           project : project._id,

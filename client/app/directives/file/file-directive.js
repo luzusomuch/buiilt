@@ -6,10 +6,26 @@ angular.module('buiiltApp').directive('file', function(){
         scope:{
             project:'=',
         },
-        controller: function($scope, $stateParams, $cookieStore, fileService,FileUploader) {
+        controller: function($scope, $stateParams, $cookieStore, fileService,FileUploader, authService) {
             $scope.documents = [];
             $scope.files = [];
             $scope.file = {};
+            $scope.isInterested = false;
+            authService.getCurrentUser().$promise.then(function(data){
+                $scope.currentUser = data;
+                // fileService.getFileByStateParam({'id': $stateParams.id}).$promise.then(function(data) {
+                //     $scope.files = data;
+                //     console.log($scope.files);
+                //     _.each($scope.files, function(file){
+                //         if (_.find(file.usersInterestedIn,{_id: $scope.currentUser._id})) {
+                //             $scope.isInterested = true;
+                //         }
+                //         else {
+                //             $scope.isInterested = false;
+                //         }
+                //     })
+                // });
+            });
 
             fileService.getFileByStateParam({'id': $stateParams.id}).$promise.then(function(data) {
                 $scope.files = data;
@@ -18,8 +34,16 @@ angular.module('buiiltApp').directive('file', function(){
             $scope.filterFunction = function(element) {
                 return element.title.match(/^Ma/) ? true : false;
             };
-            $scope.interested = function(value) {
+            $scope.likeDocument = function(value) {
                 fileService.interested({'id': value},{}).$promise.then(function(data) {
+                    _.remove($scope.files, {_id: data._id});
+                    $scope.files.push(data);
+                });
+            };
+            $scope.disLikeDocument = function(value) {
+                fileService.disinterested({'id': value},{}).$promise.then(function(data) {
+                    _.remove($scope.files, {_id: data._id});
+                    $scope.files.push(data);
                 });
             };
             var fileId;

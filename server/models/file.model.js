@@ -33,9 +33,6 @@ var FileSchema = new Schema({
     _id: {
       type: Schema.Types.ObjectId,
       ref: 'User'
-    },
-    email: {
-      type: String
     }
   }],
   path: {

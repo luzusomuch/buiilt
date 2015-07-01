@@ -14,6 +14,9 @@
               </span>
             </div>
             <div class="card-action">
+              {{file.usersInterestedIn}}
+              <span ng-repeat="interested in file.usersInterestedIn" ng-click="likeDocument(file._id)" ng-if="interested._id != currentUser._id || !interested._id"><i class="fa fa-heart-o"></i>Like</span>
+              <span ng-repeat="interested in file.usersInterestedIn" ng-click="disLikeDocument(file._id)" ng-if="interested._id == currentUser._id"><i class="fa fa-heart"></i>Liked</span>
                 <p>{{file.title}} <span><em>Revision {{file.version +1 }} of {{file.version +1 }}</em></span></p>
                 <a href='#!' class="activator">Upload Revision</a>
             </div>

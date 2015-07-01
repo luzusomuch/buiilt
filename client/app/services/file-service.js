@@ -22,6 +22,13 @@ angular.module('buiiltApp').factory('fileService', function($rootScope, $q, $res
                 action: 'interested'
               }
             },
+            disinterested: {
+              method: 'PUT',
+              params: {
+                id: 'id',
+                action: 'disinterested'
+              }
+            },
             getFileByStateParam: {
               method: 'GET',
               params: {

@@ -92,11 +92,19 @@ var BuilderPackageSchema = new Schema({
 BuilderPackageSchema.plugin(packagePlugin);
 
 BuilderPackageSchema.pre('save', function(next) {
+  this._modifiedPaths = this.modifiedPaths();
+  this.editUser = this._editUser;
+  this.ownerUser = this._ownerUser;
   next();
 });
 
 BuilderPackageSchema.post('save', function(doc) {
   var evtName = this.wasNew ? 'BuilderPackage.Inserted' : 'BuilderPackage.Updated';
+  if (this._modifiedPaths) {
+    doc._modifiedPaths = this._modifiedPaths
+  }
+  doc.ownerUser = this._ownerUser;
+  doc.editUser = this._editUser;
 
   EventBus.emit(evtName, doc);
 });

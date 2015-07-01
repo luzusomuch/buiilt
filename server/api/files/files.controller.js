@@ -26,11 +26,11 @@ exports.show = function(req, res) {
 };
 
 exports.interested = function(req, res) {
-    console.log(req.params.id);
     File.findById(req.params.id, function(err, file) {
         if (err) {return res.send(500, err);}
         else {
-            file.usersInterestedIn = {_id: req.user._id, email: req.user.email};
+            console.log(file);
+            file.usersInterestedIn = {_id: req.user._id};
             file.save(function(err, savedFile) {
                 if (err) {return res.send(500, err);}
                 else {
@@ -40,6 +40,28 @@ exports.interested = function(req, res) {
         }
     });
 };
+exports.disinterested = function(req, res) {
+    File.findById(req.params.id, function(err, file) {
+        if (err) {return res.send(500, err);}
+        else {
+            if (_.find(file.usersInterestedIn, {_id: req.user._id})) {
+                _.remove(file.usersInterestedIn, {_id: req.user._id});
+                console.log(file);
+                file.save(function(err, savedFile) {
+                    if (err) {return res.send(500, err);}
+                    else {
+                        console.log(savedFile);
+                        return res.json(savedFile);
+                    }
+                })
+            }
+            else {
+                return res.send(500);
+            }
+        }
+    });
+};
+
 
 exports.getFileByStateParam = function(req, res) {
     File.find({'belongTo': req.params.id}, function(err, files) {
