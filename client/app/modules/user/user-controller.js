@@ -45,16 +45,9 @@ angular.module('buiiltApp').controller('UserFormCtrl', function($scope, $state, 
     });
   };
 
-  $scope.changePhoneNum = function() {
-    authService.changePhoneNum($scope.user.phoneNumber).then(function(data) {
-      $scope.user = data;
-    }, function(res) {
-      $scope.errors = res.data;
-    });
-  };
-
   $scope.changeProfile = function() {
-    authService.changeProfile($scope.user.firstName, $scope.user.lastName).then(function(data){
+    authService.changeProfile($scope.user.firstName, $scope.user.lastName, $scope.user.phoneNumber)
+    .then(function(data){
       $scope.user = data;
     });
   }

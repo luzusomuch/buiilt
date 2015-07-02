@@ -577,7 +577,7 @@ exports.editAddendum = function(req, res) {
                                 addendumScope.quantity = addendumScope.quantity;   
                             }
                         });
-                        return false;
+                        contractorPackage.save();
                     });
                     contractorPackage.markModified('editAddendum');
                     contractorPackage._editUser = req.user;
@@ -628,7 +628,7 @@ exports.editAddendum = function(req, res) {
                                 addendumScope.quantity = addendumScope.quantity;   
                             }
                         });
-                        return false;
+                        materialPackage.save();
                     });
                     materialPackage.markModified('editAddendum');
                     materialPackage._editUser = req.user;

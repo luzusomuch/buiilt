@@ -215,7 +215,6 @@ angular.module('buiiltApp').directive('addon', function(){
                   $scope.files = data;
               });
             };
-            console.log($scope.type);
             uploader.onBeforeUploadItem = function (item) {
                 $scope.formData._id = $scope.fileId;
                 $scope.formData.title = item.title;

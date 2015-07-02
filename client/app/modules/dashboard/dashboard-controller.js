@@ -91,18 +91,22 @@ angular.module('buiiltApp')
     };
 
     $scope.goToDocument = function(value){
-      console.log(value);
-      if (value.referenceTo == 'DocumentContractorPackage') {
-        $state.go('contractors', {id: value.element.file.belongTo});
-      }
-      else if (value.referenceTo == 'DocumentMaterialPackage') {
-        $state.go('materials', {id: value.element.file.belongTo});
-      }
-      else if (value.referenceTo == 'DocumentStaffPackage') {
-        $state.go('staff', {id: value.element.file.belongTo});
+      if (value.referenceTo == 'DocumentInProject') {
+        $state.go('projects.view', {id: value.element.file.belongTo});
       }
       else {
-        $state.go('client', {id: value.element.file.belongTo});
+        if (value.referenceTo == 'DocumentContractorPackage') {
+          $state.go('contractors', {id: value.element.file.belongTo});
+        }
+        else if (value.referenceTo == 'DocumentMaterialPackage') {
+          $state.go('materials', {id: value.element.file.belongTo});
+        }
+        else if (value.referenceTo == 'DocumentStaffPackage') {
+          $state.go('staff', {id: value.element.file.belongTo});
+        }
+        else {
+          $state.go('client', {id: value.element.file.belongTo});
+        }
       }
     };
 
@@ -133,10 +137,6 @@ angular.module('buiiltApp')
       if (newVal)
         $('#messages').scrollTop($('#messages')[0].scrollHeight)
     });
-
-    $scope.showDoc = function() {
-      console.log($scope.myFiles);
-    };
 
     $scope.complete = function(task,index) {
       task.completed = true;

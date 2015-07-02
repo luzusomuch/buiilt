@@ -175,6 +175,7 @@ exports.sendInvitationInMaterial = function(req, res) {
               materialPackage.to = to;
               materialPackage.newInvitation = newSuppliers;
               materialPackage._ownerUser = req.user;
+              materialPackage._editUser = req.user;
               materialPackage.markModified('inviteMaterial');
               materialPackage.save(function(err, saved){
                 if (err) {return res.send(500,err);}

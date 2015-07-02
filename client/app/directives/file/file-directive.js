@@ -39,7 +39,6 @@ angular.module('buiiltApp').directive('file', function(){
                 });
             };
             
-            var fileId;
             var uploader = $scope.uploader = new FileUploader({
                 url: 'api/uploads/'+ $stateParams.id + '/file',
                 headers : {
@@ -48,7 +47,7 @@ angular.module('buiiltApp').directive('file', function(){
                 formData: [$scope.formData]
             });
             $scope.getFileId = function(value) {
-                var fileId = value;
+                var fileId = value._id;
                 $scope.formData = {
                     fileId: '',
                     date: new Date(),
@@ -98,10 +97,10 @@ angular.module('buiiltApp').directive('file', function(){
 
                 uploader.onBeforeUploadItem = function (item) {
                     $scope.formData._id = fileId;
-                    $scope.formData.title = item.title;
+                    $scope.formData.title = value.title;
                     // $scope.formData.belongTo = $stateParams.id;
                     // $scope.formData.doc = $scope.documentId;
-                    // $scope.formData.desc = item.file.desc || "";
+                    $scope.formData.desc = value.desc;
                     // $scope.formData.usersRelatedTo = item.file.usersRelatedTo || "";
                     //angular.forEach(item.file.tags, function (tag) {
                     //  $scope.formData.tags.push(tag.text);
@@ -116,7 +115,6 @@ angular.module('buiiltApp').directive('file', function(){
                 };
 
                 uploader.onCompleteAll = function () {
-                    alert('Upload successfully!');
                     if(hideModalAfterUploading){
                         // $modalInstance.close(newPhoto);
                     }

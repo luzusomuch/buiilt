@@ -33,7 +33,7 @@ s3Aws.prototype.uploadFile = function (file, callback) {
     localFile: file.path,
     s3Params: {
       Bucket: config.Bucket,
-      Key: file.title,
+      Key: file.name,
       ACL: 'public-read'
     }
   });

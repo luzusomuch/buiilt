@@ -41,62 +41,52 @@
                   </div>
                 </div>
               </li>
+
+              <li class="collection-item vlalign" ng-repeat="addendum in package.addendums | filter:{isHidden: 'false'}">
+                <div class="row" ng-hide="hideAddendum">
+                  <h6>{{addendum.description}}</h6>
+                  <div class="col s9" ng-repeat="addendumScope in addendum.addendumsScope">
+                    <div class="row">
+                      <div class="col s8">
+                        <p>{{addendumScope.description}}</p>
+                      </div>
+                      <div class="col s4">
+                        <p>{{addendumScope.quantity}}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col s3">
+                    <a class="btn-flat btn-flat" ng-click="remove(addendum._id)">Remove</a>
+                    <a class="btn-flat btn-flat" ng-click="hideAddendum='true'; showEdit='true'">Edit</a>
+                  </div>
+                </div>
+                <div class="row" ng-show="showEdit">
+                  <div class="row">
+                    <div class="form-field col s12">
+                      <div contentEditable="true" ng-model="editAddendum.description">{{addendum.description}}</div>
+                    </div>
+                  </div>
+                  <div class="row" ng-repeat="addendumScope in addendum.addendumsScope">
+                    <div class="form-field col s8">
+                      <div contentEditable="true" ng-model="editAddendum.scopeDescription[$index]">{{addendumScope.description}}</div>
+                    </div>
+                    <div class="form-field col s4">
+                      <div contentEditable="true" ng-model="editAddendum.quantity[$index]">{{addendumScope.quantity}}</div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <a class="btn-flat btn-flat" ng-click="edit(addendum._id);showEdit = false; hideAddendum = false">Save</a>
+                    <a class="btn-flat btn-flat" ng-click="showEdit = false; hideAddendum = false">Cancel</a>
+                  </div>
+                </div>
+              </li>
             </ul>
          </div>
        </div>
-       
-       <div class="row" ng-if="package.addendums">
-         <div class="col s12">
-           <div class="row" ng-repeat="addendum in package.addendums | filter:{isHidden: 'false'}">
-                <div class="row" ng-hide="hideAddendum">
-                  <h6>{{addendum.description}}</h6>
-                  <li class="collection-item vlalign">
-                    <div class="col s9" style="margin-bottom: 0px" ng-repeat="addendumScope in addendum.addendumsScope">
-                      <div class="row">
-                        <div class="col s8">
-                          <p>{{addendumScope.description}}</p>
-                        </div>
-                        <div class="col s4">
-                          <p>{{addendumScope.quantity}}</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col s3">
-                      <a class="btn-flat btn-flat" ng-click="remove(addendum._id)">Remove</a>
-                      <a class="btn-flat btn-flat" ng-click="hideAddendum='true'; showEdit='true'">Edit</a>
-                    </div>
-                  </li>
-                </div>
-                <div class="row" ng-show="showEdit">
-                  <!-- <form> -->
-                    <div class="row">
-                      <div class="form-field col s12">
-                        <div contentEditable="true" ng-model="editAddendum.description">{{addendum.description}}</div>
-                      </div>
-                    </div>
-                    <div class="row" ng-repeat="addendumScope in addendum.addendumsScope">
-                      <div class="form-field col s8">
-                        <div contentEditable="true" ng-model="editAddendum.scopeDescription[$index]">{{addendumScope.description}}</div>
-                      </div>
-                      <div class="form-field col s4">
-                        <div contentEditable="true" ng-model="editAddendum.quantity[$index]">{{addendumScope.quantity}}</div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <a class="btn-flat btn-flat" ng-click="edit(addendum._id);showEdit = false; hideAddendum = false">Save</a>
-                      <a class="btn-flat btn-flat" ng-click="showEdit = false; hideAddendum = false">Cancel</a>
-                    </div>
-                  <!-- </form> -->
-                </div>
-              </div>
-         </div>
-       </div>
-     
     </div>
   <div class="divider"></div>
     <div class="modal-footer">
         <button type="submit" class="modal-action modal-close waves-effect waves-green btn-flat ">Send Addendum!</button>
-         <!-- <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Send Addendum!</a> -->
      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
     </div>
     </form>

@@ -58,7 +58,8 @@ exports.upload = function(req, res){
             if (uploadedField._id != 'undefined') {
                 File.findById(uploadedField._id, function(err, file) {
                     if (err) {console.log(err);}
-                    file.title = uploadedFile.name;
+                    file.title = uploadedField.title;
+                    file.name = uploadedFile.name;
                     file.path = uploadedFile.path;
                     file.mimeType = uploadedFile.type;
                     file.description = uploadedField.description;
@@ -76,7 +77,7 @@ exports.upload = function(req, res){
                                         if (err || !builderPackage) {return cb(err);}
                                         else {
                                             if (builderPackage.to.team) {
-                                                owners = _.union(builderPackage.owner.leader, builderPackage.to.team.leader);
+                                                owners = _.union(builderPackage.owner.leader, builderPackage.to.team.leader, saved.usersInterestedIn);
                                                 async.each(owners, function(leader, callback){
                                                     var notification = new Notification({
                                                         owner: leader,
@@ -125,7 +126,8 @@ exports.upload = function(req, res){
             }
             else {
                 var file = new File({
-                    title: uploadedFile.name,
+                    title: uploadedField.title,
+                    name: uploadedFile.name,
                     path: uploadedFile.path,
                     server: 's3',
                     mimeType: uploadedFile.type,
@@ -224,7 +226,8 @@ exports.uploadInPackge = function(req, res){
     .on('end', function() {
         if (uploadedFile && uploadedField) {
             var file = new File();
-            file.title = uploadedFile.name;
+            file.title = uploadedField.title;
+            file.name = uploadedFile.name;
             file.server = 's3';
             file.user = req.user._id;
             file.path = uploadedFile.path;

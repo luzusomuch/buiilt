@@ -294,6 +294,7 @@ exports.sendInvitationInContractor = function(req, res) {
               contractorPackage.to = to;
               contractorPackage.newInvitation = newContractor;
               contractorPackage._ownerUser = req.user;
+              contractorPackage._editUser = req.user;
               contractorPackage.markModified('inviteContractor');
               contractorPackage.save(function(err, saved){
                 if (err) {return res.send(500,err);}

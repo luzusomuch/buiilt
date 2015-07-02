@@ -51,21 +51,12 @@
          <div class="collapsible-header">Contact Details</div>
          <div class="collapsible-body">
          
-         <form class="col s12" name="chagePhoneNumberForm" ng-submit="changePhoneNum()">
-             <div class="row center-align">
-                 <div class="input-field col s10 offset-s1">
-                   <input ng-model="user.phoneNumber" id="password" type="number" class="validate">
-                   <label class="active" for="password">Mobile Phone Number</label>
-                   
-                   <button class="btn waves-effect waves-light" ng-disable="chagePhoneNumberForm.$invalid" name="action">Edit/Save
-                   </button>
-                 </div>
-                 
-             </div>
-         </form>
-
          <form class="col s12" name="changeProfileForm" ng-submit="changeProfile()">
              <div class="row center-align">
+                <div class="input-field col s10 offset-s1">
+                 <input ng-model="user.phoneNumber" id="password" type="number" class="validate">
+                 <label class="active" for="password">Mobile Phone Number</label>
+                </div>
                  <div class="input-field col s10 offset-s1">
                    <input ng-model="user.firstName" id="firstName" type="text" class="validate">
                    <label class="active" for="firstName">First Name</label>
@@ -77,7 +68,6 @@
                    <button class="btn waves-effect waves-light" ng-disable="changeProfileForm.$invalid" name="action">Edit/Save
                    </button>
                  </div>
-                 
              </div>
          </form>
          

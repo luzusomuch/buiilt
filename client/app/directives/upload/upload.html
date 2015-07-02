@@ -8,11 +8,17 @@
           <input type="file" nv-file-select="" uploader="uploader"/>
         </div>
       </div>
+      <div class="row">
+        <div class="input-field col s8 offset-s2">
+          <textarea class="materialize-textarea" ng-model="formData.title" id="textarea1"></textarea>
+          <label for="">Title</label>
+        </div>
+      </div>
       <div ng-show="uploader.queue.length" class="form-group">
         <div ng-repeat="item in uploader.queue" ng-if="$last">
           <div class="row">
             <div class="input-field col s8 offset-s2">
-              <input type="text" ng-model="item.file.name">
+              <input type="text" ng-model="item.file.name" disabled>
               <label for="">File name</label>
             </div>
           </div>

@@ -137,9 +137,6 @@
     <li ng-repeat="file in myFiles" ng-if="$last">
       <div class="collapsible-header">
         {{file.element.file.title}}
-        <a ng-if="file.referenceTo == 'DocumentInProject'" href="#!" class="btn-flat secondary-content" style="font-size: 12px;" ui-sref="projects.view({id: file.element.file.belongTo})">
-          Go to Document
-        </a>
         <a class="btn-flat secondary-content" style="font-size: 12px;" ng-click="goToDocument(file)">
           Go to Document
         </a>

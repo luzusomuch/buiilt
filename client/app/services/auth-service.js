@@ -116,23 +116,24 @@ angular.module('buiiltApp')
       }).$promise;
     },
 
-    changePhoneNum: function(phoneNumber, callback) {
-      var cb = callback || angular.noop;
+    // changePhoneNum: function(phoneNumber, callback) {
+    //   var cb = callback || angular.noop;
 
-      return userService.changePhoneNum({id: currentUser._id}, {
-        phoneNumber: phoneNumber
-      }, function(user) {
-        return cb(user);
-      }, function(err) {
-        return cb(err);
-      }.bind(this)).$promise;
-    },
+    //   return userService.changePhoneNum({id: currentUser._id}, {
+    //     phoneNumber: phoneNumber
+    //   }, function(user) {
+    //     return cb(user);
+    //   }, function(err) {
+    //     return cb(err);
+    //   }.bind(this)).$promise;
+    // },
 
-    changeProfile: function(firstName, lastName, callback) {
+    changeProfile: function(firstName, lastName, phoneNumber, callback) {
       var cb = callback || angular.noop;
       return userService.changeProfile({id: currentUser._id}, {
         firstName: firstName,
-        lastName: lastName
+        lastName: lastName,
+        phoneNumber: phoneNumber
       }, function(user) {
         return cb(user);
       }, function(err){

@@ -322,17 +322,17 @@ exports.changePassword = function (req, res, next) {
   });
 };
 
-exports.changePhoneNum = function(req, res, next) {
-  var userId = req.user._id;
-  var phoneNumber = req.body.phoneNumber;
-  User.findById(userId, function(err, user) {
-    user.phoneNumber = phoneNumber;
-    user.save(function(err) {
-      if (err) {return validationError(res, err);}
-      res.send(200);
-    });
-  });
-};
+// exports.changePhoneNum = function(req, res, next) {
+//   var userId = req.user._id;
+//   var phoneNumber = req.body.phoneNumber;
+//   User.findById(userId, function(err, user) {
+//     user.phoneNumber = phoneNumber;
+//     user.save(function(err) {
+//       if (err) {return validationError(res, err);}
+//       res.send(200);
+//     });
+//   });
+// };
 
 exports.changeProfile = function(req, res) {
   User.findById(req.user._id, function(err, user){
@@ -341,6 +341,7 @@ exports.changeProfile = function(req, res) {
     else {
       user.firstName = req.body.firstName;
       user.lastName = req.body.lastName;
+      user.phoneNumber = req.body.phoneNumber;
       user.name = req.body.firstName +' '+req.body.lastName;
       user.save(function(err,saved){
         if (err) {return res.send(500,err);}

@@ -8,6 +8,10 @@ var FileSchema = new Schema({
     type: String, // filename
     required: true
   },
+  name: {
+    type: String, // filename
+    required: true
+  },
   comments: [{
     user: {
       type: Schema.Types.ObjectId,

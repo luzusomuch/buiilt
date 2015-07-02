@@ -87,7 +87,7 @@ angular.module('buiiltApp').directive('upload', function(){
 
             uploader.onBeforeUploadItem = function (item) {
                 $scope.formData._id = $scope.fileId;
-                $scope.formData.title = item.title;
+                // $scope.formData.title = item.title;
                 $scope.formData.belongToType =  ($scope.package) ? $scope.package.type : '';
                 // $scope.formData.belongTo = $stateParams.id;
                 // $scope.formData.doc = $scope.documentId;
@@ -106,7 +106,6 @@ angular.module('buiiltApp').directive('upload', function(){
             };
 
             uploader.onCompleteAll = function () {
-                alert('Upload successfully!');
                 if(hideModalAfterUploading){
                     // $modalInstance.close(newPhoto);
                 }
