@@ -7,8 +7,8 @@
     <li><a class="modal-trigger" href="#newMaterialPackage">Material Package</a></li>
   </ul>
   <div class="collection">
-    <a href="#" class="collection-item" ng-click="showTasks()" ng-class="{'active' : currentList == 'tasks'}">Tasks<span class="new badge">1</span></a>
-    <a href="#" class="collection-item" ng-click="showChats()" ng-class="{'active' : currentList == 'chats'}">Chats<span class="new badge">4</span></a>
+    <a href="#" class="collection-item" ng-click="showTasks()" ng-class="{'active' : currentList == 'tasks'}">Tasks<span ng-if="myTasks.length > 0" class="new badge">{{myTasks.length}}</span></a>
+    <a href="#" class="collection-item" ng-click="showChats()" ng-class="{'active' : currentList == 'chats'}">Chats<span ng-if="myThreads.length > 0" class="new badge">{{myThreads.length}}</span></a>
     <a href="#" class="collection-item" ng-click="showDocs()" ng-class="{'active' : currentList == 'docs'}">Docs<span class="new badge">2</span></a>
   </div>
 </div>
@@ -41,9 +41,9 @@
            class="btn-flat secondary-content new badge" style="font-size: 12px;">
           Go to Task
         </a>
-        <!--<a href="#!" class="btn-flat secondary-content" style="font-size: 12px;">-->
-          <!--Edit-->
-        <!--</a>-->
+        <button type="button" ng-click="editTask(task)" class="btn-flat secondary-content" style="font-size: 12px;">
+          Edit
+        </button>
       </div>
       <div class="collapsible-body" style="display: none;">
         <div class="row">
@@ -83,20 +83,37 @@
   </ul>
   <ul class="collapsible" data-collapsible="accordion" ng-if="currentList == 'chats'">
     <li class="" ng-repeat="thread in myThreads">
-      <div class="collapsible-header" ng-click="showChat(thread)">
+      <div class="collapsible-header" ng-click="showChat(thread,$index)">
         {{thread.name}}
-        <a href="#!" class="btn-flat secondary-content" style="font-size: 12px;">
+        <a ng-if="thread.type == 'builder'"
+           ui-sref="client({id : thread.project})"
+           class="btn-flat secondary-content new badge" style="font-size: 12px;">
+          Go to Thread
+        </a>
+        <a ng-if="thread.type == 'contractor'"
+           ui-sref="contractorRequest.contractorPackageInProcess({id : thread.project, packageId : thread.package})"
+           class="btn-flat secondary-content new badge" style="font-size: 12px;">
+          Go to Thread
+        </a>
+        <a ng-if="thread.type == 'staff'"
+           ui-sref="staff.view({id : thread.project, packageId : thread.package})"
+           class="btn-flat secondary-content new badge" style="font-size: 12px;">
+          Go to Thread
+        </a>
+        <a ng-if="thread.type == 'material'"
+           ui-sref="materialRequest.materialPackageInProcess({id : thread.project, packageId : thread.package})"
+           class="btn-flat secondary-content new badge" style="font-size: 12px;">
           Go to Thread
         </a>
         <a href="#!" class="btn-flat secondary-content" style="font-size: 12px;">
-          1 NEW
+          {{thread.__v}} NEW
         </a>
       </div>
       <div class="collapsible-body" style="display: none;">
 
         <div class="col s12">
           <ul class="collection">
-            <div style="height: 300px; background-color: white; overflow-y: auto" id="messages">
+            <div style="height: 300px; background-color: white; overflow-y: auto" class="messages">
 
               <li class="collection-item" ng-repeat="message in thread.messages">
                 <div class="row valign-wrapper" style="margin-bottom: -5px ">

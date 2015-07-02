@@ -10,11 +10,11 @@
         <div class="card collection">
         <form method="post" ng-submit="signup(form)" name="form" novalidate style="padding:10px">
           <h3>Create account</h3>
-          <div class="row">
-            <div input-field class="col s12">
+          <div class="row" ng-if="!hasInviteToken">
+            <div input-field class="col s12" >
               <input id="email" type="email" name="email" ng-model="user.email" required
                      ng-class="{'invalid' : form.email.$invalid && submitted}"
-                     ng-if="!hasInviteToken">
+                     >
               <label for="email">Email</label>
               <p class="validate-message" ng-show="form.email.$error.required && submitted">Email is required</p>
               <p class="validate-message" ng-show="form.email.$error.email && submitted">Wrong email format</p>

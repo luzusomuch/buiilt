@@ -65,19 +65,26 @@ exports.myThread = function(req,res) {
   var user = req.user;
   var result = [];
   var query = Notification.find(
-    {$or : [{owner : user._id},{users : user._id}],unread : true, referenceTo : 'thread'}
+    {$or : [{'element.owner' : user._id},{'element.users' : user._id}],unread : true, referenceTo : 'thread'}
   );
   query.distinct('element._id');
+
   query.exec(function(err, threads) {
+
     async.each(threads,function(thread,callback) {
       Thread.findById(thread)
         .populate('messages.user')
         .exec(function(err,thread) {
-          result.push(thread);
-          callback();
+          Notification.where({owner : user._id,'element._id' : thread._id,referenceTo : 'thread',unread : true}).count(function(err,count) {
+            thread.__v = count;
+            result.push(thread);
+            callback();
+          }) ;
         })
     },function() {
-      return res.json(result);
+
+        return res.json(result);
+
     })
   })
 };
@@ -165,3 +172,5 @@ exports.getMessages = function(req,res) {
       return res.json(threads);
     });
 };
+
+

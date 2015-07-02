@@ -107,31 +107,38 @@ angular.module('buiiltApp')
     };
 
     $scope.showTask = function(task) {
+      console.log('show');
       $scope.isShow = true;
       $scope.available = [];
       getAvailableAssignee(task.package,task.type);
       _.forEach(task.assignees,function(item) {
-        if (!_.find($scope.available,{_id : item._id})) {
-          item.canRevoke = false;
-        } else {
-          item.canRevoke = true;
-        }
+        item.canRevoke = (!_.find($scope.available,{_id : item._id}))
         _.remove($scope.available,{_id : item._id});
       });
     };
 
-    $scope.showChat = function(thread) {
-      $scope.message = {text : ''};
-      $timeout(function() {
-        updateMessage(thread)
-      },1000);
-      $scope.currentThread = thread;
+    $scope.editTask = function(task) {
+      console.log('edit');
+      $scope.isShow = false;
     };
 
-    $scope.$watch('scrollHeight',function(newVal) {
-      console.log($('#messages')[0].scrollHeight);
-      if (newVal)
-        $('#messages').scrollTop($('#messages')[0].scrollHeight)
+
+    var messages = document.getElementsByClassName('messages');
+    var _index = 0;
+
+    $scope.showChat = function(thread,index) {
+      $scope.message = {text : ''};
+      _index = index;
+      $timeout(function() {
+        updateMessage(thread,_index)
+      },2000);
+      $scope.currentThread = thread;
+      notificationService.read({_id : thread._id})
+    };
+
+    $scope.$watch('scrollHeight',function(value) {
+      if (value)
+        $(messages[_index]).scrollTop(value)
     });
 
     $scope.showDoc = function() {
@@ -157,29 +164,28 @@ angular.module('buiiltApp')
 
     $scope.sendMessage = function(form) {
       $scope.messageFormSubmitted = true;
-      var index = _.findIndex($scope.myThreads,{_id : $scope.currentThread._id})
       if (form.$valid) {
         messageService.sendMessage({id : $scope.currentThread._id, type : $scope.currentThread.type},$scope.message).$promise
           .then(function() {
-
             //$scope.myThreads[index].messages = res.messages;
             $scope.message.text = '';
-            console.log($scope.currentThread);
-            console.log($scope.myThreads[1]);
             $scope.messageFormSubmitted = false;
           });
       }
     };
 
     var updateMessage = function(thread) {
-      var index = _.findIndex($scope.myThread,{_id : thread._id});
       messageService.getOne({id : thread._id, type : thread.type}).$promise
         .then(function(res) {
           thread.messages = res.messages;
-          $timeout(function() {
-            updateMessage(thread)
-          },1000)
-          $scope.scrollHeight = $('#messages')[0].scrollHeight;
+          if (thread) {
+            $timeout(function() {
+              updateMessage(thread)
+            },3000);
+          }
+          if (messages[_index]) {
+            $scope.scrollHeight = messages[_index].scrollHeight;
+          }
         })
 
     };

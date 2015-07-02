@@ -123,12 +123,12 @@ angular.module('buiiltApp')
           var getMessage = function() {
             if ($scope.currentThread)
               updateThread();
-            $timeout(getMessage,1000);
+            $timeout(getMessage,3000);
             if ($('#messages')[0])
              $scope.scrollHeight = $('#messages')[0].scrollHeight;
           };
 
-          $timeout(getMessage,1000);
+          $timeout(getMessage,3000);
 
           $scope.$watch('scrollHeight',function(newVal) {
             console.log(newVal);
