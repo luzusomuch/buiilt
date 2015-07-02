@@ -14,8 +14,8 @@
          <form class="col s12" name="changeEmailForm" ng-submit="changeEmail()">
              <div class="row center-align">
                  <div class="input-field col s10 offset-s1">
-                     <input ng-model="user.email" id="email" type="email" class="validate">
-                     <label class="active" for="email">{{currentUser.email}}</label>
+                     <input ng-model="currentUser.email" id="email" type="email" class="validate">
+                     <label class="active" for="email">Email</label>
                      <button class="btn waves-effect waves-light" ng-disable="changeEmailForm.$invalid" name="action">Edit/Save
                      </button>
                  </div>

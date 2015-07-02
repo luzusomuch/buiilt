@@ -9,10 +9,13 @@ angular.module('buiiltApp').controller('ContractorsCtrl',
     $scope.user = authService.getCurrentUser();
     $scope.filter = {isCompleted : false, isAccept : true};
     $scope.submitted = false;
-
+    // $scope.isBuilder = ($scope.contractorPackages.owner == $scope.currentTeam._id) ? true : false;
+    // $scope.canSee = (_.find(contractorPackages.to, {_id: $scope.currentTeam._id})) ? true : false;
     // $scope.team = authService.getCurrentTeam();
 
-
+    _.forEach($scope.contractorPackages,function(contractorPackage) {
+        contractorPackage.isContractor = (_.find(contractorPackage.to, {_id: $scope.currentTeam._id})) ? true: false;
+    });
 
 });
 

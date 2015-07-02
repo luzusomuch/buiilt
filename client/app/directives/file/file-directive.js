@@ -6,7 +6,7 @@ angular.module('buiiltApp').directive('file', function(){
         scope:{
             project:'=',
         },
-        controller: function($scope, $stateParams, $cookieStore, fileService,FileUploader, authService) {
+        controller: function($scope,$window, $stateParams, $cookieStore, fileService,FileUploader, authService) {
             $scope.documents = [];
             $scope.files = [];
             $scope.file = {};
@@ -36,6 +36,13 @@ angular.module('buiiltApp').directive('file', function(){
             $scope.likeDocument = function(value) {
                 fileService.interested({'id': value._id, isInterested: value.isInterested}).$promise.then(function(data) {
                    value.isInterested = !value.isInterested;
+                });
+            };
+
+            $scope.downloadFile = function(value) {
+                fileService.downloadFile({id: value})
+                .$promise.then(function(data){
+                    $window.open(data.url);
                 });
             };
             

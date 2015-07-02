@@ -11,6 +11,8 @@ angular.module('buiiltApp').controller('MaterialsCtrl',
     $scope.requirements = [];
     $scope.submitted = false;
 
-
+    _.forEach($scope.materialPackages,function(materialPackage) {
+        materialPackage.isSupplier = (_.find(materialPackage.to, {_id: $scope.currentTeam._id})) ? true: false;
+    });
 
   });

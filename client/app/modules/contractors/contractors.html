@@ -32,12 +32,12 @@
         #{{$index + 1}} -  {{contractorPackage.name}}
         <span class="new badge">{{contractorPackage.__v}}</span>
       </a>
-      <a class="collection-item" ng-if="currentTeam.type == 'contractor' && contractorPackage.isAccept"
+      <a ng-show="contractorPackage.isContractor" class="collection-item" ng-if="currentTeam.type == 'contractor' && contractorPackage.isAccept"
          ui-sref='contractorRequest.contractorPackageInProcess({id: contractorPackage.project, packageId: contractorPackage._id})'>
         #{{$index + 1}} -  {{contractorPackage.name}}
         <span class="new badge">{{contractorPackage.__v}}</span>
       </a>
-      <a class="collection-item" ng-if="currentTeam.type == 'contractor' && !contractorPackage.isAccept"
+      <a ng-show="contractorPackage.isContractor" class="collection-item" ng-if="currentTeam.type == 'contractor' && !contractorPackage.isAccept"
          ui-sref='contractorRequest.sendQuote({id: contractorPackage.project, packageId: contractorPackage._id})'>#{{$index + 1}} -  {{contractorPackage.name}}
         <span class="new badge">{{contractorPackage.__v}}</span>
       </a>
