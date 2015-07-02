@@ -1,0 +1,381 @@
+<div id="newWorkPackage" class="modal modal-fixed-footer">
+  <form novalidate name="form" ng-submit="save(form)">
+    <div class="modal-content">
+
+      <div class="row">
+        <div class="col s12">
+          <h5>New Work Package for {{currentProject.name}}</h5>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s8">
+
+          <input id="package_name" type="text" name="name" class="validate" ng-model="package.name" required ng-class="{'invalid' : form.name.$invalid && submitted}">
+          <label for="package_name">Work Package Title</label>
+          <p class="validate-message" ng-if="form.name.$error.required && submitted">Package name is required</p>
+        </div>
+        <div class="input-field col s4">
+          <label for="commencement_date" class="active">Commencement Date</label>
+          <input type="date" id="commencement_date" ng-model="package.dateStart">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12">
+          <ul class="collection z-depth-1">
+            <li class="collection-item vlalign-wrapper">
+              <div class="row form" style="margin-bottom: 0px">
+                <div class="col s12"><p>Enter work descriptions below:</p></div>
+                <div class="input-field col s10">
+                  <textarea id="description" class="materialize-textarea" ng-model="description" ng-class="{'invalid' : descriptionError}"></textarea>
+                  <label for="description" class="">Description</label>
+                  <p class="validate-message" ng-if="descriptionError">Scope of work at least 1 item</p>
+                </div>
+                <div class="valign col s2">
+                  <button class="btn" type="button" name="action" style="margin-top: 78px" ng-click="addDescription(description)">Add</button>
+                </div>
+              </div>
+            </li>
+            <li class="collection-item vlalign" ng-repeat="description in package.descriptions track by $index">
+              <div class="row" style="margin-bottom: 0px">
+                <div class="col s10">
+                  <p>{{description}}</p>
+                </div>
+                <div class="col s2">
+                  <button class="btn-flat btn-flat" ng-click="removeDescription($index)">Remove</button>
+                </div>
+              </div>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12">
+          <div class="card-panel">
+            <div class="chips">
+              <div class="chips-head row current-assign">
+                <p style="">Current Assignees:</p>
+                <p class="validate-message" ng-if="assgineesError">Current assignees must be at least 1 item</p>
+                <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="staff in package.staffs">
+                  {{staff.email}} <span><a href="#!" ng-click="revoke(staff,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
+                </div>
+              </div>
+
+              <div class="divider"></div>
+
+              <div class="row available-assign">
+                <p style="">Available Assignee's:</p>
+                <a href="#!" ng-click="assign(staff,$index)" ng-repeat="staff in available">
+                  <div class="card col" style="padding: 5px; margin-left: 10px" >
+                    {{staff.email}}
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="modal-action waves-effect waves-green btn modal-action">Create Package!</button>
+      <button type="button" ng-click="closeModal()" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</button>
+    </div>
+  </form>
+</div>
+
+
+<!-- CONTRACTOR PACKAGE -->
+<div id="newContractorPackage" class="modal modal-fixed-footer">
+  <form method="post" name="contractorForm" ng-submit="createContractorPackage(contractorForm)" novalidate>
+    <div class="modal-content">
+      <div class="row">
+        <div class="col s12">
+          <h5>New Contractor Package for {{currentProject.name}}</h5>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="project_name" name="name" type="text" class="validate" ng-model="contractor.name" required
+                 ng-class="{'invalid' : contractorForm.name.$invalid && contractorSubmitted}">
+          <label for="project_name">Contractor Package Title</label>
+          <p class="validate-message" ng-if="contractorForm.name.$error.required && contractorSubmitted">Package name is required</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s6">
+          <select material-select ng-model="contractor.category">
+            <option value="" disabled selected>Category</option>
+            <option value="1">Option 1</option>
+            <option value="2">Option 2</option>
+            <option value="3">Option 3</option>
+          </select>
+          <label>Category</label>
+        </div>
+        <div class="input-field col s6">
+          <label for="date_required" class="active">Date Required</label>
+          <input type="date"
+                 ng-model="contractor.dateStart"
+                 format="mm/dd/yyyy"/>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12">
+          <ul class="collection z-depth-1">
+            <li class="collection-item vlalign-wrapper">
+              <div class="row form" style="margin-bottom: 0px">
+                <div class="col s12"><p>Enter work descriptions below:</p></div>
+                <div class="input-field col s10">
+                  <textarea id="description" class="materialize-textarea" ng-model="description" ng-class="{'invalid' : contractorDescriptionError}"></textarea>
+                  <label for="description" class="">Description</label>
+                  <p class="validate-message" ng-if="contractorDescriptionError">Scope of work at least 1 item</p>
+                </div>
+                <div class="valign col s2">
+                  <button class="btn" type="button" name="action" style="margin-top: 78px" ng-click="addDescriptionContractor(description)">Add</button>
+                </div>
+              </div>
+            </li>
+            <li class="collection-item vlalign" ng-repeat="description in contractor.descriptions track by $index">
+              <div class="row" style="margin-bottom: 0px">
+                <div class="col s10">
+                  <p>{{description}}</p>
+                </div>
+                <div class="col s2">
+                  <button type="button" class="btn-flat btn-flat" ng-click="removeDescriptionContractor($index)">Remove</button>
+                </div>
+              </div>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col s12">
+          <ul class="collection z-depth-1">
+            <li class="collection-item vlalign-wrapper">
+              <div class="row form" style="margin-bottom: 0px">
+                <div class="col s12"><p>Enter tradesmen's details below:</p></div>
+                <p class="validate-message" ng-if="trademenError">Tradesmen's details at least 1 item</p>
+                <div class="input-field col s7">
+                  <!-- <input id="email_address" ng-model="newEmail" type="email" name="email" class="validate"> -->
+                  <angucomplete-alt id="ex1"
+                                    pause="100"
+                                    selected-object="contractorMember.email"
+                                    local-data="contractorTeamMember"
+                                    search-fields="email"
+                                    title-field="email"
+                                    minlength="1"
+                                    input-changed="contractorInputChanged"
+                                    template-url="/my-custom-template.html"
+                                    input-class="col s12"></angucomplete-alt>
+                </div>
+                <div class="input-field col s3">
+                  <input id="phone_number" ng-model="newPhoneNumber" type="number" name="phoneNumber" class="validate">
+                  <label for="phone_number">Phone Number</label>
+                  <p class="validate-message" ng-if="contractorForm.phoneNumber.$valid == false">Please input number</p>
+                </div>
+                <div class="valign col s2">
+                  <a ng-if="contractorForm.phoneNumber.$valid == true" href="#" ng-click="contractorAddUser()" class="btn" style="margin-top: 28px">Add</a>
+                  <!-- <button class="btn" type="submit" ng-submit="addUser()" name="action" style="margin-top: 28px">Add</button> -->
+                </div>
+              </div>
+            </li>
+
+            <li class="collection-item vlalign" ng-repeat="emailPhone in contractorMember.emailsPhone">
+              <div class="row" style="margin-bottom: 0px">
+                <div class="col s7">{{emailPhone.email}}</div>
+                <div class="col s3">{{emailPhone.phoneNumber}}</div>
+                <div class="col s2"><a class="btn-flat btn-flat" ng-click="contractorRemoveUser($index)" >Remove</a></div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="waves-effect waves-light btn modal-action">Create Package!</button>
+      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
+    </div>
+  </form>
+</div>
+<!-- END CONTRACTOR PACKAGE -->
+
+<!-- MATERIAL PACKAGE -->
+<div id="newMaterialPackage" class="modal modal-fixed-footer">
+  <form method="post" name="materialForm" ng-submit="createMaterialPackage(materialForm)" novalidate>
+    <div class="modal-content">
+      <div class="row">
+        <div class="col s12">
+          <h5>New Material Package for  {{currentProject.name}}</h5>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s8">
+          <input id="project_name" name="name" type="text" class="validate" required ng-model="material.name"
+                 ng-class="{'invalid' : materialForm.name.$invalid && materialSubmitted}">
+          <label for="project_name">Material Package Title</label>
+
+          <p class="validate-message" ng-if="materialForm.name.$error.required && materialSubmitted">Package name is
+            required</p>
+        </div>
+        <div class="input-field col s4">
+          <label for="date_required" class="active">Date Required</label>
+          <input
+            ng-model="material.dateStart"
+            type="date"
+            name="created"
+            id="inputCreated"
+            ng-model="currentTime"/>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12">
+          <ul class="collection z-depth-1">
+            <li class="collection-item vlalign-wrapper">
+              <div class="row form" style="margin-bottom: 0px">
+                <div class="col s12"><p>Enter work descriptions below:</p></div>
+                <div class="input-field col s10">
+                  <textarea id="description" class="materialize-textarea" ng-model="description1" ng-class="{'invalid' : materialDescriptionError}"></textarea>
+                  <label for="description" class="">Description</label>
+                  <p class="validate-message" ng-if="materialDescriptionError">Scope of work at least 1 item</p>
+                </div>
+                <div class="valign col s2">
+                  <a class="btn" name="action" style="margin-top: 78px" ng-click="addDescriptionMaterial(description1)">Add</a>
+                </div>
+              </div>
+            </li>
+            <li class="collection-item vlalign" ng-repeat="description in material.descriptions track by $index">
+              <div class="row" style="margin-bottom: 0px">
+                <div class="col s10">
+                  <p>{{description}}</p>
+                </div>
+                <div class="col s2">
+                  <a class="btn-flat btn-flat" ng-click="removeDescriptionMaterial($index)">Remove</a>
+                </div>
+              </div>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12">
+          <ul class="collection z-depth-1">
+            <li class="collection-item vlalign-wrapper">
+              <div class="row form" style="margin-bottom: 0px">
+                <div class="col s12"><p>Enter materials required below:</p></div>
+                <div class="input-field col s7">
+                  <textarea id="description" class="materialize-textarea" ng-class="{'invalid' : requireError}"
+                            ng-model="description"></textarea>
+                  <label for="description">Description</label>
+                  <p class="validate-message" ng-if="requireError">Material require details at least 1 item</p>
+                </div>
+                <div class="input-field col s3" style="margin-top: 67px">
+                  <input id="quantity" type="number" name="requiredQuantity" class="validate" ng-model="quantity">
+                  <label for="quantity">Quantity</label>
+                  <p class="validate-message" ng-if="materialForm.requiredQuantity.$valid == false">Please input number</p>
+                </div>
+                <div class="valign col s2">
+                  <a ng-if="materialForm.requiredQuantity.$valid == true" name="action" class="btn" style="margin-top:78px;"
+                     ng-click="addNewRequire()">Add</a>
+                </div>
+              </div>
+            </li>
+            <li class="collection-item vlalign" ng-repeat="requirement in requirements">
+              <div class="row" style="margin-bottom: 0px">
+                <div class="col s7">{{requirement.description}}</div>
+                <div class="col s3">{{requirement.quantity}}</div>
+                <div class="col s2">
+                  <a class="btn-flat btn-flat" ng-click="removeRequire($index)">Remove</a>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col s12">
+          <ul class="collection z-depth-1">
+            <li class="collection-item vlalign-wrapper">
+              <div class="row form" style="margin-bottom: 0px">
+                <div class="col s12"><p>Enter supplier details below:</p></div>
+                <p class="validate-message" ng-if="supplierError">Supplier details at least 1 item</p>
+
+                <div class="input-field col s7">
+                  <angucomplete-alt id="ex1"
+                                    pause="100"
+                                    selected-object="member.email"
+                                    local-data="supplierTeamMember"
+                                    search-fields="email"
+                                    title-field="email"
+                                    minlength="1"
+                                    input-changed="supplierInputChanged"
+                                    template-url="/my-custom-template.html"
+                                    input-class="col s12"></angucomplete-alt>
+                </div>
+                <div class="input-field col s3">
+                  <input id="phone_number" type="number" name="phoneNumber" class="validate" ng-model="newPhoneNumber">
+                  <label for="phone_number">Phone Number</label>
+                  <p class="validate-message" ng-if="materialForm.phoneNumber.$valid == false">Please input number</p>
+                </div>
+                <div class="valign col s2">
+                  <a ng-if="materialForm.phoneNumber.$valid == true" name="action" class="btn" style="margin-top:28px;" ng-click="addNewSupplier()">Add</a>
+                </div>
+              </div>
+            </li>
+            <li class="collection-item vlalign" ng-repeat="emailPhone in materialMember.emailsPhone">
+              <div class="row" style="margin-bottom: 0px">
+                <div class="col s7">{{emailPhone.email}}</div>
+                <div class="col s3">{{emailPhone.phoneNumber}}</div>
+                <div class="col s2">
+                  <a class="btn-flat btn-flat" ng-click="removeSupplier($index)">Remove</a>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="modal-action waves-effect waves-green btn modal-action">Create Package!</button>
+      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
+    </div>
+  </form>
+</div>
+<!-- END MATERIAL PACKAGE -->
+
+<script type="text/ng-template" id="/my-custom-template.html">
+  <div class="angucomplete-holder" ng-class="{'angucomplete-dropdown-visible': showDropdown}">
+    <input ng-model="searchStr"
+           id="email"
+           ng-disabled="disableInput"
+           type="text"
+           placeholder="{{placeholder}}"
+           ng-focus="onFocusHandler()"
+           class="{{inputClass}}"
+           ng-focus="resetHideResults()"
+           ng-blur="hideResults($event)"
+
+           autocapitalize="off"
+           autocorrect="off"
+           autocomplete="off"
+           ng-change="inputChangeHandler(searchStr)"/>
+    <label for="email">Email</label>
+    <div class="angucomplete-dropdown col s12" ng-show="showDropdown">
+      <div class="angucomplete-searching" ng-show="searching" ng-bind="textSearching"></div>
+      <div class="angucomplete-searching" ng-show="!searching && (!results || results.length == 0)" ng-bind="textNoResults"></div>
+      <div class="angucomplete-row" ng-repeat="result in results" ng-click="selectResult(result)" ng-mouseenter="hoverRow($index)" ng-class="{'angucomplete-selected-row': $index == currentIndex}">
+        <div ng-if="imageField" class="angucomplete-image-holder">
+          <img ng-if="result.image && result.image != ''" ng-src="{{result.image}}" class="angucomplete-image"/>
+          <div ng-if="!result.image && result.image != ''" class="angucomplete-image-default"></div>
+        </div>
+        <div class="angucomplete-title" ng-if="matchClass" ng-bind-html="result.title"></div>
+        <div class="angucomplete-title" ng-if="!matchClass">{{ result.title }}</div>
+        <div ng-if="matchClass && result.description && result.description != ''" class="angucomplete-description" ng-bind-html="result.description"></div>
+        <div ng-if="!matchClass && result.description && result.description != ''" class="angucomplete-description">{{result.description}}</div>
+      </div>
+
+    </div>
+  </div>
+</script>
