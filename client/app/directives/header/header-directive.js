@@ -19,6 +19,9 @@ angular.module('buiiltApp')
             authService.getCurrentUser().$promise
               .then(function(res) {
                 $rootScope.user = res;
+                if ($state.current.name == 'dashboard' && ! res.emailVerified) {
+                  Materialize.toast('You must confirm your email to hide this message!', 10000,'rounded');
+                }
                 $scope.isLeader = $scope.user.team.role == 'admin';
                 authService.getCurrentTeam().$promise
                   .then(function(res) {
@@ -59,6 +62,7 @@ angular.module('buiiltApp')
         $scope.currentProject = $rootScope.currentProject;
         $rootScope.currentUser = $scope.user;
         $rootScope.currentTeam = $scope.currentTeam;
+
         if ($scope.currentProject && !_.find($scope.currentTeam.project,{_id : $scope.currentProject._id}))
         {
           $state.go('team.manager');

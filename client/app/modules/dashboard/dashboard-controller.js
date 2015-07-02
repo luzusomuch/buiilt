@@ -1,6 +1,5 @@
 angular.module('buiiltApp')
-  .controller('DashboardCtrl', function($scope,$state, $timeout, $q, userService, $rootScope,myFiles,myTasks,myThreads,taskService,messageService,notificationService) {
-    $scope.currentUser = userService.get();
+  .controller('DashboardCtrl', function($scope,$state, $timeout, $q, userService, $rootScope,myFiles,myTasks,myThreads,authService,taskService,messageService,notificationService) {
     $scope.currentProject = $rootScope.currentProject;
     $scope.myTasks = myTasks;
     _.forEach($scope.myTasks,function(task) {

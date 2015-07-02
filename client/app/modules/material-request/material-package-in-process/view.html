@@ -13,8 +13,8 @@
            <li ng-if="currentTeam.type == 'supplier'"><a class="modal-trigger" href="#attachInvoice">Attach Invoice</a></li>
            <li><a class="modal-trigger" href="#modal_attachDocument">Attach Document</a></li>
            <div class="divider"  ng-if="isLeader"></div>
-           <li><a class="modal-trigger" ng-if="isLeader && !materialRequest.isCompleted" href="#modal_complete">Mark as complete</a></li>
-           <li><a class="modal-trigger" ng-if="isLeader && materialRequest.isCompleted" href="#modal_complete">Mark as in progress</a></li>
+           <li><a class="modal-trigger" ng-if="isLeader && currentTeam.type =='builder' && !materialRequest.isCompleted" href="#modal_complete">Mark as complete</a></li>
+           <li><a class="modal-trigger" ng-if="isLeader && currentTeam.type =='builder' && materialRequest.isCompleted" href="#modal_complete">Mark as in progress</a></li>
          </ul>
    </div>
 </div>

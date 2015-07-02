@@ -72,19 +72,17 @@ exports.create = function (req, res, next) {
         if (invite.type == 'team-invite') {
           var update = {
             "member.$._id" : newUser._id,
-            "member.$.status" : (invite.accept) ? 'Active' : 'Reject'
+            "member.$.status" : 'Active'
           };
           Team.update({_id : invite.element._id,'member.email' : req.body.email},{'$set' : update,'$unset' : {'member.$.email' : 1}},function(err) {
             if (err) {
               return res.send(500, err);
             }
             newUser.emailVerified = true;
-            if (invite.accept) {
-              newUser.team = {
-                _id : invite.element._id,
-                role : 'member'
-              }
-            }
+            newUser.team = {
+              _id : invite.element._id,
+              role : 'member'
+            };
             newUser.save(function() {
               InviteToken.remove({_id : invite._id},function(err) {
                 if (err) {
@@ -98,7 +96,7 @@ exports.create = function (req, res, next) {
         }
       }
       else {
-        return res.json({token: token,emailVerified : false});
+        return res.json({token: token,emailVerified : true});
       }
     });
   }));

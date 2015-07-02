@@ -19,9 +19,9 @@ exports.setup = function (User, config) {
           return done(null, false, { message: 'This password is not correct.' });
         }
         //verify email
-        if (!user.emailVerified) {
-          return done(null, false, { message: 'This email is not verified.' });
-        }
+        //if (!user.emailVerified) {
+        //  return done(null, false, { message: 'This email is not verified.' });
+        //}
         return done(null, user);
       });
     }
