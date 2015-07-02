@@ -55,11 +55,12 @@ angular.module('buiiltApp')
             $scope.member.email = {};
           }
       } else {
-        if (!(_.find($scope.member.emails,{email : $scope.textString}))) {
-          $scope.member.emails.push({email: $scope.textString});
-          $scope.team.emails.push({email: $scope.textString});
-         // $scope.member.email = {};
-        }
+        if ($scope.textString)
+          if (!(_.find($scope.member.emails,{email : $scope.textString}))) {
+            $scope.member.emails.push({email: $scope.textString});
+            $scope.team.emails.push({email: $scope.textString});
+           // $scope.member.email = {};
+          }
       }
       $scope.$broadcast('angucomplete-alt:clearInput');
     };
