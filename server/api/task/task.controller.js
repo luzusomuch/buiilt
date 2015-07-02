@@ -58,6 +58,7 @@ exports.myTask = function(req,res) {
   var user = req.user;
   var result = [];
   Task.find({$or : [{'user' : user._id}, {assignees : user._id}],completed : false})
+    .sort({'dueDate' : -1})
     .populate('assignees')
     .populate('user')
 

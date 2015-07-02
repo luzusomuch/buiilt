@@ -1,8 +1,12 @@
 angular.module('buiiltApp')
-  .controller('DashboardCtrl', function($scope,$state, $timeout, $q, userService, $rootScope,myFiles,myTasks,myThreads,taskService,messageService) {
+  .controller('DashboardCtrl', function($scope,$state, $timeout, $q, userService, $rootScope,myFiles,myTasks,myThreads,taskService,messageService,notificationService) {
     $scope.currentUser = userService.get();
     $scope.currentProject = $rootScope.currentProject;
     $scope.myTasks = myTasks;
+    _.forEach($scope.myTasks,function(task) {
+      task.dateEnd = new Date(task.dateEnd);
+    });
+    console.log($scope.temp);
     $scope.myThreads = myThreads;
     $scope.myFiles = myFiles;
     $scope.currentList = 'tasks';
@@ -111,19 +115,20 @@ angular.module('buiiltApp')
     };
 
     $scope.showTask = function(task) {
-      console.log('show');
       $scope.isShow = true;
       $scope.available = [];
       getAvailableAssignee(task.package,task.type);
+      console.log($scope.available);
       _.forEach(task.assignees,function(item) {
-        item.canRevoke = (!_.find($scope.available,{_id : item._id}))
+        item.canRevoke = (_.find($scope.available,{_id : item._id}));
         _.remove($scope.available,{_id : item._id});
       });
     };
 
     $scope.editTask = function(task) {
-      console.log('edit');
       $scope.isShow = false;
+      $scope.task = task;
+      console.log($scope.task.assignees.length);
     };
 
 
@@ -145,6 +150,20 @@ angular.module('buiiltApp')
         $(messages[_index]).scrollTop(value)
     });
 
+    //Assign people to task
+    $scope.assign = function(staff,index) {
+      staff.canRevoke = true;
+      $scope.task.assignees.push(staff);
+      console.log($scope.task.assignees.length);
+      $scope.available.splice(index,1);
+    };
+
+    //Revoke people to task
+    $scope.revoke = function(assignee,index) {
+      $scope.available.push(assignee);
+      $scope.task.assignees.splice(index,1);
+    };
+
     $scope.complete = function(task,index) {
       task.completed = true;
       task.completedBy = $scope.currentUser._id;
@@ -161,6 +180,15 @@ angular.module('buiiltApp')
 
         })
     };
+
+    $scope.saveTask = function(form) {
+      if (form.$valid) {
+        taskService.update({id : $scope.task._id, type : $scope.task.type},$scope.task).$promise
+          .then(function(res) {
+            $scope.isShow = true;
+          })
+      }
+    }
 
     $scope.sendMessage = function(form) {
       $scope.messageFormSubmitted = true;
@@ -189,5 +217,5 @@ angular.module('buiiltApp')
         })
 
     };
-    console.log(myThreads)
+    console.log(myTasks);
 });

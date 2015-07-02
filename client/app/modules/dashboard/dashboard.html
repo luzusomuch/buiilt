@@ -41,43 +41,56 @@
            class="btn-flat secondary-content new badge" style="font-size: 12px;">
           Go to Task
         </a>
-        <button type="button" ng-click="editTask(task)" class="btn-flat secondary-content" style="font-size: 12px;">
+        <button type="button" ng-if="isShow" ng-click="editTask(task);$event.stopPropagation()" class="btn-flat secondary-content" style="font-size: 12px;">
           Edit
         </button>
       </div>
       <div class="collapsible-body" style="display: none;">
-        <div class="row">
-          <div class="input-field col s10 offset-s1">
-            <input id="task_description" value="{{task.name}}" type="text" class="validate" style="margin-bottom: -20px" ng-disabled="isShow">
-          </div>
-        </div>
-
-        <div class="row container current-assign">
-          <p style="">Current Assignee's:</p>
-          <div class="card col"  ng-if="!isShow"  style="padding: 5px; margin-left: 10px" ng-repeat="assignee in task.assignees" ng-class="{'admin' : assignee.team.role == 'admin'}">
-            {{assignee.email}} <span ng-if="assignee.canRevoke"><a href="#!" ng-click="revoke(assignee,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
-          </div>
-          <div class="card col"  ng-if="isShow"  style="padding: 5px; margin-left: 10px" ng-repeat="assignee in task.assignees" ng-class="{'admin' : assignee.team.role == 'admin'}">
-            {{assignee.email}}
-          </div>
-        </div>
-
-        <div class="divider"></div>
-
-        <div class="row container available-assign"  ng-if="!isShow" >
-          <p style="">Available Assignee's:</p>
-          <a href="#!" ng-click="assign(staff,$index)" ng-repeat="staff in available">
-            <div class="card col" style="padding: 5px; margin-left: 10px"  ng-class="{'admin' : staff.team.role == 'admin'}">
-              {{staff.email}}
+        <form name="form" novalidate ng-submit="saveTask(form)">
+          <div class="row">
+            <div class="input-field col s10 offset-s1">
+              <input id="task_description" value="{{task.name}}" type="text" class="validate" style="margin-bottom: -20px" ng-model="task.name" ng-disabled="isShow">
             </div>
-          </a>
-        </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s10 offset-s1">
+              <input type="date"
+                     name="created"
+                     id="dueDate"
+                     ng-model="task.dateEnd"
+                     format="mm/dd/yyyy"
+                     ng-disabled="isShow"
+                />
+              <label for="dueDate" class="active">Due date</label>
+            </div>
+          </div>
 
-        <div class="row">
-          <button class="btn right" type="submit" name="action" ng-if="!isShow">Save
-          </button>
-        </div>
+          <div class="row container current-assign">
+            <p style="">Current Assignee's:</p>
+            <div class="card col"  ng-if="!isShow"  style="padding: 5px; margin-left: 10px" ng-repeat="assignee in task.assignees" ng-class="{'admin' : assignee.team.role == 'admin'}">
+              {{assignee.email}} <span ng-if="assignee.canRevoke"><a href="#!" ng-click="revoke(assignee,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
+            </div>
+            <div class="card col"  ng-if="isShow"  style="padding: 5px; margin-left: 10px" ng-repeat="assignee in task.assignees" ng-class="{'admin' : assignee.team.role == 'admin'}">
+              {{assignee.email}}
+            </div>
+          </div>
 
+          <div class="divider"></div>
+
+          <div class="row container available-assign"  ng-if="!isShow" >
+            <p style="">Available Assignee's:</p>
+            <a href="#!" ng-click="assign(staff,$index)" ng-repeat="staff in available">
+              <div class="card col" style="padding: 5px; margin-left: 10px"  ng-class="{'admin' : staff.team.role == 'admin'}">
+                {{staff.email}}
+              </div>
+            </a>
+          </div>
+
+          <div class="row">
+            <button class="btn right" type="submit" name="action" ng-if="!isShow">Save
+            </button>
+          </div>
+        </form>
       </div>
     </li>
   </ul>

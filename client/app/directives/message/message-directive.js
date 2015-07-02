@@ -130,8 +130,7 @@ angular.module('buiiltApp')
 
           $timeout(getMessage,3000);
 
-          $scope.$watch('scrollHeight',function(newVal) {
-            console.log(newVal);
+          $scope.$watch('scrollHeight',function(newVal) {;
             if (newVal)
               $('#messages').scrollTop($('#messages')[0].scrollHeight)
           })
