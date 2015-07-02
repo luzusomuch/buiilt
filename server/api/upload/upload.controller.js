@@ -84,7 +84,8 @@ exports.upload = function(req, res){
                                                         fromUser: req.user._id,
                                                         toUser: leader,
                                                         element: {file: saved, 
-                                                            uploadIn: builderPackage},
+                                                            uploadIn: builderPackage,
+                                                            projectId: builderPackage.project},
                                                         referenceTo: "DocumentInProject",
                                                         type: 'uploadNewDocumentVersion'
                                                     });
@@ -155,7 +156,8 @@ exports.upload = function(req, res){
                                                         fromUser: req.user._id,
                                                         toUser: leader,
                                                         element: {file: saved, 
-                                                            uploadIn: builderPackage},
+                                                            uploadIn: builderPackage,
+                                                            projectId: builderPackage.project},
                                                         referenceTo: "DocumentInProject",
                                                         type: 'uploadDocument'
                                                     });
@@ -254,7 +256,8 @@ exports.uploadInPackge = function(req, res){
                                             fromUser: req.user._id,
                                             toUser: leader,
                                             element: {file: saved,
-                                                uploadIn: contractorPackage},
+                                                uploadIn: contractorPackage,
+                                                projectId: contractorPackage.project},
                                             referenceTo: "DocumentContractorPackage",
                                             type: 'uploadDocument'
                                         });
@@ -273,7 +276,8 @@ exports.uploadInPackge = function(req, res){
                                             fromUser: req.user._id,
                                             toUser: leader,
                                             element: {file:saved,
-                                                uploadIn: materialPackage},
+                                                uploadIn: materialPackage,
+                                                projectId: materialPackage.project},
                                             referenceTo: "DocumentMaterialPackage",
                                             type: 'uploadDocument'
                                         });
@@ -291,7 +295,8 @@ exports.uploadInPackge = function(req, res){
                                             fromUser: req.user._id,
                                             toUser: leader,
                                             element: {file:saved,
-                                                uploadIn: staffPackage},
+                                                uploadIn: staffPackage,
+                                                projectId: staffPackage.project},
                                             referenceTo: "DocumentStaffPackage",
                                             type: 'uploadDocument'
                                         });
@@ -308,7 +313,8 @@ exports.uploadInPackge = function(req, res){
                                             fromUser: req.user._id,
                                             toUser: leader,
                                             element: {file:saved,
-                                                uploadIn: builderPackage},
+                                                uploadIn: builderPackage,
+                                                projectId: builderPackage.project},
                                             referenceTo: "DocumentBuilderPackage",
                                             type: 'uploadDocument'
                                         });

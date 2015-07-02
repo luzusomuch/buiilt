@@ -19,12 +19,15 @@ angular.module('buiiltApp').config(function($stateProvider) {
           return messageService.myThread().$promise
         }
       ],
-      myFiles : [
-        'notificationService',
-        function(notificationService) {
-         return notificationService.getMyFile().$promise
-        }
-      ]
+      // myFiles : [
+      //   'notificationService',
+      //   function(notificationService, $stateParams) {
+      //    return notificationService.getMyFile({'id': stateParams.id}).$promise
+      //   }
+      // ],
+      myFiles: function($stateParams, notificationService){
+        return notificationService.getMyFile({'id':$stateParams.id}).$promise;
+      }
     }
   });
 });

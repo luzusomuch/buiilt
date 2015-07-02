@@ -44,7 +44,8 @@ angular.module('buiiltApp')
         getMyFile: {
           method: 'GET',
           params: {
-            action: 'me'
+            id: 'id',
+            action: 'my-file'
           },
           isArray: true
         }

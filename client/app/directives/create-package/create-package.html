@@ -170,12 +170,12 @@
                                     input-class="col s12"></angucomplete-alt>
                 </div>
                 <div class="input-field col s3">
-                  <input id="phone_number" ng-model="newPhoneNumber" type="number" name="phoneNumber" class="validate">
+                  <input id="phone_number" ng-model="newPhoneNumber" type="number" name="phoneNumber" class="validate" required>
                   <label for="phone_number">Phone Number</label>
-                  <p class="validate-message" ng-if="contractorForm.phoneNumber.$valid == false">Please input number</p>
+                  <p class="validate-message" ng-if="!contractorForm.phoneNumber.$valid">Please input number</p>
                 </div>
                 <div class="valign col s2">
-                  <a ng-if="contractorForm.phoneNumber.$valid == true" href="#" ng-click="contractorAddUser()" class="btn" style="margin-top: 28px">Add</a>
+                  <a href="#" ng-disabled="contractorForm.phoneNumber.$invalid || newPhoneNumber == ''" ng-click="contractorAddUser()" class="btn" style="margin-top: 28px">Add</a>
                   <!-- <button class="btn" type="submit" ng-submit="addUser()" name="action" style="margin-top: 28px">Add</button> -->
                 </div>
               </div>
