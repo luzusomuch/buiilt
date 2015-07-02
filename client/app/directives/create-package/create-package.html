@@ -171,11 +171,10 @@
                 </div>
                 <div class="input-field col s3">
                   <input id="phone_number" ng-model="newPhoneNumber" type="number" name="phoneNumber" class="validate" required>
-                  <label for="phone_number">Phone Number</label>
-                  <p class="validate-message" ng-if="!contractorForm.phoneNumber.$valid">Please input number</p>
+                  <label for="phone_number">Phone number</label>
                 </div>
                 <div class="valign col s2">
-                  <a href="#" ng-disabled="contractorForm.phoneNumber.$invalid || newPhoneNumber == ''" ng-click="contractorAddUser()" class="btn" style="margin-top: 28px">Add</a>
+                  <a href="#" ng-click="contractorAddUser()" class="btn" style="margin-top: 28px">Add</a>
                   <!-- <button class="btn" type="submit" ng-submit="addUser()" name="action" style="margin-top: 28px">Add</button> -->
                 </div>
               </div>
@@ -316,11 +315,10 @@
                 </div>
                 <div class="input-field col s3">
                   <input id="phone_number" type="number" name="phoneNumber" class="validate" ng-model="newPhoneNumber">
-                  <label for="phone_number">Phone Number</label>
-                  <p class="validate-message" ng-if="materialForm.phoneNumber.$valid == false">Please input number</p>
+                  <label for="phone_number">Phone Number</label>                  
                 </div>
                 <div class="valign col s2">
-                  <a ng-if="materialForm.phoneNumber.$valid == true" name="action" class="btn" style="margin-top:28px;" ng-click="addNewSupplier()">Add</a>
+                  <a name="action" class="btn" style="margin-top:28px;" ng-click="addNewSupplier()">Add</a>
                 </div>
               </div>
             </li>
