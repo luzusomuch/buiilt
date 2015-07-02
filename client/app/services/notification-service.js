@@ -19,6 +19,12 @@ angular.module('buiiltApp')
           method : 'GET',
           isArray : true
         },
+        read : {
+          method : 'PUT',
+          params : {
+            action : 'dashboard-read'
+          }
+        },
         markAsRead : {
           method : 'PUT',
           params : {

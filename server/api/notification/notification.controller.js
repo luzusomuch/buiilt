@@ -60,6 +60,16 @@ exports.update = function(req,res) {
   })
 };
 
+exports.dashboardRead = function(req,res) {
+  var id= new require('mongoose').Types.ObjectId(req.params.id);
+  Notification.update({'element._id': id},{unread : false},{multi : true},function(err) {
+    if (err) {
+      return res.send(500)
+    }
+    return res.json(true);
+  });
+};
+
 exports.allRead = function(req,res) {
   var user = req.user;
   Notification.update({toUser: user._id},{unread : false},{multi : true},function(err) {
