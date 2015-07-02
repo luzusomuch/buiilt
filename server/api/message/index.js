@@ -12,6 +12,6 @@ router.post('/:id/:type/message', auth.isAuthenticated(), controller.thread, con
 router.put('/:id/:type', auth.isAuthenticated(), controller.thread, controller.update);
 router.get('/:id/:type', auth.isAuthenticated(), controller.package, controller.getMessages);
 router.get('/:id/:type/one', auth.isAuthenticated(), controller.thread, controller.getOne);
-router.get('/me', auth.isAuthenticated(), controller.myThread);
+router.get('/:id/dashboard/me', auth.isAuthenticated(),controller.project, controller.myThread);
 
 module.exports = router;

@@ -8,15 +8,15 @@ angular.module('buiiltApp').config(function($stateProvider) {
     authenticate : true,
     resolve : {
       myTasks : [
-        'taskService',
-        function(taskService) {
-         return taskService.myTask().$promise
+        'taskService','$stateParams',
+        function(taskService,$stateParams) {
+         return taskService.myTask({id : $stateParams.id}).$promise
         }
       ],
       myThreads : [
-        'messageService',
-        function(messageService) {
-          return messageService.myThread().$promise
+        'messageService','$stateParams',
+        function(messageService,$stateParams) {
+          return messageService.myThread({id : $stateParams.id}).$promise
         }
       ],
       // myFiles : [

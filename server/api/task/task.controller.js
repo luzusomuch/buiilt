@@ -6,7 +6,8 @@ var StaffPackage = require('./../../models/staffPackage.model'),
     BuilderPackage = require('./../../models/builderPackage.model'),
     ContractorPackage = require('./../../models/contractorPackage.model'),
     MaterialPackage = require('./../../models/materialPackage.model'),
-    Notification = require('./../../models/notification.model');
+    Notification = require('./../../models/notification.model'),
+    Project = require('./../../models/project.model');
 var TaskValidator = require('./../../validators/task');
 var errorsHelper = require('../../components/helpers/errors');
 var _ = require('lodash');
@@ -33,6 +34,16 @@ var getPackage = function(type) {
   return _package;
 };
 
+exports.project = function(req,res,next) {
+  Project.findById(req.params.id,function(err,project) {
+    if (err || !project) {
+      return res.send(500,err);
+    }
+    req.project = project;
+    next();
+  })
+};
+
 exports.package = function(req,res,next) {
   var _package = getPackage(req.params.type);
   _package.findById(req.params.id,function(err,aPackage) {
@@ -56,8 +67,9 @@ exports.task = function(req,res,next) {
 
 exports.myTask = function(req,res) {
   var user = req.user;
+  var project = req.project;
   var result = [];
-  Task.find({$or : [{'user' : user._id}, {assignees : user._id}],completed : false})
+  Task.find({$or : [{'user' : user._id}, {assignees : user._id}],project : project._id,completed : false})
     .sort({'dueDate' : -1})
     .populate('assignees')
     .populate('user')

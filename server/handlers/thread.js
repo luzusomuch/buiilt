@@ -82,8 +82,12 @@ EventBus.onSeries('Thread.Updated', function(thread, next) {
 });
 
 EventBus.onSeries('Thread.NewMessage', function(thread, next) {
+  var owners = thread.users;
+  owners.push(thread.owner);
+  var index = _.findIndex(owners,thread.message.user._id);
+  owners.splice(index,1);
   var params = {
-    owners : thread.users,
+    owners : owners,
     fromUser : thread.message.user,
     element : thread,
     referenceTo : 'thread',

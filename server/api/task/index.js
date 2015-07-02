@@ -10,6 +10,6 @@ var router = express.Router();
 router.post('/:id/:type', auth.isAuthenticated(), controller.package, controller.create);
 router.put('/:id/:type', auth.isAuthenticated(), controller.task, controller.update);
 router.get('/:id/:type', auth.isAuthenticated(), controller.package, controller.getTask);
-router.get('/me', auth.isAuthenticated(), controller.myTask);
+router.get('/:id/dashboard/me', auth.isAuthenticated(),controller.project, controller.myTask);
 
 module.exports = router;

@@ -13,7 +13,8 @@ angular.module('buiiltApp')
           method : 'GET',
           isArray : true,
           params : {
-            id : 'me'
+            type : 'dashboard',
+            action : 'me'
           }
         },
         getOne : {

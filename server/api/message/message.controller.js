@@ -6,7 +6,8 @@ var StaffPackage = require('./../../models/staffPackage.model'),
   BuilderPackage = require('./../../models/builderPackage.model'),
   ContractorPackage = require('./../../models/contractorPackage.model'),
   MaterialPackage = require('./../../models/materialPackage.model'),
-  Notification = require('./../../models/notification.model');
+  Notification = require('./../../models/notification.model'),
+  Project = require('./../../models/project.model');
 var ThreadValidator = require('./../../validators/thread');
 var errorsHelper = require('../../components/helpers/errors');
 var _ = require('lodash');
@@ -31,6 +32,16 @@ var getPackage = function(type) {
       break;
   }
   return _package;
+};
+
+exports.project = function(req,res,next) {
+  Project.findById(req.params.id,function(err,project) {
+    if (err || !project) {
+      return res.send(500,err);
+    }
+    req.project = project;
+    next();
+  })
 };
 
 exports.package = function(req,res,next) {
@@ -59,13 +70,14 @@ exports.getOne = function(req,res) {
   Thread.populate(thread,{path : 'messages.user'},function(err,thread) {
     return res.json(thread);
   })
-}
+};
 
 exports.myThread = function(req,res) {
   var user = req.user;
+  var project = req.project;
   var result = [];
   var query = Notification.find(
-    {$or : [{'element.owner' : user._id},{'element.users' : user._id}],unread : true, referenceTo : 'thread'}
+    {owner : user._id,unread : true, referenceTo : 'thread','element.project' : project._id }
   );
   query.distinct('element._id');
 

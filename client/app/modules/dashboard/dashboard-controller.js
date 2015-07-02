@@ -5,7 +5,6 @@ angular.module('buiiltApp')
     _.forEach($scope.myTasks,function(task) {
       task.dateEnd = new Date(task.dateEnd);
     });
-    console.log($scope.temp);
     $scope.myThreads = myThreads;
     $scope.myFiles = myFiles;
     $scope.currentList = 'tasks';
