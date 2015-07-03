@@ -31,6 +31,9 @@ EventBus.onSeries('BuilderPackage.Updated', function(builderPackage, next) {
         next();
       }
       else {
+        if (!builderPackage.to.team) {
+          return next();
+        }
         owners = _.union(builderPackage.owner.leader, builderPackage.to.team.leader);
         var params = {
           owners: owners,
@@ -53,6 +56,9 @@ EventBus.onSeries('BuilderPackage.Updated', function(builderPackage, next) {
         next();
       }
       else {
+        if (!builderPackage.to.team) {
+          return next();
+        }
         owners = _.union(builderPackage.owner.leader, builderPackage.to.team.leader);
         var params = {
           owners: owners,
@@ -74,6 +80,9 @@ EventBus.onSeries('BuilderPackage.Updated', function(builderPackage, next) {
       if (err || !builderPackage) {
         next();
       }else {
+        if (!builderPackage.to.team) {
+          return next();
+        }
         owners = _.union(builderPackage.owner.leader, builderPackage.to.team.leader);
         var params = {
           owners: owners,

@@ -30,7 +30,7 @@ angular.module('buiiltApp').directive('addon', function(){
             };
 
             $scope.showVariations = function() {
-                // console.log('dasdasdsad');
+                console.log('dasdasdsad');
                 // console.log($scope.package);
                 $scope.package = $scope.package;
                 $scope.allItemsText = 'Variations';

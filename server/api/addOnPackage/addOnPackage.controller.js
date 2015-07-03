@@ -142,12 +142,12 @@ exports.sendVariation = function(req, res) {
                     'to._id': contractorPackage.winnerTeam._id
                 });
                 variation.save(function(err,saved){
-                    if (err) {console.log(err);return res.send(500,err);}
+                    if (err) {return res.send(500,err);}
                     contractorPackage.variations.push(saved._id);
                     contractorPackage.markModified('sendVariation');
                     contractorPackage._editUser = req.user;
                     contractorPackage.save(function(err, savedContractorPacakge){
-                        if (err) {console.log(err);return res.send(500,err);}
+                        if (err) {return res.send(500,err);}
                         else {
                             return res.json(saved);
                         }

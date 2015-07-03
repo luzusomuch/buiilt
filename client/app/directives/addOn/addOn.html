@@ -5,7 +5,7 @@
        <div class="col s6">
          <a class='dropdown-button btn-flat' style="margin-top: 15px" href='#' data-gutter="15" data-activates='itemFilter' dropdown data-beloworigin="true">{{(allItemsText) ? allItemsText : 'All items'}}<i class="mdi-navigation-arrow-drop-down"></i></a>
          <ul id='itemFilter' class='dropdown-content' style="margin-top: 15px">
-          <li ng-if="type != 'variation'">
+          <li ng-show="type != 'variation'">
             <a ng-click="showVariations(); hideAll = true; showVariation = true; showDocument = false; showDefect = false; showDocument = false; showInvoice = false;">VARIATIONS</a>
           </li>
           <li>
@@ -63,10 +63,11 @@
   <li class="collection-item" ng-repeat="file in documents" ng-if="documents">
     <a class="modal-trigger" href="#modal-file-{{file._id}}">Document - {{file.title}}</a></li>
   </div>
-  <div class="scrollbar-dynamic" style="height: 300px" ng-show="showVariation" ng-if="package.variations">
-    <!-- {{package.variations}} dasdasdasdasasdasdasd -->
+
+
+  <div class="scrollbar-dynamic" style="height: 300px" ng-show="showVariation" ng-if="package">
    <li class="collection-item" ng-repeat="variation in package.variations | filter:{isCompleted:false, isCancel: false} track by $index">
-    <a <a href="#" ng-click="goToVariation(variation)">>asdasdadsad{{variation.name}}</a></li>
+    <a <a href="#" ng-click="goToVariation(variation)">{{variation.name}}</a></li>
   </div>
   <div class="scrollbar-dynamic" style="height: 300px" ng-show="showDefect" ng-if="data">
    <li class="collection-item" ng-repeat="defect in data.defects">
