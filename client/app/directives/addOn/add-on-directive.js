@@ -7,8 +7,9 @@ angular.module('buiiltApp').directive('addon', function(){
             package: '=',
             type: '@'
         },
-        controller: function($scope,$window, $stateParams, authService,addOnPackageService, FileUploader, $cookieStore, fileService, contractorRequestService, materialRequestService) {
+        controller: function($scope, $state,$window, $stateParams, authService,addOnPackageService, FileUploader, $cookieStore, fileService, contractorRequestService, materialRequestService, variationRequestService) {
             $scope.allItemsText = 'All items';
+            console.log($scope.type);
             authService.getCurrentUser().$promise.then(function(data){
                 $scope.currentUser = data;
                 $scope.isStaff = (_.find($scope.package.staffs,{_id: data._id})) ? true: false;
@@ -48,6 +49,22 @@ angular.module('buiiltApp').directive('addon', function(){
                 fileService.downloadFile({id: value})
                 .$promise.then(function(data){
                     $window.open(data.url);
+                });
+            };
+
+            $scope.goToVariation = function(value) {
+                variationRequestService.findOne({id: value._id}).$promise.then(function(data){
+                    if (!data.to.isSelect) {
+                        if ($scope.currentTeam.type == 'builder') {
+                            $state.go('variationRequest.viewRequest',{id: data.project,variationId: data._id});
+                        }
+                        else {
+                            $state.go('variationRequest.sendQuote',{id: data.project,variationId: data._id});
+                        }
+                    }
+                    else {
+                        $state.go('variationRequest.inProcess',{id: data.project,variationId: data._id});
+                    }
                 });
             };
 

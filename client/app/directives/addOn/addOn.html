@@ -5,7 +5,7 @@
        <div class="col s6">
          <a class='dropdown-button btn-flat' style="margin-top: 15px" href='#' data-gutter="15" data-activates='itemFilter' dropdown data-beloworigin="true">{{(allItemsText) ? allItemsText : 'All items'}}<i class="mdi-navigation-arrow-drop-down"></i></a>
          <ul id='itemFilter' class='dropdown-content' style="margin-top: 15px">
-          <li>
+          <li ng-if="type != 'variation'">
             <a ng-click="showVariations(); hideAll = true; showVariation = true; showDocument = false; showDefect = false; showDocument = false; showInvoice = false;">VARIATIONS</a>
           </li>
           <li>
@@ -30,7 +30,7 @@
          <li><a class="modal-trigger" href="#modal_attachDocument">Attach Document</a></li>
        </ul>
 
-       <ul id='relatedActions' class='dropdown-content' style="margin-top: 15px" ng-if="type == 'contractor' || type == 'material'">
+       <ul id='relatedActions' class='dropdown-content' style="margin-top: 15px" ng-if="type == 'contractor' || type == 'material' || type == 'variation'">
          <li ng-if="type == 'contractor'">
           <a class="modal-trigger" href="#modal_attachVariation">Attach Variation</a>
         </li>
@@ -53,7 +53,7 @@
 <div class="scrollbar-dynamic" style="height: 300px;" ng-hide="hideAll">
 
   <li class="collection-item" ng-repeat="item in package.variations" ng-if="package.variations">
-    <a class="modal-trigger" href="#modal-variation-{{item._id}}">Variation - {{item.title}}</a>
+    <a href="#" ng-click="goToVariation(item)">Variation - {{item.title}}</a>
   </li>
   <li class="collection-item" ng-repeat="item in package.defects" ng-if="package.defects">
     <a class="modal-trigger" href="#modal-defect-{{item._id}}">Defect - {{item.title}}</a>
@@ -67,7 +67,7 @@
 
   <div class="scrollbar-dynamic" style="height: 300px" ng-show="showVariation" ng-if="data">
    <li class="collection-item" ng-repeat="variation in data.variations">
-    <a class="modal-trigger" href="#modal-variation-{{variation._id}}">{{variation.title}}</a></li>
+    <a <a href="#" ng-click="goToVariation(variation)">>{{variation.title}}</a></li>
   </div>
   <div class="scrollbar-dynamic" style="height: 300px" ng-show="showDefect" ng-if="data">
    <li class="collection-item" ng-repeat="defect in data.defects">

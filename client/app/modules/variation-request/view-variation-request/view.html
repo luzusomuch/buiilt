@@ -1,0 +1,141 @@
+<div class="row" style="margin-top: 18px">
+  <h5 class="col s8">Variation{{variationRequest.title}} in Tender</h5>
+  <div class="col s4" style="margin-top:15px">
+   <a class='dropdown-button btn-flat right tooltipped' dropdown data-position="top" data-delay="1" data-tooltip="Attach..." data-gutter="-16" href='#'
+      data-activates='itemActions' dropdown data-beloworigin="true" data-constrainwidth="false" >
+    <i class="mdi-navigation-more-vert"></i>
+  </a>
+
+  <!-- Dropdown Structure -->
+  <ul id='itemActions' class='dropdown-content left'>
+   <li><a class="modal-trigger" href="#modal_attachAddendum">Attach Addendum</a></li>
+   <li><div class="divider"></div></li>
+   <li><a ng-click="cancelPackage()">Cancel Package</a></li>
+ </ul>
+</div>
+
+<div class="row">
+ <p class="col s12">{{variationRequest.description}}</p>
+</div>
+
+<div class="row">
+  <div class="col s12">
+    <ul class="collapsible popout" data-collapsible="accordion">
+      <li>
+        <div class="collapsible-header">
+          Tenderer #{{$index+1}} - {{toContractor.to._id.name}}
+          <a ng-if="variationRequest.to.quote" class="btn-flat btn-flat secondary-content modal-trigger" href='#modal_viewQuote_{{variationRequest._id}}' style="font-size:12px; margin-top: 8px">View Quote</a>
+        </div>
+        <div class="collapsible-body">
+          <div class="row">
+            <div class="col s5">
+              <div>Total: {{variationRequest.to.quote.total}}</div>
+              <div ng-if="variationRequest.to.quote">
+                <a class="btn-flat btn-flat modal-trigger" href="#modal_viewQuote_{{variationRequest.to.quote._id}}">View quote</a>
+                <button ng-click="selectQuote(variationRequest._id)" class="btn-flat btn-flat valign">Select quote</button>
+                <button class="btn-flat btn-flat valign">Decline quote</button>
+              </div>
+            </div>
+            <div class="col s6">
+             <ul class="collection">
+               <div style="height: 300px; background-color: white;">
+                 <li class="collection-item" ng-repeat = "message in messages.messages">
+                   <div class="row valign-wrapper" style="margin-bottom: -5px" >
+                     <a href="#!" class="btn-flat col s1">
+                       <i class="mdi-toggle-radio-button-on valign center-align" ></i>
+                     </a>
+                     <p class="col s11 valign">{{message.message}}</p>
+                   </div>
+                 </li>
+               </div>
+               <div class="divider"></div>
+               <div class="col s12 card-footer" style="background-color: white">
+                 <div class="row">
+                   <form class="valign-wrapper" ng-submit="sendMessage(variationRequest.to._id._id)">
+                     <div class="input-field col s9">
+                       <textarea id="textarea1" class="materialize-textarea" ng-model="message.message"></textarea>
+                       <label for="textarea1">Textarea</label>
+                     </div>
+                     <div class="col s3">
+                       <button class="btn-flat btn-flat valign" type="submit" name="action">
+                         Send
+                       </button>
+                     </div>
+                   </form>
+                 </div>
+               </div>
+             </ul>
+           </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div id='modal_viewQuote_{{variationRequest.to.quote._id}}' class="modal modal-fixed-footer">
+    <div class="modal-content">
+      <h4>View Quote</h4>
+      <p>Total: <strong>{{variationRequest.to.quote.total}}</strong></p>
+      <p>{{variationRequest.to.quote.description}}</p>
+      <h6>Quote rate</h6>
+      <table>
+        <thead>
+          <th>#</th>
+          <th>Description</th>
+          <th>Rate</th>
+          <th>Quantity</th>
+          <th>Total</th>
+        </thead>
+        <tbody>
+          <tr ng-repeat="quoteRate in variationRequest.to.quote.quoteRate">
+            <td>{{$index +1}}</td>
+            <td>{{quoteRate.description}}</td>
+            <td>{{quoteRate.rate}}</td>
+            <td>{{quoteRate.quantity}}</td>
+            <td>{{quoteRate.total}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <hr>
+      <h6>Quote price</h6>
+      <table>
+        <thead>
+          <th>#</th>
+          <th>Description</th>
+          <th>Rate</th>
+          <th>Quantity</th>
+          <th>Total</th>
+        </thead>
+        <tbody>
+          <tr ng-repeat="quotePrice in variationRequest.to.quote.quotePrice">
+            <td>{{$index +1}}</td>
+            <td>{{quotePrice.description}}</td>
+            <td>{{quotePrice.price}}</td>
+            <td>{{quotePrice.quantity}}</td>
+            <td>{{quotePrice.total}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="modal-footer">
+      <a ng-click="selectQuote(variationRequest.to.quote._id)" class="modal-action modal-close waves-effect waves-green btn-flat ">Select this quote</a>
+      <a class="modal-action modal-close waves-effect waves-green btn-flat ">Decline</a>
+    </div>
+  </div>
+
+<div id="modal_cancelPackage" class="modal">
+  <div class="modal-content">
+   <div class="row">
+     <div class="col s12">
+       <h5>Confirm the Cancelation of variation {{variationRequest.title}}</h5>
+     </div>
+   </div>
+   <div class="divider"></div>
+   <div class="modal-footer">
+     <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel This Variation</a>
+     <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Go Back</a>
+   </div>
+ </div>  
+</div>
+<addendum package="variationRequest" type="variation"></addendum>
+

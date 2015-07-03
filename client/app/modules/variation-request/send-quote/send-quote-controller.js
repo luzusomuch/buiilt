@@ -1,19 +1,16 @@
 angular.module('buiiltApp')
-.controller('SendQuoteContractorPackageCtrl', function($scope, $window, $state, currentTeam, $stateParams, $cookieStore, authService, userService, contractorRequest, contractorRequestService,FileUploader, registryForContractorService) {
+.controller('SendQuoteVariationCtrl', function($scope, $window, $state, currentTeam, $stateParams, $cookieStore, authService, userService, variationRequest, variationRequestService,FileUploader, registryForContractorService) {
   /**
    * quote data
    */
   $scope.quoteRequest = {};
-  $scope.contractorRequest = contractorRequest;
+  $scope.variationRequest = variationRequest;
   $scope.currentTeam = currentTeam;
   $scope.currentUser = {};
   if ($cookieStore.get('token')) {
     $scope.currentUser = userService.get();
   }
 
-  $scope.formData = {
-      title: ''
-  };
   $scope.subTotalPrice = 0;
   $scope.subTotalRate = 0;
   $scope.user = {};
@@ -49,11 +46,9 @@ angular.module('buiiltApp')
 
   $scope.formData = {
     fileId: '',
-    date: new Date(),
     title: '',
     desc: '',
-    belongToType: '',
-    usersRelatedTo: []
+    belongToType: ''
   };
 
   $scope.safeApply = function (fn) {
@@ -68,7 +63,7 @@ angular.module('buiiltApp')
   };
 
   var uploader = $scope.uploader = new FileUploader({
-    url: 'api/uploads/'+ $stateParams.packageId + '/file-package',
+    url: 'api/uploads/'+ $stateParams.variationId + '/file-package',
     headers : {
       Authorization: 'Bearer ' + $cookieStore.get('token')
     },
@@ -100,6 +95,7 @@ angular.module('buiiltApp')
   uploader.onBeforeUploadItem = function (item) {
       $scope.formData._id = $scope.fileId;
       $scope.formData.title = item.title;
+      $scope.formData.belongToType = 'variation';
       item.formData.push($scope.formData);
   };
 
@@ -116,7 +112,7 @@ angular.module('buiiltApp')
       // $state.reload();
   };
 
-  contractorRequestService.getMessageForContractor({'id': $stateParams.packageId})
+  variationRequestService.getMessageForContractor({'id': $stateParams.variationId})
   .$promise.then(function(data) {
     $scope.messages = data;
   });
@@ -155,9 +151,10 @@ angular.module('buiiltApp')
     }
     else {
 
-      contractorRequestService.sendQuote({contractorRequest: $scope.contractorRequest,quoteRequest: $scope.quoteRequest, rate: $scope.lineWithRates, price: $scope.lineWithPrices}).$promise
+      variationRequestService.sendQuote({variationRequest: $scope.variationRequest,quoteRequest: $scope.quoteRequest, rate: $scope.lineWithRates, price: $scope.lineWithPrices}).$promise
         .then(function(data){
-        $scope.success = data;
+        $scope.lineWithPrices = [];
+        $scope.lineWithRates = [];
         // $state.go("team.manager");
       });
     }
@@ -184,7 +181,7 @@ angular.module('buiiltApp')
   };
 
   $scope.sendMessage = function() {
-    contractorRequestService.sendMessageToBuilder({id: $stateParams.packageId, team: $scope.currentTeam._id, message: $scope.message})
+    variationRequestService.sendMessageToBuilder({id: $stateParams.variationId, team: $scope.currentTeam._id, message: $scope.message})
     .$promise.then(function(data) {
       $scope.messages = data;
       $scope.message = {};

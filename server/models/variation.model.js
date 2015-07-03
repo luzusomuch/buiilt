@@ -6,33 +6,20 @@ var crypto = require('crypto');
 var okay = require('okay');
 var EventBus = require('./../components/EventBus');
 
-var ContractorPackageSchema = new Schema({
+var VariationSchema = new Schema({
   owner: {
     type: Schema.Types.ObjectId,
     ref: 'Team',
     required: true
   },
-  type: String,
   project: {
     type: Schema.Types.ObjectId,
     ref: 'Project',
     required: true
   },
-  packageInviteToken: String,
-  name: String,
-  descriptions: [String],
-  category: String,
-  addendums: [{
-    description: String,
-    addendumsScope: [{
-      description: String,
-      quantity: Number
-    }],
-    isHidden: {type: Boolean, default: false}
-  }],
-  variations : [{
-    _id:{type: Schema.Types.ObjectId, ref: 'Variation'},
-    title: String}],
+  type: String,
+  title: String,
+  description: String,
   defects : [{
     owner: {
       type: Schema.Types.ObjectId,
@@ -53,41 +40,22 @@ var ContractorPackageSchema = new Schema({
     },
     message: {type: String}
   }],
-  to: [{
+  to: {
     _id: {
       type: Schema.Types.ObjectId,
       ref: 'Team'
     },
-    email: {
-      type: String
-    },
-    phoneNumber: {
-      type: Number
-    },
-    quote: {type: Schema.Types.ObjectId, ref: 'QuoteRequest'}
-  }],
-  newInvitation: [{
-    _id: {
-      type: Schema.Types.ObjectId,
-      ref: 'Team'
-    },
-    email: {
-      type: String
-    },
-    phoneNumber: {
-      type: Number
-    }
-  }],
-  winnerTeam: {
-    _id: {
-      type: Schema.Types.ObjectId,
-      ref: 'Team'
-    }
+    quote: {type: Schema.Types.ObjectId, ref: 'QuoteRequest'},
+    isSelect: {type: Boolean, default: false}
   },
-  quote: {
-    type: Number,
-    // required: true
-  },
+  addendums: [{
+    description: String,
+    addendumsScope: [{
+      description: String,
+      quantity: Number
+    }],
+    isHidden: {type: Boolean, default: false}
+  }],
   invoices: [{
     owner: {type: Schema.Types.ObjectId, ref: 'User'},
     title: String,
@@ -118,11 +86,11 @@ var ContractorPackageSchema = new Schema({
 /**
  * Pre-save hook
  */
-ContractorPackageSchema.post( 'init', function() {
+VariationSchema.post( 'init', function() {
   this._original = this.toJSON();
 });
 
-ContractorPackageSchema
+VariationSchema
 .pre('save', function(next) {
   this._modifiedPaths = this.modifiedPaths();
   this.wasNew = this.isNew;
@@ -131,21 +99,14 @@ ContractorPackageSchema
   this.quote = this._quote;
   if (!this.isNew){
     this.updatedAt = new Date();
-  } else {
-    this.packageInviteToken = crypto.randomBytes(20).toString('hex');
   }
   next();
 });
 
-ContractorPackageSchema.post('save', function (doc) {
-  var evtName = this.wasNew ? 'ContractorPackage.Inserted' : 'ContractorPackage.Updated';
+VariationSchema.post('save', function (doc) {
+  var evtName = this.wasNew ? 'VariationSchema.Inserted' : 'VariationSchema.Updated';
   if (this._modifiedPaths) {
     doc._modifiedPaths = this._modifiedPaths
-  }
-  if (this._original) {
-    doc._oldContractor = this._original.to.slice(0);
-    doc._newInvitation = this._original.newInvitation.slice(0);
-    doc._oldAddendum = this._original.addendums.slice(0);
   }
   doc.ownerUser = this._ownerUser;
   doc.editUser = this._editUser;
@@ -153,4 +114,4 @@ ContractorPackageSchema.post('save', function (doc) {
   EventBus.emit(evtName, doc);
 });
 
-module.exports = mongoose.model('ContractorPackage', ContractorPackageSchema);
+module.exports = mongoose.model('Variation', VariationSchema);

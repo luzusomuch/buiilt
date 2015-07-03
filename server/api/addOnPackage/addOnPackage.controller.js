@@ -5,8 +5,10 @@ var MaterialPackage = require('./../../models/materialPackage.model');
 var PackageInvite = require('./../../models/packageInvite.model');
 var BuilderPackage = require('./../../models/builderPackage.model');
 var StaffPackage = require('./../../models/staffPackage.model');
+var Variation = require('./../../models/variation.model');
 var ValidateInvite = require('./../../models/validateInvite.model');
 var QuoteRequest = require('./../../models/quoteRequest.model');
+var Variation = require('./../../models/variation.model');
 var User = require('./../../models/user.model');
 var Team = require('./../../models/team.model');
 var _ = require('lodash');
@@ -98,6 +100,27 @@ exports.sendDefect = function(req, res) {
             }
         });
     }
+    else if (packageType == 'variation') {
+        Variation.findById(req.params.id, function(err, variation){
+            if (err) {return res.send(500,err);}
+            else {
+                variation.defects.push({
+                    owner: req.user._id,
+                    title: req.body.defect.title,
+                    location: req.body.defect.location,
+                    description: req.body.defect.description
+                });
+                variation.markModified('sendDefect');
+                variation._editUser = req.user;
+                variation.save(function(err, savedVariation){
+                    if (err) {return res.send(500,err);}
+                    else {
+                        return res.json(savedVariation);
+                    }
+                });
+            }
+        });
+    }
     else {
         return res.send(500);
     }
@@ -109,18 +132,25 @@ exports.sendVariation = function(req, res) {
         ContractorPackage.findById(req.params.id, function(err, contractorPackage){
             if (err) {return res.send(500,err);}
             else {
-                contractorPackage.variations.push({
-                    owner: req.user._id,
+                var variation = new Variation({
+                    owner: contractorPackage.owner,
+                    project: contractorPackage.project,
                     title: req.body.variation.title,
-                    description: req.body.variation.description
+                    description: req.body.variation.description,
+                    type: 'variation',
+                    'to._id': contractorPackage.winnerTeam._id
                 });
-                contractorPackage.markModified('sendVariation');
-                contractorPackage._editUser = req.user;
-                contractorPackage.save(function(err, savedContractorPacakge){
+                variation.save(function(err,saved){
                     if (err) {return res.send(500,err);}
-                    else {
-                        return res.json(savedContractorPacakge);
-                    }
+                    contractorPackage.variations.push({_id:saved._id,title:saved.title});
+                    contractorPackage.markModified('sendVariation');
+                    contractorPackage._editUser = req.user;
+                    contractorPackage.save(function(err, savedContractorPacakge){
+                        if (err) {return res.send(500,err);}
+                        else {
+                            return res.json(savedContractorPacakge);
+                        }
+                    });
                 });
             }
         });
@@ -420,6 +450,68 @@ exports.sendInvoice = function(req, res) {
             }
         });
     }
+    else if (packageType == 'material'){
+        Variation.findById(req.params.id, function(err, variation) {
+            if (err) {return res.send(500,err);}
+            else {
+                var quoteRate = [];
+                var quotePrice = [];
+                var subTotal = 0;
+                async.each(req.body.rate, function(rate, callback){
+                    if (rate !== null) {
+                        for (var i = 0; i < req.body.rate.length -1; i++) {
+                            quoteRate.push({
+                            description: rate.description[i],
+                            rate: rate.rate[i],
+                            quantity: rate.quantity[i],
+                            total: rate.rate[i] * rate.quantity[i]
+                        });
+                            subTotal += rate.rate[i] * rate.quantity[i];
+                        };
+                    }
+                    callback();
+                }, function(err) {
+                    if (err) {return res.send(500,err);}
+                    else {
+                      async.each(req.body.price, function(price, callback){
+                        if (price !== null) {
+                            for (var i = 0; i < req.body.price.length -1; i++) {
+                                quotePrice.push({
+                                    description: price.description[i],
+                                    price: price.price[i],
+                                    quantity: 1,
+                                    total: price.price[i]
+                                });
+                                subTotal += price.price[i] * 1;
+                            };
+                        }
+                        callback();
+                      }, function(err){
+                        if (err) {return res.send(500,err);}
+                        else {
+                            variation.invoices.push({
+                                owner: req.user._id,
+                                title: req.body.invoice.title,
+                                quoteRate: quoteRate,
+                                quotePrice: quotePrice,
+                                subTotal: subTotal,
+                                total: subTotal * 0.1 + subTotal
+                            });
+                            variation.markModified('sendInvoice');
+                            variation._editUser = req.user;
+                            variation.save(function(err, saved) {
+                                if (err) {return res.send(500,err);}
+                                else {
+                                    return res.json(200, saved);
+                                }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
     else {
         return res.send(500);
     }
@@ -473,6 +565,33 @@ exports.sendAddendum = function(req, res) {
                 materialPackage.markModified('sendAddendum');
                 materialPackage._editUser = req.user;
                 materialPackage.save(function(err, saved){
+                    if (err) {return res.send(500, err);}
+                    else {
+                        return res.json(200,saved);
+                    }
+                });
+            }
+        });
+    }
+    else if(packageType == 'variation') {
+        Variation.findById(req.body.id, function(err, variation) {
+            if (err) {return res.send(500,err)}
+            if (!variation) {return res.send(404,err)}
+            else {
+                var addendumsScope = [];
+                _.each(req.body.addendumScope, function(addendumScope) {
+                    addendumsScope.push({
+                        description: addendumScope.scopeDescription,
+                        quantity: addendumScope.quantity
+                    });
+                });
+                variation.addendums.push({
+                    description: req.body.description.description,
+                    addendumsScope: addendumsScope
+                });
+                variation.markModified('sendAddendum');
+                variation._editUser = req.user;
+                variation.save(function(err, saved){
                     if (err) {return res.send(500, err);}
                     else {
                         return res.json(200,saved);

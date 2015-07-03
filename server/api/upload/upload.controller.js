@@ -6,6 +6,7 @@ var BuilderPackage = require('./../../models/builderPackage.model');
 var ContractorPackage = require('./../../models/contractorPackage.model');
 var MaterialPackage = require('./../../models/materialPackage.model');
 var StaffPackage = require('./../../models/staffPackage.model');
+var Variation = require('./../../models/variation.model');
 var File = require('./../../models/file.model');
 var Document = require('./../../models/document.model');
 var Notification = require('./../../models/notification.model');
@@ -227,6 +228,7 @@ exports.uploadInPackge = function(req, res){
     })
     .on('end', function() {
         if (uploadedFile && uploadedField) {
+            console.log(uploadedField,uploadedFile);
             var file = new File();
             file.title = uploadedField.title;
             file.name = uploadedFile.name;
@@ -298,6 +300,25 @@ exports.uploadInPackge = function(req, res){
                                                 uploadIn: staffPackage,
                                                 projectId: staffPackage.project},
                                             referenceTo: "DocumentStaffPackage",
+                                            type: 'uploadDocument'
+                                        });
+                                        notification.save(callback);
+                                    },cb);
+                                });
+                            }
+                            else if (saved.belongToType == 'variation') {
+                                Variation.findById(saved.belongTo).populate('owner').populate('to._id').exec(function(err, variation) {
+                                    if (err || !variation) {return cb();}
+                                    owners = _.union(variation.owner.leader, variation.to._id.leader);
+                                    async.each(owners, function(leader,callback){
+                                        var notification = new Notification({
+                                            owner: leader,
+                                            fromUser: req.user._id,
+                                            toUser: leader,
+                                            element: {file:saved,
+                                                uploadIn: variation,
+                                                projectId: variation.project},
+                                            referenceTo: "DocumentVariation",
                                             type: 'uploadDocument'
                                         });
                                         notification.save(callback);
