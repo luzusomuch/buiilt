@@ -51,9 +51,8 @@
 
 <div class="divider"></div>
 <div class="scrollbar-dynamic" style="height: 300px;" ng-hide="hideAll">
-
-  <li class="collection-item" ng-repeat="item in package.variations" ng-if="package.variations">
-    <a href="#" ng-click="goToVariation(item)">Variation - {{item.title}}</a>
+  <li class="collection-item" ng-repeat="item in package.variations | filter:{isCompleted:false, isCancel: false} track by $index" ng-if="package.variations">
+    <a href="#" ng-click="goToVariation(item)">Variation - {{item.name}}</a>
   </li>
   <li class="collection-item" ng-repeat="item in package.defects" ng-if="package.defects">
     <a class="modal-trigger" href="#modal-defect-{{item._id}}">Defect - {{item.title}}</a>
@@ -64,10 +63,11 @@
   <li class="collection-item" ng-repeat="file in documents" ng-if="documents">
     <a class="modal-trigger" href="#modal-file-{{file._id}}">Document - {{file.title}}</a></li>
   </div>
-
-  <div class="scrollbar-dynamic" style="height: 300px" ng-show="showVariation" ng-if="data">
-   <li class="collection-item" ng-repeat="variation in data.variations">
-    <a <a href="#" ng-click="goToVariation(variation)">>{{variation.title}}</a></li>
+  
+  <div class="scrollbar-dynamic" style="height: 300px" ng-show="showVariation">
+    <!-- {{package.variations}} dasdasdasdasasdasdasd -->
+   <li class="collection-item" ng-repeat="variation in package.variations | filter:{isCompleted:false, isCancel: false} track by $index">
+    <a <a href="#" ng-click="goToVariation(variation)">>asdasdadsad{{variation.name}}</a></li>
   </div>
   <div class="scrollbar-dynamic" style="height: 300px" ng-show="showDefect" ng-if="data">
    <li class="collection-item" ng-repeat="defect in data.defects">

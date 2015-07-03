@@ -78,11 +78,10 @@ angular.module('buiiltApp')
   //Cancel package
   $scope.cancelPackage = function() {
     if (confirm('Cancel this package?!')) {
-      variationRequestService.cancelPackage({id: $stateParams.packageId})
+      variationRequestService.cancelPackage({id: $stateParams.variationId})
       .$promise.then(function(data) {
-        // console.log($state.get());
-        $window.location.href = data.project + '/contractors';
-        // $state.go('^.contractors, {id: '+ data.project +'}');
+        $state.go('contractorRequest.contractorPackageInProcess',
+          {id:variationRequest.project, packageId: variationRequest.package});
       });
     }
   };

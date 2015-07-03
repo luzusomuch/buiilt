@@ -15,6 +15,7 @@ exports.findOne = function(req, res) {
       .populate('winnerTeam._id')
       .populate('owner')
       .populate('to.quote')
+      .populate('variations')
       .exec(function(err, contractorPackage) {
         if (err) {
           return res.send(500, err);

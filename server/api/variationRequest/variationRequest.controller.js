@@ -176,3 +176,31 @@ exports.selectWinner = function(req, res) {
     }
   });
 };
+
+exports.cancelPackage = function(req, res) {
+  Variation.findById(req.body.id, function(err, variation) {
+    if (err) {return res.send(500,err);}
+    else {
+      variation.isCancel = true;
+      variation.save(function(err, saved) {
+        if (err) {return res.send(500,err);}
+        else {
+          console.log(saved);
+          return res.json(200, saved);
+        }
+      });
+    }
+  });
+};
+
+exports.complete = function(req, res) {
+  Variation.findById(req.params.id, function(err, variation){
+    if (err) {return res.send(500,err);}
+    if (!variation) {return res.send(404,err);}
+    variation.isCompleted = !variation.isCompleted;
+    variation.save(function(err,saved){
+      if (err) {return res.send(500,err);}
+      return res.send(200,saved);
+    });
+  });
+};

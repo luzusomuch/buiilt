@@ -9,7 +9,6 @@ angular.module('buiiltApp').directive('addon', function(){
         },
         controller: function($scope, $state,$window, $stateParams, authService,addOnPackageService, FileUploader, $cookieStore, fileService, contractorRequestService, materialRequestService, variationRequestService) {
             $scope.allItemsText = 'All items';
-            console.log($scope.type);
             authService.getCurrentUser().$promise.then(function(data){
                 $scope.currentUser = data;
                 $scope.isStaff = (_.find($scope.package.staffs,{_id: data._id})) ? true: false;
@@ -31,7 +30,9 @@ angular.module('buiiltApp').directive('addon', function(){
             };
 
             $scope.showVariations = function() {
-                $scope.data = $scope.package;
+                // console.log('dasdasdsad');
+                // console.log($scope.package);
+                $scope.package = $scope.package;
                 $scope.allItemsText = 'Variations';
             };
 
@@ -73,8 +74,8 @@ angular.module('buiiltApp').directive('addon', function(){
             $scope.sendVariation = function() {
                 addOnPackageService.sendVariation({id: $scope.package._id, packageType: $scope.type, variation: $scope.variation})
                 .$promise.then(function(data) {
-                    $scope.data = data;
-                    $scope.package.variations = data.variations;
+                    $scope.package.variations.push(data);
+                    // $scope.data = $scope.package.variations.push(data);
                     $scope.variation = {};
                   // $scope.messages = data;
                 });

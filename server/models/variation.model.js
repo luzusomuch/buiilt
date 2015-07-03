@@ -17,8 +17,13 @@ var VariationSchema = new Schema({
     ref: 'Project',
     required: true
   },
+  package: {
+    type: Schema.Types.ObjectId,
+    ref: 'ContractorPackage',
+    required: true
+  },
   type: String,
-  title: String,
+  name: String,
   description: String,
   defects : [{
     owner: {

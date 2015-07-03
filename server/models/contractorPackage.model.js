@@ -30,9 +30,7 @@ var ContractorPackageSchema = new Schema({
     }],
     isHidden: {type: Boolean, default: false}
   }],
-  variations : [{
-    _id:{type: Schema.Types.ObjectId, ref: 'Variation'},
-    title: String}],
+  variations : [{type: Schema.Types.ObjectId, ref: 'Variation'}],
   defects : [{
     owner: {
       type: Schema.Types.ObjectId,

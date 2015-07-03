@@ -135,20 +135,21 @@ exports.sendVariation = function(req, res) {
                 var variation = new Variation({
                     owner: contractorPackage.owner,
                     project: contractorPackage.project,
-                    title: req.body.variation.title,
+                    package: contractorPackage._id,
+                    name: req.body.variation.title,
                     description: req.body.variation.description,
                     type: 'variation',
                     'to._id': contractorPackage.winnerTeam._id
                 });
                 variation.save(function(err,saved){
                     if (err) {return res.send(500,err);}
-                    contractorPackage.variations.push({_id:saved._id,title:saved.title});
+                    contractorPackage.variations.push(saved._id);
                     contractorPackage.markModified('sendVariation');
                     contractorPackage._editUser = req.user;
                     contractorPackage.save(function(err, savedContractorPacakge){
                         if (err) {return res.send(500,err);}
                         else {
-                            return res.json(savedContractorPacakge);
+                            return res.json(saved);
                         }
                     });
                 });
