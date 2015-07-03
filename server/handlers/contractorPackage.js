@@ -187,7 +187,7 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
   }
   else if (request._modifiedPaths.indexOf('sendMessageToBuilder') != -1) {
     Team.findById(request.owner, function(err, team) {
-      if (err || !tema) {
+      if (err || !team) {
         next();
       }
       else {

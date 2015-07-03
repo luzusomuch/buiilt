@@ -184,7 +184,7 @@ angular.module('buiiltApp')
     variationRequestService.sendMessageToBuilder({id: $stateParams.variationId, team: $scope.currentTeam._id, message: $scope.message})
     .$promise.then(function(data) {
       $scope.messages = data;
-      $scope.message = {};
+      $scope.message = null;
     });
   };
 

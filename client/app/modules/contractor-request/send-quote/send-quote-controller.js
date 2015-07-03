@@ -187,7 +187,7 @@ angular.module('buiiltApp')
     contractorRequestService.sendMessageToBuilder({id: $stateParams.packageId, team: $scope.currentTeam._id, message: $scope.message})
     .$promise.then(function(data) {
       $scope.messages = data;
-      $scope.message = {};
+      $scope.message = null;
     });
   };
 

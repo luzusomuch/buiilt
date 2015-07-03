@@ -1,5 +1,5 @@
 <div class="row" style="margin-top: 18px">
-  <h5 class="col s8">Variation{{variationRequest.title}} in Tender</h5>
+  <h5 class="col s8">Variation{{variationRequest.name}} in Tender</h5>
   <div class="col s4" style="margin-top:15px">
    <a class='dropdown-button btn-flat right tooltipped' dropdown data-position="top" data-delay="1" data-tooltip="Attach..." data-gutter="-16" href='#'
       data-activates='itemActions' dropdown data-beloworigin="true" data-constrainwidth="false" >
@@ -20,27 +20,27 @@
 
 <div class="row">
   <div class="col s12">
-    <ul class="collapsible popout" data-collapsible="accordion">
+    <ul class="collapsible" data-collapsible="accordion">
       <li>
         <div class="collapsible-header">
           Tenderer #{{$index+1}} - {{toContractor.to._id.name}}
-          <a ng-if="variationRequest.to.quote" class="btn-flat btn-flat secondary-content modal-trigger" href='#modal_viewQuote_{{variationRequest._id}}' style="font-size:12px; margin-top: 8px">View Quote</a>
+          <a ng-if="variationRequest.to.quote" class="btn-flat btn-flat secondary-content modal-trigger" href='#modal_viewQuote_{{variationRequest.to.quote._id}}' style="font-size:12px; margin-top: 8px">View Quote</a>
         </div>
         <div class="collapsible-body">
           <div class="row">
             <div class="col s5">
-              <div>Total: {{variationRequest.to.quote.total}}</div>
+              <div style="text-align:center">Total: {{variationRequest.to.quote.total}}</div>
               <div ng-if="variationRequest.to.quote">
-                <a class="btn-flat btn-flat modal-trigger" href="#modal_viewQuote_{{variationRequest.to.quote._id}}">View quote</a>
-                <button ng-click="selectQuote(variationRequest._id)" class="btn-flat btn-flat valign">Select quote</button>
-                <button class="btn-flat btn-flat valign">Decline quote</button>
+                <a style="margin: 0px -15px;" class="btn-flat btn-flat modal-trigger" href="#modal_viewQuote_{{variationRequest.to.quote._id}}">View quote</a>
+                <button style="margin: 0px -15px;" ng-click="selectQuote(variationRequest._id)" class="btn-flat btn-flat valign">Select quote</button>
+                <button style="margin: 0px -15px;" class="btn-flat btn-flat valign">Decline quote</button>
               </div>
             </div>
             <div class="col s6">
              <ul class="collection">
-               <div style="height: 300px; background-color: white;">
+               <div style="height: 300px; background-color: white;overflow-y: auto">
                  <li class="collection-item" ng-repeat = "message in messages.messages">
-                   <div class="row valign-wrapper" style="margin-bottom: -5px" >
+                   <div class="row valign-wrapper" style="margin-bottom: -5px;" >
                      <a href="#!" class="btn-flat col s1">
                        <i class="mdi-toggle-radio-button-on valign center-align" ></i>
                      </a>

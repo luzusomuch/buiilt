@@ -32,7 +32,8 @@
 
        <ul id='relatedActions' class='dropdown-content' style="margin-top: 15px" ng-if="type == 'contractor' || type == 'material' || type == 'variation'">
          <li ng-if="type == 'contractor'">
-          <a class="modal-trigger" href="#modal_attachVariation">Attach Variation</a>
+          <a ng-show="currentTeam.type == 'builder'" class="modal-trigger" href="#modal_attachVariation">Attach Variation</a>
+          <a ng-show="currentTeam.type == 'contractor'" class="modal-trigger" href="#attachVariationWithQuote">Attach Variation</a>
         </li>
         <li ng-if="currentTeam.type == 'builder'">
           <a class="modal-trigger" href="#modal_attachDefect">Attach Defect</a>
@@ -365,12 +366,145 @@
       <p>Description {{file.description}}</p>
     </div>
     <div class="col s12">
-      <a ng-click="downloadFile(file._id)">Download file</a>
+      <a ng-click="downloadFile(file._id)" style="cursor:pointer">Download file</a>
     </div>
   </div>
   <div class="modal-footer">
     <a class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
   </div>
+</div>
+
+<div id="attachVariationWithQuote" class="modal modal-fixed-footer">
+  <form>
+    <div class="modal-content">
+    
+       <div class="row">
+         <div class="col s12">
+           <h5>New Variation for Contractor Package {{package.name}}</h5>
+         </div>
+       </div>
+       <div class="row valign-wrapper">
+         <div class="input-field col s8">
+                 <input id="project_name" type="text" class="validate valign" ng-model="variation.title">
+                 <label for="project_name">Variation Title</label>
+             </div>
+         <div class="col s3 offset-s1">
+           <p>
+               <input type="checkbox" id="quote_later" class="valign" ng-model="quoteLater"/>
+               <label for="quote_later">Attach Quote Later</label>
+           </p>
+         </div>
+       </div>
+       <div class="row">
+         <div class="input-field col s12">
+          <textarea id="variation_description" class="materialize-textarea" ng-model="variation.description"></textarea>
+            <label for="variation_description">Description of Variation</label>
+             </div>
+       </div>
+       <div class="row">
+         
+         
+       </div>
+       <div class="row" ng-hide="quoteLater">
+         <div class="row">
+       <div class="col s12">
+        <ul class="collection z-depth-1">
+          <li class="collection-item vlalign-wrapper">
+            <div class="row" style="margin-bottom: 0px">
+              <div class="col s6 valign center-align background-hover">
+                <a ng-click="addLineWithRate()" class="waves-effect waves-light btn-flat">Add Line with Rate</a>
+              </div>
+              <div class="col s6 valign center-align background-hover">
+                <a ng-click="addLineWithPrice()" class="waves-effect waves-light btn-flat">Add Line with Price</a>
+              </div>
+            </div>
+          </li>
+          <li class="collection-item vlalign-wrapper">
+            <div class="row form" style="margin-bottom: 0px" ng-repeat="lineWithRate in lineWithRates track by $index">
+              <div class="input-field col s6">
+               <textarea value="This is a line item with Rate - note the field for qty is editable"id="description" class="materialize-textarea" ng-model="rate.lineWithRate.rateDescription[$index]" required></textarea>
+               <label for="description">Description of Item</label>
+             </div>
+             <div class="input-field col s2" style="margin-top: 67px">
+              <input id="rate" type="text" class="validate" ng-model="rate.lineWithRate.rate[$index]" required>
+              <label for="rate">Rate</label>
+            </div>
+            <div class="input-field col s1" style="margin-top: 67px">
+              <input id="quantity" type="text" class="validate" ng-model="rate.lineWithRate.rateQuantity[$index]" required>
+              <label for="quantity">Qty</label>
+            </div>
+            <div class="input-field col s2" style="margin-top: 67px">
+              <input disabled id="quantity" type="text" class="validate" ng-model="rate.lineWithRate.rateTotal[$index]">
+              <label for="quantity">Line Total {{rate.lineWithRate.rate[$index] * rate.lineWithRate.rateQuantity[$index]}}</label>
+            </div>
+            <div class="input-field col s1" style="margin-top: 67px">
+              <i class="small mdi-action-highlight-remove" ng-click="removeLineWithRate($index)"></i>
+            </div>
+          </div>
+        </li>
+        <li class="collection-item vlalign-wrapper">
+          <div class="row form" style="margin-bottom: 0px" ng-repeat="lineWithPrice in lineWithPrices track by $index">
+            <div class="input-field col s6">
+             <textarea value="This is a line item with Price - the Qty field is set to 1 and only price can be changed."id="description" class="materialize-textarea" ng-model="price.lineWithPrice.description[$index]" required></textarea>
+             <label for="description">Description of Item</label>
+           </div>
+           <div class="input-field col s2" style="margin-top: 67px">
+            <input id="rate" type="text" class="validate" ng-model="price.lineWithPrice.price[$index]" required>
+            <label for="rate">Price</label>
+          </div>
+          <div class="input-field col s1" style="margin-top: 67px">
+            <input disabled value="1" id="quantity" type="text" class="validate" ng-model="price.lineWithPrice.quantity[$index]">
+            <label for="quantity">1</label>
+          </div>
+          <div class="input-field col s2" style="margin-top: 67px">
+            <input disabled id="quantity" type="text" class="validate" ng-model="price.lineWithPrice.total[$index]">
+            <label for="quantity">Line Total {{price.lineWithPrice.price[$index]}}</label>
+          </div>
+          <div class="input-field col s1" style="margin-top: 67px">
+            <i class="small mdi-action-highlight-remove" ng-click="removeLineWithPrice($index)"></i>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="row" style="margin-top: 50px">
+ <div class="col s6 valign">
+   <div class="file-field input-field">
+     <!-- <input class="file-path validate" type="text"/> -->
+     <div ng-show="uploader.queue.length" class="form-group">
+      <div ng-repeat="item in uploader.queue">
+        <div class="row">
+          <div class="input-field col s8 offset-s2">
+            <input type="text" ng-model="item.file.name">
+            <label for="">File name</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s8 offset-s2">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="btn tooltipped" data-position="top" data-delay="1" data-tooltip="Attach a File"><i class="mdi-editor-attach-file"></i>
+     <input type="file" nv-file-select="" uploader="uploader" />
+   </div>
+ </div>
+</div>
+<div class="input-field col s2 offset-s3" style="margin-top: -40px">
+  <p>Sub-Total: {{subTotalRate + subTotalPrice}}</p>
+  <p>GST: {{(subTotalRate + subTotalPrice) * 0.1}}</p>
+  <p>Total: {{(subTotalRate + subTotalPrice) * 0.1 + (subTotalRate + subTotalPrice)}}</p>
+</div>
+</div>
+     
+    </div>
+  <div class="divider"></div>
+    <div class="modal-footer">
+         <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Send Variation!</a>
+     <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
+    </div>
+    </form>
 </div>
 
 
