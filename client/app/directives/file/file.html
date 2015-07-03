@@ -15,7 +15,8 @@
             </div>
             <div class="card-action">
               <span style="cursor:pointer;" ng-click="likeDocument(file)">
-                {{(file.isInterested) ? 'Dislike' : 'Like'}}
+                <div>{{(file.isInterested) ? 'Dislike' : 'Like'}}</div>
+                <div class="secondary-content">{{file.usersInterestedIn.length}} Like</div>
               </span>
               <p style="cursor:pointer;" ng-click="downloadFile(file._id)">
                 Download

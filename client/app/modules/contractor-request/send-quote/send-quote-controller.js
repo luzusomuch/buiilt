@@ -14,8 +14,6 @@ angular.module('buiiltApp')
   $scope.formData = {
       title: ''
   };
-
-
   $scope.subTotalPrice = 0;
   $scope.subTotalRate = 0;
   $scope.user = {};

@@ -31,7 +31,7 @@
        </ul>
 
        <ul id='relatedActions' class='dropdown-content' style="margin-top: 15px" ng-if="type == 'contractor' || type == 'material'">
-         <li ng-if="currentTeam.type == 'builder'">
+         <li ng-if="type == 'contractor'">
           <a class="modal-trigger" href="#modal_attachVariation">Attach Variation</a>
         </li>
         <li ng-if="currentTeam.type == 'builder'">
@@ -123,7 +123,7 @@
 </div>
 
 <div id="attachInvoice" class="modal modal-fixed-footer">
-  <form method="POST" ng-submit="sendInvoice()">
+  <form method="POST" ng-submit="sendInvoice()" name="sendInvoiceForm">
     <div class="modal-content">
 
      <div class="row">
@@ -133,7 +133,7 @@
      </div>
      <div class="row">
        <div class="input-field col s12">
-         <input id="project_name" type="text" class="validate" ng-model="invoice.title">
+         <input id="project_name" type="text" class="validate" ng-model="invoice.title" required>
          <label for="project_name">Invoice Title</label>
        </div>
      </div>
@@ -233,7 +233,7 @@
 </div>
 <div class="divider"></div>
 <div class="modal-footer">
-  <button type="submit" ng-click="uploadAll()" class="modal-action modal-close waves-effect waves-green btn-flat ">Send Invoice!</button>
+  <button type="submit" ng-disable="sendInvoiceForm.$invalid" ng-click="uploadAll()" class="modal-action modal-close waves-effect waves-green btn-flat ">Send Invoice!</button>
   <!-- <a href="#!" ng-click="uploadAll();" >Send Invoice!</a> -->
   <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
 </div>
@@ -362,7 +362,7 @@
       <h5>File {{file.title}}</h5>
     </div>
     <div class="col s12">
-      <p>{{file.description}}</p>
+      <p>Description {{file.description}}</p>
     </div>
     <div class="col s12">
       <a ng-click="downloadFile(file._id)">Download file</a>

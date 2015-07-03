@@ -80,12 +80,17 @@
       <li ng-repeat="toContractor in contractorRequest.to">
         <div class="collapsible-header">
           Tenderer #{{$index+1}} - {{toContractor.email}}
-          <a ng-if="toContractor.quote" class="btn-flat btn-flat secondary-content modal-trigger" href='#modal_viewQuote_{{toContractor.quote}}' style="font-size:12px; margin-top: 8px">View Quote</a>
+          <a ng-if="toContractor.quote._id" class="btn-flat btn-flat secondary-content modal-trigger" href='#modal_viewQuote_{{toContractor.quote._id}}' style="font-size:12px; margin-top: 8px">View Quote</a>
         </div>
         <div class="collapsible-body">
           <div class="row">
             <div class="col s5">
-              <p>This is the detail area for the tender #{{$index + 1}}.</p>
+              <div>Total: {{toContractor.quote.total}}</div>
+              <div ng-if="toContractor.quote._id">
+                <a class="btn-flat btn-flat modal-trigger" href="#modal_viewQuote_{{toContractor.quote._id}}">View quote</a>
+                <button ng-click="selectQuote(quoteRequest._id)" class="btn-flat btn-flat valign">Select quote</button>
+                <button class="btn-flat btn-flat valign">Decline quote</button>
+              </div>
             </div>
             <div class="col s6">
              <ul class="collection">

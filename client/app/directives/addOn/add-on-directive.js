@@ -141,6 +141,9 @@ angular.module('buiiltApp').directive('addon', function(){
                     addOnPackageService.sendInvoice({id: $scope.package._id, packageType: $scope.type, invoice: $scope.invoice, rate: $scope.lineWithRates, price: $scope.lineWithPrices}).$promise.then(function(data){
                         $scope.data = data;
                         $scope.package.invoices = data.invoices;
+                        $scope.lineWithPrices = [];
+                        $scope.lineWithRates = [];
+                        $scope.invoice = {};
                     });
                 }
             };

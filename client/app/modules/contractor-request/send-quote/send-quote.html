@@ -24,10 +24,9 @@
        <li>
          <div class="collapsible-header">Detail</div>
          <div class="collapsible-body">
-          <div class="col s12">{{contractorRequest.description}}</div>
-          <div class="col s12" ng-if="contractorRequest.addendums">
-            <h5>Addendum</h5>
-              <div class="row" ng-repeat="addendum in contractorRequest.addendums | filter:{isHidden: true}" ng-if="$last">
+          <div class="col s12">
+            <span ng-repeat="desc in contractorRequest.descriptions"> {{desc}}</span>
+            <div class="row" ng-repeat="addendum in contractorRequest.addendums | filter:{isHidden: false}" ng-if="$last">
                 <h6>{{addendum.description}}</h6>
                 <h6>Addendum scope</h6>
                 <table>
