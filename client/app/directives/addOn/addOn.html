@@ -63,8 +63,7 @@
   <li class="collection-item" ng-repeat="file in documents" ng-if="documents">
     <a class="modal-trigger" href="#modal-file-{{file._id}}">Document - {{file.title}}</a></li>
   </div>
-  
-  <div class="scrollbar-dynamic" style="height: 300px" ng-show="showVariation">
+  <div class="scrollbar-dynamic" style="height: 300px" ng-show="showVariation" ng-if="package.variations">
     <!-- {{package.variations}} dasdasdasdasasdasdasd -->
    <li class="collection-item" ng-repeat="variation in package.variations | filter:{isCompleted:false, isCancel: false} track by $index">
     <a <a href="#" ng-click="goToVariation(variation)">>asdasdadsad{{variation.name}}</a></li>
