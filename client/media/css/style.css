@@ -119,9 +119,6 @@ span.disabled {
   top : 5% !important;
 }
 
-.btn-flat.active {
-  font-size: 12px;border: solid 1px #dedede;border-radius: 5px;
-}
 
 .scrollbar-dynamic {
     max-height: 300px;
@@ -130,4 +127,22 @@ span.disabled {
 
 .collection.list span a, .collection.list a{
   color: #000 !important;
+}
+
+.task-filter {
+
+}
+
+.task-filter a {
+  padding: 5px 10px;
+  margin: 0px 10px;
+  line-height: 24px;
+}
+
+.task-filter a.active {
+  font-size: 12px;border: solid 1px #000;border-radius: 5px;
+}
+.task-filter a:hover {
+  background-color: #dedede;
+  border-radius: 5px;
 }
