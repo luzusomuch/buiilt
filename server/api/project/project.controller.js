@@ -47,6 +47,7 @@ exports.create = function(req, res){
       var to = {};
       Team.findById(user.team._id,function(err,team) {
         team.project.push(project._id);
+        team.markModified('project');
         team.save();
         if (team.type == 'builder') {
           to.type = 'homeOwner'

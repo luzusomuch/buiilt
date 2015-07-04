@@ -27,7 +27,7 @@
           Go to Task
         </a>
         <a ng-if="task.type == 'contractor'"
-           ui-sref="contractorRequest.contractorPackageInProcess({id : task.project, packageId : task.package})"
+           ui-sref="contractorRequest.contractorPackageInProcess({id : task.project, packageId : task.package._id})"
            class="btn-flat secondary-content new badge" style="font-size: 12px;">
           Go to Task
         </a>
