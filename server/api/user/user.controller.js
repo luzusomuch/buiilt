@@ -1,6 +1,7 @@
 'use strict';
 
 var User = require('./../../models/user.model');
+var ResetPassword = require('./../../models/resetPassword.model');
 var Project = require('./../../models/project.model');
 var PackageInvite = require('./../../models/packageInvite.model');
 var ContractorPackage = require('./../../models/contractorPackage.model');
@@ -11,6 +12,7 @@ var InviteToken = require('./../../models/inviteToken.model');
 var passport = require('passport');
 var config = require('../../config/environment');
 var jwt = require('jsonwebtoken');
+var ResetPasswordValidator = require('./../../validators/resetPassword');
 var UserValidator = require('./../../validators/user');
 var okay = require('okay');
 var async = require('async');
@@ -391,7 +393,42 @@ exports.sendVerification = function(req,res) {
   }else{
     return res.send(422,{msg: 'blah blah blah'})
   }
-}
+};
+
+exports.forgotPassword = function(req,res) {
+  ResetPasswordValidator.create(req,function(err,data) {
+    if (err) {
+      return res.send(422,err);
+    }
+    var resetPassword = new ResetPassword(data);
+    resetPassword.save(function(err) {
+      if (err) {
+        return res.send(422,err);
+      }
+      return res.json(true);
+
+    })
+  })
+};
+
+exports.resetPassword = function(req,res) {
+  ResetPassword.findOne({resetPasswordToken : req.body.token},function(err,resetPassword) {
+    if (err || !resetPassword){
+      return res.send(422,err);
+    }
+    User.findOne({email : resetPassword.email},function(err,user) {
+      if (err || !user) {
+        return res.send(422,err)
+      }
+      user.password = req.body.password;
+      user.save(function(err) {
+        if (err) {return res.send(422, err);}
+        resetPassword.remove();
+        return res.json(true);
+      });
+    })
+  })
+};
 
 /**
  * Authentication callback

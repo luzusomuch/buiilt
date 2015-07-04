@@ -23,6 +23,18 @@ angular.module('buiiltApp')
         action : 'send-verification'
       }
     },
+    forgotPassword : {
+      method : 'POST',
+      params : {
+        action : 'forgot-password'
+      }
+    },
+    resetPassword : {
+      method : 'POST',
+      params : {
+        action : 'reset-password'
+      }
+    },
     getTheBestProviders: { method: 'GET', params: { id: 'theBestProviders'}, isArray: true },
     gets:{method:'GET', params: {action: ''}, isArray: true},
     delete: {method:'DELETE', params: {id: 'id', action: ''}},

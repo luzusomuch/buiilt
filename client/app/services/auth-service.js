@@ -263,6 +263,13 @@ angular.module('buiiltApp')
 
     sendVerification: function() {
       return userService.sendVerification();
+    },
+    forgotPassword: function(email) {
+      return userService.forgotPassword(email);
+    },
+    resetPassword : function(data) {
+      return userService.resetPassword(data);
     }
+
   };
 });
