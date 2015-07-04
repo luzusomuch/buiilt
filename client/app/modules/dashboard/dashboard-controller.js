@@ -186,7 +186,7 @@ angular.module('buiiltApp')
             $scope.isShow = true;
           })
       }
-    }
+    };
 
     $scope.sendMessage = function(form) {
       $scope.messageFormSubmitted = true;
@@ -213,7 +213,5 @@ angular.module('buiiltApp')
             $scope.scrollHeight = messages[_index].scrollHeight;
           }
         })
-
     };
-    console.log(myTasks);
 });

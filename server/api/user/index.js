@@ -17,5 +17,6 @@ router.put('/:id/change-profile', auth.isAuthenticated(), controller.changeProfi
 router.get('/:id', auth.isAuthenticated(), controller.show);
 router.post('/', controller.create);
 router.post('/invite-token', controller.createUserWithInviteToken);
+router.post('/send-verification', auth.isAuthenticated(), controller.sendVerification);
 
 module.exports = router;

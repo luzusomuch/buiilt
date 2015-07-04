@@ -6,6 +6,27 @@ angular.module('buiiltApp')
     controller: function($scope,$state, $stateParams, $rootScope,materialPackageService, authService, projectService, contractorService,teamService,filterFilter) {
       $scope.projects = [];
       $scope.submitted = false;
+      $scope.menuTypes = {
+        homeOwner: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
+          {sref: 'client({id :  currentProject._id})', label: 'builder'},
+          {sref: 'projects.view({id :  currentProject._id})', label: 'project'}],
+        contractor: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
+          {sref: 'contractors({id :  currentProject._id})', label: 'contractors'},
+          {sref: 'projects.view({id :  currentProject._id})', label: 'project'}],
+        builder: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
+          {sref: 'client({id :  currentProject._id})', label: 'client'},
+          {sref: 'contractors({id :  currentProject._id})', label: 'contractors'},
+          {sref: 'materials({id :  currentProject._id})', label: 'materials'},
+          {sref: 'staff.index({id :  currentProject._id})', label: 'staff'},
+          {sref: 'projects.view({id :  currentProject._id})', label: 'project'}],
+        supplier: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
+          {sref: 'materials({id :  currentProject._id})', label: 'materials'},
+          {sref: 'projects.view({id :  currentProject._id})', label: 'project'}],
+        other : [{sref: 'team.manager', label: 'team manager'},
+          {sref: 'user.form', label: 'edit profile'},
+          {sref: 'notification.view', label: 'notification'}]
+      };
+
       function queryProjects(){
         authService.isLoggedInAsync(function(isLoggedIn){
           if(isLoggedIn){
@@ -16,11 +37,12 @@ angular.module('buiiltApp')
                 to : ''
               }
             };
+            $scope.duration = 10000
             authService.getCurrentUser().$promise
               .then(function(res) {
                 $rootScope.user = res;
                 if ($state.current.name == 'dashboard' && ! res.emailVerified) {
-                  Materialize.toast('You must confirm your email to hide this message!', 10000,'rounded');
+                  Materialize.toast('<span>You must confirm your email to hide this message!</span><a class="btn-flat yellow-text" id="sendVerification">Send Verification Email Again<a>', $scope.duration,'rounded');
                 }
                 $scope.isLeader = $scope.user.team.role == 'admin';
                 authService.getCurrentTeam().$promise
@@ -74,30 +96,26 @@ angular.module('buiiltApp')
         }
       });
 
-      $rootScope.$on('TeamUpdate',function(event,data) {
-        queryProjects();
+      document.addEventListener('click',function(e) {
+        if (e.target.id == 'sendVerification')
+        {
+          authService.sendVerification().$promise
+            .then(function(res) {
+              Materialize.toast('<span>Verification email has been sent to your email address</span>', $scope.duration,'rounded');
+            })
+        }
       });
 
 
-      $scope.menuTypes = {
-        homeOwner: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
-          {sref: 'client({id :  currentProject._id})', label: 'builder'},
-          {sref: 'projects.view({id :  currentProject._id})', label: 'project'}],
-        contractor: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
-          {sref: 'contractors({id :  currentProject._id})', label: 'contractors'},
-          {sref: 'projects.view({id :  currentProject._id})', label: 'project'}],
-        builder: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
-          {sref: 'client({id :  currentProject._id})', label: 'client'},
-          {sref: 'contractors({id :  currentProject._id})', label: 'contractors'},
-          {sref: 'materials({id :  currentProject._id})', label: 'materials'},
-          {sref: 'staff.index({id :  currentProject._id})', label: 'staff'},
-          {sref: 'projects.view({id :  currentProject._id})', label: 'project'}],
-        supplier: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
-          {sref: 'materials({id :  currentProject._id})', label: 'materials'},
-          {sref: 'projects.view({id :  currentProject._id})', label: 'project'}],
-        other : [{sref: 'team.manager', label: 'team manager'},
-          {sref: 'user.form', label: 'edit profile'},
-          {sref: 'notification.view', label: 'notification'}]
+
+
+      $rootScope.sendVerification = function() {
+        $scope.duration = 0;
+        console.log($scope.duration);
+        //authService.sendVerification().$promise
+        //  .then(function(res) {
+        //
+        //  })
       };
 
       $scope.create = function(form) {
@@ -123,6 +141,8 @@ angular.module('buiiltApp')
       $scope.inputChanged = function(str) {
         $scope.textString = str;
       };
+
+
     }
   };
 });

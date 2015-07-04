@@ -15,6 +15,7 @@ var UserValidator = require('./../../validators/user');
 var okay = require('okay');
 var async = require('async');
 var _ = require('lodash');
+var Mailer = require('./../../components/Mailer');
 
 var validationError = function (res, err) {
   return res.json(422, err);
@@ -375,6 +376,24 @@ exports.all = function (req, res, next) {
     res.json(users);
   });
 };
+
+exports.sendVerification = function(req,res) {
+  var user = req.user;
+  if(!user.emailVerified){
+    Mailer.sendMail('confirm-email.html', user.email, {
+      user: user,
+      confirmation: config.baseUrl + 'auth/confirm-email/' + user.emailVerifyToken,
+      subject: 'Confirm email from buiilt.com'
+    }, function(err){
+      if (err) {
+        return res.send(500,err);
+      }
+      return res.json(true);
+    });
+  }else{
+    return res.send(422,{msg: 'blah blah blah'})
+  }
+}
 
 /**
  * Authentication callback

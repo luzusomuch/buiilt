@@ -259,6 +259,10 @@ angular.module('buiiltApp')
 
     setCurrentUser: function(user){
       currentUser = user;
+    },
+
+    sendVerification: function() {
+      return userService.sendVerification();
     }
   };
 });
