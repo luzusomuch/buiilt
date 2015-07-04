@@ -35,18 +35,18 @@
               <p class="col s12">Builder team : <span class="highlight">{{builderPackage.owner.name}}</span> </p>
               <p class="col s12">Builder team member : <span class="highlight"></span> </p>
               <div class="card col admin" style="padding: 5px; margin-left: 10px" ng-repeat="leader in builderPackage.owner.leader">
-                {{leader.email}}
+                {{leader | name}}
               </div>
               <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="member in builderPackage.owner.member | filter : {status : 'Active'}">
-                {{member._id.email}}
+                {{member._id | name}}
               </div>
               <p class="col s12">Home owner team : <span class="highlight">{{builderPackage.to.team.name}}</span> </p>
               <p class="col s12">Home owner team member : <span class="highlight"></span> </p>
               <div class="card col admin" style="padding: 5px; margin-left: 10px" ng-repeat="leader in builderPackage.to.team.leader">
-                {{leader.email}}
+                {{leader | name}}
               </div>
               <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="member in builderPackage.to.team.member | filter : {status : 'Active'}">
-                {{member._id.email}}
+                {{member._id | name}}
               </div>
             </div>
 

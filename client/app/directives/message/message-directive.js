@@ -45,6 +45,7 @@ angular.module('buiiltApp')
                     $scope.available.push(member._id);
                   }
                 });
+                _.remove($scope.available,{_id : $scope.currentUser._id});
                 break;
               case 'staff' :
                 $scope.available =  angular.copy($scope.package.staffs);

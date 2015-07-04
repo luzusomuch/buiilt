@@ -53,21 +53,24 @@
                   <a href=""></a>
                   <table class="team bordered">
                     <thead>
-                    <th class="col s6">Member email</th>
+                    <th class="col s3">Member email</th>
+                    <th class="col s3">Member name</th>
                     <th class="col s2">Type</th>
                     <th class="col s2">Status</th>
                     <th class="col s2 center-align">Action</th>
                     </thead>
                     <tbody>
                     <tr ng-repeat="leader in currentTeam.leader">
-                      <td class="col s6">{{leader.email}}</td>
+                      <td class="col s3">{{leader.email}}</td>
+                      <td class="col s3">{{leader.firstName}} {{leader.lastName}}</td>
                       <td class="col s2">Admin</td>
                       <td class="col s2">Active</td>
                       <td class="col s2 center-align">
                       </td>
                     </tr>
                     <tr ng-repeat="member in currentTeam.member | orderBy : ['status']">
-                      <td class="col s6">{{(member.email) ? member.email : member._id.email}}</td>
+                      <td class="col s3">{{(member.email) ? member.email : member._id.email}}</td>
+                      <td class="col s3">{{(member._id) ? member._id.firstName + ' ' + member._id.lastName : ''}}</td>
                       <td class="col s2">Member</td>
                       <td class="col s2">{{member.status}}</td>
                       <td class="col s2 center-align">

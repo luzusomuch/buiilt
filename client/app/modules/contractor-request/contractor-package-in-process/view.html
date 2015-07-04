@@ -35,10 +35,10 @@
           <p class="col s12">Contractor team: <span class="highlight">{{contractorRequest.winnerTeam._id.name}}</span></p>
           <p class="col s12">Member: </p>
           <div class="card col admin" style="padding: 5px; margin-left: 10px" ng-repeat="leader in contractorRequest.winnerTeam._id.leader">
-            {{leader.email}}
+            {{leader | name}}
           </div>
           <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="member in contractorRequest.winnerTeam._id.member">
-            {{member._id.email}}
+            {{member._id | name}}
           </div>
           <p class="col s12">Package status : <span class="highlight">{{(!contractorRequest.isCompleted) ? 'In progress' : 'Completed'}}</span></p>
         </div>

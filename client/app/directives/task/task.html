@@ -35,7 +35,7 @@
     </div>
 
     <div class="card-reveal">
-      <span class="card-title grey-text text-darken-4"><i class="mdi-navigation-close right"></i></span>
+      <!--<span class="card-title grey-text text-darken-4"><i class="mdi-navigation-close right"></i></span>-->
       <form name="form" class="col s12" ng-submit="save(form)">
         <div class="row">
           <div class="input-field col s12">
@@ -59,10 +59,10 @@
         <div class="row current-assign">
           <p style="">Current Assignee's:</p>
           <div class="card col"  ng-if="!isShow"  style="padding: 5px; margin-left: 10px" ng-repeat="assignee in task.assignees" ng-class="{'admin' : assignee.team.role == 'admin'}">
-            {{assignee.email}} <span ng-if="assignee.canRevoke"><a href="#!" ng-click="revoke(assignee,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
+            {{assignee | name}} <span ng-if="assignee.canRevoke"><a href="#!" ng-click="revoke(assignee,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
           </div>
           <div class="card col"  ng-if="isShow"  style="padding: 5px; margin-left: 10px" ng-repeat="assignee in task.assignees" ng-class="{'admin' : assignee.team.role == 'admin'}">
-            {{assignee.email}}
+            {{assignee | name}}
           </div>
         </div>
 
@@ -72,7 +72,7 @@
           <p style="">Available Assignee's:</p>
           <a href="#!" ng-click="assign(staff,$index)" ng-repeat="staff in available">
             <div class="card col" style="padding: 5px; margin-left: 10px"  ng-class="{'admin' : staff.team.role == 'admin'}">
-              {{staff.email}}
+              {{staff | name}}
             </div>
           </a>
         </div>
@@ -80,6 +80,7 @@
         <div class="row">
           <button class="btn right" type="submit" ng-if="!isShow" name="action">Save
           </button>
+          <button class="card-title grey-text text-darken-4 btn-flat right" type="button" style="font-size: 15px;margin-right: 10px">Cancel</button>
         </div>
       </form>
     </div>

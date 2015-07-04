@@ -31,7 +31,7 @@
             </ul>
             <p class="col s12">Package staffs list :</p>
             <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="staff in staffPackage.staffs">
-              {{staff.email}}
+              {{staff | name}}
             </div>
             <p class="col s12">Package status : <span class="highlight">{{(!staffPackage.isCompleted) ? 'In progress' : 'Completed'}}</span></p>
           </div>

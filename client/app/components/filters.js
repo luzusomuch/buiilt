@@ -82,6 +82,12 @@ angular.module('buiiltApp')
     };
   }
 )
+.filter('name', function () {
+    return function (user) {
+      return user.firstName + ' ' + user.lastName;
+    };
+  }
+)
 .filter('taskFilter', function() {
   return function (items,filterType) {
     var filtered = [];

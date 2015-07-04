@@ -234,8 +234,6 @@ exports.createUserWithInviteToken = function(req, res, next) {
                       else {
                         project.status = 'open';
                         project.save(function(err, savedProject){
-                          savedTeam.project.push(savedProject._id);
-                          savedTeam.save();
                         });
                       }
                     });

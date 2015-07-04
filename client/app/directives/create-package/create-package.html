@@ -57,7 +57,7 @@
                 <p style="">Current Assignees:</p>
                 <p class="validate-message" ng-if="assgineesError">Current assignees must be at least 1 item</p>
                 <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="staff in package.staffs">
-                  {{staff.email}} <span><a href="#!" ng-click="revoke(staff,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
+                  {{staff | name}} <span><a href="#!" ng-click="revoke(staff,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
                 </div>
               </div>
 
@@ -67,7 +67,7 @@
                 <p style="">Available Assignee's:</p>
                 <a href="#!" ng-click="assign(staff,$index)" ng-repeat="staff in available">
                   <div class="card col" style="padding: 5px; margin-left: 10px" >
-                    {{staff.email}}
+                    {{staff | name}}
                   </div>
                 </a>
               </div>

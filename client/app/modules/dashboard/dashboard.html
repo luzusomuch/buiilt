@@ -68,10 +68,10 @@
           <div class="row container current-assign">
             <p style="">Current Assignee's:</p>
             <div class="card col"  ng-if="!isShow"  style="padding: 5px; margin-left: 10px" ng-repeat="assignee in task.assignees" ng-class="{'admin' : assignee.team.role == 'admin'}">
-              {{assignee.email}} <span ng-if="assignee.canRevoke"><a href="#!" ng-click="revoke(assignee,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
+              {{assignee | name}} <span ng-if="assignee.canRevoke"><a href="#!" ng-click="revoke(assignee,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
             </div>
             <div class="card col"  ng-if="isShow"  style="padding: 5px; margin-left: 10px" ng-repeat="assignee in task.assignees" ng-class="{'admin' : assignee.team.role == 'admin'}">
-              {{assignee.email}}
+              {{assignee | name}}
             </div>
           </div>
 
@@ -81,7 +81,7 @@
             <p style="">Available Assignee's:</p>
             <a href="#!" ng-click="assign(staff,$index)" ng-repeat="staff in available">
               <div class="card col" style="padding: 5px; margin-left: 10px"  ng-class="{'admin' : staff.team.role == 'admin'}">
-                {{staff.email}}
+                {{staff | name}}
               </div>
             </a>
           </div>
@@ -132,7 +132,7 @@
                 <div class="row valign-wrapper" style="margin-bottom: -5px ">
                   <p class="col s9 valign">{{message.text}}</p>
                   <div class="card col" style="padding: 5px; margin-left: 10px">
-                    {{message.user.email}}
+                    {{message.user | name}}
                   </div>
                 </div>
               </li>
