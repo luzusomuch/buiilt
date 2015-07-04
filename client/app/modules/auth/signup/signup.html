@@ -8,8 +8,13 @@
           {{msg.email.message}}
         </alert>
         <div class="card collection">
-        <form method="post" ng-submit="signup(form)" name="form" novalidate style="padding:10px">
-          <h3>Create account</h3>
+        <form method="post" ng-submit="signup(form)" name="form" novalidate style="padding:10px 50px">
+          <div ng-if="hasInviteToken && user.invite.type == 'team-invite'">
+            <h3>Team invitation</h3>
+            <h4>Team <span class="highlight">{{user.invite.element.name}}</span> has invited you to join them on Buiilt</h4>
+            <h4>Accept their invitation by signing up below</h4>
+          </div>
+          <h3 ng-if="!hasInviteToken">Create account</h3>
           <div class="row" ng-if="!hasInviteToken">
             <div input-field class="col s12" >
               <input id="email" type="email" name="email" ng-model="user.email" required
@@ -46,13 +51,7 @@
               <p class="validate-message" ng-show="form.repassword.$error.compareTo && submitted">Confirm password dose not match</p>
             </div>
           </div>
-          <div ng-if="hasInviteToken && user.invite.type == 'team-invite'">
-            <h3>Team invitation</h3>
-            <div class="row">
-              <p>Team <span class="highlight">{{user.invite.element.name}}</span> has invited you to join them on Buiilt</p>
-              <p>Accept their invitation by signing up below</p>
-            </div>
-          </div>
+
           <div class="row">
             <button style="margin-left:10px" class="waves-effect waves-light btn">Sign up</button>
           </div>
