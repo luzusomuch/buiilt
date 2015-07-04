@@ -72,6 +72,16 @@ angular.module('buiiltApp')
     return user.avatar;
   };
 })
+.filter('threadUsers', function () {
+    return function (users) {
+      var result = "";
+      _.forEach(users,function(user) {
+        result += user.name + " , "
+      });
+      return result.substr(0,result.length -3 );
+    };
+  }
+)
 .filter('taskFilter', function() {
   return function (items,filterType) {
     var filtered = [];

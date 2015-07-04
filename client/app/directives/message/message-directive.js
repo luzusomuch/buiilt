@@ -169,6 +169,7 @@ angular.module('buiiltApp')
 
           $scope.selectThread = function(thread) {
             $scope.currentThread = thread;
+
           };
 
           $scope.sendMessage = function(form) {

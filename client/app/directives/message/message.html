@@ -14,10 +14,10 @@
           </ul>
         </div>
         <div class="col s8" ng-if="currentThread.users">
-          <p style="">Current user in thread:</p>
-          <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="user in currentThread.users" ng-class="{'admin' : user.team.role == 'admin'}">
-            {{user.email}}
-          </div>
+          <p style="margin-top: 15px">{{currentThread.users | threadUsers}}</p>
+          <!--<div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="user in currentThread.users" ng-class="{'admin' : user.team.role == 'admin'}">-->
+            <!--{{user.email}}-->
+          <!--</div>-->
         </div>
       </div>
       <div class="col s2">
@@ -72,7 +72,6 @@
         <p class="validate-message" ng-show="form.name.$error.required && submitted">Thread name is required</p>
       </div>
       <div class="row current-assign">
-        <p style="">Current user:</p>
         <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="user in thread.users" ng-class="{'admin' : user.team.role == 'admin'}">
           {{user.email}} <span><a href="#!" ng-click="revoke(user,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
         </div>
