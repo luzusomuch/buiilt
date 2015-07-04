@@ -77,14 +77,18 @@ angular.module('buiiltApp')
     var filtered = [];
     angular.forEach(items, function(item) {
       if (filterType == 'all') {
-        filtered.push(item);
+        if (!item.completed) {
+          filtered.push(item);
+        }
       } else if (filterType == 'completed') {
         if (item.completed) {
           filtered.push(item);
         }
       } else {
         if (_.find(item.assignees,{_id : filterType.myTask})) {
-          filtered.push(item);
+          if (!item.completed) {
+            filtered.push(item);
+          }
         }
       }
     });

@@ -25,16 +25,16 @@
     <span ng-repeat="materialPackage in materialPackages | filter : filter">
       <a class="collection-item" ng-if="(currentTeam.type == 'builder' || currentTeam.type == 'homeOwner') && materialPackage.isSelect"
          ui-sref='materialRequest.materialPackageInProcess({id: materialPackage.project, packageId: materialPackage._id})'>
-        #{{$index + 1}} - {{materialPackage.name}}<span class="new badge">{{materialPackage.__v}}</span></a>
+        {{materialPackage.name}}<span class="new badge">{{materialPackage.__v}}</span></a>
       <a class="collection-item" ng-if="(currentTeam.type == 'builder' || currentTeam.type == 'homeOwner') && !materialPackage.isSelect"
          ui-sref='materialRequest.viewMaterialRequest({id: materialPackage.project, packageId: materialPackage._id})'>
-        #{{$index + 1}} - {{materialPackage.name}}<span class="new badge">{{materialPackage.__v}}</span></a>
+        {{materialPackage.name}}<span class="new badge">{{materialPackage.__v}}</span></a>
       <a ng-show="materialPackage.isSupplier" class="collection-item" ng-if="currentTeam.type == 'supplier' && materialPackage.isSelect"
          ui-sref='materialRequest.materialPackageInProcess({id: materialPackage.project, packageId: materialPackage._id})'>
-        #{{$index + 1}} - {{materialPackage.name}}<span class="new badge">{{materialPackage.__v}}</span></a>
+        {{materialPackage.name}}<span class="new badge">{{materialPackage.__v}}</span></a>
       <a ng-show="materialPackage.isSupplier" class="collection-item" ng-if="currentTeam.type == 'supplier' && !materialPackage.isSelect"
          ui-sref='materialRequest.sendQuote({id: materialPackage.project, packageId: materialPackage._id})'>
-        #{{$index + 1}} - {{materialPackage.name}}<span class="new badge">{{materialPackage.__v}}</span></a>
+        {{materialPackage.name}}<span class="new badge">{{materialPackage.__v}}</span></a>
     </span>
   </div>
 </div>
