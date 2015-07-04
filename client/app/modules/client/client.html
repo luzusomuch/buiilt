@@ -1,7 +1,7 @@
 <div layout="column" style="">
 	
 	<div class="row" style="margin-top: 18px">
-	   <h5 class="col s8">Builder Package {{buiderPackageRequest.name}}</h5>
+	   <h5 class="col s8">{{builderPackage.name}}</h5>
 	   
 	   <div class="col s4" style="margin-top:15px">
 		     <a class='dropdown-button btn-flat right tooltipped' data-position="top" data-delay="1" data-tooltip="Attach..." href='#' data-activates='itemActions' dropdown data-beloworigin="true" data-constrainwidth="false">
@@ -23,7 +23,6 @@
         <li>
           <div class="collapsible-header"><i class=""></i>Details</div>
           <div class="collapsible-body" style="background-color: #FFF; padding:10px">
-            <p class="col s12">Package name : <span class="highlight">{{builderPackage.name}}</span></p>
             <p class="col s12">Package description : <span class="highlight">{{builderPackage.description}}</span></p>
             <p class="col s12">Location : </p>
             <ul style="margin-left: 50px">
@@ -31,42 +30,6 @@
               <li>Suburb : <span class="highlight">{{builderPackage.location.suburb}}</span></li>
               <li>Postcode: <span class="highlight">{{builderPackage.location.postcode}}</span></li>
             </ul>
-            <div ng-if="builderPackage.to.type == 'homeOwner'">
-              <p class="col s12">Builder team : <span class="highlight">{{builderPackage.owner.name}}</span> </p>
-              <p class="col s12">Builder team member : <span class="highlight"></span> </p>
-              <div class="card col admin" style="padding: 5px; margin-left: 10px" ng-repeat="leader in builderPackage.owner.leader">
-                {{leader | name}}
-              </div>
-              <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="member in builderPackage.owner.member | filter : {status : 'Active'}">
-                {{member._id | name}}
-              </div>
-              <p class="col s12">Home owner team : <span class="highlight">{{builderPackage.to.team.name}}</span> </p>
-              <p class="col s12">Home owner team member : <span class="highlight"></span> </p>
-              <div class="card col admin" style="padding: 5px; margin-left: 10px" ng-repeat="leader in builderPackage.to.team.leader">
-                {{leader | name}}
-              </div>
-              <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="member in builderPackage.to.team.member | filter : {status : 'Active'}">
-                {{member._id | name}}
-              </div>
-            </div>
-
-            <div ng-if="builderPackage.to.type == 'builder'">
-              <p class="col s12">Builder team : <span class="highlight">{{builderPackage.to.team.name}}</span> </p>
-              <p class="col s12">Builder team member : <span class="highlight"></span> </p>
-              <div class="card col admin" style="padding: 5px; margin-left: 10px" ng-repeat="leader in builderPackage.to.team.leader">
-                {{leader.email}}
-              </div>
-              <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="member in builderPackage.to.team.member | filter : {status : 'Active'}">
-                {{member._id.email}}
-              </div>
-              <p class="col s12">Home owner team : <span class="highlight">{{builderPackage.owner.name}}</span> </p>
-              <p class="col s12">Home owner team member : <span class="highlight"></span> </p>
-              <div class="card col admin" style="padding: 5px; margin-left: 10px" ng-repeat="leader in builderPackage.owner.leader">
-                {{leader.email}}
-              </div>
-              <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="member in builderPackage.owner.member | filter : {status : 'Active'}">
-                {{member._id.email}}
-              </div>
             </div>
 
           </div>

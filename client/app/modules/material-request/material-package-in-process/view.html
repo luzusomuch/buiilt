@@ -1,5 +1,5 @@
 <div class="row" style="margin-top: 18px">
-   <h5 class="col s8">Material Package {{materialRequest.name}} in Progress</h5>
+   <h5 class="col s8">{{materialRequest.name}}</h5>
    
    <div class="col s4" style="margin-top:15px">
          <a class='dropdown-button btn-flat right tooltipped' data-position="top" data-delay="1"
@@ -25,24 +25,22 @@
       <li>
         <div class="collapsible-header"><i class=""></i>Details</div>
         <div class="collapsible-body" style="background-color: #FFF; padding:10px">
-          <p class="col s12">Package name : <span class="highlight">{{materialRequest.name}}</span></p>
-          <p class="col s12">Scope of Work : </p>
-          <ul style="margin-left: 50px">
-            <li ng-repeat="description in materialRequest.descriptions">{{description}}</li>
-          </ul>
-          <p class="col s12">Requirements : </p>
-          <ul style="margin-left: 50px">
-            <li ng-repeat="requirement in materialRequest.requirements"><span class="highlight">{{requirement.description}} : </span>{{requirement.quantity}}</li>
-          </ul>
-          <p class="col s12">Supplier team: <span class="highlight">{{materialRequest.winnerTeam._id.name}}</span></p>
-          <p class="col s12">Member: </p>
-          <div class="card col admin" style="padding: 5px; margin-left: 10px" ng-repeat="leader in materialRequest.winnerTeam._id.leader">
-            {{leader | name}}
-          </div>
-          <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="member in materialRequest.winnerTeam._id.member" >
-            {{member._id | name}}
-          </div>
-          <p class="col s12">Package status : <span class="highlight">{{(!materialRequest.isCompleted) ? 'In progress' : 'Completed'}}</span></p>
+          <table class="bordered centered">
+            <thead>
+            <tr>
+              <th>#</th>
+              <th>Materials list</th>
+              <th>Quantity</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="requirement in materialRequest.requirements">
+              <td>{{$index + 1}}</td>
+              <td>{{requirement.description}}</td>
+              <td>{{requirement.quantity}}</td>
+            </tr>
+            </tbody>
+          </table>
         </div>
       </li>
     </ul>

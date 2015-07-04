@@ -1,6 +1,6 @@
 <div layout="column" style="">
   <div class="row" style="margin-top: 18px">
-    <h5 class="col s8">Staff package in Progress</h5>
+    <h5 class="col s8">{{staffPackage.name}}</h5>
 
     <div class="col s4" style="margin-top:15px">
       <a class="dropdown-button btn-flat right tooltipped" data-position="top" data-delay="1" data-tooltip="Attach..." href="#"
@@ -24,16 +24,20 @@
         <li>
           <div class="collapsible-header"><i class=""></i>Details</div>
           <div class="collapsible-body" style="background-color: #FFF; padding:10px">
-            <p class="col s12">Package name : <span class="highlight">{{staffPackage.name}}</span></p>
-            <p class="col s12">Scope of Work : </p>
-            <ul style="margin-left: 50px">
-              <li ng-repeat="description in staffPackage.descriptions">{{description}}</li>
-            </ul>
-            <p class="col s12">Package staffs list :</p>
-            <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="staff in staffPackage.staffs">
-              {{staff | name}}
-            </div>
-            <p class="col s12">Package status : <span class="highlight">{{(!staffPackage.isCompleted) ? 'In progress' : 'Completed'}}</span></p>
+            <table class="bordered centered">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Work description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="description in staffPackage.descriptions">
+                  <td>{{$index + 1}}</td>
+                  <td>{{description}}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </li>
       </ul>
