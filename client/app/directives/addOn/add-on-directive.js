@@ -70,7 +70,26 @@ angular.module('buiiltApp').directive('addon', function(){
             //send variation
             $scope.variation = {};
             $scope.sendVariation = function() {
-                addOnPackageService.sendVariation({id: $scope.package._id, packageType: $scope.type, variation: $scope.variation})
+                if ($scope.rate.lineWithRate) {
+                    $scope.lineWithRates.push({
+                        description: $scope.rate.lineWithRate.rateDescription,
+                        rate: $scope.rate.lineWithRate.rate,
+                        quantity: $scope.rate.lineWithRate.rateQuantity,
+                        total: $scope.rate.lineWithRate.rate * $scope.rate.lineWithRate.rateQuantity
+                    });    
+                }
+                if ($scope.price.lineWithPrice) {
+                    $scope.lineWithPrices.push({
+                        description: $scope.price.lineWithPrice.description,
+                        price: $scope.price.lineWithPrice.price,
+                        quantity: 1,
+                        total: $scope.price.lineWithPrice.price
+                    });
+                }
+                addOnPackageService.sendVariation({id: $scope.package._id, 
+                    quoteLater: $scope.quoteLater,
+                    packageType: $scope.type, variation: $scope.variation,
+                    rate: $scope.lineWithRates, price: $scope.lineWithPrices})
                 .$promise.then(function(data) {
                     $scope.package.variations.push(data);
                     // $scope.data = $scope.package.variations.push(data);

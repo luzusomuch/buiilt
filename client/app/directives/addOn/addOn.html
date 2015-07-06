@@ -375,7 +375,7 @@
 </div>
 
 <div id="attachVariationWithQuote" class="modal modal-fixed-footer">
-  <form>
+  <form ng-submit="sendVariation()">
     <div class="modal-content">
     
        <div class="row">
@@ -501,7 +501,7 @@
     </div>
   <div class="divider"></div>
     <div class="modal-footer">
-         <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Send Variation!</a>
+      <button type="submit" class="modal-action modal-close waves-effect waves-green btn-flat " >Send Variation!</button>
      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
     </div>
     </form>

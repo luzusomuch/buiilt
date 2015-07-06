@@ -128,76 +128,161 @@ exports.sendDefect = function(req, res) {
 
 exports.sendVariation = function(req, res) {
     var packageType = req.body.packageType;
-    if (packageType == 'contractor') {
-        ContractorPackage.findById(req.params.id, function(err, contractorPackage){
-            if (err) {return res.send(500,err);}
-            else {
-                var variation = new Variation({
-                    owner: contractorPackage.owner,
-                    project: contractorPackage.project,
-                    package: contractorPackage._id,
-                    name: req.body.variation.title,
-                    description: req.body.variation.description,
-                    type: 'variation',
-                    'to._id': contractorPackage.winnerTeam._id
-                });
-                variation.save(function(err,saved){
-                    if (err) {return res.send(500,err);}
-                    contractorPackage.variations.push(saved._id);
-                    contractorPackage.markModified('sendVariation');
-                    contractorPackage._editUser = req.user;
-                    contractorPackage.save(function(err, savedContractorPacakge){
-                        if (err) {return res.send(500,err);}
-                        else {
-                            return res.json(saved);
-                        }
+    if (!req.body.quoteLater) {
+        if (packageType == 'contractor') {
+            ContractorPackage.findById(req.params.id, function(err, contractorPackage){
+                if (err) {return res.send(500,err);}
+                else {
+                    var quoteRate = [];
+                    var quotePrice = [];
+                    var subTotal = 0;
+                    if (req.body.rate) {
+                        _.each(req.body.rate, function(rate) {
+                            if (rate) {
+                                for (var i = 0; i < req.body.rate.length -1; i++) {
+                                    quoteRate.push({
+                                        description: rate.description[i],
+                                        rate: rate.rate[i],
+                                        quantity: rate.quantity[i],
+                                        total: rate.rate[i] * rate.quantity[i]
+                                    });
+                                    subTotal += rate.rate[i] * rate.quantity[i];
+                                };
+                            }
+                        });
+                    }
+                    if (req.body.price) {
+                        _.each(req.body.price, function(price) {
+                            if (price) {
+                                for (var i = 0; i < req.body.price.length -1; i++) {
+                                    quotePrice.push({
+                                        description: price.description[i],
+                                        price: price.price[i],
+                                        quantity: 1,
+                                        total: price.price[i]
+                                    });
+                                    subTotal += price.price[i];
+                                };
+                            }
+                        });
+                    }
+                    var quoteRequest = new QuoteRequest({
+                        user: req.user._id,
+                        team: req.user.team._id,
+                        description: req.body.variation.description,
+                        project: contractorPackage.project,
+                        type: 'contractor to builder',
+                        package: req.params.id,
+                        packageType: 'contractor',
+                        quoteRate: (quoteRate) ? quoteRate : null,
+                        quotePrice: (quotePrice) ? quotePrice : null,
+                        subTotal: subTotal,
+                        total: subTotal * 0.1 + subTotal
                     });
-                });
-            }
-        });
-    }
-    else if (packageType == 'material'){
-        MaterialPackage.findById(req.params.id, function(err, materialPackage){
-            if (err) {return res.send(500,err);}
-            else {
-                materialPackage.variations.push({
-                    owner: req.user._id,
-                    title: req.body.variation.title,
-                    description: req.body.variation.description
-                });
-                materialPackage.markModified('sendVariation');
-                materialPackage._editUser = req.user;
-                materialPackage.save(function(err, savedMaterialPacakge){
-                    if (err) {return res.send(500,err);}
-                    else {
-                        return res.json(savedMaterialPacakge);
-                    }
-                });
-            }
-        });
-    }
-    else if (packageType == 'BuilderPackage') {
-        BuilderPackage.findById(req.params.id, function(err, builderPackage){
-            if (err) {return res.send(500,err);}
-            else {
-                builderPackage.variations.push({
-                    owner: req.user._id,
-                    title: req.body.variation.title,
-                    description: req.body.variation.description
-                });
-                builderPackage.markModified('sendVariation');
-                builderPackage._editUser = req.user;
-                builderPackage.save(function(err, savedBuilderPackage){
-                    if (err) {return res.send(500,err);}
-                    else {
-                        return res.json(savedBuilderPackage);
-                    }
-                });
-            }
-        });
+                    quoteRequest.save(function(err, saved){
+                        if (err) {return res.send(500,err);}
+                        var variation = new Variation({
+                            owner: contractorPackage.owner,
+                            project: contractorPackage.project,
+                            package: contractorPackage._id,
+                            name: req.body.variation.title,
+                            description: req.body.variation.description,
+                            type: 'variation',
+                            'to._id': contractorPackage.winnerTeam._id,
+                            'to.quote': saved._id
+                        });
+                        variation.save(function(err,saved){
+                            if (err) {return res.send(500,err);}
+                            contractorPackage.variations.push(saved._id);
+                            contractorPackage.markModified('sendVariation');
+                            contractorPackage._editUser = req.user;
+                            contractorPackage.save(function(err, savedContractorPacakge){
+                                if (err) {return res.send(500,err);}
+                                else {
+                                    return res.json(saved);
+                                }
+                            });
+                        });
+                    });
+                }
+            });
+        }
+        else {
+            return res.send(500);
+        }
     }
     else {
-        return res.send(500);
+        if (packageType == 'contractor') {
+            ContractorPackage.findById(req.params.id, function(err, contractorPackage){
+                if (err) {return res.send(500,err);}
+                else {
+                    var variation = new Variation({
+                        owner: contractorPackage.owner,
+                        project: contractorPackage.project,
+                        package: contractorPackage._id,
+                        name: req.body.variation.title,
+                        description: req.body.variation.description,
+                        type: 'variation',
+                        'to._id': contractorPackage.winnerTeam._id
+                    });
+                    variation.save(function(err,saved){
+                        if (err) {return res.send(500,err);}
+                        contractorPackage.variations.push(saved._id);
+                        contractorPackage.markModified('sendVariation');
+                        contractorPackage._editUser = req.user;
+                        contractorPackage.save(function(err, savedContractorPacakge){
+                            if (err) {return res.send(500,err);}
+                            else {
+                                return res.json(saved);
+                            }
+                        });
+                    });
+                }
+            });
+        }
+        else if (packageType == 'material'){
+            MaterialPackage.findById(req.params.id, function(err, materialPackage){
+                if (err) {return res.send(500,err);}
+                else {
+                    materialPackage.variations.push({
+                        owner: req.user._id,
+                        title: req.body.variation.title,
+                        description: req.body.variation.description
+                    });
+                    materialPackage.markModified('sendVariation');
+                    materialPackage._editUser = req.user;
+                    materialPackage.save(function(err, savedMaterialPacakge){
+                        if (err) {return res.send(500,err);}
+                        else {
+                            return res.json(savedMaterialPacakge);
+                        }
+                    });
+                }
+            });
+        }
+        else if (packageType == 'BuilderPackage') {
+            BuilderPackage.findById(req.params.id, function(err, builderPackage){
+                if (err) {return res.send(500,err);}
+                else {
+                    builderPackage.variations.push({
+                        owner: req.user._id,
+                        title: req.body.variation.title,
+                        description: req.body.variation.description
+                    });
+                    builderPackage.markModified('sendVariation');
+                    builderPackage._editUser = req.user;
+                    builderPackage.save(function(err, savedBuilderPackage){
+                        if (err) {return res.send(500,err);}
+                        else {
+                            return res.json(savedBuilderPackage);
+                        }
+                    });
+                }
+            });
+        }
+        else {
+            return res.send(500);
+        }
     }
 };
 
