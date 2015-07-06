@@ -80,16 +80,16 @@
       <li ng-repeat="toContractor in contractorRequest.to">
         <div class="collapsible-header">
           Tenderer #{{$index+1}} - {{toContractor.email}}
-          <a ng-if="toContractor.quote._id" class="btn-flat btn-flat secondary-content modal-trigger" href='#modal_viewQuote_{{toContractor.quote._id}}' style="font-size:12px; margin-top: 8px">View Quote</a>
+          <a ng-if="toContractor.quote.total > 0" class="btn-flat btn-flat secondary-content modal-trigger" href='#modal_viewQuote_{{toContractor.quote._id}}' style="font-size:12px; margin-top: 8px">View Quote</a>
         </div>
         <div class="collapsible-body">
           <div class="row">
             <div class="col s5">
               Detail for the tender #{{$index + 1}}.
-              <div ng-if="toContractor.quote._id" style="text-align:center">
+              <div ng-if="toContractor.quote.total > 0" style="text-align:center">
                 Total: {{toContractor.quote.total}}
               </div>
-              <div ng-if="toContractor.quote._id">
+              <div ng-if="toContractor.quote.total > 0">
                 <a style="margin: 0px -15px;" class="btn-flat btn-flat modal-trigger" href="#modal_viewQuote_{{toContractor.quote._id}}">View quote</a>
                 <button style="margin: 0px -15px;" ng-click="selectQuote(quoteRequest._id)" class="btn-flat btn-flat valign">Select quote</button>
                 <button style="margin: 0px -15px;" class="btn-flat btn-flat valign">Decline quote</button>
@@ -130,58 +130,6 @@
       </li>
     </ul>
   </div>
-  <!-- display none -->
- <!-- <div class="col s12" style="display:none;">
-  <ul class="collapsible popout" data-collapsible="accordion">
-    <li ng-repeat="quoteRequest in quoteRequests">
-      <div class="collapsible-header">
-        Tenderer #{{$index + 1}} - {{quoteRequest.user.email}}
-        <a class="btn-flat btn-flat secondary-content modal-trigger" href='#modal_viewQuote_{{quoteRequest._id}}' style="font-size:12px; margin-top: 8px">View Quote</a>
-      </div>
-      <div class="collapsible-body">
-        <div class="row">
-          <div class="col s5">
-            <p>This is the detail area for the tender #{{$index + 1}}.</p>
-            <p>{{quoteRequest.description}}</p>
-          </div>
-          <div class="col s6">
-             <ul class="collection">
-               <div style="height: 300px; background-color: white;">
-
-                 <li class="collection-item" ng-repeat = "message in messages.messages">
-                   <div class="row valign-wrapper" style="margin-bottom: -5px">
-                     <a href="#!" class="btn-flat col s1">
-                       <i class="mdi-toggle-radio-button-on valign center-align" ></i>
-                     </a>
-
-                     <p class="col s11 valign">message.message</p>
-                   </div>
-                 </li>
-               </div>
-               <div class="divider"></div>
-               <div class="col s12 card-footer" style="background-color: white">
-                 <div class="row">
-                   <form class="valign-wrapper" ng-submit="sendMessage()">
-                     <div class="input-field col s9">
-                       <textarea id="textarea1" class="materialize-textarea" ng-model="message.message"></textarea>
-                       <label for="textarea1">Textarea</label>
-                     </div>
-                     <div class="col s3">
-                       <button class="btn-flat btn-flat valign" type="submit" name="action">
-                         Send
-                       </button>
-                     </div>
-                   </form>
-                 </div>
-               </div>
-             </ul>
-           </div>
-        </div>
-      </div>
-    </li>
-  </ul>
- </div>
-</div> -->
 
 <div ng-repeat="quoteRequest in quoteRequests">
   <div id='modal_viewQuote_{{quoteRequest._id}}' class="modal modal-fixed-footer">
