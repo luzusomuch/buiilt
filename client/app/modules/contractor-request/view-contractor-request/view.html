@@ -85,7 +85,10 @@
         <div class="collapsible-body">
           <div class="row">
             <div class="col s5">
-              <div style="text-align:center">Total: {{toContractor.quote.total}}</div>
+              Detail for the tender #{{$index + 1}}.
+              <div ng-if="toContractor.quote._id" style="text-align:center">
+                Total: {{toContractor.quote.total}}
+              </div>
               <div ng-if="toContractor.quote._id">
                 <a style="margin: 0px -15px;" class="btn-flat btn-flat modal-trigger" href="#modal_viewQuote_{{toContractor.quote._id}}">View quote</a>
                 <button style="margin: 0px -15px;" ng-click="selectQuote(quoteRequest._id)" class="btn-flat btn-flat valign">Select quote</button>

@@ -10,7 +10,7 @@
 
                  <!-- Dropdown Structure -->
                  <ul id='itemActions' class='dropdown-content'>
-                    <li><a class="modal-trigger" data-target="upload" href="#attachDocument">Upload document</a></li>
+                    <li ng-show="isLeader && currentTeam.type == 'builder'"><a class="modal-trigger" data-target="upload" href="#attachDocument">Upload document</a></li>
                     <li><a>Download All Documents</a></li>
                  </ul>
            </div>

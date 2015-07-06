@@ -74,26 +74,25 @@ angular.module('buiiltApp')
 
   $scope.sendQuote = function() {
     if (confirm("Are you sure you want to send this quote")) {
-      $scope.lineWithRates.push({
-        description: $scope.rate.lineWithRate.rateDescription,
-        rate: $scope.rate.lineWithRate.rate,
-        quantity: $scope.rate.lineWithRate.rateQuantity,
-        total: $scope.rate.lineWithRate.rate * $scope.rate.lineWithRate.rateQuantity
-      });
-      $scope.lineWithPrices.push({
-        description: $scope.price.lineWithPrice.description,
-        price: $scope.price.lineWithPrice.price,
-        quantity: 1,
-        total: $scope.price.lineWithPrice.price
-      });
-      if ($scope.lineWithPrices.length == 0 || $scope.lineWithRates.length == 0) {
-        alert('Please review your quote');
-      }
-      else {
-        materialRequestService.sendQuote({materialRequest: $scope.materialRequest,quoteRequest: $scope.quoteRequest, rate: $scope.lineWithRates, price: $scope.lineWithPrices}).$promise.then(function(data){
-          $scope.success = data;
+      if ($scope.rate.lineWithRate) {
+        $scope.lineWithRates.push({
+          description: $scope.rate.lineWithRate.rateDescription,
+          rate: $scope.rate.lineWithRate.rate,
+          quantity: $scope.rate.lineWithRate.rateQuantity,
+          total: $scope.rate.lineWithRate.rate * $scope.rate.lineWithRate.rateQuantity
         });
       }
+      if ($scope.price.lineWithPrice) {
+        $scope.lineWithPrices.push({
+          description: $scope.price.lineWithPrice.description,
+          price: $scope.price.lineWithPrice.price,
+          quantity: 1,
+          total: $scope.price.lineWithPrice.price
+        });
+      }
+      materialRequestService.sendQuote({materialRequest: $scope.materialRequest,quoteRequest: $scope.quoteRequest, rate: $scope.lineWithRates, price: $scope.lineWithPrices}).$promise.then(function(data){
+        $scope.success = data;
+      });
     }
   };
 

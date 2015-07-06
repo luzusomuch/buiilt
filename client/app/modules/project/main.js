@@ -29,10 +29,16 @@ angular.module('buiiltApp').config(function($stateProvider) {
     url: '/:id',
     templateUrl: '/app/modules/project/view-project/view.html',
     controller: 'ViewProjectCtrl',
-      authenticate : true,
+    authenticate : true,
     resolve: {
       project: function($stateParams, projectService) {
         return projectService.get({id: $stateParams.id});
+      },
+      currentTeam: function(authService) {
+        return authService.getCurrentTeam();
+      },
+      currentUser: function(authenticate) {
+        return authenticate.getCurrentUser();
       }
     },
     hasCurrentProject : true

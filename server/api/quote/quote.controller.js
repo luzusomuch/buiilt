@@ -149,6 +149,9 @@ exports.getByMaterial = function(req, res){
             materialPackage.winnerTeam._id = team._id;
             materialPackage.quote = quote.total;
             materialPackage.isSelect = true;
+            materialPackage.markModified('selectQuote');
+            materialPackage._ownerUser = quote.user;
+            materialPackage._editUser = req.user;
             materialPackage.save(function(err, saved) {
               if (err) {return res.send(500,err);}
               else {

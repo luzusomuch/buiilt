@@ -41,7 +41,7 @@ angular.module('buiiltApp')
     if (confirm("Are you sure you want to select this quote?")) {
       quoteService.get({'id': value}).$promise.then(function(data) { 
           $scope.winner = data;
-          $state.reload();
+          $state.go('contractorRequest.contractorPackageInProcess', {id: data.project, packageId: data._id});
       });
     }
   };

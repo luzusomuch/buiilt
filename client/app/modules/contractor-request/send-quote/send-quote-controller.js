@@ -138,29 +138,27 @@ angular.module('buiiltApp')
   };
 
   $scope.sendQuote = function() {
-    $scope.lineWithRates.push({
-      description: $scope.rate.lineWithRate.rateDescription,
-      rate: $scope.rate.lineWithRate.rate,
-      quantity: $scope.rate.lineWithRate.rateQuantity,
-      total: $scope.rate.lineWithRate.rate * $scope.rate.lineWithRate.rateQuantity
-    });
-    $scope.lineWithPrices.push({
-      description: $scope.price.lineWithPrice.description,
-      price: $scope.price.lineWithPrice.price,
-      quantity: 1,
-      total: $scope.price.lineWithPrice.price
-    });
-    if ($scope.lineWithPrices.length == 0 || $scope.lineWithRates.length == 0) {
-      alert('Please review your quote');
-    }
-    else {
-
-      contractorRequestService.sendQuote({contractorRequest: $scope.contractorRequest,quoteRequest: $scope.quoteRequest, rate: $scope.lineWithRates, price: $scope.lineWithPrices}).$promise
-        .then(function(data){
-        $scope.success = data;
-        // $state.go("team.manager");
+    if ($scope.rate.lineWithRate) {
+      $scope.lineWithRates.push({
+        description: $scope.rate.lineWithRate.rateDescription,
+        rate: $scope.rate.lineWithRate.rate,
+        quantity: $scope.rate.lineWithRate.rateQuantity,
+        total: $scope.rate.lineWithRate.rate * $scope.rate.lineWithRate.rateQuantity
       });
     }
+    if ($scope.price.lineWithPrice) {
+      $scope.lineWithPrices.push({
+        description: $scope.price.lineWithPrice.description,
+        price: $scope.price.lineWithPrice.price,
+        quantity: 1,
+        total: $scope.price.lineWithPrice.price
+      });
+    }
+    contractorRequestService.sendQuote({contractorRequest: $scope.contractorRequest,quoteRequest: $scope.quoteRequest, rate: $scope.lineWithRates, price: $scope.lineWithPrices}).$promise
+      .then(function(data){
+      $scope.success = data;
+      // $state.go("team.manager");
+    });
   };
 
   $scope.getSubTotal = function() {

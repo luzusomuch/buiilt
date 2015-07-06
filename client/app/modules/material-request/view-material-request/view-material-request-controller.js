@@ -38,7 +38,7 @@ angular.module('buiiltApp')
     if (confirm("Are you sure you want to select this quote?")) {
       quoteService.getForMaterial({'id': value}).$promise.then(function(data) { 
           $scope.winner = data;
-          $state.reload();
+          $state.go('materialRequest.materialPackageInProcess', {id: data.project, packageId: data._id});
       });
     }
   };

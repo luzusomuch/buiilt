@@ -175,73 +175,65 @@ exports.sendQuote =function(req, res) {
       var quoteRate = [];
       var quotePrice = [];
       var subTotal = 0;
-      async.each(req.body.rate, function(rate, callback){
-        if (rate !== null) {
-          for (var i = 0; i < req.body.rate.length -1; i++) {
-            quoteRate.push({
-              description: rate.description[i],
-              rate: rate.rate[i],
-              quantity: rate.quantity[i],
-              total: rate.rate[i] * rate.quantity[i]
-            });
-            subTotal += rate.rate[i] * rate.quantity[i];
-          };
-        }
-        callback();
-      }, function(err) {
-        if (err) {return res.send(500,err);}
-        else {
-          quoteRequest.quoteRate = quoteRate;
-          async.each(req.body.price, function(price, callback){
-            if (price !== null) {
-              for (var i = 0; i < req.body.price.length -1; i++) {
-                quotePrice.push({
-                  description: price.description[i],
-                  price: price.price[i],
-                  quantity: 1,
-                  total: price.price[i]
-                });
-                subTotal += price.price[i] * 1;
-              };
-            }
-            callback();
-          }, function(err){
-            if (err) {return res.send(500,err);}
-            else {
-              quoteRequest.quotePrice = quotePrice;
-              quoteRequest.subTotal = subTotal;
-              quoteRequest.total = subTotal * 0.1 + subTotal;
-              quoteRequest.save(function(err, saved) {
-                if (err) {return res.send(500,err);}
-                else {
-                  ContractorPackage.findById(req.body.contractorRequest._id, function(err, contractorPackage){
-                    if (err) {return res.send(500,err);}
-                    else {
-                      _.each(contractorPackage.to, function(to){
-                        if (to._id) {
-                          if (to._id.toString() == team._id.toString()) {
-                            to._id = team._id,
-                            to.email = to.email,
-                            to.quote = saved._id;
-                          }
-                        }
-                      });
-                      contractorPackage._quote = saved.total;
-                      contractorPackage._editUser = req.user;
-                      contractorPackage.markModified('sendQuote');
-                      contractorPackage.save(function(err, savedContractorPackage){
-                        if (err) {return res.send(500,err);}
-                        else {
-                          return res.json(200, saved);
-                        }
-                      });
-                    }
-                  });
-                }
+      if (req.body.rate) {
+        _.each(req.body.rate, function(rate){
+          if (rate) {
+            for (var i = 0; i < req.body.rate.length -1; i++) {
+              quoteRate.push({
+                description: rate.description[i],
+                rate: rate.rate[i],
+                quantity: rate.quantity[i],
+                total: rate.rate[i] * rate.quantity[i]
               });
-            }
-          });
-        }
+              subTotal += rate.rate[i] * rate.quantity[i];
+            };
+          }
+        });
+      }
+      if (req.body.price) {
+        _.each(req.body.price, function(price){
+          if (price) {
+            for (var i = 0; i < req.body.price.length -1; i++) {
+              quotePrice.push({
+                description: price.description[i],
+                price: price.price[i],
+                quantity: 1,
+                total: price.price[i]
+              });
+              subTotal += price.price[i];
+            };
+          }
+        });
+      }
+      quoteRequest.quoteRate = quoteRate;
+      quoteRequest.quotePrice = quotePrice;
+      quoteRequest.subTotal = subTotal;
+      quoteRequest.total = subTotal * 0.1 + subTotal;
+      quoteRequest.save(function(err, saved) {
+        if (err) {return res.send(500,err);}
+        ContractorPackage.findById(req.body.contractorRequest._id, function(err, contractorPackage){
+          if (err) {return res.send(500,err);}
+          else {
+            _.each(contractorPackage.to, function(to){
+              if (to._id) {
+                if (to._id.toString() == team._id.toString()) {
+                  to._id = team._id,
+                  to.email = to.email,
+                  to.quote = saved._id;
+                }
+              }
+            });
+            contractorPackage._quote = saved.total;
+            contractorPackage._editUser = req.user;
+            contractorPackage.markModified('sendQuote');
+            contractorPackage.save(function(err, savedContractorPackage){
+              if (err) {return res.send(500,err);}
+              else {
+                return res.json(200, saved);
+              }
+            });
+          }
+        });
       });
     }
   });
