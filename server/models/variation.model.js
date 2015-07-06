@@ -24,7 +24,7 @@ var VariationSchema = new Schema({
   packageType: String,
   type: String,
   name: String,
-  description: String,
+  description: [String],
   defects : [{
     owner: {
       type: Schema.Types.ObjectId,

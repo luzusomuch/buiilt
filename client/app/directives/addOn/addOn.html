@@ -268,9 +268,32 @@
 
       </div>
       <div class="row">
-        <div class="input-field col s8 offset-s2">
-          <textarea id="variation_description" class="materialize-textarea" ng-model="variation.description"></textarea>
-          <label for="variation_description">Description of Variation</label>
+        <div class="col s8 offset-s2">
+          <ul class="collection z-depth-1">
+            <li class="collection-item vlalign-wrapper">
+              <div class="row form" style="margin-bottom: 0px">
+                <div class="col s12"><p>Enter work descriptions below:</p></div>
+                <div class="input-field col s10">
+                  <textarea id="description" class="materialize-textarea" ng-model="description" ng-class="{'invalid' : descriptionError}"></textarea>
+                  <label for="description" class="">Description</label>
+                  <p class="validate-message" ng-if="descriptionError">Scope of work at least 1 item</p>
+                </div>
+                <div class="valign col s2">
+                  <button class="btn" type="button" name="action" style="margin-top: 78px" ng-click="addDescription(description)">Add</button>
+                </div>
+              </div>
+            </li>
+            <li class="collection-item vlalign" ng-repeat="description in variation.descriptions track by $index">
+              <div class="row" style="margin-bottom: 0px">
+                <div class="col s10">
+                  <p>{{description}}</p>
+                </div>
+                <div class="col s2">
+                  <button class="btn-flat btn-flat" ng-click="removeDescription($index)">Remove</button>
+                </div>
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
@@ -407,10 +430,34 @@
          </div>
        </div>
        <div class="row">
-         <div class="input-field col s12">
-          <textarea id="variation_description" class="materialize-textarea" ng-model="variation.description"></textarea>
-            <label for="variation_description">Description of Variation</label>
-             </div>
+        <div class="col s12">
+          <ul class="collection z-depth-1">
+            <li class="collection-item vlalign-wrapper">
+              <div class="row form" style="margin-bottom: 0px">
+                <div class="col s12"><p>Enter work descriptions below:</p></div>
+                <div class="input-field col s10">
+                  <textarea id="description" class="materialize-textarea" ng-model="description" ng-class="{'invalid' : descriptionError}"></textarea>
+                  <label for="description" class="">Description</label>
+                  <p class="validate-message" ng-if="descriptionError">Scope of work at least 1 item</p>
+                </div>
+                <div class="valign col s2">
+                  <button class="btn" type="button" name="action" style="margin-top: 78px" ng-click="addDescription(description)">Add</button>
+                </div>
+              </div>
+            </li>
+            <li class="collection-item vlalign" ng-repeat="description in variation.descriptions track by $index">
+              <div class="row" style="margin-bottom: 0px">
+                <div class="col s10">
+                  <p>{{description}}</p>
+                </div>
+                <div class="col s2">
+                  <button class="btn-flat btn-flat" ng-click="removeDescription($index)">Remove</button>
+                </div>
+              </div>
+            </li>
+
+          </ul>
+        </div>
        </div>
        <div class="row">
          

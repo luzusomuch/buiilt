@@ -33,12 +33,6 @@ angular.module('buiiltApp').config(function($stateProvider) {
     resolve: {
       project: function($stateParams, projectService) {
         return projectService.get({id: $stateParams.id});
-      },
-      currentTeam: function(authService) {
-        return authService.getCurrentTeam();
-      },
-      currentUser: function(authenticate) {
-        return authenticate.getCurrentUser();
       }
     },
     hasCurrentProject : true

@@ -9,7 +9,7 @@ var EventBus = require('./../components/EventBus');
 var PackageInviteSchema = new Schema({
   owner: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'Team',
     required: true
   },
   to: String,

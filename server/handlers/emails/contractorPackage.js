@@ -33,7 +33,7 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
       async.each(request.to,function(toEmail,cb) {
         if (!toEmail._id) {
           var packageInvite = new PackageInvite({
-            owner: result.user._id,
+            owner: result.user.team._id,
             inviteType: 'contractor',
             project: result.project._id,
             package: request._id,
@@ -102,7 +102,7 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
         async.each(request.newInvitation,function(toEmail, cb) {
           if (!toEmail._id) {
             var packageInvite = new PackageInvite({
-              owner: result.user._id,
+              owner: result.user.team._id,
               inviteType: 'contractor',
               package: request._id,
               project: result.project._id,

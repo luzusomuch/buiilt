@@ -24,9 +24,31 @@
        <li>
          <div class="collapsible-header">Detail</div>
          <div class="collapsible-body">
-          <div class="col s12">{{materialRequest.description}}</div>
+          <div class="col s12">Scope of works:
+           <ul>
+             <li style="margin-left: 20px;" ng-repeat="description in materialRequest.descriptions">
+               {{description}}
+             </li>
+           </ul>
+          </div>
+          <div class="col s12">Requirements:
+            <table>
+              <thead>
+                <th>#</th>
+                <th>Description</th>
+                <th>Quantity</th>
+              </thead>
+              <tbody>
+                <tr ng-repeat="requirement in materialRequest.requirements">
+                  <td>{{$index + 1}}</td>
+                  <td>{{requirement.description}}</td>
+                  <td>{{requirement.quantity}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
           <div class="col s12" ng-if="materialRequest.addendums">
-            <h5>Addendum</h5>
+            <h6>Addendum:</h6>
               <div class="row" ng-repeat="addendum in materialRequest.addendums | filter:{isHidden: true}" ng-if="$last">
                 <h6>{{addendum.description}}</h6>
                 <h6>Addendum scope</h6>
@@ -229,10 +251,10 @@
            <div class="file-field input-field">
                <!-- <input class="file-path validate" type="text"/> -->
                <div ng-show="uploader.queue.length" class="form-group">
-                <div ng-repeat="item in uploader.queue">
+                <div ng-repeat="item in uploader.queue" ng-if="$last">
                   <div class="row">
                     <div class="input-field col s8 offset-s2">
-                      <input type="text" ng-model="item.file.name">
+                      <input type="text" ng-model="item.file.name" disabled>
                       <label for="">File name</label>
                     </div>
                   </div>

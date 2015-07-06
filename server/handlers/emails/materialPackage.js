@@ -36,7 +36,7 @@ EventBus.onSeries('MaterialPackage.Inserted', function(request, next) {
     async.each(request.to, function(supplier, cb) {
       if (!supplier._id) {
         var packageInvite = new PackageInvite({
-          owner: result.user._id,
+          owner: result.user.team._id,
           inviteType: 'supplier',
           project: result.project._id,
           package: request._id,
@@ -52,6 +52,7 @@ EventBus.onSeries('MaterialPackage.Inserted', function(request, next) {
               registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + saved._id,
               subject: 'Invite supplier send quote for ' + request.name
             },function(err){
+              console.log(err);
              return cb(err);
             });
           }
@@ -108,7 +109,7 @@ EventBus.onSeries('MaterialPackage.Updated', function(request, next) {
         async.each(request.newInvitation, function(supplier,cb) {
           if (!supplier._id) {
             var packageInvite = new PackageInvite({
-              owner: result.user._id,
+              owner: result.user.team._id,
               inviteType: 'supplier',
               project: result.project._id,
               package: request._id,

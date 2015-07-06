@@ -7,87 +7,52 @@
         <alert ng-repeat="(key, msg) in errors" type="danger" close="closeAlert(key)">
           {{msg.email.message}}
         </alert>
-        <h3>Create account</h3>
-        <form method="post" ng-submit="signup()" name="signupForm">
-<!--          <div class="row">
-            <div input-field class="col s6">
-              <label>First name</label>
-              <input type="text" ng-model="user.firstName" required>
+        <div class="card collection">
+          <form method="post" ng-submit="signup()" name="signupForm" novalidate style="padding:10px 50px">
+            <div class="row">
+              <h5>
+                {{packageInvite.owner.name}} has invited you to privide a quote for their project.
+                Please create account below to view the tender details and submit quote.
+              </h5>
             </div>
-            <div input-field class="col s6">
-              <label>Last Name</label>
-              <input type="text" ng-model="user.lastName" required>
+            <div class="row">
+              <div input-field class="col s12">
+                <label>Team name</label>
+                <input type="text" ng-model="user.teamName" required>
+              </div>
             </div>
-          </div>
-          <div class="row">
-            <div input-field class="col s6">
-              <label>Display name</label>
-              <input type="text" ng-model="user.displayName">
+            <div class="row">
+              <div class="input-field col s6">
+                <input type="text" name="firstName" ng-model="user.firstName" required>
+                <label for="firstName">First name</label>
+              </div>
+              <div class="input-field col s6">
+                <input type="text" name="lastName" ng-model="user.lastName" required>
+                <label for="lastName">Last name</label>
+              </div>
             </div>
-            <div input-field class="col s6">
-              <label>Website</label>
-              <input type="text" ng-model="user.website">
+            <div class="row">
+              <div class="input-field col s6">
+                <label for="">Team type</label>
+                <input type="text" ng-model="packageInvite.inviteType" disabled>
+              </div>
+              <div input-field class="col s6">
+                <label>Email</label>
+                <input ng-model="packageInvite.to" required type="text" disabled>
+              </div>
             </div>
-          </div>-->
-          <div class="row">
-            <div input-field class="col s12">
-              <label>Team name</label>
-              <input type="text" ng-model="user.teamName" required>
+            <div class="row">
+              <div input-field class="col s12">
+                <label>Password</label>
+                <input ng-model="user.password" required type="password">
+              </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="input-field col s12">
-              <input type="text" name="firstName" ng-model="user.firstName" required>
-              <label for="firstName">First name</label>
+            <div class="row">
+              <button class="waves-effect waves-light btn" ng-disabled="signupForm.$invalid">Sign up</button>
             </div>
-          </div>
-          <div class="row">
-            <div class="input-field col s12">
-              <input type="text" name="lastName" ng-model="user.lastName" required>
-              <label for="lastName">Last name</label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="input-field col s12">
-              <label for="">Team type</label>
-              <input type="text" ng-model="packageInvite.inviteType" disabled>
-            </div>
-          </div>
-<!--          <div class="row">
-            <div input-field class="col s12">
-              <select material-select ng-model="user.type" required>
-                <option value="homeOwner">Home owner</option>
-                <option value="contractor">Contractor</option>
-                <option value="buider">Buider</option>
-                <option value="supplier">Supplier</option>
-              </select>
-            </div>
-          </div>-->
-          <div class="row">
-            <div input-field class="col s12">
-              <label>Email</label>
-              <input ng-model="packageInvite.to" required type="text" disabled>
-            </div>
-          </div>
-
-          <div class="row">
-            <div input-field class="col s12">
-              <label>Password</label>
-              <input ng-model="user.password" required type="password">
-            </div>
-          </div>
-<!--          <div class="row">
-            <div>
-              <input type="checkbox" ng-model="user.allowNewsletter" />
-              <label>Receive news about new, trending and updated packages including site related news.</label>
-            </div>
-          </div>-->
-          <div class="row">
-            <button class="waves-effect waves-light btn" ng-disabled="signupForm.$invalid">Sign up</button>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
-      <!--/ contact form -->
     </div>
 
     <!-- right sidebar -->

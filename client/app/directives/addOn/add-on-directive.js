@@ -83,8 +83,22 @@ angular.module('buiiltApp').directive('addon', function(){
             };
 
             //send variation
-            $scope.variation = {};
+            $scope.variation = {
+                descriptions: []
+            };
             $scope.quoteLater = true;
+            $scope.addDescription = function(description){
+                if (description) {
+                    $scope.variation.descriptions.push(description);
+                    $scope.description = '';
+                }
+            };
+            $scope.removeDescription = function(index){
+                $scope.variation.descriptions.splice(index,1);
+            };
+            $scope.$watchGroup(['variation.descriptions.length','submitted'],function(value) {
+                $scope.descriptionError = (value[0] <= 0 && value[1])
+            });
             $scope.sendVariation = function() {
                 if ($scope.rate.lineWithRate) {
                     $scope.lineWithRates.push({
@@ -265,7 +279,7 @@ angular.module('buiiltApp').directive('addon', function(){
                 newPhoto = response;
               // $state.reload();
               fileService.getFileByStateParam({'id': $scope.package._id}).$promise.then(function(data) {
-                  $scope.files = data;
+                  $scope.documents = data;
               });
             };
             uploader.onBeforeUploadItem = function (item) {
@@ -285,7 +299,9 @@ angular.module('buiiltApp').directive('addon', function(){
                 if(hideModalAfterUploading){
                   // $modalInstance.close(newPhoto);
                 }
-              // $state.reload();
+                fileService.getFileByStateParam({'id': $scope.package._id}).$promise.then(function(data) {
+                    $scope.documents = data;
+                });
             };
         }
     }

@@ -21,7 +21,10 @@
          <div class="collapsible-header">Detail</div>
          <div class="collapsible-body">
           <div class="col s12">
-            <p class="col s12">{{variationRequest.description}}</p>
+            <h6>Scope of variations: </h6>
+            <ul>
+              <li style="margin-left:20px;" ng-repeat="description in variationRequest.description">{{description}}</li>
+            </ul>
             <div class="row" ng-repeat="addendum in variationRequest.addendums | filter:{isHidden: false}" ng-if="$last">
                 <h6>{{addendum.description}}</h6>
                 <h6>Addendum scope</h6>
