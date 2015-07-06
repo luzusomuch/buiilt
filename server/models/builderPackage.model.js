@@ -52,14 +52,7 @@ var BuilderPackageSchema = new Schema({
       enum : ['homeOwner','builder']
     }
   },
-  variations : [{
-    owner: {
-      type: Schema.Types.ObjectId,
-      ref: 'User'
-    },
-    title: {type: String},
-    description: {type: String}
-  }],
+  variations : [{type: Schema.Types.ObjectId, ref: 'Variation'}],
   defects : [{
     owner: {
       type: Schema.Types.ObjectId,

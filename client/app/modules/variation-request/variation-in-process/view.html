@@ -7,8 +7,7 @@
    </a>
 
    <!-- Dropdown Structure -->
-   <ul id='itemActions' class='dropdown-content'>
-     
+   <ul id='itemActions' class='dropdown-content' ng-if="variationRequest.packageType == 'contractor' || variationRequest.packageType == 'supplier'">
      <li ng-if="currentTeam.type == 'builder'"><a class="modal-trigger" href="#modal_attachDefect">Attach Defect</a></li>
      <li><a class="modal-trigger" href="#modal_attachDocument">Attach Document</a></li>
      <li ng-if="currentTeam.type == 'contractor'"><a class="modal-trigger" href="#attachInvoice">Attach Invoice</a></li>
@@ -16,6 +15,16 @@
      <li><a class="modal-trigger" ng-if="isLeader && currentTeam.type =='builder' && !variationRequest.isCompleted" href="#modal_complete">Mark as complete</a></li>
      <li><a class="modal-trigger" ng-if="isLeader && currentTeam.type =='builder' && variationRequest.isCompleted" href="#modal_complete">Mark as in progress</a></li>
    </ul>
+
+   <ul id='itemActions' class='dropdown-content' ng-if="variationRequest.packageType == 'BuilderPackage'">
+     <li ng-if="currentTeam.type == 'homeOwner'"><a class="modal-trigger" href="#modal_attachDefect">Attach Defect</a></li>
+     <li><a class="modal-trigger" href="#modal_attachDocument">Attach Document</a></li>
+     <li ng-if="currentTeam.type == 'builder'"><a class="modal-trigger" href="#attachInvoice">Attach Invoice</a></li>
+     <div class="divider"  ng-if="isLeader"></div>
+     <li><a class="modal-trigger" ng-if="isLeader && currentTeam.type =='homeOwner' && !variationRequest.isCompleted" href="#modal_complete">Mark as complete</a></li>
+     <li><a class="modal-trigger" ng-if="isLeader && currentTeam.type =='homeOwner' && variationRequest.isCompleted" href="#modal_complete">Mark as in progress</a></li>
+   </ul>
+
  </div>
 </div>
 <div class="row">

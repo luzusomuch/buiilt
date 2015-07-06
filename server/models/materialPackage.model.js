@@ -23,6 +23,7 @@ var MaterialPackageSchema = new Schema({
     }],
     isHidden: {type: Boolean, default: false}
   }],
+  variations : [{type: Schema.Types.ObjectId, ref: 'Variation'}],
   messages: [{
     owner: {
       type: Schema.Types.ObjectId,

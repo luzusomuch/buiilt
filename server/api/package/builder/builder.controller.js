@@ -27,6 +27,7 @@ exports.getDefaultPackageByProject = function(req, res) {
   .populate('project')
   .populate('owner')
   .populate('to.team')
+  .populate('variations')
   .exec(function(err, builderPackage) {
     if (err){ return res.send(500, err); }
     User.populate(builderPackage,[

@@ -26,18 +26,29 @@
        <ul id='relatedActions' class='dropdown-content' style="margin-top: 15px" ng-if="type == 'BuilderPackage'">
          <li ng-if="currentTeam.type == 'builder'"><a class="modal-trigger" href="#attachInvoice">Attach Invoice</a></li>
          <li ng-if="currentTeam.type == 'homeOwner'"><a class="modal-trigger" href="#modal_attachDefect">Attach Defect</a></li>
-         <li><a class="modal-trigger" href="#modal_attachVariation">Attach Variation</a></li>
+         <li>
+          <a class="modal-trigger" href="#attachVariationWithQuote" ng-show="currentTeam.type == 'builder'">Attach Variation</a>
+          <a class="modal-trigger" href="#modal_attachVariation" ng-show="currentTeam.type == 'homeOwner'">Attach Variation</a>
+        </li>
          <li><a class="modal-trigger" href="#modal_attachDocument">Attach Document</a></li>
        </ul>
 
        <ul id='relatedActions' class='dropdown-content' style="margin-top: 15px" ng-if="type == 'contractor' || type == 'material' || type == 'variation'">
-         <li ng-if="type == 'contractor' || type == 'supplier'">
+         <li ng-if="type == 'contractor' || type == 'material'">
           <a ng-show="currentTeam.type == 'builder'" class="modal-trigger" href="#modal_attachVariation">Attach Variation</a>
           <a ng-show="currentTeam.type == 'contractor' || currentTeam.type == 'supplier'" class="modal-trigger" href="#attachVariationWithQuote">Attach Variation</a>
         </li>
-        <li ng-if="currentTeam.type == 'builder'">
+        <li ng-if="currentTeam.type == 'builder'" ng-hide="package.packageType == 'BuilderPackage'">
           <a class="modal-trigger" href="#modal_attachDefect">Attach Defect</a>
         </li>
+        <li ng-show="package.packageType == 'BuilderPackage'" ng-if="currentTeam.type == 'builder'">
+          <a class="modal-trigger" href="#attachInvoice">Attach Invoice</a>
+        </li>
+
+        <li ng-show="package.packageType == 'BuilderPackage'">
+          <a ng-if="currentTeam.type == 'homeOwner'" class="modal-trigger" href="#modal_attachDefect">Attach Defect</a>
+        </li>
+
         <li>
           <a class="modal-trigger" href="#modal_attachDocument">Attach Document</a>
         </li>

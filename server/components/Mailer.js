@@ -30,7 +30,7 @@ Mailer.prototype.send = function(options, callback) {
   });
   this.transport.sendMail(options, function(err, data){
     if(err){
-      return console.log('mailer error', err);
+      console.log('mailer error', err);
     }
 
     return callback && callback(null, data);

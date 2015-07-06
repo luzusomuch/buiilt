@@ -19,9 +19,9 @@ var VariationSchema = new Schema({
   },
   package: {
     type: Schema.Types.ObjectId,
-    ref: 'ContractorPackage',
     required: true
   },
+  packageType: String,
   type: String,
   name: String,
   description: String,

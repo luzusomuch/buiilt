@@ -53,16 +53,31 @@ angular.module('buiiltApp').directive('addon', function(){
 
             $scope.goToVariation = function(value) {
                 variationRequestService.findOne({id: value._id}).$promise.then(function(data){
-                    if (!data.to.isSelect) {
-                        if ($scope.currentTeam.type == 'builder') {
-                            $state.go('variationRequest.viewRequest',{id: data.project,variationId: data._id});
+                    if ($scope.type == 'BuilderPackage') {
+                        if (!data.to.isSelect) {
+                            if ($scope.currentTeam.type == 'builder') {
+                                $state.go('variationRequest.sendQuote',{id: data.project,variationId: data._id});
+                            }
+                            else {
+                                $state.go('variationRequest.viewRequest',{id: data.project,variationId: data._id});
+                            }
                         }
                         else {
-                            $state.go('variationRequest.sendQuote',{id: data.project,variationId: data._id});
+                            $state.go('variationRequest.inProcess',{id: data.project,variationId: data._id});
                         }
                     }
                     else {
-                        $state.go('variationRequest.inProcess',{id: data.project,variationId: data._id});
+                        if (!data.to.isSelect) {
+                            if ($scope.currentTeam.type == 'builder') {
+                                $state.go('variationRequest.viewRequest',{id: data.project,variationId: data._id});
+                            }
+                            else {
+                                $state.go('variationRequest.sendQuote',{id: data.project,variationId: data._id});
+                            }
+                        }
+                        else {
+                            $state.go('variationRequest.inProcess',{id: data.project,variationId: data._id});
+                        }
                     }
                 });
             };
@@ -158,30 +173,29 @@ angular.module('buiiltApp').directive('addon', function(){
             };
 
             $scope.sendInvoice = function() {
-                $scope.lineWithRates.push({
-                    description: $scope.rate.lineWithRate.rateDescription,
-                    rate: $scope.rate.lineWithRate.rate,
-                    quantity: $scope.rate.lineWithRate.rateQuantity,
-                    total: $scope.rate.lineWithRate.rate * $scope.rate.lineWithRate.rateQuantity
-                });
-                $scope.lineWithPrices.push({
-                    description: $scope.price.lineWithPrice.description,
-                    price: $scope.price.lineWithPrice.price,
-                    quantity: 1,
-                    total: $scope.price.lineWithPrice.price
-                });
-                if ($scope.lineWithPrices.length == 0 || $scope.lineWithRates.length == 0) {
-                    alert('Please review your quote');
-                }
-                else {
-                    addOnPackageService.sendInvoice({id: $scope.package._id, packageType: $scope.type, invoice: $scope.invoice, rate: $scope.lineWithRates, price: $scope.lineWithPrices}).$promise.then(function(data){
-                        $scope.data = data;
-                        $scope.package.invoices = data.invoices;
-                        $scope.lineWithPrices = [];
-                        $scope.lineWithRates = [];
-                        $scope.invoice = {};
+                if ($scope.rate.lineWithRate) {
+                    $scope.lineWithRates.push({
+                        description: $scope.rate.lineWithRate.rateDescription,
+                        rate: $scope.rate.lineWithRate.rate,
+                        quantity: $scope.rate.lineWithRate.rateQuantity,
+                        total: $scope.rate.lineWithRate.rate * $scope.rate.lineWithRate.rateQuantity
                     });
                 }
+                if ($scope.price.lineWithPrice) {
+                    $scope.lineWithPrices.push({
+                        description: $scope.price.lineWithPrice.description,
+                        price: $scope.price.lineWithPrice.price,
+                        quantity: 1,
+                        total: $scope.price.lineWithPrice.price
+                    });
+                }
+                addOnPackageService.sendInvoice({id: $scope.package._id, packageType: $scope.type, invoice: $scope.invoice, rate: $scope.lineWithRates, price: $scope.lineWithPrices}).$promise.then(function(data){
+                    $scope.data = data;
+                    $scope.package.invoices = data.invoices;
+                    $scope.lineWithPrices = [];
+                    $scope.lineWithRates = [];
+                    $scope.invoice = {};
+                });
             };
 
             $scope.$watch('rate.lineWithRate',function(value) {

@@ -124,7 +124,7 @@ EventBus.onSeries('MaterialPackage.Updated', function(request, next) {
           if (toContractor._id) {
             Team.findById(toContractor, function(err, team) {
                 if (err || !team) {
-                    return cb;
+                    return cb();
                 }
                 async.each(team.leader, function(leader,cb) {
                     var notification = new Notification({
