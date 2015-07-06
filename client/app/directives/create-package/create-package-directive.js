@@ -211,6 +211,7 @@ angular.module('buiiltApp').directive('createPackage', function(){
         email: {},
         emailsPhone: []
       };
+      
       $scope.addNewSupplier = function () {
         if ($scope.materialMember.email.title) {
           if (!(_.find($scope.materialMember.emailsPhone, {email: $scope.materialMember.email.title}))) {

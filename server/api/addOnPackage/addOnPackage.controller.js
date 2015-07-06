@@ -128,7 +128,7 @@ exports.sendDefect = function(req, res) {
 
 exports.sendVariation = function(req, res) {
     var packageType = req.body.packageType;
-    if (!req.body.quoteLater) {
+    if (!req.body.quoteLater && req.body.quoteLater == false) {
         if (packageType == 'contractor') {
             ContractorPackage.findById(req.params.id, function(err, contractorPackage){
                 if (err) {return res.send(500,err);}

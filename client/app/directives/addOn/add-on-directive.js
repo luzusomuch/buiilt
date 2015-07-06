@@ -69,6 +69,7 @@ angular.module('buiiltApp').directive('addon', function(){
 
             //send variation
             $scope.variation = {};
+            $scope.quoteLater = true;
             $scope.sendVariation = function() {
                 if ($scope.rate.lineWithRate) {
                     $scope.lineWithRates.push({
