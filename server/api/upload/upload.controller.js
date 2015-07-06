@@ -230,7 +230,7 @@ exports.uploadInPackge = function(req, res){
         if (uploadedFile && uploadedField) {
             console.log(uploadedField,uploadedFile);
             var file = new File();
-            file.title = uploadedField.title;
+            file.title = (uploadedField.title == 'undefined') ? uploadedFile.name : uploadedField.title;
             file.name = uploadedFile.name;
             file.server = 's3';
             file.user = req.user._id;
@@ -241,6 +241,7 @@ exports.uploadInPackge = function(req, res){
             file.version = file.version + 1;
             file.belongTo = req.params.id;
             file.belongToType = uploadedField.belongToType;
+            file.uploadBy = req.user.team._id;
             file.save(function(err, saved) {
                 if (err) {return res.send(500,err);}
                 else {

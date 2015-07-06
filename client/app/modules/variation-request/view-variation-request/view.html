@@ -15,7 +15,21 @@
 </div>
 
 <div class="row">
- <p class="col s12">{{variationRequest.description}}</p>
+  <div class="col s12">
+    <ul class="collapsible" data-collapsible="accordion">
+      <li>
+        <div class="collapsible-header">
+          Detail
+        </div>
+        <div class="collapsible-body">
+          Scope of works:
+          <ul>
+            <li style="margin-left:20px;" ng-repeat="description in variationRequest.description">{{description}}</li>
+          </ul>
+        </div>
+      </li>
+    </ul>
+  </div>
 </div>
 
 <div class="row">

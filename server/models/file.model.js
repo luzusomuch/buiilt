@@ -33,6 +33,7 @@ var FileSchema = new Schema({
   belongTo: {type: Schema.Types.ObjectId},
   //Maybe contractor package or material package ...
   belongToType: {type: String},
+  uploadBy: {type: Schema.Types.ObjectId, ref: 'Team'},
   usersInterestedIn: [{
     _id: {
       type: Schema.Types.ObjectId,
