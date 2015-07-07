@@ -70,7 +70,7 @@
                     </tr>
                     <tr ng-repeat="member in currentTeam.member | orderBy : ['status']">
                       <td class="col s3">{{(member.email) ? member.email : member._id.email}}</td>
-                      <td class="col s3">{{(member._id) ? member._id.firstName + ' ' + member._id.lastName : ''}}</td>
+                      <td class="col s3">{{(member._id) ? member._id.firstName + ' ' + member._id.lastName : '&nbsp;'}}</td>
                       <td class="col s2">Member</td>
                       <td class="col s2">{{member.status}}</td>
                       <td class="col s2 center-align">
