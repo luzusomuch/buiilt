@@ -44,18 +44,16 @@ EventBus.onSeries('MaterialPackage.Inserted', function(request, next) {
         });
         packageInvite.save(function(err, saved){
           if (err) {return cb(err);}
-          else {
-            Mailer.sendMail('supplier-package-send-quote-no-account.html', saved.to, {
-              materialPackage: request,
-              user: result.user,
-              project: result.project,
-              registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + saved._id,
-              subject: 'Invite supplier send quote for ' + request.name
-            },function(err){
-              console.log(err);
-             return cb(err);
-            });
-          }
+          Mailer.sendMail('supplier-package-send-quote-no-account.html', saved.to, {
+            materialPackage: request.toJSON(),
+            user: result.user.toJSON(),
+            project: result.project.toJSON(),
+            registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + saved._id,
+            subject: 'Invite supplier send quote for ' + request.name
+          },function(err){
+            console.log(err);
+           return cb(err);
+          });
         });
       }
       else {
@@ -69,18 +67,16 @@ EventBus.onSeries('MaterialPackage.Inserted', function(request, next) {
                 if (err || !user) {
                   return callback(err);
                 }
-                else {
-                  Mailer.sendMail('supplier-package-send-quote.html', user.email, {
-                    materialPackage: request,
-                    //project owner
-                    user: result.user,
-                    project: result.project,
-                    link: config.baseUrl + result.project._id + '/material-request/' + request._id,
-                    subject: 'Quote request for ' + request.name
-                  }, function() {
-                    return callback();
-                  });
-                }
+                Mailer.sendMail('supplier-package-send-quote.html', user.email, {
+                  materialPackage: request.toJSON(),
+                  //project owner
+                  user: result.user.toJSON(),
+                  project: result.project.toJSON(),
+                  link: config.baseUrl + result.project._id + '/material-request/' + request._id,
+                  subject: 'Quote request for ' + request.name
+                }, function() {
+                  return callback();
+                });
               });
             }, function() {
               return cb();
@@ -117,17 +113,15 @@ EventBus.onSeries('MaterialPackage.Updated', function(request, next) {
             });
             packageInvite.save(function(err, saved){
               if (err) {return cb(err);}
-              else {
-                Mailer.sendMail('supplier-package-send-quote-no-account.html', saved.to, {
-                  materialPackage: request,
-                  user: result.user,
-                  project: result.project,
-                  registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + saved._id,
-                  subject: 'Invite supplier send quote for ' + request.name
-                },function(err){
-                 return cb(err);
-                });
-              }
+              Mailer.sendMail('supplier-package-send-quote-no-account.html', saved.to, {
+                materialPackage: request.toJSON(),
+                user: result.user.toJSON(),
+                project: result.project.toJSON(),
+                registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + saved._id,
+                subject: 'Invite supplier send quote for ' + request.name
+              },function(err){
+               return cb(err);
+              });
             });
           }
           else {
@@ -140,18 +134,16 @@ EventBus.onSeries('MaterialPackage.Updated', function(request, next) {
                     if (err || !user) {
                       return callback(err);
                     }
-                    else {
-                      Mailer.sendMail('supplier-package-send-quote.html', user.email, {
-                        materialPackage: request,
-                        //project owner
-                        user: result.user,
-                        project: result.project,
-                        link: config.baseUrl + result.project._id + '/material-request/' + request._id,
-                        subject: 'Quote request for ' + request.name
-                      }, function() {
-                        return callback();
-                      });
-                    }
+                    Mailer.sendMail('supplier-package-send-quote.html', user.email, {
+                      materialPackage: request.toJSON(),
+                      //project owner
+                      user: result.user.toJSON(),
+                      project: result.project.toJSON(),
+                      link: config.baseUrl + result.project._id + '/material-request/' + request._id,
+                      subject: 'Quote request for ' + request.name
+                    }, function() {
+                      return callback();
+                    });
                   });
                 }, function() {
                   return cb();

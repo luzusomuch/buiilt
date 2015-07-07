@@ -48,6 +48,8 @@ angular.module('buiiltApp').directive('addendum', function(){
                 .$promise.then(function(data){
                     $scope.addendums = data;
                     $scope.package = data;
+                }, function(res){
+                    console.log(res);
                 });
             }
         }

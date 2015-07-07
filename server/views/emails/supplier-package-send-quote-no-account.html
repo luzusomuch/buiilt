@@ -12,7 +12,6 @@
 
 <div>
   <h6>Material package detail</h6>
-  <%= materialPackage.requirements %>
     <table>
         <thead>
             <th>#</th>
@@ -23,8 +22,8 @@
             {% for requirement in materialPackage.requirements %}
             <tr>
                 <td></td>
-                <td>{{requirement.description}}</td>
-                <td>{{requirement.quantity}}</td>
+                <td><%= requirement.description %></td>
+                <td><%= requirement.quantity %></td>
             </tr>
             {% endfor %}
         </tbody>
@@ -32,7 +31,6 @@
 </div>
 <p>
     Please click this <a href="<%= registryLink %>">link</a> to sign up first.
-    Then you can click <a href="<%= link %>">here</a> to send the request.
 
   <br/>
   Feel free to contact us at <a href="mailto:admin@buiilt.com">admin@buiilt.com</a> if you have any questions.
