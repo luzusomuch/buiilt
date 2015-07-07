@@ -108,7 +108,7 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
               if (err) {return cb(err);}
               Mailer.sendMail('contractor-package-request-no-account.html', saved.to, {
                 contractorPackage: request.toJSON(),
-                user: result.user.toJSON()
+                user: result.user.toJSON(),
                 project: result.project.toJSON(),
                 registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + saved._id,
                 subject: 'Invite contractor send quote for ' + request.name

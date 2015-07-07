@@ -43,13 +43,14 @@ angular.module('buiiltApp').directive('addendum', function(){
                 });
             };
 
+            $scope.error = false;
             $scope.edit = function(value) {
                 addOnPackageService.editAddendum({id: $scope.package._id, packageType: $scope.type, addendumId: value, addendum: $scope.editAddendum})
                 .$promise.then(function(data){
                     $scope.addendums = data;
                     $scope.package = data;
                 }, function(res){
-                    console.log(res);
+                    $scope.error = true;
                 });
             }
         }

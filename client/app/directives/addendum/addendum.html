@@ -43,6 +43,11 @@
               </li>
 
               <li class="collection-item vlalign" ng-repeat="addendum in package.addendums | filter:{isHidden: 'false'}">
+                <div class="row" ng-show="error">
+                  <div class="col s12">
+                    <p class="validate-message">Please check your input again!!</p>
+                  </div>
+                </div>
                 <div class="row" ng-hide="hideAddendum">
                   <h6>{{addendum.description}}</h6>
                   <div class="col s9" ng-repeat="addendumScope in addendum.addendumsScope">
