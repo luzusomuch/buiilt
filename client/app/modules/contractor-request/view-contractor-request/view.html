@@ -77,6 +77,29 @@
 <div class="row" ng-if="!contractorRequest.winnerTeam._id">
   <div class="col s12">
     <ul class="collapsible popout" data-collapsible="accordion">
+      <li>
+        <div class="collapsible-header">
+          Detail
+        </div>
+        <div class="collapsible-body">
+          <table>
+            <thead>
+              <th>#</th>
+              <th>Description</th>
+            </thead>
+            <tbody>
+              <tr ng-repeat="description in contractorRequest.descriptions">
+                <td>{{$index + 1}}</td>
+                <td>{{description}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div class="col s12">
+    <ul class="collapsible popout" data-collapsible="accordion">
       <li ng-repeat="toContractor in contractorRequest.to">
         <div class="collapsible-header">
           Tenderer #{{$index+1}} - {{toContractor.email}}

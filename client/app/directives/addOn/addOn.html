@@ -415,7 +415,7 @@
     
        <div class="row">
          <div class="col s12">
-           <h5>New Variation for Contractor Package {{package.name}}</h5>
+           <h5>New Variation for {{package.name}}</h5>
          </div>
        </div>
        <div class="row valign-wrapper">
@@ -556,11 +556,12 @@
   <p>Total: {{(subTotalRate + subTotalPrice) * 0.1 + (subTotalRate + subTotalPrice)}}</p>
 </div>
 </div>
+</div>
      
     </div>
   <div class="divider"></div>
     <div class="modal-footer">
-      <button type="submit" class="modal-action modal-close waves-effect waves-green btn-flat " >Send Variation!</button>
+      <button ng-click="uploadAll()" type="submit" class="modal-action modal-close waves-effect waves-green btn-flat " >Send Variation!</button>
      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
     </div>
     </form>

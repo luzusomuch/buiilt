@@ -996,9 +996,7 @@ exports.editAddendum = function(req, res) {
                                 addendumScope.quantity = addendumScope.quantity;   
                             }
                         });
-                        variation.save(function(err){
-                            if (err) {return res.send(500,err);}
-                        });
+                        variation.save();
                     });
                     variation.markModified('editAddendum');
                     variation._editUser = req.user;

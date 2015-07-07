@@ -116,16 +116,21 @@ angular.module('buiiltApp').directive('addon', function(){
                         total: $scope.price.lineWithPrice.price
                     });
                 }
-                addOnPackageService.sendVariation({id: $scope.package._id, 
-                    quoteLater: $scope.quoteLater,
-                    packageType: $scope.type, variation: $scope.variation,
-                    rate: $scope.lineWithRates, price: $scope.lineWithPrices})
-                .$promise.then(function(data) {
-                    $scope.package.variations.push(data);
-                    // $scope.data = $scope.package.variations.push(data);
-                    $scope.variation = {};
-                  // $scope.messages = data;
-                });
+                if ($scope.variation.title) {
+                    addOnPackageService.sendVariation({id: $scope.package._id, 
+                        quoteLater: $scope.quoteLater,
+                        packageType: $scope.type, variation: $scope.variation,
+                        rate: $scope.lineWithRates, price: $scope.lineWithPrices})
+                    .$promise.then(function(data) {
+                        $scope.package.variations.push(data);
+                        // $scope.data = $scope.package.variations.push(data);
+                        $scope.variation.title = null;
+                        $scope.variation.descriptions = [];
+                        $scope.lineWithRates = [];
+                        $scope.lineWithPrices = [];
+                      // $scope.messages = data;
+                    });
+                }
             };
 
             //send defect
