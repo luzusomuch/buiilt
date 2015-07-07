@@ -438,6 +438,22 @@ exports.sendAddendum = function(req, res) {
   });
 };
 
+//cancel package
+exports.cancelPackage = function(req, res) {
+  MaterialPackage.findById(req.body.id, function(err, materialPackage) {
+    if (err) {return res.send(500,err);}
+    else {
+      materialPackage.isCancel = true;
+      materialPackage.save(function(err, saved) {
+        if (err) {return res.send(500,err);}
+        else {
+          return res.json(200, saved);
+        }
+      });
+    }
+  });
+};
+
 exports.complete = function(req,res) {
   var materialPackage = req.materialPackage
   materialPackage.isCompleted = !materialPackage.isCompleted

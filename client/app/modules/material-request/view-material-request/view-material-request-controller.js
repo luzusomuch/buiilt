@@ -94,4 +94,15 @@ angular.module('buiiltApp')
   //   });
   // };
 
+  $scope.cancelPackage = function() {
+    if (confirm('Cancel this package?!')) {
+      materialRequestService.cancelPackage({id: $stateParams.packageId})
+      .$promise.then(function(data) {
+        // console.log($state.get());
+        $window.location.href = data.project + '/materials';
+        // $state.go('^.contractors, {id: '+ data.project +'}');
+      });
+    }
+  };
+
 });
