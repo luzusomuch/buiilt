@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-.controller('ViewMaterialRequestCtrl', function($scope, $state, $stateParams,currentTeam, $cookieStore, authService, userService, materialRequest, materialRequestService, quoteService) {
+.controller('ViewMaterialRequestCtrl', function($scope,$window, $state, $stateParams,currentTeam,fileService, $cookieStore, authService, userService, materialRequest, materialRequestService, quoteService) {
   /**
    * quote data
    */
@@ -14,6 +14,18 @@ angular.module('buiiltApp')
   $scope.user = {};
   $scope.toSupplier = {};
   $scope.message = {};
+
+  fileService.getFileByStateParam({id: $stateParams.packageId})
+  .$promise.then(function(data){
+    $scope.files = data;
+  });
+
+  $scope.downloadFile = function(value) {
+    fileService.downloadFile({id: value._id})
+    .$promise.then(function(data){
+      $window.open(data.url);
+    });
+  };
 
   materialRequestService.getQuoteRequestByMaterialPackge({'id':$stateParams.packageId}).$promise.then(function(data){
     $scope.quoteRequests = data;

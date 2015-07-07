@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-.controller('ViewVariationRequestCtrl', function($scope, $window, $state, $stateParams,currentTeam, $cookieStore, authService, userService, variationRequest, variationRequestService, quoteService) {
+.controller('ViewVariationRequestCtrl', function($scope, $window, $state, $stateParams,fileService,currentTeam, $cookieStore, authService, userService, variationRequest, variationRequestService, quoteService) {
   /**
    * quote data
    */
@@ -21,6 +21,17 @@ angular.module('buiiltApp')
   //     $scope.toContractor = toContractor;
   //   });
   // });
+  fileService.getFileByStateParam({id: $stateParams.variationId})
+  .$promise.then(function(data){
+    $scope.files = data;
+  });
+
+  $scope.downloadFile = function(value) {
+    fileService.downloadFile({id: value._id})
+    .$promise.then(function(data){
+      $window.open(data.url);
+    });
+  };
 
   variationRequestService.getMessageForBuilder({'id': $stateParams.variationId})
   .$promise.then(function(data) {

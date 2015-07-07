@@ -22,10 +22,18 @@
           Detail
         </div>
         <div class="collapsible-body">
-          Scope of works:
-          <ul>
-            <li style="margin-left:20px;" ng-repeat="description in variationRequest.description">{{description}}</li>
-          </ul>
+          <table>
+            <thead>
+              <th>#</th>
+              <th>Scope of works</th>
+            </thead>
+            <tbody>
+              <tr ng-repeat="description in variationRequest.description">
+                <td>{{$index + 1}}</td>
+                <td>{{description}}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </li>
     </ul>
@@ -44,7 +52,10 @@
           <div class="row">
             <div class="col s5">
               <div style="text-align:center">
-                <span ng-show="variationRequest.to.quote">
+                <div ng-repeat="file in files" ng-if="variationRequest.to._id._id == file.uploadBy">
+                  {{file.title}} - <a href="#" ng-click="downloadFile(file)">Download file</a>
+                </div>
+                <span ng-show="variationRequest.to.quote.total > 0">
                   Total: {{variationRequest.to.quote.total}}
                 </span>
               </div>
@@ -93,47 +104,51 @@
   <div id='modal_viewQuote_{{variationRequest.to.quote._id}}' class="modal modal-fixed-footer">
     <div class="modal-content">
       <h4>View Quote</h4>
-      <p>Total: <strong>{{variationRequest.to.quote.total}}</strong></p>
+      <p ng-show="variationRequest.to.quote.total > 0">Total: <strong>{{variationRequest.to.quote.total}}</strong></p>
       <p>{{variationRequest.to.quote.description}}</p>
-      <h6>Quote rate</h6>
-      <table>
-        <thead>
-          <th>#</th>
-          <th>Description</th>
-          <th>Rate</th>
-          <th>Quantity</th>
-          <th>Total</th>
-        </thead>
-        <tbody>
-          <tr ng-repeat="quoteRate in variationRequest.to.quote.quoteRate">
-            <td>{{$index +1}}</td>
-            <td>{{quoteRate.description}}</td>
-            <td>{{quoteRate.rate}}</td>
-            <td>{{quoteRate.quantity}}</td>
-            <td>{{quoteRate.total}}</td>
-          </tr>
-        </tbody>
-      </table>
+      <div ng-show="variationRequest.to.quote.quoteRate.length > 0">
+        <h6>Quote rate</h6>
+        <table>
+          <thead>
+            <th>#</th>
+            <th>Description</th>
+            <th>Rate</th>
+            <th>Quantity</th>
+            <th>Total</th>
+          </thead>
+          <tbody>
+            <tr ng-repeat="quoteRate in variationRequest.to.quote.quoteRate">
+              <td>{{$index +1}}</td>
+              <td>{{quoteRate.description}}</td>
+              <td>{{quoteRate.rate}}</td>
+              <td>{{quoteRate.quantity}}</td>
+              <td>{{quoteRate.total}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       <hr>
-      <h6>Quote price</h6>
-      <table>
-        <thead>
-          <th>#</th>
-          <th>Description</th>
-          <th>Rate</th>
-          <th>Quantity</th>
-          <th>Total</th>
-        </thead>
-        <tbody>
-          <tr ng-repeat="quotePrice in variationRequest.to.quote.quotePrice">
-            <td>{{$index +1}}</td>
-            <td>{{quotePrice.description}}</td>
-            <td>{{quotePrice.price}}</td>
-            <td>{{quotePrice.quantity}}</td>
-            <td>{{quotePrice.total}}</td>
-          </tr>
-        </tbody>
-      </table>
+      <div ng-show="variationRequest.to.quote.quotePrice.length > 0">
+        <h6>Quote price</h6>
+        <table>
+          <thead>
+            <th>#</th>
+            <th>Description</th>
+            <th>Rate</th>
+            <th>Quantity</th>
+            <th>Total</th>
+          </thead>
+          <tbody>
+            <tr ng-repeat="quotePrice in variationRequest.to.quote.quotePrice">
+              <td>{{$index +1}}</td>
+              <td>{{quotePrice.description}}</td>
+              <td>{{quotePrice.price}}</td>
+              <td>{{quotePrice.quantity}}</td>
+              <td>{{quotePrice.total}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
     <div class="modal-footer">
       <a ng-click="selectQuote(variationRequest._id)" class="modal-action modal-close waves-effect waves-green btn-flat ">Select this quote</a>

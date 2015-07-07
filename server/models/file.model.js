@@ -115,6 +115,7 @@ FileSchema.methods.toJSON = function() {
     previewData: this.previewData,
     usersRelatedTo: this.usersRelatedTo,
     usersInterestedIn: this.usersInterestedIn,
+    uploadBy: this.uploadBy,
     belongTo: this.belongTo,
     version: this.version,
     archive: this.archive,

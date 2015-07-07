@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-.controller('ViewContractorRequestCtrl', function($scope, $window, $state, $stateParams,currentTeam, $cookieStore, authService, userService, contractorRequest, contractorRequestService, quoteService) {
+.controller('ViewContractorRequestCtrl', function($scope, $window, $state, $stateParams,fileService,currentTeam, $cookieStore, authService, userService, contractorRequest, contractorRequestService, quoteService) {
   /**
    * quote data
    */
@@ -21,6 +21,18 @@ angular.module('buiiltApp')
       $scope.toContractor = toContractor;
     });
   });
+
+  fileService.getFileByStateParam({id: $stateParams.packageId})
+  .$promise.then(function(data){
+    $scope.files = data;
+  });
+
+  $scope.downloadFile = function(value) {
+    fileService.downloadFile({id: value._id})
+    .$promise.then(function(data){
+      $window.open(data.url);
+    });
+  };
 
   contractorRequestService.getMessageForBuilder({'id': $stateParams.packageId})
   .$promise.then(function(data) {

@@ -21,10 +21,18 @@
          <div class="collapsible-header">Detail</div>
          <div class="collapsible-body">
           <div class="col s12">
-            <h6>Scope of variations: </h6>
-            <ul>
-              <li style="margin-left:20px;" ng-repeat="description in variationRequest.description">{{description}}</li>
-            </ul>
+            <table>
+              <thead>
+                <th>#</th>
+                <th>Scope of works</th>
+              </thead>
+              <tbody>
+                <tr ng-repeat="description in variationRequest.description">
+                  <td>{{$index + 1}}</td>
+                  <td>{{description}}</td>
+                </tr>
+              </tbody>
+            </table>
             <div class="row" ng-repeat="addendum in variationRequest.addendums | filter:{isHidden: false}" ng-if="$last">
                 <h6>{{addendum.description}}</h6>
                 <h6>Addendum scope</h6>
@@ -95,8 +103,8 @@
 </div>
 
 <div id="attachQuote" class="modal modal-fixed-footer">
-    <div class="modal-content">
     <form name="sendQuoteForm" ng-submit="sendQuote()" method="POST">
+    <div class="modal-content">
       <div class="row">
         <h5 class="col s12">New Quote for variation {{variationRequest.title}}</h5>
       </div>
@@ -190,12 +198,12 @@
             <p>Total: {{(subTotalRate + subTotalPrice) * 0.1 + (subTotalRate + subTotalPrice)}}</p>
              </div>
        </div>
+    </div>
        <div class="divider"></div>
     <div class="modal-footer">
       <button class="modal-action modal-close waves-effect waves-green btn-flat" ng-disable="sendQuoteForm.$invalid" ng-click="uploadAll()"> Send quote!</button>
      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
     </div>
      </form>
-    </div>
   
 </div>

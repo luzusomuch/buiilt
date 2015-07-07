@@ -45,6 +45,7 @@ exports.materialPackage = function(req,res,next) {
 }
 
 exports.sendQuote =function(req, res) {
+  console.log('asdsadsadasd');
   var quoteRequest = new QuoteRequest({
     user: req.user._id,
     team : req.user.team._id,

@@ -1,5 +1,5 @@
 <div class="row" style="margin-top: 18px">
-   <h5 class="col s8">Contractor Package {{materialRequest.name}} in Progress</h5>
+   <h5 class="col s8">Material Package {{materialRequest.name}} in tender</h5>
    
    <div class="col s4" style="margin-top:15px">
        <a class='dropdown-button btn-flat right tooltipped' data-position="top" data-delay="1" data-tooltip="Attach..." href='#'
@@ -24,14 +24,23 @@
        <li>
          <div class="collapsible-header">Detail</div>
          <div class="collapsible-body">
-          <div class="col s12">Scope of works:
-           <ul>
-             <li style="margin-left: 20px;" ng-repeat="description in materialRequest.descriptions">
-               {{description}}
-             </li>
-           </ul>
+          <div class="col s12">
+            <h5>Description</h5>
+            <table>
+              <thead>
+                <th>#</th>
+                <th>Description</th>
+              </thead>
+              <tbody>
+                <tr ng-repeat="description in materialRequest.descriptions">
+                  <td>{{$index + 1}}</td>
+                  <td>{{description}}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-          <div class="col s12">Requirements:
+          <div class="col s12">
+            <h5>Requirements:</h5>
             <table>
               <thead>
                 <th>#</th>
@@ -47,8 +56,8 @@
               </tbody>
             </table>
           </div>
-          <div class="col s12" ng-if="materialRequest.addendums">
-            <h6>Addendum:</h6>
+          <div class="col s12" ng-if="materialRequest.addendums.length > 0">
+            <h5>Addendum:</h5>
               <div class="row" ng-repeat="addendum in materialRequest.addendums | filter:{isHidden: true}" ng-if="$last">
                 <h6>{{addendum.description}}</h6>
                 <h6>Addendum scope</h6>
@@ -150,8 +159,8 @@
 </div>
 
 <div id="signupAndSendQuoteContractor" class="modal modal-fixed-footer">
-  <div class="modal-content">
     <form method="post" ng-submit="signupAndSendQuoteContractor()" name="signupForm" >
+  <div class="modal-content">
       <h3>Registry</h3>
       <div class="row">
         <div input-field class="col s12">
@@ -179,10 +188,10 @@
 </div>
 
 <div id="attachQuote" class="modal modal-fixed-footer">
-    <div class="modal-content">
     <form name="sendQuoteForm" ng-submit="sendQuote()" method="POST">
+    <div class="modal-content">
       <div class="row">
-        <h5 class="col s12">New Quote for Contractor Package Name</h5>
+        <h5 class="col s12">New Quote for {{materialRequest.name}}</h5>
       </div>
        <div class="row">
          <div class="col s12">
@@ -275,14 +284,14 @@
             <p>Total: {{(subTotalRate + subTotalPrice) * 0.1 + (subTotalRate + subTotalPrice)}}</p>
              </div>
        </div>
+    </div>
        <div class="divider"></div>
     <div class="modal-footer">
-      <button class="modal-action modal-close waves-effect waves-green btn-flat" ng-disable="sendQuoteForm.$invalid" ng-click="uploadAll()"> Send quote!</button>
+      <button type="submit" class="modal-action modal-close waves-effect waves-green btn-flat" ng-disable="sendQuoteForm.$invalid" ng-click="uploadAll()"> Send quote!</button>
          <!-- <a href="#!" ng-click="sendQuote()" class="modal-action modal-close waves-effect waves-green btn-flat ">Send Quote!</a> -->
      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
     </div>
      </form>
-    </div>
   
 </div>
 

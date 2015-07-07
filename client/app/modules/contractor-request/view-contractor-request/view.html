@@ -80,18 +80,21 @@
       <li ng-repeat="toContractor in contractorRequest.to">
         <div class="collapsible-header">
           Tenderer #{{$index+1}} - {{toContractor.email}}
-          <a ng-if="toContractor.quote.total > 0" class="btn-flat btn-flat secondary-content modal-trigger" href='#modal_viewQuote_{{toContractor.quote._id}}' style="font-size:12px; margin-top: 8px">View Quote</a>
+          <a ng-if="toContractor.quote._id" class="btn-flat btn-flat secondary-content modal-trigger" href='#modal_viewQuote_{{toContractor.quote._id}}' style="font-size:12px; margin-top: 8px">View Quote</a>
         </div>
         <div class="collapsible-body">
           <div class="row">
             <div class="col s5">
               Detail for the tender #{{$index + 1}}.
+              <div ng-repeat="file in files" ng-if="toContractor.team == file.uploadBy">
+                {{file.title}} - <a href="#" ng-click="downloadFile(file)">Download file</a>
+              </div>
               <div ng-if="toContractor.quote.total > 0" style="text-align:center">
                 Total: {{toContractor.quote.total}}
               </div>
-              <div ng-if="toContractor.quote.total > 0">
+              <div ng-if="toContractor.quote._id">
                 <a style="margin: 0px -15px;" class="btn-flat btn-flat modal-trigger" href="#modal_viewQuote_{{toContractor.quote._id}}">View quote</a>
-                <button style="margin: 0px -15px;" ng-click="selectQuote(quoteRequest._id)" class="btn-flat btn-flat valign">Select quote</button>
+                <button style="margin: 0px -15px;" ng-click="selectQuote(toContractor.quote._id)" class="btn-flat btn-flat valign">Select quote</button>
                 <button style="margin: 0px -15px;" class="btn-flat btn-flat valign">Decline quote</button>
               </div>
             </div>
@@ -135,47 +138,51 @@
   <div id='modal_viewQuote_{{quoteRequest._id}}' class="modal modal-fixed-footer">
     <div class="modal-content">
       <h4>View Quote</h4>
-      <p>Total: <strong>{{quoteRequest.total}}</strong></p>
+      <p ng-show="quoteRequest.total > 0">Total: <strong>{{quoteRequest.total}}</strong></p>
       <p>{{quoteRequest.description}}</p>
-      <h6>Quote rate</h6>
-      <table>
-        <thead>
-          <th>#</th>
-          <th>Description</th>
-          <th>Rate</th>
-          <th>Quantity</th>
-          <th>Total</th>
-        </thead>
-        <tbody>
-          <tr ng-repeat="quoteRate in quoteRequest.quoteRate">
-            <td>{{$index +1}}</td>
-            <td>{{quoteRate.description}}</td>
-            <td>{{quoteRate.rate}}</td>
-            <td>{{quoteRate.quantity}}</td>
-            <td>{{quoteRate.total}}</td>
-          </tr>
-        </tbody>
-      </table>
+      <div ng-show="quoteRequest.quoteRate.length > 0">
+        <h6>Quote rate</h6>
+        <table>
+          <thead>
+            <th>#</th>
+            <th>Description</th>
+            <th>Rate</th>
+            <th>Quantity</th>
+            <th>Total</th>
+          </thead>
+          <tbody>
+            <tr ng-repeat="quoteRate in quoteRequest.quoteRate">
+              <td>{{$index +1}}</td>
+              <td>{{quoteRate.description}}</td>
+              <td>{{quoteRate.rate}}</td>
+              <td>{{quoteRate.quantity}}</td>
+              <td>{{quoteRate.total}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       <hr>
-      <h6>Quote price</h6>
-      <table>
-        <thead>
-          <th>#</th>
-          <th>Description</th>
-          <th>Rate</th>
-          <th>Quantity</th>
-          <th>Total</th>
-        </thead>
-        <tbody>
-          <tr ng-repeat="quotePrice in quoteRequest.quotePrice">
-            <td>{{$index +1}}</td>
-            <td>{{quotePrice.description}}</td>
-            <td>{{quotePrice.price}}</td>
-            <td>{{quotePrice.quantity}}</td>
-            <td>{{quotePrice.total}}</td>
-          </tr>
-        </tbody>
-      </table>
+      <div ng-show="quoteRequest.quotePrice.length > 0">
+        <h6>Quote price</h6>
+        <table>
+          <thead>
+            <th>#</th>
+            <th>Description</th>
+            <th>Rate</th>
+            <th>Quantity</th>
+            <th>Total</th>
+          </thead>
+          <tbody>
+            <tr ng-repeat="quotePrice in quoteRequest.quotePrice">
+              <td>{{$index +1}}</td>
+              <td>{{quotePrice.description}}</td>
+              <td>{{quotePrice.price}}</td>
+              <td>{{quotePrice.quantity}}</td>
+              <td>{{quotePrice.total}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
     <div class="modal-footer">
       <a ng-click="selectQuote(quoteRequest._id)" class="modal-action modal-close waves-effect waves-green btn-flat ">Select this quote</a>
