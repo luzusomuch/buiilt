@@ -91,6 +91,8 @@ angular.module('buiiltApp')
     }
     materialRequestService.sendQuote({materialRequest: $scope.materialRequest,quoteRequest: $scope.quoteRequest, rate: $scope.lineWithRates, price: $scope.lineWithPrices}).$promise.then(function(data){
       $scope.success = data;
+      $scope.lineWithPrices = [];
+      $scope.lineWithRates = [];
     });
   };
 

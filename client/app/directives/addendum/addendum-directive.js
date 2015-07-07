@@ -14,9 +14,11 @@ angular.module('buiiltApp').directive('addendum', function(){
             $scope.addendumsScope = [];
 
             $scope.addAddendum = function() {
-                $scope.addendumsScope.push({scopeDescription: $scope.addendum.scopeDescription, quantity: $scope.addendum.quantity});
-                $scope.addendum.scopeDescription = null;
-                $scope.addendum.quantity = null;
+                if ($scope.addendum.scopeDescription && $scope.addendum.quantity) {
+                    $scope.addendumsScope.push({scopeDescription: $scope.addendum.scopeDescription, quantity: $scope.addendum.quantity});
+                    $scope.addendum.scopeDescription = null;
+                    $scope.addendum.quantity = null;
+                }
             };
             $scope.removeAddendum = function(index) {
                 $scope.addendumsScope.splice(index, 1);

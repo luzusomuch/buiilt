@@ -157,6 +157,8 @@ angular.module('buiiltApp')
     contractorRequestService.sendQuote({contractorRequest: $scope.contractorRequest,quoteRequest: $scope.quoteRequest, rate: $scope.lineWithRates, price: $scope.lineWithPrices}).$promise
       .then(function(data){
       $scope.success = data;
+      $scope.lineWithRates = [];
+      $scope.lineWithPrices = [];
       // $state.go("team.manager");
     });
   };

@@ -40,9 +40,11 @@ angular.module('buiiltApp')
   });
 
   $scope.addUser = function() {
-    $scope.emailsPhone.push({email: $scope.user.newEmail, phoneNumber: $scope.user.newPhoneNumber});
-    $scope.user.newEmail = null;
-    $scope.user.newPhoneNumber = null;
+    if ($scope.user.newEmail && $scope.user.newPhoneNumber) {
+      $scope.emailsPhone.push({email: $scope.user.newEmail, phoneNumber: $scope.user.newPhoneNumber});
+      $scope.user.newEmail = null;
+      $scope.user.newPhoneNumber = null;
+    }
   };
 
   $scope.removeUser = function(index) {
