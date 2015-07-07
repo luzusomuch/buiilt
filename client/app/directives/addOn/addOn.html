@@ -63,8 +63,9 @@
 
 <div class="divider"></div>
 <div class="scrollbar-dynamic" style="height: 300px;" ng-hide="hideAll">
-  <li class="collection-item" ng-repeat="item in package.variations | filter:{isCompleted:false, isCancel: false} track by $index" ng-if="package.variations">
-    <a href="#" ng-click="goToVariation(item)">Variation - {{item.name}}</a>
+  <li class="collection-item" ng-repeat="item in package.variations | filter:{isCancel: false} track by $index" ng-if="package.variations">
+    <a ng-if="item.isCompleted" href="#" ng-click="goToVariation(item)">Variation - {{item.name}} - Completed</a>
+    <a ng-if="!item.isCompleted" href="#" ng-click="goToVariation(item)">Variation - {{item.name}}</a>
   </li>
   <li class="collection-item" ng-repeat="item in package.defects" ng-if="package.defects">
     <a class="modal-trigger" href="#modal-defect-{{item._id}}">Defect - {{item.title}}</a>
