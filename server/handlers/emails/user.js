@@ -14,7 +14,7 @@ var config = require('./../../config/environment');
 EventBus.onSeries('User.Inserted', function(user, next) {
   if(!user.emailVerified){
     Mailer.sendMail('confirm-email.html', user.email, {
-      user: user,
+      user: user.toJSON(),
       confirmation: config.baseUrl + 'auth/confirm-email/' + user.emailVerifyToken,
       subject: 'Confirm email from buiilt.com'
     }, function(err){

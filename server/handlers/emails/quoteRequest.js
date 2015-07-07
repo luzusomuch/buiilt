@@ -37,10 +37,10 @@ EventBus.onSeries('QuoteRequest.Updated', function(request, next) {
       if (result.builderPackage) {
         Mailer.sendMail('become-home-builder.html', result.project.builder.email, {
           //project owner
-          user: result.user,
-          project: result.project,
+          user: result.user.toJSON(),
+          project: result.project.toJSON(),
           link: config.baseUrl + request.project +'/dashboard',
-          builderPackage: result.builderPackage,
+          builderPackage: result.builderPackage.toJSON(),
           subject: 'Become home builder for project ' + result.project.name
         }, function() {
           return next();

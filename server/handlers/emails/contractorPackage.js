@@ -41,40 +41,36 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
           });
           packageInvite.save(function(err, saved){
             if (err) {return cb(err);}
-            else {
-              Mailer.sendMail('contractor-package-request-no-account.html', saved.to, {
-                contractorPackage: request,
-                user: result.user,
-                project: result.project,
-                registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + saved._id,
-                subject: 'Invite contractor send quote for ' + request.name
-              },function(err){
-               return cb(err);
-              });
-            }
+            Mailer.sendMail('contractor-package-request-no-account.html', saved.to, {
+              contractorPackage: request.toJSON(),
+              user: result.user.toJSON(),
+              project: result.project.toJSON(),
+              registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + saved._id,
+              subject: 'Invite contractor send quote for ' + request.name
+            },function(){
+             return cb();
+            });
           });
         }
         else {
           Team.findOne({'_id': toEmail._id}, function(err, team) {
           if (err || !team) {return cb(err);}
-          else {
-            async.each(team.leader, function(leader, callback) {
-              User.findById(leader, function(err,user) {
-                Mailer.sendMail('contractor-package-request.html', user.email, {
-                  contractorPackage: request,
-                  //project owner
-                  user: result.user,
-                  project: result.project,
-                  contractorPackageLink: config.baseUrl + result.project._id  + '/contractor-requests/' + request._id,
-                  subject: 'Quote request for ' + request.name
-                }, function() {
-                  return callback();
-                });
+          async.each(team.leader, function(leader, callback) {
+            User.findById(leader, function(err,user) {
+              Mailer.sendMail('contractor-package-request.html', user.email, {
+                contractorPackage: request.toJSON(),
+                //project owner
+                user: result.user.toJSON(),
+                project: result.project.toJSON(),
+                contractorPackageLink: config.baseUrl + result.project._id  + '/contractor-requests/' + request._id,
+                subject: 'Quote request for ' + request.name
+              }, function() {
+                return callback();
               });
-            }, function(){
-              return cb();
             });
-          }
+          }, function(){
+            return cb();
+          });
         });
         }
       }, function(){
@@ -110,41 +106,37 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
             });
             packageInvite.save(function(err,saved){
               if (err) {return cb(err);}
-              else {
-                Mailer.sendMail('contractor-package-request-no-account.html', saved.to, {
-                  contractorPackage: request,
-                  user: result.user,
-                  project: result.project,
-                  registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + saved._id,
-                  subject: 'Invite contractor send quote for ' + request.name
-                },function(err){
-                 return cb(err);
-                });
-              }
+              Mailer.sendMail('contractor-package-request-no-account.html', saved.to, {
+                contractorPackage: request.toJSON(),
+                user: result.user.toJSON()
+                project: result.project.toJSON(),
+                registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + saved._id,
+                subject: 'Invite contractor send quote for ' + request.name
+              },function(){
+               return cb();
+              });
             });
           }
           else {
             Team.findOne({'_id': toEmail._id}, function(err, team) {
             if (err || !team) {return cb(err);}
-            else {
-              async.each(team.leader, function(leader, callback) {
-                User.findById(leader, function(err,user) {
-                  if (err || !user) {return cb(err);}
-                  Mailer.sendMail('contractor-package-request.html', user.email, {
-                    contractorPackage: request,
-                    //project owner
-                    user: result.user,
-                    project: result.project,
-                    contractorPackageLink: config.baseUrl + 'contractor-requests/' + request._id,
-                    subject: 'Quote request for ' + request.name
-                  }, function(err) {
-                    return callback(err);
-                  });
+            async.each(team.leader, function(leader, callback) {
+              User.findById(leader, function(err,user) {
+                if (err || !user) {return cb(err);}
+                Mailer.sendMail('contractor-package-request.html', user.email, {
+                  contractorPackage: request.toJSON(),
+                  //project owner
+                  user: result.user.toJSON(),
+                  project: result.project.toJSON(),
+                  contractorPackageLink: config.baseUrl + 'contractor-requests/' + request._id,
+                  subject: 'Quote request for ' + request.name
+                }, function() {
+                  return callback();
                 });
-              }, function(){
-                return cb();
               });
-            }
+            }, function(){
+              return cb();
+            });
           });
           }
         }, function(){

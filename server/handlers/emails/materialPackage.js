@@ -50,9 +50,8 @@ EventBus.onSeries('MaterialPackage.Inserted', function(request, next) {
             project: result.project.toJSON(),
             registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + saved._id,
             subject: 'Invite supplier send quote for ' + request.name
-          },function(err){
-            console.log(err);
-           return cb(err);
+          },function(){
+           return cb();
           });
         });
       }
@@ -61,27 +60,25 @@ EventBus.onSeries('MaterialPackage.Inserted', function(request, next) {
           if (err || !team) {
             return cb(err);
           }
-          else {
-            async.each(team.leader, function(leader, callback) {
-              User.findById(leader, function(err, user) {
-                if (err || !user) {
-                  return callback(err);
-                }
-                Mailer.sendMail('supplier-package-send-quote.html', user.email, {
-                  materialPackage: request.toJSON(),
-                  //project owner
-                  user: result.user.toJSON(),
-                  project: result.project.toJSON(),
-                  link: config.baseUrl + result.project._id + '/material-request/' + request._id,
-                  subject: 'Quote request for ' + request.name
-                }, function() {
-                  return callback();
-                });
+          async.each(team.leader, function(leader, callback) {
+            User.findById(leader, function(err, user) {
+              if (err || !user) {
+                return callback(err);
+              }
+              Mailer.sendMail('supplier-package-send-quote.html', user.email, {
+                materialPackage: request.toJSON(),
+                //project owner
+                user: result.user.toJSON(),
+                project: result.project.toJSON(),
+                link: config.baseUrl + result.project._id + '/material-request/' + request._id,
+                subject: 'Quote request for ' + request.name
+              }, function() {
+                return callback();
               });
-            }, function() {
-              return cb();
             });
-          }
+          }, function() {
+            return cb();
+          });
         });
       }
     }, function(){
@@ -119,8 +116,8 @@ EventBus.onSeries('MaterialPackage.Updated', function(request, next) {
                 project: result.project.toJSON(),
                 registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + saved._id,
                 subject: 'Invite supplier send quote for ' + request.name
-              },function(err){
-               return cb(err);
+              },function(){
+               return cb();
               });
             });
           }
@@ -128,27 +125,26 @@ EventBus.onSeries('MaterialPackage.Updated', function(request, next) {
             Team.findOne({_id: supplier._id}, function(err, team) {
               if (err || !team) {
                 return cb(err);
-              }else {
-                async.each(team.leader, function(leader, callback) {
-                  User.findById(leader, function(err, user) {
-                    if (err || !user) {
-                      return callback(err);
-                    }
-                    Mailer.sendMail('supplier-package-send-quote.html', user.email, {
-                      materialPackage: request.toJSON(),
-                      //project owner
-                      user: result.user.toJSON(),
-                      project: result.project.toJSON(),
-                      link: config.baseUrl + result.project._id + '/material-request/' + request._id,
-                      subject: 'Quote request for ' + request.name
-                    }, function() {
-                      return callback();
-                    });
-                  });
-                }, function() {
-                  return cb();
-                });
               }
+              async.each(team.leader, function(leader, callback) {
+                User.findById(leader, function(err, user) {
+                  if (err || !user) {
+                    return callback(err);
+                  }
+                  Mailer.sendMail('supplier-package-send-quote.html', user.email, {
+                    materialPackage: request.toJSON(),
+                    //project owner
+                    user: result.user.toJSON(),
+                    project: result.project.toJSON(),
+                    link: config.baseUrl + result.project._id + '/material-request/' + request._id,
+                    subject: 'Quote request for ' + request.name
+                  }, function() {
+                    return callback();
+                  });
+                });
+              }, function() {
+                return cb();
+              });
             });
           }
         }, function() {
