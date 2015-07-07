@@ -1,9 +1,11 @@
 angular.module('buiiltApp')
-  .controller('ResetPasswordCtrl', function ($scope, authService, $stateParams) {
+  .controller('ResetPasswordCtrl', function ($scope, authService, $stateParams,token) {
     $scope.email = '';
     $scope.errors = {};
     $scope.submitted = false;
-
+    $scope.token = token;
+    $scope.hasToken = (token._id) ? true : false;
+    $scope.isExpired = new Date($scope.token.expired) < new Date();
     $scope.resetPassword = function(form) {
       $scope.submitted = true;
       if (form.$valid) {

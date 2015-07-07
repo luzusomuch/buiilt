@@ -396,19 +396,25 @@ exports.sendVerification = function(req,res) {
 };
 
 exports.forgotPassword = function(req,res) {
-  ResetPasswordValidator.create(req,function(err,data) {
+  ResetPassword.remove({email : req.body.email},function(err) {
     if (err) {
-      return res.send(422,err);
+      return res.send(500,err);
     }
-    var resetPassword = new ResetPassword(data);
-    resetPassword.save(function(err) {
+    ResetPasswordValidator.create(req,function(err,data) {
       if (err) {
         return res.send(422,err);
       }
-      return res.json(true);
+      var resetPassword = new ResetPassword(data);
+      resetPassword.save(function(err) {
+        if (err) {
+          return res.send(422,err);
+        }
+        return res.json(true);
 
+      })
     })
-  })
+  });
+
 };
 
 exports.resetPassword = function(req,res) {
@@ -429,6 +435,15 @@ exports.resetPassword = function(req,res) {
     })
   })
 };
+
+exports.getResetPasswordToken = function(req,res) {
+  ResetPassword.findOne({resetPasswordToken : req.params.id},function(err,resetPassword) {
+    if (err || !resetPassword) {
+      return res.send(500,err);
+    }
+    return res.json(resetPassword);
+  })
+}
 
 /**
  * Authentication callback

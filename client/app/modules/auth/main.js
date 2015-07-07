@@ -23,7 +23,15 @@ angular.module('buiiltApp').config(function($stateProvider) {
     .state('resetPassword', {
       url: '/reset-password?token',
       templateUrl : '/app/modules/auth/reset-password/reset-password.html',
-      controller: 'ResetPasswordCtrl'
+      controller: 'ResetPasswordCtrl',
+      resolve : {
+        token : [
+          '$stateParams','authService',
+          function($stateParams,authService) {
+            return authService.getResetPasswordToken($stateParams.token);
+          }
+        ]
+      }
     })
     .state('signout', {
       url: '/signout',

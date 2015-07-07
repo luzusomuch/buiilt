@@ -269,6 +269,9 @@ angular.module('buiiltApp')
     },
     resetPassword : function(data) {
       return userService.resetPassword(data);
+    },
+    getResetPasswordToken : function(id) {
+      return userService.getResetPasswordToken({id : id});
     }
 
   };

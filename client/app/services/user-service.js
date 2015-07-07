@@ -35,6 +35,12 @@ angular.module('buiiltApp')
         action : 'reset-password'
       }
     },
+    getResetPasswordToken : {
+      method : 'GET',
+      params : {
+        action : 'reset-password'
+      }
+    },
     getTheBestProviders: { method: 'GET', params: { id: 'theBestProviders'}, isArray: true },
     gets:{method:'GET', params: {action: ''}, isArray: true},
     delete: {method:'DELETE', params: {id: 'id', action: ''}},
