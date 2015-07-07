@@ -146,3 +146,15 @@ span.disabled {
   background-color: #dedede;
   border-radius: 5px;
 }
+
+.progress-bar {
+  float: left;
+  width: 0px;
+  height: 100%;
+  font-size: 12px;
+  color: #FFF;
+  text-align: center;
+  background-color: #428BCA;
+  box-shadow: 0px -1px 0px rgba(0, 0, 0, 0.15) inset;
+  transition: width 0.6s ease 0s;
+}

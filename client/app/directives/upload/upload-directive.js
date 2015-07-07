@@ -64,6 +64,7 @@ angular.module('buiiltApp').directive('upload', function(){
               // CALLBACKS
             uploader.onProgressAll = function (progress) {
                 $scope.progress = progress;
+                Materialize.toast('Upload progress: <div class="progress" style="margin-bottom:0; width:150px;"><div class="progress-bar" role="progressbar" ng-style="{\'width\': '+progress+'%}" style="width:'+progress+'%"></div></div> '+progress+'%',3000);
             };
             uploader.onAfterAddingFile = function (item) {
                 //item.file.name = ''; try to change file name
