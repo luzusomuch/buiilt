@@ -42,9 +42,11 @@
             <li><a ui-sref="signout">Sign out</a></li>
           </ul>
         </li>
-        <li class="notification-open">
+
+        <li class="notification-open" ng-if="user._id">
           <a href="#!" style="position: relative">
             <i class="material-icons">add_alert</i>
+            <span class="count">{{notifications.length}}</span>
           </a>
           <div sp-notification></div>
 

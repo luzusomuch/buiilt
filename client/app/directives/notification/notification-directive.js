@@ -106,17 +106,34 @@ angular.module('buiiltApp')
       controller: [
         '$scope', '$rootScope','notificationService','socket',
         function ($scope, $rootScope, notificationService,socket) {
-          var getNotifications = function() {
-            notificationService.get().$promise
-              .then(function(res) {
-                $scope.notifications = res;
-              })
+          $scope.slimScrollOptions = {height: '390px'};
+          $scope.readMore = true;
+          $scope.notifications = [];
+          var limit = 10;
+          var getNotifications = function(limit) {
+            if ($scope.readMore) {
+
+              notificationService.get({limit : limit}).$promise
+                .then(function(res) {
+                  $scope.notifications = res;
+                  if (limit > res.length) {
+                    $scope.readMore = false;
+                  }
+
+                })
+            }
           };
 
-          getNotifications();
+          $scope.loadMore = function() {
+            limit += 10;
+            getNotifications(limit);
+          };
 
+          getNotifications(limit);
           socket.on('notification:new', function (notification) {
             console.log(notification);
+            $scope.notifications.unshift(notification);
+            $scope.$apply();
           });
         }]
 

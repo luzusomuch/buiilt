@@ -32,8 +32,10 @@ exports.notification = function(req,res,next) {
  */
 exports.get = function(req,res) {
   var user = req.user;
+  var limit = (req.query.limit) ? req.query.limit : 10
   Notification.find({owner : user._id})
     .sort('-createdDate')
+    .limit(limit)
     .populate('owner')
     .populate('fromUser')
     .populate('toUser')

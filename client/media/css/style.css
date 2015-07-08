@@ -165,7 +165,6 @@ span.disabled {
   opacity: 0;
   visibility:hidden;
   max-width: 500px;
-  min-height: 200px;
   background-color: #FFF;
   position: absolute;
   z-index: 1000;
@@ -179,7 +178,7 @@ span.disabled {
   border-bottom: solid 1px #dedede;
 }
 
-.notification-list ._notification a{
+.notification-list ._notification p a{
   display: inline;
   color: #039be5;
   padding: 0px;
@@ -188,6 +187,19 @@ span.disabled {
 .notification-list ._notification p{
   line-height: 2rem;
 
+}
+
+.count {
+  position: absolute;
+  top: 12px;
+  right: 10px;
+  background-color: #ffc721;
+  width: 16px;
+  height: 16px;
+  /* display: block; */
+  line-height: 16px;
+  border-radius: 50%;
+  text-align: center
 }
 .progress-bar {
   float: left;

@@ -32,7 +32,7 @@ function _parse(initPath, callback) {
 function onDisconnect(socket) {
   EventBus.removeListener('toSocket.voiceIncomming', function(){});
 
-  socket.leave(socket.decoded_token._id);
+  //socket.leave(socket.decoded_token._id);
 }
 
 // When the user connects.. perform this
@@ -74,10 +74,10 @@ module.exports = function (socketio) {
   // 1. You will need to send the token in `client/components/socket/socket.service.js`
   //
   // 2. Require authentication here:
-   socketio.use(require('socketio-jwt').authorize({
-     secret: config.secrets.session,
-     handshake: true
-   }));
+  // socketio.use(require('socketio-jwt').authorize({
+  //   secret: config.secrets.session,
+  //   handshake: true
+  // }));
 
   socketio.on('connection', function (socket) {
     socket.address = socket.handshake.address !== null ?
