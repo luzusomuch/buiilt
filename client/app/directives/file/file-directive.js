@@ -16,6 +16,7 @@ angular.module('buiiltApp').directive('file', function(){
                 fileService.getFileByStateParam({'id': $stateParams.id}).$promise.then(function(data) {
                     $scope.files = data;
                     _.each($scope.files, function(file){
+                        file.totalLike = file.usersInterestedIn.length;
                         if (_.find(file.usersInterestedIn,{_id: $scope.currentUser._id})) {
                             file.isInterested = true;
                         }
@@ -36,6 +37,12 @@ angular.module('buiiltApp').directive('file', function(){
             $scope.likeDocument = function(value) {
                 fileService.interested({'id': value._id, isInterested: value.isInterested}).$promise.then(function(data) {
                    value.isInterested = !value.isInterested;
+                   if (value.isInterested) {
+                        value.totalLike = value.totalLike +1;
+                   }
+                   else {
+                        value.totalLike = value.totalLike -1;
+                   }
                 });
             };
 

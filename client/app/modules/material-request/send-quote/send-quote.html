@@ -13,10 +13,6 @@
        </ul>
    </div>
  </div>
- 
- <div class="row">
-   <p class="col s12">{{materialRequest.description}}</p>
- </div>
 
  <div class="row">
    <div class="col s12">
@@ -25,7 +21,7 @@
          <div class="collapsible-header">Detail</div>
          <div class="collapsible-body">
           <div class="col s12">
-            <h5>Description</h5>
+            <h6>Description</h6>
             <table>
               <thead>
                 <th>#</th>
@@ -40,7 +36,7 @@
             </table>
           </div>
           <div class="col s12">
-            <h5>Requirements:</h5>
+            <h6>Requirements:</h6>
             <table>
               <thead>
                 <th>#</th>
@@ -57,7 +53,7 @@
             </table>
           </div>
           <div class="col s12" ng-if="materialRequest.addendums.length > 0">
-            <h5>Addendum:</h5>
+            <h6>Addendum:</h6>
               <div class="row" ng-repeat="addendum in materialRequest.addendums | filter:{isHidden: true}" ng-if="$last">
                 <h6>{{addendum.description}}</h6>
                 <h6>Addendum scope</h6>

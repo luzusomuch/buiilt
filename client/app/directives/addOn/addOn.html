@@ -343,8 +343,7 @@
     <div class="col s12">
       <h5>Invoice {{invoice.title}} with total {{invoice.total}}</h5>
     </div>
-    <div class="col s12" ng-if="invoice.quotePrice">
-      <h5>Quote price</h5>
+    <div class="col s12">
       <table>
         <thead>
           <th>#</th>
@@ -361,24 +360,10 @@
             <td>1</td>
             <td>{{price.total}}</td>
           </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="col s12" ng-if="invoice.quoteRate">
-      <h5>Quote rate</h5>
-      <table>
-        <thead>
-          <th>#</th>
-          <th>Description</th>
-          <th>Rate</th>
-          <th>Quantity</th>
-          <th>Total</th>
-        </thead>
-        <tbody>
-          <tr ng-repeat="rate in invoices.quoteRate">
+          <tr ng-repeat="rate in invoice.quoteRate">
             <td>{{$index + 1}}</td>
             <td>{{rate.description}}</td>
-            <td>{{rate.price}}</td>
+            <td>{{rate.rate}}</td>
             <td>{{rate.quantity}}</td>
             <td>{{rate.total}}</td>
           </tr>
@@ -465,7 +450,6 @@
          
        </div>
        <div class="row" ng-hide="quoteLater">
-         <div class="row">
        <div class="col s12">
         <ul class="collection z-depth-1">
           <li class="collection-item vlalign-wrapper">
@@ -526,7 +510,6 @@
       </li>
     </ul>
   </div>
-</div>
 <div class="row" style="margin-top: 50px">
  <div class="col s6 valign">
    <div class="file-field input-field">

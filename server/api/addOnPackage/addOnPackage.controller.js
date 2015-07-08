@@ -860,6 +860,7 @@ exports.removeAddendum = function(req, res){
 
 exports.editAddendum = function(req, res) {
     var packageType = req.body.packageType;
+    console.log(req.body.addendum);
     if (packageType == 'contractor') {
         ContractorPackage.findById(req.params.id, function(err, contractorPackage){
             if (err) {return res.send(500,err);}
@@ -875,8 +876,10 @@ exports.editAddendum = function(req, res) {
                     else {
                         pack.description = pack.description;
                     }
-                    _.each(pack.addendumsScope, function(addendumScope) {
-                        _.forEach(req.body.addendum.scopeDescription, function(value, key){
+                    async.each(pack.addendumsScope, function(addendumScope, callback) {
+                        _.each(req.body.addendum.scopeDescription, function(value){
+                            console.log(addendumScope);
+                            console.log(value);
                             if (addendumScope.description != value
                                 && value != '{{addendumScope.description}}') {
                                 addendumScope.description = value;
@@ -885,7 +888,7 @@ exports.editAddendum = function(req, res) {
                                 addendumScope.description = addendumScope.description;   
                             }
                         });
-                        _.forEach(req.body.addendum.quantity, function(value,key){
+                        _.each(req.body.addendum.quantity, function(value){
                             if (addendumScope.quantity != value
                                 && value != '{{addendumScope.quantity}}') {
                                 addendumScope.quantity = value;
@@ -894,15 +897,16 @@ exports.editAddendum = function(req, res) {
                                 addendumScope.quantity = addendumScope.quantity;   
                             }
                         });
-                        contractorPackage.save();
-                    });
-                    contractorPackage.markModified('editAddendum');
-                    contractorPackage._editUser = req.user;
-                    contractorPackage.save(function(err, saved) {
-                        if (err) {return res.send(500,err);}
-                        else {
-                            return res.json(200,saved);
-                        }
+                        callback();
+                    }, function(){
+                        contractorPackage.markModified('editAddendum');
+                        contractorPackage._editUser = req.user;
+                        contractorPackage.save(function(err, saved) {
+                            if (err) {return res.send(500,err);}
+                            else {
+                                return res.json(200,saved);
+                            }
+                        });
                     });
                 }
                 else {

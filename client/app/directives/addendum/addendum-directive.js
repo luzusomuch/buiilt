@@ -7,7 +7,7 @@ angular.module('buiiltApp').directive('addendum', function(){
             package: '=',
             type: '@'
         },
-        controller: function($scope,addOnPackageService) {
+        controller: function($scope,$timeout,addOnPackageService) {
             $scope.addendum = {};
             $scope.editAddendum = {};
             $scope.addendumScope = {};
@@ -51,6 +51,9 @@ angular.module('buiiltApp').directive('addendum', function(){
                     $scope.package = data;
                 }, function(res){
                     $scope.error = true;
+                    $timeout(function() {
+                        $scope.error = false;
+                    }, 5000);
                 });
             }
         }
