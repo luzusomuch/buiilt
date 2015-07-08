@@ -32,12 +32,13 @@ EventBus.onSeries('BuilderPackage.Inserted', function(request, next) {
       });
       packageInvite.save(function(err) {
         if(err){ next(); }
-        Mailer.sendMail('invite-' + request.to.type + '-has-no-account.html', request.to.email, {
+        Mailer.sendMail('invite-' + subjectType + '-has-no-account.html', request.to.email, {
           project: result.project.toJSON(),
           team: result.team.toJSON(),
           registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
           subject: 'Invite ' + subjectType + ' send quote for ' + request.name
-        },function(){
+        },function(err){
+          console.log(err);
          return next();
         });
       });
@@ -49,7 +50,7 @@ EventBus.onSeries('BuilderPackage.Inserted', function(request, next) {
 
           if (team.type == request.to.type) {
             team.leader.forEach(function(leader) {
-              Mailer.sendMail('invite-' + request.to.type + '.html', leader.email, {
+              Mailer.sendMail('invite-' + subjectType + '.html', leader.email, {
                 project: result.project.toJSON(),
                 team: result.team.toJSON(),
                 link: config.baseUrl + request.project._id + '/dashboard',
