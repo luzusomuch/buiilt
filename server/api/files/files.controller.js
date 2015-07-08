@@ -72,3 +72,26 @@ exports.downloadFile = function(req, res) {
         }
     });
 };
+
+exports.downloadAll = function(req, res) {
+    File.find({belongTo:req.params.id}, function(err, files){
+        if (err) {return res.send(500,err);}
+        else {
+            var listFileUrls = [];
+            _.each(files, function(file){
+                var fileUrl = {url: s3.getPublicUrl(file.name)};    
+                listFileUrls.push(fileUrl);
+            });
+            return res.json(200,listFileUrls);
+            
+            // return res.json(200,fileUrl);
+            // s3.downloadFile(file, function(err, data) {
+            //     if (err) {return res.send(500,err);}
+            //     else {
+            //         console.log(data)
+            //         return res.json(200,data);
+            //     }
+            // });
+        }
+    });
+};

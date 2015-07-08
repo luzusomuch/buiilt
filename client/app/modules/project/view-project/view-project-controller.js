@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('ViewProjectCtrl', function($scope, $stateParams, authService,documentService, projectService, project, packageService) {
+angular.module('buiiltApp').controller('ViewProjectCtrl', function($window,$scope, $stateParams, authService,documentService, projectService, project, packageService, fileService) {
   $scope.errors = {};
   $scope.project=project;
   $scope.docum = {};
@@ -16,6 +16,14 @@ angular.module('buiiltApp').controller('ViewProjectCtrl', function($scope, $stat
     documentService.create({'id': $scope.project._id},$scope.docum).$promise
       .then(function(data) {
       $scope.success = true;
+    });
+  };
+
+  $scope.downloadAll = function() {
+    fileService.downloadAll({id: $stateParams.id}).$promise.then(function(data){
+      _.each(data, function(url){
+        $window.open(url.url);
+      });
     });
   };
 
