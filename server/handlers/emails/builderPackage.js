@@ -37,8 +37,7 @@ EventBus.onSeries('BuilderPackage.Inserted', function(request, next) {
           team: result.team.toJSON(),
           registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
           subject: 'Invite ' + subjectType + ' send quote for ' + request.name
-        },function(err){
-          console.log(err);
+        },function(){
          return next();
         });
       });

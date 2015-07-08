@@ -8,21 +8,6 @@
 
 <div>
   <h6>Material package detail</h6>
-    Description:
-    <table style="width:100%">
-        <thead>
-            <th>#</th>
-            <th>Description</th>
-        </thead>
-        <tbody>
-            {% for description in materialPackage.descriptions %}
-            <tr>
-                <td style="text-align:center"><%= loop.index %></td>
-                <td style="text-align:center"><%= description %></td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
     Requirement:
     <table style="width:100%">
         <thead>

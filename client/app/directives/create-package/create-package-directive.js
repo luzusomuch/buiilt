@@ -243,9 +243,9 @@ angular.module('buiiltApp').directive('createPackage', function(){
       };
 
 
-      $scope.$watchGroup(['material.descriptions.length', 'materialSubmitted'], function (value) {
-        $scope.materialDescriptionError = (value[0] <= 0 && value[1]);
-      });
+      // $scope.$watchGroup(['material.descriptions.length', 'materialSubmitted'], function (value) {
+      //   $scope.materialDescriptionError = (value[0] <= 0 && value[1]);
+      // });
       $scope.$watchGroup(['materialMember.emailsPhone.length', 'materialSubmitted'], function (value) {
         $scope.supplierError = (value[0] <= 0 && value[1]);
       });

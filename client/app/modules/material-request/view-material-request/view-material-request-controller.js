@@ -5,6 +5,7 @@ angular.module('buiiltApp')
    */
   $scope.emailsPhone = [];
   $scope.materialRequest = materialRequest;
+  console.log(materialRequest);
   $scope.currentTeam = currentTeam;
   $scope.currentUser = {};
   if ($cookieStore.get('token')) {
