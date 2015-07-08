@@ -12,44 +12,56 @@ var config = require('./../../config/environment');
 var async = require('async');
 
 EventBus.onSeries('BuilderPackage.Inserted', function(request, next) {
-  var subjectType = (request.to.type == 'homeOwner') ? 'homeowner' : 'builder';
-  if (request.to.email) {
-    var packageInvite = new PackageInvite({
-      owner: request.owner,
-      project: request.project,
-      package: request._id,
-      inviteType : request.to.type,
-      to: request.to.email
-    });
-    packageInvite.save(function(err) {
-      if(err){ next(); }
-      Mailer.sendMail('invite-' + request.to.type + '-has-no-account.html', request.to.email, {
+  async.parallel({
+    team: function(cb) {
+      Team.findById(request.owner, cb);
+    },
+    project: function(cb){
+      Project.findById(request.project, cb);
+    }
+  },function(err,result){
+    if (err) {return next();}
+    var subjectType = (request.to.type == 'homeOwner') ? 'homeowner' : 'builder';
+    if (request.to.email) {
+      var packageInvite = new PackageInvite({
+        owner: request.owner,
         project: request.project,
-        registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
-        subject: 'Invite ' + subjectType + ' send quote for ' + request.name
-      },function(){
-       return next();
+        package: request._id,
+        inviteType : request.to.type,
+        to: request.to.email
       });
-    });
-  } else {
-    Team.findById(request.to.team)
-      .populate('leader')
-      .exec(function(err, team) {
-        if(err || !team){ next(); }
+      packageInvite.save(function(err) {
+        if(err){ next(); }
+        Mailer.sendMail('invite-' + request.to.type + '-has-no-account.html', request.to.email, {
+          project: result.project.toJSON(),
+          team: result.team.toJSON(),
+          registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
+          subject: 'Invite ' + subjectType + ' send quote for ' + request.name
+        },function(){
+         return next();
+        });
+      });
+    } else {
+      Team.findById(request.to.team)
+        .populate('leader')
+        .exec(function(err, team) {
+          if(err || !team){ next(); }
 
-        if (team.type == request.to.type) {
-          team.leader.forEach(function(leader) {
-            Mailer.sendMail('invite-' + request.to.type + '.html', leader.email, {
-              project: request.project,
-              link: config.baseUrl + request.project._id + '/dashboard',
-              subject: 'Invite ' + subjectType + ' send quote for ' + request.name
-            }, function () {
-              return next();
+          if (team.type == request.to.type) {
+            team.leader.forEach(function(leader) {
+              Mailer.sendMail('invite-' + request.to.type + '.html', leader.email, {
+                project: result.project.toJSON(),
+                team: result.team.toJSON(),
+                link: config.baseUrl + request.project._id + '/dashboard',
+                subject: 'Invite ' + subjectType + ' send quote for ' + request.name
+              }, function () {
+                return next();
+              });
             });
-          });
-        }else{
-          return next();
-        }
-    });
-  }
+          }else{
+            return next();
+          }
+      });
+    }
+  });
 });

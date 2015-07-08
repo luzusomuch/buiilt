@@ -23,6 +23,9 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
     user: function(cb){
       User.findOne({_id: request.ownerUser._id}, cb);
     },
+    team: function(cb){
+      Team.findOne({_id: request.owner}, cb);
+    },
     project: function(cb){
       //find project
       Project.findOne({_id: request.project}, cb);
@@ -42,6 +45,7 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
           packageInvite.save(function(err, saved){
             if (err) {return cb(err);}
             Mailer.sendMail('contractor-package-request-no-account.html', saved.to, {
+              team: result.team.toJSON(),
               contractorPackage: request.toJSON(),
               user: result.user.toJSON(),
               project: result.project.toJSON(),
@@ -60,6 +64,7 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
               Mailer.sendMail('contractor-package-request.html', user.email, {
                 contractorPackage: request.toJSON(),
                 //project owner
+                team: result.team.toJSON(),
                 user: result.user.toJSON(),
                 project: result.project.toJSON(),
                 contractorPackageLink: config.baseUrl + result.project._id  + '/contractor-requests/' + request._id,
@@ -88,6 +93,9 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
       user: function(cb){
         User.findOne({_id: request.editUser._id}, cb);
       },
+      team: function(cb){
+        Team.findOne({_id: request.owner}, cb);
+      },
       project: function(cb){
         //find project
         Project.findOne({_id: request.project}, cb);
@@ -107,6 +115,7 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
             packageInvite.save(function(err,saved){
               if (err) {return cb(err);}
               Mailer.sendMail('contractor-package-request-no-account.html', saved.to, {
+                team: result.team.toJSON(),
                 contractorPackage: request.toJSON(),
                 user: result.user.toJSON(),
                 project: result.project.toJSON(),
@@ -126,6 +135,7 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
                 Mailer.sendMail('contractor-package-request.html', user.email, {
                   contractorPackage: request.toJSON(),
                   //project owner
+                  team: result.team.toJSON(),
                   user: result.user.toJSON(),
                   project: result.project.toJSON(),
                   contractorPackageLink: config.baseUrl + 'contractor-requests/' + request._id,

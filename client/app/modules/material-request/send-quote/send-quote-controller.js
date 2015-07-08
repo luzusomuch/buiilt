@@ -55,6 +55,7 @@ angular.module('buiiltApp')
     materialRequestService.sendMessageToBuilder({id: $stateParams.packageId, team: $scope.currentTeam._id, message: $scope.message.message})
     .$promise.then(function(data) {
       $scope.messages = data;
+      $scope.message.message = null;
     });
   };
 

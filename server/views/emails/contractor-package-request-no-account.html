@@ -2,22 +2,29 @@
 
 {% block content %}
 <p>
-  <%= user.email %> has invited you to send quote for contractor package <%= contractorPackage.name %>
+  <%= team.name %> has invited you to send quote for contractor package <%= contractorPackage.name %>
 </p>
 
-<p>
-  <b>Project detail <%= project.name %></b>
-  <%= project.description %>
-</p>
-
-<p>
-  <b>Contractor package detail</b>
-  <%= contractorPackage.description %>
-</p>
+<div>
+  <h6>Contractor package detail</h6>
+    <table style="width:100%">
+        <thead>
+            <th>#</th>
+            <th>Description</th>
+        </thead>
+        <tbody>
+            {% for description in contractorPackage.descriptions %}
+            <tr>
+                <td style="text-align:center"><%= loop.index %></td>
+                <td style="text-align:center"><%= description %></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
 <p>
     Please click <a href="<%= registryLink %>">here</a> to sign up first.
-  Then you can click <a href="<%= contractorPackageLink %>">here</a> to send the request.
 
   <br/>
   Feel free to contact us at <a href="mailto:admin@buiilt.com">admin@buiilt.com</a> if you have any questions.

@@ -14,13 +14,12 @@ var User = require('./../../models/user.model');
  */
 EventBus.onSeries('ResetPassword.Inserted', function(resetPassword, next) {
   User.findOne({email : resetPassword.email},function(err,user) {
-    if (err) {console.log(err)}
+    if (err) {return next();}
     Mailer.sendMail('reset-password.html', resetPassword.email, {
       name: user.firstName + ' ' + user.lastName,
       resetPassword: config.baseUrl + 'reset-password?token=' + resetPassword.resetPasswordToken,
       subject: 'Reset password email from buiilt.com'
-    }, function(err){
-      if (err) {console.log(err)}
+    }, function(){
       return next();
     });
   });

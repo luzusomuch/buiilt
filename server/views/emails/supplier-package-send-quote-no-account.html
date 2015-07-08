@@ -2,17 +2,29 @@
 
 {% block content %}
 <p>
-  <%= user.email %> has invited you to send quote for material package <%= materialPackage.name %>
+  <%= team.name %> has invited you to send quote for material package <%= materialPackage.name %>
 </p>
 
-<p>
-  <b>Project detail <%= project.name %></b>
-  <%= project.description %>
-</p>
 
 <div>
   <h6>Material package detail</h6>
-    <table>
+    Description:
+    <table style="width:100%">
+        <thead>
+            <th>#</th>
+            <th>Description</th>
+        </thead>
+        <tbody>
+            {% for description in materialPackage.descriptions %}
+            <tr>
+                <td style="text-align:center"><%= loop.index %></td>
+                <td style="text-align:center"><%= description %></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    Requirement:
+    <table style="width:100%">
         <thead>
             <th>#</th>
             <th>Description</th>
@@ -21,9 +33,9 @@
         <tbody>
             {% for requirement in materialPackage.requirements %}
             <tr>
-                <td></td>
-                <td><%= requirement.description %></td>
-                <td><%= requirement.quantity %></td>
+                <td style="text-align:center"><%= loop.index %></td>
+                <td style="text-align:center"><%= requirement.description %></td>
+                <td style="text-align:center"><%= requirement.quantity %></td>
             </tr>
             {% endfor %}
         </tbody>
