@@ -33,7 +33,7 @@
     </div>
   </div>
   <div class="divider"></div>
-  <div id="messages" style="height: 500px; overflow-y: auto">
+  <div id="messages" style="height: 500px; overflow-y: auto"  scroll-to-bottom="currentThread.messages">
 
     <li class="collection-item" ng-repeat="message in currentThread.messages">
       <div class="row valign-wrapper" style="margin-bottom: -5px">
@@ -48,11 +48,12 @@
   <div class="divider"></div>
   <div class="col s12 card-footer" style="height: 150px" ng-show="currentThread">
     <div class="row">
-      <form class="col s10 offset-s1 ng-pristine ng-valid" name="messageForm" novalidate ng-submit="sendMessage(messageForm)">
+      <form class="col s10 offset-s1 ng-pristine ng-valid" name="messageForm" novalidate ng-submit="sendMessage()">
         <div class="input-field col s9">
-          <textarea name="text" id="textarea1" class="materialize-textarea" ng-model="message.text" required ng-class="{'invalid' : messageForm.text.$invalid && messageFormSubmitted}"></textarea>
+          <textarea name="text" id="textarea1" class="materialize-textarea" ng-model="message.text"
+                    ng-keydown="enterMessage($event);">
+          </textarea>
           <label for="textarea1">Send a Message...</label>
-          <p class="validate-message" ng-if="messageForm.text.$error.required && messageFormSubmitted">Message text is required</p>
         </div>
         <div class="input-field col s3">
           <button class="btn-large waves-effect waves-yellow" type="submit" style="margin-top: 47px" name="action">Send

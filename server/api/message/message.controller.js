@@ -12,6 +12,7 @@ var ThreadValidator = require('./../../validators/thread');
 var errorsHelper = require('../../components/helpers/errors');
 var _ = require('lodash');
 var async = require('async');
+var EventBus = require('../../components/EventBus');
 
 var getPackage = function(type) {
   var _package = {};
@@ -165,6 +166,16 @@ exports.saveMessage = function(req,res) {
         if (err) {
           return res.send(422,err);
         }
+        EventBus.emit('socket:emit', {
+          event: 'message:new',
+          room: thread._id.toString(),
+          data: thread
+        });
+        //EventBus.emit('socket:emit', {
+        //  event: 'message:new',
+        //  room: thread.owner.toString(),
+        //  data: thread
+        //});
         return res.json(thread)
       })
 

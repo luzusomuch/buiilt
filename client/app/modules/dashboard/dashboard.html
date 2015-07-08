@@ -126,9 +126,9 @@
 
         <div class="col s12">
           <ul class="collection">
-            <div style="height: 300px; background-color: white; overflow-y: auto" class="messages">
+            <div style="height: 300px; background-color: white; overflow-y: auto" class="messages" scroll-to-bottom="currentThread.messages">
 
-              <li class="collection-item" ng-repeat="message in thread.messages">
+              <li class="collection-item" ng-repeat="message in currentThread.messages">
                 <div class="row valign-wrapper" style="margin-bottom: -5px ">
                   <p class="col s9 valign">{{message.text}}</p>
                   <div class="card col" style="padding: 5px; margin-left: 10px">

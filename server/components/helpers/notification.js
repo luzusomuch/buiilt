@@ -1,20 +1,7 @@
 var _ = require('lodash');
 var async = require('async');
 var Notification = require('./../../models/notification.model');
-
-/**
- * populate response error
- *
- * return {
- *  type: 'Validator',
- *  errors: {
- *    fieldName: {
- *      type: 'required',
- *      msg: 'Message data'
- *    }
- *  }
- * }
- */
+var EventBus = require('./../EventBus');
 exports.create = function(params,cb){
   async.each(params.owners,function(owner,callback) {
     var notification = new Notification({
@@ -29,6 +16,11 @@ exports.create = function(params,cb){
       if (err) {
         return callback(err);
       }
+      EventBus.emit('socket:emit', {
+        event: 'notification:new',
+        room: notification.owner.toString(),
+        data: notification
+      });
       callback(null);
     })
   },function(err) {

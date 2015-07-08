@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-  .controller('DashboardCtrl', function($scope,$state, $timeout, $q, userService, $rootScope,myFiles,myTasks,myThreads,authService,taskService,messageService,notificationService) {
+  .controller('DashboardCtrl', function($scope,$state, socket, $q, userService, $rootScope,myFiles,myTasks,myThreads,authService,taskService,messageService,notificationService) {
     $scope.currentProject = $rootScope.currentProject;
     $scope.myTasks = myTasks;
     _.forEach($scope.myTasks,function(task) {
@@ -126,33 +126,28 @@ angular.module('buiiltApp')
     $scope.editTask = function(task) {
       $scope.isShow = false;
       $scope.task = task;
-      console.log($scope.task.assignees.length);
     };
 
 
-    var messages = document.getElementsByClassName('messages');
-    var _index = 0;
 
     $scope.showChat = function(thread,index) {
       $scope.message = {text : ''};
-      _index = index;
-      $timeout(function() {
-        updateMessage(thread,_index)
-      },2000);
       $scope.currentThread = thread;
+      $scope.index = index;
+      socket.emit('join',thread._id);
       notificationService.read({_id : thread._id})
     };
 
-    $scope.$watch('scrollHeight',function(value) {
-      if (value)
-        $(messages[_index]).scrollTop(value)
+    socket.on('message:new', function (thread) {
+      $scope.currentThread = thread;
+      $scope.$apply();
     });
+
 
     //Assign people to task
     $scope.assign = function(staff,index) {
       staff.canRevoke = true;
       $scope.task.assignees.push(staff);
-      console.log($scope.task.assignees.length);
       $scope.available.splice(index,1);
     };
 
@@ -198,20 +193,5 @@ angular.module('buiiltApp')
             $scope.messageFormSubmitted = false;
           });
       }
-    };
-
-    var updateMessage = function(thread) {
-      messageService.getOne({id : thread._id, type : thread.type}).$promise
-        .then(function(res) {
-          thread.messages = res.messages;
-          if (thread) {
-            $timeout(function() {
-              updateMessage(thread)
-            },3000);
-          }
-          if (messages[_index]) {
-            $scope.scrollHeight = messages[_index].scrollHeight;
-          }
-        })
     };
 });

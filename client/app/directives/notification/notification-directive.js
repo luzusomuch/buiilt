@@ -77,7 +77,7 @@ angular.module('buiiltApp')
           text = params.fromUser  + 'has update document ' + params.fileName + ' in project ' + params.place;
         }
         text += ' Click <a href="#!" ng-click="goToDetail(notification)">here</a> for more infomation';
-        element.html(text).show();
+        element.html('<p>' + text + '</p>').show();
         $compile(element.contents())(scope);
       },
       controller: function ($scope, $rootScope, taskService, authService, $state, notificationService) {
@@ -96,5 +96,29 @@ angular.module('buiiltApp')
         }
 
       }
+    }
+  })
+  .directive('spNotification',function() {
+    return {
+      restrict: 'EA',
+      replace : true,
+      templateUrl: 'app/directives/notification/notification.html',
+      controller: [
+        '$scope', '$rootScope','notificationService','socket',
+        function ($scope, $rootScope, notificationService,socket) {
+          var getNotifications = function() {
+            notificationService.get().$promise
+              .then(function(res) {
+                $scope.notifications = res;
+              })
+          };
+
+          getNotifications();
+
+          socket.on('notification:new', function (notification) {
+            console.log(notification);
+          });
+        }]
+
     }
   });

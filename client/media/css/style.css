@@ -21,12 +21,13 @@
 main.container{
   margin-top: 15px;
   width: 80%;
-
+  min-height: 450px;
 }
 
 table.team {
     background-color: #FFF;
 }
+
 
 .overlay-bg {
     width: 100%;
@@ -147,6 +148,41 @@ span.disabled {
   border-radius: 5px;
 }
 
+.notification-open:hover .notification-list  {
+  opacity: 1;
+
+  visibility:visible;
+  transition-delay:0s;
+}
+
+.notification-list {
+  opacity: 0;
+  visibility:hidden;
+  max-width: 500px;
+  min-height: 200px;
+  background-color: #FFF;
+  position: absolute;
+  z-index: 1000;
+  right: 22px;
+  transition:visibility 0s linear 0.3s,opacity 0.3s linear;
+}
+
+.notification-list ._notification{
+  color:#000;
+  padding: 10px;
+  border-bottom: solid 1px #dedede;
+}
+
+.notification-list ._notification a{
+  display: inline;
+  color: #039be5;
+  padding: 0px;
+}
+
+.notification-list ._notification p{
+  line-height: 2rem;
+
+}
 .progress-bar {
   float: left;
   width: 0px;

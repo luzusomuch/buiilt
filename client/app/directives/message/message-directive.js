@@ -8,7 +8,7 @@ angular.module('buiiltApp')
         type : '@'
       },
       controller:
-        function($scope,$rootScope,messageService, authService,$timeout,$anchorScroll,$location,filterFilter, $cookieStore, $stateParams, $location , packageService, userService, projectService, FileUploader, documentService) {
+        function($scope,$rootScope,messageService, authService,socket,$timeout,$anchorScroll,$location,filterFilter, $cookieStore, $stateParams, $location , packageService, userService, projectService, FileUploader, documentService) {
           //Init Params
           $scope.currentProject = $rootScope.currentProject;
           authService.getCurrentUser().$promise.then(function(res) {
@@ -124,17 +124,11 @@ angular.module('buiiltApp')
           var getMessage = function() {
             if ($scope.currentThread)
               updateThread();
-            $timeout(getMessage,3000);
-            if ($('#messages')[0])
-             $scope.scrollHeight = $('#messages')[0].scrollHeight;
+            //$timeout(getMessage,3000);
+
           };
 
-          $timeout(getMessage,3000);
-
-          $scope.$watch('scrollHeight',function(newVal) {;
-            if (newVal)
-              $('#messages').scrollTop($('#messages')[0].scrollHeight)
-          })
+          //$timeout(getMessage,3000);
 
           //Function fired when click new task
           $scope.newThread = function() {
@@ -171,19 +165,31 @@ angular.module('buiiltApp')
           $scope.selectThread = function(thread) {
             $scope.currentThread = thread;
 
+            socket.emit('join',thread._id);
           };
 
-          $scope.sendMessage = function(form) {
-            $scope.messageFormSubmitted = true;
-            if (form.$valid) {
-              messageService.sendMessage({id : $scope.currentThread._id, type : $scope.type},$scope.message).$promise
-                .then(function(res) {
-                  $scope.currentThread = res;
-                  updateThread();
+          socket.on('message:new', function (thread) {
+            $scope.currentThread = thread;
+            console.log($scope.scrollHeight = $('#messages')[0].scrollHeight);
+          });
+
+          $scope.enterMessage = function ($event) {
+            if ($event.keyCode === 13) {
+              $event.preventDefault();
+              $scope.sendMessage();
+            }
+          };
+
+          $scope.sendMessage = function() {
+            if ($scope.message.text != '') {
+              messageService.sendMessage({id: $scope.currentThread._id, type: $scope.type}, $scope.message).$promise
+                .then(function (res) {
+                  //$scope.currentThread = res;
+                  //updateThread();
                   $scope.message.text = '';
-                  $scope.messageFormSubmitted = false;
                 });
             }
+
           };
 
           $scope.saveThread = function(form) {
@@ -194,6 +200,7 @@ angular.module('buiiltApp')
                   .then(function (res) {
                     $('.card-title').trigger('click');
                     $scope.currentThread = res;
+                    socket.emit('join',res._id);
                     updateThread();
                   })
               } else {

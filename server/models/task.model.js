@@ -77,7 +77,7 @@ var TaskSchema = new Schema({
   archived: {type: Boolean, default: false},
   hidden: {type: Boolean, default: false},
   createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now }
 },{
   strict: true,
   minimize: false

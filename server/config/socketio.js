@@ -1,4 +1,4 @@
-/**
+  /**
  * Socket.io configuration
  */
 
@@ -40,11 +40,16 @@ function onConnect(socket) {
   //global
   //socket.join(config.app.name);
   //user room
-  socket.join(socket.decoded_token._id);
+  //socket.join(socket.decoded_token._id);
 
   // When the client emits 'info', this listens and executes
   socket.on('info', function (data) {
     console.info('[%s] %s', socket.address, JSON.stringify(data, null, 2));
+  });
+
+  socket.on('join', function (id) {
+    console.log('user join room [%s] socket id [%s]', id, socket.id);
+    socket.join(id);
   });
 
   //new TwilioSocket(socket);
@@ -91,4 +96,15 @@ module.exports = function (socketio) {
     onConnect(socket);
     console.info('[%s] CONNECTED', socket.address);
   });
+
+  EventBus.on('socket:emit',function(payload) {
+    if (!payload.event) {
+      return;
+    }
+    if (payload.room) {
+      socketio.sockets.in(payload.room).emit(payload.event, payload.data);
+    } else {
+      socketio.sockets.emit(payload.event, payload.data);
+    }
+  })
 };

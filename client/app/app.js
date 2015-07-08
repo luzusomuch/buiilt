@@ -14,6 +14,7 @@ angular.module('buiiltApp', [
   'contenteditable',
   '720kb.tooltips',
   'angucomplete-alt',
+  'btford.socket-io'
 ]);
 
 angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider, $locationProvider, $urlRouterProvider, $httpProvider, $sceDelegateProvider, cfpLoadingBarProvider) {
@@ -55,6 +56,7 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
   .run(function ($rootScope, $cookieStore, cfpLoadingBar, authService, $location,projectService,$state) {
     cfpLoadingBar.start();
     $rootScope.currentProject = null;
+    $rootScope.authService = authService;
     $rootScope.safeApply = function (fn) {
       var phase = $rootScope.$$phase;
       if (phase === '$apply' || phase === '$digest') {

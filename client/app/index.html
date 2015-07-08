@@ -38,6 +38,7 @@
     <script src="/bower_components/angular-resource/angular-resource.js"></script>
     <script src="/bower_components/angular-ui-utils/ui-utils.js"></script>
     <script src="/bower_components/angular-tooltips/dist/angular-tooltips.min.js"></script>
+    <script src="/bower_components/angular-socket-io/socket.min.js"></script>
     <script src="/bower_components/es5-shim/es5-shim.min.js"></script>
     <script src="/bower_components/angular-file-upload/angular-file-upload.js"></script>
     <script src="/bower_components/angular-notify/angular-notify.js"></script>
@@ -55,6 +56,9 @@
 
     <script src="/app/components/angular-materialize/src/angular-materialize.js"></script>
     <script src="/app/components/filters.js"></script>
+    <script src="/app/components/directive.js"></script>
+    <script src="/app/components/socket/socket.service.js"></script>
+    <script src="socket.io-client/socket.io.js"></script>
     <script src="/app/directives/footer/footer-directive.js"></script>
     <script src="/app/directives/header/header-directive.js"></script>
     <script src="/app/directives/quote/quote-directive.js"></script>
@@ -155,7 +159,7 @@
 
     <div ui-view></div>
   </main>
-
+  <div ng-if="authService.isLoggedIn()" sp-socket></div>
   <built-footer></built-footer>
 </body>
 </html>
