@@ -27,9 +27,13 @@ var MaterialPackageSchema = new Schema({
   messages: [{
     owner: {
       type: Schema.Types.ObjectId,
-      ref: 'User'
+      ref: 'Team'
     },
     to: {
+      type: Schema.Types.ObjectId,
+      ref: 'Team'
+    },
+    sendBy: {
       type: Schema.Types.ObjectId,
       ref: 'Team'
     },

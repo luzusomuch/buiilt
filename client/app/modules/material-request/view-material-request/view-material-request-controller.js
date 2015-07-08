@@ -5,7 +5,6 @@ angular.module('buiiltApp')
    */
   $scope.emailsPhone = [];
   $scope.materialRequest = materialRequest;
-  console.log(materialRequest);
   $scope.currentTeam = currentTeam;
   $scope.currentUser = {};
   if ($cookieStore.get('token')) {
@@ -71,6 +70,7 @@ angular.module('buiiltApp')
       materialRequestService.sendMessage({id: $stateParams.packageId, to: value, team: $scope.currentTeam._id, message: $scope.message.message})
       .$promise.then(function(data) {
         $scope.messages = data;
+        $scope.message.message = null;
       });  
     }
   };

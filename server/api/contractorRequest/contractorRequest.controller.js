@@ -72,6 +72,7 @@ exports.sendMessage = function(req, res) {
         contractorPackage.messages.push({
           owner: req.body.team,
           to: req.body.to,
+          sendBy: req.user.team._id,
           message: req.body.message
         });
         contractorPackage.markModified('sendMessage');
@@ -98,6 +99,7 @@ exports.sendMessageToBuilder = function(req, res) {
         messages.push({
           owner: contractorPackage.owner,
           to: req.body.team,
+          sendBy: req.user.team._id,
           message: req.body.message
         });
         contractorPackage.messages = messages;
@@ -112,6 +114,7 @@ exports.sendMessageToBuilder = function(req, res) {
         contractorPackage.messages.push({
           owner: contractorPackage.owner,
           to: req.body.team,
+          sendBy: req.user.team._id,
           message: req.body.message
         });
         contractorPackage.markModified('sendMessageToBuilder');
@@ -119,7 +122,10 @@ exports.sendMessageToBuilder = function(req, res) {
         contractorPackage.save(function(err, saved) {
           if (err) {return res.send(500, err)}
           else {
-            return res.json(200,saved);
+            saved.populate('messages.sendBy', function(err){
+              if (err) {return res.send(500,err);}
+              return res.json(200,saved);
+            });
           }
         });
       }
@@ -133,7 +139,7 @@ exports.getMessageForBuilder = function(req, res) {
     else {
       ContractorPackage.findOne({$and:[{_id: req.params.id},{'messages.owner': team._id}]}, function(err, contractorPackage) {
         if (err) {console.log(err);}
-        if (!contractorPackage) {return res.send(500,err)}
+        if (!contractorPackage) {return res.send(404,err)}
         else {
           return res.json(200,contractorPackage);
         }
@@ -146,9 +152,10 @@ exports.getMessageForContractor = function(req, res) {
   Team.findOne({$or:[{leader: req.user._id},{'member._id': req.user._id}]}, function(err, team){
     if (err) {return res.send(500,err);}
     else {
-      ContractorPackage.findOne({$and:[{_id: req.params.id},{'messages.to': team._id}]}, function(err, contractorPackage) {
-        if (err) {console.log(err);}
-        if (!contractorPackage) {return res.send(500,err)}
+      ContractorPackage.findOne({$and:[{_id: req.params.id},{'messages.to': team._id}]})
+      .populate('messages.sendBy').exec(function(err, contractorPackage) {
+        if (err) {return res.send(500,err);}
+        if (!contractorPackage) {return res.send(404,err)}
         else {
           return res.json(200,contractorPackage);
         }

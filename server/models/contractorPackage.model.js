@@ -49,6 +49,10 @@ var ContractorPackageSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: 'Team'
     },
+    sendBy: {
+      type: Schema.Types.ObjectId,
+      ref: 'Team'
+    },
     message: {type: String}
   }],
   to: [{
