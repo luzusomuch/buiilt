@@ -43,6 +43,10 @@ var VariationSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: 'Team'
     },
+    sendBy: {
+      type: Schema.Types.ObjectId,
+      ref: 'Team'
+    },
     message: {type: String}
   }],
   to: {
@@ -109,7 +113,7 @@ VariationSchema
 });
 
 VariationSchema.post('save', function (doc) {
-  var evtName = this.wasNew ? 'VariationSchema.Inserted' : 'VariationSchema.Updated';
+  var evtName = this.wasNew ? 'Variation.Inserted' : 'Variation.Updated';
   if (this._modifiedPaths) {
     doc._modifiedPaths = this._modifiedPaths
   }

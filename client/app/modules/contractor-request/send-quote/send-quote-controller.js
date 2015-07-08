@@ -184,11 +184,13 @@ angular.module('buiiltApp')
   };
 
   $scope.sendMessage = function() {
-    contractorRequestService.sendMessageToBuilder({id: $stateParams.packageId, team: $scope.currentTeam._id, message: $scope.message})
-    .$promise.then(function(data) {
-      $scope.messages = data;
-      $scope.message = null;
-    });
+    if ($scope.message) {
+      contractorRequestService.sendMessageToBuilder({id: $stateParams.packageId, team: $scope.currentTeam._id, message: $scope.message})
+      .$promise.then(function(data) {
+        $scope.messages = data;
+        $scope.message = null;
+      });
+    }
   };
 
   $scope.closeSuccess = function() {

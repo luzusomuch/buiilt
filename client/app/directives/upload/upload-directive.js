@@ -64,7 +64,6 @@ angular.module('buiiltApp').directive('upload', function(){
               // CALLBACKS
             uploader.onProgressAll = function (progress) {
                 $scope.progress = progress;
-                Materialize.toast('Upload in progress',3000);
             };
             uploader.onAfterAddingFile = function (item) {
                 //item.file.name = ''; try to change file name
@@ -104,6 +103,7 @@ angular.module('buiiltApp').directive('upload', function(){
             $scope.uploadAll = function(){
                 hideModalAfterUploading = true;
                 uploader.uploadAll();
+                Materialize.toast('<p style="width:300px;">Upload in progress</p><div class="progress"><div class="indeterminate"></div></div>',3000);
             };
 
             uploader.onCompleteAll = function () {

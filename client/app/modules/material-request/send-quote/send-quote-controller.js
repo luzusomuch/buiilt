@@ -5,7 +5,6 @@ angular.module('buiiltApp')
    */
   $scope.quoteRequest = {};
   $scope.materialRequest = materialRequest;
-  console.log($scope.materialRequest);
   $scope.currentTeam = currentTeam;
   $scope.currentUser = {};
   if ($cookieStore.get('token')) {
@@ -59,7 +58,6 @@ angular.module('buiiltApp')
       $scope.message.message = null;
     });
   };
-
   $scope.addLineWithRate = function() {
     $scope.lineWithRates.length = $scope.lineWithRates.length + 1;
   };

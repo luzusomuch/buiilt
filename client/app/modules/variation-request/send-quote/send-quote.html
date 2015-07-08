@@ -24,12 +24,12 @@
             <table>
               <thead>
                 <th>#</th>
-                <th>Scope of works</th>
+                <th style="text-align:center">Scope of works</th>
               </thead>
               <tbody>
                 <tr ng-repeat="description in variationRequest.description">
                   <td>{{$index + 1}}</td>
-                  <td>{{description}}</td>
+                  <td style="text-align:center">{{description}}</td>
                 </tr>
               </tbody>
             </table>
@@ -38,11 +38,13 @@
                 <h6>Addendum scope</h6>
                 <table>
                    <thead>
+                      <th>#</th>
                       <th>Description</th>
                       <th>Quantity</th>
                    </thead>
                    <tbody>
                      <tr ng-repeat="addendumScope in addendum.addendumsScope">
+                        <td>{{$index + 1}}</td>
                        <td>{{addendumScope.description}}</td>
                        <td>{{addendumScope.quantity}}</td>
                      </tr>
@@ -68,8 +70,8 @@
          </a>
          
          <p class="col s9 valign">{{message.message}}</p>
-         
-         <img src="images/yuna.jpg" alt="" class="circle col s2 right valign center-align" />
+         <p class="circle col s2 right valign center-align"><strong>Send by</strong>: {{message.sendBy.name}}</p>
+         <!-- <img src="images/yuna.jpg" alt="" class="circle col s2 right valign center-align" /> -->
        </div>
        </li>
      </div>
@@ -121,7 +123,7 @@
                 </div>
               </div>
             </li>
-            <li class="collection-item vlalign-wrapper">
+            <li class="">
               <div class="row form" style="margin-bottom: 0px" ng-repeat="lineWithRate in lineWithRates track by $index">
                 <div class="input-field col s6">
                    <textarea value="This is a line item with Rate - note the field for qty is editable"id="description" class="materialize-textarea" ng-model="rate.lineWithRate.rateDescription[$index]" required></textarea>
@@ -144,7 +146,7 @@
                     </div>
               </div>
             </li>
-            <li class="collection-item vlalign-wrapper">
+            <li class="">
               <div class="row form" style="margin-bottom: 0px" ng-repeat="lineWithPrice in lineWithPrices track by $index">
                 <div class="input-field col s6">
                    <textarea value="This is a line item with Price - the Qty field is set to 1 and only price can be changed."id="description" class="materialize-textarea" ng-model="price.lineWithPrice.description[$index]" required></textarea>

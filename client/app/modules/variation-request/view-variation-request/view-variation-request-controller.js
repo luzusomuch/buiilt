@@ -61,7 +61,7 @@ angular.module('buiiltApp')
     if (value == 'undefined' || !value) {
       alert('This user not registry');
     }
-    else if (value != 'undefined' || value){
+    else if ($scope.message.message && value != 'undefined' || value){
       variationRequestService.sendMessage({id: $stateParams.variationId, to: value, team: $scope.currentTeam._id, message: $scope.message.message})
       .$promise.then(function(data) {
         $scope.messages = data;

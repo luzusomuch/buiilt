@@ -108,7 +108,7 @@
     <div class="modal-content">
       <div class="row">
         <div class="col s12">
-          <h5>New Defect for Contractor Package {{package.name}}</h5>
+          <h5>New Defect for {{package.name}}</h5>
         </div>
       </div>
       <div class="row valign-wrapper">
@@ -141,7 +141,7 @@
 
      <div class="row">
        <div class="col s12">
-         <h5>New Invoice for Builder Package {{package.name}}</h5>
+         <h5>New Invoice for {{package.name}}</h5>
        </div>
      </div>
      <div class="row">
@@ -163,7 +163,7 @@
               </div>
             </div>
           </li>
-          <li class="collection-item vlalign-wrapper">
+          <li class="">
             <div class="row form" style="margin-bottom: 0px" ng-repeat="lineWithRate in lineWithRates track by $index">
               <div class="input-field col s6">
                <textarea value="This is a line item with Rate - note the field for qty is editable"id="description" class="materialize-textarea" ng-model="rate.lineWithRate.rateDescription[$index]" required></textarea>
@@ -186,7 +186,7 @@
             </div>
           </div>
         </li>
-        <li class="collection-item vlalign-wrapper">
+        <li class="">
           <div class="row form" style="margin-bottom: 0px" ng-repeat="lineWithPrice in lineWithPrices track by $index">
             <div class="input-field col s6">
              <textarea value="This is a line item with Price - the Qty field is set to 1 and only price can be changed."id="description" class="materialize-textarea" ng-model="price.lineWithPrice.description[$index]" required></textarea>
@@ -235,7 +235,7 @@
    </div>
  </div>
 </div>
-<div class="input-field col s2 offset-s3" style="margin-top: -40px">
+<div class="input-field col s2 offset-s3" style="">
   <p>Sub-Total: {{subTotalRate + subTotalPrice}}</p>
   <p>GST: {{(subTotalRate + subTotalPrice) * 0.1}}</p>
   <p>Total: {{(subTotalRate + subTotalPrice) * 0.1 + (subTotalRate + subTotalPrice)}}</p>
@@ -258,7 +258,7 @@
     <div class="modal-content">
       <div class="row">
         <div class="col s12">
-          <h5>New Variation for Contractor Package {{contractorRequest.name}}</h5>
+          <h5>New Variation for {{package.name}}</h5>
         </div>
       </div>
       <div class="row valign-wrapper">
@@ -380,10 +380,10 @@
 <div ng-repeat="file in documents" class="modal modal-fixed-footer" id="modal-file-{{file._id}}">
   <div class="modal-content">
     <div class="col s12">
-      <h5>File {{file.title}}</h5>
+      <h5>{{file.title}}</h5>
     </div>
     <div class="col s12">
-      <p>Description {{file.description}}</p>
+      <p>{{file.description}}</p>
     </div>
     <div class="col s12">
       <a ng-click="downloadFile(file._id)" style="cursor:pointer">Download file</a>
@@ -462,7 +462,7 @@
               </div>
             </div>
           </li>
-          <li class="collection-item vlalign-wrapper">
+          <li class="">
             <div class="row form" style="margin-bottom: 0px" ng-repeat="lineWithRate in lineWithRates track by $index">
               <div class="input-field col s6">
                <textarea value="This is a line item with Rate - note the field for qty is editable"id="description" class="materialize-textarea" ng-model="rate.lineWithRate.rateDescription[$index]" required></textarea>
@@ -485,7 +485,7 @@
             </div>
           </div>
         </li>
-        <li class="collection-item vlalign-wrapper">
+        <li class="">
           <div class="row form" style="margin-bottom: 0px" ng-repeat="lineWithPrice in lineWithPrices track by $index">
             <div class="input-field col s6">
              <textarea value="This is a line item with Price - the Qty field is set to 1 and only price can be changed."id="description" class="materialize-textarea" ng-model="price.lineWithPrice.description[$index]" required></textarea>
@@ -533,7 +533,7 @@
    </div>
  </div>
 </div>
-<div class="input-field col s2 offset-s3" style="margin-top: -40px">
+<div class="input-field col s2 offset-s3" style="">
   <p>Sub-Total: {{subTotalRate + subTotalPrice}}</p>
   <p>GST: {{(subTotalRate + subTotalPrice) * 0.1}}</p>
   <p>Total: {{(subTotalRate + subTotalPrice) * 0.1 + (subTotalRate + subTotalPrice)}}</p>

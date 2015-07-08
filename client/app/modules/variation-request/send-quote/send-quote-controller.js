@@ -179,11 +179,13 @@ angular.module('buiiltApp')
   };
 
   $scope.sendMessage = function() {
-    variationRequestService.sendMessageToBuilder({id: $stateParams.variationId, team: $scope.currentTeam._id, message: $scope.message})
-    .$promise.then(function(data) {
-      $scope.messages = data;
-      $scope.message = null;
-    });
+    if ($scope.message) {
+      variationRequestService.sendMessageToBuilder({id: $stateParams.variationId, team: $scope.currentTeam._id, message: $scope.message})
+      .$promise.then(function(data) {
+        $scope.messages = data;
+        $scope.message = null;
+      });
+    }
   };
 
   $scope.closeSuccess = function() {

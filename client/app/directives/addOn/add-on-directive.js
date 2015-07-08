@@ -218,6 +218,7 @@ angular.module('buiiltApp').directive('addon', function(){
             };
 
             $scope.$watch('rate.lineWithRate',function(value) {
+                console.log(value);
                 $scope.subTotalRate = 0;
                 if (value && value.rateTotal) {
                     _.forEach(value.rateTotal, function (item) {

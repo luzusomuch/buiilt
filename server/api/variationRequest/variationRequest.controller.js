@@ -106,6 +106,7 @@ exports.sendMessage = function(req, res) {
       variation.messages.push({
         owner: req.body.team,
         to: req.body.to,
+        sendBy: req.user.team._id,
         message: req.body.message
       });
       variation.markModified('sendMessage');
@@ -129,15 +130,17 @@ exports.sendMessageToBuilder = function(req, res) {
       variation.messages.push({
         owner: variation.owner,
         to: req.body.team,
+        sendBy: req.user.team._id,
         message: req.body.message
       });
       variation.markModified('sendMessageToBuilder');
       variation._editUser = req.user;
       variation.save(function(err, saved) {
         if (err) {return res.send(500, err)}
-        else {
+        saved.populate('messages.sendBy', function(err){
+          if (err) {return res.send(500,err);}
           return res.json(200,saved);
-        }
+        });
       });
     }
   });
@@ -154,9 +157,10 @@ exports.getMessageForBuilder = function(req, res) {
 };
 
 exports.getMessageForContractor = function(req, res) {
-  Variation.findOne({$and:[{_id: req.params.id},{'messages.to': req.user.team._id}]}, function(err, variation) {
-    if (err) {console.log(err);}
-    if (!variation) {return res.send(500,err)}
+  Variation.findOne({$and:[{_id: req.params.id},{'messages.to': req.user.team._id}]})
+  .populate('messages.sendBy').exec(function(err, variation) {
+    if (err) {return res.send(500,err);}
+    if (!variation) {return res.send(404,err)}
     else {
       return res.json(200,variation);
     }
