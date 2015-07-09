@@ -44,7 +44,7 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
             fromUser: request._editUser,
             toUser: leader,
             element: {package: request, quote: request._quote},
-            referenceTo: 'SendQuote',
+            referenceTo: 'ContractorPackage',
             type: 'send-quote'
           });
           notification.save(cb);
@@ -67,7 +67,7 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
                 owner: leader,
                 fromUser: request.ownerUser,
                 toUser: leader,
-                element: request,
+                element: {package:request},
                 referenceTo: 'ContractorPackage',
                 type: 'invite'
               });
@@ -194,7 +194,7 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
         var params = {
           owners: team.leader,
           fromUser: request.editUser,
-          element: request,
+          element: {package:request},
           referenceTo: 'ContractorPackage',
           type: 'send-message-to-builder'
         };

@@ -37,6 +37,11 @@ angular.module('buiiltApp')
         var serviceArray = ['task-assign','task-revoke','task-reopened','task-completed','thread-assign','thread-message'];
         var teamArray = ['team-invite','team-accept','team-remove','team-leave','team-assign-leader'];
         var packageArray = ['staff-assign'];
+        var builderNotificationArray = [ 'send-quote','invite','send-message-to-builder'];
+        var contractorAndMaterialNotificationArray = ['send-addendum', 'edit-addendum','send-message','invitation'];
+        var inProgressArray = ['select-quote'];
+        var addOnNotification = ['send-variation','send-invoice','send-defect'];
+        var documentNotification = ['uploadDocument','uploadNewDocumentVersion'];
         var getSref = function(notification) {
           if (serviceArray.indexOf(notification.type) != -1)  {
             switch (notification.element.type) {
@@ -63,6 +68,62 @@ angular.module('buiiltApp')
                 return 'contractorRequest.contractorPackageInProcess({id : notification.element.project, packageId : notification.element.package})';
               case 'material' :
                 return 'materialRequest.materialPackageInProcess({id : notification.element.project, packageId : notification.element.package})';
+            }
+          }
+          if (contractorAndMaterialNotificationArray.indexOf(notification.type) != -1) {
+            switch(notification.referenceTo){
+              case 'ContractorPackage': 
+                return 'contractorRequest.sendQuote({id: notification.element.project, packageId: notification.element._id})';
+              case 'MaterialPackage': 
+                return 'materialRequest.sendQuote({id: notification.element.project, packageId: notification.element._id})';
+              case 'Variation': 
+                return 'variationRequest.sendQuote({id: notification.element.project, packageId: notification.element.package})';
+            }
+          }
+          if (inProgressArray.indexOf(notification.type) != -1) {
+            switch(notification.referenceTo){
+              case 'ContractorPackage': 
+                return 'contractorRequest.contractorPackageInProcess({id: notification.element.project, packageId: notification.element._id})';
+              case 'MaterialPackage': 
+                return 'materialRequest.materialPackageInProcess({id: notification.element.project, packageId: notification.element._id})';
+              case 'Variation': 
+                return 'variationRequest.inProcess({id: notification.element.project, packageId: notification.element.package})';
+            }
+          }
+          if (addOnNotification.indexOf(notification.type) != -1) {
+            switch(notification.referenceTo){
+              case 'ContractorPackage': 
+                return 'contractorRequest.contractorPackageInProcess({id: notification.element.project, packageId: notification.element._id})';
+              case 'MaterialPackage': 
+                return 'materialRequest.materialPackageInProcess({id: notification.element.project, packageId: notification.element._id})';
+              case 'Variation': 
+                return 'variationRequest.inProcess({id: notification.element.project, packageId: notification.element.package})';
+            }
+          }
+          if (documentNotification.indexOf(notification.type) != -1) {
+            switch(notification.referenceTo){
+              case 'DocumentInProject': 
+                return 'projects.view({id: notification.element.projectId})';
+              case 'DocumentContractorPackage': 
+                return 'contractorRequest.contractorPackageInProcess({id: notification.element.projectId, packageId: notification.element.uploadIn._id})';
+              case 'DocumentMaterialPackage': 
+                return 'materialRequest.materialPackageInProcess({id: notification.element.projectId, packageId: notification.element.uploadIn._id})';
+              case 'DocumentStaffPackage': 
+                return 'staff.view({id: notification.element.projectId, packageId: notification.element.uploadIn._id})';
+              case 'DocumentVariation': 
+                return 'variationRequest.inProcess({id: notification.element.projectId, packageId: notification.element.uploadIn._id})';
+              case 'DocumentBuilderPackage': 
+                return 'client({id: notification.element.projectId})';
+            }
+          }
+          if (builderNotificationArray.indexOf(notification.type) != -1) {
+            switch(notification.referenceTo){
+              case 'ContractorPackage': 
+                return 'contractorRequest.viewContractorRequest({id: notification.element.package.project, packageId: notification.element.package._id})';
+              case 'MaterialPackage': 
+                return 'materialRequest.viewMaterialRequest({id: notification.element.package.project, packageId: notification.element.package._id})';
+              case 'Variation': 
+                return 'variationRequest.viewRequest({id: notification.element.package.project, packageId: notification.element.package._id})';
             }
           }
         };

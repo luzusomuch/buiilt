@@ -116,6 +116,61 @@ EventBus.onSeries('Variation.Updated', function(request, next) {
             });
         });
     }
+    else if (request._modifiedPaths.indexOf('sendQuote') != -1) {
+      Team.findById(request.owner, function(err, team) {
+        if (err || !team) {
+          next();
+        }
+        var params = {
+          owners: team.leader,
+          fromUser: request.editUser,
+          element: {package: request, quote: request._quote},
+          referenceTo: 'Variation',
+          type: 'send-quote'
+        };
+        NotificationHelper.create(params, function() {
+          next();
+        });
+      });
+    }
+    else if (request._modifiedPaths.indexOf('sendMessage') != -1) {
+      Team.findById(request.editUser, function(err, team) {
+        if (err || !team) {
+          next();
+        }
+        else {
+          var params = {
+            owners: team.leader,
+            fromUser: request.ownerUser,
+            element: {package:request},
+            referenceTo: 'Variation',
+            type: 'send-message'
+          };
+          NotificationHelper.create(params, function() {
+            next();
+          });
+        }
+      });
+    }
+    else if (request._modifiedPaths.indexOf('sendMessageToBuilder') != -1) {
+      Team.findById(request.owner, function(err, team) {
+        if (err || !team) {
+          next();
+        }
+        else {
+          var params = {
+            owners: team.leader,
+            fromUser: request.editUser,
+            element: {package:request},
+            referenceTo: 'Variation',
+            type: 'send-message-to-builder'
+          };
+          NotificationHelper.create(params, function(err) {
+            next();
+          });
+        }
+      });
+    }
     else {
         return next();
     }

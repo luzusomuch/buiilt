@@ -42,7 +42,7 @@ EventBus.onSeries('MaterialPackage.Updated', function(request, next) {
                 fromUser: request._editUser,
                 toUser: leader,
                 element: {package: request, quote: request._quote},
-                referenceTo: 'SendQuote',
+                referenceTo: 'MaterialPackage',
                 type: 'send-quote'
               });
               notification.save(cb);
@@ -62,7 +62,7 @@ EventBus.onSeries('MaterialPackage.Updated', function(request, next) {
                     owner: leader,
                     fromUser: request.ownerUser,
                     toUser: leader,
-                    element: request,
+                    element: {package:request},
                     referenceTo: 'MaterialPackage',
                     type: 'invite'
                   });
@@ -167,7 +167,7 @@ EventBus.onSeries('MaterialPackage.Updated', function(request, next) {
             var params = {
               owners: team.leader,
               fromUser: request.editUser,
-              element: request,
+              element: {package:request},
               referenceTo: 'MaterialPackage',
               type: 'send-message-to-builder'
             };
