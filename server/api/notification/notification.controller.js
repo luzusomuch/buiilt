@@ -99,7 +99,7 @@ exports.getMyFile = function(req, res) {
     {referenceTo: 'DocumentPackage'},{referenceTo: 'DocumentInProject'}],
     unread: true, 'element.projectId': mongoose.Types.ObjectId(req.params.id)}, function(err, notifications){
     if (err) {;return res.send(500,err);}
-    if (!notifications) {return res.send(404,err);}
+    if (!notifications) {return res.send(500,err);}
     else {
       return res.send(200,notifications);
     }

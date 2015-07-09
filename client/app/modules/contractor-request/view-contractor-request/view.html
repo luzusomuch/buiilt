@@ -81,7 +81,7 @@
         <div class="collapsible-header">
           Detail
         </div>
-        <div class="collapsible-body">
+        <div class="collapsible-body" style="background-color: #FFF; padding:10px">
           <table>
             <thead>
               <th>#</th>
@@ -105,7 +105,7 @@
           Tenderer #{{$index+1}} - {{toContractor.email}}
           <a ng-if="toContractor.quote._id" class="btn-flat btn-flat secondary-content modal-trigger" href='#modal_viewQuote_{{toContractor.quote._id}}' style="font-size:12px; margin-top: 8px">View Quote</a>
         </div>
-        <div class="collapsible-body">
+        <div class="collapsible-body" style="background-color: #FFF; padding:10px">
           <div class="row">
             <div class="col s5">
               Detail for the tender #{{$index + 1}}.
