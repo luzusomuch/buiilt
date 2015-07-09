@@ -298,6 +298,7 @@ angular.module('buiiltApp').directive('addon', function(){
             $scope.uploadAll = function(){
                 hideModalAfterUploading = true;
                 uploader.uploadAll();
+                Materialize.toast('<p style="width:300px;">Upload in progress</p><div class="progress"><div class="indeterminate"></div></div>',30000);
             };
 
             uploader.onCompleteAll = function () {
@@ -307,6 +308,8 @@ angular.module('buiiltApp').directive('addon', function(){
                 fileService.getFileByStateParam({'id': $scope.package._id}).$promise.then(function(data) {
                     $scope.documents = data;
                 });
+                $('.toast').css('opacity','0');
+                Materialize.toast('Upload completed',3000);
             };
         }
     }

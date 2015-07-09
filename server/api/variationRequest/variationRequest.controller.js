@@ -177,6 +177,8 @@ exports.selectWinner = function(req, res) {
     if (!variation) {return res.send(404,err);}
     else {
       variation.to.isSelect = true;
+      variation.markModified('selectQuote');
+      variation._editUser = req.user;
       variation.save(function(err,saved){
         if (err) {return res.send(500,err);}
         return res.send(200,saved);

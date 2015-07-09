@@ -164,7 +164,7 @@
             </div>
           </li>
           <li class="">
-              <div class="form" style="margin-bottom: 0px" ng-repeat="lineWithRate in lineWithRates track by $index">
+              <div class="row form" style="margin-bottom: 0px; padding:10px;" ng-repeat="lineWithRate in lineWithRates track by $index">
                 <div class="input-field col s6">
                    <textarea value="This is a line item with Rate - note the field for qty is editable"id="description" class="materialize-textarea" ng-model="rate.lineWithRate.rateDescription[$index]" required></textarea>
                        <label for="description">Description of Item</label>
@@ -188,7 +188,7 @@
               </div>
             </li>
             <li class="">
-              <div class="form" style="margin-bottom: 0px" ng-repeat="lineWithPrice in lineWithPrices track by $index">
+              <div class="row form" style="margin-bottom: 0px; padding:10px;" ng-repeat="lineWithPrice in lineWithPrices track by $index">
                 <div class="input-field col s6">
                    <textarea value="This is a line item with Price - the Qty field is set to 1 and only price can be changed."id="description" class="materialize-textarea" ng-model="price.lineWithPrice.description[$index]" required></textarea>
                        <label for="description">Description of Item</label>
@@ -219,7 +219,7 @@
    <div class="file-field input-field">
      <!-- <input class="file-path validate" type="text"/> -->
      <div ng-show="uploader.queue.length" class="form-group">
-      <div ng-repeat="item in uploader.queue">
+      <div ng-repeat="item in uploader.queue" ng-if="$last">
         <div class="row">
           <div class="input-field col s8 offset-s2">
             <input type="text" ng-model="item.file.name">
@@ -465,7 +465,7 @@
             </div>
           </li>
           <li class="">
-              <div class="form" style="margin-bottom: 0px" ng-repeat="lineWithRate in lineWithRates track by $index">
+              <div class="row form" style="margin-bottom: 0px;padding:10px;" ng-repeat="lineWithRate in lineWithRates track by $index">
                 <div class="input-field col s6">
                    <textarea value="This is a line item with Rate - note the field for qty is editable"id="description" class="materialize-textarea" ng-model="rate.lineWithRate.rateDescription[$index]" required></textarea>
                        <label for="description">Description of Item</label>
@@ -489,7 +489,7 @@
               </div>
             </li>
             <li class="">
-              <div class="form" style="margin-bottom: 0px" ng-repeat="lineWithPrice in lineWithPrices track by $index">
+              <div class="row form" style="margin-bottom: 0px;padding:10px;" ng-repeat="lineWithPrice in lineWithPrices track by $index">
                 <div class="input-field col s6">
                    <textarea value="This is a line item with Price - the Qty field is set to 1 and only price can be changed."id="description" class="materialize-textarea" ng-model="price.lineWithPrice.description[$index]" required></textarea>
                        <label for="description">Description of Item</label>
@@ -519,7 +519,7 @@
    <div class="file-field input-field">
      <!-- <input class="file-path validate" type="text"/> -->
      <div ng-show="uploader.queue.length" class="form-group">
-      <div ng-repeat="item in uploader.queue">
+      <div ng-repeat="item in uploader.queue" ng-if="$last">
         <div class="row">
           <div class="input-field col s8 offset-s2">
             <input type="text" ng-model="item.file.name">

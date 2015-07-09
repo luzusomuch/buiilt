@@ -37,9 +37,11 @@ angular.module('buiiltApp')
   });
 
   $scope.addUser = function() {
-    $scope.emailsPhone.push({email: $scope.toSupplier.newEmail, phoneNumber: $scope.toSupplier.newPhoneNumber});
-    $scope.toSupplier.newEmail = null;
-    $scope.toSupplier.newPhoneNumber = null;
+    if ($scope.toSupplier.newEmail) {
+      $scope.emailsPhone.push({email: $scope.toSupplier.newEmail, phoneNumber: $scope.toSupplier.newPhoneNumber});
+      $scope.toSupplier.newEmail = null;
+      $scope.toSupplier.newPhoneNumber = null;
+    }
   };
 
   $scope.removeUser = function(index) {

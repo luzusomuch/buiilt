@@ -40,7 +40,7 @@ angular.module('buiiltApp')
   });
 
   $scope.addUser = function() {
-    if ($scope.user.newEmail && $scope.user.newPhoneNumber) {
+    if ($scope.user.newEmail) {
       $scope.emailsPhone.push({email: $scope.user.newEmail, phoneNumber: $scope.user.newPhoneNumber});
       $scope.user.newEmail = null;
       $scope.user.newPhoneNumber = null;

@@ -100,13 +100,13 @@ angular.module('buiiltApp').directive('createPackage', function(){
       $scope.contractorSubmitted = false;
       $scope.contractorAddUser = function() {
         if ($scope.contractorMember.email.title) {
-          if (!(_.find($scope.contractorMember.emailsPhone,{email : $scope.contractorMember.email.title})) && $scope.newPhoneNumber) {
+          if (!(_.find($scope.contractorMember.emailsPhone,{email : $scope.contractorMember.email.title}))) {
             $scope.contractorMember.emailsPhone.push({email: $scope.contractorMember.email.title, phoneNumber: $scope.newPhoneNumber});
           }
         }
         else {
           if ($scope.textString) {
-            if (!(_.find($scope.contractorMember.emailsPhone,{email : $scope.textString})) && $scope.newPhoneNumber) {
+            if (!(_.find($scope.contractorMember.emailsPhone,{email : $scope.textString}))) {
               $scope.contractorMember.emailsPhone.push({email: $scope.textString, phoneNumber: $scope.newPhoneNumber});
             }
           }
@@ -216,7 +216,7 @@ angular.module('buiiltApp').directive('createPackage', function(){
       
       $scope.addNewSupplier = function () {
         if ($scope.materialMember.email.title) {
-          if (!(_.find($scope.materialMember.emailsPhone, {email: $scope.materialMember.email.title})) && $scope.newPhoneNumber) {
+          if (!(_.find($scope.materialMember.emailsPhone, {email: $scope.materialMember.email.title}))) {
             $scope.materialMember.emailsPhone.push({
               email: $scope.materialMember.email.title,
               phoneNumber: $scope.newPhoneNumber
