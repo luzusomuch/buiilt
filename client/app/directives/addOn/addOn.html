@@ -165,26 +165,26 @@
           </li>
           <li class="">
             <div class="row form" style="margin-bottom: 0px" ng-repeat="lineWithRate in lineWithRates track by $index">
-              <div class="input-field col s6">
-               <textarea value="This is a line item with Rate - note the field for qty is editable"id="description" class="materialize-textarea" ng-model="rate.lineWithRate.rateDescription[$index]" required></textarea>
-               <label for="description">Description of Item</label>
-             </div>
-             <div class="input-field col s2" style="margin-top: 67px">
-              <input id="rate" type="text" class="validate" ng-model="rate.lineWithRate.rate[$index]" required>
-              <label for="rate">Rate</label>
-            </div>
-            <div class="input-field col s1" style="margin-top: 67px">
-              <input id="quantity" type="text" class="validate" ng-model="rate.lineWithRate.rateQuantity[$index]" required>
-              <label for="quantity">Qty</label>
-            </div>
-            <div class="input-field col s2" style="margin-top: 67px">
-              <input disabled id="quantity" type="text" class="validate" ng-model="rate.lineWithRate.rateTotal[$index]">
-              <label for="quantity">Line Total {{rate.lineWithRate.rate[$index] * rate.lineWithRate.rateQuantity[$index]}}</label>
-            </div>
-            <div class="input-field col s1" style="margin-top: 67px">
-              <i class="small mdi-action-highlight-remove" ng-click="removeLineWithRate($index)"></i>
-            </div>
-          </div>
+                <div class="input-field col s6">
+                   <textarea value="This is a line item with Rate - note the field for qty is editable"id="description" class="materialize-textarea" ng-model="rate.lineWithRate.rateDescription[$index]" required></textarea>
+                       <label for="description">Description of Item</label>
+                    </div>
+                <div class="input-field col s2" style="margin-top: 67px">
+                        <input id="rate" type="number" class="validate" ng-model="rate.lineWithRate.rate[$index]" required>
+                        <label for="rate">Rate</label>
+                    </div>
+                <div class="input-field col s1" style="margin-top: 67px">
+                        <input id="quantity" type="text" class="validate" ng-model="rate.lineWithRate.rateQuantity[$index]" required>
+                        <label for="quantity">Qty</label>
+                    </div>
+                <div class="input-field col s2" style="margin-top: 67px">
+                        <input disabled id="total" type="text" class="validate" ng-model="rate.lineWithRate.rateTotal[$index]">
+                        <label for="total">Line total{{rate.lineWithRate.rateTotal[$index] = rate.lineWithRate.rate[$index] * rate.lineWithRate.rateQuantity[$index]}}</label>
+                    </div>
+                <div class="input-field col s1" style="margin-top: 67px">
+                        <i class="small mdi-action-highlight-remove" ng-click="removeLineWithRate($index)"></i>
+                    </div>
+              </div>
         </li>
         <li class="">
           <div class="row form" style="margin-bottom: 0px" ng-repeat="lineWithPrice in lineWithPrices track by $index">
@@ -469,7 +469,7 @@
                <label for="description">Description of Item</label>
              </div>
              <div class="input-field col s2" style="margin-top: 67px">
-              <input id="rate" type="text" class="validate" ng-model="rate.lineWithRate.rate[$index]" required>
+              <input id="rate" type="number" class="validate" ng-model="rate.lineWithRate.rate[$index]" required>
               <label for="rate">Rate</label>
             </div>
             <div class="input-field col s1" style="margin-top: 67px">
