@@ -57,6 +57,7 @@ exports.create = function(req,res) {
     staffPackage.project = project;
     staffPackage.staffs = data.staffs;
     staffPackage.markModified('staffs');
+    staffPackage._editUser = user;
     staffPackage.save(function(err) {
       if (err) {
         return res.send(500, err);

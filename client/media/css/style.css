@@ -189,17 +189,30 @@ span.disabled {
 
 }
 
+.notification-list header {
+  padding: 10px;
+  color: #000;
+  border-bottom: solid 1px #dedede;
+}
+
+.notification-list ._notification:hover{
+  background-color: #dedede;
+}
+
+.notification-list .list-empty{
+  color: #000;
+  border-bottom: solid 1px #dedede;
+}
+
 .count {
   position: absolute;
   top: 12px;
   right: 10px;
   background-color: #ffc721;
-  width: 16px;
-  height: 16px;
+  padding: 1.5px;
   /* display: block; */
   line-height: 16px;
   border-radius: 50%;
-  text-align: center
 }
 .progress-bar {
   float: left;

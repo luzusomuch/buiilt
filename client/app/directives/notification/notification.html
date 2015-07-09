@@ -1,9 +1,14 @@
 <div class="notification-list z-depth-1">
-  <div class="_notification">
+  <header class="z-depth-1">
       <h5 style="display: inline-block">Notification</h5>
       <a class="btn waves-effect waves-yellow" ng-click="markAllAsRead()" style="margin-left:120px">Mark all as read</a>
+  </header>
+  <div class="list-empty" ng-if="notifications.length== 0">
+    <p style="text-align: center">No notifications</p>
   </div>
-  <div slimscroll slimscroll-option="slimScrollOptions" scroll-to-bottom-cb="loadMore">
-    <div notification="notification" class="_notification" ng-class="{'read' : !notification.unread}" ng-repeat="notification in notifications"></div>
+  <div slimscroll slimscroll-option="slimScrollOptions" scroll-to-bottom-cb="loadMore" ng-if="notifications.length > 0">
+    <div notification="notification" current-user='currentUser' ng-repeat="notification in notifications">
+
+    </div>
   </div>
 </div>

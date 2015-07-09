@@ -10,7 +10,6 @@ angular.module('buiiltApp')
     $scope.isEdit = false;
 
     var getLocalData = function() {
-      $scope.users  = filterFilter($scope.users, {emailVerified : true});
       _.forEach($scope.currentTeam.member,function(member) {
         if (member._id)
           _.remove($scope.users, {_id : member._id._id});

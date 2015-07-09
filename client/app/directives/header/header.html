@@ -46,7 +46,7 @@
         <li class="notification-open" ng-if="user._id">
           <a href="#!" style="position: relative">
             <i class="material-icons">add_alert</i>
-            <span class="count">{{notifications.length}}</span>
+            <span class="count" ng-if="notifications.length > 0">{{notifications.length}}</span>
           </a>
           <div sp-notification></div>
 

@@ -32,9 +32,9 @@ exports.notification = function(req,res,next) {
  */
 exports.get = function(req,res) {
   var user = req.user;
-  var limit = (req.query.limit) ? req.query.limit : 10
-  Notification.find({owner : user._id})
-    .sort('-createdDate')
+  var limit = (req.query.limit) ? req.query.limit : 10;
+  Notification.find({owner : user._id,unread : true})
+    .sort('-createdAt')
     .limit(limit)
     .populate('owner')
     .populate('fromUser')
@@ -75,11 +75,11 @@ exports.dashboardRead = function(req,res) {
 
 exports.allRead = function(req,res) {
   var user = req.user;
-  Notification.update({toUser: user._id},{unread : false},{multi : true},function(err) {
+  Notification.update({owner: user._id},{unread : false},{multi : true},function(err,e) {
     if (err) {
       return res.send(500,err)
     }
-    Notification.find({toUser : user._id})
+    Notification.find({owner : user._id})
       .sort('-createdDate')
       .populate('owner')
       .populate('fromUser')

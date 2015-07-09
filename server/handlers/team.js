@@ -71,7 +71,7 @@ EventBus.onSeries('Team.MemberRemoved', function(team, next) {
         owners.push(member._id);
       }
     });
-    owners.push(toUser);
+    owners.push(toUser._id);
     var params = {
       owners: owners,
       fromUser: team.user,
@@ -98,7 +98,9 @@ EventBus.onSeries('Team.Accepted', function(team, next) {
       owners.push(member._id);
     }
   });
-  _.remove(owners,{_id : team.user._id})
+  var index = _.findIndex(owners,team.user._id);
+  owners.splice(index,1);
+
   var params = {
     owners : owners,
     fromUser : team.user,
@@ -167,15 +169,15 @@ EventBus.onSeries('Team.LeaderAssigned', function(team, next) {
       owners.push(member._id);
     }
   });
+  owners.push(toUser);
   var params = {
     owners : owners,
     fromUser : team.user,
-    to : toUser._id,
+    toUser : toUser,
     element : team,
     referenceTo : 'team',
     type : 'team-assign-leader'
   };
-  console.log(params);
   NotificationHelper.create(params,function(err) {
     if (err) {
       console.log(err);

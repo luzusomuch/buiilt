@@ -11,6 +11,20 @@ var Mailer = require('./../components/Mailer');
 var _ = require('lodash');
 var async = require('async');
 
+EventBus.onSeries('StaffPackage.Inserted', function(staffPackage, next) {
+  var params = {
+    owners: staffPackage.staffs,
+    fromUser: staffPackage.editUser._id,
+    element: staffPackage,
+    referenceTo: 'StaffPackage',
+    type: 'staff-assign'
+  };
+  NotificationHelper.create(params, function(err) {
+    console.log(err);
+    next();
+  });
+});
+
 EventBus.onSeries('StaffPackage.Updated', function(staffPackage, next) {
   if (staffPackage._modifiedPaths.indexOf('sendDefect') != -1) {
     var owners = [];

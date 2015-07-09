@@ -25,7 +25,7 @@ EventBus.onSeries('Thread.Inserted', function(thread, next) {
 });
 
 EventBus.onSeries('Thread.Updated', function(thread, next) {
-  if (thread.users.length > 0) {
+  if (thread.users.length > 0 || thread.oldUsers.length > 0) {
     async.waterfall([
       function(callback) {
         var toUsers = [];
@@ -41,7 +41,7 @@ EventBus.onSeries('Thread.Updated', function(thread, next) {
             element : thread,
             toUser : toUser,
             referenceTo : 'thread',
-            type : 'thread-add'
+            type : 'thread-assign'
           };
           NotificationHelper.create(params,function() {
             callback();
@@ -52,14 +52,17 @@ EventBus.onSeries('Thread.Updated', function(thread, next) {
       },
       function (callback) {
         var toUsers = [];
+        var owners = thread.users;
         thread.oldUsers.forEach(function(user) {
           if (_.findIndex(thread.users, user) == -1) {
             toUsers.push(user)
           }
         });
+        owners = _.union(owners,toUsers)
+
         async.each(toUsers,function(toUser,callback) {
           var params = {
-            owners : thread.users,
+            owners : owners,
             fromUser : thread.editUser,
             element : thread,
             toUser : toUser,

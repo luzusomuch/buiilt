@@ -178,6 +178,7 @@ exports.update = function(req,res) {
 exports.getTask = function(req,res) {
   var aPackage = req.aPackage;
   Task.find({package : aPackage})
+    .sort('-dateEnd')
     .populate('assignees')
     .exec(function(err,tasks) {
     if (err) {

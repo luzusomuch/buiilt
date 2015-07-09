@@ -39,16 +39,18 @@ angular.module('buiiltApp').directive('createPackage', function(){
         $scope.package.staffs.splice(index,1);
       };
 
-      $scope.$watchGroup(['package.descriptions.length','submitted'],function(value) {
-        $scope.descriptionError = (value[0] <= 0 && value[1])
-      });
 
-      $scope.$watchGroup(['package.staffs.length','submitted'],function(value) {
-        $scope.assgineesError = (value[0] <= 0 && value[1])
-      });
 
       $scope.save = function(form) {
         $scope.submitted = true;
+        $scope.$watchGroup(['package.descriptions.length','submitted'],function(value) {
+          $scope.descriptionError = (value[0] <= 0 && value[1]);
+        });
+
+        $scope.$watchGroup(['package.staffs.length','submitted'],function(value) {
+          $scope.assgineesError = (value[0] <= 0 && value[1]);
+
+        });
         if (form.$valid && !$scope.assgineesError && !$scope.descriptionError ) {
           staffPackageService.create({id : $scope.currentProject._id},$scope.package).$promise
             .then(function(res) {
@@ -99,15 +101,18 @@ angular.module('buiiltApp').directive('createPackage', function(){
       };
       $scope.contractorSubmitted = false;
       $scope.contractorAddUser = function() {
+
         if ($scope.contractorMember.email.title) {
           if (!(_.find($scope.contractorMember.emailsPhone,{email : $scope.contractorMember.email.title}))) {
-            $scope.contractorMember.emailsPhone.push({email: $scope.contractorMember.email.title, phoneNumber: $scope.newPhoneNumber});
+            $scope.contractorMember.emailsPhone.push({email: $scope.contractorMember.email.title, phoneNumber: $scope.newPhoneNumber})
+
           }
         }
         else {
-          if ($scope.textString) {
-            if (!(_.find($scope.contractorMember.emailsPhone,{email : $scope.textString}))) {
-              $scope.contractorMember.emailsPhone.push({email: $scope.textString, phoneNumber: $scope.newPhoneNumber});
+          if ($scope.contractorTextString) {
+            if (!(_.find($scope.contractorMember.emailsPhone,{email : $scope.contractorTextString}))) {
+              $scope.contractorMember.emailsPhone.push({email: $scope.contractorTextString, phoneNumber: $scope.newPhoneNumber});
+
             }
           }
         }
@@ -117,7 +122,7 @@ angular.module('buiiltApp').directive('createPackage', function(){
       };
 
       $scope.contractorInputChanged = function(str) {
-        $scope.textString = str;
+        $scope.contractorTextString = str;
       };
 
       $scope.contractorRemoveUser = function(index) {

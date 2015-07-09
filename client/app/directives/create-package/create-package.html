@@ -10,7 +10,8 @@
       <div class="row">
         <div class="input-field col s8">
 
-          <input id="package_name" type="text" name="name" class="validate" ng-model="package.name" required ng-class="{'invalid' : form.name.$invalid && submitted}">
+          <input id="package_name" type="text" name="name" class="validate" ng-model="package.name"
+                 required ng-class="{'invalid' : form.name.$invalid && submitted}">
           <label for="package_name">Work Package Title</label>
           <p class="validate-message" ng-if="form.name.$error.required && submitted">Package name is required</p>
         </div>
