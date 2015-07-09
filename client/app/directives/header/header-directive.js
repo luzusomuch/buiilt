@@ -23,8 +23,7 @@ angular.module('buiiltApp')
           {sref: 'materials({id :  currentProject._id})', label: 'materials'},
           {sref: 'projects.view({id :  currentProject._id})', label: 'documentation'}],
         other : [{sref: 'team.manager', label: 'team manager'},
-          {sref: 'user.form', label: 'edit profile'},
-          {sref: 'notification.view', label: 'notification'}]
+          {sref: 'user.form', label: 'edit profile'}]
       };
 
       function queryProjects(){

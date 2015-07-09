@@ -18,26 +18,44 @@ var async = require('async');
 /**
  * event handler after creating new account
  */
-// EventBus.onSeries('BuilderPackage.Inserted', function(builderPackage, next) {
-//   return next();
-// });
+EventBus.onSeries('BuilderPackage.Inserted', function(builderPackage, next) {
+  console.log(builderPackage);
+  if (builderPackage.to.team) {
+    Team.findById(builderPackage.to.team, function(err,team){
+      if (err || !team) {next();}
+      var params = {
+        owners: team.leader,
+        fromUser: builderPackage.editUser._id,
+        element: builderPackage,
+        referenceTo: 'BuilderPackage',
+        type: 'create-builder-package'
+      };
+      NotificationHelper.create(params, function() {
+        next();
+      });
+    });
+  }
+  else {
+    return next();
+  }
+});
 
 EventBus.onSeries('BuilderPackage.Updated', function(builderPackage, next) {
   if (builderPackage._modifiedPaths.indexOf('sendDefect') != -1) {
     var owners = [];
     BuilderPackage.findById(builderPackage._id).populate('owner')
-            .populate('to.team').exec(function(err, builderPackage) {
-      if (err || !builderPackage) {
+            .populate('to.team').exec(function(err, _builderPackage) {
+      if (err || !_builderPackage) {
         next();
       }
       else {
-        if (!builderPackage.to.team) {
+        if (!_builderPackage.to.team) {
           return next();
         }
-        owners = _.union(builderPackage.owner.leader, builderPackage.to.team.leader);
+        owners = _.union(_builderPackage.owner.leader, _builderPackage.to.team.leader);
         var params = {
           owners: owners,
-          fromUser: builderPackage.editUser,
+          fromUser: builderPackage.editUser._id,
           element: builderPackage,
           referenceTo: 'BuilderPackage',
           type: 'send-defect'
@@ -51,18 +69,18 @@ EventBus.onSeries('BuilderPackage.Updated', function(builderPackage, next) {
   else if (builderPackage._modifiedPaths.indexOf('sendVariation') != -1) {
     var owners = [];
     BuilderPackage.findById(builderPackage._id).populate('owner')
-            .populate('to.team').exec(function(err, builderPackage) {
-      if (err || !builderPackage) {
+            .populate('to.team').exec(function(err, _builderPackage) {
+      if (err || !_builderPackage) {
         next();
       }
       else {
-        if (!builderPackage.to.team) {
+        if (!_builderPackage.to.team) {
           return next();
         }
-        owners = _.union(builderPackage.owner.leader, builderPackage.to.team.leader);
+        owners = _.union(_builderPackage.owner.leader, _builderPackage.to.team.leader);
         var params = {
           owners: owners,
-          fromUser: builderPackage.editUser,
+          fromUser: builderPackage.editUser._id,
           element: builderPackage,
           referenceTo: 'BuilderPackage',
           type: 'send-variation'
@@ -76,17 +94,17 @@ EventBus.onSeries('BuilderPackage.Updated', function(builderPackage, next) {
   else if (builderPackage._modifiedPaths.indexOf('sendInvoice') != -1) {
     var owners = [];
     BuilderPackage.findById(builderPackage._id).populate('owner')
-            .populate('to.team').exec(function(err, builderPackage) {
-      if (err || !builderPackage) {
+            .populate('to.team').exec(function(err, _builderPackage) {
+      if (err || !_builderPackage) {
         next();
       }else {
-        if (!builderPackage.to.team) {
+        if (!_builderPackage.to.team) {
           return next();
         }
-        owners = _.union(builderPackage.owner.leader, builderPackage.to.team.leader);
+        owners = _.union(_builderPackage.owner.leader, _builderPackage.to.team.leader);
         var params = {
           owners: owners,
-          fromUser: builderPackage.editUser,
+          fromUser: builderPackage.editUser._id,
           element: builderPackage,
           referenceTo: 'BuilderPackage',
           type: 'send-invoice'

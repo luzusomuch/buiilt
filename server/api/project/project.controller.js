@@ -74,6 +74,7 @@ exports.create = function(req, res){
           description : project.description
         });
         builderPackage.to = to;
+        builderPackage._editUser = req.user;
         builderPackage.save(function(err) {
           if (err) {
             return res.send(500,err)

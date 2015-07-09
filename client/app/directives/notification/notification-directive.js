@@ -32,13 +32,14 @@ angular.module('buiiltApp')
           fileName: '<span class="highlight">{{notification.element.file.title}}</span> ',
           packageName: '<span class="highlight">{{notification.element.package.name}}</span> ',
           place: '<span class="highlight">{{notification.element.uploadIn.name}}</span> ',
+          builderOrHomeOwner: '<span class="highlight">{{(notification.element.to.type == "homeOwner") ? "home owner" : "builder"}}</span> ',
           time : '<span class="highlight">{{notification.createdAt | date : "yyyy/MM/dd hh:mm a"}}</span>'
         };
         var serviceArray = ['task-assign','task-revoke','task-reopened','task-completed','thread-assign','thread-message'];
         var teamArray = ['team-invite','team-accept','team-remove','team-leave','team-assign-leader'];
         var packageArray = ['staff-assign'];
         var builderNotificationArray = [ 'send-quote','invite','send-message-to-builder'];
-        var contractorAndMaterialNotificationArray = ['send-addendum', 'edit-addendum','send-message','invitation'];
+        var contractorAndMaterialNotificationArray = ['create-contractor-package','create-material-package','send-addendum', 'edit-addendum','send-message','invitation'];
         var inProgressArray = ['select-quote'];
         var addOnNotification = ['send-variation','send-invoice','send-defect'];
         var documentNotification = ['uploadDocument','uploadNewDocumentVersion'];
@@ -77,7 +78,7 @@ angular.module('buiiltApp')
               case 'MaterialPackage': 
                 return 'materialRequest.sendQuote({id: notification.element.project, packageId: notification.element._id})';
               case 'Variation': 
-                return 'variationRequest.sendQuote({id: notification.element.project, packageId: notification.element.package})';
+                return 'variationRequest.sendQuote({id: notification.element.project, variationId: notification.element.package})';
             }
           }
           if (inProgressArray.indexOf(notification.type) != -1) {
@@ -87,7 +88,7 @@ angular.module('buiiltApp')
               case 'MaterialPackage': 
                 return 'materialRequest.materialPackageInProcess({id: notification.element.project, packageId: notification.element._id})';
               case 'Variation': 
-                return 'variationRequest.inProcess({id: notification.element.project, packageId: notification.element.package})';
+                return 'variationRequest.inProcess({id: notification.element.project, variationId: notification.element.package})';
             }
           }
           if (addOnNotification.indexOf(notification.type) != -1) {
@@ -97,7 +98,9 @@ angular.module('buiiltApp')
               case 'MaterialPackage': 
                 return 'materialRequest.materialPackageInProcess({id: notification.element.project, packageId: notification.element._id})';
               case 'Variation': 
-                return 'variationRequest.inProcess({id: notification.element.project, packageId: notification.element.package})';
+                return 'variationRequest.inProcess({id: notification.element.project, variationId: notification.element._id})';
+              case 'BuilderPackage': 
+                return 'client({id: notification.element.project})';
             }
           }
           if (documentNotification.indexOf(notification.type) != -1) {
@@ -125,6 +128,9 @@ angular.module('buiiltApp')
               case 'Variation': 
                 return 'variationRequest.viewRequest({id: notification.element.package.project, packageId: notification.element.package._id})';
             }
+          }
+          if (notification.type == 'create-builder-package') {
+            return 'client({id: notification.element.project})';
           }
         };
 
@@ -212,6 +218,9 @@ angular.module('buiiltApp')
         }
         if (scope.notification.type === 'uploadNewDocumentVersion') {
           text = params.fromUser()  + 'has update document ' + params.fileName + ' in project ' + params.place;
+        }
+        if (scope.notification.type == 'create-builder-package') {
+          text = params.fromUser() + ' invited you become a ' + params.builderOrHomeOwner + ' for project' + params.element;
         }
 
         scope.notification.sref = getSref(scope.notification);

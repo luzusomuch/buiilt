@@ -15,6 +15,7 @@ exports.create = function(params,cb){
     });
     notification.save(function(err) {
       if (err) {
+        console.log(err);
         return callback(err);
       }
       Notification.populate(notification,[
