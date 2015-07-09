@@ -75,11 +75,11 @@
                       <td class="col s2">{{member.status}}</td>
                       <td class="col s2 center-align">
                         <a class="waves-effect waves-light" name="action" ng-click="assignLeader(member)"
-                           ng-if="isLeader && leader._id != user._id && member._id && member.status == 'Active'" tooltips title="Assign Admin">
+                           ng-if="isLeader && leader._id != user._id && member._id && member.status == 'Active'">
                           <i class="material-icons">supervisor_account</i>
                         </a>
                         <a class="waves-effect waves-light" name="action" ng-click="removeMember(member)"
-                           ng-if="isLeader && leader._id != user._id" tooltips title="Remove this Member">
+                           ng-if="isLeader && leader._id != user._id">
                           <i class="mdi-action-highlight-remove tiny"></i>
                         </a>
                       </td>
@@ -121,12 +121,10 @@
             <td class="col s1">{{invitation.type}}</td>
             <td class="col s3">{{invitation.member.length}}</td>
             <td class="col s2 center-align">
-              <a class="waves-effect waves-light" name="action" ng-click="accept(invitation,$index)"
-                 tooltips title="Accept">
+              <a class="waves-effect waves-light" name="action" ng-click="accept(invitation,$index)">
                 <i class="mdi-navigation-check tiny"></i>
               </a>
-              <a class="waves-effect waves-light" name="action" ng-click="reject(invitation,$index)"
-                 tooltips title="Reject">
+              <a class="waves-effect waves-light" name="action" ng-click="reject(invitation,$index)">
                 <i class="mdi-navigation-cancel tiny"></i>
               </a>
             </td>
