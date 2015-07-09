@@ -173,19 +173,4 @@ angular.module('buiiltApp')
       // $state.reload();
   };
 
-  // $scope.signupAndSendQuotematerial = function () {
-  //   $scope.user.idParams = $stateParams.id;
-  //   $scope.user.quoteRequest = $scope.quoteRequest;
-  //   console.log($scope.user);
-  //   registryFormaterialService.createUserFormaterialRequest($scope.user).$promise.then(function(data) {
-  //     $scope.user = {
-  //       allowNewsletter: true
-  //     };
-  //     alert('Registry successfully, please confirm your email!')
-  //     $state.go('dashboard');
-  //   }, function(res) {
-  //     $scope.errors = res.data;
-  //   });
-  // };
-
 });

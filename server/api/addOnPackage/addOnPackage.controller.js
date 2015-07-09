@@ -274,14 +274,14 @@ exports.sendVariation = function(req, res) {
                     quoteRequest.save(function(err, saved){
                         if (err) {return res.send(500,err);}
                         var variation = new Variation({
-                            owner: builderPackage.owner,
+                            owner: (builderPackage.to.team) ? builderPackage.to.team : null,
                             project: builderPackage.project,
                             package: builderPackage._id,
                             name: req.body.variation.title,
                             description: req.body.variation.descriptions,
                             packageType: packageType,
                             type: 'variation',
-                            'to._id': (builderPackage.to.team) ? builderPackage.to.team : null,
+                            'to._id': builderPackage.owner,
                             'to.quote': saved._id
                         });
                         variation.save(function(err,saved){
@@ -368,14 +368,14 @@ exports.sendVariation = function(req, res) {
                 if (err) {return res.send(500,err);}
                 else {
                     var variation = new Variation({
-                        owner: builderPackage.owner,
+                        owner: (builderPackage.to.team) ? builderPackage.to.team : null,
                         project: builderPackage.project,
                         package: builderPackage._id,
                         name: req.body.variation.title,
                         description: req.body.variation.descriptions,
                         packageType: packageType,
                         type: 'variation',
-                        'to._id': builderPackage.to.team
+                        'to._id': builderPackage.owner
                     });
                     variation.save(function(err,saved){
                         if (err) {return res.send(500,err);}

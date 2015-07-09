@@ -132,12 +132,12 @@ angular.module('buiiltApp').directive('file', function(){
                     if(hideModalAfterUploading){
                         // $modalInstance.close(newPhoto);
                     }
-                    $state.reload();
-                    // if ($stateParams.id) {
-                    //     fileService.getFileByStateParam({'id': $stateParams.id}).$promise.then(function(data) {
-                    //         $scope.files = data;
-                    //     });    
-                    // }
+                    // $state.reload();
+                    if ($stateParams.id) {
+                        fileService.getFileByStateParam({'id': $stateParams.id}).$promise.then(function(data) {
+                            $scope.files = data;
+                        });    
+                    }
                 };
             };
         }

@@ -49,17 +49,14 @@ angular.module('buiiltApp')
   };
 
   $scope.selectQuote = function(value) {
-    if (confirm("Are you sure you want to select this quote?")) {
-      variationRequestService.selectWinner({'id': value}).$promise.then(function(data) { 
-          $scope.winner = data;
-          $state.go('variationRequest.inProcess',{id:data.project, variationId: data._id});
-      });
-    }
+    variationRequestService.selectWinner({'id': value}).$promise.then(function(data) { 
+        $scope.winner = data;
+        $state.go('variationRequest.inProcess',{id:data.project, variationId: data._id});
+    });
   };
 
   $scope.sendMessage = function(value) {
     if (value == 'undefined' || !value) {
-      alert('This user not registry');
     }
     else if ($scope.message.message && value != 'undefined' || value){
       variationRequestService.sendMessage({id: $stateParams.variationId, to: value, team: $scope.currentTeam._id, message: $scope.message.message})
@@ -70,30 +67,12 @@ angular.module('buiiltApp')
     }
   };
 
-  //Send addendum
-  // $scope.addAddendum = function() {
-  //   $scope.addendumsScope.push({scopeDescription: $scope.addendum.scopeDescription, quantity: $scope.addendum.quantity});
-  //   $scope.addendum.scopeDescription = null;
-  //   $scope.addendum.quantity = null;
-  // };
-  // $scope.removeAddendum = function(index) {
-  //   $scope.addendumsScope.splice(index, 1);
-  // };
-  // $scope.sendAddendum = function() {
-  //   contractorRequestService.sendAddendum({id: $stateParams.packageId, description: $scope.addendum, addendumScope: $scope.addendumsScope})
-  //   .$promise.then(function(data) {
-  //     // $scope.messages = data;
-  //   });
-  // };
-
   //Cancel package
   $scope.cancelPackage = function() {
-    if (confirm('Cancel this package?!')) {
-      variationRequestService.cancelPackage({id: $stateParams.variationId})
-      .$promise.then(function(data) {
-        $state.go('contractorRequest.contractorPackageInProcess',
-          {id:variationRequest.project, packageId: variationRequest.package});
-      });
-    }
+    variationRequestService.cancelPackage({id: $stateParams.variationId})
+    .$promise.then(function(data) {
+      $state.go('contractorRequest.contractorPackageInProcess',
+        {id:variationRequest.project, packageId: variationRequest.package});
+    });
   };
 });

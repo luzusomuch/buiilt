@@ -103,7 +103,7 @@ angular.module('buiiltApp').directive('upload', function(){
             $scope.uploadAll = function(){
                 hideModalAfterUploading = true;
                 uploader.uploadAll();
-                Materialize.toast('<p style="width:300px;">Upload in progress</p><div class="progress"><div class="indeterminate"></div></div>',3000);
+                Materialize.toast('<p style="width:300px;">Upload in progress</p><div class="progress"><div class="indeterminate"></div></div>',30000);
             };
 
             uploader.onCompleteAll = function () {
@@ -121,6 +121,7 @@ angular.module('buiiltApp').directive('upload', function(){
                         $scope.files = data;
                     });       
                 }
+                $('.toast').css('opacity','0');
                 Materialize.toast('Upload completed',3000);
             };
         },

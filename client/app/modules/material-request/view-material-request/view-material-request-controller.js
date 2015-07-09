@@ -46,13 +46,12 @@ angular.module('buiiltApp')
     $scope.emailsPhone.splice(index, 1);
   };
 
+  //Todo add confirm when select quote
   $scope.selectQuote = function(value) {
-    if (confirm("Are you sure you want to select this quote?")) {
-      quoteService.getForMaterial({'id': value}).$promise.then(function(data) { 
-          $scope.winner = data;
-          $state.go('materialRequest.materialPackageInProcess', {id: data.project, packageId: data._id});
-      });
-    }
+    quoteService.getForMaterial({'id': value}).$promise.then(function(data) { 
+        $scope.winner = data;
+        $state.go('materialRequest.materialPackageInProcess', {id: data.project, packageId: data._id});
+    });
   };
 
   $scope.sendInvitation = function() {
@@ -64,7 +63,6 @@ angular.module('buiiltApp')
 
   $scope.sendMessage = function(value) {
     if (value == 'undefined' || !value) {
-      alert('This user not registry');
     }
     else if(value != 'undefined' || value) {
       materialRequestService.sendMessage({id: $stateParams.packageId, to: value, team: $scope.currentTeam._id, message: $scope.message.message})
@@ -75,35 +73,12 @@ angular.module('buiiltApp')
     }
   };
 
-  // $scope.closeSuccess = function() {
-  //   $scope.success = false;
-  // };
-
-  //Send addendum
-  // $scope.addAddendum = function() {
-  //   $scope.addendumsScope.push({scopeDescription: $scope.addendum.scopeDescription, quantity: $scope.addendum.quantity});
-  //   $scope.addendum.scopeDescription = null;
-  //   $scope.addendum.quantity = null;
-  // };
-  // $scope.removeAddendum = function(index) {
-  //   $scope.addendumsScope.splice(index, 1);
-  // };
-  // $scope.sendAddendum = function() {
-  //   materialRequestService.sendAddendum({id: $stateParams.packageId, description: $scope.addendum, addendumScope: $scope.addendumsScope})
-  //   .$promise.then(function(data) {
-  //     // $scope.messages = data;
-  //   });
-  // };
-
+  //Todo add confirm when cancel package
   $scope.cancelPackage = function() {
-    if (confirm('Cancel this package?!')) {
-      materialRequestService.cancelPackage({id: $stateParams.packageId})
-      .$promise.then(function(data) {
-        // console.log($state.get());
-        $window.location.href = data.project + '/materials';
-        // $state.go('^.contractors, {id: '+ data.project +'}');
-      });
-    }
+    materialRequestService.cancelPackage({id: $stateParams.packageId})
+    .$promise.then(function(data) {
+      $state.go('materials', {id: $stateParams.id})
+    });
   };
 
 });
