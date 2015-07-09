@@ -164,14 +164,15 @@
             </div>
           </li>
           <li class="">
-            <div class="row form" style="margin-bottom: 0px" ng-repeat="lineWithRate in lineWithRates track by $index">
+              <div class="row form" style="margin-bottom: 0px" ng-repeat="lineWithRate in lineWithRates track by $index">
                 <div class="input-field col s6">
                    <textarea value="This is a line item with Rate - note the field for qty is editable"id="description" class="materialize-textarea" ng-model="rate.lineWithRate.rateDescription[$index]" required></textarea>
                        <label for="description">Description of Item</label>
                     </div>
                 <div class="input-field col s2" style="margin-top: 67px">
-                        <input id="rate" type="number" class="validate" ng-model="rate.lineWithRate.rate[$index]" required>
+                        <input id="rate" name="rate" type="text" class="validate" ng-model="rate.lineWithRate.rate[$index]" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" required>
                         <label for="rate">Rate</label>
+                        <p class="validate-message" ng-show="sendInvoiceForm.rate.$invalid">Limit 2 decimals!!!</p>
                     </div>
                 <div class="input-field col s1" style="margin-top: 67px">
                         <input id="quantity" type="text" class="validate" ng-model="rate.lineWithRate.rateQuantity[$index]" required>
@@ -179,36 +180,37 @@
                     </div>
                 <div class="input-field col s2" style="margin-top: 67px">
                         <input disabled id="total" type="text" class="validate" ng-model="rate.lineWithRate.rateTotal[$index]">
-                        <label for="total">Line total{{rate.lineWithRate.rateTotal[$index] = rate.lineWithRate.rate[$index] * rate.lineWithRate.rateQuantity[$index]}}</label>
+                        <label for="total">Line total{{rate.lineWithRate.rateTotal[$index] = (rate.lineWithRate.rate[$index] * rate.lineWithRate.rateQuantity[$index]).toFixed(2)}}</label>
                     </div>
                 <div class="input-field col s1" style="margin-top: 67px">
                         <i class="small mdi-action-highlight-remove" ng-click="removeLineWithRate($index)"></i>
                     </div>
               </div>
-        </li>
-        <li class="">
-          <div class="row form" style="margin-bottom: 0px" ng-repeat="lineWithPrice in lineWithPrices track by $index">
-            <div class="input-field col s6">
-             <textarea value="This is a line item with Price - the Qty field is set to 1 and only price can be changed."id="description" class="materialize-textarea" ng-model="price.lineWithPrice.description[$index]" required></textarea>
-             <label for="description">Description of Item</label>
-           </div>
-           <div class="input-field col s2" style="margin-top: 67px">
-            <input id="rate" type="text" class="validate" ng-model="price.lineWithPrice.price[$index]" required>
-            <label for="rate">Price</label>
-          </div>
-          <div class="input-field col s1" style="margin-top: 67px">
-            <input disabled value="1" id="quantity" type="text" class="validate" ng-model="price.lineWithPrice.quantity[$index]">
-            <label for="quantity">1</label>
-          </div>
-          <div class="input-field col s2" style="margin-top: 67px">
-            <input disabled id="quantity" type="text" class="validate" ng-model="price.lineWithPrice.total[$index]">
-            <label for="quantity">Line Total {{price.lineWithPrice.price[$index]}}</label>
-          </div>
-          <div class="input-field col s1" style="margin-top: 67px">
-            <i class="small mdi-action-highlight-remove" ng-click="removeLineWithPrice($index)"></i>
-          </div>
-        </div>
-      </li>
+            </li>
+            <li class="">
+              <div class="row form" style="margin-bottom: 0px" ng-repeat="lineWithPrice in lineWithPrices track by $index">
+                <div class="input-field col s6">
+                   <textarea value="This is a line item with Price - the Qty field is set to 1 and only price can be changed."id="description" class="materialize-textarea" ng-model="price.lineWithPrice.description[$index]" required></textarea>
+                       <label for="description">Description of Item</label>
+                    </div>
+                <div class="input-field col s2" style="margin-top: 67px">
+                        <input id="price" name="price" type="text" class="validate" ng-model="price.lineWithPrice.price[$index]" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" required>
+                        <label for="price">Price</label>
+                        <p class="validate-message" ng-show="sendInvoiceForm.price.$invalid">Limit 2 decimals!!!</p>
+                    </div>
+                <div class="input-field col s1" style="margin-top: 67px">
+                        <input disabled value="1" id="quantity" type="text" class="validate" ng-model="price.lineWithPrice.quantity[$index]">
+                        <label for="quantity">1</label>
+                    </div>
+                <div class="input-field col s2" style="margin-top: 67px">
+                        <input disabled id="total" type="text" class="validate" ng-model="price.lineWithPrice.total[$index]">
+                        <label for="total">Line Total {{price.lineWithPrice.price[$index]}}</label>
+                    </div>
+                <div class="input-field col s1" style="margin-top: 67px">
+                        <i class="small mdi-action-highlight-remove" ng-click="removeLineWithPrice($index)"></i>
+                    </div>
+              </div>
+            </li>
     </ul>
   </div>
 </div>
@@ -236,9 +238,9 @@
  </div>
 </div>
 <div class="input-field col s2 offset-s3" style="">
-  <p>Sub-Total: {{subTotalRate + subTotalPrice}}</p>
-  <p>GST: {{(subTotalRate + subTotalPrice) * 0.1}}</p>
-  <p>Total: {{(subTotalRate + subTotalPrice) * 0.1 + (subTotalRate + subTotalPrice)}}</p>
+  <p>Sub-Total: {{(subTotalRate + subTotalPrice).toFixed(2)}}</p>
+            <p>GST: {{((subTotalRate + subTotalPrice) * 0.1).toFixed(2)}}</p>
+            <p>Total: {{((subTotalRate + subTotalPrice) * 0.1 + subTotalRate + subTotalPrice).toFixed(2)}}</p>
 </div>
 </div>
 
@@ -395,7 +397,7 @@
 </div>
 
 <div id="attachVariationWithQuote" class="modal modal-fixed-footer">
-  <form ng-submit="sendVariation()">
+  <form ng-submit="sendVariation()" name="sendVariationForm">
     <div class="modal-content">
     
        <div class="row">
@@ -463,51 +465,53 @@
             </div>
           </li>
           <li class="">
-            <div class="row form" style="margin-bottom: 0px" ng-repeat="lineWithRate in lineWithRates track by $index">
-              <div class="input-field col s6">
-               <textarea value="This is a line item with Rate - note the field for qty is editable"id="description" class="materialize-textarea" ng-model="rate.lineWithRate.rateDescription[$index]" required></textarea>
-               <label for="description">Description of Item</label>
-             </div>
-             <div class="input-field col s2" style="margin-top: 67px">
-              <input id="rate" type="number" class="validate" ng-model="rate.lineWithRate.rate[$index]" required>
-              <label for="rate">Rate</label>
-            </div>
-            <div class="input-field col s1" style="margin-top: 67px">
-              <input id="quantity" type="text" class="validate" ng-model="rate.lineWithRate.rateQuantity[$index]" required>
-              <label for="quantity">Qty</label>
-            </div>
-            <div class="input-field col s2" style="margin-top: 67px">
-              <input disabled id="quantity" type="text" class="validate" ng-model="rate.lineWithRate.rateTotal[$index]">
-              <label for="quantity">Line Total {{rate.lineWithRate.rate[$index] * rate.lineWithRate.rateQuantity[$index]}}</label>
-            </div>
-            <div class="input-field col s1" style="margin-top: 67px">
-              <i class="small mdi-action-highlight-remove" ng-click="removeLineWithRate($index)"></i>
-            </div>
-          </div>
-        </li>
-        <li class="">
-          <div class="row form" style="margin-bottom: 0px" ng-repeat="lineWithPrice in lineWithPrices track by $index">
-            <div class="input-field col s6">
-             <textarea value="This is a line item with Price - the Qty field is set to 1 and only price can be changed."id="description" class="materialize-textarea" ng-model="price.lineWithPrice.description[$index]" required></textarea>
-             <label for="description">Description of Item</label>
-           </div>
-           <div class="input-field col s2" style="margin-top: 67px">
-            <input id="rate" type="text" class="validate" ng-model="price.lineWithPrice.price[$index]" required>
-            <label for="rate">Price</label>
-          </div>
-          <div class="input-field col s1" style="margin-top: 67px">
-            <input disabled value="1" id="quantity" type="text" class="validate" ng-model="price.lineWithPrice.quantity[$index]">
-            <label for="quantity">1</label>
-          </div>
-          <div class="input-field col s2" style="margin-top: 67px">
-            <input disabled id="quantity" type="text" class="validate" ng-model="price.lineWithPrice.total[$index]">
-            <label for="quantity">Line Total {{price.lineWithPrice.price[$index]}}</label>
-          </div>
-          <div class="input-field col s1" style="margin-top: 67px">
-            <i class="small mdi-action-highlight-remove" ng-click="removeLineWithPrice($index)"></i>
-          </div>
-        </div>
-      </li>
+              <div class="row form" style="margin-bottom: 0px" ng-repeat="lineWithRate in lineWithRates track by $index">
+                <div class="input-field col s6">
+                   <textarea value="This is a line item with Rate - note the field for qty is editable"id="description" class="materialize-textarea" ng-model="rate.lineWithRate.rateDescription[$index]" required></textarea>
+                       <label for="description">Description of Item</label>
+                    </div>
+                <div class="input-field col s2" style="margin-top: 67px">
+                        <input id="rate" name="rate" type="text" class="validate" ng-model="rate.lineWithRate.rate[$index]" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" required>
+                        <label for="rate">Rate</label>
+                        <p class="validate-message" ng-show="sendVariationForm.rate.$invalid">Limit 2 decimals!!!</p>
+                    </div>
+                <div class="input-field col s1" style="margin-top: 67px">
+                        <input id="quantity" type="text" class="validate" ng-model="rate.lineWithRate.rateQuantity[$index]" required>
+                        <label for="quantity">Qty</label>
+                    </div>
+                <div class="input-field col s2" style="margin-top: 67px">
+                        <input disabled id="total" type="text" class="validate" ng-model="rate.lineWithRate.rateTotal[$index]">
+                        <label for="total">Line total{{rate.lineWithRate.rateTotal[$index] = (rate.lineWithRate.rate[$index] * rate.lineWithRate.rateQuantity[$index]).toFixed(2)}}</label>
+                    </div>
+                <div class="input-field col s1" style="margin-top: 67px">
+                        <i class="small mdi-action-highlight-remove" ng-click="removeLineWithRate($index)"></i>
+                    </div>
+              </div>
+            </li>
+            <li class="">
+              <div class="row form" style="margin-bottom: 0px" ng-repeat="lineWithPrice in lineWithPrices track by $index">
+                <div class="input-field col s6">
+                   <textarea value="This is a line item with Price - the Qty field is set to 1 and only price can be changed."id="description" class="materialize-textarea" ng-model="price.lineWithPrice.description[$index]" required></textarea>
+                       <label for="description">Description of Item</label>
+                    </div>
+                <div class="input-field col s2" style="margin-top: 67px">
+                        <input id="price" name="price" type="text" class="validate" ng-model="price.lineWithPrice.price[$index]" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" required>
+                        <label for="price">Price</label>
+                        <p class="validate-message" ng-show="sendVariationForm.price.$invalid">Limit 2 decimals!!!</p>
+                    </div>
+                <div class="input-field col s1" style="margin-top: 67px">
+                        <input disabled value="1" id="quantity" type="text" class="validate" ng-model="price.lineWithPrice.quantity[$index]">
+                        <label for="quantity">1</label>
+                    </div>
+                <div class="input-field col s2" style="margin-top: 67px">
+                        <input disabled id="total" type="text" class="validate" ng-model="price.lineWithPrice.total[$index]">
+                        <label for="total">Line Total {{price.lineWithPrice.price[$index]}}</label>
+                    </div>
+                <div class="input-field col s1" style="margin-top: 67px">
+                        <i class="small mdi-action-highlight-remove" ng-click="removeLineWithPrice($index)"></i>
+                    </div>
+              </div>
+            </li>
     </ul>
   </div>
 <div class="row" style="margin-top: 50px">
@@ -534,9 +538,9 @@
  </div>
 </div>
 <div class="input-field col s2 offset-s3" style="">
-  <p>Sub-Total: {{subTotalRate + subTotalPrice}}</p>
-  <p>GST: {{(subTotalRate + subTotalPrice) * 0.1}}</p>
-  <p>Total: {{(subTotalRate + subTotalPrice) * 0.1 + (subTotalRate + subTotalPrice)}}</p>
+  <p>Sub-Total: {{(subTotalRate + subTotalPrice).toFixed(2)}}</p>
+  <p>GST: {{((subTotalRate + subTotalPrice) * 0.1).toFixed(2)}}</p>
+  <p>Total: {{((subTotalRate + subTotalPrice) * 0.1 + subTotalRate + subTotalPrice).toFixed(2)}}</p>
 </div>
 </div>
 </div>

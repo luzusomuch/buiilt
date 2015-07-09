@@ -91,8 +91,8 @@ exports.sendQuote =function(req, res) {
   }
   quoteRequest.quoteRate = quoteRate;
   quoteRequest.quotePrice = quotePrice;
-  quoteRequest.subTotal = subTotal;
-  quoteRequest.total = subTotal * 0.1 + subTotal;
+  quoteRequest.subTotal = parseFloat(subTotal);
+  quoteRequest.total = parseFloat(subTotal) * 0.1 + parseFloat(subTotal);
   quoteRequest.save(function(err, saved) {
     if (err) {return res.send(500,err);}
     MaterialPackage.findById(req.body.materialRequest._id, function(err, materialPackage){

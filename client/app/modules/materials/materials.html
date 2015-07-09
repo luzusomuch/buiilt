@@ -29,7 +29,7 @@
       <a class="collection-item" ng-if="(currentTeam.type == 'builder' || currentTeam.type == 'homeOwner') && !materialPackage.isSelect"
          ui-sref='materialRequest.viewMaterialRequest({id: materialPackage.project, packageId: materialPackage._id})'>
         {{materialPackage.name}}<span class="new badge">{{materialPackage.__v}}</span></a>
-      <a ng-show="materialPackage.isSupplier" class="collection-item" ng-if="currentTeam.type == 'supplier' && materialPackage.isSelect"
+      <a ng-show="materialPackage.isSupplier" class="collection-item" ng-if="currentTeam.type == 'supplier' && materialPackage.isSelect && materialPackage.winnerTeam._id == currentTeam._id"
          ui-sref='materialRequest.materialPackageInProcess({id: materialPackage.project, packageId: materialPackage._id})'>
         {{materialPackage.name}}<span class="new badge">{{materialPackage.__v}}</span></a>
       <a ng-show="materialPackage.isSupplier" class="collection-item" ng-if="currentTeam.type == 'supplier' && !materialPackage.isSelect"

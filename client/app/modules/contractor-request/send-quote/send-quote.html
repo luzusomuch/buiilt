@@ -159,8 +159,9 @@
                        <label for="description">Description of Item</label>
                     </div>
                 <div class="input-field col s2" style="margin-top: 67px">
-                        <input id="rate" type="number" class="validate" ng-model="rate.lineWithRate.rate[$index]" required>
+                        <input id="rate" name="rate" type="text" class="validate" ng-model="rate.lineWithRate.rate[$index]" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" required>
                         <label for="rate">Rate</label>
+                        <p class="validate-message" ng-show="sendQuoteForm.rate.$invalid">Limit 2 decimals!!!</p>
                     </div>
                 <div class="input-field col s1" style="margin-top: 67px">
                         <input id="quantity" type="text" class="validate" ng-model="rate.lineWithRate.rateQuantity[$index]" required>
@@ -168,7 +169,7 @@
                     </div>
                 <div class="input-field col s2" style="margin-top: 67px">
                         <input disabled id="total" type="text" class="validate" ng-model="rate.lineWithRate.rateTotal[$index]">
-                        <label for="total">Line total{{rate.lineWithRate.rateTotal[$index] = rate.lineWithRate.rate[$index] * rate.lineWithRate.rateQuantity[$index]}}</label>
+                        <label for="total">Line total{{rate.lineWithRate.rateTotal[$index] = (rate.lineWithRate.rate[$index] * rate.lineWithRate.rateQuantity[$index]).toFixed(2)}}</label>
                     </div>
                 <div class="input-field col s1" style="margin-top: 67px">
                         <i class="small mdi-action-highlight-remove" ng-click="removeLineWithRate($index)"></i>
@@ -182,8 +183,9 @@
                        <label for="description">Description of Item</label>
                     </div>
                 <div class="input-field col s2" style="margin-top: 67px">
-                        <input id="rate" type="number" class="validate" ng-model="price.lineWithPrice.price[$index]" required>
-                        <label for="rate">Price</label>
+                        <input id="price" name="price" type="text" class="validate" ng-model="price.lineWithPrice.price[$index]" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" required>
+                        <label for="price">Price</label>
+                        <p class="validate-message" ng-show="sendQuoteForm.price.$invalid">Limit 2 decimals!!!</p>
                     </div>
                 <div class="input-field col s1" style="margin-top: 67px">
                         <input disabled value="1" id="quantity" type="text" class="validate" ng-model="price.lineWithPrice.quantity[$index]">
@@ -225,9 +227,9 @@
             </div>
          </div>
          <div class="input-field col s2 offset-s3" style="margin-top: -40px">
-                <p>Sub-Total: {{subTotalRate + subTotalPrice}}</p>
-            <p>GST: {{(subTotalRate + subTotalPrice) * 0.1}}</p>
-            <p>Total: {{(subTotalRate + subTotalPrice) * 0.1 + (subTotalRate + subTotalPrice)}}</p>
+                <p>Sub-Total: {{(subTotalRate + subTotalPrice).toFixed(2)}}</p>
+            <p>GST: {{((subTotalRate + subTotalPrice) * 0.1).toFixed(2)}}</p>
+            <p>Total: {{((subTotalRate + subTotalPrice) * 0.1 + subTotalRate + subTotalPrice).toFixed(2)}}</p>
              </div>
        </div>
     </div>

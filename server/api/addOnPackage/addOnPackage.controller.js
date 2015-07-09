@@ -142,7 +142,7 @@ exports.sendVariation = function(req, res) {
                             quantity: rate.quantity[i],
                             total: rate.rate[i] * rate.quantity[i]
                         });
-                        subTotal += rate.rate[i] * rate.quantity[i];
+                        subTotal += parseFloat(rate.rate[i] * rate.quantity[i]);
                     };
                 }
             });
@@ -157,7 +157,7 @@ exports.sendVariation = function(req, res) {
                             quantity: 1,
                             total: price.price[i]
                         });
-                        subTotal += price.price[i];
+                        subTotal += parseFloat(price.price[i]);
                     };
                 }
             });
@@ -865,6 +865,29 @@ exports.editAddendum = function(req, res) {
         ContractorPackage.findById(req.params.id, function(err, contractorPackage){
             if (err) {return res.send(500,err);}
             else {
+                var merge = _.assign(req.body.addendum.scopeDescription,req.body.addendum.quantity);
+                console.log(merge);
+                return;
+                var addendumScope = [];
+                _.each(req.body.addendum.scopeDescription, function(value) {
+                    addendumScope.push({
+                        description: addendumScope.scopeDescription,
+                        quantity: addendumScope.quantity
+                    });
+                });
+                contractorPackage.addendums.push({
+                    description: req.body.description.description,
+                    addendumsScope: addendumsScope
+                });
+                contractorPackage.markModified('sendAddendum');
+                contractorPackage._editUser = req.user;
+                contractorPackage.save(function(err, saved){
+                    if (err) {return res.send(500, err);}
+                    else {
+                        return res.json(200,saved);
+                    }
+                });
+                return;
                 var pack = _.findWhere(contractorPackage.addendums, function(id){
                     return id._id.toString() === req.body.addendumId;
                 });
@@ -877,8 +900,8 @@ exports.editAddendum = function(req, res) {
                         pack.description = pack.description;
                     }
                     async.each(pack.addendumsScope, function(addendumScope, callback) {
+                        console.log(addendumScope);
                         _.each(req.body.addendum.scopeDescription, function(value){
-                            console.log(addendumScope);
                             console.log(value);
                             if (addendumScope.description != value
                                 && value != '{{addendumScope.description}}') {
@@ -897,7 +920,8 @@ exports.editAddendum = function(req, res) {
                                 addendumScope.quantity = addendumScope.quantity;   
                             }
                         });
-                        callback();
+                        contractorPackage.save(callback);
+                        console.log(pack);
                     }, function(){
                         contractorPackage.markModified('editAddendum');
                         contractorPackage._editUser = req.user;

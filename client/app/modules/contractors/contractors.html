@@ -32,7 +32,7 @@
         {{contractorPackage.name}}
         <span class="new badge">{{contractorPackage.__v}}</span>
       </a>
-      <a ng-show="contractorPackage.isContractor" class="collection-item" ng-if="currentTeam.type == 'contractor' && contractorPackage.isAccept"
+      <a ng-show="contractorPackage.isContractor" class="collection-item" ng-if="currentTeam.type == 'contractor' && contractorPackage.isAccept && contractorPackage.winnerTeam._id == currentTeam._id"
          ui-sref='contractorRequest.contractorPackageInProcess({id: contractorPackage.project, packageId: contractorPackage._id})'>
         {{contractorPackage.name}}
         <span class="new badge">{{contractorPackage.__v}}</span>
