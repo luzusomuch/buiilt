@@ -214,7 +214,10 @@ exports.sendMessage = function(req, res) {
         materialPackage.save(function(err, saved) {
           if (err) {return res.send(500, err)}
           else {
-            return res.json(200,saved);
+            saved.populate('messages.sendBy', function(err){
+              if (err) {return res.send(500,err);}
+              return res.json(200,saved);
+            });
           }
         });
       }
@@ -267,7 +270,8 @@ exports.getMessageForBuilder = function(req, res) {
   Team.findOne({$or:[{leader: req.user._id},{'member._id': req.user._id}]}, function(err, team){
     if (err) {return res.send(500,err);}
     else {
-      MaterialPackage.findOne({$and:[{_id: req.params.id},{'messages.owner': team._id}]}, function(err, materialPackage) {
+      MaterialPackage.findOne({$and:[{_id: req.params.id},{'messages.owner': team._id}]})
+      .populate('messages.sendBy').exec(function(err, materialPackage) {
         if (err) {return res.send(500,err);}
         if (!materialPackage) {return res.send(500,err)}
         else {

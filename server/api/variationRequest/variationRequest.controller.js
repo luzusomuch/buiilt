@@ -115,7 +115,10 @@ exports.sendMessage = function(req, res) {
       variation.save(function(err, saved) {
         if (err) {return res.send(500, err)}
         else {
-          return res.json(200,saved);
+          saved.populate('messages.sendBy', function(err){
+            if (err) {return res.send(500,err);}
+            return res.json(200,saved);
+          });
         }
       });
     }
@@ -147,7 +150,8 @@ exports.sendMessageToBuilder = function(req, res) {
 };
 
 exports.getMessageForBuilder = function(req, res) {
-  Variation.findOne({$and:[{_id: req.params.id},{'messages.owner': req.user.team._id}]}, function(err, variation) {
+  Variation.findOne({$and:[{_id: req.params.id},{'messages.owner': req.user.team._id}]})
+  .populate('messages.sendBy').exec(function(err, variation) {
     if (err) {return res.send(500,err);}
     if (!variation) {return res.send(404,err)}
     else {
