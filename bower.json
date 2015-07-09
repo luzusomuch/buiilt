@@ -30,8 +30,7 @@
     "prism": "git://github.com/PrismJS/prism.git",
     "angular-tooltips": "~0.1.10",
     "angucomplete-alt": "~1.0.0",
-    "angular-socket-io": "~0.7.0",
-    "ngInfiniteScroll": "1.0.0"
+    "angular-socket-io": "~0.7.0"
   },
   "resolutions": {
     "angular": "~1.3"

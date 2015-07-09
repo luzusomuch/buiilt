@@ -117,34 +117,34 @@ angular.module('buiiltApp')
           text = params.fromUser() + ' has send quote ' + params.quote + ' to ' + params.toUser() + ' in ' + params.packageName;
         }
         if (scope.notification.type === 'send-addendum') {
-          text = params.fromUser()  + 'has add new addendum in pacakge ' + params.element;
+          text = params.fromUser()  + 'has add new addendum in ' + params.element;
         }
         if (scope.notification.type === 'edit-addendum') {
-          text = params.fromUser()  + 'has edit addendum in pacakge ' + params.element;
+          text = params.fromUser()  + 'has edit addendum in ' + params.element;
         }
         if (scope.notification.type === 'invite') {
-          text = params.fromUser()  + 'has invited new contractor in package ' + params.element;
+          text = params.fromUser()  + 'has invited new person in ' + params.element;
         }
         if (scope.notification.type === 'invitation') {
-          text = params.fromUser()  + 'has invited you to send quote for package ' + params.element;
+          text = params.fromUser()  + 'has invited you to send quote for ' + params.element;
         }
         if (scope.notification.type === 'send-message') {
-          text = params.fromUser()  + 'has send you a message in package ' + params.element;
+          text = params.fromUser()  + 'has send you a message in ' + params.element;
         }
         if (scope.notification.type === 'send-message-to-builder') {
-          text = params.fromUser()  + 'has send you a message in package ' + params.element;
+          text = params.fromUser()  + 'has send you a message in ' + params.element;
         }
         if (scope.notification.type === 'select-quote') {
-          text = params.fromUser()  + 'has select you as a contractor for package ' + params.element;
+          text = params.fromUser()  + 'has select you for ' + params.element;
         }
         if (scope.notification.type === 'send-defect') {
-          text = params.fromUser()  + 'has add new defect in package ' + params.element;
+          text = params.fromUser()  + 'has add new defect in ' + params.element;
         }
         if (scope.notification.type === 'send-variation') {
-          text = params.fromUser()  + 'has add new variation in package ' + params.element;
+          text = params.fromUser()  + 'has add new variation in ' + params.element;
         }
         if (scope.notification.type === 'send-invoice') {
-          text = params.fromUser() + 'has add new invoice in package ' + params.element;
+          text = params.fromUser() + 'has add new invoice in ' + params.element;
         }
         if (scope.notification.type === 'uploadDocument') {
           text = params.fromUser()  + 'has add new document ' + params.fileName + ' in ' + params.place;
