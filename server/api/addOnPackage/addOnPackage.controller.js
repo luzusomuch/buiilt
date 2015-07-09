@@ -865,29 +865,6 @@ exports.editAddendum = function(req, res) {
         ContractorPackage.findById(req.params.id, function(err, contractorPackage){
             if (err) {return res.send(500,err);}
             else {
-                var merge = _.assign(req.body.addendum.scopeDescription,req.body.addendum.quantity);
-                console.log(merge);
-                return;
-                var addendumScope = [];
-                _.each(req.body.addendum.scopeDescription, function(value) {
-                    addendumScope.push({
-                        description: addendumScope.scopeDescription,
-                        quantity: addendumScope.quantity
-                    });
-                });
-                contractorPackage.addendums.push({
-                    description: req.body.description.description,
-                    addendumsScope: addendumsScope
-                });
-                contractorPackage.markModified('sendAddendum');
-                contractorPackage._editUser = req.user;
-                contractorPackage.save(function(err, saved){
-                    if (err) {return res.send(500, err);}
-                    else {
-                        return res.json(200,saved);
-                    }
-                });
-                return;
                 var pack = _.findWhere(contractorPackage.addendums, function(id){
                     return id._id.toString() === req.body.addendumId;
                 });

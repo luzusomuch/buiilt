@@ -89,14 +89,20 @@ p.validate-message {
 }
 
 ul#itemActions {
-    left : 986.0625px !important;
+    left : 71% !important;
 }
 
 ul#relatedActions {
-    left :212.265625px !important
+    left :49% !important
 }
 ul#chatActions {
-    left : 875.671875px !important
+    left : 84% !important
+}
+ul#itemSendQuote {
+    left : 75% !important
+}
+ul#itemDownload {
+    left : 69% !important
 }
 
 .current-assign {

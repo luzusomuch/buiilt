@@ -3,12 +3,12 @@
    
    <div class="col s4" style="margin-top:15px">
        <a class='dropdown-button btn-flat right tooltipped' data-position="top" data-delay="1" data-tooltip="Attach..." href='#'
-          data-activates='itemActions' data-gutter="-30" dropdown data-constrainwidth="false" data-beloworigin="true">
+          data-activates='itemSendQuote' data-gutter="-30" dropdown data-constrainwidth="false" data-beloworigin="true">
         <i class="mdi-navigation-more-vert"></i>
        </a>
 
        <!-- Dropdown Structure -->
-       <ul id='itemActions' class='dropdown-content'>
+       <ul id='itemSendQuote' class='dropdown-content'>
        <li><a class="modal-trigger" href="#attachQuote">Attach Quote</a></li>
        </ul>
    </div>
@@ -188,7 +188,7 @@
               </div>
             </li>
             <li class="">
-              <div class="row form" style="margin-bottom: 0px;padding:10px;" ng-repeat="lineWithRate in lineWithRates track by $index">
+              <div class="row form" style="margin-bottom: 0px;padding:10px;background-color: #FFF" ng-repeat="lineWithRate in lineWithRates track by $index">
                 <div class="input-field col s6">
                    <textarea value="This is a line item with Rate - note the field for qty is editable"id="description" class="materialize-textarea" ng-model="rate.lineWithRate.rateDescription[$index]" required></textarea>
                        <label for="description">Description of Item</label>
@@ -212,7 +212,7 @@
               </div>
             </li>
             <li class="">
-              <div class="row form" style="margin-bottom: 0px;padding:10px;" ng-repeat="lineWithPrice in lineWithPrices track by $index">
+              <div class="row form" style="margin-bottom: 0px;padding:10px;background-color: #FFF" ng-repeat="lineWithPrice in lineWithPrices track by $index">
                 <div class="input-field col s6">
                    <textarea value="This is a line item with Price - the Qty field is set to 1 and only price can be changed."id="description" class="materialize-textarea" ng-model="price.lineWithPrice.description[$index]" required></textarea>
                        <label for="description">Description of Item</label>

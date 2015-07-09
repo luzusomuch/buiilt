@@ -4,12 +4,12 @@
             <h5 class="col s8">{{project.name}}</h5>
             <div class="col s4" style="margin-top:15px">
                  <a class='dropdown-button btn-flat right' href="#!"
-                    data-activates="itemActions" dropdown data-constrainwidth="false" data-beloworigin="true">
+                    data-activates="itemDownload" dropdown data-constrainwidth="false" data-beloworigin="true">
                     <i class="mdi-navigation-more-vert"></i>
                  </a>
 
                  <!-- Dropdown Structure -->
-                 <ul id='itemActions' class='dropdown-content'>
+                 <ul id='itemDownload' class='dropdown-content'>
                     <li ng-show="isLeader && currentTeam.type == 'builder'"><a class="modal-trigger" data-target="upload" href="#attachDocument">Upload document</a></li>
                     <li><a ng-click="downloadAll()">Download All Documents</a></li>
                  </ul>
