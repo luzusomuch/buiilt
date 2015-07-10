@@ -14,8 +14,7 @@ angular.module('buiiltApp', [
   'contenteditable',
   '720kb.tooltips',
   'angucomplete-alt',
-  'btford.socket-io',
-  'ui.bootstrap'
+  'btford.socket-io'
 ]);
 
 angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider, $locationProvider, $urlRouterProvider, $httpProvider, $sceDelegateProvider, cfpLoadingBarProvider) {
