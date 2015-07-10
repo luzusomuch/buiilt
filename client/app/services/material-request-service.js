@@ -89,5 +89,12 @@ angular.module('buiiltApp')
           action: 'cancel-package'
         }
       },
+      declineQuote: {
+        method: 'PUT',
+        params: {
+          id: '@id',
+          action: 'decline-quote'
+        }
+      }
     });
   });

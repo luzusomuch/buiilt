@@ -22,5 +22,6 @@ router.post('/:id/send-addendum', auth.isAuthenticated(), controller.sendAddendu
 router.get('/:id/message-builder', auth.isAuthenticated(), controller.getMessageForBuilder);
 router.put('/:id/complete', auth.isAuthenticated(), controller.materialPackage, controller.complete);
 router.put('/:id/cancel-package', auth.isAuthenticated(), controller.cancelPackage);
+router.put('/:id/decline-quote', auth.isAuthenticated(), controller.declineQuote);
 
 module.exports = router;

@@ -119,6 +119,17 @@ EventBus.onSeries('MaterialPackage.Updated', function(request, next) {
           return next();
         });
     }
+    else if (request._modifiedPaths.indexOf('decline-quote') != -1) {
+      var notification = new Notification({
+        owner: request.ownerUser,
+        fromUser: request.editUser,
+        toUser: request.ownerUser,
+        element: {package:request},
+        referenceTo: 'MaterialPackage',
+        type: 'decline-quote'
+      });
+      notification.save();
+    }
     else if (request._modifiedPaths.indexOf('editAddendum') != -1) {
         async.each(request.to, function(toContractor,cb) {
           if (toContractor._id) {

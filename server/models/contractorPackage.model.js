@@ -66,6 +66,7 @@ var ContractorPackageSchema = new Schema({
     phoneNumber: {
       type: Number
     },
+    isDecline: {type: Boolean, default: false},
     quote: {type: Schema.Types.ObjectId, ref: 'QuoteRequest'}
   }],
   newInvitation: [{

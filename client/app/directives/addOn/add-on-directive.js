@@ -241,6 +241,7 @@ angular.module('buiiltApp').directive('addon', function(){
                 }
 
             },true);
+              console.log($scope.type);
 
             $scope.formData = {
                 title: '',
@@ -287,6 +288,7 @@ angular.module('buiiltApp').directive('addon', function(){
               });
             };
             uploader.onBeforeUploadItem = function (item) {
+
                 $scope.formData._id = $scope.fileId;
                 $scope.formData.title = item.title;
                 $scope.formData.belongToType = $scope.type;

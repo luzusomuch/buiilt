@@ -33,7 +33,7 @@
          <li><a class="modal-trigger" href="#modal_attachDocument">Attach Document</a></li>
        </ul>
 
-       <ul id='relatedActions' class='dropdown-content' style="margin-top: 15px" ng-if="type == 'contractor' || type == 'material' || type == 'variation'">
+       <ul id='relatedActions' class='dropdown-content' style="margin-top: 15px" ng-if="type == 'contractor' || type == 'material' || type == 'variation' || type == 'staffPackage'">
          <li ng-if="type == 'contractor' || type == 'material'">
           <a ng-show="currentTeam.type == 'builder'" class="modal-trigger" href="#modal_attachVariation">Attach Variation</a>
           <a ng-show="currentTeam.type == 'contractor' || currentTeam.type == 'supplier'" class="modal-trigger" href="#attachVariationWithQuote">Attach Variation</a>

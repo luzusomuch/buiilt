@@ -76,6 +76,17 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
       }
     });
   }
+  else if (request._modifiedPaths.indexOf('decline-quote') != -1) {
+    var notification = new Notification({
+      owner: request.ownerUser,
+      fromUser: request.editUser,
+      toUser: request.ownerUser,
+      element: {package:request},
+      referenceTo: 'ContractorPackage',
+      type: 'decline-quote'
+    });
+    notification.save();
+  }
   else if (request._modifiedPaths.indexOf('inviteContractor') != -1) {
     async.parallel([
       function(cb){

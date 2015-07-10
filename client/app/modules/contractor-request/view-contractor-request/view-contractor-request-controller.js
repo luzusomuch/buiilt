@@ -59,6 +59,12 @@ angular.module('buiiltApp')
     });
   };
 
+  $scope.declineQuote = function(value) {
+    contractorRequestService.declineQuote({id: contractorRequest._id, belongTo: value}).$promise.then(function(data){
+      $scope.contractorRequest = data;
+    });
+  };
+
   $scope.sendInvitationInContractor = function() {
     contractorRequestService.sendInvitationInContractor({id: $stateParams.packageId, toContractor: $scope.emailsPhone})
     .$promise.then(function(data){

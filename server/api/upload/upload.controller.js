@@ -64,7 +64,7 @@ exports.upload = function(req, res){
                     file.path = uploadedFile.path;
                     file.server = 's3';
                     file.mimeType = uploadedFile.type;
-                    file.description = uploadedField.description;
+                    file.description = uploadedField.desc;
                     file.size = uploadedFile.size;
                     file.version = file.version + 1;
                     file.belongTo = req.params.id;
@@ -80,6 +80,16 @@ exports.upload = function(req, res){
                                         else {
                                             if (builderPackage.to.team) {
                                                 owners = _.union(builderPackage.owner.leader, builderPackage.to.team.leader, saved.usersInterestedIn);
+                                                _.each(builderPackage.owner.member, function(member){
+                                                    if (member._id) {
+                                                        owners.push(member._id);
+                                                    }
+                                                });
+                                                _.each(builderPackage.to.team.member, function(member){
+                                                    if (member._id) {
+                                                        owners.push(member._id);
+                                                    }
+                                                });
                                                 async.each(owners, function(leader, callback){
                                                     var notification = new Notification({
                                                         owner: leader,
@@ -152,6 +162,16 @@ exports.upload = function(req, res){
                                         else {
                                             if (builderPackage.to.team) {
                                                 owners = _.union(builderPackage.owner.leader, builderPackage.to.team.leader);
+                                                _.each(builderPackage.owner.member, function(member){
+                                                    if (member._id) {
+                                                        owners.push(member._id);
+                                                    }
+                                                });
+                                                _.each(builderPackage.to.team.member, function(member){
+                                                    if (member._id) {
+                                                        owners.push(member._id);
+                                                    }
+                                                });
                                                 async.each(owners, function(leader,callback){
                                                     var notification = new Notification({
                                                         owner: leader,
@@ -237,7 +257,7 @@ exports.uploadInPackge = function(req, res){
             file.user = req.user._id;
             file.path = uploadedFile.path;
             file.mimeType = uploadedFile.type;
-            file.description = uploadedField.description;
+            file.description = uploadedField.desc;
             file.size = uploadedFile.size;
             file.version = file.version;
             file.belongTo = req.params.id;
@@ -254,6 +274,16 @@ exports.uploadInPackge = function(req, res){
                                 .populate('winnerTeam._id').exec(function(err, contractorPackage) {
                                     if (err || !contractorPackage) {return cb();}
                                     owners = _.union(contractorPackage.owner.leader, contractorPackage.winnerTeam._id.leader);
+                                    _.each(contractorPackage.owner.member, function(member){
+                                        if (member._id) {
+                                            owners.push(member._id);
+                                        }
+                                    });
+                                    _.each(contractorPackage.winnerTeam._id.member, function(member){
+                                        if (member._id) {
+                                            owners.push(member._id);
+                                        }
+                                    });
                                     async.each(owners, function(leader, callback){
                                         var notification = new Notification({
                                             owner: leader,
@@ -274,6 +304,16 @@ exports.uploadInPackge = function(req, res){
                                 .populate('winnerTeam._id').exec(function(err, materialPackage) {
                                     if (err || !materialPackage) {return cb();}
                                     owners = _.union(materialPackage.owner.leader, materialPackage.winnerTeam._id.leader);
+                                    _.each(materialPackage.owner.member, function(member){
+                                        if (member._id) {
+                                            owners.push(member._id);
+                                        }
+                                    });
+                                    _.each(materialPackage.winnerTeam._id.member, function(member){
+                                        if (member._id) {
+                                            owners.push(member._id);
+                                        }
+                                    });
                                     async.each(owners, function(leader, callback){
                                         var notification = new Notification({
                                             owner: leader,
@@ -312,6 +352,16 @@ exports.uploadInPackge = function(req, res){
                                 Variation.findById(saved.belongTo).populate('owner').populate('to._id').exec(function(err, variation) {
                                     if (err || !variation) {return cb();}
                                     owners = _.union(variation.owner.leader, variation.to._id.leader);
+                                    _.each(variation.owner.member, function(member){
+                                        if (member._id) {
+                                            owners.push(member._id);
+                                        }
+                                    });
+                                    _.each(variation.to._id.member, function(member){
+                                        if (member._id) {
+                                            owners.push(member._id);
+                                        }
+                                    });
                                     async.each(owners, function(leader,callback){
                                         var notification = new Notification({
                                             owner: leader,
@@ -366,7 +416,9 @@ exports.uploadInPackge = function(req, res){
                                 }
                             });
                         }
-                    ]);
+                    ], function(err){
+                        return res.send(500,err);
+                    });
                 }
             });
         }

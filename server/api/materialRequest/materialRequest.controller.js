@@ -466,6 +466,28 @@ exports.cancelPackage = function(req, res) {
   });
 };
 
+exports.declineQuote = function(req, res) {
+  MaterialPackage.findById(req.body.id).populate('to.quote').exec(function(err, materialPackage) {
+    if (err) {return res.send(500,err);}
+    else {
+      _.each(materialPackage.to, function(toMaterial){
+        if (toMaterial._id == req.body.belongTo) {
+          toMaterial.isDecline = true;
+          toMaterial._ownerUser = toMaterial.quote.user;
+        }
+      });
+      materialPackage.markModified('decline-quote');
+      materialPackage._editUser = req.user;
+      materialPackage.save(function(err, saved) {
+        if (err) {return res.send(500,err);}
+        else {
+          return res.json(200, saved);
+        }
+      });
+    }
+  });
+};
+
 exports.complete = function(req,res) {
   var materialPackage = req.materialPackage
   materialPackage.isCompleted = !materialPackage.isCompleted

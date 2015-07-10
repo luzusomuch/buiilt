@@ -126,7 +126,7 @@
               <div ng-if="toMaterial.quote._id">
                 <a style="margin: 0px -15px;" class="btn-flat btn-flat modal-trigger" href="#modal_viewQuote_{{toMaterial.quote._id}}">View quote</a>
                 <button style="margin: 0px -15px;" ng-click="selectQuote(toMaterial.quote._id)" class="btn-flat btn-flat valign">Select quote</button>
-                <button style="margin: 0px -15px;" class="btn-flat btn-flat valign">Decline quote</button>
+                <button style="margin: 0px -15px;" ng-click="declineQuote(toMaterial._id)" class="btn-flat btn-flat valign">Decline quote</button>
               </div>
             </div>
             <div class="col s6">
@@ -311,7 +311,7 @@
     </div>
     <div class="modal-footer">
       <a ng-click="selectQuote(quoteRequest._id)" class="modal-action modal-close waves-effect waves-green btn-flat ">Select this quote</a>
-      <a class="modal-action modal-close waves-effect waves-green btn-flat ">Decline</a>
+      <a class="modal-action modal-close waves-effect waves-green btn-flat " ng-click="declineQuote(quoteRequest.team)">Decline</a>
     </div>
   </div>
 </div> 

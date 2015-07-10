@@ -95,6 +95,13 @@ angular.module('buiiltApp')
         params : {
           action : 'complete'
         }
+      },
+      declineQuote: {
+        method: 'PUT',
+        params: {
+          id: '@id',
+          action: 'decline-quote'
+        }
       }
     }
     );

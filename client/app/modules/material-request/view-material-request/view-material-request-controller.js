@@ -36,6 +36,13 @@ angular.module('buiiltApp')
     $scope.messages = data;
   });
 
+  $scope.declineQuote = function(value) {
+    materialRequestService.declineQuote({id: materialRequest._id, belongTo: value}).$promise.then(function(data){
+      $scope.materialRequest = data;
+    });
+  };
+
+
   $scope.addUser = function() {
     if ($scope.toSupplier.newEmail) {
       $scope.emailsPhone.push({email: $scope.toSupplier.newEmail, phoneNumber: $scope.toSupplier.newPhoneNumber});
