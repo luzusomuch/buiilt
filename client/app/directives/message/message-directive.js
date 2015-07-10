@@ -92,6 +92,25 @@ angular.module('buiiltApp')
                 });
                 _.remove($scope.available,{_id : $scope.currentUser._id});
                 break;
+              case 'variation' :
+                $scope.available = [];
+                $scope.available = _.union($scope.available,$scope.currentTeam.leader);
+                if ($scope.currentTeam._id == $scope.package.to._id._id && $scope.isLeader) {
+                  _.forEach($scope.package.owner.leader,function(leader) {
+                    $scope.available.push(leader);
+                  });
+                }
+                if ($scope.currentTeam._id == $scope.package.owner._id && $scope.isLeader) {
+                  _.forEach($scope.package.to._id.leader,function(leader) {
+                    $scope.available.push(leader);
+                  });
+                }
+                _.forEach($scope.currentTeam.member,function(member) {
+                  if (member.status == 'Active') {
+                    $scope.available.push(member._id);
+                  }
+                });
+                _.remove($scope.available,{_id : $scope.currentUser._id});
               default :
                 break
             }

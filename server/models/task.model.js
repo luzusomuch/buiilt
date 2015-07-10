@@ -27,7 +27,7 @@ var TaskSchema = new Schema({
   },
   type : {
     type : String,
-    enum : ['staff','contractor','builder','material']
+    enum : ['staff','contractor','builder','material','variation']
   },
   package : {
     type : Schema.Types.ObjectId,
@@ -62,6 +62,7 @@ var TaskSchema = new Schema({
   dateStart: { type: Date },
   //due date
   dateEnd: { type: Date },
+  hasDateEnd : Boolean,
   starred: {type: Boolean, default: false},
   //the sub task just has title, we don't need to separate a new model
   subTasks: [{
@@ -91,6 +92,7 @@ TaskSchema.pre('save', function(next) {
   this._modifiedPaths = this.modifiedPaths();
   this.wasNew = this.isNew;
   this.editUser = this._editUser;
+  this.hasDateEnd =  (this.dateEnd) ? true : false;
   next();
 });
 

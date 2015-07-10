@@ -93,6 +93,25 @@ angular.module('buiiltApp')
                 }
               });
               break;
+            case 'variation' :
+              $scope.available = [];
+              $scope.available = _.union($scope.available,$scope.currentTeam.leader);
+              if ($scope.currentTeam._id == $scope.package.to._id._id && $scope.isLeader) {
+                _.forEach($scope.package.owner.leader,function(leader) {
+                  $scope.available.push(leader);
+                });
+              }
+              if ($scope.currentTeam._id == $scope.package.owner._id && $scope.isLeader) {
+                _.forEach($scope.package.to._id.leader,function(leader) {
+                  $scope.available.push(leader);
+                });
+              }
+              _.forEach($scope.currentTeam.member,function(member) {
+                if (member.status == 'Active') {
+                  $scope.available.push(member._id);
+                }
+              });
+              break;
             default :
               break
           }
@@ -107,7 +126,7 @@ angular.module('buiiltApp')
               $scope.tasks = res;
               _.forEach($scope.tasks,function(task) {
                 task.isOwner = (_.findIndex(task.assignees,{_id : $scope.currentUser._id}) != -1)
-                task.dateEnd = new Date(task.dateEnd);
+                task.dateEnd = (task.dateEnd) ? new Date(task.dateEnd) : null;
               })
             });
         };

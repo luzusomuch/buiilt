@@ -6,6 +6,7 @@ var StaffPackage = require('./../../models/staffPackage.model'),
     BuilderPackage = require('./../../models/builderPackage.model'),
     ContractorPackage = require('./../../models/contractorPackage.model'),
     MaterialPackage = require('./../../models/materialPackage.model'),
+    Variation = require('./../../models/variation.model'),
     Notification = require('./../../models/notification.model'),
     Project = require('./../../models/project.model');
 var TaskValidator = require('./../../validators/task');
@@ -28,6 +29,8 @@ var getPackage = function(type) {
     case 'material' :
       _package = MaterialPackage;
       break;
+    case 'variation' :
+      _package = Variation;
     default :
       break;
   }
@@ -70,7 +73,8 @@ exports.myTask = function(req,res) {
   var project = req.project;
   var result = [];
   Task.find({$or : [{'user' : user._id}, {assignees : user._id}],project : project._id,completed : false})
-    .sort({'dateEnd' : -1})
+    .sort('hasDateEnd')
+    .sort({'dateEnd': 1})
     .populate('assignees')
     .populate('user')
 
@@ -110,6 +114,24 @@ exports.myTask = function(req,res) {
                 {path : 'package.owner.leader',model : 'User'},{path : 'package.owner.member._id',model : 'User'},
                 {path : 'package.winnerTeam._id.leader',model : 'User'},{path : 'package.winnerTeam._id.member._id',model : 'User'}
               ],function(err,task) {
+                result.push(task);
+                callback(null)
+              })
+            })
+          });
+        } else if (task.type == 'variation') {
+          Task.populate(task, {path: 'package', model: 'Variation'}, function (err, task) {
+            Task.populate(task, [{path: 'package.owner', model: 'Team'}, {
+              path: 'package.winnerTeam._id',
+              model: 'Team'
+            }], function (err, task) {
+              Task.populate(task, [
+                {path: 'package.owner.leader', model: 'User'}, {path: 'package.owner.member._id', model: 'User'},
+                {path: 'package.winnerTeam._id.leader', model: 'User'}, {
+                  path: 'package.winnerTeam._id.member._id',
+                  model: 'User'
+                }
+              ], function (err, task) {
                 result.push(task);
                 callback(null)
               })
@@ -178,6 +200,7 @@ exports.update = function(req,res) {
 exports.getTask = function(req,res) {
   var aPackage = req.aPackage;
   Task.find({package : aPackage})
+    .sort('hasDateEnd')
     .sort({'dateEnd': -1})
     .populate('assignees')
     .exec(function(err,tasks) {

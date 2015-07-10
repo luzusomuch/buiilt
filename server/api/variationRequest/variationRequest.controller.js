@@ -14,11 +14,17 @@ exports.findOne = function(req, res) {
     Variation.findById(req.params.id)
     .populate('to.quote')
     .populate('to._id')
+    .populate('owner')
     .exec(function(err, variation){
         if (err) {return res.send(500,err);}
         if (!variation) {return res.send(404,err);}
         else {
+          User.populate(variation,[
+            {path : 'to._id.leader'},
+            {path : 'owner.leader'}
+          ],function(err,variation) {
             return res.send(200,variation);
+          })
         }
     });
 };

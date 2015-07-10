@@ -54,6 +54,8 @@ angular.module('buiiltApp')
                 return 'contractorRequest.contractorPackageInProcess({id : notification.element.project, packageId : notification.element.package})';
               case 'material' :
                 return 'materialRequest.materialPackageInProcess({id : notification.element.project, packageId : notification.element.package})';
+              case 'variation' :
+                return 'variationRequest.inProcess({id : notification.element.project, variationId : notification.element.package})';
             }
           }
           if (teamArray.indexOf(notification.type) != -1)  {
@@ -63,12 +65,6 @@ angular.module('buiiltApp')
             switch (notification.referenceTo) {
               case 'StaffPackage' :
                 return 'staff.view({id : notification.element.project, packageId : notification.element._id})';
-              case 'builder' :
-                return 'client({id : notification.element.project})';
-              case 'contractor' :
-                return 'contractorRequest.contractorPackageInProcess({id : notification.element.project, packageId : notification.element.package})';
-              case 'material' :
-                return 'materialRequest.materialPackageInProcess({id : notification.element.project, packageId : notification.element.package})';
             }
           }
           if (contractorAndMaterialNotificationArray.indexOf(notification.type) != -1) {

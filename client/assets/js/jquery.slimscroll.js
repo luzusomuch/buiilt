@@ -91,8 +91,8 @@
 			  me.parent().css('height', 'auto');
 			  me.css('height', 'auto');
 			  var height = me.parent().parent().height();
-			  me.parent().css('height', height);
-			  me.css('height', height);
+			  me.parent().css('max-height', height);
+			  me.css('max-height', height);
 			}
 
 			if ('scrollTo' in options)
@@ -145,14 +145,14 @@
 			position: 'relative',
 			overflow: 'hidden',
 			width: o.width,
-			height: o.height
+			'max-height' : o.height
 		  });
 
 		// update style for the div
 		me.css({
 		  overflow: 'hidden',
 		  width: o.width,
-		  height: o.height
+		  'max-height' : o.height
 		});
 
 		// create scrollbar rail

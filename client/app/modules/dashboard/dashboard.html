@@ -14,7 +14,7 @@
 </div>
 <div class="col s9">
   <ul class="collapsible task-dashboard" data-collapsible="accordion" ng-if="currentList == 'tasks'">
-    <li class="" ng-repeat="task in myTasks">
+    <li class="" ng-repeat="task in myTasks | orderBy : ['dateEnd']">
       <div class="collapsible-header row" >
         <a class="btn-flat col s1" style="margin-top: -3px; font-size: 12px;" ng-click="complete(task,$index)">
           <i ng-if="!task.completed" class="mdi-toggle-check-box-outline-blank"></i>
@@ -41,6 +41,11 @@
         </a>
         <a ng-if="task.type == 'material'"
            ui-sref="materialRequest.materialPackageInProcess({id : task.project, packageId : task.package._id})"
+           class="btn-flat secondary-content new badge col s2" style="font-size: 12px;">
+          Go to Task
+        </a>
+        <a ng-if="task.type == 'variation'"
+           ui-sref="variationRequest.inProcess({id : task.project, variationId : task.package._id})"
            class="btn-flat secondary-content new badge col s2" style="font-size: 12px;">
           Go to Task
         </a>

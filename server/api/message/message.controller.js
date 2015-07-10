@@ -6,6 +6,7 @@ var StaffPackage = require('./../../models/staffPackage.model'),
   BuilderPackage = require('./../../models/builderPackage.model'),
   ContractorPackage = require('./../../models/contractorPackage.model'),
   MaterialPackage = require('./../../models/materialPackage.model'),
+  Variation = require('./../../models/variation.model'),
   Notification = require('./../../models/notification.model'),
   Project = require('./../../models/project.model');
 var ThreadValidator = require('./../../validators/thread');
@@ -29,6 +30,8 @@ var getPackage = function(type) {
     case 'material' :
       _package = MaterialPackage;
       break;
+    case 'variation' :
+      _package = Variation
     default :
       break;
   }

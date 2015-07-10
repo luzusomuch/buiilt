@@ -1,9 +1,9 @@
 angular.module('buiiltApp')
-  .controller('DashboardCtrl', function($scope,$state, socket, $q, userService, $rootScope,myFiles,myTasks,myThreads,authService,taskService,messageService,notificationService) {
+  .controller('DashboardCtrl', function($scope,$state, socket, $q, userService,$timeout, $rootScope,myFiles,myTasks,myThreads,authService,taskService,messageService,notificationService) {
     $scope.currentProject = $rootScope.currentProject;
     $scope.myTasks = myTasks;
     _.forEach($scope.myTasks,function(task) {
-      task.dateEnd = new Date(task.dateEnd);
+      task.dateEnd = (task.dateEnd) ? new Date(task.dateEnd) : null;
     });
     $scope.myThreads = myThreads;
     $scope.myFiles = myFiles;
