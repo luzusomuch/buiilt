@@ -300,11 +300,13 @@ exports.destroy = function (req, res) {
  * Change a users password
  */
 exports.changePassword = function (req, res, next) {
-  var userId = req.user._id;
+  var user = req.user;
   var oldPass = String(req.body.oldPassword);
   var newPass = String(req.body.newPassword);
-
-  User.findById(userId, function (err, user) {
+  User.findById(user._id, function (err, user) {
+    if (!user.authenticate(oldPass)) {
+      return res.send(422,{oldPassword : 'This password is not correct.'});
+    }
     user.password = newPass;
     user.save(function(err) {
       if (err) {return validationError(res, err);}

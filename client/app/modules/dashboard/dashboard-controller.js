@@ -3,7 +3,6 @@ angular.module('buiiltApp')
     $scope.currentProject = $rootScope.currentProject;
     $scope.myTasks = myTasks;
     $scope.currentUser = $rootScope.currentUser;
-    console.log($scope.currentUser);
     _.forEach($scope.myTasks,function(task) {
       task.dateEnd = (task.dateEnd) ? new Date(task.dateEnd) : null;
     });
