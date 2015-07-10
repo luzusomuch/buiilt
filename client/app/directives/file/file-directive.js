@@ -46,12 +46,14 @@ angular.module('buiiltApp').directive('file', function(){
                 });
             };
 
-            $scope.downloadFile = function(value) {
-                fileService.downloadFile({id: value})
-                .$promise.then(function(data){
-                    $window.open(data.url);
-                });
-            };
+            // $scope.downloadFile = function(value) {
+            //     console.log(value);
+            //     $scope.downloadLink = null;
+            //     fileService.downloadFile({id: value})
+            //     .$promise.then(function(data){
+            //         $scope.downloadLink = data.url;
+            //     });
+            // };
             
             var uploader = $scope.uploader = new FileUploader({
                 url: 'api/uploads/'+ $stateParams.id + '/file',

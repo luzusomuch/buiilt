@@ -54,7 +54,7 @@
               Detail for tenderer:
               <div style="text-align:center">
                 <div ng-repeat="file in files" ng-if="variationRequest.to._id._id == file.uploadBy">
-                  {{file.title}} - <a href="#" ng-click="downloadFile(file)">Download file</a>
+                  {{file.title}} - <a href='{{file.fileUrl}}' download="file.name">Download file</a>
                 </div>
                 <span ng-show="variationRequest.to.quote.total > 0">
                   Total: {{variationRequest.to.quote.total}}

@@ -18,8 +18,8 @@
                 <div>{{(file.isInterested) ? 'Dislike' : 'Like'}}</div>
                 <div class="secondary-content">{{file.totalLike}} Like</div>
               </span>
-              <p style="cursor:pointer;" ng-click="downloadFile(file._id)">
-                Download
+              <p style="cursor:pointer;">
+                <a href='{{file.fileUrl}}' download="file.name">Download</a>
               </p>
               <p>{{file.title}} <span><em>Revision {{file.version +1 }} of {{file.version +1 }}</em></span></p>
               <a href='#!' class="activator">Upload Revision</a>

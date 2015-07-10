@@ -388,7 +388,7 @@
       <p>{{file.description}}</p>
     </div>
     <div class="col s12">
-      <a ng-click="downloadFile(file._id)" style="cursor:pointer">Download file</a>
+      <a href='{{file.fileUrl}}' download="file.name" style="cursor:pointer">Download file</a>
     </div>
   </div>
   <div class="modal-footer">

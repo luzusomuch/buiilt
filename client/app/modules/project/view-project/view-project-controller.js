@@ -11,6 +11,9 @@ angular.module('buiiltApp').controller('ViewProjectCtrl', function($window,$scop
   packageService.getPackageByProject({'id': $stateParams.id}).$promise.then(function(data) {
     $scope.builderPackage = data;
   });
+  fileService.getFileByStateParam({'id': $stateParams.id}).$promise.then(function(data) {
+    $scope.files = data;
+  });
   
   $scope.createDocument = function() {
     documentService.create({'id': $scope.project._id},$scope.docum).$promise
@@ -19,13 +22,13 @@ angular.module('buiiltApp').controller('ViewProjectCtrl', function($window,$scop
     });
   };
 
-  $scope.downloadAll = function() {
-    fileService.downloadAll({id: $stateParams.id}).$promise.then(function(data){
-      _.each(data, function(url){
-        $window.open(url.url);
-      });
-    });
-  };
+  // $scope.downloadAll = function() {
+  //   fileService.downloadAll({id: $stateParams.id}).$promise.then(function(data){
+  //     _.each(data, function(url){
+  //       $window.open(url.url);
+  //     });
+  //   });
+  // };
 
   $scope.closeAlert = function (key) {
     delete $scope.errors[key];

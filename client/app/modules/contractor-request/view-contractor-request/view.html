@@ -19,7 +19,7 @@
  <p class="col s12">{{contractorRequest.description}}</p>
 </div>
 
-<div class="row" ng-if="contractorRequest.winnerTeam._id">
+<div class="row" ng-if="contractorRequest.winnerTeam._id" style="display:none">
   <div class="col s12">
     <ul class="collapsible" data-collapsible="accordion">
       <li>
@@ -111,7 +111,7 @@
             <div class="col s5">
               Detail for the tender #{{$index + 1}}.
               <div ng-repeat="file in files" ng-if="toContractor.team == file.uploadBy">
-                {{file.title}} - <a href="#" ng-click="downloadFile(file)">Download file</a>
+                {{file.title}} - <a href='{{file.fileUrl}}' download="file.name">Download file</a>
               </div>
               <div ng-if="toContractor.quote.total > 0" style="text-align:center">
                 Total: {{toContractor.quote.total}}

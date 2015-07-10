@@ -12,7 +12,7 @@
     <a href="#" class="collection-item" ng-click="showDocs()" ng-class="{'active' : currentList == 'docs'}">Docs<span ng-if="myFiles.length > 0" class="new badge">{{myFiles.length}}</span></a>
   </div>
 </div>
-<div class="col s9">
+<div class="col s9" style="height:700px; overflow-y:auto">
   <ul class="collapsible task-dashboard" data-collapsible="accordion" ng-if="currentList == 'tasks'">
     <li class="" ng-repeat="task in myTasks | orderBy : ['dateEnd']">
       <div class="collapsible-header row" >

@@ -62,6 +62,7 @@ exports.upload = function(req, res){
                     file.title = uploadedField.title;
                     file.name = uploadedFile.name;
                     file.path = uploadedFile.path;
+                    file.server = 's3';
                     file.mimeType = uploadedFile.type;
                     file.description = uploadedField.description;
                     file.size = uploadedFile.size;

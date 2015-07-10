@@ -11,7 +11,12 @@
                  <!-- Dropdown Structure -->
                  <ul id='itemDownload' class='dropdown-content'>
                     <li ng-show="isLeader && currentTeam.type == 'builder'"><a class="modal-trigger" data-target="upload" href="#attachDocument">Upload document</a></li>
-                    <li><a ng-click="downloadAll()">Download All Documents</a></li>
+                    <li>
+                        <a id="downloadAll">Download All Documents</a>
+                        <span ng-repeat="file in files" style="display:none">
+                            <a class="downloadFile" href='{{file.fileUrl}}' download="file.name">{{file.title}}</a>
+                        </span>
+                    </li>
                  </ul>
            </div>
         </div>
@@ -28,3 +33,25 @@
   
     <upload package=""></upload>
 </div>
+
+<script>
+$(document).ready(function(){
+    $("#downloadAll").click(function(){
+        $('a.downloadFile').each(function(){
+            $(this).simulateClick("click");
+        });
+    });
+});
+jQuery.fn.simulateClick = function() {
+    return this.each(function() {
+        if('createEvent' in document) {
+            var doc = this.ownerDocument,
+                evt = doc.createEvent('MouseEvents');
+            evt.initMouseEvent('click', true, true, doc.defaultView, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
+            this.dispatchEvent(evt);
+        } else {
+            this.click(); // IE Boss!
+        }
+    });
+}
+</script>

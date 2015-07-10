@@ -1,5 +1,5 @@
 'use strict';
-
+var s3 = require('../components/S3');
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
@@ -84,8 +84,8 @@ var FileSchema = new Schema({
  */
 FileSchema.virtual('fileUrl')
   .get(function() {
-  if (this.serve === 's3') {
-    return s3.getPublicUrlHttp(this.path);
+  if (this.server === 's3') {
+    return s3.getPublicUrl(this.name);
   }
   return this.path;
 });
@@ -106,6 +106,7 @@ FileSchema.methods.toJSON = function() {
   return {
     _id: this._id,
     title: this.title,
+    name: this.name,
     description: this.description,
     comments: this.comments,
     mimeType: this.mimeType,
