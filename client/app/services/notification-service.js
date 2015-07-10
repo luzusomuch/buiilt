@@ -48,6 +48,12 @@ angular.module('buiiltApp')
             action: 'my-file'
           },
           isArray: true
+        },
+        getTotal : {
+          method : 'GET',
+          params : {
+            action : 'get-total'
+          }
         }
         //update: {
         //  method: 'PUT'

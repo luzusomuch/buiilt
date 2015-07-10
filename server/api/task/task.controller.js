@@ -70,7 +70,7 @@ exports.myTask = function(req,res) {
   var project = req.project;
   var result = [];
   Task.find({$or : [{'user' : user._id}, {assignees : user._id}],project : project._id,completed : false})
-    .sort({'dueDate' : -1})
+    .sort({'dateEnd' : -1})
     .populate('assignees')
     .populate('user')
 
@@ -117,7 +117,7 @@ exports.myTask = function(req,res) {
           });
         } else if (task.type == 'staff') {
           Task.populate(task,{path : 'package',model : 'StaffPackage'},function(err,task) {
-            Task.populate(task,{path : 'package.staffs'},function(err,task) {
+            User.populate(task,{path : 'package.staffs'},function(err,task) {
               result.push(task);
               callback(null)
             })
@@ -178,7 +178,7 @@ exports.update = function(req,res) {
 exports.getTask = function(req,res) {
   var aPackage = req.aPackage;
   Task.find({package : aPackage})
-    .sort('-dateEnd')
+    .sort({'dateEnd': -1})
     .populate('assignees')
     .exec(function(err,tasks) {
     if (err) {

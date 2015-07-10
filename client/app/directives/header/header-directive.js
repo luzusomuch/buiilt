@@ -95,11 +95,19 @@ angular.module('buiiltApp')
         }
       });
 
+      $rootScope.$on('TeamUpdate',function(event,team) {
+        queryProjects();
+      });
+
       document.addEventListener('click',function(e) {
         if (e.target.id == 'sendVerification')
         {
           authService.sendVerification().$promise
             .then(function(res) {
+              var toast = document.getElementsByClassName('toast');
+              toast.forEach(function(item) {
+                item.style.display = 'none'
+              })
               Materialize.toast('<span>Verification email has been sent to your email address</span>', $scope.duration,'rounded');
             })
         }

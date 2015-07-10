@@ -13,9 +13,9 @@
 
      <div class="collection"  style="margin-top:10px">
          <a href="#!" ng-click="filter = {isCompleted : false}" class="collection-item"
-            ng-class="{'active' : !filter.isCompleted}">In Progress</a>
+            ng-class="{'active' : !filter.isCompleted}">In Progress<span class="badge item">{{(staffPackages | filter : {isCompleted : false}).length}}</span></a>
          <a href="#!" ng-click="filter = {isCompleted : true}" class="collection-item"
-            ng-class="{'active' : filter.isCompleted}">Completed</a>
+            ng-class="{'active' : filter.isCompleted}">Completed<span class="badge item">{{(staffPackages | filter : {isCompleted : true}).length}}</span></a>
      </div>
   </div>
 

@@ -16,16 +16,16 @@
     </div>
     <div class="divider"></div>
     <div style="height:300px; overflow-y: auto">
-      <li class="collection-item" ng-repeat="task in tasks | taskFilter : filter | orderBy : ['-completed','-createdAt'] ">
+      <li class="collection-item row" ng-repeat="task in tasks | taskFilter : filter | orderBy : ['dateEnd'] ">
         <div>
-          <a class="btn-flat"
+          <a class="btn-flat col s1"
              ng-click="(!task.isOwner && !isLeader) || complete(task)"
              ng-class="{ 'disabled' : !task.isOwner && !isLeader}">
             <i ng-if="!task.completed" class="mdi-toggle-check-box-outline-blank"></i>
             <i ng-if="task.completed" class="mdi-toggle-check-box"></i>
           </a>
-            <span ng-class="{'completed' : task.completed, 'disabled' : !task.isOwner && !isLeader}"><a class="activator" href="#!" ng-click="showTask(task)">{{task.name}}</a></span>
-          <a href="#!" class="btn-flat activator secondary-content" style="margin-top: -3px; font-size: 12px;"
+            <span class="col s10" ng-class="{'completed' : task.completed, 'disabled' : !task.isOwner && !isLeader}"><a class="activator" href="#!" ng-click="showTask(task)">{{task.name}}</a></span>
+          <a href="#!" class="btn-flat activator secondary-content col s1" style="margin-top: -3px; font-size: 12px;"
              ng-click="(!task.isOwner && !isLeader && !task.completed) || editTask(task)"
              ng-if="task.isOwner || isLeader && !task.completed ">
           Edit
@@ -39,7 +39,7 @@
       <form name="form" class="col s12" ng-submit="save(form)">
         <div class="row">
           <div class="input-field col s12">
-            <input id="task_description" type="text" ng-model="task.name" name="name"
+            <input id="task_description" type="text" ng-model="task.name" name="name" maxlength="80"
                    ng-class="{'invalid' : form.name.$invalid && submitted}" ng-disabled="isShow">
             <label for="task_description">Task</label>
             <p class="validate-message" ng-show="form.name.$error.required && submitted">Task name is required</p>

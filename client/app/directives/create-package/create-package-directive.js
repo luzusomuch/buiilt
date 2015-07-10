@@ -29,12 +29,12 @@ angular.module('buiiltApp').directive('createPackage', function(){
         $scope.description = '';
       };
 
-      $scope.assign = function(staff,index) {
+      $scope.staffAssign = function(staff,index) {
         $scope.package.staffs.push(staff);
         $scope.available.splice(index,1);
       };
 
-      $scope.revoke = function(assignee,index) {
+      $scope.staffRevoke = function(assignee,index) {
         $scope.available.push(assignee);
         $scope.package.staffs.splice(index,1);
       };

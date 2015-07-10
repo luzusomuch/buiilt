@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-  .controller('TeamCtrl', function ($scope,$rootScope, validateInviteService, invitations,users,currentUser, currentTeam, teamService, authService,$state,userService,filterFilter) {
+  .controller('TeamCtrl', function ($scope,$rootScope, validateInviteService, invitations,users,currentUser, currentTeam, teamService, authService,$state,userService,filterFilter,Modal) {
     $scope.existedTeam = {};
     $scope.validateInvite = null;
     $scope.invitations = invitations;
@@ -8,6 +8,7 @@ angular.module('buiiltApp')
     $scope.users = users;
     $scope.clear = false;
     $scope.isEdit = false;
+
 
     var getLocalData = function() {
       _.forEach($scope.currentTeam.member,function(member) {
@@ -105,21 +106,28 @@ angular.module('buiiltApp')
 
     //Todo add confirm when asign leader
     $scope.assignLeader = function(member) {
-      teamService.assignLeader({id: $scope.currentTeam._id}, member).$promise
-        .then(function (team) {
-          $scope.currentTeam = team;
-          $rootScope.$emit('TeamUpdate',team);
-          getLocalData();
-        })
+      Modal.confirm('Are you sure you want to assign this member as leader',function(confirm) {
+        if (confirm) {
+          teamService.assignLeader({id: $scope.currentTeam._id}, member).$promise
+            .then(function (team) {
+              $scope.currentTeam = team;
+              $rootScope.$emit('TeamUpdate',team);
+              getLocalData();
+            })
+        }
+      });
     };
 
     //Todo add confirm when leave team
     $scope.leaveTeam = function() {
-      teamService.leaveTeam({_id: $scope.currentTeam._id}).$promise
-        .then(function (team) {
-
-          $state.go($state.current, {}, {reload: true});
-        })
+      Modal.confirm('Are you sure you want to leave this team',function(confirm) {
+        if (confirm) {
+          teamService.leaveTeam({_id: $scope.currentTeam._id}).$promise
+            .then(function (team) {
+              $state.go($state.current, {}, {reload: true});
+            })
+        }
+      })
     };
 
     $scope.addNewMember = function(){
@@ -137,43 +145,59 @@ angular.module('buiiltApp')
 
     //Todo add confirm when remove member
     $scope.removeMember = function(member){
-      teamService.removeMember({id: $scope.currentTeam._id}, member).$promise
-        .then(function (team) {
-          $scope.currentTeam = team;
-          $rootScope.$emit('TeamUpdate',team);
-          getLocalData();
-        }, function (err) {
-        });
+      Modal.confirm('Are you sure you want to remove this member',function(confirm) {
+        if (confirm) {
+          teamService.removeMember({id: $scope.currentTeam._id}, member).$promise
+            .then(function (team) {
+              $scope.currentTeam = team;
+              $rootScope.$emit('TeamUpdate',team);
+              getLocalData();
+            }, function (err) {
+            });
+        }
+      })
     };
 
     //Todo add confirm when remove invitation
     $scope.removeInvitation = function(member) {
-      teamService.removeMember({id: $scope.currentTeam._id}, member).$promise
-        .then(function (team) {
-          $scope.currentTeam = team;
-          $rootScope.$emit('TeamUpdate',team);
-        }, function (err) {
-        });
+      Modal.confirm('Are you sure you want to reject this invitation',function(confirm) {
+        if (confirm) {
+          teamService.removeMember({id: $scope.currentTeam._id}, member).$promise
+            .then(function (team) {
+              $scope.currentTeam = team;
+              $rootScope.$emit('TeamUpdate',team);
+            }, function (err) {
+            });
+        }
+      })
     };
 
     //Todo add confirm when join team
     $scope.accept = function(invitation) {
-      teamService.acceptTeam({_id: invitation._id}).$promise
-        .then(function (res) {
-          $scope.currentTeam = res;
-          $rootScope.$emit('TeamUpdate',res);
-          getLocalData();
-        }, function (err) {
-        }); 
+      Modal.confirm('Are you sure you want to aceept this invitation',function(confirm) {
+        if (confirm) {
+          teamService.acceptTeam({_id: invitation._id}).$promise
+            .then(function (res) {
+              $scope.currentTeam = res;
+              $rootScope.$emit('TeamUpdate',res);
+              getLocalData();
+            }, function (err) {
+            });
+        }
+      })
     };
 
     //Todo add confirm when reject team
     $scope.reject = function(invitation,index) {
-      teamService.rejectTeam({_id: invitation._id}).$promise
-        .then(function () {
-          $scope.invitations.splice(index, 1);
-          getLocalData();
-        }, function (err) {
-        });
+      Modal.confirm('Are you sure you want to reject this invitation',function(confirm) {
+        if (confirm) {
+          teamService.rejectTeam({_id: invitation._id}).$promise
+            .then(function () {
+              $scope.invitations.splice(index, 1);
+              getLocalData();
+            }, function (err) {
+            });
+        }
+      })
     }
   });

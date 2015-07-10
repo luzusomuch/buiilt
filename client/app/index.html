@@ -61,6 +61,8 @@
     <script src="/app/components/directive.js"></script>
     <script src="/app/components/angular-slimscroll/angular-slimscroll.js"></script>
     <script src="/app/components/socket/socket.service.js"></script>
+    <script src="/app/components/modal/modal.service.js"></script>
+
     <script src="socket.io-client/socket.io.js"></script>
     <script src="/app/directives/footer/footer-directive.js"></script>
     <script src="/app/directives/header/header-directive.js"></script>
@@ -163,6 +165,7 @@
   <main class="row container">
 
     <div ui-view></div>
+    <div ng-include="'app/components/modal/modal.html'"></div>
   </main>
   <div ng-if="authService.isLoggedIn()" sp-socket></div>
   <built-footer></built-footer>

@@ -4,11 +4,11 @@
       <div class="col s10">
         <div class="col s4">
           <a class="dropdown-button btn-flat ng-isolate-scope" data-gutter="5" style="margin-top: 15px" href="#" data-activates="threadSelector" dropdown="" data-beloworigin="true"><span class="ng-scope">
-            {{(currentThread) ? currentThread.name : 'no Thread'}}
+            {{(currentThread) ? currentThread.name : 'no Thread' | elipsis : 20}}
             </span><i class="mdi-navigation-arrow-drop-down ng-scope"></i>
           </a>
             <ul id="threadSelector" style="margin-top: 15px" class="dropdown-content">
-              <li ng-repeat="thread in threads " >
+              <li ng-repeat="thread in threads" >
                 <a ng-if="thread.canSee" href="#!" ng-click="selectThread(thread)">{{thread.name}}</a>
               </li>
           </ul>
@@ -37,7 +37,7 @@
 
     <li class="collection-item" ng-repeat="message in currentThread.messages">
       <div class="row valign-wrapper" style="margin-bottom: -5px">
-        <p class="col s9 valign">{{message.text}}</p>
+        <p class="col s9 valign" ng-bind-html="message.text | linkify"></p>
         <div class="card col" style="padding: 5px; margin-left: 10px">
           {{message.user | name}}
         </div>
@@ -64,8 +64,8 @@
     </div>
   </div>
   <div class="card-reveal">
-    <span class="card-title grey-text text-darken-4" ng-if="isNew">New Thread<i class="mdi-navigation-close right"></i></span>
-    <span class="card-title grey-text text-darken-4" ng-if="!isNew">Edit Thread<i class="mdi-navigation-close right"></i></span>
+    <span ng-click="close()" class="card-title grey-text text-darken-4" ng-if="isNew">New Thread<i class="mdi-navigation-close right"></i></span>
+    <span ng-click="close()" class="card-title grey-text text-darken-4" ng-if="!isNew">Edit Thread<i class="mdi-navigation-close right"></i></span>
     <form class="col s12" name="form" novalidate ng-submit="saveThread(form)">
       <div class="input-field col s12">
         <input id="thread_name" type="text" ng-model="thread.name" required name="name" ng-class="{'invalid' : form.name.$invalid && submitted}">

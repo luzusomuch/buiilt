@@ -94,6 +94,17 @@ exports.allRead = function(req,res) {
   })
 };
 
+exports.countTotal = function(req,res) {
+  var user = req.user;
+  Notification.find({owner : user._id, unread : true}).count(function(err,count) {
+    if (err) {
+      return res.send(500,err);
+    }
+    console.log(count);
+    return res.json({count : count});
+  })
+};
+
 exports.getMyFile = function(req, res) {
   var user = req.user;
 

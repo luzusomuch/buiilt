@@ -192,6 +192,10 @@ angular.module('buiiltApp')
 
           };
 
+          $scope.close = function() {
+            $scope.submitted = false
+          }
+
           $scope.saveThread = function(form) {
             $scope.submitted = true;
             if (form.$valid) {

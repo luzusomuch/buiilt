@@ -1,14 +1,21 @@
-<div class="notification-list z-depth-1">
-  <header class="z-depth-1">
+<li class="notification-open">
+  <a href="#!" style="position: relative">
+    <i class="material-icons">add_alert</i>
+    <span class="count" ng-if="total > 0">{{total}}</span>
+  </a>
+  <div class="notification-list z-depth-1">
+    <header class="z-depth-1">
       <h5 style="display: inline-block">Notification</h5>
       <a class="btn waves-effect waves-yellow" ng-click="markAllAsRead()" style="margin-left:120px">Mark all as read</a>
-  </header>
-  <div class="list-empty" ng-if="notifications.length== 0">
-    <p style="text-align: center">No notifications</p>
-  </div>
-  <div slimscroll slimscroll-option="slimScrollOptions" scroll-to-bottom-cb="loadMore" ng-if="notifications.length > 0">
-    <div notification="notification" current-user='currentUser' ng-repeat="notification in notifications">
+    </header>
+    <div class="list-empty" ng-if="total == 0">
+      <p style="text-align: center">No notifications</p>
+    </div>
+    <div slimscroll slimscroll-option="slimScrollOptions" scroll-to-bottom-cb="loadMore" ng-if="total > 0">
+      <div notification="notification" current-user='currentUser' ng-repeat="notification in notifications">
 
+      </div>
     </div>
   </div>
-</div>
+
+</li>

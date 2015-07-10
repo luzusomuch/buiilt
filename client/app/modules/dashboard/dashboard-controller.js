@@ -35,6 +35,7 @@ angular.module('buiiltApp')
           break;
         case 'staff' :
           $scope.available =  angular.copy($package.staffs);
+          console.log($package);
           $scope.available = _.union($scope.available,$scope.currentTeam.leader);
           break;
         case 'contractor' :
@@ -116,7 +117,6 @@ angular.module('buiiltApp')
       $scope.isShow = true;
       $scope.available = [];
       getAvailableAssignee(task.package,task.type);
-      console.log($scope.available);
       _.forEach(task.assignees,function(item) {
         item.canRevoke = (_.find($scope.available,{_id : item._id}));
         _.remove($scope.available,{_id : item._id});
@@ -126,6 +126,16 @@ angular.module('buiiltApp')
     $scope.editTask = function(task) {
       $scope.isShow = false;
       $scope.task = task;
+      $scope.available = [];
+      getAvailableAssignee(task.package,task.type);
+      _.forEach(task.assignees,function(item) {
+        if (!_.find($scope.available,{_id : item._id})) {
+          item.canRevoke = false;
+        } else {
+          item.canRevoke = true;
+        }
+        _.remove($scope.available,{_id : item._id});
+      });
     };
 
 
@@ -140,6 +150,7 @@ angular.module('buiiltApp')
 
     socket.on('message:new', function (thread) {
       $scope.currentThread = thread;
+      console.log(thread);
       $scope.$apply();
     });
 

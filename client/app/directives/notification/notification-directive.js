@@ -251,6 +251,11 @@ angular.module('buiiltApp')
           $scope.currentUser = $rootScope.user;
           $scope.notifications = [];
           var limit = 10;
+
+          notificationService.getTotal().$promise
+            .then(function(res) {
+              $scope.total = res.count;
+            });
           var getNotifications = function(limit) {
             if ($scope.readMore) {
               notificationService.get({limit : limit}).$promise
@@ -271,19 +276,31 @@ angular.module('buiiltApp')
           $scope.markAllAsRead = function() {
             notificationService.markAllAsRead().$promise
               .then(function(res) {
-                $scope.notifications = res;
+                $scope.notifications = [];
+                $scope.total = 0;
+                $('#slimScrollDiv').hide();
               })
           };
 
+          $scope.$watch('total',function(value) {
+            if (value == 0) {
+              $('.slimScrollDiv').hide();
+            } else
+              $('.slimScrollDiv').show();
+          })
+
           $rootScope.$on('notification:read',function(event,notification) {
             _.remove($scope.notifications,{_id : notification._id});
+            $scope.total--;
           });
 
           getNotifications(limit);
           socket.on('notification:new', function (notification) {
-            console.log(notification);
-            $scope.notifications.unshift(notification);
-            $scope.$apply();
+            if (notification) {
+              $scope.notifications.unshift(notification);
+              $scope.total++;
+              $scope.$apply();
+            }
           });
         }]
 

@@ -164,7 +164,7 @@ span.disabled {
 .notification-list {
   opacity: 0;
   visibility:hidden;
-  max-width: 500px;
+  width: 500px;
   background-color: #FFF;
   position: absolute;
   z-index: 1000;
@@ -224,4 +224,18 @@ span.disabled {
   background-color: #428BCA;
   box-shadow: 0px -1px 0px rgba(0, 0, 0, 0.15) inset;
   transition: width 0.6s ease 0s;
+}
+
+.task-dashboard .collapsible-header {
+  height: auto !important;
+}
+.task-dashboard .collapsible-header.row{
+  margin-bottom: 0px;
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+}
+
+#confirmModal {
+  height: 20%;
+  width:50%
 }

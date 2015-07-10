@@ -58,7 +58,7 @@
                 <p style="">Current Assignees:</p>
                 <p class="validate-message" ng-if="assgineesError">Current assignees must be at least 1 item</p>
                 <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="staff in package.staffs">
-                  {{staff | name}} <span><a href="#!" ng-click="revoke(staff,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
+                  {{staff | name}} <span><a href="#!" ng-click="staffRevoke(staff,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
                 </div>
               </div>
 
@@ -66,7 +66,7 @@
 
               <div class="row available-assign">
                 <p style="">Available Assignee's:</p>
-                <a href="#!" ng-click="assign(staff,$index)" ng-repeat="staff in available">
+                <a href="#!" ng-click="staffAssign(staff,$index)" ng-repeat="staff in available">
                   <div class="card col" style="padding: 5px; margin-left: 10px" >
                     {{staff | name}}
                   </div>
@@ -78,8 +78,8 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="submit" class="modal-action waves-effect waves-green btn modal-action">Create Package!</button>
-      <button type="button" ng-click="closeModal()" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</button>
+      <button type="submit" class="modal-action waves-effect waves-green btn modal-action">Yes</button>
+      <button type="button" ng-click="closeModal()" class="modal-action modal-close waves-effect waves-green btn-flat ">No</button>
     </div>
   </form>
 </div>
