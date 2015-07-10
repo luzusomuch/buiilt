@@ -45,6 +45,7 @@ angular.module('buiiltApp')
     gets:{method:'GET', params: {action: ''}, isArray: true},
     delete: {method:'DELETE', params: {id: 'id', action: ''}},
     changePassword: { method: 'PUT', params: {id: 'id', action: 'password'}},
+    changeEmail: { method: 'PUT', params: {id: 'id', action: 'email'}},
     // changePhoneNum: { method: 'PUT', params: {id: 'id', action: 'phone'}},
     changeProfile: { method: 'PUT', params: {id: 'id', action: 'change-profile'}},
     createUserWithInviteToken: {method: 'POST', params: {action: 'invite-token'}}

@@ -18,6 +18,7 @@ var okay = require('okay');
 var async = require('async');
 var _ = require('lodash');
 var Mailer = require('./../../components/Mailer');
+var crypto = require('crypto');
 
 var validationError = function (res, err) {
   return res.json(422, err);
@@ -312,18 +313,24 @@ exports.changePassword = function (req, res, next) {
       if (err) {return validationError(res, err);}
       res.send(200);
     });
-    // if (user.authenticate(oldPass)) {
-    //   user.password = newPass;
-    //   user.save(function (err) {
-    //     if (err) {
-    //       return validationError(res, err);
-    //     }
-    //     res.send(200);
-    //   });
-    // } else {
-    //   res.send(403);
-    // }
   });
+};
+
+exports.changeEmail = function(req,res) {
+  var user = req.user;
+  User.findById(user._id,function(err,user) {
+    user.changeEmailToken = crypto.randomBytes(20).toString('hex');
+    var currentDate = new Date();
+    user.expired = currentDate.setMinutes(currentDate.getMinutes() + 30);
+    user.emailChange = req.body.email;
+    user._evtName = "User.ChangeEmail";
+    user.save(function(err) {
+      if (err) {
+        return res.send(500,err)
+      }
+      return res.json(true);
+    })
+  })
 };
 
 // exports.changePhoneNum = function(req, res, next) {

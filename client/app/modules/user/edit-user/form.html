@@ -11,19 +11,22 @@
       <div class="collapsible-header">Email</div>
       <div class="collapsible-body">
 
-        <form class="col s12" name="changeEmailForm" ng-submit="changeEmail()">
-          <div class="row center-align">
+        <form class="col s12" name="changeEmailForm" ng-submit="changeEmail(changeEmailForm)" novalidate>
+          <div class="row">
             <div class="input-field col s10 offset-s1">
-              <input ng-model="currentUser.email" id="email" type="email" ng-disabled="!isEditEmail">
+              <input ng-model="email.email" name="email" id="email" type="email" ng-disabled="!isEditEmail" required>
               <label class="active" for="email">Email</label>
+              <p class="validate-message" ng-if="changeEmailForm.email.$error.required && emailFormSubmitted">This input is required</p>
+              <p class="validate-message" ng-if="changeEmailForm.email.$error.email && emailFormSubmitted">Wrong email format</p>
             </div>
+          </div>
+          <div class="row">
             <div class="input-field col s10 offset-s1">
-              <button ng-click="editEmail()" ng-show="!isEditEmail" type="button" class="btn waves-effect waves-light"
-                      ng-disable="changeEmailForm.$invalid" name="action">Edit
+              <button ng-click="editEmail()" ng-show="!isEditEmail" type="button" class="btn waves-effect waves-light" name="action">Edit
               </button>
-              <button ng-show="isEditEmail" class="btn waves-effect waves-light" ng-disable="changeEmailForm.$invalid"
-                      name="action">Save
-              </button>
+              <button ng-show="isEditEmail" class="btn waves-effect waves-light"
+                      name="action">Save</button>
+              <button ng-show="isEditEmail" class="btn waves-effect waves-light" name="action">Cancel</button>
             </div>
           </div>
         </form>
@@ -34,13 +37,12 @@
       <div class="collapsible-header">Password</div>
       <div class="collapsible-body">
 
-        <form class="col s12" name="changePasswordForm" ng-submit="changePw(changePasswordForm)" novalidate>
+        <form class="col s12" name="changePasswordForm" ng-submit="changePassword(changePasswordForm)" novalidate>
           <div class="row">
             <div class="input-field col s10 offset-s1">
               <input ng-model="password.oldPassword" name="oldPassword" id="old-password" type="password" ng-disabled="!isEditPassword" required>
               <label class="active" for="old-password">Old Password</label>
               <p class="validate-message" ng-if="changePasswordForm.oldPassword.$error.required && passwordFormSubmitted">This input is required</p>
-              <p class="validate-message" ng-if="changePasswordForm.oldPassword.$error.wrongPassword && passwordFormSubmitted">Your old password does not correct</p>
             </div>
           </div>
           <div class="row">

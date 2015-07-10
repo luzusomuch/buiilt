@@ -28,3 +28,14 @@ EventBus.onSeries('User.Inserted', function(user, next) {
 EventBus.onSeries('User.Updated', function(user, next) {
   return next();
 });
+
+EventBus.onSeries('User.ChangeEmail', function(user, next) {
+  Mailer.sendMail('confirm-change-email.html', user.email, {
+    user: user.toJSON(),
+    emailChange : user.emailChange,
+    confirmation: config.baseUrl + 'auth/confirm-email-change/' + user.changeEmailToken,
+    subject: 'Confirm email change from buiilt.com'
+  }, function(err){
+    return next();
+  });
+});

@@ -36,4 +36,22 @@ router.get('/confirm-email/:token', function(req, res){
   });
 });
 
+router.get('/confirm-email-change/:token', function(req, res){
+  User.findOne({
+    changeEmailToken: req.params.token
+  }).exec(function(err, user){
+    if(err || !user){
+      return this.sendStatus(404);
+    }
+
+    //update token
+    user.confirmEmailChange(function(err){
+      if(err){ return res.sendStatus(500); }
+
+      //redirect to success page
+      res.redirect('/signin?action=verifyEmailSuccess');
+    });
+  });
+});
+
 module.exports = router;

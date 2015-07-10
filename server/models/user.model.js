@@ -13,6 +13,10 @@ var UserSchema = new Schema({
   lastName: String,
   email: {type: String, lowercase: true},
   emailVerified: {type: Boolean, default: false},
+  emailChange: {type: String, lowercase: true},
+  changeEmailToken: String,
+  hasChangedEmail: {type: Boolean, default: true},
+  expired : Date,
   emailVerifyToken: String,
   role: {
     type: String,
@@ -122,14 +126,13 @@ var validatePresenceOf = function (value) {
 UserSchema
   .pre('save', function (next) {
     this.wasNew = this.isNew;
-
+    this.evtName = this._evtName;
     if (!this.isNew) {
       return next();
     } else if (this.isNew && !this.emailVerified) {
       //create email verify token
       this.emailVerifyToken = crypto.randomBytes(20).toString('hex');
     }
-
     if (!validatePresenceOf(this.hashedPassword) && authTypes.indexOf(this.provider) === -1) {
       next(new Error('Invalid password'));
     } else {
@@ -138,7 +141,12 @@ UserSchema
   });
 
 UserSchema.post('save', function (doc) {
-  var evtName = this.wasNew ? 'User.Inserted' : 'User.Updated';
+  var evtName;
+  if (this.evtName) {
+    evtName = this.evtName;
+  } else {
+    evtName = this.wasNew ? 'User.Inserted' : 'User.Updated';
+  }
   EventBus.emit(evtName, doc);
 });
 
@@ -184,6 +192,17 @@ UserSchema.methods.confirmEmail = function (callback) {
   //remove keychain and update email verified status
   delete this.emailVerifyToken;
   this.emailVerified = true;
+
+  this.save(callback);
+};
+
+UserSchema.methods.confirmEmailChange = function (callback) {
+  this.hasChangedEmail = true;
+  this.email = this.emailChange;
+  //remove keychain and update email verified status
+  this.set('changeEmailToken', undefined);
+  this.set('expired', undefined);
+  this.set('emailChange', undefined);
 
   this.save(callback);
 };
