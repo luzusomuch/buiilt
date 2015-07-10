@@ -73,6 +73,16 @@ exports.dashboardRead = function(req,res) {
   });
 };
 
+exports.dashboardReadDocument = function(req,res){
+  var id= new require('mongoose').Types.ObjectId(req.params.id);
+  Notification.update({'_id': id},{unread : false},{multi : true},function(err) {
+    if (err) {
+      return res.send(500)
+    }
+    return res.json(true);
+  });
+};
+
 exports.allRead = function(req,res) {
   var user = req.user;
   Notification.update({owner: user._id},{unread : false},{multi : true},function(err,e) {

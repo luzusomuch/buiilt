@@ -94,18 +94,22 @@ angular.module('buiiltApp')
     };
 
     $scope.goToDocument = function(value){
+      notificationService.readDocumentDashboard({_id : value._id});
       if (value.referenceTo == 'DocumentInProject') {
         $state.go('projects.view', {id: value.element.file.belongTo});
       }
       else {
         if (value.referenceTo == 'DocumentContractorPackage') {
-          $state.go('contractors', {id: value.element.file.belongTo});
+          $state.go('contractorRequest.contractorPackageInProcess', {id: value.element.projectId, packageId: value.element.uploadIn._id});
         }
         else if (value.referenceTo == 'DocumentMaterialPackage') {
-          $state.go('materials', {id: value.element.file.belongTo});
+          $state.go('materialRequest.materialPackageInProcess', {id: value.element.projectId, packageId: value.element.uploadIn._id});
         }
         else if (value.referenceTo == 'DocumentStaffPackage') {
-          $state.go('staff', {id: value.element.file.belongTo});
+          $state.go('staff.view', {id: value.element.projectId, packageId: value.element.uploadIn._id});
+        }
+        else if (value.referenceTo == 'DocumentVariation') {
+          $state.go('variationRequest.inProcess', {id: value.element.projectId, variationId: value.element.uploadIn._id});
         }
         else {
           $state.go('client', {id: value.element.file.belongTo});

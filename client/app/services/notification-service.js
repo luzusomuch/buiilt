@@ -55,6 +55,13 @@ angular.module('buiiltApp')
             action : 'get-total'
           }
         }
+        },
+        readDocumentDashboard : {
+          method : 'PUT',
+          params : {
+            action : 'dashboard-read-document'
+          }
+        },
         //update: {
         //  method: 'PUT'
         //},
