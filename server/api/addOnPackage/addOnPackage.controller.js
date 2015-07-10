@@ -860,11 +860,22 @@ exports.removeAddendum = function(req, res){
 
 exports.editAddendum = function(req, res) {
     var packageType = req.body.packageType;
-    console.log(req.body.addendum);
     if (packageType == 'contractor') {
         ContractorPackage.findById(req.params.id, function(err, contractorPackage){
             if (err) {return res.send(500,err);}
             else {
+                var addendumsScope = [];
+                var editAnAddendum = [];
+                _.each(req.body.addendum.scopeDescription, function(item) {
+                    addendumsScope.push({
+                        description: item
+                    });
+                });
+                _.each(req.body.addendum.quantity, function(item) {
+                    addendumsScope.push({
+                        quantity: item
+                    });
+                });
                 var pack = _.findWhere(contractorPackage.addendums, function(id){
                     return id._id.toString() === req.body.addendumId;
                 });
@@ -876,42 +887,38 @@ exports.editAddendum = function(req, res) {
                     else {
                         pack.description = pack.description;
                     }
-                    async.each(pack.addendumsScope, function(addendumScope, callback) {
-                        console.log(addendumScope);
-                        _.each(req.body.addendum.scopeDescription, function(value){
-                            console.log(value);
-                            if (addendumScope.description != value
-                                && value != '{{addendumScope.description}}') {
-                                addendumScope.description = value;
-                            }
-                            else {
-                                addendumScope.description = addendumScope.description;   
-                            }
-                        });
-                        _.each(req.body.addendum.quantity, function(value){
-                            if (addendumScope.quantity != value
-                                && value != '{{addendumScope.quantity}}') {
-                                addendumScope.quantity = value;
-                            }
-                            else {
-                                addendumScope.quantity = addendumScope.quantity;   
-                            }
-                        });
-                        contractorPackage.save(callback);
-                        console.log(pack);
-                    }, function(){
-                        contractorPackage.markModified('editAddendum');
-                        contractorPackage._editUser = req.user;
-                        contractorPackage.save(function(err, saved) {
-                            if (err) {return res.send(500,err);}
-                            else {
-                                return res.json(200,saved);
-                            }
-                        });
+                    var key = 0;
+                    _.each(pack.addendumsScope, function(addendumScope) {
+                        if (addendumScope.description != addendumsScope[key].description && 
+                            addendumsScope[key].description != '{{addendumScope.description}}') {
+                            addendumScope.description = addendumsScope[key].description;
+                        }
+                        else if(addendumsScope[key].description == '{{addendumScope.description}}'){
+                            addendumScope.description = addendumScope.description;
+                        }
+                        else {
+                            addendumScope.description = addendumScope.description;
+                        }
+                        if (addendumScope.quantity != addendumsScope[key + 2].quantity && 
+                            addendumsScope[key + 2].quantity != '{{addendumScope.quantity}}') {
+                            addendumScope.quantity = addendumsScope[key + 2].quantity;
+                        }
+                        else if(addendumsScope[key + 2].quantity == '{{addendumScope.quantity}}'){
+                            addendumScope.quantity = addendumScope.quantity;
+                        }
+                        else {
+                            addendumScope.quantity = addendumScope.quantity;
+                        }
+                        key++;
                     });
-                }
-                else {
-                    return res.send(500);
+                    contractorPackage.markModified('editAddendum');
+                    contractorPackage._editUser = req.user;
+                    contractorPackage.save(function(err, saved) {
+                        if (err) {return res.send(500,err);}
+                        else {
+                            return res.json(200,saved);
+                        }
+                    });
                 }
             }
         });
@@ -920,6 +927,18 @@ exports.editAddendum = function(req, res) {
         MaterialPackage.findById(req.params.id, function(err, materialPackage){
             if (err) {return res.send(500,err);}
             else {
+                var addendumsScope = [];
+                var editAnAddendum = [];
+                _.each(req.body.addendum.scopeDescription, function(item) {
+                    addendumsScope.push({
+                        description: item
+                    });
+                });
+                _.each(req.body.addendum.quantity, function(item) {
+                    addendumsScope.push({
+                        quantity: item
+                    });
+                });
                 var pack = _.findWhere(materialPackage.addendums, function(id){
                     return id._id.toString() === req.body.addendumId;
                 });
@@ -931,26 +950,29 @@ exports.editAddendum = function(req, res) {
                     else {
                         pack.description = pack.description;
                     }
+                    var key = 0;
                     _.each(pack.addendumsScope, function(addendumScope) {
-                        _.forEach(req.body.addendum.scopeDescription, function(value, key){
-                            if (addendumScope.description != value
-                                && value != '{{addendumScope.description}}') {
-                                addendumScope.description = value;
-                            }
-                            else {
-                                addendumScope.description = addendumScope.description;   
-                            }
-                        });
-                        _.forEach(req.body.addendum.quantity, function(value,key){
-                            if (addendumScope.quantity != value
-                                && value != '{{addendumScope.quantity}}') {
-                                addendumScope.quantity = value;
-                            }
-                            else {
-                                addendumScope.quantity = addendumScope.quantity;   
-                            }
-                        });
-                        materialPackage.save();
+                        if (addendumScope.description != addendumsScope[key].description && 
+                            addendumsScope[key].description != '{{addendumScope.description}}') {
+                            addendumScope.description = addendumsScope[key].description;
+                        }
+                        else if(addendumsScope[key].description == '{{addendumScope.description}}'){
+                            addendumScope.description = addendumScope.description;
+                        }
+                        else {
+                            addendumScope.description = addendumScope.description;
+                        }
+                        if (addendumScope.quantity != addendumsScope[key + 2].quantity && 
+                            addendumsScope[key + 2].quantity != '{{addendumScope.quantity}}') {
+                            addendumScope.quantity = addendumsScope[key + 2].quantity;
+                        }
+                        else if(addendumsScope[key + 2].quantity == '{{addendumScope.quantity}}'){
+                            addendumScope.quantity = addendumScope.quantity;
+                        }
+                        else {
+                            addendumScope.quantity = addendumScope.quantity;
+                        }
+                        key++;
                     });
                     materialPackage.markModified('editAddendum');
                     materialPackage._editUser = req.user;
@@ -961,9 +983,6 @@ exports.editAddendum = function(req, res) {
                         }
                     });
                 }
-                else {
-                    return res.send(500);
-                }
             }
         });
     }
@@ -971,6 +990,18 @@ exports.editAddendum = function(req, res) {
         Variation.findById(req.params.id, function(err, variation){
             if (err) {return res.send(500,err);}
             else {
+                var addendumsScope = [];
+                var editAnAddendum = [];
+                _.each(req.body.addendum.scopeDescription, function(item) {
+                    addendumsScope.push({
+                        description: item
+                    });
+                });
+                _.each(req.body.addendum.quantity, function(item) {
+                    addendumsScope.push({
+                        quantity: item
+                    });
+                });
                 var pack = _.findWhere(variation.addendums, function(id){
                     return id._id.toString() === req.body.addendumId;
                 });
@@ -982,26 +1013,29 @@ exports.editAddendum = function(req, res) {
                     else {
                         pack.description = pack.description;
                     }
+                    var key = 0;
                     _.each(pack.addendumsScope, function(addendumScope) {
-                        _.forEach(req.body.addendum.scopeDescription, function(value, key){
-                            if (addendumScope.description != value
-                                && value != '{{addendumScope.description}}') {
-                                addendumScope.description = value;
-                            }
-                            else {
-                                addendumScope.description = addendumScope.description;   
-                            }
-                        });
-                        _.forEach(req.body.addendum.quantity, function(value,key){
-                            if (addendumScope.quantity != value
-                                && value != '{{addendumScope.quantity}}') {
-                                addendumScope.quantity = value;
-                            }
-                            else {
-                                addendumScope.quantity = addendumScope.quantity;   
-                            }
-                        });
-                        variation.save();
+                        if (addendumScope.description != addendumsScope[key].description && 
+                            addendumsScope[key].description != '{{addendumScope.description}}') {
+                            addendumScope.description = addendumsScope[key].description;
+                        }
+                        else if(addendumsScope[key].description == '{{addendumScope.description}}'){
+                            addendumScope.description = addendumScope.description;
+                        }
+                        else {
+                            addendumScope.description = addendumScope.description;
+                        }
+                        if (addendumScope.quantity != addendumsScope[key + 2].quantity && 
+                            addendumsScope[key + 2].quantity != '{{addendumScope.quantity}}') {
+                            addendumScope.quantity = addendumsScope[key + 2].quantity;
+                        }
+                        else if(addendumsScope[key + 2].quantity == '{{addendumScope.quantity}}'){
+                            addendumScope.quantity = addendumScope.quantity;
+                        }
+                        else {
+                            addendumScope.quantity = addendumScope.quantity;
+                        }
+                        key++;
                     });
                     variation.markModified('editAddendum');
                     variation._editUser = req.user;
@@ -1011,9 +1045,6 @@ exports.editAddendum = function(req, res) {
                             return res.json(200,saved);
                         }
                     });
-                }
-                else {
-                    return res.send(500);
                 }
             }
         });

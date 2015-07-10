@@ -253,7 +253,8 @@
 </div>
 <div class="divider"></div>
 <div class="modal-footer">
-  <button type="submit" ng-disable="sendInvoiceForm.$invalid" ng-click="uploadAll()" class="modal-action modal-close waves-effect waves-green btn-flat ">Send Invoice!</button>
+  <button ng-show="uploader.queue.length > 0" type="submit" ng-disable="sendInvoiceForm.$invalid" ng-click="uploadAll()" class="modal-action modal-close waves-effect waves-green btn-flat ">Send Invoice with image!</button>
+  <button ng-hide="uploader.queue.length != 0" type="submit" ng-disable="sendInvoiceForm.$invalid" class="modal-action modal-close waves-effect waves-green btn-flat ">Send Invoice!</button>
   <!-- <a href="#!" ng-click="uploadAll();" >Send Invoice!</a> -->
   <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
 </div>
