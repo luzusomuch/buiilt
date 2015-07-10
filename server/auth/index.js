@@ -41,7 +41,12 @@ router.get('/confirm-email-change/:token', function(req, res){
     changeEmailToken: req.params.token
   }).exec(function(err, user){
     if(err || !user){
-      return this.sendStatus(404);
+      return res.redirect('/signin?action=verifyEmailChange&error=invalidToken');
+    }
+
+    if (new Date(user.expired) < new Date() )
+    {
+      return res.redirect('/signin?action=verifyEmailChange&error=tokenExpired');
     }
 
     //update token
@@ -49,7 +54,7 @@ router.get('/confirm-email-change/:token', function(req, res){
       if(err){ return res.sendStatus(500); }
 
       //redirect to success page
-      res.redirect('/signin?action=verifyEmailSuccess');
+      res.redirect('/signin?action=verifyEmailChange');
     });
   });
 });

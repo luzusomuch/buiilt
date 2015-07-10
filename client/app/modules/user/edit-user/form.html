@@ -26,7 +26,7 @@
               </button>
               <button ng-show="isEditEmail" class="btn waves-effect waves-light"
                       name="action">Save</button>
-              <button ng-show="isEditEmail" class="btn waves-effect waves-light" name="action">Cancel</button>
+              <button type="button" ng-show="isEditEmail" ng-click="cancelEmail()" class="btn waves-effect waves-light" name="action">Cancel</button>
             </div>
           </div>
         </form>
@@ -66,7 +66,7 @@
                       class="btn waves-effect waves-light" name="action">Edit
               </button>
               <button ng-show="isEditPassword" class="btn waves-effect waves-light" name="action">Save</button>
-              <button ng-show="isEditPassword" class="btn waves-effect waves-light" name="action">Cancel</button>
+              <button type="button" ng-show="isEditPassword" ng-click="cancelPassword()" class="btn waves-effect waves-light" name="action">Cancel</button>
             </div>
           </div>
         </form>

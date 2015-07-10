@@ -319,6 +319,9 @@ exports.changePassword = function (req, res, next) {
 exports.changeEmail = function(req,res) {
   var user = req.user;
   User.findById(user._id,function(err,user) {
+    if (user.email == req.body.email) {
+      return res.json(true);
+    }
     user.changeEmailToken = crypto.randomBytes(20).toString('hex');
     var currentDate = new Date();
     user.expired = currentDate.setMinutes(currentDate.getMinutes() + 30);

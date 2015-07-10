@@ -36,7 +36,6 @@ angular.module('buiiltApp')
             }
           ]
         },
-        hasCurrenrProject : false
       })
       .state('team.create', {
         url: '/create',
