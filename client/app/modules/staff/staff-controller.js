@@ -8,10 +8,7 @@ angular.module('buiiltApp')
     $scope.available = [];
     $scope.isLeader = (_.find(currentTeam.leader,{_id : $scope.currentUser._id})) ? true : false;
     $scope.staffPackages = staffPackages;
-    $scope.package = {
-      staffs : [],
-      descriptions: []
-    };
+
     $scope.submitted = false;
     $scope.filter = {isCompleted : false};
 

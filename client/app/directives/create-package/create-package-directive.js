@@ -6,6 +6,10 @@ angular.module('buiiltApp').directive('createPackage', function(){
     controller: function($scope, $rootScope,$state,$stateParams, $cookieStore, staffPackageService,teamService,contractorService,materialPackageService) {
       $scope.currentTeam = $rootScope.currentTeam;
       $scope.available = [];
+      $scope.package = {
+        staffs : [],
+        descriptions: []
+      };
       $scope.submitted = false;
       var getAvailableAssign =  function() {
         _.forEach($scope.currentTeam.member, function(member) {

@@ -18,11 +18,16 @@ exports.setup = function (User, config) {
         if (!user.authenticate(password)) {
           return done(null, false, { message: 'This password is not correct.' });
         }
+        user.hasChangedEmail = false;
+        user.save(function() {
+          return done(null, user);
+        });
+
         //verify email
         //if (!user.emailVerified) {
         //  return done(null, false, { message: 'This email is not verified.' });
         //}
-        return done(null, user);
+
       });
     }
   ));

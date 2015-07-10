@@ -116,6 +116,10 @@ angular.module('buiiltApp')
       }).$promise;
     },
 
+    changeEmail : function(email) {
+      return userService.changeEmail({id : currentUser._id},email).$promise
+    },
+
     // changePhoneNum: function(phoneNumber, callback) {
     //   var cb = callback || angular.noop;
 

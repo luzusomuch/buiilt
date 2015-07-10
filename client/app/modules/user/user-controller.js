@@ -3,7 +3,10 @@
 angular.module('buiiltApp').controller('UserCtrl', function($scope, $state, authService) {
   $scope.errors = {};
   $scope.user = authService.getCurrentUser();
-  $scope.passwor = {}
+  $scope.password = {};
+  $scope.email = {
+    email : $scope.user.email
+  };
 
   $scope.editEmail = function() {
     $scope.isEditEmail = true;
@@ -13,17 +16,23 @@ angular.module('buiiltApp').controller('UserCtrl', function($scope, $state, auth
     $scope.isEditPassword = true;
   };
 
-  $scope.saveEmail = function() {
+  $scope.changeEmail = function(form) {
+    $scope.emailFormSubmitted = true;
+    if (form.$valid) {
+      authService.changeEmail($scope.email).then(function() {
+
+      })
+    }
 
   };
 
-  $scope.changePw = function(form) {
+  $scope.changePassword = function(form) {
     $scope.passwordFormSubmitted = true;
     if (form.$valid) {
-      authService.changePassword($scope.password.oldPassword,$scope.password.newPassword).then(function(data) {
+      authService.changePassword($scope.password.oldPassword,$scope.password.newPassword).then(function() {
         $scope.isEditPassword = false;
         $scope.passwordFormSubmitted = false;
-        $scope.password = {}
+        $scope.password = {};
         Materialize.toast('<span>Your password has been change success fully </span>', 5000,'rounded');
       }, function(res) {
         var err = res.data;

@@ -17,8 +17,7 @@ angular.module('buiiltApp')
           .then(function(res) {
             $scope.success = true;
             $scope.successMsg = 'Your password has been change click <a href="/signin">here</a> to go to login page';
-            $scope.password = '';
-            $scope.repassword = '';
+            $scope.reset = {};
 
             $scope.submitted = false;
           })
