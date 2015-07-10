@@ -14,12 +14,11 @@
          <form class="col s12" name="changeEmailForm" ng-submit="changeEmail()">
              <div class="row center-align">
                  <div class="input-field col s10 offset-s1">
-                     <input ng-model="currentUser.email" id="email" type="email" class="validate">
+                     <input ng-model="currentUser.email" id="email" type="email" ng-disabled="!isEditEmail">
                      <label class="active" for="email">Email</label>
-                     <button class="btn waves-effect waves-light" ng-disable="changeEmailForm.$invalid" name="action">Edit/Save
-                     </button>
+                     <button ng-click="editEmail()" ng-show="!isEditEmail" type="button" class="btn waves-effect waves-light" ng-disable="changeEmailForm.$invalid" name="action">Edit</button>
+                     <button ng-show="isEditEmail" class="btn waves-effect waves-light" ng-disable="changeEmailForm.$invalid" name="action">Save</button>
                  </div>
-                 
              </div>
          </form>    
             

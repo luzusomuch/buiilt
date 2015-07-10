@@ -2,6 +2,8 @@ angular.module('buiiltApp')
   .controller('DashboardCtrl', function($scope,$state, socket, $q, userService,$timeout, $rootScope,myFiles,myTasks,myThreads,authService,taskService,messageService,notificationService) {
     $scope.currentProject = $rootScope.currentProject;
     $scope.myTasks = myTasks;
+    $scope.currentUser = $rootScope.currentUser;
+    console.log($scope.currentUser);
     _.forEach($scope.myTasks,function(task) {
       task.dateEnd = (task.dateEnd) ? new Date(task.dateEnd) : null;
     });

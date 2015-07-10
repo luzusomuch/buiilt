@@ -1,5 +1,4 @@
 angular.module('buiiltApp').controller('HomeCtrl',
-  function($scope, $timeout, $q,projectsByUser,projectsByBuilder) {
-    $scope.projectsByUser = projectsByUser;
-    $scope.projectsByBuilder = projectsByBuilder;
+  function($scope, $timeout, $q,$state) {
+    $state.go('team.manager');
   });

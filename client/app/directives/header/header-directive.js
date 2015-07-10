@@ -23,7 +23,7 @@ angular.module('buiiltApp')
           {sref: 'materials({id :  currentProject._id})', label: 'materials'},
           {sref: 'projects.view({id :  currentProject._id})', label: 'documentation'}],
         other : [{sref: 'team.manager', label: 'team manager'},
-          {sref: 'user.form', label: 'edit profile'}]
+          {sref: 'user', label: 'User profile'}]
       };
 
       function queryProjects(){
@@ -39,11 +39,12 @@ angular.module('buiiltApp')
             $scope.duration = 10000
             authService.getCurrentUser().$promise
               .then(function(res) {
-                $rootScope.user = res;
+                $rootScope.user = $scope.user = res;
+
                 if ($state.current.name == 'dashboard' && ! res.emailVerified) {
                   Materialize.toast('<span>You must confirm your email to hide this message!</span><a class="btn-flat yellow-text" id="sendVerification">Send Verification Email Again<a>', $scope.duration,'rounded');
                 }
-                $scope.isLeader = $scope.user.team.role == 'admin';
+                console.log($rootScope.isLeader);
                 authService.getCurrentTeam().$promise
                   .then(function(res) {
                     $scope.currentTeam = res;
@@ -130,7 +131,7 @@ angular.module('buiiltApp')
         if (form.$valid) {
             projectService.create($scope.project).$promise.then(function(data) {
               $scope.projects.push(data);
-              $state.go('dashboard',{id : data._id});
+              $state.go('dashboard',{id : data._id},{reload : true});
               $scope.project = {
                 package : {
                   location: {},

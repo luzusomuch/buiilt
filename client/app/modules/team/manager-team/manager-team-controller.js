@@ -97,7 +97,7 @@ angular.module('buiiltApp')
           $rootScope.$emit('TeamUpdate',team);
           $scope.member.emails = [];
           $scope.team.emails = [];
-          $scope.isLeader = true;
+          $rootScope.isLeader = true;
           getLocalData();
         }, function (err) {
         });

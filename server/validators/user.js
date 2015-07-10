@@ -13,7 +13,7 @@ exports.validateNewUser = function(req, callback){
     return callback(req.validationErrors(), _.omit(req.body, 'role','teamInviteToken','repasswords','acceptTeam','invite'));
   }
   else{
-    return callback('The email iuput not look like a valid email.');
+    return callback({msg : 'The email input not look like a valid email.'});
   }
 };
 

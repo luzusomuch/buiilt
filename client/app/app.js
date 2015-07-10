@@ -21,7 +21,7 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
   $sceDelegateProvider.resourceUrlWhitelist(['^(?:http(?:s)?:\/\/)?(?:[^\.]+\.)?\(vimeo|youtube)\.com(/.*)?$', 'self']);
 
   /* Add New States Above */
-  $urlRouterProvider.otherwise('/');
+  $urlRouterProvider.otherwise('/team/manger');
 
   $locationProvider.html5Mode(true);
   $httpProvider.interceptors.push('authInterceptor');
@@ -75,7 +75,6 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
             $state.go('team.manager')
           }
         });
-
 
 
       if (toState.hasCurrentProject) {

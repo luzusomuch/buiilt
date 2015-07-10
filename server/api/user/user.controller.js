@@ -39,7 +39,10 @@ exports.index = function (req, res) {
  */
 exports.create = function (req, res, next) {
   var invite = req.body.invite;
-  UserValidator.validateNewUser(req, okay(next, function (data) {
+  UserValidator.validateNewUser(req, function(err,data) {
+    if (err) {
+      return res.send(422,{errors: err})
+    }
     var newUser = new User(data);
     newUser.provider = 'local';
     newUser.role = 'user';
@@ -102,7 +105,7 @@ exports.create = function (req, res, next) {
         return res.json({token: token,emailVerified : true});
       }
     });
-  }));
+  });
 };
 
 //create user with invite token
@@ -276,7 +279,7 @@ exports.show = function (req, res, next) {
     if (!user) {
       return res.send(401);
     }
-    res.json(user);
+    return res.json(user);
   });
 };
 
@@ -364,7 +367,8 @@ exports.me = function (req, res, next) {
     if (!user) {
       return res.json(401);
     }
-    res.json(user);
+    console.log(user);
+    return res.json(user);
   });
 };
 

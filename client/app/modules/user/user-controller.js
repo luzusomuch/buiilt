@@ -1,39 +1,14 @@
-angular.module('buiiltApp').controller('UserCtrl', function($scope, $state, userService,authService) {
 
-  $scope.errors = {};
-  $scope.currentUser = {};
-  userService.get().$promise.then(function(data){
-    //show alert
-    $scope.currentUser = data;
-    $scope.success = true;
-  }, function(res){
-      $scope.errors = res.data;
-  });
-  //};
 
-  $scope.edit = function() {
-
-  };
-
-  $scope.delete = function() {
-    userService.delete().$promise.then(function() {
-      $scope.success = true;
-    })
-  }
-
-  $scope.closeAlert = function(key) {
-    delete $scope.errors[key];
-  };
-
-  $scope.closeSuccess = function(){
-    $scope.success = false;
-  };
-});
-
-angular.module('buiiltApp').controller('UserFormCtrl', function($scope, $state, authService) {
+angular.module('buiiltApp').controller('UserCtrl', function($scope, $state, authService) {
   $scope.errors = {};
   $scope.user = authService.getCurrentUser();
-  $scope.changeEmail = function() {
+
+  $scope.editEmail = function() {
+    $scope.isEditEmail = true;
+  };
+
+  $scope.saveEmail = function() {
 
   };
 
