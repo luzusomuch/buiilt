@@ -280,13 +280,12 @@
       <div class="row" ng-show="quoteRequest.total > 0">
         <p>Total: <strong>{{quoteRequest.total}}</strong></p>
       </div>
-      <div class="row" ng-if="quoteRequest.quoteRate.length > 0">
-        <h6>Rate</h6>
+      <div class="row">
         <table>
           <thead>
             <th>#</th>
             <th>Description</th>
-            <th>Rate</th>
+            <th>Price</th>
             <th>Quantity</th>
             <th>Total</th>
           </thead>
@@ -298,21 +297,6 @@
               <td>{{rate.quantity}}</td>
               <td>{{rate.total}}</td>
             </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="row" ng-if="quoteRequest.quotePrice.length > 0">
-        <h6>Price</h6>
-        <table>
-          <thead>
-            <th>#</th>
-            <th>Description</th>
-            <th>Price</th>
-            <th>Quantity</th>
-            <th>Total</th>
-          </thead>
-          <tbody>
             <tr ng-repeat="price in quoteRequest.quotePrice">
               <td>{{$index + 1}}</td>
               <td>{{price.description}}</td>

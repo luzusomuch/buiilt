@@ -208,15 +208,42 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
     });
   }
   else if (request._modifiedPaths.indexOf('selectQuote') != -1) {
-    var notification = new Notification({
-      owner: request.ownerUser,
-      fromUser: request.editUser,
-      toUser: request.ownerUser,
-      element: request,
-      referenceTo: 'ContractorPackage',
-      type: 'select-quote'
+    async.parallel([
+      function(cb) {
+        var notification = new Notification({
+          owner: request.ownerUser,
+          fromUser: request.editUser,
+          toUser: request.ownerUser,
+          element: request,
+          referenceTo: 'ContractorPackage',
+          type: 'select-quote'
+        });
+        notification.save();
+      },
+      function(cb) {
+        _.remove(request.to, {_id: request.winnerTeam._id});
+        _.each(request.to, function(toContractorLoser){
+          if (!toContractorLoser._id) {
+            return cb();
+          }
+          Team.findById(toContractorLoser._id, function(err, team){
+            if (err || !team) {return cb();}
+            var params = {
+              owners: team.leader,
+              fromUser: request.editUser,
+              element: {package:request},
+              referenceTo: 'ContractorPackage',
+              type: 'send-thanks-to-loser'
+            };
+            NotificationHelper.create(params, function() {
+              next();
+            });
+          })
+        });
+      }
+    ],function(){
+      return next();
     });
-    notification.save();
   }
   else if (request._modifiedPaths.indexOf('sendDefect') != -1) {
     var owners = [];

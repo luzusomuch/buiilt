@@ -218,6 +218,9 @@ angular.module('buiiltApp')
         if (scope.notification.type == 'create-builder-package') {
           text = params.fromUser() + ' invited you become a ' + params.builderOrHomeOwner + ' for project' + params.element;
         }
+        if (scope.notification.type == 'send-thanks-to-loser') {
+          text = params.packageName + 'has been awarded to another company. ' + params.fromUser() + ' thanks you for provide a quote';
+        }
 
         scope.notification.sref = getSref(scope.notification);
 

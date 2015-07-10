@@ -165,8 +165,7 @@
       <h4>View Quote</h4>
       <p ng-show="quoteRequest.total > 0">Total: <strong>{{quoteRequest.total}}</strong></p>
       <p>{{quoteRequest.description}}</p>
-      <div ng-show="quoteRequest.quoteRate.length > 0">
-        <h6>Quote rate</h6>
+      <div>
         <table>
           <thead>
             <th>#</th>
@@ -183,21 +182,6 @@
               <td>{{quoteRate.quantity}}</td>
               <td>{{quoteRate.total}}</td>
             </tr>
-          </tbody>
-        </table>
-      </div>
-      <hr>
-      <div ng-show="quoteRequest.quotePrice.length > 0">
-        <h6>Quote price</h6>
-        <table>
-          <thead>
-            <th>#</th>
-            <th>Description</th>
-            <th>Rate</th>
-            <th>Quantity</th>
-            <th>Total</th>
-          </thead>
-          <tbody>
             <tr ng-repeat="quotePrice in quoteRequest.quotePrice">
               <td>{{$index +1}}</td>
               <td>{{quotePrice.description}}</td>

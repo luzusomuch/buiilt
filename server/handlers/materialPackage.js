@@ -52,53 +52,53 @@ EventBus.onSeries('MaterialPackage.Updated', function(request, next) {
           }
         });
     } else if (request._modifiedPaths.indexOf('inviteMaterial') != -1) {
-        async.parallel([
-          function(cb){
-            Team.findById(request.owner, function(err, team) {
-              if (err || !team) { return cb(err); }
-              else {
+      async.parallel([
+        function(cb){
+          Team.findById(request.owner, function(err, team) {
+            if (err || !team) { return cb(err); }
+            else {
+              async.each(team.leader, function(leader, cb) {
+                var notification = new Notification({
+                  owner: leader,
+                  fromUser: request.ownerUser,
+                  toUser: leader,
+                  element: {package:request},
+                  referenceTo: 'MaterialPackage',
+                  type: 'invite'
+                });
+                notification.save(cb);
+              }, function(){
+                return cb();
+              });
+            }
+          });
+        },
+        function(cb){
+          async.each(request.newInvitation, function(invite, cb) {
+            if (invite._id) {
+              Team.findById(invite._id, function(err, team) {
+                if (err || !team) { return cb(); }
+
                 async.each(team.leader, function(leader, cb) {
                   var notification = new Notification({
                     owner: leader,
                     fromUser: request.ownerUser,
                     toUser: leader,
-                    element: {package:request},
+                    element: request,
                     referenceTo: 'MaterialPackage',
-                    type: 'invite'
+                    type: 'invitation'
                   });
                   notification.save(cb);
-                }, function(){
-                  return cb();
-                });
-              }
-            });
-          },
-          function(cb){
-            async.each(request.newInvitation, function(invite, cb) {
-              if (invite._id) {
-                Team.findById(invite._id, function(err, team) {
-                  if (err || !team) { return cb(); }
-
-                  async.each(team.leader, function(leader, cb) {
-                    var notification = new Notification({
-                      owner: leader,
-                      fromUser: request.ownerUser,
-                      toUser: leader,
-                      element: request,
-                      referenceTo: 'MaterialPackage',
-                      type: 'invitation'
-                    });
-                    notification.save(cb);
-                  }, cb);
-                });
-              } else {
-                return cb();
-              }
-            }, cb);
-          }
-        ], function(){
-          return next();
-        });
+                }, cb);
+              });
+            } else {
+              return cb();
+            }
+          }, cb);
+        }
+      ], function(){
+        return next();
+      });
     }else if (request._modifiedPaths.indexOf('sendAddendum') != -1) {
         async.each(request.to, function(toContractor, cb) {
           Team.findById(toContractor, function(err, team) {
@@ -177,17 +177,45 @@ EventBus.onSeries('MaterialPackage.Updated', function(request, next) {
         });
     }
     else if (request._modifiedPaths.indexOf('selectQuote') != -1) {
-        var notification = new Notification({
-          owner: request.ownerUser,
-          fromUser: request.editUser,
-          toUser: request.ownerUser,
-          element: request,
-          referenceTo: 'MaterialPackage',
-          type: 'select-quote'
-        });
-        notification.save(function(){
-            next();
-        });
+        
+      async.parallel([
+        function(cb) {
+          var notification = new Notification({
+            owner: request.ownerUser,
+            fromUser: request.editUser,
+            toUser: request.ownerUser,
+            element: request,
+            referenceTo: 'MaterialPackage',
+            type: 'select-quote'
+          });
+          notification.save(function(){
+              next();
+          });
+        },
+        function(cb) {
+          _.remove(request.to, {_id: request.winnerTeam._id});
+          _.each(request.to, function(toSupplierLoser){
+            if (!toContractorLoser._id) {
+              return cb();
+            }
+            Team.findById(toSupplierLoser._id, function(err, team){
+              if (err || !team) {return cb();}
+              var params = {
+                owners: team.leader,
+                fromUser: request.editUser,
+                element: {package:request},
+                referenceTo: 'MaterialPackage',
+                type: 'send-thanks-to-loser'
+              };
+              NotificationHelper.create(params, function() {
+                next();
+              });
+            })
+          });
+        }
+      ],function(){
+        return next();
+      });
     }
     else if (request._modifiedPaths.indexOf('sendDefect') != -1) {
         var owners = [];
