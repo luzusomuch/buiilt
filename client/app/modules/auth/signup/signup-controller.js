@@ -1,22 +1,4 @@
 angular.module('buiiltApp')
-  .directive("compareTo", function() {
-    return {
-      require: "ngModel",
-      scope: {
-        confirmPassword: "=compareTo"
-      },
-      link: function(scope, element, attributes, modelVal) {
-
-        modelVal.$validators.compareTo = function(val) {
-          return val == scope.confirmPassword;
-        };
-
-        scope.$watch("confirmPassword", function() {
-          modelVal.$validate();
-        });
-      }
-    };
-  })
   .controller('SignupCtrl', function ($scope, authService,$stateParams,inviteTokenService) {
   $scope.user = {
     password : '',

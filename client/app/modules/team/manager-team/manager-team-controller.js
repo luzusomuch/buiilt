@@ -8,6 +8,7 @@ angular.module('buiiltApp')
     $scope.users = users;
     $scope.clear = false;
     $scope.isEdit = false;
+    $scope.isLeader = (currentUser.team.role == 'admin');
 
 
     var getLocalData = function() {

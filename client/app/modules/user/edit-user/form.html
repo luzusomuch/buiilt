@@ -1,76 +1,101 @@
-<div class="col s12 ">  
+<div class="col s12 ">
 
-   <ul class="collapsible popout s10" data-collapsible="accordion">
-      <!-- <li>
-         <div class="collapsible-header">User information</div>
-         <div class="collapsible-body">
-            <p>Email: {{currentUser.email}}</p>
-         </div>
-       </li> -->
-       <li>
-         <div class="collapsible-header">Email</div>
-         <div class="collapsible-body">
-         
-         <form class="col s12" name="changeEmailForm" ng-submit="changeEmail()">
-             <div class="row center-align">
-                 <div class="input-field col s10 offset-s1">
-                     <input ng-model="currentUser.email" id="email" type="email" ng-disabled="!isEditEmail">
-                     <label class="active" for="email">Email</label>
-                     <button ng-click="editEmail()" ng-show="!isEditEmail" type="button" class="btn waves-effect waves-light" ng-disable="changeEmailForm.$invalid" name="action">Edit</button>
-                     <button ng-show="isEditEmail" class="btn waves-effect waves-light" ng-disable="changeEmailForm.$invalid" name="action">Save</button>
-                 </div>
-             </div>
-         </form>    
-            
-         </div>
-       </li>
-       <li>
-         <div class="collapsible-header">Password</div>
-         <div class="collapsible-body">
-         
-         <form class="col s12" name="changePasswordForm" ng-submit="changePw()">
-             <div class="row center-align">
-                 <div class="input-field col s10 offset-s1">
-                   <input ng-model="user.password" id="password" type="password" class="validate">
-                   <label class="active" for="password">New Password</label>
-                 </div>
-                 <div class="input-field col s10 offset-s1">
-                   <input ng-model="user.rePassword" id="repeat_password" match="user.password" type="password" class="validate">
-                   <label class="active" for="repeat_password">Repeat New Password</label>
-                   
-                   <button class="btn waves-effect waves-light" ng-disble="changePasswordForm.$invalid" name="action">Edit/Save
-                   </button>
-                 </div>
-             </div>
-         </form>
-         
-         </div>
-       </li>
-       <li>
-         <div class="collapsible-header">Contact Details</div>
-         <div class="collapsible-body">
-         
-         <form class="col s12" name="changeProfileForm" ng-submit="changeProfile()">
-             <div class="row center-align">
-                <div class="input-field col s10 offset-s1">
-                 <input ng-model="user.phoneNumber" id="password" type="number" class="validate">
-                 <label class="active" for="password">Mobile Phone Number</label>
-                </div>
-                 <div class="input-field col s10 offset-s1">
-                   <input ng-model="user.firstName" id="firstName" type="text" class="validate">
-                   <label class="active" for="firstName">First Name</label>
-                  </div>
-                  <div class="input-field col s10 offset-s1">
-                   <input ng-model="user.lastName" id="lastName" type="text" class="validate">
-                   <label class="active" for="lastName">Last Name</label>
-                   
-                   <button class="btn waves-effect waves-light" ng-disable="changeProfileForm.$invalid" name="action">Edit/Save
-                   </button>
-                 </div>
-             </div>
-         </form>
-         
-         </div>
-       </li>
-   </ul>
+  <ul class="collapsible popout s10" data-collapsible="accordion">
+    <!-- <li>
+       <div class="collapsible-header">User information</div>
+       <div class="collapsible-body">
+          <p>Email: {{currentUser.email}}</p>
+       </div>
+     </li> -->
+    <li>
+      <div class="collapsible-header">Email</div>
+      <div class="collapsible-body">
+
+        <form class="col s12" name="changeEmailForm" ng-submit="changeEmail()">
+          <div class="row center-align">
+            <div class="input-field col s10 offset-s1">
+              <input ng-model="currentUser.email" id="email" type="email" ng-disabled="!isEditEmail">
+              <label class="active" for="email">Email</label>
+            </div>
+            <div class="input-field col s10 offset-s1">
+              <button ng-click="editEmail()" ng-show="!isEditEmail" type="button" class="btn waves-effect waves-light"
+                      ng-disable="changeEmailForm.$invalid" name="action">Edit
+              </button>
+              <button ng-show="isEditEmail" class="btn waves-effect waves-light" ng-disable="changeEmailForm.$invalid"
+                      name="action">Save
+              </button>
+            </div>
+          </div>
+        </form>
+
+      </div>
+    </li>
+    <li>
+      <div class="collapsible-header">Password</div>
+      <div class="collapsible-body">
+
+        <form class="col s12" name="changePasswordForm" ng-submit="changePw(changePasswordForm)" novalidate>
+          <div class="row">
+            <div class="input-field col s10 offset-s1">
+              <input ng-model="password.oldPassword" name="oldPassword" id="old-password" type="password" ng-disabled="!isEditPassword" required>
+              <label class="active" for="old-password">Old Password</label>
+              <p class="validate-message" ng-if="changePasswordForm.oldPassword.$error.required && passwordFormSubmitted">This input is required</p>
+              <p class="validate-message" ng-if="changePasswordForm.oldPassword.$error.wrongPassword && passwordFormSubmitted">Your old password does not correct</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s10 offset-s1">
+              <input ng-model="password.newPassword" name="newPassword" id="new-password" type="password" ng-disabled="!isEditPassword" required>
+              <label class="active" for="new-password">New Password</label>
+              <p class="validate-message" ng-if="changePasswordForm.newPassword.$error.required && passwordFormSubmitted">This input is required</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s10 offset-s1">
+              <input ng-model="password.rePassword" name="repasword" id="repeat_password" compare-to="password.newPassword" type="password"
+                     ng-disabled="!isEditPassword" required>
+              <label class="active" for="repeat_password">Repeat New Password</label>
+              <p class="validate-message" ng-if="changePasswordForm.repasword.$error.compareTo && passwordFormSubmitted">Confirm password dose not match</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s10 offset-s1">
+              <button ng-click="editPassword()" ng-show="!isEditPassword" type="button"
+                      class="btn waves-effect waves-light" name="action">Edit
+              </button>
+              <button ng-show="isEditPassword" class="btn waves-effect waves-light" name="action">Save</button>
+              <button ng-show="isEditPassword" class="btn waves-effect waves-light" name="action">Cancel</button>
+            </div>
+          </div>
+        </form>
+
+      </div>
+    </li>
+    <li>
+      <div class="collapsible-header">Contact Details</div>
+      <div class="collapsible-body">
+
+        <form class="col s12" name="changeProfileForm" ng-submit="changeProfile()">
+          <div class="row center-align">
+            <div class="input-field col s10 offset-s1">
+              <input ng-model="user.phoneNumber" id="password" type="number" class="validate">
+              <label class="active" for="password">Mobile Phone Number</label>
+            </div>
+            <div class="input-field col s10 offset-s1">
+              <input ng-model="user.firstName" id="firstName" type="text" class="validate">
+              <label class="active" for="firstName">First Name</label>
+            </div>
+            <div class="input-field col s10 offset-s1">
+              <input ng-model="user.lastName" id="lastName" type="text" class="validate">
+              <label class="active" for="lastName">Last Name</label>
+
+              <button class="btn waves-effect waves-light" name="action">Edit/Save
+              </button>
+            </div>
+          </div>
+        </form>
+
+      </div>
+    </li>
+  </ul>
 </div>
