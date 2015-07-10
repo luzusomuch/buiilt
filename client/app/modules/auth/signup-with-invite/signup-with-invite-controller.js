@@ -1,4 +1,5 @@
-angular.module('buiiltApp').controller('SignupWithInviteCtrl', function ($scope,authService,$q,$cookieStore,$state,userService,$stateParams, packageInviteService) {
+angular.module('buiiltApp')
+  .controller('SignupWithInviteCtrl', function ($scope,authService,$q,$cookieStore,$state,userService,$stateParams, packageInviteService) {
   $scope.user = {
     lastName: '',
     firstName: '',

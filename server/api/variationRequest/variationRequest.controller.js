@@ -198,6 +198,8 @@ exports.cancelPackage = function(req, res) {
     if (err) {return res.send(500,err);}
     else {
       variation.isCancel = true;
+      variation.markModified('cancel-package');
+      variation._editUser = req.user;
       variation.save(function(err, saved) {
         if (err) {return res.send(500,err);}
         else {

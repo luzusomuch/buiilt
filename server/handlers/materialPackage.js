@@ -161,6 +161,28 @@ EventBus.onSeries('MaterialPackage.Updated', function(request, next) {
             });
         });
     }
+    else if (request._modifiedPaths.indexOf('cancel-package') != -1) {
+      async.each(request.to, function(toMaterial, callback){
+        if (toMaterial._id) {
+          Team.findById(toMaterial._id, function(err, team){
+            if (err || !team) {return callback();}
+            var params = {
+              owners: team.leader,
+              fromUser: request.editUser._id,
+              element: {package:request},
+              referenceTo: 'MaterialPackage',
+              type: 'cancel-package'
+            };
+            NotificationHelper.create(params, function() {
+              return callback();
+            });
+          })
+        }
+        else {
+          return callback();
+        }
+      });
+    }
     else if (request._modifiedPaths.indexOf('sendMessageToBuilder') != -1) {
         Team.findById(request.owner, function(err, team) {
             if (err) {next();}

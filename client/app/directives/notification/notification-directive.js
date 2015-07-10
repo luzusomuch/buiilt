@@ -128,6 +128,16 @@ angular.module('buiiltApp')
           if (notification.type == 'create-builder-package') {
             return 'client({id: notification.element.project})';
           }
+          if (notification.type == 'cancel-package') {
+            switch(notification.referenceTo){
+              case 'ContractorPackage':
+                return 'contractors({id: notification.element.package.project})';
+              case 'MaterialPackage':
+                return 'materials({id: notification.element.package.project})';
+              case 'Variation':
+                return 'dashboard({id: notification.element.package.project})';
+            }
+          }
         };
 
         var text;
@@ -220,6 +230,9 @@ angular.module('buiiltApp')
         }
         if (scope.notification.type == 'send-thanks-to-loser') {
           text = params.packageName + 'has been awarded to another company. ' + params.fromUser() + ' thanks you for provide a quote';
+        }
+        if (scope.notification.type == 'cancel-package') {
+          text = params.fromUser() + 'has been cancel package ' + params.packageName;
         }
 
         scope.notification.sref = getSref(scope.notification);

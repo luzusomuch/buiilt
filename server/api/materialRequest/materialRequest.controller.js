@@ -454,6 +454,8 @@ exports.cancelPackage = function(req, res) {
     if (err) {return res.send(500,err);}
     else {
       materialPackage.isCancel = true;
+      materialPackage.markModified('cancel-package');
+      materialPackage._editUser = req.user;
       materialPackage.save(function(err, saved) {
         if (err) {return res.send(500,err);}
         else {

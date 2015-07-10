@@ -54,6 +54,28 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
       }
     });
   }
+  else if (request._modifiedPaths.indexOf('cancel-package') != -1) {
+    async.each(request.to, function(toContractor, callback){
+      if (toContractor._id) {
+        Team.findById(toContractor._id, function(err, team){
+          if (err || !team) {return callback();}
+          var params = {
+            owners: team.leader,
+            fromUser: request.editUser._id,
+            element: {package:request},
+            referenceTo: 'ContractorPackage',
+            type: 'cancel-package'
+          };
+          NotificationHelper.create(params, function() {
+            return callback();
+          });
+        })
+      }
+      else {
+        return callback();
+      }
+    });
+  }
   else if (request._modifiedPaths.indexOf('inviteContractor') != -1) {
     async.parallel([
       function(cb){

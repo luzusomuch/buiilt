@@ -35,6 +35,21 @@ EventBus.onSeries('Variation.Updated', function(request, next) {
             }
         });
     }
+    else if (request._modifiedPaths.indexOf('cancel-package') != -1) {
+      Team.findById(request.to._id, function(err, team){
+        if (err || !team) {next();}
+        var params = {
+          owners: team.leader,
+          fromUser: request.editUser._id,
+          element: {package:request},
+          referenceTo: 'Variation',
+          type: 'cancel-package'
+        };
+        NotificationHelper.create(params, function() {
+          next();
+        });
+      })
+    }
     else if (request._modifiedPaths.indexOf('sendInvoice') != -1) {
         var owners = [];
         Variation.findById(request._id).populate('owner')
