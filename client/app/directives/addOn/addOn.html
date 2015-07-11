@@ -5,10 +5,10 @@
        <div class="col s6">
          <a class='dropdown-button btn-flat' style="margin-top: 15px" href='#' data-gutter="15" data-activates='itemFilter' dropdown data-beloworigin="true">{{(allItemsText) ? allItemsText : 'All items'}}<i class="mdi-navigation-arrow-drop-down"></i></a>
          <ul id='itemFilter' class='dropdown-content' style="margin-top: 15px">
-          <li ng-show="type != 'variation'">
+          <li ng-show="type != 'variation'" ng-hide="type == 'staffPackage'">
             <a ng-click="showVariations(); hideAll = true; showVariation = true; showDocument = false; showDefect = false; showDocument = false; showInvoice = false;">VARIATIONS</a>
           </li>
-          <li>
+          <li ng-show="type != 'staffPackage'">
             <a ng-click="showInvoices(); hideAll = true; showInvoice = true; showDefect = false; showVariation = false; showDocument = false;">INVOICES</a>
           </li>
           <li>

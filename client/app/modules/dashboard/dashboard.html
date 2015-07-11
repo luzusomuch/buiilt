@@ -170,7 +170,7 @@
     </li>
   </ul>
   <ul class="collapsible" data-collapsible="accordion" ng-if="currentList == 'docs'">
-    <li ng-repeat="file in myFiles">
+    <li ng-repeat="file in myFiles | unique:file">
       <div class="collapsible-header">
         {{file.element.file.title}}
         <a class="btn-flat secondary-content" style="font-size: 12px;" ng-click="goToDocument(file)">

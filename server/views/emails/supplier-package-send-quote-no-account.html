@@ -16,11 +16,11 @@
             <th>Quantity</th>
         </thead>
         <tbody>
-            {% for requirement in materialPackage.requirements %}
+            {% for addendum in materialPackage.addendums %}
             <tr>
                 <td style="text-align:center"><%= loop.index %></td>
-                <td style="text-align:center"><%= requirement.description %></td>
-                <td style="text-align:center"><%= requirement.quantity %></td>
+                <td style="text-align:center"><%= addendum.addendumsScope.description %></td>
+                <td style="text-align:center"><%= addendum.addendumsScope.quantity %></td>
             </tr>
             {% endfor %}
         </tbody>
