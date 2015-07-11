@@ -1,6 +1,6 @@
 angular.module('buiiltApp')
   .controller('StaffCtrl',
-  function($scope, $timeout, $q, authService, $rootScope,staffPackageService,filterFilter,currentTeam,currentUser,staffPackages) {
+  function($scope, $timeout, $q, authService, $rootScope,staffPackageService,filterFilter,currentTeam,currentUser,staffPackages,socket) {
     //Init Params
     $scope.currentUser = currentUser;
     $scope.currentProject = $rootScope.currentProject;
@@ -8,7 +8,7 @@ angular.module('buiiltApp')
     $scope.available = [];
     $scope.isLeader = (_.find(currentTeam.leader,{_id : $scope.currentUser._id})) ? true : false;
     $scope.staffPackages = staffPackages;
-
+    $scope.inProgressTotal = 0;
     $scope.submitted = false;
     $scope.filter = {isCompleted : false};
 
@@ -17,6 +17,32 @@ angular.module('buiiltApp')
         item.canSee =  (_.indexOf(item.staffs,$scope.currentUser._id) != -1);
       })
     }
+
+    // Real time process
+    $rootScope.$on('notification:allRead',function(event) {
+      _.forEach($scope.staffPackages,function(item) {
+        item.__v =  0;
+      })
+    })
+
+    $scope.$watch('staffPackages',function(value) {
+      $scope.inProgressTotal = 0;
+      _.forEach(value,function(item) {
+        $scope.inProgressTotal += item.__v
+      });
+    },true);
+
+    socket.on('notification:new', function (notification) {
+      if (notification) {
+        console.log(notification);
+        var staffPackage = _.find($scope.staffPackages,{_id : notification.element.package});
+        if (staffPackage) {
+          staffPackage.__v++;
+        }
+      }
+    });
+
+    // End Real time process
 
     //Get available user to assign to staff package
     //var getAvailableAssign =  function() {
@@ -98,9 +124,12 @@ angular.module('buiiltApp')
 
 })
   .controller('StaffViewCtrl',
-    function($scope, $rootScope,filterFilter,currentTeam,staffPackage,staffPackageService,currentUser) {
+    function($scope, $rootScope,filterFilter,currentTeam,staffPackage,staffPackageService,currentUser,notificationService) {
       $scope.staffPackage = staffPackage;
       $scope.currentUser = currentUser;
+      notificationService.markReadByPackage({_id : staffPackage._id}).$promise
+        .then(function(res) {
+        });
       $scope.complete = function() {
         staffPackageService.complete({_id : $scope.staffPackage._id}).$promise
           .then(function(res) {

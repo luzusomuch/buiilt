@@ -9,7 +9,7 @@
             <div class="row">
               <div class="input-field">
                 <label>Email</label>
-                <input ng-model="user.email" name="email" type="email" required>
+                <input ng-model="user.email" name="email" type="email" required ng-class="{'invalid' : form.email.$invalid && submitted}">
                 <p class="validate-message" ng-show="form.email.$error.required && submitted">Email is required</p>
                 <p class="validate-message" ng-show="form.email.$error.email && submitted">Wrong email format</p>
               </div>
@@ -17,7 +17,7 @@
             <div class="row">
               <div class="input-field">
                 <label>Password</label>
-                <input ng-model="user.password" name="password" required type="password">
+                <input ng-model="user.password" name="password" required type="password" ng-class="{'invalid' : form.password.$invalid && submitted}">
                 <p class="validate-message" ng-show="form.password.$error.required && submitted">Password is required</p>
 
               </div>

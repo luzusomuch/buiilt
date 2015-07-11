@@ -290,6 +290,7 @@ angular.module('buiiltApp')
               .then(function(res) {
                 $scope.notifications = [];
                 $scope.total = 0;
+                $rootScope.$emit('notification:allRead');
                 $('#slimScrollDiv').hide();
               })
           };
@@ -314,6 +315,14 @@ angular.module('buiiltApp')
               $scope.$apply();
             }
           });
+
+          socket.on('notification:read',function(notifications) {
+            _.forEach(notifications,function(notification) {
+              _.remove($scope.notifications,{_id : notification._id});
+            });
+            $scope.total -= notifications.length;
+
+          })
         }]
 
     }

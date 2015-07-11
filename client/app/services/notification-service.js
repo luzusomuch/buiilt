@@ -38,6 +38,13 @@ angular.module('buiiltApp')
             action : 'mark-all-as-read'
           }
         },
+        markReadByPackage : {
+          method : 'PUT',
+          isArray : true,
+          params : {
+            action : 'mark-read-by-package'
+          }
+        },
         create: {
           method: 'POST'
         },

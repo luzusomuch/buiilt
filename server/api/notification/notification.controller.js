@@ -1,6 +1,7 @@
 'use strict';
 
 var mongoose = require('mongoose');
+var objectID = require('mongoose').Types.ObjectId;
 var User = require('./../../models/user.model');
 var Project = require('./../../models/project.model');
 var Notification = require('./../../models/notification.model');
@@ -8,6 +9,7 @@ var Validator = require('./../../validators/staffPackage');
 var errorsHelper = require('./../../components/helpers/errors');
 var _ = require('lodash');
 var async = require('async');
+var EventBus = require('../../components/EventBus');
 
 /**
  * Get single notification
@@ -73,8 +75,26 @@ exports.dashboardRead = function(req,res) {
   });
 };
 
+exports.markReadByPackage = function(req,res) {
+  var user = req.user;
+  var packageId = new objectID(req.params.id);
+  Notification.find({owner:user._id,'element.package' : packageId,unread : true},function(err,notifications) {
+    async.each(notifications,function(notification,callback) {
+      notification.unread = false;
+      notification.save(callback)
+    },function() {
+      EventBus.emit('socket:emit', {
+        event: 'notification:read',
+        room: user._id.toString(),
+        data: notifications
+      });
+      return res.json(notifications);
+    });
+  })
+}
+
 exports.dashboardReadDocument = function(req,res){
-  var id= new require('mongoose').Types.ObjectId(req.params.id);
+  var id= new objectID(req.params.id);
   Notification.update({'_id': id},{unread : false},{multi : true},function(err) {
     if (err) {
       return res.send(500)
@@ -110,7 +130,6 @@ exports.countTotal = function(req,res) {
     if (err) {
       return res.send(500,err);
     }
-    console.log(count);
     return res.json({count : count});
   })
 };

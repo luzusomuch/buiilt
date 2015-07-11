@@ -3,6 +3,7 @@
 var User = require('./../../../models/user.model');
 var Project = require('./../../../models/project.model');
 var StaffPackage = require('./../../../models/staffPackage.model');
+var Notification = require('./../../../models/notification.model');
 var Validator = require('./../../../validators/staffPackage');
 var errorsHelper = require('./../../../components/helpers/errors');
 var _ = require('lodash');
@@ -75,11 +76,19 @@ exports.create = function(req,res) {
  */
 exports.getAll = function(req,res) {
   var project = req.project;
+  var user = req.user;
   StaffPackage.find({'project' : project._id},function(err,packages) {
     if (err) {
       return res.status(400).json(err);
     }
-    return res.json(packages)
+    async.each(packages,function(item,callback) {
+      Notification.find({owner: user._id,'element.package' : item._id, unread : true}).count(function(err,count) {
+        item.__v = count;
+        callback();
+      })
+    },function() {
+      return res.json(packages)
+    });
   })
 };
 

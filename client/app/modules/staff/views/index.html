@@ -13,7 +13,7 @@
 
      <div class="collection"  style="margin-top:10px">
          <a href="#!" ng-click="filter = {isCompleted : false}" class="collection-item"
-            ng-class="{'active' : !filter.isCompleted}">In Progress<span class="badge item">{{(staffPackages | filter : {isCompleted : false}).length}}</span></a>
+            ng-class="{'active' : !filter.isCompleted}">In Progress<span class="badge new" ng-if="inProgressTotal">{{inProgressTotal}}</span></a>
          <a href="#!" ng-click="filter = {isCompleted : true}" class="collection-item"
             ng-class="{'active' : filter.isCompleted}">Completed<span class="badge item">{{(staffPackages | filter : {isCompleted : true}).length}}</span></a>
      </div>
@@ -21,11 +21,11 @@
 
   <div class="col s9">
      <!--<ul class="collection z-depth-1">-->
-       <!--<li class="collection-item" ng-repeat="item in staffPackages" ng-if="item.canSee || isLeader"><a ui-sref="staff.view({packageId : item._id})">{{item.name}}</a></li>-->
+       <!--<li class="collection-item" ng-repeat  ="item in staffPackages" ng-if="item.canSee || isLeader"><a ui-sref="staff.view({packageId : item._id})">{{item.name}}</a></li>-->
      <!--</ul>-->
     <div class="collection z-depth-1 list">
       <span ng-repeat="item in staffPackages | filter : filter">
-        <a ui-sref="staff.view({packageId : item._id})"  ng-show="item.canSee || isLeader" class="collection-item">{{item.name}}</a>
+        <a ui-sref="staff.view({packageId : item._id})"  ng-show="item.canSee || isLeader" class="collection-item">{{item.name}}<span class="badge new" ng-if="item.__v > 0">{{item.__v}}</span></a>
       </span>
     </div>
   </div>

@@ -100,6 +100,10 @@ angular.module('buiiltApp')
         queryProjects();
       });
 
+      $rootScope.$on('Profile.change',function(event,data) {
+        $scope.user.name = data.name;
+      });
+
       document.addEventListener('click',function(e) {
         if (e.target.id == 'sendVerification')
         {

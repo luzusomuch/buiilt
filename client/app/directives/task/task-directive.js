@@ -125,7 +125,7 @@ angular.module('buiiltApp')
             .then(function(res) {
               $scope.tasks = res;
               _.forEach($scope.tasks,function(task) {
-                task.isOwner = (_.findIndex(task.assignees,{_id : $scope.currentUser._id}) != -1)
+                task.isOwner = (_.findIndex(task.assignees,{_id : $scope.currentUser._id}) != -1) || (task.user == $scope.currentUser._id);
                 task.dateEnd = (task.dateEnd) ? new Date(task.dateEnd) : null;
               })
             });

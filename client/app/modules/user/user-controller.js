@@ -1,12 +1,13 @@
 
 
-angular.module('buiiltApp').controller('UserCtrl', function($scope, $state, authService) {
+angular.module('buiiltApp').controller('UserCtrl', function($scope,$rootScope, $state, authService) {
   $scope.errors = {};
   $scope.user = authService.getCurrentUser();
   $scope.password = {};
   $scope.email = {
     email : $scope.user.email
   };
+  $scope.profile = angular.copy($scope.user);
 
   $scope.editEmail = function() {
     $scope.isEditEmail = true;
@@ -14,6 +15,16 @@ angular.module('buiiltApp').controller('UserCtrl', function($scope, $state, auth
 
   $scope.editPassword = function() {
     $scope.isEditPassword = true;
+  };
+
+  $scope.editProfile = function() {
+    $scope.isEditProfile = true;
+  };
+
+  $scope.cancelProfile = function() {
+    $scope.isEditProfile = false;
+    $scope.profileFormSubmitted = false;
+    $scope.profile = angular.copy($scope.user);
   };
 
   $scope.cancelPassword = function() {
@@ -66,11 +77,17 @@ angular.module('buiiltApp').controller('UserCtrl', function($scope, $state, auth
     }
   };
 
-  $scope.changeProfile = function() {
-    authService.changeProfile($scope.user.firstName, $scope.user.lastName, $scope.user.phoneNumber)
-    .then(function(data){
-      $scope.user = data;
-    });
+  $scope.changeProfile = function(form) {
+    $scope.profileFormSubmitted = true;
+    if (form.$valid) {
+      authService.changeProfile($scope.profile.firstName, $scope.profile.lastName, $scope.profile.phoneNumber)
+        .then(function(data){
+          $scope.isEditProfile = false;
+          $scope.profileFormSubmitted = false;
+          $rootScope.$emit('Profile.change',data)
+
+        });
+    }
   }
 });
 

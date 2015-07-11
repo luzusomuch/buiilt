@@ -74,7 +74,7 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
           if (toState.authenticate && !loggedIn) {
             $location.path('/signin');
           } else if (!toState.authenticate && loggedIn) {
-            //$state.go('team.manager')
+            $state.go('team.manager')
           }
         });
       if (toState.noHeader) {

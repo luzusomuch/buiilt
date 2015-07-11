@@ -12,11 +12,11 @@
 
   <div class="collection">
     <a href="#!" ng-click="filter = {isCompleted : false, isSelect : true}" class="collection-item"
-       ng-class="{'active' : !filter.isCompleted && filter.isSelect}">In Progress</a>
+       ng-class="{'active' : !filter.isCompleted && filter.isSelect}">In Progress<span class="badge item">{{(materialPackages | filter : {isCompleted : false, isSelect : true}).length}}</span></a>
     <a href="#!" ng-click="filter = {isCompleted : false, isSelect : false, isCancel:false} " class="collection-item"
-       ng-class="{'active' : !filter.isAccept && !filter.isSelect}">In Tender</a>
+       ng-class="{'active' : !filter.isAccept && !filter.isSelect}">In Tender<span class="badge item">{{(materialPackages | filter : {isCompleted : false, isSelect : false, isCancel:false}).length}}</span></a>
     <a href="#!" ng-click="filter = {isCompleted : true, isSelect : true}" class="collection-item"
-       ng-class="{'active' : filter.isCompleted  && filter.isSelect}">Completed</a>
+       ng-class="{'active' : filter.isCompleted  && filter.isSelect}">Completed<span class="badge item">{{(materialPackages | filter : {isCompleted : true, isSelect : true}).length}}</span></a>
   </div>
 </div>
 
