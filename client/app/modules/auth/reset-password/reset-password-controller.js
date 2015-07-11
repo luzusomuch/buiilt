@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-  .controller('ResetPasswordCtrl', function ($scope, authService, $stateParams,token) {
+  .controller('ResetPasswordCtrl', function ($scope, authService, $stateParams,token,$state) {
     $scope.email = '';
     $scope.errors = {};
     $scope.submitted = false;
@@ -16,6 +16,7 @@ angular.module('buiiltApp')
         authService.resetPassword({token: $stateParams.token,password : $scope.reset.password}).$promise
           .then(function(res) {
             $scope.success = true;
+            $state.go('signin',{action : 'changePassword'});
             $scope.successMsg = 'Your password has been change click <a href="/signin">here</a> to go to login page';
             $scope.reset = {};
 

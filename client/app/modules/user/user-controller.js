@@ -34,13 +34,15 @@ angular.module('buiiltApp').controller('UserCtrl', function($scope, $state, auth
     $scope.emailFormSubmitted = true;
     if (form.$valid) {
       var newEmail = $scope.email.email;
-      authService.changeEmail($scope.email).then(function() {
+      if (newEmail != $scope.user.email) {
+        authService.changeEmail($scope.email).then(function() {
+          $scope.success = true;
+          $scope.successMsg = "An email has been sent to your email to confirm your change";
+          $scope.cancelEmail();
+        })
+      } else {
         $scope.cancelEmail();
-        $scope.email = {
-          email : newEmail
-        };
-
-      })
+      }
     }
 
   };
@@ -50,11 +52,15 @@ angular.module('buiiltApp').controller('UserCtrl', function($scope, $state, auth
     if (form.$valid) {
       authService.changePassword($scope.password.oldPassword,$scope.password.newPassword).then(function() {
         $scope.cancelPassword();
-        Materialize.toast('<span>Your password has been change success fully </span>', 5000,'rounded');
+        $scope.success = true;
+        $scope.error = false;
+        $scope.successMsg = "Your password has been change success fully ";
       }, function(res) {
         var err = res.data;
         if (err.oldPassword) {
-          Materialize.toast('<span>Your old password dose not correct</span>', 5000,'rounded');
+          $scope.error = true;
+          $scope.success = false;
+          $scope.errorMsg = "Your old password dose not correct";
         }
       });
     }

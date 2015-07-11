@@ -1,5 +1,6 @@
 <div class="col s12 ">
-
+  <div class="alert alert-success" ng-if="success"><strong>Success! </strong>{{successMsg}}</div>
+  <div class="alert alert-danger" ng-if="error"><strong>Error! </strong>{{errorMsg}}</div>
   <ul class="collapsible popout s10" data-collapsible="accordion">
     <!-- <li>
        <div class="collapsible-header">User information</div>
@@ -10,7 +11,6 @@
     <li>
       <div class="collapsible-header">Email</div>
       <div class="collapsible-body">
-
         <form class="col s12" name="changeEmailForm" ng-submit="changeEmail(changeEmailForm)" novalidate>
           <div class="row">
             <div class="input-field col s10 offset-s1">
@@ -47,9 +47,10 @@
           </div>
           <div class="row">
             <div class="input-field col s10 offset-s1">
-              <input ng-model="password.newPassword" name="newPassword" id="new-password" type="password" ng-disabled="!isEditPassword" required>
+              <input ng-model="password.newPassword" name="newPassword" id="new-password" type="password" ng-disabled="!isEditPassword" required minlength="6">
               <label class="active" for="new-password">New Password</label>
               <p class="validate-message" ng-if="changePasswordForm.newPassword.$error.required && passwordFormSubmitted">This input is required</p>
+              <p class="validate-message" ng-show="changePasswordForm.newPassword.$error.minlength">Password need at least 6 character</p>
             </div>
           </div>
           <div class="row">

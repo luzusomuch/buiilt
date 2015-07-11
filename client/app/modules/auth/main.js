@@ -11,7 +11,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
       controller: 'SignupWithInviteCtrl'
     })
     .state('signin', {
-      url: '/signin',
+      url: '/signin?action&error',
       templateUrl: '/app/modules/auth/signin/signin.html',
       controller: 'SigninCtrl'
     })

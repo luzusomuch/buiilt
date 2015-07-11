@@ -1,26 +1,29 @@
 <div layout="row" class="main-content container" style="margin-top:50px;">
   <div class="col-md-12">
     <div class="add-comment contact-form boxed">
-      <alert ng-repeat="(key, msg) in errors" type="danger" close="closeAlert(key)">
-        {{msg}}
-      </alert>
+      <div class="alert alert-success" ng-if="success"><strong>Success! </strong>{{successMsg}}</div>
+      <div class="alert alert-danger" ng-if="error"><strong>Error! </strong>{{errorMsg}}</div>
       <div class="card collection">
-          <form method="post" ng-submit="signin()" style="padding:10px;">
+          <form method="post" name="form" ng-submit="signin(form)" style="padding:10px 50px;" novalidate>
             <h3>Login</h3>
-            <div layout layout-sm="column">
-              <div input-field>
+            <div class="row">
+              <div class="input-field">
                 <label>Email</label>
-                <input ng-model="user.email" type="text" required>
+                <input ng-model="user.email" name="email" type="email" required>
+                <p class="validate-message" ng-show="form.email.$error.required && submitted">Email is required</p>
+                <p class="validate-message" ng-show="form.email.$error.email && submitted">Wrong email format</p>
               </div>
             </div>
-            <div layout layout-sm="column">
-              <div input-field>
+            <div class="row">
+              <div class="input-field">
                 <label>Password</label>
-                <input ng-model="user.password" required type="password">
+                <input ng-model="user.password" name="password" required type="password">
+                <p class="validate-message" ng-show="form.password.$error.required && submitted">Password is required</p>
+
               </div>
             </div>
 
-            <div layout layout-sm="column">
+            <div class="row">
               <button class="waves-effect waves-light btn">Login</button>
               <a ui-sref="forgotPassword" style="margin-left: 20px">Forgot Password</a>
             </div>
