@@ -749,16 +749,11 @@ exports.sendAddendum = function(req, res) {
             if (err) {return res.send(500,err)}
             if (!materialPackage) {return res.send(404,err)}
             else {
-                var addendumsScope = [];
                 _.each(req.body.addendumScope, function(addendumScope) {
-                    addendumsScope.push({
-                        description: addendumScope.scopeDescription,
-                        quantity: addendumScope.quantity
-                    });
-                });
-                materialPackage.addendums.push({
-                    description: req.body.description.description,
-                    addendumsScope: addendumsScope
+                    materialPackage.addendums.push({
+                        'addendumsScope.description': addendumScope.scopeDescription,
+                        'addendumsScope.quantity': addendumScope.quantity,
+                    });  
                 });
                 materialPackage.markModified('sendAddendum');
                 materialPackage._editUser = req.user;
@@ -960,92 +955,43 @@ exports.editAddendum = function(req, res) {
         });
     }
     else if(packageType == 'material') {
+        console.log(req.body);
         MaterialPackage.findById(req.params.id, function(err, materialPackage){
             if (err) {return res.send(500,err);}
             else {
-                var addendumsScope = [];
-                var editAnAddendum = [];
-                _.each(req.body.addendum.scopeDescription, function(item) {
-                    addendumsScope.push({
-                        description: item
-                    });
-                });
-                _.each(req.body.addendum.quantity, function(item) {
-                    addendumsScope.push({
-                        quantity: item
-                    });
-                });
                 var pack = _.findWhere(materialPackage.addendums, function(id){
                     return id._id.toString() === req.body.addendumId;
                 });
                 if (pack._id == req.body.addendumId) {
-                    if (pack.description != req.body.addendum.description &&
-                        req.body.addendum.description != '{{addendum.description}}') {
-                        pack.description = req.body.addendum.description;
+                    if (pack.addendumsScope.description != req.body.addendum.scopeDescription && 
+                        req.body.addendum.scopeDescription != '{{addendum.addendumsScope.description}}') {
+                        pack.addendumsScope.description = req.body.addendum.scopeDescription;
+                    }
+                    else if(req.body.addendum.scopeDescription == '{{addendum.addendumsScope.description}}'){
+                        pack.addendumsScope.description = pack.addendumsScope.description;
                     }
                     else {
-                        pack.description = pack.description;
+                        pack.addendumsScope.description = pack.addendumsScope.description;
                     }
-                    var key = 0;
-                    if (pack.addendumsScope.length > 1) {
-                        _.each(pack.addendumsScope, function(addendumScope) {
-                            if (addendumScope.description != addendumsScope[key].description && 
-                                addendumsScope[key].description != '{{addendumScope.description}}') {
-                                addendumScope.description = addendumsScope[key].description;
-                            }
-                            else if(addendumsScope[key].description == '{{addendumScope.description}}'){
-                                addendumScope.description = addendumScope.description;
-                            }
-                            else {
-                                addendumScope.description = addendumScope.description;
-                            }
-                            if (addendumScope.quantity != addendumsScope[key + 2].quantity && 
-                                addendumsScope[key + 2].quantity != '{{addendumScope.quantity}}') {
-                                addendumScope.quantity = addendumsScope[key + 2].quantity;
-                            }
-                            else if(addendumsScope[key + 2].quantity == '{{addendumScope.quantity}}'){
-                                addendumScope.quantity = addendumScope.quantity;
-                            }
-                            else {
-                                addendumScope.quantity = addendumScope.quantity;
-                            }
-                            key++;
-                        });
+                    if (pack.addendumsScope.quantity != req.body.addendum.quantity && 
+                        req.body.addendum.quantity != '{{addendum.addendumsScope.quantity}}') {
+                        pack.addendumsScope.quantity = req.body.addendum.quantity;
+                    }
+                    else if(req.body.addendum.quantity == '{{addendum.addendumsScope.quantity}}'){
+                        pack.addendumsScope.quantity = pack.addendumsScope.quantity;
                     }
                     else {
-                        _.each(pack.addendumsScope, function(addendumScope){
-                            if (addendumScope.description != addendumsScope[key].description && 
-                                addendumsScope[key].description != '{{addendumScope.description}}') {
-                                addendumScope.description = addendumsScope[key].description;
-                            }
-                            else if(addendumsScope[key].description == '{{addendumScope.description}}'){
-                                addendumScope.description = addendumScope.description;
-                            }
-                            else {
-                                addendumScope.description = addendumScope.description;
-                            }
-                            if (addendumScope.quantity != addendumsScope[key + 1].quantity && 
-                                addendumsScope[key + 1].quantity != '{{addendumScope.quantity}}') {
-                                addendumScope.quantity = addendumsScope[key + 1].quantity;
-                            }
-                            else if(addendumsScope[key + 1].quantity == '{{addendumScope.quantity}}'){
-                                addendumScope.quantity = addendumScope.quantity;
-                            }
-                            else {
-                                addendumScope.quantity = addendumScope.quantity;
-                            }
-                        });
+                        pack.addendumsScope.quantity = pack.addendumsScope.quantity;
                     }
-                    materialPackage.addendums.sort(compare);
-                    materialPackage.markModified('editAddendum');
-                    materialPackage._editUser = req.user;
-                    materialPackage.save(function(err, saved) {
-                        if (err) {return res.send(500,err);}
-                        else {
-                            return res.json(200,saved);
-                        }
-                    });
                 }
+                materialPackage.markModified('editAddendum');
+                materialPackage._editUser = req.user;
+                materialPackage.save(function(err, saved) {
+                    if (err) {return res.send(500,err);}
+                    else {
+                        return res.json(200,saved);
+                    }
+                });
             }
         });
     }

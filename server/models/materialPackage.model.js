@@ -17,12 +17,13 @@ var MaterialPackageSchema = new Schema({
   descriptions: [String],
   addendums: [{
     description: String,
-    addendumsScope: [{
+    addendumsScope: {
       description: String,
-      quantity: Number
-    }],
-    updated: { type: Date, default: Date.now},
-    isHidden: {type: Boolean, default: false}
+      quantity: Number,
+      scopeUpdated: { type: Date, default: Date.now},
+    },
+    isHidden: {type: Boolean, default: false},
+    updated: { type: Date, default: Date.now}
   }],
   variations : [{type: Schema.Types.ObjectId, ref: 'Variation'}],
   messages: [{

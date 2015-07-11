@@ -7,7 +7,7 @@ angular.module('buiiltApp').directive('addendum', function(){
             package: '=',
             type: '@'
         },
-        controller: function($scope,$timeout,addOnPackageService) {
+        controller: function($scope,$timeout,addOnPackageService,$rootScope) {
             $scope.addendum = {};
             $scope.editAddendum = {};
             $scope.addendumScope = {};
@@ -33,6 +33,8 @@ angular.module('buiiltApp').directive('addendum', function(){
                         $scope.addendums = data;
                         $scope.package = data;
                         $scope.addendum = {};
+                        $scope.addendumsScope = [];
+                        $rootScope.$emit('addendum', data);
                     });    
                 }
             };
@@ -46,17 +48,23 @@ angular.module('buiiltApp').directive('addendum', function(){
             };
 
             $scope.error = false;
-            $scope.edit = function(value) {
-                addOnPackageService.editAddendum({id: $scope.package._id, packageType: $scope.type, addendumId: value, addendum: $scope.editAddendum})
+            $scope.edit = function(addendumId) {
+                addOnPackageService.editAddendum({id: $scope.package._id, packageType: $scope.type, addendumId: addendumId, addendum: $scope.editAddendum})
                 .$promise.then(function(data){
                     $scope.addendums = data;
                     $scope.package = data;
+                    $rootScope.$emit('addendum', data);
                 }, function(res){
                     $scope.error = true;
                     $timeout(function() {
                         $scope.error = false;
                     }, 5000);
                 });
+
+            };
+
+            $scope.getAddendumScopeUpdate = function(value){
+                $scope.addendumScopeId = value;
             }
         }
     }

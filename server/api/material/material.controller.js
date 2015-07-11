@@ -44,7 +44,13 @@ exports.createMaterialPackage = function (req, res, next) {
     project: req.body.project,
     requirements: req.body.requirements
   });
-  materialPackage.addendums.push({description: '', addendumsScope: req.body.requirements});
+  _.each(req.body.requirements, function(requirement){
+    materialPackage.addendums.push({
+      description: '',
+      'addendumsScope.description': requirement.description,
+      'addendumsScope.quantity': requirement.quantity,
+    });  
+  });
   async.each(req.body.suppliers, function(emailPhone, callback) {
     User.findOne({'email': emailPhone.email}, function(err, user) {
       if (err) {return callback(err);}

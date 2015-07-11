@@ -25,8 +25,7 @@ var ContractorPackageSchema = new Schema({
   addendums: [{
     description: String,
     addendumsScope: [{
-      description: String,
-      quantity: Number
+      description: String
     }],
     isHidden: {type: Boolean, default: false}
   }],
