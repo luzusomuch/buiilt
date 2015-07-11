@@ -113,6 +113,19 @@ exports.findOne = function(req, res){
             contractorPackage.winnerTeam._id = team._id;
             contractorPackage.quote = quote.total;
             contractorPackage.isAccept = true;
+            _.remove(contractorPackage.to,{_id: team._id});
+            _.each(contractorPackage.to, function(toContractor){
+              if (toContractor._id) {
+                Team.findById(toContractor._id, function(err,team){
+                  if (err || !team) {return res.send(500,err);}
+                  _.remove(team.project, contractorPackage.project);
+                  team.markModified('project');
+                  team.save(function(err){
+                    if (err) {return res.send(500,err);}
+                  });
+                });
+              }
+            });
             contractorPackage.markModified('selectQuote');
             contractorPackage._ownerUser = quote.user;
             contractorPackage._editUser = req.user;
@@ -149,6 +162,19 @@ exports.getByMaterial = function(req, res){
             materialPackage.winnerTeam._id = team._id;
             materialPackage.quote = quote.total;
             materialPackage.isSelect = true;
+            _.remove(materialPackage.to,{_id: team._id});
+            _.each(materialPackage.to, function(toMaterial){
+              if (toMaterial._id) {
+                Team.findById(toMaterial._id, function(err,team){
+                  if (err || !team) {return res.send(500,err);}
+                  _.remove(team.project, materialPackage.project);
+                  team.markModified('project');
+                  team.save(function(err){
+                    if (err) {return res.send(500,err);}
+                  });
+                });
+              }
+            });
             materialPackage.markModified('selectQuote');
             materialPackage._ownerUser = quote.user;
             materialPackage._editUser = req.user;

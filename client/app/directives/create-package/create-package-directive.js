@@ -109,7 +109,8 @@ angular.module('buiiltApp').directive('createPackage', function(){
         if ($scope.contractorMember.email.title) {
           if (!(_.find($scope.contractorMember.emailsPhone,{email : $scope.contractorMember.email.title}))) {
             $scope.contractorMember.emailsPhone.push({email: $scope.contractorMember.email.title, phoneNumber: $scope.newPhoneNumber})
-
+            _.remove($scope.contractorTeamMember, {email : $scope.contractorMember.email.title});
+            $scope.contractorMember.email = {};
           }
         }
         else {

@@ -241,7 +241,6 @@ angular.module('buiiltApp').directive('addon', function(){
                 }
 
             },true);
-              console.log($scope.type);
 
             $scope.formData = {
                 title: '',

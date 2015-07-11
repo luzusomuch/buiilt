@@ -104,7 +104,6 @@
     <ul class="collapsible" data-collapsible="accordion">
       <li ng-repeat="toContractor in contractorRequest.to | filter: {isDecline:false}">
         <div class="collapsible-header">
-          {{toContractor}}
           Tenderer #{{$index+1}} - {{toContractor.email}}
           <a ng-if="toContractor.quote._id" class="btn-flat btn-flat secondary-content modal-trigger" href='#modal_viewQuote_{{toContractor.quote._id}}' style="font-size:12px; margin-top: 8px">View Quote</a>
         </div>
@@ -198,6 +197,7 @@
     <div class="modal-footer">
       <a ng-click="selectQuote(quoteRequest._id)" class="modal-action modal-close waves-effect waves-green btn-flat ">Select this quote</a>
       <a class="modal-action modal-close waves-effect waves-green btn-flat " ng-click="declineQuote(quoteRequest.team)">Decline</a>
+      <a class="modal-action modal-close waves-effect waves-green btn-flat ">Close</a>
     </div>
   </div>
 </div>
