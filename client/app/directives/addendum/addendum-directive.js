@@ -25,14 +25,16 @@ angular.module('buiiltApp').directive('addendum', function(){
             };
 
             $scope.sendAddendum = function() {
-                addOnPackageService.sendAddendum({id: $scope.package._id, 
-                    packageType: $scope.type, description: $scope.addendum, 
-                    addendumScope: $scope.addendumsScope})
-                .$promise.then(function(data) {
-                    $scope.addendums = data;
-                    $scope.package = data;
-                    $scope.addendum = {};
-                });
+                if ($scope.addendumsScope) {
+                    addOnPackageService.sendAddendum({id: $scope.package._id, 
+                        packageType: $scope.type, description: $scope.addendum, 
+                        addendumScope: $scope.addendumsScope})
+                    .$promise.then(function(data) {
+                        $scope.addendums = data;
+                        $scope.package = data;
+                        $scope.addendum = {};
+                    });    
+                }
             };
 
             $scope.remove = function(value){

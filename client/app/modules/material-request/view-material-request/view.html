@@ -30,15 +30,13 @@
             <h6>Requirements:</h6>
             <table>
               <thead>
-                <th>#</th>
                 <th>Description</th>
                 <th>Quantity</th>
               </thead>
-              <tbody>
-                <tr ng-repeat="requirement in materialRequest.requirements">
-                  <td>{{$index + 1}}</td>
-                  <td>{{requirement.description}}</td>
-                  <td>{{requirement.quantity}}</td>
+              <tbody ng-repeat="addendum in materialRequest.addendums | filter:{isHidden:false}">
+                <tr ng-repeat="addendumScope in addendum.addendumsScope">
+                  <td>{{addendumScope.description}}</td>
+                  <td>{{addendumScope.quantity}}</td>
                 </tr>
               </tbody>
             </table>

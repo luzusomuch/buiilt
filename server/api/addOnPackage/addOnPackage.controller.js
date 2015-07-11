@@ -858,6 +858,14 @@ exports.removeAddendum = function(req, res){
     }
 };
 
+function compare(a,b) {
+  if (a.updated < b.updated)
+    return -1;
+  if (a.updated > b.updated)
+    return 1;
+  return 0;
+};
+
 exports.editAddendum = function(req, res) {
     var packageType = req.body.packageType;
     if (packageType == 'contractor') {
@@ -880,6 +888,7 @@ exports.editAddendum = function(req, res) {
                     return id._id.toString() === req.body.addendumId;
                 });
                 if (pack._id == req.body.addendumId) {
+                    pack.updated = new Date();
                     if (pack.description != req.body.addendum.description &&
                         req.body.addendum.description != '{{addendum.description}}') {
                         pack.description = req.body.addendum.description;
@@ -888,29 +897,56 @@ exports.editAddendum = function(req, res) {
                         pack.description = pack.description;
                     }
                     var key = 0;
-                    _.each(pack.addendumsScope, function(addendumScope) {
-                        if (addendumScope.description != addendumsScope[key].description && 
-                            addendumsScope[key].description != '{{addendumScope.description}}') {
-                            addendumScope.description = addendumsScope[key].description;
-                        }
-                        else if(addendumsScope[key].description == '{{addendumScope.description}}'){
-                            addendumScope.description = addendumScope.description;
-                        }
-                        else {
-                            addendumScope.description = addendumScope.description;
-                        }
-                        if (addendumScope.quantity != addendumsScope[key + 2].quantity && 
-                            addendumsScope[key + 2].quantity != '{{addendumScope.quantity}}') {
-                            addendumScope.quantity = addendumsScope[key + 2].quantity;
-                        }
-                        else if(addendumsScope[key + 2].quantity == '{{addendumScope.quantity}}'){
-                            addendumScope.quantity = addendumScope.quantity;
-                        }
-                        else {
-                            addendumScope.quantity = addendumScope.quantity;
-                        }
-                        key++;
-                    });
+                    if (pack.addendumsScope.length > 1) {
+                        _.each(pack.addendumsScope, function(addendumScope) {
+                            if (addendumScope.description != addendumsScope[key].description && 
+                                addendumsScope[key].description != '{{addendumScope.description}}') {
+                                addendumScope.description = addendumsScope[key].description;
+                            }
+                            else if(addendumsScope[key].description == '{{addendumScope.description}}'){
+                                addendumScope.description = addendumScope.description;
+                            }
+                            else {
+                                addendumScope.description = addendumScope.description;
+                            }
+                            if (addendumScope.quantity != addendumsScope[key + 2].quantity && 
+                                addendumsScope[key + 2].quantity != '{{addendumScope.quantity}}') {
+                                addendumScope.quantity = addendumsScope[key + 2].quantity;
+                            }
+                            else if(addendumsScope[key + 2].quantity == '{{addendumScope.quantity}}'){
+                                addendumScope.quantity = addendumScope.quantity;
+                            }
+                            else {
+                                addendumScope.quantity = addendumScope.quantity;
+                            }
+                            key++;
+                        });
+                    }
+                    else {
+                        _.each(pack.addendumsScope, function(addendumScope){
+                            if (addendumScope.description != addendumsScope[key].description && 
+                                addendumsScope[key].description != '{{addendumScope.description}}') {
+                                addendumScope.description = addendumsScope[key].description;
+                            }
+                            else if(addendumsScope[key].description == '{{addendumScope.description}}'){
+                                addendumScope.description = addendumScope.description;
+                            }
+                            else {
+                                addendumScope.description = addendumScope.description;
+                            }
+                            if (addendumScope.quantity != addendumsScope[key + 1].quantity && 
+                                addendumsScope[key + 1].quantity != '{{addendumScope.quantity}}') {
+                                addendumScope.quantity = addendumsScope[key + 1].quantity;
+                            }
+                            else if(addendumsScope[key + 1].quantity == '{{addendumScope.quantity}}'){
+                                addendumScope.quantity = addendumScope.quantity;
+                            }
+                            else {
+                                addendumScope.quantity = addendumScope.quantity;
+                            }
+                        });
+                    }
+                    contractorPackage.addendums.sort(compare);
                     contractorPackage.markModified('editAddendum');
                     contractorPackage._editUser = req.user;
                     contractorPackage.save(function(err, saved) {
@@ -951,29 +987,56 @@ exports.editAddendum = function(req, res) {
                         pack.description = pack.description;
                     }
                     var key = 0;
-                    _.each(pack.addendumsScope, function(addendumScope) {
-                        if (addendumScope.description != addendumsScope[key].description && 
-                            addendumsScope[key].description != '{{addendumScope.description}}') {
-                            addendumScope.description = addendumsScope[key].description;
-                        }
-                        else if(addendumsScope[key].description == '{{addendumScope.description}}'){
-                            addendumScope.description = addendumScope.description;
-                        }
-                        else {
-                            addendumScope.description = addendumScope.description;
-                        }
-                        if (addendumScope.quantity != addendumsScope[key + 2].quantity && 
-                            addendumsScope[key + 2].quantity != '{{addendumScope.quantity}}') {
-                            addendumScope.quantity = addendumsScope[key + 2].quantity;
-                        }
-                        else if(addendumsScope[key + 2].quantity == '{{addendumScope.quantity}}'){
-                            addendumScope.quantity = addendumScope.quantity;
-                        }
-                        else {
-                            addendumScope.quantity = addendumScope.quantity;
-                        }
-                        key++;
-                    });
+                    if (pack.addendumsScope.length > 1) {
+                        _.each(pack.addendumsScope, function(addendumScope) {
+                            if (addendumScope.description != addendumsScope[key].description && 
+                                addendumsScope[key].description != '{{addendumScope.description}}') {
+                                addendumScope.description = addendumsScope[key].description;
+                            }
+                            else if(addendumsScope[key].description == '{{addendumScope.description}}'){
+                                addendumScope.description = addendumScope.description;
+                            }
+                            else {
+                                addendumScope.description = addendumScope.description;
+                            }
+                            if (addendumScope.quantity != addendumsScope[key + 2].quantity && 
+                                addendumsScope[key + 2].quantity != '{{addendumScope.quantity}}') {
+                                addendumScope.quantity = addendumsScope[key + 2].quantity;
+                            }
+                            else if(addendumsScope[key + 2].quantity == '{{addendumScope.quantity}}'){
+                                addendumScope.quantity = addendumScope.quantity;
+                            }
+                            else {
+                                addendumScope.quantity = addendumScope.quantity;
+                            }
+                            key++;
+                        });
+                    }
+                    else {
+                        _.each(pack.addendumsScope, function(addendumScope){
+                            if (addendumScope.description != addendumsScope[key].description && 
+                                addendumsScope[key].description != '{{addendumScope.description}}') {
+                                addendumScope.description = addendumsScope[key].description;
+                            }
+                            else if(addendumsScope[key].description == '{{addendumScope.description}}'){
+                                addendumScope.description = addendumScope.description;
+                            }
+                            else {
+                                addendumScope.description = addendumScope.description;
+                            }
+                            if (addendumScope.quantity != addendumsScope[key + 1].quantity && 
+                                addendumsScope[key + 1].quantity != '{{addendumScope.quantity}}') {
+                                addendumScope.quantity = addendumsScope[key + 1].quantity;
+                            }
+                            else if(addendumsScope[key + 1].quantity == '{{addendumScope.quantity}}'){
+                                addendumScope.quantity = addendumScope.quantity;
+                            }
+                            else {
+                                addendumScope.quantity = addendumScope.quantity;
+                            }
+                        });
+                    }
+                    materialPackage.addendums.sort(compare);
                     materialPackage.markModified('editAddendum');
                     materialPackage._editUser = req.user;
                     materialPackage.save(function(err, saved) {
@@ -1014,29 +1077,55 @@ exports.editAddendum = function(req, res) {
                         pack.description = pack.description;
                     }
                     var key = 0;
-                    _.each(pack.addendumsScope, function(addendumScope) {
-                        if (addendumScope.description != addendumsScope[key].description && 
-                            addendumsScope[key].description != '{{addendumScope.description}}') {
-                            addendumScope.description = addendumsScope[key].description;
-                        }
-                        else if(addendumsScope[key].description == '{{addendumScope.description}}'){
-                            addendumScope.description = addendumScope.description;
-                        }
-                        else {
-                            addendumScope.description = addendumScope.description;
-                        }
-                        if (addendumScope.quantity != addendumsScope[key + 2].quantity && 
-                            addendumsScope[key + 2].quantity != '{{addendumScope.quantity}}') {
-                            addendumScope.quantity = addendumsScope[key + 2].quantity;
-                        }
-                        else if(addendumsScope[key + 2].quantity == '{{addendumScope.quantity}}'){
-                            addendumScope.quantity = addendumScope.quantity;
-                        }
-                        else {
-                            addendumScope.quantity = addendumScope.quantity;
-                        }
-                        key++;
-                    });
+                    if (pack.addendumsScope.length > 1) {
+                        _.each(pack.addendumsScope, function(addendumScope) {
+                            if (addendumScope.description != addendumsScope[key].description && 
+                                addendumsScope[key].description != '{{addendumScope.description}}') {
+                                addendumScope.description = addendumsScope[key].description;
+                            }
+                            else if(addendumsScope[key].description == '{{addendumScope.description}}'){
+                                addendumScope.description = addendumScope.description;
+                            }
+                            else {
+                                addendumScope.description = addendumScope.description;
+                            }
+                            if (addendumScope.quantity != addendumsScope[key + 2].quantity && 
+                                addendumsScope[key + 2].quantity != '{{addendumScope.quantity}}') {
+                                addendumScope.quantity = addendumsScope[key + 2].quantity;
+                            }
+                            else if(addendumsScope[key + 2].quantity == '{{addendumScope.quantity}}'){
+                                addendumScope.quantity = addendumScope.quantity;
+                            }
+                            else {
+                                addendumScope.quantity = addendumScope.quantity;
+                            }
+                            key++;
+                        });
+                    }
+                    else {
+                        _.each(pack.addendumsScope, function(addendumScope){
+                            if (addendumScope.description != addendumsScope[key].description && 
+                                addendumsScope[key].description != '{{addendumScope.description}}') {
+                                addendumScope.description = addendumsScope[key].description;
+                            }
+                            else if(addendumsScope[key].description == '{{addendumScope.description}}'){
+                                addendumScope.description = addendumScope.description;
+                            }
+                            else {
+                                addendumScope.description = addendumScope.description;
+                            }
+                            if (addendumScope.quantity != addendumsScope[key + 1].quantity && 
+                                addendumsScope[key + 1].quantity != '{{addendumScope.quantity}}') {
+                                addendumScope.quantity = addendumsScope[key + 1].quantity;
+                            }
+                            else if(addendumsScope[key + 1].quantity == '{{addendumScope.quantity}}'){
+                                addendumScope.quantity = addendumScope.quantity;
+                            }
+                            else {
+                                addendumScope.quantity = addendumScope.quantity;
+                            }
+                        });
+                    }
                     variation.markModified('editAddendum');
                     variation._editUser = req.user;
                     variation.save(function(err, saved) {

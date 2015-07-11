@@ -35,6 +35,7 @@ exports.createMaterialPackage = function (req, res, next) {
     project: req.body.project,
     requirements: req.body.requirements
   });
+  materialPackage.addendums.push({description: '', addendumsScope: req.body.requirements});
   async.each(req.body.suppliers, function(emailPhone, callback) {
     User.findOne({'email': emailPhone.email}, function(err, user) {
       if (err) {return callback(err);}

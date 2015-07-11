@@ -21,6 +21,7 @@ var MaterialPackageSchema = new Schema({
       description: String,
       quantity: Number
     }],
+    updated: { type: Date, default: Date.now},
     isHidden: {type: Boolean, default: false}
   }],
   variations : [{type: Schema.Types.ObjectId, ref: 'Variation'}],
