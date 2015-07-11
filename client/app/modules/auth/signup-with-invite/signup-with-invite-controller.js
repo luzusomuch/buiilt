@@ -13,14 +13,18 @@ angular.module('buiiltApp')
     $scope.packageInvite = data;
   });
 
-  $scope.signup = function () {
+  $scope.signup = function (form) {
     if ($stateParams.packageInviteToken) {
       $scope.user.packageInviteToken = $stateParams.packageInviteToken;
     }
-    authService.createUserWithInvite($scope.user).then(function (data) {
-    }, function (res) {
-      $scope.errors = res.data;
-    });
+    $scope.submitted = true;
+    if (form.$valid) {
+      authService.createUserWithInvite($scope.user).then(function (data) {
+      }, function (res) {
+        $scope.errors = res.data;
+      });
+    }
+
   };
 
   $scope.closeAlert = function (key) {

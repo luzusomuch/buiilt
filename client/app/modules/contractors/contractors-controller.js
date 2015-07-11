@@ -1,5 +1,5 @@
 angular.module('buiiltApp').controller('ContractorsCtrl',
-  function($scope, team, $stateParams, $rootScope, $timeout, $q, contractorService, authService, projectService, teamService,contractorPackages) {
+  function($scope,socket, team, $stateParams, $rootScope, $timeout, $q, contractorService, authService, projectService, teamService,contractorPackages) {
     $scope.contractor = {
       descriptions : []
     };
@@ -16,6 +16,31 @@ angular.module('buiiltApp').controller('ContractorsCtrl',
     _.forEach($scope.contractorPackages,function(contractorPackage) {
         contractorPackage.isContractor = (_.find(contractorPackage.to, {_id: $scope.currentTeam._id})) ? true: false;
     });
+
+    // Real time process
+    $rootScope.$on('notification:allRead',function(event) {
+      _.forEach($scope.contractorPackages,function(item) {
+        item.__v =  0;
+      })
+    });
+
+    $scope.$watch('contractorPackages',function(value) {
+      $scope.inProgressTotal = 0;
+      _.forEach(value,function(item) {
+        $scope.inProgressTotal += item.__v
+      });
+    },true);
+
+    socket.on('notification:new', function (notification) {
+      if (notification) {
+        var contractorPackage = _.find($scope.contractorPackages,{_id : notification.element.package});
+        if (contractorPackage) {
+          contractorPackage.__v++;
+        }
+      }
+    });
+
+    // End Real time process
 
 });
 

@@ -1,5 +1,6 @@
 angular.module('buiiltApp')
-  .controller('ContractorPackageInProcessCtrl', function($scope, $state, $stateParams, filterFilter, currentTeam, $cookieStore, fileService, authService, userService, contractorRequest, contractorRequestService, quoteService) {
+  .controller('ContractorPackageInProcessCtrl',
+  function($scope, $state, $stateParams, filterFilter, currentTeam, $cookieStore, fileService, authService, userService, contractorRequest, contractorRequestService, quoteService,notificationService) {
     /**
      * quote data
      */
@@ -11,6 +12,10 @@ angular.module('buiiltApp')
     if ($cookieStore.get('token')) {
       $scope.currentUser = userService.get();
     }
+
+    notificationService.markReadByPackage({_id : contractorRequest._id}).$promise
+      .then(function(res) {
+      });
 
     $scope.complete = function() {
       contractorRequestService.complete({_id : $scope.contractorRequest._id}).$promise

@@ -2,6 +2,7 @@
 
 var MaterialPackage = require('./../../models/materialPackage.model');
 var PackageInvite = require('./../../models/packageInvite.model');
+var Notification = require('./../../models/notification.model');
 var ValidateInvite = require('./../../models/validateInvite.model');
 var User = require('./../../models/user.model');
 var Team = require('./../../models/team.model');
@@ -13,11 +14,19 @@ var async = require('async');
  * restriction: 'admin'
  */
 exports.index = function (req, res) {
+  var user = req.user;
   MaterialPackage.find({project : req.params.id},function (err, materials) {
     if (err){
       return res.send(500, err);
     }
-    res.json(200, materials);
+    async.each(materials,function(item,callback) {
+      Notification.find({owner: user._id,'element.package' : item._id, unread : true}).count(function(err,count) {
+        item.__v = count;
+        callback();
+      })
+    },function() {
+      return res.json(materials)
+    });
   });
 };
 

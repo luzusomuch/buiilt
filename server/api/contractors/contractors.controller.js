@@ -1,6 +1,7 @@
 'use strict';
 
 var ContractorPackage = require('./../../models/contractorPackage.model');
+var Notification = require('./../../models/notification.model');
 var PackageInvite = require('./../../models/packageInvite.model');
 var ValidateInvite = require('./../../models/validateInvite.model');
 var Team = require('./../../models/team.model');
@@ -13,11 +14,19 @@ var async = require('async');
  * restriction: 'admin'
  */
 exports.index = function (req, res) {
+  var user = req.user;
   ContractorPackage.find({project : req.params.id},function (err, contractors) {
     if (err){
       return res.send(500, err);
-    }    
-    res.json(200, contractors);
+    }
+    async.each(contractors,function(item,callback) {
+      Notification.find({owner: user._id,'element.package' : item._id, unread : true}).count(function(err,count) {
+        item.__v = count;
+        callback();
+      })
+    },function() {
+      return res.json(contractors)
+    });
   });
 };
 

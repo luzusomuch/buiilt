@@ -43,7 +43,7 @@
                      ng-class="{'invalid' : form.password.$invalid && submitted}" ng-minlength="6">
               <label for="password">Password</label>
               <p class="validate-message" ng-show="form.password.$error.required && submitted">Password is required</p>
-              <p class="validate-message" ng-show="form.password.$error.minlength">Password need at least 6 character</p>
+              <p class="validate-message" ng-show="form.password.$error.minlength && submitted">Password need at least 6 character</p>
             </div>
           </div>
           <div class="row">

@@ -23,7 +23,7 @@ angular.module('buiiltApp')
       _.forEach($scope.staffPackages,function(item) {
         item.__v =  0;
       })
-    })
+    });
 
     $scope.$watch('staffPackages',function(value) {
       $scope.inProgressTotal = 0;

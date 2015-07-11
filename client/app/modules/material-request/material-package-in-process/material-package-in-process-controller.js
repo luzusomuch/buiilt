@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-.controller('MaterialPackageInProcessCtrl', function($scope, $state, $stateParams, filterFilter, $cookieStore, currentTeam, materialRequest, fileService, authService, userService,materialRequestService) {
+.controller('MaterialPackageInProcessCtrl', function($scope, $state, $stateParams, filterFilter, $cookieStore, currentTeam, materialRequest, fileService, authService, userService,materialRequestService,notificationService) {
   /**
    * quote data
    */
@@ -9,6 +9,10 @@ angular.module('buiiltApp')
   if ($cookieStore.get('token')) {
     $scope.currentUser = userService.get();
   }
+
+  notificationService.markReadByPackage({_id : materialRequest._id}).$promise
+    .then(function(res) {
+    });
 
   $scope.complete = function() {
     materialRequestService.complete({_id : $scope.materialRequest._id}).$promise

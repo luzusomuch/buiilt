@@ -4,7 +4,7 @@
       <!-- sign-up form -->
       <div class="add-comment contact-form boxed">
         <div class="card collection">
-          <form method="post" ng-submit="signup()" name="signupForm" novalidate style="padding:10px 50px">
+          <form method="post" ng-submit="signup(signupForm)" name="signupForm" novalidate style="padding:10px 50px">
             <div class="row">
               <h5>
                 {{packageInvite.owner.name}} has invited you to privide a quote for their project.
@@ -15,7 +15,7 @@
               <div input-field class="col s12">
                 <label for="teamName">Team name</label>
                 <input type="text" id="teamName" name="teamName" ng-model="user.teamName" required>
-                <p class="validate-message" ng-show="signupForm.teamName.$error.required">Team name is required</p>
+                <p class="validate-message" ng-show="signupForm.teamName.$error.required && submitted">Team name is required</p>
               </div>
             </div>
             <div class="row">
@@ -42,18 +42,18 @@
               <div input-field class="col s12">
                 <label>Password</label>
                 <input ng-model="user.password" name="password" required type="password" ng-minlength="6" required>
-                <p class="validate-message" ng-show="signupForm.password.$error.minlength">Password need at least 6 character</p>
+                <p class="validate-message" ng-show="signupForm.password.$error.minlength && submitted">Password need at least 6 character</p>
               </div>
             </div>
             <div class="row">
             <div input-field class="col s12">
               <input id="repassword" name="repassword" ng-model="user.repassword" compare-to="user.password" type="password">
               <label for="repassword">Confirm Password</label>
-              <p class="validate-message" ng-show="signupForm.repassword.$error.compareTo">Confirm password dose not match</p>
+              <p class="validate-message" ng-show="signupForm.repassword.$error.compareTo && submitted">Confirm password dose not match</p>
             </div>
           </div>
             <div class="row">
-              <button class="waves-effect waves-light btn" ng-disabled="signupForm.$invalid">Sign up</button>
+              <button class="waves-effect waves-light btn">Sign up</button>
             </div>
           </form>
         </div>
