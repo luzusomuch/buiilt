@@ -12,13 +12,24 @@ angular.module('buiiltApp').directive('addendum', function(){
             $scope.editAddendum = {};
             $scope.addendumScope = {};
             $scope.addendumsScope = [];
+            console.log($scope.package);
 
             $scope.addAddendum = function() {
-                if ($scope.addendum.scopeDescription && $scope.addendum.quantity) {
-                    $scope.addendumsScope.push({scopeDescription: $scope.addendum.scopeDescription, quantity: $scope.addendum.quantity});
-                    $scope.addendum.scopeDescription = null;
-                    $scope.addendum.quantity = null;
+                if ($scope.package.type == 'material') {
+                    if ($scope.addendum.scopeDescription && $scope.addendum.quantity) {
+                        $scope.addendumsScope.push({scopeDescription: $scope.addendum.scopeDescription, quantity: $scope.addendum.quantity});
+                        $scope.addendum.scopeDescription = null;
+                        $scope.addendum.quantity = null;
+                    }
                 }
+                else if ($scope.package.type == 'contractor') {
+                    if ($scope.addendum.scopeDescription) {
+                        $scope.addendumsScope.push({scopeDescription: $scope.addendum.scopeDescription});
+                        $scope.addendum.scopeDescription = null;
+                        $scope.addendum.quantity = null;
+                    }
+                }
+                
             };
             $scope.removeAddendum = function(index) {
                 $scope.addendumsScope.splice(index, 1);

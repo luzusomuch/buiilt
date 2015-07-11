@@ -59,10 +59,10 @@ var VariationSchema = new Schema({
   },
   addendums: [{
     description: String,
-    addendumsScope: [{
+    addendumsScope: {
       description: String,
       quantity: Number
-    }],
+    },
     isHidden: {type: Boolean, default: false}
   }],
   invoices: [{

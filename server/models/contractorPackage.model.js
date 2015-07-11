@@ -24,9 +24,9 @@ var ContractorPackageSchema = new Schema({
   category: String,
   addendums: [{
     description: String,
-    addendumsScope: [{
+    addendumsScope: {
       description: String
-    }],
+    },
     isHidden: {type: Boolean, default: false}
   }],
   variations : [{type: Schema.Types.ObjectId, ref: 'Variation'}],

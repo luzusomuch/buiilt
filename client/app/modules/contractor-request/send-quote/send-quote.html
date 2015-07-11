@@ -32,9 +32,9 @@
                 <th>Description</th>
               </thead>
               <tbody>
-                <tr ng-repeat="description in contractorRequest.descriptions">
-                  <td>{{$index + 1}}</td>
-                  <td>{{description}}</td>
+                <tr ng-repeat="addendum in contractorRequest.addendums | filter:{isHidden:false}">
+                  <td>{{addendum.addendumsScope.description}}</td>
+                  <td>{{addendum.addendumsScope.quantity}}</td>
                 </tr>
               </tbody>
             </table>

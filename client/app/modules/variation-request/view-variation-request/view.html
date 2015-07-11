@@ -24,13 +24,11 @@
         <div class="collapsible-body" style="background-color: #FFF; padding:10px">
           <table>
             <thead>
-              <th>#</th>
-              <th style="text-align:center">Scope of works</th>
+              <th>Description</th>
             </thead>
             <tbody>
-              <tr ng-repeat="description in variationRequest.description">
-                <td>{{$index + 1}}</td>
-                <td style="text-align:center">{{description}}</td>
+              <tr ng-repeat="addendum in variationRequest.addendums | filter:{isHidden:false}">
+                <td>{{addendum.addendumsScope.description}}</td>
               </tr>
             </tbody>
           </table>

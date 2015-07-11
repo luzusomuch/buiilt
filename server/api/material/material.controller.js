@@ -46,7 +46,6 @@ exports.createMaterialPackage = function (req, res, next) {
   });
   _.each(req.body.requirements, function(requirement){
     materialPackage.addendums.push({
-      description: '',
       'addendumsScope.description': requirement.description,
       'addendumsScope.quantity': requirement.quantity,
     });  

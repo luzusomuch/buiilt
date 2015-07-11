@@ -44,6 +44,11 @@ exports.createContractorPackage = function (req, res, next) {
     category: req.body.contractor.category,
     dateStart: req.body.contractor.dateStart
   });
+  _.each(req.body.contractor.descriptions, function(description){
+    contractorPackage.addendums.push({
+      'addendumsScope.description': description
+    }); 
+  });
   async.each(req.body.emailsPhone, function(emailPhone, callback) {
     User.findOne({'email': emailPhone.email}, function(err, user) {
       if (err) {return callback(err);}

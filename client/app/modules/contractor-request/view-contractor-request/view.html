@@ -86,13 +86,11 @@
           <strong>Start date</strong>: {{contractorRequest.dateStart | date: longDate}}
           <table>
             <thead>
-              <th>#</th>
               <th>Description</th>
             </thead>
             <tbody>
-              <tr ng-repeat="description in contractorRequest.descriptions">
-                <td>{{$index + 1}}</td>
-                <td>{{description}}</td>
+              <tr ng-repeat="addendum in contractorRequest.addendums | filter:{isHidden:false}">
+                <td>{{addendum.addendumsScope.description}}</td>
               </tr>
             </tbody>
           </table>
