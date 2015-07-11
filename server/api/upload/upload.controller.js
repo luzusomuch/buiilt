@@ -90,12 +90,13 @@ exports.upload = function(req, res){
                                                         owners.push(member._id);
                                                     }
                                                 });
+                                                console.log(owners);
                                                 async.each(owners, function(leader, callback){
                                                     var notification = new Notification({
                                                         owner: leader,
                                                         fromUser: req.user._id,
                                                         toUser: leader,
-                                                        element: {file: saved, 
+                                                        element: {file: saved.toJSON(), 
                                                             uploadIn: builderPackage,
                                                             projectId: builderPackage.project},
                                                         referenceTo: "DocumentInProject",
@@ -172,12 +173,13 @@ exports.upload = function(req, res){
                                                         owners.push(member._id);
                                                     }
                                                 });
+                                                console.log(owners);
                                                 async.each(owners, function(leader,callback){
                                                     var notification = new Notification({
                                                         owner: leader,
                                                         fromUser: req.user._id,
                                                         toUser: leader,
-                                                        element: {file: saved, 
+                                                        element: {file: saved.toJSON(), 
                                                             uploadIn: builderPackage,
                                                             projectId: builderPackage.project},
                                                         referenceTo: "DocumentInProject",
@@ -289,7 +291,7 @@ exports.uploadInPackge = function(req, res){
                                             owner: leader,
                                             fromUser: req.user._id,
                                             toUser: leader,
-                                            element: {file: saved,
+                                            element: {file: saved.toJSON(),
                                                 uploadIn: contractorPackage,
                                                 projectId: contractorPackage.project},
                                             referenceTo: "DocumentContractorPackage",
@@ -319,7 +321,7 @@ exports.uploadInPackge = function(req, res){
                                             owner: leader,
                                             fromUser: req.user._id,
                                             toUser: leader,
-                                            element: {file:saved,
+                                            element: {file:saved.toJSON(),
                                                 uploadIn: materialPackage,
                                                 projectId: materialPackage.project},
                                             referenceTo: "DocumentMaterialPackage",
@@ -338,7 +340,7 @@ exports.uploadInPackge = function(req, res){
                                             owner: leader,
                                             fromUser: req.user._id,
                                             toUser: leader,
-                                            element: {file:saved,
+                                            element: {file:saved.toJSON(),
                                                 uploadIn: staffPackage,
                                                 projectId: staffPackage.project},
                                             referenceTo: "DocumentStaffPackage",
@@ -367,7 +369,7 @@ exports.uploadInPackge = function(req, res){
                                             owner: leader,
                                             fromUser: req.user._id,
                                             toUser: leader,
-                                            element: {file:saved,
+                                            element: {file:saved.toJSON(),
                                                 uploadIn: variation,
                                                 projectId: variation.project},
                                             referenceTo: "DocumentVariation",
@@ -378,14 +380,26 @@ exports.uploadInPackge = function(req, res){
                                 });
                             }
                             else {
-                                BuilderPackage.findById(saved.belongTo).populate('owner').exec(function(err, builderPackage){
+                                BuilderPackage.findById(saved.belongTo)
+                                .populate('owner').populate('to.team').exec(function(err, builderPackage){
                                     if (err || !builderPackage) {return cb();}
-                                    async.each(builderPackage.owner.leader, function(leader,callback){
+                                    owners = _.union(builderPackage.owner.leader, builderPackage.to.team.leader);
+                                    _.each(builderPackage.owner.member, function(member){
+                                        if (member._id) {
+                                            owners.push(member._id);
+                                        }
+                                    });
+                                    _.each(builderPackage.to.team.member, function(member){
+                                        if (member._id) {
+                                            owners.push(member._id);
+                                        }
+                                    });
+                                    async.each(owners, function(leader,callback){
                                         var notification = new Notification({
                                             owner: leader,
                                             fromUser: req.user._id,
                                             toUser: leader,
-                                            element: {file:saved,
+                                            element: {file:saved.toJSON(),
                                                 uploadIn: builderPackage,
                                                 projectId: builderPackage.project},
                                             referenceTo: "DocumentBuilderPackage",

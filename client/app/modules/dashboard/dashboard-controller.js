@@ -94,6 +94,10 @@ angular.module('buiiltApp')
       $scope.currentList = 'docs';
     };
 
+    $scope.downloadFile = function(value){
+      notificationService.readDocumentDashboard({_id : value._id});
+    };
+
     $scope.goToDocument = function(value){
       notificationService.readDocumentDashboard({_id : value._id});
       if (value.referenceTo == 'DocumentInProject') {
@@ -112,8 +116,8 @@ angular.module('buiiltApp')
         else if (value.referenceTo == 'DocumentVariation') {
           $state.go('variationRequest.inProcess', {id: value.element.projectId, variationId: value.element.uploadIn._id});
         }
-        else {
-          $state.go('client', {id: value.element.file.belongTo});
+        else if (value.referenceTo == 'DocumentBuilderPackage') {
+          $state.go('client', {id: value.element.projectId});
         }
       }
     };

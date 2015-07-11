@@ -55,6 +55,7 @@ exports.create = function(req,res) {
     var staffPackage = new StaffPackage(data);
     staffPackage.owner = user.team._id;
     staffPackage.project = project;
+    staffPackage.type = 'staffPackage';
     staffPackage.staffs = data.staffs;
     staffPackage.markModified('staffs');
     staffPackage._editUser = user;
