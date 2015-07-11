@@ -81,7 +81,7 @@ angular.module('buiiltApp')
       //check menu when state changes
       $rootScope.$on('$stateChangeSuccess', function (event, next) {
         queryProjects();
-        $scope.currentProject = $rootScope.currentProject;
+        $scope.currentProject = _.merge($scope.currentProject, $rootScope.currentProject);
         $rootScope.currentUser = $scope.user;
         $rootScope.currentTeam = $scope.currentTeam;
 
