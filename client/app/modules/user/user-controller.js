@@ -33,7 +33,12 @@ angular.module('buiiltApp').controller('UserCtrl', function($scope, $state, auth
   $scope.changeEmail = function(form) {
     $scope.emailFormSubmitted = true;
     if (form.$valid) {
+      var newEmail = $scope.email.email;
       authService.changeEmail($scope.email).then(function() {
+        $scope.cancelEmail();
+        $scope.email = {
+          email : newEmail
+        };
 
       })
     }

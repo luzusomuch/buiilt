@@ -129,6 +129,8 @@
     <script src="/app/modules/variation-request/send-quote/send-quote-controller.js"></script>
     <script src="/app/modules/variation-request/view-variation-request/view-variation-request-controller.js"></script>
     <script src="/app/modules/variation-request/variation-in-process/variation-in-process-controller.js"></script>
+    <script src="/app/modules/error/error-controller.js"></script>
+    <script src="/app/modules/error/main.js"></script>
 
     
     <script src="/app/services/auth-service.js"></script>
@@ -160,7 +162,7 @@
     <script src="/assets/js/jquery.slimscroll.js"></script>
     <!-- Add New Component JS Above -->
 
-  <built-header></built-header>
+  <built-header ng-if="hasHeader"></built-header>
 
   <main class="row container">
 
@@ -169,6 +171,6 @@
   </main>
   <div ng-if="authService.isLoggedIn()" sp-socket></div>
   
-  <built-footer></built-footer>
+  <built-footer  ng-if="hasFooter"></built-footer>
 </body>
 </html>

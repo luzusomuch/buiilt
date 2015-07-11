@@ -41,12 +41,12 @@ router.get('/confirm-email-change/:token', function(req, res){
     changeEmailToken: req.params.token
   }).exec(function(err, user){
     if(err || !user){
-      return res.redirect('/signin?action=verifyEmailChange&error=invalidToken');
+      return res.redirect('/error/404');
     }
 
     if (new Date(user.expired) < new Date() )
     {
-      return res.redirect('/signin?action=verifyEmailChange&error=tokenExpired');
+      return res.redirect('/error/404');
     }
 
     //update token

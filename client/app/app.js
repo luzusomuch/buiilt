@@ -57,6 +57,8 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
     cfpLoadingBar.start();
     $rootScope.currentProject = null;
     $rootScope.authService = authService;
+    $rootScope.hasHeader = true;
+    $rootScope.hasFooter = true;
     $rootScope.safeApply = function (fn) {
       var phase = $rootScope.$$phase;
       if (phase === '$apply' || phase === '$digest') {
@@ -72,10 +74,16 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
           if (toState.authenticate && !loggedIn) {
             $location.path('/signin');
           } else if (!toState.authenticate && loggedIn) {
-            $state.go('team.manager')
+            //$state.go('team.manager')
           }
         });
+      if (toState.noHeader) {
+        $rootScope.hasHeader = false;
+      }
 
+      if (toState.noFooter) {
+        $rootScope.hasFooter = false;
+      }
 
       if (toState.hasCurrentProject) {
         if (!$rootScope.currentProject || toParams.id !== $rootScope.currentProject._id) {
