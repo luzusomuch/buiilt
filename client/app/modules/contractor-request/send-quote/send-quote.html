@@ -28,34 +28,14 @@
             <strong>Start date</strong>: {{contractorRequest.dateStart | date: longDate}}
             <table>
               <thead>
-                <th>#</th>
                 <th>Description</th>
               </thead>
               <tbody>
                 <tr ng-repeat="addendum in contractorRequest.addendums | filter:{isHidden:false}">
                   <td>{{addendum.addendumsScope.description}}</td>
-                  <td>{{addendum.addendumsScope.quantity}}</td>
                 </tr>
               </tbody>
             </table>
-          </div>
-          <div class="col s12">
-            <div class="row" ng-repeat="addendum in contractorRequest.addendums | filter:{isHidden: false}" ng-if="$last">
-                <h6>{{addendum.description}}</h6>
-                <h6>Addendum scope</h6>
-                <table>
-                   <thead>
-                      <th>Description</th>
-                      <th>Quantity</th>
-                   </thead>
-                   <tbody>
-                     <tr ng-repeat="addendumScope in addendum.addendumsScope">
-                       <td>{{addendumScope.description}}</td>
-                       <td>{{addendumScope.quantity}}</td>
-                     </tr>
-                   </tbody>
-                </table>
-              </div>
           </div>
          </div>
        </li>

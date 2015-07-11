@@ -66,7 +66,7 @@
 
               <div class="row available-assign">
                 <p style="">Available Assignee's:</p>
-                <a href="#!" ng-click="staffAssign(staff,$index)" ng-repeat="staff in available">
+                <a href="#!" ng-click="staffAssign(staff,$index)" ng-repeat="staff in available track by $index">
                   <div class="card col" style="padding: 5px; margin-left: 10px" >
                     {{staff | name}}
                   </div>

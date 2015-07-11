@@ -87,7 +87,6 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
 
       if (toState.hasCurrentProject) {
         if (!$rootScope.currentProject || toParams.id !== $rootScope.currentProject._id) {
-
           projectService.get({id: toParams.id}).$promise
             .then(function (data) {
               if (data._id) {

@@ -85,7 +85,7 @@
 
           <div class="row container available-assign"  ng-if="!isShow" >
             <p style="">Available Assignee's:</p>
-            <a href="#!" ng-click="assign(staff,$index)" ng-repeat="staff in available">
+            <a href="#!" ng-click="assign(staff,$index)" ng-repeat="staff in available track by $index">
               <div class="card col" style="padding: 5px; margin-left: 10px"  ng-class="{'admin' : staff.team.role == 'admin'}">
                 {{staff | name}}
               </div>
@@ -170,7 +170,7 @@
     </li>
   </ul>
   <ul class="collapsible" data-collapsible="accordion" ng-if="currentList == 'docs'">
-    <li ng-repeat="file in myFiles | unique: file">
+    <li ng-repeat="file in myFiles | unique: file" ng-if="file.owner == currentUser._id">
       <div class="collapsible-header">
         {{file.element.file.title}}
         <a class="btn-flat secondary-content" style="font-size: 12px;" ng-click="goToDocument(file)">
