@@ -10,12 +10,18 @@ angular.module('buiiltApp')
     $scope.currentUser = userService.get();
   }
 
-  if (currentTeam.type == 'contractor' ||
-   currentTeam.type == 'homeOwner' || 
-   contractorRequest.owner._id != currentTeam._id || 
-   contractorRequest.winnerTeam._id._id != currentTeam._id
-    ) {
+  if (currentTeam.type == 'contractor' || currentTeam.type == 'homeOwner') {
     $state.go('team.manager');
+  }
+  else if (currentTeam.type == 'builder') {
+    if (materialRequest.owner._id != currentTeam._id) {
+      $state.go('team.manager');
+    }
+  }
+  else {
+    if (materialRequest.winnerTeam._id._id != currentTeam._id) {
+      $state.go('team.manager');
+    }
   }
 
   notificationService.markReadByPackage({_id : materialRequest._id}).$promise
