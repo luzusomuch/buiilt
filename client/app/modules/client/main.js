@@ -9,7 +9,10 @@ angular.module('buiiltApp').config(function($stateProvider) {
     resolve: {
       builderPackage: function(builderPackageService, $stateParams) {
             return builderPackageService.findDefaultByProject({id : $stateParams.id}).$promise;
-        }
+        },
+      team: function(authService){
+        return authService.getCurrentTeam().$promise;
+      },
     }
   });
 });

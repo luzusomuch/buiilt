@@ -12,6 +12,10 @@ angular.module('buiiltApp')
       $scope.currentUser = userService.get();
     }
 
+    if (variationRequest.owner._id != currentTeam._id || variationRequest.to._id._id != currentTeam._id) {
+      $state.go('team.manager');
+    }
+
     $scope.complete = function() {
       variationRequestService.complete({_id : $scope.variationRequest._id}).$promise
         .then(function(res) {

@@ -1,5 +1,5 @@
 angular.module('buiiltApp').controller('ContractorsCtrl',
-  function($scope,socket, team, $stateParams, $rootScope, $timeout, $q, contractorService, authService, projectService, teamService,contractorPackages) {
+  function($scope, $state,socket, team, $stateParams, $rootScope, $timeout, $q, contractorService, authService, projectService, teamService,contractorPackages) {
     $scope.contractor = {
       descriptions : []
     };
@@ -9,6 +9,9 @@ angular.module('buiiltApp').controller('ContractorsCtrl',
     $scope.user = authService.getCurrentUser();
     $scope.filter = {isCompleted : false, isAccept : true};
     $scope.submitted = false;
+    if ($scope.currentTeam.type == 'supplier' || $scope.currentTeam.type == 'homeOwner') {
+      $state.go('team.manager');
+    }
     // $scope.isBuilder = ($scope.contractorPackages.owner == $scope.currentTeam._id) ? true : false;
     // $scope.canSee = (_.find(contractorPackages.to, {_id: $scope.currentTeam._id})) ? true : false;
     // $scope.team = authService.getCurrentTeam();

@@ -11,6 +11,10 @@ angular.module('buiiltApp')
     $scope.currentUser = userService.get();
   }
 
+  if (variationRequest.to._id._id != currentTeam._id) {
+    $state.go('team.manager');
+  }
+
   $scope.subTotalPrice = 0;
   $scope.subTotalRate = 0;
   $scope.user = {};

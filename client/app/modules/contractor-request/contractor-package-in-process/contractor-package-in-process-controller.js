@@ -13,6 +13,14 @@ angular.module('buiiltApp')
       $scope.currentUser = userService.get();
     }
 
+    if (currentTeam.type == 'supplier' ||
+     currentTeam.type == 'homeOwner' || 
+     contractorRequest.owner._id != currentTeam._id || 
+     contractorRequest.winnerTeam._id._id != currentTeam._id
+      ) {
+      $state.go('team.manager');
+    }
+
     notificationService.markReadByPackage({_id : contractorRequest._id}).$promise
       .then(function(res) {
       });

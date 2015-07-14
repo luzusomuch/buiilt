@@ -17,7 +17,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
       currentTeam : [
         'authService',
         function(authService) {
-          return authService.getCurrentTeam();
+          return authService.getCurrentTeam().$promise;
         }
       ],
       materialRequest: function($stateParams, materialRequestService){
@@ -35,7 +35,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
       currentTeam : [
         'authService',
         function(authService) {
-          return authService.getCurrentTeam();
+          return authService.getCurrentTeam().$promise;
         }
       ],
       materialRequest: function($stateParams, materialRequestService){
@@ -53,7 +53,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
       currentTeam : [
         'authService',
         function(authService) {
-          return authService.getCurrentTeam();
+          return authService.getCurrentTeam().$promise;
         }
       ],
       materialRequest: function($stateParams, materialRequestService){

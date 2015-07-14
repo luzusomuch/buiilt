@@ -803,23 +803,22 @@ exports.sendAddendum = function(req, res) {
             else {
                 var addendumsScope = [];
                 _.each(req.body.addendumScope, function(addendumScope) {
-                    addendumsScope.push({
-                        description: addendumScope.scopeDescription,
-                        quantity: addendumScope.quantity
+                    variation.addendums.push({
+                        'addendumsScope.description': addendumScope.scopeDescription,
+                        'addendumsScope.quantity': addendumScope.quantity
                     });
                 });
-                variation.addendums.push({
-                    description: req.body.description.description,
-                    addendumsScope: addendumsScope
-                });
+                
                 variation.markModified('sendAddendum');
                 variation._editUser = req.user;
                 variation.save(function(err, saved){
                     if (err) {return res.send(500, err);}
                     else {
-                        saved.populate('to.quote', function(err){
+                        Variation.populate(saved, [{path: 'to._id'},{path: 'to.quote'}], function(err,variation){
                             if (err) {return res.send(500,err);}
-                            return res.json(200,saved);
+                            else {
+                                return res.json(200,saved);
+                            }
                         });
                     }
                 });

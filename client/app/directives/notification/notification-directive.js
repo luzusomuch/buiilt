@@ -138,6 +138,9 @@ angular.module('buiiltApp')
                 return 'dashboard({id: notification.element.package.project})';
             }
           }
+          if (notification.type == 'send-thanks-to-loser') {
+            return 'team.manager';
+          }
         };
 
         var text;

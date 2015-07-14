@@ -5,10 +5,13 @@ angular.module('buiiltApp')
    */
   $scope.quoteRequest = {};
   $scope.contractorRequest = contractorRequest;
-  $scope.currentTeam = currentTeam;
   $scope.currentUser = {};
   if ($cookieStore.get('token')) {
     $scope.currentUser = userService.get();
+  }
+  $scope.currentTeam = currentTeam;
+  if (_.findIndex(contractorRequest.to, {_id:currentTeam._id}) == -1) {
+    $state.go('team.manager');
   }
 
   $scope.formData = {

@@ -11,6 +11,10 @@ angular.module('buiiltApp')
     $scope.currentUser = userService.get();
   }
 
+  if (_.findIndex(materialRequest.to, {_id:currentTeam._id}) == -1) {
+    $state.go('team.manager');
+  }
+
   $scope.subTotalPrice = 0;
   $scope.subTotalRate = 0;
   $scope.user = {};

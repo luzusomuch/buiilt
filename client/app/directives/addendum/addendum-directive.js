@@ -21,7 +21,7 @@ angular.module('buiiltApp').directive('addendum', function(){
                         $scope.addendum.quantity = null;
                     }
                 }
-                else if ($scope.package.type == 'contractor') {
+                else if ($scope.package.type == 'contractor' || $scope.package.packageType == 'BuilderPackage' || $scope.package.packageType == 'contractor') {
                     if ($scope.addendum.scopeDescription) {
                         $scope.addendumsScope.push({scopeDescription: $scope.addendum.scopeDescription});
                         $scope.addendum.scopeDescription = null;

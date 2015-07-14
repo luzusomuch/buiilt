@@ -11,6 +11,10 @@ angular.module('buiiltApp')
     $scope.currentUser = userService.get();
   }
 
+  if ($scope.currentTeam.type != 'builder' && contractorRequest.owner._id != currentTeam._id) {
+    $state.go('team.manager');
+  }
+
   $scope.user = {};
   $scope.toSupplier = {};
   $scope.message = {};

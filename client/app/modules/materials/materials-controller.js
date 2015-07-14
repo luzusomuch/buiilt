@@ -12,6 +12,10 @@ angular.module('buiiltApp').controller('MaterialsCtrl',
     $scope.submitted = false;
     $scope.inProgressTotal = 0;
 
+    if ($scope.currentTeam.type == 'contractor' || $scope.currentTeam.type == 'homeOwner') {
+      $state.go('team.manager');
+    }
+
     _.forEach($scope.materialPackages,function(materialPackage) {
         materialPackage.isSupplier = (_.find(materialPackage.to, {_id: $scope.currentTeam._id})) ? true: false;
     });

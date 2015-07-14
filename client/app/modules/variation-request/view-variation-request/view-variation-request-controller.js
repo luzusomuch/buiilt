@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-.controller('ViewVariationRequestCtrl', function($scope, $window, $state, $stateParams,fileService,currentTeam, $cookieStore, authService, userService, variationRequest, variationRequestService, quoteService) {
+.controller('ViewVariationRequestCtrl', function($scope, $rootScope, $window, $state, $stateParams,fileService,currentTeam, $cookieStore, authService, userService, variationRequest, variationRequestService, quoteService) {
   /**
    * quote data
    */
@@ -9,6 +9,10 @@ angular.module('buiiltApp')
   $scope.currentUser = {};
   if ($cookieStore.get('token')) {
     $scope.currentUser = userService.get();
+  }
+
+  if (variationRequest.owner._id != currentTeam._id) {
+    $state.go('team.manager');
   }
   $scope.message = {};
   $scope.addendum = {};
@@ -24,6 +28,10 @@ angular.module('buiiltApp')
   fileService.getFileByStateParam({id: $stateParams.variationId})
   .$promise.then(function(data){
     $scope.files = data;
+  });
+
+  $rootScope.$on('addendum', function(event, data){
+    $scope.variationRequest = data;
   });
 
   $scope.downloadFile = function(value) {

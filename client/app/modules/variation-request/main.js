@@ -16,11 +16,11 @@ angular.module('buiiltApp').config(function($stateProvider) {
       currentTeam : [
         'authService',
         function(authService) {
-          return authService.getCurrentTeam();
+          return authService.getCurrentTeam().$promise;
         }
       ],
       variationRequest: function($stateParams, variationRequestService){
-        return variationRequestService.findOne({'id':$stateParams.variationId});
+        return variationRequestService.findOne({'id':$stateParams.variationId}).$promise;
       }
     }
   })
@@ -34,11 +34,11 @@ angular.module('buiiltApp').config(function($stateProvider) {
       currentTeam : [
         'authService',
         function(authService) {
-          return authService.getCurrentTeam();
+          return authService.getCurrentTeam().$promise;
         }
       ],
       variationRequest: function($stateParams, variationRequestService){
-        return variationRequestService.findOne({'id':$stateParams.variationId});
+        return variationRequestService.findOne({'id':$stateParams.variationId}).$promise;
       }
     }
   })
@@ -52,7 +52,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
       currentTeam : [
         'authService',
         function(authService) {
-          return authService.getCurrentTeam();
+          return authService.getCurrentTeam().$promise;
         }
       ],
       variationRequest: function($stateParams, variationRequestService){

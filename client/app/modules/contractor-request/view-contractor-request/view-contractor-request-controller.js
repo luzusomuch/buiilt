@@ -6,6 +6,9 @@ angular.module('buiiltApp')
   $scope.emailsPhone = [];
   $scope.contractorRequest = contractorRequest;
   $scope.currentTeam = currentTeam;
+  if ($scope.currentTeam.type != 'builder' && contractorRequest.owner._id != currentTeam._id) {
+    $state.go('team.manager');
+  }
   $scope.currentUser = {};
   if ($cookieStore.get('token')) {
     $scope.currentUser = userService.get();
