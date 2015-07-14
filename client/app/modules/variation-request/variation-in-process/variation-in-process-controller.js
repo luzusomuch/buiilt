@@ -11,7 +11,6 @@ angular.module('buiiltApp')
     if ($cookieStore.get('token')) {
       $scope.currentUser = userService.get();
     }
-    console.log(variationRequest);
     if (variationRequest.packageType == 'BuilderPackage') {
       if (currentTeam.type == 'homeOwner') {
         if (variationRequest.owner._id != currentTeam._id) {
