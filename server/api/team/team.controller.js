@@ -37,7 +37,8 @@ exports.index = function (req, res) {
 exports.me = function(req,res) {
   var user = req.user;
   if (!user.team) {
-    return res.json(null);
+    // return res.json(null);
+    return res.send(500);
   }
   Team.findById(user.team._id)
     .populate('leader')
@@ -45,7 +46,8 @@ exports.me = function(req,res) {
     .populate('project')
     .exec(function (err,team) {
     if (err) {
-      return errorsHelper.validationErrors(res, err);
+      // return errorsHelper.validationErrors(res, err);
+      return res.send(500,err);
     }
     return res.json(team);
   })
@@ -217,7 +219,8 @@ exports.invitation = function(req,res) {
     .populate('leader')
     .exec(function(err,teams) {
       if (err || !teams) {
-        errorsHelper.validationErrors(res, err);
+        // errorsHelper.validationErrors(res, err);
+        return res.send(500,err);
       }
       return res.json(teams);
     })

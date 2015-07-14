@@ -278,7 +278,7 @@ exports.show = function (req, res, next) {
       return next(err);
     }
     if (!user) {
-      return res.send(401);
+      return res.send(404);
     }
     return res.json(user);
   });
@@ -377,7 +377,7 @@ exports.me = function (req, res, next) {
       return next(err);
     }
     if (!user) {
-      return res.json(401);
+      return res.json(404);
     }
     console.log(user);
     return res.json(user);
@@ -387,7 +387,8 @@ exports.me = function (req, res, next) {
 exports.all = function (req, res, next) {
   User.find({},function(err,users) {
     if (err) {
-      return validationError(res,err);
+      // return validationError(res,err);
+      return res.send(500,err);
     }
     res.json(users);
   });
