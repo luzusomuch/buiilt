@@ -14,3 +14,4 @@ docker.log
 /server/config/environment/development.js
 /client/media/img
 /server/test.js
+/npm-debug.log

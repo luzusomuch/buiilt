@@ -19,6 +19,8 @@ var s3 = require('../../components/S3');
 var _ = require('lodash');
 var async = require('async');
 var gm = require('gm');
+var PDFImage = require("pdf-image").PDFImage;
+var fs = require('fs');
 
 var validationError = function (res, err) {
   return res.json(422, err);
@@ -90,7 +92,6 @@ exports.upload = function(req, res){
                                                         owners.push(member._id);
                                                     }
                                                 });
-                                                console.log(owners);
                                                 async.each(owners, function(leader, callback){
                                                     var notification = new Notification({
                                                         owner: leader,
@@ -173,7 +174,6 @@ exports.upload = function(req, res){
                                                         owners.push(member._id);
                                                     }
                                                 });
-                                                console.log(owners);
                                                 async.each(owners, function(leader,callback){
                                                     var notification = new Notification({
                                                         owner: leader,
@@ -198,6 +198,7 @@ exports.upload = function(req, res){
                                     s3.uploadFile(saved, function(err, data) {
                                         if (err) {return cb(err);}
                                         else {
+                                            console.log(saved.mimeType)
                                             if (saved.mimeType == 'image/png' || saved.mimeType == 'image/jpeg') {
                                                 gm(__dirname + "/../../../" + saved.path)
                                                 .resize(320, 480)
@@ -206,6 +207,16 @@ exports.upload = function(req, res){
                                                     else {
                                                         return cb(null,data);        
                                                     }
+                                                });
+                                            }
+                                            else if (saved.mimeType == 'application/pdf') {
+                                                // gm(__dirname + "/../../../" + saved.path)
+                                                console.log(saved.path);
+                                                var pdfImage = new PDFImage(__dirname + "/../../../" + saved.path);
+                                                console.log(pdfImage);
+                                                pdfImage.convertPage(0).then(function(imagePath){
+                                                    console.log(imagePath);
+                                                    fs.existsSync(__dirname + "/../../../" + "client/media/files/"+saved._id + '-' +saved.title+'.png');
                                                 });
                                             }
                                             else {
