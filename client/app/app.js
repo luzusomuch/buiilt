@@ -86,9 +86,12 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
       }
 
       if (toState.hasCurrentProject) {
+        console.log(toParams.id);
+        console.log($rootScope.currentProject);
         if (!$rootScope.currentProject || toParams.id !== $rootScope.currentProject._id) {
           projectService.get({id: toParams.id}).$promise
             .then(function (data) {
+              console.log(data);
               if (data._id) {
                 $rootScope.currentProject = data;
               } else {
@@ -99,7 +102,7 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
         }
 
       } else {
-        $rootScope.currentProject = null;
+        $rootScope.currentProject = { };
 
       }
       $rootScope.hasCurrentProject=toState.hasCurrentProject;

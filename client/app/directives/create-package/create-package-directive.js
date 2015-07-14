@@ -12,11 +12,13 @@ angular.module('buiiltApp').directive('createPackage', function(){
       };
       $scope.submitted = false;
       var getAvailableAssign =  function() {
-        _.forEach($scope.currentTeam.member, function(member) {
-          if (member.status == 'Active') {
-            $scope.available.push(member._id);
-          }
-        });
+        if ($scope.currentTeam) {
+          _.forEach($scope.currentTeam.member, function(member) {
+            if (member.status == 'Active') {
+              $scope.available.push(member._id);
+            }
+          });
+        }
       };
 
       getAvailableAssign();
