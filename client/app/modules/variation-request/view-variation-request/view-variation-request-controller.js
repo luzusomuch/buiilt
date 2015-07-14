@@ -18,7 +18,7 @@ angular.module('buiiltApp')
   $scope.addendum = {};
   $scope.addendumsScope = [];
   $scope.user = {};
-
+console.log($scope.variationRequest);
   // variationRequestService.getQuoteRequestByContractorPackge({'id':$stateParams.packageId}).$promise.then(function(data){
   //   $scope.quoteRequests = data;
   //   _.each(data.to, function(toContractor){
@@ -62,6 +62,12 @@ angular.module('buiiltApp')
         $state.go('variationRequest.inProcess',{id:data.project, variationId: data._id});
     });
   };
+
+  // $scope.declineQuote = function(value){
+  //   variationRequestService.declineQuote({'id':value}).$promise.then(function(data){
+  //     $scope.variationRequest = data;
+  //   });
+  // };
 
   $scope.sendMessage = function(value) {
     if (value == 'undefined' || !value) {

@@ -203,13 +203,35 @@ exports.cancelPackage = function(req, res) {
       variation.save(function(err, saved) {
         if (err) {return res.send(500,err);}
         else {
-          console.log(saved);
           return res.json(200, saved);
         }
       });
     }
   });
 };
+
+// exports.declineQuote = function(req, res) {
+//   Variation.findById(req.params.id).populate('to.quote').exec(function(err, variation) {
+//     if (err) {return res.send(500,err);}
+//     else {
+//       _.each(materialPackage.to, function(toMaterial){
+//         if (toMaterial._id == req.body.belongTo) {
+//           toMaterial.isDecline = true;
+//           toMaterial._ownerUser = toMaterial.quote.user;
+//         }
+//       });
+//       variation.to.
+//       variation.markModified('decline-quote');
+//       variation._editUser = req.user;
+//       variation.save(function(err, saved) {
+//         if (err) {return res.send(500,err);}
+//         else {
+//           return res.json(200, saved);
+//         }
+//       });
+//     }
+//   });
+// };
 
 exports.complete = function(req, res) {
   Variation.findById(req.params.id, function(err, variation){

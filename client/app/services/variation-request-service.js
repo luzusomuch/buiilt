@@ -90,6 +90,13 @@ angular.module('buiiltApp')
           }
           // isArray: true
         },
+      declineQuote: {
+        method: 'PUT',
+        params: {
+          id: '@id',
+          action: 'decline-quote'
+        }
+      }
     }
     );
   });

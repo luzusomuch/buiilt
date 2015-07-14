@@ -14,7 +14,7 @@ angular.module('buiiltApp')
     console.log(variationRequest);
     if (variationRequest.packageType == 'BuilderPackage') {
       if (currentTeam.type == 'homeOwner') {
-        if (variationRequest.owner != currentTeam._id) {
+        if (variationRequest.owner._id != currentTeam._id) {
           $state.go('team.manager');
         }
       }
@@ -26,7 +26,7 @@ angular.module('buiiltApp')
     }
     else if (variationRequest.packageType == 'contractor') {
       if (currentTeam.type == 'builder') {
-        if (variationRequest.owner != currentTeam._id) {
+        if (variationRequest.owner._id != currentTeam._id) {
           $state.go('team.manager');
         }
       }
@@ -38,7 +38,7 @@ angular.module('buiiltApp')
     }
     else if (variationRequest.packageType == 'material') {
       if (currentTeam.type == 'builder') {
-        if (variationRequest.owner != currentTeam._id) {
+        if (variationRequest.owner._id != currentTeam._id) {
           $state.go('team.manager');
         }
       }
