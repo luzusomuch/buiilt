@@ -26,7 +26,8 @@ angular.module('buiiltApp')
           {sref: 'user', label: 'User profile'}]
       };
 
-      function queryProjects(){
+      function queryProjects(callback){
+        var cb = callback || angular.noop;
         authService.isLoggedInAsync(function(isLoggedIn){
           if(isLoggedIn){
             $scope.isLoggedIn = true;
@@ -36,7 +37,7 @@ angular.module('buiiltApp')
                 to : ''
               }
             };
-            $scope.duration = 10000
+            $scope.duration = 10000;
             authService.getCurrentUser().$promise
               .then(function(res) {
                 $rootScope.user = $scope.user = res;
@@ -65,39 +66,42 @@ angular.module('buiiltApp')
                     } else {
                       $scope.tabs = $scope.menuTypes['other'];
                     }
+                    return cb();
                   });
               });
 
           } else {
             $scope.isLoggedIn = false;
+            return cb();
           }
         });
       };
-      $rootScope.states = {};
 
 
       //first load
       queryProjects();
       //check menu when state changes
       $rootScope.$on('$stateChangeSuccess', function (event, next) {
-        queryProjects();
-        $scope.currentProject = $rootScope.currentProject;
-        $rootScope.currentUser = $scope.user;
-        $rootScope.currentTeam = $scope.currentTeam;
+        queryProjects(function() {
+          $scope.currentProject = $rootScope.currentProject;
+          $rootScope.currentUser = $scope.user;
+          $rootScope.currentTeam = $scope.currentTeam;
+          if ($scope.currentProject && $scope.currentTeam && !_.find($scope.currentTeam.project,{_id : $scope.currentProject._id}))
+          {
+            $state.go('team.manager');
+          }
 
-        if ($scope.currentProject && !_.find($scope.currentTeam.project,{_id : $scope.currentProject._id}))
-        {
-          $state.go('team.manager');
-        }
-        if ($state.current.name == 'team.manager' || $state.current.name == 'dashboard'){
-          setTimeout(function () {
-            $('#tabsMenu').tabs();
-          }, 500);
-        }
+          if ($state.current.name == 'team.manager' || $state.current.name == 'dashboard'){
+            setTimeout(function () {
+              $('#tabsMenu').tabs();
+            }, 500);
+          }
+        });
       });
 
       $rootScope.$on('TeamUpdate',function(event,team) {
         queryProjects();
+
       });
 
       $rootScope.$on('Profile.change',function(event,data) {
