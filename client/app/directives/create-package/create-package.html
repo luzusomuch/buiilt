@@ -103,9 +103,10 @@
         </div>
         <div class="input-field col s4">
           <label for="date_required" class="active">Date Required</label>
-          <input type="date"
+          <input type="text"
                  ng-model="contractor.dateStart"
-                 format="mm/dd/yyyy"/>
+                 id="dateStart"
+                 datepicker/>
         </div>
       </div>
       <div class="row" style="display:none">
@@ -224,10 +225,11 @@
           <label for="date_required" class="active">Date Required</label>
           <input
             ng-model="material.dateStart"
-            type="date"
+            type="text"
             name="created"
             id="inputCreated"
-            ng-model="currentTime"/>
+            ng-model="currentTime"
+            datepicker/>
         </div>
       </div>
       <div class="row" style="display:none">

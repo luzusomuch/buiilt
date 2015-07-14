@@ -45,12 +45,13 @@
             <p class="validate-message" ng-show="form.name.$error.required && submitted">Task name is required</p>
           </div>
           <div class="input-field col s12">
-            <input type="date"
+            <input type="text"
                    name="created"
                    id="dueDate"
                    ng-model="task.dateEnd"
                    format="mm/dd/yyyy"
                    ng-disabled="isShow"
+                   datepicker
               />
             <label for="dueDate" class="active">Due date</label>
           </div>
