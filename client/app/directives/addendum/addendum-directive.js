@@ -12,7 +12,6 @@ angular.module('buiiltApp').directive('addendum', function(){
             $scope.editAddendum = {};
             $scope.addendumScope = {};
             $scope.addendumsScope = [];
-            console.log($scope.package);
 
             $scope.addAddendum = function() {
                 if ($scope.package.type == 'material') {

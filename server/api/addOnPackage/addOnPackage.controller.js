@@ -762,7 +762,10 @@ exports.sendAddendum = function(req, res) {
                 contractorPackage.save(function(err, saved){
                     if (err) {return res.send(500, err);}
                     else {
-                        return res.json(200,saved);
+                        saved.populate('to.quote', function(err){
+                            if (err) {return res.send(500,err);}
+                            return res.json(200,saved);
+                        });
                     }
                 });
             }
@@ -784,7 +787,10 @@ exports.sendAddendum = function(req, res) {
                 materialPackage.save(function(err, saved){
                     if (err) {return res.send(500, err);}
                     else {
-                        return res.json(200,saved);
+                        saved.populate('to.quote', function(err){
+                            if (err) {return res.send(500,err);}
+                            return res.json(200,saved);
+                        });
                     }
                 });
             }
@@ -811,7 +817,10 @@ exports.sendAddendum = function(req, res) {
                 variation.save(function(err, saved){
                     if (err) {return res.send(500, err);}
                     else {
-                        return res.json(200,saved);
+                        saved.populate('to.quote', function(err){
+                            if (err) {return res.send(500,err);}
+                            return res.json(200,saved);
+                        });
                     }
                 });
             }
@@ -911,7 +920,10 @@ exports.editAddendum = function(req, res) {
                         contractorPackage.save(function(err, saved) {
                             if (err) {return res.send(500,err);}
                             else {
-                                return res.json(200,saved);
+                                saved.populate('to.quote', function(err){
+                                    if (err) {return res.send(500,err);}
+                                    return res.json(200,saved);
+                                });
                             }
                         });
                     }
@@ -953,23 +965,23 @@ exports.editAddendum = function(req, res) {
                 materialPackage.save(function(err, saved) {
                     if (err) {return res.send(500,err);}
                     else {
-                        return res.json(200,saved);
+                        saved.populate('to.quote', function(err){
+                            if (err) {return res.send(500,err);}
+                            return res.json(200,saved);
+                        });
                     }
                 });
             }
         });
     }
     else if(packageType == 'variation') {
-        console.log(req.body);
         Variation.findById(req.params.id, function(err, variation){
             if (err) {return res.send(500,err);}
             else {
-                console.log(variation);
                 if (variation.packageType == 'contractor' || variation.packageType == 'BuilderPackage') {
                     var pack = _.findWhere(variation.addendums, function(id){
                         return id._id.toString() === req.body.addendumId;
                     });
-                    console.log('asdasdasdasd');
                     if (pack._id == req.body.addendumId) {
                         if (pack._id == req.body.addendumId) {
                             if (pack.addendumsScope.description != req.body.addendum.scopeDescription && 
@@ -987,7 +999,10 @@ exports.editAddendum = function(req, res) {
                             variation.save(function(err, saved) {
                                 if (err) {return res.send(500,err);}
                                 else {
-                                    return res.json(200,saved);
+                                    saved.populate('to.quote', function(err){
+                                        if (err) {return res.send(500,err);}
+                                        return res.json(200,saved);
+                                    });
                                 }
                             });
                         }
@@ -1022,7 +1037,10 @@ exports.editAddendum = function(req, res) {
                             variation.save(function(err, saved) {
                                 if (err) {return res.send(500,err);}
                                 else {
-                                    return res.json(200,saved);
+                                    saved.populate('to.quote', function(err){
+                                        if (err) {return res.send(500,err);}
+                                        return res.json(200,saved);
+                                    });
                                 }
                             });
                         }
