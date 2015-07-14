@@ -55,8 +55,9 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
   })
   .run(function ($rootScope, $cookieStore, cfpLoadingBar, authService, $location,projectService,$state) {
     cfpLoadingBar.start();
-    $rootScope.currentProject = null;
+    $rootScope.currentProject = {};
     $rootScope.authService = authService;
+    $rootScope.currentTeam = {};
     $rootScope.hasHeader = true;
     $rootScope.hasFooter = true;
     $rootScope.safeApply = function (fn) {
@@ -71,6 +72,9 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
     };
     $rootScope.$on('$stateChangeStart', function (event,toState, toParams, next) {
         authService.isLoggedInAsync(function (loggedIn) {
+          if (loggedIn) {
+
+          }
           if (toState.authenticate && !loggedIn) {
             $location.path('/signin');
           } else if (!toState.authenticate && loggedIn) {
@@ -85,15 +89,30 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
         $rootScope.hasFooter = false;
       }
 
+      if (toState.canAccess) {
+        authService.getCurrentTeam().$promise
+          .then(function(res) {
+            if (toState.canAccess.indexOf(res.type) == -1) {
+              if (toState.hasCurrentProject) {
+                $state.go('dashboard',{id : toParams.id })
+              } else {
+                $state.go('team.manager');
+              }
+            } else {
+              console.log('false')
+            }
+          });
+
+      }
+
       if (toState.hasCurrentProject) {
-        console.log(toParams.id);
-        console.log($rootScope.currentProject);
+
         if (!$rootScope.currentProject || toParams.id !== $rootScope.currentProject._id) {
           projectService.get({id: toParams.id}).$promise
             .then(function (data) {
-              console.log(data);
               if (data._id) {
                 $rootScope.currentProject = data;
+
               } else {
                 $rootScope.currentProject = null;
                 $location.path('/team/manager');
