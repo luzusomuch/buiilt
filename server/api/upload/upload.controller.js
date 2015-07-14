@@ -21,6 +21,7 @@ var async = require('async');
 var gm = require('gm');
 var PDFImage = require("pdf-image").PDFImage;
 var fs = require('fs');
+var exec = require('child_process').exec;
 
 var validationError = function (res, err) {
   return res.json(422, err);
@@ -210,14 +211,21 @@ exports.upload = function(req, res){
                                                 });
                                             }
                                             else if (saved.mimeType == 'application/pdf') {
+                                                exec("gs -dNOPAUSE -sDEVICE=jpeg -r144 -sOutputFile="+__dirname + "/../../../" + "client/media/files/"+saved._id + '-' +saved.title+".jpg "+ __dirname + "/../../../" + saved.path, function(err,data){
+                                                    if (err) {return cb(err);}
+                                                    else {
+                                                        return cal(null,data);
+                                                    }
+                                                })
                                                 // gm(__dirname + "/../../../" + saved.path)
-                                                console.log(saved.path);
-                                                var pdfImage = new PDFImage(__dirname + "/../../../" + saved.path);
-                                                console.log(pdfImage);
-                                                pdfImage.convertPage(0).then(function(imagePath){
-                                                    console.log(imagePath);
-                                                    fs.existsSync(__dirname + "/../../../" + "client/media/files/"+saved._id + '-' +saved.title+'.png');
-                                                });
+                                                // console.log(saved.path);
+                                                // var pdfImage = new PDFImage(__dirname + "/../../../" + saved.path);
+                                                // console.log(pdfImage);
+                                                // pdfImage.convertPage(0).then(function(imagePath){
+                                                //     console.log(imagePath);
+                                                //     console.log(fs.existsSync(__dirname + "/../../../" + "client/media/files/"+saved._id + '-' +saved.title+'.png'));
+                                                //     fs.existsSync(__dirname + "/../../../" + "client/media/files/"+saved._id + '-' +saved.title+'.png');
+                                                // });
                                             }
                                             else {
                                                 return cb(null,data);
