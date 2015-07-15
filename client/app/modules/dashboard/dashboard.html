@@ -170,7 +170,7 @@
     </li>
   </ul>
   <ul class="collapsible" data-collapsible="accordion" ng-if="currentList == 'docs'">
-    <li ng-repeat="file in myFiles | unique: file" ng-if="file.owner == currentUser._id">
+    <li ng-repeat="file in myFiles | unique: file">
       <div class="collapsible-header">
         {{file.element.file.title}}
         <a class="btn-flat secondary-content" style="font-size: 12px;" ng-click="goToDocument(file)">
@@ -195,7 +195,7 @@
                 <img src="../../media/files/{{file.element.file._id}}-{{file.element.file.title}}" alt="">
               </span>
               <span ng-switch-when="application/pdf">
-                <img src="../../media/files/{{file._id}}-{{file.title}}.jpg" alt="" style="height:250px;">
+                <img src="../../media/files/{{file.element.file._id}}-{{file.element.file.title}}.jpg" alt="" style="height:250px;">
               </span>
               <span ng-switch-default>
                 <img src="../../media/sample-1.jpg" alt="">

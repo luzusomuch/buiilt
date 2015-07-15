@@ -136,13 +136,11 @@ exports.countTotal = function(req,res) {
 
 exports.getMyFile = function(req, res) {
   var user = req.user;
-
-  Notification.find({$or:[{owner: user._id},{toUser: user._id},
-    {referenceTo: 'DocumentPackage'},{referenceTo: 'DocumentInProject'}],
-    unread: true, 'element.projectId': mongoose.Types.ObjectId(req.params.id)}, function(err, notifications){
+  Notification.find({owner: user._id,unread: true, 'element.projectId': mongoose.Types.ObjectId(req.params.id)}, function(err, notifications){
     if (err) {;return res.send(500,err);}
     if (!notifications) {return res.send(500,err);}
     else {
+      console.log(notifications);
       return res.send(200,notifications);
     }
   });
