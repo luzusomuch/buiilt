@@ -126,7 +126,7 @@ exports.upload = function(req, res){
                                                 });
                                             }
                                             else if (saved.mimeType == 'application/pdf') {
-                                                exec("gs -dNOPAUSE -sDEVICE=jpeg -r144 -dColorImageResolution=150 -sOutputFile="+__dirname + "/../../../" + "client/media/files/"+saved._id + '-' +saved.title+".jpg "+ __dirname + "/../../../" + saved.path, function(err,data){
+                                                exec("gs -dNOPAUSE -sDEVICE=jpeg -r144 -sOutputFile="+__dirname + "/../../../" + "client/media/files/"+saved._id + '-' +saved.title+".jpg "+ __dirname + "/../../../" + saved.path, function(err,data){
                                                     if (err) {return cb(err);}
                                                     else {
                                                         return cb(null,data);
@@ -215,7 +215,7 @@ exports.upload = function(req, res){
                                                 });
                                             }
                                             else if (saved.mimeType == 'application/pdf') {
-                                                exec("gs -dNOPAUSE -sDEVICE=jpeg -r144 -dColorImageResolution=150 -sOutputFile="+__dirname + "/../../../" + "client/media/files/"+saved._id + '-' +saved.title+".jpg "+ __dirname + "/../../../" + saved.path, function(err,data){
+                                                exec("gs -dNOPAUSE -sDEVICE=jpeg -r144 -sOutputFile="+__dirname + "/../../../" + "client/media/files/"+saved._id + '-' +saved.title+".jpg "+ __dirname + "/../../../" + saved.path, function(err,data){
                                                     if (err) {return cb(err);}
                                                     else {
                                                         return cb(null,data);
@@ -442,7 +442,7 @@ exports.uploadInPackge = function(req, res){
                                         });
                                     }
                                     else if (saved.mimeType == 'application/pdf') {
-                                        exec("gs -dNOPAUSE -sDEVICE=jpeg -r144 -dColorImageResolution=150 -sOutputFile="+__dirname + "/../../../" + "client/media/files/"+saved._id + '-' +saved.title+".jpg "+ __dirname + "/../../../" + saved.path, function(err,data){
+                                        exec("gs -dNOPAUSE -sDEVICE=jpeg -r144 -sOutputFile="+__dirname + "/../../../" + "client/media/files/"+saved._id + '-' +saved.title+".jpg "+ __dirname + "/../../../" + saved.path, function(err,data){
                                             if (err) {return cb(err);}
                                             else {
                                                 return cb(null,data);
