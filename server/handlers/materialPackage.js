@@ -24,7 +24,6 @@ EventBus.onSeries('MaterialPackage.Inserted', function(request, next) {
                     type: 'create-material-package'
                 });
                 notification.save(cb);
-                console.log(notification);
             }
         });
     }, function(){
@@ -229,7 +228,7 @@ EventBus.onSeries('MaterialPackage.Updated', function(request, next) {
         function(cb) {
           _.remove(request.to, {_id: request.winnerTeam._id});
           _.each(request.to, function(toSupplierLoser){
-            if (!toContractorLoser._id) {
+            if (!toSupplierLoser._id) {
               return cb();
             }
             Team.findById(toSupplierLoser._id, function(err, team){

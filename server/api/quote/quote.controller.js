@@ -118,7 +118,8 @@ exports.findOne = function(req, res){
               if (toContractor._id) {
                 Team.findById(toContractor._id, function(err,team){
                   if (err || !team) {return res.send(500,err);}
-                  _.remove(team.project, contractorPackage.project);
+                  var index = team.project.indexOf(contractorPackage.project);
+                  team.project.splice(index,1);
                   team.markModified('project');
                   team.save(function(err){
                     if (err) {return res.send(500,err);}
@@ -167,7 +168,8 @@ exports.getByMaterial = function(req, res){
               if (toMaterial._id) {
                 Team.findById(toMaterial._id, function(err,team){
                   if (err || !team) {return res.send(500,err);}
-                  _.remove(team.project, materialPackage.project);
+                  var index = team.project.indexOf(materialPackage.project);
+                  team.project.splice(index,1);
                   team.markModified('project');
                   team.save(function(err){
                     if (err) {return res.send(500,err);}
