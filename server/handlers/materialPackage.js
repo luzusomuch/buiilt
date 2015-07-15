@@ -24,6 +24,7 @@ EventBus.onSeries('MaterialPackage.Inserted', function(request, next) {
                     type: 'create-material-package'
                 });
                 notification.save(cb);
+                console.log(notification);
             }
         });
     }, function(){

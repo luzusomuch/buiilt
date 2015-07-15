@@ -189,8 +189,11 @@ angular.module('buiiltApp')
         if (scope.notification.type === 'create-contractor-package') {
           text = params.fromUser() + ' has invited ' + params.toUser() + 'to send a quote for ' + params.element;
         }
-        if (scope.notification.type === 'create-material-package') {
-          text = params.fromUser() + ' has invited ' + params.toUser() + 'to send a quote for ' + params.element;
+        // if (scope.notification.type === 'create-material-package') {
+        //   text = params.fromUser() + ' has invited ' + params.toUser() + 'to send a quote for ' + params.element;
+        // }
+        if (scope.notification.type == 'create-material-package') {
+          text = params.fromUser() + ' has invited ' + params.toUser() + 'to send a quote tesing for ' + params.element;
         }
         if (scope.notification.type === 'send-quote') {
           text = params.fromUser() + ' has send quote ' + params.quote + ' to ' + params.toUser() + ' in ' + params.packageName;
