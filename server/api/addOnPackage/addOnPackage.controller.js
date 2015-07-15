@@ -880,6 +880,30 @@ exports.removeAddendum = function(req, res){
             }
         });
     }
+    else if(packageType == 'variation') {
+        Variation.findById(req.params.id, function(err, variation){
+            if (err) {return res.send(500,err);}
+            else {
+                var pack = _.findWhere(variation.addendums, function(id){
+                    return id._id.toString() === req.body.addendumId;
+                });
+                if (pack._id == req.body.addendumId) {
+                    pack.isHidden = true;
+                    variation.save(function(err, saved){
+                        if (err) {
+                            return res.send(500,err);
+                        }
+                        else {
+                            return res.send(200,saved);
+                        }
+                    });
+                }
+                else {
+                    return res.send(500,err);
+                }
+            }
+        });
+    }
     else {
         return res.send(500);
     }
@@ -1006,43 +1030,44 @@ exports.editAddendum = function(req, res) {
                             });
                         }
                     }
-                    else if (variation.packageType == 'material') {
-                        var pack = _.findWhere(variation.addendums, function(id){
-                            return id._id.toString() === req.body.addendumId;
-                        });
-                        if (pack._id == req.body.addendumId) {
-                            if (pack.addendumsScope.description != req.body.addendum.scopeDescription && 
-                                req.body.addendum.scopeDescription != '{{addendum.addendumsScope.description}}') {
-                                pack.addendumsScope.description = req.body.addendum.scopeDescription;
-                            }
-                            else if(req.body.addendum.scopeDescription == '{{addendum.addendumsScope.description}}'){
-                                pack.addendumsScope.description = pack.addendumsScope.description;
-                            }
-                            else {
-                                pack.addendumsScope.description = pack.addendumsScope.description;
-                            }
-                            if (pack.addendumsScope.quantity != req.body.addendum.quantity && 
-                                req.body.addendum.quantity != '{{addendum.addendumsScope.quantity}}') {
-                                pack.addendumsScope.quantity = req.body.addendum.quantity;
-                            }
-                            else if(req.body.addendum.quantity == '{{addendum.addendumsScope.quantity}}'){
-                                pack.addendumsScope.quantity = pack.addendumsScope.quantity;
-                            }
-                            else {
-                                pack.addendumsScope.quantity = pack.addendumsScope.quantity;
-                            }
-                            variation.markModified('editAddendum');
-                            variation._editUser = req.user;
-                            variation.save(function(err, saved) {
-                                if (err) {return res.send(500,err);}
-                                else {
-                                    saved.populate('to.quote', function(err){
-                                        if (err) {return res.send(500,err);}
-                                        return res.json(200,saved);
-                                    });
-                                }
-                            });
+                }
+                else if (variation.packageType == 'material') {
+                    console.log('sdsds');
+                    var pack = _.findWhere(variation.addendums, function(id){
+                        return id._id.toString() === req.body.addendumId;
+                    });
+                    if (pack._id == req.body.addendumId) {
+                        if (pack.addendumsScope.description != req.body.addendum.scopeDescription && 
+                            req.body.addendum.scopeDescription != '{{addendum.addendumsScope.description}}') {
+                            pack.addendumsScope.description = req.body.addendum.scopeDescription;
                         }
+                        else if(req.body.addendum.scopeDescription == '{{addendum.addendumsScope.description}}'){
+                            pack.addendumsScope.description = pack.addendumsScope.description;
+                        }
+                        else {
+                            pack.addendumsScope.description = pack.addendumsScope.description;
+                        }
+                        if (pack.addendumsScope.quantity != req.body.addendum.quantity && 
+                            req.body.addendum.quantity != '{{addendum.addendumsScope.quantity}}') {
+                            pack.addendumsScope.quantity = req.body.addendum.quantity;
+                        }
+                        else if(req.body.addendum.quantity == '{{addendum.addendumsScope.quantity}}'){
+                            pack.addendumsScope.quantity = pack.addendumsScope.quantity;
+                        }
+                        else {
+                            pack.addendumsScope.quantity = pack.addendumsScope.quantity;
+                        }
+                        variation.markModified('editAddendum');
+                        variation._editUser = req.user;
+                        variation.save(function(err, saved) {
+                            if (err) {return res.send(500,err);}
+                            else {
+                                saved.populate('to.quote', function(err){
+                                    if (err) {return res.send(500,err);}
+                                    return res.json(200,saved);
+                                });
+                            }
+                        });
                     }
                 }
             }
