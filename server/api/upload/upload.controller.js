@@ -118,7 +118,7 @@ exports.upload = function(req, res){
                                             if (saved.mimeType == 'image/png' || saved.mimeType == 'image/jpeg') {
                                                 gm(__dirname + "/../../../" + saved.path)
                                                 .resize(320, 480)
-                                                .write(__dirname + "/../../../" + "client/media/files/"+saved._id + '-' +saved.title, function(err) {
+                                                .write(__dirname + "/../../../" + "client/media/files/"+saved._id + '-' +saved.title, function(err,data) {
                                                     if (err) {return cb(err);}
                                                     else {
                                                         return cb(null, data);        
@@ -207,7 +207,7 @@ exports.upload = function(req, res){
                                             if (saved.mimeType == 'image/png' || saved.mimeType == 'image/jpeg') {
                                                 gm(__dirname + "/../../../" + saved.path)
                                                 .resize(320, 480)
-                                                .write(__dirname + "/../../../" + "client/media/files/"+saved._id + '-' +saved.title, function(err) {
+                                                .write(__dirname + "/../../../" + "client/media/files/"+saved._id + '-' +saved.title, function(err,data) {
                                                     if (err) {return cb(err);}
                                                     else {
                                                         return cb(null,data);        
@@ -434,10 +434,10 @@ exports.uploadInPackge = function(req, res){
                                     if (saved.mimeType == 'image/png' || saved.mimeType == 'image/jpeg') {
                                         gm(__dirname + "/../../../" + saved.path)
                                         .resize(320, 480)
-                                        .write(__dirname + "/../../../" + "client/media/files/"+saved._id + '-' +saved.title, function(err) {
+                                        .write(__dirname + "/../../../" + "client/media/files/"+saved._id + '-' +saved.title, function(err,data) {
                                             if (err) {return cb(err);}
                                             else {
-                                                return res.json(200,data);        
+                                                return cb(null,data);    
                                             }
                                         });
                                     }
