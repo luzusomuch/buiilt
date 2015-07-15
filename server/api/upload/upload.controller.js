@@ -196,7 +196,6 @@ exports.upload = function(req, res){
                                                     type: 'uploadDocument'
                                                 });
                                                 notification.save(callback);
-                                                console.log(notification);
                                             }, cb);
                                         }
                                     });
@@ -205,7 +204,6 @@ exports.upload = function(req, res){
                                     s3.uploadFile(saved, function(err, data) {
                                         if (err) {return cb(err);}
                                         else {
-                                            console.log(saved.mimeType)
                                             if (saved.mimeType == 'image/png' || saved.mimeType == 'image/jpeg') {
                                                 gm(__dirname + "/../../../" + saved.path)
                                                 .resize(320, 480)
@@ -399,17 +397,20 @@ exports.uploadInPackge = function(req, res){
                                 BuilderPackage.findById(saved.belongTo)
                                 .populate('owner').populate('to.team').exec(function(err, builderPackage){
                                     if (err || !builderPackage) {return cb();}
-                                    owners = _.union(builderPackage.owner.leader, builderPackage.to.team.leader);
+                                    owners = builderPackage.owner.leader;
                                     _.each(builderPackage.owner.member, function(member){
                                         if (member._id) {
                                             owners.push(member._id);
                                         }
                                     });
-                                    _.each(builderPackage.to.team.member, function(member){
-                                        if (member._id) {
-                                            owners.push(member._id);
-                                        }
-                                    });
+                                    if (builderPackage.to.team) {
+                                        owners = _.union(builderPackage.owner.leader, builderPackage.to.team.leader);
+                                        _.each(builderPackage.to.team.member, function(member){
+                                            if (member._id) {
+                                                owners.push(member._id);
+                                            }
+                                        });
+                                    }
                                     async.each(owners, function(leader,callback){
                                         var notification = new Notification({
                                             owner: leader,

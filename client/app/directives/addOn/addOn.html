@@ -73,7 +73,7 @@
   <li class="collection-item" ng-repeat="item in package.invoices" ng-if="package.invoices">
     <a class="modal-trigger" href="#modal-invoice-{{item._id}}">Invoices - {{item.title}}</a>
   </li>
-  <li class="collection-item" ng-repeat="file in documents" ng-if="documents">
+  <li class="collection-item" ng-repeat="file in documents | unique: title" ng-if="documents">
     <a class="modal-trigger" href="#modal-file-{{file._id}}">Document - {{file.title}}</a></li>
   </div>
 
@@ -91,7 +91,7 @@
     <a class="modal-trigger" href="#modal-invoice-{{invoice._id}}">{{invoice.title}} - Total {{invoice.total}}</a></li>
   </div>
   <div class="scrollbar-dynamic" style="height: 300px" ng-show="showDocument" ng-if="documents">
-    <li class="collection-item" ng-repeat="file in documents">
+    <li class="collection-item" ng-repeat="file in documents | unique: title">
       <a class="modal-trigger" href="#modal-file-{{file._id}}">{{file.title}}</a></li>
     </div>
   </ul>
