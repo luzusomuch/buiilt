@@ -13,6 +13,7 @@ angular.module('buiiltApp').directive('file', function(){
             $scope.isInterested = false;
             authService.getCurrentUser().$promise.then(function(data){
                 $scope.currentUser = data;
+                $scope.isLeader = (data.team.role == 'admin');
                 fileService.getFileByStateParam({'id': $stateParams.id}).$promise.then(function(data) {
                     $scope.files = data;
                     _.each($scope.files, function(file){
@@ -25,6 +26,9 @@ angular.module('buiiltApp').directive('file', function(){
                         }
                     })
                 });
+            });
+            authService.getCurrentTeam().$promise.then(function(team){
+                $scope.currentTeam = team;
             });
 
             // fileService.getFileByStateParam({'id': $stateParams.id}).$promise.then(function(data) {

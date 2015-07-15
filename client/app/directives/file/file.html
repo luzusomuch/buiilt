@@ -25,7 +25,7 @@
                 <a href='{{file.fileUrl}}' download="file.name">Download</a>
               </p>
               <p>{{file.title}} <span><em>Revision {{file.version +1 }} of {{file.version +1 }}</em></span></p>
-              <a href='#!' class="activator">Upload Revision</a>
+              <a href='#!' class="activator" ng-show="isLeader && currentTeam.type == 'builder'">Upload Revision</a>
             </div>
             <div class="card-reveal">
                 <span class="card-title grey-text text-darken-4">{{file.title}} <i class="mdi-navigation-close right"></i></span>
