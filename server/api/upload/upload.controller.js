@@ -81,35 +81,33 @@ exports.upload = function(req, res){
                                     .populate('owner').populate("project").populate('to.team').exec(function(err,builderPackage){
                                         if (err || !builderPackage) {return cb(err);}
                                         else {
+                                            owners = builderPackage.owner.leader;
+                                            _.each(builderPackage.owner.member, function(member){
+                                                if (member._id) {
+                                                    owners.push(member._id);
+                                                }
+                                            });
                                             if (builderPackage.to.team) {
-                                                owners = _.union(builderPackage.owner.leader, builderPackage.to.team.leader, saved.usersInterestedIn);
-                                                _.each(builderPackage.owner.member, function(member){
-                                                    if (member._id) {
-                                                        owners.push(member._id);
-                                                    }
-                                                });
+                                                owners = _.union(builderPackage.owner.leader, builderPackage.to.team.leader);
                                                 _.each(builderPackage.to.team.member, function(member){
                                                     if (member._id) {
                                                         owners.push(member._id);
                                                     }
                                                 });
-                                                async.each(owners, function(leader, callback){
-                                                    var notification = new Notification({
-                                                        owner: leader,
-                                                        fromUser: req.user._id,
-                                                        toUser: leader,
-                                                        element: {file: saved.toJSON(), 
-                                                            uploadIn: builderPackage,
-                                                            projectId: builderPackage.project},
-                                                        referenceTo: "DocumentInProject",
-                                                        type: 'uploadNewDocumentVersion'
-                                                    });
-                                                    notification.save(callback);
-                                                }, cb);
                                             }
-                                            else {
-                                                return cb();
-                                            }
+                                            async.each(owners, function(leader, callback){
+                                                var notification = new Notification({
+                                                    owner: leader,
+                                                    fromUser: req.user._id,
+                                                    toUser: leader,
+                                                    element: {file: saved.toJSON(), 
+                                                        uploadIn: builderPackage,
+                                                        projectId: builderPackage.project},
+                                                    referenceTo: "DocumentInProject",
+                                                    type: 'uploadNewDocumentVersion'
+                                                });
+                                                notification.save(callback);
+                                            }, cb);
                                         }
                                     });
                                 },
@@ -171,36 +169,35 @@ exports.upload = function(req, res){
                                     .populate('owner').populate("project").populate('to.team').exec(function(err,builderPackage){
                                         if (err || !builderPackage) {return cb(err);}
                                         else {
+                                            owners = builderPackage.owner.leader;
+                                            _.each(builderPackage.owner.member, function(member){
+                                                if (member._id) {
+                                                    owners.push(member._id);
+                                                }
+                                            });
                                             if (builderPackage.to.team) {
                                                 owners = _.union(builderPackage.owner.leader, builderPackage.to.team.leader);
-                                                _.each(builderPackage.owner.member, function(member){
-                                                    if (member._id) {
-                                                        owners.push(member._id);
-                                                    }
-                                                });
                                                 _.each(builderPackage.to.team.member, function(member){
                                                     if (member._id) {
                                                         owners.push(member._id);
                                                     }
                                                 });
-                                                async.each(owners, function(leader,callback){
-                                                    var notification = new Notification({
-                                                        owner: leader,
-                                                        fromUser: req.user._id,
-                                                        toUser: leader,
-                                                        element: {file: saved.toJSON(), 
-                                                            uploadIn: builderPackage,
-                                                            projectId: builderPackage.project},
-                                                        referenceTo: "DocumentInProject",
-                                                        type: 'uploadDocument'
-                                                    });
-                                                    notification.save(callback);
-                                                    console.log(notification);
-                                                }, cb);
                                             }
-                                            else {
-                                                return cb();
-                                            }
+                                            
+                                            async.each(owners, function(leader,callback){
+                                                var notification = new Notification({
+                                                    owner: leader,
+                                                    fromUser: req.user._id,
+                                                    toUser: leader,
+                                                    element: {file: saved.toJSON(), 
+                                                        uploadIn: builderPackage,
+                                                        projectId: builderPackage.project},
+                                                    referenceTo: "DocumentInProject",
+                                                    type: 'uploadDocument'
+                                                });
+                                                notification.save(callback);
+                                                console.log(notification);
+                                            }, cb);
                                         }
                                     });
                                 },
