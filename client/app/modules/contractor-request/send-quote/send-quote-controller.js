@@ -126,7 +126,6 @@ angular.module('buiiltApp')
 
   $scope.addLineWithRate = function() {
     $scope.lineWithRates.length = $scope.lineWithRates.length + 1;
-
   };
   $scope.addLineWithPrice = function() {
     $scope.lineWithPrices.length = $scope.lineWithPrices.length + 1;
@@ -134,10 +133,17 @@ angular.module('buiiltApp')
 
   $scope.removeLineWithRate = function(index) {
     $scope.lineWithRates.splice(index, 1);
+    delete $scope.rate.lineWithRate.rateDescription[index];
+    delete $scope.rate.lineWithRate.rate[index];
+    delete $scope.rate.lineWithRate.rateQuantity[index];
+    delete $scope.rate.lineWithRate.rateTotal[index];
   };
-
   $scope.removeLineWithPrice = function(index) {
     $scope.lineWithPrices.splice(index, 1);
+    delete $scope.price.lineWithPrice.description[index];
+    delete $scope.price.lineWithPrice.price[index];
+    // delete $scope.rate.lineWithPrice.rateQuantity[index];
+    // delete $scope.rate.lineWithPrice.rateTotal[index];
   };
 
   $scope.sendQuote = function() {
