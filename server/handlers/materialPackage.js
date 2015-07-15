@@ -122,7 +122,7 @@ EventBus.onSeries('MaterialPackage.Updated', function(request, next) {
     else if (request._modifiedPaths.indexOf('decline-quote') != -1) {
       var notification = new Notification({
         owner: request.ownerUser,
-        fromUser: request.editUser,
+        fromUser: request.editUser._id,
         toUser: request.ownerUser,
         element: {package:request},
         referenceTo: 'MaterialPackage',

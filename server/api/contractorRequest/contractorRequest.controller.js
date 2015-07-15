@@ -526,13 +526,16 @@ exports.declineQuote = function(req, res) {
   ContractorPackage.findById(req.body.id).populate('to.quote').exec(function(err, contractorPackage) {
     if (err) {return res.send(500,err);}
     else {
+      var ownerUser = {};
       _.each(contractorPackage.to, function(toContractor){
         if (toContractor._id == req.body.belongTo) {
           toContractor.isDecline = true;
-          contractorPackage._ownerUser = toContractor.quote.user;
+          ownerUser = toContractor.quote.user;
+          toContractor.quote = null;
         }
       });
       contractorPackage.markModified('decline-quote');
+      contractorPackage._ownerUser = ownerUser;
       contractorPackage._editUser = req.user;
       contractorPackage.save(function(err, saved) {
         if (err) {return res.send(500,err);}

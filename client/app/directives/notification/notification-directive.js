@@ -141,6 +141,9 @@ angular.module('buiiltApp')
           if (notification.type == 'send-thanks-to-loser') {
             return 'team.manager';
           }
+          if (notification.type == 'decline-quote') {
+            return 'team.manager';
+          }
         };
 
         var text;
@@ -236,6 +239,9 @@ angular.module('buiiltApp')
         }
         if (scope.notification.type == 'cancel-package') {
           text = params.fromUser() + 'has been cancel package ' + params.packageName;
+        }
+        if (scope.notification.type == 'decline-quote') {
+          text = params.fromUser() + 'has been decline your quote in ' + params.packageName;
         }
 
         scope.notification.sref = getSref(scope.notification);

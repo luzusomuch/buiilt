@@ -12,7 +12,7 @@ angular.module('buiiltApp')
         authenticate : true,
         resolve: {
           invitations : [
-            'teamService',
+            'authService',
             function(authService) {
               return authService.getCurrentInvitation().$promise;
             }

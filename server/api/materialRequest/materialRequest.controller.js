@@ -470,13 +470,16 @@ exports.declineQuote = function(req, res) {
   MaterialPackage.findById(req.body.id).populate('to.quote').exec(function(err, materialPackage) {
     if (err) {return res.send(500,err);}
     else {
+      var ownerUser = {};
       _.each(materialPackage.to, function(toMaterial){
         if (toMaterial._id == req.body.belongTo) {
           toMaterial.isDecline = true;
-          toMaterial._ownerUser = toMaterial.quote.user;
+          ownerUser = toMaterial.quote.user;
+          toMaterial.quote = null;
         }
       });
       materialPackage.markModified('decline-quote');
+      materialPackage._ownerUser = ownerUser;
       materialPackage._editUser = req.user;
       materialPackage.save(function(err, saved) {
         if (err) {return res.send(500,err);}
