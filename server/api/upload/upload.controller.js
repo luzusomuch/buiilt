@@ -195,6 +195,7 @@ exports.upload = function(req, res){
                                                         type: 'uploadDocument'
                                                     });
                                                     notification.save(callback);
+                                                    console.log(notification);
                                                 }, cb);
                                             }
                                             else {
