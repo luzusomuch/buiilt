@@ -207,7 +207,7 @@ angular.module('buiiltApp')
         if (scope.notification.type === 'invite') {
           text = params.fromUser()  + 'has invited new person in ' + params.packageName;
         }
-        if (scope.notification.type === 'invitation') {
+        if (scope.notification.type == 'invitation') {
           text = params.fromUser()  + 'has invited you to send quote for ' + params.element;
         }
         if (scope.notification.type === 'send-message') {
