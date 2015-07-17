@@ -280,17 +280,26 @@ exports.sendInvitationInContractor = function(req, res) {
                 callback();
             }
             else {
+              if (user.team._id) {
                 to.push({
                   _id: user.team._id,
                   email: emailPhone.email,
                   phone: emailPhone.phoneNumber
-              });
+                });
                 newContractor.push({
                   _id: user.team._id,
                   email: emailPhone.email,
                   phone: emailPhone.phoneNumber
                 });
+                Team.findById(user.team._id, function(err,team){
+                  if (err) {return res.send(500,err);}
+                  team.project.push(contractorPackage.project);
+                  team.save(function(err){
+                    if (err) {return res.send(500,err);}
+                  })
+                });
                 callback();
+              }
             }
         });
         }, function(err) {
