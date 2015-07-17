@@ -60,6 +60,12 @@ exports.create = function(req, res){
           to.email = req.body.package.to;
         } else {
           to.team = _user.team._id;
+          Team.findById(to.team, function(err,team){
+            if (err) {return res.send(500,err);}
+            team.project.push(project._id);
+            team.markModified('project');
+            team.save();
+          });
         }
         var builderPackage = new BuilderPackage({
           type: 'BuilderPackage',

@@ -11,3 +11,8 @@ Please follow these steps
 
 - Run project under development mode: `grunt`
 - Open browser and enter: localhost:9000 (default port)
+
+-Ionic install
+Run these 2 cmd with administrator
++npm install -g ionic
++npm install -g cordova
