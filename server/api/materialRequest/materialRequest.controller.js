@@ -477,7 +477,7 @@ exports.declineQuote = function(req, res) {
       _.each(materialPackage.to, function(toMaterial){
         if (toMaterial._id == req.body.belongTo) {
           toMaterial.isDecline = true;
-          toMaterial._id = null;
+          
           Team.findById(toMaterial._id, function(err,team){
             if (err || !team) {return res.send(500,err);}
             var index = team.project.indexOf(materialPackage.project);
@@ -487,6 +487,7 @@ exports.declineQuote = function(req, res) {
               if (err) {return res.send(500,err);}
             });
           });
+          toMaterial._id = null;
           ownerUser = toMaterial.quote.user;
           toMaterial.quote = null;
         }

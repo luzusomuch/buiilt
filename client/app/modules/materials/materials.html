@@ -1,45 +1,47 @@
-<div class="col s3">
-  <a ng-if="currentTeam.type == 'builder' && isLeader" class="dropdown-button btn-large col s12"
-     data-activates="createNew" dropdown data-gutter="15" data-beloworigin="true" style="margin-top: 8px; margin-bottom: 15px">Create New</a>
-  <ul id="createNew" class="dropdown-content" style="margin-top: 15px">
-    <li><a class="modal-trigger" href="#newMaterialPackage">Material Package</a></li>
-    <li>
-      <div class="divider"></div>
-    </li>
-     <li><a class="modal-trigger" href="#newContractorPackage">Contractor Package</a></li>
-     <li><a class="modal-trigger" href="#newWorkPackage">Work Package</a></li>
-  </ul>
-
-  <div class="collection">
-    <a href="#!" ng-click="filter = {isCompleted : false, isSelect : true}" class="collection-item"
-       ng-class="{'active' : !filter.isCompleted && filter.isSelect}">In Progress<span class="badge new" ng-if="inProgressTotal">{{inProgressTotal}}</span></a>
-    <a href="#!" ng-click="filter = {isCompleted : false, isSelect : false, isCancel:false} " class="collection-item"
-       ng-class="{'active' : !filter.isAccept && !filter.isSelect}">In Tender</a>
-    <a href="#!" ng-click="filter = {isCompleted : true, isSelect : true}" class="collection-item"
-       ng-class="{'active' : filter.isCompleted  && filter.isSelect}">Completed</a>
-  </div>
+<div class="col s12" style="margin-top:-10px;">
+  <h5 class="secondary-content">Suppliers</h5>
 </div>
-
-<div class="col s9">
-  <div class="col s12">
-    <h5 class="secondary-content">Suppliers</h5>
+<div class="col s12">
+  <div class="col s3">
+    <a ng-if="currentTeam.type == 'builder' && isLeader" class="dropdown-button btn-large col s12"
+       data-activates="createNew" dropdown data-gutter="15" data-beloworigin="true" style="margin-top: 8px; margin-bottom: 15px">Create New</a>
+    <ul id="createNew" class="dropdown-content" style="margin-top: 15px">
+      <li><a class="modal-trigger" href="#newMaterialPackage">Material Package</a></li>
+      <li>
+        <div class="divider"></div>
+      </li>
+       <li><a class="modal-trigger" href="#newContractorPackage">Contractor Package</a></li>
+       <li><a class="modal-trigger" href="#newWorkPackage">Work Package</a></li>
+    </ul>
+  
+    <div class="collection">
+      <a href="#!" ng-click="filter = {isCompleted : false, isSelect : true}" class="collection-item"
+         ng-class="{'active' : !filter.isCompleted && filter.isSelect}">In Progress<span class="badge new" ng-if="inProgressTotal">{{inProgressTotal}}</span></a>
+      <a href="#!" ng-click="filter = {isCompleted : false, isSelect : false, isCancel:false} " class="collection-item"
+         ng-class="{'active' : !filter.isAccept && !filter.isSelect}">In Tender</a>
+      <a href="#!" ng-click="filter = {isCompleted : true, isSelect : true}" class="collection-item"
+         ng-class="{'active' : filter.isCompleted  && filter.isSelect}">Completed</a>
+    </div>
   </div>
-  <div class="col s12">
-    <div class="collection z-depth-1 list">
-      <span ng-repeat="materialPackage in materialPackages | filter : filter">
-        <a class="collection-item" ng-if="(currentTeam.type == 'builder' || currentTeam.type == 'homeOwner') && materialPackage.isSelect"
-           ui-sref='materialRequest.materialPackageInProcess({id: materialPackage.project, packageId: materialPackage._id})'>
-          {{materialPackage.name}}<span class="new badge" ng-if="materialPackage.__v">{{materialPackage.__v}}</span></a>
-        <a class="collection-item" ng-if="(currentTeam.type == 'builder' || currentTeam.type == 'homeOwner') && !materialPackage.isSelect"
-           ui-sref='materialRequest.viewMaterialRequest({id: materialPackage.project, packageId: materialPackage._id})'>
-          {{materialPackage.name}}<span class="new badge" ng-if="materialPackage.__v">{{materialPackage.__v}}</span></a>
-        <a ng-show="materialPackage.isSupplier" class="collection-item" ng-if="currentTeam.type == 'supplier' && materialPackage.isSelect && materialPackage.winnerTeam._id == currentTeam._id"
-           ui-sref='materialRequest.materialPackageInProcess({id: materialPackage.project, packageId: materialPackage._id})'>
-          {{materialPackage.name}}<span class="new badge" ng-if="materialPackage.__v">{{materialPackage.__v}}</span></a>
-        <a ng-show="materialPackage.isSupplier" class="collection-item" ng-if="currentTeam.type == 'supplier' && !materialPackage.isSelect"
-           ui-sref='materialRequest.sendQuote({id: materialPackage.project, packageId: materialPackage._id})'>
-          {{materialPackage.name}}<span class="new badge" ng-if="materialPackage.__v">{{materialPackage.__v}}</span></a>
-      </span>
+  
+  <div class="col s9">
+    <div class="col s12">
+      <div class="collection z-depth-1 list">
+        <span ng-repeat="materialPackage in materialPackages | filter : filter">
+          <a class="collection-item" ng-if="(currentTeam.type == 'builder' || currentTeam.type == 'homeOwner') && materialPackage.isSelect"
+             ui-sref='materialRequest.materialPackageInProcess({id: materialPackage.project, packageId: materialPackage._id})'>
+            {{materialPackage.name}}<span class="new badge" ng-if="materialPackage.__v">{{materialPackage.__v}}</span></a>
+          <a class="collection-item" ng-if="(currentTeam.type == 'builder' || currentTeam.type == 'homeOwner') && !materialPackage.isSelect"
+             ui-sref='materialRequest.viewMaterialRequest({id: materialPackage.project, packageId: materialPackage._id})'>
+            {{materialPackage.name}}<span class="new badge" ng-if="materialPackage.__v">{{materialPackage.__v}}</span></a>
+          <a ng-show="materialPackage.isSupplier" class="collection-item" ng-if="currentTeam.type == 'supplier' && materialPackage.isSelect && materialPackage.winnerTeam._id == currentTeam._id"
+             ui-sref='materialRequest.materialPackageInProcess({id: materialPackage.project, packageId: materialPackage._id})'>
+            {{materialPackage.name}}<span class="new badge" ng-if="materialPackage.__v">{{materialPackage.__v}}</span></a>
+          <a ng-show="materialPackage.isSupplier" class="collection-item" ng-if="currentTeam.type == 'supplier' && !materialPackage.isSelect"
+             ui-sref='materialRequest.sendQuote({id: materialPackage.project, packageId: materialPackage._id})'>
+            {{materialPackage.name}}<span class="new badge" ng-if="materialPackage.__v">{{materialPackage.__v}}</span></a>
+        </span>
+      </div>
     </div>
   </div>
 </div>

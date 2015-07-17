@@ -22,6 +22,7 @@ var gm = require('gm');
 var PDFImage = require("pdf-image").PDFImage;
 var fs = require('fs');
 var exec = require('child_process').exec;
+var config = require('./../../config/environment');
 
 var validationError = function (res, err) {
   return res.json(422, err);
@@ -117,25 +118,25 @@ exports.upload = function(req, res){
                                         if (err || !data) {return cb(err);}
                                         else {
                                             if (saved.mimeType == 'image/png' || saved.mimeType == 'image/jpeg') {
-                                                gm(__dirname + "/../../../" + saved.path)
+                                                gm(config.root +'/' + saved.path)
                                                 .resize(320, 480)
-                                                .write(__dirname + "/../../../" + "client/media/files/"+saved._id + '-' +saved.title, function(err,data) {
+                                                .write(config.media +saved._id + '-' +saved.title, function(err,data) {
                                                     if (err) {return cb(err);}
                                                     else {
-                                                        return cb(data);        
+                                                        cb(data);        
                                                     }
                                                 });
                                             }
                                             else if (saved.mimeType == 'application/pdf') {
-                                                exec("gs -dNOPAUSE -sDEVICE=jpeg -r144 -sOutputFile="+__dirname + "/../../../" + "client/media/files/"+saved._id + '-' +saved.title+".jpg "+ __dirname + "/../../../" + saved.path, function(err,data){
+                                                exec("gs -dNOPAUSE -sDEVICE=jpeg -r144 -sOutputFile="+ config.media +saved._id + '-' +saved.title+".jpg "+ config.root + '/' + saved.path, function(err,data){
                                                     if (err) {return cb(err);}
                                                     else {
-                                                        return cb(data);
+                                                        cb(data);
                                                     }
                                                 })
                                             }
                                             else {
-                                                return cb( data); 
+                                                return cb(data); 
                                             }
                                         }
                                     });
@@ -206,20 +207,20 @@ exports.upload = function(req, res){
                                         if (err) {return cb(err);}
                                         else {
                                             if (saved.mimeType == 'image/png' || saved.mimeType == 'image/jpeg') {
-                                                gm(__dirname + "/../../../" + saved.path)
+                                                gm(config.root + '/' + saved.path)
                                                 .resize(320, 480)
-                                                .write(__dirname + "/../../../" + "client/media/files/"+saved._id + '-' +saved.title, function(err,data) {
+                                                .write(config.media +saved._id + '-' +saved.title, function(err,data) {
                                                     if (err) {return cb(err);}
                                                     else {
-                                                        return cb(data);        
+                                                        cb(data);        
                                                     }
                                                 });
                                             }
                                             else if (saved.mimeType == 'application/pdf') {
-                                                exec("gs -dNOPAUSE -sDEVICE=jpeg -r144 -sOutputFile="+__dirname + "/../../../" + "client/media/files/"+saved._id + '-' +saved.title+".jpg "+ __dirname + "/../../../" + saved.path, function(err,data){
+                                                exec("gs -dNOPAUSE -sDEVICE=jpeg -r144 -sOutputFile="+ config.media +saved._id + '-' +saved.title+".jpg "+ config.root + '/' + saved.path, function(err,data){
                                                     if (err) {return cb(err);}
                                                     else {
-                                                        return cb(data);
+                                                        cb(data);
                                                     }
                                                 })
                                             }
@@ -438,20 +439,20 @@ exports.uploadInPackge = function(req, res){
                                 if (err) {return cb(err);}
                                 else {
                                     if (saved.mimeType == 'image/png' || saved.mimeType == 'image/jpeg') {
-                                        gm(__dirname + "/../../../" + saved.path)
+                                        gm(config.root + '/' + saved.path)
                                         .resize(320, 480)
-                                        .write(__dirname + "/../../../" + "client/media/files/"+saved._id + '-' +saved.title, function(err,data) {
+                                        .write(config.media +saved._id + '-' +saved.title, function(err,data) {
                                             if (err) {return cb(err);}
                                             else {
-                                                return cb(data);    
+                                                cb(data);    
                                             }
                                         });
                                     }
                                     else if (saved.mimeType == 'application/pdf') {
-                                        exec("gs -dNOPAUSE -sDEVICE=jpeg -r144 -sOutputFile="+__dirname + "/../../../" + "client/media/files/"+saved._id + '-' +saved.title+".jpg "+ __dirname + "/../../../" + saved.path, function(err,data){
+                                        exec("gs -dNOPAUSE -sDEVICE=jpeg -r144 -sOutputFile="+ config.media +saved._id + '-' +saved.title+".jpg "+ config.root +'/' + saved.path, function(err,data){
                                             if (err) {return cb(err);}
                                             else {
-                                                return cb(data);
+                                                cb(data);
                                             }
                                         })
                                     }

@@ -106,7 +106,7 @@
   
   <div class="col s12">
     <ul class="collapsible" data-collapsible="accordion">
-      <li ng-repeat="toMaterial in materialRequest.to">
+      <li ng-repeat="toMaterial in materialRequest.to | filter: {isDecline:false}">
         <div class="collapsible-header">
           Tenderer #{{$index+1}} - {{toMaterial.email}}
           <a ng-if="toMaterial.quote._id" class="btn-flat btn-flat secondary-content modal-trigger" href='#modal_viewQuote_{{toMaterial.quote._id}}' style="font-size:12px; margin-top: 8px">View Quote</a>

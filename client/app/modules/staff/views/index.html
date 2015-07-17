@@ -1,4 +1,7 @@
-<div class="col-md-12">
+<div class="col s12" style="margin-top:-10px;">
+  <h5 class="secondary-content">Employees</h5>
+</div>
+<div class="col s12">
   <div class="col s3">
      <a class="dropdown-button btn-large col s12" ng-if="currentTeam.type == 'builder' && isLeader" href="#newWorkPackage" style="margin-top: 8px; margin-bottom: 15px"
         data-activates="createNew" dropdown data-gutter="15" data-beloworigin="true">
@@ -23,9 +26,6 @@
      <!--<ul class="collection z-depth-1">-->
        <!--<li class="collection-item" ng-repeat  ="item in staffPackages" ng-if="item.canSee || isLeader"><a ui-sref="staff.view({packageId : item._id})">{{item.name}}</a></li>-->
      <!--</ul>-->
-     <div class="col s12">
-      <h5 class="secondary-content">Employees</h5>
-    </div>
     <div class="col s12">
       <div class="collection z-depth-1 list">
         <span ng-repeat="item in staffPackages | filter : filter">

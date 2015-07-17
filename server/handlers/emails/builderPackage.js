@@ -47,7 +47,7 @@ EventBus.onSeries('BuilderPackage.Inserted', function(request, next) {
         .exec(function(err, team) {
           if(err || !team){ next(); }
 
-          if (team.type == request.to.type) {
+          if (result.team.type == request.to.type) {
             team.leader.forEach(function(leader) {
               Mailer.sendMail('invite-' + subjectType + '.html', leader.email, {
                 project: result.project.toJSON(),
