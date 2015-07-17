@@ -534,6 +534,15 @@ exports.declineQuote = function(req, res) {
         if (toContractor._id == req.body.belongTo) {
           toContractor.isDecline = true;
           ownerUser = toContractor.quote.user;
+          Team.findById(toContractor._id, function(err,team){
+            if (err || !team) {return res.send(500,err);}
+            var index = team.project.indexOf(contractorPackage.project);
+            team.project.splice(index,1);
+            team.markModified('project');
+            team.save(function(err){
+              if (err) {return res.send(500,err);}
+            });
+          });
           toContractor._id = null;
           toContractor.quote = null;
         }

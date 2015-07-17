@@ -85,8 +85,17 @@ console.log($scope.variationRequest);
   $scope.cancelPackage = function() {
     variationRequestService.cancelPackage({id: $stateParams.variationId})
     .$promise.then(function(data) {
-      $state.go('contractorRequest.contractorPackageInProcess',
-        {id:variationRequest.project, packageId: variationRequest.package});
+      if (data.packageType == 'contractor') {
+        $state.go('contractorRequest.contractorPackageInProcess',
+          {id:variationRequest.project, packageId: variationRequest.package});
+      }
+      else if (data.packageType == 'material') {
+        $state.go('materialRequest.materialPackageInProcess',
+          {id:variationRequest.project, packageId: variationRequest.package});
+      }
+      else if (data.packageType == 'BuilderPackage') {
+        $state.go('client', {id: data.project});
+      }
     });
   };
 });

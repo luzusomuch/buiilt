@@ -478,6 +478,15 @@ exports.declineQuote = function(req, res) {
         if (toMaterial._id == req.body.belongTo) {
           toMaterial.isDecline = true;
           toMaterial._id = null;
+          Team.findById(toMaterial._id, function(err,team){
+            if (err || !team) {return res.send(500,err);}
+            var index = team.project.indexOf(materialPackage.project);
+            team.project.splice(index,1);
+            team.markModified('project');
+            team.save(function(err){
+              if (err) {return res.send(500,err);}
+            });
+          });
           ownerUser = toMaterial.quote.user;
           toMaterial.quote = null;
         }
