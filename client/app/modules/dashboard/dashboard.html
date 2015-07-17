@@ -12,208 +12,213 @@
     <a href="#" class="collection-item" ng-click="showDocs()" ng-class="{'active' : currentList == 'docs'}">Docs<span ng-if="myFiles.length > 0" class="new badge">{{myFiles.length}}</span></a>
   </div>
 </div>
-<div class="col s9" style="height:700px; overflow-y:auto">
-  <ul class="collapsible task-dashboard" data-collapsible="accordion" ng-if="currentList == 'tasks'">
-    <li class="" ng-repeat="task in myTasks | orderBy : ['dateEnd']">
-      <div class="collapsible-header row" >
-        <a class="btn-flat col s1" style="margin-top: -3px; font-size: 12px;" ng-click="complete(task,$index)">
-          <i ng-if="!task.completed" class="mdi-toggle-check-box-outline-blank"></i>
-          <i ng-if="task.completed" class="mdi-toggle-check-box"></i>
-        </a>
-        <span class="col s8" ng-class="{'completed' : task.completed}" ng-click="showTask(task)">{{task.name}}</span>
-        <button type="button" ng-click="editTask(task)" class="btn-flat secondary-content col s1" style="font-size: 12px;">
-          Edit
-        </button>
-        <a ng-if="task.type == 'builder'"
-           ui-sref="client({id : task.project})"
-           class="btn-flat secondary-content new badge col s2" style="font-size: 12px;">
-          Go to Task
-        </a>
-        <a ng-if="task.type == 'contractor'"
-           ui-sref="contractorRequest.contractorPackageInProcess({id : task.project, packageId : task.package._id})"
-           class="btn-flat secondary-content new badge col s2" style="font-size: 12px;">
-          Go to Task
-        </a>
-        <a ng-if="task.type == 'staff'"
-           ui-sref="staff.view({id : task.project, packageId : task.package._id})"
-           class="btn-flat secondary-content new badge col s2" style="font-size: 12px;">
-          Go to Task
-        </a>
-        <a ng-if="task.type == 'material'"
-           ui-sref="materialRequest.materialPackageInProcess({id : task.project, packageId : task.package._id})"
-           class="btn-flat secondary-content new badge col s2" style="font-size: 12px;">
-          Go to Task
-        </a>
-        <a ng-if="task.type == 'variation'"
-           ui-sref="variationRequest.inProcess({id : task.project, variationId : task.package._id})"
-           class="btn-flat secondary-content new badge col s2" style="font-size: 12px;">
-          Go to Task
-        </a>
-
-      </div>
-      <div class="collapsible-body" style="display: none; background-color: #FFF">
-        <form name="form" novalidate ng-submit="saveTask(form)">
-          <div class="row">
-            <div class="input-field col s10 offset-s1">
-              <input id="task_description" value="{{task.name}}" type="text" style="margin-bottom: -20px" ng-model="task.name" ng-disabled="isShow">
-            </div>
-          </div>
-          <div class="row">
-            <div class="input-field col s10 offset-s1">
-              <input type="date"
-                     name="created"
-                     id="dueDate"
-                     ng-model="task.dateEnd"
-                     format="mm/dd/yyyy"
-                     ng-disabled="isShow"
-                />
-              <label for="dueDate" class="active">Due date</label>
-            </div>
-          </div>
-
-          <div class="row container current-assign">
-            <p style="">Current Assignee's:</p>
-            <div class="card col"  ng-if="!isShow"  style="padding: 5px; margin-left: 10px" ng-repeat="assignee in task.assignees" ng-class="{'admin' : assignee.team.role == 'admin'}">
-              {{assignee | name}} <span ng-if="assignee.canRevoke"><a href="#!" ng-click="revoke(assignee,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
-            </div>
-            <div class="card col"  ng-if="isShow"  style="padding: 5px; margin-left: 10px" ng-repeat="assignee in task.assignees" ng-class="{'admin' : assignee.team.role == 'admin'}">
-              {{assignee | name}}
-            </div>
-          </div>
-
-          <div class="divider"></div>
-
-          <div class="row container available-assign"  ng-if="!isShow" >
-            <p style="">Available Assignee's:</p>
-            <a href="#!" ng-click="assign(staff,$index)" ng-repeat="staff in available track by $index">
-              <div class="card col" style="padding: 5px; margin-left: 10px"  ng-class="{'admin' : staff.team.role == 'admin'}">
-                {{staff | name}}
-              </div>
-            </a>
-          </div>
-
-          <div class="row">
-            <button class="btn right" type="submit" name="action" ng-if="!isShow" style="margin-right: 30">Save
-            </button>
-          </div>
-        </form>
-      </div>
-    </li>
-  </ul>
-  <ul class="collapsible" data-collapsible="accordion" ng-if="currentList == 'chats'">
-    <li class="" ng-repeat="thread in myThreads">
-      <div class="collapsible-header" ng-click="showChat(thread,$index)">
-        {{thread.name}}
-        <a ng-if="thread.type == 'builder'"
-           ui-sref="client({id : thread.project})"
-           class="btn-flat secondary-content new badge" style="font-size: 12px;">
-          Go to Thread
-        </a>
-        <a ng-if="thread.type == 'contractor'"
-           ui-sref="contractorRequest.contractorPackageInProcess({id : thread.project, packageId : thread.package})"
-           class="btn-flat secondary-content new badge" style="font-size: 12px;">
-          Go to Thread
-        </a>
-        <a ng-if="thread.type == 'staff'"
-           ui-sref="staff.view({id : thread.project, packageId : thread.package})"
-           class="btn-flat secondary-content new badge" style="font-size: 12px;">
-          Go to Thread
-        </a>
-        <a ng-if="thread.type == 'material'"
-           ui-sref="materialRequest.materialPackageInProcess({id : thread.project, packageId : thread.package})"
-           class="btn-flat secondary-content new badge" style="font-size: 12px;">
-          Go to Thread
-        </a>
-        <a href="#!" class="btn-flat secondary-content" style="font-size: 12px;">
-          {{thread.__v}} NEW
-        </a>
-      </div>
-      <div class="collapsible-body" style="display: none;">
-
-        <div class="col s12">
-          <ul class="collection">
-            <div style="height: 300px; background-color: white; overflow-y: auto" class="messages" scroll-to-bottom="currentThread.messages">
-
-              <li class="collection-item" ng-repeat="message in currentThread.messages">
-                <div class="row valign-wrapper" style="margin-bottom: -5px ">
-                  <p class="col s9 valign" ng-bind-html="message.text | linkify"></p>
-                  <div class="card col" style="padding: 5px; margin-left: 10px">
-                    {{message.user | name}}
-                  </div>
-                </div>
-              </li>
-            </div>
-
-            <div class="divider"></div>
-
-            <div class="col s10 offset-s1 card-footer" style="background-color: white">
-              <div class="row">
-                <form class="col s10 offset-s1 ng-pristine ng-valid" name="messageForm" novalidate ng-submit="sendMessage(messageForm)">
-                  <div class="input-field col s9">
-                    <textarea name="text" id="textarea1" class="materialize-textarea" ng-model="message.text" required ng-class="{'invalid' : messageForm.text.$invalid && messageFormSubmitted}"></textarea>
-                    <label for="textarea1">Send a Message...</label>
-                    <p class="validate-message" ng-if="messageForm.text.$error.required && messageFormSubmitted">Message text is required</p>
-                  </div>
-                  <div class="input-field col s3">
-                    <button class="btn-large waves-effect waves-yellow" type="submit" style="margin-top: 47px" name="action">Send
-                      <i class="mdi-content-send right"></i>
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-
-          </ul>
+<div class="col s9">
+  <div class="col s12">
+    <h5 class="secondary-content">Dashboard</h5>
+  </div>
+  <div class="col s12" style="height:700px; overflow-y:auto">
+    <ul class="collapsible task-dashboard" data-collapsible="accordion" ng-if="currentList == 'tasks'">
+      <li class="" ng-repeat="task in myTasks | orderBy : ['dateEnd']">
+        <div class="collapsible-header row" >
+          <a class="btn-flat col s1" style="margin-top: -3px; font-size: 12px;" ng-click="complete(task,$index)">
+            <i ng-if="!task.completed" class="mdi-toggle-check-box-outline-blank"></i>
+            <i ng-if="task.completed" class="mdi-toggle-check-box"></i>
+          </a>
+          <span class="col s8" ng-class="{'completed' : task.completed}" ng-click="showTask(task)">{{task.name}}</span>
+          <button type="button" ng-click="editTask(task)" class="btn-flat secondary-content col s1" style="font-size: 12px;">
+            Edit
+          </button>
+          <a ng-if="task.type == 'builder'"
+             ui-sref="client({id : task.project})"
+             class="btn-flat secondary-content new badge col s2" style="font-size: 12px;">
+            Go to Task
+          </a>
+          <a ng-if="task.type == 'contractor'"
+             ui-sref="contractorRequest.contractorPackageInProcess({id : task.project, packageId : task.package._id})"
+             class="btn-flat secondary-content new badge col s2" style="font-size: 12px;">
+            Go to Task
+          </a>
+          <a ng-if="task.type == 'staff'"
+             ui-sref="staff.view({id : task.project, packageId : task.package._id})"
+             class="btn-flat secondary-content new badge col s2" style="font-size: 12px;">
+            Go to Task
+          </a>
+          <a ng-if="task.type == 'material'"
+             ui-sref="materialRequest.materialPackageInProcess({id : task.project, packageId : task.package._id})"
+             class="btn-flat secondary-content new badge col s2" style="font-size: 12px;">
+            Go to Task
+          </a>
+          <a ng-if="task.type == 'variation'"
+             ui-sref="variationRequest.inProcess({id : task.project, variationId : task.package._id})"
+             class="btn-flat secondary-content new badge col s2" style="font-size: 12px;">
+            Go to Task
+          </a>
+    
         </div>
-
-      </div>
-    </li>
-  </ul>
-  <ul class="collapsible" data-collapsible="accordion" ng-if="currentList == 'docs'">
-    <li ng-repeat="file in myFiles | unique: file">
-      <div class="collapsible-header">
-        {{file.element.file.title}}
-        <a class="btn-flat secondary-content" style="font-size: 12px;" ng-click="goToDocument(file)">
-          Go to Document
-        </a>
-
-        <a href="#!" class="btn-flat secondary-content" style="font-size: 12px;">
-          <span ng-if="file.element.file.version == 0">New document</span>
-          <span ng-if="file.element.file.version > 0">Reversion {{file.element.file.version +1}}</span>
-        </a>
-      </div>
-      <div class="collapsible-body">
-
-        <div class="row container">
-
-          <div class="card">
-            <div class="card-image" ng-switch="file.element.file.mimeType">
-              <span ng-switch-when="image/jpeg">
-                <img src="../../media/files/{{file.element.file._id}}-{{file.element.file.title}}" alt="">
-              </span>
-              <span ng-switch-when="image/png">
-                <img src="../../media/files/{{file.element.file._id}}-{{file.element.file.title}}" alt="">
-              </span>
-              <span ng-switch-when="application/pdf">
-                <img src="../../media/files/{{file.element.file._id}}-{{file.element.file.title}}.jpg" alt="" style="height:250px;">
-              </span>
-              <span ng-switch-default>
-                <img src="../../media/sample-1.jpg" alt="">
-              </span>
-              <span class="card-title">{{file.element.file.title}}</span>
+        <div class="collapsible-body" style="display: none; background-color: #FFF">
+          <form name="form" novalidate ng-submit="saveTask(form)">
+            <div class="row">
+              <div class="input-field col s10 offset-s1">
+                <input id="task_description" value="{{task.name}}" type="text" style="margin-bottom: -20px" ng-model="task.name" ng-disabled="isShow">
+              </div>
             </div>
-            <div class="card-content">
-              <p>
-                <span class="col s9">{{file.element.file.description}}</span>
-                <span class="col s3 secondary-content"><a ng-click="downloadFile(file)" href='{{file.element.file.fileUrl}}' download="file.element.file.name">Download</a></span>
-              </p>
+            <div class="row">
+              <div class="input-field col s10 offset-s1">
+                <input type="date"
+                       name="created"
+                       id="dueDate"
+                       ng-model="task.dateEnd"
+                       format="mm/dd/yyyy"
+                       ng-disabled="isShow"
+                  />
+                <label for="dueDate" class="active">Due date</label>
+              </div>
             </div>
+    
+            <div class="row container current-assign">
+              <p style="">Current Assignee's:</p>
+              <div class="card col"  ng-if="!isShow"  style="padding: 5px; margin-left: 10px" ng-repeat="assignee in task.assignees" ng-class="{'admin' : assignee.team.role == 'admin'}">
+                {{assignee | name}} <span ng-if="assignee.canRevoke"><a href="#!" ng-click="revoke(assignee,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
+              </div>
+              <div class="card col"  ng-if="isShow"  style="padding: 5px; margin-left: 10px" ng-repeat="assignee in task.assignees" ng-class="{'admin' : assignee.team.role == 'admin'}">
+                {{assignee | name}}
+              </div>
+            </div>
+    
+            <div class="divider"></div>
+    
+            <div class="row container available-assign"  ng-if="!isShow" >
+              <p style="">Available Assignee's:</p>
+              <a href="#!" ng-click="assign(staff,$index)" ng-repeat="staff in available track by $index">
+                <div class="card col" style="padding: 5px; margin-left: 10px"  ng-class="{'admin' : staff.team.role == 'admin'}">
+                  {{staff | name}}
+                </div>
+              </a>
+            </div>
+    
+            <div class="row">
+              <button class="btn right" type="submit" name="action" ng-if="!isShow" style="margin-right: 30">Save
+              </button>
+            </div>
+          </form>
+        </div>
+      </li>
+    </ul>
+    <ul class="collapsible" data-collapsible="accordion" ng-if="currentList == 'chats'">
+      <li class="" ng-repeat="thread in myThreads">
+        <div class="collapsible-header" ng-click="showChat(thread,$index)">
+          {{thread.name}}
+          <a ng-if="thread.type == 'builder'"
+             ui-sref="client({id : thread.project})"
+             class="btn-flat secondary-content new badge" style="font-size: 12px;">
+            Go to Thread
+          </a>
+          <a ng-if="thread.type == 'contractor'"
+             ui-sref="contractorRequest.contractorPackageInProcess({id : thread.project, packageId : thread.package})"
+             class="btn-flat secondary-content new badge" style="font-size: 12px;">
+            Go to Thread
+          </a>
+          <a ng-if="thread.type == 'staff'"
+             ui-sref="staff.view({id : thread.project, packageId : thread.package})"
+             class="btn-flat secondary-content new badge" style="font-size: 12px;">
+            Go to Thread
+          </a>
+          <a ng-if="thread.type == 'material'"
+             ui-sref="materialRequest.materialPackageInProcess({id : thread.project, packageId : thread.package})"
+             class="btn-flat secondary-content new badge" style="font-size: 12px;">
+            Go to Thread
+          </a>
+          <a href="#!" class="btn-flat secondary-content" style="font-size: 12px;">
+            {{thread.__v}} NEW
+          </a>
+        </div>
+        <div class="collapsible-body" style="display: none;">
+    
+          <div class="col s12">
+            <ul class="collection">
+              <div style="height: 300px; background-color: white; overflow-y: auto" class="messages" scroll-to-bottom="currentThread.messages">
+    
+                <li class="collection-item" ng-repeat="message in currentThread.messages">
+                  <div class="row valign-wrapper" style="margin-bottom: -5px ">
+                    <p class="col s9 valign" ng-bind-html="message.text | linkify"></p>
+                    <div class="card col" style="padding: 5px; margin-left: 10px">
+                      {{message.user | name}}
+                    </div>
+                  </div>
+                </li>
+              </div>
+    
+              <div class="divider"></div>
+    
+              <div class="col s10 offset-s1 card-footer" style="background-color: white">
+                <div class="row">
+                  <form class="col s10 offset-s1 ng-pristine ng-valid" name="messageForm" novalidate ng-submit="sendMessage(messageForm)">
+                    <div class="input-field col s9">
+                      <textarea name="text" id="textarea1" class="materialize-textarea" ng-model="message.text" required ng-class="{'invalid' : messageForm.text.$invalid && messageFormSubmitted}"></textarea>
+                      <label for="textarea1">Send a Message...</label>
+                      <p class="validate-message" ng-if="messageForm.text.$error.required && messageFormSubmitted">Message text is required</p>
+                    </div>
+                    <div class="input-field col s3">
+                      <button class="btn-large waves-effect waves-yellow" type="submit" style="margin-top: 47px" name="action">Send
+                        <i class="mdi-content-send right"></i>
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+    
+            </ul>
           </div>
-
-        </div>        
-      </div>
-    </li>
-  </ul>
+    
+        </div>
+      </li>
+    </ul>
+    <ul class="collapsible" data-collapsible="accordion" ng-if="currentList == 'docs'">
+      <li ng-repeat="file in myFiles | unique: file">
+        <div class="collapsible-header">
+          {{file.element.file.title}}
+          <a class="btn-flat secondary-content" style="font-size: 12px;" ng-click="goToDocument(file)">
+            Go to Document
+          </a>
+    
+          <a href="#!" class="btn-flat secondary-content" style="font-size: 12px;">
+            <span ng-if="file.element.file.version == 0">New document</span>
+            <span ng-if="file.element.file.version > 0">Reversion {{file.element.file.version +1}}</span>
+          </a>
+        </div>
+        <div class="collapsible-body">
+    
+          <div class="row container">
+    
+            <div class="card">
+              <div class="card-image" ng-switch="file.element.file.mimeType">
+                <span ng-switch-when="image/jpeg">
+                  <img src="../../media/files/{{file.element.file._id}}-{{file.element.file.title}}" alt="">
+                </span>
+                <span ng-switch-when="image/png">
+                  <img src="../../media/files/{{file.element.file._id}}-{{file.element.file.title}}" alt="">
+                </span>
+                <span ng-switch-when="application/pdf">
+                  <img src="../../media/files/{{file.element.file._id}}-{{file.element.file.title}}.jpg" alt="" style="height:250px;">
+                </span>
+                <span ng-switch-default>
+                  <img src="../../media/sample-1.jpg" alt="">
+                </span>
+                <span class="card-title">{{file.element.file.title}}</span>
+              </div>
+              <div class="card-content">
+                <p>
+                  <span class="col s9">{{file.element.file.description}}</span>
+                  <span class="col s3 secondary-content"><a ng-click="downloadFile(file)" href='{{file.element.file.fileUrl}}' download="file.element.file.name">Download</a></span>
+                </p>
+              </div>
+            </div>
+    
+          </div>        
+        </div>
+      </li>
+    </ul>
+  </div>
 </div>
 
 

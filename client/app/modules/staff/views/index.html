@@ -23,10 +23,15 @@
      <!--<ul class="collection z-depth-1">-->
        <!--<li class="collection-item" ng-repeat  ="item in staffPackages" ng-if="item.canSee || isLeader"><a ui-sref="staff.view({packageId : item._id})">{{item.name}}</a></li>-->
      <!--</ul>-->
-    <div class="collection z-depth-1 list">
-      <span ng-repeat="item in staffPackages | filter : filter">
-        <a ui-sref="staff.view({packageId : item._id})"  ng-show="item.canSee || isLeader" class="collection-item">{{item.name}}<span class="badge new" ng-if="item.__v > 0">{{item.__v}}</span></a>
-      </span>
+     <div class="col s12">
+      <h5 class="secondary-content">Employees</h5>
+    </div>
+    <div class="col s12">
+      <div class="collection z-depth-1 list">
+        <span ng-repeat="item in staffPackages | filter : filter">
+          <a ui-sref="staff.view({packageId : item._id})"  ng-show="item.canSee || isLeader" class="collection-item">{{item.name}}<span class="badge new" ng-if="item.__v > 0">{{item.__v}}</span></a>
+        </span>
+      </div>
     </div>
   </div>
 

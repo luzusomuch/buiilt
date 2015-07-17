@@ -11,7 +11,7 @@ angular.module('buiiltApp')
     $scope.currentUser = userService.get();
   }
 
-  if (variationRequest.to._id._id != currentTeam._id) {
+  if (variationRequest.to._id._id != currentTeam._id || variationRequest.isCancel) {
     $state.go('team.manager');
   }
 
