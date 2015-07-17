@@ -132,7 +132,7 @@ angular.module('buiiltApp').directive('file', function(){
                 $scope.uploadAll = function(){
                     hideModalAfterUploading = true;
                     uploader.uploadAll();
-                    Materialize.toast('<p style="width:300px;">Upload in progress</p><div class="progress"><div class="indeterminate"></div></div>',30000);
+                    Materialize.toast('<p style="width:300px;">Upload in progress</p><div class="progress"><div class="indeterminate"></div></div>',35000);
                 };
 
                 uploader.onCompleteAll = function () {
