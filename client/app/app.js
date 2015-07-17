@@ -99,7 +99,7 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
                 $state.go('team.manager');
               }
             } else {
-              console.log('false')
+              // console.log('false')
             }
           });
 

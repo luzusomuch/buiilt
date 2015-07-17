@@ -95,6 +95,7 @@ exports.upload = function(req, res){
                                                     }
                                                 });
                                             }
+                                            _.remove(owners, req.user._id);
                                             async.each(owners, function(leader, callback){
                                                 var notification = new Notification({
                                                     owner: leader,
@@ -121,7 +122,7 @@ exports.upload = function(req, res){
                                                 .write(__dirname + "/../../../" + "client/media/files/"+saved._id + '-' +saved.title, function(err,data) {
                                                     if (err) {return cb(err);}
                                                     else {
-                                                        return cb(null, data);        
+                                                        return cb(data);        
                                                     }
                                                 });
                                             }
@@ -129,12 +130,12 @@ exports.upload = function(req, res){
                                                 exec("gs -dNOPAUSE -sDEVICE=jpeg -r144 -sOutputFile="+__dirname + "/../../../" + "client/media/files/"+saved._id + '-' +saved.title+".jpg "+ __dirname + "/../../../" + saved.path, function(err,data){
                                                     if (err) {return cb(err);}
                                                     else {
-                                                        return cb(null,data);
+                                                        return cb(data);
                                                     }
                                                 })
                                             }
                                             else {
-                                                return cb(null, data); 
+                                                return cb( data); 
                                             }
                                         }
                                     });
@@ -183,7 +184,7 @@ exports.upload = function(req, res){
                                                     }
                                                 });
                                             }
-                                            
+                                            _.remove(owners, req.user._id);
                                             async.each(owners, function(leader,callback){
                                                 var notification = new Notification({
                                                     owner: leader,
@@ -210,7 +211,7 @@ exports.upload = function(req, res){
                                                 .write(__dirname + "/../../../" + "client/media/files/"+saved._id + '-' +saved.title, function(err,data) {
                                                     if (err) {return cb(err);}
                                                     else {
-                                                        return cb(null,data);        
+                                                        return cb(data);        
                                                     }
                                                 });
                                             }
@@ -218,12 +219,12 @@ exports.upload = function(req, res){
                                                 exec("gs -dNOPAUSE -sDEVICE=jpeg -r144 -sOutputFile="+__dirname + "/../../../" + "client/media/files/"+saved._id + '-' +saved.title+".jpg "+ __dirname + "/../../../" + saved.path, function(err,data){
                                                     if (err) {return cb(err);}
                                                     else {
-                                                        return cb(null,data);
+                                                        return cb(data);
                                                     }
                                                 })
                                             }
                                             else {
-                                                return cb(null,data);
+                                                return cb(data);
                                             }
                                         }
                                     });
@@ -300,6 +301,7 @@ exports.uploadInPackge = function(req, res){
                                             owners.push(member._id);
                                         }
                                     });
+                                    _.remove(owners, req.user._id);
                                     async.each(owners, function(leader, callback){
                                         var notification = new Notification({
                                             owner: leader,
@@ -330,6 +332,7 @@ exports.uploadInPackge = function(req, res){
                                             owners.push(member._id);
                                         }
                                     });
+                                    _.remove(owners, req.user._id);
                                     async.each(owners, function(leader, callback){
                                         var notification = new Notification({
                                             owner: leader,
@@ -349,6 +352,7 @@ exports.uploadInPackge = function(req, res){
                                 StaffPackage.findById(saved.belongTo).populate('owner').exec(function(err, staffPackage) {
                                     if (err || !staffPackage) {return cb();}
                                     owners = _.union(staffPackage.owner.leader, staffPackage.staffs);
+                                    _.remove(owners, req.user._id);
                                     async.each(owners, function(leader,callback){
                                         var notification = new Notification({
                                             owner: leader,
@@ -378,6 +382,7 @@ exports.uploadInPackge = function(req, res){
                                             owners.push(member._id);
                                         }
                                     });
+                                    _.remove(owners, req.user._id);
                                     async.each(owners, function(leader,callback){
                                         var notification = new Notification({
                                             owner: leader,
@@ -411,6 +416,7 @@ exports.uploadInPackge = function(req, res){
                                             }
                                         });
                                     }
+                                    _.remove(owners, req.user._id);
                                     async.each(owners, function(leader,callback){
                                         var notification = new Notification({
                                             owner: leader,
@@ -437,7 +443,7 @@ exports.uploadInPackge = function(req, res){
                                         .write(__dirname + "/../../../" + "client/media/files/"+saved._id + '-' +saved.title, function(err,data) {
                                             if (err) {return cb(err);}
                                             else {
-                                                return cb(null,data);    
+                                                return cb(data);    
                                             }
                                         });
                                     }
@@ -445,7 +451,7 @@ exports.uploadInPackge = function(req, res){
                                         exec("gs -dNOPAUSE -sDEVICE=jpeg -r144 -sOutputFile="+__dirname + "/../../../" + "client/media/files/"+saved._id + '-' +saved.title+".jpg "+ __dirname + "/../../../" + saved.path, function(err,data){
                                             if (err) {return cb(err);}
                                             else {
-                                                return cb(null,data);
+                                                return cb(data);
                                             }
                                         })
                                     }

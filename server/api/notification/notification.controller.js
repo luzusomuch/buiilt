@@ -140,7 +140,6 @@ exports.getMyFile = function(req, res) {
     if (err) {;return res.send(500,err);}
     if (!notifications) {return res.send(500,err);}
     else {
-      console.log(notifications);
       return res.send(200,notifications);
     }
   });

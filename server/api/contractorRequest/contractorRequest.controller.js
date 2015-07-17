@@ -304,7 +304,10 @@ exports.sendInvitationInContractor = function(req, res) {
               contractorPackage.save(function(err, saved){
                 if (err) {return res.send(500,err);}
                 else {
-                  return res.json(200,saved);
+                  saved.populate('to.quote', function(err){
+                    if (err) {return res.send(500,err);}
+                    return res.json(200,saved);
+                  });
                 }
               });
             }
@@ -531,6 +534,7 @@ exports.declineQuote = function(req, res) {
         if (toContractor._id == req.body.belongTo) {
           toContractor.isDecline = true;
           ownerUser = toContractor.quote.user;
+          toContractor._id = null;
           toContractor.quote = null;
         }
       });

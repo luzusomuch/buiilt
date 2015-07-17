@@ -6,7 +6,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
     controller: 'ContractorsCtrl',
     hasCurrentProject : true,
     authenticate : true,
-    canAccess : ['builder','contractor'],
+    // canAccess : ['builder','contractor'],
     resolve: {
       team: function(authService){
         return authService.getCurrentTeam().$promise;

@@ -175,7 +175,10 @@ exports.sendInvitationInMaterial = function(req, res) {
               materialPackage.save(function(err, saved){
                 if (err) {return res.send(500,err);}
                 else {
-                  return res.json(200,saved);
+                  saved.populate('to.quote', function(err){
+                    if (err) {return res.send(500,err);}
+                    return res.json(200,saved);
+                  });
                 }
               });
             }
@@ -474,6 +477,7 @@ exports.declineQuote = function(req, res) {
       _.each(materialPackage.to, function(toMaterial){
         if (toMaterial._id == req.body.belongTo) {
           toMaterial.isDecline = true;
+          toMaterial._id = null;
           ownerUser = toMaterial.quote.user;
           toMaterial.quote = null;
         }

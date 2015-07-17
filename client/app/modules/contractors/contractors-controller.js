@@ -36,7 +36,7 @@ angular.module('buiiltApp').controller('ContractorsCtrl',
 
     socket.on('notification:new', function (notification) {
       if (notification) {
-        var contractorPackage = _.find($scope.contractorPackages,{_id : notification.element.package});
+        var contractorPackage = _.find($scope.contractorPackages,{_id : notification.element._id});
         if (contractorPackage) {
           contractorPackage.__v++;
         }

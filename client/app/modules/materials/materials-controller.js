@@ -36,7 +36,7 @@ angular.module('buiiltApp').controller('MaterialsCtrl',
 
     socket.on('notification:new', function (notification) {
       if (notification) {
-        var materialPackage = _.find($scope.materialPackages,{_id : notification.element.package});
+        var materialPackage = _.find($scope.materialPackages,{_id : notification.element._id});
         if (materialPackage) {
           materialPackage.__v++;
         }
