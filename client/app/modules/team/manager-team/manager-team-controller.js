@@ -100,6 +100,7 @@ angular.module('buiiltApp')
           $scope.team.emails = [];
           $rootScope.isLeader = true;
           getLocalData();
+          $state.reload();
         }, function (err) {
         });
       }

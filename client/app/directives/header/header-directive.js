@@ -88,7 +88,7 @@ angular.module('buiiltApp')
           $rootScope.currentTeam = $scope.currentTeam;
           if ($scope.user && $scope.currentProject && $scope.currentTeam && !_.find($scope.currentTeam.project,{_id : $scope.currentProject._id}))
           {
-            $state.go('team.manager');
+            // $state.go('team.manager');
           }
 
           if ($state.current.name == 'team.manager' || $state.current.name == 'dashboard'){
