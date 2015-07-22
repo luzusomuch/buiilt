@@ -9,8 +9,7 @@ var EventBus = require('./../components/EventBus');
 var VariationSchema = new Schema({
   owner: {
     type: Schema.Types.ObjectId,
-    ref: 'Team',
-    required: true
+    ref: 'Team'
   },
   project: {
     type: Schema.Types.ObjectId,
