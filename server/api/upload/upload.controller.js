@@ -120,7 +120,7 @@ exports.upload = function(req, res){
                                             if (saved.mimeType == 'image/png' || saved.mimeType == 'image/jpeg') {
                                                 gm(config.root +'/' + saved.path)
                                                 .resize(320, 480)
-                                                .write(config.media +saved._id + '-' +saved.title, function(err,data) {
+                                                .write(config.media +saved._id + '-' +saved.title + '.jpg', function(err,data) {
                                                     if (err) {return cb(err);}
                                                     else {
                                                         cb(data);        
@@ -209,7 +209,7 @@ exports.upload = function(req, res){
                                             if (saved.mimeType == 'image/png' || saved.mimeType == 'image/jpeg') {
                                                 gm(config.root + '/' + saved.path)
                                                 .resize(320, 480)
-                                                .write(config.media +saved._id + '-' +saved.title, function(err,data) {
+                                                .write(config.media +saved._id + '-' +saved.title + '.jpg', function(err,data) {
                                                     if (err) {return cb(err);}
                                                     else {
                                                         cb(data);        
@@ -441,7 +441,7 @@ exports.uploadInPackge = function(req, res){
                                     if (saved.mimeType == 'image/png' || saved.mimeType == 'image/jpeg') {
                                         gm(config.root + '/' + saved.path)
                                         .resize(320, 480)
-                                        .write(config.media +saved._id + '-' +saved.title, function(err,data) {
+                                        .write(config.media +saved._id + '-' +saved.title + '.jpg', function(err,data) {
                                             if (err) {return cb(err);}
                                             else {
                                                 cb(data);    

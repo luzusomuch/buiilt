@@ -15,3 +15,4 @@ docker.log
 /client/media/img
 /server/test.js
 /npm-debug.log
+/server/media
