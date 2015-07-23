@@ -7,12 +7,12 @@ var auth = require('../../auth/auth.service');
 var router = express.Router();
 
 //router.get('/', auth.isAuthenticated(), controller.index);
+router.get('/list', auth.isAuthenticated(), controller.getAll);
 router.get('/:id',  auth.isAuthenticated(), controller.index);
 //router.delete('/:id', auth.hasRole('admin'), controller.destroy);
 //router.get('/:id', auth.isAuthenticated(), controller.show);
 router.post('/', auth.isAuthenticated(), controller.createContractorPackage);
 router.get('/:id/winner', auth.isAuthenticated(), controller.getProjectForContractor);
-router.get('/get-all-contractor-packages', auth.isAuthenticated(), controller.getAll);
 
 //get contractor package by project for builder
 router.get('/:id/projectb', auth.isAuthenticated(), controller.getContractorPackageByProjectForBuilder);

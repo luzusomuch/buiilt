@@ -14,7 +14,7 @@
                 <td>{{user.firstName}}  {{user.lastName}}</td>
                 <td>{{user.role}}</td>
                 <td>
-                    <i class="material-icons" ng-click="remove(user)" style="color:#03A9F4">remove</i>
+                    <i ng-hide="currentUser._id == user._id" class="material-icons" ng-click="remove(user)" style="color:#03A9F4">remove</i>
                 </td>
             </tr>
         </tbody>

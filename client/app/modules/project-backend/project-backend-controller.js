@@ -1,5 +1,5 @@
-angular.module('buiiltApp').controller('UserBackendCtrl', function($scope, users, userService, authService) {
-    $scope.users = users;
+angular.module('buiiltApp').controller('MaterialPackageBackendCtrl', function($scope, projects, userService, authService) {
+    $scope.projects = projects;
     authService.getCurrentUser().$promise.then(function(user){
         $scope.currentUser = user;
     });

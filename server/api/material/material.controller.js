@@ -13,6 +13,13 @@ var async = require('async');
  * Get list of users
  * restriction: 'admin'
  */
+exports.getAll = function(req, res){
+  MaterialPackage.find({}, function(err, data){
+    if (err) {return res.send(500,err);}
+    return res.send(200,data);
+  })
+};
+
 exports.index = function (req, res) {
   var user = req.user;
   MaterialPackage.find({project : req.params.id},function (err, materials) {

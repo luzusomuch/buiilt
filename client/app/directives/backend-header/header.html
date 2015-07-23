@@ -1,4 +1,12 @@
 <header style="padding-left: 240px;">
+    <ul ng-show="currentUser._id" id="nav-mobile" class="side-nav fixed">
+        <li><a ui-sref="#">Projects</a></li>
+        <li><a ui-sref="userBackend">Users</a></li>
+        <li><a ui-sref="contractorPackagesBackend">Contractor packages</a></li>
+        <li><a ui-sref="materialPackagesBackend">Material packages</a></li>
+        <li><a ui-sref="#">Tasks</a></li>
+        <li><a ui-sref="#">Document</a></li>
+    </ul>
     <nav>
         <div class="nav-wrapper container">
             <a ui-sref="backend" class="brand-logo">buiilt</a>

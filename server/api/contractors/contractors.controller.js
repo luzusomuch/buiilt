@@ -14,6 +14,7 @@ var async = require('async');
  * restriction: 'admin'
  */
 exports.getAll = function(req, res) {
+  console.log('asdasdasd');
   ContractorPackage.find({}, function(err, contractorPackages){
     if (err) {return res.send(500,err);}
     return res.send(200, contractorPackages);

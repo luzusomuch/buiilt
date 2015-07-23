@@ -6,6 +6,13 @@ angular.module('buiiltApp')
           method : 'GET',
           isArray : true
         },
+        getAll : {
+          method : 'GET',
+          params: {
+            action: 'list'
+          },
+          isArray : true
+        },
         createMaterialPackage: {
             method: 'POST'
         },

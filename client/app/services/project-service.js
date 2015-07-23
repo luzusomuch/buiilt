@@ -50,7 +50,7 @@ angular.module('buiiltApp')
           method: 'GET',
           isArray: true,
           params: {
-            action: 'all-projects'
+            action: 'list'
           }
         }
     }

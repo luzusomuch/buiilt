@@ -43,7 +43,7 @@ angular.module('buiiltApp')
     },
     getTheBestProviders: { method: 'GET', params: { id: 'theBestProviders'}, isArray: true },
     gets:{method:'GET', params: {action: ''}, isArray: true},
-    delete: {method:'DELETE', params: {id: 'id', action: ''}},
+    delete: {method:'DELETE', params: {id: 'id', action: ''}, isArray: true},
     changePassword: { method: 'PUT', params: {id: 'id', action: 'password'}},
     changeEmail: { method: 'PUT', params: {id: 'id', action: 'email'}},
     // changePhoneNum: { method: 'PUT', params: {id: 'id', action: 'phone'}},

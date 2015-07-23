@@ -5,6 +5,13 @@ angular.module('buiiltApp')
         createContractorPackage: {
             method: 'POST'
         },
+        getAll : {
+            method: 'GET',
+            params: {
+                action: 'list'
+            },
+            isArray: true
+        },
         get : {
           method : 'GET',
           isArray : true
@@ -64,13 +71,7 @@ angular.module('buiiltApp')
                 action: 'processingcontractor'
             },
             isArray: true
-        },
-        getAll : {
-            method: 'GET',
-            params: {
-                action: 'get-all-contractor-packages'
-            },
-            isArray: true
         }
+        
     });
 });

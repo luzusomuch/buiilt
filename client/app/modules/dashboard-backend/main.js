@@ -12,11 +12,17 @@ angular.module('buiiltApp').config(function($stateProvider) {
             allContractorPackages: function(contractorService) {
                 return contractorService.getAll();
             },
+            allMaterialPackages: function(materialPackageService) {
+                return materialPackageService.getAll();
+            },
             allUsers: function(userService) {
                 return userService.getAll();
             },
             allDocuments: function(fileService) {
                 return fileService.getAll();
+            },
+            allTasks: function(taskService) {
+                return taskService.getAll();
             }
         }
     });

@@ -210,3 +210,10 @@ exports.getTask = function(req,res) {
     return res.json(tasks);
   });
 };
+
+exports.getAll = function(req, res) {
+  Task.find({}, function(err, tasks){
+    if (err) {return res.send(500,err);}
+    return res.json(200, tasks);
+  });
+};

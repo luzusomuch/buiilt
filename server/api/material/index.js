@@ -7,6 +7,7 @@ var auth = require('../../auth/auth.service');
 var router = express.Router();
 
 router.post('/', auth.isAuthenticated(), controller.createMaterialPackage);
+router.get('/list', auth.isAuthenticated(), controller.getAll);
 router.get('/:id', auth.isAuthenticated(), controller.index);
 router.get('/:id/supplier', auth.isAuthenticated(), controller.getProjectForSupplier);
 router.get('/:id/projectb', auth.isAuthenticated(), controller.getMaterialByProjectForBuilder);
