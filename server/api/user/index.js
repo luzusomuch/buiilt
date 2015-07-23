@@ -10,7 +10,7 @@ var router = express.Router();
 router.get('/', auth.hasRole('admin'), controller.index);
 router.delete('/:id', auth.hasRole('admin'), controller.destroy);
 router.get('/me', auth.isAuthenticated(), controller.me);
-router.get('/all', controller.all);
+router.get('/all', auth.hasRole('admin'), controller.all);
 router.put('/:id/password', auth.isAuthenticated(), controller.changePassword);
 router.put('/:id/email', auth.isAuthenticated(), controller.changeEmail);
 // router.put('/:id/phone', auth.isAuthenticated(), controller.changePhoneNum);

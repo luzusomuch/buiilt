@@ -15,6 +15,11 @@ angular.module('buiiltApp').config(function($stateProvider) {
       templateUrl: '/app/modules/auth/signin/signin.html',
       controller: 'SigninCtrl'
     })
+    .state('signinBackend', {
+      url: '/backend/signin',
+      templateUrl: '/app/modules/auth/signin-backend/signin.html',
+      controller: 'SigninBackendCtrl'
+    })
     .state('forgotPassword', {
       url: '/forgot-password',
       templateUrl : '/app/modules/auth/forgot-password/forgot-password.html',

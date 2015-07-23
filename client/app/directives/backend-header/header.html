@@ -1,0 +1,19 @@
+<header style="padding-left: 240px;">
+    <nav>
+        <div class="nav-wrapper container">
+            <a ui-sref="backend" class="brand-logo">buiilt</a>
+            <ul id="nav-mobile" class="right">
+                <li ng-if="currentUser._id">
+                    <a href="#!" class="dropdown-button" data-activates="userSettings" dropdown data-gutter="-30">
+                        <span ng-if="!currentUser.name">{{currentUser.email}}<i class="mdi-navigation-arrow-drop-down right"></i></span>
+                        <span ng-if="currentUser.name">{{currentUser.name}}<i class="mdi-navigation-arrow-drop-down right"></i></span>
+                    </a>
+                  
+                    <ul id="userSettings" class="dropdown-content"  style="margin-top: 15px">
+                        <li><a ui-sref="signout">Sign out</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>

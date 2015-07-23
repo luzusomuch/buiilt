@@ -13,6 +13,13 @@ var async = require('async');
  * Get list of users
  * restriction: 'admin'
  */
+exports.getAll = function(req, res) {
+  ContractorPackage.find({}, function(err, contractorPackages){
+    if (err) {return res.send(500,err);}
+    return res.send(200, contractorPackages);
+  });
+};
+
 exports.index = function (req, res) {
   var user = req.user;
   ContractorPackage.find({project : req.params.id},function (err, contractors) {

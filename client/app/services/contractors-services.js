@@ -64,6 +64,13 @@ angular.module('buiiltApp')
                 action: 'processingcontractor'
             },
             isArray: true
+        },
+        getAll : {
+            method: 'GET',
+            params: {
+                action: 'get-all-contractor-packages'
+            },
+            isArray: true
         }
     });
 });

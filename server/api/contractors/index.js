@@ -12,6 +12,7 @@ router.get('/:id',  auth.isAuthenticated(), controller.index);
 //router.get('/:id', auth.isAuthenticated(), controller.show);
 router.post('/', auth.isAuthenticated(), controller.createContractorPackage);
 router.get('/:id/winner', auth.isAuthenticated(), controller.getProjectForContractor);
+router.get('/get-all-contractor-packages', auth.isAuthenticated(), controller.getAll);
 
 //get contractor package by project for builder
 router.get('/:id/projectb', auth.isAuthenticated(), controller.getContractorPackageByProjectForBuilder);

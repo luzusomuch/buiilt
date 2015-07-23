@@ -95,3 +95,10 @@ exports.downloadAll = function(req, res) {
         }
     });
 };
+
+exports.getAll = function(req, res) {
+    File.find({}, function(err, files){
+        if (err) {return res.send(500,err);}
+        return res.json(200,files)
+    })
+};

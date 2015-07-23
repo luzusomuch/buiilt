@@ -51,6 +51,13 @@ angular.module('buiiltApp').factory('fileService', function($rootScope, $q, $res
                 action: 'download-all'
               },
               isArray: true
+            },
+            getAll: {
+              method: 'get',
+              params: {
+                action: 'get-all'
+              },
+              isArray: true
             }
     });
 });

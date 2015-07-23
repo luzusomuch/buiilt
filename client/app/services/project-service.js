@@ -1,6 +1,5 @@
 angular.module('buiiltApp')
 .factory('projectService', function($rootScope, $q, $resource) {
-
   return $resource('/api/projects/:id/:action',{
     id : '@_id'},
     {
@@ -46,8 +45,14 @@ angular.module('buiiltApp')
             action: 'builder'
           },
           isArray: true
+        },
+        getAllProjects: {
+          method: 'GET',
+          isArray: true,
+          params: {
+            action: 'all-projects'
+          }
         }
     }
-    
 );
 });

@@ -293,7 +293,10 @@ exports.destroy = function (req, res) {
     if (err) {
       return res.send(500, err);
     }
-    return res.send(204);
+    User.find({}, function(err,users){
+      if (err) {return res.send(500,err);}
+      return res.send(200, users);
+    })
   });
 };
 
@@ -379,7 +382,6 @@ exports.me = function (req, res, next) {
     if (!user) {
       return res.json(404);
     }
-    console.log(user);
     return res.json(user);
   });
 };
@@ -390,7 +392,7 @@ exports.all = function (req, res, next) {
       // return validationError(res,err);
       return res.send(500,err);
     }
-    res.json(users);
+    return res.json(users);
   });
 };
 

@@ -10,6 +10,7 @@ var router = express.Router();
 // router.post('/', auth.isAuthenticated(), controller.create);
 router.get('/:id/document', auth.isAuthenticated(), controller.getByDocument);
 router.get('/:id', auth.isAuthenticated(), controller.show);
+router.get('/get-all', auth.isAuthenticated(), controller.getAll);
 // router.put('/:id', auth.isAuthenticated(), controller.update);
 router.put('/:id/interested', auth.isAuthenticated(), controller.interested);
 // router.put('/:id/disinterested', auth.isAuthenticated(), controller.disinterested);
