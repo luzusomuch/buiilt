@@ -51,7 +51,7 @@ exports.getDefaultPackageByProject = function(req, res) {
  * get single package id
  */
 exports.findByProject = function(req, res){
-  BuilderPackage.findById(req.params.id)
+  BuilderPackage.findOne({project: req.params.id})
   .populate('project')
   .populate('owner')
   .populate('to.team')
