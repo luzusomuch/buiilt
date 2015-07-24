@@ -22,7 +22,6 @@ exports.project = function(req, res, next) {
 };
 
 exports.getDefaultPackageByProject = function(req, res) {
-  console.log('aaaaaaaaaaaaa');
   var project = req.project;
   BuilderPackage.findOne({
     project: project._id,
@@ -59,6 +58,14 @@ exports.findByProject = function(req, res){
   .exec(function(err, builderPackage) {
     if (err){ return res.send(500, err); }
     if (!builderPackage) {return res.send(404, err);}
-    return res.json(builderPackage);
+    User.populate(builderPackage,[
+      {path : 'owner.member._id'},
+      {path : 'owner.leader'},
+      {path : 'to.team.member._id'},
+      {path : 'to.team.leader'}
+    ],function(err,builderPackage) {
+      if (err){ console.log(err);return res.send(500, err); }
+      return res.json(builderPackage);
+    });
   });
 };
