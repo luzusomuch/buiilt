@@ -10,8 +10,11 @@ var async = require('async');
 
 exports.project = function(req, res, next) {
   Project.findById(req.params.id,function(err,project) {
-    if (err || !project) {
+    if (err) {
       return res.send(500,{msg: 'Missing project.'})
+    }
+    if (!project) {
+      return res.send(404,err);
     }
     req.project = project;
     next();
@@ -19,6 +22,7 @@ exports.project = function(req, res, next) {
 };
 
 exports.getDefaultPackageByProject = function(req, res) {
+  console.log('aaaaaaaaaaaaa');
   var project = req.project;
   BuilderPackage.findOne({
     project: project._id,
@@ -29,14 +33,14 @@ exports.getDefaultPackageByProject = function(req, res) {
   .populate('to.team')
   .populate('variations')
   .exec(function(err, builderPackage) {
-    if (err){ return res.send(500, err); }
+    if (err){console.log(err); return res.send(500, err); }
     User.populate(builderPackage,[
       {path : 'owner.member._id'},
       {path : 'owner.leader'},
       {path : 'to.team.member._id'},
       {path : 'to.team.leader'}
     ],function(err,builderPackage) {
-      if (err){ return res.send(500, err); }
+      if (err){ console.log(err);return res.send(500, err); }
       return res.json(builderPackage);
     })
 
@@ -46,12 +50,15 @@ exports.getDefaultPackageByProject = function(req, res) {
 /**
  * get single package id
  */
-exports.show = function(req, res){
-  BuilderPackage.findOne({project: req.params.id})
+exports.findByProject = function(req, res){
+  BuilderPackage.findById(req.params.id)
   .populate('project')
+  .populate('owner')
+  .populate('to.team')
+  .populate('variations')
   .exec(function(err, builderPackage) {
     if (err){ return res.send(500, err); }
-
-    res.json(builderPackage);
+    if (!builderPackage) {return res.send(404, err);}
+    return res.json(builderPackage);
   });
 };

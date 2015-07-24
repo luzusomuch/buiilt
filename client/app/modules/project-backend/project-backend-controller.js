@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('MaterialPackageBackendCtrl', function($scope, projects, userService, authService) {
+angular.module('buiiltApp').controller('ProjectBackendCtrl', function($scope, projects, userService, authService) {
     $scope.projects = projects;
     authService.getCurrentUser().$promise.then(function(user){
         $scope.currentUser = user;
