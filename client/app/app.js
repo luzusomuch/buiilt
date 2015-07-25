@@ -11,7 +11,7 @@ angular.module('buiiltApp', [
   'restangular',
   'lumx',
   'ui.materialize',
-  'contenteditable',
+  // 'contenteditable',
   '720kb.tooltips',
   'angucomplete-alt',
   'btford.socket-io'
