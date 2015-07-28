@@ -33,6 +33,7 @@ module.exports = function(app) {
   app.use('/api/messages', require('./api/message'));
   app.use('/api/addOnPackages', require('./api/addOnPackage'));
   app.use('/api/variationRequests', require('./api/variationRequest'));
+  app.use('/api/devices', require('./api/device'));
 
   app.use('/auth', require('./auth'));
 

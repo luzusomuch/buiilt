@@ -5,6 +5,7 @@ var EventBus = require('./../components/EventBus');
 var User = require('./../models/user.model');
 var Notification = require('./../models/notification.model');
 var NotificationHelper = require('./../components/helpers/notification');
+var PushNotificationHelper = require('./../components/helpers/PushNotification');
 var config = require('./../config/environment');
 var async = require('async');
 var _ = require('lodash');
@@ -99,4 +100,6 @@ EventBus.onSeries('Thread.NewMessage', function(thread, next) {
   NotificationHelper.create(params,function() {
     return next();
   });
+  var data = _.last(thread.messages);
+  PushNotificationHelper.getData(thread.name, data.text, data.user);
 });
