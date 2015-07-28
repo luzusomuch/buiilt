@@ -4,8 +4,8 @@ var device = require('./../../models/device.model');
 
 exports.getData = function(threadName, message, user){
     agent
-        .set('cert file', __dirname+'/../../cert/builtCert.pem')
-        .set('key file', __dirname+'/../../cert/builtKey.pem')    
+        .set('cert file', __dirname+'/../../cert/buiiltCert.pem')
+        .set('key file', __dirname+'/../../cert/buiiltKey.pem')    
         .set('passphrase', '123456')
         .disable('sandbox');//enable production
         // .enable('sandbox');//disable production
