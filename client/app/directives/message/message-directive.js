@@ -189,7 +189,7 @@ angular.module('buiiltApp')
 
           socket.on('message:new', function (thread) {
             $scope.currentThread = thread;
-            console.log($scope.scrollHeight = $('#messages')[0].scrollHeight);
+            // console.log($scope.scrollHeight = $('#messages')[0].scrollHeight);
           });
 
           $scope.enterMessage = function ($event) {
