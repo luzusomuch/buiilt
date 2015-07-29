@@ -19,7 +19,6 @@ var s3 = require('../../components/S3');
 var _ = require('lodash');
 var async = require('async');
 var gm = require('gm');
-var PDFImage = require("pdf-image").PDFImage;
 var fs = require('fs');
 var exec = require('child_process').exec;
 var config = require('./../../config/environment');
