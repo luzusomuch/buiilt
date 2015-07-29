@@ -81,7 +81,10 @@ exports.getData = function(threadName, message, users){
         agent.createMessage()
          .device(device.deviceToken)
          .alert(threadName+': '+message)
-         .sound('defauld').send();
+         .sound('defauld').send(function(err){
+          if (err) {console.log(err)}
+          console.log('success');
+         });
       }
     }); 
   });
