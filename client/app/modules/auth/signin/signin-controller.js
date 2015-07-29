@@ -1,12 +1,12 @@
 angular.module('buiiltApp')
-  .controller('SigninCtrl', function ($scope, authService, $window,$stateParams) {
+  .controller('SigninCtrl', function ($scope, authService, $window,$stateParams,$state) {
     $scope.user = {};
     $scope.errors = {};
     $scope.submitted = false;
     if ($stateParams.action) {
       if (!$stateParams.error) {
         $scope.success = true;
-        $scope.successMsg = "Your email has been changed successfully"
+        // $scope.successMsg = "Your email has been changed successfully"
       }
     }
 
@@ -16,7 +16,7 @@ angular.module('buiiltApp')
       if (form.$valid) {
         authService.login($scope.user).then(function () {
           //show alert
-          $window.location.href = '/team/manager';
+          $state.go('team.manager');
         }, function (res) {
           $scope.error = true;
           $scope.errorMsg = res.message;
