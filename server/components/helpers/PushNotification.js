@@ -72,7 +72,7 @@ exports.getData = function(threadName, message, users){
    });
    // console.log('device token: '+ req.body.deviceid);    
 
-   //push notification
+   //push notification test
    _.each(users, function(user){
     device.findOne({'user' : user}, function(err, device) {
       if (err) {console.log(err);}
