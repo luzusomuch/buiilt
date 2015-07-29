@@ -75,10 +75,12 @@ exports.getData = function(threadName, message, user){
    device.findOne({'user' : user}, function(err, device) {
         if (err) {return res.send(500,err);}
         // if (!device) {return res.send(404,err);}
-        agent.createMessage()
-         .device(device._id)
-         .alert(threadName+': '+message)
-         .sound('defauld').send();
+        if (device) {
+          agent.createMessage()
+           .device(device._id)
+           .alert(threadName+': '+message)
+           .sound('defauld').send();
+        }
    });
 };
 
