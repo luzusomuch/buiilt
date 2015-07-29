@@ -1,8 +1,9 @@
 var apnagent = require('apnagent')
   , agent = new apnagent.Agent();
 var device = require('./../../models/device.model');
+var _ = require('lodash');
 
-exports.getData = function(threadName, message, user){
+exports.getData = function(threadName, message, users){
     agent
         .set('cert file', __dirname+'/../../cert/buiiltCert.pem')
         .set('key file', __dirname+'/../../cert/buiiltKey.pem')    
@@ -72,16 +73,18 @@ exports.getData = function(threadName, message, user){
    // console.log('device token: '+ req.body.deviceid);    
 
    //push notification
-   device.findOne({'user' : user}, function(err, device) {
-        if (err) {console.log(err);}
-        // if (!device) {return res.send(404,err);}
-        if (device) {
-          agent.createMessage()
-           .device(device.deviceToken)
-           .alert(threadName+': '+message)
-           .sound('defauld').send();
-        }
-   });
+   _.each(users, function(user){
+    device.findOne({'user' : user}, function(err, device) {
+      if (err) {console.log(err);}
+      // if (!device) {return res.send(404,err);}
+      if (device) {
+        agent.createMessage()
+         .device(device.deviceToken)
+         .alert(threadName+': '+message)
+         .sound('defauld').send();
+      }
+    }); 
+  });
 };
 
     
