@@ -37,7 +37,7 @@ exports.getData = function(threadName, message, user){
             errMsg = '[message:error] other error: '+ err.message;      
             break;
         }
-        return({
+        console.log({
             status: "error",
             message: errMsg
         });
@@ -49,7 +49,7 @@ exports.getData = function(threadName, message, user){
     var msg = '';
      // gracefully handle auth problems
      if (err && err.name === 'GatewayAuthorizationError') {        
-    return ({
+    console.log ({
       status: "error",
       message: 'Authentication Error: '+err.message
     });
@@ -57,13 +57,13 @@ exports.getData = function(threadName, message, user){
 
      // handle any other err (not likely)
      else if (err) {
-    return ({
+    console.log ({
       status: "error",
       message: err
     });
      }
     
-    return ({
+    console.log ({
       status: "success",
       message: ''
     });
@@ -73,11 +73,11 @@ exports.getData = function(threadName, message, user){
 
    //push notification
    device.findOne({'user' : user}, function(err, device) {
-        if (err) {return res.send(500,err);}
+        if (err) {console.log(err);}
         // if (!device) {return res.send(404,err);}
         if (device) {
           agent.createMessage()
-           .device(device._id)
+           .device(device.deviceToken)
            .alert(threadName+': '+message)
            .sound('defauld').send();
         }
