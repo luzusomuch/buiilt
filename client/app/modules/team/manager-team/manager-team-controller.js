@@ -60,7 +60,7 @@ angular.module('buiiltApp')
           if (!(_.find($scope.member.emails,{email : $scope.textString}))) {
             $scope.member.emails.push({email: $scope.textString});
             $scope.team.emails.push({email: $scope.textString});
-           // $scope.member.email = {};
+           $scope.member.email = {};
           }
       }
       $scope.$broadcast('angucomplete-alt:clearInput');

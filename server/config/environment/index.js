@@ -63,10 +63,10 @@ var all = {
   },
 
   s3Options: {
-            accessKeyId: 'AKIAI7KKFT6PBJRLBZKQ',
-            secretAccessKey: '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',
+            accessKeyId: 'AKIAICAYUM6RPT5MOCMQ',
+            secretAccessKey: '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',
           },
-  Bucket: 'hvs3',
+  Bucket: 'buiilt',
 };
 
 // Export the config object based on the NODE_ENV

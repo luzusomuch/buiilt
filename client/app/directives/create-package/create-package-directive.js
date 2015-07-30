@@ -107,7 +107,8 @@ angular.module('buiiltApp').directive('createPackage', function(){
       };
       $scope.contractorSubmitted = false;
       $scope.contractorAddUser = function() {
-
+        console.log($scope.contractorMember.email);
+        console.log($scope.contractorTextString);
         if ($scope.contractorMember.email.title) {
           if (!(_.find($scope.contractorMember.emailsPhone,{email : $scope.contractorMember.email.title}))) {
             $scope.contractorMember.emailsPhone.push({email: $scope.contractorMember.email.title, phoneNumber: $scope.newPhoneNumber})
@@ -119,7 +120,7 @@ angular.module('buiiltApp').directive('createPackage', function(){
           if ($scope.contractorTextString) {
             if (!(_.find($scope.contractorMember.emailsPhone,{email : $scope.contractorTextString}))) {
               $scope.contractorMember.emailsPhone.push({email: $scope.contractorTextString, phoneNumber: $scope.newPhoneNumber});
-
+              $scope.contractorMember.email = {};
             }
           }
         }
@@ -233,12 +234,14 @@ angular.module('buiiltApp').directive('createPackage', function(){
               email: $scope.materialMember.email.title,
               phoneNumber: $scope.newPhoneNumber
             });
+            $scope.materialMember.email = {};
           }
         }
         else {
           if ($scope.textString) {
             if (!(_.find($scope.materialMember.emailsPhone, {email: $scope.textString}))) {
               $scope.materialMember.emailsPhone.push({email: $scope.textString, phoneNumber: $scope.newPhoneNumber});
+              $scope.materialMember.email = {};
             }
           }
         }

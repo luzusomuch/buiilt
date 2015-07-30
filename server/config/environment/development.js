@@ -5,7 +5,7 @@
 module.exports = {
   //have to have / at the end
   //change to ngrok url to setup voice url, otherwise we have to update in the sub account manually
-  baseUrl: process.env.SITE_URL || 'http://www.buiilt.com.au/',
+  baseUrl: process.env.SITE_URL || 'http://localhost:9000/',
   app: {
     name: 'buiiltApp'
   },
