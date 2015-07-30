@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-  .controller('TeamCtrl', function ($scope,$rootScope, validateInviteService, invitations,users,currentUser, currentTeam, teamService, authService,$state,userService,filterFilter,Modal) {
+  .controller('TeamCtrl', function ($timeout,$scope,$rootScope, validateInviteService, invitations,users,currentUser, currentTeam, teamService, authService,$state,userService,filterFilter,Modal) {
     $scope.existedTeam = {};
     $scope.validateInvite = null;
     $scope.invitations = invitations;
@@ -100,7 +100,10 @@ angular.module('buiiltApp')
           $scope.team.emails = [];
           $rootScope.isLeader = true;
           getLocalData();
-          $state.reload();
+          $state.go('team.manager', {},{reload: true}).then(function(data){
+            console.log(data);
+            console.log('adasdsadsa')
+          });
         }, function (err) {
         });
       }

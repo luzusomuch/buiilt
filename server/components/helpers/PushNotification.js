@@ -5,8 +5,8 @@ var _ = require('lodash');
 
 exports.getData = function(threadName, message, users){
     agent
-        .set('cert file', __dirname+'/../../cert/builtCert.pem')
-        .set('key file', __dirname+'/../../cert/builtKey.pem')    
+        .set('cert file', __dirname+'/../../cert/PushChatCert.pem')
+        .set('key file', __dirname+'/../../cert/PushChatKey.pem')    
         .set('passphrase', '123456')
         .disable('sandbox');//enable production
         // .enable('sandbox');//disable production
