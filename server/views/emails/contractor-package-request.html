@@ -2,37 +2,11 @@
 
 {% block content %}
 <p>
-  <%= team.name %> has invited you to send quote for contractor package <%= contractorPackage.name %>
-</p>
-<div>
-  <h6>Contractor package detail</h6>
-    <table style="width:100%">
-        <thead>
-            <th>#</th>
-            <th>Description</th>
-        </thead>
-        <tbody>
-            {% for addendum in contractorPackage.addendums %}
-            <tr>
-                <td style="text-align:center"><%= loop.index %></td>
-                <td style="text-align:center"><%= addendum.addendumsScope.description %></td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-<p>
-  Your can click <a href="<%= contractorPackageLink %>">here</a> to send the request.
-
-  <br/>
-  Feel free to contact us at <a href="mailto:admin@buiilt.com">admin@buiilt.com</a> if you have any questions.
+	<%= team.name %> has invited you to send them a quote.
 </p>
 
 <p>
-  Love, <br/>
-  Team buiilt
-  <br/>
-  <a href="http://www.buiilt.com">www.buiilt.com</a>
+    Please click <a href="<%= contractorPackageLink %>">here</a> to view the project details, and submit a quote.
 </p>
 
 {% endblock %}

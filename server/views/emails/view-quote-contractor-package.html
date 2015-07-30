@@ -2,33 +2,11 @@
 
 {% block content %}
 <p>
-  <%= user.email %> has send you a quote for contractor package <%= contractorPackage.name %>
+  <%= user.email %> has sent you a quote.
 </p>
 
 <p>
-  <b><%= project.name %></b>
-  <%= project.description %>
-</p>
-
-<p>
-  <b>Quote request detail</b>
-  <%= description %>
-</p>
-<p>
-  Price: <%= price %>
-</p>
-<p>
-  Your can click <a href="<%= quotesLink %>">here</a> to see the request and select the winner.
-
-  <br/>
-  Feel free to contact us at <a href="mailto:admin@buiilt.com">admin@buiilt.com</a> if you have any questions.
-</p>
-
-<p>
-  Love, <br/>
-  Team buiilt
-  <br/>
-  <a href="http://www.buiilt.com">www.buiilt.com</a>
+	Please click <a href="<%= quotesLink %>">here</a> to view the quote.
 </p>
 
 {% endblock %}

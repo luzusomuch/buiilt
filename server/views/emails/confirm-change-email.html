@@ -2,18 +2,8 @@
 
 {% block content %}
 
-<p>You or someone have requested to change your email to <%= emailChange %> for your account at Buiilt.com</p>
-<p></p>
-<p>Please visit this url to change your email and re-login. </p>
-<p></p>
-<p><a href="<%= confirmation %>" ><%= confirmation %></a></p>
-<p></p>
-<p>If you received this email in error, you can safely ignore this email.</p>
-<p>
-  Love, <br/>
-  Team buiilt
-  <br/>
-  <a href="http://www.slicktalk.com">www.buiilt.com</a>
-</p>
+<p>Someone has requested to change the email for your account on buiilt.</p>
+<p>Please click <a href="<%= confirmation %>">here</a> to confirm this change.</p>
+<p>If you did not make this request, you can safely ignore this email.</p>
 
 {% endblock %}

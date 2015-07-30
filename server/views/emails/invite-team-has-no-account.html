@@ -2,21 +2,12 @@
 
 {% block content %}
 <p>
-  Invitation for group <%= request.name %>
+	<%= request.name %> has invited you to become a member of their team.
 </p>
 
 <p>
-  Click <a href="<%= link %>">this</a> link to registry.
-
-  <br/>
-  Feel free to contact us at <a href="mailto:admin@slicktalk.com">admin@buiilt.com</a> if you have any questions.
+	Please click <a href="<%= link %>">here</a> to create your account and join their team.
 </p>
 
-<p>
-    Love, <br/>
-    Team buiilt
-    <br/>
-    <a href="http://www.buiilt.com">www.buiilt.com</a>
-  </p>
 
 {% endblock %}
