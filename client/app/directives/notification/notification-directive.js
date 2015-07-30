@@ -148,43 +148,43 @@ angular.module('buiiltApp')
 
         var text;
         if (scope.notification.type === 'task-assign') {
-          text = params.fromUser() + ' has assigned ' + params.toUser() + ' to task ' + params.element + ' at ' + params.time;
+          text = params.fromUser() + ' has assigned ' + params.toUser() + ' to the task ' + params.element + ' at ' + params.time;
         }
         if (scope.notification.type === 'task-revoke') {
-          text = params.fromUser() + ' has revoked ' + params.toUser() + ' from task ' + params.element + ' at ' + params.time;
+          text = params.fromUser() + ' has removed ' + params.toUser() + ' from the task ' + params.element + ' at ' + params.time;
         }
         if (scope.notification.type === 'task-reopened') {
-          text = params.fromUser() + ' has reopened task ' + params.element + ' at ' + params.time;
+          text = params.fromUser() + ' has reopened the task ' + params.element + ' at ' + params.time;
         }
         if (scope.notification.type === 'task-completed') {
-          text = params.fromUser() + ' has completed task ' + params.element + ' at ' + params.time;
+          text = params.fromUser() + ' has completed the task ' + params.element + ' at ' + params.time;
         }
         if (scope.notification.type === 'thread-assign') {
-          text = params.fromUser() + ' has assigned ' + params.toUser() + ' to thread ' + params.element + ' at ' + params.time;
+          text = params.fromUser() + ' has assigned ' + params.toUser() + ' to the thread ' + params.element + ' at ' + params.time;
         }
         if (scope.notification.type === 'thread-remove') {
-          text = params.fromUser() + ' has removed ' + params.toUser() + ' to thread ' + params.element + ' at ' + params.time;
+          text = params.fromUser() + ' has removed ' + params.toUser() + ' from the thread ' + params.element + ' at ' + params.time;
         }
         if (scope.notification.type === 'thread-message') {
-          text = params.fromUser() + ' has send new message in thread ' + params.element + ' at ' + params.time;
+          text = params.fromUser() + ' has posted a new message in the thread ' + params.element + ' at ' + params.time;
         }
         if (scope.notification.type === 'team-invite') {
-          text = params.fromUser() + ' has invite you to ' + params.team() + ' at ' + params.time;
+          text = params.fromUser() + ' has invited you to the team ' + params.team() + ' at ' + params.time;
         }
         if (scope.notification.type === 'team-accept') {
-          text = params.fromUser() + ' has accept to join to ' + params.team() + ' at ' + params.time;
+          text = params.fromUser() + ' has accepted to join the team ' + params.team() + ' at ' + params.time;
         }
         if (scope.notification.type === 'team-remove') {
-          text = params.fromUser() + ' has remove ' + params.toUser() + ' to ' + params.team() + ' at ' + params.time;
+          text = params.fromUser() + ' has removed ' + params.toUser() + ' from ' + params.team() + ' at ' + params.time;
         }
         if (scope.notification.type === 'team-leave') {
-          text = params.fromUser() + ' has leaved ' + params.team() + ' at ' + params.time;
+          text = params.fromUser() + ' has left the team ' + params.team() + ' at ' + params.time;
         }
         if (scope.notification.type === 'staff-assign') {
-          text = params.fromUser() + ' has assigned ' + params.toUser() + ' to package '+ params.element + ' at ' + params.time;
+          text = params.fromUser() + ' has assigned ' + params.toUser() + ' to the package '+ params.element + ' at ' + params.time;
         }
         if (scope.notification.type === 'team-assign-leader') {
-          text = params.fromUser() + ' has assigned ' + params.toUser() + ' to admin in '+ params.team() + ' at ' + params.time;
+          text = params.fromUser() + ' has assigned ' + params.toUser() + ' as an administrator in '+ params.team() + ' at ' + params.time;
         }
         if (scope.notification.type === 'create-contractor-package') {
           text = params.fromUser() + ' has invited ' + params.toUser() + 'to send a quote for ' + params.element;
@@ -196,55 +196,55 @@ angular.module('buiiltApp')
           text = params.fromUser() + ' has invited ' + params.toUser() + 'to send a quote for ' + params.element;
         }
         if (scope.notification.type === 'send-quote') {
-          text = params.fromUser() + ' has send quote ' + params.quote + ' to ' + params.toUser() + ' in ' + params.packageName;
+          text = params.fromUser() + ' has sent a quote ' + params.quote + ' to ' + params.toUser() + ' in ' + params.packageName;
         }
         if (scope.notification.type === 'send-addendum') {
-          text = params.fromUser()  + 'has add new addendum in ' + params.element;
+          text = params.fromUser()  + 'has attached an addendum to ' + params.element;
         }
         if (scope.notification.type === 'edit-addendum') {
-          text = params.fromUser()  + 'has edit addendum in ' + params.element;
+          text = params.fromUser()  + 'has edited an addendum in ' + params.element;
         }
         if (scope.notification.type === 'invite') {
-          text = params.fromUser()  + 'has invited new person in ' + params.packageName;
+          text = params.fromUser()  + 'has sent an invitation in ' + params.packageName;
         }
         if (scope.notification.type == 'invitation') {
-          text = params.fromUser()  + 'has invited you to send quote for ' + params.element;
+          text = params.fromUser()  + 'has invited you to send a quote for ' + params.element;
         }
         if (scope.notification.type === 'send-message') {
-          text = params.fromUser()  + 'has send you a message in ' + params.element;
+          text = params.fromUser()  + 'has sent you a message in ' + params.element;
         }
         if (scope.notification.type === 'send-message-to-builder') {
-          text = params.fromUser()  + 'has send you a message in ' + params.element;
+          text = params.fromUser()  + 'has sent you a message in ' + params.element;
         }
         if (scope.notification.type === 'select-quote') {
-          text = params.fromUser()  + 'has select you for ' + params.element;
+          text = params.fromUser()  + 'has selected your quote for ' + params.element;
         }
         if (scope.notification.type === 'send-defect') {
-          text = params.fromUser()  + 'has add new defect in ' + params.element;
+          text = params.fromUser()  + 'has added a new defect to ' + params.element;
         }
         if (scope.notification.type === 'send-variation') {
-          text = params.fromUser()  + 'has add new variation in ' + params.element;
+          text = params.fromUser()  + 'has added a new variation to ' + params.element;
         }
         if (scope.notification.type === 'send-invoice') {
-          text = params.fromUser() + 'has add new invoice in ' + params.element;
+          text = params.fromUser() + 'has added a new invoice to ' + params.element;
         }
         if (scope.notification.type === 'uploadDocument') {
-          text = params.fromUser()  + 'has add new document ' + params.fileName + ' in ' + params.place;
+          text = params.fromUser()  + 'has added a new document ' + params.fileName + ' to ' + params.place;
         }
         if (scope.notification.type === 'uploadNewDocumentVersion') {
-          text = params.fromUser()  + 'has update document ' + params.fileName + ' in project ' + params.place;
+          text = params.fromUser()  + 'has updated the document ' + params.fileName + ' in project ' + params.place;
         }
         if (scope.notification.type == 'create-builder-package') {
-          text = params.fromUser() + ' invited you become a ' + params.builderOrHomeOwner + ' for project' + params.element;
+          text = params.fromUser() + ' has invited you become the ' + params.builderOrHomeOwner + ' for project' + params.element;
         }
         if (scope.notification.type == 'send-thanks-to-loser') {
           text = params.packageName + 'has been awarded to another company. ' + params.fromUser() + ' thanks you for provide a quote';
         }
         if (scope.notification.type == 'cancel-package') {
-          text = params.fromUser() + 'has been cancel package ' + params.packageName;
+          text = params.fromUser() + 'has canceled the package ' + params.packageName;
         }
         if (scope.notification.type == 'decline-quote') {
-          text = params.fromUser() + 'has been decline your quote in ' + params.packageName;
+          text = params.fromUser() + 'has declined your quote in ' + params.packageName;
         }
 
         scope.notification.sref = getSref(scope.notification);

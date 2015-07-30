@@ -2,42 +2,11 @@
 
 {% block content %}
 <p>
-  <%= team.name %> has invited you to send quote for material package <%= materialPackage.name %>
-</p>
-
-
-<div>
-  <h6>Material package detail</h6>
-    Requirement:
-    <table style="width:100%">
-        <thead>
-            <th>#</th>
-            <th>Description</th>
-            <th>Quantity</th>
-        </thead>
-        <tbody>
-            {% for addendum in materialPackage.addendums %}
-            <tr>
-                <td style="text-align:center"><%= loop.index %></td>
-                <td style="text-align:center"><%= addendum.addendumsScope.description %></td>
-                <td style="text-align:center"><%= addendum.addendumsScope.quantity %></td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-<p>
-    Please click this <a href="<%= registryLink %>">link</a> to sign up first.
-
-  <br/>
-  Feel free to contact us at <a href="mailto:admin@buiilt.com">admin@buiilt.com</a> if you have any questions.
+	<%= team.name %> has invited you to send them a quote for their project.
 </p>
 
 <p>
-  Love, <br/>
-  Team buiilt
-  <br/>
-  <a href="http://www.buiilt.com">www.buiilt.com</a>
+    Please <a href="<%= registryLink %>">click here</a> to create an account and submit your quote.
 </p>
 
 {% endblock %}

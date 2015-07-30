@@ -2,24 +2,11 @@
 
 {% block content %}
 <p>
-  <%= user.email %> has send you a quote for project <%= project.name %>
-</p>
-<p><strong>Price: </strong><%= price%></p>
-
-<p>
-  Price: <%= quoteRequest.price %>
-  <br>
-  Your can click <a href="<%= quotesLink %>">here</a> to see all quotes request.
-
-  <br/>
-  Feel free to contact us at <a href="mailto:admin@slicktalk.com">admin@buiilt.com</a> if you have any questions.
+	<%= user.email %> has sent you a quote for your project.
 </p>
 
 <p>
-    Love, <br/>
-    Team buiilt
-    <br/>
-    <a href="http://www.buiilt.com">www.buiilt.com</a>
-  </p>
+   Please click <a href="<%= quotesLink %>">here</a> to view the quote.
+</p>
 
 {% endblock %}
