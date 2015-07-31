@@ -8,8 +8,8 @@ exports.getData = function(threadName, message, users){
         .set('cert file', __dirname+'/../../cert/buiiltAppNewCert.pem')
         .set('key file', __dirname+'/../../cert/buiiltAppNewKey.pem')    
         .set('passphrase', '123456')
-        .disable('sandbox');//enable production
-        // .enable('sandbox');//disable production
+        // .disable('sandbox');//enable production
+        .enable('sandbox');//disable production
     
     agent.on('message:error', function (err, msg) {
         var errMsg = '';
@@ -50,24 +50,26 @@ exports.getData = function(threadName, message, users){
     var msg = '';
      // gracefully handle auth problems
      if (err && err.name === 'GatewayAuthorizationError') {        
-    console.log ({
-      status: "error",
-      message: 'Authentication Error: '+err.message
-    });
+      console.log ({
+        status: "error",
+        message: 'Authentication Error: '+err.message
+      });
      }
 
      // handle any other err (not likely)
      else if (err) {
-    console.log ({
-      status: "error",
-      message: err
-    });
+      console.log ({
+        status: "error",
+        message: err
+      });
      }
     
-    console.log ({
-      status: "success",
-      message: ''
-    });
+    // it worked!
+  var env = agent.enabled('sandbox')
+    ? 'sandbox'
+    : 'production';
+
+  console.log('apnagent [%s] gateway connected', env);
       
    });
    // console.log('device token: '+ req.body.deviceid);    
@@ -82,8 +84,10 @@ exports.getData = function(threadName, message, users){
          .device(device.deviceToken)
          .alert(threadName+': '+message)
          .sound('defauld').send(function(err){
-          if (err) {console.log(err)}
-          console.log('success');
+          if (!err) {console.log('success');}
+          console.log(err);
+          // if (err) {console.log(err)}
+          // console.log('success');
          });
       }
     }); 
