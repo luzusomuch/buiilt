@@ -5,11 +5,11 @@ var _ = require('lodash');
 
 exports.getData = function(threadName, message, users){
     agent
-        .set('cert file', __dirname+'/../../cert/PushChatCert2.pem')
-        .set('key file', __dirname+'/../../cert/PushChatKey2.pem')    
+        .set('cert file', __dirname+'/../../cert/PushChatCert3.pem')
+        .set('key file', __dirname+'/../../cert/PushChatKey3.pem')    
         .set('passphrase', '123456')
-        // .disable('sandbox');//enable production
-        .enable('sandbox');//disable production
+        .disable('sandbox');//enable production
+        // .enable('sandbox');//disable production
     
     agent.on('message:error', function (err, msg) {
         var errMsg = '';
