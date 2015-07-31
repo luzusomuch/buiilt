@@ -5,11 +5,11 @@ var _ = require('lodash');
 
 exports.getData = function(threadName, message, users){
     agent
-        .set('cert file', __dirname+'/../../cert/buiiltAppNewDisCert.pem')
-        .set('key file', __dirname+'/../../cert/buiiltAppNewDisKey.pem')    
+        .set('cert file', __dirname+'/../../cert/buiiltAppNewCert.pem')
+        .set('key file', __dirname+'/../../cert/buiiltAppNewKey.pem')    
         .set('passphrase', '123456')
-        // .disable('sandbox');//enable production
-        .enable('sandbox');//disable production
+        .disable('sandbox');//enable production
+        // .enable('sandbox');//disable production
     
     agent.on('message:error', function (err, msg) {
         var errMsg = '';
