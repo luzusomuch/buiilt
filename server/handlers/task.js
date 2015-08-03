@@ -7,6 +7,7 @@ var Notification = require('./../models/notification.model');
 var config = require('./../config/environment');
 var async = require('async');
 var _ = require('lodash');
+var PushNotificationHelper = require('./../components/helpers/PushNotification');
 
 EventBus.onSeries('Task.Inserted', function(task, next){
   if (task.assignees.length > 0) {
@@ -20,6 +21,7 @@ EventBus.onSeries('Task.Inserted', function(task, next){
     NotificationHelper.create(params, function() {
       next();
     });
+    PushNotificationHelper.getData(task.name, 'has assigned to you', task.assignees);
   } else {
     next();
   }
