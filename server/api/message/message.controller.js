@@ -199,4 +199,10 @@ exports.getMessages = function(req,res) {
     });
 };
 
-
+exports.getById = function(req, res){
+  Thread.findById(req.params.id).populate('messages.user').exec(function(err, thread){
+    if (err) {return res.send(500,err);}
+    if (!thread) {return res.send(404);}
+    return res.send(200,thread);
+  });
+};

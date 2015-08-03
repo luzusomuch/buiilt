@@ -293,6 +293,22 @@ exports.destroy = function (req, res) {
     if (err) {
       return res.send(500, err);
     }
+    console.log(user);
+    if (user.team._id) {
+      Team.findById(user.team._id, function(err, team){
+        if (err) {return res.send(500,err);}
+        var teamMembers = team.leader;
+        _.each(team.member, function(member){
+          if (member._id) {
+            teamMembers.push(member._id);
+          }
+        });
+        _.remove(teamMembers, user._id);
+        team.markModified('member');
+        team.markModified('leader');
+        team.save();
+      });
+    }
     User.find({}, function(err,users){
       if (err) {return res.send(500,err);}
       return res.send(200, users);

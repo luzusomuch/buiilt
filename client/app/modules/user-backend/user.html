@@ -1,6 +1,23 @@
 <div class="col s12">
-    <table>
-        <thead>
+    <table ng-table="tableParams" class="table">
+        <tr ng-repeat="user in users">
+            <td data-title="'#'">
+                {{$index + 1}}
+            </td>
+            <td data-title="'Email'">
+                {{user.email}}
+            </td>
+            <td data-title="'Full name'">
+                {{user.firstName}}  {{user.lastName}}
+            </td>
+            <td data-title="'Role'">
+                {{user.role}}
+            </td>
+            <td data-title="'Action'">
+                <i ng-hide="currentUser._id == user._id" class="material-icons" ng-click="remove(user)" style="color:#03A9F4">remove</i>
+            </td>
+        </tr>
+        <!-- <thead>
             <th>#</th>
             <th>Email</th>
             <th>Full name</th>
@@ -17,6 +34,6 @@
                     <i ng-hide="currentUser._id == user._id" class="material-icons" ng-click="remove(user)" style="color:#03A9F4">remove</i>
                 </td>
             </tr>
-        </tbody>
+        </tbody> -->
     </table>
 </div>

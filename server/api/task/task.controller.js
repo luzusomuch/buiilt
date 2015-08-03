@@ -217,3 +217,11 @@ exports.getAll = function(req, res) {
     return res.json(200, tasks);
   });
 };
+
+exports.getOne = function(req, res) {
+  Task.findById(req.params.id).populate('assignees').exec(function(err, task){
+    if (err) {return res.send(500,err);}
+    if (!task) {return res.send(404);}
+    return res.send(200,task);
+  });
+};
