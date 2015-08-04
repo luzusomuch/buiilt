@@ -188,3 +188,17 @@ exports.getContractorPackageInProcessByProjectForContractor = function(req, res)
     }
   });
 };
+
+exports.destroy = function (req, res) {
+  ContractorPackage.findByIdAndRemove(req.params.id, function (err, contractorPackage) {
+    if (err) {
+      return res.send(500, err);
+    }
+    if (!contractorPackage) {return res.send(404);}
+    console.log(contractorPackage);
+    ContractorPackage.find({}, function(err,packages){
+      if (err) {return res.send(500,err);}
+      return res.send(200, packages);
+    })
+  });
+};

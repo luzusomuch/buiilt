@@ -7,7 +7,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
     authenticate: true,
     resolve: {
         contractorPackages: function(contractorService) {
-            return contractorService.getAll();
+            return contractorService.getAll().$promise;
         }
     }
   })

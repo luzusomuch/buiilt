@@ -188,3 +188,17 @@ exports.getMaterialByProjectForSupplier = function(req, res) {
   });
   
 };
+
+exports.destroy = function (req, res) {
+  MaterialPackage.findByIdAndRemove(req.params.id, function (err, materialPackage) {
+    if (err) {
+      return res.send(500, err);
+    }
+    if (!materialPackage) {return res.send(404);}
+    console.log(materialPackage);
+    MaterialPackage.find({}, function(err,materialPackages){
+      if (err) {return res.send(500,err);}
+      return res.send(200, materialPackages);
+    })
+  });
+};

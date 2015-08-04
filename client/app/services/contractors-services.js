@@ -71,7 +71,8 @@ angular.module('buiiltApp')
                 action: 'processingcontractor'
             },
             isArray: true
-        }
+        },
+        delete: {method:'DELETE', params: {id: 'id', action: ''}, isArray: true},
         
     });
 });

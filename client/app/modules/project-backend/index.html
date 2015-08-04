@@ -1,22 +1,18 @@
 <div class="col s12">
-    <table>
-        <thead>
-            <th>#</th>
-            <th>Name</th>
-            <th>Start date</th>
-            <th>Status</th>
-            <th>Action</th>
-        </thead>
-        <tbody>
-            <tr ng-repeat="project in projects">
-                <td>{{$index +1}}</td>
-                <td>{{project.name}}</td>
-                <td>{{project.dateStart}}</td>
-                <td>{{project.status}}</td>
-                <td>
-                    <i ng-hide="currentUser._id == user._id" class="material-icons" ng-click="remove(project)" style="color:#03A9F4">remove</i>
-                </td>
-            </tr>
-        </tbody>
+    <table ng-table="tableParams" class="table">
+        <tr ng-repeat="project in $data">
+            <td data-title="'#'">
+                {{$index + 1}}
+            </td>
+            <td data-title="'Name'">
+                {{project.name}}
+            </td>
+            <td data-title="'Status'">
+                {{project.status}}
+            </td>
+            <td data-title="'Action'">
+                <i ng-hide="currentUser._id == user._id" class="material-icons" ng-click="remove(project)" style="color:#03A9F4">remove</i>
+            </td>
+        </tr>
     </table>
 </div>

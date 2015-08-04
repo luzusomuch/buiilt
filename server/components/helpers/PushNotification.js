@@ -83,7 +83,7 @@ exports.getData = function(threadName, message, users){
         agent.createMessage()
          .device(device.deviceToken)
          .alert(threadName+': '+message)
-         .badge(4)
+         .badge(8)
          .sound('defauld').send(function(err){
           if (!err) {console.log('success');}
           console.log(err);

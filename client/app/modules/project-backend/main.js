@@ -7,7 +7,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
     authenticate: true,
     resolve: {
         projects: function(projectService) {
-            return projectService.getAllProjects();
+            return projectService.getAllProjects().$promise;
         }
     }
   })
