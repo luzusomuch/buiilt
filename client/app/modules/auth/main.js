@@ -42,5 +42,10 @@ angular.module('buiiltApp').config(function($stateProvider) {
       url: '/signout',
       controller: 'SignoutCtrl',
         authenticate : true
+    })
+    .state('signoutBackend', {
+      url: '/backend/signout',
+      controller: 'SignoutBackendCtrl',
+        authenticate : true
     });
 });

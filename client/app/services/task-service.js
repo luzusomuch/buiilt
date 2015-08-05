@@ -36,6 +36,7 @@ angular.module('buiiltApp')
         update : {
           method : 'PUT'
         },
+        delete: {method:'DELETE', params: {id: 'id', action: ''}, isArray: true},
         //update: {
         //  method: 'PUT'
         //},

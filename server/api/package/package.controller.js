@@ -3,6 +3,7 @@
 var User = require('./../../models/user.model');
 var Project = require('./../../models/project.model');
 var BuilderPackage = require('./../../models/builderPackage.model');
+var StaffPackage = require('./../../models/staffPackage.model');
 var errorsHelper = require('../../components/helpers/errors');
 var ProjectValidator = require('./../../validators/project');
 var _ = require('lodash');
@@ -15,4 +16,5 @@ exports.getPackageByProject = function(req, res) {
     // console.log(builderPackages);
     res.json(200, builderPackages);
   });
-}
+};
+

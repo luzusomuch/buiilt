@@ -224,7 +224,6 @@ exports.getDefaultPackage = function(req, res){
 };
 
 exports.getAll = function(req, res) {
-  console.log('asdasdasdasdasd');
   Project.find({}, function(err, projects){
     if (err) {return res.send(500,err);}
     return res.send(200,projects)

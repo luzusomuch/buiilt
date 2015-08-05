@@ -1,0 +1,18 @@
+<div class="col s12">
+    <table ng-table="tableParams" class="table">
+        <tr ng-repeat="project in $data">
+            <td data-title="'#'">
+                {{$index + 1}}
+            </td>
+            <td data-title="'Name'">
+                {{project.name}}
+            </td>
+            <td data-title="'Status'">
+                {{project.status}}
+            </td>
+            <td data-title="'Action'">
+                <i class="material-icons" ng-click="remove(project)" style="color:#03A9F4">remove</i>
+            </td>
+        </tr>
+    </table>
+</div>

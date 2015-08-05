@@ -1,17 +1,20 @@
 <div class="col s12">
     <table ng-table="tableParams" class="table">
-        <tr ng-repeat="project in $data">
+        <tr ng-repeat="package in $data">
             <td data-title="'#'">
                 {{$index + 1}}
             </td>
             <td data-title="'Name'">
-                {{project.name}}
+                {{package.name}}
+            </td>
+            <td data-title="'Start date'">
+                {{package.dateStart | date: longDate}}
             </td>
             <td data-title="'Status'">
-                {{project.status}}
+                {{package.status}}
             </td>
             <td data-title="'Action'">
-                <i ng-hide="currentUser._id == user._id" class="material-icons" ng-click="remove(project)" style="color:#03A9F4">remove</i>
+                <i class="material-icons" ng-click="remove(package)" style="color:#03A9F4">remove</i>
             </td>
         </tr>
     </table>

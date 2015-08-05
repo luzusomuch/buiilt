@@ -1,8 +1,5 @@
-angular.module('buiiltApp').controller('UserBackendCtrl', function(ngTableParams,$scope, users, userService, authService) {
+angular.module('buiiltApp').controller('UserBackendCtrl', function(ngTableParams,$scope, users, userService) {
     var data = users;
-    authService.getCurrentUser().$promise.then(function(user){
-        $scope.currentUser = user;
-    });
 
     $scope.tableParams = new ngTableParams({
         page: 1,            // show first page

@@ -1,8 +1,5 @@
-angular.module('buiiltApp').controller('MaterialPackageBackendCtrl', function(ngTableParams,$scope, materialPackages, materialPackageService, authService) {
+angular.module('buiiltApp').controller('MaterialPackageBackendCtrl', function(ngTableParams,$scope, materialPackages, materialPackageService) {
     var data = materialPackages;
-    authService.getCurrentUser().$promise.then(function(user){
-        $scope.currentUser = user;
-    });
 
     $scope.tableParams = new ngTableParams({
         page: 1,            // show first page

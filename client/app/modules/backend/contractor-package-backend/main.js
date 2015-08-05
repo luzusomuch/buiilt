@@ -2,7 +2,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
   $stateProvider
   .state('contractorPackagesBackend', {
     url: '/backend/contractor-package',
-    templateUrl: '/app/modules/contractor-package-backend/index.html',
+    templateUrl: '/app/modules/backend/contractor-package-backend/index.html',
     controller: 'ContractorPackageBackendCtrl',
     authenticate: true,
     resolve: {

@@ -2,7 +2,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
   $stateProvider
     .state('dashboardBackend', {
         url: '/backend/dashboard',
-        templateUrl: '/app/modules/dashboard-backend/dashboard.html',
+        templateUrl: '/app/modules/backend/dashboard-backend/dashboard.html',
         controller: 'DashboardBackendCtrl',
         authenticate : true,
         resolve : {

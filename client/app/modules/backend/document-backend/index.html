@@ -1,0 +1,15 @@
+<div class="col s12">
+    <table ng-table="tableParams" class="table">
+        <tr ng-repeat="document in $data">
+            <td data-title="'#'">
+                {{$index + 1}}
+            </td>
+            <td data-title="'Name'">
+                {{document.title}}
+            </td>
+            <td data-title="'Action'">
+                <i class="material-icons" ng-click="remove(document)" style="color:#03A9F4">remove</i>
+            </td>
+        </tr>
+    </table>
+</div>

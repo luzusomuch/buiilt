@@ -212,7 +212,7 @@ exports.getTask = function(req,res) {
 };
 
 exports.getAll = function(req, res) {
-  Task.find({}, function(err, tasks){
+  Task.find({}).populate('assignees').exec(function(err, tasks){
     if (err) {return res.send(500,err);}
     return res.json(200, tasks);
   });
@@ -223,5 +223,18 @@ exports.getOne = function(req, res) {
     if (err) {return res.send(500,err);}
     if (!task) {return res.send(404);}
     return res.send(200,task);
+  });
+};
+
+exports.destroy = function (req, res) {
+  Task.findByIdAndRemove(req.params.id, function (err, task) {
+    if (err) {
+      return res.send(500, err);
+    }
+    console.log(task);
+    Task.find({}, function(err,tasks){
+      if (err) {return res.send(500,err);}
+      return res.send(200, tasks);
+    })
   });
 };

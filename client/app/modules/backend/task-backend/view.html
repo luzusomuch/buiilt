@@ -1,0 +1,25 @@
+<div class="col s12">
+    <table ng-table="tableParams" class="table">
+        <tr ng-repeat="task in $data">
+            <td data-title="'#'">
+                {{$index + 1}}
+            </td>
+            <td data-title="'name'">
+                {{task.name}}
+            </td>
+            <td data-title="'Assignees'">
+                <ul>
+                    <li ng-repeat="assignee in task.assignees">
+                        {{(assignee.firstName && assignee.lastName) ? assignee.firstName + ' ' + assignee.lastName : assignee.email}}
+                    </li>
+                </ul>
+            </td>
+            <td data-title="'Due date'">
+                {{task.dateEnd | date: longDate}}
+            </td>
+            <td data-title="'Action'">
+                <i class="material-icons" ng-click="remove(task)" style="color:#03A9F4">remove</i>
+            </td>
+        </tr>
+    </table>
+</div>

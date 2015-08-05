@@ -92,6 +92,26 @@ exports.getAll = function(req,res) {
   })
 };
 
+exports.getAllStaffPackage = function(req, res){
+  StaffPackage.find({}, function(err, staffPackages){
+    if (err) {return res.send(500,err);}
+    return res.send(200,staffPackages);
+  })
+};
+
+exports.destroy = function (req, res) {
+  StaffPackage.findByIdAndRemove(req.params.id, function (err, staffPackage) {
+    if (err) {
+      return res.send(500, err);
+    }
+    console.log(staffPackage);
+    StaffPackage.find({}, function(err,staffPackages){
+      if (err) {return res.send(500,err);}
+      return res.send(200, staffPackages);
+    })
+  });
+};
+
 /**
  * Get a staff package
  * @param req
