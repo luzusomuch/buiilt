@@ -76,10 +76,12 @@ exports.getData = function(threadName, message, users){
 
    //push notification test
    _.each(users, function(user){
+    console.log(user);
     device.findOne({'user' : user}, function(err, device) {
       if (err) {console.log(err);}
       // if (!device) {return res.send(404,err);}
       if (device) {
+        console.log(device);
         agent.createMessage()
          .device(device.deviceToken)
          .alert(threadName+': '+message)
