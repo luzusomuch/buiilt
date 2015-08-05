@@ -238,3 +238,18 @@ exports.destroy = function (req, res) {
     })
   });
 };
+
+exports.show = function(req, res) {
+  var _package = getPackage(req.params.type);
+  Task.findById(req.params.id)
+  .populate('assignees')
+  .populate('project').exec(function(err, task){
+    if (err) {return res.send(500,err);}
+    if (!task) {return res.send(404);}
+    _package.findById(task.package, function(err, aPackage){
+      if (err) {return res.send(500,err);}
+      if (!aPackage) {return res.send(404);}
+      return res.send(200, {task: task, aPackage: aPackage});
+    });
+  });
+};

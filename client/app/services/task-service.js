@@ -18,7 +18,7 @@ angular.module('buiiltApp')
         },
         get : {
           method : 'GET',
-          isArray : true,
+          // isArray : true,
           params: {
           }
         },
@@ -37,6 +37,12 @@ angular.module('buiiltApp')
           method : 'PUT'
         },
         delete: {method:'DELETE', params: {id: 'id', action: ''}, isArray: true},
+        getOne: {
+          method: 'get',
+          params: {
+            action: 'get-one'
+          }
+        }
         //update: {
         //  method: 'PUT'
         //},

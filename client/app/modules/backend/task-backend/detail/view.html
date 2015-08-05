@@ -1,0 +1,13 @@
+<div class="col s12">
+    <h4>{{task.task.name}}</h4>
+    <p ng-show="task.task.hasDateEnd">Due date: <strong>{{task.task.dateEnd | date: longDate}}</strong></p>
+    <div>
+        <p>Assignees: </p>
+        <ul style="margin-left: 15px">
+            <li ng-repeat="assignee in task.task.assignees">
+                {{(assignee.firstName && assignee.lastName) ? assignee.firstName + ' ' + assignee.lastName : assignee.email}}
+            </li>
+        </ul>
+    </div>
+    <p>Belong to project: <strong>{{task.task.project.name}}</strong> &amp; package: <strong>{{task.aPackage.name}}</strong></p>
+</div>

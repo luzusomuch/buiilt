@@ -5,7 +5,7 @@
                 {{$index + 1}}
             </td>
             <td data-title="'name'">
-                {{task.name}}
+                <a ui-sref="taskBackend.detail({taskId: task._id, type: task.type})">{{task.name}}</a>
             </td>
             <td data-title="'Assignees'">
                 <ul>

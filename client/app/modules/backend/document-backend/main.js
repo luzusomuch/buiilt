@@ -2,7 +2,6 @@ angular.module('buiiltApp').config(function($stateProvider) {
   $stateProvider
   .state('documentBackend', {
     url: '/backend/document',
-    hasCurrentProject : true,
     authenticate : true,
     template: '<ui-view/>'
   })
@@ -24,8 +23,6 @@ angular.module('buiiltApp').config(function($stateProvider) {
     authenticate: true,
     resolve: {
       document: function(fileService, $stateParams) {
-        console.log('asdasdasd');
-        console.log($stateParams.documentId);
         return fileService.get({id: $stateParams.documentId}).$promise;
       }
     }
