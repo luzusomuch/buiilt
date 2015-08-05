@@ -5,8 +5,8 @@
                 {{$index + 1}}
             </td>
             <td data-title="'Name'">
-                {{document.title}}
-            </td>
+                <a ui-sref="documentBackend.detail({documentId: document._id})">{{document.name}} - {{document.title}}</a>
+            </td> 
             <td data-title="'Action'">
                 <i class="material-icons" ng-click="remove(document)" style="color:#03A9F4">remove</i>
             </td>

@@ -17,6 +17,9 @@
             <td data-title="'Due date'">
                 {{task.dateEnd | date: longDate}}
             </td>
+            <td data-title="'Status'">
+                {{(task.completed) ? "Completed" : "Not complete"}}
+            </td>
             <td data-title="'Action'">
                 <i class="material-icons" ng-click="remove(task)" style="color:#03A9F4">remove</i>
             </td>

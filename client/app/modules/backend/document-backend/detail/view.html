@@ -1,0 +1,18 @@
+<div class="col s12">
+    <h5>{{document.title}} - {{document.name}}</h5>
+    <p>{{document.description}}</p>
+    <div class="card-image" ng-switch="document.mimeType">
+        <span ng-switch-when="image/jpeg">
+            <img src="../../media/files/{{document._id}}-{{document.title}}.jpg" alt="">
+        </span>
+        <span ng-switch-when="image/png">
+            <img src="../../media/files/{{document._id}}-{{document.title}}.jpg" alt="">
+        </span>
+        <span ng-switch-when="application/pdf">
+            <img src="../../media/files/{{document._id}}-{{document.title}}.jpg" alt="" style="height:250px;">
+        </span>
+        <span ng-switch-default>
+            <img src="../../media/sample-1.jpg" alt="">
+        </span>
+    </div>
+</div>
