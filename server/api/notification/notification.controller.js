@@ -143,4 +143,13 @@ exports.getMyFile = function(req, res) {
       return res.send(200,notifications);
     }
   });
-}
+};
+
+exports.countTotalForIOS = function(req, res) {
+  var user = req.user;
+  Notification.find({owner: user._id, $or:[{referenceTo: 'task'},{referenceTo: 'thread'}]}, function(err, notifications){
+    if (err) {return res.send(500,err);}
+    if (!notifications) {return res.send(404);}
+    return res.send(200, notifications);
+  })
+};

@@ -7,6 +7,7 @@ var auth = require('../../auth/auth.service');
 var router = express.Router();
 router.get('/', auth.isAuthenticated(), controller.get);
 router.get('/get-total', auth.isAuthenticated(), controller.countTotal);
+router.get('/get-total-ios', auth.isAuthenticated(), controller.countTotalForIOS);
 router.get('/:id/my-file', auth.isAuthenticated(), controller.getMyFile);
 router.put('/:id/mark-as-read', auth.isAuthenticated(),controller.notification, controller.update);
 router.put('/:id/dashboard-read', auth.isAuthenticated(), controller.dashboardRead);
