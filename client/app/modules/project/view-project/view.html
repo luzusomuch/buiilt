@@ -1,4 +1,4 @@
-<div class="row">
+<!-- <div class="row">
     <div class="">
         <div class="row" style="margin-top: 18px">
             <h5 class="col s8">{{project.name}}</h5>
@@ -8,7 +8,6 @@
                     <i class="mdi-navigation-more-vert"></i>
                  </a>
 
-                 <!-- Dropdown Structure -->
                  <ul id='itemDownload' class='dropdown-content'>
                     <li ng-show="isLeader && currentTeam.type == 'builder'"><a class="modal-trigger" data-target="upload" href="#attachDocument">Upload document</a></li>
                     <li>
@@ -29,9 +28,60 @@
     </div>
 </div>
 
+
+
+
+ -->
+
+<div class="col s10 offset-s1">
+   <div class="collection with-header">
+       <div class="row collection-header" style="margin-bottom:0px">
+            
+            <div class="col right" style="margin-top: 10px">
+               <a class="modal-trigger" data-target="upload" href="#attachDocument" style="margin-left:30px; padding: 5px; font-size: 12px; color: black">UPLOAD NEW DOCUMENT</a>
+               <a id="downloadAll" style="margin-left:30px; padding: 5px; font-size: 12px; color: black; cursor:pointer;">DOWNLOAD ALL DOCUMENTS</a>
+               <span ng-repeat="file in files" style="display:none">
+                    <a class="downloadFile" href='{{file.fileUrl}}' download="file.name">{{file.title}}</a>
+                </span>
+            </div>
+            
+       </div>
+       <div class="row collection-header" style="margin-bottom:0px;">
+           <div class="col s12">
+               <div style="font-size: 12px;">
+                   <a ng-click="filter('all')" style="margin-left:30px; padding: 5px; background-color: #eeeeee; border-radius: 3px">ALL DOCUMENTS</a>
+                   <a ng-click="filter('architectural')" style="margin-left:30px">ARCHITECTURAL</a>
+                   <a ng-click="filter('engineering')" style="margin-left:30px">ENGINEERING</a>
+                   <a ng-click="filter('council')" style="margin-left:30px">COUNCIL</a>
+                   <a ng-click="filter('other')" style="margin-left:30px">OTHER</a>
+               </div>
+           </div>
+       </div>
+       <div  style="height: 480px; overflow-y: auto; background-color: white;">
+            <div ng-if="!hasFilter" class="collection-item row" ng-repeat="file in files">
+                <div class="col s10"> {{file.title}}</div>
+                <div class="col s2"><a><i class="material-icons" style="color:black">remove_red_eye</i></a></div>
+                <div class="col s12">
+                    <div style="font-size:12px;">{{file.description}}.</div>
+                    <div style="font-size:12px;">Version {{file.version +1}} - {{file.createdAt | date: longDate}}</div>
+                </div>
+            </div>
+
+            
+            <div ng-if="hasFilter" class="collection-item row" ng-repeat="file in files | filter: {tags: filterValue}">
+                <div class="col s10"> {{file.title}}</div>
+                <div class="col s2"><a><i class="material-icons" style="color:black">remove_red_eye</i></a></div>
+                <div class="col s12">
+                    <div style="font-size:12px;">{{file.description}}.</div>
+                    <div style="font-size:12px;">Version {{file.version +1}} - {{file.createdAt | date: longDate}}</div>
+                </div>
+            </div>
+       </div>
+   </div>
+</div>
+
 <div id="attachDocument" class="modal modal-fixed-footer">
-  
-    <upload package=""></upload>
+    <upload type="project" package=""></upload>
 </div>
 
 <script>

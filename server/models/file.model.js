@@ -76,7 +76,8 @@ var FileSchema = new Schema({
   createdAt: {
     type: Date,
     default: Date.now
-  }
+  },
+  tag: [String]
 });
 
 /**
@@ -95,6 +96,9 @@ FileSchema.virtual('fileUrl')
  */
 FileSchema.pre('save', function(next) {
   this.wasNew = this.isNew;
+  if (!this.isNew){
+    this.createdAt = new Date();
+  }
   next();
 });
 

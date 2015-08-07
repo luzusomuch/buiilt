@@ -58,6 +58,7 @@ exports.upload = function(req, res){
         }
     })
     .on('end', function() {
+        console.log(uploadedFile, uploadedField);
         if (uploadedFile && uploadedField) {
             if (uploadedField._id != 'undefined') {
                 File.findById(uploadedField._id, function(err, file) {
@@ -148,6 +149,7 @@ exports.upload = function(req, res){
                 });
             }
             else {
+                var tags = uploadedField.tags.split(',');
                 var file = new File({
                     title: uploadedField.title,
                     name: uploadedFile.name,
@@ -157,7 +159,8 @@ exports.upload = function(req, res){
                     description: uploadedField.desc,
                     size: uploadedFile.size,
                     user: req.user._id,
-                    belongTo: req.params.id
+                    belongTo: req.params.id,
+                    tag: tags
                 });
                 file.save(function(err, saved){
                     file.save(function(err, fileSaved) {

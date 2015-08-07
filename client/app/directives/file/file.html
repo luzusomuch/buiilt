@@ -1,4 +1,12 @@
-
+<div class="collection-item row" ng-repeat="file in files">
+ <div class="col s10"> {{file.title}}</div>
+ <div class="col s2"><a><i class="material-icons" style="color:black">remove_red_eye</i></a></div>
+ <div class="col s12">
+  <div style="font-size:12px;">{{file.description}}.</div>
+  <div style="font-size:12px;">Version {{file.version +1}} - {{file.createdAt | date: longDate}}</div>
+ </div>
+</div>
+<!-- 
 <div ng-repeat="file in files">
     <div class="col s4">
         <div class="card">
@@ -67,4 +75,4 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->

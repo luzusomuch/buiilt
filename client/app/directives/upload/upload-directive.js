@@ -8,7 +8,8 @@ angular.module('buiiltApp').directive('upload', function(){
             builderPackage: '=',
             documentId : '=',
             fileId: '=',
-            package: '='
+            package: '=',
+            type: '@'
         },
         controller: function($scope, $state, $cookieStore, $stateParams, $rootScope, $location, fileService, packageService, userService, projectService, FileUploader, documentService) {
             $scope.errors = {};
@@ -19,7 +20,24 @@ angular.module('buiiltApp').directive('upload', function(){
                 date: new Date(),
                 title: '',
                 belongToType: '',
-                desc: ''
+                desc: '',
+                tags: []
+            };
+            console.log($scope.type);
+            $scope.tags = [];
+            if ($scope.type == 'project') {
+                $scope.tags = ['architectural','engineering','council','other'];
+            }
+
+            $scope.selectedTags = [];
+            $scope.selectTag = function(tag, index) {
+                $scope.selectedTags.push(tag);
+                $scope.tags.splice(index,1);
+            };
+
+            $scope.deselect = function(tag, index) {
+                $scope.tags.push(tag);
+                $scope.selectedTags.splice(index,1);
             };
 
             $scope.safeApply = function (fn) {
@@ -88,7 +106,8 @@ angular.module('buiiltApp').directive('upload', function(){
             uploader.onBeforeUploadItem = function (item) {
                 $scope.formData._id = $scope.fileId;
                 // $scope.formData.title = item.title;
-                $scope.formData.belongToType =  ($scope.package) ? $scope.package.type : '';
+                $scope.formData.belongToType =  ($scope.package) ? $scope.package.type : 'project';
+                $scope.formData.tags = $scope.selectedTags;
                 // $scope.formData.belongTo = $stateParams.id;
                 // $scope.formData.doc = $scope.documentId;
                 // $scope.formData.desc = item.file.desc || "";

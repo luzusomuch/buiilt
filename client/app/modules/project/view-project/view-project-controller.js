@@ -14,21 +14,6 @@ angular.module('buiiltApp').controller('ViewProjectCtrl', function($window,$scop
   fileService.getFileByStateParam({'id': $stateParams.id}).$promise.then(function(data) {
     $scope.files = data;
   });
-  
-  $scope.createDocument = function() {
-    documentService.create({'id': $scope.project._id},$scope.docum).$promise
-      .then(function(data) {
-      $scope.success = true;
-    });
-  };
-
-  // $scope.downloadAll = function() {
-  //   fileService.downloadAll({id: $stateParams.id}).$promise.then(function(data){
-  //     _.each(data, function(url){
-  //       $window.open(url.url);
-  //     });
-  //   });
-  // };
 
   $scope.closeAlert = function (key) {
     delete $scope.errors[key];
@@ -36,5 +21,16 @@ angular.module('buiiltApp').controller('ViewProjectCtrl', function($window,$scop
 
   $scope.closeSuccess = function () {
     $scope.success = false;
+  };
+
+  $scope.hasFilter = false;
+  $scope.filter = function(value){
+    if (value == 'all') {
+      $scope.hasFilter = false;
+    }
+    else {
+      $scope.hasFilter = true;
+      $scope.filterValue = value;
+    }
   };
 });
