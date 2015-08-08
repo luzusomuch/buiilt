@@ -70,6 +70,13 @@ exports.createMaterialPackage = function (req, res, next) {
       else {
         Team.findOne({$or:[{'leader': user._id}, {'member._id': user._id}]}, function(err, team){
           if (err) {return callback(err);}
+          if (!team) {
+            to.push({
+              email: emailPhone.email,
+              phone: emailPhone.phoneNumber
+            });
+            callback();
+          }
           else {
             team.project.push(req.body.project);
             team.save();
