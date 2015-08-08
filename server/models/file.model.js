@@ -77,7 +77,7 @@ var FileSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  tag: [String]
+  tags: [String]
 });
 
 /**
@@ -126,6 +126,7 @@ FileSchema.methods.toJSON = function() {
     archive: this.archive,
     ownerId: this.ownerId,
     groupId: this.groupId,
+    tags: this.tags,
     updatedAt: this.updatedAt,
     createdAt: this.createdAt
   };

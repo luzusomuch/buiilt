@@ -34,6 +34,7 @@ var validationError = function (res, err) {
  * @returns {undefined}
  */
 exports.upload = function(req, res){
+    console.log('11111111111111111');
     // var root = path.normalize(__dirname + '/../../..');
     var form = new formidable.IncomingForm();
     var files = [];
@@ -61,6 +62,7 @@ exports.upload = function(req, res){
         console.log(uploadedFile, uploadedField);
         if (uploadedFile && uploadedField) {
             if (uploadedField._id != 'undefined') {
+                var tags = uploadedField.tags.split(',');
                 File.findById(uploadedField._id, function(err, file) {
                     if (err) {console.log(err);}
                     file.title = uploadedField.title;
@@ -72,9 +74,11 @@ exports.upload = function(req, res){
                     file.size = uploadedFile.size;
                     file.version = file.version + 1;
                     file.belongTo = req.params.id;
+                    file.tags = tags;
                     file.save(function(err, saved) {
                         if (err) {return res.send(500,err);}
                         else {
+                            console.log(saved);
                             var owners = [];
                             async.parallel([
                                 function(cb) {
@@ -160,7 +164,7 @@ exports.upload = function(req, res){
                     size: uploadedFile.size,
                     user: req.user._id,
                     belongTo: req.params.id,
-                    tag: tags
+                    tags: tags
                 });
                 file.save(function(err, saved){
                     file.save(function(err, fileSaved) {

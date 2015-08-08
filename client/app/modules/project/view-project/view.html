@@ -46,7 +46,7 @@
             </div>
             
        </div>
-       <div class="row collection-header" style="margin-bottom:0px;">
+       <div ng-if="!isShowFileDetail" class="row collection-header" style="margin-bottom:0px;">
            <div class="col s12">
                <div style="font-size: 12px;">
                    <a ng-click="filter('all')" style="margin-left:30px; padding: 5px; background-color: #eeeeee; border-radius: 3px">ALL DOCUMENTS</a>
@@ -57,31 +57,135 @@
                </div>
            </div>
        </div>
-       <div  style="height: 480px; overflow-y: auto; background-color: white;">
+       <div ng-if="!isShowFileDetail" style="height: 480px; overflow-y: auto; background-color: white;">
             <div ng-if="!hasFilter" class="collection-item row" ng-repeat="file in files">
                 <div class="col s10"> {{file.title}}</div>
-                <div class="col s2"><a><i class="material-icons" style="color:black">remove_red_eye</i></a></div>
+                <div class="col s2"><a><i ng-click="getFileDetail(file)" class="material-icons" style="color:black">remove_red_eye</i></a></div>
                 <div class="col s12">
                     <div style="font-size:12px;">{{file.description}}.</div>
                     <div style="font-size:12px;">Version {{file.version +1}} - {{file.createdAt | date: longDate}}</div>
                 </div>
             </div>
 
-            
-            <div ng-if="hasFilter" class="collection-item row" ng-repeat="file in files | filter: {tags: filterValue}">
+            <div ng-if="hasFilter" class="collection-item row" ng-repeat="file in files | filter: filterValue">
                 <div class="col s10"> {{file.title}}</div>
-                <div class="col s2"><a><i class="material-icons" style="color:black">remove_red_eye</i></a></div>
+                <div class="col s2"><a><i ng-click="getFileDetail(file)" class="material-icons" style="color:black">remove_red_eye</i></a></div>
                 <div class="col s12">
                     <div style="font-size:12px;">{{file.description}}.</div>
                     <div style="font-size:12px;">Version {{file.version +1}} - {{file.createdAt | date: longDate}}</div>
                 </div>
             </div>
        </div>
+
+       <div ng-if="isShowFileDetail" class="row collection-header" style="margin-bottom:0px;">
+         <div class="col s12">
+           <div  style="font-size: 12px;">
+             <a href="#!" ng-click="backToList()" style="margin-left:30px; padding: 5px;">&lt; BACK TO ALL DOCUMENTS</a>
+             <div class="right">
+               <a class="modal-trigger" href="#uploadReversion" style="margin-left:30px; padding: 5px;">UPLOAD A REVISION</a>
+               <a href='{{file.fileUrl}}' download="file.name" style="margin-left:30px; padding: 5px;">DOWNLOAD THIS DOCUMENT</a>
+             </div>
+           </div>
+         </div>
+       </div>
+       <div ng-if="isShowFileDetail" style="height: 480px; overflow-y: auto; background-color: white;" class="valign-wrapper">
+          <div class="col s8 offset-s2 center valign" ng-switch="file.mimeType">
+            <span ng-switch-when="image/jpeg">
+              <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}-{{file.title}}.jpg" alt="">
+            </span>
+            <span ng-switch-when="image/png">
+              <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}-{{file.title}}.jpg" alt="">
+            </span>
+            <span ng-switch-when="application/pdf">
+              <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}-{{file.title}}.jpg" alt="">
+            </span>
+            <span ng-switch-default>
+              <img class="materialboxed" width="90%" src="../../media/sample-1.jpg" alt="">
+            </span>
+            <!-- file description -->
+            <span style="cursor:pointer;" ng-click="likeDocument(file);">
+              <div class="col s4" style="display:inline-block">{{(file.isInterested) ? 'Dislike' : 'Like'}}</div>
+              <div class="col s4" style="display:inline-block">{{file.totalLike}} Like</div>
+              <div class="col s4" style="display:inline-block">
+                <p style="cursor:pointer;">
+                  <a href='{{file.fileUrl}}' download="file.name">Download</a>
+                </p>
+              </div>
+            </span>
+            <p>{{file.title}} <span><em>Revision {{file.version +1 }} of {{file.version +1 }}</em></span></p>
+          </div>
+       </div>
    </div>
 </div>
 
 <div id="attachDocument" class="modal modal-fixed-footer">
     <upload type="project" package=""></upload>
+</div>
+
+<div id="uploadReversion" class="modal modal-fixed-footer">
+  <form ng-submit="uploadAll()">
+  <div class="modal-content">
+  <div class="row" style="margin-top: 50px">
+    <div class="col s8 offset-s2">
+      <div class="file-field input-field">
+        <div class="btn tooltipped" data-position="top" data-delay="1" data-tooltip="Attach a File">
+          <i class="mdi-editor-attach-file"></i>
+          <input type="file" nv-file-select="" uploader="uploader"/>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s8 offset-s2">
+          <textarea class="materialize-textarea" ng-model="file.title" id="textarea1"></textarea>
+          <label for="">Title</label>
+        </div>
+      </div>
+      <div ng-show="uploader.queue.length" class="form-group">
+        <div ng-repeat="item in uploader.queue" ng-if="$last">
+          <div class="row">
+            <div class="input-field col s8 offset-s2">
+              <input type="text" ng-model="item.file.name" disabled>
+              <label for="">File name</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s8 offset-s2">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s8 offset-s2">
+          <textarea class="materialize-textarea" ng-model="file.description" id="textarea1"></textarea>
+          <label for="">Description</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s8 offset-s2">
+          <p>Current tags: </p>
+          <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="tag in selectedTags">
+            {{tag}}<span><a href="#!" ng-click="deselect(tag,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s8 offset-s2">
+          <p>Avaiable tags: </p>
+          <a href="#!" ng-click="selectTag(tag, $index)" ng-repeat="tag in tags">
+            <div class="card col" style="padding: 5px; margin-left: 10px">
+              {{tag}}
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  <div class="modal-footer">
+    <button ng-click="getFileId(file)" type="submit" class="modal-action modal-close waves-effect waves-green btn-flat" ng-disabled="uploader.isReady || uploader.isUploading || uploader.isSuccess">Attach Document!</button>
+    <!-- <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="uploadAll()" ng-disabled="uploader.isReady || uploader.isUploading || uploader.isSuccess">Attach Document!</a> -->
+    <a class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+  </div>
+</form>
 </div>
 
 <script>
