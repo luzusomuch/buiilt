@@ -185,15 +185,21 @@ angular.module('buiiltApp')
   };
 
   //File detail
+  $("div.showFileDetail").css("display","none");
   $scope.isShowFileDetail = false;
   $scope.getFileDetail = function(file){
     $scope.isShowFileDetail = true;
     $scope.file = file;
+    $("div.notShowFileDetail").toggle("slide");
+    $("div.showFileDetail").css("display","block");
   };
 
   $scope.backToList = function(){
     $scope.isShowFileDetail = false;
     $scope.file = {};
+    $("div.notShowFileDetail").toggle("slide");
+    $("div.notShowFileDetail").css("display","block");
+    $("div.showFileDetail").css("display","none");
   };
 
   $scope.likeDocument = function(value) {

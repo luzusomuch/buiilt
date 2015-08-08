@@ -46,7 +46,7 @@
             </div>
             
        </div>
-       <div ng-if="!isShowFileDetail" class="row collection-header" style="margin-bottom:0px;">
+       <div class="row collection-header notShowFileDetail" style="margin-bottom:0px;">
            <div class="col s12">
                <div style="font-size: 12px;">
                    <a ng-click="filter('all')" style="margin-left:30px; padding: 5px; background-color: #eeeeee; border-radius: 3px">ALL DOCUMENTS</a>
@@ -57,7 +57,7 @@
                </div>
            </div>
        </div>
-       <div ng-if="!isShowFileDetail" style="height: 480px; overflow-y: auto; background-color: white;">
+       <div class="notShowFileDetail" style="height: 480px; overflow-y: auto; background-color: white;">
             <div ng-if="!hasFilter" class="collection-item row" ng-repeat="file in files">
                 <div class="col s10"> {{file.title}}</div>
                 <div class="col s2"><a><i ng-click="getFileDetail(file)" class="material-icons" style="color:black">remove_red_eye</i></a></div>
@@ -77,10 +77,10 @@
             </div>
        </div>
 
-       <div ng-if="isShowFileDetail" class="row collection-header" style="margin-bottom:0px;">
+       <div class="row collection-header showFileDetail" style="margin-bottom:0px;">
          <div class="col s12">
            <div  style="font-size: 12px;">
-             <a href="#!" ng-click="backToList()" style="margin-left:30px; padding: 5px;">&lt; BACK TO ALL DOCUMENTS</a>
+             <a id="backToListDocuments" href="#!" ng-click="backToList()" style="margin-left:30px; padding: 5px;">&lt; BACK TO ALL DOCUMENTS</a>
              <div class="right">
                <a class="modal-trigger" href="#uploadReversion" style="margin-left:30px; padding: 5px;">UPLOAD A REVISION</a>
                <a href='{{file.fileUrl}}' download="file.name" style="margin-left:30px; padding: 5px;">DOWNLOAD THIS DOCUMENT</a>
@@ -88,7 +88,7 @@
            </div>
          </div>
        </div>
-       <div ng-if="isShowFileDetail" style="height: 480px; overflow-y: auto; background-color: white;" class="valign-wrapper">
+       <div style="height: 480px; overflow-y: auto; background-color: white;" class="valign-wrapper showFileDetail">
           <div class="col s8 offset-s2 center valign" ng-switch="file.mimeType">
             <span ng-switch-when="image/jpeg">
               <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}-{{file.title}}.jpg" alt="">

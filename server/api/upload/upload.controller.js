@@ -78,7 +78,6 @@ exports.upload = function(req, res){
                     file.save(function(err, saved) {
                         if (err) {return res.send(500,err);}
                         else {
-                            console.log(saved);
                             var owners = [];
                             async.parallel([
                                 function(cb) {
