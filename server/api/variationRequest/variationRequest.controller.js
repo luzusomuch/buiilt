@@ -244,3 +244,11 @@ exports.complete = function(req, res) {
     });
   });
 };
+
+exports.getVariationByPackage = function(req, res) {
+  Variation.find({package: req.params.id}, function(err, variations){
+    if (err) {return res.send(500,err);}
+    if (!variations) {return res.send(404);}
+    return res.send(200,variations);
+  });
+};

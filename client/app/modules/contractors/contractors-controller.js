@@ -18,7 +18,7 @@ angular.module('buiiltApp').controller('ContractorsCtrl',
 
     _.forEach($scope.contractorPackages,function(contractorPackage) {
         contractorPackage.isContractor = (_.find(contractorPackage.to, {_id: $scope.currentTeam._id})) ? true: false;
-        fileService.getFileByContractorPackage({id: contractorPackage._id}).$promise.then(function(files){
+        fileService.getFileByPackage({id: contractorPackage._id, type: 'contractor'}).$promise.then(function(files){
           contractorPackage.files = files;
         });
         taskService.getByPackage({id: contractorPackage._id, type: 'contractor'}).$promise.then(function(tasks){

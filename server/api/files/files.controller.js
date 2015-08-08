@@ -103,8 +103,8 @@ exports.getAll = function(req, res) {
     })
 };
 
-exports.getFileByContractorPackage = function(req, res) {
-    File.find({belongTo: req.params.id, belongToType: 'contractor'}, function(err, files){
+exports.getFileByPackage = function(req, res) {
+    File.find({belongTo: req.params.id, belongToType: req.params.type}, function(err, files){
         if (err) {return res.send(500,err);}
         if (!files) {return res.send(404);}
         return res.send(200,files);

@@ -14,6 +14,7 @@ router.post('/:id/message', auth.isAuthenticated(), controller.sendMessage);
 router.post('/:id/send-message-to-builder', auth.isAuthenticated(), controller.sendMessageToBuilder);
 router.get('/:id/message-builder', auth.isAuthenticated(), controller.getMessageForBuilder);
 router.get('/:id/message-contractor', auth.isAuthenticated(), controller.getMessageForContractor);
+router.get('/:id/get-by-package', auth.isAuthenticated(), controller.getVariationByPackage);
 // router.post('/:id/sendVariation', auth.isAuthenticated(), controller.sendVariation);
 // router.post('/:id/sendDefect', auth.isAuthenticated(), controller.sendDefect);
 // router.post('/:id/sendInvoice', auth.isAuthenticated(), controller.sendInvoice);
