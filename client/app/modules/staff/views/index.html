@@ -1,4 +1,4 @@
-<div class="col s12" style="margin-top:-10px;">
+<!-- <div class="col s12" style="margin-top:-10px;">
   <h5 class="secondary-content">Employees</h5>
 </div>
 <div class="col s12">
@@ -22,11 +22,11 @@
      </div>
   </div>
 
-  <div class="col s9">
+  <div class="col s9"> -->
      <!--<ul class="collection z-depth-1">-->
        <!--<li class="collection-item" ng-repeat  ="item in staffPackages" ng-if="item.canSee || isLeader"><a ui-sref="staff.view({packageId : item._id})">{{item.name}}</a></li>-->
      <!--</ul>-->
-    <div class="col s12">
+    <!-- <div class="col s12">
       <div class="collection z-depth-1 list">
         <span ng-repeat="item in staffPackages | filter : filter">
           <a ui-sref="staff.view({packageId : item._id})"  ng-show="item.canSee || isLeader" class="collection-item">{{item.name}}<span class="badge new" ng-if="item.__v > 0">{{item.__v}}</span></a>
@@ -37,4 +37,175 @@
 
 </div>
 
-<div create-package></div>
+<div create-package></div> -->
+
+<div class="row" style="padding: 12px">
+ <div class="col s10 offset-s1">
+   <div class="collection with-header">
+         <div class="row collection-header" style="margin-bottom:0px">
+       
+       <div class="col">
+         <p style="font-size: 12px; margin-left: 10px">STAFFS PACKAGE</p>
+      </div>
+      <div class="col right" style="margin-top: 10px">
+         <a href="#newMaterialPackage" class="modal-trigger" style="padding: 5px; font-size: 12px; color: black">NEW STAFF PACKAGE</a>
+      </div>
+         </div>
+         <div class="row collection-header" style="margin-bottom:0px;">
+       <div class="col s12">
+         <div style="font-size: 12px;">
+           <a style="margin-left:30px; padding: 5px; background-color: #eeeeee; border-radius: 3px" ng-click="filter = {}">ALL</a>
+           <a ng-click="filter = {isCompleted : false}" style="margin-left:30px; padding: 5px;">IN PROGRESS</a>
+           <a ng-click="filter = {isCompleted : true}" style="margin-left:30px; padding: 5px;">COMPLETED</a>
+         </div>
+       </div>
+     </div>
+     <div  style="height: 480px; overflow-y: auto; background-color: white;">
+       <div class="collection-item row" ng-repeat="item in staffPackages | filter: filter">
+         <div class="col s9">
+           <div>
+            <a ui-sref="staff.view({packageId : item._id})"  ng-show="item.canSee || isLeader">{{item.name}}</a>
+          </div>
+         </div>
+         <div style="color: #757575">
+           <div class="col s1 valign-wrapper">
+             <div style="font-size:15px;">{{item.messages.length}}</div>
+             <i style="font-size: 15px; margin-left: 5px" class="material-icons valign">message</i>
+           </div>
+           <div class="col s1 valign-wrapper">
+             <div style="font-size:15px;">{{item.files.length}}</div>
+             <i style="font-size: 15px; margin-left: 5px" class="material-icons valign">insert_drive_file</i>
+           </div>
+           <div class="col s1 valign-wrapper">
+             <div style="font-size:15px;">{{item.tasks.length}}</div>
+             <i style="font-size: 15px; margin-left: 5px" class="material-icons valign">check</i>
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+ </div>
+</div>
+
+<!-- add staff pacakge -->
+<div id="newWorkPackage" class="modal modal-fixed-footer">
+  <form novalidate name="form" ng-submit="save(form)">
+    <div class="modal-content">
+
+      <div class="row">
+        <div class="col s12">
+          <h5>New Work Package for {{currentProject.name}}</h5>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s8">
+
+          <input id="package_name" type="text" name="name" class="validate" ng-model="package.name"
+                 required ng-class="{'invalid' : form.name.$invalid && submitted}">
+          <label for="package_name">Work Package Title</label>
+          <p class="validate-message" ng-if="form.name.$error.required && submitted">Package name is required</p>
+        </div>
+        <div class="input-field col s4">
+          <label for="commencement_date" class="active">Commencement Date</label>
+          <input type="text" datepicker id="commencement_date" ng-model="package.dateStart">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12">
+          <ul class="collection z-depth-1">
+            <li class="collection-item vlalign-wrapper">
+              <div class="row form" style="margin-bottom: 0px">
+                <div class="col s12"><p>Enter work descriptions below:</p></div>
+                <div class="input-field col s10">
+                  <textarea id="description" class="materialize-textarea" ng-model="description" ng-class="{'invalid' : descriptionError}"></textarea>
+                  <label for="description" class="">Description</label>
+                  <p class="validate-message" ng-if="descriptionError">Scope of work at least 1 item</p>
+                </div>
+                <div class="valign col s2">
+                  <button class="btn" type="button" name="action" style="margin-top: 78px" ng-click="addDescription(description)">Add</button>
+                </div>
+              </div>
+            </li>
+            <li class="collection-item vlalign" ng-repeat="description in package.descriptions track by $index">
+              <div class="row" style="margin-bottom: 0px">
+                <div class="col s10">
+                  <p>{{description}}</p>
+                </div>
+                <div class="col s2">
+                  <button class="btn-flat btn-flat" ng-click="removeDescription($index)">Remove</button>
+                </div>
+              </div>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12">
+          <div class="card-panel">
+            <div class="chips">
+              <div class="chips-head row current-assign">
+                <p style="">Current Assignees:</p>
+                <p class="validate-message" ng-if="assgineesError">Current assignees must be at least 1 item</p>
+                <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="staff in package.staffs">
+                  {{staff | name}} <span><a href="#!" ng-click="staffRevoke(staff,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
+                </div>
+              </div>
+
+              <div class="divider"></div>
+
+              <div class="row available-assign">
+                <p style="">Available Assignee's:</p>
+                <a href="#!" ng-click="staffAssign(staff,$index)" ng-repeat="staff in available track by $index">
+                  <div class="card col" style="padding: 5px; margin-left: 10px" >
+                    {{staff | name}}
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="modal-action waves-effect waves-green btn modal-action">Create Package !</button>
+      <button type="button" ng-click="closeModal()" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</button>
+    </div>
+  </form>
+</div>
+<!-- end add staff package -->
+
+<script type="text/ng-template" id="/my-custom-template.html">
+  <div class="angucomplete-holder" ng-class="{'angucomplete-dropdown-visible': showDropdown}">
+    <input ng-model="searchStr"
+           id="email"
+           ng-disabled="disableInput"
+           type="text"
+           placeholder="{{placeholder}}"
+           ng-focus="onFocusHandler()"
+           class="{{inputClass}}"
+           ng-focus="resetHideResults()"
+           ng-blur="hideResults($event)"
+
+           autocapitalize="off"
+           autocorrect="off"
+           autocomplete="off"
+           ng-change="inputChangeHandler(searchStr)"/>
+    <label for="email">Email</label>
+    <div class="angucomplete-dropdown col s12" ng-show="showDropdown">
+      <div class="angucomplete-searching" ng-show="searching" ng-bind="textSearching"></div>
+      <div class="angucomplete-searching" ng-show="!searching && (!results || results.length == 0)" ng-bind="textNoResults"></div>
+      <div class="angucomplete-row" ng-repeat="result in results" ng-click="selectResult(result)" ng-mouseenter="hoverRow($index)" ng-class="{'angucomplete-selected-row': $index == currentIndex}">
+        <div ng-if="imageField" class="angucomplete-image-holder">
+          <img ng-if="result.image && result.image != ''" ng-src="{{result.image}}" class="angucomplete-image"/>
+          <div ng-if="!result.image && result.image != ''" class="angucomplete-image-default"></div>
+        </div>
+        <div class="angucomplete-title" ng-if="matchClass" ng-bind-html="result.title"></div>
+        <div class="angucomplete-title" ng-if="!matchClass">{{ result.title }}</div>
+        <div ng-if="matchClass && result.description && result.description != ''" class="angucomplete-description" ng-bind-html="result.description"></div>
+        <div ng-if="!matchClass && result.description && result.description != ''" class="angucomplete-description">{{result.description}}</div>
+      </div>
+
+    </div>
+  </div>
+</script>
