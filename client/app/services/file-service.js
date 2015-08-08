@@ -58,6 +58,13 @@ angular.module('buiiltApp').factory('fileService', function($rootScope, $q, $res
                 action: 'get-all'
               },
               isArray: true
+            },
+            getFileByContractorPackage: {
+              method: 'get',
+              params: {
+                action: 'contractor-package'
+              },
+              isArray: true
             }
     });
 });

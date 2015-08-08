@@ -42,6 +42,13 @@ angular.module('buiiltApp')
           params: {
             action: 'get-one'
           }
+        },
+        getByPackage: {
+          method: 'get',
+          params: {
+            action: 'get-by-package'
+          },
+          isArray: true
         }
         //update: {
         //  method: 'PUT'

@@ -1,4 +1,4 @@
-<div class="col s12" style="margin-top:-10px;">
+<!-- <div class="col s12" style="margin-top:-10px;">
   <h5 class="secondary-content">Subcontractors</h5>
 </div>
 <div class="col s12">
@@ -53,4 +53,185 @@
   </div>
   
 </div>
-<div create-package></div>
+<div create-package></div> -->
+
+<div class="row" style="padding: 12px">
+ <div class="col s10 offset-s1">
+   <div class="collection with-header">
+         <div class="row collection-header" style="margin-bottom:0px">
+       
+       <div class="col">
+         <p style="font-size: 12px; margin-left: 10px">CONTRACTORS PACKAGE</p>
+      </div>
+      <div class="col right" style="margin-top: 10px">
+         <a href="#newContractorPackage" class="modal-trigger" style="padding: 5px; font-size: 12px; color: black">NEW CONTRACTOR PACKAGE</a>
+      </div>
+         </div>
+         <div class="row collection-header" style="margin-bottom:0px;">
+       <div class="col s12">
+         <div style="font-size: 12px;">
+           <a style="margin-left:30px; padding: 5px; background-color: #eeeeee; border-radius: 3px" ng-click="filter = {}">ALL</a>
+           <a ng-click="filter = {isCompleted : false, isAccept : false, isCancel:false} " style="margin-left:30px; padding: 5px;">IN TENDER</a>
+           <a ng-click="filter = {isCompleted : false, isAccept : true}" style="margin-left:30px; padding: 5px;">IN PROGRESS</a>
+           <a ng-click="filter = {isCompleted : true, isAccept : true}" style="margin-left:30px; padding: 5px;">COMPLETED</a>
+         </div>
+       </div>
+     </div>
+     <div  style="height: 480px; overflow-y: auto; background-color: white;">
+       <div class="collection-item row" ng-repeat="contractorPackage in contractorPackages | filter: filter">
+         <div class="col s9">
+           <div>
+            <!-- when user is a builder -->
+            <!-- package in process -->
+            <a ng-if="(currentTeam.type == 'builder' || currentTeam.type == 'homeOwner') && contractorPackage.isAccept" ui-sref="contractorRequest.contractorPackageInProcess({id: contractorPackage.project, packageId: contractorPackage._id})">{{contractorPackage.name}}
+            </a>
+            <!-- package in tender -->
+            <a ng-if="(currentTeam.type == 'builder' || currentTeam.type == 'homeOwner') && !contractorPackage.isAccept" ui-sref="contractorRequest.viewContractorRequest({id: contractorPackage.project, packageId: contractorPackage._id})">{{contractorPackage.name}}
+            </a>
+
+            <!-- when user is a contractor -->
+            <a ng-if="currentTeam.type == 'contractor' && contractorPackage.isAccept" ui-sref="contractorRequest.contractorPackageInProcess({id: contractorPackage.project, packageId: contractorPackage._id})">{{contractorPackage.name}}
+            </a>
+            <!-- package in tender -->
+            <a ng-if="currentTeam.type == 'contractor' && !contractorPackage.isAccept" ui-sref="contractorRequest.sendQuote({id: contractorPackage.project, packageId: contractorPackage._id})">{{contractorPackage.name}}
+            </a>
+          </div>
+         </div>
+         <div style="color: #757575">
+           <div class="col s1 valign-wrapper">
+             <div style="font-size:15px;">{{contractorPackage.messages.length}}</div>
+             <i style="font-size: 15px; margin-left: 5px" class="material-icons valign">message</i>
+           </div>
+           <div class="col s1 valign-wrapper">
+             <div style="font-size:15px;">{{contractorPackage.files.length}}</div>
+             <i style="font-size: 15px; margin-left: 5px" class="material-icons valign">insert_drive_file</i>
+           </div>
+           <div class="col s1 valign-wrapper">
+             <div style="font-size:15px;">{{contractorPackage.tasks.length}}</div>
+             <i style="font-size: 15px; margin-left: 5px" class="material-icons valign">check</i>
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+ </div>
+</div>
+
+<!-- CONTRACTOR PACKAGE -->
+<div id="newContractorPackage" class="modal modal-fixed-footer">
+  <form method="post" name="contractorForm" ng-submit="createContractorPackage(contractorForm)" novalidate>
+    <div class="modal-content">
+      <div class="row">
+        <div class="col s12">
+          <h5>New Contractor Package for {{currentProject.name}}</h5>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s8">
+          <input id="project_name" name="name" type="text" class="validate" ng-model="contractor.name" required
+                 ng-class="{'invalid' : contractorForm.name.$invalid && contractorSubmitted}">
+          <label for="project_name">Contractor Package Title</label>
+          <p class="validate-message" ng-if="contractorForm.name.$error.required && contractorSubmitted">Package name is required</p>
+        </div>
+        <div class="input-field col s4">
+          <label for="date_required" class="active">Date Required</label>
+          <input type="text"
+                 ng-model="contractor.dateStart"
+                 id="dateStart"
+                 datepicker/>
+        </div>
+      </div>
+      <div class="row" style="display:none">
+        <div class="input-field col s6">
+          <select material-select ng-model="contractor.category">
+            <option value="" disabled selected>Category</option>
+            <option value="1">Option 1</option>
+            <option value="2">Option 2</option>
+            <option value="3">Option 3</option>
+          </select>
+          <label>Category</label>
+        </div>
+        
+      </div>
+      <div class="row">
+        <div class="col s12">
+          <ul class="collection z-depth-1">
+            <li class="collection-item vlalign-wrapper">
+              <div class="row form" style="margin-bottom: 0px">
+                <div class="col s12"><p>Enter work descriptions below:</p></div>
+                <div class="input-field col s10">
+                  <textarea id="description" class="materialize-textarea" ng-model="description" ng-class="{'invalid' : contractorDescriptionError}"></textarea>
+                  <label for="description" class="">Description</label>
+                  <p class="validate-message" ng-if="contractorDescriptionError">Scope of work at least 1 item</p>
+                </div>
+                <div class="valign col s2">
+                  <button class="btn" type="button" name="action" style="margin-top: 78px" ng-click="addDescriptionContractor(description)">Add</button>
+                </div>
+              </div>
+            </li>
+            <li class="collection-item vlalign" ng-repeat="description in contractor.descriptions track by $index">
+              <div class="row" style="margin-bottom: 0px">
+                <div class="col s10">
+                  <p>{{description}}</p>
+                </div>
+                <div class="col s2">
+                  <button type="button" class="btn-flat btn-flat" ng-click="removeDescriptionContractor($index)">Remove</button>
+                </div>
+              </div>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col s12">
+          <ul class="collection z-depth-1">
+            <li class="collection-item vlalign-wrapper">
+              <div class="row form" style="margin-bottom: 0px">
+                <div class="col s12"><p>Enter tradesmen's details below:</p></div>
+                <p class="validate-message" ng-if="trademenError">Tradesmen's details at least 1 item</p>
+                <div class="input-field col s7">
+                  <!-- <input id="email_address" ng-model="newEmail" type="email" name="email" class="validate"> -->
+                  <angucomplete-alt id="ex1"
+                                    pause="100"
+                                    selected-object="contractorMember.email"
+                                    local-data="contractorTeamMember"
+                                    search-fields="email"
+                                    title-field="email"
+                                    minlength="1"
+                                    input-changed="contractorInputChanged"
+                                    template-url="/my-custom-template.html"
+                                    input-class="col s12"></angucomplete-alt>
+                </div>
+                <div class="input-field col s3">
+                  <input id="phone_number" ng-model="newPhoneNumber" type="number" name="phoneNumber" class="validate">
+                  <label for="phone_number">Phone number</label>
+                  <p class="validate-message" ng-if="contractorForm.phoneNumber.$valid == false">Please input number</p>  
+                </div>
+                <div class="valign col s2">
+                  <a href="#" ng-if="contractorForm.phoneNumber.$valid == true" ng-click="contractorAddUser()" class="btn" style="margin-top: 28px">Add</a>
+                  <!-- <button class="btn" type="submit" ng-submit="addUser()" name="action" style="margin-top: 28px">Add</button> -->
+                </div>
+              </div>
+            </li>
+
+            <li class="collection-item vlalign" ng-repeat="emailPhone in contractorMember.emailsPhone">
+              <div class="row" style="margin-bottom: 0px">
+                <div class="col s7">{{emailPhone.email}}</div>
+                <div class="col s3">{{emailPhone.phoneNumber}}</div>
+                <div class="col s2" style="float:right"><a class="btn-flat btn-flat" ng-click="contractorRemoveUser($index)" >Remove</a></div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="waves-effect waves-light btn modal-action">Create Package!</button>
+      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
+    </div>
+  </form>
+</div>
+<!-- END CONTRACTOR PACKAGE -->
+

@@ -102,3 +102,11 @@ exports.getAll = function(req, res) {
         return res.json(200,files)
     })
 };
+
+exports.getFileByContractorPackage = function(req, res) {
+    File.find({belongTo: req.params.id, belongToType: 'contractor'}, function(err, files){
+        if (err) {return res.send(500,err);}
+        if (!files) {return res.send(404);}
+        return res.send(200,files);
+    });
+};
