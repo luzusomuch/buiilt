@@ -27,6 +27,9 @@ angular.module('buiiltApp').directive('upload', function(){
             if ($scope.type == 'project') {
                 $scope.tags = ['architectural','engineering','council','other'];
             }
+            else if ($scope.type == 'package') {
+                $scope.tags = ['quote','invoice','design','spec','other'];
+            }
 
             $scope.selectedTags = [];
             $scope.selectTag = function(tag, index) {

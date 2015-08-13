@@ -273,6 +273,7 @@ exports.uploadInPackge = function(req, res){
     .on('end', function() {
         if (uploadedFile && uploadedField) {
             console.log(uploadedField,uploadedFile);
+            var tags = uploadedField.tags.split(',');
             var file = new File();
             file.title = (uploadedField.title == 'undefined') ? uploadedFile.name : uploadedField.title;
             file.name = uploadedFile.name;
@@ -286,8 +287,9 @@ exports.uploadInPackge = function(req, res){
             file.belongTo = req.params.id;
             file.belongToType = uploadedField.belongToType;
             file.uploadBy = req.user.team._id;
+            file.tags = tags;
             file.save(function(err, saved) {
-                if (err) {return res.send(500,err);}
+                if (err) {console.log(err);return res.send(500,err);}
                 else {
                     async.parallel([
                         function(cb) {
@@ -467,8 +469,9 @@ exports.uploadInPackge = function(req, res){
                                 }
                             });
                         }
-                    ], function(err){
-                        return res.send(500,err);
+                    ], function(){
+                        console.log(err);
+                        return res.send(200,saved);
                     });
                 }
             });

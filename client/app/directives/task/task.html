@@ -1,4 +1,55 @@
-<div class="col s7">
+<div id="modal_createNewTask" class="modal modal-fixed-footer">
+  <form class="col s12" name="form" novalidate ng-submit="save(form)">
+    <div class="modal-content">
+      <div class="row">
+          <div class="input-field col s12">
+            <input id="task_description" type="text" ng-model="task.name" name="name" maxlength="80"
+                   ng-class="{'invalid' : form.name.$invalid && submitted}" ng-disabled="isShow">
+            <label for="task_description">Task</label>
+            <p class="validate-message" ng-show="form.name.$error.required && submitted">Task name is required</p>
+          </div>
+          <div class="input-field col s12">
+            <input type="text"
+                   name="created"
+                   id="dueDate"
+                   ng-model="task.dateEnd"
+                   format="mm/dd/yyyy"
+                   ng-disabled="isShow"
+                   datepicker
+              />
+            <label for="dueDate" class="active">Due date</label>
+          </div>
+        </div>
+
+        <div class="row current-assign">
+          <p style="">Current Assignee's:</p>
+          <div class="card col"  ng-if="!isShow"  style="padding: 5px; margin-left: 10px" ng-repeat="assignee in task.assignees" ng-class="{'admin' : assignee.team.role == 'admin'}">
+            {{assignee | name}} <span ng-if="assignee.canRevoke"><a href="#!" ng-click="revoke(assignee,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
+          </div>
+          <div class="card col"  ng-if="isShow"  style="padding: 5px; margin-left: 10px" ng-repeat="assignee in task.assignees" ng-class="{'admin' : assignee.team.role == 'admin'}">
+            {{assignee | name}}
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="row available-assign"  ng-if="!isShow" >
+          <p style="">Available Assignee's:</p>
+          <a href="#!" ng-click="assign(staff,$index)" ng-repeat="staff in available track by $index">
+            <div class="card col" style="padding: 5px; margin-left: 10px"  ng-class="{'admin' : staff.team.role == 'admin'}">
+              {{staff | name}}
+            </div>
+          </a>
+        </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="modal-action modal-close waves-effect waves-green btn-flat ">Save!</button>
+      <button type="button" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</button>
+    </div>
+  </form>
+</div>
+
+<!-- <div class="col s7">
   <ul class="card collection">
     <div class="card-header">
       <div class="row">
@@ -35,7 +86,6 @@
     </div>
 
     <div class="card-reveal">
-      <!--<span class="card-title grey-text text-darken-4"><i class="mdi-navigation-close right"></i></span>-->
       <form name="form" class="col s12" ng-submit="save(form)">
         <div class="row">
           <div class="input-field col s12">
@@ -89,3 +139,4 @@
 
 </div>
        
+ -->

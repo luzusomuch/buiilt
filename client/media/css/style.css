@@ -259,3 +259,9 @@ span.disabled {
   background-color: #dff0d8;
   border-color: #d6e9c6;
 }
+
+.current-select {
+  padding: 5px; 
+  background-color: #eeeeee; 
+  border-radius: 3px
+}

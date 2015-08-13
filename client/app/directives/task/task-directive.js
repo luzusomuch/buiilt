@@ -133,10 +133,10 @@ angular.module('buiiltApp')
 
 
         //Function fired when click new task
-        $scope.newTask = function() {
-          $scope.task = {
+        $scope.task = {
             assignees : []
           };
+        $scope.newTask = function() {
           getAvailableAssignee($scope.type);
           $scope.isNew = true;
           $scope.isShow = false;

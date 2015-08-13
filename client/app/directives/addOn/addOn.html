@@ -1,4 +1,4 @@
-<div class="col s5">
+<!-- <div class="col s5">
   <ul class="card collection">
    <div class="card-header">
      <div class="row">
@@ -221,9 +221,8 @@
 </div>
 <div class="row" style="margin-top: 50px">
  <div class="col s6 valign">
-   <div class="file-field input-field">
-     <!-- <input class="file-path validate" type="text"/> -->
-     <div ng-show="uploader.queue.length" class="form-group">
+   <div class="file-field input-field"> -->
+     <!-- <div ng-show="uploader.queue.length" class="form-group">
       <div ng-repeat="item in uploader.queue" ng-if="$last">
         <div class="row">
           <div class="input-field col s8 offset-s2">
@@ -255,7 +254,6 @@
 <div class="modal-footer">
   <button ng-show="uploader.queue.length > 0" type="submit" ng-disable="sendInvoiceForm.$invalid" ng-click="uploadAll()" class="modal-action modal-close waves-effect waves-green btn-flat ">Send Invoice!</button>
   <button ng-hide="uploader.queue.length != 0" type="submit" ng-disable="sendInvoiceForm.$invalid" class="modal-action modal-close waves-effect waves-green btn-flat ">Send Invoice!</button>
-  <!-- <a href="#!" ng-click="uploadAll();" >Send Invoice!</a> -->
   <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
 </div>
 </form>
@@ -311,10 +309,10 @@
       <button type="button" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</button>
     </div>
   </form>
-</div>
+</div> -->
 
 <!-- modal for contractor variations -->
-<div ng-repeat="variation in package.variations">
+<!-- <div ng-repeat="variation in package.variations">
   <div class="modal modal-fixed-footer" id="modal-variation-{{variation._id}}">
     <div class="modal-content">
       <div class="col s12">
@@ -328,10 +326,10 @@
       <a class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
     </div>
   </div>
-</div>
+</div> -->
 
 <!-- modal for contractor defects -->
-<div ng-repeat="defect in package.defects" class="modal modal-fixed-footer" id="modal-defect-{{defect._id}}">
+<!-- <div ng-repeat="defect in package.defects" class="modal modal-fixed-footer" id="modal-defect-{{defect._id}}">
   <div class="modal-content">
     <div class="col s12">
       <h5>Defect {{defect.title}}</h5>
@@ -343,10 +341,10 @@
   <div class="modal-footer">
     <a class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
   </div>
-</div>
+</div> -->
 
 <!-- modal for contractor invoice -->
-<div ng-repeat="invoice in package.invoices" class="modal modal-fixed-footer" id="modal-invoice-{{invoice._id}}">
+<!-- <div ng-repeat="invoice in package.invoices" class="modal modal-fixed-footer" id="modal-invoice-{{invoice._id}}">
   <div class="modal-content">
     <div class="col s12">
       <h5>Invoice {{invoice.title}} with total {{invoice.total}}</h5>
@@ -382,10 +380,10 @@
   <div class="modal-footer">
     <a class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
   </div>
-</div>
+</div> -->
 
 <!-- modal for contractor document -->
-<div ng-repeat="file in documents" class="modal modal-fixed-footer" id="modal-file-{{file._id}}">
+<!-- <div ng-repeat="file in documents" class="modal modal-fixed-footer" id="modal-file-{{file._id}}">
   <div class="modal-content">
     <div class="col s12">
       <h5>{{file.title}}</h5>
@@ -528,7 +526,6 @@
 <div class="row" style="margin-top: 50px">
  <div class="col s6 valign">
    <div class="file-field input-field">
-     <!-- <input class="file-path validate" type="text"/> -->
      <div ng-show="uploader.queue.length" class="form-group">
       <div ng-repeat="item in uploader.queue" ng-if="$last">
         <div class="row">
@@ -561,10 +558,282 @@
     <div class="modal-footer">
       <button ng-show="uploader.queue.length > 0" type="submit" ng-disable="sendInvoiceForm.$invalid" ng-click="uploadAll()" class="modal-action modal-close waves-effect waves-green btn-flat ">Send Variation!</button>
       <button ng-hide="uploader.queue.length != 0" type="submit" ng-disable="sendInvoiceForm.$invalid" class="modal-action modal-close waves-effect waves-green btn-flat ">Send Variation!</button>
-      <!-- <button ng-click="uploadAll()" type="submit" class="modal-action modal-close waves-effect waves-green btn-flat " >Send Variation!</button> -->
      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
     </div>
     </form>
+</div> -->
+
+
+<div class="collection with-header">
+   <div class="row collection-header" style="margin-bottom:0px">
+   
+   <div class="col">
+     <a dropdown class='dropdown-button btn-flat' href='#' data-activates='itemFilter' style="font-size: 12px;">{{(allItemsText) ? allItemsText : 'OVERVIEW'}}<i class="mdi-navigation-arrow-drop-down"></i></a>
+       <ul id='itemFilter' class='dropdown-content'>
+       <li><a ng-click="showOverView()" href="#!">OVERVIEW</a></li>
+       <li><a ng-click="showTasks()" href="#!">TASKS</a></li>
+       <li><a ng-click="showVariations()" href="#!">VARIATIONS</a></li>
+       <li><a ng-click="showDocuments()" href="#!">DOCUMENTS</a></li>
+       </ul>
+  </div>
+  <div class="col right" style="margin-top: 10px">
+     <a ng-click="newTask()" class="modal-trigger" href="#modal_createNewTask" style="margin-left:30px; padding: 5px; font-size: 12px; color: black">NEW TASK</a>
+     <a class="modal-trigger" href="#modal_attachDocument" style="margin-left:30px; padding: 5px; font-size: 12px; color: black">NEW DOCUMENT</a>
+     <a class="modal-trigger" href="#modal_attachVariation" style="margin-left:30px; padding: 5px; font-size: 12px; color: black">NEW VARIATION</a>
+  </div>
+
+  <!-- show overview -->
+  <div ng-if="isShowOverView" style="height: 480px; overflow-y: auto; background-color: white;"></div>
+        
+  </div>
+<!-- show list of tasks -->
+  <div ng-if="isShowTasks">
+    <div ng-if="showListTasks" class="listTasks">
+     <div class="row collection-header" style="margin-bottom:0px;">
+       <div class="col s12">
+         <div style="font-size: 12px">
+           <a ng-click="filter = 'all'" style="margin-left:30px;" ng-class="{'current-select' : filter == 'all'}">ALL TASKS</a>
+           <a ng-click="filter = {'myTask' : currentUser._id}" style="margin-left:30px" ng-class="{'current-select' : filter.myTask == currentUser._id}">MY TASKS</a>
+           <a ng-click="filter = 'completed'" style="margin-left:30px" ng-class="{'current-select' : filter == 'completed'}">COMPLETED TASKS</a>
+         </div>
+       </div>
+     </div>
+     <div  style="height: 480px; overflow-y: auto; background-color: white;">
+       <div class="collection-item row" ng-repeat="task in tasks | taskFilter : filter">
+         <div class="col s12">
+           <div ng-click="showTaskDetail(task)"><input type="checkbox" id="complete" /><label style="color: black" for="complete">{{task.name}}</label></div>
+         </div>
+         <div class="col s12">
+           <div style="font-size: 10px">
+            <span>Due Date: {{task.dateEnd | date: longDate}}</span>
+             - Assignees: <span ng-repeat="assignee in task.assignees">
+              {{(assignee.lastName) ? assignee.firstName +" "+ assignee.lastName : assignee.email}},
+            </span>
+          </div>
+         </div>
+       </div>
+     </div>
+    </div>
+    <!-- show task detail -->
+    <div ng-if="showDetailOfTask" class="taskDetail">
+      <div class="row collection-header" style="margin-bottom:0px;">
+       <div class="col s12">
+         <div class="" style="font-size: 12px;">
+           <a href="#" ng-click="backToTaskList()" style="margin-left:30px; padding: 5px;">&lt; BACK TO TASKS</a>
+           <div class="right">
+             <a href="#" style="padding: 5px;">EDIT TASK</a>
+             <a ng-if="!task.completed" href="#" ng-click="(!task.isOwner && !isLeader) || complete(task)" style="padding: 5px;">MARK COMPLETE</a>
+             <a ng-if="task.completed" href="#" ng-click="(!task.isOwner && !isLeader) || complete(task)" style="padding: 5px;">RE-OPEN TASK</a>
+           </div>
+         </div>
+       </div>
+      </div>
+      <div  style="height: 480px; overflow-y: auto; background-color: white;">
+       <div class="collection-item row">
+         <div class="col s12">
+           <p>{{task.name}} - {{task.description}}</p>
+           <p>Due Date: {{task.dateEnd | date: longDate}}</p>
+         </div>
+         <div class="col s12">
+           <div class="col card" style="font-size:12px; background-color: white; padding: 8px; border-radius: 3px" ng-repeat="assignee in task.assignees">
+             {{(assignee.lastName) ? assignee.firstName +" "+ assignee.lastName : assignee.email}}
+           </div>  
+         </div>
+       </div>
+     </div>
+    </div>
+  </div>
+
+  <!-- list of variations -->
+  <div ng-if="isShowVariations" class="variationsList">
+    <div class="row collection-header" style="margin-bottom:0px;">
+     <div class="col s12">
+       <div style="font-size: 12px;">
+         <a style="margin-left:30px; padding: 5px; background-color: #eeeeee; border-radius: 3px">ALL VARIATIONS</a>
+       </div>
+     </div>
+    </div>
+    <div style="height: 480px; overflow-y: auto; background-color: white;">
+     <div class="collection-item row">
+       <div class="col s12" ng-repeat="variation in package.variations">
+         <div style="cursor:pointer" ng-click="goToVariation(variation)">{{variation.name}}</div>
+       </div>
+     </div>
+   </div>
+  </div>
+
+  <!-- list of documents -->
+  <div ng-if="isShowDocuments">
+    <div ng-if="showListDocuments" class="documentsList">
+      <div class="row collection-header" style="margin-bottom:0px;">
+       <div class="col s12">
+         <div style="font-size: 12px;">
+           <a ng-click="documentFilter = {isShowAll: true}" style="margin-left:30px; padding: 5px;" ng-class="{'current-select' : documentFilter.isShowAll}">ALL DOCUMENTS</a>
+           <a ng-click="documentFilter = {isQuote: true}" style="margin-left:30px; padding: 5px;" ng-class="{'current-select' : documentFilter.isQuote}">QUOTES</a>
+           <a ng-click="documentFilter = {isInvoice: true}" style="margin-left:30px; padding: 5px;" ng-class="{'current-select' : documentFilter.isInvoice}">INVOICES</a>
+           <a ng-click="documentFilter = {isDesign: true}" style="margin-left:30px; padding: 5px;" ng-class="{'current-select' : documentFilter.isDesign}">DESIGNS</a>
+           <a ng-click="documentFilter = {isSpec: true}" style="margin-left:30px; padding: 5px;" ng-class="{'current-select' : documentFilter.isSpec}">SPECS</a>
+           <a ng-click="documentFilter = {isOther: true}" style="margin-left:30px; padding: 5px;" ng-class="{'current-select' : documentFilter.isOther}">OTHERS</a>
+         </div>
+       </div>
+      </div>
+      <div  style="height: 480px; overflow-y: auto; background-color: white;">
+        <div class="collection-item row" ng-repeat="document in documents | filter: documentFilter">
+         <div class="col s12">
+           <div ng-click="goToDocumentDetail(document)">{{document.title}}</div>
+         </div>
+         <div class="col s12">
+           <div style="font-size:12px;">{{document.description}}</div>
+         </div>
+        </div>
+      </div>
+    </div>
+    <!-- document detail -->
+    <div ng-if="showDocumentDetail" class="documentDetail">
+      <div class="row collection-header" style="margin-bottom:0px;">
+       <div class="col s12">
+         <div style="font-size: 12px;">
+           <a ng-click="backToDocumentsList()" style="margin-left:30px; padding: 5px;">&lt; BACK TO DOCUMENTS</a>
+           <div class="right">
+             <a href="document.fileUrl" download="document.title" class="" style="padding: 5px;">DOWNLOAD</a>
+           </div>
+         </div>
+       </div>
+      </div>
+      <div  style="height: 480px; overflow-y: auto; background-color: white;">
+        <div class="collection-item row">
+          <p>{{document.title}}</p>
+          <p>{{document.description}}</p>
+        </div>
+        <div class="row center" ng-switch="document.mimeType">
+          <span ng-switch-when="image/jpeg">
+              <img class="materialboxed" width="70%" src="../../media/files/{{document._id}}-{{document.title}}.jpg" alt="">
+            </span>
+            <span ng-switch-when="image/png">
+              <img class="materialboxed" width="70%" src="../../media/files/{{document._id}}-{{document.title}}.jpg" alt="">
+            </span>
+            <span ng-switch-when="application/pdf">
+              <img class="materialboxed" width="70%" src="../../media/files/{{document._id}}-{{document.title}}.jpg" alt="">
+            </span>
+            <span ng-switch-default>
+              <img class="materialboxed" width="70%" src="../../media/sample-1.jpg" alt="">
+            </span>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
+<div id="modal_createNewTask" class="modal modal-fixed-footer">
+  <form class="col s12" name="form" novalidate ng-submit="save(form)">
+    <div class="modal-content">
+      <div class="row">
+        <div class="col s12">
+          <h5>New task for {{package.name}}</h5>
+        </div>
+      </div>
+      <div class="row">
+          <div class="input-field col s12">
+            <input id="task_description" type="text" ng-model="task.name" name="name" maxlength="80"
+                   ng-class="{'invalid' : form.name.$invalid && submitted}" ng-disabled="isShow">
+            <label for="task_description">Task</label>
+            <p class="validate-message" ng-show="form.name.$error.required && submitted">Task name is required</p>
+          </div>
+          <div class="input-field col s12">
+            <input type="text"
+                   name="created"
+                   id="dueDate"
+                   ng-model="task.dateEnd"
+                   format="mm/dd/yyyy"
+                   ng-disabled="isShow"
+                   datepicker
+              />
+            <label for="dueDate" class="active">Due date</label>
+          </div>
+        </div>
 
+        <div class="row current-assign">
+          <p style="">Current Assignee's:</p>
+          <div class="card col"  ng-if="!isShow"  style="padding: 5px; margin-left: 10px" ng-repeat="assignee in task.assignees" ng-class="{'admin' : assignee.team.role == 'admin'}">
+            {{assignee | name}} <span ng-if="assignee.canRevoke"><a href="#!" ng-click="revoke(assignee,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
+          </div>
+          <div class="card col"  ng-if="isShow"  style="padding: 5px; margin-left: 10px" ng-repeat="assignee in task.assignees" ng-class="{'admin' : assignee.team.role == 'admin'}">
+            {{assignee | name}}
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="row available-assign"  ng-if="!isShow" >
+          <p style="">Available Assignee's:</p>
+          <a href="#!" ng-click="assign(staff,$index)" ng-repeat="staff in available track by $index">
+            <div class="card col" style="padding: 5px; margin-left: 10px"  ng-class="{'admin' : staff.team.role == 'admin'}">
+              {{staff | name}}
+            </div>
+          </a>
+        </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="modal-action modal-close waves-effect waves-green btn-flat ">Save!</button>
+      <button type="button" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</button>
+    </div>
+  </form>
+</div>
+
+<div id="modal_attachVariation" class="modal modal-fixed-footer">
+  <form ng-submit="sendVariation()">
+    <div class="modal-content">
+      <div class="row">
+        <div class="col s12">
+          <h5>New Variation for {{package.name}}</h5>
+        </div>
+      </div>
+      <div class="row valign-wrapper">
+        <div class="input-field col s8 offset-s2">
+          <input id="project_name" type="text" class="validate valign" ng-model="variation.title">
+          <label for="project_name">Variation Title</label>
+        </div>
+
+      </div>
+      <div class="row">
+        <div class="col s8 offset-s2">
+          <ul class="collection z-depth-1">
+            <li class="collection-item vlalign-wrapper">
+              <div class="row form" style="margin-bottom: 0px">
+                <div class="col s12"><p>Enter work descriptions below:</p></div>
+                <div class="input-field col s10">
+                  <textarea id="description" class="materialize-textarea" ng-model="description" ng-class="{'invalid' : descriptionError}"></textarea>
+                  <label for="description" class="">Description</label>
+                  <p class="validate-message" ng-if="descriptionError">Scope of work at least 1 item</p>
+                </div>
+                <div class="valign col s2">
+                  <button class="btn" type="button" name="action" style="margin-top: 78px" ng-click="addDescription(description)">Add</button>
+                </div>
+              </div>
+            </li>
+            <li class="collection-item vlalign" ng-repeat="description in variation.descriptions track by $index">
+              <div class="row" style="margin-bottom: 0px">
+                <div class="col s10">
+                  <p>{{description}}</p>
+                </div>
+                <div class="col s2">
+                  <button class="btn-flat btn-flat" ng-click="removeDescription($index)">Remove</button>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="modal-action modal-close waves-effect waves-green btn-flat ">Send Variation!</button>
+      <button type="button" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</button>
+    </div>
+  </form>
+</div>
+
+<div id="modal_attachDocument" class="modal">
+  <div class="modal-content">
+    <upload package="package" type="package"></upload>
+  </div>
+</div>

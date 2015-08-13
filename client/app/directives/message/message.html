@@ -1,4 +1,81 @@
-<ul class="card collection">
+<div class="collection with-header">
+  <div class="row collection-header" style="margin-bottom:0px; padding-top: 20px; padding-bottom: 14px">
+    <div class="right">
+      <a class="modal-trigger" style="font-size: 12px; margin:20px; color: black;" href='#modal_createNewThread' ng-click="newThread()">NEW THREAD</a>
+    </div>
+  </div>
+
+  <div ng-if="showThreadDetail" class="row collection-header" style="margin-bottom:0px;">
+   <div class="col s12" style="font-size: 12px">
+     <a ng-click="backToThreadsList()" href="#" style="padding: 5px;">&lt; BACK TO THREADS</a>
+     <div class="right">
+       <a href="#" class="" style="padding: 5px;">EDIT THREAD</a>
+     </div>
+   </div>
+  </div>
+         
+  <div style="height: 520px; overflow-y: auto; background-color:White;">
+    <div ng-if="showThreadsList" class="collection-item row" ng-repeat="thread in threads">
+      <div class="col s12">
+        <div style="cursor:pointer" ng-click="goToThreadDetail(thread)">#{{$index + 1}} - {{thread.name}}</div>
+      </div>
+      <div class="col s12">
+        <div style="font-size: 10px;">
+          <span ng-repeat="assignee in thread.users">
+            {{(assignee.firstName) ? assignee.firstName + ' ' + assignee.lastName : assignee.email}}, 
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div ng-if="showThreadDetail" class="threadDetail">
+      <div class="row" style="font-size: 13px; margin: 12px; background-color: #eee; border-radius: 3px;">
+       <div class="col s12">
+         <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s - <strong>From Another Person</strong></p>
+       </div>
+      </div>
+       <div class="row" style="font-size: 13px; background-color: #BBDEFB; margin: 12px; border-radius: 3px;">
+       <div class="col s12">
+         <p class="right">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s - <strong>From Me</strong></p>
+       </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="modal_createNewThread" class="modal modal-fixed-footer">
+  <form class="col s12" name="form" novalidate ng-submit="saveThread(form)">
+    <div class="modal-content">
+      <div class="input-field col s12">
+        <input id="thread_name" type="text" ng-model="thread.name" required name="name" ng-class="{'invalid' : form.name.$invalid && submitted}">
+        <label for="thread_name">Name</label>
+        <p class="validate-message" ng-show="form.name.$error.required && submitted">Thread name is required</p>
+      </div>
+      <div class="row current-assign">
+        <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="user in thread.users" ng-class="{'admin' : user.team.role == 'admin'}">
+          {{user | name}} <span><a href="#!" ng-click="revoke(user,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="row available-assign">
+        <p style="">Available user:</p>
+        <a href="#!" ng-click="assign(user,$index)" ng-repeat="user in available track by $index" >
+          <div class="card col" style="padding: 5px; margin-left: 10px" ng-class="{'admin' : user.team.role == 'admin'}">
+            {{user | name}}
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="modal-action modal-close waves-effect waves-green btn-flat ">Save!</button>
+      <button type="button" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</button>
+    </div>
+  </form>
+</div>
+
+<!-- <ul class="card collection">
   <div class="card-header">
     <div class="row">
       <div class="col s10">
@@ -15,9 +92,6 @@
         </div>
         <div class="col s8" ng-if="currentThread.users">
           <p style="margin-top: 15px">{{currentThread.users | threadUsers}}</p>
-          <!--<div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="user in currentThread.users" ng-class="{'admin' : user.team.role == 'admin'}">-->
-            <!--{{user.email}}-->
-          <!--</div>-->
         </div>
       </div>
       <div class="col s2">
@@ -95,3 +169,4 @@
     </form>
   </div>
 </ul>
+ -->

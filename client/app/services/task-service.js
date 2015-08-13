@@ -20,7 +20,8 @@ angular.module('buiiltApp')
           method : 'GET',
           // isArray : true,
           params: {
-          }
+          },
+          isArray: true
         },
         myTask : {
           method : 'GET',

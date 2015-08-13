@@ -22,6 +22,19 @@ angular.module('buiiltApp')
           $scope.submitted = false;
           $scope.isNew = true;
 
+          $scope.showThreadsList = true;
+          $scope.showThreadDetail = false;
+          $scope.backToThreadsList = function(){
+            $scope.thread = {};
+            $scope.showThreadsList = true;
+            $scope.showThreadDetail = false;
+          };
+          $scope.goToThreadDetail = function(thread) {
+            $scope.thread = thread;
+            $scope.showThreadsList = false;
+            $scope.showThreadDetail = true;
+          };
+
           //Get Available assignee to assign to task
           var getAvailableUser = function(type) {
             switch(type) {
