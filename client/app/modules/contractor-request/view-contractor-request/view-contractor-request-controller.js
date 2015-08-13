@@ -1,8 +1,37 @@
 angular.module('buiiltApp')
 .controller('ViewContractorRequestCtrl', function($scope, $window, $state, $stateParams,fileService,currentTeam, $cookieStore, authService, userService, contractorRequest, contractorRequestService, quoteService) {
-  /**
-   * quote data
-   */
+  
+  $scope.showScope = true;
+  $scope.showTenders = false;
+  $scope.viewMessages = false;
+  $scope.defaultText = "SCOPE";
+
+  $scope.clickShowScopes = function() {
+    $scope.defaultText = "SCOPE";
+    $scope.showScope = true;
+    $scope.showTenders = false;
+  };
+  $scope.clickShowTenders = function() {
+    $scope.defaultText = "TENDERS";
+    $scope.showScope = false;
+    $scope.showTenders = true;
+  };
+
+  $("div.showTenderDetail").css("display","none");
+  $scope.viewTenderDetail = function(tender){
+    $scope.viewMessages = true;
+    $scope.tender = tender;
+    $("div.tenderLists").toggle("slide");
+    $("div.showTenderDetail").css("display","block");
+  };
+
+  $scope.backToList = function(){
+    $scope.tender = {};
+    $("div.tenderLists").toggle("slide");
+    $("div.tenderLists").css("display","block");
+    $("div.showTenderDetail").css("display","none");
+  };
+
   $scope.emailsPhone = [];
   $scope.contractorRequest = contractorRequest;
   $scope.currentTeam = currentTeam;

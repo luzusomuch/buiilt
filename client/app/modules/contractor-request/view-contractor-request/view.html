@@ -1,4 +1,156 @@
-<div class="row" style="margin-top: 18px">
+<div class="row" style="padding: 12px">
+  <div class="col s8">
+    <div class="collection with-header">
+      <div class="row collection-header" style="margin-bottom:0px">
+        <div class="col">
+         <a class='dropdown-button btn-flat' href='#' data-activates='inTender' style="font-size: 12px;" dropdown>{{(defaultText) ? defaultText : "SCOPE"}}<i class="mdi-navigation-arrow-drop-down"></i></a>
+           <ul id='inTender' class='dropdown-content'>
+           <li><a ng-click="clickShowScopes()" href="#!">SCOPE</a></li>
+           <li><a ng-click="clickShowTenders()" href="#!">TENDERERS</a></li>
+           </ul>
+        </div>
+            
+      </div>
+      <div ng-if="showScope">
+        <div class="row collection-header" style="margin-bottom:0px;">
+          <div class="col right" style="font-size:12px">
+             <a ng-click="cancelPackage()" class="" style="padding: 5px;">CANCEL PACKAGE</a>
+             <a class="modal-trigger" href="#modal_attachAddendum" style="padding: 5px;">ATTACH ADDENDUM</a>
+          </div>
+        </div>
+        <div style="height: 480px; overflow-y: auto; background-color: white;">
+          <div class="" style="padding: 10px">
+            <h5>{{contractorRequest.name}} detail: </h5>
+            <strong>Start date</strong>: {{contractorRequest.dateStart | date: longDate}}
+            <table>
+              <thead>
+                <th>Description</th>
+              </thead>
+              <tbody>
+                <tr ng-repeat="addendum in contractorRequest.addendums | filter:{isHidden:false}">
+                  <td>{{addendum.addendumsScope.description}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="tenderLists" ng-if="showTenders">
+        <div class="row collection-header" style="margin-bottom:0px;">
+          <div class="col right" style="font-size:12px">
+            <a class="modal-trigger" href="#modal_inviteContractor" style="padding: 5px;">INVITE ANOTHER TENDERER</a>
+          </div>
+        </div>
+        <div style="height: 480px; overflow-y: auto; background-color: white;">
+          <div class="collection-item row" ng-repeat="tender in contractorRequest.to">
+             <div class="col s9">
+               <div><a ng-click="viewTenderDetail(tender)" href="#">{{tender.email}}</a></div>
+             </div>
+             <div style="color: #757575">
+               <div class="col s1 valign-wrapper">
+                 <div style="font-size:15px;">5</div>
+                 <i style="font-size: 15px; margin-left: 5px" class="material-icons valign">message</i>
+               </div>
+               <div class="col s1 valign-wrapper">
+                 <div style="font-size:15px;">10 </div>
+                 <i style="font-size: 15px; margin-left: 5px" class="material-icons valign">insert_drive_file</i>
+               </div>
+             </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="showTenderDetail">
+        <div class="row collection-header" style="margin-bottom:0px;">
+          <div class="col s12" style="font-size:12px">
+            <a href="#!" ng-click="backToList()" style="margin-left:30px; padding: 5px;">&lt; BACK TO TENDERS</a>
+            <div class="right">
+              <a ng-click="declineQuote(tender._id)" style="padding: 5px;">DECLINE TENDER</a>
+              <a ng-click="selectQuote(tender.quote._id)" style="padding: 5px;">ACCEPT TENDER</a>
+            </div>
+          </div>
+        </div>
+        <div  style="height: 480px; overflow-y: auto; background-color: white;">
+          {{tender}}
+             
+         
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col s4">
+    <div class="collection with-header">
+         
+      <div style="height: 575px; overflow-y: auto; background-color:#fafafa;" class="">
+        <div ng-if="viewMessages && message.to == tender._id" ng-repeat="message in contractorRequest.messages" class="row" style="font-size: 13px; margin: 12px; background-color: #eee; border-radius: 3px;">
+          <div class="col s12">
+            <p>{{message.message}} - <strong>From {{(currentTeam._id == message.sendBy._id) ? "Me" : message.sendBy.name}}</strong></p>
+          </div>
+        </div>
+        <div style="display:none" class="row" style="font-size: 13px; background-color: #BBDEFB; margin: 12px; border-radius: 3px;">
+          <div class="col s12">
+            <p class="right">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s - <strong>From Me</strong></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<addendum package="contractorRequest" type="contractor"></addendum>
+
+<div id="modal_inviteContractor" class="modal modal-fixed-footer">
+  <form ng-submit="sendInvitationInContractor()" name="form">
+  <div class="modal-content">
+     <div class="row">
+       <div class="col s12">
+         <h5>Invite More Sub-Contractors to Package {{contractorRequest.name}}</h5>
+       </div>
+     </div>
+
+     <div class="row">
+       <div class="col s12">
+        <ul class="collection z-depth-1">
+          <li class="collection-item vlalign-wrapper">
+            <div class="row form" style="margin-bottom: 0px">
+              <div class="col s12"><p>Enter tradesmen's details below:</p></div>
+              <div class="input-field col s7">
+                <input id="email_address" type="email" class="validate" ng-model="user.newEmail">
+                <label for="email_address">Email</label>
+              </div>
+              <div class="input-field col s3">
+                <input id="phone_number" type="number" name="phoneNumber" class="validate" ng-model="user.newPhoneNumber">
+                <label for="phone_number">Phone Number</label>
+                <p class="validate-message" ng-if="form.phoneNumber.$valid == false">Please input number</p>
+              </div>
+              <div class="valign col s2">
+                <a ng-if="form.phoneNumber.$valid == true" href="#" ng-click="addUser()" class="btn" style="margin-top: 28px">Add</a>
+              </div>
+            </div>
+          </li>
+          <li class="collection-item vlalign" ng-repeat="emailPhone in emailsPhone">
+            <div class="row" style="margin-bottom: 0px">
+              <div class="col s7">{{emailPhone.email}}</div>
+              <div class="col s3">{{emailPhone.phoneNumber}}</div>
+              <div class="col s2" style="float:right"><a class="btn-flat btn-flat" ng-click="removeUser($index)" >Remove</a></div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+</div>
+<div class="divider"></div>
+<div class="modal-footer">
+  <button type="submit" class="modal-action modal-close waves-effect waves-green btn-flat ">Send Invitations!</button>
+ 
+ <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
+</div>
+</form>
+</div>  
+
+<!-- <div class="row" style="margin-top: 18px">
   <h5 class="col s8">Contractor Package {{contractorRequest.name}} in Tender</h5>
   <div class="col s4" style="margin-top:15px">
    <a class='dropdown-button btn-flat right tooltipped' dropdown data-position="top" data-delay="1" data-tooltip="Attach..." data-gutter="-16" href='#'
@@ -6,7 +158,7 @@
     <i class="mdi-navigation-more-vert"></i>
   </a>
 
-  <!-- Dropdown Structure -->
+  
   <ul id='itemActions' class='dropdown-content left'>
    <li><a class="modal-trigger" href="#modal_attachAddendum">Attach Addendum</a></li>
    <li><a class="modal-trigger" href="#modal_inviteContractor">Invite Contractor</a></li>
@@ -245,7 +397,7 @@
 <div class="divider"></div>
 <div class="modal-footer">
   <button type="submit" class="modal-action modal-close waves-effect waves-green btn-flat ">Send Invitations!</button>
- <!-- <a class="modal-action modal-close waves-effect waves-green btn-flat ">Send Invitations!</a> -->
+ 
  <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
 </div>
 </form>
@@ -267,3 +419,4 @@
 </div>
 <addendum package="contractorRequest" type="contractor"></addendum>
 
+ -->
