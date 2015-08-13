@@ -29,14 +29,14 @@
     </div>
 
     <div ng-if="showThreadDetail" class="threadDetail">
-      <div class="row" style="font-size: 13px; margin: 12px; background-color: #eee; border-radius: 3px;">
+      <div class="row message-row" style="font-size: 13px; margin: 12px; border-radius: 3px;" ng-style="backgroundColor" ng-repeat="message in currentThread.messages">
        <div class="col s12">
-         <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s - <strong>From Another Person</strong></p>
+         <p>{{message.text}} - <strong>From {{(message.user._id == currentUser._id) ? "Me" : message.user.firstName +" "+ message.user.lastName}}</strong></p>
        </div>
       </div>
-       <div class="row" style="font-size: 13px; background-color: #BBDEFB; margin: 12px; border-radius: 3px;">
-       <div class="col s12">
-         <p class="right">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s - <strong>From Me</strong></p>
+      <div class="row collection-footer" style="margin-bottom: 0px; background-color: white; padding: 12px; padding-top: 0px; border-top: 1px solid #E0E0E0">
+       <div class="input-field col s12" style="margin-top: 0px; margin-bottom: 0px;">
+         <textarea id="textarea1" class="materialize-textarea" style="margin: 0px; margin-top: 0px" ng-model="message.text" ng-keydown="enterMessage($event);"></textarea>
        </div>
       </div>
     </div>

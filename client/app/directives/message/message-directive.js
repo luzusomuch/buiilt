@@ -30,7 +30,15 @@ angular.module('buiiltApp')
             $scope.showThreadDetail = false;
           };
           $scope.goToThreadDetail = function(thread) {
-            $scope.thread = thread;
+            $scope.currentThread = thread;
+            _.each(thread.messages, function(message){
+              if (message.user._id != $scope.currentUser._id) {
+                $scope.backgroundColor = {'background-color':'#eee'}
+              }
+              else {
+                $scope.backgroundColor = {'background-color':'#BBDEFB'}
+              }
+            });
             $scope.showThreadsList = false;
             $scope.showThreadDetail = true;
           };
@@ -211,7 +219,7 @@ angular.module('buiiltApp')
               $scope.sendMessage();
             }
           };
-
+          $scope.message = {};
           $scope.sendMessage = function() {
             if ($scope.message.text != '') {
               messageService.sendMessage({id: $scope.currentThread._id, type: $scope.type}, $scope.message).$promise
