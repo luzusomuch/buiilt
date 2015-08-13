@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('ClientCtrl', function(addOnPackageService,taskService,fileService,variationRequestService,$scope, team, $state, $rootScope, $timeout, $q, builderPackage) {
+angular.module('buiiltApp').controller('ClientCtrl', function(messageService,addOnPackageService,taskService,fileService,variationRequestService,$scope, team, $state, $rootScope, $timeout, $q, builderPackage) {
     $scope.currentProject = $rootScope.currentProject;
     $scope.builderPackage = builderPackage;
     $scope.currentTeam = team;
@@ -41,6 +41,9 @@ angular.module('buiiltApp').controller('ClientCtrl', function(addOnPackageServic
             taskService.getByPackage({id: variation._id, type: 'variation'}).$promise.then(function(tasks){
               variation.tasks = tasks;
             });    
+            messageService.getByPackage({id: variation._id, type: 'variation'}).$promise.then(function(threads){
+                variation.threads = threads;
+            })
         });
     });
 

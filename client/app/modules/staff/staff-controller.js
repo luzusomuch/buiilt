@@ -1,6 +1,6 @@
 angular.module('buiiltApp')
   .controller('StaffCtrl',
-  function(taskService,fileService,$scope, $timeout, $q, authService, $rootScope,staffPackageService,filterFilter,currentTeam,currentUser,staffPackages,socket) {
+  function(messageService,$state,taskService,fileService,$scope, $timeout, $q, authService, $rootScope,staffPackageService,filterFilter,currentTeam,currentUser,staffPackages,socket) {
     //Init Params
     $scope.currentUser = currentUser;
     $scope.currentProject = $rootScope.currentProject;
@@ -11,18 +11,23 @@ angular.module('buiiltApp')
     $scope.inProgressTotal = 0;
     $scope.submitted = false;
     $scope.filter = {};
-
     if (!$scope.isLeader) {
       _.forEach($scope.staffPackages,function(item) {
         item.canSee =  (_.indexOf(item.staffs,$scope.currentUser._id) != -1);
+      });
+    }
+
+    _.each($scope.staffPackages, function(item) {
         fileService.getFileByPackage({id: item._id, type: 'staff'}).$promise.then(function(files){
           item.files = files;
         });
         taskService.getByPackage({id: item._id, type: 'staff'}).$promise.then(function(tasks){
           item.tasks = tasks;
         });
-      })
-    }
+        messageService.getByPackage({id: item._id, type: 'staff'}).$promise.then(function(threads){
+            item.threads = threads;
+        })
+    });
 
     // Real time process
     $rootScope.$on('notification:allRead',function(event) {

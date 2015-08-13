@@ -1,5 +1,5 @@
 angular.module('buiiltApp').controller('MaterialsCtrl',
-  function ($state,taskService,fileService,$scope,socket, $stateParams, $rootScope, $timeout, $q, authService, teamService, materialPackageService, materialPackages, team) {
+  function (messageService,$state,taskService,fileService,$scope,socket, $stateParams, $rootScope, $timeout, $q, authService, teamService, materialPackageService, materialPackages, team) {
     $scope.material = {
       descriptions: []
     };
@@ -23,6 +23,9 @@ angular.module('buiiltApp').controller('MaterialsCtrl',
         });
         taskService.getByPackage({id: materialPackage._id, type: 'supplier'}).$promise.then(function(tasks){
           materialPackage.tasks = tasks;
+        });
+        messageService.getByPackage({id: materialPackage._id, type: 'supplier'}).$promise.then(function(threads){
+          materialPackage.threads = threads;
         })
     });
 

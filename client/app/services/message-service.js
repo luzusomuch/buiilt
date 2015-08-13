@@ -50,6 +50,13 @@ angular.module('buiiltApp')
           isArray: true
         },
         delete: {method:'DELETE', params: {id: 'id', action: ''}, isArray: true},
+        getByPackage: {
+          method: 'get',
+          params: {
+            action: 'get-by-package'
+          },
+          isArray: true
+        }
         //update: {
         //  method: 'PUT'
         //},

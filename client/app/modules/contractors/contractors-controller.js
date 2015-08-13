@@ -1,5 +1,5 @@
 angular.module('buiiltApp').controller('ContractorsCtrl',
-  function(taskService,fileService,teamService,$scope, $state,socket, team, $stateParams, $rootScope, $timeout, $q, contractorService, authService, projectService, teamService,contractorPackages) {
+  function(messageService,taskService,fileService,teamService,$scope, $state,socket, team, $stateParams, $rootScope, $timeout, $q, contractorService, authService, projectService, teamService,contractorPackages) {
     $scope.contractor = {
       descriptions : []
     };
@@ -23,6 +23,9 @@ angular.module('buiiltApp').controller('ContractorsCtrl',
         });
         taskService.getByPackage({id: contractorPackage._id, type: 'contractor'}).$promise.then(function(tasks){
           contractorPackage.tasks = tasks;
+        });
+        messageService.getByPackage({id: contractorPackage._id, type: 'contractor'}).$promise.then(function(threads){
+          contractorPackage.threads = threads;
         })
     });
 

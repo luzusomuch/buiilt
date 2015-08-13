@@ -228,3 +228,11 @@ exports.destroy = function (req, res) {
     })
   });
 };
+
+exports.getByPackage = function(req, res){
+  Thread.find({package: req.params.id, type: req.params.type}, function(err, threads){
+    if (err) {return res.send(500,err);}
+    if (!threads) {return res.send(404);}
+    return res.send(200,threads);
+  });
+};
