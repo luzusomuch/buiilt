@@ -77,7 +77,11 @@ var FileSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  tags: [String]
+  tags: [String],
+  isQuote: {
+    type: Boolean,
+    default: false
+  }
 });
 
 /**
@@ -127,6 +131,7 @@ FileSchema.methods.toJSON = function() {
     ownerId: this.ownerId,
     groupId: this.groupId,
     tags: this.tags,
+    isQuote: this.isQuote,
     updatedAt: this.updatedAt,
     createdAt: this.createdAt
   };

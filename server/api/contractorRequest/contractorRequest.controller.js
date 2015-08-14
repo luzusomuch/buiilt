@@ -15,7 +15,9 @@ exports.findOne = function(req, res) {
       .populate('winnerTeam._id')
       .populate('owner')
       .populate('to.quote')
+      .populate('to.quoteDocument')
       .populate('variations')
+      .populate('messages.sendBy')
       .exec(function(err, contractorPackage) {
         if (err) {
           return res.send(500, err);
@@ -542,7 +544,7 @@ exports.declineQuote = function(req, res) {
       _.each(contractorPackage.to, function(toContractor){
         if (toContractor._id == req.body.belongTo) {
           toContractor.isDecline = true;
-          ownerUser = toContractor.quote.user;
+          ownerUser = req.body.belongTo;
           Team.findById(toContractor._id, function(err,team){
             if (err || !team) {return res.send(500,err);}
             var index = team.project.indexOf(contractorPackage.project);

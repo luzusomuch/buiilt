@@ -273,3 +273,40 @@ exports.createUserForHomeBuilderRequest = function(req, res, next) {
     });
   }));
 };
+
+exports.selectQuoteByDocument = function(req, res){
+  ContractorPackage.findById(req.body.id, function(err, contractorPackage){
+    if (err) {return res.send(500,err);}
+    if (!contractorPackage) {return res.send(404);}
+    contractorPackage.winnerTeam._id = req.body.selector;
+    contractorPackage.isAccept = true;
+    _.remove(contractorPackage.to,{_id: req.body.selector});
+    _.each(contractorPackage.to, function(toContractor){
+      if (toContractor._id) {
+        Team.findById(toContractor._id, function(err,team){
+          if (err || !team) {return res.send(500,err);}
+          var index = team.project.indexOf(contractorPackage.project);
+          team.project.splice(index,1);
+          team.markModified('project');
+          team.save(function(err){
+            if (err) {return res.send(500,err);}
+          });
+        });
+      }
+    });
+    contractorPackage.markModified('selectQuote');
+    contractorPackage._ownerUser = req.body.selector;
+    contractorPackage._editUser = req.user;
+    contractorPackage.save(function(err, saved) {
+      if (err) {return res.send(500,err);}
+      else {
+        ContractorPackage.findById(saved._id).populate('winnerTeam._id').exec(function(err,contractorPackage) {
+          if (err) {return res.send(500,err);}
+          else {
+            return res.json(200,contractorPackage);
+          }
+        }); 
+      }
+    });
+  });  
+};

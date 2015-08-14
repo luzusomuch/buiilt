@@ -581,11 +581,35 @@
      <a class="modal-trigger" href="#modal_attachDocument" style="margin-left:30px; padding: 5px; font-size: 12px; color: black">NEW DOCUMENT</a>
      <a class="modal-trigger" href="#modal_attachVariation" style="margin-left:30px; padding: 5px; font-size: 12px; color: black">NEW VARIATION</a>
   </div>
-
+</div>
   <!-- show overview -->
-  <div ng-if="isShowOverView" style="height: 480px; overflow-y: auto; background-color: white;"></div>
-        
+  <div ng-if="isShowOverView" style="height: 480px; overflow-y: auto; background-color: white;">
+    <div class="col s12">
+      <ul class="collapsible" data-collapsible="accordion">
+        <li>
+          <div class="collapsible-header"><i class=""></i>Details</div>
+          <div class="collapsible-body" style="background-color: #FFF; padding:10px">
+            <table class="bordered centered">
+              <thead>
+              <tr>
+                <th>#</th>
+                <th>Scope of works</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr ng-repeat="description in package.descriptions">
+                <td>{{$index + 1}}</td>
+                <td>{{description}}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
+        
+  
 <!-- show list of tasks -->
   <div ng-if="isShowTasks">
     <div ng-if="showListTasks" class="listTasks">

@@ -66,7 +66,8 @@ var ContractorPackageSchema = new Schema({
       type: Number
     },
     isDecline: {type: Boolean, default: false},
-    quote: {type: Schema.Types.ObjectId, ref: 'QuoteRequest'}
+    // quote: {type: Schema.Types.ObjectId, ref: 'QuoteRequest'}
+    quoteDocument: [{type: Schema.Types.ObjectId, ref: 'File'}]
   }],
   newInvitation: [{
     _id: {

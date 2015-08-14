@@ -43,6 +43,13 @@ angular.module('buiiltApp')
         },
         createUserForHomeBuilderRequest: {
           method: 'POST'
+        },
+        selectWinnerByQuoteDocument: {
+          method: 'PUT',
+          params: {
+            id: '@id',
+            action: 'select-winner-by-quote-document'
+          }
         }
     }
     // createProject: function(project, callback) {

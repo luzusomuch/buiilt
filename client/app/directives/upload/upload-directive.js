@@ -9,7 +9,8 @@ angular.module('buiiltApp').directive('upload', function(){
             documentId : '=',
             fileId: '=',
             package: '=',
-            type: '@'
+            type: '@',
+            isQuote: '@'
         },
         controller: function($scope, $state, $cookieStore, $stateParams, $rootScope, $location, fileService, packageService, userService, projectService, FileUploader, documentService) {
             $scope.errors = {};
@@ -23,6 +24,7 @@ angular.module('buiiltApp').directive('upload', function(){
                 desc: '',
                 tags: []
             };
+            console.log($scope.isQuote);
             $scope.tags = [];
             if ($scope.type == 'project') {
                 $scope.tags = ['architectural','engineering','council','other'];
@@ -104,12 +106,12 @@ angular.module('buiiltApp').directive('upload', function(){
                 //     $scope.files = data;
                 // });
             };
-
             uploader.onBeforeUploadItem = function (item) {
                 $scope.formData._id = $scope.fileId;
                 // $scope.formData.title = item.title;
                 $scope.formData.belongToType =  ($scope.package) ? $scope.package.type : 'project';
                 $scope.formData.tags = $scope.selectedTags;
+                $scope.formData.isQuote = $scope.isQuote;
                 // $scope.formData.belongTo = $stateParams.id;
                 // $scope.formData.doc = $scope.documentId;
                 // $scope.formData.desc = item.file.desc || "";

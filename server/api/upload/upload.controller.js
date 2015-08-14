@@ -288,6 +288,7 @@ exports.uploadInPackge = function(req, res){
             file.belongToType = uploadedField.belongToType;
             file.uploadBy = req.user.team._id;
             file.tags = tags;
+            file.isQuote = uploadedField.isQuote;
             file.save(function(err, saved) {
                 if (err) {console.log(err);return res.send(500,err);}
                 else {
@@ -298,18 +299,30 @@ exports.uploadInPackge = function(req, res){
                                 ContractorPackage.findById(saved.belongTo).populate('owner')
                                 .populate('winnerTeam._id').exec(function(err, contractorPackage) {
                                     if (err || !contractorPackage) {return cb();}
-                                    owners = _.union(contractorPackage.owner.leader, contractorPackage.winnerTeam._id.leader);
+                                    
+                                    _.each(contractorPackage.to, function(toContractor){
+                                        if (toContractor._id.toString() == req.user.team._id.toString()) {
+                                            toContractor.quoteDocument.push(saved._id);
+                                            contractorPackage.markModified('toContractor.quoteDocument');
+                                        }
+                                    });
+                                    owners = contractorPackage.owner.leader;
+                                    if (contractorPackage.winnerTeam._id) {
+                                        owners = _.union(contractorPackage.owner.leader, contractorPackage.winnerTeam._id.leader);
+                                        _.each(contractorPackage.winnerTeam._id.member, function(member){
+                                            if (member._id) {
+                                                owners.push(member._id);
+                                            }
+                                        });
+                                    }
                                     _.each(contractorPackage.owner.member, function(member){
                                         if (member._id) {
                                             owners.push(member._id);
                                         }
                                     });
-                                    _.each(contractorPackage.winnerTeam._id.member, function(member){
-                                        if (member._id) {
-                                            owners.push(member._id);
-                                        }
-                                    });
+                                    
                                     _.remove(owners, req.user._id);
+                                    contractorPackage.save();
                                     async.each(owners, function(leader, callback){
                                         var notification = new Notification({
                                             owner: leader,

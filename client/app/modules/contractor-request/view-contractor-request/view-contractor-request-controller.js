@@ -34,6 +34,14 @@ angular.module('buiiltApp')
 
   $scope.emailsPhone = [];
   $scope.contractorRequest = contractorRequest;
+  _.each($scope.contractorRequest.to, function(item) {
+    item.totalMessages = 0;
+    _.each($scope.contractorRequest.messages, function(message){
+      if (message.sendBy._id == item._id) {
+        item.totalMessages ++;
+      }
+    });
+  });
   $scope.currentTeam = currentTeam;
   if ($scope.currentTeam.type != 'builder' && contractorRequest.owner._id != currentTeam._id) {
     $state.go('team.manager');
@@ -94,6 +102,7 @@ angular.module('buiiltApp')
   $scope.declineQuote = function(value) {
     contractorRequestService.declineQuote({id: contractorRequest._id, belongTo: value}).$promise.then(function(data){
       $scope.contractorRequest = data;
+      $scope.backToList();
     });
   };
 
@@ -108,13 +117,20 @@ angular.module('buiiltApp')
     $scope.success = false;
   };
 
-  $scope.sendMessage = function(value) {
-    if (value == 'undefined' || !value) {
+  $scope.enterMessage = function ($event) {
+    if ($event.keyCode === 13) {
+      $event.preventDefault();
+      $scope.sendMessage();
     }
-    else if (value != 'undefined' || value){
-      contractorRequestService.sendMessage({id: $stateParams.packageId, to: value, team: $scope.currentTeam._id, message: $scope.message.message})
+  };
+
+  $scope.sendMessage = function() {
+    if ($scope.tender._id == 'undefined' || !$scope.tender._id) {
+    }
+    else if ($scope.tender._id != 'undefined' || $scope.tender._id){
+      contractorRequestService.sendMessage({id: $stateParams.packageId, to: $scope.tender._id, team: $scope.currentTeam._id, message: $scope.message.message})
       .$promise.then(function(data) {
-        $scope.messages = data;
+        $scope.contractorRequest = data;
         $scope.message.message = null;
       });
     }
@@ -126,6 +142,14 @@ angular.module('buiiltApp')
     contractorRequestService.cancelPackage({id: $stateParams.packageId})
     .$promise.then(function(data) {
       $state.go('contractors',{id: $stateParams.id});
+    });
+  };
+
+  //select winner by quote document -- new requirement
+  $scope.selectWinnerByQuoteDocument = function(value) {
+    quoteService.selectWinnerByQuoteDocument({id: $scope.contractorRequest._id,selector: value}).$promise.then(function(res){
+      $scope.winner = res;
+      $state.go('contractorRequest.contractorPackageInProcess', {id: res.project, packageId: res._id});
     });
   };
 });

@@ -1,4 +1,122 @@
-<div class="row" style="margin-top: 18px">
+<div class="row" style="padding: 12px">
+  <div class="col s8">
+    <div class="collection with-header">
+      <div class="row collection-header" style="margin-bottom:0px">
+        <div class="col">
+         <a class='dropdown-button btn-flat' href='#' data-activates='inTender' style="font-size: 12px;" dropdown>{{(defaultText) ? defaultText : "SCOPE"}}<i class="mdi-navigation-arrow-drop-down"></i></a>
+           <ul id='inTender' class='dropdown-content'>
+           <li><a ng-click="clickShowScopes()" href="#!">SCOPE</a></li>
+           <li><a ng-click="clickShowQuotes()" href="#!">QUOTES</a></li>
+           </ul>
+        </div>
+            
+      </div>
+      <div ng-if="showScope">
+        <!-- <div class="row collection-header" style="margin-bottom:0px;">
+          <div class="col right" style="font-size:12px">
+             <a ng-click="cancelPackage()" class="" style="padding: 5px;">CANCEL PACKAGE</a>
+             <a class="modal-trigger" href="#modal_attachAddendum" style="padding: 5px;">ATTACH ADDENDUM</a>
+          </div>
+        </div> -->
+        <div style="height: 480px; overflow-y: auto; background-color: white;">
+          <div class="" style="padding: 10px">
+            <h5>{{contractorRequest.name}} detail: </h5>
+            <strong>Start date</strong>: {{contractorRequest.dateStart | date: longDate}}
+            <table>
+              <thead>
+                <th>Description</th>
+              </thead>
+              <tbody>
+                <tr ng-repeat="addendum in contractorRequest.addendums | filter:{isHidden:false}">
+                  <td>{{addendum.addendumsScope.description}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="quotesList" ng-if="showQuotes">
+        <div class="row collection-header" style="margin-bottom:0px;">
+          <div class="col right" style="font-size:12px">
+            <a class="modal-trigger" href="#modal_attachDocument" style="padding: 5px;">ATTACT QUOTE</a>
+          </div>
+        </div>
+        <div ng-if="currentTeam._id == tender._id" ng-repeat="tender in contractorRequest.to" style="height: 480px; overflow-y: auto; background-color: white;">
+          <div class="collection-item row" ng-repeat="quote in tender.quoteDocument">
+             <div class="col s9">
+               <div><a ng-click="viewQuoteDetail(quote)" href="#">{{quote.title}}</a></div>
+             </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="showQuoteDetail">
+        <div class="row collection-header" style="margin-bottom:0px;">
+          <div class="col s12" style="font-size:12px">
+            <a href="#!" ng-click="backToList()" style="margin-left:30px; padding: 5px;">&lt; BACK TO TENDERS</a>
+            <div class="right">
+              <a href="#modal_attachDocument" style="padding: 5px;">ATTACH QUOTE</a>
+              <!-- <a ng-click="selectQuote(tender.quote._id)" style="padding: 5px;">ACCEPT TENDER</a> -->
+            </div>
+          </div>
+        </div>
+        <div  style="height: 480px; overflow-y: auto; background-color: white;">
+         <div class="col s9">
+           <div>
+            <a href="{{quote.fileUrl}}" download="{{quote.name}}">
+              <span>
+                {{quote.title}} - <i class="material-icons">cloud_download</i>
+              </span>
+            </a>
+          </div>
+         </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col s4">
+    <div class="collection with-header">
+         
+      <div style="height: 575px; overflow-y: auto; background-color:#fafafa;" class="">
+        <div ng-if="message.to == currentTeam._id" ng-repeat="message in contractorRequest.messages" class="row" style="font-size: 13px; margin: 12px; background-color: #eee; border-radius: 3px;">
+          <div class="col s12">
+            <p>{{message.message}} - <strong>From {{(currentTeam._id == message.sendBy._id) ? "Me" : message.sendBy.name}}</strong></p>
+          </div>
+        </div>
+        <div style="display:none" class="row" style="font-size: 13px; background-color: #BBDEFB; margin: 12px; border-radius: 3px;">
+          <div class="col s12">
+            <p class="right">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s - <strong>From Me</strong></p>
+          </div>
+        </div>
+        
+        <div class="row collection-footer" style="margin-bottom: 0px; background-color: white; padding: 12px; padding-top: 0px; border-top: 1px solid #E0E0E0">
+           <form ng-submit="sendMessage()">
+               <div class="input-field col s12" style="margin-top: 0px; margin-bottom: 0px;">
+                 <textarea id="textarea1" class="materialize-textarea" ng-model="message" ng-keydown="enterMessage($event);"></textarea>
+                 <label for="textarea1">Send a Message...</label>
+           </div>
+           <!-- <div class="input-field col s3">
+               <button class="btn-large waves-effect waves-light" type="submit" style="margin-top: 47px" name="action">Send
+                 <i class="mdi-content-send right"></i>
+               </button>
+               </div> -->
+           </form>
+       </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="modal_attachDocument" class="modal">
+  <div class="modal-content">
+    <upload package="contractorRequest" type="package" is-quote="true"></upload>
+  </div>
+</div>
+
+<!-- <div class="row" style="margin-top: 18px">
  <h5 class="col s8">Contractor Package {{contractorRequest.name}} in Tender</h5>
  
  <div class="col s4" style="margin-top:15px">
@@ -7,7 +125,6 @@
       <i class="mdi-navigation-more-vert"></i>
      </a>
 
-     <!-- Dropdown Structure -->
      <ul id='itemSendQuote' class='dropdown-content'>
      <li><a class="modal-trigger" href='#attachQuote'>Attach Quote</a></li>
      </ul>
@@ -56,34 +173,8 @@
          
          <p class="col s9 valign">{{message.message}}</p>
          <p class="circle col s2 right valign center-align"><strong>Sent by</strong>: {{message.sendBy.name}}</p>
-         <!-- <img src="images/yuna.jpg" alt="" class="circle col s2 right valign center-align" /> -->
        </div>
        </li>
-     
-     <!-- <li class="collection-item">
-       <div class="row valign-wrapper" style="margin-bottom: -5px">
-         <a href="#!" class="btn-flat col s1">
-           <i class="mdi-toggle-radio-button-on valign center-align" ></i>
-         </a>
-         
-         <p class="col s9 valign">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.<br /> Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
-         
-         <img src="images/yuna.jpg" alt="" class="circle col s2 right valign center-align" />
-       </div>
-       </li>
-     
-     <li class="collection-item">
-       <div class="row valign-wrapper" style="margin-bottom: -5px">
-         <a href="#!" class="btn-flat col s1">
-           <i class="mdi-toggle-radio-button-on valign center-align" ></i>
-         </a>
-         
-         <p class="col s9 valign">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.<br /> Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
-         
-         <img src="images/yuna.jpg" alt="" class="circle col s2 right valign center-align" />
-       </div>
-       </li> -->
-     
      </div>
      <div class="divider"></div>
      <div class="col s12 card-footer" style="height: 150px">
@@ -206,7 +297,6 @@
                   </div>
                 </div>
               </div>
-               <!-- <input class="file-path validate" type="text"/> -->
               <div class="btn tooltipped" data-position="top" data-delay="1" data-tooltip="Attach a File"><i class="mdi-editor-attach-file"></i>
                <input type="file" nv-file-select="" uploader="uploader"/>
               </div>
@@ -222,100 +312,9 @@
        <div class="divider"></div>
     <div class="modal-footer">
       <button class="modal-action modal-close waves-effect waves-green btn-flat" ng-disable="sendQuoteForm.$invalid" ng-click="uploadAll()"> Send quote!</button>
-         <!-- <a href="#!" ng-click="sendQuote()" class="modal-action modal-close waves-effect waves-green btn-flat ">Send Quote!</a> -->
      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
     </div>
      </form>
   
 </div>
-
-<!-- <div class="row">
-  <h4>Project detail</h4>
-  <h5>{{contractorRequest.project.name}}</h5>
-
-  <p>{{contractorRequest.project.description}}</p>
-
-  <alert type="success" close="closeSuccess()" ng-show="success">Thank you for your submit</alert>
-  <alert ng-repeat="(key, msg) in errors" type="danger" close="closeAlert(key)">{{msg}}</alert>
-
-  <h4>Quote request detail</h4>
-  <h5>{{contractorRequest.name}}</h5>
-  <p>{{contractorRequest.description}}</p>
-  <form method="POST" name="sendQuoteToBuilder" ng-submit="sendQuote()">
-      <div class="row">
-          <div class="input-field col s12">
-              <textarea name="" id="" ng-model="quoteRequest.description" required></textarea>
-              <label for="">Description</label>
-          </div>
-      </div>
-      <div class="row">
-          <div class="input-field col s12">
-              <input type="number" ng-model="quoteRequest.price" required>
-              <label for="">Price in USD</label>
-          </div>
-      </div>
-      <div class="row">
-          <button ng-if="currentUser.email" class="waves-effect waves-light btn" ng-disabled="sendQuoteToBuilder.$invalid">Send quote</button>
-      </div>
-      <div ng-if="currentUser.email == null || currentUser.email == ''">
-        <a href="#signin" class="waves-effect waves-light btn modal-trigger">Login</a> 
-      </div>
-  </form>
-</div>
-
-<div id="signin" class="modal modal-fixed-footer">
-  <div class="modal-content">
-    <form method="post" ng-submit="signin()" style="padding:10px;">
-      <h3>Login</h3>
-      <div layout layout-sm="column">
-        <div input-field>
-          <label>Email</label>
-          <input ng-model="user.email" type="text" required>
-        </div>
-      </div>
-      <div layout layout-sm="column">
-        <div input-field>
-          <label>Password</label>
-          <input ng-model="user.password" required type="password">
-        </div>
-      </div>
-
-      <div layout layout-sm="column">
-        <button class="waves-effect waves-light btn" id="btn-login">Login</button>
-      </div>
-      <div class="divider"></div>
-      <div class="modal-footer">
-       <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
-      </div>
-    </form>
-  </div>
-</div>
-
-<div id="signupAndSendQuoteContractor" class="modal modal-fixed-footer">
-  <div class="modal-content">
-    <form method="post" ng-submit="signupAndSendQuoteContractor()" name="signupForm" >
-      <h3>Registry</h3>
-      <div class="row">
-        <div input-field class="col s12">
-          <label>Email</label>
-          <input type="email" ng-model="user.email" required>
-        </div>
-      </div>
-      <div class="row">
-        <div input-field class="col s12">
-          <label>Password</label>
-          <input ng-model="user.password" required type="password">
-        </div>
-      </div>
-      <div class="row">
-        <button class="waves-effect waves-light btn" id="btn-signup" ng-disabled="signupForm.$invalid">Sign up</button>
-      </div>
-      <div class="divider"></div>
-      <div class="modal-footer">
-       <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
-      </div>
-    </form>
-  </div>
-</div>
  -->
-
