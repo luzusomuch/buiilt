@@ -127,14 +127,21 @@
         </div>
       </div>
       <div class="row">
-        <div class="input-field col s8">
+        <div class="input-field col s6">
           <input id="project_name" name="name" type="text" class="validate" ng-model="contractor.name" required
                  ng-class="{'invalid' : contractorForm.name.$invalid && contractorSubmitted}">
           <label for="project_name">Contractor Package Title</label>
           <p class="validate-message" ng-if="contractorForm.name.$error.required && contractorSubmitted">Package name is required</p>
         </div>
-        <div class="input-field col s4">
-          <label for="date_required" class="active">Date Required</label>
+        <div class="input-field col s3">
+          <p>
+            <input class="valign" type="checkbox" ng-model="contractor.isSkipInTender" id="skipInTender"/>
+            <label for="skipInTender">Skip In Tender State</label>
+          </p>
+        </div>
+        <div class="input-field col s3">
+          <label for="date_required" ng-if="!contractor.isSkipInTender">Tender Due Date</label>
+          <label for="date_required" ng-if="contractor.isSkipInTender">Date Require On Site</label>
           <input type="text"
                  ng-model="contractor.dateStart"
                  id="dateStart"
@@ -216,7 +223,14 @@
               </div>
             </li>
 
-            <li class="collection-item vlalign" ng-repeat="emailPhone in contractorMember.emailsPhone">
+            <li ng-if="!contractor.isSkipInTender" class="collection-item vlalign" ng-repeat="emailPhone in contractorMember.emailsPhone">
+              <div class="row" style="margin-bottom: 0px">
+                <div class="col s7">{{emailPhone.email}}</div>
+                <div class="col s3">{{emailPhone.phoneNumber}}</div>
+                <div class="col s2" style="float:right"><a class="btn-flat btn-flat" ng-click="contractorRemoveUser($index)" >Remove</a></div>
+              </div>
+            </li>
+            <li ng-if="contractor.isSkipInTender && $first" class="collection-item vlalign" ng-repeat="emailPhone in contractorMember.emailsPhone">
               <div class="row" style="margin-bottom: 0px">
                 <div class="col s7">{{emailPhone.email}}</div>
                 <div class="col s3">{{emailPhone.phoneNumber}}</div>

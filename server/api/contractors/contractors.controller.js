@@ -86,6 +86,14 @@ exports.createContractorPackage = function (req, res, next) {
     if (err) {return res.send(500,err);}
     else {
       contractorPackage.to = to;
+      if (req.body.contractor.isSkipInTender) {
+        contractorPackage.isSkipInTender = req.body.contractor.isSkipInTender;
+        var winnerTeam = _.first(to);
+        if (winnerTeam._id) {
+          contractorPackage.winnerTeam._id = winnerTeam._id;
+          contractorPackage.isAccept = true;
+        }
+      }
       contractorPackage._ownerUser = req.user;
       contractorPackage.save(function(err, saved){
         if (err) {return res.send(500,err);}

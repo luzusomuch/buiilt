@@ -16,6 +16,7 @@ var PackageInviteSchema = new Schema({
   inviteType: String,
   package: { type: Schema.Types.ObjectId },
   project: { type: Schema.Types.ObjectId, ref: 'Project' },
+  isSkipInTender: {type: Boolean, default: false},
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
 });

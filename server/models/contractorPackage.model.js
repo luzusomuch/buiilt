@@ -110,6 +110,7 @@ var ContractorPackageSchema = new Schema({
     total: Number
   }],
   defact:[],
+  isSkipInTender: {type: Boolean, default: false},
   isCancel: {type: Boolean, default: false},
   isAccept: { type: Boolean, default: false },
   isCompleted: { type: Boolean, default: false },

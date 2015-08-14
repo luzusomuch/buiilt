@@ -147,18 +147,16 @@ exports.createUserWithInviteToken = function(req, res, next) {
                 ContractorPackage.findById(packageInvite.package, function(err, contractorPackge){
                   if (err) {return res.send(500);}
                   else {
-                    // var packageTo = contractorPackge.to;
+                    if (packageInvite.isSkipInTender) {
+                      contractorPackge.winnerTeam._id = savedTeam._id;
+                      contractorPackge.isAccept = true;
+                    }
                     _.each(contractorPackge.to, function(to) {
                       if (to.email === packageInvite.to) {
                         to._id = savedTeam._id;
                         to.email = packageInvite.to;
-                        // contractorPackge.to.push({
-                        //   _id: savedTeam._id,
-                        //   email: packageInvite.to
-                        // });
                       }
                     });
-                    // contractorPackge.to = packageTo;
                     contractorPackge.save(function(err, saved) {
                       if (err) {return res.send(500,err);}
                       else {

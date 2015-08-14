@@ -77,7 +77,10 @@ angular.module('buiiltApp')
           $cookieStore.put('token', data.token);
           currentUser = userService.get();
           if (data.package.type === 'contractor') {
-            $state.go('contractorRequest.sendQuote', {id:data.package.project, packageId: data.package._id});  
+            if (!data.package.isAccept) {
+              $state.go('contractorRequest.sendQuote', {id:data.package.project, packageId: data.package._id});  
+            }
+            $state.go('contractorRequest.contractorPackageInProcess', {id:data.package.project, packageId: data.package._id});  
           }
           else if (data.package.type === 'material') {
             $state.go('materialRequest.sendQuote', {id: data.package.project, packageId: data.package._id});

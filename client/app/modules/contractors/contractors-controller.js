@@ -1,7 +1,8 @@
 angular.module('buiiltApp').controller('ContractorsCtrl',
   function(messageService,taskService,fileService,teamService,$scope, $state,socket, team, $stateParams, $rootScope, $timeout, $q, contractorService, authService, projectService, teamService,contractorPackages) {
     $scope.contractor = {
-      descriptions : []
+      descriptions : [],
+      isSkipInTender: false
     };
     $scope.contractorPackages = contractorPackages;
     $scope.currentProject = $rootScope.currentProject;
@@ -102,6 +103,12 @@ angular.module('buiiltApp').controller('ContractorsCtrl',
         }
       }
       // $scope.emailsPhone.newEmail = null;
+      console.log($scope.contractor.isSkipInTender);
+      if ($scope.contractor.isSkipInTender) {
+        console.log('11111');
+        $scope.contractorMember.emailsPhone.slice(0,1);
+        console.log($scope.contractorMember.emailsPhone.slice(0,1));
+      }
       $scope.newPhoneNumber = null;
       $scope.$broadcast('angucomplete-alt:clearInput');
     };
@@ -146,7 +153,12 @@ angular.module('buiiltApp').controller('ContractorsCtrl',
           emailsPhone: $scope.contractorMember.emailsPhone,
           project: $stateParams.id
         }).$promise.then(function (data) {
-            $state.go('contractorRequest.viewContractorRequest',{id : data.project, packageId : data._id});
+            // if (!isSkipInTender) {
+            //   $state.go('contractorRequest.viewContractorRequest',{id : data.project, packageId : data._id});
+            // }
+            // else {
+            //   $state.go('contractorRequest.contractorPackageInProcess',{id : data.project, packageId : data._id});
+            // }
             $('#newContractorPackage').closeModal();
           });
       }

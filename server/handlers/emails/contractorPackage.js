@@ -33,6 +33,7 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
   }, function(err, result){
     if (!err) {
       //do send email
+      console.log(request);
       async.each(request.to,function(toEmail,cb) {
         if (!toEmail._id) {
           var packageInvite = new PackageInvite({
@@ -40,6 +41,7 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
             inviteType: 'contractor',
             project: result.project._id,
             package: request._id,
+            isSkipInTender: request.isSkipInTender,
             to: toEmail.email
           });
           packageInvite.save(function(err, saved){
