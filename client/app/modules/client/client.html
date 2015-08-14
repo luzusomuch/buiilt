@@ -81,6 +81,25 @@
        </div>
      </div>
      <div  style="height: 480px; overflow-y: auto; background-color: white;">
+        <div class="collection-item row">
+          <div class="col s9">{{builderPackage.name}} - BUILDER PACKAGE</div>
+          <div style="color: #757575">
+           <div class="col s1 valign-wrapper">
+             <div style="font-size:15px;">{{builderPackage.threads.length}}</div>
+             <i style="font-size: 15px; margin-left: 5px" class="material-icons valign">message</i>
+           </div>
+           <div class="col s1 valign-wrapper">
+             <div style="font-size:15px;">{{builderPackage.files.length}}</div>
+             <i style="font-size: 15px; margin-left: 5px" class="material-icons valign">insert_drive_file</i>
+           </div>
+           <div class="col s1 valign-wrapper">
+             <div style="font-size:15px;">{{builderPackage.tasks.length}}</div>
+             <i style="font-size: 15px; margin-left: 5px" class="material-icons valign">check</i>
+           </div>
+         </div>
+        </div>
+
+
        <div class="collection-item row" ng-repeat="variation in variations | filter: filter">
          <div class="col s9">
            <div>

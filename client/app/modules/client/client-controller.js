@@ -1,6 +1,15 @@
 angular.module('buiiltApp').controller('ClientCtrl', function(messageService,addOnPackageService,taskService,fileService,variationRequestService,$scope, team, $state, $rootScope, $timeout, $q, builderPackage) {
     $scope.currentProject = $rootScope.currentProject;
     $scope.builderPackage = builderPackage;
+    fileService.getFileByPackage({id: $scope.builderPackage._id, type: 'builder'}).$promise.then(function(files){
+        $scope.builderPackage.files = files;
+    });
+    taskService.getByPackage({id: $scope.builderPackage._id, type: 'builder'}).$promise.then(function(tasks){
+        $scope.builderPackage.tasks = tasks;
+    });    
+    messageService.getByPackage({id: $scope.builderPackage._id, type: 'builder'}).$promise.then(function(threads){
+        $scope.builderPackage.threads = threads;
+    })
     $scope.currentTeam = team;
     if ($scope.currentTeam.type == 'contractor' || $scope.currentTeam.type == 'supplier') {
       $state.go('team.manager');
