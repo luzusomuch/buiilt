@@ -77,17 +77,17 @@
            <div>
             <!-- when user is a builder -->
             <!-- package in process -->
-            <a ng-if="(currentTeam.type == 'builder' || currentTeam.type == 'homeOwner') && materialPackage.isAccept" ui-sref="materialRequest.materialPackageInProcess({id: materialPackage.project, packageId: materialPackage._id})">{{materialPackage.name}}
+            <a ng-if="(currentTeam.type == 'builder' || currentTeam.type == 'homeOwner') && materialPackage.isSelect" ui-sref="materialRequest.materialPackageInProcess({id: materialPackage.project, packageId: materialPackage._id})">{{materialPackage.name}}
             </a>
             <!-- package in tender -->
-            <a ng-if="(currentTeam.type == 'builder' || currentTeam.type == 'homeOwner') && !materialPackage.isAccept" ui-sref="materialRequest.viewMaterialRequest({id: materialPackage.project, packageId: materialPackage._id})">{{materialPackage.name}}
+            <a ng-if="(currentTeam.type == 'builder' || currentTeam.type == 'homeOwner') && !materialPackage.isSelect" ui-sref="materialRequest.viewMaterialRequest({id: materialPackage.project, packageId: materialPackage._id})">{{materialPackage.name}}
             </a>
 
             <!-- when user is a contractor -->
-            <a ng-if="currentTeam.type == 'supplier' && materialPackage.isAccept" ui-sref="materialRequest.materialPackageInProcess({id: materialPackage.project, packageId: materialPackage._id})">{{materialPackage.name}}
+            <a ng-if="currentTeam.type == 'supplier' && materialPackage.isSelect" ui-sref="materialRequest.materialPackageInProcess({id: materialPackage.project, packageId: materialPackage._id})">{{materialPackage.name}}
             </a>
             <!-- package in tender -->
-            <a ng-if="currentTeam.type == 'supplier' && !materialPackage.isAccept" ui-sref="materialRequest.sendQuote({id: materialPackage.project, packageId: materialPackage._id})">{{materialPackage.name}}
+            <a ng-if="currentTeam.type == 'supplier' && !materialPackage.isSelect" ui-sref="materialRequest.sendQuote({id: materialPackage.project, packageId: materialPackage._id})">{{materialPackage.name}}
             </a>
           </div>
          </div>

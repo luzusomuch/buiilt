@@ -83,9 +83,9 @@ exports.sendMessage = function(req, res) {
         contractorPackage.save(function(err, saved) {
           if (err) {return res.send(500, err)}
           else {
-            saved.populate('messages.sendBy', function(err){
+            ContractorPackage.populate(saved,[{path:'messages.sendBy'},{path: 'to.quoteDocument'}] , function(err,contractorPackage){
               if (err) {return res.send(500,err);}
-              return res.json(200,saved);
+              return res.json(200,contractorPackage);
             });
           }
         });
@@ -127,9 +127,9 @@ exports.sendMessageToBuilder = function(req, res) {
         contractorPackage.save(function(err, saved) {
           if (err) {return res.send(500, err)}
           else {
-            saved.populate('messages.sendBy', function(err){
+            ContractorPackage.populate(saved,[{path:'messages.sendBy'},{path: 'to.quoteDocument'}] , function(err,contractorPackage){
               if (err) {return res.send(500,err);}
-              return res.json(200,saved);
+              return res.json(200,contractorPackage);
             });
           }
         });

@@ -3,8 +3,41 @@ angular.module('buiiltApp')
   /**
    * quote data
    */
+
+   $scope.showScope = true;
+  $scope.showTenders = false;
+  $scope.viewMessages = false;
+  $scope.defaultText = "SCOPE";
+
+  $scope.clickShowScopes = function() {
+    $scope.defaultText = "SCOPE";
+    $scope.showScope = true;
+    $scope.showTenders = false;
+  };
+  $scope.clickShowTenders = function() {
+    $scope.defaultText = "TENDERS";
+    $scope.showScope = false;
+    $scope.showTenders = true;
+  };
+
+  $("div.showTenderDetail").css("display","none");
+  $scope.viewTenderDetail = function(tender){
+    $scope.viewMessages = true;
+    $scope.tender = tender;
+    $("div.tenderLists").toggle("slide");
+    $("div.showTenderDetail").css("display","block");
+  };
+
+  $scope.backToList = function(){
+    $scope.tender = {};
+    $("div.tenderLists").toggle("slide");
+    $("div.tenderLists").css("display","block");
+    $("div.showTenderDetail").css("display","none");
+  };
+
   $scope.emailsPhone = [];
   $scope.variationRequest = variationRequest;
+  console.log($scope.variationRequest);
   $scope.currentTeam = currentTeam;
   $scope.currentUser = {};
   if ($cookieStore.get('token')) {
@@ -18,7 +51,6 @@ angular.module('buiiltApp')
   $scope.addendum = {};
   $scope.addendumsScope = [];
   $scope.user = {};
-console.log($scope.variationRequest);
   // variationRequestService.getQuoteRequestByContractorPackge({'id':$stateParams.packageId}).$promise.then(function(data){
   //   $scope.quoteRequests = data;
   //   _.each(data.to, function(toContractor){
@@ -56,8 +88,8 @@ console.log($scope.variationRequest);
     $scope.emailsPhone.splice(index, 1);
   };
 
-  $scope.selectQuote = function(value) {
-    variationRequestService.selectWinner({'id': value}).$promise.then(function(data) { 
+  $scope.selectQuote = function() {
+    variationRequestService.selectWinner({'id': $scope.variationRequest._id}).$promise.then(function(data) { 
         $scope.winner = data;
         $state.go('variationRequest.inProcess',{id:data.project, variationId: data._id});
     });
@@ -69,13 +101,21 @@ console.log($scope.variationRequest);
   //   });
   // };
 
-  $scope.sendMessage = function(value) {
-    if (value == 'undefined' || !value) {
+  $scope.enterMessage = function ($event) {
+    if ($event.keyCode === 13) {
+      $event.preventDefault();
+      $scope.sendMessage();
     }
-    else if ($scope.message.message && value != 'undefined' || value){
-      variationRequestService.sendMessage({id: $stateParams.variationId, to: value, team: $scope.currentTeam._id, message: $scope.message.message})
+  };
+
+  $scope.sendMessage = function() {
+    var to = $scope.variationRequest.to._id._id;
+    if (to == 'undefined' || !to) {
+    }
+    else if ($scope.message.message && to != 'undefined' || to){
+      variationRequestService.sendMessage({id: $stateParams.variationId, to: to, team: $scope.currentTeam._id, message: $scope.message.message})
       .$promise.then(function(data) {
-        $scope.messages = data;
+        $scope.variationRequest = data;
         $scope.message.message = null;
       });
     }
@@ -98,4 +138,5 @@ console.log($scope.variationRequest);
       }
     });
   };
+
 });

@@ -404,6 +404,7 @@ exports.uploadInPackge = function(req, res){
                             else if (saved.belongToType == 'variation') {
                                 Variation.findById(saved.belongTo).populate('owner').populate('to._id').exec(function(err, variation) {
                                     if (err || !variation) {return cb();}
+
                                     owners = _.union(variation.owner.leader, variation.to._id.leader);
                                     _.each(variation.owner.member, function(member){
                                         if (member._id) {
@@ -416,6 +417,11 @@ exports.uploadInPackge = function(req, res){
                                         }
                                     });
                                     _.remove(owners, req.user._id);
+
+                                    variation.to.quoteDocument.push(saved._id);
+                                    variation.markModified('to.quoteDocument');
+                                    variation.save();
+
                                     async.each(owners, function(leader,callback){
                                         var notification = new Notification({
                                             owner: leader,

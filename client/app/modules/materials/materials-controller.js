@@ -166,7 +166,10 @@ angular.module('buiiltApp').controller('MaterialsCtrl',
           suppliers: $scope.materialMember.emailsPhone,
           project: $stateParams.id
         }).$promise.then(function (data) {
+          if (!data.isSelect) {
             $state.go('materialRequest.viewMaterialRequest',{id : data.project, packageId : data._id});
+          }
+          $state.go('materialRequest.materialPackageInProcess',{id : data.project, packageId : data._id});
             $('#newMaterialPackage').closeModal();
           });
       }

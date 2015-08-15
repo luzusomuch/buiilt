@@ -42,6 +42,7 @@ exports.index = function (req, res) {
  */
 exports.createMaterialPackage = function (req, res, next) {
   var to = [];
+  console.log(req.body);
   var materialPackage = new MaterialPackage({
     owner: req.user.team._id,
     type: 'material',
@@ -99,7 +100,7 @@ exports.createMaterialPackage = function (req, res, next) {
         var winnerTeam = _.first(to);
         if (winnerTeam._id) {
           materialPackage.winnerTeam._id = winnerTeam._id;
-          materialPackage.isAccept = true;
+          materialPackage.isSelect = true;
         }
       }
       materialPackage._ownerUser = req.user;

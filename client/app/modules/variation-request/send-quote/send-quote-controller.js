@@ -3,8 +3,41 @@ angular.module('buiiltApp')
   /**
    * quote data
    */
+
+  $scope.showScope = true;
+  $scope.showQuotes = false;
+  $scope.viewMessages = true;
+  $scope.defaultText = "SCOPE";
+
+  $scope.clickShowScopes = function() {
+    $scope.defaultText = "SCOPE";
+    $scope.showScope = true;
+    $scope.showQuotes = false;
+  };
+  $scope.clickShowQuotes = function() {
+    $scope.defaultText = "QUOTES";
+    $scope.showScope = false;
+    $scope.showQuotes = true;
+  };
+
+  $("div.showQuoteDetail").css("display","none");
+  $scope.viewQuoteDetail = function(quote){
+    // $scope.viewMessages = true;
+    $scope.quote = quote;
+    $("div.quotesList").toggle("slide");
+    $("div.showQuoteDetail").css("display","block");
+  };
+
+  $scope.backToList = function(){
+    $scope.quote = {};
+    $("div.quotesList").toggle("slide");
+    $("div.quotesList").css("display","block");
+    $("div.showQuoteDetail").css("display","none");
+  };
+
   $scope.quoteRequest = {};
   $scope.variationRequest = variationRequest;
+  console.log($scope.variationRequest);
   $scope.currentTeam = currentTeam;
   $scope.currentUser = {};
   if ($cookieStore.get('token')) {
@@ -182,11 +215,18 @@ angular.module('buiiltApp')
     // return subTotal;
   };
 
+  $scope.enterMessage = function ($event) {
+    if ($event.keyCode === 13) {
+      $event.preventDefault();
+      $scope.sendMessage();
+    }
+  };
+
   $scope.sendMessage = function() {
     if ($scope.message) {
       variationRequestService.sendMessageToBuilder({id: $stateParams.variationId, team: $scope.currentTeam._id, message: $scope.message})
       .$promise.then(function(data) {
-        $scope.messages = data;
+        $scope.variationRequest = data;
         $scope.message = null;
       });
     }
