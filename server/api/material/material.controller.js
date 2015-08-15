@@ -94,6 +94,14 @@ exports.createMaterialPackage = function (req, res, next) {
     if (err) {return res.send(500,err);}
     else {
       materialPackage.to = to;
+      if (req.body.material.isSkipInTender) {
+        materialPackage.isSkipInTender = req.body.material.isSkipInTender;
+        var winnerTeam = _.first(to);
+        if (winnerTeam._id) {
+          materialPackage.winnerTeam._id = winnerTeam._id;
+          materialPackage.isAccept = true;
+        }
+      }
       materialPackage._ownerUser = req.user;
       materialPackage.save(function(err, saved){
         if (err) {return res.send(500,err);}

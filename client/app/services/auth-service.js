@@ -83,7 +83,10 @@ angular.module('buiiltApp')
             $state.go('contractorRequest.contractorPackageInProcess', {id:data.package.project, packageId: data.package._id});  
           }
           else if (data.package.type === 'material') {
-            $state.go('materialRequest.sendQuote', {id: data.package.project, packageId: data.package._id});
+            if (!data.package.isAccept) {
+              $state.go('materialRequest.sendQuote', {id: data.package.project, packageId: data.package._id});
+            }
+            $state.go('materialRequest.materialPackageInProcess', {id: data.package.project, packageId: data.package._id});
           }
           else if (data.package.type === 'BuilderPackage') {
             $state.go('dashboard', {id: data.package.project});

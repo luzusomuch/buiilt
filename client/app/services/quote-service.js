@@ -44,11 +44,18 @@ angular.module('buiiltApp')
         createUserForHomeBuilderRequest: {
           method: 'POST'
         },
-        selectWinnerByQuoteDocument: {
+        selectContractorWinnerByQuoteDocument: {
           method: 'PUT',
           params: {
             id: '@id',
-            action: 'select-winner-by-quote-document'
+            action: 'select-contractor-winner-by-quote-document'
+          }
+        },
+        selectSupplierWinnerByQuoteDocument: {
+          method: 'PUT',
+          params: {
+            id: '@id',
+            action: 'select-supplier-winner-by-quote-document'
           }
         }
     }

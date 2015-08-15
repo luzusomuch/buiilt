@@ -3,8 +3,50 @@ angular.module('buiiltApp')
   /**
    * quote data
    */
+
+  $scope.showScope = true;
+  $scope.showTenders = false;
+  $scope.viewMessages = false;
+  $scope.defaultText = "SCOPE";
+
+  $scope.clickShowScopes = function() {
+    $scope.defaultText = "SCOPE";
+    $scope.showScope = true;
+    $scope.showTenders = false;
+  };
+  $scope.clickShowTenders = function() {
+    $scope.defaultText = "TENDERS";
+    $scope.showScope = false;
+    $scope.showTenders = true;
+  };
+
+  $("div.showTenderDetail").css("display","none");
+  $scope.viewTenderDetail = function(tender){
+    $scope.viewMessages = true;
+    $scope.tender = tender;
+    $("div.tenderLists").toggle("slide");
+    $("div.showTenderDetail").css("display","block");
+  };
+
+  $scope.backToList = function(){
+    $scope.tender = {};
+    $("div.tenderLists").toggle("slide");
+    $("div.tenderLists").css("display","block");
+    $("div.showTenderDetail").css("display","none");
+  };
+
   $scope.emailsPhone = [];
   $scope.materialRequest = materialRequest;
+  console.log($scope.materialRequest);
+  _.each($scope.materialRequest.to, function(item) {
+    item.totalMessages = 0;
+    _.each($scope.materialRequest.messages, function(message){
+      if (message.sendBy._id == item._id) {
+        item.totalMessages ++;
+      }
+    });
+  });
+
   $scope.currentTeam = currentTeam;
   $scope.currentUser = {};
   if ($cookieStore.get('token')) {
@@ -46,7 +88,9 @@ angular.module('buiiltApp')
 
   $scope.declineQuote = function(value) {
     materialRequestService.declineQuote({id: materialRequest._id, belongTo: value}).$promise.then(function(data){
+      console.log(data);
       $scope.materialRequest = data;
+      $scope.backToList();
     });
   };
 
@@ -78,13 +122,20 @@ angular.module('buiiltApp')
     });
   };
 
-  $scope.sendMessage = function(value) {
-    if (value == 'undefined' || !value) {
+  $scope.enterMessage = function ($event) {
+    if ($event.keyCode === 13) {
+      $event.preventDefault();
+      $scope.sendMessage();
     }
-    else if(value != 'undefined' || value) {
-      materialRequestService.sendMessage({id: $stateParams.packageId, to: value, team: $scope.currentTeam._id, message: $scope.message.message})
+  };
+
+  $scope.sendMessage = function() {
+    if ($scope.tender._id == 'undefined' || !$scope.tender._id) {
+    }
+    else if($scope.tender._id != 'undefined' || $scope.tender._id) {
+      materialRequestService.sendMessage({id: $stateParams.packageId, to: $scope.tender._id, team: $scope.currentTeam._id, message: $scope.message.message})
       .$promise.then(function(data) {
-        $scope.messages = data;
+        $scope.materialRequest = data;
         $scope.message.message = null;
       });  
     }
@@ -95,6 +146,13 @@ angular.module('buiiltApp')
     materialRequestService.cancelPackage({id: $stateParams.packageId})
     .$promise.then(function(data) {
       $state.go('materials', {id: $stateParams.id})
+    });
+  };
+
+  $scope.selectWinnerByQuoteDocument = function(value) {
+    quoteService.selectSupplierWinnerByQuoteDocument({id: $scope.materialRequest._id,selector: value}).$promise.then(function(res){
+      $scope.winner = res;
+      $state.go('materialRequest.materialPackageInProcess', {id: res.project, packageId: res._id});
     });
   };
 

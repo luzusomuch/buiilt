@@ -13,7 +13,9 @@ exports.findOne = function(req, res) {
       .populate('winnerTeam._id')
       .populate('owner')
       .populate('to.quote')
+      .populate('to.quoteDocument')
       .populate('variations')
+      .populate('messages.sendBy')
       
       .populate('project').exec(function(err, materialPackage) {
         if (err) {return res.send(500, err);}
@@ -226,9 +228,9 @@ exports.sendMessage = function(req, res) {
         materialPackage.save(function(err, saved) {
           if (err) {return res.send(500, err)}
           else {
-            saved.populate('messages.sendBy', function(err){
+            MaterialPackage.populate(saved,[{path:'messages.sendBy'},{path: 'to.quoteDocument'}] , function(err,materialPackage){
               if (err) {return res.send(500,err);}
-              return res.json(200,saved);
+              return res.json(200,materialPackage);
             });
           }
         });
@@ -267,9 +269,9 @@ exports.sendMessageToBuilder = function(req, res) {
         materialPackage.save(function(err, saved) {
           if (err) {return res.send(500, err)}
           else {
-            saved.populate('messages.sendBy', function(err){
+            MaterialPackage.populate(saved,[{path:'messages.sendBy'},{path: 'to.quoteDocument'}] , function(err,materialPackage){
               if (err) {return res.send(500,err);}
-              return res.json(200,saved);
+              return res.json(200,materialPackage);
             });
           }
         });
@@ -497,7 +499,7 @@ exports.declineQuote = function(req, res) {
             });
           });
           toMaterial._id = null;
-          ownerUser = toMaterial.quote.user;
+          ownerUser = req.body.belongTo;
           toMaterial.quote = null;
         }
       });

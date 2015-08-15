@@ -147,7 +147,7 @@ angular.module('buiiltApp')
 
   //select winner by quote document -- new requirement
   $scope.selectWinnerByQuoteDocument = function(value) {
-    quoteService.selectWinnerByQuoteDocument({id: $scope.contractorRequest._id,selector: value}).$promise.then(function(res){
+    quoteService.selectContractorWinnerByQuoteDocument({id: $scope.contractorRequest._id,selector: value}).$promise.then(function(res){
       $scope.winner = res;
       $state.go('contractorRequest.contractorPackageInProcess', {id: res.project, packageId: res._id});
     });

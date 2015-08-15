@@ -43,6 +43,7 @@ EventBus.onSeries('MaterialPackage.Inserted', function(request, next) {
           inviteType: 'supplier',
           project: result.project._id,
           package: request._id,
+          isSkipInTender: request.isSkipInTender,
           to: supplier.email
         });
         packageInvite.save(function(err, saved){

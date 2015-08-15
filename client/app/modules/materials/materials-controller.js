@@ -1,7 +1,8 @@
 angular.module('buiiltApp').controller('MaterialsCtrl',
   function (messageService,$state,taskService,fileService,$scope,socket, $stateParams, $rootScope, $timeout, $q, authService, teamService, materialPackageService, materialPackages, team) {
     $scope.material = {
-      descriptions: []
+      descriptions: [],
+      isSkipInTender: false
     };
     $scope.materialPackages = materialPackages;
     $scope.currentProject = $rootScope.currentProject;
@@ -122,6 +123,13 @@ angular.module('buiiltApp').controller('MaterialsCtrl',
             $scope.materialMember.email = {};
           }
         }
+      }
+
+      console.log($scope.material.isSkipInTender);
+      if ($scope.material.isSkipInTender) {
+        console.log('11111');
+        $scope.materialMember.emailsPhone.slice(0,1);
+        console.log($scope.materialMember.emailsPhone.slice(0,1));
       }
       $scope.newPhoneNumber = null;
       $scope.$broadcast('angucomplete-alt:clearInput');

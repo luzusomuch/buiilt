@@ -175,18 +175,16 @@ exports.createUserWithInviteToken = function(req, res, next) {
                 MaterialPackage.findById(packageInvite.package, function(err, materialPackage){
                   if (err) {return res.send(500);}
                   else {
-                    // var packageTo = materialPackage.to;
+                    if (packageInvite.isSkipInTender) {
+                      materialPackage.winnerTeam._id = savedTeam._id;
+                      materialPackage.isAccept = true;
+                    }
                     _.each(materialPackage.to, function(to) {
                       if (to.email === packageInvite.to) {
                         to._id = savedTeam._id;
                         to.email = packageInvite.to;
-                        // materialPackage.to.push({
-                        //   _id: savedTeam._id,
-                        //   email: packageInvite.to
-                        // });
                       }
                     });
-                    // materialPackage.to = packageTo;
                     materialPackage.save(function(err, saved) {
                       if (err) {return res.send(500,err);}
                       else {

@@ -342,18 +342,30 @@ exports.uploadInPackge = function(req, res){
                                 MaterialPackage.findById(saved.belongTo).populate('owner')
                                 .populate('winnerTeam._id').exec(function(err, materialPackage) {
                                     if (err || !materialPackage) {return cb();}
-                                    owners = _.union(materialPackage.owner.leader, materialPackage.winnerTeam._id.leader);
+                                    _.each(materialPackage.to, function(toSupplier){
+                                        if (toSupplier._id.toString() == req.user.team._id.toString()) {
+                                            toSupplier.quoteDocument.push(saved._id);
+                                            materialPackage.markModified('toSupplier.quoteDocument');
+                                        }
+                                    });
+                                    owners = materialPackage.owner.leader;
+                                    if (materialPackage.winnerTeam._id) {
+                                        owners = _.union(materialPackage.owner.leader, materialPackage.winnerTeam._id.leader);
+                                        _.each(materialPackage.winnerTeam._id.member, function(member){
+                                            if (member._id) {
+                                                owners.push(member._id);
+                                            }
+                                        });
+                                    }
+
                                     _.each(materialPackage.owner.member, function(member){
                                         if (member._id) {
                                             owners.push(member._id);
                                         }
                                     });
-                                    _.each(materialPackage.winnerTeam._id.member, function(member){
-                                        if (member._id) {
-                                            owners.push(member._id);
-                                        }
-                                    });
+                                    
                                     _.remove(owners, req.user._id);
+                                    materialPackage.save();
                                     async.each(owners, function(leader, callback){
                                         var notification = new Notification({
                                             owner: leader,

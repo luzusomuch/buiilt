@@ -1,4 +1,177 @@
-<div class="row" style="margin-top: 18px">
+<div class="row" style="padding: 12px">
+  <div class="col s8">
+    <div class="collection with-header">
+      <div class="row collection-header" style="margin-bottom:0px">
+        <div class="col">
+         <a class='dropdown-button btn-flat' href='#' data-activates='inTender' style="font-size: 12px;" dropdown>{{(defaultText) ? defaultText : "SCOPE"}}<i class="mdi-navigation-arrow-drop-down"></i></a>
+           <ul id='inTender' class='dropdown-content'>
+           <li><a ng-click="clickShowScopes()" href="#!">SCOPE</a></li>
+           <li><a ng-click="clickShowTenders()" href="#!">TENDERERS</a></li>
+           </ul>
+        </div>
+            
+      </div>
+      <div ng-if="showScope">
+        <div class="row collection-header" style="margin-bottom:0px;">
+          <div class="col right" style="font-size:12px">
+             <a ng-click="cancelPackage()" class="" style="padding: 5px;">CANCEL PACKAGE</a>
+             <a class="modal-trigger" href="#modal_attachAddendum" style="padding: 5px;">ATTACH ADDENDUM</a>
+          </div>
+        </div>
+        <div style="height: 480px; overflow-y: auto; background-color: white;">
+          <div class="" style="padding: 10px">
+            <h5>{{materialRequest.name}} detail: </h5>
+            <strong>Start date</strong>: {{materialRequest.dateStart | date: longDate}}
+            <table>
+              <thead>
+                <th>Description</th>
+              </thead>
+              <tbody>
+                <tr ng-repeat="addendum in materialRequest.addendums | filter:{isHidden:false}">
+                  <td>{{addendum.addendumsScope.description}}</td>
+                  <td>{{addendum.addendumsScope.quantity}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="tenderLists" ng-if="showTenders">
+        <div class="row collection-header" style="margin-bottom:0px;">
+          <div class="col right" style="font-size:12px">
+            <a class="modal-trigger" href="#modal_inviteSupplier" style="padding: 5px;">INVITE ANOTHER TENDERER</a>
+          </div>
+        </div>
+        <div style="height: 480px; overflow-y: auto; background-color: white;">
+          <div class="collection-item row" ng-repeat="tender in materialRequest.to | filter: {isDecline:false}">
+             <div class="col s9">
+               <div><a ng-click="viewTenderDetail(tender)" href="#">{{tender.email}}</a></div>
+             </div>
+             <div style="color: #757575">
+               <div class="col s1 valign-wrapper">
+                 <div style="font-size:15px;">{{tender.totalMessages}}</div>
+                 <i style="font-size: 15px; margin-left: 5px" class="material-icons valign">message</i>
+               </div>
+               <div class="col s1 valign-wrapper">
+                 <div style="font-size:15px;">{{tender.quoteDocument.length}} </div>
+                 <i style="font-size: 15px; margin-left: 5px" class="material-icons valign">insert_drive_file</i>
+               </div>
+             </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="showTenderDetail">
+        <div class="row collection-header" style="margin-bottom:0px;">
+          <div class="col s12" style="font-size:12px">
+            <a class="backToTendersList" href="#!" ng-click="backToList()" style="margin-left:30px; padding: 5px;">&lt; BACK TO TENDERS</a>
+            <div class="right">
+              <a ng-click="declineQuote(tender._id)" style="padding: 5px;">DECLINE TENDER</a>
+              <!-- <a ng-click="selectQuote(tender.quote._id)" style="padding: 5px;">ACCEPT TENDER</a> -->
+              <a ng-click="selectWinnerByQuoteDocument(tender._id)" style="padding: 5px;">ACCEPT TENDER</a>
+            </div>
+          </div>
+        </div>
+        <div  style="height: 480px; overflow-y: auto; background-color: white;">
+          <div class="collection-item row" ng-repeat="quote in tender.quoteDocument">
+             <div class="col s9" ng-if="$last">
+               <div>
+                  <a href="{{quote.fileUrl}}" download="{{quote.title}}">
+                  <span>
+                    {{quote.title}} - <i class="material-icons">cloud_download</i>
+                  </span>
+                  </a>
+              </div>
+             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col s4">
+    <div class="collection with-header">
+         
+      <div style="height: 575px; overflow-y: auto; background-color:#fafafa;" class="">
+        <div ng-if="viewMessages && message.to == tender._id" ng-repeat="message in materialRequest.messages" class="row" style="font-size: 13px; margin: 12px; background-color: #eee; border-radius: 3px;">
+          <div class="col s12">
+            <p>{{message.message}} - <strong>From {{(currentTeam._id == message.sendBy._id) ? "Me" : message.sendBy.name}}</strong></p>
+          </div>
+        </div>
+        <div ng-if="viewMessages" class="row collection-footer" style="margin-bottom: 0px; background-color: white; padding: 12px; padding-top: 0px; border-top: 1px solid #E0E0E0">
+           <form ng-submit="sendMessage()">
+               <div class="input-field col s12" style="margin-top: 0px; margin-bottom: 0px;">
+                 <textarea id="textarea1" class="materialize-textarea" ng-model="message.message" ng-keydown="enterMessage($event);"></textarea>
+                 <label for="textarea1">Send a Message...</label>
+           </div>
+           <!-- <div class="input-field col s3">
+               <button class="btn-large waves-effect waves-light" type="submit" style="margin-top: 47px" name="action">Send
+                 <i class="mdi-content-send right"></i>
+               </button>
+               </div> -->
+           </form>
+       </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<addendum package="materialRequest" type="material"></addendum>
+
+<div id="modal_inviteSupplier" class="modal modal-fixed-footer">
+  <form ng-submit="sendInvitation()" name="form">
+    <div class="modal-content">
+    
+       <div class="row">
+         <div class="col s12">
+           <h5>Invite More Suppliers to Package Name</h5>
+         </div>
+       </div>
+       
+       <div class="row">
+         <div class="col s12">
+          <ul class="collection z-depth-1">
+            <li class="collection-item vlalign-wrapper">
+              <div class="row form" style="margin-bottom: 0px">
+                <div class="col s12"><p>Enter suppliers details below:</p></div>
+                <div class="input-field col s7">
+                        <input id="email_address" type="text" class="validate" ng-model="toSupplier.newEmail">
+                        <label for="email_address">Email</label>
+                    </div>
+                <div class="input-field col s3">
+                        <input id="phone_number" type="text" name="phoneNumber" class="validate" ng-model="toSupplier.newPhoneNumber">
+                        <label for="phone_number">Phone Number</label>
+                        <p class="validate-message" ng-if="form.phoneNumber.$valid == false">Please input number</p>
+                    </div>
+                <div class="valign col s2">
+                  <a ng-if="form.phoneNumber.$valid == true" href="#" ng-click="addUser()" class="btn" style="margin-top: 28px">Add</a>
+                </div>
+              </div>
+            </li>
+            <li class="collection-item vlalign" ng-repeat="emailPhone in emailsPhone">
+              <div class="row" style="margin-bottom: 0px">
+                <div class="col s7">{{emailPhone.email}}</div>
+                <div class="col s3">{{emailPhone.phoneNumber}}</div>
+                <div class="col s2" style="float:right"><a class="btn-flat btn-flat" ng-click="removeUser($index)" >Remove</a></div>
+              </div>
+            </li>
+          </ul>
+         </div>
+       </div>
+       
+     
+    </div>
+  <div class="divider"></div>
+    <div class="modal-footer">
+      <button type="submit" class="modal-action modal-close waves-effect waves-green btn-flat">Send Invitations</button>
+     <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
+    </div>
+    </form>
+</div>
+
+
+<!-- <div class="row" style="margin-top: 18px">
    <h5 class="col s8">Material Package {{materialRequest.name}} in Tender</h5>
    
    <div class="col s4" style="margin-top:15px">
@@ -7,7 +180,6 @@
         <i class="mdi-navigation-more-vert"></i>
        </a>
 
-       <!-- Dropdown Structure -->
        <ul id='itemActions' class='dropdown-content left'>
          <li><a class="modal-trigger" href="#modal_attachAddendum">Attach Addendum</a></li>
        <li><a class="modal-trigger" href="#modal_inviteSupplier">Invite Supplier</a></li>
@@ -162,7 +334,7 @@
         </div>
       </li>
     </ul>
-  </div>
+  </div> -->
 
  <!-- <div class="col s12">
   <ul class="collapsible popout" data-collapsible="accordion">
@@ -228,7 +400,7 @@
  </div>
 </div> -->
 
-<addendum package="materialRequest" type="material"></addendum>
+<!-- <addendum package="materialRequest" type="material"></addendum> -->
 
 <!-- <div id="modal_attachAddendum" class="modal modal-fixed-footer">
     <div class="modal-content">
@@ -272,7 +444,7 @@
     </div>
 </div> -->
 
-<div ng-repeat="quoteRequest in quoteRequests">
+<!-- <div ng-repeat="quoteRequest in quoteRequests">
   <div id='modal_viewQuote_{{quoteRequest._id}}' class="modal modal-fixed-footer">
     <div class="modal-content">
       <h4>View Quote</h4>
@@ -361,7 +533,6 @@
   <div class="divider"></div>
     <div class="modal-footer">
       <button type="submit" class="modal-action modal-close waves-effect waves-green btn-flat">Send Invitations</button>
-         <!-- <a class="modal-action modal-close waves-effect waves-green btn-flat ">Send Invitations!</a> -->
      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
     </div>
     </form>
@@ -379,4 +550,4 @@
          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel This Package</a>
      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Go Back</a>
     </div>
-</div>
+</div> -->
