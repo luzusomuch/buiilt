@@ -224,7 +224,7 @@ angular.module('buiiltApp')
             if ($scope.message.text != '') {
               messageService.sendMessage({id: $scope.currentThread._id, type: $scope.type}, $scope.message).$promise
                 .then(function (res) {
-                  //$scope.currentThread = res;
+                  $scope.currentThread = res;
                   //updateThread();
                   $scope.message.text = '';
                 });

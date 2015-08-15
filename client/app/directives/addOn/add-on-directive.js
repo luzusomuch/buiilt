@@ -281,7 +281,6 @@ angular.module('buiiltApp').directive('addon', function(){
             };
             $scope.goToDocumentDetail = function(document) {
               $scope.document = document;
-              console.log($scope.document);
               $scope.showListDocuments = false;
               $scope.showDocumentDetail = true;
             }
