@@ -572,14 +572,14 @@
        <ul id='itemFilter' class='dropdown-content'>
        <li><a ng-click="showOverView()" href="#!">OVERVIEW</a></li>
        <li><a ng-click="showTasks()" href="#!">TASKS</a></li>
-       <li ng-hide="type == 'variation'"><a ng-click="showVariations()" href="#!">VARIATIONS</a></li>
+       <li ng-hide="type == 'variation' || type == 'staff'"><a ng-click="showVariations()" href="#!">VARIATIONS</a></li>
        <li><a ng-click="showDocuments()" href="#!">DOCUMENTS</a></li>
        </ul>
   </div>
   <div class="col right" style="margin-top: 10px">
      <a ng-click="newTask()" class="modal-trigger" href="#modal_createNewTask" style="margin-left:30px; padding: 5px; font-size: 12px; color: black">NEW TASK</a>
      <a class="modal-trigger" href="#modal_attachDocument" style="margin-left:30px; padding: 5px; font-size: 12px; color: black">NEW DOCUMENT</a>
-     <a ng-hide="type == 'variation'" class="modal-trigger" href="#modal_attachVariation" style="margin-left:30px; padding: 5px; font-size: 12px; color: black">NEW VARIATION</a>
+     <a ng-hide="type == 'variation' || type == 'staff'" class="modal-trigger" href="#modal_attachVariation" style="margin-left:30px; padding: 5px; font-size: 12px; color: black">NEW VARIATION</a>
   </div>
 </div>
   <!-- show overview -->

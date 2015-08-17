@@ -1,4 +1,15 @@
-<div layout="column" style="">
+<div class="row" style="padding: 12px">
+ <div class="col s8">
+  <addOn package="staffPackage" type="staff"></addOn>
+ </div>
+
+ <div class="col s4">
+  <div message package="staffPackage" type="staff"></div>
+ </div>
+</div>
+
+
+<!-- <div layout="column" style="">
   <div class="row" style="margin-top: 18px">
     <h5 class="col s8">{{staffPackage.name}}</h5>
 
@@ -8,7 +19,6 @@
         <i class="mdi-navigation-more-vert"></i>
       </a>
 
-      <!-- Dropdown Structure -->
       <ul id="itemActions" class="dropdown-content">
         <li><a class="modal-trigger" href="#modal_attachDefect">Attach Defect</a></li>
         <li><a class="modal-trigger" href="#modal_attachDocument">Attach Document</a></li>
@@ -56,4 +66,4 @@
     </div>
   </div>
   <div ng-include="'app/modules/staff/views/complete.modal.html'"></div>
-</div>
+</div> -->

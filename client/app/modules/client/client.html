@@ -79,10 +79,22 @@
            <a ng-click="filter = {isCompleted : true, isAccept : true}" style="margin-left:30px; padding: 5px;">COMPLETED</a>
          </div>
        </div>
-     </div>
-     <div  style="height: 480px; overflow-y: auto; background-color: white;">
+      </div>
+      <div class="builderPackageDetail" style="height: 480px; overflow-y: auto; background-color: white;">
+        <a class="backToTendersList" href="#!" ng-click="backToList()" style="margin-left:30px; padding: 5px;">&lt; BACK TO LIST</a>
+        <div class="row" style="padding: 12px">
+          <div class="col s8">
+            <addOn package="builderPackage" type="builder"></addOn>
+          </div>
+
+         <div class="col s4">
+            <div message package="builderPackage" type="builder"></div>
+         </div>
+        </div>
+      </div>
+      <div class="builderPackageList" style="height: 480px; overflow-y: auto; background-color: white;">
         <div class="collection-item row">
-          <div class="col s9">{{builderPackage.name}} - BUILDER PACKAGE</div>
+          <div class="col s9" ng-click="goToBuilderPackageDetail()">{{builderPackage.name}} - BUILDER PACKAGE</div>
           <div style="color: #757575">
            <div class="col s1 valign-wrapper">
              <div style="font-size:15px;">{{builderPackage.threads.length}}</div>

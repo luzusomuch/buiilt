@@ -342,7 +342,7 @@ angular.module('buiiltApp').directive('addon', function(){
 
             $scope.goToVariation = function(value) {
                 variationRequestService.findOne({id: value._id}).$promise.then(function(data){
-                    if ($scope.type == 'BuilderPackage') {
+                    if ($scope.type == 'builder') {
                         if (!data.to.isSelect) {
                             if ($scope.currentTeam.type == 'builder') {
                                 $state.go('variationRequest.sendQuote',{id: data.project,variationId: data._id});

@@ -1,4 +1,17 @@
 angular.module('buiiltApp').controller('ClientCtrl', function(messageService,addOnPackageService,taskService,fileService,variationRequestService,$scope, team, $state, $rootScope, $timeout, $q, builderPackage) {
+
+    $("div.builderPackageDetail").css("display","none");
+    $scope.goToBuilderPackageDetail = function(){
+        $("div.builderPackageList").toggle("slide");
+        $("div.builderPackageDetail").css("display","block");
+    };
+
+    $scope.backToList = function(){
+        $("div.builderPackageList").toggle("slide");
+        $("div.builderPackageList").css("display","block");
+        $("div.builderPackageDetail").css("display","none");
+    };
+
     $scope.currentProject = $rootScope.currentProject;
     $scope.builderPackage = builderPackage;
     fileService.getFileByPackage({id: $scope.builderPackage._id, type: 'builder'}).$promise.then(function(files){
