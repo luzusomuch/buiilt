@@ -8,6 +8,16 @@ angular.module('buiiltApp').directive('addon', function(){
             type: '@'
         },
         controller: function(filterFilter,taskService,$rootScope,$scope, $state,$window, $stateParams, authService,addOnPackageService, FileUploader, $cookieStore, fileService, contractorRequestService, materialRequestService, variationRequestService) {
+            
+            $scope.activeHover = function($event){
+              angular.element($event.currentTarget).addClass("item-hover")
+            };
+            $scope.removeHover = function($event) {
+              angular.element($event.currentTarget).removeClass("item-hover")
+            }
+
+            $scope.contentHeight = $rootScope.maximunHeight - $rootScope.headerHeight - $rootScope.footerHeight - 130;
+
             $scope.allItemsText = 'OVERVIEW';
 
             $scope.currentProject = $rootScope.currentProject;

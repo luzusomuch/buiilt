@@ -18,7 +18,7 @@
              <a class="modal-trigger" href="#modal_attachAddendum" style="padding: 5px;">ATTACH ADDENDUM</a>
           </div>
         </div>
-        <div style="height: 480px; overflow-y: auto; background-color: white;">
+        <div style="height: {{contentHeight -10}}px; overflow-y: auto; background-color: white;">
           <div class="" style="padding: 10px">
             <h5>{{materialRequest.name}} detail: </h5>
             <strong>Start date</strong>: {{materialRequest.dateStart | date: longDate}}
@@ -43,8 +43,8 @@
             <a class="modal-trigger" href="#modal_inviteSupplier" style="padding: 5px;">INVITE ANOTHER TENDERER</a>
           </div>
         </div>
-        <div style="height: 480px; overflow-y: auto; background-color: white;">
-          <div class="collection-item row" ng-repeat="tender in materialRequest.to | filter: {isDecline:false}">
+        <div style="height: {{contentHeight -10}}px; overflow-y: auto; background-color: white; overflow-x: hidden">
+          <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="tender in materialRequest.to | filter: {isDecline:false}">
              <div class="col s9">
                <div><a ng-click="viewTenderDetail(tender)" href="#">{{tender.email}}</a></div>
              </div>
@@ -73,7 +73,7 @@
             </div>
           </div>
         </div>
-        <div  style="height: 480px; overflow-y: auto; background-color: white;">
+        <div  style="height: {{contentHeight -10}}px; overflow-y: auto; background-color: white; overflow-x: hidden">
           <div class="collection-item row" ng-repeat="quote in tender.quoteDocument">
              <div class="col s9" ng-if="$last">
                <div>
@@ -93,7 +93,7 @@
   <div class="col s4">
     <div class="collection with-header">
          
-      <div style="height: 575px; overflow-y: auto; background-color:#fafafa;" class="">
+      <div style="height: {{contentHeight + 85}}px; overflow-y: auto; background-color:#fafafa; overflow-x: hidden" class="">
         <div ng-if="viewMessages && message.to == tender._id" ng-repeat="message in materialRequest.messages" class="row" style="font-size: 13px; margin: 12px; background-color: #eee; border-radius: 3px;">
           <div class="col s12">
             <p>{{message.message}} - <strong>From {{(currentTeam._id == message.sendBy._id) ? "Me" : message.sendBy.name}}</strong></p>

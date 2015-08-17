@@ -1,5 +1,8 @@
 angular.module('buiiltApp').controller('ContractorsCtrl',
   function(messageService,taskService,fileService,teamService,$scope, $state,socket, team, $stateParams, $rootScope, $timeout, $q, contractorService, authService, projectService, teamService,contractorPackages) {
+    
+    $scope.contentHeight = $rootScope.maximunHeight - $rootScope.headerHeight - $rootScope.footerHeight - 130;
+
     $scope.contractor = {
       descriptions : [],
       isSkipInTender: false
@@ -9,6 +12,7 @@ angular.module('buiiltApp').controller('ContractorsCtrl',
     $scope.currentTeam = team;
     $scope.user = authService.getCurrentUser();
     $scope.filter = {};
+    $scope.filterAll = true;
     $scope.submitted = false;
     if ($scope.currentTeam.type == 'supplier' || $scope.currentTeam.type == 'homeOwner') {
       $state.go('team.manager');
@@ -163,6 +167,13 @@ angular.module('buiiltApp').controller('ContractorsCtrl',
           });
       }
     };
+
+    $scope.activeHover = function($event){
+      angular.element($event.currentTarget).addClass("item-hover")
+    };
+    $scope.removeHover = function($event) {
+      angular.element($event.currentTarget).removeClass("item-hover")
+    }
 
 });
 

@@ -54,14 +54,14 @@
          <div class="row collection-header" style="margin-bottom:0px;">
        <div class="col s12">
          <div style="font-size: 12px;">
-           <a style="margin-left:30px; padding: 5px; background-color: #eeeeee; border-radius: 3px" ng-click="filter = {}">ALL</a>
-           <a ng-click="filter = {isCompleted : false}" style="margin-left:30px; padding: 5px;">IN PROGRESS</a>
-           <a ng-click="filter = {isCompleted : true}" style="margin-left:30px; padding: 5px;">COMPLETED</a>
+           <a ng-class="{'current-select' : filterAll}" style="margin-left:30px;" ng-click="filterAll = true; filter = {}">ALL</a>
+           <a ng-class="{'current-select' : filter.isCompleted == false}" ng-click="filter = {isCompleted : false}; filterAll = false;" style="margin-left:30px; padding: 5px;">IN PROGRESS</a>
+           <a ng-class="{'current-select' : filter.isCompleted}" ng-click="filter = {isCompleted : true}; filterAll = false;" style="margin-left:30px; padding: 5px;">COMPLETED</a>
          </div>
        </div>
      </div>
-     <div  style="height: 480px; overflow-y: auto; background-color: white;">
-       <div class="collection-item row" ng-repeat="item in staffPackages | filter: filter">
+     <div  style="height: {{contentHeight}}px; overflow-y: auto; background-color: white; overflow-x:hidden;">
+       <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="item in staffPackages | filter: filter">
          <div class="col s9">
            <div>
             <a ui-sref="staff.view({packageId : item._id})"  ng-show="item.canSee || isLeader">{{item.name}}</a>

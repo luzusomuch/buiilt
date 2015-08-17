@@ -49,16 +49,16 @@
        <div class="row collection-header notShowFileDetail" style="margin-bottom:0px;">
            <div class="col s12">
                <div style="font-size: 12px;">
-                   <a ng-click="filter('all')" style="margin-left:30px; padding: 5px; background-color: #eeeeee; border-radius: 3px">ALL DOCUMENTS</a>
-                   <a ng-click="filter('architectural')" style="margin-left:30px">ARCHITECTURAL</a>
-                   <a ng-click="filter('engineering')" style="margin-left:30px">ENGINEERING</a>
-                   <a ng-click="filter('council')" style="margin-left:30px">COUNCIL</a>
-                   <a ng-click="filter('other')" style="margin-left:30px">OTHER</a>
+                   <a ng-class="{'current-select' : !hasFilter}" ng-click="filter('all')" style="margin-left:30px;">ALL DOCUMENTS</a>
+                   <a ng-class="{'current-select' : filterValue.isArchitectural}" ng-click="filter('architectural')" style="margin-left:30px">ARCHITECTURAL</a>
+                   <a ng-class="{'current-select' : filterValue.isEngineering}" ng-click="filter('engineering')" style="margin-left:30px">ENGINEERING</a>
+                   <a ng-class="{'current-select' : filterValue.isCouncil}" ng-click="filter('council')" style="margin-left:30px">COUNCIL</a>
+                   <a ng-class="{'current-select' : filterValue.isOther}" ng-click="filter('other')" style="margin-left:30px">OTHER</a>
                </div>
            </div>
        </div>
        <div class="notShowFileDetail" style="height: {{contentHeight}}px; overflow-y: auto; background-color: white; overflow-x: hidden">
-            <div ng-if="!hasFilter" class="collection-item row" ng-repeat="file in files">
+            <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-if="!hasFilter" class="collection-item row" ng-repeat="file in files">
                 <div class="col s10"> {{file.title}}</div>
                 <div class="col s2"><a><i ng-click="getFileDetail(file)" class="material-icons" style="color:black">remove_red_eye</i></a></div>
                 <div class="col s12">
@@ -67,7 +67,7 @@
                 </div>
             </div>
 
-            <div ng-if="hasFilter" class="collection-item row" ng-repeat="file in files | filter: filterValue">
+            <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-if="hasFilter" class="collection-item row" ng-repeat="file in files | filter: filterValue">
                 <div class="col s10"> {{file.title}}</div>
                 <div class="col s2"><a><i ng-click="getFileDetail(file)" class="material-icons" style="color:black">remove_red_eye</i></a></div>
                 <div class="col s12">
@@ -119,7 +119,7 @@
 </div>
 
 <div id="attachDocument" class="modal modal-fixed-footer">
-    <upload type="project" package=""></upload>
+    <upload type="project" package="" is-quote="false"></upload>
 </div>
 
 <div id="uploadReversion" class="modal modal-fixed-footer">

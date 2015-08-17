@@ -1,5 +1,7 @@
 angular.module('buiiltApp').controller('ClientCtrl', function(messageService,addOnPackageService,taskService,fileService,variationRequestService,$scope, team, $state, $rootScope, $timeout, $q, builderPackage) {
 
+    $scope.contentHeight = $rootScope.maximunHeight - $rootScope.headerHeight - $rootScope.footerHeight - 130;
+
     $scope.isShowBuilderPackageDetail = false;
     $("div.builderPackageDetail").css("display","none");
     $scope.goToBuilderPackageDetail = function(){
@@ -14,6 +16,15 @@ angular.module('buiiltApp').controller('ClientCtrl', function(messageService,add
         $("div.builderPackageList").css("display","block");
         $("div.builderPackageDetail").css("display","none");
     };
+
+    $scope.isShowAll = true;
+
+    $scope.activeHover = function($event){
+        angular.element($event.currentTarget).addClass("item-hover")
+    };
+    $scope.removeHover = function($event) {
+        angular.element($event.currentTarget).removeClass("item-hover")
+    }
 
     $scope.currentProject = $rootScope.currentProject;
     $scope.builderPackage = builderPackage;

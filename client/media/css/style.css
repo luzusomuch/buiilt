@@ -272,3 +272,7 @@ footer.footer {
   left: 0px;
   right: 0px;
 }
+
+.item-hover {
+  background-color: #E0E0E0 !important;
+}

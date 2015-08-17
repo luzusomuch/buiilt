@@ -14,8 +14,8 @@
    </div>
   </div>
          
-  <div style="height: 520px; overflow-y: auto; background-color:White;">
-    <div ng-if="showThreadsList" class="collection-item row" ng-repeat="thread in threads">
+  <div style="height: {{contentHeight - 15}}px; overflow-x: hidden; overflow-y: auto; background-color:White;">
+    <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-if="showThreadsList" class="collection-item row" ng-repeat="thread in threads">
       <div class="col s12">
         <div style="cursor:pointer" ng-click="goToThreadDetail(thread)">#{{$index + 1}} - {{thread.name}}</div>
       </div>
@@ -28,7 +28,7 @@
       </div>
     </div>
 
-    <div ng-if="showThreadDetail" class="threadDetail">
+    <div ng-if="showThreadDetail" class="threadDetail" scroll-to-bottom="currentThread.messages">
       <div class="row message-row" style="font-size: 13px; margin: 12px; border-radius: 3px;" ng-style="backgroundColor" ng-repeat="message in currentThread.messages">
        <div class="col s12">
          <p>{{message.text}} - <strong>From {{(message.user._id == currentUser._id) ? "Me" : message.user.firstName +" "+ message.user.lastName}}</strong></p>

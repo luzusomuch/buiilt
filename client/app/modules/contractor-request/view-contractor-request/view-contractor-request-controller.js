@@ -1,6 +1,14 @@
 angular.module('buiiltApp')
-.controller('ViewContractorRequestCtrl', function($scope, $window, $state, $stateParams,fileService,currentTeam, $cookieStore, authService, userService, contractorRequest, contractorRequestService, quoteService) {
-  
+.controller('ViewContractorRequestCtrl', function($rootScope,$scope, $window, $state, $stateParams,fileService,currentTeam, $cookieStore, authService, userService, contractorRequest, contractorRequestService, quoteService) {
+  $scope.activeHover = function($event){
+    angular.element($event.currentTarget).addClass("item-hover")
+  };
+  $scope.removeHover = function($event) {
+    angular.element($event.currentTarget).removeClass("item-hover")
+  }
+    
+  $scope.contentHeight = $rootScope.maximunHeight - $rootScope.headerHeight - $rootScope.footerHeight - 130;
+
   $scope.showScope = true;
   $scope.showTenders = false;
   $scope.viewMessages = false;

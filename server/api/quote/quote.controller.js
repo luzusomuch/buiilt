@@ -316,7 +316,7 @@ exports.selectMaterialQuoteByDocument = function(req, res){
     if (err) {return res.send(500,err);}
     if (!materialPackage) {return res.send(404);}
     materialPackage.winnerTeam._id = req.body.selector;
-    materialPackage.isAccept = true;
+    materialPackage.isSelect = true;
     _.remove(materialPackage.to,{_id: req.body.selector});
     _.each(materialPackage.to, function(toContractor){
       if (toContractor._id) {

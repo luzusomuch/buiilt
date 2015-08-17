@@ -10,6 +10,15 @@ angular.module('buiiltApp')
       controller:
         function($scope,$rootScope,messageService, authService,socket,$timeout,$anchorScroll,$location,filterFilter, $cookieStore, $stateParams, $location , packageService, userService, projectService, FileUploader, documentService) {
           //Init Params
+          $scope.activeHover = function($event){
+            angular.element($event.currentTarget).addClass("item-hover")
+          };
+          $scope.removeHover = function($event) {
+            angular.element($event.currentTarget).removeClass("item-hover")
+          }
+
+          $scope.contentHeight = $rootScope.maximunHeight - $rootScope.headerHeight - $rootScope.footerHeight - 105;
+
           $scope.currentProject = $rootScope.currentProject;
           authService.getCurrentUser().$promise.then(function(res) {
             $scope.currentUser = res;

@@ -301,7 +301,7 @@ exports.uploadInPackge = function(req, res){
                                     if (err || !contractorPackage) {return cb();}
                                     
                                     _.each(contractorPackage.to, function(toContractor){
-                                        if (toContractor._id.toString() == req.user.team._id.toString()) {
+                                        if (toContractor._id && toContractor._id.toString() == req.user.team._id.toString()) {
                                             toContractor.quoteDocument.push(saved._id);
                                             contractorPackage.markModified('toContractor.quoteDocument');
                                         }
@@ -322,7 +322,6 @@ exports.uploadInPackge = function(req, res){
                                     });
                                     
                                     _.remove(owners, req.user._id);
-                                    contractorPackage.save();
                                     async.each(owners, function(leader, callback){
                                         var notification = new Notification({
                                             owner: leader,
@@ -336,6 +335,7 @@ exports.uploadInPackge = function(req, res){
                                         });
                                         notification.save(callback);
                                     },cb);
+                                    contractorPackage.save();
                                 });
                             }
                             else if (saved.belongToType == 'material') {
@@ -343,7 +343,7 @@ exports.uploadInPackge = function(req, res){
                                 .populate('winnerTeam._id').exec(function(err, materialPackage) {
                                     if (err || !materialPackage) {return cb();}
                                     _.each(materialPackage.to, function(toSupplier){
-                                        if (toSupplier._id.toString() == req.user.team._id.toString()) {
+                                        if (toSupplier._id && toSupplier._id.toString() == req.user.team._id.toString()) {
                                             toSupplier.quoteDocument.push(saved._id);
                                             materialPackage.markModified('toSupplier.quoteDocument');
                                         }

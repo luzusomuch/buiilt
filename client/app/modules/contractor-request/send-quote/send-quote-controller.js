@@ -1,8 +1,17 @@
 angular.module('buiiltApp')
-.controller('SendQuoteContractorPackageCtrl', function($scope, $window, $state, currentTeam, $stateParams, $cookieStore, authService, userService, contractorRequest, contractorRequestService,FileUploader, registryForContractorService) {
+.controller('SendQuoteContractorPackageCtrl', function($rootScope,$scope, $window, $state, currentTeam, $stateParams, $cookieStore, authService, userService, contractorRequest, contractorRequestService,FileUploader, registryForContractorService) {
   /**
    * quote data
    */
+  $scope.activeHover = function($event){
+    angular.element($event.currentTarget).addClass("item-hover")
+  };
+  $scope.removeHover = function($event) {
+    angular.element($event.currentTarget).removeClass("item-hover")
+  }
+
+  $scope.contentHeight = $rootScope.maximunHeight - $rootScope.headerHeight - $rootScope.footerHeight - 130;
+
   $scope.showScope = true;
   $scope.showQuotes = false;
   $scope.viewMessages = true;

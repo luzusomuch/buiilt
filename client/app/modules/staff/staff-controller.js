@@ -2,6 +2,16 @@ angular.module('buiiltApp')
   .controller('StaffCtrl',
   function(messageService,$state,taskService,fileService,$scope, $timeout, $q, authService, $rootScope,staffPackageService,filterFilter,currentTeam,currentUser,staffPackages,socket) {
     //Init Params
+
+    $scope.activeHover = function($event){
+        angular.element($event.currentTarget).addClass("item-hover")
+    };
+    $scope.removeHover = function($event) {
+        angular.element($event.currentTarget).removeClass("item-hover")
+    }
+
+    $scope.contentHeight = $rootScope.maximunHeight - $rootScope.headerHeight - $rootScope.footerHeight - 130;
+
     $scope.currentUser = currentUser;
     $scope.currentProject = $rootScope.currentProject;
     $scope.currentTeam =  currentTeam;
@@ -11,6 +21,8 @@ angular.module('buiiltApp')
     $scope.inProgressTotal = 0;
     $scope.submitted = false;
     $scope.filter = {};
+    $scope.filterAll = true;
+    
     if (!$scope.isLeader) {
       _.forEach($scope.staffPackages,function(item) {
         item.canSee =  (_.indexOf(item.staffs,$scope.currentUser._id) != -1);

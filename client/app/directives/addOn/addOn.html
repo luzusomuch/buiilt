@@ -583,7 +583,7 @@
   </div>
 </div>
   <!-- show overview -->
-  <div ng-if="isShowOverView" style="height: 480px; overflow-y: auto; background-color: white;">
+  <div ng-if="isShowOverView" style="height: {{contentHeight + 25}}px; overflow-y: auto; background-color: white; overflow-x: hidden;">
     <div class="col s12">
       <ul class="collapsible" data-collapsible="accordion">
         <li>
@@ -622,8 +622,8 @@
          </div>
        </div>
      </div>
-     <div  style="height: 480px; overflow-y: auto; background-color: white;">
-       <div class="collection-item row" ng-repeat="task in tasks | taskFilter : filter">
+     <div  style="height: {{contentHeight - 15}}px; overflow-x:hidden; overflow-y: auto; background-color: white;">
+       <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="task in tasks | taskFilter : filter">
          <div class="col s12">
            <div ng-click="showTaskDetail(task)"><input type="checkbox" id="complete" /><label style="color: black" for="complete">{{task.name}}</label></div>
          </div>
@@ -652,7 +652,7 @@
          </div>
        </div>
       </div>
-      <div  style="height: 480px; overflow-y: auto; background-color: white;">
+      <div  style="height: {{contentHeight - 15}}px; overflow-x: hidden; overflow-y: auto; background-color: white;">
        <div class="collection-item row">
          <div class="col s12">
            <p>{{task.name}} - {{task.description}}</p>
@@ -677,9 +677,9 @@
        </div>
      </div>
     </div>
-    <div style="height: 480px; overflow-y: auto; background-color: white;">
-     <div class="collection-item row">
-       <div class="col s12" ng-repeat="variation in package.variations">
+    <div style="height: {{contentHeight - 15}}px; overflow-x:hidden; overflow-y: auto; background-color: white;">
+     <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="variation in package.variations">
+       <div class="col s12">
          <div style="cursor:pointer" ng-click="goToVariation(variation)">{{variation.name}}</div>
        </div>
      </div>
@@ -701,8 +701,8 @@
          </div>
        </div>
       </div>
-      <div  style="height: 480px; overflow-y: auto; background-color: white;">
-        <div class="collection-item row" ng-repeat="document in documents | filter: documentFilter">
+      <div  style="height: {{contentHeight - 15}}px; overflow-x:hidden; overflow-y: auto; background-color: white;">
+        <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="document in documents | filter: documentFilter">
          <div class="col s12">
            <div ng-click="goToDocumentDetail(document)">{{document.title}}</div>
          </div>
@@ -724,7 +724,7 @@
          </div>
        </div>
       </div>
-      <div  style="height: 480px; overflow-y: auto; background-color: white;">
+      <div  style="height: {{contentHeight - 15}}px; overflow-x:hidden; overflow-y: auto; background-color: white;">
         <div class="collection-item row">
           <p>{{document.title}}</p>
           <p>{{document.description}}</p>
@@ -858,6 +858,6 @@
 
 <div id="modal_attachDocument" class="modal">
   <div class="modal-content">
-    <upload package="package" type="package"></upload>
+    <upload package="package" type="package" is-quote="false"></upload>
   </div>
 </div>

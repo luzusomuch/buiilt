@@ -148,7 +148,7 @@ exports.sendMessageToBuilder = function(req, res) {
       variation._editUser = req.user;
       variation.save(function(err, saved) {
         if (err) {return res.send(500, err)}
-        Variation.populate(saved,[{path:'messages.sendBy'},{path: 'to.quoteDocument'}] , function(err,variation){
+        Variation.populate(saved,[{path:'messages.sendBy'},{path: 'to.quoteDocument'},{path: 'to._id'}] , function(err,variation){
           if (err) {return res.send(500,err);}
           return res.json(200,variation);
         });

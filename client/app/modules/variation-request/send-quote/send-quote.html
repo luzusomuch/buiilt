@@ -18,7 +18,7 @@
              <a class="modal-trigger" href="#modal_attachAddendum" style="padding: 5px;">ATTACH ADDENDUM</a>
           </div>
         </div> -->
-        <div style="height: 480px; overflow-y: auto; background-color: white;">
+        <div style="height: {{contentHeight + 28}}px; overflow-y: auto; background-color: white;">
           <div class="" style="padding: 10px">
             <h5>{{variationRequest.name}} detail: </h5>
             <strong>Start date</strong>: {{variationRequest.dateStart | date: longDate}}
@@ -43,8 +43,8 @@
             <a class="modal-trigger" href="#modal_attachDocument" style="padding: 5px;">ATTACT QUOTE</a>
           </div>
         </div>
-        <div ng-if="currentTeam._id == variationRequest.to._id._id" style="height: 480px; overflow-y: auto; background-color: white;">
-          <div class="collection-item row" ng-repeat="quote in variationRequest.to.quoteDocument">
+        <div ng-if="currentTeam._id == variationRequest.to._id._id" style="height: {{contentHeight -10}}px; overflow-y: auto; background-color: white;">
+          <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="quote in variationRequest.to.quoteDocument">
              <div class="col s9">
                <div><a ng-click="viewQuoteDetail(quote)" href="#">{{quote.title}}</a></div>
              </div>
@@ -62,7 +62,7 @@
             </div>
           </div>
         </div>
-        <div  style="height: 480px; overflow-y: auto; background-color: white;">
+        <div  style="height: {{contentHeight -10}}px; overflow-y: auto; background-color: white;">
          <div class="col s9">
            <div>
             <a href="{{quote.fileUrl}}" download="{{quote.name}}">
@@ -80,7 +80,7 @@
   <div class="col s4">
     <div class="collection with-header">
          
-      <div style="height: 575px; overflow-y: auto; background-color:#fafafa;" class="">
+      <div style="height: {{contentHeight + 85}}px; overflow-y: auto; background-color:#fafafa;" class="">
         <div ng-if="message.to == currentTeam._id" ng-repeat="message in variationRequest.messages" class="row" style="font-size: 13px; margin: 12px; background-color: #eee; border-radius: 3px;">
           <div class="col s12">
             <p>{{message.message}} - <strong>From {{(currentTeam._id == message.sendBy._id) ? "Me" : message.sendBy.name}}</strong></p>

@@ -1,5 +1,12 @@
 angular.module('buiiltApp')
 .controller('ViewProjectCtrl', function($rootScope,$window,$scope, $stateParams, authService,documentService, projectService, project, packageService, fileService,FileUploader,$cookieStore) {
+  $scope.activeHover = function($event){
+    angular.element($event.currentTarget).addClass("item-hover")
+  };
+  $scope.removeHover = function($event) {
+    angular.element($event.currentTarget).removeClass("item-hover")
+  }
+
   $scope.errors = {};
   //content height
   $scope.contentHeight = $rootScope.maximunHeight - $rootScope.headerHeight - $rootScope.footerHeight - 130;
@@ -62,6 +69,7 @@ angular.module('buiiltApp')
   $scope.filter = function(value){
     if (value == 'all') {
       $scope.hasFilter = false;
+      $scope.filterValue = {};
     }
     else if (value == 'architectural') {
       $scope.hasFilter = true;

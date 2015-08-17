@@ -1,8 +1,17 @@
 angular.module('buiiltApp')
-.controller('SendQuoteVariationCtrl', function($scope, $window, $state, currentTeam, $stateParams, $cookieStore, authService, userService, variationRequest, variationRequestService,FileUploader, registryForContractorService) {
+.controller('SendQuoteVariationCtrl', function($rootScope,$scope, $window, $state, currentTeam, $stateParams, $cookieStore, authService, userService, variationRequest, variationRequestService,FileUploader, registryForContractorService) {
   /**
    * quote data
    */
+
+  $scope.activeHover = function($event){
+    angular.element($event.currentTarget).addClass("item-hover")
+  };
+  $scope.removeHover = function($event) {
+    angular.element($event.currentTarget).removeClass("item-hover")
+  }
+
+  $scope.contentHeight = $rootScope.maximunHeight - $rootScope.headerHeight - $rootScope.footerHeight - 130;
 
   $scope.showScope = true;
   $scope.showQuotes = false;
@@ -226,6 +235,7 @@ angular.module('buiiltApp')
     if ($scope.message) {
       variationRequestService.sendMessageToBuilder({id: $stateParams.variationId, team: $scope.currentTeam._id, message: $scope.message})
       .$promise.then(function(data) {
+        console.log(data);
         $scope.variationRequest = data;
         $scope.message = null;
       });

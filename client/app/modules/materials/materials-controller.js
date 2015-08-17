@@ -1,5 +1,8 @@
 angular.module('buiiltApp').controller('MaterialsCtrl',
   function (messageService,$state,taskService,fileService,$scope,socket, $stateParams, $rootScope, $timeout, $q, authService, teamService, materialPackageService, materialPackages, team) {
+    
+    $scope.contentHeight = $rootScope.maximunHeight - $rootScope.headerHeight - $rootScope.footerHeight - 130;
+    
     $scope.material = {
       descriptions: [],
       isSkipInTender: false
@@ -8,6 +11,7 @@ angular.module('buiiltApp').controller('MaterialsCtrl',
     $scope.currentProject = $rootScope.currentProject;
     $scope.currentTeam = team;
     $scope.filter = {};
+    $scope.filterAll = true;
     $scope.user = authService.getCurrentUser();
     $scope.requirements = [];
     $scope.submitted = false;
@@ -174,5 +178,12 @@ angular.module('buiiltApp').controller('MaterialsCtrl',
           });
       }
     };
+
+    $scope.activeHover = function($event){
+        angular.element($event.currentTarget).addClass("item-hover")
+    };
+    $scope.removeHover = function($event) {
+        angular.element($event.currentTarget).removeClass("item-hover")
+    }
 
   });
