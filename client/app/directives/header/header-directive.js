@@ -6,6 +6,10 @@ angular.module('buiiltApp')
     controller: function($scope,$state, $stateParams, $rootScope,materialPackageService, authService, projectService, contractorService,teamService,filterFilter) {
       $scope.projects = [];
       $scope.submitted = false;
+
+      //get header height
+      $rootScope.headerHeight = $('nav').outerHeight() + 48;
+
       $scope.menuTypes = {
         homeOwner: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
           {sref: 'client({id :  currentProject._id})', label: 'builder'},
@@ -158,8 +162,6 @@ angular.module('buiiltApp')
       $scope.inputChanged = function(str) {
         $scope.textString = str;
       };
-
-
     }
   };
 });

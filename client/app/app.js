@@ -56,6 +56,11 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
   })
   .run(function ($rootScope, $cookieStore, cfpLoadingBar, authService, $location,projectService,$state) {
     cfpLoadingBar.start();
+    $rootScope.maximunHeight = $(window).height();
+    // $rootScope.contentHeight = $(window).height() - $('header').outerHeight() - $('footer').outerHeight();
+    // console.log($('header').outerHeight());
+    // console.log($('footer').outerHeight());
+    // console.log($rootScope.contentHeight);
     $rootScope.currentProject = {};
     $rootScope.authService = authService;
     $rootScope.currentTeam = {};

@@ -1,6 +1,9 @@
 angular.module('buiiltApp')
-.controller('ViewProjectCtrl', function($window,$scope, $stateParams, authService,documentService, projectService, project, packageService, fileService,FileUploader,$cookieStore) {
+.controller('ViewProjectCtrl', function($rootScope,$window,$scope, $stateParams, authService,documentService, projectService, project, packageService, fileService,FileUploader,$cookieStore) {
   $scope.errors = {};
+  //content height
+  $scope.contentHeight = $rootScope.maximunHeight - $rootScope.headerHeight - $rootScope.footerHeight - 130;
+  
   $scope.project=project;
   $scope.docum = {};
   authService.getCurrentTeam().$promise.then(function(team){
@@ -186,6 +189,7 @@ angular.module('buiiltApp')
 
   //File detail
   $("div.showFileDetail").css("display","none");
+  $scope.file = {};
   $scope.isShowFileDetail = false;
   $scope.getFileDetail = function(file){
     $scope.isShowFileDetail = true;
