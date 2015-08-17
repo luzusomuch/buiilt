@@ -171,6 +171,7 @@ angular.module('buiiltApp').directive('addon', function(){
 
             //Function fired when click edit task
             $scope.editTask = function(task) {
+              console.log(task);
               $scope.task = angular.copy(task);
               getAvailableAssignee($scope.type);
               _.forEach($scope.task.assignees,function(item) {
