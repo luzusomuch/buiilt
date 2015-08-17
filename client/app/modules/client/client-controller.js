@@ -1,12 +1,15 @@
 angular.module('buiiltApp').controller('ClientCtrl', function(messageService,addOnPackageService,taskService,fileService,variationRequestService,$scope, team, $state, $rootScope, $timeout, $q, builderPackage) {
 
+    $scope.isShowBuilderPackageDetail = false;
     $("div.builderPackageDetail").css("display","none");
     $scope.goToBuilderPackageDetail = function(){
+        $scope.isShowBuilderPackageDetail = true;
         $("div.builderPackageList").toggle("slide");
         $("div.builderPackageDetail").css("display","block");
     };
 
     $scope.backToList = function(){
+        $scope.isShowBuilderPackageDetail = false;
         $("div.builderPackageList").toggle("slide");
         $("div.builderPackageList").css("display","block");
         $("div.builderPackageDetail").css("display","none");
