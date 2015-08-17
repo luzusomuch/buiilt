@@ -19,6 +19,8 @@ angular.module('buiiltApp')
 
           $scope.contentHeight = $rootScope.maximunHeight - $rootScope.headerHeight - $rootScope.footerHeight - 105;
 
+          $scope.messageScreenHeight = $scope.contentHeight - 135;
+
           $scope.currentProject = $rootScope.currentProject;
           authService.getCurrentUser().$promise.then(function(res) {
             $scope.currentUser = res;

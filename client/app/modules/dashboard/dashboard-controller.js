@@ -1,5 +1,7 @@
 angular.module('buiiltApp')
   .controller('DashboardCtrl', function($scope,$state, socket, $q, userService,$timeout, $rootScope,myFiles,myTasks,myThreads,authService,taskService,messageService,notificationService) {
+    $scope.contentHeight = $rootScope.maximunHeight - $rootScope.headerHeight - $rootScope.footerHeight - 130;
+    
     $scope.currentProject = $rootScope.currentProject;
     $scope.myTasks = myTasks;
     $scope.currentUser = $rootScope.currentUser;

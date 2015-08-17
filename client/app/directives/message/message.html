@@ -1,4 +1,4 @@
-<div class="collection with-header">
+<div style="position:relative;" class="collection with-header">
   <div class="row collection-header" style="margin-bottom:0px; padding-top: 20px; padding-bottom: 14px">
     <div class="right">
       <a class="modal-trigger" style="font-size: 12px; margin:20px; color: black;" href='#modal_createNewThread' ng-click="newThread()">NEW THREAD</a>
@@ -28,13 +28,13 @@
       </div>
     </div>
 
-    <div ng-if="showThreadDetail" class="threadDetail" scroll-to-bottom="currentThread.messages">
+    <div ng-if="showThreadDetail" class="threadDetail" scroll-to-bottom="currentThread.messages" style="height: {{messageScreenHeight}}px; overflow-y:auto">
       <div class="row message-row" style="font-size: 13px; margin: 12px; border-radius: 3px;" ng-style="backgroundColor" ng-repeat="message in currentThread.messages">
        <div class="col s12">
          <p>{{message.text}} - <strong>From {{(message.user._id == currentUser._id) ? "Me" : message.user.firstName +" "+ message.user.lastName}}</strong></p>
        </div>
       </div>
-      <div class="row collection-footer" style="margin-bottom: 0px; background-color: white; padding: 12px; padding-top: 0px; border-top: 1px solid #E0E0E0">
+      <div class="send-message-box row collection-footer" style="margin-bottom: 0px; background-color: white; padding: 12px; padding-top: 0px; border-top: 1px solid #E0E0E0; position:absolute; bottom: 2px; left: 1px; right: 1px;">
        <div class="input-field col s12" style="margin-top: 0px; margin-bottom: 0px;">
          <textarea id="textarea1" class="materialize-textarea" style="margin: 0px; margin-top: 0px" ng-model="message.text" ng-keydown="enterMessage($event);"></textarea>
        </div>

@@ -1,4 +1,119 @@
-<div class="col s12" style="margin-top: -10px;">
+<div class="col s3">
+ <div class="collection">
+   <div ng-click="currentList = 'tasks'" class="row collection-item">
+     Tasks <span ng-if="myTasks.length > 0" class="item badge">{{myTasks.length}}</span>
+   </div>
+   <div ng-click="currentList = 'chats'" class="row collection-item">
+     Messages <span ng-if="myThreads.length > 0" class="new badge">{{myThreads.length}}</span>
+   </div>
+   <div ng-click="currentList = 'docs'" class="row collection-item">
+     Documents <span ng-if="myFiles.length > 0" class="new badge">{{myFiles.length}}</span>
+   </div>
+ </div>
+</div>
+
+<div class="col s9">
+ <div class="collection">
+   <div  style="height: {{contentHeight + 85}}px; overflow-x:hidden; overflow-y: auto; background-color: white;">
+     
+     <!-- List of tasks -->
+    <div ng-if="currentList == 'tasks'" class="collection-item row" ng-repeat="task in myTasks | orderBy : ['dateEnd']">
+      <div class="col s12">
+        <div>
+          <input ng-if="!task.completed" type="checkbox" id="complete" />
+          <input ng-if="task.completed" checked="true" type="checkbox" id="complete" />
+
+          <label style="color: black" for="complete">
+            <a click="showTask(task)" ng-if="task.type == 'builder'"
+               ui-sref="client({id : task.project})"
+               class="btn-flat secondary-content new badge col s2" style="font-size: 12px;">
+              {{task.name}}
+            </a>
+            <a click="showTask(task)" ng-if="task.type == 'contractor'"
+               ui-sref="contractorRequest.contractorPackageInProcess({id : task.project, packageId : task.package._id})"
+               class="btn-flat secondary-content new badge col s2" style="font-size: 12px;">
+              {{task.name}}
+            </a>
+            <a click="showTask(task)" ng-if="task.type == 'staff'"
+               ui-sref="staff.view({id : task.project, packageId : task.package._id})"
+               class="btn-flat secondary-content new badge col s2" style="font-size: 12px;">
+              {{task.name}}
+            </a>
+            <a click="showTask(task)" ng-if="task.type == 'material'"
+               ui-sref="materialRequest.materialPackageInProcess({id : task.project, packageId : task.package._id})"
+               class="btn-flat secondary-content new badge col s2" style="font-size: 12px;">
+              {{task.name}}
+            </a>
+            <a click="showTask(task)" ng-if="task.type == 'variation'"
+               ui-sref="variationRequest.inProcess({id : task.project, variationId : task.package._id})"
+               class="btn-flat secondary-content new badge col s2" style="font-size: 12px;">
+              {{task.name}}
+            </a>
+          </label>
+        </div>
+     </div>
+     <div class="col s12">
+        <div style="font-size: 10px">
+          <span>Due date: {{task.dateEnd | date: longDate}}</span> - Assignees: <span ng-repeat="assignee in task.assignees">
+              {{(assignee.lastName) ? assignee.firstName +" "+ assignee.lastName : assignee.email}},</span>
+        </div>
+     </div>
+    </div>
+     
+     
+     <!-- Threads list -->
+    <div ng-if="currentList == 'chats'" class="collection-item row" ng-repeat="thread in myThreads">
+       <div class="col s12">
+         <div>
+           <a ng-click="showChat(thread,$index)" ng-if="thread.type == 'builder'"
+               ui-sref="client({id : thread.project})"
+               class="btn-flat new badge" style="font-size: 12px;">
+              {{thread.name}}
+            </a>
+            <a ng-click="showChat(thread,$index)" ng-if="thread.type == 'contractor'"
+               ui-sref="contractorRequest.contractorPackageInProcess({id : thread.project, packageId : thread.package})"
+               class="btn-flat new badge" style="font-size: 12px;">
+              {{thread.name}}
+            </a>
+            <a ng-click="showChat(thread,$index)" ng-if="thread.type == 'staff'"
+               ui-sref="staff.view({id : thread.project, packageId : thread.package})"
+               class="btn-flat new badge" style="font-size: 12px;">
+              {{thread.name}}
+            </a>
+            <a ng-click="showChat(thread,$index)" ng-if="thread.type == 'material'"
+               ui-sref="materialRequest.materialPackageInProcess({id : thread.project, packageId : thread.package})"
+               class="btn-flat new badge" style="font-size: 12px;">
+              {{thread.name}}
+            </a>
+            <a ng-click="showChat(thread,$index)" ng-if="thread.type == 'variation'"
+               ui-sref="variationRequest.inProcess({id : thread.project, variationId : thread.package})"
+               class="btn-flat new badge" style="font-size: 12px;">
+              {{thread.name}}
+            </a>
+         </div>
+       </div>
+       <div class="col s12">
+         <div style="font-size: 10px;">
+            <span ng-repeat="assignee in thread.users">
+              {{(assignee.lastName) ? assignee.firstName +" "+ assignee.lastName : assignee.email}},</span>
+         </div>
+       </div>
+    </div>
+
+    <!-- list of documents -->
+    <div ng-if="currentList == 'docs'" class="collection-item row" ng-repeat="file in myFiles | unique: file">
+       <div class="col s12" style="cursor:pointer">
+         <div ng-click="goToDocument(file)">{{file.element.file.title}}</div>
+       </div>
+       <div class="col s12">
+         <div style="font-size:12px;">{{file.element.file.description}}</div>
+       </div>
+    </div>
+   </div>
+ </div>
+</div>
+
+<!-- <div class="col s12" style="margin-top: -10px;">
   <h5 class="secondary-content">Dashboard</h5>
 </div>
 <div class="col s12">
@@ -225,4 +340,4 @@
   
   
   <div create-package></div>
-</div>
+</div> -->

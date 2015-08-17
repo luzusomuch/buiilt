@@ -90,6 +90,7 @@ exports.myThread = function(req,res) {
     async.each(threads,function(thread,callback) {
       Thread.findById(thread)
         .populate('messages.user')
+        .populate('users')
         .exec(function(err,thread) {
           Notification.where({owner : user._id,'element._id' : thread._id,referenceTo : 'thread',unread : true}).count(function(err,count) {
             thread.__v = count;
