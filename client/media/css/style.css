@@ -276,3 +276,8 @@ footer.footer {
 .item-hover {
   background-color: #E0E0E0 !important;
 }
+
+body{
+  background-image: url("../old-and-new.png");
+  background-size: 100%;
+}
