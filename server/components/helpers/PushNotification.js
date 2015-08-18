@@ -1,7 +1,9 @@
 var apnagent = require('apnagent')
   , agent = new apnagent.Agent();
 var device = require('./../../models/device.model');
+var Notification = require('./../../models/notification.model');
 var _ = require('lodash');
+
 
 exports.getData = function(threadName, message, users){
     agent
@@ -77,21 +79,24 @@ exports.getData = function(threadName, message, users){
    //push notification test
    _.each(users, function(user){
     console.log(user);
+    
     device.findOne({'user' : user}, function(err, device) {
       if (err) {console.log(err);}
       // if (!device) {return res.send(404,err);}
       if (device) {
-        console.log(device);
-        agent.createMessage()
-         .device(device.deviceToken)
-         .alert(threadName+': '+message)
-         .badge(8)
-         .sound('defauld').send(function(err){
-          if (!err) {console.log('success');}
-          console.log(err);
-          // if (err) {console.log(err)}
-          // console.log('success');
-         });
+        Notification.find({owner: user, unread:true, $or:[{referenceTo: 'task'},{referenceTo: 'thread'}]}, function(err, notifications){
+          if (err) {console.log(err);}
+          // if (!notifications) {return res.send(404);}
+          var totalBadge = notifications.length;
+          agent.createMessage()
+           .device(device.deviceToken)
+           .alert(threadName+': '+message)
+           .badge(totalBadge)
+           .sound('defauld').send(function(err){
+            if (!err) {console.log('success');}
+            console.log(err);
+          });
+        });
       }
     }); 
   });
