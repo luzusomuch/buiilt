@@ -1,9 +1,17 @@
-<div class="col s3">
-  <a class="btn-large col s12" ui-sref="projects.create" data-activates="createNew" data-gutter="15" >Create New</a>
-</div>
-<div class="col s9">
-  <ul class="collection z-depth-1">
-    <li class="collection-item" ng-repeat="item in projectsByBuilder"><a ui-sref="projects.view({id: item._id})">{{item.name}}</a><span class="new badge">1</span></li>
-    <li class="collection-item" ng-repeat="item in projectsByUser"><a ui-sref="projects.view({id: item._id})">{{item.name}}</a><span class="new badge">1</span></li>
-  </ul>
+<div class="row">
+               
+   <div class="row center" style="margin: 0px;">
+       <h4>Project management made simple.</h4>
+   </div>
+   <div class="row center" style="margin: 0px;">
+       <h5>The one place to organise your entire project team. Distribute information to those who need it, and track the progress of all your project resources.</h5>
+   </div>
+   <div class="row center" style="margin: 0px;">
+       <a class="btn-large" ui-sref="signup">Register Now for Free</a>
+   </div>
+   <div class="row center">
+       <img src="../../media/old-and-new.png" style="width: 80%; margin: auto"></img>
+   </div>
+   
+   
 </div>
