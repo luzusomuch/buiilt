@@ -25,19 +25,18 @@ angular.module('buiiltApp')
     $scope.showTenders = true;
   };
 
-  $("div.showTenderDetail").css("display","none");
   $scope.viewTenderDetail = function(tender){
     $scope.viewMessages = true;
     $scope.tender = tender;
-    $("div.tenderLists").toggle("slide");
-    $("div.showTenderDetail").css("display","block");
+    $("div.tenderLists").hide();
+    $("div.showTenderDetail").show("slide", { direction: "right" }, 500);
   };
 
   $scope.backToList = function(){
+    $scope.viewMessages = false;
     $scope.tender = {};
-    $("div.tenderLists").toggle("slide");
-    $("div.tenderLists").css("display","block");
-    $("div.showTenderDetail").css("display","none");
+    $("div.showTenderDetail").hide();
+    $("div.tenderLists").show("slide", { direction: "left" }, 500);
   };
 
   $scope.emailsPhone = [];

@@ -29,19 +29,17 @@ angular.module('buiiltApp')
     $scope.showQuotes = true;
   };
 
-  $("div.showQuoteDetail").css("display","none");
   $scope.viewQuoteDetail = function(quote){
     // $scope.viewMessages = true;
     $scope.quote = quote;
-    $("div.quotesList").toggle("slide");
-    $("div.showQuoteDetail").css("display","block");
+    $("div.quotesList").hide();
+    $("div.showQuoteDetail").show("slide", { direction: "right" }, 500);
   };
 
   $scope.backToList = function(){
     $scope.quote = {};
-    $("div.quotesList").toggle("slide");
-    $("div.quotesList").css("display","block");
-    $("div.showQuoteDetail").css("display","none");
+    $("div.showQuoteDetail").hide();
+    $("div.quotesList").show("slide", { direction: "right" }, 500);
   };
 
   $scope.quoteRequest = {};

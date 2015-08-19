@@ -5,17 +5,10 @@
     </div>
   </div>
 
-  <div ng-if="showThreadDetail" class="row collection-header" style="margin-bottom:0px;">
-   <div class="col s12" style="font-size: 12px">
-     <a ng-click="backToThreadsList()" href="#" style="padding: 5px;">&lt; BACK TO THREADS</a>
-     <div class="right">
-       <a ng-click="editThread(currentThread)" href="#modal_editThread" class="modal-trigger" style="padding: 5px;">EDIT THREAD</a>
-     </div>
-   </div>
-  </div>
+  
          
-  <div style="height: {{contentHeight - 15}}px; overflow-x: hidden; overflow-y: auto; background-color:White;">
-    <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-if="showThreadsList" class="collection-item row" ng-repeat="thread in threads">
+  <div id="threadsList" style="height: {{contentHeight - 15}}px; overflow-x: hidden; overflow-y: auto; background-color:White;">
+    <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row " ng-repeat="thread in threads">
       <div class="col s12">
         <div style="cursor:pointer" ng-click="goToThreadDetail(thread)">#{{$index + 1}} - {{thread.name}}</div>
       </div>
@@ -27,8 +20,18 @@
         </div>
       </div>
     </div>
+  </div>
 
-    <div ng-if="showThreadDetail" class="threadDetail" scroll-to-bottom="currentThread.messages" style="height: {{messageScreenHeight}}px; overflow-y:auto">
+  <div id="threadDetail" style="height: {{contentHeight - 15}}px; overflow-x: hidden; overflow-y: auto; background-color:White; display:none">
+    <div class="row collection-header" style="margin-bottom:0px;">
+     <div class="col s12" style="font-size: 12px">
+       <a ng-click="backToThreadsList()" href="#" style="padding: 5px;">&lt; BACK TO THREADS</a>
+       <div class="right">
+         <a ng-click="editThread(currentThread)" href="#modal_editThread" class="modal-trigger" style="padding: 5px;">EDIT THREAD</a>
+       </div>
+     </div>
+    </div>
+    <div class="" scroll-to-bottom="currentThread.messages" style="height: {{messageScreenHeight - 40}}px; overflow-y:auto">
       <div class="row message-row" style="font-size: 13px; margin: 12px; border-radius: 3px;" ng-style="backgroundColor" ng-repeat="message in currentThread.messages">
        <div class="col s12">
          <p>{{message.text}} - <strong>From {{(message.user._id == currentUser._id) ? "Me" : message.user.firstName +" "+ message.user.lastName}}</strong></p>

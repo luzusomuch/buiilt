@@ -202,16 +202,15 @@ angular.module('buiiltApp')
   $scope.getFileDetail = function(file){
     $scope.isShowFileDetail = true;
     $scope.file = file;
-    $("div.notShowFileDetail").toggle("slide");
-    $("div.showFileDetail").css("display","block");
+    $("div.notShowFileDetail").hide();
+    $("div.showFileDetail").show("slide", { direction: "right" }, 500);
   };
 
   $scope.backToList = function(){
     $scope.isShowFileDetail = false;
     $scope.file = {};
-    $("div.notShowFileDetail").toggle("slide");
-    $("div.notShowFileDetail").css("display","block");
-    $("div.showFileDetail").css("display","none");
+    $("div.showFileDetail").hide();
+    $("div.notShowFileDetail").show("slide", { direction: "left" }, 500);
   };
 
   $scope.likeDocument = function(value) {

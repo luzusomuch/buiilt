@@ -583,7 +583,7 @@
   </div>
 </div>
   <!-- show overview -->
-  <div ng-hide="type == 'builder' || type == 'staff'" ng-if="isShowOverView" style="height: {{contentHeight + 25}}px; overflow-y: auto; background-color: white; overflow-x: hidden;">
+  <div ng-hide="type == 'builder' || type == 'staff'" ng-if="isShowOverView" style="height: {{contentHeight + 10}}px; overflow-y: auto; background-color: white; overflow-x: hidden;">
     <div class="col s12">
       <ul class="collapsible" data-collapsible="accordion">
         <li class="active">
@@ -611,7 +611,7 @@
     </div>
   </div>
 
-  <div ng-show="type == 'builder' || type == 'staff'" ng-if="isShowOverView" style="height: {{contentHeight + 25}}px; overflow-y: auto; background-color: white; overflow-x: hidden;">
+  <div ng-show="type == 'builder' || type == 'staff'" ng-if="isShowOverView" style="height: {{contentHeight + 10}}px; overflow-y: auto; background-color: white; overflow-x: hidden;">
     <div class="col s12">
       <ul class="collapsible" data-collapsible="accordion">
         <li class="active">
@@ -650,7 +650,7 @@
          </div>
        </div>
      </div>
-     <div  style="height: {{contentHeight - 15}}px; overflow-x:hidden; overflow-y: auto; background-color: white;">
+     <div  style="height: {{contentHeight - 29}}px; overflow-x:hidden; overflow-y: auto; background-color: white;">
        <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="task in tasks | taskFilter : filter">
          <div class="col s12">
            <div ng-click="showTaskDetail(task)"><input type="checkbox" id="complete" /><label style="color: black" for="complete">{{task.name}}</label></div>
@@ -680,7 +680,7 @@
          </div>
        </div>
       </div>
-      <div  style="height: {{contentHeight - 15}}px; overflow-x: hidden; overflow-y: auto; background-color: white;">
+      <div  style="height: {{contentHeight - 29}}px; overflow-x: hidden; overflow-y: auto; background-color: white;">
        <div class="collection-item row">
          <div class="col s12">
            <p>{{task.name}} - {{task.description}}</p>
@@ -705,7 +705,7 @@
        </div>
      </div>
     </div>
-    <div style="height: {{contentHeight - 15}}px; overflow-x:hidden; overflow-y: auto; background-color: white;">
+    <div style="height: {{contentHeight - 29}}px; overflow-x:hidden; overflow-y: auto; background-color: white;">
      <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="variation in package.variations">
        <div class="col s12">
          <div style="cursor:pointer" ng-click="goToVariation(variation)">{{variation.name}}</div>
@@ -716,7 +716,7 @@
 
   <!-- list of documents -->
   <div ng-if="isShowDocuments">
-    <div ng-if="showListDocuments" class="documentsList">
+    <div class="documentsList">
       <div class="row collection-header" style="margin-bottom:0px;">
        <div class="col s12">
          <div style="font-size: 12px;">
@@ -729,10 +729,10 @@
          </div>
        </div>
       </div>
-      <div  style="height: {{contentHeight - 15}}px; overflow-x:hidden; overflow-y: auto; background-color: white;">
-        <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="document in documents | filter: documentFilter">
+      <div  style="height: {{contentHeight - 29}}px; overflow-x:hidden; overflow-y: auto; background-color: white;">
+        <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="document in documents | filter: documentFilter" ng-click="goToDocumentDetail(document)" style="cursor: pointer">
          <div class="col s12">
-           <div ng-click="goToDocumentDetail(document)">{{document.title}}</div>
+           <div>{{document.title}}</div>
          </div>
          <div class="col s12">
            <div style="font-size:12px;">{{document.description}}</div>
@@ -741,7 +741,7 @@
       </div>
     </div>
     <!-- document detail -->
-    <div ng-if="showDocumentDetail" class="documentDetail">
+    <div class="documentDetail" style="display:none">
       <div class="row collection-header" style="margin-bottom:0px;">
        <div class="col s12">
          <div style="font-size: 12px;">
@@ -752,7 +752,7 @@
          </div>
        </div>
       </div>
-      <div  style="height: {{contentHeight - 15}}px; overflow-x:hidden; overflow-y: auto; background-color: white;">
+      <div  style="height: {{contentHeight - 29}}px; overflow-x:hidden; overflow-y: auto; background-color: white;">
         <div class="collection-item row">
           <p>{{document.title}}</p>
           <p>{{document.description}}</p>

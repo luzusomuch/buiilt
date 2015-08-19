@@ -18,7 +18,7 @@
              <a class="modal-trigger" href="#modal_attachAddendum" style="padding: 5px;">ATTACH ADDENDUM</a>
           </div>
         </div>
-        <div style="height: {{contentHeight - 10}}px; overflow-y: auto; background-color: white; overflow-x: hidden">
+        <div style="height: {{contentHeight - 30}}px; overflow-y: auto; background-color: white; overflow-x: hidden">
           <div class="" style="padding: 10px">
             <ul class="collapsible" data-collapsible="accordion">
               <li class="active">
@@ -52,7 +52,7 @@
             <a class="modal-trigger" href="#modal_inviteContractor" style="padding: 5px;">INVITE ANOTHER TENDERER</a>
           </div>
         </div>
-        <div style="height: {{contentHeight -10}}px; overflow-y: auto; background-color: white; overflow-x: hidden">
+        <div style="height: {{contentHeight -30}}px; overflow-y: auto; background-color: white; overflow-x: hidden">
           <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="tender in contractorRequest.to | filter: {isDecline:false}">
              <div class="col s9">
                <div><a ng-click="viewTenderDetail(tender)" href="#">{{tender.email}}</a></div>
@@ -71,7 +71,7 @@
         </div>
       </div>
 
-      <div class="showTenderDetail">
+      <div class="showTenderDetail" style="display:none">
         <div class="row collection-header" style="margin-bottom:0px;">
           <div class="col s12" style="font-size:12px">
             <a class="backToTendersList" href="#!" ng-click="backToList()" style="margin-left:30px; padding: 5px;">&lt; BACK TO TENDERS</a>
@@ -82,7 +82,7 @@
             </div>
           </div>
         </div>
-        <div  style="height: {{contentHeight -10}}px; overflow-y: auto; background-color: white; overflow-x: hidden">
+        <div  style="height: {{contentHeight -30}}px; overflow-y: auto; background-color: white; overflow-x: hidden">
           <div class="collection-item row" ng-repeat="quote in tender.quoteDocument">
              <div class="col s9" ng-if="$last">
                <div>
@@ -102,7 +102,7 @@
   <div class="col s4">
     <div class="collection with-header">
          
-      <div style="height: {{contentHeight + 85}}px; overflow-y: auto; background-color:#fafafa; overflow-x: hidden" class="">
+      <div style="height: {{contentHeight + 65}}px; overflow-y: auto; background-color:#fafafa; overflow-x: hidden" class="" scroll-to-bottom="contractorRequest.messages">
         <div ng-if="viewMessages && message.to == tender._id" ng-repeat="message in contractorRequest.messages" class="row" style="font-size: 13px; margin: 12px; background-color: #eee; border-radius: 3px;">
           <div class="col s12">
             <p>{{message.message}} - <strong>From {{(currentTeam._id == message.sendBy._id) ? "Me" : message.sendBy.name}}</strong></p>

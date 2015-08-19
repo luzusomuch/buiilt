@@ -33,12 +33,10 @@ angular.module('buiiltApp')
           $scope.submitted = false;
           $scope.isNew = true;
 
-          $scope.showThreadsList = true;
-          $scope.showThreadDetail = false;
           $scope.backToThreadsList = function(){
             $scope.thread = {};
-            $scope.showThreadsList = true;
-            $scope.showThreadDetail = false;
+            $("div#threadDetail").hide();
+            $("div#threadsList").show("slide", { direction: "left" }, 500);
           };
           $scope.goToThreadDetail = function(thread) {
             $scope.currentThread = thread;
@@ -50,8 +48,8 @@ angular.module('buiiltApp')
                 $scope.backgroundColor = {'background-color':'#BBDEFB'}
               }
             });
-            $scope.showThreadsList = false;
-            $scope.showThreadDetail = true;
+            $("div#threadsList").hide();
+            $("div#threadDetail").show("slide", { direction: "right" }, 500);
           };
 
           //Get Available assignee to assign to task
@@ -267,6 +265,8 @@ angular.module('buiiltApp')
               }
             }
           };
+
+
         }
     }
   });

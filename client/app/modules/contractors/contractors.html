@@ -77,7 +77,7 @@
          </div>
        </div>
      </div>
-     <div  style="height: {{contentHeight}}px; overflow-y: auto; background-color: white; overflow-x: hidden;">
+     <div  style="height: {{contentHeight -30}}px; overflow-y: auto; background-color: white; overflow-x: hidden;">
        <div ng-show="currentTeam.type == 'builder' || contractorPackage.isContractor" ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="contractorPackage in contractorPackages | filter: filter" style="cursor:pointer" ng-click="goToContractorPackageRequest(contractorPackage)">
          <div class="col s9" ng-if="currentTeam.type == 'builder'">{{contractorPackage.name}}</div>
          <div class="col s9" ng-if="currentTeam.type == 'contractor' && contractorPackage.isContractor">{{contractorPackage.name}}</div>

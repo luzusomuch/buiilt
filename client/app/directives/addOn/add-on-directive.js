@@ -286,17 +286,15 @@ angular.module('buiiltApp').directive('addon', function(){
             });
 
             //documents list and document detail
-            $scope.showListDocuments = true;
-            $scope.showDocumentDetail = false;
             $scope.backToDocumentsList = function(){
               $scope.document = {};
-              $scope.showListDocuments = true;
-              $scope.showDocumentDetail = false;
+              $("div.documentDetail").hide();
+              $("div.documentsList").show("slide", { direction: "left" }, 500);
             };
             $scope.goToDocumentDetail = function(document) {
               $scope.document = document;
-              $scope.showListDocuments = false;
-              $scope.showDocumentDetail = true;
+              $("div.documentsList").hide();
+              $("div.documentDetail").show("slide", { direction: "right" }, 500);
             }
 
             $scope.isShowOverView = true;

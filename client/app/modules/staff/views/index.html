@@ -60,7 +60,7 @@
          </div>
        </div>
      </div>
-     <div  style="height: {{contentHeight}}px; overflow-y: auto; background-color: white; overflow-x:hidden;">
+     <div  style="height: {{contentHeight -30}}px; overflow-y: auto; background-color: white; overflow-x:hidden;">
        <div style="cursor:pointer;" ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="item in staffPackages | filter: filter" ng-click="goToStaffPacakgeDetail(item)">
          <div class="col s9" ng-show="item.canSee || isLeader">{{item.name}}
            <!-- <div>

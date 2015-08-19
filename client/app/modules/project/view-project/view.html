@@ -57,7 +57,7 @@
                </div>
            </div>
        </div>
-       <div class="notShowFileDetail" style="height: {{contentHeight}}px; overflow-y: auto; background-color: white; overflow-x: hidden">
+       <div class="notShowFileDetail" style="height: {{contentHeight -15}}px; overflow-y: auto; background-color: white; overflow-x: hidden">
             <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-if="!hasFilter" class="collection-item row" ng-repeat="file in files" ng-click="getFileDetail(file)" style="cursor:pointer">
                 <div class="col s10"> {{file.title}}</div>
                 <!-- <div class="col s2"><a><i  class="material-icons" style="color:black">remove_red_eye</i></a></div> -->
@@ -92,7 +92,7 @@
            </div>
          </div>
        </div>
-       <div style="height: {{contentHeight}}px; overflow-y: auto; background-color: white; display: none; overflow-x: hidden" class="valign-wrapper showFileDetail">
+       <div style="height: {{contentHeight -15}}px; overflow-y: auto; background-color: white; display: none; overflow-x: hidden" class="valign-wrapper showFileDetail">
           <div class="col s8 offset-s2 center valign" ng-switch="file.mimeType">
             <span ng-switch-when="image/jpeg">
               <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}-{{file.title}}.jpg" alt="">
