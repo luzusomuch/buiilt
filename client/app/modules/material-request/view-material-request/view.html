@@ -19,21 +19,30 @@
           </div>
         </div>
         <div style="height: {{contentHeight -10}}px; overflow-y: auto; background-color: white;">
-          <div class="" style="padding: 10px">
-            <h5>{{materialRequest.name}} detail: </h5>
-            <strong>Start date</strong>: {{materialRequest.dateStart | date: longDate}}
-            <table>
-              <thead>
-                <th>Description</th>
-              </thead>
-              <tbody>
-                <tr ng-repeat="addendum in materialRequest.addendums | filter:{isHidden:false}">
-                  <td>{{addendum.addendumsScope.description}}</td>
-                  <td>{{addendum.addendumsScope.quantity}}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          <ul class="collapsible" data-collapsible="accordion">
+            <li class="active">
+              <div class="collapsible-header active"><i class=""></i>Details</div>
+              <div class="collapsible-body" style="background-color: #FFF; padding:10px">
+                <strong>Start date</strong>: {{materialRequest.dateStart | date: longDate}}
+                <table class="bordered centered">
+                  <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Scope of works</th>
+                    <th>Quantity</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr ng-repeat="addendum in materialRequest.addendums | filter:{isHidden:false}">
+                    <td>{{$index + 1}}</td>
+                    <td>{{addendum.addendumsScope.description}}</td>
+                    <td>{{addendum.addendumsScope.quantity}}</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
 

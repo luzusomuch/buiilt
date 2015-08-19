@@ -583,11 +583,39 @@
   </div>
 </div>
   <!-- show overview -->
-  <div ng-if="isShowOverView" style="height: {{contentHeight + 25}}px; overflow-y: auto; background-color: white; overflow-x: hidden;">
+  <div ng-hide="type == 'builder' || type == 'staff'" ng-if="isShowOverView" style="height: {{contentHeight + 25}}px; overflow-y: auto; background-color: white; overflow-x: hidden;">
     <div class="col s12">
       <ul class="collapsible" data-collapsible="accordion">
-        <li>
-          <div class="collapsible-header"><i class=""></i>Details</div>
+        <li class="active">
+          <div class="collapsible-header active"><i class=""></i>Details</div>
+          <div class="collapsible-body" style="background-color: #FFF; padding:10px">
+            <table class="bordered centered">
+              <thead>
+              <tr>
+                <th>#</th>
+                <th>Scope of works</th>
+                <th ng-show="type == 'material'">Quantity</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr ng-repeat="addendum in package.addendums | filter:{isHidden:false}">
+                <td>{{$index + 1}}</td>
+                <td>{{addendum.addendumsScope.description}}</td>
+                <td ng-show="type == 'material'">{{addendum.addendumsScope.quantity}}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div ng-show="type == 'builder' || type == 'staff'" ng-if="isShowOverView" style="height: {{contentHeight + 25}}px; overflow-y: auto; background-color: white; overflow-x: hidden;">
+    <div class="col s12">
+      <ul class="collapsible" data-collapsible="accordion">
+        <li class="active">
+          <div class="collapsible-header active"><i class=""></i>Details</div>
           <div class="collapsible-body" style="background-color: #FFF; padding:10px">
             <table class="bordered centered">
               <thead>
@@ -597,9 +625,9 @@
               </tr>
               </thead>
               <tbody>
-              <tr ng-repeat="addendum in package.addendums | filter:{isHidden:false}">
+              <tr ng-repeat="description in package.descriptions">
                 <td>{{$index + 1}}</td>
-                <td>{{addendum.addendumsScope.description}}</td>
+                <td>{{description}}</td>
               </tr>
               </tbody>
             </table>

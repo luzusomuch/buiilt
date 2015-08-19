@@ -128,6 +128,7 @@ angular.module('buiiltApp')
                 task.isOwner = (_.findIndex(task.assignees,{_id : $scope.currentUser._id}) != -1) || (task.user == $scope.currentUser._id);
                 task.dateEnd = (task.dateEnd) ? new Date(task.dateEnd) : null;
               })
+
             });
         };
 
@@ -221,7 +222,7 @@ angular.module('buiiltApp')
             }
 
           }
-        }
+        };
       }
   }
 });
