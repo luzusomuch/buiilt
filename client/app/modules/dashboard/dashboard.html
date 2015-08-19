@@ -17,7 +17,7 @@
    <div  style="height: {{contentHeight + 85}}px; overflow-x:hidden; overflow-y: auto; background-color: white;">
      
      <!-- List of tasks -->
-    <div ng-if="currentList == 'tasks' && !showDetailOfTask" class="collection-item row" ng-repeat="task in myTasks | orderBy : ['dateEnd']">
+    <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-if="currentList == 'tasks' && !showDetailOfTask" class="collection-item row" ng-repeat="task in myTasks | orderBy : ['dateEnd']">
       <div class="col s12">
         <div>
           <input ng-if="!task.completed" type="checkbox" id="complete" />
@@ -118,7 +118,7 @@
      
      
      <!-- Threads list -->
-    <div ng-if="currentList == 'chats'" class="collection-item row" ng-repeat="thread in myThreads">
+    <div ng-if="currentList == 'chats'" class="collection-item row" ng-repeat="thread in myThreads" ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)">
        <div class="col s12">
          <div>
            <a ng-click="showChat(thread,$index)" ng-if="thread.type == 'builder'"
@@ -157,16 +157,102 @@
     </div>
 
     <!-- list of documents -->
-    <div ng-if="currentList == 'docs'" class="collection-item row" ng-repeat="file in myFiles | unique: file">
-       <div class="col s12" style="cursor:pointer">
-         <div ng-click="goToDocument(file)">{{file.element.file.title}}</div>
+    <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-if="currentList == 'docs'" class="documentsList collection-item row" ng-repeat="file in myFiles | unique: file" ng-click="goToDocumentDetail(file)" style="cursor:pointer">
+       <div class="col s12">
+         <div>{{file.element.file.title}}</div>
        </div>
        <div class="col s12">
          <div style="font-size:12px;">{{file.element.file.description}}</div>
        </div>
     </div>
+
+    <!-- show document detail  -->
+    <div class="documentDetail" style="display:none; margin-top:10px;">
+      <div class="row collection-header" style="margin-bottom:0px;">
+       <div class="col s12">
+         <div style="font-size: 12px;">
+           <a ng-click="backToDocumentsList()" style="margin-left:30px; padding: 5px;">&lt; BACK TO DOCUMENTS</a>
+           <div class="right">
+             <a ng-click="goToDocument(document)" href="#" class="" style="padding: 5px;">GO TO DOCUMENT</a>
+             <a href="{{document.fileUrl}}" download="{{document.title}}" class="" style="padding: 5px;">DOWNLOAD</a>
+           </div>
+         </div>
+       </div>
+      </div>
+      <div  style="height: {{contentHeight - 29}}px; overflow-x:hidden; overflow-y: auto; background-color: white;">
+        <div class="collection-item row">
+          <p>{{document.title}}</p>
+          <p>{{document.description}}</p>
+        </div>
+        <div class="row center" ng-switch="document.mimeType">
+          <span ng-switch-when="image/jpeg">
+              <img class="materialboxed" width="70%" src="../../media/files/{{document._id}}-{{document.title}}.jpg" alt="">
+            </span>
+            <span ng-switch-when="image/png">
+              <img class="materialboxed" width="70%" src="../../media/files/{{document._id}}-{{document.title}}.jpg" alt="">
+            </span>
+            <span ng-switch-when="application/pdf">
+              <img class="materialboxed" width="70%" src="../../media/files/{{document._id}}-{{document.title}}.jpg" alt="">
+            </span>
+            <span ng-switch-default>
+              <img class="materialboxed" width="70%" src="../../media/sample-1.jpg" alt="">
+            </span>
+        </div>
+      </div>
+    </div>
    </div>
  </div>
+</div>
+
+<div id="modal-edit-task" class="modal modal-fixed-footer">
+  <form name="form" class="col s12" ng-submit="save(form)">
+  <div class="modal-content">
+    <div class="row">
+      <div class="input-field col s12">
+        <input id="task_description" type="text" ng-model="task.name" name="name" maxlength="80"
+               ng-class="{'invalid' : form.name.$invalid && submitted}" ng-disabled="isShow">
+        <label for="task_description">Task</label>
+        <p class="validate-message" ng-show="form.name.$error.required && submitted">Task name is required</p>
+      </div>
+      <div class="input-field col s12">
+        <input type="text"
+               name="created"
+               id="dueDate"
+               ng-model="task.dateEnd"
+               format="mm/dd/yyyy"
+               ng-disabled="isShow"
+               datepicker
+          />
+        <label for="dueDate" class="active">Due date</label>
+      </div>
+    </div>
+
+    <div class="row current-assign">
+      <p style="">Current Assignee's:</p>
+      <div class="card col"  ng-if="!isShow"  style="padding: 5px; margin-left: 10px" ng-repeat="assignee in task.assignees" ng-class="{'admin' : assignee.team.role == 'admin'}">
+        {{assignee | name}} <span ng-if="assignee.canRevoke"><a href="#!" ng-click="revoke(assignee,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
+      </div>
+      <div class="card col"  ng-if="isShow"  style="padding: 5px; margin-left: 10px" ng-repeat="assignee in task.assignees" ng-class="{'admin' : assignee.team.role == 'admin'}">
+        {{assignee | name}}
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="row available-assign"  ng-if="!isShow" >
+      <p style="">Available Assignee's:</p>
+      <a href="#!" ng-click="assign(staff,$index)" ng-repeat="staff in available track by $index">
+        <div class="card col" style="padding: 5px; margin-left: 10px"  ng-class="{'admin' : staff.team.role == 'admin'}">
+          {{staff | name}}
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="modal-footer" style="margin-left: -12px">
+    <button type="submit" class="modal-action modal-close waves-effect waves-green btn-flat ">Save!</button>
+    <button type="button" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</button>
+  </div>
+  </form>
 </div>
 
 <!-- <div class="col s12" style="margin-top: -10px;">

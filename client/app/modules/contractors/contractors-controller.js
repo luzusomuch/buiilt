@@ -163,6 +163,10 @@ angular.module('buiiltApp').controller('ContractorsCtrl',
             // else {
             //   $state.go('contractorRequest.contractorPackageInProcess',{id : data.project, packageId : data._id});
             // }
+            data.tasks = {};
+            data.threads = {};
+            data.files = {};
+            $scope.contractorPackages.push(data);
             $('#newContractorPackage').closeModal();
           });
       }

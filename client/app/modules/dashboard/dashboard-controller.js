@@ -13,6 +13,24 @@ angular.module('buiiltApp')
     $scope.currentList = 'tasks';
     $scope.currentThread = {};
 
+    $scope.activeHover = function($event){
+        angular.element($event.currentTarget).addClass("item-hover")
+    };
+    $scope.removeHover = function($event) {
+        angular.element($event.currentTarget).removeClass("item-hover")
+    };
+
+    $scope.backToDocumentsList = function(){
+      $scope.document = {};
+      $("div.documentDetail").hide();
+      $("div.documentsList").show("slide", { direction: "left" }, 500);
+    };
+    $scope.goToDocumentDetail = function(document) {
+      $scope.document = document;
+      $("div.documentsList").hide();
+      $("div.documentDetail").show("slide", { direction: "right" }, 500);
+    }
+
     var getAvailableAssignee = function($package,type) {
       switch(type) {
         case 'builder' :
