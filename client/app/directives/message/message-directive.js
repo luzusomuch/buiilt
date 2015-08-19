@@ -162,7 +162,16 @@ angular.module('buiiltApp')
                     thread.canSee = false;
                     thread.isOwner = false
                   }
+                  _.each(thread.users, function(user){
+                      if (user.team._id.toString() == $scope.currentTeam._id.toString()) {
+                        thread.isBelongToCurrentTeam = true;
+                      }
+                      else {
+                        thread.isBelongToCurrentTeam = false;
+                      }
+                    });
                 });
+                console.log($scope.threads);
                 if ($scope.currentThread) {
                   $scope.currentThread = _.find($scope.threads,{_id : $scope.currentThread._id});
                 }

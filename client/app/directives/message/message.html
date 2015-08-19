@@ -8,7 +8,7 @@
   
          
   <div id="threadsList" style="height: {{contentHeight - 15}}px; overflow-x: hidden; overflow-y: auto; background-color:White;">
-    <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row " ng-repeat="thread in threads">
+    <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row " ng-repeat="thread in threads | filter: {isBelongToCurrentTeam : true}">
       <div class="col s12">
         <div style="cursor:pointer" ng-click="goToThreadDetail(thread)">#{{$index + 1}} - {{thread.name}}</div>
       </div>
