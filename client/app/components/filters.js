@@ -95,16 +95,16 @@ angular.module('buiiltApp')
     var filtered = [];
     angular.forEach(items, function(item) {
       if (filterType == 'all') {
-        if (!item.completed) {
+        if (!item.completed && item.isBelongToCurrentTeam) {
           filtered.push(item);
         }
       } else if (filterType == 'completed') {
-        if (item.completed) {
+        if (item.completed && item.isBelongToCurrentTeam) {
           filtered.push(item);
         }
       } else {
         if (_.find(item.assignees,{_id : filterType.myTask})) {
-          if (!item.completed) {
+          if (!item.completed && item.isBelongToCurrentTeam) {
             filtered.push(item);
           }
         }

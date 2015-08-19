@@ -124,7 +124,11 @@ angular.module('buiiltApp')
       }
     };
 
+    $scope.showDetailOfTask = false;
     $scope.showTask = function(task) {
+      console.log(task);
+      $scope.task = task;
+      $scope.showDetailOfTask = true;
       $scope.isShow = true;
       $scope.available = [];
       getAvailableAssignee(task.package,task.type);
@@ -132,6 +136,11 @@ angular.module('buiiltApp')
         item.canRevoke = (_.find($scope.available,{_id : item._id}));
         _.remove($scope.available,{_id : item._id});
       });
+    };
+
+    $scope.backToTaskList = function(){
+      $scope.task = {};
+      $scope.showDetailOfTask = false;
     };
 
     $scope.editTask = function(task) {

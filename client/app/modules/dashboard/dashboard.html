@@ -17,14 +17,14 @@
    <div  style="height: {{contentHeight + 85}}px; overflow-x:hidden; overflow-y: auto; background-color: white;">
      
      <!-- List of tasks -->
-    <div ng-if="currentList == 'tasks'" class="collection-item row" ng-repeat="task in myTasks | orderBy : ['dateEnd']">
+    <div ng-if="currentList == 'tasks' && !showDetailOfTask" class="collection-item row" ng-repeat="task in myTasks | orderBy : ['dateEnd']">
       <div class="col s12">
         <div>
           <input ng-if="!task.completed" type="checkbox" id="complete" />
           <input ng-if="task.completed" checked="true" type="checkbox" id="complete" />
 
-          <label style="color: black" for="complete">
-            <a click="showTask(task)" ng-if="task.type == 'builder'"
+          <label style="color: black" for="complete" ng-click="showTask(task)">{{task.name}}
+            <!-- <a click="showTask(task)" ng-if="task.type == 'builder'"
                ui-sref="client({id : task.project})"
                class="btn-flat secondary-content new badge col s2" style="font-size: 12px;">
               {{task.name}}
@@ -49,7 +49,7 @@
                class="btn-flat secondary-content new badge col s2" style="font-size: 12px;">
               {{task.name}}
             </a>
-          </label>
+          </label> -->
         </div>
      </div>
      <div class="col s12">
@@ -57,6 +57,62 @@
           <span>Due date: {{task.dateEnd | date: longDate}}</span> - Assignees: <span ng-repeat="assignee in task.assignees">
               {{(assignee.lastName) ? assignee.firstName +" "+ assignee.lastName : assignee.email}},</span>
         </div>
+     </div>
+    </div>
+
+    <!-- Show task detail -->
+    <div ng-show="showDetailOfTask" class="taskDetail" style="padding: 16px;">
+      <div class="row collection-header" style="margin-bottom:0px;">
+       <div class="col s12">
+         <div class="" style="font-size: 12px;">
+           <a href="#" ng-click="backToTaskList()" style="margin-left:30px; padding: 5px;">&lt; BACK TO TASKS</a>
+
+            <div class="right">
+              <a ng-if="task.type == 'builder'"
+               ui-sref="client({id : task.project})"
+               class="" style="font-size: 12px; padding:5px">
+              GO TO TASK
+              </a>
+              <a ng-if="task.type == 'contractor'"
+               ui-sref="contractorRequest.contractorPackageInProcess({id : task.project, packageId : task.package._id})"
+               class="" style="font-size: 12px;padding:5px">
+              GO TO TASK
+              </a>
+              <a ng-if="task.type == 'staff'"
+               ui-sref="staff.view({id : task.project, packageId : task.package._id})"
+               class="" style="font-size: 12px; padding:5px">
+              GO TO TASK
+              </a>
+              <a ng-if="task.type == 'material'"
+               ui-sref="materialRequest.materialPackageInProcess({id : task.project, packageId : task.package._id})"
+               class="" style="font-size: 12px; padding:5px">
+              GO TO TASK
+              </a>
+              <a ng-if="task.type == 'variation'"
+               ui-sref="variationRequest.inProcess({id : task.project, variationId : task.package._id})"
+               class="" style="font-size: 12px; padding:5px">
+              GO TO TASK
+              </a>
+
+             <a ng-click="editTask(task)" class="modal-trigger" href="#modal-edit-task" style="padding: 5px;">EDIT TASK</a>
+             <a ng-if="!task.completed" href="#" ng-click="(!task.isOwner && !isLeader) || complete(task)" style="padding: 5px;">MARK COMPLETE</a>
+             <a ng-if="task.completed" href="#" ng-click="(!task.isOwner && !isLeader) || complete(task)" style="padding: 5px;">RE-OPEN TASK</a>
+           </div>
+         </div>
+       </div>
+      </div>
+      <div  style="height: {{contentHeight - 29}}px; overflow-x: hidden; overflow-y: auto; background-color: white;">
+       <div class="collection-item row">
+         <div class="col s12">
+           <p>{{task.name}} - {{task.description}}</p>
+           <p>Due Date: {{task.dateEnd | date: longDate}}</p>
+         </div>
+         <div class="col s12">
+           <div class="col card" style="font-size:12px; background-color: white; padding: 8px; border-radius: 3px" ng-repeat="assignee in task.assignees">
+             {{(assignee.lastName) ? assignee.firstName +" "+ assignee.lastName : assignee.email}}
+           </div>  
+         </div>
+       </div>
      </div>
     </div>
      
