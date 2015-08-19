@@ -58,21 +58,25 @@
            </div>
        </div>
        <div class="notShowFileDetail" style="height: {{contentHeight}}px; overflow-y: auto; background-color: white; overflow-x: hidden">
-            <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-if="!hasFilter" class="collection-item row" ng-repeat="file in files">
+            <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-if="!hasFilter" class="collection-item row" ng-repeat="file in files" ng-click="getFileDetail(file)" style="cursor:pointer">
                 <div class="col s10"> {{file.title}}</div>
-                <div class="col s2"><a><i ng-click="getFileDetail(file)" class="material-icons" style="color:black">remove_red_eye</i></a></div>
+                <!-- <div class="col s2"><a><i  class="material-icons" style="color:black">remove_red_eye</i></a></div> -->
                 <div class="col s12">
-                    <div style="font-size:12px;">{{file.description}}.</div>
-                    <div style="font-size:12px;">Version {{file.version +1}} - {{file.createdAt | date: longDate}}</div>
+                    <div style="font-size:12px;">
+                      {{file.description}} - Version {{file.version +1}} - {{file.createdAt | date: longDate}}
+                    </div>
+                    <!-- <div style="font-size:12px;"></div> -->
                 </div>
             </div>
 
-            <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-if="hasFilter" class="collection-item row" ng-repeat="file in files | filter: filterValue">
+            <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-if="hasFilter" class="collection-item row" ng-repeat="file in files | filter: filterValue" ng-click="getFileDetail(file)" style="cursor:pointer"> 
                 <div class="col s10"> {{file.title}}</div>
-                <div class="col s2"><a><i ng-click="getFileDetail(file)" class="material-icons" style="color:black">remove_red_eye</i></a></div>
+                <!-- <div class="col s2"><a><i ng-click="getFileDetail(file)" class="material-icons" style="color:black">remove_red_eye</i></a></div> -->
                 <div class="col s12">
-                    <div style="font-size:12px;">{{file.description}}.</div>
-                    <div style="font-size:12px;">Version {{file.version +1}} - {{file.createdAt | date: longDate}}</div>
+                    <div style="font-size:12px;">
+                      {{file.description}} - Version {{file.version +1}} - {{file.createdAt | date: longDate}}
+                    </div>
+                    <!-- <div style="font-size:12px;">Version {{file.version +1}} - {{file.createdAt | date: longDate}}</div> -->
                 </div>
             </div>
        </div>
