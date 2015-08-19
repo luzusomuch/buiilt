@@ -58,7 +58,7 @@ exports.createContractorPackage = function (req, res, next) {
   });
   async.each(req.body.emailsPhone, function(emailPhone, callback) {
     User.findOne({'email': emailPhone.email}, function(err, user) {
-      if (err) {return callback(err);}
+      if (err) {console.log(err);return callback(err);}
       if (!user) {
         to.push({
           email: emailPhone.email,
@@ -86,7 +86,7 @@ exports.createContractorPackage = function (req, res, next) {
     if (err) {return res.send(500,err);}
     else {
       contractorPackage.to = to;
-      if (req.body.contractor.isSkipInTender) {
+      if (req.body.contractor.isSkipInTender == true) {
         contractorPackage.isSkipInTender = req.body.contractor.isSkipInTender;
         var winnerTeam = _.first(to);
         if (winnerTeam._id) {
