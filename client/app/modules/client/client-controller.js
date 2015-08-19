@@ -2,6 +2,7 @@ angular.module('buiiltApp').controller('ClientCtrl', function(messageService,add
 
     $scope.currentProject = $rootScope.currentProject;
     $scope.builderPackage = builderPackage;
+    $scope.currentTeam = team;
     $scope.contentHeight = $rootScope.maximunHeight - $rootScope.headerHeight - $rootScope.footerHeight - 130;
 
     $scope.isShowBuilderPackageDetail = false;
@@ -11,6 +12,21 @@ angular.module('buiiltApp').controller('ClientCtrl', function(messageService,add
         // $("div.builderPackageList").toggle("slide");
         // $("div.builderPackageDetail").css("display","block");
         $state.go("client.view", {id: $scope.builderPackage.project._id});
+    };
+
+    $scope.goToVariationRequest = function(variation) {
+        if ($scope.currentTeam.type == 'homeOwner' && variation.isAccept) {
+            $state.go("variationRequest.inProcess",{id: variation.project, variationId: variation._id});
+        }
+        else if ($scope.currentTeam.type == 'homeOwner' && !variation.isAccept) {
+            $state.go("variationRequest.viewRequest",{id: variation.project, variationId: variation._id});
+        }
+        else if ($scope.currentTeam.type == 'builder' && variation.isAccept) {
+            $state.go("variationRequest.inProcess",{id: variation.project, variationId: variation._id});
+        }
+        else if ($scope.currentTeam.type == 'builder' && !variation.isAccept) {
+            $state.go("variationRequest.sendQuote",{id: variation.project, variationId: variation._id});
+        }
     };
 
     $scope.backToList = function(){
@@ -39,7 +55,7 @@ angular.module('buiiltApp').controller('ClientCtrl', function(messageService,add
     messageService.getByPackage({id: $scope.builderPackage._id, type: 'builder'}).$promise.then(function(threads){
         $scope.builderPackage.threads = threads;
     })
-    $scope.currentTeam = team;
+    
     if ($scope.currentTeam.type == 'contractor' || $scope.currentTeam.type == 'supplier') {
       $state.go('team.manager');
     }

@@ -135,7 +135,11 @@ angular.module('buiiltApp')
                 $('#newWorkPackage').closeModal();
             })
         }
-    }
+    };
+
+    $scope.goToStaffPacakgeDetail = function(staffPackage) {
+        $state.go("staff.view",{packageId : staffPackage._id});
+    };
 
     //Get available user to assign to staff package
     //var getAvailableAssign =  function() {

@@ -173,7 +173,19 @@ angular.module('buiiltApp').controller('ContractorsCtrl',
     };
     $scope.removeHover = function($event) {
       angular.element($event.currentTarget).removeClass("item-hover")
-    }
+    };
+
+    $scope.goToContractorPackageRequest = function(contractorPackage) {
+      if (($scope.currentTeam.type == 'builder' || $scope.currentTeam.type == 'contractor') && contractorPackage.isAccept) {
+        $state.go("contractorRequest.contractorPackageInProcess",{id: contractorPackage.project, packageId: contractorPackage._id});
+      }
+      else if ($scope.currentTeam.type == 'builder' && !contractorPackage.isAccept) {
+        $state.go("contractorRequest.viewContractorRequest",{id: contractorPackage.project, packageId: contractorPackage._id});
+      }
+      else if ($scope.currentTeam.type == 'contractor' && !contractorPackage.isAccept) {
+        $state.go("contractorRequest.sendQuote",{id: contractorPackage.project, packageId: contractorPackage._id});
+      }
+    };
 
 });
 

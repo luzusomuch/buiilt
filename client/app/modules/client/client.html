@@ -97,7 +97,7 @@
         </div>
       </div>
       <div class="builderPackageList" style="height: {{contentHeight}}px; overflow-y: auto; background-color: white; overflow-x: hidden;">
-        <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row">
+        <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" style="cursor:pointer;">
           <div class="col s9" ng-click="goToBuilderPackageDetail()">{{builderPackage.name}} - BUILDER PACKAGE</div>
           <div style="color: #757575">
            <div class="col s1 valign-wrapper">
@@ -116,26 +116,25 @@
         </div>
 
 
-       <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="variation in variations | filter: filter">
-         <div class="col s9">
-           <div>
+       <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="variation in variations | filter: filter" style="cursor:pointer;" ng-click="goToVariationRequest(variation)">
+         <div class="col s9">{{variation.name}}</div>
+           <!-- <div> -->
             <!-- when user is a homeOwner -->
             <!-- variation in process -->
-            <a ng-if="currentTeam.type == 'homeOwner' && variation.isAccept" ui-sref="variationRequest.inProcess({id: variation.project, variationId: variation._id})">{{variation.name}}
-            </a>
+            <!-- <a ng-if="currentTeam.type == 'homeOwner' && variation.isAccept" ui-sref="variationRequest.inProcess({id: variation.project, variationId: variation._id})">{{variation.name}} -->
+            <!-- </a> -->
             <!-- variation in tender -->
-            <a ng-if="currentTeam.type == 'homeOwner' && !variation.isAccept" ui-sref="variationRequest.viewRequest({id: variation.project, variationId: variation._id})">{{variation.name}}
-            </a>
+            <!-- <a ng-if="currentTeam.type == 'homeOwner' && !variation.isAccept" ui-sref="variationRequest.viewRequest({id: variation.project, variationId: variation._id})">{{variation.name}} -->
+            <!-- </a> -->
 
             <!-- when user is a builder -->
             <!-- variation in process -->
-            <a ng-if="currentTeam.type == 'builder' && variation.isAccept" ui-sref="variationRequest.inProcess({id: variation.project, variationId: variation._id})">{{variation.name}}
-            </a>
+            <!-- <a ng-if="currentTeam.type == 'builder' && variation.isAccept" ui-sref="variationRequest.inProcess({id: variation.project, variationId: variation._id})">{{variation.name}} -->
+            <!-- </a> -->
             <!-- variation in tender -->
-            <a ng-if="currentTeam.type == 'builder' && !variation.isAccept" ui-sref="variationRequest.sendQuote({id: variation.project, variationId: variation._id})">{{variation.name}}
-            </a>
-          </div>
-         </div>
+            <!-- <a ng-if="currentTeam.type == 'builder' && !variation.isAccept" ui-sref="variationRequest.sendQuote({id: variation.project, variationId: variation._id})">{{variation.name}} -->
+            <!-- </a> -->
+          <!-- </div> -->
          <div style="color: #757575">
            <div class="col s1 valign-wrapper">
              <div style="font-size:15px;">{{variation.threads.length}}</div>

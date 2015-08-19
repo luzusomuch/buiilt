@@ -78,25 +78,26 @@
        </div>
      </div>
      <div  style="height: {{contentHeight}}px; overflow-y: auto; background-color: white; overflow-x: hidden;">
-       <div ng-show="currentTeam.type == 'builder' || contractorPackage.isContractor" ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="contractorPackage in contractorPackages | filter: filter">
-         <div class="col s9">
-           <div>
+       <div ng-show="currentTeam.type == 'builder' || contractorPackage.isContractor" ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="contractorPackage in contractorPackages | filter: filter" style="cursor:pointer" ng-click="goToContractorPackageRequest(contractorPackage)">
+         <div class="col s9" ng-if="currentTeam.type == 'builder'">{{contractorPackage.name}}</div>
+         <div class="col s9" ng-if="currentTeam.type == 'contractor' && contractorPackage.isContractor">{{contractorPackage.name}}</div>
+           <!-- <div> -->
             <!-- when user is a builder -->
             <!-- package in process -->
-            <a ng-if="(currentTeam.type == 'builder' || currentTeam.type == 'homeOwner') && contractorPackage.isAccept" ui-sref="contractorRequest.contractorPackageInProcess({id: contractorPackage.project, packageId: contractorPackage._id})">{{contractorPackage.name}}
-            </a>
+            <!-- <a ng-if="(currentTeam.type == 'builder' || currentTeam.type == 'homeOwner') && contractorPackage.isAccept" ui-sref="contractorRequest.contractorPackageInProcess({id: contractorPackage.project, packageId: contractorPackage._id})">{{contractorPackage.name}} -->
+            <!-- </a> -->
             <!-- package in tender -->
-            <a ng-if="(currentTeam.type == 'builder' || currentTeam.type == 'homeOwner') && !contractorPackage.isAccept" ui-sref="contractorRequest.viewContractorRequest({id: contractorPackage.project, packageId: contractorPackage._id})">{{contractorPackage.name}}
-            </a>
+            <!-- <a ng-if="(currentTeam.type == 'builder' || currentTeam.type == 'homeOwner') && !contractorPackage.isAccept" ui-sref="contractorRequest.viewContractorRequest({id: contractorPackage.project, packageId: contractorPackage._id})">{{contractorPackage.name}} -->
+            <!-- </a> -->
 
             <!-- when user is a contractor -->
-            <a ng-show="contractorPackage.isContractor" ng-if="currentTeam.type == 'contractor' && contractorPackage.isAccept" ui-sref="contractorRequest.contractorPackageInProcess({id: contractorPackage.project, packageId: contractorPackage._id})">{{contractorPackage.name}}
-            </a>
+            <!-- <a ng-show="contractorPackage.isContractor" ng-if="currentTeam.type == 'contractor' && contractorPackage.isAccept" ui-sref="contractorRequest.contractorPackageInProcess({id: contractorPackage.project, packageId: contractorPackage._id})">{{contractorPackage.name}} -->
+            <!-- </a> -->
             <!-- package in tender -->
-            <a ng-show="contractorPackage.isContractor" ng-if="currentTeam.type == 'contractor' && !contractorPackage.isAccept" ui-sref="contractorRequest.sendQuote({id: contractorPackage.project, packageId: contractorPackage._id})">{{contractorPackage.name}}
-            </a>
-          </div>
-         </div>
+            <!-- <a ng-show="contractorPackage.isContractor" ng-if="currentTeam.type == 'contractor' && !contractorPackage.isAccept" ui-sref="contractorRequest.sendQuote({id: contractorPackage.project, packageId: contractorPackage._id})">{{contractorPackage.name}} -->
+            <!-- </a> -->
+          <!-- </div> -->
+         <!-- </div> -->
          <div style="color: #757575" >
            <div class="col s1 valign-wrapper">
              <div style="font-size:15px;">{{contractorPackage.threads.length}}</div>

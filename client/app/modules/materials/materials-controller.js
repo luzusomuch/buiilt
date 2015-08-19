@@ -184,6 +184,18 @@ angular.module('buiiltApp').controller('MaterialsCtrl',
     };
     $scope.removeHover = function($event) {
         angular.element($event.currentTarget).removeClass("item-hover")
-    }
+    };
+
+    $scope.goToMaterialPackageRequest = function(materialPackage) {
+      if (($scope.currentTeam.type == 'builder' || $scope.currentTeam.type == 'supplier') && materialPackage.isSelect) {
+        $state.go("materialRequest.materialPackageInProcess",{id: materialPackage.project, packageId: materialPackage._id});
+      }
+      else if ($scope.currentTeam.type == 'builder' && !materialPackage.isSelect) {
+        $state.go("materialRequest.viewMaterialRequest",{id: materialPackage.project, packageId: materialPackage._id});
+      }
+      else if ($scope.currentTeam.type == 'supplier' && !materialPackage.isSelect) {
+        $state.go("materialRequest.sendQuote",{id: materialPackage.project, packageId: materialPackage._id});
+      }
+    };
 
   });

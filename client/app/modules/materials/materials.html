@@ -72,25 +72,26 @@
        </div>
      </div>
      <div  style="height: {{contentHeight}}px; overflow-y: auto; background-color: white; overflow-x: hidden;">
-       <div ng-show="currentTeam.type == 'builder' || materialPackage.isSupplier" ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="materialPackage in materialPackages | filter: filter">
-         <div class="col s9">
-           <div>
+       <div ng-show="currentTeam.type == 'builder' || materialPackage.isSupplier" ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="materialPackage in materialPackages | filter: filter" style="cursor:pointer" ng-click="goToMaterialPackageRequest(materialPackage)">
+         <div class="col s9">{{materialPackage.name}}</div>
+         <!-- <div class="col s9" ng-if="currentTeam.type == 'supplier'"></div> -->
+           <!-- <div> -->
             <!-- when user is a builder -->
             <!-- package in process -->
-            <a ng-if="(currentTeam.type == 'builder' || currentTeam.type == 'homeOwner') && materialPackage.isSelect" ui-sref="materialRequest.materialPackageInProcess({id: materialPackage.project, packageId: materialPackage._id})">{{materialPackage.name}}
-            </a>
+            <!-- <a ng-if="(currentTeam.type == 'builder' || currentTeam.type == 'homeOwner') && materialPackage.isSelect" ui-sref="materialRequest.materialPackageInProcess({id: materialPackage.project, packageId: materialPackage._id})">{{materialPackage.name}} -->
+            <!-- </a> -->
             <!-- package in tender -->
-            <a ng-if="(currentTeam.type == 'builder' || currentTeam.type == 'homeOwner') && !materialPackage.isSelect" ui-sref="materialRequest.viewMaterialRequest({id: materialPackage.project, packageId: materialPackage._id})">{{materialPackage.name}}
-            </a>
+            <!-- <a ng-if="(currentTeam.type == 'builder' || currentTeam.type == 'homeOwner') && !materialPackage.isSelect" ui-sref="materialRequest.viewMaterialRequest({id: materialPackage.project, packageId: materialPackage._id})">{{materialPackage.name}} -->
+            <!-- </a> -->
 
             <!-- when user is a contractor -->
-            <a ng-if="currentTeam.type == 'supplier' && materialPackage.isSelect" ui-sref="materialRequest.materialPackageInProcess({id: materialPackage.project, packageId: materialPackage._id})">{{materialPackage.name}}
-            </a>
+            <!-- <a ng-if="currentTeam.type == 'supplier' && materialPackage.isSelect" ui-sref="materialRequest.materialPackageInProcess({id: materialPackage.project, packageId: materialPackage._id})">{{materialPackage.name}} -->
+            <!-- </a> -->
             <!-- package in tender -->
-            <a ng-if="currentTeam.type == 'supplier' && !materialPackage.isSelect" ui-sref="materialRequest.sendQuote({id: materialPackage.project, packageId: materialPackage._id})">{{materialPackage.name}}
-            </a>
-          </div>
-         </div>
+            <!-- <a ng-if="currentTeam.type == 'supplier' && !materialPackage.isSelect" ui-sref="materialRequest.sendQuote({id: materialPackage.project, packageId: materialPackage._id})">{{materialPackage.name}} -->
+            <!-- </a> -->
+          <!-- </div> -->
+         <!-- </div> -->
          <div style="color: #757575">
            <div class="col s1 valign-wrapper">
              <div style="font-size:15px;">{{materialPackage.threads.length}}</div>
