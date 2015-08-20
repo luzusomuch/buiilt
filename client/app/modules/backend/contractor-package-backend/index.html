@@ -11,7 +11,7 @@
                 {{(package.isCompleted) ? "Completed" : "Not complete"}}
             </td>
             <td data-title="'Threads'" sortable="'threads'">
-                <a ui-sref="#">{{package.threads}}</a>
+                <a ui-sref="threadBackend.list">{{package.threads}}</a>
             </td>
             <td data-title="'Documents'" sortable="'documents'">
                 <a ui-sref="documentBackend.list">{{package.documents}}</a>
