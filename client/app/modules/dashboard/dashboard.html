@@ -70,7 +70,7 @@
 
             <div class="right">
               <a ng-if="task.type == 'builder'"
-               ui-sref="client({id : task.project})"
+               ui-sref="client.view({id : task.project})"
                class="" style="font-size: 12px; padding:5px">
               GO TO TASK
               </a>
@@ -164,7 +164,7 @@
          <a ng-click="backToThreadsList()" href="#" style="padding: 5px;">&lt; BACK TO THREADS</a>
          <div class="right">
            <a ng-if="currentThread.type == 'builder'"
-               ui-sref="client({id : currentThread.project})"
+               ui-sref="client.view({id : currentThread.project})"
                class="" style="font-size: 12px;">
               GO TO THREAD
             </a>

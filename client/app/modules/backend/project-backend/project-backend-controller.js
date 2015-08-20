@@ -8,10 +8,9 @@ angular.module('buiiltApp').controller('ProjectBackendCtrl', function($scope, pr
             project.materialpackages = packages.length;
         });
     });
-console.log(data);
     $scope.tableParams = new ngTableParams({
         page: 1,            // show first page
-        count: 15,           // count per page
+        count: 10,           // count per page
         sorting: {
             name: 'asc'     // initial sorting
         }

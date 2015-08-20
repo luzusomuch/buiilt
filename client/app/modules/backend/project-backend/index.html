@@ -11,10 +11,10 @@
                 {{project.status}}
             </td>
             <td data-title="'Contractor Packages'" sortable="'contractorPackages'">
-                {{project.contractorPackages}}
+                <a ui-sref="contractorPackagesBackend({id: project._id})">{{project.contractorPackages}}</a>
             </td>
             <td data-title="'Material Packages'" sortable="'materialpackages'">
-                {{project.materialpackages}}
+                <a ui-sref="materialPackagesBackend({id: project._id})">{{project.materialpackages}}</a>
             </td>
             <td data-title="'Action'">
                 <i class="material-icons" ng-click="remove(project, $index)" style="color:#03A9F4">remove</i>

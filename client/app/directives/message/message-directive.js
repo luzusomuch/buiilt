@@ -164,8 +164,9 @@ angular.module('buiiltApp')
                     thread.isOwner = false
                   }
                   _.each(thread.users, function(user){
-                      if (user.team.role == 'admin' || user.team._id.toString() == $rootScope.currentTeam._id.toString()) {
+                      if ((user.team.role == 'admin' && user.team._id == $rootScope.currentTeam._id) || user.team._id.toString() == $rootScope.currentTeam._id.toString()) {
                         thread.isBelongToCurrentTeam = true;
+                        return false;
                       }
                       else {
                         thread.isBelongToCurrentTeam = false;

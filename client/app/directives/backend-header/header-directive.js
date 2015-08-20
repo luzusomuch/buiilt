@@ -8,6 +8,7 @@ angular.module('buiiltApp')
             if ($cookieStore.get('token')) {
                 $scope.currentUser = userService.get();
             }
+            $scope.currentProjectBackend = $rootScope.currentProjectBackend;
         }
     }
 });

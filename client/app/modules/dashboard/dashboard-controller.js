@@ -162,7 +162,7 @@ angular.module('buiiltApp')
           $state.go('variationRequest.inProcess', {id: value.element.projectId, variationId: value.element.uploadIn._id});
         }
         else if (value.referenceTo == 'DocumentBuilderPackage') {
-          $state.go('client', {id: value.element.projectId});
+          $state.go('client.view', {id: value.element.projectId});
         }
       }
     };

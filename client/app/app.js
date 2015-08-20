@@ -58,6 +58,7 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
     cfpLoadingBar.start();
     $rootScope.maximunHeight = $(window).height();
     $rootScope.currentProject = {};
+    $rootScope.currentProjectBackend = {};
     $rootScope.authService = authService;
     $rootScope.currentTeam = {};
     $rootScope.hasHeader = true;
@@ -105,6 +106,24 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
             }
           });
 
+      }
+
+      if (toState.backendHasCurrentProject) {
+        if (!$rootScope.currentProjectBackend || toParams.id !== $rootScope.currentProjectBackend._id) {
+          projectService.get({id: toParams.id}).$promise
+          .then(function (data) {
+            if (data._id) {
+              $rootScope.currentProjectBackend = data;
+
+            } else {
+              $rootScope.currentProjectBackend = null;
+              $location.path('/backend/projects');
+            }
+          })
+        }
+      }
+      else {
+        $rootScope.currentProjectBackend = {};
       }
 
       if (toState.hasCurrentProject) {

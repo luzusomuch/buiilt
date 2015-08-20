@@ -2,8 +2,8 @@
     <ul ng-if="currentUser._id" id="nav-mobile" class="side-nav fixed">
         <li><a ui-sref="projectsBackend">Projects</a></li>
         <li><a ui-sref="userBackend">Users</a></li>
-        <li><a ui-sref="contractorPackagesBackend">Contractor packages</a></li>
-        <li><a ui-sref="materialPackagesBackend">Material packages</a></li>
+        <li><a ui-sref="contractorPackagesBackend({id: currentProjectBackend._id})">Contractor packages</a></li>
+        <li><a ui-sref="materialPackagesBackend({id: currentProjectBackend._id})">Material packages</a></li>
         <li><a ui-sref="builderPackagesBackend">Builder packages</a></li>
         <li><a ui-sref="workPackagesBackend">Work packages</a></li>
         <li><a ui-sref="chatThreadsBackend">Chat threads</a></li>
