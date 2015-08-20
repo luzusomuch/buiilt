@@ -222,17 +222,17 @@
            <a ng-click="backToDocumentsList()" style="margin-left:30px; padding: 5px;">&lt; BACK TO DOCUMENTS</a>
            <div class="right">
              <a ng-click="goToDocument(document)" href="#" class="" style="padding: 5px;">GO TO DOCUMENT</a>
-             <a href="{{document.fileUrl}}" download="{{document.title}}" class="" style="padding: 5px;">DOWNLOAD</a>
+             <a href="{{document.element.file.fileUrl}}" download="{{document.element.file.title}}" class="" style="padding: 5px;">DOWNLOAD</a>
            </div>
          </div>
        </div>
       </div>
       <div  style="height: {{contentHeight - 29}}px; overflow-x:hidden; overflow-y: auto; background-color: white;">
         <div class="collection-item row">
-          <p>{{document.title}}</p>
-          <p>{{document.description}}</p>
+          <p>{{document.element.file.title}}</p>
+          <p>{{document.element.file.description}}</p>
         </div>
-        <div class="row center" ng-switch="document.mimeType">
+        <div class="row center" ng-switch="document.element.file.mimeType">
           <span ng-switch-when="image/jpeg">
               <img class="materialboxed" width="70%" src="../../media/files/{{document._id}}-{{document.title}}.jpg" alt="">
             </span>

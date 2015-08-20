@@ -17,7 +17,6 @@ angular.module('buiiltApp')
             angular.element($event.currentTarget).removeClass("item-hover")
           }
 
-          console.log($rootScope.currentTeam);
 
           $scope.contentHeight = $rootScope.maximunHeight - $rootScope.headerHeight - $rootScope.footerHeight - 105;
 
@@ -165,7 +164,6 @@ angular.module('buiiltApp')
                     thread.isOwner = false
                   }
                   _.each(thread.users, function(user){
-                    console.log(user, $scope.currentTeam);
                       if (user.team.role == 'admin' || user.team._id.toString() == $rootScope.currentTeam._id.toString()) {
                         thread.isBelongToCurrentTeam = true;
                       }
@@ -174,7 +172,6 @@ angular.module('buiiltApp')
                       }
                     });
                 });
-                console.log($scope.threads);
                 if ($scope.currentThread) {
                   $scope.currentThread = _.find($scope.threads,{_id : $scope.currentThread._id});
                 }
@@ -245,8 +242,11 @@ angular.module('buiiltApp')
             if ($scope.message.text != '') {
               messageService.sendMessage({id: $scope.currentThread._id, type: $scope.type}, $scope.message).$promise
                 .then(function (res) {
+                  // _.remove($scope.threads, {_id: res._id});
                   $scope.currentThread = res;
-                  //updateThread();
+                  // $scope.threads.push($scope.currentThread);
+                  // console.log($scope.threads);
+                  updateThread();
                   $scope.message.text = '';
                 });
             }
