@@ -2,22 +2,11 @@
 
 {% block content %}
 <p>
-  Now, you are a home builder for project <%= project.name %>
+	Your client has nominated you as the builder for their project, <%= project.name %>.
 </p>
 
 <p>
-    First you need to create team with type is <strong>home builder</strong>.
-  Then please click <a href="<%= link %>">this</a> link to visit your project.
-
-  <br/>
-  Feel free to contact us at <a href="mailto:admin@slicktalk.com">admin@buiilt.com</a> if you have any questions.
+	Please <a href="<%= link %>">click here</a> to create your account and view the project.
 </p>
-
-<p>
-    Love, <br/>
-    Team buiilt
-    <br/>
-    <a href="http://www.buiilt.com">www.buiilt.com</a>
-  </p>
 
 {% endblock %}
