@@ -9,7 +9,8 @@ angular.module('buiiltApp')
                 authService.login($scope.user).then(function (data) {
                     // $window.location.href = '/team/manager';
                     if (data.role === 'admin') {
-                        $state.go('dashboardBackend');
+                        // $state.go('dashboardBackend');
+                        window.location.href = "/backend/dashboard";
                     }
                     else {
                         $cookieStore.remove('token');

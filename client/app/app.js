@@ -62,7 +62,6 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
     $rootScope.currentTeam = {};
     $rootScope.hasHeader = true;
     $rootScope.hasFooter = true;
-    $rootScope.isAdminLogin = false;
     $rootScope.safeApply = function (fn) {
       var phase = $rootScope.$$phase;
       if (phase === '$apply' || phase === '$digest') {
@@ -75,15 +74,8 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
     };
     $rootScope.$on('$stateChangeStart', function (event,toState, toParams, next) {
         authService.isLoggedInAsync(function (loggedIn) {
-          console.log(loggedIn);
           if (loggedIn) {
-            console.log(authService.isAdmin());
-            if (authService.isAdmin()) {
-              $rootScope.isAdminLogin = true;
-            }
-            else {
-              $rootScope.isAdminLogin = false;
-            }
+
           }
           if (toState.authenticate && !loggedIn) {
             $location.path('/');

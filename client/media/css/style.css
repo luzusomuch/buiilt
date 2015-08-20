@@ -277,6 +277,10 @@ footer.footer {
   background-color: #E0E0E0 !important;
 }
 
+ul.pagination {
+  margin-top: 15px;
+}
+
 /*body{
   background-image: url("../old-and-new.png");
   background-size: 100%;
