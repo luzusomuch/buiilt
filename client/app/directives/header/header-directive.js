@@ -6,15 +6,19 @@ angular.module('buiiltApp')
     controller: function($scope,$state, $stateParams, $rootScope,materialPackageService, authService, projectService, contractorService,teamService,filterFilter) {
       $scope.projects = [];
       $scope.submitted = false;
+
+      //get header height
+      $rootScope.headerHeight = $('nav').outerHeight() + 48;
+
       $scope.menuTypes = {
         homeOwner: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
-          {sref: 'client({id :  currentProject._id})', label: 'builder'},
+          {sref: 'client.list({id :  currentProject._id})', label: 'builder'},
           {sref: 'projects.view({id :  currentProject._id})', label: 'documentation'}],
         contractor: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
           {sref: 'contractors({id :  currentProject._id})', label: 'contracts'},
           {sref: 'projects.view({id :  currentProject._id})', label: 'documentation'}],
         builder: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
-          {sref: 'client({id :  currentProject._id})', label: 'client'},
+          {sref: 'client.list({id :  currentProject._id})', label: 'client'},
           {sref: 'contractors({id :  currentProject._id})', label: 'subcontractors'},
           {sref: 'materials({id :  currentProject._id})', label: 'suppliers'},
           {sref: 'staff.index({id :  currentProject._id})', label: 'employees'},
@@ -158,8 +162,6 @@ angular.module('buiiltApp')
       $scope.inputChanged = function(str) {
         $scope.textString = str;
       };
-
-
     }
   };
 });

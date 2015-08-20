@@ -14,14 +14,15 @@ angular.module('buiiltApp', [
   // 'contenteditable',
   '720kb.tooltips',
   'angucomplete-alt',
-  'btford.socket-io'
+  'btford.socket-io',
+  'ngTable'
 ]);
 
 angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider, $locationProvider, $urlRouterProvider, $httpProvider, $sceDelegateProvider, cfpLoadingBarProvider) {
   $sceDelegateProvider.resourceUrlWhitelist(['^(?:http(?:s)?:\/\/)?(?:[^\.]+\.)?\(vimeo|youtube)\.com(/.*)?$', 'self']);
 
   /* Add New States Above */
-  $urlRouterProvider.otherwise('/signin');
+  $urlRouterProvider.otherwise('/');
 
   $locationProvider.html5Mode(true);
   $httpProvider.interceptors.push('authInterceptor');
@@ -42,7 +43,7 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
       // Intercept 401s and redirect you to login
       responseError: function (response) {
         if (response.status === 401) {
-          $location.path('/signin');
+          $location.path('/');
           // remove any stale tokens
           $cookieStore.remove('token');
           return $q.reject(response);
@@ -55,6 +56,7 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
   })
   .run(function ($rootScope, $cookieStore, cfpLoadingBar, authService, $location,projectService,$state) {
     cfpLoadingBar.start();
+    $rootScope.maximunHeight = $(window).height();
     $rootScope.currentProject = {};
     $rootScope.authService = authService;
     $rootScope.currentTeam = {};
@@ -76,7 +78,7 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
 
           }
           if (toState.authenticate && !loggedIn) {
-            $location.path('/signin');
+            $location.path('/');
           } else if (!toState.authenticate && loggedIn) {
             $state.go('team.manager')
           }

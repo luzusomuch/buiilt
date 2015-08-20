@@ -8,6 +8,8 @@ angular.module('buiiltApp')
     $scope.contractorRequest = contractorRequest;
     $scope.contractorRequest.winnerTeam._id.member  = filterFilter($scope.contractorRequest.winnerTeam._id.member , {status : 'Active'});
 
+    
+
     $scope.currentUser = {};
     if ($cookieStore.get('token')) {
       $scope.currentUser = userService.get();

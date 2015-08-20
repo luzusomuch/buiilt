@@ -1,5 +1,5 @@
 angular.module('buiiltApp').factory('fileService', function($rootScope, $q, $resource) {
-    return $resource('/api/files/:id/:action', {
+    return $resource('/api/files/:id/:type/:action', {
         id: '@_id'},{
             getByDocument: {
               method: 'GET',
@@ -56,6 +56,13 @@ angular.module('buiiltApp').factory('fileService', function($rootScope, $q, $res
               method: 'get',
               params: {
                 action: 'get-all'
+              },
+              isArray: true
+            },
+            getFileByPackage: {
+              method: 'get',
+              params: {
+                action: 'get-by-package'
               },
               isArray: true
             }

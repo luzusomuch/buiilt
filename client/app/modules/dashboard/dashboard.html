@@ -1,4 +1,314 @@
+<<<<<<< HEAD
 
+=======
+<div class="col s3">
+ <div class="collection">
+   <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-click="currentList = 'tasks'" class="row collection-item" style="cursor: pointer">
+     Tasks <span ng-if="myTasks.length > 0" class="item badge">{{myTasks.length}}</span>
+   </div>
+   <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-click="currentList = 'chats'" class="row collection-item" style="cursor: pointer">
+     Messages <span ng-if="myThreads.length > 0" class="new badge">{{myThreads.length}}</span>
+   </div>
+   <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-click="currentList = 'docs'" class="row collection-item" style="cursor: pointer">
+     Documents <span ng-if="myFiles.length > 0" class="new badge">{{myFiles.length}}</span>
+   </div>
+ </div>
+</div>
+
+<div class="col s9">
+ <div class="collection">
+   <div  style="height: {{contentHeight + 85}}px; overflow-x:hidden; overflow-y: auto; background-color: white;">
+     
+     <!-- List of tasks -->
+    <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-if="currentList == 'tasks' && !showDetailOfTask" class="collection-item row" ng-repeat="task in myTasks | orderBy : ['dateEnd']">
+      <div class="col s12">
+        <div>
+          <input ng-if="!task.completed" type="checkbox" id="complete" />
+          <input ng-if="task.completed" checked="true" type="checkbox" id="complete" />
+
+          <label style="color: black" for="complete" ng-click="showTask(task)">{{task.name}}
+            <!-- <a click="showTask(task)" ng-if="task.type == 'builder'"
+               ui-sref="client({id : task.project})"
+               class="btn-flat secondary-content new badge col s2" style="font-size: 12px;">
+              {{task.name}}
+            </a>
+            <a click="showTask(task)" ng-if="task.type == 'contractor'"
+               ui-sref="contractorRequest.contractorPackageInProcess({id : task.project, packageId : task.package._id})"
+               class="btn-flat secondary-content new badge col s2" style="font-size: 12px;">
+              {{task.name}}
+            </a>
+            <a click="showTask(task)" ng-if="task.type == 'staff'"
+               ui-sref="staff.view({id : task.project, packageId : task.package._id})"
+               class="btn-flat secondary-content new badge col s2" style="font-size: 12px;">
+              {{task.name}}
+            </a>
+            <a click="showTask(task)" ng-if="task.type == 'material'"
+               ui-sref="materialRequest.materialPackageInProcess({id : task.project, packageId : task.package._id})"
+               class="btn-flat secondary-content new badge col s2" style="font-size: 12px;">
+              {{task.name}}
+            </a>
+            <a click="showTask(task)" ng-if="task.type == 'variation'"
+               ui-sref="variationRequest.inProcess({id : task.project, variationId : task.package._id})"
+               class="btn-flat secondary-content new badge col s2" style="font-size: 12px;">
+              {{task.name}}
+            </a>
+          </label> -->
+        </div>
+     </div>
+     <div class="col s12">
+        <div style="font-size: 10px">
+          <span>Due date: {{task.dateEnd | date: longDate}}</span> - Assignees: <span ng-repeat="assignee in task.assignees">
+              {{(assignee.lastName) ? assignee.firstName +" "+ assignee.lastName : assignee.email}},</span>
+        </div>
+     </div>
+    </div>
+
+    <!-- Show task detail -->
+    <div ng-show="showDetailOfTask" class="taskDetail" style="padding: 16px;">
+      <div class="row collection-header" style="margin-bottom:0px;">
+       <div class="col s12">
+         <div class="" style="font-size: 12px;">
+           <a href="#" ng-click="backToTaskList()" style="margin-left:30px; padding: 5px;">&lt; BACK TO TASKS</a>
+
+            <div class="right">
+              <a ng-if="task.type == 'builder'"
+               ui-sref="client({id : task.project})"
+               class="" style="font-size: 12px; padding:5px">
+              GO TO TASK
+              </a>
+              <a ng-if="task.type == 'contractor'"
+               ui-sref="contractorRequest.contractorPackageInProcess({id : task.project, packageId : task.package._id})"
+               class="" style="font-size: 12px;padding:5px">
+              GO TO TASK
+              </a>
+              <a ng-if="task.type == 'staff'"
+               ui-sref="staff.view({id : task.project, packageId : task.package._id})"
+               class="" style="font-size: 12px; padding:5px">
+              GO TO TASK
+              </a>
+              <a ng-if="task.type == 'material'"
+               ui-sref="materialRequest.materialPackageInProcess({id : task.project, packageId : task.package._id})"
+               class="" style="font-size: 12px; padding:5px">
+              GO TO TASK
+              </a>
+              <a ng-if="task.type == 'variation'"
+               ui-sref="variationRequest.inProcess({id : task.project, variationId : task.package._id})"
+               class="" style="font-size: 12px; padding:5px">
+              GO TO TASK
+              </a>
+
+             <a ng-click="editTask(task)" class="modal-trigger" href="#modal-edit-task" style="padding: 5px;">EDIT TASK</a>
+             <a ng-if="!task.completed" href="#" ng-click="(!task.isOwner && !isLeader) || complete(task)" style="padding: 5px;">MARK COMPLETE</a>
+             <a ng-if="task.completed" href="#" ng-click="(!task.isOwner && !isLeader) || complete(task)" style="padding: 5px;">RE-OPEN TASK</a>
+           </div>
+         </div>
+       </div>
+      </div>
+      <div  style="height: {{contentHeight - 29}}px; overflow-x: hidden; overflow-y: auto; background-color: white;">
+       <div class="collection-item row">
+         <div class="col s12">
+           <p>{{task.name}} - {{task.description}}</p>
+           <p>Due Date: {{task.dateEnd | date: longDate}}</p>
+         </div>
+         <div class="col s12">
+           <div class="col card" style="font-size:12px; background-color: white; padding: 8px; border-radius: 3px" ng-repeat="assignee in task.assignees">
+             {{(assignee.lastName) ? assignee.firstName +" "+ assignee.lastName : assignee.email}}
+           </div>  
+         </div>
+       </div>
+     </div>
+    </div>
+     
+     
+     <!-- Threads list -->
+    <div id="threadsList" ng-if="currentList == 'chats'" class="collection-item row" ng-repeat="thread in myThreads" ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" style="cursor: pointer" ng-click="goToThreadDetail(thread)">
+       <div class="col s12">{{thread.name}}
+         <!-- <div>
+           <a ng-click="showChat(thread,$index)" ng-if="thread.type == 'builder'"
+               ui-sref="client({id : thread.project})"
+               class="btn-flat new badge" style="font-size: 12px;">
+              {{thread.name}}
+            </a>
+            <a ng-click="showChat(thread,$index)" ng-if="thread.type == 'contractor'"
+               ui-sref="contractorRequest.contractorPackageInProcess({id : thread.project, packageId : thread.package})"
+               class="btn-flat new badge" style="font-size: 12px;">
+              {{thread.name}}
+            </a>
+            <a ng-click="showChat(thread,$index)" ng-if="thread.type == 'staff'"
+               ui-sref="staff.view({id : thread.project, packageId : thread.package})"
+               class="btn-flat new badge" style="font-size: 12px;">
+              {{thread.name}}
+            </a>
+            <a ng-click="showChat(thread,$index)" ng-if="thread.type == 'material'"
+               ui-sref="materialRequest.materialPackageInProcess({id : thread.project, packageId : thread.package})"
+               class="btn-flat new badge" style="font-size: 12px;">
+              {{thread.name}}
+            </a>
+            <a ng-click="showChat(thread,$index)" ng-if="thread.type == 'variation'"
+               ui-sref="variationRequest.inProcess({id : thread.project, variationId : thread.package})"
+               class="btn-flat new badge" style="font-size: 12px;">
+              {{thread.name}}
+            </a>
+         </div> -->
+       </div>
+       <div class="col s12">
+         <div style="font-size: 10px;">
+            <span ng-repeat="assignee in thread.users">
+              {{(assignee.lastName) ? assignee.firstName +" "+ assignee.lastName : assignee.email}},</span>
+         </div>
+       </div>
+    </div>
+
+    <!-- show thread detail -->
+    <div id="threadDetail" style="display:none; padding: 10px;">
+      <div class="row collection-header" style="margin-bottom:0px">
+       <div class="col s12" style="font-size: 12px">
+         <a ng-click="backToThreadsList()" href="#" style="padding: 5px;">&lt; BACK TO THREADS</a>
+         <div class="right">
+           <a ng-if="currentThread.type == 'builder'"
+               ui-sref="client({id : currentThread.project})"
+               class="" style="font-size: 12px;">
+              GO TO THREAD
+            </a>
+            <a ng-if="currentThread.type == 'contractor'"
+               ui-sref="contractorRequest.contractorPackageInProcess({id : currentThread.project, packageId : currentThread.package})"
+               class="" style="font-size: 12px;">
+              GO TO THREAD
+            </a>
+            <a ng-if="currentThread.type == 'staff'"
+               ui-sref="staff.view({id : currentThread.project, currentThread : thread.package})"
+               class="" style="font-size: 12px;">
+              GO TO THREAD</a>
+            <a ng-if="currentThread.type == 'material'"
+               ui-sref="materialRequest.materialPackageInProcess({id : currentThread.project, packageId : currentThread.package})"
+               class="btn-flat new badge" style="font-size: 12px;">
+              GO TO THREAD
+            </a>
+            <a ng-if="currentThread.type == 'variation'"
+               ui-sref="variationRequest.inProcess({id : currentThread.project, variationId : currentThread.package})"
+               class="btn-flat new badge" style="font-size: 12px;">
+              GO TO THREAD
+            </a>
+         </div>
+       </div>
+      </div>
+      <div class="" scroll-to-bottom="currentThread.messages" style="height: {{messageScreenHeight - 40}}px; overflow-y:auto">
+        <div class="row message-row" style="font-size: 13px; margin: 12px; border-radius: 3px;" ng-style="backgroundColor" ng-repeat="message in currentThread.messages">
+         <div class="col s12">
+           <p>{{message.text}} - <strong>From {{(message.user._id == currentUser._id) ? "Me" : message.user.firstName +" "+ message.user.lastName}}</strong></p>
+         </div>
+        </div>
+        <div class="send-message-box row collection-footer" style="margin-bottom: 0px; background-color: white; padding: 12px; padding-top: 0px; border-top: 1px solid #E0E0E0; position:absolute; bottom: 2px; left: 1px; right: 1px;">
+         <div class="input-field col s12" style="margin-top: 0px; margin-bottom: 0px;">
+           <textarea id="textarea1" class="materialize-textarea" style="margin: 0px; margin-top: 0px" ng-model="message.text" ng-keydown="enterMessage($event);"></textarea>
+         </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- list of documents -->
+    <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-if="currentList == 'docs'" class="documentsList collection-item row" ng-repeat="file in myFiles | unique: file" ng-click="goToDocumentDetail(file)" style="cursor:pointer">
+       <div class="col s12">
+         <div>{{file.element.file.title}}</div>
+       </div>
+       <div class="col s12">
+         <div style="font-size:12px;">{{file.element.file.description}}</div>
+       </div>
+    </div>
+
+    <!-- show document detail  -->
+    <div class="documentDetail" style="display:none; margin-top:10px;">
+      <div class="row collection-header" style="margin-bottom:0px;">
+       <div class="col s12">
+         <div style="font-size: 12px;">
+           <a ng-click="backToDocumentsList()" style="margin-left:30px; padding: 5px;">&lt; BACK TO DOCUMENTS</a>
+           <div class="right">
+             <a ng-click="goToDocument(document)" href="#" class="" style="padding: 5px;">GO TO DOCUMENT</a>
+             <a href="{{document.fileUrl}}" download="{{document.title}}" class="" style="padding: 5px;">DOWNLOAD</a>
+           </div>
+         </div>
+       </div>
+      </div>
+      <div  style="height: {{contentHeight - 29}}px; overflow-x:hidden; overflow-y: auto; background-color: white;">
+        <div class="collection-item row">
+          <p>{{document.title}}</p>
+          <p>{{document.description}}</p>
+        </div>
+        <div class="row center" ng-switch="document.mimeType">
+          <span ng-switch-when="image/jpeg">
+              <img class="materialboxed" width="70%" src="../../media/files/{{document._id}}-{{document.title}}.jpg" alt="">
+            </span>
+            <span ng-switch-when="image/png">
+              <img class="materialboxed" width="70%" src="../../media/files/{{document._id}}-{{document.title}}.jpg" alt="">
+            </span>
+            <span ng-switch-when="application/pdf">
+              <img class="materialboxed" width="70%" src="../../media/files/{{document._id}}-{{document.title}}.jpg" alt="">
+            </span>
+            <span ng-switch-default>
+              <img class="materialboxed" width="70%" src="../../media/sample-1.jpg" alt="">
+            </span>
+        </div>
+      </div>
+    </div>
+   </div>
+ </div>
+</div>
+
+<div id="modal-edit-task" class="modal modal-fixed-footer">
+  <form name="form" class="col s12" ng-submit="save(form)">
+  <div class="modal-content">
+    <div class="row">
+      <div class="input-field col s12">
+        <input id="task_description" type="text" ng-model="task.name" name="name" maxlength="80"
+               ng-class="{'invalid' : form.name.$invalid && submitted}" ng-disabled="isShow">
+        <label for="task_description">Task</label>
+        <p class="validate-message" ng-show="form.name.$error.required && submitted">Task name is required</p>
+      </div>
+      <div class="input-field col s12">
+        <input type="text"
+               name="created"
+               id="dueDate"
+               ng-model="task.dateEnd"
+               format="mm/dd/yyyy"
+               ng-disabled="isShow"
+               datepicker
+          />
+        <label for="dueDate" class="active">Due date</label>
+      </div>
+    </div>
+
+    <div class="row current-assign">
+      <p style="">Current Assignee's:</p>
+      <div class="card col"  ng-if="!isShow"  style="padding: 5px; margin-left: 10px" ng-repeat="assignee in task.assignees" ng-class="{'admin' : assignee.team.role == 'admin'}">
+        {{assignee | name}} <span ng-if="assignee.canRevoke"><a href="#!" ng-click="revoke(assignee,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
+      </div>
+      <div class="card col"  ng-if="isShow"  style="padding: 5px; margin-left: 10px" ng-repeat="assignee in task.assignees" ng-class="{'admin' : assignee.team.role == 'admin'}">
+        {{assignee | name}}
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="row available-assign"  ng-if="!isShow" >
+      <p style="">Available Assignee's:</p>
+      <a href="#!" ng-click="assign(staff,$index)" ng-repeat="staff in available track by $index">
+        <div class="card col" style="padding: 5px; margin-left: 10px"  ng-class="{'admin' : staff.team.role == 'admin'}">
+          {{staff | name}}
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="modal-footer" style="margin-left: -12px">
+    <button type="submit" class="modal-action modal-close waves-effect waves-green btn-flat ">Save!</button>
+    <button type="button" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</button>
+  </div>
+  </form>
+</div>
+
+<!-- <div class="col s12" style="margin-top: -10px;">
+  <h5 class="secondary-content">Dashboard</h5>
+</div>
+>>>>>>> e479bc26ae291f380fd804761023e7e9121b76e2
 <div class="col s12">
   <div class="col s3">
     <a ng-if="currentTeam.type == 'builder' && isLeader" class="dropdown-button btn-large col s12" href="#!" data-activates="createNew" dropdown data-gutter="15" style="margin-top: 8px; margin-bottom: 15px">Create New</a>
@@ -223,4 +533,4 @@
   
   
   <div create-package></div>
-</div>
+</div> -->

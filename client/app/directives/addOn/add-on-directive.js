@@ -7,31 +7,337 @@ angular.module('buiiltApp').directive('addon', function(){
             package: '=',
             type: '@'
         },
-        controller: function($scope, $state,$window, $stateParams, authService,addOnPackageService, FileUploader, $cookieStore, fileService, contractorRequestService, materialRequestService, variationRequestService) {
-            $scope.allItemsText = 'All items';
-            authService.getCurrentUser().$promise.then(function(data){
-                $scope.currentUser = data;
-                $scope.isStaff = (_.find($scope.package.staffs,{_id: data._id})) ? true: false;
-            });
-            $scope.currentTeam = authService.getCurrentTeam();
+        controller: function(filterFilter,taskService,$rootScope,$scope, $state,$window, $stateParams, authService,addOnPackageService, FileUploader, $cookieStore, fileService, contractorRequestService, materialRequestService, variationRequestService) {
             
-            // $scope.documents = [];
+            $scope.activeHover = function($event){
+              angular.element($event.currentTarget).addClass("item-hover")
+            };
+            $scope.removeHover = function($event) {
+              angular.element($event.currentTarget).removeClass("item-hover")
+            }
+
+            $scope.contentHeight = $rootScope.maximunHeight - $rootScope.headerHeight - $rootScope.footerHeight - 130;
+
+            $scope.allItemsText = 'OVERVIEW';
+
+            $scope.currentProject = $rootScope.currentProject;
+            authService.getCurrentUser().$promise.then(function(res) {
+                $scope.currentUser = res;
+                $scope.isStaff = (_.find($scope.package.staffs,{_id: res._id})) ? true: false;
+
+                authService.getCurrentTeam().$promise.then(function(res) {
+                  $scope.currentTeam = res;
+                  $scope.isLeader = (_.find($scope.currentTeam.leader,{_id : $scope.currentUser._id})) ? true : false;
+                  getAvailableAssignee($scope.type);
+                  updateTasks();
+
+                });
+            });
+
+            $scope.isNew = true;
+            $scope.filter = 'all';
+            $scope.customFilter = {};
+            $scope.documentFilter = {
+              isShowAll : true
+            };
+            //Get Available assignee to assign to task
+            var getAvailableAssignee = function(type) {
+              switch(type) {
+                case 'builder' :
+                  $scope.available = [];
+                  $scope.available = _.union($scope.available,$scope.currentTeam.leader);
+                  if ($scope.currentTeam._id == $scope.package.owner._id && $scope.isLeader) {
+                    if ($scope.package.to.team) {
+                        _.forEach($scope.package.to.team.leader, function (leader) {
+                          $scope.available.push(leader);
+                        })
+                    }
+                  }
+                  if ($scope.package.to.team && $scope.currentTeam._id == $scope.package.to.team._id && $scope.isLeader) {
+                    _.forEach($scope.package.owner.leader, function (leader) {
+                      $scope.available.push(leader);
+                    })
+                  }
+                  _.forEach($scope.currentTeam.member,function(member) {
+                    if (member.status == 'Active') {
+                      $scope.available.push(member._id);
+                    }
+                  });
+                  break;
+                case 'staff' :
+                  $scope.available =  angular.copy($scope.package.staffs);
+                  $scope.available = _.union($scope.available,$scope.currentTeam.leader);
+                  break;
+                case 'contractor' :
+                  $scope.available = [];
+                  $scope.available = _.union($scope.available,$scope.currentTeam.leader);
+                  if ($scope.currentTeam._id == $scope.package.winnerTeam._id._id && $scope.isLeader) {
+                    _.forEach($scope.package.owner.leader,function(leader) {
+                        $scope.available.push(leader);
+                    });
+                  }
+                  if ($scope.currentTeam._id == $scope.package.owner._id && $scope.isLeader) {
+                    _.forEach($scope.package.winnerTeam._id.leader,function(leader) {
+                      $scope.available.push(leader);
+                    });
+                  }
+                  _.forEach($scope.currentTeam.member,function(member) {
+                    if (member.status == 'Active') {
+                      $scope.available.push(member._id);
+                    }
+                  });
+                  break;
+                case 'material' :
+                  $scope.available = [];
+                  $scope.available = _.union($scope.available,$scope.currentTeam.leader);
+                  if ($scope.currentTeam._id == $scope.package.winnerTeam._id._id && $scope.isLeader) {
+                    _.forEach($scope.package.owner.leader,function(leader) {
+                      $scope.available.push(leader);
+                    });
+                  }
+                  if ($scope.currentTeam._id == $scope.package.owner._id  && $scope.isLeader) {
+                    _.forEach($scope.package.winnerTeam._id.leader,function(leader) {
+                      $scope.available.push(leader);
+                    });
+                  }
+                  _.forEach($scope.currentTeam.member,function(member) {
+                    if (member.status == 'Active') {
+                      $scope.available.push(member._id);
+                    }
+                  });
+                  break;
+                case 'variation' :
+                  $scope.available = [];
+                  $scope.available = _.union($scope.available,$scope.currentTeam.leader);
+                  if ($scope.currentTeam._id == $scope.package.to._id._id && $scope.isLeader) {
+                    _.forEach($scope.package.owner.leader,function(leader) {
+                      $scope.available.push(leader);
+                    });
+                  }
+                  if ($scope.currentTeam._id == $scope.package.owner._id && $scope.isLeader) {
+                    _.forEach($scope.package.to._id.leader,function(leader) {
+                      $scope.available.push(leader);
+                    });
+                  }
+                  _.forEach($scope.currentTeam.member,function(member) {
+                    if (member.status == 'Active') {
+                      $scope.available.push(member._id);
+                    }
+                  });
+                  break;
+                default :
+                  break
+              }
+            };
+
+
+
+            //Update Task List
+            var updateTasks = function() {
+              taskService.get({id : $scope.package._id, type : $scope.type}).$promise
+                .then(function(res) {
+                  $scope.tasks = res;
+                  _.forEach($scope.tasks,function(task) {
+                    task.isOwner = (_.findIndex(task.assignees,{_id : $scope.currentUser._id}) != -1) || (task.user == $scope.currentUser._id);
+                    task.dateEnd = (task.dateEnd) ? new Date(task.dateEnd) : null;
+                    _.each(task.assignees, function(assignee){
+                      if (assignee.team._id.toString() == $scope.currentTeam._id.toString()) {
+                        task.isBelongToCurrentTeam = true;
+                      }
+                      else {
+                        task.isBelongToCurrentTeam = false;
+                      }
+                    });
+                  });
+                });
+            };
+
+
+            //Function fired when click new task
+            $scope.newTask = function() {
+              $scope.task = {
+                  assignees : []
+                };
+              getAvailableAssignee($scope.type);
+              $scope.isNew = true;
+              $scope.isShow = false;
+            };
+
+            $scope.showTask = function(task) {
+              $scope.task = angular.copy(task);
+              getAvailableAssignee($scope.type);
+              _.forEach($scope.task.assignees,function(item) {
+                if (!_.find($scope.available,{_id : item._id})) {
+                  item.canRevoke = false;
+                } else {
+                  item.canRevoke = true;
+                }
+                _.remove($scope.available,{_id : item._id});
+              });
+              $scope.isShow = true;
+            };
+
+            //Function fired when click edit task
+            $scope.editTask = function(task) {
+              console.log(task);
+              $scope.task = angular.copy(task);
+              getAvailableAssignee($scope.type);
+              _.forEach($scope.task.assignees,function(item) {
+                if (!_.find($scope.available,{_id : item._id})) {
+                  item.canRevoke = false;
+                } else {
+                  item.canRevoke = true;
+                }
+                _.remove($scope.available,{_id : item._id});
+              });
+              $scope.isNew = false;
+              $scope.isShow = false;
+
+            };
+
+            //Assign people to task
+            $scope.assign = function(staff,index) {
+              staff.canRevoke = true;
+              $scope.task.assignees.push(staff);
+              $scope.available.splice(index,1);
+            };
+
+            //Revoke people to task
+            $scope.revoke = function(assignee,index) {
+              $scope.available.push(assignee);
+              $scope.task.assignees.splice(index,1);
+            };
+
+            //Complete task
+            $scope.complete = function(task) {
+              task.completed = !task.completed;
+              if (task.completed) {
+                task.completedBy = $scope.currentUser._id;
+                task.completedAt = new Date();
+              } else {
+                task.completedBy = null;
+                task.completedAt = null;
+              }
+              taskService.update({id : task._id, type : $scope.type},task).$promise
+                .then(function(res) {
+                  //$('.card-title').trigger('click');
+                  updateTasks();
+                })
+            };
+
+            //Submit form function
+            $scope.save = function(form) {
+              if (form.$valid) {
+                if ($scope.isNew) {
+                  taskService.create({id : $scope.package._id, type : $scope.type},$scope.task).$promise
+                    .then(function(res) {
+                      $('.card-title').trigger('click');
+                      updateTasks();
+                    })
+                } else {
+                  taskService.update({id : $scope.task._id, type : $scope.type},$scope.task).$promise
+                    .then(function(res) {
+                      $('.card-title').trigger('click');
+                      updateTasks();
+                    })
+                }
+
+              }
+            };
+
+            //tasks list and task detail
+            $scope.showListTasks = true;
+            $scope.showDetailOfTask = false;
+            $scope.showTaskDetail = function(task){
+              $scope.task = task;
+              $scope.showListTasks = false;
+              $scope.showDetailOfTask = true;
+            };
+            $scope.backToTaskList = function() {
+              $scope.task = {};
+              $scope.showListTasks = true;
+              $scope.showDetailOfTask = false;
+            };
+
+            $scope.documents = [];
             fileService.getFileByStateParam({'id': $scope.package._id})
                 .$promise.then(function(data) {
                 $scope.documents = data;
-                // $scope.packageItemArray = _.union($scope.package.variations, $scope.package.defects, $scope.package.invoices, data);
+                _.each($scope.documents, function(item) {
+                  item.isQuote = false;
+                  item.isInvoice = false;
+                  item.isDesign = false;
+                  item.isSpec = false;
+                  item.isOther = false;
+                  item.isShowAll = true;
+                  _.each(item.tags, function(tag){
+                    if (tag == 'quote') {
+                      item.isQuote = true;
+                    }
+                    else if (tag == 'invoice') {
+                      item.isInvoice = true;
+                    }
+                    else if (tag == 'design') {
+                      item.isDesign = true;
+                    }
+                    else if (tag == 'spec') {
+                      item.isSpec = true;
+                    }
+                    else if (tag == 'other') {
+                      item.isOther = true;
+                    }
+                  })
+                });
             });
 
+            //documents list and document detail
+            $scope.backToDocumentsList = function(){
+              $scope.document = {};
+              $("div.documentDetail").hide();
+              $("div.documentsList").show("slide", { direction: "left" }, 500);
+            };
+            $scope.goToDocumentDetail = function(document) {
+              $scope.document = document;
+              $("div.documentsList").hide();
+              $("div.documentDetail").show("slide", { direction: "right" }, 500);
+            }
+
+            $scope.isShowOverView = true;
+            $scope.isShowTasks = false;
+            $scope.isShowVariations = false;
+            $scope.isShowDocuments = false;
+
+            $scope.showOverView = function() {
+              $scope.allItemsText = 'OVERVIEW';
+              $scope.isShowOverView = true;
+              $scope.isShowTasks = false;
+              $scope.isShowVariations = false;
+              $scope.isShowDocuments = false;
+            };
             $scope.showDocuments = function() {
-                // console.log($scope.documents);
-                // $scope.files = $scope.abc;
-                $scope.documents = $scope.documents;
-                $scope.allItemsText = 'Documents';
+              $scope.documents = $scope.documents;
+              $scope.allItemsText = 'DOCUMENTS';
+              $scope.isShowOverView = false;
+              $scope.isShowTasks = false;
+              $scope.isShowVariations = false;
+              $scope.isShowDocuments = true;
             };
 
             $scope.showVariations = function() {
-                $scope.package = $scope.package;
-                $scope.allItemsText = 'Variations';
+              $scope.package = $scope.package;
+              $scope.allItemsText = 'VARIATION';
+              $scope.isShowOverView = false;
+              $scope.isShowTasks = false;
+              $scope.isShowVariations = true;
+              $scope.isShowDocuments = false;
+            };
+            $scope.showTasks = function() {
+              $scope.tasks = $scope.tasks;
+              $scope.allItemsText = "TASKS"
+              $scope.isShowOverView = false;
+              $scope.isShowTasks = true;
+              $scope.isShowVariations = false;
+              $scope.isShowDocuments = false;
             };
 
             $scope.showDefects = function() {
@@ -53,7 +359,7 @@ angular.module('buiiltApp').directive('addon', function(){
 
             $scope.goToVariation = function(value) {
                 variationRequestService.findOne({id: value._id}).$promise.then(function(data){
-                    if ($scope.type == 'BuilderPackage') {
+                    if ($scope.type == 'builder') {
                         if (!data.to.isSelect) {
                             if ($scope.currentTeam.type == 'builder') {
                                 $state.go('variationRequest.sendQuote',{id: data.project,variationId: data._id});

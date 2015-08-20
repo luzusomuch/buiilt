@@ -1,0 +1,21 @@
+<div class="col s12">
+    <table ng-table="tableParams" class="table">
+        <tr ng-repeat="user in $data">
+            <td data-title="'#'">
+                {{$index + 1}}
+            </td>
+            <td data-title="'Email'">
+                {{user.email}}
+            </td>
+            <td data-title="'Full name'">
+                {{user.firstName}}  {{user.lastName}}
+            </td>
+            <td data-title="'Role'">
+                {{user.role}}
+            </td>
+            <td data-title="'Action'">
+                <i class="material-icons" ng-click="remove(user)" style="color:#03A9F4">remove</i>
+            </td>
+        </tr>
+    </table>
+</div>

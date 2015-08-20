@@ -162,6 +162,7 @@ exports.create = function(req,res) {
       return errorsHelper.validationErrors(res,err)
     }
     var task = new Task(data);
+    task.description = req.body.description;
     task.package = aPackage;
     task.project = aPackage.project;
     task.user = user;
@@ -211,9 +212,53 @@ exports.getTask = function(req,res) {
   });
 };
 
+exports.getByPackage = function(req, res){
+  Task.find({package: req.params.id, type: req.params.type}, function(err, tasks){
+    if (err) {return res.send(500,err);}
+    if (!tasks) {return res.send(404);}
+    return res.send(200,tasks);
+  });
+};
+
 exports.getAll = function(req, res) {
-  Task.find({}, function(err, tasks){
+  Task.find({}).populate('assignees').exec(function(err, tasks){
     if (err) {return res.send(500,err);}
     return res.json(200, tasks);
+  });
+};
+
+exports.getOne = function(req, res) {
+  Task.findById(req.params.id).populate('assignees').exec(function(err, task){
+    if (err) {return res.send(500,err);}
+    if (!task) {return res.send(404);}
+    return res.send(200,task);
+  });
+};
+
+exports.destroy = function (req, res) {
+  Task.findByIdAndRemove(req.params.id, function (err, task) {
+    if (err) {
+      return res.send(500, err);
+    }
+    console.log(task);
+    Task.find({}, function(err,tasks){
+      if (err) {return res.send(500,err);}
+      return res.send(200, tasks);
+    })
+  });
+};
+
+exports.show = function(req, res) {
+  var _package = getPackage(req.params.type);
+  Task.findById(req.params.id)
+  .populate('assignees')
+  .populate('project').exec(function(err, task){
+    if (err) {return res.send(500,err);}
+    if (!task) {return res.send(404);}
+    _package.findById(task.package, function(err, aPackage){
+      if (err) {return res.send(500,err);}
+      if (!aPackage) {return res.send(404);}
+      return res.send(200, {task: task, aPackage: aPackage});
+    });
   });
 };

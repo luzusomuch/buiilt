@@ -91,7 +91,8 @@ var MaterialPackageSchema = new Schema({
       type: Number
     },
     isDecline: {type: Boolean, default: false},
-    quote: {type: Schema.Types.ObjectId, ref: 'QuoteRequest'}
+    quote: {type: Schema.Types.ObjectId, ref: 'QuoteRequest'},
+    quoteDocument: [{type: Schema.Types.ObjectId, ref: 'File'}]
   }],
   newInvitation: [{
     _id: {
@@ -119,6 +120,7 @@ var MaterialPackageSchema = new Schema({
   },
   isCancel: {type: Boolean, default: false},
   defact:[],
+  isSkipInTender: {type: Boolean, default: false},
   isSelect: { type: Boolean, default: false },
   isCompleted: { type: Boolean, default: false },
   dateStart: { type: Date, default: Date.now },

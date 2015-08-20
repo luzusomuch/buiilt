@@ -96,6 +96,13 @@ angular.module('buiiltApp')
           id: '@id',
           action: 'decline-quote'
         }
+      },
+      getVariationByPackage: {
+        method: 'get',
+        params: {
+          action: 'get-by-package'
+        },
+        isArray: true
       }
     }
     );

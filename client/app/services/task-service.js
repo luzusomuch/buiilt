@@ -18,9 +18,10 @@ angular.module('buiiltApp')
         },
         get : {
           method : 'GET',
-          isArray : true,
+          // isArray : true,
           params: {
-          }
+          },
+          isArray: true
         },
         myTask : {
           method : 'GET',
@@ -36,6 +37,20 @@ angular.module('buiiltApp')
         update : {
           method : 'PUT'
         },
+        delete: {method:'DELETE', params: {id: 'id', action: ''}, isArray: true},
+        getOne: {
+          method: 'get',
+          params: {
+            action: 'get-one'
+          }
+        },
+        getByPackage: {
+          method: 'get',
+          params: {
+            action: 'get-by-package'
+          },
+          isArray: true
+        }
         //update: {
         //  method: 'PUT'
         //},

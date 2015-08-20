@@ -1,8 +1,47 @@
 angular.module('buiiltApp')
-.controller('SendQuoteMaterialPackageCtrl', function($scope, $state, $stateParams,currentTeam, FileUploader, $cookieStore, authService, userService, materialRequest, materialRequestService) {
+.controller('SendQuoteMaterialPackageCtrl', function($rootScope,$scope, $state, $stateParams,currentTeam, FileUploader, $cookieStore, authService, userService, materialRequest, materialRequestService) {
   /**
    * quote data
    */
+
+  $scope.activeHover = function($event){
+    angular.element($event.currentTarget).addClass("item-hover")
+  };
+  $scope.removeHover = function($event) {
+    angular.element($event.currentTarget).removeClass("item-hover")
+  }
+
+  $scope.contentHeight = $rootScope.maximunHeight - $rootScope.headerHeight - $rootScope.footerHeight - 130;
+
+   $scope.showScope = true;
+  $scope.showQuotes = false;
+  $scope.viewMessages = true;
+  $scope.defaultText = "SCOPE";
+
+  $scope.clickShowScopes = function() {
+    $scope.defaultText = "SCOPE";
+    $scope.showScope = true;
+    $scope.showQuotes = false;
+  };
+  $scope.clickShowQuotes = function() {
+    $scope.defaultText = "QUOTES";
+    $scope.showScope = false;
+    $scope.showQuotes = true;
+  };
+
+  $scope.viewQuoteDetail = function(quote){
+    // $scope.viewMessages = true;
+    $scope.quote = quote;
+    $("div.quotesList").hide();
+    $("div.showQuoteDetail").show("slide", { direction: "right" }, 500);
+  };
+
+  $scope.backToList = function(){
+    $scope.quote = {};
+    $("div.showQuoteDetail").hide();
+    $("div.quotesList").show("slide", { direction: "right" }, 500);
+  };
+
   $scope.quoteRequest = {};
   $scope.materialRequest = materialRequest;
   $scope.currentTeam = currentTeam;
@@ -55,10 +94,16 @@ angular.module('buiiltApp')
     $scope.messages = data;
   });
 
+  $scope.enterMessage = function ($event) {
+    if ($event.keyCode === 13) {
+      $event.preventDefault();
+      $scope.sendMessage();
+    }
+  };
   $scope.sendMessage = function() {
     materialRequestService.sendMessageToBuilder({id: $stateParams.packageId, team: $scope.currentTeam._id, message: $scope.message.message})
     .$promise.then(function(data) {
-      $scope.messages = data;
+      $scope.materialRequest = data;
       $scope.message.message = null;
     });
   };

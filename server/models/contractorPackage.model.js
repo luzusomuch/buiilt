@@ -66,7 +66,8 @@ var ContractorPackageSchema = new Schema({
       type: Number
     },
     isDecline: {type: Boolean, default: false},
-    quote: {type: Schema.Types.ObjectId, ref: 'QuoteRequest'}
+    // quote: {type: Schema.Types.ObjectId, ref: 'QuoteRequest'}
+    quoteDocument: [{type: Schema.Types.ObjectId, ref: 'File'}]
   }],
   newInvitation: [{
     _id: {
@@ -109,6 +110,7 @@ var ContractorPackageSchema = new Schema({
     total: Number
   }],
   defact:[],
+  isSkipInTender: {type: Boolean, default: false},
   isCancel: {type: Boolean, default: false},
   isAccept: { type: Boolean, default: false },
   isCompleted: { type: Boolean, default: false },

@@ -34,6 +34,7 @@ var validationError = function (res, err) {
  * @returns {undefined}
  */
 exports.upload = function(req, res){
+    console.log('11111111111111111');
     // var root = path.normalize(__dirname + '/../../..');
     var form = new formidable.IncomingForm();
     var files = [];
@@ -58,8 +59,10 @@ exports.upload = function(req, res){
         }
     })
     .on('end', function() {
+        console.log(uploadedFile, uploadedField);
         if (uploadedFile && uploadedField) {
             if (uploadedField._id != 'undefined') {
+                var tags = uploadedField.tags.split(',');
                 File.findById(uploadedField._id, function(err, file) {
                     if (err) {console.log(err);}
                     file.title = uploadedField.title;
@@ -71,6 +74,7 @@ exports.upload = function(req, res){
                     file.size = uploadedFile.size;
                     file.version = file.version + 1;
                     file.belongTo = req.params.id;
+                    file.tags = tags;
                     file.save(function(err, saved) {
                         if (err) {return res.send(500,err);}
                         else {
@@ -148,6 +152,7 @@ exports.upload = function(req, res){
                 });
             }
             else {
+                var tags = uploadedField.tags.split(',');
                 var file = new File({
                     title: uploadedField.title,
                     name: uploadedFile.name,
@@ -157,7 +162,8 @@ exports.upload = function(req, res){
                     description: uploadedField.desc,
                     size: uploadedFile.size,
                     user: req.user._id,
-                    belongTo: req.params.id
+                    belongTo: req.params.id,
+                    tags: tags
                 });
                 file.save(function(err, saved){
                     file.save(function(err, fileSaved) {
@@ -267,6 +273,7 @@ exports.uploadInPackge = function(req, res){
     .on('end', function() {
         if (uploadedFile && uploadedField) {
             console.log(uploadedField,uploadedFile);
+            var tags = uploadedField.tags.split(',');
             var file = new File();
             file.title = (uploadedField.title == 'undefined') ? uploadedFile.name : uploadedField.title;
             file.name = uploadedFile.name;
@@ -280,8 +287,10 @@ exports.uploadInPackge = function(req, res){
             file.belongTo = req.params.id;
             file.belongToType = uploadedField.belongToType;
             file.uploadBy = req.user.team._id;
+            file.tags = tags;
+            file.isQuote = uploadedField.isQuote;
             file.save(function(err, saved) {
-                if (err) {return res.send(500,err);}
+                if (err) {console.log(err);return res.send(500,err);}
                 else {
                     async.parallel([
                         function(cb) {
@@ -290,17 +299,28 @@ exports.uploadInPackge = function(req, res){
                                 ContractorPackage.findById(saved.belongTo).populate('owner')
                                 .populate('winnerTeam._id').exec(function(err, contractorPackage) {
                                     if (err || !contractorPackage) {return cb();}
-                                    owners = _.union(contractorPackage.owner.leader, contractorPackage.winnerTeam._id.leader);
+                                    
+                                    _.each(contractorPackage.to, function(toContractor){
+                                        if (toContractor._id && toContractor._id.toString() == req.user.team._id.toString()) {
+                                            toContractor.quoteDocument.push(saved._id);
+                                            contractorPackage.markModified('toContractor.quoteDocument');
+                                        }
+                                    });
+                                    owners = contractorPackage.owner.leader;
+                                    if (contractorPackage.winnerTeam._id) {
+                                        owners = _.union(contractorPackage.owner.leader, contractorPackage.winnerTeam._id.leader);
+                                        _.each(contractorPackage.winnerTeam._id.member, function(member){
+                                            if (member._id) {
+                                                owners.push(member._id);
+                                            }
+                                        });
+                                    }
                                     _.each(contractorPackage.owner.member, function(member){
                                         if (member._id) {
                                             owners.push(member._id);
                                         }
                                     });
-                                    _.each(contractorPackage.winnerTeam._id.member, function(member){
-                                        if (member._id) {
-                                            owners.push(member._id);
-                                        }
-                                    });
+                                    
                                     _.remove(owners, req.user._id);
                                     async.each(owners, function(leader, callback){
                                         var notification = new Notification({
@@ -315,24 +335,37 @@ exports.uploadInPackge = function(req, res){
                                         });
                                         notification.save(callback);
                                     },cb);
+                                    contractorPackage.save();
                                 });
                             }
                             else if (saved.belongToType == 'material') {
                                 MaterialPackage.findById(saved.belongTo).populate('owner')
                                 .populate('winnerTeam._id').exec(function(err, materialPackage) {
                                     if (err || !materialPackage) {return cb();}
-                                    owners = _.union(materialPackage.owner.leader, materialPackage.winnerTeam._id.leader);
+                                    _.each(materialPackage.to, function(toSupplier){
+                                        if (toSupplier._id && toSupplier._id.toString() == req.user.team._id.toString()) {
+                                            toSupplier.quoteDocument.push(saved._id);
+                                            materialPackage.markModified('toSupplier.quoteDocument');
+                                        }
+                                    });
+                                    owners = materialPackage.owner.leader;
+                                    if (materialPackage.winnerTeam._id) {
+                                        owners = _.union(materialPackage.owner.leader, materialPackage.winnerTeam._id.leader);
+                                        _.each(materialPackage.winnerTeam._id.member, function(member){
+                                            if (member._id) {
+                                                owners.push(member._id);
+                                            }
+                                        });
+                                    }
+
                                     _.each(materialPackage.owner.member, function(member){
                                         if (member._id) {
                                             owners.push(member._id);
                                         }
                                     });
-                                    _.each(materialPackage.winnerTeam._id.member, function(member){
-                                        if (member._id) {
-                                            owners.push(member._id);
-                                        }
-                                    });
+                                    
                                     _.remove(owners, req.user._id);
+                                    materialPackage.save();
                                     async.each(owners, function(leader, callback){
                                         var notification = new Notification({
                                             owner: leader,
@@ -371,6 +404,7 @@ exports.uploadInPackge = function(req, res){
                             else if (saved.belongToType == 'variation') {
                                 Variation.findById(saved.belongTo).populate('owner').populate('to._id').exec(function(err, variation) {
                                     if (err || !variation) {return cb();}
+
                                     owners = _.union(variation.owner.leader, variation.to._id.leader);
                                     _.each(variation.owner.member, function(member){
                                         if (member._id) {
@@ -383,6 +417,11 @@ exports.uploadInPackge = function(req, res){
                                         }
                                     });
                                     _.remove(owners, req.user._id);
+
+                                    variation.to.quoteDocument.push(saved._id);
+                                    variation.markModified('to.quoteDocument');
+                                    variation.save();
+
                                     async.each(owners, function(leader,callback){
                                         var notification = new Notification({
                                             owner: leader,
@@ -461,8 +500,9 @@ exports.uploadInPackge = function(req, res){
                                 }
                             });
                         }
-                    ], function(err){
-                        return res.send(500,err);
+                    ], function(){
+                        console.log(err);
+                        return res.send(200,saved);
                     });
                 }
             });

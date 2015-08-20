@@ -90,6 +90,7 @@ exports.myThread = function(req,res) {
     async.each(threads,function(thread,callback) {
       Thread.findById(thread)
         .populate('messages.user')
+        .populate('users')
         .exec(function(err,thread) {
           Notification.where({owner : user._id,'element._id' : thread._id,referenceTo : 'thread',unread : true}).count(function(err,count) {
             thread.__v = count;
@@ -199,4 +200,40 @@ exports.getMessages = function(req,res) {
     });
 };
 
+exports.getById = function(req, res){
+  Thread.findById(req.params.id).populate('messages.user').exec(function(err, thread){
+    if (err) {return res.send(500,err);}
+    if (!thread) {return res.send(404);}
+    return res.send(200,thread);
+  });
+};
 
+exports.getAll = function(req, res){
+  Thread.find({})
+  .populate('owner')
+  .populate('users').exec(function(err, threads){
+    if (err) {return res.send(500,err);}
+    return res.send(200,threads);
+  })
+};
+
+exports.destroy = function (req, res) {
+  Thread.findByIdAndRemove(req.params.id, function (err, thread) {
+    if (err) {
+      return res.send(500, err);
+    }
+    console.log(thread);
+    Thread.find({}, function(err,threads){
+      if (err) {return res.send(500,err);}
+      return res.send(200, threads);
+    })
+  });
+};
+
+exports.getByPackage = function(req, res){
+  Thread.find({package: req.params.id, type: req.params.type}, function(err, threads){
+    if (err) {return res.send(500,err);}
+    if (!threads) {return res.send(404);}
+    return res.send(200,threads);
+  });
+};

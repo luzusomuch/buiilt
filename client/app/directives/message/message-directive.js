@@ -10,6 +10,17 @@ angular.module('buiiltApp')
       controller:
         function($scope,$rootScope,messageService, authService,socket,$timeout,$anchorScroll,$location,filterFilter, $cookieStore, $stateParams, $location , packageService, userService, projectService, FileUploader, documentService) {
           //Init Params
+          $scope.activeHover = function($event){
+            angular.element($event.currentTarget).addClass("item-hover")
+          };
+          $scope.removeHover = function($event) {
+            angular.element($event.currentTarget).removeClass("item-hover")
+          }
+
+          $scope.contentHeight = $rootScope.maximunHeight - $rootScope.headerHeight - $rootScope.footerHeight - 105;
+
+          $scope.messageScreenHeight = $scope.contentHeight - 135;
+
           $scope.currentProject = $rootScope.currentProject;
           authService.getCurrentUser().$promise.then(function(res) {
             $scope.currentUser = res;
@@ -21,6 +32,25 @@ angular.module('buiiltApp')
           });
           $scope.submitted = false;
           $scope.isNew = true;
+
+          $scope.backToThreadsList = function(){
+            $scope.currentThread = {};
+            $("div#threadDetail").hide();
+            $("div#threadsList").show("slide", { direction: "left" }, 500);
+          };
+          $scope.goToThreadDetail = function(thread) {
+            $scope.currentThread = thread;
+            _.each(thread.messages, function(message){
+              if (message.user._id != $scope.currentUser._id) {
+                $scope.backgroundColor = {'background-color':'#eee'}
+              }
+              else {
+                $scope.backgroundColor = {'background-color':'#BBDEFB'}
+              }
+            });
+            $("div#threadsList").hide();
+            $("div#threadDetail").show("slide", { direction: "right" }, 500);
+          };
 
           //Get Available assignee to assign to task
           var getAvailableUser = function(type) {
@@ -132,7 +162,16 @@ angular.module('buiiltApp')
                     thread.canSee = false;
                     thread.isOwner = false
                   }
+                  _.each(thread.users, function(user){
+                      if (user.team._id.toString() == $scope.currentTeam._id.toString()) {
+                        thread.isBelongToCurrentTeam = true;
+                      }
+                      else {
+                        thread.isBelongToCurrentTeam = false;
+                      }
+                    });
                 });
+                console.log($scope.threads);
                 if ($scope.currentThread) {
                   $scope.currentThread = _.find($scope.threads,{_id : $scope.currentThread._id});
                 }
@@ -198,12 +237,12 @@ angular.module('buiiltApp')
               $scope.sendMessage();
             }
           };
-
+          $scope.message = {};
           $scope.sendMessage = function() {
             if ($scope.message.text != '') {
               messageService.sendMessage({id: $scope.currentThread._id, type: $scope.type}, $scope.message).$promise
                 .then(function (res) {
-                  //$scope.currentThread = res;
+                  $scope.currentThread = res;
                   //updateThread();
                   $scope.message.text = '';
                 });
@@ -235,6 +274,8 @@ angular.module('buiiltApp')
               }
             }
           };
+
+
         }
     }
   });

@@ -9,8 +9,12 @@ var router = express.Router();
 
 router.post('/:id/:type', auth.isAuthenticated(), controller.package, controller.create);
 router.put('/:id/:type', auth.isAuthenticated(), controller.task, controller.update);
-router.get('/:id/:type', auth.isAuthenticated(), controller.package, controller.getTask);
-router.get('/:id/dashboard/me', auth.isAuthenticated(),controller.project, controller.myTask);
+router.delete('/:id', auth.hasRole('admin'), controller.destroy);
 router.get('/list', auth.isAuthenticated(), controller.getAll);
+router.get('/:id', auth.isAuthenticated(), controller.getOne);
+router.get('/:id/:type', auth.isAuthenticated(), controller.package, controller.getTask);
+router.get('/:id/:type/get-by-package', auth.isAuthenticated(), controller.getByPackage);
+router.get('/:id/:type/get-one', auth.isAuthenticated(), controller.show);
+router.get('/:id/dashboard/me', auth.isAuthenticated(),controller.project, controller.myTask);
 
 module.exports = router;

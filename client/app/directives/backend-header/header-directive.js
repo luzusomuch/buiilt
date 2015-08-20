@@ -3,11 +3,11 @@ angular.module('buiiltApp')
     return {
         restrict: 'E',
         templateUrl: 'app/directives/backend-header/header.html',
-        controller: function($rootScope, authService, $scope, authService) {
-            $scope.currentUser = authService.getCurrentUser();
-            // authService.getCurrentUser().$promise.then(function(data){
-                // $scope.currentUser = data;
-            // });
+        controller: function($state,$rootScope,authService, userService, $scope,$cookieStore) {
+            $scope.currentUser = {};
+            if ($cookieStore.get('token')) {
+                $scope.currentUser = userService.get();
+            }
         }
     }
 });

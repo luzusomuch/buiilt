@@ -42,6 +42,7 @@ exports.index = function (req, res) {
  */
 exports.createMaterialPackage = function (req, res, next) {
   var to = [];
+  console.log(req.body);
   var materialPackage = new MaterialPackage({
     owner: req.user.team._id,
     type: 'material',
@@ -70,6 +71,13 @@ exports.createMaterialPackage = function (req, res, next) {
       else {
         Team.findOne({$or:[{'leader': user._id}, {'member._id': user._id}]}, function(err, team){
           if (err) {return callback(err);}
+          if (!team) {
+            to.push({
+              email: emailPhone.email,
+              phone: emailPhone.phoneNumber
+            });
+            callback();
+          }
           else {
             team.project.push(req.body.project);
             team.save();
@@ -87,6 +95,14 @@ exports.createMaterialPackage = function (req, res, next) {
     if (err) {return res.send(500,err);}
     else {
       materialPackage.to = to;
+      if (req.body.material.isSkipInTender) {
+        materialPackage.isSkipInTender = req.body.material.isSkipInTender;
+        var winnerTeam = _.first(to);
+        if (winnerTeam._id) {
+          materialPackage.winnerTeam._id = winnerTeam._id;
+          materialPackage.isSelect = true;
+        }
+      }
       materialPackage._ownerUser = req.user;
       materialPackage.save(function(err, saved){
         if (err) {return res.send(500,err);}
@@ -187,4 +203,18 @@ exports.getMaterialByProjectForSupplier = function(req, res) {
     }
   });
   
+};
+
+exports.destroy = function (req, res) {
+  MaterialPackage.findByIdAndRemove(req.params.id, function (err, materialPackage) {
+    if (err) {
+      return res.send(500, err);
+    }
+    if (!materialPackage) {return res.send(404);}
+    console.log(materialPackage);
+    MaterialPackage.find({}, function(err,materialPackages){
+      if (err) {return res.send(500,err);}
+      return res.send(200, materialPackages);
+    })
+  });
 };

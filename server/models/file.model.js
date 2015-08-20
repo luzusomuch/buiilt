@@ -76,6 +76,11 @@ var FileSchema = new Schema({
   createdAt: {
     type: Date,
     default: Date.now
+  },
+  tags: [String],
+  isQuote: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -95,6 +100,9 @@ FileSchema.virtual('fileUrl')
  */
 FileSchema.pre('save', function(next) {
   this.wasNew = this.isNew;
+  if (!this.isNew){
+    this.createdAt = new Date();
+  }
   next();
 });
 
@@ -122,6 +130,8 @@ FileSchema.methods.toJSON = function() {
     archive: this.archive,
     ownerId: this.ownerId,
     groupId: this.groupId,
+    tags: this.tags,
+    isQuote: this.isQuote,
     updatedAt: this.updatedAt,
     createdAt: this.createdAt
   };

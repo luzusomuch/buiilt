@@ -1,8 +1,46 @@
 angular.module('buiiltApp')
-.controller('SendQuoteContractorPackageCtrl', function($scope, $window, $state, currentTeam, $stateParams, $cookieStore, authService, userService, contractorRequest, contractorRequestService,FileUploader, registryForContractorService) {
+.controller('SendQuoteContractorPackageCtrl', function($rootScope,$scope, $window, $state, currentTeam, $stateParams, $cookieStore, authService, userService, contractorRequest, contractorRequestService,FileUploader, registryForContractorService) {
   /**
    * quote data
    */
+  $scope.activeHover = function($event){
+    angular.element($event.currentTarget).addClass("item-hover")
+  };
+  $scope.removeHover = function($event) {
+    angular.element($event.currentTarget).removeClass("item-hover")
+  }
+
+  $scope.contentHeight = $rootScope.maximunHeight - $rootScope.headerHeight - $rootScope.footerHeight - 130;
+
+  $scope.showScope = true;
+  $scope.showQuotes = false;
+  $scope.viewMessages = true;
+  $scope.defaultText = "SCOPE";
+
+  $scope.clickShowScopes = function() {
+    $scope.defaultText = "SCOPE";
+    $scope.showScope = true;
+    $scope.showQuotes = false;
+  };
+  $scope.clickShowQuotes = function() {
+    $scope.defaultText = "QUOTES";
+    $scope.showScope = false;
+    $scope.showQuotes = true;
+  };
+
+  $scope.viewQuoteDetail = function(quote){
+    // $scope.viewMessages = true;
+    $scope.quote = quote;
+    $("div.quotesList").hide();
+    $("div.showQuoteDetail").show("slide", { direction: "right" }, 500);
+  };
+
+  $scope.backToList = function(){
+    $scope.quote = {};
+    $("div.showQuoteDetail").hide();
+    $("div.quotesList").show("slide", { direction: "right" }, 500);
+  };
+
   $scope.quoteRequest = {};
   $scope.contractorRequest = contractorRequest;
   $scope.currentUser = {};
@@ -190,6 +228,12 @@ angular.module('buiiltApp')
     // });
     // subTotal = $scope.rate.lineWithRate.rate;
     // return subTotal;
+  };
+  $scope.enterMessage = function ($event) {
+    if ($event.keyCode === 13) {
+      $event.preventDefault();
+      $scope.sendMessage();
+    }
   };
 
   $scope.sendMessage = function() {

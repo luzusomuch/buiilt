@@ -1,4 +1,153 @@
-<div class="row" style="margin-top: 18px">
+<div class="row" style="padding: 12px">
+  <div class="col s8">
+    <div class="collection with-header">
+      <div class="row collection-header" style="margin-bottom:0px">
+        <div class="col">
+         <a class='dropdown-button btn-flat' href='#' data-activates='inTender' style="font-size: 12px;" dropdown>{{(defaultText) ? defaultText : "SCOPE"}}<i class="mdi-navigation-arrow-drop-down"></i></a>
+           <ul id='inTender' class='dropdown-content'>
+           <li><a ng-click="clickShowScopes()" href="#!">SCOPE</a></li>
+           <li><a ng-click="clickShowTenders()" href="#!">TENDERERS</a></li>
+           </ul>
+        </div>
+            
+      </div>
+      <div ng-if="showScope">
+        <div class="row collection-header" style="margin-bottom:0px;">
+          <div class="col right" style="font-size:12px">
+             <a ng-click="cancelPackage()" class="" style="padding: 5px;">CANCEL PACKAGE</a>
+             <a class="modal-trigger" href="#modal_attachAddendum" style="padding: 5px;">ATTACH ADDENDUM</a>
+          </div>
+        </div>
+        <div style="height: {{contentHeight -30}}px; overflow-y: auto; background-color: white; overflow-x:hidden;">
+          <div class="col s12">
+            <strong>Start date</strong>: {{variationRequest.dateStart | date: longDate}}
+            <table class="bordered centered">
+              <thead>
+              <tr>
+                <th>#</th>
+                <th>Scope of works</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr ng-repeat="addendum in variationRequest.addendums | filter:{isHidden:false}">
+                <td>{{$index + 1}}</td>
+                <td>{{addendum.addendumsScope.description}}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- <ul class="collapsible" data-collapsible="accordion">
+            <li class="active">
+              <div class="collapsible-header active"><i class=""></i>Details</div>
+              <div class="collapsible-body" style="background-color: #FFF; padding:10px">
+                <strong>Start date</strong>: {{variationRequest.dateStart | date: longDate}}
+                <table class="bordered centered">
+                  <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Scope of works</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr ng-repeat="addendum in variationRequest.addendums | filter:{isHidden:false}">
+                    <td>{{$index + 1}}</td>
+                    <td>{{addendum.addendumsScope.description}}</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </li>
+          </ul> -->
+        </div>
+      </div>
+
+      <div class="tenderLists" ng-if="showTenders">
+        <div class="row collection-header" style="margin-bottom:0px;">
+          <div class="col right" style="font-size:12px">
+            <!-- <a class="modal-trigger" href="#modal_inviteSupplier" style="padding: 5px;">INVITE ANOTHER TENDERER</a> -->
+          </div>
+        </div>
+        <div style="height: {{contentHeight -13}}px; overflow-y: auto; background-color: white; overflow-x:hidden;">
+          <div class="collection-item row">
+             <div class="col s9">
+               <div><a ng-click="viewTenderDetail(variationRequest)" href="#">{{variationRequest.to._id.name}}</a></div>
+             </div>
+             <div style="color: #757575">
+               <div class="col s1 valign-wrapper">
+                 <div style="font-size:15px;">{{variationRequest.messages.length}}</div>
+                 <i style="font-size: 15px; margin-left: 5px" class="material-icons valign">message</i>
+               </div>
+               <div class="col s1 valign-wrapper">
+                 <div style="font-size:15px;">{{variationRequest.to.quoteDocument.length}} </div>
+                 <i style="font-size: 15px; margin-left: 5px" class="material-icons valign">insert_drive_file</i>
+               </div>
+             </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="showTenderDetail" style="display:none">
+        <div class="row collection-header" style="margin-bottom:0px;">
+          <div class="col s12" style="font-size:12px">
+            <a class="backToTendersList" href="#!" ng-click="backToList()" style="margin-left:30px; padding: 5px;">&lt; BACK TO TENDERS</a>
+            <div class="right">
+              <a ng-click="cancelPackage()" style="padding: 5px;">DECLINE TENDER</a>
+              <!-- <a ng-click="selectQuote(tender.quote._id)" style="padding: 5px;">ACCEPT TENDER</a> -->
+              <a ng-click="selectQuote()" style="padding: 5px;">ACCEPT TENDER</a>
+            </div>
+          </div>
+        </div>
+        <div  style="height: {{contentHeight -30}}px; overflow-y: auto; background-color: white; overflow-x:hidden;">
+          <div class="collection-item row" ng-repeat="quote in variationRequest.to.quoteDocument">
+             <div class="col s9" ng-if="$last">
+               <div>
+                  <a href="{{quote.fileUrl}}" download="{{quote.title}}">
+                  <span>
+                    {{quote.title}} - <i class="material-icons">cloud_download</i>
+                  </span>
+                  </a>
+              </div>
+             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col s4">
+    <div class="collection with-header">
+         
+      <div style="height: {{contentHeight + 65}}px; overflow-y: auto; background-color:#fafafa; overflow-x:hidden;" class="">
+        <div class="" style="height: {{contentHeight - 85}}px; overflow-y: auto">
+          <div ng-if="viewMessages" ng-repeat="message in variationRequest.messages" class="row" style="font-size: 13px; margin: 12px; background-color: #eee; border-radius: 3px;">
+            <div class="col s12">
+              <p>{{message.message}} - <strong>From {{(currentTeam._id == message.sendBy._id) ? "Me" : message.sendBy.name}}</strong></p>
+            </div>
+          </div>
+        </div>
+        <div ng-if="viewMessages" class="row collection-footer" style="margin-bottom: 0px; background-color: white; padding: 12px; padding-top: 0px; border-top: 1px solid #E0E0E0">
+           <form ng-submit="sendMessage()">
+               <div class="input-field col s12" style="margin-top: 0px; margin-bottom: 0px;">
+                 <textarea id="textarea1" class="materialize-textarea" ng-model="message.message" ng-keydown="enterMessage($event);"></textarea>
+                 <!-- <label for="textarea1">Send a Message...</label> -->
+           </div>
+           <!-- <div class="input-field col s3">
+               <button class="btn-large waves-effect waves-light" type="submit" style="margin-top: 47px" name="action">Send
+                 <i class="mdi-content-send right"></i>
+               </button>
+               </div> -->
+           </form>
+       </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<addendum package="variationRequest" type="variation"></addendum>
+
+
+
+<!-- <div class="row" style="margin-top: 18px">
   <h5 class="col s8">Variation {{variationRequest.name}} in Tender</h5>
   <div class="col s4" style="margin-top:15px">
    <a class='dropdown-button btn-flat right tooltipped' dropdown data-position="top" data-delay="1" data-tooltip="Attach..." data-gutter="-16" href='#'
@@ -6,7 +155,6 @@
     <i class="mdi-navigation-more-vert"></i>
   </a>
 
-  <!-- Dropdown Structure -->
   <ul id='itemActions' class='dropdown-content left'>
    <li><a class="modal-trigger" href="#modal_attachAddendum">Attach Addendum</a></li>
    <li><div class="divider"></div></li>
@@ -156,5 +304,5 @@
    </div>
  </div>  
 </div>
-<addendum package="variationRequest" type="variation"></addendum>
+<addendum package="variationRequest" type="variation"></addendum> -->
 

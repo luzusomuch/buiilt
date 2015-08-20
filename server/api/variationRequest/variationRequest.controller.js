@@ -13,8 +13,10 @@ var async = require('async');
 exports.findOne = function(req, res) {
     Variation.findById(req.params.id)
     .populate('to.quote')
+    .populate('to.quoteDocument')
     .populate('to._id')
     .populate('owner')
+    .populate('messages.sendBy')
     .exec(function(err, variation){
         if (err) {return res.send(500,err);}
         if (!variation) {return res.send(404,err);}
@@ -121,9 +123,9 @@ exports.sendMessage = function(req, res) {
       variation.save(function(err, saved) {
         if (err) {return res.send(500, err)}
         else {
-          saved.populate('messages.sendBy', function(err){
+          Variation.populate(saved,[{path:'to._id'},{path:'messages.sendBy'},{path: 'to.quoteDocument'}] , function(err,variation){
             if (err) {return res.send(500,err);}
-            return res.json(200,saved);
+            return res.json(200,variation);
           });
         }
       });
@@ -140,15 +142,15 @@ exports.sendMessageToBuilder = function(req, res) {
         owner: variation.owner,
         to: req.body.team,
         sendBy: req.user.team._id,
-        message: req.body.message
+        message: req.body.message.message
       });
       variation.markModified('sendMessageToBuilder');
       variation._editUser = req.user;
       variation.save(function(err, saved) {
         if (err) {return res.send(500, err)}
-        saved.populate('messages.sendBy', function(err){
+        Variation.populate(saved,[{path:'messages.sendBy'},{path: 'to.quoteDocument'},{path: 'to._id'}] , function(err,variation){
           if (err) {return res.send(500,err);}
-          return res.json(200,saved);
+          return res.json(200,variation);
         });
       });
     }
@@ -242,5 +244,13 @@ exports.complete = function(req, res) {
       if (err) {return res.send(500,err);}
       return res.send(200,saved);
     });
+  });
+};
+
+exports.getVariationByPackage = function(req, res) {
+  Variation.find({package: req.params.id}, function(err, variations){
+    if (err) {return res.send(500,err);}
+    if (!variations) {return res.send(404);}
+    return res.send(200,variations);
   });
 };

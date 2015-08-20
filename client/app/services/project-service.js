@@ -52,7 +52,8 @@ angular.module('buiiltApp')
           params: {
             action: 'list'
           }
-        }
+        },
+        delete: {method:'DELETE', params: {id: 'id', action: ''}, isArray: true}
     }
 );
 });

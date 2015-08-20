@@ -4,8 +4,16 @@ angular.module('buiiltApp')
         id: '@_id'},
       {
         findDefaultByProject : {
-          method : 'GET'
-        }
+            method : 'GET'
+        },
+        getAll: {
+            method: 'get',
+            params: {
+                action:'list'
+            },
+            isArray: true
+        },
+        delete: {method:'DELETE', params: {id: 'id', action: ''}, isArray: true},
       }
     );
 });

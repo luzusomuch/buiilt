@@ -69,3 +69,23 @@ exports.findByProject = function(req, res){
     });
   });
 };
+
+exports.getAll = function(req, res){
+  BuilderPackage.find({}, function(err, builderPackages){
+    if (err) {return res.send(500,err);}
+    return res.send(200,builderPackages);
+  })
+};
+
+exports.destroy = function (req, res) {
+  BuilderPackage.findByIdAndRemove(req.params.id, function (err, builderPackage) {
+    if (err) {
+      return res.send(500, err);
+    }
+    console.log(builderPackage);
+    BuilderPackage.find({}, function(err,builderPackages){
+      if (err) {return res.send(500,err);}
+      return res.send(200, builderPackages);
+    })
+  });
+};

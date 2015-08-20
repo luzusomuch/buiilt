@@ -29,7 +29,8 @@ angular.module('buiiltApp')
           params : {
             action : 'complete'
           }
-        }
+        },
+        delete: {method:'DELETE', params: {id: 'id', action: ''}, isArray: true},
         //update: {
         //  method: 'PUT'
         //},

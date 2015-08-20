@@ -58,7 +58,7 @@ exports.sendDefect = function(req, res) {
             }
         });
     }
-    else if (packageType == 'BuilderPackage') {
+    else if (packageType == 'builder') {
         BuilderPackage.findById(req.params.id, function(err, builderPackage){
             if (err) {return res.send(500,err);}
             else {
@@ -79,7 +79,7 @@ exports.sendDefect = function(req, res) {
             }
         });
     }
-    else if (packageType == 'staffPackage') {
+    else if (packageType == 'staff') {
         StaffPackage.findById(req.params.id, function(err, staffPackage){
             if (err) {return res.send(500,err);}
             else {
@@ -264,7 +264,7 @@ exports.sendVariation = function(req, res) {
                 }
             });
         }
-        else if (packageType == 'BuilderPackage') {
+        else if (packageType == 'builder') {
             BuilderPackage.findById(req.params.id, function(err, builderPackage){
                 if (err) {return res.send(500,err);}
                 else {
@@ -388,7 +388,7 @@ exports.sendVariation = function(req, res) {
                 }
             });
         }
-        else if (packageType == 'BuilderPackage') {
+        else if (packageType == 'builder') {
             BuilderPackage.findById(req.params.id, function(err, builderPackage){
                 if (err) {return res.send(500,err);}
                 else {
@@ -554,7 +554,7 @@ exports.sendInvoice = function(req, res) {
             }
         });
     }
-    else if (packageType == 'BuilderPackage'){
+    else if (packageType == 'builder'){
         BuilderPackage.findById(req.params.id, function(err, builderPackage) {
             if (err) {return res.send(500,err);}
             else {
@@ -616,7 +616,7 @@ exports.sendInvoice = function(req, res) {
             }
         });
     }
-    else if (packageType == 'staffPackage'){
+    else if (packageType == 'staff'){
         StaffPackage.findById(req.params.id, function(err, staffPackage) {
             if (err) {return res.send(500,err);}
             else {

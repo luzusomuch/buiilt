@@ -128,15 +128,16 @@ angular.module('buiiltApp')
                 task.isOwner = (_.findIndex(task.assignees,{_id : $scope.currentUser._id}) != -1) || (task.user == $scope.currentUser._id);
                 task.dateEnd = (task.dateEnd) ? new Date(task.dateEnd) : null;
               })
+
             });
         };
 
 
         //Function fired when click new task
-        $scope.newTask = function() {
-          $scope.task = {
+        $scope.task = {
             assignees : []
           };
+        $scope.newTask = function() {
           getAvailableAssignee($scope.type);
           $scope.isNew = true;
           $scope.isShow = false;
@@ -221,7 +222,7 @@ angular.module('buiiltApp')
             }
 
           }
-        }
+        };
       }
   }
 });

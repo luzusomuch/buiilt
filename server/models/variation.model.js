@@ -54,6 +54,7 @@ var VariationSchema = new Schema({
       ref: 'Team'
     },
     quote: {type: Schema.Types.ObjectId, ref: 'QuoteRequest'},
+    quoteDocument: [{type: Schema.Types.ObjectId, ref: 'File'}],
     isSelect: {type: Boolean, default: false}
   },
   addendums: [{

@@ -71,6 +71,7 @@ angular.module('buiiltApp')
                 action: 'processing-supplier'
             },
             isArray: true
-        }
+        },
+        delete: {method:'DELETE', params: {id: 'id', action: ''}, isArray: true},
     });
 });

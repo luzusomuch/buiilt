@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/bower_components/jquery-ui/themes/base/jquery-ui.css" />
     <link rel="stylesheet" href="/bower_components/angular-notify/angular-notify.css" />
     <link rel="stylesheet" href="/bower_components/angular-loading-bar/build/loading-bar.css" />
+    <link rel="stylesheet" href="/bower_components/ng-table/dist/ng-table.css" />
     <link rel="stylesheet" href="/dist/app.full.css" data-concat="false" />
     <link rel="stylesheet" href="/bower_components/lumx/dist/lumx.css">
     <link rel="stylesheet" href="/bower_components/materialize/bin/materialize.css">
@@ -36,7 +37,7 @@
     <script src="/bower_components/angular-ui-utils/ui-utils.js"></script>
     <script src="/bower_components/angular-tooltips/dist/angular-tooltips.min.js"></script>
     <script src="/bower_components/angular-socket-io/socket.min.js"></script>
-    <script src="/bower_components/angular-file-upload/angular-file-upload.js"></script>
+    <script src="/bower_components/angular-file-upload/dist/angular-file-upload.min.js"></script>
     <script src="/bower_components/angular-notify/angular-notify.js"></script>
     <script src="/bower_components/angular-loading-bar/build/loading-bar.js"></script>
     <script src="/bower_components/velocity/velocity.js"></script>
@@ -44,8 +45,7 @@
     <script src="/bower_components/lumx/dist/lumx.js"></script>
     <script src="/bower_components/restangular/src/restangular.js"></script>
     <script src="/bower_components/angular-contenteditable/angular-contenteditable.js"></script>
-    <script src="/bower_components/at-table/dist/angular-table.js"></script>
-
+    <script src="/bower_components/ng-table/dist/ng-table.js"></script>
     <script src="/app/app.js"></script>
 </head>
 <body>
@@ -58,21 +58,35 @@
     <script src="/app/components/modal/modal.service.js"></script>
 
     <script src="/app/directives/backend-header/header-directive.js"></script>
-    <script src="/app/directives/footer/footer-directive.js"></script>
+    <script src="/app/directives/backend-footer/footer-directive.js"></script>
 
     <script src="/app/modules/auth/main.js"></script>
     <script src="/app/modules/auth/signin-backend/signin-backend-controller.js"></script>
-    <script src="/app/modules/auth/signout/signout-controller.js"></script>
-    <script src="/app/modules/dashboard-backend/main.js"></script>
-    <script src="/app/modules/dashboard-backend/dashboard-backend-controller.js"></script>
-    <script src="/app/modules/user-backend/main.js"></script>
-    <script src="/app/modules/user-backend/user-backend-controller.js"></script>
-    <script src="/app/modules/contractor-package-backend/main.js"></script>
-    <script src="/app/modules/contractor-package-backend/contractor-package-backend-controller.js"></script>
-    <script src="/app/modules/material-package-backend/main.js"></script>
-    <script src="/app/modules/material-package-backend/material-package-backend-controller.js"></script>
-    <script src="/app/modules/project-backend/main.js"></script>
-    <script src="/app/modules/project-backend/project-backend-controller.js"></script>
+    <script src="/app/modules/auth/signout-backend/signout-backend-controller.js"></script>
+    <script src="/app/modules/backend/dashboard-backend/main.js"></script>
+    <script src="/app/modules/backend/dashboard-backend/dashboard-backend-controller.js"></script>
+    <script src="/app/modules/backend/user-backend/main.js"></script>
+    <script src="/app/modules/backend/user-backend/user-backend-controller.js"></script>
+    <script src="/app/modules/backend/contractor-package-backend/main.js"></script>
+    <script src="/app/modules/backend/contractor-package-backend/contractor-package-backend-controller.js"></script>
+    <script src="/app/modules/backend/material-package-backend/main.js"></script>
+    <script src="/app/modules/backend/material-package-backend/material-package-backend-controller.js"></script>
+    <script src="/app/modules/backend/builder-package-backend/main.js"></script>
+    <script src="/app/modules/backend/builder-package-backend/builder-package-backend-controller.js"></script>
+    <script src="/app/modules/backend/staff-package-backend/main.js"></script>
+    <script src="/app/modules/backend/staff-package-backend/staff-package-backend-controller.js"></script>
+    <script src="/app/modules/backend/project-backend/main.js"></script>
+    <script src="/app/modules/backend/project-backend/project-backend-controller.js"></script>
+    <script src="/app/modules/backend/chat-thread-backend/main.js"></script>
+    <script src="/app/modules/backend/chat-thread-backend/chat-thread-backend-controller.js"></script>
+    <script src="/app/modules/backend/document-backend/main.js"></script>
+    <script src="/app/modules/backend/document-backend/document-backend-controller.js"></script>
+    <script src="/app/modules/backend/document-backend/detail/document-detail-backend-controller.js"></script>
+    <script src="/app/modules/backend/task-backend/main.js"></script>
+    <script src="/app/modules/backend/task-backend/task-backend-controller.js"></script>
+    <script src="/app/modules/backend/task-backend/detail/task-detail-backend-controller.js"></script>
+
+
 
     <script src="/app/services/auth-service.js"></script>
     <script src="/app/services/user-service.js"></script>

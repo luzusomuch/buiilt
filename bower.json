@@ -32,7 +32,7 @@
     "angucomplete-alt": "~1.0.0",
     "angular-socket-io": "~0.7.0",
     "jquery-ui": "#1.10.4",
-    "at-table":"~v1.0.4"
+    "ng-table": "~v0.8.0"
   },
   "resolutions": {
     "angular": "#1.3.15"

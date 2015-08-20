@@ -147,18 +147,16 @@ exports.createUserWithInviteToken = function(req, res, next) {
                 ContractorPackage.findById(packageInvite.package, function(err, contractorPackge){
                   if (err) {return res.send(500);}
                   else {
-                    // var packageTo = contractorPackge.to;
+                    if (packageInvite.isSkipInTender) {
+                      contractorPackge.winnerTeam._id = savedTeam._id;
+                      contractorPackge.isAccept = true;
+                    }
                     _.each(contractorPackge.to, function(to) {
                       if (to.email === packageInvite.to) {
                         to._id = savedTeam._id;
                         to.email = packageInvite.to;
-                        // contractorPackge.to.push({
-                        //   _id: savedTeam._id,
-                        //   email: packageInvite.to
-                        // });
                       }
                     });
-                    // contractorPackge.to = packageTo;
                     contractorPackge.save(function(err, saved) {
                       if (err) {return res.send(500,err);}
                       else {
@@ -177,18 +175,16 @@ exports.createUserWithInviteToken = function(req, res, next) {
                 MaterialPackage.findById(packageInvite.package, function(err, materialPackage){
                   if (err) {return res.send(500);}
                   else {
-                    // var packageTo = materialPackage.to;
+                    if (packageInvite.isSkipInTender) {
+                      materialPackage.winnerTeam._id = savedTeam._id;
+                      materialPackage.isAccept = true;
+                    }
                     _.each(materialPackage.to, function(to) {
                       if (to.email === packageInvite.to) {
                         to._id = savedTeam._id;
                         to.email = packageInvite.to;
-                        // materialPackage.to.push({
-                        //   _id: savedTeam._id,
-                        //   email: packageInvite.to
-                        // });
                       }
                     });
-                    // materialPackage.to = packageTo;
                     materialPackage.save(function(err, saved) {
                       if (err) {return res.send(500,err);}
                       else {
@@ -292,6 +288,22 @@ exports.destroy = function (req, res) {
   User.findByIdAndRemove(req.params.id, function (err, user) {
     if (err) {
       return res.send(500, err);
+    }
+    console.log(user);
+    if (user.team._id) {
+      Team.findById(user.team._id, function(err, team){
+        if (err) {return res.send(500,err);}
+        var teamMembers = team.leader;
+        _.each(team.member, function(member){
+          if (member._id) {
+            teamMembers.push(member._id);
+          }
+        });
+        _.remove(teamMembers, user._id);
+        team.markModified('member');
+        team.markModified('leader');
+        team.save();
+      });
     }
     User.find({}, function(err,users){
       if (err) {return res.send(500,err);}

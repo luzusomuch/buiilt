@@ -41,6 +41,21 @@ angular.module('buiiltApp')
           params : {
             action : 'message'
           }
+        },
+        getAll: {
+          method: 'get',
+          params: {
+            action: 'list'
+          },
+          isArray: true
+        },
+        delete: {method:'DELETE', params: {id: 'id', action: ''}, isArray: true},
+        getByPackage: {
+          method: 'get',
+          params: {
+            action: 'get-by-package'
+          },
+          isArray: true
         }
         //update: {
         //  method: 'PUT'

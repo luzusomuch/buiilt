@@ -259,3 +259,29 @@ span.disabled {
   background-color: #dff0d8;
   border-color: #d6e9c6;
 }
+
+.current-select {
+  padding: 5px; 
+  background-color: #eeeeee; 
+  border-radius: 3px
+}
+
+footer.footer {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+}
+
+.item-hover {
+  background-color: #E0E0E0 !important;
+}
+
+ul.pagination {
+  margin-top: 15px;
+}
+
+/*body{
+  background-image: url("../old-and-new.png");
+  background-size: 100%;
+}*/

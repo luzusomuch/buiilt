@@ -4,7 +4,7 @@ angular.module('buiiltApp').directive('file', function(){
         restrict: 'EA',
         templateUrl: 'app/directives/file/file.html',
         scope:{
-            project:'=',
+            project:'='
         },
         controller: function($scope,$state,$window, $stateParams, $cookieStore, fileService,FileUploader, authService) {
             $scope.documents = [];

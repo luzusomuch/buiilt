@@ -1,4 +1,4 @@
-<div layout="column" style="">
+<!-- <div layout="column" style="">
 	
 	<div class="row" style="margin-top: 18px">
 	   <h5 class="col s8">{{builderPackage.name}}</h5>
@@ -8,7 +8,6 @@
 		     	<i class="mdi-navigation-more-vert"></i>
 		     </a>
 
-		     <!-- Dropdown Structure -->
 		     <ul id='itemActions' class='dropdown-content'  style="left:956.0625px">
 		       <li><a class="modal-trigger" href="#attachInvoice">Attach Invoice</a></li>
 		       <li>
@@ -57,3 +56,154 @@
 
 
 
+ -->
+
+ <div class="row" style="padding: 12px">
+ <div class="col s10 offset-s1">
+   <div class="collection with-header">
+         <div class="row collection-header" style="margin-bottom:0px">
+       
+       <div class="col">
+         <p ng-if="currentTeam.type == 'builder'" style="margin-left: 10px"><STRONG>CLIENT</STRONG></p>
+         <p ng-if="currentTeam.type == 'homeOwner'" style="margin-left: 10px"><STRONG>BUILDER</STRONG></p>
+      </div>
+      <div ng-hide="isShowBuilderPackageDetail" class="col right" style="">
+         <a href="#modal_attachVariation" class="modal-trigger" style="padding: 5px; font-size: 12px; color: black">ADD A NEW VARIATION</a>
+      </div>
+         </div>
+         <div class="row collection-header" style="margin-bottom:0px;">
+       <div class="col s12">
+         <div ng-hide="isShowBuilderPackageDetail" style="font-size: 12px;">
+           <a ng-class="{'current-select' : isShowAll}" style="margin-left:30px; padding: 5px;" ng-click="filter = {}; isShowAll = true">ALL</a>
+           <a ng-class="{'current-select' : filter.isCompleted == false && filter.isAccept == false}" ng-click="filter = {isCompleted : false, isAccept : false, isCancel:false}; isShowAll = false " style="margin-left:30px; padding: 5px;">IN TENDER</a>
+           <a ng-class="{'current-select' : !filter.isCompleted && filter.isAccept}" ng-click="filter = {isCompleted : false, isAccept : true}; isShowAll = false" style="margin-left:30px; padding: 5px;">IN PROGRESS</a>
+           <a ng-class="{'current-select' : filter.isCompleted && filter.isAccept}" ng-click="filter = {isCompleted : true, isAccept : true}; isShowAll = false" style="margin-left:30px; padding: 5px;">COMPLETED</a>
+         </div>
+
+         <div ng-show="isShowBuilderPackageDetail" style="font-size : 12px;">
+           <a class="backToTendersList" href="#!" ng-click="backToList()" style="margin-left:30px; padding: 5px;">&lt; BACK TO LIST</a>
+         </div>
+       </div>
+      </div>
+      <div class="builderPackageDetail" style="height: {{contentHeight}}px; overflow-y: auto; background-color: white; overflow-x: hidden; display:none;">
+        
+        <div class="row" style="padding: 12px">
+          <div class="col s8">
+            <addOn package="builderPackage" type="builder"></addOn>
+          </div>
+
+         <div class="col s4">
+            <div message package="builderPackage" type="builder"></div>
+         </div>
+        </div>
+      </div>
+      <div class="builderPackageList" style="height: {{contentHeight - 30}}px; overflow-y: auto; background-color: white; overflow-x: hidden;">
+        <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" style="cursor:pointer;">
+          <div class="col s9" ng-click="goToBuilderPackageDetail()">Head Contract- {{builderPackage.name}}</div>
+          <div style="color: #757575">
+           <div class="col s1 valign-wrapper">
+             <div style="font-size:15px;">{{builderPackage.threads.length}}</div>
+             <i style="font-size: 15px; margin-left: 5px" class="material-icons valign">message</i>
+           </div>
+           <div class="col s1 valign-wrapper">
+             <div style="font-size:15px;">{{builderPackage.files.length}}</div>
+             <i style="font-size: 15px; margin-left: 5px" class="material-icons valign">insert_drive_file</i>
+           </div>
+           <div class="col s1 valign-wrapper">
+             <div style="font-size:15px;">{{builderPackage.tasks.length}}</div>
+             <i style="font-size: 15px; margin-left: 5px" class="material-icons valign">check</i>
+           </div>
+         </div>
+        </div>
+
+
+       <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="variation in variations | filter: filter" style="cursor:pointer;" ng-click="goToVariationRequest(variation)">
+         <div class="col s9">{{variation.name}}</div>
+           <!-- <div> -->
+            <!-- when user is a homeOwner -->
+            <!-- variation in process -->
+            <!-- <a ng-if="currentTeam.type == 'homeOwner' && variation.isAccept" ui-sref="variationRequest.inProcess({id: variation.project, variationId: variation._id})">{{variation.name}} -->
+            <!-- </a> -->
+            <!-- variation in tender -->
+            <!-- <a ng-if="currentTeam.type == 'homeOwner' && !variation.isAccept" ui-sref="variationRequest.viewRequest({id: variation.project, variationId: variation._id})">{{variation.name}} -->
+            <!-- </a> -->
+
+            <!-- when user is a builder -->
+            <!-- variation in process -->
+            <!-- <a ng-if="currentTeam.type == 'builder' && variation.isAccept" ui-sref="variationRequest.inProcess({id: variation.project, variationId: variation._id})">{{variation.name}} -->
+            <!-- </a> -->
+            <!-- variation in tender -->
+            <!-- <a ng-if="currentTeam.type == 'builder' && !variation.isAccept" ui-sref="variationRequest.sendQuote({id: variation.project, variationId: variation._id})">{{variation.name}} -->
+            <!-- </a> -->
+          <!-- </div> -->
+         <div style="color: #757575">
+           <div class="col s1 valign-wrapper">
+             <div style="font-size:15px;">{{variation.threads.length}}</div>
+             <i style="font-size: 15px; margin-left: 5px" class="material-icons valign">message</i>
+           </div>
+           <div class="col s1 valign-wrapper">
+             <div style="font-size:15px;">{{variation.files.length}}</div>
+             <i style="font-size: 15px; margin-left: 5px" class="material-icons valign">insert_drive_file</i>
+           </div>
+           <div class="col s1 valign-wrapper">
+             <div style="font-size:15px;">{{variation.tasks.length}}</div>
+             <i style="font-size: 15px; margin-left: 5px" class="material-icons valign">check</i>
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+ </div>
+</div>
+
+<div id="modal_attachVariation" class="modal modal-fixed-footer">
+  <form ng-submit="sendVariation()">
+    <div class="modal-content">
+      <div class="row">
+        <div class="col s12">
+          <h5>New Variation for {{builderPackage.name}}</h5>
+        </div>
+      </div>
+      <div class="row valign-wrapper">
+        <div class="input-field col s8 offset-s2">
+          <input id="project_name" type="text" class="validate valign" ng-model="variation.title">
+          <label for="project_name">Variation Title</label>
+        </div>
+
+      </div>
+      <div class="row">
+        <div class="col s8 offset-s2">
+          <ul class="collection z-depth-1">
+            <li class="collection-item vlalign-wrapper">
+              <div class="row form" style="margin-bottom: 0px">
+                <div class="col s12"><p>Enter work descriptions below:</p></div>
+                <div class="input-field col s10">
+                  <textarea id="description" class="materialize-textarea" ng-model="description" ng-class="{'invalid' : descriptionError}"></textarea>
+                  <label for="description" class="">Description</label>
+                  <p class="validate-message" ng-if="descriptionError">Scope of work at least 1 item</p>
+                </div>
+                <div class="valign col s2">
+                  <button class="btn" type="button" name="action" style="margin-top: 78px" ng-click="addDescription(description)">Add</button>
+                </div>
+              </div>
+            </li>
+            <li class="collection-item vlalign" ng-repeat="description in variation.descriptions track by $index">
+              <div class="row" style="margin-bottom: 0px">
+                <div class="col s10">
+                  <p>{{description}}</p>
+                </div>
+                <div class="col s2">
+                  <button class="btn-flat btn-flat" ng-click="removeDescription($index)">Remove</button>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="modal-action modal-close waves-effect waves-green btn-flat ">Send Variation!</button>
+      <button type="button" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</button>
+    </div>
+  </form>
+</div>
