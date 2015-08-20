@@ -19,7 +19,26 @@
           </div>
         </div> -->
         <div style="height: {{contentHeight + 8}}px; overflow-y: auto; background-color: white; overflow-x:hidden">
-          <ul class="collapsible" data-collapsible="accordion">
+          <div class="col s12">
+            <strong>Start date</strong>: {{materialRequest.dateStart | date: longDate}}
+            <table class="bordered centered">
+              <thead>
+              <tr>
+                <th>#</th>
+                <th>Scope of works</th>
+                <th>Quantity</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr ng-repeat="addendum in materialRequest.addendums | filter:{isHidden:false}">
+                <td>{{$index + 1}}</td>
+                <td>{{addendum.addendumsScope.description}}</td>
+                <td>{{addendum.addendumsScope.quantity}}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- <ul class="collapsible" data-collapsible="accordion">
             <li class="active">
               <div class="collapsible-header active"><i class=""></i>Details</div>
               <div class="collapsible-body" style="background-color: #FFF; padding:10px">
@@ -42,7 +61,7 @@
                 </table>
               </div>
             </li>
-          </ul>
+          </ul> -->
         </div>
       </div>
 
@@ -90,9 +109,11 @@
     <div class="collection with-header">
          
       <div style="height: {{contentHeight + 65}}px; overflow-y: auto; background-color:#fafafa; overflow-x:hidden" class="">
-        <div ng-if="message.to == currentTeam._id" ng-repeat="message in materialRequest.messages" class="row" style="font-size: 13px; margin: 12px; background-color: #eee; border-radius: 3px;">
-          <div class="col s12">
-            <p>{{message.message}} - <strong>From {{(currentTeam._id == message.sendBy._id) ? "Me" : message.sendBy.name}}</strong></p>
+        <div class="" style="height: {{contentHeight - 85}}px; overflow-y: auto">
+          <div ng-if="message.to == currentTeam._id" ng-repeat="message in materialRequest.messages" class="row" style="font-size: 13px; margin: 12px; background-color: #eee; border-radius: 3px;">
+            <div class="col s12">
+              <p>{{message.message}} - <strong>From {{(currentTeam._id == message.sendBy._id) ? "Me" : message.sendBy.name}}</strong></p>
+            </div>
           </div>
         </div>
         <div style="display:none" class="row" style="font-size: 13px; background-color: #BBDEFB; margin: 12px; border-radius: 3px;">

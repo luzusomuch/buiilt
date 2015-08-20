@@ -19,28 +19,31 @@
           </div>
         </div> -->
         <div style="height: {{contentHeight + 8}}px; overflow-y: auto; background-color: white;">
-          <ul class="collapsible" data-collapsible="accordion">
+          <div class="col s12">
+            <strong>Start date</strong>: {{contractorRequest.dateStart | date: longDate}}
+            <table class="bordered centered">
+              <thead>
+              <tr>
+                <th>#</th>
+                <th>Scope of works</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr ng-repeat="addendum in contractorRequest.addendums | filter:{isHidden:false}">
+                <td>{{$index + 1}}</td>
+                <td>{{addendum.addendumsScope.description}}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- <ul class="collapsible" data-collapsible="accordion">
             <li class="active">
               <div class="collapsible-header active"><i class=""></i>Details</div>
               <div class="collapsible-body" style="background-color: #FFF; padding:10px">
-                <strong>Start date</strong>: {{contractorRequest.dateStart | date: longDate}}
-                <table class="bordered centered">
-                  <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Scope of works</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr ng-repeat="addendum in contractorRequest.addendums | filter:{isHidden:false}">
-                    <td>{{$index + 1}}</td>
-                    <td>{{addendum.addendumsScope.description}}</td>
-                  </tr>
-                  </tbody>
-                </table>
+                
               </div>
             </li>
-          </ul>
+          </ul> -->
         </div>
       </div>
 
@@ -88,9 +91,11 @@
     <div class="collection with-header">
          
       <div style="height: {{contentHeight + 65}}px; overflow-y: auto; background-color:#fafafa;" class="">
-        <div ng-if="message.to == currentTeam._id" ng-repeat="message in contractorRequest.messages" class="row" style="font-size: 13px; margin: 12px; background-color: #eee; border-radius: 3px;">
-          <div class="col s12">
-            <p>{{message.message}} - <strong>From {{(currentTeam._id == message.sendBy._id) ? "Me" : message.sendBy.name}}</strong></p>
+        <div class="" style="height: {{contentHeight - 85}}px; overflow-y: auto">
+          <div ng-if="message.to == currentTeam._id" ng-repeat="message in contractorRequest.messages" class="row" style="font-size: 13px; margin: 12px; background-color: #eee; border-radius: 3px;">
+            <div class="col s12">
+              <p>{{message.message}} - <strong>From {{(currentTeam._id == message.sendBy._id) ? "Me" : message.sendBy.name}}</strong></p>
+            </div>
           </div>
         </div>
         <div style="display:none" class="row" style="font-size: 13px; background-color: #BBDEFB; margin: 12px; border-radius: 3px;">
@@ -99,7 +104,7 @@
           </div>
         </div>
         
-        <div class="row collection-footer" style="margin-bottom: 0px; background-color: white; padding: 12px; padding-top: 0px; border-top: 1px solid #E0E0E0">
+        <div class="row collection-footer" style="margin-bottom: 0px; background-color: white; padding: 12px; padding-top: 0px; border-top: 1px solid #E0E0E0;position:absolute; bottom:0px; left: 1px; right: 1px;">
            <form ng-submit="sendMessage()">
                <div class="input-field col s12" style="margin-top: 0px; margin-bottom: 0px;">
                  <textarea id="textarea1" class="materialize-textarea" ng-model="message" ng-keydown="enterMessage($event);"></textarea>

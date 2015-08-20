@@ -19,7 +19,24 @@
           </div>
         </div>
         <div style="height: {{contentHeight -30}}px; overflow-y: auto; background-color: white; overflow-x:hidden;">
-          <ul class="collapsible" data-collapsible="accordion">
+          <div class="col s12">
+            <strong>Start date</strong>: {{variationRequest.dateStart | date: longDate}}
+            <table class="bordered centered">
+              <thead>
+              <tr>
+                <th>#</th>
+                <th>Scope of works</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr ng-repeat="addendum in variationRequest.addendums | filter:{isHidden:false}">
+                <td>{{$index + 1}}</td>
+                <td>{{addendum.addendumsScope.description}}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- <ul class="collapsible" data-collapsible="accordion">
             <li class="active">
               <div class="collapsible-header active"><i class=""></i>Details</div>
               <div class="collapsible-body" style="background-color: #FFF; padding:10px">
@@ -40,7 +57,7 @@
                 </table>
               </div>
             </li>
-          </ul>
+          </ul> -->
         </div>
       </div>
 
@@ -101,9 +118,11 @@
     <div class="collection with-header">
          
       <div style="height: {{contentHeight + 65}}px; overflow-y: auto; background-color:#fafafa; overflow-x:hidden;" class="">
-        <div ng-if="viewMessages" ng-repeat="message in variationRequest.messages" class="row" style="font-size: 13px; margin: 12px; background-color: #eee; border-radius: 3px;">
-          <div class="col s12">
-            <p>{{message.message}} - <strong>From {{(currentTeam._id == message.sendBy._id) ? "Me" : message.sendBy.name}}</strong></p>
+        <div class="" style="height: {{contentHeight - 85}}px; overflow-y: auto">
+          <div ng-if="viewMessages" ng-repeat="message in variationRequest.messages" class="row" style="font-size: 13px; margin: 12px; background-color: #eee; border-radius: 3px;">
+            <div class="col s12">
+              <p>{{message.message}} - <strong>From {{(currentTeam._id == message.sendBy._id) ? "Me" : message.sendBy.name}}</strong></p>
+            </div>
           </div>
         </div>
         <div ng-if="viewMessages" class="row collection-footer" style="margin-bottom: 0px; background-color: white; padding: 12px; padding-top: 0px; border-top: 1px solid #E0E0E0">

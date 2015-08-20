@@ -8,6 +8,7 @@ angular.module('buiiltApp')
   }
     
   $scope.contentHeight = $rootScope.maximunHeight - $rootScope.headerHeight - $rootScope.footerHeight - 130;
+  $scope.messageScreenHeight = $scope.contentHeight - 135;
 
   $scope.showScope = true;
   $scope.showTenders = false;
