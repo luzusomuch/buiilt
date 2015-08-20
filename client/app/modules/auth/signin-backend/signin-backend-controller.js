@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-    .controller('SigninBackendCtrl', function ($scope, authService, $state, $cookieStore) {
+    .controller('SigninBackendCtrl', function ($rootScope,$scope, authService, $state, $cookieStore) {
         $scope.user = {};
         $scope.errors = {};
 
