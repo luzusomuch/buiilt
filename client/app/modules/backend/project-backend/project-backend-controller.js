@@ -1,6 +1,14 @@
-angular.module('buiiltApp').controller('ProjectBackendCtrl', function($scope, projects, projectService,ngTableParams,$filter) {
+angular.module('buiiltApp').controller('ProjectBackendCtrl', function($scope, projects, projectService,ngTableParams,$filter,contractorService,materialPackageService) {
     var data = projects;
-
+    _.each(data, function(project) {
+        contractorService.get({id: project._id}).$promise.then(function(packages){
+            project.contractorPackages = packages.length;
+        });
+        materialPackageService.get({id: project._id}).$promise.then(function(packages){
+            project.materialpackages = packages.length;
+        });
+    });
+console.log(data);
     $scope.tableParams = new ngTableParams({
         page: 1,            // show first page
         count: 15,           // count per page
@@ -17,9 +25,10 @@ angular.module('buiiltApp').controller('ProjectBackendCtrl', function($scope, pr
         }
     });
 
-    $scope.remove = function(project){
+    $scope.remove = function(project, index){
         projectService.delete({'id': project._id}).$promise.then(function(projects){
-            data = projects;
+            data.splice(index, 1);
+            // data = projects;
         })
     };
 });

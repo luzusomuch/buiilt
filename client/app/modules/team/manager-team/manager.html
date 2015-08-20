@@ -1,7 +1,7 @@
 <div class="col s12" style="margin-bottom: 8px">
   <a class="waves-effect waves-light btn modal-trigger" href="#newTeam" ng-if="!currentTeam._id">Create New Team</a>
 </div>
-<div class="col s12" ng-if="currentTeam._id">
+<div class="col s12" ng-if="currentTeam._id" style="height: {{contentHeight + 70}}px; overflow: auto;">
   <ul class="collapsible popout s10" data-collapsible="accordion">
 
     <li class="active">

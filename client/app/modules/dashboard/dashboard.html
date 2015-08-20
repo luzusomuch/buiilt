@@ -1,15 +1,13 @@
-<<<<<<< HEAD
 
-=======
 <div class="col s3">
  <div class="collection">
-   <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-click="currentList = 'tasks'" class="row collection-item" style="cursor: pointer">
+   <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-click="currentList = 'tasks'; backToTaskList(); backToDocumentsList(); backToThreadsList()" class="row collection-item" style="cursor: pointer">
      Tasks <span ng-if="myTasks.length > 0" class="item badge">{{myTasks.length}}</span>
    </div>
-   <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-click="currentList = 'chats'" class="row collection-item" style="cursor: pointer">
+   <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-click="currentList = 'chats'; backToTaskList(); backToDocumentsList(); backToThreadsList()" class="row collection-item" style="cursor: pointer">
      Messages <span ng-if="myThreads.length > 0" class="new badge">{{myThreads.length}}</span>
    </div>
-   <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-click="currentList = 'docs'" class="row collection-item" style="cursor: pointer">
+   <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-click="currentList = 'docs'; backToTaskList(); backToDocumentsList(); backToThreadsList()" class="row collection-item" style="cursor: pointer">
      Documents <span ng-if="myFiles.length > 0" class="new badge">{{myFiles.length}}</span>
    </div>
  </div>
@@ -305,10 +303,13 @@
   </form>
 </div>
 
+<script>
+  $("div.ui-effects-wrapper").hide();
+</script>
+
 <!-- <div class="col s12" style="margin-top: -10px;">
   <h5 class="secondary-content">Dashboard</h5>
 </div>
->>>>>>> e479bc26ae291f380fd804761023e7e9121b76e2
 <div class="col s12">
   <div class="col s3">
     <a ng-if="currentTeam.type == 'builder' && isLeader" class="dropdown-button btn-large col s12" href="#!" data-activates="createNew" dropdown data-gutter="15" style="margin-top: 8px; margin-bottom: 15px">Create New</a>

@@ -17,6 +17,8 @@ angular.module('buiiltApp')
             angular.element($event.currentTarget).removeClass("item-hover")
           }
 
+          console.log($rootScope.currentTeam);
+
           $scope.contentHeight = $rootScope.maximunHeight - $rootScope.headerHeight - $rootScope.footerHeight - 105;
 
           $scope.messageScreenHeight = $scope.contentHeight - 135;
@@ -163,7 +165,8 @@ angular.module('buiiltApp')
                     thread.isOwner = false
                   }
                   _.each(thread.users, function(user){
-                      if (user.team._id.toString() == $scope.currentTeam._id.toString()) {
+                    console.log(user, $scope.currentTeam);
+                      if (user.team.role == 'admin' || user.team._id.toString() == $rootScope.currentTeam._id.toString()) {
                         thread.isBelongToCurrentTeam = true;
                       }
                       else {

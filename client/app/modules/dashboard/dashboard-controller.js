@@ -16,6 +16,7 @@ angular.module('buiiltApp')
     $scope.currentList = 'tasks';
     $scope.currentThread = {};
 
+
     $scope.activeHover = function($event){
         angular.element($event.currentTarget).addClass("item-hover")
     };
@@ -25,6 +26,7 @@ angular.module('buiiltApp')
 
     $scope.backToDocumentsList = function(){
       $scope.document = {};
+      $("div.ui-effects-wrapper").hide();
       $("div.documentDetail").hide();
       $("div.documentsList").show("slide", { direction: "left" }, 500);
     };
@@ -36,13 +38,12 @@ angular.module('buiiltApp')
 
     $scope.backToThreadsList = function(){
       $scope.currentThread = {};
+      $("div.ui-effects-wrapper").hide();
       $("div#threadDetail").hide();
       $("div#threadsList").show("slide", { direction: "left" }, 500);
     };
     $scope.goToThreadDetail = function(thread) {
       $scope.currentThread = thread;
-      console.log(thread.messages);
-      console.log($scope.currentUser);
       _.each(thread.messages, function(message){
         if (message.user._id != $scope.currentUser._id) {
           $scope.backgroundColor = {'background-color':'#eee'}
@@ -168,7 +169,6 @@ angular.module('buiiltApp')
 
     $scope.showDetailOfTask = false;
     $scope.showTask = function(task) {
-      console.log(task);
       $scope.task = task;
       $scope.showDetailOfTask = true;
       $scope.isShow = true;
@@ -183,6 +183,7 @@ angular.module('buiiltApp')
     $scope.backToTaskList = function(){
       $scope.task = {};
       $scope.showDetailOfTask = false;
+      $("div.ui-effects-wrapper").hide();
     };
 
     $scope.editTask = function(task) {

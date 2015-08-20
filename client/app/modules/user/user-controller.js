@@ -1,6 +1,8 @@
 
 
 angular.module('buiiltApp').controller('UserCtrl', function($scope,$rootScope, $state, authService) {
+  $scope.contentHeight = $rootScope.maximunHeight - $rootScope.headerHeight - $rootScope.footerHeight - 130;
+
   $scope.errors = {};
   $scope.user = authService.getCurrentUser();
   $scope.password = {};

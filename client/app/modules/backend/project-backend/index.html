@@ -10,8 +10,14 @@
             <td data-title="'Status'" sortable="'status'">
                 {{project.status}}
             </td>
+            <td data-title="'Contractor Packages'" sortable="'contractorPackages'">
+                {{project.contractorPackages}}
+            </td>
+            <td data-title="'Material Packages'" sortable="'materialpackages'">
+                {{project.materialpackages}}
+            </td>
             <td data-title="'Action'">
-                <i class="material-icons" ng-click="remove(project)" style="color:#03A9F4">remove</i>
+                <i class="material-icons" ng-click="remove(project, $index)" style="color:#03A9F4">remove</i>
             </td>
         </tr>
     </table>

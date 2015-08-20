@@ -1,5 +1,7 @@
 angular.module('buiiltApp')
   .controller('TeamCtrl', function ($timeout,$scope,$rootScope, validateInviteService, invitations,users,currentUser, currentTeam, teamService, authService,$state,userService,filterFilter,Modal) {
+    $scope.contentHeight = $rootScope.maximunHeight - $rootScope.headerHeight - $rootScope.footerHeight - 130;
+
     $scope.existedTeam = {};
     $scope.validateInvite = null;
     $scope.invitations = invitations;
