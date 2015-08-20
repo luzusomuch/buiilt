@@ -34,7 +34,7 @@ angular.module('buiiltApp')
           $scope.isNew = true;
 
           $scope.backToThreadsList = function(){
-            $scope.thread = {};
+            $scope.currentThread = {};
             $("div#threadDetail").hide();
             $("div#threadsList").show("slide", { direction: "left" }, 500);
           };

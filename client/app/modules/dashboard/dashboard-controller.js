@@ -4,7 +4,10 @@ angular.module('buiiltApp')
     
     $scope.currentProject = $rootScope.currentProject;
     $scope.myTasks = myTasks;
-    $scope.currentUser = $rootScope.currentUser;
+    authService.getCurrentUser().$promise.then(function(res) {
+      $scope.currentUser = res;
+    });
+    // $scope.currentUser = $rootScope.currentUser;
     _.forEach($scope.myTasks,function(task) {
       task.dateEnd = (task.dateEnd) ? new Date(task.dateEnd) : null;
     });
@@ -29,7 +32,28 @@ angular.module('buiiltApp')
       $scope.document = document;
       $("div.documentsList").hide();
       $("div.documentDetail").show("slide", { direction: "right" }, 500);
-    }
+    };
+
+    $scope.backToThreadsList = function(){
+      $scope.currentThread = {};
+      $("div#threadDetail").hide();
+      $("div#threadsList").show("slide", { direction: "left" }, 500);
+    };
+    $scope.goToThreadDetail = function(thread) {
+      $scope.currentThread = thread;
+      console.log(thread.messages);
+      console.log($scope.currentUser);
+      _.each(thread.messages, function(message){
+        if (message.user._id != $scope.currentUser._id) {
+          $scope.backgroundColor = {'background-color':'#eee'}
+        }
+        else {
+          $scope.backgroundColor = {'background-color':'#BBDEFB'}
+        }
+      });
+      $("div#threadsList").hide();
+      $("div#threadDetail").show("slide", { direction: "right" }, 500);
+    };
 
     var getAvailableAssignee = function($package,type) {
       switch(type) {
@@ -231,11 +255,20 @@ angular.module('buiiltApp')
       }
     };
 
-    $scope.sendMessage = function(form) {
+    $scope.enterMessage = function ($event) {
+      if ($event.keyCode === 13) {
+        $event.preventDefault();
+        $scope.sendMessage();
+      }
+    };
+
+    $scope.sendMessage = function() {
       $scope.messageFormSubmitted = true;
-      if (form.$valid) {
+      if ($scope.message.text != '') {
         messageService.sendMessage({id : $scope.currentThread._id, type : $scope.currentThread.type},$scope.message).$promise
-          .then(function() {
+          .then(function(res) {
+            console.log(res);
+            $scope.currentThread = res;
             //$scope.myThreads[index].messages = res.messages;
             $scope.message.text = '';
             $scope.messageFormSubmitted = false;
