@@ -45,16 +45,17 @@
          <div class="row collection-header" style="margin-bottom:0px">
        
        <div class="col">
-         <p style="font-size: 12px; margin-left: 10px">STAFFS PACKAGE</p>
+         <p ng-if="isLeader" style="margin-left: 10px"><STRONG>EMPLOYEES</STRONG></p>
+         <p ng-if="!isLeader" style="margin-left: 10px"><STRONG>STAFFS PACKAGE</STRONG></p>
       </div>
-      <div class="col right" style="margin-top: 10px">
-         <a href="#newWorkPackage" class="modal-trigger" style="padding: 5px; font-size: 12px; color: black">NEW STAFF PACKAGE</a>
+      <div class="col right" style="">
+         <a ng-if="currentTeam.type == 'builder' && isLeader" href="#newWorkPackage" class="modal-trigger" style="padding: 5px; font-size: 12px; color: black">ADD A WORK ORDER</a>
       </div>
          </div>
          <div class="row collection-header" style="margin-bottom:0px;">
        <div class="col s12">
          <div style="font-size: 12px;">
-           <a ng-class="{'current-select' : filterAll}" style="margin-left:30px;" ng-click="filterAll = true; filter = {}">ALL</a>
+           <a ng-class="{'current-select' : filterAll}" style="margin-left:30px; padding: 5px;" ng-click="filterAll = true; filter = {}">ALL</a>
            <a ng-class="{'current-select' : filter.isCompleted == false}" ng-click="filter = {isCompleted : false}; filterAll = false;" style="margin-left:30px; padding: 5px;">IN PROGRESS</a>
            <a ng-class="{'current-select' : filter.isCompleted}" ng-click="filter = {isCompleted : true}; filterAll = false;" style="margin-left:30px; padding: 5px;">COMPLETED</a>
          </div>
@@ -168,7 +169,7 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="submit" class="modal-action waves-effect waves-green btn modal-action">Create Package !</button>
+      <button type="submit" class="modal-action waves-effect waves-green btn modal-action">ADD WORK ORDER</button>
       <button type="button" ng-click="closeModal()" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</button>
     </div>
   </form>

@@ -61,16 +61,17 @@
          <div class="row collection-header" style="margin-bottom:0px">
        
        <div class="col">
-         <p style="font-size: 12px; margin-left: 10px">CONTRACTORS PACKAGE</p>
+         <p style="margin-left: 10px" ng-if="currentTeam.type == 'builder'"><strong>SUBCONTRACTORS</strong></p>
+         <p style="margin-left: 10px" ng-if="currentTeam.type == 'contractor'"><strong>CONTRACTORS PACKAGE</strong></p>
       </div>
-      <div class="col right" style="margin-top: 10px">
-         <a href="#newContractorPackage" class="modal-trigger" style="padding: 5px; font-size: 12px; color: black">NEW CONTRACTOR PACKAGE</a>
+      <div class="col right" style="">
+         <a ng-if="currentTeam.type == 'builder' && isLeader" href="#newContractorPackage" class="modal-trigger" style="padding: 5px; font-size: 12px; color: black">ADD A SUBCONTRACTOR</a>
       </div>
          </div>
          <div class="row collection-header" style="margin-bottom:0px;">
        <div class="col s12">
          <div style="font-size: 12px;">
-           <a ng-class="{'current-select' : filterAll}" style="margin-left:30px; " ng-click="filter = {}; filterAll = true">ALL</a>
+           <a ng-class="{'current-select' : filterAll}" style="margin-left:30px; padding: 5px;" ng-click="filter = {}; filterAll = true">ALL</a>
            <a ng-class="{'current-select' : filter.isCompleted == false && filter.isAccept == false}" ng-click="filter = {isCompleted : false, isAccept : false, isCancel:false}; filterAll = false " style="margin-left:30px; padding: 5px;">IN TENDER</a>
            <a ng-class="{'current-select' : !filter.isCompleted && filter.isAccept}" ng-click="filter = {isCompleted : false, isAccept : true}; filterAll = false" style="margin-left:30px; padding: 5px;">IN PROGRESS</a>
            <a ng-class="{'current-select' : filter.isCompleted && filter.isAccept}" ng-click="filter = {isCompleted : true, isAccept : true}; filterAll = false" style="margin-left:30px; padding: 5px;">COMPLETED</a>
@@ -137,12 +138,12 @@
         <div class="input-field col s3">
           <p>
             <input class="valign" type="checkbox" ng-model="contractor.isSkipInTender" id="skipInTender"/>
-            <label for="skipInTender">Skip In Tender State</label>
+            <label for="skipInTender">Skip In Tender Stage</label>
           </p>
         </div>
         <div class="input-field col s3">
           <label for="date_required" ng-if="!contractor.isSkipInTender">Tender Due Date</label>
-          <label for="date_required" ng-if="contractor.isSkipInTender">Date Require On Site</label>
+          <label for="date_required" ng-if="contractor.isSkipInTender">Date Required On Site</label>
           <input type="text"
                  ng-model="contractor.dateStart"
                  id="dateStart"
@@ -243,7 +244,7 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="submit" class="waves-effect waves-light btn modal-action">Create Package!</button>
+      <button type="submit" class="waves-effect waves-light btn modal-action">ADD SUBCONTRACTOR</button>
       <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
     </div>
   </form>

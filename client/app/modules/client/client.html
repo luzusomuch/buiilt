@@ -64,16 +64,17 @@
          <div class="row collection-header" style="margin-bottom:0px">
        
        <div class="col">
-         <p style="margin-left: 10px">BUILDER PACKAGE</p>
+         <p ng-if="currentTeam.type == 'builder'" style="margin-left: 10px"><STRONG>CLIENT</STRONG></p>
+         <p ng-if="currentTeam.type == 'homeOwner'" style="margin-left: 10px"><STRONG>BUILDER</STRONG></p>
       </div>
       <div ng-hide="isShowBuilderPackageDetail" class="col right" style="">
-         <a href="#modal_attachVariation" class="modal-trigger" style="padding: 5px; font-size: 12px; color: black">NEW VARIATION</a>
+         <a href="#modal_attachVariation" class="modal-trigger" style="padding: 5px; font-size: 12px; color: black">ADD A NEW VARIATION</a>
       </div>
          </div>
          <div class="row collection-header" style="margin-bottom:0px;">
        <div class="col s12">
          <div ng-hide="isShowBuilderPackageDetail" style="font-size: 12px;">
-           <a ng-class="{'current-select' : isShowAll}" style="margin-left:30px;" ng-click="filter = {}; isShowAll = true">ALL</a>
+           <a ng-class="{'current-select' : isShowAll}" style="margin-left:30px; padding: 5px;" ng-click="filter = {}; isShowAll = true">ALL</a>
            <a ng-class="{'current-select' : filter.isCompleted == false && filter.isAccept == false}" ng-click="filter = {isCompleted : false, isAccept : false, isCancel:false}; isShowAll = false " style="margin-left:30px; padding: 5px;">IN TENDER</a>
            <a ng-class="{'current-select' : !filter.isCompleted && filter.isAccept}" ng-click="filter = {isCompleted : false, isAccept : true}; isShowAll = false" style="margin-left:30px; padding: 5px;">IN PROGRESS</a>
            <a ng-class="{'current-select' : filter.isCompleted && filter.isAccept}" ng-click="filter = {isCompleted : true, isAccept : true}; isShowAll = false" style="margin-left:30px; padding: 5px;">COMPLETED</a>
