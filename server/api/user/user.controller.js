@@ -149,7 +149,7 @@ exports.createUserWithInviteToken = function(req, res, next) {
                   else {
                     if (packageInvite.isSkipInTender) {
                       contractorPackge.winnerTeam._id = savedTeam._id;
-                      contractorPackge.isAccept = true;
+                      // contractorPackge.isAccept = true;
                     }
                     _.each(contractorPackge.to, function(to) {
                       if (to.email === packageInvite.to) {
@@ -177,7 +177,7 @@ exports.createUserWithInviteToken = function(req, res, next) {
                   else {
                     if (packageInvite.isSkipInTender) {
                       materialPackage.winnerTeam._id = savedTeam._id;
-                      materialPackage.isAccept = true;
+                      // materialPackage.isAccept = true;
                     }
                     _.each(materialPackage.to, function(to) {
                       if (to.email === packageInvite.to) {

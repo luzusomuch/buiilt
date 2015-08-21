@@ -1,5 +1,6 @@
 angular.module('buiiltApp')
-  .controller('SignupWithInviteCtrl', function ($scope,authService,$q,$cookieStore,$state,userService,$stateParams, packageInviteService) {
+  .controller('SignupWithInviteCtrl', function ($rootScope,$scope,authService,$q,$cookieStore,$state,userService,$stateParams, packageInviteService) {
+  $scope.contentHeight = $rootScope.maximunHeight - $rootScope.headerHeight - $rootScope.footerHeight - 130;
   $scope.user = {
     lastName: '',
     firstName: '',

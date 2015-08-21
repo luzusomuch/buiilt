@@ -6,13 +6,13 @@ angular.module('buiiltApp').config(function($stateProvider) {
     template: '<ui-view/>'
   })
   .state('documentBackend.list', {
-    url: '/list',
+    url: '/list/:packageId/:type',
     templateUrl: '/app/modules/backend/document-backend/index.html',
     controller: 'DocumentBackendCtrl',
     authenticate: true,
     resolve: {
-        documents: function(fileService) {
-            return fileService.getAll().$promise;
+        documents: function(fileService, $stateParams) {
+            return fileService.getFileByPackage({id: $stateParams.id, type: $stateParams.type}).$promise;
         }
     }
   })

@@ -14,7 +14,7 @@
                 <a ui-sref="threadBackend.list">{{package.threads}}</a>
             </td>
             <td data-title="'Documents'" sortable="'documents'">
-                <a ui-sref="documentBackend.list">{{package.documents}}</a>
+                <a ui-sref="documentBackend.list({packageId: package._id, type: package.type})">{{package.documents}}</a>
             </td>
             <td data-title="'Tasks'" sortable="'tasks'">
                 <a ui-sref="taskBackend.list">{{package.tasks}}</a>

@@ -681,9 +681,13 @@
        </div>
      </div>
      <div  style="height: {{contentHeight - 29}}px; overflow-x:hidden; overflow-y: auto; background-color: white;">
-       <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="task in tasks | taskFilter : filter">
+       <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="task in tasks | taskFilter : filter" ng-click="showTaskDetail(task)" style="cursor:pointer">
          <div class="col s12">
-           <div ng-click="showTaskDetail(task)"><input type="checkbox" id="complete" /><label style="color: black" for="complete">{{task.name}}</label></div>
+           <div>
+            <input ng-if="!task.completed" type="checkbox" id="complete" />
+            <input ng-if="task.completed" checked="true" type="checkbox" id="complete" />
+            <label style="color: black" for="complete">{{task.name}}</label>
+          </div>
          </div>
          <div class="col s12">
            <div style="font-size: 10px">

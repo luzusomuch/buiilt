@@ -98,10 +98,11 @@ exports.createMaterialPackage = function (req, res, next) {
       if (req.body.material.isSkipInTender) {
         materialPackage.isSkipInTender = req.body.material.isSkipInTender;
         var winnerTeam = _.first(to);
+        materialPackage.isSelect = true;
         if (winnerTeam._id) {
           materialPackage.winnerTeam._id = winnerTeam._id;
-          materialPackage.isSelect = true;
         }
+        materialPackage.winnerTeam._id = req.user.team._id
       }
       materialPackage._ownerUser = req.user;
       materialPackage.save(function(err, saved){

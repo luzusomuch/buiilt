@@ -89,10 +89,11 @@ exports.createContractorPackage = function (req, res, next) {
       if (req.body.contractor.isSkipInTender == true) {
         contractorPackage.isSkipInTender = req.body.contractor.isSkipInTender;
         var winnerTeam = _.first(to);
+        contractorPackage.isAccept = true;
         if (winnerTeam._id) {
           contractorPackage.winnerTeam._id = winnerTeam._id;
-          contractorPackage.isAccept = true;
         }
+        contractorPackage.winnerTeam._id = req.user.team._id;
       }
       contractorPackage._ownerUser = req.user;
       contractorPackage.save(function(err, saved){

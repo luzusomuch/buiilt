@@ -18,13 +18,13 @@
    <div  style="height: {{contentHeight + 85}}px; overflow-x:hidden; overflow-y: auto; background-color: white;">
      
      <!-- List of tasks -->
-    <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-if="currentList == 'tasks' && !showDetailOfTask" class="collection-item row" ng-repeat="task in myTasks | orderBy : ['dateEnd']">
+    <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-if="currentList == 'tasks' && !showDetailOfTask" class="collection-item row" ng-repeat="task in myTasks | orderBy : ['dateEnd']" ng-click="showTask(task)" style="cursor:pointer">
       <div class="col s12">
         <div>
           <input ng-if="!task.completed" type="checkbox" id="complete" />
           <input ng-if="task.completed" checked="true" type="checkbox" id="complete" />
 
-          <label style="color: black" for="complete" ng-click="showTask(task)">{{task.name}}
+          <label style="color: black" for="complete">{{task.name}}
             <!-- <a click="showTask(task)" ng-if="task.type == 'builder'"
                ui-sref="client({id : task.project})"
                class="btn-flat secondary-content new badge col s2" style="font-size: 12px;">

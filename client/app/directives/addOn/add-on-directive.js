@@ -141,7 +141,7 @@ angular.module('buiiltApp').directive('addon', function(){
                     task.isOwner = (_.findIndex(task.assignees,{_id : $scope.currentUser._id}) != -1) || (task.user == $scope.currentUser._id);
                     task.dateEnd = (task.dateEnd) ? new Date(task.dateEnd) : null;
                     _.each(task.assignees, function(assignee){
-                      if ((assignee.team.role == 'admin' && assignee.team._id == $scope.currentTeam._id) || assignee.team._id.toString() == $scope.currentTeam._id.toString()) {
+                      if (task.user == $scope.currentUser._id || (assignee.team.role == 'admin' && assignee.team._id == $scope.currentTeam._id) || assignee.team._id.toString() == $scope.currentTeam._id.toString()) {
                         task.isBelongToCurrentTeam = true;
                         return false;
                       }
