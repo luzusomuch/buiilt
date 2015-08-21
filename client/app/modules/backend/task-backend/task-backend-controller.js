@@ -1,5 +1,6 @@
 angular.module('buiiltApp').controller('TaskBackendCtrl', function(ngTableParams,$scope, tasks, taskService) {
     var data = tasks;
+    console.log(data);
 
     $scope.tableParams = new ngTableParams({
         page: 1,            // show first page

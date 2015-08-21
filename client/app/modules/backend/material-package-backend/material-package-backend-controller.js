@@ -1,13 +1,13 @@
 angular.module('buiiltApp').controller('MaterialPackageBackendCtrl', function($filter,fileService,taskService,messageService,ngTableParams,$scope, materialPackages, materialPackageService) {
     var data = materialPackages;
     _.each(data, function(materialPackage){
-        fileService.getFileByPackage({id: materialPackage._id, type: 'supplier'}).$promise.then(function(files){
+        fileService.getFileByPackage({id: materialPackage._id, type: 'material'}).$promise.then(function(files){
             materialPackage.documents = files.length;
         });
-        taskService.getByPackage({id: materialPackage._id, type: 'supplier'}).$promise.then(function(tasks){
+        taskService.getByPackage({id: materialPackage._id, type: 'material'}).$promise.then(function(tasks){
             materialPackage.tasks = tasks.length;
         });    
-        messageService.getByPackage({id: materialPackage._id, type: 'supplier'}).$promise.then(function(threads){
+        messageService.getByPackage({id: materialPackage._id, type: 'material'}).$promise.then(function(threads){
             materialPackage.threads = threads.length;
         })
     });

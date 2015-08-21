@@ -6,13 +6,24 @@ angular.module('buiiltApp').config(function($stateProvider) {
     template: '<ui-view/>'
   })
   .state('chatThreadsBackend.list', {
-    url: '/list',
+    url: '/list/:packageId/:type',
     templateUrl: '/app/modules/backend/chat-thread-backend/view.html',
     controller: 'ChatThreadBackendCtrl',
     authenticate: true,
     resolve: {
-        chatTheads: function(messageService) {
-            return messageService.getAll().$promise;
+        threads: function(messageService,$stateParams) {
+            return messageService.getByPackage({id: $stateParams.packageId, type: $stateParams.type}).$promise;
+        }
+    }
+  })
+  .state('chatThreadsBackend.detail', {
+    url: '/:threadId/:type',
+    templateUrl: '/app/modules/backend/chat-thread-backend/detail/view.html',
+    controller: 'ChatThreadDetailBackendCtrl',
+    authenticate: true,
+    resolve: {
+        thread: function(messageService, $stateParams) {
+            return messageService.getOne({id: $stateParams.threadId, type: $stateParams.type}).$promise;
         }
     }
   })

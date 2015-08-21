@@ -5,7 +5,7 @@
                 {{$index + 1}}
             </td>
             <td data-title="'Name'">
-                {{thread.name}}
+                <a ui-sref="chatThreadsBackend.detail({threadId: thread._id, type: thread.type})">{{thread.name}}</a>
             </td>
             <td data-title="'From'">
                 {{(thread.owner.firstName && thread.owner.lastName) ? thread.owner.firstName + ' '+ thread.owner.lastName : thread.owner.email }}

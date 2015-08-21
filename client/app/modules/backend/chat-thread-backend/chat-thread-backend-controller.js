@@ -1,9 +1,9 @@
-angular.module('buiiltApp').controller('ChatThreadBackendCtrl', function(ngTableParams,$scope, chatTheads, messageService) {
-    var data = chatTheads;
+angular.module('buiiltApp').controller('ChatThreadBackendCtrl', function(ngTableParams,$scope, threads, messageService) {
+    var data = threads;
 
     $scope.tableParams = new ngTableParams({
         page: 1,            // show first page
-        count: 15           // count per page
+        count: 10           // count per page
     }, {
         total: data.length, // length of data
         getData: function ($defer, params) {
@@ -12,8 +12,8 @@ angular.module('buiiltApp').controller('ChatThreadBackendCtrl', function(ngTable
     });
 
     $scope.remove = function(package){
-        messageService.delete({'id': package._id}).$promise.then(function(chatTheads){
-            data = chatTheads;
+        messageService.delete({'id': package._id}).$promise.then(function(threads){
+            data = threads;
         })
     };
 });

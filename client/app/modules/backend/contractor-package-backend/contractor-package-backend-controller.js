@@ -11,7 +11,6 @@ angular.module('buiiltApp').controller('ContractorPackageBackendCtrl', function(
             contractorPackage.threads = threads.length;
         })
     });
-    console.log(data);
 
     $scope.tableParams = new ngTableParams({
         page: 1,            // show first page

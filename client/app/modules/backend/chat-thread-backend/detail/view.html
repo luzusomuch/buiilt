@@ -1,1 +1,15 @@
-view.html
+<div class="col s12">
+    <table ng-table="tableParams" class="table">
+        <tr ng-repeat="message in $data">
+            <td data-title="'#'">
+                {{$index + 1}}
+            </td>
+            <td data-title="'From'">
+                {{(message.user.firstName) ? message.user.firstName + ' ' + message.user.lastName : message.user.email}}
+            </td>
+            <td data-title="'Message'">
+                {{message.text}}
+            </td>
+        </tr>
+    </table>
+</div>

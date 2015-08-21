@@ -104,7 +104,6 @@ exports.getAll = function(req, res) {
 };
 
 exports.getFileByPackage = function(req, res) {
-    console.log('aaaaaaa');
     File.find({belongTo: req.params.id, belongToType: req.params.type}, function(err, files){
         if (err) {return res.send(500,err);}
         if (!files) {return res.send(404);}

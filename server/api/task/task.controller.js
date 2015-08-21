@@ -213,7 +213,8 @@ exports.getTask = function(req,res) {
 };
 
 exports.getByPackage = function(req, res){
-  Task.find({package: req.params.id, type: req.params.type}, function(err, tasks){
+  Task.find({package: req.params.id, type: req.params.type})
+  .populate('assignees').exec(function(err, tasks){
     if (err) {return res.send(500,err);}
     if (!tasks) {return res.send(404);}
     return res.send(200,tasks);

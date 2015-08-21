@@ -6,13 +6,13 @@ angular.module('buiiltApp').config(function($stateProvider) {
     template: '<ui-view/>'
   })
   .state('taskBackend.list', {
-    url: '/backend/task',
+    url: '/list/:packageId/:type',
     templateUrl: '/app/modules/backend/task-backend/view.html',
     controller: 'TaskBackendCtrl',
     authenticate: true,
     resolve: {
-        tasks: function(taskService) {
-            return taskService.getAll().$promise;
+        tasks: function(taskService,$stateParams) {
+            return taskService.getByPackage({id: $stateParams.packageId, type: $stateParams.type}).$promise;
         }
     }
   })
