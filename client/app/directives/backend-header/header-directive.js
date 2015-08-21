@@ -11,6 +11,7 @@ angular.module('buiiltApp')
             $scope.currentProjectBackend = $rootScope.currentProjectBackend;
             $scope.currentPackageId = $rootScope.currentPackageId;
             $scope.currentPackageType = $rootScope.currentPackageType;
+            console.log($scope.currentPackageId);
         }
     }
 });

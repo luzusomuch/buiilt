@@ -75,7 +75,7 @@ table.team {
 }
 
 ul.notifications li .highlight, .highlight {
-    color :#FFC107
+    /*color :#FFC107*/
 }
 ul.notifications li div.read {
     opacity: 0.4;
