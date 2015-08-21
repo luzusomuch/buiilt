@@ -16,6 +16,8 @@ router.get('/:id', auth.isAuthenticated(), controller.show);
 router.put('/:id/winner', auth.isAuthenticated(), controller.selectWinner);
 router.get('/:id/user', auth.isAuthenticated(), controller.getProjectsByUser);
 router.get('/:id/builder', auth.isAuthenticated(), controller.getProjectsByBuilder);
+
+router.put('/:id', auth.isAuthenticated(), controller.updateProject);
 // router.post('/', controller.create);
 
 module.exports = router;

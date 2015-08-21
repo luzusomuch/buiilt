@@ -18,6 +18,7 @@ router.get('/:id/params', auth.isAuthenticated(), controller.getFileByStateParam
 router.get('/:id/download', auth.isAuthenticated(), controller.downloadFile);
 router.get('/:id/download-all', auth.isAuthenticated(), controller.downloadAll);
 router.get('/:id/:type/get-by-package', auth.isAuthenticated(), controller.getFileByPackage);
+router.delete('/:id', auth.isAuthenticated(), controller.deleteFile);
 // router.get('/me', auth.isAuthenticated(), controller.getMyFile);
 // router.post('/', controller.create);
 

@@ -53,7 +53,13 @@ angular.module('buiiltApp')
             action: 'list'
           }
         },
-        delete: {method:'DELETE', params: {id: 'id', action: ''}, isArray: true}
+        delete: {method:'DELETE', params: {id: 'id', action: ''}, isArray: true},
+        updateProject: {
+          method: 'put',
+          params: {
+            id: '@id'
+          }
+        }
     }
 );
 });

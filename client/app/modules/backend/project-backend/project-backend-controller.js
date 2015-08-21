@@ -1,5 +1,7 @@
-angular.module('buiiltApp').controller('ProjectBackendCtrl', function($scope, projects, projectService,ngTableParams,$filter,contractorService,materialPackageService) {
+angular.module('buiiltApp')
+.controller('ProjectBackendCtrl', function($state,authService,$rootScope,$scope, projects, projectService,ngTableParams,$filter,contractorService,materialPackageService) {
     var data = projects;
+
     _.each(data, function(project) {
         contractorService.get({id: project._id}).$promise.then(function(packages){
             project.contractorPackages = packages.length;
@@ -23,11 +25,19 @@ angular.module('buiiltApp').controller('ProjectBackendCtrl', function($scope, pr
             $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
         }
     });
-
     $scope.remove = function(project, index){
         projectService.delete({'id': project._id}).$promise.then(function(projects){
-            data.splice(index, 1);
-            // data = projects;
+            _.remove(data, {_id: project._id});
+            $scope.tableParams.reload();
         })
+    };
+
+    $scope.getCurrentProject = function(project) {
+        $scope.project = project;
+    };
+    $scope.editProject = function() {
+        projectService.updateProject({id: $scope.project._id},{project: $scope.project}).$promise.then(function(project) {
+            $scope.tableParams.reload();
+        });
     };
 });

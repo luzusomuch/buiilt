@@ -3,7 +3,7 @@ angular.module('buiiltApp').controller('UserBackendCtrl', function(ngTableParams
 
     $scope.tableParams = new ngTableParams({
         page: 1,            // show first page
-        count: 15           // count per page
+        count: 10           // count per page
     }, {
         total: data.length, // length of data
         getData: function ($defer, params) {
@@ -13,7 +13,8 @@ angular.module('buiiltApp').controller('UserBackendCtrl', function(ngTableParams
 
     $scope.remove = function(user){
         userService.delete({'id': user._id}).$promise.then(function(users){
-            data = users;
+            _.remove(data, {_id: user._id});
+            $scope.tableParams.reload();
         })
     };
 });

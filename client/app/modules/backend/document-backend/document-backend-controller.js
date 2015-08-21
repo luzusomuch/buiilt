@@ -13,7 +13,8 @@ angular.module('buiiltApp').controller('DocumentBackendCtrl', function($scope, d
 
     $scope.remove = function(value){
         fileService.delete({'id': value._id}).$promise.then(function(documents){
-            data = documents;
+            _.remove(data, {_id: value._id});
+            $scope.tableParams.reload();
         })
     };
 });

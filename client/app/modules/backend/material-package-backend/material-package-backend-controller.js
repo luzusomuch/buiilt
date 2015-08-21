@@ -30,7 +30,8 @@ angular.module('buiiltApp').controller('MaterialPackageBackendCtrl', function($f
 
     $scope.remove = function(package){
         materialPackageService.delete({'id': package._id}).$promise.then(function(materialPackages){
-            data = materialPackages;
+            _.remove(data, {_id: package._id});
+            $scope.tableParams.reload();
         })
     };
 });

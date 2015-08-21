@@ -242,3 +242,12 @@ exports.destroy = function (req, res) {
     })
   });
 };
+
+exports.updateProject = function(req, res) {
+  console.log(req.body.project);
+  Project.update({_id: req.params.id},
+  {name: req.body.project.name, description: req.body.project.description}, function(err, saved){
+    if (err) {console.log(err);return res.send(500,err);}
+    return res.send(200,saved);
+  });
+};

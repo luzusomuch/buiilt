@@ -18,7 +18,28 @@
             </td>
             <td data-title="'Action'">
                 <i class="material-icons" ng-click="remove(project, $index)" style="color:#03A9F4">remove</i>
+                <a ng-click="getCurrentProject(project)" href="#editProject" class="modal-trigger"><i class="material-icons">create</i></a>
             </td>
         </tr>
     </table>
+</div>
+
+<div id="editProject" class="modal modal-fixed-bottom">
+    <form ng-submit="editProject()">
+        <div class="modal-content">
+            <div class="input-field col s12">
+                <label>Name </label>
+                <input name="name" ng-model="project.name" required type="text"
+                       ng-class="{'invalid' : form.name.$invalid && submitted}">
+            </div>
+            <div class="input-field col s12">
+                <label for="">Description</label>
+                <input type="text" ng-model="project.description">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-flat modal-action modal-close">Save</button>
+            <button class="btn btn-flat modal-action modal-close">Close</button>
+        </div>
+    </form>
 </div>
