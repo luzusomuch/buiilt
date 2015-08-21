@@ -28,6 +28,40 @@ angular.module('buiiltApp').controller('BuilderPackageBackendCtrl', function(ngT
         }
     });
 
+    $scope.getEditPackage = function(package) {
+        $scope.package = package;
+    };
+
+    $scope.addDescription = function(description) {
+        if (description) {
+            $scope.package.descriptions.push(description);
+            $scope.description = '';
+        }
+    };
+
+    $scope.removeDescription = function(index) {
+        $scope.package.descriptions.splice(index,1);
+        $scope.description = '';
+    };
+
+    $scope.editPackage = function() {
+        builderPackageService.updatePackage({id: $scope.package._id}, {package: $scope.package})
+        .$promise.then(function(package){
+            _.remove(data, {_id: $scope.package._id});
+            fileService.getFileByPackage({id: package._id, type: 'builder'}).$promise.then(function(files){
+                package.documents = files.length;
+            });
+            taskService.getByPackage({id: package._id, type: 'builder'}).$promise.then(function(tasks){
+                package.tasks = tasks.length;
+            });    
+            messageService.getByPackage({id: package._id, type: 'builder'}).$promise.then(function(threads){
+                package.threads = threads.length;
+            });
+            data.push(package);
+            $scope.tableParams.reload();
+        });
+    };
+
     // $scope.remove = function(package){
     //     builderPackageService.delete({'id': package._id}).$promise.then(function(builderPackages){
     //         data = builderPackages;

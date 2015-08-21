@@ -27,6 +27,7 @@
 <div id="editProject" class="modal modal-fixed-bottom">
     <form ng-submit="editProject()">
         <div class="modal-content">
+            <h5>EDIT PROJECT</h5>
             <div class="input-field col s12">
                 <label>Name </label>
                 <input name="name" ng-model="project.name" required type="text"
@@ -39,7 +40,7 @@
         </div>
         <div class="modal-footer">
             <button type="submit" class="btn btn-flat modal-action modal-close">Save</button>
-            <button class="btn btn-flat modal-action modal-close">Close</button>
+            <a href="#" class="btn btn-flat modal-action modal-close">Close</a>
         </div>
     </form>
 </div>

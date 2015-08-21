@@ -34,4 +34,38 @@ angular.module('buiiltApp').controller('StaffPackageBackendCtrl', function(messa
             $scope.tableParams.reload();
         })
     };
+
+    $scope.getEditPackage = function(package) {
+        $scope.package = package;
+    };
+
+    $scope.addDescription = function(description) {
+        if (description) {
+            $scope.package.descriptions.push(description);
+            $scope.description = '';
+        }
+    };
+
+    $scope.removeDescription = function(index) {
+        $scope.package.descriptions.splice(index,1);
+        $scope.description = '';
+    };
+
+    $scope.editPackage = function() {
+        staffPackageService.updatePackage({id: $scope.package._id}, {package: $scope.package})
+        .$promise.then(function(package){
+            _.remove(data, {_id: $scope.package._id});
+            fileService.getFileByPackage({id: package._id, type: 'staff'}).$promise.then(function(files){
+                package.documents = files.length;
+            });
+            taskService.getByPackage({id: package._id, type: 'staff'}).$promise.then(function(tasks){
+                package.tasks = tasks.length;
+            });    
+            messageService.getByPackage({id: package._id, type: 'staff'}).$promise.then(function(threads){
+                package.threads = threads.length;
+            });
+            data.push(package);
+            $scope.tableParams.reload();
+        });
+    };
 });

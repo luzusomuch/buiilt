@@ -34,4 +34,42 @@ angular.module('buiiltApp').controller('ContractorPackageBackendCtrl', function(
             $scope.tableParams.reload();
         })
     };
+
+    $scope.getEditPackage = function(package) {
+        $scope.package = package;
+        $scope.package.descriptions = [];
+        _.each($scope.package.addendums, function(addendum) {
+            $scope.package.descriptions.push({description: addendum.addendumsScope.description, isNew: false});
+        });
+    };
+
+    $scope.addDescriptionContractor = function(description) {
+        if (description) {
+            $scope.package.descriptions.push({description: description, isNew: true});
+            $scope.description = '';
+        }
+    };
+
+    $scope.removeDescriptionContractor = function(index) {
+        $scope.package.descriptions.splice(index,1);
+        $scope.description = '';
+    };
+
+    $scope.editPackage = function() {
+        contractorService.updatePackage({id: $scope.package._id}, {package: $scope.package})
+        .$promise.then(function(package){
+            _.remove(data, {_id: $scope.package._id});
+            fileService.getFileByPackage({id: package._id, type: 'contractor'}).$promise.then(function(files){
+                package.documents = files.length;
+            });
+            taskService.getByPackage({id: package._id, type: 'contractor'}).$promise.then(function(tasks){
+                package.tasks = tasks.length;
+            });    
+            messageService.getByPackage({id: package._id, type: 'contractor'}).$promise.then(function(threads){
+                package.threads = threads.length;
+            });
+            data.push(package);
+            $scope.tableParams.reload();
+        });
+    };
 });

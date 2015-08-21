@@ -210,3 +210,21 @@ exports.destroy = function (req, res) {
     })
   });
 };
+
+exports.updatePackage = function(req, res) {
+  var requestPackage = req.body.package;
+  ContractorPackage.findById(req.params.id, function(err, contractorPackage) {
+    if (err) {return res.send(500,err);}
+    if (!contractorPackage) {return res.send(404);}
+    _.each(requestPackage.descriptions, function(description) {
+      if (description.isNew) {
+        contractorPackage.addendums.push({'addendumsScope.description': description.description});
+      }
+    })
+    contractorPackage.name = requestPackage.name;
+    contractorPackage.save(function(err) {
+      if (err) {return res.send(500,err);}
+      return res.send(contractorPackage);
+    });
+  });  
+};

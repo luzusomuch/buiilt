@@ -9,5 +9,5 @@ router.delete('/:id', auth.hasRole('admin'), controller.destroy);
 router.get('/list', auth.isAuthenticated(), controller.getAll);
 router.get('/:id', auth.isAuthenticated(), controller.project, controller.getDefaultPackageByProject);
 router.get('/:id/find-by-project', auth.isAuthenticated(), controller.findByProject);
-
+router.put('/:id', auth.isAuthenticated(), controller.updatePackage);
 module.exports = router;

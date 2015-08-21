@@ -219,3 +219,21 @@ exports.destroy = function (req, res) {
     })
   });
 };
+
+exports.updatePackage = function(req, res) {
+  var requestPackage = req.body.package;
+  MaterialPackage.findById(req.params.id, function(err, materialPackage) {
+    if (err) {return res.send(500,err);}
+    if (!materialPackage) {return res.send(404);}
+    _.each(requestPackage.requirements, function(requirement) {
+      if (requirement.isNew) {
+        materialPackage.addendums.push({'addendumsScope.description': requirement.description, 'addendumsScope.quantity': requirement.quantity});
+      }
+    })
+    materialPackage.name = requestPackage.name;
+    materialPackage.save(function(err) {
+      if (err) {return res.send(500,err);}
+      return res.send(materialPackage);
+    });
+  });  
+};

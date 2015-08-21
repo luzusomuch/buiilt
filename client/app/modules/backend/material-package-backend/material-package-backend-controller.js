@@ -34,4 +34,44 @@ angular.module('buiiltApp').controller('MaterialPackageBackendCtrl', function($f
             $scope.tableParams.reload();
         })
     };
+
+    $scope.getEditPackage = function(package) {
+        $scope.package = package;
+        $scope.package.requirements = [];
+        _.each($scope.package.addendums, function(addendum) {
+            $scope.package.requirements.push({description: addendum.addendumsScope.description, quantity: addendum.addendumsScope.quantity, isNew: false});
+        });
+    };
+
+    $scope.addDescriptionSupplier = function() {
+        if ($scope.description && $scope.quantity) {
+            $scope.package.requirements.push({description: $scope.description, quantity: $scope.quantity , isNew: true});
+            $scope.description = '';
+            $scope.quantity = '';
+        }
+    };
+
+    $scope.removeDescriptionSupplier = function(index) {
+        $scope.package.requirements.splice(index,1);
+        $scope.description = '';
+        $scope.quantity = '';
+    };
+
+    $scope.editPackage = function() {
+        materialPackageService.updatePackage({id: $scope.package._id}, {package: $scope.package})
+        .$promise.then(function(package){
+            _.remove(data, {_id: $scope.package._id});
+            fileService.getFileByPackage({id: package._id, type: 'material'}).$promise.then(function(files){
+                package.documents = files.length;
+            });
+            taskService.getByPackage({id: package._id, type: 'material'}).$promise.then(function(tasks){
+                package.tasks = tasks.length;
+            });    
+            messageService.getByPackage({id: package._id, type: 'material'}).$promise.then(function(threads){
+                package.threads = threads.length;
+            });
+            data.push(package);
+            $scope.tableParams.reload();
+        });
+    };
 });

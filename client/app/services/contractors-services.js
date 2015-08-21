@@ -73,6 +73,12 @@ angular.module('buiiltApp')
             isArray: true
         },
         delete: {method:'DELETE', params: {id: 'id', action: ''}, isArray: true},
+        updatePackage: {
+            method: 'put',
+            params: {
+                id: '@id'
+            }
+        }
         
     });
 });

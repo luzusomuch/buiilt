@@ -89,3 +89,12 @@ exports.destroy = function (req, res) {
     })
   });
 };
+
+exports.updatePackage = function(req, res) {
+  var requestPackage = req.body.package;
+  BuilderPackage.update({_id: req.params.id},
+  {name: requestPackage.name, descriptions: requestPackage.descriptions}, function(err, saved) {
+    if (err) {return res.send(500,err);}
+    return res.send(200,saved);
+  })
+};

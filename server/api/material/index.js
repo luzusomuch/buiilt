@@ -7,7 +7,9 @@ var auth = require('../../auth/auth.service');
 var router = express.Router();
 
 router.post('/', auth.isAuthenticated(), controller.createMaterialPackage);
+
 router.delete('/:id', auth.hasRole('admin'), controller.destroy);
+
 router.get('/list', auth.isAuthenticated(), controller.getAll);
 router.get('/:id', auth.isAuthenticated(), controller.index);
 router.get('/:id/supplier', auth.isAuthenticated(), controller.getProjectForSupplier);
@@ -17,6 +19,8 @@ router.get('/:id/tender-builder', auth.isAuthenticated(), controller.getMaterial
 router.get('/:id/processing-builder', auth.isAuthenticated(), controller.getMaterialPackageInProcessByProjectForBuilder);
 router.get('/:id/tender-supplier', auth.isAuthenticated(), controller.getMaterialPackageInTenderByProjectForSupplier);
 router.get('/:id/processing-supplier', auth.isAuthenticated(), controller.getMaterialPackageInProcessByProjectForSupplier);
+
+router.put('/:id', auth.isAuthenticated(), controller.updatePackage);
 
 
 module.exports = router;

@@ -37,6 +37,14 @@ angular.module('buiiltApp')
     };
     $scope.editProject = function() {
         projectService.updateProject({id: $scope.project._id},{project: $scope.project}).$promise.then(function(project) {
+            _.remove(data, {_id: $scope.project._id});
+            contractorService.get({id: project._id}).$promise.then(function(packages){
+                project.contractorPackages = packages.length;
+            });
+            materialPackageService.get({id: project._id}).$promise.then(function(packages){
+                project.materialpackages = packages.length;
+            });
+            data.push(project);
             $scope.tableParams.reload();
         });
     };
