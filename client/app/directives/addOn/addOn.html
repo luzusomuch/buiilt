@@ -852,7 +852,7 @@
 
         <div class="row available-assign"  ng-if="!isShow" >
           <p style="">Available Assignee's:</p>
-          <a href="#!" ng-click="assign(staff,$index)" ng-repeat="staff in available track by $index">
+          <a href="#!" ng-click="assign(staff,$index)" ng-repeat="staff in available | unique: staff track by $index">
             <div class="card col" style="padding: 5px; margin-left: 10px"  ng-class="{'admin' : staff.team.role == 'admin'}">
               {{staff | name}}
             </div>

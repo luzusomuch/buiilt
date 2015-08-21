@@ -12,7 +12,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
     authenticate: true,
     resolve: {
         documents: function(fileService, $stateParams) {
-            return fileService.getFileByPackage({id: $stateParams.id, type: $stateParams.type}).$promise;
+            return fileService.getFileByPackage({id: $stateParams.packageId, type: $stateParams.type}).$promise;
         }
     }
   })
