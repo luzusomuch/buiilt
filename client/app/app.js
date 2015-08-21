@@ -74,16 +74,18 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
       }
     };
     $rootScope.$on('$stateChangeStart', function (event,toState, toParams, next) {
-        authService.isLoggedInAsync(function (loggedIn) {
-          if (loggedIn) {
+      $rootScope.currentPackageId = toParams.packageId;
+      $rootScope.currentPackageType = toParams.type;
+      authService.isLoggedInAsync(function (loggedIn) {
+        if (loggedIn) {
 
-          }
-          if (toState.authenticate && !loggedIn) {
-            $location.path('/');
-          } else if (!toState.authenticate && loggedIn) {
-            $state.go('team.manager')
-          }
-        });
+        }
+        if (toState.authenticate && !loggedIn) {
+          $location.path('/');
+        } else if (!toState.authenticate && loggedIn) {
+          $state.go('team.manager')
+        }
+      });
       if (toState.noHeader) {
         $rootScope.hasHeader = false;
       }

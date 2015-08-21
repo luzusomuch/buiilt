@@ -1,8 +1,9 @@
 angular.module('buiiltApp').config(function($stateProvider) {
   $stateProvider
   .state('chatThreadsBackend', {
-    url: '/backend/chat-thread',
+    url: '/backend/:id/chat-thread',
     authenticate: true,
+    backendHasCurrentProject: true,
     template: '<ui-view/>'
   })
   .state('chatThreadsBackend.list', {
@@ -10,6 +11,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
     templateUrl: '/app/modules/backend/chat-thread-backend/view.html',
     controller: 'ChatThreadBackendCtrl',
     authenticate: true,
+    backendHasCurrentProject: true,
     resolve: {
         threads: function(messageService,$stateParams) {
             return messageService.getByPackage({id: $stateParams.packageId, type: $stateParams.type}).$promise;
@@ -21,6 +23,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
     templateUrl: '/app/modules/backend/chat-thread-backend/detail/view.html',
     controller: 'ChatThreadDetailBackendCtrl',
     authenticate: true,
+    backendHasCurrentProject: true,
     resolve: {
         thread: function(messageService, $stateParams) {
             return messageService.getOne({id: $stateParams.threadId, type: $stateParams.type}).$promise;
