@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-.controller('SendQuoteContractorPackageCtrl', function($rootScope,$scope, $window, $state, currentTeam, $stateParams, $cookieStore, authService, userService, contractorRequest, contractorRequestService,FileUploader, registryForContractorService) {
+.controller('SendQuoteContractorPackageCtrl', function(socket,$rootScope,$scope, $window, $state, currentTeam, $stateParams, $cookieStore, authService, userService, contractorRequest, contractorRequestService,FileUploader, registryForContractorService) {
   /**
    * quote data
    */
@@ -43,6 +43,9 @@ angular.module('buiiltApp')
 
   $scope.quoteRequest = {};
   $scope.contractorRequest = contractorRequest;
+
+  socket.emit('join',$scope.contractorRequest._id);
+
   $scope.currentUser = {};
   if ($cookieStore.get('token')) {
     $scope.currentUser = userService.get();
@@ -236,11 +239,16 @@ angular.module('buiiltApp')
     }
   };
 
+  socket.on('messageInTender:new', function (package) {
+    $scope.contractorRequest = package;
+    // console.log(package);
+  });
+
   $scope.sendMessage = function() {
     if ($scope.message) {
       contractorRequestService.sendMessageToBuilder({id: $stateParams.packageId, team: $scope.currentTeam._id, message: $scope.message})
       .$promise.then(function(data) {
-        $scope.messages = data;
+        $scope.contractorRequest = data;
         $scope.message = null;
       });
     }

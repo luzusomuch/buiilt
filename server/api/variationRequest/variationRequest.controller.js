@@ -9,6 +9,7 @@ var User = require('./../../models/user.model');
 var Team = require('./../../models/team.model');
 var _ = require('lodash');
 var async = require('async');
+var EventBus = require('../../components/EventBus');
 
 exports.findOne = function(req, res) {
     Variation.findById(req.params.id)
@@ -125,6 +126,11 @@ exports.sendMessage = function(req, res) {
         else {
           Variation.populate(saved,[{path:'to._id'},{path:'messages.sendBy'},{path: 'to.quoteDocument'}] , function(err,variation){
             if (err) {return res.send(500,err);}
+            EventBus.emit('socket:emit', {
+              event: 'messageInTender:new',
+              room: variation._id.toString(),
+              data: variation
+            });
             return res.json(200,variation);
           });
         }
@@ -150,6 +156,11 @@ exports.sendMessageToBuilder = function(req, res) {
         if (err) {return res.send(500, err)}
         Variation.populate(saved,[{path:'messages.sendBy'},{path: 'to.quoteDocument'},{path: 'to._id'}] , function(err,variation){
           if (err) {return res.send(500,err);}
+          EventBus.emit('socket:emit', {
+            event: 'messageInTender:new',
+            room: variation._id.toString(),
+            data: variation
+          });
           return res.json(200,variation);
         });
       });

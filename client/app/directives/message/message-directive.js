@@ -41,6 +41,7 @@ angular.module('buiiltApp')
           };
           $scope.goToThreadDetail = function(thread) {
             $scope.currentThread = thread;
+            socket.emit('join',thread._id);
             _.each(thread.messages, function(message){
               if (message.user._id != $scope.currentUser._id) {
                 $scope.backgroundColor = {'background-color':'#eee'}
@@ -247,7 +248,7 @@ angular.module('buiiltApp')
                   $scope.currentThread = res;
                   // $scope.threads.push($scope.currentThread);
                   // console.log($scope.threads);
-                  updateThread();
+                  // updateThread();
                   $scope.message.text = '';
                 });
             }

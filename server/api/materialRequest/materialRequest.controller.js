@@ -7,6 +7,7 @@ var User = require('./../../models/user.model');
 var Team = require('./../../models/team.model');
 var _ = require('lodash');
 var async = require('async');
+var EventBus = require('../../components/EventBus');
 
 exports.findOne = function(req, res) {
     MaterialPackage.findById(req.params.id)
@@ -230,6 +231,11 @@ exports.sendMessage = function(req, res) {
           else {
             MaterialPackage.populate(saved,[{path:'messages.sendBy'},{path: 'to.quoteDocument'}] , function(err,materialPackage){
               if (err) {return res.send(500,err);}
+              EventBus.emit('socket:emit', {
+                event: 'messageInTender:new',
+                room: materialPackage._id.toString(),
+                data: materialPackage
+              });
               return res.json(200,materialPackage);
             });
           }
@@ -271,6 +277,11 @@ exports.sendMessageToBuilder = function(req, res) {
           else {
             MaterialPackage.populate(saved,[{path:'messages.sendBy'},{path: 'to.quoteDocument'}] , function(err,materialPackage){
               if (err) {return res.send(500,err);}
+              EventBus.emit('socket:emit', {
+                event: 'messageInTender:new',
+                room: materialPackage._id.toString(),
+                data: materialPackage
+              });
               return res.json(200,materialPackage);
             });
           }

@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-.controller('SendQuoteVariationCtrl', function($rootScope,$scope, $window, $state, currentTeam, $stateParams, $cookieStore, authService, userService, variationRequest, variationRequestService,FileUploader, registryForContractorService) {
+.controller('SendQuoteVariationCtrl', function(socket,$rootScope,$scope, $window, $state, currentTeam, $stateParams, $cookieStore, authService, userService, variationRequest, variationRequestService,FileUploader, registryForContractorService) {
   /**
    * quote data
    */
@@ -44,7 +44,7 @@ angular.module('buiiltApp')
 
   $scope.quoteRequest = {};
   $scope.variationRequest = variationRequest;
-  console.log($scope.variationRequest);
+  socket.emit('join',$scope.variationRequest._id);
   $scope.currentTeam = currentTeam;
   $scope.currentUser = {};
   if ($cookieStore.get('token')) {
@@ -54,6 +54,11 @@ angular.module('buiiltApp')
   if (variationRequest.to._id._id != currentTeam._id && variationRequest.isCancel) {
     $state.go('team.manager');
   }
+
+  socket.on('messageInTender:new', function (package) {
+    $scope.variationRequest = package;
+    // console.log(package);
+  });
 
   $scope.subTotalPrice = 0;
   $scope.subTotalRate = 0;
@@ -233,7 +238,6 @@ angular.module('buiiltApp')
     if ($scope.message) {
       variationRequestService.sendMessageToBuilder({id: $stateParams.variationId, team: $scope.currentTeam._id, message: $scope.message})
       .$promise.then(function(data) {
-        console.log(data);
         $scope.variationRequest = data;
         $scope.message = null;
       });

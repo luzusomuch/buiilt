@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-.controller('ViewContractorRequestCtrl', function($rootScope,$scope, $window, $state, $stateParams,fileService,currentTeam, $cookieStore, authService, userService, contractorRequest, contractorRequestService, quoteService) {
+.controller('ViewContractorRequestCtrl', function(socket,$rootScope,$scope, $window, $state, $stateParams,fileService,currentTeam, $cookieStore, authService, userService, contractorRequest, contractorRequestService, quoteService) {
   $scope.activeHover = function($event){
     angular.element($event.currentTarget).addClass("item-hover")
   };
@@ -42,6 +42,7 @@ angular.module('buiiltApp')
 
   $scope.emailsPhone = [];
   $scope.contractorRequest = contractorRequest;
+  socket.emit('join',$scope.contractorRequest._id);
   _.each($scope.contractorRequest.to, function(item) {
     item.totalMessages = 0;
     _.each($scope.contractorRequest.messages, function(message){
@@ -131,6 +132,11 @@ angular.module('buiiltApp')
       $scope.sendMessage();
     }
   };
+
+  socket.on('messageInTender:new', function (package) {
+    $scope.contractorRequest = package;
+    // console.log(package);
+  });
 
   $scope.sendMessage = function() {
     if ($scope.tender._id == 'undefined' || !$scope.tender._id) {

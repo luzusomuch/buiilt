@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-.controller('ViewVariationRequestCtrl', function($scope, $rootScope, $window, $state, $stateParams,fileService,currentTeam, $cookieStore, authService, userService, variationRequest, variationRequestService, quoteService) {
+.controller('ViewVariationRequestCtrl', function(socket, $scope, $rootScope, $window, $state, $stateParams,fileService,currentTeam, $cookieStore, authService, userService, variationRequest, variationRequestService, quoteService) {
   /**
    * quote data
    */
@@ -44,7 +44,13 @@ angular.module('buiiltApp')
 
   $scope.emailsPhone = [];
   $scope.variationRequest = variationRequest;
-  console.log($scope.variationRequest);
+  socket.emit('join',$scope.variationRequest._id);
+
+  socket.on('messageInTender:new', function (package) {
+    $scope.variationRequest = package;
+    // console.log(package);
+  });
+
   $scope.currentTeam = currentTeam;
   $scope.currentUser = {};
   if ($cookieStore.get('token')) {

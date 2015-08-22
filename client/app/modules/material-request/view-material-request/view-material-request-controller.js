@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-.controller('ViewMaterialRequestCtrl', function($scope,$rootScope,$window, $state, $stateParams,currentTeam,fileService, $cookieStore, authService, userService, materialRequest, materialRequestService, quoteService) {
+.controller('ViewMaterialRequestCtrl', function(socket,$scope,$rootScope,$window, $state, $stateParams,currentTeam,fileService, $cookieStore, authService, userService, materialRequest, materialRequestService, quoteService) {
   /**
    * quote data
    */
@@ -45,6 +45,7 @@ angular.module('buiiltApp')
 
   $scope.emailsPhone = [];
   $scope.materialRequest = materialRequest;
+  socket.emit('join',$scope.materialRequest._id);
   _.each($scope.materialRequest.to, function(item) {
     item.totalMessages = 0;
     _.each($scope.materialRequest.messages, function(message){
@@ -135,6 +136,10 @@ angular.module('buiiltApp')
       $scope.sendMessage();
     }
   };
+
+  socket.on('messageInTender:new', function (package) {
+    $scope.materialRequest = package;
+  });
 
   $scope.sendMessage = function() {
     if ($scope.tender._id == 'undefined' || !$scope.tender._id) {

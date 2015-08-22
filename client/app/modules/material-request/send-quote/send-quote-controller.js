@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-.controller('SendQuoteMaterialPackageCtrl', function($rootScope,$scope, $state, $stateParams,currentTeam, FileUploader, $cookieStore, authService, userService, materialRequest, materialRequestService) {
+.controller('SendQuoteMaterialPackageCtrl', function(socket,$rootScope,$scope, $state, $stateParams,currentTeam, FileUploader, $cookieStore, authService, userService, materialRequest, materialRequestService) {
   /**
    * quote data
    */
@@ -44,6 +44,7 @@ angular.module('buiiltApp')
 
   $scope.quoteRequest = {};
   $scope.materialRequest = materialRequest;
+  socket.emit('join',$scope.materialRequest._id);
   $scope.currentTeam = currentTeam;
   $scope.currentUser = {};
   if ($cookieStore.get('token')) {
@@ -100,6 +101,11 @@ angular.module('buiiltApp')
       $scope.sendMessage();
     }
   };
+
+  socket.on('messageInTender:new', function (package) {
+    $scope.materialRequest = package;
+  });
+
   $scope.sendMessage = function() {
     materialRequestService.sendMessageToBuilder({id: $stateParams.packageId, team: $scope.currentTeam._id, message: $scope.message.message})
     .$promise.then(function(data) {
