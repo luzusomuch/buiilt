@@ -79,14 +79,16 @@ angular.module('buiiltApp')
           if (data.package.type === 'contractor') {
             if (!data.package.isAccept) {
               $state.go('contractorRequest.sendQuote', {id:data.package.project, packageId: data.package._id});  
+            } else {
+              $state.go('contractorRequest.contractorPackageInProcess', {id:data.package.project, packageId: data.package._id});  
             }
-            $state.go('contractorRequest.contractorPackageInProcess', {id:data.package.project, packageId: data.package._id});  
           }
           else if (data.package.type === 'material') {
-            if (!data.package.isAccept) {
+            if (!data.package.isSelect) {
               $state.go('materialRequest.sendQuote', {id: data.package.project, packageId: data.package._id});
+            } else {
+              $state.go('materialRequest.materialPackageInProcess', {id: data.package.project, packageId: data.package._id});
             }
-            $state.go('materialRequest.materialPackageInProcess', {id: data.package.project, packageId: data.package._id});
           }
           else if (data.package.type === 'BuilderPackage') {
             $state.go('dashboard', {id: data.package.project});

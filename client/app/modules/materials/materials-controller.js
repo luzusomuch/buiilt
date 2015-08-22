@@ -170,15 +170,12 @@ angular.module('buiiltApp').controller('MaterialsCtrl',
           suppliers: $scope.materialMember.emailsPhone,
           project: $stateParams.id
         }).$promise.then(function (data) {
-          data.files = {};
-          data.tasks = {};
-          data.threads = {};
-          $scope.materialPackages.push(data);
           $('#newMaterialPackage').closeModal();
-          // if (!data.isSelect) {
-            // $state.go('materialRequest.viewMaterialRequest',{id : data.project, packageId : data._id});
-          // }
-          // $state.go('materialRequest.materialPackageInProcess',{id : data.project, packageId : data._id});
+          if (!data.isSelect) {
+            $state.go('materialRequest.viewMaterialRequest',{id : data.project, packageId : data._id});
+          } else {
+            $state.go('materialRequest.materialPackageInProcess',{id : data.project, packageId : data._id});
+          }
           });
       }
     };

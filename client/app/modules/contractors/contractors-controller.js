@@ -157,17 +157,17 @@ angular.module('buiiltApp').controller('ContractorsCtrl',
           emailsPhone: $scope.contractorMember.emailsPhone,
           project: $stateParams.id
         }).$promise.then(function (data) {
-            // if (!isSkipInTender) {
-            //   $state.go('contractorRequest.viewContractorRequest',{id : data.project, packageId : data._id});
-            // }
-            // else {
-            //   $state.go('contractorRequest.contractorPackageInProcess',{id : data.project, packageId : data._id});
-            // }
-            data.tasks = {};
-            data.threads = {};
-            data.files = {};
-            $scope.contractorPackages.push(data);
             $('#newContractorPackage').closeModal();
+            if (!data.isAccept) {
+              $state.go('contractorRequest.viewContractorRequest',{id : data.project, packageId : data._id});
+            }
+            else {
+              $state.go('contractorRequest.contractorPackageInProcess',{id : data.project, packageId : data._id});
+            }
+            // data.tasks = {};
+            // data.threads = {};
+            // data.files = {};
+            // $scope.contractorPackages.push(data);
           });
       }
     };

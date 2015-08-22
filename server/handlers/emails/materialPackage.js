@@ -36,6 +36,7 @@ EventBus.onSeries('MaterialPackage.Inserted', function(request, next) {
     if (err) {
       return next();
     }
+    console.log(request);
     if (request.isSkipInTender == true) {
       var winner = _.first(request.to);
       if (!winner._id) {
@@ -62,7 +63,7 @@ EventBus.onSeries('MaterialPackage.Inserted', function(request, next) {
         });
       }
       else {
-        Team.findOne({_id: supplier._id}, function(err, team) {
+        Team.findOne({_id: winner._id}, function(err, team) {
           if (err || !team) {
             return next();
           }

@@ -42,7 +42,6 @@ exports.index = function (req, res) {
  */
 exports.createMaterialPackage = function (req, res, next) {
   var to = [];
-  console.log(req.body);
   var materialPackage = new MaterialPackage({
     owner: req.user.team._id,
     type: 'material',
@@ -101,8 +100,9 @@ exports.createMaterialPackage = function (req, res, next) {
         materialPackage.isSelect = true;
         if (winnerTeam._id) {
           materialPackage.winnerTeam._id = winnerTeam._id;
+        } else {
+          materialPackage.winnerTeam._id = req.user.team._id
         }
-        materialPackage.winnerTeam._id = req.user.team._id
       }
       materialPackage._ownerUser = req.user;
       materialPackage.save(function(err, saved){
@@ -212,7 +212,6 @@ exports.destroy = function (req, res) {
       return res.send(500, err);
     }
     if (!materialPackage) {return res.send(404);}
-    console.log(materialPackage);
     MaterialPackage.find({}, function(err,materialPackages){
       if (err) {return res.send(500,err);}
       return res.send(200, materialPackages);
