@@ -23,13 +23,13 @@ angular.module('buiiltApp').controller('MaterialsCtrl',
 
     _.forEach($scope.materialPackages,function(materialPackage) {
         materialPackage.isSupplier = (_.find(materialPackage.to, {_id: $scope.currentTeam._id})) ? true: false;
-        fileService.getFileByPackage({id: materialPackage._id, type: 'supplier'}).$promise.then(function(files){
+        fileService.getFileByPackage({id: materialPackage._id, type: 'material'}).$promise.then(function(files){
           materialPackage.files = files;
         });
-        taskService.getByPackage({id: materialPackage._id, type: 'supplier'}).$promise.then(function(tasks){
+        taskService.getByPackage({id: materialPackage._id, type: 'material'}).$promise.then(function(tasks){
           materialPackage.tasks = tasks;
         });
-        messageService.getByPackage({id: materialPackage._id, type: 'supplier'}).$promise.then(function(threads){
+        messageService.getByPackage({id: materialPackage._id, type: 'material'}).$promise.then(function(threads){
           materialPackage.threads = threads;
         })
     });
