@@ -92,6 +92,7 @@ exports.getData = function(threadName, message, users){
            .device(device.deviceToken)
            .alert(threadName+': '+message)
            .badge(totalBadge)
+           .set("push", true)
            .sound('defauld').send(function(err){
             if (!err) {console.log('success');}
             console.log(err);

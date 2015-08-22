@@ -764,7 +764,7 @@
        </div>
       </div>
       <div  style="height: {{contentHeight - 29}}px; overflow-x:hidden; overflow-y: auto; background-color: white;">
-        <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="document in documents | filter: documentFilter" ng-click="goToDocumentDetail(document)" style="cursor: pointer">
+        <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="document in documents | filter: documentFilter | unique:document" ng-click="goToDocumentDetail(document)" style="cursor: pointer">
          <div class="col s12">
            <div>{{document.title}}</div>
          </div>

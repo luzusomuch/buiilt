@@ -47,6 +47,7 @@ exports.upload = function(req, res){
     });
     form.uploadDir = uploadDir;
     form.keepExtensions = true;
+    form.maxFieldsSize = 6 * 1024 * 1024;
     form.parse(req, function(err, fields, files) {
         if (err) {console.log(err);}
         uploadedField = fields;
@@ -260,6 +261,7 @@ exports.uploadInPackge = function(req, res){
     });
     form.uploadDir = uploadDir;
     form.keepExtensions = true;
+    form.maxFieldsSize = 6 * 1024 * 1024;
     form.parse(req, function(err, fields, files) {
         if (err) {console.log(err);}
         uploadedField = fields;
@@ -488,10 +490,13 @@ exports.uploadInPackge = function(req, res){
                                         });
                                     }
                                     else if (saved.mimeType == 'application/pdf') {
+                                        // exec("C:/Program Files (x86)/gs/gs9.16/bin/gswin32c.exe -dNOPAUSE -sDEVICE=jpeg -r144 -sOutputFile="+ config.media +saved._id + '-' +saved.title+".jpg "+ config.root + '/' + saved.path, function(err,stdout,stderr){
                                         exec("gs -dNOPAUSE -sDEVICE=jpeg -r144 -sOutputFile="+ config.media +saved._id + '-' +saved.title+".jpg "+ config.root +'/' + saved.path, function(err,data){
                                             if (err) {return cb(err);}
                                             else {
-                                                cb(data);
+                                                console.log(stdout);
+                                                console.log(stderr);
+                                                cb(stdout);
                                             }
                                         })
                                     }
