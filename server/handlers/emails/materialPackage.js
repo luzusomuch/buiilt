@@ -90,60 +90,62 @@ EventBus.onSeries('MaterialPackage.Inserted', function(request, next) {
         });
       }
     }
-    async.each(request.to, function(supplier, cb) {
-      if (!supplier._id) {
-        var packageInvite = new PackageInvite({
-          owner: result.user.team._id,
-          inviteType: 'supplier',
-          project: result.project._id,
-          package: request._id,
-          isSkipInTender: request.isSkipInTender,
-          to: supplier.email
-        });
-        packageInvite.save(function(err, saved){
-          if (err) {return cb(err);}
-          Mailer.sendMail('supplier-package-send-quote-no-account.html', saved.to, {
-            team: result.team.toJSON(),
-            materialPackage: request.toJSON(),
-            user: result.user.toJSON(),
-            project: result.project.toJSON(),
-            registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + saved._id,
-            subject: 'Invite supplier send quote for ' + request.name
-          },function(){
-           return cb();
+    else {
+      async.each(request.to, function(supplier, cb) {
+        if (!supplier._id) {
+          var packageInvite = new PackageInvite({
+            owner: result.user.team._id,
+            inviteType: 'supplier',
+            project: result.project._id,
+            package: request._id,
+            isSkipInTender: request.isSkipInTender,
+            to: supplier.email
           });
-        });
-      }
-      else {
-        Team.findOne({_id: supplier._id}, function(err, team) {
-          if (err || !team) {
-            return cb(err);
-          }
-          async.each(team.leader, function(leader, callback) {
-            User.findById(leader, function(err, user) {
-              if (err || !user) {
-                return callback(err);
-              }
-              Mailer.sendMail('supplier-package-send-quote.html', user.email, {
-                materialPackage: request.toJSON(),
-                //project owner
-                team: result.team.toJSON(),
-                user: result.user.toJSON(),
-                project: result.project.toJSON(),
-                link: config.baseUrl + result.project._id + '/material-request/' + request._id,
-                subject: 'Quote request for ' + request.name
-              }, function() {
-                return callback();
-              });
+          packageInvite.save(function(err, saved){
+            if (err) {return cb(err);}
+            Mailer.sendMail('supplier-package-send-quote-no-account.html', saved.to, {
+              team: result.team.toJSON(),
+              materialPackage: request.toJSON(),
+              user: result.user.toJSON(),
+              project: result.project.toJSON(),
+              registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + saved._id,
+              subject: 'Invite supplier send quote for ' + request.name
+            },function(){
+             return cb();
             });
-          }, function() {
-            return cb();
           });
-        });
-      }
-    }, function(){
-      return next();
-    });
+        }
+        else {
+          Team.findOne({_id: supplier._id}, function(err, team) {
+            if (err || !team) {
+              return cb(err);
+            }
+            async.each(team.leader, function(leader, callback) {
+              User.findById(leader, function(err, user) {
+                if (err || !user) {
+                  return callback(err);
+                }
+                Mailer.sendMail('supplier-package-send-quote.html', user.email, {
+                  materialPackage: request.toJSON(),
+                  //project owner
+                  team: result.team.toJSON(),
+                  user: result.user.toJSON(),
+                  project: result.project.toJSON(),
+                  link: config.baseUrl + result.project._id + '/material-request/' + request._id,
+                  subject: 'Quote request for ' + request.name
+                }, function() {
+                  return callback();
+                });
+              });
+            }, function() {
+              return cb();
+            });
+          });
+        }
+      }, function(){
+        return next();
+      });
+    }
   });
 });
 

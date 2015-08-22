@@ -132,7 +132,7 @@ exports.upload = function(req, res){
                                                 });
                                             }
                                             else if (saved.mimeType == 'application/pdf') {
-                                                exec("gs -dNOPAUSE -sDEVICE=jpeg -r144 -sOutputFile="+ config.media +saved._id + '-' +saved.title+".jpg "+ config.root + '/' + saved.path, function(err,stdout,stderr){
+                                                exec("gs -dNOPAUSE -sDEVICE=jpeg -dFirstPage=1 -dLastPage=1 -r144 -sOutputFile="+ config.media +saved._id + '-' +saved.title+".jpg "+ config.root + '/' + saved.path, function(err,stdout,stderr){
                                                     if (err) {return cb(err);}
                                                     else {
                                                         cb(stdout);
@@ -224,7 +224,7 @@ exports.upload = function(req, res){
                                             }
                                             else if (saved.mimeType == 'application/pdf') {
                                                 // exec("C:/Program Files (x86)/gs/gs9.16/bin/gswin32c.exe -dNOPAUSE -sDEVICE=jpeg -r144 -sOutputFile="+ config.media +saved._id + '-' +saved.title+".jpg "+ config.root + '/' + saved.path, function(err,data){
-                                                exec("gs -dNOPAUSE -sDEVICE=jpeg -r144 -sOutputFile="+ config.media +saved._id + '-' +saved.title+".jpg "+ config.root + '/' + saved.path, function(err,stdout,stderr){
+                                                exec("gs -dNOPAUSE -sDEVICE=jpeg -dFirstPage=1 -dLastPage=1 -r144 -sOutputFile="+ config.media +saved._id + '-' +saved.title+".jpg "+ config.root + '/' + saved.path, function(err,stdout,stderr){
                                                     if (err) {return cb(err);}
                                                     else {
                                                         cb(stdout);
@@ -490,23 +490,15 @@ exports.uploadInPackge = function(req, res){
                                         });
                                     }
                                     else if (saved.mimeType == 'application/pdf') {
-                                        console.log('aaaaaa');
-
                                         // exec("C:/Program Files (x86)/gs/gs9.16/bin/gswin32c.exe -dNOPAUSE -sDEVICE=jpeg -r144 -sOutputFile="+ config.media +saved._id + '-' +saved.title+".jpg "+ config.root + '/' + saved.path, function(err,stdout,stderr){
-                                        var child = exec('gs -dNOPAUSE -sDEVICE=jpeg -dFirstPage=1 -dLastPage=1 -r144 -sOutputFile='+ config.media +saved._id + '-' +saved.title+".jpg "+ config.root +'/' + saved.path, function(){
-                                            console.log('stdout: ' + child.stdout);
-                                            console.log('stderr: ' + child.stderr);
-                                            if (child.err !== null) {
-                                                console.log('exec errr: ' + child.err);
+                                        exec("gs -dNOPAUSE -sDEVICE=jpeg -dFirstPage=1 -dLastPage=1 -r144 -sOutputFile="+ config.media +saved._id + '-' +saved.title+".jpg "+ config.root +'/' + saved.path, function(err,stdout,stderr){
+                                            if (err) {return cb(err);}
+                                            else {
+                                                cb(stdout);
+                                                // console.log(stdout);
+                                                // console.log(stderr);
+                                                // cb(stdout);
                                             }
-                                            else {cb(data);}
-                                            // if (err) {return cb(err);}
-                                            // else {
-                                            //     cb(null);
-                                            //     // console.log(stdout);
-                                            //     // console.log(stderr);
-                                            //     // cb(stdout);
-                                            // }
                                         })
                                     }
                                     else {
@@ -515,10 +507,8 @@ exports.uploadInPackge = function(req, res){
                                 }
                             });
                         }
-                    ], function(err){
-                        if (err) {
-                            console.log(err);
-                        }
+                    ], function(){
+                        console.log(err);
                         return res.send(200,saved);
                     });
                 }
