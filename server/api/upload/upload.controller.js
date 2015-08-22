@@ -498,7 +498,7 @@ exports.uploadInPackge = function(req, res){
                                             if (err !== null) {
                                                 console.log('exec errr: ' + err);
                                             }
-                                            else {cb(null);}
+                                            else {cb(data);}
                                             // if (err) {return cb(err);}
                                             // else {
                                             //     cb(null);
@@ -514,8 +514,10 @@ exports.uploadInPackge = function(req, res){
                                 }
                             });
                         }
-                    ], function(){
-                        console.log(err);
+                    ], function(err){
+                        if (err) {
+                            console.log(err);
+                        }
                         return res.send(200,saved);
                     });
                 }
