@@ -222,6 +222,7 @@ exports.upload = function(req, res){
                                                 });
                                             }
                                             else if (saved.mimeType == 'application/pdf') {
+                                                // exec("C:/Program Files (x86)/gs/gs9.16/bin/gswin32c.exe -dNOPAUSE -sDEVICE=jpeg -r144 -sOutputFile="+ config.media +saved._id + '-' +saved.title+".jpg "+ config.root + '/' + saved.path, function(err,data){
                                                 exec("gs -dNOPAUSE -sDEVICE=jpeg -r144 -sOutputFile="+ config.media +saved._id + '-' +saved.title+".jpg "+ config.root + '/' + saved.path, function(err,data){
                                                     if (err) {return cb(err);}
                                                     else {
