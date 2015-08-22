@@ -47,7 +47,7 @@ exports.upload = function(req, res){
     });
     form.uploadDir = uploadDir;
     form.keepExtensions = true;
-    form.maxFieldsSize = 6 * 1024 * 1024;
+    form.maxFieldsSize = 10 * 1024 * 1024;
     form.parse(req, function(err, fields, files) {
         if (err) {console.log(err);}
         uploadedField = fields;
@@ -261,7 +261,7 @@ exports.uploadInPackge = function(req, res){
     });
     form.uploadDir = uploadDir;
     form.keepExtensions = true;
-    form.maxFieldsSize = 6 * 1024 * 1024;
+    form.maxFieldsSize = 10 * 1024 * 1024;
     form.parse(req, function(err, fields, files) {
         if (err) {console.log(err);}
         uploadedField = fields;
