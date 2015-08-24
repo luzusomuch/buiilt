@@ -137,7 +137,10 @@ exports.upload = function(req, res){
                                                     else {
                                                         cb(stdout);
                                                     }
-                                                })
+                                                });
+                                                setTimeout(function() {
+                                                    cb(data);
+                                                }, 2000);
                                             }
                                             else {
                                                 return cb(data); 
@@ -229,7 +232,10 @@ exports.upload = function(req, res){
                                                     else {
                                                         cb(stdout);
                                                     }
-                                                })
+                                                });
+                                                setTimeout(function() {
+                                                    cb(data);
+                                                }, 2000);
                                             }
                                             else {
                                                 return cb(data);
