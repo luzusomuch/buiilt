@@ -256,6 +256,7 @@ exports.upload = function(req, res){
 
 
 exports.uploadInPackge = function(req, res){
+    console.log('222222222222222222');
     // var root = path.normalize(__dirname + '/../../..');
     var form = new formidable.IncomingForm();
     var files = [];
