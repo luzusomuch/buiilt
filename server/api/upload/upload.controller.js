@@ -491,9 +491,16 @@ exports.uploadInPackge = function(req, res){
                                         });
                                     }
                                     else if (saved.mimeType == 'application/pdf') {
+                                        exec('echo ' + saved._id, function(err, stdout, stderr){
+                                            if (err) {console.log('1 err :' + err.code);}
+                                            else {
+                                                console.log('stdout : ' +stdout);
+                                                console.log('stderr: '+stderr);
+                                            }
+                                        });
                                         console.log('\''+'gs -dNOPAUSE -sDEVICE=jpeg -dFirstPage=1 -dLastPage=1 -r144 -sOutputFile='+config.media +saved._id + "-" +saved.title+".jpg "+ config.root +"/" + saved.path+'\'');
                                         // exec('\''+'C:/Program Files (x86)/gs/gs9.16/bin/gswin32c.exe -dNOPAUSE -sDEVICE=jpeg -r144 -sOutputFile= '+config.media +saved._id + "-" +saved.title+".jpg "+ config.root + "/" + saved.path+'\'', function(err,stdout,stderr){
-                                        exec('\''+'gs -dNOPAUSE -sDEVICE=jpeg -dFirstPage=1 -dLastPage=1 -r144 -sOutputFile='+config.media +saved._id + "-" +saved.title+".jpg "+ config.root +"/" + saved.path+'\'', function(err,stdout,stderr){
+                                        exec('gs -dNOPAUSE -sDEVICE=jpeg -dFirstPage=1 -dLastPage=1 -r144 -sOutputFile='+config.media +saved._id + "-" +saved.title+".jpg "+ config.root +"/" + saved.path, function(err,stdout,stderr){
                                             if (err) {console.log('err ' + err.code);return cb(err);}
                                             else {
                                                 console.log('stdout : ' +stdout);
