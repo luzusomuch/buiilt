@@ -10,6 +10,7 @@ angular.module('buiiltApp').directive('colorbox', function($compile, $rootScope)
                         $rootScope.$apply(function(){
                             var content = $('#cboxLoadedContent');
                             $("div#cboxLoadedContent").css('height',scope.maximunHeight+'px');
+                            $("img.cboxPhoto").css({'height':'100%','withd':'auto'});
                             $compile(content)($rootScope);      
                         });
                     }

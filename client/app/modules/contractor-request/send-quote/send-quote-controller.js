@@ -160,10 +160,10 @@ angular.module('buiiltApp')
       // $state.reload();
   };
 
-  contractorRequestService.getMessageForContractor({'id': $stateParams.packageId})
-  .$promise.then(function(data) {
-    $scope.messages = data;
-  });
+  // contractorRequestService.getMessageForContractor({'id': $stateParams.packageId})
+  // .$promise.then(function(data) {
+  //   $scope.messages = data;
+  // });
 
   $scope.addLineWithRate = function() {
     $scope.lineWithRates.length = $scope.lineWithRates.length + 1;

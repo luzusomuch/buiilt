@@ -11,7 +11,7 @@ var async = require('async');
 var EventBus = require('../../components/EventBus');
 
 exports.findOne = function(req, res) {
-    ContractorPackage.findById(req.params.id)
+    ContractorPackage.findById(req.params.id, {'messages':0})
       .populate('project')
       .populate('winnerTeam._id')
       .populate('owner')
@@ -170,10 +170,20 @@ exports.getMessageForContractor = function(req, res) {
     if (err) {return res.send(500,err);}
     else {
       ContractorPackage.findOne({$and:[{_id: req.params.id},{'messages.to': team._id}]})
-      .populate('messages.sendBy').exec(function(err, contractorPackage) {
+      .exec(function(err, contractorPackage) {
         if (err) {return res.send(500,err);}
         if (!contractorPackage) {return res.send(404,err)}
         else {
+          _.each(contractorPackage.messages, function(message){
+            console.log(message);
+            if (message.to) {
+              if (message.to != req.user.team._id) {
+                _.remove(contractorPackage.messages, {_id: message._id});
+              }
+            }
+          });
+          console.log(req.user.team._id);
+          console.log(contractorPackage);
           return res.json(200,contractorPackage);
         }
       });

@@ -83,10 +83,10 @@ angular.module('buiiltApp')
     });
   };
 
-  contractorRequestService.getMessageForBuilder({'id': $stateParams.packageId})
-  .$promise.then(function(data) {
-    $scope.messages = data;
-  });
+  // contractorRequestService.getMessageForBuilder({'id': $stateParams.packageId})
+  // .$promise.then(function(data) {
+  //   $scope.messages = data;
+  // });
 
   $scope.addUser = function() {
     if ($scope.user.newEmail) {

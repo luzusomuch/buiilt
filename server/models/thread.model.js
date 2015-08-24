@@ -105,4 +105,18 @@ ThreadSchema.post('save', function (doc) {
   EventBus.emit(evtName, doc);
 });
 
+// ThreadSchema.methods.toJSON = function() {
+//   return {
+//     _id: this._id,
+//     name: this.name,
+//     owner: this.owner,
+//     project: this.project,
+//     package: this.package,
+//     type: this.type,
+//     users: this.users,
+//     updatedAt: this.updatedAt,
+//     createdAt: this.createdAt
+//   };
+// };
+
 module.exports = mongoose.model('Thread', ThreadSchema);

@@ -189,7 +189,7 @@ exports.saveMessage = function(req,res) {
 
 exports.getMessages = function(req,res) {
   var aPackage = req.aPackage;
-  Thread.find({package : aPackage})
+  Thread.find({package : aPackage},{messages: 0})
     .populate('users')
     .populate('messages.user')
     .exec(function(err,threads) {
@@ -201,6 +201,14 @@ exports.getMessages = function(req,res) {
 };
 
 exports.getById = function(req, res){
+  Thread.findById(req.params.id).populate('messages.user').exec(function(err, thread){
+    if (err) {return res.send(500,err);}
+    if (!thread) {return res.send(404);}
+    return res.send(200,thread);
+  });
+};
+
+exports.getThreadById = function(req, res){
   Thread.findById(req.params.id).populate('messages.user').exec(function(err, thread){
     if (err) {return res.send(500,err);}
     if (!thread) {return res.send(404);}

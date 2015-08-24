@@ -4,6 +4,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
     url: '/backend/:id/chat-thread',
     authenticate: true,
     backendHasCurrentProject: true,
+    isAdmin: true,
     template: '<ui-view/>'
   })
   .state('chatThreadsBackend.list', {
@@ -12,6 +13,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
     controller: 'ChatThreadBackendCtrl',
     authenticate: true,
     backendHasCurrentProject: true,
+    isAdmin: true,
     resolve: {
         threads: function(messageService,$stateParams) {
             return messageService.getByPackage({id: $stateParams.packageId, type: $stateParams.type}).$promise;
@@ -24,6 +26,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
     controller: 'ChatThreadDetailBackendCtrl',
     authenticate: true,
     backendHasCurrentProject: true,
+    isAdmin: true,
     resolve: {
         thread: function(messageService, $stateParams) {
             return messageService.getOne({id: $stateParams.threadId, type: $stateParams.type}).$promise;

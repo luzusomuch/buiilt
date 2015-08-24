@@ -5,6 +5,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
         templateUrl: '/app/modules/backend/dashboard-backend/dashboard.html',
         controller: 'DashboardBackendCtrl',
         authenticate : true,
+        isAdmin: true,
         resolve : {
             allProjects: function(projectService) {
                 return projectService.getAllProjects();

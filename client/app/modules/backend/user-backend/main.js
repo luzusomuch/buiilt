@@ -5,6 +5,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
     templateUrl: '/app/modules/backend/user-backend/user.html',
     controller: 'UserBackendCtrl',
     authenticate: true,
+    isAdmin: true,
     resolve: {
         users: function(userService) {
             return userService.getAll().$promise;

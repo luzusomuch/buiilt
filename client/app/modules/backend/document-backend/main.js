@@ -4,6 +4,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
     url: '/backend/:id/document',
     authenticate : true,
     backendHasCurrentProject: true,
+    isAdmin: true,
     template: '<ui-view/>'
   })
   .state('documentBackend.list', {
@@ -12,6 +13,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
     controller: 'DocumentBackendCtrl',
     authenticate: true,
     backendHasCurrentProject: true,
+    isAdmin: true,
     resolve: {
         documents: function(fileService, $stateParams) {
             return fileService.getFileByPackage({id: $stateParams.packageId, type: $stateParams.type}).$promise;
@@ -24,6 +26,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
     controller: 'DocumentDetailBackendCtrl',
     authenticate: true,
     backendHasCurrentProject: true,
+    isAdmin: true,
     resolve: {
       document: function(fileService, $stateParams) {
         return fileService.get({id: $stateParams.documentId}).$promise;

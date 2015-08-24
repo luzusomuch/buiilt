@@ -6,6 +6,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
     controller: 'BuilderPackageBackendCtrl',
     authenticate: true,
     backendHasCurrentProject: true,
+    isAdmin: true,
     resolve: {
         builderPackage: function(builderPackageService, $stateParams) {
             return builderPackageService.findDefaultByProject({id: $stateParams.id}).$promise;

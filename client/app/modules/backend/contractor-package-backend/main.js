@@ -6,6 +6,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
     controller: 'ContractorPackageBackendCtrl',
     authenticate: true,
     backendHasCurrentProject: true,
+    isAdmin: true,
     resolve: {
         contractorPackages: function(contractorService, $stateParams) {
             return contractorService.get({id: $stateParams.id}).$promise;

@@ -56,6 +56,12 @@ angular.module('buiiltApp')
             action: 'get-by-package'
           },
           isArray: true
+        },
+        getThread:{
+          method: 'get',
+          params: {
+            action: 'get-thread'
+          }
         }
         //update: {
         //  method: 'PUT'

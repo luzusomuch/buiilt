@@ -4,6 +4,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
     url: '/backend/:id/task',
     authenticate: true,
     backendHasCurrentProject: true,
+    isAdmin: true,
     template: '<ui-view/>'
   })
   .state('taskBackend.list', {
@@ -12,6 +13,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
     controller: 'TaskBackendCtrl',
     authenticate: true,
     backendHasCurrentProject: true,
+    isAdmin: true,
     resolve: {
         tasks: function(taskService,$stateParams) {
             return taskService.getByPackage({id: $stateParams.packageId, type: $stateParams.type}).$promise;
@@ -24,6 +26,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
     controller: 'TaskDetailBackendCtrl',
     authenticate: true,
     backendHasCurrentProject: true,
+    isAdmin: true,
     resolve: {
         task: function(taskService, $stateParams) {
             return taskService.getOne({id: $stateParams.taskId, type: $stateParams.type}).$promise;

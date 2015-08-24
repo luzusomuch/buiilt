@@ -40,18 +40,21 @@ angular.module('buiiltApp')
             $("div#threadsList").show("slide", { direction: "left" }, 500);
           };
           $scope.goToThreadDetail = function(thread) {
-            $scope.currentThread = thread;
-            socket.emit('join',thread._id);
-            _.each(thread.messages, function(message){
-              if (message.user._id != $scope.currentUser._id) {
-                $scope.backgroundColor = {'background-color':'#eee'}
-              }
-              else {
-                $scope.backgroundColor = {'background-color':'#BBDEFB'}
-              }
+            messageService.getThread({id : thread._id})
+            .$promise.then(function(res){
+              $scope.currentThread = res;
+              socket.emit('join',res._id);
+              _.each($scope.currentThread.messages, function(message){
+                if (message.user._id != $scope.currentUser._id) {
+                  $scope.backgroundColor = {'background-color':'#eee'}
+                }
+                else {
+                  $scope.backgroundColor = {'background-color':'#BBDEFB'}
+                }
+              });
+              $("div#threadsList").hide();
+              $("div#threadDetail").show("slide", { direction: "right" }, 500);
             });
-            $("div#threadsList").hide();
-            $("div#threadDetail").show("slide", { direction: "right" }, 500);
           };
 
           //Get Available assignee to assign to task

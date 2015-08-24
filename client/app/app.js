@@ -107,7 +107,14 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
               // console.log('false')
             }
           });
+      }
 
+      if (toState.isAdmin) {
+        authService.getCurrentUser().$promise.then(function(user){
+          if (user.role !== 'admin') {
+            $state.go('signin');
+          }
+        });
       }
 
       if (toState.backendHasCurrentProject) {

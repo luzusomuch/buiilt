@@ -6,6 +6,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
     controller: 'MaterialPackageBackendCtrl',
     authenticate: true,
     backendHasCurrentProject: true,
+    isAdmin: true,
     resolve: {
         materialPackages: function(materialPackageService, $stateParams) {
             return materialPackageService.get({id: $stateParams.id}).$promise;
