@@ -20,7 +20,7 @@ var _ = require('lodash');
 var async = require('async');
 var gm = require('gm');
 var fs = require('fs');
-var exec = require('child_process').exec;
+var exec = require('child_process').spawn;
 var config = require('./../../config/environment');
 
 var validationError = function (res, err) {
@@ -479,7 +479,6 @@ exports.uploadInPackge = function(req, res){
                             s3.uploadFile(saved, function(err, data) {
                                 if (err) {return cb(err);}
                                 else {
-                                    console.log('aaaaaa');
                                     if (saved.mimeType == 'image/png' || saved.mimeType == 'image/jpeg') {
                                         gm(config.root + '/' + saved.path)
                                         .resize(320, 480)
@@ -491,13 +490,6 @@ exports.uploadInPackge = function(req, res){
                                         });
                                     }
                                     else if (saved.mimeType == 'application/pdf') {
-                                        exec('echo ' + saved._id, function(err, stdout, stderr){
-                                            if (err) {console.log('1 err :' + err.code);}
-                                            else {
-                                                console.log('stdout : ' +stdout);
-                                                console.log('stderr: '+stderr);
-                                            }
-                                        });
                                         console.log('\''+'gs -dNOPAUSE -sDEVICE=jpeg -dFirstPage=1 -dLastPage=1 -r144 -sOutputFile='+config.media +saved._id + "-" +saved.title+".jpg "+ config.root +"/" + saved.path+'\'');
                                         // exec('\''+'C:/Program Files (x86)/gs/gs9.16/bin/gswin32c.exe -dNOPAUSE -sDEVICE=jpeg -r144 -sOutputFile= '+config.media +saved._id + "-" +saved.title+".jpg "+ config.root + "/" + saved.path+'\'', function(err,stdout,stderr){
                                         exec('gs -dNOPAUSE -sDEVICE=jpeg -dFirstPage=1 -dLastPage=1 -r144 -sOutputFile='+config.media +saved._id + "-" +saved.title+".jpg "+ config.root +"/" + saved.path, function(err,stdout,stderr){
