@@ -303,6 +303,8 @@ angular.module('buiiltApp').directive('addon', function(){
               $("div.documentDetail").show("slide", { direction: "right" }, 500);
             }
 
+            $("a."+$scope.package._id).colorbox({rel:'group1'});
+
             $scope.isShowOverView = true;
             $scope.isShowTasks = false;
             $scope.isShowVariations = false;

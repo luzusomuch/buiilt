@@ -95,16 +95,16 @@
        <div style="height: {{contentHeight -15}}px; overflow-y: auto; background-color: white; display: none; overflow-x: hidden" class="valign-wrapper showFileDetail">
           <div class="col s8 offset-s2 center valign" ng-switch="file.mimeType">
             <span ng-switch-when="image/jpeg">
-              <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}-{{file.title}}.jpg" alt="">
+              <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}-{{file.title}}.jpg" alt="" colorbox="../../media/files/{{file._id}}-{{file.title}}.jpg">
             </span>
             <span ng-switch-when="image/png">
-              <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}-{{file.title}}.jpg" alt="">
+              <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}-{{file.title}}.jpg" alt="" colorbox="../../media/files/{{file._id}}-{{file.title}}.jpg">
             </span>
             <span ng-switch-when="application/pdf">
-              <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}-{{file.title}}.jpg" alt="">
+              <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}-{{file.title}}.jpg" alt="" colorbox="../../media/files/{{file._id}}-{{file.title}}.jpg">
             </span>
             <span ng-switch-default>
-              <img class="materialboxed" width="90%" src="../../media/sample-1.jpg" alt="">
+              <img class="materialboxed" width="90%" src="../../media/sample-1.jpg" alt="" colorbox="../../media/sample-1.jpg">
             </span>
             <!-- file description -->
             <span style="cursor:pointer;" ng-click="likeDocument(file);">

@@ -32,7 +32,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
     authenticate : true,
     resolve: {
       project: function($stateParams, projectService) {
-        return projectService.get({id: $stateParams.id});
+        return projectService.get({id: $stateParams.id}).$promise;
       }
     },
     hasCurrentProject : true

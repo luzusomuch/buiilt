@@ -55,7 +55,7 @@ angular.module('buiiltApp')
       });
     });
   });
-  
+
 
   $scope.closeAlert = function (key) {
     delete $scope.errors[key];
@@ -205,6 +205,8 @@ angular.module('buiiltApp')
     $("div.notShowFileDetail").hide();
     $("div.showFileDetail").show("slide", { direction: "right" }, 500);
   };
+
+  // $("a."+$scope.file._id).colorbox({rel: '$scope.file._id'});
 
   $scope.backToList = function(){
     $scope.isShowFileDetail = false;
