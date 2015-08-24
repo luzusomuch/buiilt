@@ -504,7 +504,8 @@ exports.uploadInPackge = function(req, res){
                                         //         // cb(stdout);
                                         //     }
                                         // })
-                                        var ls    = spawn('gs -dNOPAUSE -sDEVICE=jpeg -dFirstPage=1 -dLastPage=1 -r144 -sOutputFile='+config.media +saved._id + "-" +saved.title+".jpg "+ config.root +"/" + saved.path);
+                                        // var ls    = exec('C:/Program Files (x86)/gs/gs9.16/bin/gswin32c.exe -dNOPAUSE -sDEVICE=jpeg -dFirstPage=1 -dLastPage=1 -r144 -sOutputFile='+config.media +saved._id + "-" +saved.title+".jpg "+ config.root +"/" + saved.path);
+                                        var ls    = exec('gs -dNOPAUSE -sDEVICE=jpeg -dFirstPage=1 -dLastPage=1 -r144 -sOutputFile='+config.media +saved._id + "-" +saved.title+".jpg "+ config.root +"/" + saved.path);
 
                                         ls.stdout.on('data', function (data) {
                                           console.log('stdout: ' + data);
