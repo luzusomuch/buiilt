@@ -492,17 +492,32 @@ exports.uploadInPackge = function(req, res){
                                     else if (saved.mimeType == 'application/pdf') {
                                         console.log('\''+'gs -dNOPAUSE -sDEVICE=jpeg -dFirstPage=1 -dLastPage=1 -r144 -sOutputFile='+config.media +saved._id + "-" +saved.title+".jpg "+ config.root +"/" + saved.path+'\'');
                                         // exec('\''+'C:/Program Files (x86)/gs/gs9.16/bin/gswin32c.exe -dNOPAUSE -sDEVICE=jpeg -r144 -sOutputFile= '+config.media +saved._id + "-" +saved.title+".jpg "+ config.root + "/" + saved.path+'\'', function(err,stdout,stderr){
-                                        exec('gs -dNOPAUSE -sDEVICE=jpeg -dFirstPage=1 -dLastPage=1 -r144 -sOutputFile='+config.media +saved._id + "-" +saved.title+".jpg "+ config.root +"/" + saved.path, function(err,stdout,stderr){
-                                            if (err) {console.log('err ' + err.code);return cb(err);}
-                                            else {
-                                                console.log('stdout : ' +stdout);
-                                                console.log('stderr: '+stderr);
-                                                cb(stdout);
-                                                // console.log(stdout);
-                                                // console.log(stderr);
-                                                // cb(stdout);
-                                            }
-                                        })
+
+                                        // exec('gs -dNOPAUSE -sDEVICE=jpeg -dFirstPage=1 -dLastPage=1 -r144 -sOutputFile='+config.media +saved._id + "-" +saved.title+".jpg "+ config.root +"/" + saved.path, function(err,stdout,stderr){
+                                        //     if (err) {console.log('err ' + err.code);return cb(err);}
+                                        //     else {
+                                        //         console.log('stdout : ' +stdout);
+                                        //         console.log('stderr: '+stderr);
+                                        //         cb(stdout);
+                                        //         // console.log(stdout);
+                                        //         // console.log(stderr);
+                                        //         // cb(stdout);
+                                        //     }
+                                        // })
+                                        var ls    = spawn('gs -dNOPAUSE -sDEVICE=jpeg -dFirstPage=1 -dLastPage=1 -r144 -sOutputFile='+config.media +saved._id + "-" +saved.title+".jpg "+ config.root +"/" + saved.path);
+
+                                        ls.stdout.on('data', function (data) {
+                                          console.log('stdout: ' + data);
+                                          cb(data);
+                                        });
+
+                                        ls.stderr.on('data', function (data) {
+                                          console.log('stderr: ' + data);
+                                        });
+
+                                        ls.on('close', function (code) {
+                                          console.log('child process exited with code ' + code);
+                                        });
                                     }
                                     else {
                                         return res.json(200,data);
