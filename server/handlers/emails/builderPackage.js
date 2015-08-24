@@ -18,6 +18,9 @@ EventBus.onSeries('BuilderPackage.Inserted', function(request, next) {
     },
     project: function(cb){
       Project.findById(request.project, cb);
+    },
+    user: function(cb) {
+      User.findById(request.editUser, cb)
     }
   },function(err,result){
     if (err) {return next();}
@@ -33,6 +36,7 @@ EventBus.onSeries('BuilderPackage.Inserted', function(request, next) {
       packageInvite.save(function(err) {
         if(err){ next(); }
         Mailer.sendMail('invite-' + subjectType + '-has-no-account.html', request.to.email, {
+          user: result.user.toJSON(),
           project: result.project.toJSON(),
           team: result.team.toJSON(),
           registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
@@ -50,6 +54,7 @@ EventBus.onSeries('BuilderPackage.Inserted', function(request, next) {
           if (result.team.type == request.to.type) {
             team.leader.forEach(function(leader) {
               Mailer.sendMail('invite-' + subjectType + '.html', leader.email, {
+                user: result.user.toJSON(),
                 project: result.project.toJSON(),
                 team: result.team.toJSON(),
                 link: config.baseUrl + request.project._id + '/dashboard',

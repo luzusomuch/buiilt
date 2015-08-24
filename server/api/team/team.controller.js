@@ -89,6 +89,7 @@ exports.create = function (req, res) {
       if (err) {console.log(err);}
       else {
         team.member = listEmail;
+        team._user = user;
         team.save(function(err){
           if (err) {
             return errorsHelper.validationErrors(res, err);

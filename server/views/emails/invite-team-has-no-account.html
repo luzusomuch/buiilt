@@ -2,7 +2,7 @@
 
 {% block content %}
 <p>
-	<%= request.name %> has invited you to become a member of their team.
+	<%= request.user.firstName %> <%= request.user.lastName %> | <%= request.name %> has invited you to become a member of their team.
 </p>
 
 <p>
