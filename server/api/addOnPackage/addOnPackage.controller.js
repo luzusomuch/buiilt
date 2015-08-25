@@ -58,7 +58,7 @@ exports.sendDefect = function(req, res) {
             }
         });
     }
-    else if (packageType == 'builder') {
+    else if (packageType == 'builder' || packageType == 'BuilderPackage') {
         BuilderPackage.findById(req.params.id, function(err, builderPackage){
             if (err) {return res.send(500,err);}
             else {
@@ -555,7 +555,7 @@ exports.sendInvoice = function(req, res) {
             }
         });
     }
-    else if (packageType == 'builder'){
+    else if (packageType == 'builder' || packageType == 'BuilderPackage'){
         BuilderPackage.findById(req.params.id, function(err, builderPackage) {
             if (err) {return res.send(500,err);}
             else {
