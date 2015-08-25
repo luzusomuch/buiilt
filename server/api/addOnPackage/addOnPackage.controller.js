@@ -128,6 +128,7 @@ exports.sendDefect = function(req, res) {
 
 exports.sendVariation = function(req, res) {
     var packageType = req.body.packageType;
+    console.log(packageType);
     if (!req.body.quoteLater && req.body.quoteLater == false) {
         var quoteRate = [];
         var quotePrice = [];
@@ -264,7 +265,7 @@ exports.sendVariation = function(req, res) {
                 }
             });
         }
-        else if (packageType == 'builder') {
+        else if (packageType == 'builder' || packageType == 'BuilderPackage') {
             BuilderPackage.findById(req.params.id, function(err, builderPackage){
                 if (err) {return res.send(500,err);}
                 else {
@@ -388,7 +389,7 @@ exports.sendVariation = function(req, res) {
                 }
             });
         }
-        else if (packageType == 'builder') {
+        else if (packageType == 'builder' || packageType == 'BuilderPackage') {
             BuilderPackage.findById(req.params.id, function(err, builderPackage){
                 if (err) {return res.send(500,err);}
                 else {
