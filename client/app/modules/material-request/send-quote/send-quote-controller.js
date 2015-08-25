@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-.controller('SendQuoteMaterialPackageCtrl', function(socket,$rootScope,$scope, $state, $stateParams,currentTeam, FileUploader, $cookieStore, authService, userService, materialRequest, materialRequestService) {
+.controller('SendQuoteMaterialPackageCtrl', function(fileService,socket,$rootScope,$scope, $state, $stateParams,currentTeam, FileUploader, $cookieStore, authService, userService, materialRequest, materialRequestService) {
   /**
    * quote data
    */
@@ -31,9 +31,11 @@ angular.module('buiiltApp')
 
   $scope.viewQuoteDetail = function(quote){
     // $scope.viewMessages = true;
-    $scope.quote = quote;
-    $("div.quotesList").hide();
-    $("div.showQuoteDetail").show("slide", { direction: "right" }, 500);
+    fileService.get({id: quote._id}).$promise.then(function(res){
+      $scope.quote = res;
+      $("div.quotesList").hide();
+      $("div.showQuoteDetail").show("slide", { direction: "right" }, 500);
+    });
   };
 
   $scope.backToList = function(){
@@ -90,10 +92,10 @@ angular.module('buiiltApp')
 
   },true);
 
-  materialRequestService.getMessageForSupplier({'id': $stateParams.packageId})
-  .$promise.then(function(data) {
-    $scope.messages = data;
-  });
+  // materialRequestService.getMessageForSupplier({'id': $stateParams.packageId})
+  // .$promise.then(function(data) {
+  //   $scope.messages = data;
+  // });
 
   $scope.enterMessage = function ($event) {
     if ($event.keyCode === 13) {

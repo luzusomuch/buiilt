@@ -14,7 +14,8 @@ var async = require('async');
  * restriction: 'admin'
  */
 exports.getAll = function(req, res){
-  MaterialPackage.find({}, function(err, data){
+  var user = req.user;
+  MaterialPackage.find({$or:[{owner: user.team._id},{'to._id':user.team._id}]}, function(err, data){
     if (err) {return res.send(500,err);}
     return res.send(200,data);
   })
@@ -22,7 +23,7 @@ exports.getAll = function(req, res){
 
 exports.index = function (req, res) {
   var user = req.user;
-  MaterialPackage.find({$and:[{project : req.params.id},{$or:[{owner: user.team._id},{'to._id':user.team._id}]}]},function (err, materials) {
+  MaterialPackage.find({$and:[{project : req.params.id},{$or:[{owner: user.team._id},{'to._id':user.team._id}]}]},{messages:0},function (err, materials) {
     if (err){
       return res.send(500, err);
     }

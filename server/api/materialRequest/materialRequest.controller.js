@@ -10,11 +10,12 @@ var async = require('async');
 var EventBus = require('../../components/EventBus');
 
 exports.findOne = function(req, res) {
+  var user = req.user;
     MaterialPackage.findById(req.params.id)
       .populate('winnerTeam._id')
       .populate('owner')
       .populate('to.quote')
-      .populate('to.quoteDocument')
+      .populate('to.quoteDocument', '_id mimeType title')
       .populate('variations')
       .populate('messages.sendBy')
       
@@ -30,8 +31,21 @@ exports.findOne = function(req, res) {
             if (err) {
               return res.send(500, err);
             }
-            return res.json(_materialPackage);
-          })
+            if (materialPackage.owner._id.toString() == user.team._id.toString()) {
+              return res.json(_materialPackage);
+            }
+            else {
+              var messagesFiltered = [];
+              _.each(_materialPackage.messages, function(message){
+                if (message.to.toString() == user.team._id.toString()) {
+                  messagesFiltered.push(message);
+                }
+              });
+              _materialPackage.messages = [];
+              _materialPackage.messages = messagesFiltered;
+              return res.json(_materialPackage);
+            }
+          });
         }
     });
 };

@@ -35,17 +35,7 @@ exports.findOne = function(req, res) {
         return res.send(500, err);
       }
       if (contractorPackage.owner._id.toString() == user.team._id.toString()) {
-        User.populate(contractorPackage, [
-          {path : 'winnerTeam._id.member._id'},
-          {path : 'winnerTeam._id.leader'},
-          {path : 'owner.member._id'},
-          {path : 'owner.leader'}
-        ],function(err,_contractorPackage) {
-          if (err) {
-            return res.send(500, err);
-          }
-          return res.json(contractorPackage);
-        });
+        return res.json(contractorPackage);
       }
       else {
         var messagesFiltered = [];
@@ -54,19 +44,9 @@ exports.findOne = function(req, res) {
             messagesFiltered.push(message);
           }
         });
-        User.populate(contractorPackage, [
-          {path : 'winnerTeam._id.member._id'},
-          {path : 'winnerTeam._id.leader'},
-          {path : 'owner.member._id'},
-          {path : 'owner.leader'}
-        ],function(err,_contractorPackage) {
-          if (err) {
-            return res.send(500, err);
-          }
-          contractorPackage.messages = [];
-          contractorPackage.messages = messagesFiltered;
-          return res.json(contractorPackage);
-        });
+        contractorPackage.messages = [];
+        contractorPackage.messages = messagesFiltered;
+        return res.json(contractorPackage);
       }
     });
   });
