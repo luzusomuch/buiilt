@@ -200,7 +200,8 @@ exports.update = function(req,res) {
 
 exports.getTask = function(req,res) {
   var aPackage = req.aPackage;
-  Task.find({package : aPackage})
+  var user = req.user;
+  Task.find({$and:[{package : aPackage}, {$or:[{user: user._id},{assignees: user._id}]}]})
     .sort('hasDateEnd')
     .sort({'dateEnd': -1})
     .populate('assignees')
@@ -208,6 +209,7 @@ exports.getTask = function(req,res) {
     if (err) {
       return res.send(500,err);
     }
+    console.log(tasks);
     return res.json(tasks);
   });
 };
