@@ -67,7 +67,7 @@
             <a class="modal-trigger" href="#modal_attachDocument" style="padding: 5px;">ATTACT QUOTE</a>
           </div>
         </div>
-        <div ng-if="currentTeam._id == variationRequest.to._id._id" style="height: {{contentHeight -30}}px; overflow-y: auto; background-color: white;">
+        <div style="height: {{contentHeight -30}}px; overflow-y: auto; background-color: white;">
           <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="quote in variationRequest.to.quoteDocument">
              <div class="col s9">
                <div><a ng-click="viewQuoteDetail(quote)" href="#">{{quote.title}}</a></div>

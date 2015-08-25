@@ -63,8 +63,8 @@
        </div>
      </div>
      <div  style="height: {{contentHeight -30}}px; overflow-y: auto; background-color: white; overflow-x:hidden;">
-       <div style="cursor:pointer;" ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="item in staffPackages | filter: filter" ng-click="goToStaffPacakgeDetail(item)">
-         <div class="col s9" ng-show="item.canSee || isLeader">{{item.name}}
+       <div ng-show="item.canSee || isLeader" style="cursor:pointer;" ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="item in staffPackages | filter: filter" ng-click="goToStaffPacakgeDetail(item)">
+         <div class="col s9">{{item.name}}
            <!-- <div>
             <a ui-sref="staff.view({packageId : item._id})"  ng-show="item.canSee || isLeader"></a>
           </div> -->

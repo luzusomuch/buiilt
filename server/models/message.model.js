@@ -9,12 +9,17 @@ var EventBus = require('./../components/EventBus');
 var MessageSchema = new Schema({
   owner: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'Team',
     required: true
   },
-  group: {
+  from: {
     type: Schema.Types.ObjectId,
-    ref: 'GroupMessage',
+    ref: 'Team',
+    required: true
+  },
+  to: {
+    type: Schema.Types.ObjectId,
+    ref: 'Team',
     required: true
   },
   message: String,

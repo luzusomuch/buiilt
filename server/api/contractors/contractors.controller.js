@@ -14,7 +14,8 @@ var async = require('async');
  * restriction: 'admin'
  */
 exports.getAll = function(req, res) {
-  ContractorPackage.find({}, function(err, contractorPackages){
+  var user = req.user;
+  ContractorPackage.find({$or:[{owner: user.team._id},{'to._id':user.team._id}]}, function(err, contractorPackages){
     if (err) {return res.send(500,err);}
     return res.send(200, contractorPackages);
   });
@@ -22,7 +23,7 @@ exports.getAll = function(req, res) {
 
 exports.index = function (req, res) {
   var user = req.user;
-  ContractorPackage.find({project : req.params.id},function (err, contractors) {
+  ContractorPackage.find({$and:[{project : req.params.id},{$or:[{owner: user.team._id},{'to._id':user.team._id}]}]},function (err, contractors) {
     if (err){
       return res.send(500, err);
     }

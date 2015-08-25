@@ -24,7 +24,6 @@ angular.module('buiiltApp').directive('upload', function(){
                 desc: '',
                 tags: []
             };
-            console.log($scope.isQuote);
             $scope.tags = [];
             if ($scope.type == 'project') {
                 $scope.tags = ['architectural','engineering','council','other'];

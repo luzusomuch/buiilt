@@ -11,7 +11,7 @@ var async = require('async');
 var EventBus = require('../../components/EventBus');
 
 exports.findOne = function(req, res) {
-    ContractorPackage.findById(req.params.id, {'messages':0})
+    ContractorPackage.findById(req.params.id)
       .populate('project')
       .populate('winnerTeam._id')
       .populate('owner')

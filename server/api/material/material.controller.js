@@ -22,7 +22,7 @@ exports.getAll = function(req, res){
 
 exports.index = function (req, res) {
   var user = req.user;
-  MaterialPackage.find({project : req.params.id},function (err, materials) {
+  MaterialPackage.find({$and:[{project : req.params.id},{$or:[{owner: user.team._id},{'to._id':user.team._id}]}]},function (err, materials) {
     if (err){
       return res.send(500, err);
     }
