@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-.controller('SendQuoteContractorPackageCtrl', function(socket,$rootScope,$scope, $window, $state, currentTeam, $stateParams, $cookieStore, authService, userService, contractorRequest, contractorRequestService,FileUploader, registryForContractorService) {
+.controller('SendQuoteContractorPackageCtrl', function(fileService,socket,$rootScope,$scope, $window, $state, currentTeam, $stateParams, $cookieStore, authService, userService, contractorRequest, contractorRequestService,FileUploader, registryForContractorService) {
   /**
    * quote data
    */
@@ -30,15 +30,17 @@ angular.module('buiiltApp')
 
   $scope.viewQuoteDetail = function(quote){
     // $scope.viewMessages = true;
-    $scope.quote = quote;
-    $("div.quotesList").hide();
-    $("div.showQuoteDetail").show("slide", { direction: "right" }, 500);
+    fileService.get({id: quote._id}).$promise.then(function(res){
+      $scope.quote = res;
+      $("div.quotesList").hide();
+      $("div.showQuoteDetail").show("slide", { direction: "right" }, 500);  
+    });
   };
 
   $scope.backToList = function(){
     $scope.quote = {};
     $("div.showQuoteDetail").hide();
-    $("div.quotesList").show("slide", { direction: "right" }, 500);
+    $("div.quotesList").show("slide", { direction: "left" }, 500);
   };
 
   $scope.quoteRequest = {};

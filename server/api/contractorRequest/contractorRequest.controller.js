@@ -11,19 +11,30 @@ var async = require('async');
 var EventBus = require('../../components/EventBus');
 
 exports.findOne = function(req, res) {
-    ContractorPackage.findById(req.params.id)
-      .populate('project')
-      .populate('winnerTeam._id')
-      .populate('owner')
-      .populate('to.quote')
-      .populate('to.quoteDocument')
-      .populate('variations')
-      .populate('messages.sendBy')
-      .exec(function(err, contractorPackage) {
-        if (err) {
-          return res.send(500, err);
-        }
-
+  var user = req.user;
+  ContractorPackage.findById(req.params.id)
+  .populate('project')
+  .populate('winnerTeam._id')
+  .populate('owner')
+  .populate('to.quote')
+  .populate('to.quoteDocument', '_id mimeType title')
+  .populate('variations')
+  .populate('messages.sendBy')
+  .exec(function(err, contractorPackage) {
+    if (err) {
+      console.log(err);
+      return res.send(500, err);
+    }
+    User.populate(contractorPackage, [
+      {path : 'winnerTeam._id.member._id'},
+      {path : 'winnerTeam._id.leader'},
+      {path : 'owner.member._id'},
+      {path : 'owner.leader'}
+    ],function(err,_contractorPackage) {
+      if (err) {
+        return res.send(500, err);
+      }
+      if (contractorPackage.owner._id.toString() == user.team._id.toString()) {
         User.populate(contractorPackage, [
           {path : 'winnerTeam._id.member._id'},
           {path : 'winnerTeam._id.leader'},
@@ -34,8 +45,31 @@ exports.findOne = function(req, res) {
             return res.send(500, err);
           }
           return res.json(contractorPackage);
-        })
+        });
+      }
+      else {
+        var messagesFiltered = [];
+        _.each(contractorPackage.messages, function(message){
+          if (message.to.toString() == user.team._id.toString()) {
+            messagesFiltered.push(message);
+          }
+        });
+        User.populate(contractorPackage, [
+          {path : 'winnerTeam._id.member._id'},
+          {path : 'winnerTeam._id.leader'},
+          {path : 'owner.member._id'},
+          {path : 'owner.leader'}
+        ],function(err,_contractorPackage) {
+          if (err) {
+            return res.send(500, err);
+          }
+          contractorPackage.messages = [];
+          contractorPackage.messages = messagesFiltered;
+          return res.json(contractorPackage);
+        });
+      }
     });
+  });
 };
 
 exports.contractorPackage = function(req,res,next) {
@@ -101,6 +135,7 @@ exports.sendMessage = function(req, res) {
 };
 
 exports.sendMessageToBuilder = function(req, res) {
+  var user = req.user;
   ContractorPackage.findById(req.params.id, function(err, contractorPackage) {
     if (err) {return res.send(500,err)}
     if (!contractorPackage) {return res.send(404,err)}
@@ -140,6 +175,14 @@ exports.sendMessageToBuilder = function(req, res) {
                 room: contractorPackage._id.toString(),
                 data: contractorPackage
               });
+              var messagesFiltered = [];
+              _.each(contractorPackage.messages, function(message){
+                if (message.to.toString() == user.team._id.toString()) {
+                  messagesFiltered.push(message);
+                }
+              });
+              contractorPackage.messages = [];
+              contractorPackage.messages = messagesFiltered;
               return res.json(200,contractorPackage);
             });
           }
@@ -174,16 +217,6 @@ exports.getMessageForContractor = function(req, res) {
         if (err) {return res.send(500,err);}
         if (!contractorPackage) {return res.send(404,err)}
         else {
-          _.each(contractorPackage.messages, function(message){
-            console.log(message);
-            if (message.to) {
-              if (message.to != req.user.team._id) {
-                _.remove(contractorPackage.messages, {_id: message._id});
-              }
-            }
-          });
-          console.log(req.user.team._id);
-          console.log(contractorPackage);
           return res.json(200,contractorPackage);
         }
       });

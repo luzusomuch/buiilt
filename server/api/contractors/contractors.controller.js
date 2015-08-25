@@ -23,7 +23,7 @@ exports.getAll = function(req, res) {
 
 exports.index = function (req, res) {
   var user = req.user;
-  ContractorPackage.find({$and:[{project : req.params.id},{$or:[{owner: user.team._id},{'to._id':user.team._id}]}]},function (err, contractors) {
+  ContractorPackage.find({$and:[{project : req.params.id},{$or:[{owner: user.team._id},{'to._id':user.team._id}]}]},{messages: 0},function (err, contractors) {
     if (err){
       return res.send(500, err);
     }

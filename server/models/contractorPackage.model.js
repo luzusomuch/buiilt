@@ -133,6 +133,7 @@ ContractorPackageSchema
   this.editUser = this._editUser;
   this.ownerUser = this._ownerUser;
   this.quote = this._quote;
+  this.messagesFiltered = this._messagesFiltered;
   if (!this.isNew){
     this.updatedAt = new Date();
   } else {
@@ -154,6 +155,7 @@ ContractorPackageSchema.post('save', function (doc) {
   doc.ownerUser = this._ownerUser;
   doc.editUser = this._editUser;
   doc.quote = this._quote;
+  doc.messagesFiltered = this._messagesFiltered;
   EventBus.emit(evtName, doc);
 });
 
