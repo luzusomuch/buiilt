@@ -81,6 +81,9 @@ var FileSchema = new Schema({
   isQuote: {
     type: Boolean,
     default: false
+  },
+  isNewNotification: {
+    type: Boolean
   }
 });
 
@@ -133,7 +136,8 @@ FileSchema.methods.toJSON = function() {
     tags: this.tags,
     isQuote: this.isQuote,
     updatedAt: this.updatedAt,
-    createdAt: this.createdAt
+    createdAt: this.createdAt,
+    isNewNotification: this.isNewNotification
   };
 };
 

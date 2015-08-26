@@ -59,6 +59,9 @@ var ThreadSchema = new Schema({
   updatedAt: {
     type: Date,
     default: Date.now
+  },
+  isNewNotification: {
+    type: Boolean
   }
 }, {
   strict: true,
@@ -87,6 +90,7 @@ ThreadSchema.pre('save', function(next) {
     this.editUser = this._editUser;
     this.evtName = this._evtName;
     this.message = this._message;
+    this.isNewNotification = this._isNewNotification;
     next();
   });
 
@@ -96,6 +100,7 @@ ThreadSchema.post('save', function (doc) {
   }
   doc.editUser = this.editUser;
   doc.message = this.message;
+  doc.isNewNotification = doc.isNewNotification;
   if (this.evtName ) {
     var evtName = this.evtName;
   } else {

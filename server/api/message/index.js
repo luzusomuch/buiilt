@@ -14,6 +14,7 @@ router.get('/list', auth.isAuthenticated(), controller.getAll);
 router.get('/:id', auth.isAuthenticated(), controller.getById);
 router.get('/:id/get-thread', auth.isAuthenticated(), controller.getThreadById);
 router.get('/:id/:type', auth.isAuthenticated(), controller.package, controller.getMessages);
+router.get('/:id/:type/ios', auth.isAuthenticated(), controller.package, controller.getMessagesIos);
 router.get('/:id/:type/get-by-package', auth.isAuthenticated(), controller.getByPackage);
 router.get('/:id/:type/one', auth.isAuthenticated(), controller.thread, controller.getOne);
 router.get('/:id/dashboard/me', auth.isAuthenticated(),controller.project, controller.myThread);

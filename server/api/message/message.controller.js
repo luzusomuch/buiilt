@@ -200,6 +200,45 @@ exports.getMessages = function(req,res) {
     });
 };
 
+exports.getMessagesIos = function(req,res) {
+  var aPackage = req.aPackage;
+  var result = [];
+  Thread.find({package : aPackage})
+    .populate('users')
+    .populate('messages.user')
+    .exec(function(err,threads) {
+      if (err) {
+        return res.send(500,err);
+      }
+      async.each(threads, function(thread,cb){
+        var query = Notification.find(
+          {owner : req.user._id,unread : true, referenceTo : 'thread','element._id' : thread._id }
+        );
+        query.distinct('element._id');
+
+        query.exec(function(err, threadNotifications) {
+          if (err) {return cb(err);}
+          if (threadNotifications.length > 0) {
+            _.each(threadNotifications, function(threadNotification){
+              if (thread._id.toString() == threadNotification.toString()) {
+                thread.isNewNotification = true;
+                result.push(thread);
+                cb();
+              }
+            });
+          }
+          else {
+            result.push(thread);
+            cb();
+          }
+        });
+      }, function(err){
+        if (err) {return res.send(500,err);}
+        return res.json(result);
+      });
+    });
+};
+
 exports.getById = function(req, res){
   Thread.findById(req.params.id).populate('messages.user').exec(function(err, thread){
     if (err) {return res.send(500,err);}

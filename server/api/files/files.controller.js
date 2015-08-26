@@ -56,6 +56,41 @@ exports.getFileByStateParam = function(req, res) {
     });
 };
 
+exports.getFileByStateParamIos = function(req, res) {
+    var result = [];
+    File.find({'belongTo': req.params.id}, function(err, files) {
+        if (err) {return res.send(500,err)}
+        else {
+            async.each(files, function(file, cb){
+                var query = Notification.find(
+                    {owner : req.user._id,unread : true, type : 'uploadNewDocumentVersion','element.file._id' : file._id }
+                );
+                query.distinct('element.file._id');
+
+                query.exec(function(err, fileNotifications) {
+                    if (err) {return cb(err);}
+                    if (fileNotifications.length > 0) {
+                        _.each(fileNotifications, function(fileNotification){
+                            if (file._id.toString() == fileNotification.toString()) {
+                                file.isNewNotification = true;
+                                result.push(file);
+                                cb();
+                            }
+                        });
+                    }
+                    else {
+                        result.push(file);
+                        cb()
+                    }
+                });
+            }, function(err){
+                if (err) {return res.send(500,err);}
+                return res.json(200,result);
+            });
+        }
+    });
+};
+
 exports.downloadFile = function(req, res) {
     File.findById(req.params.id, function(err, file){
         if (err) {return res.send(500,err);}
