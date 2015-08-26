@@ -32,7 +32,7 @@ exports.sendDefect = function(req, res) {
                     if (err) {return res.send(500,err);}
                     else {
                         return res.json(savedContractorPacakge);
-                    }
+                    } 
                 });
             }
         });
