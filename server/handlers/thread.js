@@ -101,5 +101,5 @@ EventBus.onSeries('Thread.NewMessage', function(thread, next) {
     return next();
   });
   var data = _.last(thread.messages);
-  PushNotificationHelper.getData(thread._id,thread.name, data.text, thread.users, 'message');
+  PushNotificationHelper.getData(thread.project,thread._id,thread.name, data.text, thread.users, 'message');
 });

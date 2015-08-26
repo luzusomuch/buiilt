@@ -5,7 +5,7 @@ var Notification = require('./../../models/notification.model');
 var _ = require('lodash');
 
 
-exports.getData = function(id,threadName, message, users, type){
+exports.getData = function(projectId,id,threadName, message, users, type){
     agent
         .set('cert file', __dirname+'/../../cert/PushChatCert3.pem')
         .set('key file', __dirname+'/../../cert/PushChatKey3.pem')    
@@ -94,7 +94,8 @@ exports.getData = function(id,threadName, message, users, type){
            .badge(totalBadge)
            .set("push", true)
            .set("relatedTo", type)
-           .set("id", id);
+           .set("id", id)
+           .set("projectId", projectId)
            .sound('defauld').send(function(err){
             if (!err) {console.log('success');}
             console.log(err);

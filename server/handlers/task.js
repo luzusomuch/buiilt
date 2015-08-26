@@ -21,7 +21,7 @@ EventBus.onSeries('Task.Inserted', function(task, next){
     NotificationHelper.create(params, function() {
       next();
     });
-    PushNotificationHelper.getData(task._id,task.name, 'has assigned to you', task.assignees, 'task');
+    PushNotificationHelper.getData(task.project,task._id,task.name, 'has assigned to you', task.assignees, 'task');
   } else {
     next();
   }
