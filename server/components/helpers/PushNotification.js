@@ -3,6 +3,8 @@ var apnagent = require('apnagent')
 var device = require('./../../models/device.model');
 var Notification = require('./../../models/notification.model');
 var _ = require('lodash');
+var gcm = require('gcm'),
+  messageGcm = new gcm.Message();
 
 
 exports.getData = function(projectId,id,threadName, message, users, type){
@@ -84,23 +86,48 @@ exports.getData = function(projectId,id,threadName, message, users, type){
       if (err) {console.log(err);}
       // if (!device) {return res.send(404,err);}
       if (device) {
-        Notification.find({owner: user, unread:true, $or:[{referenceTo: 'task'},{referenceTo: 'thread'}]}, function(err, notifications){
-          if (err) {console.log(err);}
-          // if (!notifications) {return res.send(404);}
-          var totalBadge = notifications.length;
-          agent.createMessage()
-           .device(device.deviceToken)
-           .alert(threadName+': '+message)
-           .badge(totalBadge)
-           .set("push", true)
-           .set("relatedto", type)
-           .set("id", id)
-           .set("projectid", projectId)
-           .sound('defauld').send(function(err){
-            if (!err) {console.log('success');}
-            console.log(err);
+        if (device.platform == 'ios') {
+          Notification.find({owner: user, unread:true, $or:[{referenceTo: 'task'},{referenceTo: 'thread'}]}, function(err, notifications){
+            if (err) {console.log(err);}
+            // if (!notifications) {return res.send(404);}
+            var totalBadge = notifications.length;
+            agent.createMessage()
+             .device(device.deviceToken)
+             .alert(threadName+': '+message)
+             .badge(totalBadge)
+             .set("push", true)
+             .set("relatedto", type)
+             .set("id", id)
+             .set("projectid", projectId)
+             .sound('defauld').send(function(err){
+              if (!err) {console.log('success');}
+              console.log(err);
+            });
           });
-        });
+        }
+        else if (device.platform == 'android') {
+          var path = '';
+          if (type == 'task') {
+            path = "#/"+projectid+"/task/"+id;
+          }
+          else if (type == 'message') {
+            path = "#/"+projectid+"/thread/"+id;
+          }
+          var sender = new gcm.Sender("AIzaSyC6g7JMT-KKmYKdhCZ27ymy-g6A7vUljG0");//api id
+          messageGcm.addData('message', threadName+': '+message);
+          messageGcm.addData('hasSound', true);
+          messageGcm.addData('title', message);
+          messageGcm.addData('path', path);
+          messageGcm.delayWhileIdle = true;
+          //sender.send(message, device.deviceid, 4, function (err, result) {
+          sender.sendNoRetry(messageGcm, device.deviceToken, function (err, result) {
+            if (err) {
+              console.log(err);
+            } else {
+              console.log(result);
+            }
+          });
+        }
       }
     }); 
   });
