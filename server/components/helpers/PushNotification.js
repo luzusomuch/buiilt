@@ -93,9 +93,9 @@ exports.getData = function(projectId,id,threadName, message, users, type){
            .alert(threadName+': '+message)
            .badge(totalBadge)
            .set("push", true)
-           .set("relatedTo", type)
+           .set("relatedto", type)
            .set("id", id)
-           .set("projectId", projectId)
+           .set("projectid", projectId)
            .sound('defauld').send(function(err){
             if (!err) {console.log('success');}
             console.log(err);

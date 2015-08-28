@@ -415,17 +415,21 @@ exports.uploadInPackge = function(req, res){
                                 Variation.findById(saved.belongTo).populate('owner').populate('to._id').exec(function(err, variation) {
                                     if (err || !variation) {return cb();}
 
-                                    owners = _.union(variation.owner.leader, variation.to._id.leader);
-                                    _.each(variation.owner.member, function(member){
-                                        if (member._id) {
-                                            owners.push(member._id);
-                                        }
-                                    });
+                                    owners = variation.to._id.leader;
                                     _.each(variation.to._id.member, function(member){
                                         if (member._id) {
                                             owners.push(member._id);
                                         }
                                     });
+                                    if (variation.owner != null && variation.owner._id) {
+                                        owners.union(owners, variation.owner.leader);
+                                        _.each(variation.owner.member, function(member){
+                                            if (member._id) {
+                                                owners.push(member._id);
+                                            }
+                                        });
+                                    }
+                                    
                                     _.remove(owners, req.user._id);
 
                                     variation.to.quoteDocument.push(saved._id);
