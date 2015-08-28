@@ -422,7 +422,7 @@ exports.uploadInPackge = function(req, res){
                                         }
                                     });
                                     if (variation.owner != null && variation.owner._id) {
-                                        owners.union(owners, variation.owner.leader);
+                                        owners = _.union(owners, variation.owner.leader);
                                         _.each(variation.owner.member, function(member){
                                             if (member._id) {
                                                 owners.push(member._id);
