@@ -106,6 +106,7 @@ exports.getData = function(projectId,id,threadName, message, users, type){
           });
         }
         else if (device.platform == 'android') {
+          console.log(device);
           var path = '';
           if (type == 'task') {
             path = "#/"+projectid+"/task/"+id;
