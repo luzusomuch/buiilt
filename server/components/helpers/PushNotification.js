@@ -117,9 +117,9 @@ exports.getData = function(projectId,id,threadName, message, users, type){
             path = "#/"+projectId+"/thread/"+id;
           }
           var sender = new gcm.Sender("AIzaSyABcNG7VNgSzOhXIxapNGxmQWLElWHgHDU");//api id
-          messageGcm.addData('message', threadName+': '+message);
+          messageGcm.addData('message', message);
           messageGcm.addData('hasSound', true);
-          messageGcm.addData('title', message);
+          messageGcm.addData('title', threadName+': '+message);
           messageGcm.addData('path', path);
           messageGcm.delayWhileIdle = true;
           //sender.send(message, device.deviceid, 4, function (err, result) {
