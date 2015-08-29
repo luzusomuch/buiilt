@@ -116,7 +116,7 @@ exports.getData = function(projectId,id,threadName, message, users, type){
           else if (type == 'message') {
             path = "#/"+projectId+"/thread/"+id;
           }
-          var sender = new gcm.Sender("AIzaSyC6g7JMT-KKmYKdhCZ27ymy-g6A7vUljG0");//api id
+          var sender = new gcm.Sender("AIzaSyABcNG7VNgSzOhXIxapNGxmQWLElWHgHDU");//api id
           messageGcm.addData('message', threadName+': '+message);
           messageGcm.addData('hasSound', true);
           messageGcm.addData('title', message);
