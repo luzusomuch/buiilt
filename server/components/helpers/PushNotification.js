@@ -3,7 +3,7 @@ var apnagent = require('apnagent')
 var device = require('./../../models/device.model');
 var Notification = require('./../../models/notification.model');
 var _ = require('lodash');
-var gcm = require('gcm'),
+var gcm = require('node-gcm'),
   messageGcm = new gcm.Message();
 
 
