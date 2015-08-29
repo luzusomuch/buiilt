@@ -111,10 +111,10 @@ exports.getData = function(projectId,id,threadName, message, users, type){
           console.log('android');
           var path = '';
           if (type == 'task') {
-            path = "#/"+projectid+"/task/"+id;
+            path = "#/"+projectId+"/task/"+id;
           }
           else if (type == 'message') {
-            path = "#/"+projectid+"/thread/"+id;
+            path = "#/"+projectId+"/thread/"+id;
           }
           var sender = new gcm.Sender("AIzaSyC6g7JMT-KKmYKdhCZ27ymy-g6A7vUljG0");//api id
           messageGcm.addData('message', threadName+': '+message);
