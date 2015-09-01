@@ -14,7 +14,7 @@
             <h4>Team <span class="highlight">{{user.invite.element.name}}</span> has invited you to join them on Buiilt</h4>
             <h4>Accept their invitation by signing up below</h4>
           </div>
-          <h3 ng-if="!hasInviteToken">Create account</h3>
+          <h3 ng-if="!hasInviteToken" id="createAcctHead">Create account</h3>
           <div class="row" ng-if="!hasInviteToken">
             <div input-field class="col s12" >
               <input id="email" type="email" name="email" ng-model="user.email" required
@@ -56,7 +56,7 @@
           </div>
 
           <div class="row">
-            <button style="margin-left:10px" class="waves-effect waves-light btn">Sign up</button>
+            <button style="margin-left:10px" class="waves-effect waves-light btn" id="signupBtn">Sign up</button>
           </div>
         </form>
         </div>
