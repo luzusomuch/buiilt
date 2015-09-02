@@ -32,6 +32,9 @@ angular.module('buiiltApp')
 	  $rootScope.startProjectOverviewWizard = function() {
 	  	inline_manual_player.activateTopic('4936', '1');
 	  }
+	  $rootScope.startNewVariationWizard = function() {
+	  	inline_manual_player.activateTopic('4969', '1');
+	  }
 
       //get header height
       $rootScope.headerHeight = $('nav').outerHeight() + 48;
