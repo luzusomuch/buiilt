@@ -6,7 +6,7 @@
         <div clas="row">
           <div class="input-field col s12">
             <label>Name </label>
-            <input name="name" ng-model="project.name" required type="text"
+            <input id="newProjName" name="name" ng-model="project.name" required type="text"
                    ng-class="{'invalid' : form.name.$invalid && submitted}">
             <p class="validate-message" ng-if=" form.name.$error.required && submitted">Project name is required</p>
           </div>
@@ -14,7 +14,7 @@
         <div clas="row">
           <div class="input-field col s12">
             <label>Description </label>
-            <input name="description" ng-model="project.description" required type="text"
+            <input id="newProjDesc" name="description" ng-model="project.description" required type="text"
                    ng-class="{'invalid' : form.description.$invalid && submitted}">
             <p class="validate-message" ng-if=" form.description.$error.required && submitted">Project description is required</p>
           </div>
@@ -22,17 +22,17 @@
         <div clas="row">
           <div class="input-field col s12">
             <label>Address </label>
-            <input ng-model="project.package.location.address" type="text">
+            <input id="newProjAddress" ng-model="project.package.location.address" type="text">
           </div>
         </div>
         <div class="row">
           <div class="input-field col s6">
             <label>Suburb </label>
-            <input ng-model="project.package.location.suburb" type="text">
+            <input id="newProjSub" ng-model="project.package.location.suburb" type="text">
           </div>
           <div class="input-field col s6">
             <label>Postcode </label>
-            <input ng-model="project.package.location.postcode" type="text">
+            <input id="newProjPostcode" ng-model="project.package.location.postcode" type="text">
           </div>
         </div>
         <div clas="row">
@@ -41,7 +41,7 @@
               <span ng-if="currentTeam.type == 'builder'">Client's Email: </span>
               <span ng-if="currentTeam.type == 'homeOwner'">Builder's Email: </span>
             </label>
-            <input name="email" ng-model="project.package.to" required type="text"
+            <input id="newProjClient" name="email" ng-model="project.package.to" required type="text"
                    ng-class="{'invalid' : form.email.$invalid && submitted}">
             <p class="validate-message" ng-if=" form.email.$error.required && submitted">Email is required</p>
           </div>
@@ -79,7 +79,7 @@
 
     </div>
     <div class="modal-footer">
-      <button class="waves-effect waves-light btn modal-action">Create project</button>
+      <button id="newProjSubmit" class="waves-effect waves-light btn modal-action">Create project</button>
       <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
     </div>
   </form>
