@@ -100,7 +100,7 @@
       </div>
       <div class="builderPackageList" style="height: {{contentHeight - 30}}px; overflow-y: auto; background-color: white; overflow-x: hidden;">
         <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" style="cursor:pointer;">
-          <div class="col s9" ng-click="goToBuilderPackageDetail()">Head Contract- {{builderPackage.name}}</div>
+          <div id="clientHeadContractRow" class="col s9" ng-click="goToBuilderPackageDetail()">Head Contract- {{builderPackage.name}}</div>
           <div style="color: #757575">
            <div class="col s1 valign-wrapper">
              <div style="font-size:15px;">{{builderPackage.threads.length}}</div>

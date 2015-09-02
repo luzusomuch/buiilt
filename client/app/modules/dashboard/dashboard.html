@@ -1,6 +1,6 @@
 
 <div class="col s3">
- <div class="collection">
+ <div class="collection" id="dashFilters">
    <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-click="currentList = 'tasks'; backToTaskList(); backToDocumentsList(); backToThreadsList()" class="row collection-item" style="cursor: pointer">
      Tasks <span ng-if="myTasks.length > 0" class="item badge">{{myTasks.length}}</span>
    </div>
