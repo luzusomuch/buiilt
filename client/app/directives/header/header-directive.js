@@ -14,6 +14,21 @@ angular.module('buiiltApp')
 	  $rootScope.startNewProjectWizard = function() {
 	  	inline_manual_player.activateTopic('4877', '1');
 	  }
+	  $rootScope.startNewSubcontractorWizard = function() {
+	  	inline_manual_player.activateTopic('4878', '1');
+	  }
+	  $rootScope.startNewMaterialWizard = function() {
+	  	inline_manual_player.activateTopic('4887', '1');
+	  }
+	  $rootScope.startWorkOrderWizard = function() {
+	  	inline_manual_player.activateTopic('4892', '1');
+	  }
+	  $rootScope.startUploadDocWizard = function() {
+	  	inline_manual_player.activateTopic('4893', '1');
+	  }
+	  $rootScope.startAddTeamMemberWizard = function() {
+	  	inline_manual_player.activateTopic('4872', '1');
+	  }
 
       //get header height
       $rootScope.headerHeight = $('nav').outerHeight() + 48;
