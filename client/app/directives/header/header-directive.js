@@ -6,6 +6,14 @@ angular.module('buiiltApp')
     controller: function($scope,$state, $stateParams, $rootScope,materialPackageService, authService, projectService, contractorService,teamService,filterFilter) {
       $scope.projects = [];
       $scope.submitted = false;
+	  
+	  //inline manual functions
+	  $rootScope.startSignupWizard = function() {
+	  	inline_manual_player.activateTopic('4881', '1');
+	  }
+	  $rootScope.startNewProjectWizard = function() {
+	  	inline_manual_player.activateTopic('4877', '1');
+	  }
 
       //get header height
       $rootScope.headerHeight = $('nav').outerHeight() + 48;
