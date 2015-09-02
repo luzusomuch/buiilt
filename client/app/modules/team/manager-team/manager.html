@@ -89,7 +89,7 @@
                 </div>
               </div>
               <div class="row">
-                <a class="waves-effect waves-light btn modal-trigger" id="newMemberBtn" href="#newMember" ng-if="isLeader">Add new member</a>
+                <a class="waves-effect waves-light btn modal-trigger" id="newMemberBtn" href="#newMember" ng-if="isLeader" ng-click="startAddTeamMemberWizard()">Add new member</a>
                 <a class="waves-effect waves-light btn" ng-if="!isLeader || currentTeam.leader.length > 1" ng-click="leaveTeam()">Leave this team</a>
               </div>
             </div>

@@ -50,7 +50,7 @@
          <p ng-if="!isLeader" style="margin-left: 10px"><STRONG>WORK ORDERS</STRONG></p>
       </div>
       <div class="col right" style="">
-         <a ng-if="currentTeam.type == 'builder' && isLeader" href="#newWorkPackage" class="modal-trigger" id="workOrderBtn" style="padding: 5px; font-size: 12px; color: black">ADD A WORK ORDER</a>
+         <a ng-if="currentTeam.type == 'builder' && isLeader" href="#newWorkPackage" class="modal-trigger" id="workOrderBtn" style="padding: 5px; font-size: 12px; color: black" ng-click="startWorkOrderWizard()">ADD A WORK ORDER</a>
       </div>
          </div>
          <div class="row collection-header" style="margin-bottom:0px;">
