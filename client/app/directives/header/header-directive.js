@@ -29,6 +29,9 @@ angular.module('buiiltApp')
 	  $rootScope.startAddTeamMemberWizard = function() {
 	  	inline_manual_player.activateTopic('4872', '1');
 	  }
+	  $rootScope.startProjectOverviewWizard = function() {
+	  	inline_manual_player.activateTopic('4936', '1');
+	  }
 
       //get header height
       $rootScope.headerHeight = $('nav').outerHeight() + 48;
