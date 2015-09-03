@@ -61,7 +61,21 @@
     <!-- Main App JS -->
     <script src="/app/app.js"></script>
 
-    <script src="/app/components/angular-materialize/src/angular-materialize.js"></script>
+    
+    <!-- Add New Component JS Above -->
+
+  <built-header ng-if="hasHeader"></built-header>
+
+  <main class="row container">
+
+    <div ui-view></div>
+    <div ng-include="'app/components/modal/modal.html'"></div>
+  </main>
+  <div ng-if="authService.isLoggedIn()" sp-socket></div>
+  
+  <built-footer  ng-if="hasFooter"></built-footer>
+
+  <script src="/app/components/angular-materialize/src/angular-materialize.js"></script>
     <script src="/app/components/filters.js"></script>
     <script src="/app/components/directive.js"></script>
     <script src="/app/components/angular-slimscroll/angular-slimscroll.js"></script>
@@ -167,17 +181,7 @@
     <script src="/app/services/variation-request-service.js"></script>
 
     <script src="/assets/js/jquery.slimscroll.js"></script>
-    <!-- Add New Component JS Above -->
-
-  <built-header ng-if="hasHeader"></built-header>
-
-  <main class="row container">
-
-    <div ui-view></div>
-    <div ng-include="'app/components/modal/modal.html'"></div>
-  </main>
-  <div ng-if="authService.isLoggedIn()" sp-socket></div>
   
-  <built-footer  ng-if="hasFooter"></built-footer>
+  <script src="https://inlinemanual.com/embed/player.5aff7ac0939b170ff68618a7789a2a80.js"></script>
 </body>
 </html>

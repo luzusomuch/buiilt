@@ -3,7 +3,7 @@ var apnagent = require('apnagent')
 var device = require('./../../models/device.model');
 var Notification = require('./../../models/notification.model');
 var _ = require('lodash');
-var gcm = require('gcm'),
+var gcm = require('node-gcm'),
   messageGcm = new gcm.Message();
 
 
@@ -86,7 +86,9 @@ exports.getData = function(projectId,id,threadName, message, users, type){
       if (err) {console.log(err);}
       // if (!device) {return res.send(404,err);}
       if (device) {
+        console.log(device);
         if (device.platform == 'ios') {
+          console.log('ios');
           Notification.find({owner: user, unread:true, $or:[{referenceTo: 'task'},{referenceTo: 'thread'}]}, function(err, notifications){
             if (err) {console.log(err);}
             // if (!notifications) {return res.send(404);}
@@ -106,17 +108,18 @@ exports.getData = function(projectId,id,threadName, message, users, type){
           });
         }
         else if (device.platform == 'android') {
+          console.log('android');
           var path = '';
           if (type == 'task') {
-            path = "#/"+projectid+"/task/"+id;
+            path = "#/"+projectId+"/task/"+id;
           }
           else if (type == 'message') {
-            path = "#/"+projectid+"/thread/"+id;
+            path = "#/"+projectId+"/thread/"+id;
           }
-          var sender = new gcm.Sender("AIzaSyC6g7JMT-KKmYKdhCZ27ymy-g6A7vUljG0");//api id
-          messageGcm.addData('message', threadName+': '+message);
+          var sender = new gcm.Sender("AIzaSyABcNG7VNgSzOhXIxapNGxmQWLElWHgHDU");//api id
+          messageGcm.addData('message', message);
           messageGcm.addData('hasSound', true);
-          messageGcm.addData('title', message);
+          messageGcm.addData('title', threadName+': '+message);
           messageGcm.addData('path', path);
           messageGcm.delayWhileIdle = true;
           //sender.send(message, device.deviceid, 4, function (err, result) {
