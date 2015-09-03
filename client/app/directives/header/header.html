@@ -51,7 +51,7 @@
     <div class="col s12 container">
       <ul class="tabs" tabs id="tabsMenu">
         <li class="tab col" ng-repeat="tab in tabs">
-          <a ui-sref="{{tab.sref}}" ui-sref-active="active">{{tab.label}}</a>
+          <a ui-sref="{{tab.sref}}" ui-sref-active="active" id="menuItem_{{tab.label}}">{{tab.label}}</a>
         </li>
         <!-- <li class="tab col" ng-repeat="tab in tabs" ng-if="!projectParamId">
           <a ui-sref="{{tab.sref}}" ui-sref-active="active">{{tab.label}}</a>
