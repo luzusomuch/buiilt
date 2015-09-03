@@ -64,12 +64,12 @@
          <div class="row collection-header" style="margin-bottom:0px">
        
        <div class="col">
-         <p ng-if="currentTeam.type == 'builder'" style="margin-left: 10px"><STRONG>CLIENT</STRONG></p>
-         <p ng-if="currentTeam.type == 'homeOwner'" style="margin-left: 10px"><STRONG>BUILDER</STRONG></p>
+         <p ng-if="currentTeam.type == 'builder'" style="margin-left: 10px" id="clientHeader"><STRONG>CLIENT</STRONG></p>
+         <p ng-if="currentTeam.type == 'homeOwner'" style="margin-left: 10px" id="builderHeader"><STRONG>BUILDER</STRONG></p>
       </div>
       <div ng-hide="isShowBuilderPackageDetail" class="col right" style="">
          <!-- <a href="#modal_attachVariation" class="modal-trigger" style="padding: 5px; font-size: 12px; color: black">ADD A NEW VARIATION</a> -->
-         <a href="#modal_attachVariationNew" class="modal-trigger" style="padding: 5px; font-size: 12px; color: black">ADD A NEW VARIATION</a>
+         <a href="#modal_attachVariationNew" class="modal-trigger" style="padding: 5px; font-size: 12px; color: black" ng-click="startNewVariationWizard()">ADD A NEW VARIATION</a>
       </div>
          </div>
          <div class="row collection-header" style="margin-bottom:0px;">
@@ -100,7 +100,7 @@
       </div>
       <div class="builderPackageList" style="height: {{contentHeight - 30}}px; overflow-y: auto; background-color: white; overflow-x: hidden;">
         <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" style="cursor:pointer;">
-          <div class="col s9" ng-click="goToBuilderPackageDetail()">Head Contract- {{builderPackage.name}}</div>
+          <div id="clientHeadContractRow" class="col s9" ng-click="goToBuilderPackageDetail()">Head Contract- {{builderPackage.name}}</div>
           <div style="color: #757575">
            <div class="col s1 valign-wrapper">
              <div style="font-size:15px;">{{builderPackage.threads.length}}</div>
