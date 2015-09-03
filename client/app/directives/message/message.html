@@ -1,7 +1,7 @@
-<div style="position:relative;" class="collection with-header">
+<div style="position:relative;" class="collection with-header" id="packageMessagesPanel">
   <div class="row collection-header" style="margin-bottom:0px; padding-top: 20px; padding-bottom: 14px">
     <div class="right">
-      <a class="modal-trigger" style="font-size: 12px; margin:20px; color: black;" href='#modal_createNewThread' ng-click="newThread()">NEW THREAD</a>
+      <a id="packageNewMessageBtn" class="modal-trigger" style="font-size: 12px; margin:20px; color: black;" href='#modal_createNewThread' ng-click="newThread()">NEW MESSAGE</a>
     </div>
   </div>
 
@@ -25,9 +25,9 @@
   <div id="threadDetail" style="height: {{contentHeight - 15}}px; overflow-x: hidden; overflow-y: auto; background-color:White; display:none">
     <div class="row collection-header" style="margin-bottom:0px;">
      <div class="col s12" style="font-size: 12px">
-       <a ng-click="backToThreadsList()" href="#" style="padding: 5px;">&lt; BACK TO THREADS</a>
+       <a ng-click="backToThreadsList()" href="#" style="padding: 5px;">&lt; BACK TO MESSAGES</a>
        <div class="right">
-         <a ng-click="editThread(currentThread)" href="#modal_editThread" class="modal-trigger" style="padding: 5px;">EDIT THREAD</a>
+         <a ng-click="editThread(currentThread)" href="#modal_editThread" class="modal-trigger" style="padding: 5px;">EDIT MESSAGE</a>
        </div>
      </div>
     </div>

@@ -63,10 +63,10 @@
        
        <div class="col">
          <p style="margin-left: 10px" ng-if="currentTeam.type == 'builder'"><strong>SUBCONTRACTORS</strong></p>
-         <p style="margin-left: 10px" ng-if="currentTeam.type == 'contractor'"><strong>CONTRACTORS PACKAGE</strong></p>
+         <p style="margin-left: 10px" ng-if="currentTeam.type == 'contractor'"><strong>CONTRACTS</strong></p>
       </div>
       <div class="col right" style="">
-         <a ng-if="currentTeam.type == 'builder' && isLeader" href="#newContractorPackage" class="modal-trigger" style="padding: 5px; font-size: 12px; color: black">ADD A SUBCONTRACTOR</a>
+         <a ng-if="currentTeam.type == 'builder' && isLeader" href="#newContractorPackage" class="modal-trigger" id="newContractorBtn" style="padding: 5px; font-size: 12px; color: black" ng-click="startNewSubcontractorWizard()">ADD A SUBCONTRACTOR</a>
       </div>
          </div>
          <div class="row collection-header" style="margin-bottom:0px;">
@@ -139,7 +139,7 @@
         <div class="input-field col s3">
           <p>
             <input class="valign" type="checkbox" ng-model="contractor.isSkipInTender" id="skipInTender"/>
-            <label for="skipInTender">Skip Tender Stage</label>
+            <label id="subcontractorSkipTender" for="skipInTender">Skip Tender Stage</label>
           </p>
         </div>
         <div class="input-field col s3">
@@ -172,10 +172,10 @@
                 <div class="input-field col s10">
                   <textarea id="description" class="materialize-textarea" ng-model="description" ng-class="{'invalid' : contractorDescriptionError}"></textarea>
                   <label for="description" class="">Description</label>
-                  <p class="validate-message" ng-if="contractorDescriptionError">Scope of work at least 1 item</p>
+                  <p class="validate-message" ng-if="contractorDescriptionError">Please provide at least one description of the work to be carried out</p>
                 </div>
                 <div class="valign col s2">
-                  <button class="btn" type="button" name="action" style="margin-top: 78px" ng-click="addDescriptionContractor(description)">Add</button>
+                  <button class="btn" type="button" name="action" style="margin-top: 78px" ng-click="addDescriptionContractor(description)" id="scopeAddBtn">Add</button>
                 </div>
               </div>
             </li>
@@ -200,8 +200,8 @@
             <li class="collection-item vlalign-wrapper">
               <div class="row form" style="margin-bottom: 0px">
                 <div class="col s12"><p>Enter tradesmen's details below:</p></div>
-                <p class="validate-message" ng-if="trademenError">Tradesmen's details at least 1 item</p>
-                <div class="input-field col s7">
+                <p class="validate-message" ng-if="trademenError">Please provide at least one subcontractor to send this package too.</p>
+                <div class="input-field col s7" id="newSubEmail">
                   <!-- <input id="email_address" ng-model="newEmail" type="email" name="email" class="validate"> -->
                   <angucomplete-alt id="ex1"
                                     pause="100"
@@ -217,10 +217,10 @@
                 <div class="input-field col s3">
                   <input id="phone_number" ng-model="newPhoneNumber" type="number" name="phoneNumber" class="validate">
                   <label for="phone_number">Phone number</label>
-                  <p class="validate-message" ng-if="contractorForm.phoneNumber.$valid == false">Please input number</p>  
+                  <p class="validate-message" ng-if="contractorForm.phoneNumber.$valid == false">Please provide their phone number</p>  
                 </div>
                 <div class="valign col s2">
-                  <a href="#" ng-if="contractorForm.phoneNumber.$valid == true" ng-click="contractorAddUser()" class="btn" style="margin-top: 28px">Add</a>
+                  <a href="#" ng-if="contractorForm.phoneNumber.$valid == true" ng-click="contractorAddUser()" class="btn" style="margin-top: 28px" id="tradesmanAddBtn">Add</a>
                   <!-- <button class="btn" type="submit" ng-submit="addUser()" name="action" style="margin-top: 28px">Add</button> -->
                 </div>
               </div>
@@ -245,7 +245,7 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="submit" class="waves-effect waves-light btn modal-action">ADD SUBCONTRACTOR</button>
+      <button type="submit" class="waves-effect waves-light btn modal-action" id="newSubPackageSubmit">ADD SUBCONTRACTOR</button>
       <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
     </div>
   </form>
