@@ -61,6 +61,7 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
     $rootScope.currentProjectBackend = {};
     $rootScope.authService = authService;
     $rootScope.currentTeam = {};
+    $rootScope.currentUser = {};
     $rootScope.hasHeader = true;
     $rootScope.hasFooter = true;
     $rootScope.safeApply = function (fn) {
@@ -73,12 +74,36 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
         this.$apply(fn);
       }
     };
+
+    authService.isLoggedInAsync(function (loggedIn) {
+      if (loggedIn) {
+        authService.getCurrentUser().$promise.then(function(res){
+          $rootScope.currentUser = res;
+          authService.getCurrentTeam().$promise.then(function(team){
+            $rootScope.currentTeam = team;
+            var currentTeamType = [];
+            currentTeamType.push($rootScope.currentTeam.type);
+            window.inlineManualTracking = {
+              uid: $rootScope.currentUser._id, // String or Int e.g. "123"
+              email: $rootScope.currentUser.email, // String e.g. "johndoe@example.com"
+              roles: [currentTeamType], // Array of roles, e.g. ["builder"]
+            }
+          });
+        });
+      }
+      else {
+
+      }
+    });
+
     $rootScope.$on('$stateChangeStart', function (event,toState, toParams, next) {
       $rootScope.currentPackageId = toParams.packageId;
       $rootScope.currentPackageType = toParams.type;
       authService.isLoggedInAsync(function (loggedIn) {
         if (loggedIn) {
-
+          authService.getCurrentTeam().$promise.then(function(res){
+            $rootScope.currentTeam = res;
+          })
         }
         if (toState.authenticate && !loggedIn) {
           $location.path('/');
