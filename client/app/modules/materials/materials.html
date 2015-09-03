@@ -57,7 +57,7 @@
        
        <div class="col">
          <p ng-if="currentTeam.type == 'builder'" style="margin-left: 10px"><strong>SUPPLIERS</strong></p>
-         <p ng-if="currentTeam.type == 'supplier'" style="margin-left: 10px"><strong>MATERIALS PACKAGE</strong></p>
+         <p ng-if="currentTeam.type == 'supplier'" style="margin-left: 10px"><strong>CONTRACTS</strong></p>
       </div>
       <div class="col right" style="">
          <a ng-if="currentTeam.type == 'builder' && isLeader" href="#newMaterialPackage" class="modal-trigger" id="newMaterialBtn" style="padding: 5px; font-size: 12px; color: black" ng-click="startNewMaterialWizard()">ADD A MATERIAL ORDER</a>
@@ -129,13 +129,12 @@
                  ng-class="{'invalid' : materialForm.name.$invalid && materialSubmitted}">
           <label for="project_name">Material Package Title</label>
 
-          <p class="validate-message" ng-if="materialForm.name.$error.required && materialSubmitted">Package name is
-            required</p>
+          <p class="validate-message" ng-if="materialForm.name.$error.required && materialSubmitted">Please provide a name for the material package.</p>
         </div>
         <div class="input-field col s3">
           <p>
             <input class="valign" type="checkbox" ng-model="material.isSkipInTender" id="skipInTender"/>
-            <label for="skipInTender">Skip Tender Stage</label>
+            <label for="skipInTender" id="supplierSkipInTender">Skip Tender Stage</label>
           </p>
         </div>
         <div class="input-field col s3">
@@ -155,11 +154,11 @@
           <ul class="collection z-depth-1">
             <li class="collection-item vlalign-wrapper">
               <div class="row form" style="margin-bottom: 0px">
-                <div class="col s12"><p>Enter work descriptions below:</p></div>
+                <div class="col s12"><p>Provide a list of materials you require:</p></div>
                 <div class="input-field col s10">
                   <textarea id="description" class="materialize-textarea" ng-model="description1" ng-class="{'invalid' : materialDescriptionError}"></textarea>
                   <label for="description" class="">Description</label>
-                  <p class="validate-message" ng-if="materialDescriptionError">Scope of work at least 1 item</p>
+                  <p class="validate-message" ng-if="materialDescriptionError">Please provide at least one item.</p>
                 </div>
                 <div class="valign col s2">
                   <a class="btn" name="action" style="margin-top: 78px" ng-click="addDescriptionMaterial(description1)">Add</a>
@@ -185,21 +184,21 @@
           <ul class="collection z-depth-1">
             <li class="collection-item vlalign-wrapper">
               <div class="row form" style="margin-bottom: 0px">
-                <div class="col s12"><p>Enter materials required below:</p></div>
+                <div class="col s12"><p>Please provide a list of material you require:</p></div>
                 <div class="input-field col s7">
                   <textarea id="description" class="materialize-textarea" ng-class="{'invalid' : requireError}"
                             ng-model="description"></textarea>
                   <label for="description">Description</label>
-                  <p class="validate-message" ng-if="requireError">Material require details at least 1 item</p>
+                  <p class="validate-message" ng-if="requireError">Please provide at least one item.</p>
                 </div>
                 <div class="input-field col s3" style="margin-top: 67px">
                   <input id="quantity" type="number" name="requiredQuantity" class="validate" ng-model="quantity">
                   <label for="quantity">Quantity</label>
-                  <p class="validate-message" ng-if="materialForm.requiredQuantity.$valid == false">Please input number</p>
+                  <p class="validate-message" ng-if="materialForm.requiredQuantity.$valid == false" >Please provide a quantity.</p>
                 </div>
                 <div class="valign col s2">
                   <a ng-if="materialForm.requiredQuantity.$valid == true" name="action" class="btn" style="margin-top:78px;"
-                     ng-click="addNewRequire()">Add</a>
+                     ng-click="addNewRequire()" id="lineItemAddBtn">Add</a>
                 </div>
               </div>
             </li>
@@ -221,11 +220,11 @@
           <ul class="collection z-depth-1">
             <li class="collection-item vlalign-wrapper">
               <div class="row form" style="margin-bottom: 0px">
-                <div class="col s12"><p>Enter supplier details below:</p></div>
-                <p class="validate-message" ng-if="supplierError">Supplier details at least 1 item</p>
+                <div class="col s12"><p>Enter your supplier details below:</p></div>
+                <p class="validate-message" ng-if="supplierError">Please provide at least one supplier.</p>
                 
 
-                <div class="input-field col s7">
+                <div class="input-field col s7" id="newSuppEmail">
                   <angucomplete-alt id="ex1"
                                     pause="100"
                                     selected-object="materialMember.email"
@@ -243,7 +242,7 @@
                   <p class="validate-message" ng-if="materialForm.phoneNumber.$valid == false">Please input number</p>             
                 </div>
                 <div class="valign col s2">
-                  <a name="action" ng-if="materialForm.requiredQuantity.$valid == true" class="btn" style="margin-top:28px;" ng-click="addNewSupplier()">Add</a>
+                  <a name="action" ng-if="materialForm.requiredQuantity.$valid == true" class="btn" style="margin-top:28px;" ng-click="addNewSupplier()" id="matSuppAddBtn">Add</a>
                 </div>
               </div>
             </li>
@@ -270,7 +269,7 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="submit" class="modal-action waves-effect waves-green btn modal-action">ADD SUPPLIER</button>
+      <button type="submit" class="modal-action waves-effect waves-green btn modal-action" id="newMatPackageAddBtn">ADD SUPPLIER</button>
       <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
     </div>
   </form>
