@@ -62,8 +62,8 @@
          <div class="row collection-header" style="margin-bottom:0px">
        
        <div class="col">
-         <p style="margin-left: 10px" ng-if="currentTeam.type == 'builder'"><strong>SUBCONTRACTORS</strong></p>
-         <p style="margin-left: 10px" ng-if="currentTeam.type == 'contractor'"><strong>CONTRACTS</strong></p>
+         <p style="margin-left: 10px" ng-if="currentTeam.type == 'builder'" id="subcontractorsHeader"><strong>SUBCONTRACTORS</strong></p>
+         <p style="margin-left: 10px" ng-if="currentTeam.type == 'contractor'" id="subContractsHeader"><strong>CONTRACTS</strong></p>
       </div>
       <div class="col right" style="">
          <a ng-if="currentTeam.type == 'builder' && isLeader" href="#newContractorPackage" class="modal-trigger" id="newContractorBtn" style="padding: 5px; font-size: 12px; color: black" ng-click="startNewSubcontractorWizard()">ADD A SUBCONTRACTOR</a>
