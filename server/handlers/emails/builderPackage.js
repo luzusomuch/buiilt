@@ -24,6 +24,7 @@ EventBus.onSeries('BuilderPackage.Inserted', function(request, next) {
     }
   },function(err,result){
     if (err) {return next();}
+    var from = result.user.firstName + " " + result.user.lastName + " | " + result.team.name + "<"+result.user.email+">";
     var subjectType = (request.to.type == 'homeOwner') ? 'homeowner' : 'builder';
     if (request.to.email) {
       var packageInvite = new PackageInvite({
@@ -35,7 +36,7 @@ EventBus.onSeries('BuilderPackage.Inserted', function(request, next) {
       });
       packageInvite.save(function(err) {
         if(err){ next(); }
-        Mailer.sendMail('invite-' + subjectType + '-has-no-account.html', request.to.email, {
+        Mailer.sendMail('invite-' + subjectType + '-has-no-account.html', from, request.to.email, {
           user: result.user.toJSON(),
           project: result.project.toJSON(),
           team: result.team.toJSON(),
@@ -53,7 +54,7 @@ EventBus.onSeries('BuilderPackage.Inserted', function(request, next) {
 
           if (result.team.type == request.to.type) {
             team.leader.forEach(function(leader) {
-              Mailer.sendMail('invite-' + subjectType + '.html', leader.email, {
+              Mailer.sendMail('invite-' + subjectType + '.html', from, leader.email, {
                 user: result.user.toJSON(),
                 project: result.project.toJSON(),
                 team: result.team.toJSON(),

@@ -9,6 +9,7 @@ var config = require('./../../config/environment');
 var async = require('async');
 
 EventBus.onSeries('Team.Inserted', function(request, next){
+  var from = request.user.firstName + " " + request.user.lastName + " | " + request.name + "<"+request.user.email+">";
     async.each(request.member, function(user,callback) {
       if (!user._id && user.status == 'Pending') {
         var inviteToken = new InviteToken({
@@ -18,7 +19,7 @@ EventBus.onSeries('Team.Inserted', function(request, next){
         });
         inviteToken.save(function(err) {
           if (err) { return callback(err);}
-          Mailer.sendMail('invite-team-has-no-account.html', user.email, {
+          Mailer.sendMail('invite-team-has-no-account.html', from, user.email, {
             request: request.toJSON(),
             link: config.baseUrl + 'signup?inviteToken=' + inviteToken.inviteToken,
             subject: 'Group invitation ' + request.name
@@ -27,7 +28,7 @@ EventBus.onSeries('Team.Inserted', function(request, next){
           });
         })
       } else if (user._id && user.status == 'Pending')  {
-        Mailer.sendMail('invite-team-has-account.html', user.email, {
+        Mailer.sendMail('invite-team-has-account.html', from, user.email, {
           request: request.toJSON(),
           subject: 'Group invitation ' + request.name
         }, function(err) {
@@ -42,6 +43,7 @@ EventBus.onSeries('Team.Inserted', function(request, next){
 });
 
 EventBus.onSeries('Team.Updated', function(request, next){
+  var from = request.user.firstName + " " + request.user.lastName + " | " + request.name + "<"+request.user.email+">";
   async.each(request.member, function(user, cb) {
     if (!user._id && user.status == 'Pending' && !(_.find(request.oldMember,{ email : user.email}))) {
       var inviteToken = new InviteToken({
@@ -53,7 +55,7 @@ EventBus.onSeries('Team.Updated', function(request, next){
         if (err) {
           return cb(err);
         }
-        Mailer.sendMail('invite-team-has-no-account.html', user.email, {
+        Mailer.sendMail('invite-team-has-no-account.html', from, user.email, {
           request: request.toJSON(),
           link: config.baseUrl + 'signup?inviteToken=' + inviteToken.inviteToken,
           subject: 'Group invitation ' + request.name
@@ -63,7 +65,7 @@ EventBus.onSeries('Team.Updated', function(request, next){
       });
 
     } else if (user._id && user.status == 'Pending' && !(_.find(request.oldMember,{ _id : user._id})))  {
-      Mailer.sendMail('invite-team-has-account.html', user._id.email, {
+      Mailer.sendMail('invite-team-has-account.html', from, user._id.email, {
         request: request.toJSON(),
         subject: 'Group invitation ' + request.name
       }, function() {

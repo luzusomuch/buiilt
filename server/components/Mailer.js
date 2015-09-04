@@ -25,7 +25,7 @@ Mailer.prototype.send = function(options, callback) {
   var options = options || {};
 
   _.defaults(options, {
-    from : config.emailFrom,
+    from : options.from,
     bcc : config.bccEmails || []
   });
   this.transport.sendMail(options, function(err, data){
@@ -37,10 +37,11 @@ Mailer.prototype.send = function(options, callback) {
   });
 };
 
-Mailer.prototype.sendMail = function(template, emails, options, callback) {
+Mailer.prototype.sendMail = function(template, from, emails, options, callback) {
   var self = this;
   self.render(template, options, okay(callback, function(output) {
     self.send({
+      from: from,
       to : emails,
       subject : options.subject,
       html : output
