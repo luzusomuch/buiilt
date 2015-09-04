@@ -13,8 +13,8 @@ angular.module('buiiltApp').directive('addon', function(){
 	  	  	$scope.startNewTaskWizard = function() {
 	  	  		inline_manual_player.activateTopic('4981', '1');
 	  	  	};
-	  	  	$scope.startDocumentWizard = function() {
-	  	  		inline_manual_player.activateTopic('4981', '1');
+	  	  	$scope.startNewDocumentWizard = function() {
+	  	  		inline_manual_player.activateTopic('5003', '1');
 	  	  	};
 	  	  	$scope.startNewVariationWizard = function() {
 	  	  		inline_manual_player.activateTopic('4969', '1');
