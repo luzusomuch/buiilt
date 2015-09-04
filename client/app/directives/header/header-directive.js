@@ -79,7 +79,7 @@ angular.module('buiiltApp')
                 if ($state.current.name == 'dashboard' && ! res.emailVerified) {
                   Materialize.toast('<span>You must confirm your email to hide this message!</span><a class="btn-flat yellow-text" id="sendVerification">Send Verification Email Again<a>', $scope.duration,'rounded');
                 }
-                if (typeof $rootScope.isLeader == 'undefined') {
+                if (typeof $rootScope.isLeader == 'undefined' || !$rootScope.isLeader) {
                   $rootScope.isLeader = ($scope.user.team.role == 'admin');
                 }
                 $scope.isLeader = $rootScope.isLeader;

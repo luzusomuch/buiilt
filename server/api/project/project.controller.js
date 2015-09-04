@@ -50,6 +50,7 @@ exports.create = function(req, res){
       Team.findById(user.team._id,function(err,team) {
         team.project.push(project._id);
         team.markModified('project');
+        team._user = user;
         team.save();
         if (team.type == 'builder') {
           to.type = 'homeOwner'
@@ -66,6 +67,7 @@ exports.create = function(req, res){
             if (err) {return res.send(500,err);}
             team.project.push(project._id);
             team.markModified('project');
+            team._user = user;
             team.save();
           });
         }
