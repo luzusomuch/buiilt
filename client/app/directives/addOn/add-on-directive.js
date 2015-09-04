@@ -645,6 +645,7 @@ angular.module('buiiltApp').directive('addon', function(){
               fileService.getFileByStateParam({'id': $scope.package._id}).$promise.then(function(data) {
                   $scope.documents = data;
               });
+              console.log('aaaaaaaaaaa');
             };
             uploader.onBeforeUploadItem = function (item) {
 
@@ -667,7 +668,11 @@ angular.module('buiiltApp').directive('addon', function(){
                 }
                 fileService.getFileByStateParam({'id': $scope.package._id}).$promise.then(function(data) {
                     $scope.documents = data;
+                    var newestDocument = _.last(data);
+                    $scope.showDocuments();
+                    $scope.goToDocumentDetail(newestDocument);
                 });
+                console.log('bbbbbbbbbbb');
                 $('.toast').css('opacity','0');
                 Materialize.toast('Upload completed',3000);
             };
