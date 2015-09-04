@@ -9,6 +9,18 @@ angular.module('buiiltApp').directive('addon', function(){
         },
         controller: function(filterFilter,taskService,$rootScope,$scope, $state,$window, $stateParams, authService,addOnPackageService, FileUploader, $cookieStore, fileService, contractorRequestService, materialRequestService, variationRequestService) {
             
+			//Inline Manual Functions
+	  	  	$scope.startNewTaskWizard = function() {
+	  	  		inline_manual_player.activateTopic('4981', '1');
+	  	  	};
+	  	  	$scope.startDocumentWizard = function() {
+	  	  		inline_manual_player.activateTopic('4981', '1');
+	  	  	};
+	  	  	$scope.startNewVariationWizard = function() {
+	  	  		inline_manual_player.activateTopic('4969', '1');
+			};
+			
+		  
             $scope.activeHover = function($event){
               angular.element($event.currentTarget).addClass("item-hover")
             };
