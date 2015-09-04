@@ -577,9 +577,9 @@
        </ul>
   </div>
   <div class="col right" style="margin-top: 10px">
-     <a id="packageNewTaskBtn" ng-click="newTask()" class="modal-trigger" href="#modal_createNewTask" style="margin-left:30px; padding: 5px; font-size: 12px; color: black">NEW TASK</a>
-     <a id="packageNewDocumentBtn" class="modal-trigger" href="#modal_attachDocument" style="margin-left:30px; padding: 5px; font-size: 12px; color: black">NEW DOCUMENT</a>
-     <a id="packageNewVariationBtn" ng-hide="type == 'variation' || type == 'staff'" class="modal-trigger" href="#modal_attachVariation" style="margin-left:30px; padding: 5px; font-size: 12px; color: black">NEW VARIATION</a>
+     <a id="packageNewTaskBtn" ng-click="newTask(); startNewTaskWizard()" class="modal-trigger" href="#modal_createNewTask" style="margin-left:30px; padding: 5px; font-size: 12px; color: black">NEW TASK</a>
+     <a id="packageNewDocumentBtn" class="modal-trigger" href="#modal_attachDocument" style="margin-left:30px; padding: 5px; font-size: 12px; color: black" ng-click="startNewDocumentWizard()">NEW DOCUMENT</a>
+     <a id="packageNewVariationBtn" ng-hide="type == 'variation' || type == 'staff'" class="modal-trigger" href="#modal_attachVariation" style="margin-left:30px; padding: 5px; font-size: 12px; color: black" ng-click="startNewVariationWizard()">NEW VARIATION</a>
   </div>
 </div>
   <!-- show overview -->

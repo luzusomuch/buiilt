@@ -36,6 +36,7 @@ angular.module('buiiltApp')
 	  	inline_manual_player.activateTopic('4969', '1');
 	  };
 	  
+	  
       //get header height
       $rootScope.headerHeight = $('nav').outerHeight() + 48;
 

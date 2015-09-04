@@ -9,7 +9,14 @@ angular.module('buiiltApp')
       },
       controller:
         function($scope,$rootScope,messageService, authService,socket,$timeout,$anchorScroll,$location,filterFilter, $cookieStore, $stateParams, $location , packageService, userService, projectService, FileUploader, documentService) {
-          //Init Params
+          
+			//Inline Manual Functions
+	  	  $scope.startNewMessageWizard = function() {
+	  	  	inline_manual_player.activateTopic('5002', '1');
+	  	  };
+		  
+		  
+		  //Init Params
           $scope.activeHover = function($event){
             angular.element($event.currentTarget).addClass("item-hover")
           };
