@@ -33,7 +33,7 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
   }, function(err, result){
     if (!err) {
       //do send email
-      console.log(request);
+      var from = result.user.firstName + " " + result.user.lastName + " | " + result.team.name + "<"+result.user.email+">";
       if (request.isSkipInTender == true) {
         var winner = _.first(request.to);
         if (!winner._id) {
@@ -47,7 +47,7 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
           });
           packageInvite.save(function(err, saved){
             if (err) {return next();}
-            Mailer.sendMail('contractor-package-request-no-account.html', saved.to, {
+            Mailer.sendMail('contractor-package-request-no-account.html', from, saved.to, {
               team: result.team.toJSON(),
               contractorPackage: request.toJSON(),
               user: result.user.toJSON(),
@@ -64,7 +64,7 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
             if (err || !team) {return next();}
             async.each(team.leader, function(leader, callback) {
               User.findById(leader, function(err,user) {
-                Mailer.sendMail('contractor-package-request.html', user.email, {
+                Mailer.sendMail('contractor-package-request.html', from, user.email, {
                   contractorPackage: request.toJSON(),
                   //project owner
                   team: result.team.toJSON(),
@@ -95,7 +95,7 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
             });
             packageInvite.save(function(err, saved){
               if (err) {return cb(err);}
-              Mailer.sendMail('contractor-package-request-no-account.html', saved.to, {
+              Mailer.sendMail('contractor-package-request-no-account.html', from, saved.to, {
                 team: result.team.toJSON(),
                 contractorPackage: request.toJSON(),
                 user: result.user.toJSON(),
@@ -112,7 +112,7 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
             if (err || !team) {return cb(err);}
             async.each(team.leader, function(leader, callback) {
               User.findById(leader, function(err,user) {
-                Mailer.sendMail('contractor-package-request.html', user.email, {
+                Mailer.sendMail('contractor-package-request.html', from, user.email, {
                   contractorPackage: request.toJSON(),
                   //project owner
                   team: result.team.toJSON(),
@@ -141,6 +141,7 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
 });
 
 EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
+  var from = result.user.firstName + " " + result.user.lastName + " | " + result.team.name + "<"+result.user.email+">";
   if (request._modifiedPaths.indexOf('inviteContractor') != -1) {
     async.parallel({
       user: function(cb){
@@ -167,7 +168,7 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
             });
             packageInvite.save(function(err,saved){
               if (err) {return cb(err);}
-              Mailer.sendMail('contractor-package-request-no-account.html', saved.to, {
+              Mailer.sendMail('contractor-package-request-no-account.html', from, saved.to, {
                 team: result.team.toJSON(),
                 contractorPackage: request.toJSON(),
                 user: result.user.toJSON(),
@@ -185,7 +186,7 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
             async.each(team.leader, function(leader, callback) {
               User.findById(leader, function(err,user) {
                 if (err || !user) {return cb(err);}
-                Mailer.sendMail('contractor-package-request.html', user.email, {
+                Mailer.sendMail('contractor-package-request.html', from, user.email, {
                   contractorPackage: request.toJSON(),
                   //project owner
                   team: result.team.toJSON(),

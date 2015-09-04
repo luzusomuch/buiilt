@@ -36,7 +36,7 @@ EventBus.onSeries('MaterialPackage.Inserted', function(request, next) {
     if (err) {
       return next();
     }
-    console.log(request);
+    var from = result.user.firstName + " " + result.user.lastName + " | " + result.team.name + "<"+result.user.email+">";
     if (request.isSkipInTender == true) {
       var winner = _.first(request.to);
       if (!winner._id) {
@@ -50,7 +50,7 @@ EventBus.onSeries('MaterialPackage.Inserted', function(request, next) {
         });
         packageInvite.save(function(err, saved){
           if (err) {return next();}
-          Mailer.sendMail('supplier-package-send-quote-no-account.html', saved.to, {
+          Mailer.sendMail('supplier-package-send-quote-no-account.html', from, saved.to, {
             team: result.team.toJSON(),
             materialPackage: request.toJSON(),
             user: result.user.toJSON(),
@@ -72,7 +72,7 @@ EventBus.onSeries('MaterialPackage.Inserted', function(request, next) {
               if (err || !user) {
                 return callback(err);
               }
-              Mailer.sendMail('supplier-package-send-quote.html', user.email, {
+              Mailer.sendMail('supplier-package-send-quote.html', from, user.email, {
                 materialPackage: request.toJSON(),
                 //project owner
                 team: result.team.toJSON(),
@@ -103,7 +103,7 @@ EventBus.onSeries('MaterialPackage.Inserted', function(request, next) {
           });
           packageInvite.save(function(err, saved){
             if (err) {return cb(err);}
-            Mailer.sendMail('supplier-package-send-quote-no-account.html', saved.to, {
+            Mailer.sendMail('supplier-package-send-quote-no-account.html', from, saved.to, {
               team: result.team.toJSON(),
               materialPackage: request.toJSON(),
               user: result.user.toJSON(),
@@ -125,7 +125,7 @@ EventBus.onSeries('MaterialPackage.Inserted', function(request, next) {
                 if (err || !user) {
                   return callback(err);
                 }
-                Mailer.sendMail('supplier-package-send-quote.html', user.email, {
+                Mailer.sendMail('supplier-package-send-quote.html', from, user.email, {
                   materialPackage: request.toJSON(),
                   //project owner
                   team: result.team.toJSON(),
@@ -150,6 +150,7 @@ EventBus.onSeries('MaterialPackage.Inserted', function(request, next) {
 });
 
 EventBus.onSeries('MaterialPackage.Updated', function(request, next) {
+  var from = result.user.firstName + " " + result.user.lastName + " | " + result.team.name + "<"+result.user.email+">";
   if (request._modifiedPaths.indexOf('inviteMaterial') != -1) {
     async.parallel({
       user: function(cb) {
@@ -175,7 +176,7 @@ EventBus.onSeries('MaterialPackage.Updated', function(request, next) {
             });
             packageInvite.save(function(err, saved){
               if (err) {return cb(err);}
-              Mailer.sendMail('supplier-package-send-quote-no-account.html', saved.to, {
+              Mailer.sendMail('supplier-package-send-quote-no-account.html', from, saved.to, {
                 materialPackage: request.toJSON(),
                 team: result.team.toJSON(),
                 user: result.user.toJSON(),
@@ -197,7 +198,7 @@ EventBus.onSeries('MaterialPackage.Updated', function(request, next) {
                   if (err || !user) {
                     return callback(err);
                   }
-                  Mailer.sendMail('supplier-package-send-quote.html', user.email, {
+                  Mailer.sendMail('supplier-package-send-quote.html', from, user.email, {
                     materialPackage: request.toJSON(),
                     //project owner
                     team: result.team.toJSON(),
