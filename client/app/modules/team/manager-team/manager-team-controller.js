@@ -10,7 +10,13 @@ angular.module('buiiltApp')
     $scope.users = users;
     $scope.clear = false;
     $scope.isEdit = false;
-    $scope.isLeader = (currentUser.team.role == 'admin');
+    // $scope.isLeader = (currentUser.team.role == 'admin');
+    if (currentUser.team.role == 'admin' || $rootScope.isLeader) {
+      $scope.isLeader = true;
+    }
+    else {
+      $scope.isLeader = false;
+    }
 
 
     var getLocalData = function() {
@@ -91,7 +97,6 @@ angular.module('buiiltApp')
         $scope.selection.push(id);
       }
     };
-
     $scope.create = function (form) {
       $scope.submitted = true;
       if (form.$valid) {
@@ -103,9 +108,8 @@ angular.module('buiiltApp')
           $rootScope.isLeader = true;
           getLocalData();
           $state.go('team.manager', {},{reload: true}).then(function(data){
-            console.log(data);
-            console.log('adasdsadsa')
           });
+          $scope.isLeader = true;
         }, function (err) {
         });
       }
