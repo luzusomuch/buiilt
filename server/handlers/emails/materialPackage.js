@@ -150,7 +150,7 @@ EventBus.onSeries('MaterialPackage.Inserted', function(request, next) {
 });
 
 EventBus.onSeries('MaterialPackage.Updated', function(request, next) {
-  var from = result.user.firstName + " " + result.user.lastName + " | " + result.team.name + "<"+result.user.email+">";
+  
   if (request._modifiedPaths.indexOf('inviteMaterial') != -1) {
     async.parallel({
       user: function(cb) {
@@ -165,6 +165,7 @@ EventBus.onSeries('MaterialPackage.Updated', function(request, next) {
       }
     }, function(err, result) {
       if (!err) {
+        var from = result.user.firstName + " " + result.user.lastName + " | " + result.team.name + "<"+result.user.email+">";
         async.each(request.newInvitation, function(supplier,cb) {
           if (!supplier._id) {
             var packageInvite = new PackageInvite({

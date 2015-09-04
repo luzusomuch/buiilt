@@ -141,7 +141,7 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
 });
 
 EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
-  var from = result.user.firstName + " " + result.user.lastName + " | " + result.team.name + "<"+result.user.email+">";
+  
   if (request._modifiedPaths.indexOf('inviteContractor') != -1) {
     async.parallel({
       user: function(cb){
@@ -156,6 +156,7 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
       }
     }, function(err, result){
       if (!err) {
+        var from = result.user.firstName + " " + result.user.lastName + " | " + result.team.name + "<"+result.user.email+">";
         //do send email
         async.each(request.newInvitation,function(toEmail, cb) {
           if (!toEmail._id) {

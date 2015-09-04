@@ -244,13 +244,18 @@ angular.module('buiiltApp').directive('addon', function(){
                 if ($scope.isNew) {
                   taskService.create({id : $scope.package._id, type : $scope.type},$scope.task).$promise
                     .then(function(res) {
+                      console.log(res);
                       $('.card-title').trigger('click');
+                      $scope.showTasks();
+                      $scope.showTaskDetail(res);
                       updateTasks();
                     })
                 } else {
                   taskService.update({id : $scope.task._id, type : $scope.type},$scope.task).$promise
                     .then(function(res) {
                       $('.card-title').trigger('click');
+                      $scope.showTasks();
+                      $scope.showTaskDetail(res);
                       updateTasks();
                     })
                 }
@@ -263,6 +268,8 @@ angular.module('buiiltApp').directive('addon', function(){
             $scope.showDetailOfTask = false;
             $scope.showTaskDetail = function(task){
               $scope.task = task;
+              console.log('aaaa');
+              console.log(task);
               $scope.showListTasks = false;
               $scope.showDetailOfTask = true;
             };
@@ -444,12 +451,36 @@ angular.module('buiiltApp').directive('addon', function(){
                         rate: $scope.lineWithRates, price: $scope.lineWithPrices})
                     .$promise.then(function(data) {
                         $scope.package.variations.push(data);
-                        // $scope.data = $scope.package.variations.push(data);
                         $scope.variation.title = null;
                         $scope.variation.descriptions = [];
                         $scope.lineWithRates = [];
                         $scope.lineWithPrices = [];
-                      // $scope.messages = data;
+                        if ($scope.type == 'builder') {
+                            if (!data.to.isSelect) {
+                                if ($scope.currentTeam.type == 'builder') {
+                                    $state.go('variationRequest.sendQuote',{id: data.project,variationId: data._id});
+                                }
+                                else {
+                                    $state.go('variationRequest.viewRequest',{id: data.project,variationId: data._id});
+                                }
+                            }
+                            else {
+                                $state.go('variationRequest.inProcess',{id: data.project,variationId: data._id});
+                            }
+                        }
+                        else {
+                            if (!data.to.isSelect) {
+                                if ($scope.currentTeam.type == 'builder') {
+                                    $state.go('variationRequest.viewRequest',{id: data.project,variationId: data._id});
+                                }
+                                else {
+                                    $state.go('variationRequest.sendQuote',{id: data.project,variationId: data._id});
+                                }
+                            }
+                            else {
+                                $state.go('variationRequest.inProcess',{id: data.project,variationId: data._id});
+                            }
+                        }
                     });
                 }
             };
