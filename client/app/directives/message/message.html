@@ -62,7 +62,7 @@
 
       <div class="divider"></div>
 
-      <div class="row available-assign">
+      <div class="row available-assign" id="newThreadAvailRecipients">
         <p style="">Available user:</p>
         <a href="#!" ng-click="assign(user,$index)" ng-repeat="user in available track by $index" >
           <div class="card col" style="padding: 5px; margin-left: 10px" ng-class="{'admin' : user.team.role == 'admin'}">
@@ -72,7 +72,7 @@
       </div>
     </div>
     <div class="modal-footer" style="margin-left: -12px">
-      <button type="submit" class="modal-action modal-close waves-effect waves-green btn-flat ">Save!</button>
+      <button type="submit" class="modal-action modal-close waves-effect waves-green btn-flat" id="newThreadSubmitBtn">Save!</button>
       <button type="button" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</button>
     </div>
   </form>
