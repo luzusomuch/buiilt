@@ -64,6 +64,7 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
     $rootScope.currentUser = {};
     $rootScope.hasHeader = true;
     $rootScope.hasFooter = true;
+    $rootScope.isLeader = false;
     $rootScope.safeApply = function (fn) {
       var phase = $rootScope.$$phase;
       if (phase === '$apply' || phase === '$digest') {
