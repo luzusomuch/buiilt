@@ -80,6 +80,7 @@ exports.createMaterialPackage = function (req, res, next) {
           }
           else {
             team.project.push(req.body.project);
+            team._user = req.user;
             team.save();
             to.push({
               _id: team._id,

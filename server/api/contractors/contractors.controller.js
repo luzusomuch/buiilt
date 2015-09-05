@@ -72,6 +72,7 @@ exports.createContractorPackage = function (req, res, next) {
           if (err || !team) {return callback(err);}
           else {
             team.project.push(req.body.project);
+            team._user = req.user;
             team.save();
             to.push({
               _id: team._id,
