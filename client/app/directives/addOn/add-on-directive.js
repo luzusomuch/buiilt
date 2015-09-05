@@ -7,8 +7,8 @@ angular.module('buiiltApp').directive('addon', function(){
             package: '=',
             type: '@'
         },
-        controller: function(filterFilter,taskService,$rootScope,$scope, $state,$window, $stateParams, authService,addOnPackageService, FileUploader, $cookieStore, fileService, contractorRequestService, materialRequestService, variationRequestService) {
-            
+        controller: function($timeout,filterFilter,taskService,$rootScope,$scope, $state,$window, $stateParams, authService,addOnPackageService, FileUploader, $cookieStore, fileService, contractorRequestService, materialRequestService, variationRequestService) {
+
 			//Inline Manual Functions
 	  	  	$scope.startNewTaskWizard = function() {
 	  	  		inline_manual_player.activateTopic('4981', '1');
@@ -192,7 +192,6 @@ angular.module('buiiltApp').directive('addon', function(){
 
             //Function fired when click edit task
             $scope.editTask = function(task) {
-              console.log(task);
               $scope.task = angular.copy(task);
               getAvailableAssignee($scope.type);
               _.forEach($scope.task.assignees,function(item) {
@@ -244,7 +243,6 @@ angular.module('buiiltApp').directive('addon', function(){
                 if ($scope.isNew) {
                   taskService.create({id : $scope.package._id, type : $scope.type},$scope.task).$promise
                     .then(function(res) {
-                      console.log(res);
                       $('.card-title').trigger('click');
                       $scope.showTasks();
                       $scope.showTaskDetail(res);
@@ -268,8 +266,6 @@ angular.module('buiiltApp').directive('addon', function(){
             $scope.showDetailOfTask = false;
             $scope.showTaskDetail = function(task){
               $scope.task = task;
-              console.log('aaaa');
-              console.log(task);
               $scope.showListTasks = false;
               $scope.showDetailOfTask = true;
             };
@@ -378,6 +374,11 @@ angular.module('buiiltApp').directive('addon', function(){
                     $window.open(data.url);
                 });
             };
+
+            if ($rootScope.newestDocument != null) {
+              $timeout(function(){$scope.showDocuments();},500);
+              $timeout(function(){$scope.goToDocumentDetail($rootScope.newestDocument)},1500);
+            }
 
             $scope.goToVariation = function(value) {
                 variationRequestService.findOne({id: value._id}).$promise.then(function(data){
@@ -645,7 +646,6 @@ angular.module('buiiltApp').directive('addon', function(){
               fileService.getFileByStateParam({'id': $scope.package._id}).$promise.then(function(data) {
                   $scope.documents = data;
               });
-              console.log('aaaaaaaaaaa');
             };
             uploader.onBeforeUploadItem = function (item) {
 
@@ -672,10 +672,10 @@ angular.module('buiiltApp').directive('addon', function(){
                     $scope.showDocuments();
                     $scope.goToDocumentDetail(newestDocument);
                 });
-                console.log('bbbbbbbbbbb');
                 $('.toast').css('opacity','0');
                 Materialize.toast('Upload completed',3000);
             };
+            
         }
     }
 });

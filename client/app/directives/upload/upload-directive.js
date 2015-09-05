@@ -100,7 +100,7 @@ angular.module('buiiltApp').directive('upload', function(){
             var newPhoto = null;
             uploader.onCompleteItem = function (fileItem, response, status, headers) {
                 newPhoto = response;
-                $state.reload();
+                // $state.reload();
                 // fileService.getFileByStateParam({'id': $stateParams.id}).$promise.then(function(data) {
                 //     $scope.files = data;
                 // });
@@ -133,14 +133,18 @@ angular.module('buiiltApp').directive('upload', function(){
                     // $modalInstance.close(newPhoto);
                 }
                 // $state.reload();
-                if ($stateParams.id) {
+                if ($scope.type == 'project') {
                     fileService.getFileByStateParam({'id': $stateParams.id}).$promise.then(function(data) {
                         $scope.files = data;
+                        $rootScope.newestDocument = _.last(data);
+                        $state.reload();
                     });    
                 }
                 else {
-                    fileService.getFileByStateParam({'id': $stateParams.packageId}).$promise.then(function(data) {
+                    fileService.getFileByStateParam({'id': $scope.package._id}).$promise.then(function(data) {
                         $scope.files = data;
+                        $rootScope.newestDocument = _.last(data);
+                        $state.reload();
                     });       
                 }
                 $('.toast').css('opacity','0');

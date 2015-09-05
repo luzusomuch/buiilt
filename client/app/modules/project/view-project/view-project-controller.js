@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-.controller('ViewProjectCtrl', function($rootScope,$window,$scope, $stateParams, authService,documentService, projectService, project, packageService, fileService,FileUploader,$cookieStore) {
+.controller('ViewProjectCtrl', function($timeout,$rootScope,$window,$scope, $stateParams, authService,documentService, projectService, project, packageService, fileService,FileUploader,$cookieStore) {
   $scope.activeHover = function($event){
     angular.element($event.currentTarget).addClass("item-hover")
   };
@@ -226,5 +226,9 @@ angular.module('buiiltApp')
      }
     });
   };
+
+  if ($rootScope.newestDocument != null) {
+    $timeout(function(){$scope.getFileDetail($rootScope.newestDocument)},1500);
+  }
 
 });
