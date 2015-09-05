@@ -237,7 +237,7 @@
                   <p class="validate-message" ng-if="descriptionError">Scope of work at least 1 item</p>
                 </div>
                 <div class="valign col s2">
-                  <button class="btn" type="button" name="action" style="margin-top: 78px" ng-click="addDescription(description)">Add</button>
+                  <button class="btn" type="button" name="action" style="margin-top: 78px" ng-click="addDescription(description)" id="variationLineAddBtn">Add</button>
                 </div>
               </div>
             </li>
@@ -256,7 +256,7 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="submit" class="modal-action modal-close waves-effect waves-green btn-flat ">Send Variation!</button>
+      <button type="submit" class="modal-action modal-close waves-effect waves-green btn-flat" id="variationSubmit">Send Variation!</button>
       <button type="button" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</button>
     </div>
   </form>
