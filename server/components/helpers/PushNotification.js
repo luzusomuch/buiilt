@@ -80,15 +80,12 @@ exports.getData = function(projectId,id,threadName, message, users, type){
 
    //push notification test
    _.each(users, function(user){
-    console.log(user);
     
     device.findOne({'user' : user}, function(err, device) {
       if (err) {console.log(err);}
       // if (!device) {return res.send(404,err);}
       if (device) {
-        console.log(device);
         if (device.platform == 'ios') {
-          console.log('ios');
           Notification.find({owner: user, unread:true, $or:[{referenceTo: 'task'},{referenceTo: 'thread'}]}, function(err, notifications){
             if (err) {console.log(err);}
             // if (!notifications) {return res.send(404);}
@@ -108,7 +105,6 @@ exports.getData = function(projectId,id,threadName, message, users, type){
           });
         }
         else if (device.platform == 'android') {
-          console.log('android');
           var path = '';
           if (type == 'task') {
             path = "#/"+projectId+"/task/"+id;

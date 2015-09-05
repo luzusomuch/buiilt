@@ -172,9 +172,12 @@ exports.create = function(req,res) {
       if (err) {
         return res.send(500,err)
       }
-      return res.json(true);
-    })
-  })
+      Task.populate(task, {path:'assignees'}, function(err, task){
+        if (err) {return res.send(500,err);}
+        return res.json(task);
+      });
+    });
+  });
 };
 
 exports.update = function(req,res) {
@@ -193,9 +196,12 @@ exports.update = function(req,res) {
       if (err) {
         return res.send(500,err)
       }
-      return res.json(true);
-    })
-  })
+      Task.populate(task, {path:'assignees'}, function(err, task){
+        if (err) {return res.send(500,err);}
+        return res.json(task);
+      });
+    });
+  });
 };
 
 exports.getTask = function(req,res) {
@@ -209,7 +215,6 @@ exports.getTask = function(req,res) {
     if (err) {
       return res.send(500,err);
     }
-    console.log(tasks);
     return res.json(tasks);
   });
 };
@@ -243,7 +248,6 @@ exports.destroy = function (req, res) {
     if (err) {
       return res.send(500, err);
     }
-    console.log(task);
     Task.find({}, function(err,tasks){
       if (err) {return res.send(500,err);}
       return res.send(200, tasks);

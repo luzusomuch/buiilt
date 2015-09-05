@@ -7,8 +7,8 @@ angular.module('buiiltApp').directive('addon', function(){
             package: '=',
             type: '@'
         },
-        controller: function(filterFilter,taskService,$rootScope,$scope, $state,$window, $stateParams, authService,addOnPackageService, FileUploader, $cookieStore, fileService, contractorRequestService, materialRequestService, variationRequestService) {
-            
+        controller: function($timeout,filterFilter,taskService,$rootScope,$scope, $state,$window, $stateParams, authService,addOnPackageService, FileUploader, $cookieStore, fileService, contractorRequestService, materialRequestService, variationRequestService) {
+
 			//Inline Manual Functions
 	  	  	$scope.startNewTaskWizard = function() {
 	  	  		inline_manual_player.activateTopic('4981', '1');
@@ -192,7 +192,6 @@ angular.module('buiiltApp').directive('addon', function(){
 
             //Function fired when click edit task
             $scope.editTask = function(task) {
-              console.log(task);
               $scope.task = angular.copy(task);
               getAvailableAssignee($scope.type);
               _.forEach($scope.task.assignees,function(item) {
@@ -245,12 +244,16 @@ angular.module('buiiltApp').directive('addon', function(){
                   taskService.create({id : $scope.package._id, type : $scope.type},$scope.task).$promise
                     .then(function(res) {
                       $('.card-title').trigger('click');
+                      $scope.showTasks();
+                      $scope.showTaskDetail(res);
                       updateTasks();
                     })
                 } else {
                   taskService.update({id : $scope.task._id, type : $scope.type},$scope.task).$promise
                     .then(function(res) {
                       $('.card-title').trigger('click');
+                      $scope.showTasks();
+                      $scope.showTaskDetail(res);
                       updateTasks();
                     })
                 }
@@ -372,6 +375,11 @@ angular.module('buiiltApp').directive('addon', function(){
                 });
             };
 
+            if ($rootScope.newestDocument != null) {
+              $timeout(function(){$scope.showDocuments();},500);
+              $timeout(function(){$scope.goToDocumentDetail($rootScope.newestDocument)},1500);
+            }
+
             $scope.goToVariation = function(value) {
                 variationRequestService.findOne({id: value._id}).$promise.then(function(data){
                     if ($scope.type == 'builder') {
@@ -444,12 +452,36 @@ angular.module('buiiltApp').directive('addon', function(){
                         rate: $scope.lineWithRates, price: $scope.lineWithPrices})
                     .$promise.then(function(data) {
                         $scope.package.variations.push(data);
-                        // $scope.data = $scope.package.variations.push(data);
                         $scope.variation.title = null;
                         $scope.variation.descriptions = [];
                         $scope.lineWithRates = [];
                         $scope.lineWithPrices = [];
-                      // $scope.messages = data;
+                        if ($scope.type == 'builder') {
+                            if (!data.to.isSelect) {
+                                if ($scope.currentTeam.type == 'builder') {
+                                    $state.go('variationRequest.sendQuote',{id: data.project,variationId: data._id});
+                                }
+                                else {
+                                    $state.go('variationRequest.viewRequest',{id: data.project,variationId: data._id});
+                                }
+                            }
+                            else {
+                                $state.go('variationRequest.inProcess',{id: data.project,variationId: data._id});
+                            }
+                        }
+                        else {
+                            if (!data.to.isSelect) {
+                                if ($scope.currentTeam.type == 'builder') {
+                                    $state.go('variationRequest.viewRequest',{id: data.project,variationId: data._id});
+                                }
+                                else {
+                                    $state.go('variationRequest.sendQuote',{id: data.project,variationId: data._id});
+                                }
+                            }
+                            else {
+                                $state.go('variationRequest.inProcess',{id: data.project,variationId: data._id});
+                            }
+                        }
                     });
                 }
             };
@@ -636,10 +668,14 @@ angular.module('buiiltApp').directive('addon', function(){
                 }
                 fileService.getFileByStateParam({'id': $scope.package._id}).$promise.then(function(data) {
                     $scope.documents = data;
+                    var newestDocument = _.last(data);
+                    $scope.showDocuments();
+                    $scope.goToDocumentDetail(newestDocument);
                 });
                 $('.toast').css('opacity','0');
                 Materialize.toast('Upload completed',3000);
             };
+            
         }
     }
 });
