@@ -93,18 +93,50 @@
          </div>
        </div>
        <div style="height: {{contentHeight -15}}px; overflow-y: auto; background-color: white; display: none; overflow-x: hidden" class="valign-wrapper showFileDetail">
-          <div class="col s8 offset-s2 center valign" ng-switch="file.mimeType">
+
+          <div style="display:none" class="col s8 offset-s2 center valign" ng-switch="file.mimeType" ng-repeat="file in files" colorbox>
             <span ng-switch-when="image/jpeg">
-              <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}-{{file.title}}.jpg" alt="" colorbox="../../media/files/{{file._id}}-{{file.title}}.jpg">
+              <a class="gallery" data-rel="group1" href="../../media/files/{{file._id}}-{{file.title}}.jpg">
+                <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}-{{file.title}}.jpg" alt="">
+              </a>
             </span>
             <span ng-switch-when="image/png">
-              <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}-{{file.title}}.jpg" alt="" colorbox="../../media/files/{{file._id}}-{{file.title}}.jpg">
+              <a class="gallery" data-rel="group1" href="../../media/files/{{file._id}}-{{file.title}}.jpg">
+                <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}-{{file.title}}.jpg" alt="">
+              </a>
             </span>
             <span ng-switch-when="application/pdf">
-              <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}-{{file.title}}.jpg" alt="" colorbox="../../media/files/{{file._id}}-{{file.title}}.jpg">
+              <a class="gallery" data-rel="group1" href="../../media/files/{{file._id}}-{{file.title}}.jpg">
+                <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}-{{file.title}}.jpg" alt="">
+              </a>
             </span>
             <span ng-switch-default>
-              <img class="materialboxed" width="90%" src="../../media/sample-1.jpg" alt="" colorbox="../../media/sample-1.jpg">
+              <a class="gallery" data-rel="group1" href="../../media/sample-1.jpg">
+                <img class="materialboxed" width="90%" src="../../media/sample-1.jpg" alt="">
+              </a>
+            </span>
+          </div>
+
+          <div colorbox class="col s8 offset-s2 center valign" ng-switch="file.mimeType">
+            <span ng-switch-when="image/jpeg">
+              <a class="gallery" data-rel="group1" href="../../media/files/{{file._id}}-{{file.title}}.jpg">
+                <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}-{{file.title}}.jpg" alt="">
+              </a>
+            </span>
+            <span ng-switch-when="image/png">
+              <a class="gallery" data-rel="group1" href="../../media/files/{{file._id}}-{{file.title}}.jpg">
+                <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}-{{file.title}}.jpg" alt="">
+              </a>
+            </span>
+            <span ng-switch-when="application/pdf">
+              <a class="gallery" data-rel="group1" href="../../media/files/{{file._id}}-{{file.title}}.jpg">
+                <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}-{{file.title}}.jpg" alt="">
+              </a>
+            </span>
+            <span ng-switch-default>
+              <a class="gallery" data-rel="group1" href="../../media/sample-1.jpg">
+                <img class="materialboxed" width="90%" src="../../media/sample-1.jpg" alt="">
+              </a>
             </span>
             <!-- file description -->
             <span style="cursor:pointer;" ng-click="likeDocument(file);">
