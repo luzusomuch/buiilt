@@ -43,11 +43,20 @@ angular.module('buiiltApp')
     $("div.showQuoteDetail").hide();
     $("div.quotesList").show("slide", { direction: "right" }, 500);
   };
+  $scope.currentTeam = currentTeam;
 
   $scope.quoteRequest = {};
   $scope.materialRequest = materialRequest;
+  _.each($scope.materialRequest.messages, function(message){
+    if (message.sendBy._id != $scope.currentTeam._id) {
+      message.owner = false;
+    }
+    else {
+      message.owner = true;
+    }
+  });
+
   socket.emit('join',$scope.materialRequest._id);
-  $scope.currentTeam = currentTeam;
   $scope.currentUser = {};
   if ($cookieStore.get('token')) {
     $scope.currentUser = userService.get();
@@ -106,6 +115,14 @@ angular.module('buiiltApp')
 
   socket.on('messageInTender:new', function (package) {
     $scope.materialRequest = package;
+    _.each($scope.materialRequest.messages, function(message){
+      if (message.sendBy._id != $scope.currentTeam._id) {
+        message.owner = false;
+      }
+      else {
+        message.owner = true;
+      }
+    });
   });
 
   $scope.sendMessage = function() {
@@ -113,6 +130,14 @@ angular.module('buiiltApp')
     .$promise.then(function(data) {
       $scope.materialRequest = data;
       $scope.message.message = null;
+      _.each($scope.materialRequest.messages, function(message){
+        if (message.sendBy._id != $scope.currentTeam._id) {
+          message.owner = false;
+        }
+        else {
+          message.owner = true;
+        }
+      });
     });
   };
   $scope.addLineWithRate = function() {

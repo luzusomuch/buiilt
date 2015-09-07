@@ -92,7 +92,7 @@
          
       <div style="height: {{contentHeight + 65}}px; overflow-y: auto; background-color:#fafafa;" class="">
         <div class="" style="height: {{contentHeight - 85}}px; overflow-y: auto">
-          <div ng-if="message.to == currentTeam._id" ng-repeat="message in contractorRequest.messages" class="row" style="font-size: 13px; margin: 12px; background-color: #eee; border-radius: 3px;">
+          <div ng-class="{fromOther: !message.owner, fromMe: message.owner}" ng-if="message.to == currentTeam._id" ng-repeat="message in contractorRequest.messages" class="row" style="font-size: 13px; margin: 12px; border-radius: 3px;">
             <div class="col s12">
               <p>{{message.message}} - <strong>From {{(currentTeam._id == message.sendBy._id) ? "Me" : message.sendBy.name}}</strong></p>
             </div>

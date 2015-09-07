@@ -119,7 +119,7 @@
          
       <div style="height: {{contentHeight + 65}}px; overflow-y: auto; background-color:#fafafa; overflow-x: hidden" class="" scroll-to-bottom="contractorRequest.messages">
         <div class="" style="height: {{messageScreenHeight + 50}}px; overflow-y: auto">
-          <div class="row" ng-if="viewMessages && message.to == tender._id" ng-repeat="message in contractorRequest.messages" style="font-size: 13px; margin: 12px; background-color: #eee; border-radius: 3px;">
+          <div ng-class="{fromOther: !message.owner, fromMe: message.owner}" class="row" ng-if="viewMessages && message.to == tender._id" ng-repeat="message in contractorRequest.messages" style="font-size: 13px; margin: 12px; border-radius: 3px;">
             <div class="col s12">
               <p>{{message.message}} - <strong>From {{(currentTeam._id == message.sendBy._id) ? "Me" : message.sendBy.name}}</strong></p>
             </div>

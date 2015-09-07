@@ -41,17 +41,33 @@ angular.module('buiiltApp')
     $("div.showTenderDetail").hide();
     $("div.tenderLists").show("slide", { direction: "left" }, 500);
   };
+  $scope.currentTeam = currentTeam;
 
   $scope.emailsPhone = [];
   $scope.variationRequest = variationRequest;
+  _.each($scope.variationRequest.messages, function(message){
+    if (message.sendBy._id == $scope.currentTeam._id) {
+      message.owner = true;
+    }
+    else {
+      message.owner = false;
+    }
+  });
   socket.emit('join',$scope.variationRequest._id);
 
   socket.on('messageInTender:new', function (package) {
     $scope.variationRequest = package;
+    _.each($scope.variationRequest.messages, function(message){
+      if (message.sendBy._id == $scope.currentTeam._id) {
+        message.owner = true;
+      }
+      else {
+        message.owner = false;
+      }
+    });
     // console.log(package);
   });
 
-  $scope.currentTeam = currentTeam;
   $scope.currentUser = {};
   if ($cookieStore.get('token')) {
     $scope.currentUser = userService.get();
@@ -130,6 +146,14 @@ angular.module('buiiltApp')
       .$promise.then(function(data) {
         $scope.variationRequest = data;
         $scope.message.message = null;
+        _.each($scope.variationRequest.messages, function(message){
+          if (message.sendBy._id == $scope.currentTeam._id) {
+            message.owner = true;
+          }
+          else {
+            message.owner = false;
+          }
+        });
       });
     }
   };
