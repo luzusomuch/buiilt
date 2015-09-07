@@ -134,7 +134,7 @@ exports.createUserWithInviteToken = function(req, res, next) {
           });
           team.leader.push(user._id);
           team.project.push(packageInvite.project);
-
+          team._user = req.user;
           team.save(function(err, savedTeam){
             if (err) {return res.send(500,err);}
             else {
@@ -302,6 +302,7 @@ exports.destroy = function (req, res) {
         _.remove(teamMembers, user._id);
         team.markModified('member');
         team.markModified('leader');
+        team._user = req.user;
         team.save();
       });
     }

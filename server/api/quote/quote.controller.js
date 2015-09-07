@@ -121,6 +121,7 @@ exports.findOne = function(req, res){
                   var index = team.project.indexOf(contractorPackage.project);
                   team.project.splice(index,1);
                   team.markModified('project');
+                  team._user = req.user;
                   team.save(function(err){
                     if (err) {return res.send(500,err);}
                   });
@@ -171,6 +172,7 @@ exports.getByMaterial = function(req, res){
                   var index = team.project.indexOf(materialPackage.project);
                   team.project.splice(index,1);
                   team.markModified('project');
+                  team._user = req.user;
                   team.save(function(err){
                     if (err) {return res.send(500,err);}
                   });
@@ -288,6 +290,7 @@ exports.selectContractorQuoteByDocument = function(req, res){
           var index = team.project.indexOf(contractorPackage.project);
           team.project.splice(index,1);
           team.markModified('project');
+          team._user = req.user;
           team.save(function(err){
             if (err) {return res.send(500,err);}
           });
@@ -325,6 +328,7 @@ exports.selectMaterialQuoteByDocument = function(req, res){
           var index = team.project.indexOf(materialPackage.project);
           team.project.splice(index,1);
           team.markModified('project');
+          team._user = req.user;
           team.save(function(err){
             if (err) {return res.send(500,err);}
           });

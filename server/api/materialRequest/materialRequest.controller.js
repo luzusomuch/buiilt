@@ -182,6 +182,7 @@ exports.sendInvitationInMaterial = function(req, res) {
                 Team.findById(user.team._id, function(err,team){
                   if (err) {return res.send(500,err);}
                   team.project.push(materialPackage.project);
+                  team._user = req.user;
                   team.save(function(err){
                     if (err) {return res.send(500,err);}
                   })
@@ -519,6 +520,7 @@ exports.declineQuote = function(req, res) {
             var index = team.project.indexOf(materialPackage.project);
             team.project.splice(index,1);
             team.markModified('project');
+            team._user = req.user;
             team.save(function(err){
               if (err) {return res.send(500,err);}
             });
