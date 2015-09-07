@@ -32,7 +32,7 @@
      </div>
     </div>
     <div class="" scroll-to-bottom="currentThread.messages" style="height: {{messageScreenHeight - 40}}px; overflow-y:auto">
-      <div class="row message-row" style="font-size: 13px; margin: 12px; border-radius: 3px;" ng-style="backgroundColor" ng-repeat="message in currentThread.messages">
+      <div ng-class="{fromOther: !message.owner, fromMe: message.owner}" class="row message-row" style="font-size: 13px; margin: 12px; border-radius: 3px;" ng-repeat="message in currentThread.messages">
        <div class="col s12">
          <p>{{message.text}} - <strong>From {{(message.user._id == currentUser._id) ? "Me" : message.user.firstName +" "+ message.user.lastName}}</strong></p>
        </div>

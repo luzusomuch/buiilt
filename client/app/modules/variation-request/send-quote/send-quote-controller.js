@@ -41,11 +41,20 @@ angular.module('buiiltApp')
     $("div.showQuoteDetail").hide();
     $("div.quotesList").show("slide", { direction: "left" }, 500);
   };
+  $scope.currentTeam = currentTeam;
 
   $scope.quoteRequest = {};
   $scope.variationRequest = variationRequest;
+  _.each($scope.variationRequest.messages, function(message){
+    if (message.sendBy._id == $scope.currentTeam._id) {
+      message.owner = true;
+    }
+    else {
+      message.owner = false;
+    }
+  });
+
   socket.emit('join',$scope.variationRequest._id);
-  $scope.currentTeam = currentTeam;
   $scope.currentUser = {};
   if ($cookieStore.get('token')) {
     $scope.currentUser = userService.get();
@@ -57,6 +66,14 @@ angular.module('buiiltApp')
 
   socket.on('messageInTender:new', function (package) {
     $scope.variationRequest = package;
+    _.each($scope.variationRequest.messages, function(message){
+      if (message.sendBy._id == $scope.currentTeam._id) {
+        message.owner = true;
+      }
+      else {
+        message.owner = false;
+      }
+    });
     // console.log(package);
   });
 
@@ -240,6 +257,14 @@ angular.module('buiiltApp')
       .$promise.then(function(data) {
         $scope.variationRequest = data;
         $scope.message = null;
+        _.each($scope.variationRequest.messages, function(message){
+          if (message.sendBy._id == $scope.currentTeam._id) {
+            message.owner = true;
+          }
+          else {
+            message.owner = false;
+          }
+        });
       });
     }
   };

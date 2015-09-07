@@ -53,10 +53,10 @@ angular.module('buiiltApp')
               socket.emit('join',res._id);
               _.each($scope.currentThread.messages, function(message){
                 if (message.user._id != $scope.currentUser._id) {
-                  $scope.backgroundColor = {'background-color':'#eee'}
+                  message.owner = false;
                 }
                 else {
-                  $scope.backgroundColor = {'background-color':'#BBDEFB'}
+                  message.owner = true;
                 }
               });
               $("div#threadsList").hide();
@@ -240,6 +240,14 @@ angular.module('buiiltApp')
 
           socket.on('message:new', function (thread) {
             $scope.currentThread = thread;
+            _.each($scope.currentThread.messages, function(message){
+              if (message.user._id != $scope.currentUser._id) {
+                message.owner = false;
+              }
+              else {
+                message.owner = true;
+              }
+            });
             // console.log($scope.scrollHeight = $('#messages')[0].scrollHeight);
           });
 
@@ -256,6 +264,14 @@ angular.module('buiiltApp')
                 .then(function (res) {
                   // _.remove($scope.threads, {_id: res._id});
                   $scope.currentThread = res;
+                  _.each($scope.currentThread.messages, function(message){
+                    if (message.user._id != $scope.currentUser._id) {
+                      message.owner = false;
+                    }
+                    else {
+                      message.owner = true;
+                    }
+                  });
                   // $scope.threads.push($scope.currentThread);
                   // console.log($scope.threads);
                   // updateThread();

@@ -281,6 +281,14 @@ ul.pagination {
   margin-top: 15px;
 }
 
+.fromMe {
+  background-color: #eee;
+}
+
+.fromOther {
+  background-color: #BBDEFB;
+}
+
 /*body{
   background-image: url("../old-and-new.png");
   background-size: 100%;

@@ -42,9 +42,18 @@ angular.module('buiiltApp')
     $("div.showQuoteDetail").hide();
     $("div.quotesList").show("slide", { direction: "left" }, 500);
   };
+  $scope.currentTeam = currentTeam;
 
   $scope.quoteRequest = {};
   $scope.contractorRequest = contractorRequest;
+  _.each($scope.contractorRequest.messages, function(message){
+    if (message.sendBy._id != $scope.currentTeam._id) {
+      message.owner = false;
+    }
+    else {
+      message.owner = true;
+    }
+  });
 
   socket.emit('join',$scope.contractorRequest._id);
 
@@ -52,7 +61,6 @@ angular.module('buiiltApp')
   if ($cookieStore.get('token')) {
     $scope.currentUser = userService.get();
   }
-  $scope.currentTeam = currentTeam;
   if (_.findIndex(contractorRequest.to, {_id:currentTeam._id}) == -1) {
     $state.go('team.manager');
   }
@@ -243,7 +251,14 @@ angular.module('buiiltApp')
 
   socket.on('messageInTender:new', function (package) {
     $scope.contractorRequest = package;
-    // console.log(package);
+    _.each($scope.contractorRequest.messages, function(message){
+      if (message.sendBy._id != $scope.currentTeam._id) {
+        message.owner = false;
+      }
+      else {
+        message.owner = true;
+      }
+    });
   });
 
   $scope.sendMessage = function() {
@@ -252,6 +267,14 @@ angular.module('buiiltApp')
       .$promise.then(function(data) {
         $scope.contractorRequest = data;
         $scope.message = null;
+        _.each($scope.contractorRequest.messages, function(message){
+          if (message.sendBy._id != $scope.currentTeam._id) {
+            message.owner = false;
+          }
+          else {
+            message.owner = true;
+          }
+        });
       });
     }
   };

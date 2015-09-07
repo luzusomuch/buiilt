@@ -1,5 +1,10 @@
 angular.module('buiiltApp')
 .controller('ViewContractorRequestCtrl', function(socket,$rootScope,$scope, $window, $state, $stateParams,fileService,currentTeam, $cookieStore, authService, userService, contractorRequest, contractorRequestService, quoteService) {
+  $scope.currentTeam = currentTeam;
+  if ($scope.currentTeam.type != 'builder' && contractorRequest.owner._id != currentTeam._id) {
+    $state.go('team.manager');
+  }
+
   $scope.activeHover = function($event){
     angular.element($event.currentTarget).addClass("item-hover")
   };
@@ -43,22 +48,26 @@ angular.module('buiiltApp')
   $scope.emailsPhone = [];
   $scope.contractorRequest = contractorRequest;
   socket.emit('join',$scope.contractorRequest._id);
-  _.each($scope.contractorRequest.to, function(item) {
+  authService.getCurrentUser().$promise.then(function(user){
+    $scope.currentUser = user;
+    _.each($scope.contractorRequest.to, function(item) {
     item.totalMessages = 0;
     _.each($scope.contractorRequest.messages, function(message){
+      if (message.sendBy._id != $scope.currentTeam._id) {
+        message.owner = false;
+      }
+      else {
+        message.owner = true;
+      }
       if (message.sendBy._id == item._id) {
         item.totalMessages ++;
       }
     });
   });
-  $scope.currentTeam = currentTeam;
-  if ($scope.currentTeam.type != 'builder' && contractorRequest.owner._id != currentTeam._id) {
-    $state.go('team.manager');
-  }
-  $scope.currentUser = {};
-  if ($cookieStore.get('token')) {
-    $scope.currentUser = userService.get();
-  }
+  })
+  
+  
+  
   $scope.message = {};
   $scope.addendum = {};
   $scope.addendumsScope = [];
@@ -135,7 +144,16 @@ angular.module('buiiltApp')
 
   socket.on('messageInTender:new', function (package) {
     $scope.contractorRequest = package;
-    // console.log(package);
+    _.each($scope.contractorRequest.to, function(item) {
+      _.each($scope.contractorRequest.messages, function(message){
+        if (message.sendBy._id != $scope.currentTeam._id) {
+          message.owner = false;
+        }
+        else {
+          message.owner = true;
+        }
+      });
+    });
   });
 
   $scope.sendMessage = function() {
@@ -146,6 +164,16 @@ angular.module('buiiltApp')
       .$promise.then(function(data) {
         $scope.contractorRequest = data;
         $scope.message.message = null;
+        _.each($scope.contractorRequest.to, function(item) {
+          _.each($scope.contractorRequest.messages, function(message){
+            if (message.sendBy._id != $scope.currentTeam._id) {
+              message.owner = false;
+            }
+            else {
+              message.owner = true;
+            }
+          });
+        });
       });
     }
   };
