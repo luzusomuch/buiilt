@@ -22,7 +22,7 @@ EventBus.onSeries('Team.Inserted', function(request, next){
           Mailer.sendMail('invite-team-has-no-account.html', from, user.email, {
             request: request.toJSON(),
             link: config.baseUrl + 'signup?inviteToken=' + inviteToken.inviteToken,
-            subject: 'Group invitation ' + request.name
+            subject: 'Join ' + request.name + ' on buiilt'
           },function(err) {
             return callback(err);
           });
@@ -30,7 +30,7 @@ EventBus.onSeries('Team.Inserted', function(request, next){
       } else if (user._id && user.status == 'Pending')  {
         Mailer.sendMail('invite-team-has-account.html', from, user.email, {
           request: request.toJSON(),
-          subject: 'Group invitation ' + request.name
+          subject: 'Join ' + request.name + ' on buiilt'
         }, function(err) {
           return callback(err);
         });
@@ -58,7 +58,7 @@ EventBus.onSeries('Team.Updated', function(request, next){
         Mailer.sendMail('invite-team-has-no-account.html', from, user.email, {
           request: request.toJSON(),
           link: config.baseUrl + 'signup?inviteToken=' + inviteToken.inviteToken,
-          subject: 'Group invitation ' + request.name
+          subject: 'Join ' + request.name + ' on buiilt'
         }, function() {
           return cb();
         });
@@ -67,7 +67,7 @@ EventBus.onSeries('Team.Updated', function(request, next){
     } else if (user._id && user.status == 'Pending' && !(_.find(request.oldMember,{ _id : user._id})))  {
       Mailer.sendMail('invite-team-has-account.html', from, user._id.email, {
         request: request.toJSON(),
-        subject: 'Group invitation ' + request.name
+        subject: 'Join ' + request.name + ' on buiilt'
       }, function() {
         return cb();
       });

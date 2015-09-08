@@ -18,7 +18,7 @@ EventBus.onSeries('ResetPassword.Inserted', function(resetPassword, next) {
     Mailer.sendMail('reset-password.html', resetPassword.email, {
       name: user.firstName + ' ' + user.lastName,
       resetPassword: config.baseUrl + 'reset-password?token=' + resetPassword.resetPasswordToken,
-      subject: 'Reset password email from buiilt.com'
+      subject: 'Please confirm your password change with buiilt'
     }, function(){
       return next();
     });

@@ -16,7 +16,7 @@ EventBus.onSeries('User.Inserted', function(user, next) {
     Mailer.sendMail('confirm-email.html', user.email, {
       user: user.toJSON(),
       confirmation: config.baseUrl + 'auth/confirm-email/' + user.emailVerifyToken,
-      subject: 'Confirm email from buiilt.com'
+      subject: 'Please confirm your email address for buiilt'
     }, function(err){
       return next();
     });
@@ -34,7 +34,7 @@ EventBus.onSeries('User.ChangeEmail', function(user, next) {
     user: user.toJSON(),
     emailChange : user.emailChange,
     confirmation: config.baseUrl + 'auth/confirm-email-change/' + user.changeEmailToken,
-    subject: 'Confirm email change from buiilt.com'
+    subject: 'Please confirm your password change for buiilt'
   }, function(err){
     return next();
   });
