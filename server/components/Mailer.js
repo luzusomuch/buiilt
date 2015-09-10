@@ -2,6 +2,7 @@ var nodemailer = require('nodemailer'),
   htmlToText = require('nodemailer-html-to-text').htmlToText,
   smtpTransport = require('nodemailer-smtp-transport'),
   mailgunTransport = require('nodemailer-mailgun-transport'),
+  sgTransport = require('nodemailer-sendgrid-transport');
   config = require('./../config/environment'),
   okay = require('okay'),
   path = require('path'),
@@ -23,7 +24,6 @@ Mailer.prototype.render = function(template, options, callback) {
 
 Mailer.prototype.send = function(options, callback) {
   var options = options || {};
-
   _.defaults(options, {
     from : options.from,
     bcc : config.bccEmails || []
@@ -53,11 +53,20 @@ Mailer.prototype.close = function() {
   this.transport.close();
 };
 
+var options = {
+  auth: {
+    api_user: config.mailer.auth.api_user,
+    api_key: config.mailer.auth.api_key
+   }
+}
+
 var mailer;
 if(config.mailer.service === 'smtp'){
   mailer = new Mailer(smtpTransport(config.mailer.auth));
 } else if(config.mailer.service === 'mailgun'){
   mailer = new Mailer(mailgunTransport({auth: config.mailer.auth}));
+} else if (config.mailer.service == 'sendgrid') {
+  mailer = new Mailer(sgTransport(options));
 } else{
   mailer = new Mailer(config.mailer);
 }
