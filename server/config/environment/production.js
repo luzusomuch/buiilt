@@ -19,5 +19,20 @@ module.exports = {
             process.env.MONGOHQ_URL ||
             process.env.OPENSHIFT_MONGODB_DB_URL+process.env.OPENSHIFT_APP_NAME ||
             'mongodb://localhost/buiilt'
-  }
+  },
+  mailer: {
+   //  service: 'mailgun',
+   //  auth: {
+   //    api_key: 'key-0245b8bd3122b95cef10c8a5df83079b',
+    // domain: 'mg.buiilt.com.au'
+   //  }
+   service: 'sendgrid',
+   auth: {
+    api_user: 'leenguyenhvs',
+    api_key: 'buiilt2015'
+    // name: 'buiilt',
+    // api_key_id: 'uTWiQOpeQraCFHTTo6-KVw',
+    // api_key: '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',
+   }
+  },
 };
