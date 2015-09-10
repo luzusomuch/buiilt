@@ -41,7 +41,7 @@ EventBus.onSeries('BuilderPackage.Inserted', function(request, next) {
           project: result.project.toJSON(),
           team: result.team.toJSON(),
           registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
-          subject: 'Invite ' + subjectType + ' send quote for ' + request.name
+          subject: 'Join ' + result.project.name + ' on buiilt'
         },function(){
          return next();
         });
@@ -59,7 +59,7 @@ EventBus.onSeries('BuilderPackage.Inserted', function(request, next) {
                 project: result.project.toJSON(),
                 team: result.team.toJSON(),
                 link: config.baseUrl + request.project._id + '/dashboard',
-                subject: 'Invite ' + subjectType + ' send quote for ' + request.name
+                subject: 'Join ' + result.project.name + ' on buiilt'
               }, function () {
                 return next();
               });

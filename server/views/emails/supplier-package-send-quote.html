@@ -2,10 +2,11 @@
 
 {% block content %}
 <p>
-  <%= user.firstName %> <%= user.lastName %> | <%= team.name %> has invited you to send them a quote for their job.
+	<%= user.firstName %> from <%= team.name %> has invited you to send a quote for their project.
 </p>
+
 <p>
-	Please <a href="<%= link %>">click here</a> to view the details of the job and submit your quote.
+	You can view the requirements and submit a quote by clicking <a href="<%= link %>">here</a>.
 </p>
 
 {% endblock %}

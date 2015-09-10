@@ -66,6 +66,7 @@ var all = {
             accessKeyId: 'AKIAICAYUM6RPT5MOCMQ',
             secretAccessKey: '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',
           },
+		  
   Bucket: 'buiilt',
 
   // s3Options: {

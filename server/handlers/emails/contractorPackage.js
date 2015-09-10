@@ -53,7 +53,7 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
               user: result.user.toJSON(),
               project: result.project.toJSON(),
               registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + saved._id,
-              subject: 'Invite contractor send quote for ' + request.name
+              subject: result.team.name + ' would like a quote'
             },function(){
              return next();
             });
@@ -71,7 +71,7 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
                   user: result.user.toJSON(),
                   project: result.project.toJSON(),
                   contractorPackageLink: config.baseUrl + result.project._id  + '/contractor-requests/' + request._id,
-                  subject: 'Quote request for ' + request.name
+                  subject: result.team.name + ' would like a quote'
                 }, function() {
                   return callback();
                 });
@@ -101,7 +101,7 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
                 user: result.user.toJSON(),
                 project: result.project.toJSON(),
                 registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + saved._id,
-                subject: 'Invite contractor send quote for ' + request.name
+                subject: result.team.name + ' would like a quote'
               },function(){
                return cb();
               });
@@ -119,7 +119,7 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
                   user: result.user.toJSON(),
                   project: result.project.toJSON(),
                   contractorPackageLink: config.baseUrl + result.project._id  + '/contractor-requests/' + request._id,
-                  subject: 'Quote request for ' + request.name
+                  subject: result.team.name + ' would like a quote'
                 }, function() {
                   return callback();
                 });
@@ -177,7 +177,7 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
                 user: result.user.toJSON(),
                 project: result.project.toJSON(),
                 registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + saved._id,
-                subject: 'Invite contractor send quote for ' + request.name
+                subject: result.team.name + ' has sent you an addendum'
               },function(){
                return cb();
               });
@@ -196,7 +196,7 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
                   user: result.user.toJSON(),
                   project: result.project.toJSON(),
                   contractorPackageLink: config.baseUrl + 'contractor-requests/' + request._id,
-                  subject: 'Quote request for ' + request.name
+                  subject: result.team.name + ' has sent you an addendum'
                 }, function() {
                   return callback();
                 });

@@ -41,7 +41,7 @@ EventBus.onSeries('QuoteRequest.Updated', function(request, next) {
           project: result.project.toJSON(),
           link: config.baseUrl + request.project +'/dashboard',
           builderPackage: result.builderPackage.toJSON(),
-          subject: 'Become home builder for project ' + result.project.name
+          subject: 'Join your project, ' + result.project.name + ', on buiilt.'
         }, function() {
           return next();
         });
