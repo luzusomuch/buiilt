@@ -12,8 +12,9 @@ var config = require('./../../config/environment');
  * event handler after creating new account
  */
 EventBus.onSeries('User.Inserted', function(user, next) {
+  console.log(user);
   if(!user.emailVerified){
-    Mailer.sendMail('confirm-email.html', user.email, {
+    Mailer.sendMail('confirm-email.html', config.emailFrom, user.email, {
       user: user.toJSON(),
       confirmation: config.baseUrl + 'auth/confirm-email/' + user.emailVerifyToken,
       subject: 'Please confirm your email address for buiilt'
@@ -30,7 +31,7 @@ EventBus.onSeries('User.Updated', function(user, next) {
 });
 
 EventBus.onSeries('User.ChangeEmail', function(user, next) {
-  Mailer.sendMail('confirm-change-email.html', user.email, {
+  Mailer.sendMail('confirm-change-email.html',config.emailFrom, user.email, {
     user: user.toJSON(),
     emailChange : user.emailChange,
     confirmation: config.baseUrl + 'auth/confirm-email-change/' + user.changeEmailToken,

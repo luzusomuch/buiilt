@@ -35,7 +35,7 @@ EventBus.onSeries('QuoteRequest.Updated', function(request, next) {
   }, function(err, result){
     if (!err) {
       if (result.builderPackage) {
-        Mailer.sendMail('become-home-builder.html', result.project.builder.email, {
+        Mailer.sendMail('become-home-builder.html',config.emailFrom, result.project.builder.email, {
           //project owner
           user: result.user.toJSON(),
           project: result.project.toJSON(),

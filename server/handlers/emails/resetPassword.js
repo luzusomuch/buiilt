@@ -15,7 +15,7 @@ var User = require('./../../models/user.model');
 EventBus.onSeries('ResetPassword.Inserted', function(resetPassword, next) {
   User.findOne({email : resetPassword.email},function(err,user) {
     if (err) {return next();}
-    Mailer.sendMail('reset-password.html', resetPassword.email, {
+    Mailer.sendMail('reset-password.html',config.emailFrom, resetPassword.email, {
       name: user.firstName + ' ' + user.lastName,
       resetPassword: config.baseUrl + 'reset-password?token=' + resetPassword.resetPasswordToken,
       subject: 'Please confirm your password change with buiilt'
