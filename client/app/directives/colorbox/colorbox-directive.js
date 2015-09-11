@@ -18,15 +18,20 @@ angular.module('buiiltApp').directive('colorbox', function($compile, $rootScope)
                     onComplete: function(){
                         $rootScope.$apply(function(){
                             var type = $(elementClass).data('type');
+                            console.log(screenWidth);
+                            console.log(type);
                             var content = $('#cboxLoadedContent');
                             $("div#cboxOverlay").css('background','#ccc');
                             $("div#cboxContent").css({'height':scope.maximunHeight+'px','width':'auto'});
                             $("div#cboxLoadedContent").css({'height':scope.maximunHeight+'px','width':'auto'});
-                            if (type == 'jgp') {
+                            if (type == 'pdf') {
+                                $("img.cboxPhoto").css({'height':'auto','width':screenWidth+'px'});   
+                            }
+                            else if(type == 'jpg') {
                                 $("img.cboxPhoto").css({'height':'auto','width':'100%'});
                             }
-                            else if (type == 'pdf') {
-                                $("img.cboxPhoto").css({'height':'auto','width':screenWidth+'px'});   
+                            else {
+                                $("img.cboxPhoto").css({'height':'auto','width':'100%'});
                             }
                             $compile(content)($rootScope);      
                         });
