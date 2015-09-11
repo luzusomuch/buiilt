@@ -96,45 +96,45 @@
 
           <div style="display:none" class="col s8 offset-s2 center valign" ng-switch="file.mimeType" ng-repeat="file in files" colorbox>
             <span ng-switch-when="image/jpeg">
-              <a class="gallery" data-type="jpg" data-rel="group1" href="../../media/files/{{file._id}}-{{file.title}}.jpg">
+              <a class="gallery" data-filetype="jpg" data-rel="group1" rel="jpg" href="../../media/files/{{file._id}}-{{file.title}}.jpg">
                 <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}-{{file.title}}.jpg" alt="">
               </a>
             </span>
             <span ng-switch-when="image/png">
-              <a class="gallery" data-type="jpg" data-rel="group1" href="../../media/files/{{file._id}}-{{file.title}}.jpg">
+              <a class="gallery" data-filetype="jpg" data-rel="group1" rel="jpg" href="../../media/files/{{file._id}}-{{file.title}}.jpg">
                 <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}-{{file.title}}.jpg" alt="">
               </a>
             </span>
             <span ng-switch-when="application/pdf">
-              <a class="gallery" data-type="pdf" data-rel="group1" href="../../media/files/{{file._id}}-{{file.title}}.jpg">
+              <a class="gallery" data-filetype="pdf" data-rel="group1" rel="pdf" href="../../media/files/{{file._id}}-{{file.title}}.jpg">
                 <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}-{{file.title}}.jpg" alt="">
               </a>
             </span>
             <span ng-switch-default>
-              <a class="gallery" data-type="jpg" data-rel="group1" href="../../media/sample-1.jpg">
+              <a class="gallery" data-filetype="jpg" data-rel="group1" rel="jpg" href="../../media/sample-1.jpg">
                 <img class="materialboxed" width="90%" src="../../media/sample-1.jpg" alt="">
               </a>
             </span>
           </div>
 
-          <div colorbox class="col s8 offset-s2 center valign" ng-switch="file.mimeType">
+          <div colorbox data-current="true" class="col s8 offset-s2 center valign" ng-switch="file.mimeType">
             <span ng-switch-when="image/jpeg">
-              <a class="gallery" data-type="jpg" data-rel="group1" href="../../media/files/{{file._id}}-{{file.title}}.jpg">
+              <a ng-class="{isCurrent: currentSelect}" class="gallery" data-filetype="jpg" data-rel="group1" rel="jpg" href="../../media/files/{{file._id}}-{{file.title}}.jpg">
                 <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}-{{file.title}}.jpg" alt="">
               </a>
             </span>
             <span ng-switch-when="image/png">
-              <a class="gallery" data-type="jpg" data-rel="group1" href="../../media/files/{{file._id}}-{{file.title}}.jpg">
+              <a ng-class="{isCurrent: currentSelect}" class="gallery" data-filetype="jpg" data-rel="group1" rel="jpg" href="../../media/files/{{file._id}}-{{file.title}}.jpg">
                 <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}-{{file.title}}.jpg" alt="">
               </a>
             </span>
             <span ng-switch-when="application/pdf">
-              <a class="gallery" data-type="pdf" data-rel="group1" href="../../media/files/{{file._id}}-{{file.title}}.jpg">
+              <a ng-class="{isCurrent: currentSelect}" class="gallery" data-filetype="pdf" data-rel="group1" rel="pdf" href="../../media/files/{{file._id}}-{{file.title}}.jpg">
                 <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}-{{file.title}}.jpg" alt="">
               </a>
             </span>
             <span ng-switch-default>
-              <a class="gallery" data-type="jpg" data-rel="group1" href="../../media/sample-1.jpg">
+              <a ng-class="{isCurrent: currentSelect}" class="gallery" data-filetype="jpg" data-rel="group1" rel="jpg" href="../../media/sample-1.jpg">
                 <img class="materialboxed" width="90%" src="../../media/sample-1.jpg" alt="">
               </a>
             </span>

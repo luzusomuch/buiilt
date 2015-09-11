@@ -134,7 +134,7 @@ exports.createUserWithInviteToken = function(req, res, next) {
           });
           team.leader.push(user._id);
           team.project.push(packageInvite.project);
-          team._user = req.user;
+          team._user = user;
           team.save(function(err, savedTeam){
             if (err) {return res.send(500,err);}
             else {
