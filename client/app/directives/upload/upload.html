@@ -1,4 +1,4 @@
-<form ng-submit="uploadAll()">
+<form name="uploadForm" ng-submit="uploadAll(uploadForm)" novalidate>
   <div class="modal-content">
   <div class="row" style="margin-top: 50px">
     <div class="col s8 offset-s2">
@@ -10,8 +10,9 @@
       </div>
       <div class="row">
         <div class="input-field col s8 offset-s2">
-          <textarea id="docAttachTitle" class="materialize-textarea" ng-model="formData.title" id="textarea1"></textarea>
+          <textarea id="docAttachTitle" class="materialize-textarea" ng-model="formData.title" id="textarea1" name="title" required></textarea>
           <label for="">Title</label>
+          <p class="validate-message" ng-if="uploadForm.title.$error.required || formData.title == ' '">Document name is required</p>
         </div>
       </div>
       <div ng-show="uploader.queue.length" class="form-group">
@@ -30,8 +31,9 @@
       </div>
       <div class="row">
         <div class="input-field col s8 offset-s2">
-          <textarea id="docAttachDesc" class="materialize-textarea" ng-model="formData.desc" id="textarea1"></textarea>
+          <textarea id="docAttachDesc" name="description" class="materialize-textarea" ng-model="formData.desc" id="textarea1" required></textarea>
           <label for="">Description</label>
+          <p class="validate-message" ng-if="uploadForm.description.$error.required || formData.description == ' '">Document name is required</p>
         </div>
       </div>
       <div class="row">
@@ -40,6 +42,7 @@
           <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="tag in selectedTags">
             {{tag}}<span><a href="#!" ng-click="deselect(tag,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
           </div>
+          <p class="validate-message" ng-if="tagsError">Please provide at least one tag of document</p>
         </div>
       </div>
       <div class="row">
@@ -56,7 +59,7 @@
   </div>
 </div>
   <div class="modal-footer">
-    <button id="docAttachSubmit" type="submit" class="modal-action modal-close waves-effect waves-green btn-flat" ng-disabled="uploader.isReady || uploader.isUploading || uploader.isSuccess">Attach Document!</button>
+    <button id="docAttachSubmit" type="submit" class="modal-action waves-effect waves-green btn-flat" ng-disabled="uploader.isReady || uploader.isUploading || uploader.isSuccess">Attach Document!</button>
     <!-- <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="uploadAll()" ng-disabled="uploader.isReady || uploader.isUploading || uploader.isSuccess">Attach Document!</a> -->
     <a class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
   </div>

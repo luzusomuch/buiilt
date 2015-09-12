@@ -54,6 +54,10 @@ angular.module('buiiltApp').directive('upload', function(){
                 }
             };
 
+            $scope.$watch('selectedTags.length',function(value) {
+                $scope.tagsError = (value == 0) ? true : false;
+            });
+
             if ($stateParams.packageId) {
                 var uploader = $scope.uploader = new FileUploader({
                     url: 'api/uploads/'+ $stateParams.packageId + '/file-package',
@@ -122,10 +126,13 @@ angular.module('buiiltApp').directive('upload', function(){
             };
 
             var hideModalAfterUploading = false;
-            $scope.uploadAll = function(){
-                hideModalAfterUploading = true;
-                uploader.uploadAll();
-                Materialize.toast('<p style="width:300px;">Upload in progress</p><div class="progress"><div class="indeterminate"></div></div>',35000);
+            $scope.uploadAll = function(form){
+                if (form.$valid && !$scope.tagsError) {
+                    hideModalAfterUploading = true;
+                    uploader.uploadAll();
+                    $('#attachDocument').closeModal();
+                    Materialize.toast('<p style="width:300px;">Upload in progress</p><div class="progress"><div class="indeterminate"></div></div>',35000);    
+                }
             };
 
             uploader.onCompleteAll = function () {
