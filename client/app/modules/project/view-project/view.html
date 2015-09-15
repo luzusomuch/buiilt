@@ -96,18 +96,18 @@
 
           <div style="display:none" class="col s8 offset-s2 center valign" ng-switch="file.mimeType" ng-repeat="file in files" colorbox>
             <span ng-switch-when="image/jpeg">
-              <a class="gallery" data-filetype="jpg" data-rel="group1" rel="jpg" href="../../media/files/{{file._id}}-{{file.title}}.jpg">
-                <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}-{{file.title}}.jpg" alt="">
+              <a class="gallery" data-filetype="jpg" data-rel="group1" rel="jpg" href="../../media/files/{{file._id}}.jpg">
+                <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}.jpg" alt="">
               </a>
             </span>
             <span ng-switch-when="image/png">
-              <a class="gallery" data-filetype="jpg" data-rel="group1" rel="jpg" href="../../media/files/{{file._id}}-{{file.title}}.jpg">
-                <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}-{{file.title}}.jpg" alt="">
+              <a class="gallery" data-filetype="jpg" data-rel="group1" rel="jpg" href="../../media/files/{{file._id}}.jpg">
+                <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}.jpg" alt="">
               </a>
             </span>
             <span ng-switch-when="application/pdf">
-              <a class="gallery" data-filetype="pdf" data-rel="group1" rel="pdf" href="../../media/files/{{file._id}}-{{file.title}}.jpg">
-                <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}-{{file.title}}.jpg" alt="">
+              <a class="gallery" data-filetype="pdf" data-rel="group1" rel="pdf" href="../../media/files/{{file._id}}.jpg">
+                <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}.jpg" alt="">
               </a>
             </span>
             <span ng-switch-default>
@@ -119,18 +119,18 @@
 
           <div colorbox data-current="true" class="col s8 offset-s2 center valign" ng-switch="file.mimeType">
             <span ng-switch-when="image/jpeg">
-              <a ng-class="{isCurrent: currentSelect}" class="gallery" data-filetype="jpg" data-rel="group1" rel="jpg" href="../../media/files/{{file._id}}-{{file.title}}.jpg">
-                <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}-{{file.title}}.jpg" alt="">
+              <a ng-class="{isCurrent: currentSelect}" class="gallery" data-filetype="jpg" data-rel="group1" rel="jpg" href="../../media/files/{{file._id}}.jpg">
+                <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}.jpg" alt="">
               </a>
             </span>
             <span ng-switch-when="image/png">
-              <a ng-class="{isCurrent: currentSelect}" class="gallery" data-filetype="jpg" data-rel="group1" rel="jpg" href="../../media/files/{{file._id}}-{{file.title}}.jpg">
-                <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}-{{file.title}}.jpg" alt="">
+              <a ng-class="{isCurrent: currentSelect}" class="gallery" data-filetype="jpg" data-rel="group1" rel="jpg" href="../../media/files/{{file._id}}.jpg">
+                <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}.jpg" alt="">
               </a>
             </span>
             <span ng-switch-when="application/pdf">
-              <a ng-class="{isCurrent: currentSelect}" class="gallery" data-filetype="pdf" data-rel="group1" rel="pdf" href="../../media/files/{{file._id}}-{{file.title}}.jpg">
-                <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}-{{file.title}}.jpg" alt="">
+              <a ng-class="{isCurrent: currentSelect}" class="gallery" data-filetype="pdf" data-rel="group1" rel="pdf" href="../../media/files/{{file._id}}.jpg">
+                <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}.jpg" alt="">
               </a>
             </span>
             <span ng-switch-default>
