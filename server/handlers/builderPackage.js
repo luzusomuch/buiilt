@@ -19,7 +19,6 @@ var async = require('async');
  * event handler after creating new account
  */
 EventBus.onSeries('BuilderPackage.Inserted', function(builderPackage, next) {
-  console.log(builderPackage);
   if (builderPackage.to.team) {
     Team.findById(builderPackage.to.team, function(err,team){
       if (err || !team) {next();}

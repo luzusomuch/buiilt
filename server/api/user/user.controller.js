@@ -165,7 +165,12 @@ exports.createUserWithInviteToken = function(req, res, next) {
                           emailVerified: true,
                           package: saved
                         };
-                        return res.json(200,data);
+                        packageInvite.remove(function(err){
+                          if (err) {
+                            return res.send(500,err);
+                          }
+                          return res.json(200,data);
+                        });
                       }
                     });
                   }
@@ -193,7 +198,12 @@ exports.createUserWithInviteToken = function(req, res, next) {
                           emailVerified: true,
                           package: saved
                         };
-                        return res.json(200,data);
+                        packageInvite.remove(function(err){
+                          if (err) {
+                            return res.send(500,err);
+                          }
+                          return res.json(200,data);
+                        });
                       }
                     });
                   }
@@ -221,7 +231,12 @@ exports.createUserWithInviteToken = function(req, res, next) {
                           emailVerified: true,
                           package: saved
                         };
-                        return res.json(200, data);
+                        packageInvite.remove(function(err){
+                          if (err) {
+                            return res.send(500,err);
+                          }
+                          return res.json(200,data);
+                        });
                       }
                     });
                   }
@@ -249,7 +264,12 @@ exports.createUserWithInviteToken = function(req, res, next) {
                           emailVerified: true,
                           package: saved
                         };
-                        return res.json(200, data);
+                        packageInvite.remove(function(err){
+                          if (err) {
+                            return res.send(500,err);
+                          }
+                          return res.json(200,data);
+                        });
                       }
                     });
                   }

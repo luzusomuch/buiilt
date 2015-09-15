@@ -32,7 +32,8 @@ EventBus.onSeries('BuilderPackage.Inserted', function(request, next) {
         project: request.project,
         package: request._id,
         inviteType : request.to.type,
-        to: request.to.email
+        to: request.to.email,
+        user: result.user._id
       });
       packageInvite.save(function(err) {
         if(err){ next(); }

@@ -43,7 +43,8 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
             project: result.project._id,
             package: request._id,
             isSkipInTender: request.isSkipInTender,
-            to: winner.email
+            to: winner.email,
+            user: result.user._id
           });
           packageInvite.save(function(err, saved){
             if (err) {return next();}
@@ -91,7 +92,8 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
               project: result.project._id,
               package: request._id,
               isSkipInTender: request.isSkipInTender,
-              to: toEmail.email
+              to: toEmail.email,
+              user: result.user._id
             });
             packageInvite.save(function(err, saved){
               if (err) {return cb(err);}
@@ -167,7 +169,8 @@ EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
               inviteType: 'contractor',
               package: request._id,
               project: result.project._id,
-              to: toEmail.email
+              to: toEmail.email,
+              user: result.user._id
             });
             packageInvite.save(function(err,saved){
               if (err) {return cb(err);}
