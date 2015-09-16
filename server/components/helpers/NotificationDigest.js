@@ -8,6 +8,27 @@ var config = require('./../../config/environment');
 var async = require('async');
 var _ = require('lodash');
 
+function countDuplicate(arr) {
+    var a = [], b = [], prev = null;
+    
+    arr.sort(function(a,b){
+        if (a.owner > b.owner) {return 1;}
+        if (a.owner < b.owner) {return -1;}
+        return 0;
+    });
+    for ( var i = 0; i < arr.length; i++ ) {
+        if ( arr[i].owner.toString() !== prev ) {
+            a.push(arr[i].owner.toString());
+            b.push(1);
+        } else {
+            b[b.length-1]++;
+        }
+        prev = arr[i].owner.toString();
+    }
+    
+    return [a, b];
+}
+
 exports.run = function(){
     var execArray = ['PackageInvite', 'Notification', 'InviteToken'];
     var result = [];
@@ -46,57 +67,62 @@ exports.run = function(){
             var templateUrl = '';
             _.each(result, function(item){
                 if (item.type == 'PackageInvite') {
-                    _.each(item.data, function(data){
-                        if (data.inviteType == 'contractor') {
-                            templateUrl = 'contractor-package-request-no-account.html';
-                        }
-                        else if (data.inviteType == 'supplier') {
-                            templateUrl = 'supplier-package-send-quote-no-account.html'
-                        }
-                        else if (data.inviteType == 'homeOwner') {
-                            templateUrl = 'invite-homeowner-has-no-account.html';
-                        }
-                        else if (data.inviteType == 'builder') {
-                            templateUrl = 'invite-builder-has-no-account.html';
-                        }
-                        else {
-                            templateUrl = '';
-                        }
-                        async.parallel({
-                            user: function(cb){
-                                User.findOne({_id: data.user}, cb);
-                            },
-                            team: function(cb){
-                                Team.findOne({_id: data.owner}, cb);
-                            }
-                        }, function(err, result){
-                            if (!err) {
-                                var from = result.user.firstName + " " + result.user.lastName + " | " + result.team.name + "<"+result.user.email+">";
-                                Mailer.sendMail(templateUrl, from, data.to, {
-                                    team: result.team.toJSON(),
-                                    user: result.user.toJSON(),
-                                    registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + data._id,
-                                    subject: result.team.name + ' would like a quote'
-                                }, function(){});
-                            }
-                        });
-                    });
+                    // _.each(item.data, function(data){
+                    //     if (data.inviteType == 'contractor') {
+                    //         templateUrl = 'contractor-package-request-no-account.html';
+                    //     }
+                    //     else if (data.inviteType == 'supplier') {
+                    //         templateUrl = 'supplier-package-send-quote-no-account.html'
+                    //     }
+                    //     else if (data.inviteType == 'homeOwner') {
+                    //         templateUrl = 'invite-homeowner-has-no-account.html';
+                    //     }
+                    //     else if (data.inviteType == 'builder') {
+                    //         templateUrl = 'invite-builder-has-no-account.html';
+                    //     }
+                    //     else {
+                    //         templateUrl = '';
+                    //     }
+                    //     async.parallel({
+                    //         user: function(cb){
+                    //             User.findOne({_id: data.user}, cb);
+                    //         },
+                    //         team: function(cb){
+                    //             Team.findOne({_id: data.owner}, cb);
+                    //         }
+                    //     }, function(err, result){
+                    //         if (!err) {
+                    //             var from = result.user.firstName + " " + result.user.lastName + " | " + result.team.name + "<"+result.user.email+">";
+                    //             Mailer.sendMail(templateUrl, from, data.to, {
+                    //                 team: result.team.toJSON(),
+                    //                 user: result.user.toJSON(),
+                    //                 registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + data._id,
+                    //                 subject: result.team.name + ' would like a quote'
+                    //             }, function(){});
+                    //         }
+                    //     });
+                    // });
                 }
                 else if (item.type == 'InviteToken') {
-                    async.each(item.data, function(data, cb){
-                        User.findById(data.user, function(err, user){
-                            if (err || !user) {return cb(err);}
-                            var from = user.firstName + " " + user.lastName + " | " + data.element.name + "<"+user.email+">";
-                            Mailer.sendMail('invite-team-has-no-account.html', from, data.email, {
-                                request: user.toJSON,
-                                link: config.baseUrl + 'signup?inviteToken=' + data.inviteToken,
-                                subject: 'Join ' + data.element.name + ' on buiilt'
-                            }, function(err){console.log(err);return cb(err);});
-                        });
-                    }, function(){console.log('success');});
+                    // async.each(item.data, function(data, cb){
+                    //     User.findById(data.user, function(err, user){
+                    //         if (err || !user) {return cb(err);}
+                    //         var from = user.firstName + " " + user.lastName + " | " + data.element.name + "<"+user.email+">";
+                    //         Mailer.sendMail('invite-team-has-no-account.html', from, data.email, {
+                    //             request: user.toJSON,
+                    //             link: config.baseUrl + 'signup?inviteToken=' + data.inviteToken,
+                    //             subject: 'Join ' + data.element.name + ' on buiilt'
+                    //         }, function(err){console.log(err);return cb(err);});
+                    //     });
+                    // }, function(){console.log('success');});
                 }
                 else if (item.type == 'Notification') {
-                    // console.log(item.data);
+                    var result = countDuplicate(item.data);
+                    var totalNotificationByUser = [];
+                    _.each(result[0], function(owner, key){
+                        totalNotificationByUser.push({owner: owner, totalNotifications: result[1][key]});
+                    });
+                    console.log(totalNotificationByUser);
                 }
             });
         }
