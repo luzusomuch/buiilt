@@ -16,6 +16,7 @@ var EventBus = require('./../components/EventBus');
 
 var InviteTokenSchema = new Schema({
   element: {},
+  user: {type: Schema.Types.ObjectId, rel: 'User'},
   type : String,
   inviteToken : String,
   email : String,

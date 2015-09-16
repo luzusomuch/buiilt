@@ -46,7 +46,8 @@ EventBus.onSeries('MaterialPackage.Inserted', function(request, next) {
           project: result.project._id,
           package: request._id,
           isSkipInTender: request.isSkipInTender,
-          to: winner.email
+          to: winner.email,
+          user: result.user._id
         });
         packageInvite.save(function(err, saved){
           if (err) {return next();}
@@ -99,7 +100,8 @@ EventBus.onSeries('MaterialPackage.Inserted', function(request, next) {
             project: result.project._id,
             package: request._id,
             isSkipInTender: request.isSkipInTender,
-            to: supplier.email
+            to: supplier.email,
+            user: result.user._id
           });
           packageInvite.save(function(err, saved){
             if (err) {return cb(err);}
@@ -173,7 +175,8 @@ EventBus.onSeries('MaterialPackage.Updated', function(request, next) {
               inviteType: 'supplier',
               project: result.project._id,
               package: request._id,
-              to: supplier.email
+              to: supplier.email,
+              user: result.user._id
             });
             packageInvite.save(function(err, saved){
               if (err) {return cb(err);}

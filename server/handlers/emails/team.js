@@ -15,7 +15,8 @@ EventBus.onSeries('Team.Inserted', function(request, next){
         var inviteToken = new InviteToken({
           email : user.email,
           element : request,
-          type : 'team-invite'
+          type : 'team-invite',
+          user: request.user._id
         });
         inviteToken.save(function(err) {
           if (err) { return callback(err);}
@@ -49,7 +50,8 @@ EventBus.onSeries('Team.Updated', function(request, next){
       var inviteToken = new InviteToken({
         email : user.email,
         element : request,
-        type : 'team-invite'
+        type : 'team-invite',
+        user: request.user._id
       });
       inviteToken.save(function(err) {
         if (err) {

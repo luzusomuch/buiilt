@@ -82,6 +82,22 @@ exports.run = function(){
                         });
                     });
                 }
+                else if (item.type == 'InviteToken') {
+                    async.each(item.data, function(data, cb){
+                        User.findById(data.user, function(err, user){
+                            if (err || !user) {return cb(err);}
+                            var from = user.firstName + " " + user.lastName + " | " + data.element.name + "<"+user.email+">";
+                            Mailer.sendMail('invite-team-has-no-account.html', from, data.email, {
+                                request: user.toJSON,
+                                link: config.baseUrl + 'signup?inviteToken=' + data.inviteToken,
+                                subject: 'Join ' + data.element.name + ' on buiilt'
+                            }, function(err){console.log(err);return cb(err);});
+                        });
+                    }, function(){console.log('success');});
+                }
+                else if (item.type == 'Notification') {
+                    // console.log(item.data);
+                }
             });
         }
     });
