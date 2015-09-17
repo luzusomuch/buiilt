@@ -27,9 +27,9 @@ function countDuplicate(arr) {
     }
     
     return [a, b];
-}
+};
 
-exports.run = function(){
+function run(){
     var execArray = ['PackageInvite', 'Notification', 'InviteToken'];
     var result = [];
     async.each(execArray, function(item, callback){
@@ -281,3 +281,5 @@ exports.run = function(){
         }
     });
 };
+
+run();

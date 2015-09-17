@@ -1,0 +1,20 @@
+{% extends 'layouts/default.html' %}
+
+{% block content %}
+<p>
+    This is a daily email to <%= user.firstName %> <%= user.lastName %>.
+</p>
+<p>
+    You have <%= request.totalNotifications %> notification(s) unread.
+</p>
+<div style="margin-left: 10px;">
+    {% for detail in request.links %}
+        <p><strong><%= loop.index %></strong></p>    
+        <p><strong><%= detail.type %></strong></p>    
+        <p>You can <a href="<%= detail.link %>">click here</a> to view detail of this notification.</p>
+        <hr>
+        </br>
+    {% endfor %}
+</div>
+
+{% endblock %}
