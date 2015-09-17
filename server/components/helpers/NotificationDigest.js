@@ -7,6 +7,15 @@ var User = require('./../../models/user.model');
 var config = require('./../../config/environment');
 var async = require('async');
 var _ = require('lodash');
+var CronJob = require('cron').CronJob;
+
+new CronJob('* * 12 * * *', function(){
+    run();
+}, null, true, 'Australia/Melbourne');
+
+new CronJob('* * 17 * * *', function(){
+    run();
+}, null, true, 'Australia/Melbourne');
 
 function countDuplicate(arr) {
     var a = [], b = [], prev = null;
@@ -282,4 +291,4 @@ function run(){
     });
 };
 
-run();
+// run();
