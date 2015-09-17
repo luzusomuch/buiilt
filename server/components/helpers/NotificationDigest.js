@@ -120,29 +120,162 @@ exports.run = function(){
                     var result = countDuplicate(item.data);
                     var totalNotificationByUser = [];
                     var link = "";
+                    var type = "";
                     _.each(result[0], function(owner, key){
                         totalNotificationByUser.push({owner: owner, totalNotifications: result[1][key], links: []});
                     });
                     _.each(item.data, function(data){
                         if (data.type == 'uploadDocument' && data.referenceTo == 'DocumentInProject') {
                             link = config.baseUrl +'projects/'+data.element.projectId;
-
+                            type = "Upload Documentation";
                             _.each(totalNotificationByUser, function(item){
                                 if (item.owner == data.owner.toString()) {
-                                    item.links.push(link);
+                                    item.links.push({link: link, type: type});
                                 }
                             });
                         }
                         else if (data.type == 'uploadNewDocumentVersion') {
                             link = config.baseUrl +'projects/'+data.element.projectId;
+                            type = "Upload New Documentation";
                             _.each(totalNotificationByUser, function(item){
                                 if (item.owner == data.owner.toString()) {
-                                    item.links.push(link);
+                                    item.links.push({link:link, type: type});
+                                }
+                            });
+                        }
+                        else if (data.referenceTo == 'DocumentContractorPackage' || data.referenceTo == 'DocumentMaterialPackage' 
+                            || data.referenceTo == 'DocumentStaffPackage' || data.referenceTo == 'DocumentVariation' || data.referenceTo == 'DocumentBuilderPackage') {
+                            switch (data.element.uploadIn.type) {
+                                case 'BuilderPackage':
+                                    link = config.baseUrl +data.element.projectId + '/client/view';
+                                    type = "Upload New Documentation In Builder Package";
+                                    break;
+                                case 'material': 
+                                    type = "Upload New Documentation In Material Package";
+                                    link = config.baseUrl + data.element.projectId + '/material-request/' + data.element.uploadIn._id + '/processing';
+                                    break;
+                                case 'contractor':
+                                    type = "Upload New Documentation In Contractor Package";
+                                    link = config.baseUrl + data.element.projectId + '/contractor-requests/' + data.element.uploadIn._id + '/processing';
+                                    break;
+                                case 'variation':
+                                    type = "Upload New Documentation In Variation";
+                                    link = config.baseUrl + data.element.projectId + '/variation-requests/' + data.element.uploadIn._id + '/processing';
+                                    break;
+                                case 'staffPackage':
+                                    type = "Upload New Documentation In Staff Package";
+                                    link = config.baseUrl +data.element.projectId + '/staff/' + data.element.uploadIn._id + '/';
+                            }
+                            link = config.baseUrl +'projects/'+data.element.projectId;
+                            _.each(totalNotificationByUser, function(item){
+                                if (item.owner == data.owner.toString()) {
+                                    item.links.push({link:link, type: type});
+                                }
+                            });
+                        }
+                        else if (data.type == 'thread-assign' || data.type == 'thread-message') {
+                            type = (data.type == 'thread-assign') ? 'Thread Assigned' : 'Thread message';
+                            switch (data.element.type) {
+                                case 'staff' :
+                                    type = type + ' In Staff Package';
+                                    link = config.baseUrl +data.element.project + '/staff/' + data.element.package + '/';
+                                    break;
+                                case 'builder' :
+                                    type = type + ' In Builder Pacakge';
+                                    link = config.baseUrl +data.element.project + '/client/view';
+                                    break;
+                                case 'contractor' :
+                                    type = type + ' In Contractor Package';
+                                    link = config.baseUrl + data.element.project + '/contractor-requests/' + data.element.package + '/processing';
+                                    break;
+                                case 'material' :
+                                    type = type + ' In Material Package';
+                                    link = config.baseUrl + data.element.project + '/material-request/' + data.element.package + '/processing';
+                                    break;
+                                case 'variation' :
+                                    type = type + ' In Variation Package';
+                                    link = config.baseUrl + data.element.project + '/variation-requests/' + data.element.package + '/processing';
+                                    break;
+                            }
+                            _.each(totalNotificationByUser, function(item){
+                                if (item.owner == data.owner.toString()) {
+                                    item.links.push({link:link, type: type});
+                                }
+                            });
+                        }
+                        else if (data.type == 'task-assign' || data.type == 'task-revoke') {
+                            type = (data.type == 'task-assign') ? 'Task Assigned' : 'Task Revoke';
+                            switch (data.element.type) {
+                                case 'staff' :
+                                    type = type + ' In Staff Package';
+                                    link = config.baseUrl +data.element.project + '/staff/' + data.element.package + '/';
+                                    break;
+                                case 'builder' :
+                                    type = type + ' In Builder Pacakge';
+                                    link = config.baseUrl +data.element.project + '/client/view';
+                                    break;
+                                case 'contractor' :
+                                    type = type + ' In Contractor Package';
+                                    link = config.baseUrl + data.element.project + '/contractor-requests/' + data.element.package + '/processing';
+                                    break;
+                                case 'material' :
+                                    type = type + ' In Material Package';
+                                    link = config.baseUrl + data.element.project + '/material-request/' + data.element.package + '/processing';
+                                    break;
+                                case 'variation' :
+                                    type = type + ' In Variation Package';
+                                    link = config.baseUrl + data.element.project + '/variation-requests/' + data.element.package + '/processing';
+                                    break;
+                            }
+                            _.each(totalNotificationByUser, function(item){
+                                if (item.owner == data.owner.toString()) {
+                                    item.links.push({link:link, type: type});
+                                }
+                            });
+                        }
+                        else if (data.type == 'task-reopened' || data.type == 'task-completed') {
+                            type = (data.type == 'task-reopened') ? 'Task Re-Opened' : 'Task Completed';
+                            switch (data.element.type) {
+                                case 'staff' :
+                                    type = type + ' In Staff Package';
+                                    link = config.baseUrl +data.element.project + '/staff/' + data.element.package + '/';
+                                    break;
+                                case 'builder' :
+                                    type = type + ' In Builder Pacakge';
+                                    link = config.baseUrl +data.element.project + '/client/view';
+                                    break;
+                                case 'contractor' :
+                                    type = type + ' In Contractor Package';
+                                    link = config.baseUrl + data.element.project + '/contractor-requests/' + data.element.package + '/processing';
+                                    break;
+                                case 'material' :
+                                    type = type + ' In Material Package';
+                                    link = config.baseUrl + data.element.project + '/material-request/' + data.element.package + '/processing';
+                                    break;
+                                case 'variation' :
+                                    type = type + ' In Variation Package';
+                                    link = config.baseUrl + data.element.project + '/variation-requests/' + data.element.package + '/processing';
+                                    break;
+                            }
+                            _.each(totalNotificationByUser, function(item){
+                                if (item.owner == data.owner.toString()) {
+                                    item.links.push({link:link, type: type});
                                 }
                             });
                         }
                     });
-                    console.log(totalNotificationByUser);
+                    async.each(totalNotificationByUser, function(notificationByUser, cb){
+                        User.findById(notificationByUser.owner, function(err, user){
+                            if (err || !user) {return cb(err);}
+                            Mailer.sendMail('crontab-notification.html', config.emailFrom, user.email, {
+                                user: user.toJSON(),
+                                request: notificationByUser,
+                                subject: 'Daily email on buiilt'
+                            }, function(err){return cb(err);});
+                        });
+                    }, function(){
+                        console.log('success');
+                    });
                 }
             });
         }
