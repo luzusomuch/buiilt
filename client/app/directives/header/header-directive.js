@@ -56,6 +56,11 @@ angular.module('buiiltApp')
         supplier: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
           {sref: 'materials({id :  currentProject._id})', label: 'materials'},
           {sref: 'projects.view({id :  currentProject._id})', label: 'documentation'}],
+        architect: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
+          {sref: 'materials({id :  currentProject._id})', label: 'design'},
+          {sref: 'materials({id :  currentProject._id})', label: 'client'},
+          {sref: 'materials({id :  currentProject._id})', label: 'builder'},
+          {sref: 'projects.view({id :  currentProject._id})', label: 'documentation'}],
         other : [{sref: 'team.manager', label: 'team manager'},
           {sref: 'user', label: 'User profile'}]
       };
@@ -102,6 +107,9 @@ angular.module('buiiltApp')
                       }
                       else if ($scope.currentTeam.type === 'supplier') {
                         $scope.tabs = $scope.menuTypes['supplier'];
+                      }
+                      else if ($scope.currentTeam.type == 'architect') {
+                        $scope.tabs = $scope.menuTypes['architect'];
                       }
                     } else {
                       $scope.tabs = $scope.menuTypes['other'];
