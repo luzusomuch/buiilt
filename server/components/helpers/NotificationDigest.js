@@ -9,13 +9,17 @@ var async = require('async');
 var _ = require('lodash');
 var CronJob = require('cron').CronJob;
 
-new CronJob('* * 12 * * *', function(){
-    run();
-}, null, true, 'Australia/Melbourne');
+var job1 = new CronJob('00 00 12 * * *', function(){
+    run()
+}, null, false, 'Australia/Melbourne');
 
-new CronJob('* * 17 * * *', function(){
+var job2 = new CronJob('00 00 17 * * *', function(){
     run();
-}, null, true, 'Australia/Melbourne');
+}, null, false, 'Australia/Melbourne');
+
+job1.start();
+job2.start();
+
 
 function countDuplicate(arr) {
     var a = [], b = [], prev = null;
