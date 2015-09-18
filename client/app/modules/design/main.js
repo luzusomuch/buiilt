@@ -30,9 +30,12 @@ angular.module('buiiltApp').config(function($stateProvider) {
             designs : [
                 'designService','$stateParams',
                 function(designService,$stateParams) {
-                    return designService.getAll({id : $stateParams.id}).$promise
+                    return designService.getAll({id : $stateParams.id}).$promise;
                 }
-            ]
+            ],
+            builderPackage: function(builderPackageService, $stateParams){
+                return builderPackageService.findDefaultByProject({id:$stateParams.id}).$promise;
+            }
         }
     })
     .state('design.detail', {

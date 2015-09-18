@@ -1,8 +1,7 @@
 angular.module('buiiltApp')
   .factory('designService', function($rootScope, $q, $resource) {
-    return $resource('/api/design/:id/:type/:action',{
-        id : '@_id',
-        type : '@_type'},
+    return $resource('/api/designs/:id/:action',{
+        id : '@_id'},
         {
             getAll: {
                 method: 'GET',

@@ -3,6 +3,7 @@
 var User = require('./../../models/user.model');
 var Project = require('./../../models/project.model');
 var Design = require('./../../models/design.model');
+var Notification = require('./../../models/notification.model');
 var _ = require('lodash');
 var async = require('async');
 
@@ -44,26 +45,27 @@ exports.Design = function(req,res,next) {
  * @param res
  */
 exports.createDesign = function(req,res) {
-  var user = req.user;
-  var project = req.project;
-  Validator.validateCreate(req,function(err,data) {
-    if (err) {
-      return res.send(422, err);
-    }
-    var Design = new Design(data);
-    Design.owner = user.team._id;
-    Design.project = project;
-    Design.type = 'Design';
-    Design.staffs = data.staffs;
-    Design.markModified('staffs');
-    Design._editUser = user;
-    Design.save(function(err) {
-      if (err) {
-        return res.send(500, err);
-      }
-      return res.json(Design)
-    })
-  });
+    console.log(req.body);
+    var user = req.user;
+    var invitees = [];
+    var design = new Design();
+    design.name = req.body.name,
+    design.owner = user.team._id;
+    design.project = req.params.id;
+    design.descriptions = req.body.descriptions,
+    design.type = 'design';
+    _.each(req.body.staffs, function(item){
+        invitees.push(item._id);
+    })    
+    design.invitees = invitees;
+    design.markModified('invitees');
+    design._editUser = user;
+    design.save(function(err) {
+        if (err) {
+            return res.send(500, err);
+        }
+        return res.json(design)
+    });
 };
 
 /**
@@ -72,19 +74,19 @@ exports.createDesign = function(req,res) {
  * @param res
  */
 exports.getAll = function(req,res) {
-  var project = req.project;
+  // var project = req.project;
   var user = req.user;
-  Design.find({'project' : project._id},function(err,packages) {
+  Design.find({'project' : req.params.id},function(err,designs) {
     if (err) {
       return res.status(400).json(err);
     }
-    async.each(packages,function(item,callback) {
+    async.each(designs,function(item,callback) {
       Notification.find({owner: user._id,'element.package' : item._id, unread : true}).count(function(err,count) {
         item.__v = count;
         callback();
       })
     },function() {
-      return res.json(packages)
+      return res.json(designs)
     });
   })
 };

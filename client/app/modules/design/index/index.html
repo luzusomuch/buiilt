@@ -3,11 +3,10 @@
         <div class="collection with-header">
             <div class="row collection-header" style="margin-bottom:0px">
                 <div class="col">
-                    <p ng-if="isLeader" style="margin-left: 10px" id="employeesHeader"><STRONG>EMPLOYEES</STRONG></p>
-                    <p ng-if="!isLeader" style="margin-left: 10px" id="staffOrdersHeader"><STRONG>WORK ORDERS</STRONG></p>
+                    <p style="margin-left: 10px" id="employeesHeader"><STRONG>DESIGN</STRONG></p>
                 </div>
                 <div class="col right">
-                    <a ng-if="currentTeam.type == 'builder' && isLeader" href="#newWorkPackage" class="modal-trigger" id="workOrderBtn" style="padding: 5px; font-size: 12px; color: black" ng-click="startWorkOrderWizard()">ADD A WORK ORDER</a>
+                    <a ng-if="currentTeam.type == 'architect' && isLeader" href="#newDesign" class="modal-trigger" id="workOrderBtn" style="padding: 5px; font-size: 12px; color: black" >ADD A DESIGN</a>
                 </div>
             </div>
 
@@ -22,7 +21,7 @@
             </div>
 
             <div style="height: {{contentHeight -30}}px; overflow-y: auto; background-color: white; overflow-x:hidden;">
-                <div ng-show="item.canSee || isLeader" style="cursor:pointer;" ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="item in staffPackages | filter: filter" ng-click="goToStaffPacakgeDetail(item)">
+                <div ng-show="item.canSee || isLeader" style="cursor:pointer;" ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="item in designs | filter: filter" ng-click="goToStaffPacakgeDetail(item)">
                     <div class="col s9">{{item.name}}</div>
                     <div style="color: #757575">
                         <div class="col s1 valign-wrapper">
@@ -49,7 +48,7 @@
     <form novalidate name="form" ng-submit="createDesign(form)">
         <div class="modal-content">
             <div class="row">
-                <div class="col s12"><h5>New Design For {{currentProject.Name}}</h5></div>
+                <div class="col s12"><h5>New Design For {{currentProject.name}}</h5></div>
             </div>
             <div class="row">
                 <div class="col s12">
@@ -74,7 +73,7 @@
                             </div>
                         </li>
 
-                        <li class="collection-item vlalign" ng-repeat="description in package.descriptions track by $index">
+                        <li class="collection-item vlalign" ng-repeat="description in design.descriptions track by $index">
                             <div class="row" style="margin-bottom: 0px">
                                 <div class="col s10"><p>{{description}}</p></div>
                                 <div class="col s2">
@@ -92,7 +91,7 @@
                             <div class="chips-head row current-assign">
                                 <p>Current assignees:</p>
                                 <p class="validate-message" ng-if="assgineesError">Current assignees must be at least 1 item</p>
-                                <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="staff in package.staffs">
+                                <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="staff in design.staffs">
                                     {{staff | name}} <span><a href="#!" ng-click="staffRevoke(staff,$index)" id="removeAssignee"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
                                 </div>
                             </div>

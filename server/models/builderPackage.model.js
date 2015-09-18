@@ -52,6 +52,9 @@ var BuilderPackageSchema = new Schema({
       enum : ['homeOwner','builder']
     }
   },
+  winner: {
+    type: Schema.Types.ObjectId, ref: 'Team'
+  },
   architect: {
     team:{type: Schema.Types.ObjectId, ref: 'Team'},
     email: String
