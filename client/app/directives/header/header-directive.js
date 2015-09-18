@@ -66,6 +66,7 @@ angular.module('buiiltApp')
           if(isLoggedIn){
             $scope.isLoggedIn = true;
             $scope.project = {
+              hasArchitect: false,
               package : {
                 location: {},
                 to : ''
@@ -90,9 +91,11 @@ angular.module('buiiltApp')
                     if ($stateParams.id) {
                       if ($scope.currentTeam.type === 'homeOwner') {
                         $scope.tabs = $scope.menuTypes['homeOwner'];
+                        $scope.project.hasArchitect = true;
                       }
                       else if ($scope.currentTeam.type === 'builder') {
                         $scope.tabs = $scope.menuTypes['builder'];
+                        $scope.project.hasArchitect = true;
                       }
                       else if ($scope.currentTeam.type === 'contractor') {
                         $scope.tabs = $scope.menuTypes['contractor'];
@@ -168,7 +171,6 @@ angular.module('buiiltApp')
         //
         //  })
       };
-
       $scope.create = function(form) {
         $scope.submitted = true;
         if (form.$valid) {
@@ -182,6 +184,7 @@ angular.module('buiiltApp')
                 }
               };
               $scope.submitted = false;
+              $scope.project.hasArchitect = false;
               $('#createProject').closeModal();
             }, function(res) {
               $scope.errors = res.data;

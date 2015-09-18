@@ -26,7 +26,7 @@
               <a ui-sref="projects.view({id: project._id})">{{project.name}}</a>
             </li> -->
             <li class="divider"></li>
-            <li ng-if="(currentTeam.type == 'homeOwner' || currentTeam.type == 'builder') && isLeader">
+            <li ng-if="(currentTeam.type == 'architect' || currentTeam.type == 'homeOwner' || currentTeam.type == 'builder') && isLeader">
               <a href="#createProject" id="createProjBtn" class="modal-trigger" ng-click="startNewProjectWizard()">Create project</a>
             </li>
           </ul>

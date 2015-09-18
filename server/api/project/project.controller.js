@@ -52,10 +52,14 @@ exports.create = function(req, res){
         team.markModified('project');
         team._user = user;
         team.save();
-        if (team.type == 'builder') {
-          to.type = 'homeOwner'
+        if (team.type == 'builder' || team.type == 'architect') {
+          to.type = 'homeOwner';
         } else {
-          to.type = 'builder'
+          if (req.body.hasArchitect) {
+            to.type = '';
+          } else {
+            to.type = 'builder';
+          }
         }
       });
       User.findOne({email : req.body.package.to},function(err,_user) {
@@ -79,16 +83,47 @@ exports.create = function(req, res){
           name : project.name,
           description : project.description
         });
-        builderPackage.to = to;
-        builderPackage._editUser = req.user;
-        builderPackage.save(function(err) {
-          if (err) {
-            return res.send(500,err)
-          }
-          return res.json(project);
-        })
-      })
-    })
+        if (to.type == '') {
+          to = {};
+        } else {
+          builderPackage.to = to;
+        }
+        var architect = {};
+        if (req.body.architectEmail != '' && req.body.architectEmail) {
+          User.findOne({'email': req.body.architectEmail}, function(err,_architect){
+            if (err) {return res.send(500,err);}
+            if (!_architect) {architect.email = req.body.architectEmail;}
+            else {
+              architect.team = _architect.team._id;
+              Team.findById(_architect.team._id, function(err, team){
+                if (err) {return res.send(500,err);}
+                team.project.push(project._id);
+                team.markModified('project');
+                team._user = user;
+                team.save();
+              });
+            }
+            builderPackage.architect = architect;
+            builderPackage._editUser = req.user;
+            builderPackage.save(function(err) {
+              if (err) {
+                return res.send(500,err)
+              }
+              return res.json(project);
+            });
+          });
+        } else {
+          builderPackage.architect = architect;
+          builderPackage._editUser = req.user;
+          builderPackage.save(function(err) {
+            if (err) {
+              return res.send(500,err)
+            }
+            return res.json(project);
+          });
+        }
+      });
+    });
   });
 };
 

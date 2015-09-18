@@ -35,15 +35,29 @@
             <input id="newProjPostcode" ng-model="project.package.location.postcode" type="text">
           </div>
         </div>
+        <div class="row" ng-if="currentTeam.type == 'homeOwner' || currentTeam.type == 'builder' ">
+          <class class="input-field col s12">
+            <input class="valign" id="hasArchitect" type="checkbox" ng-model="project.hasArchitect"/>
+            <label id="" for="hasArchitect">Is an architect project managing this project?</label>
+          </class>
+        </div>
+        <div class="row" ng-if="project.hasArchitect">
+          <div class="input-field col s12">
+            <label for="">Architect's Email</label>
+            <input type="email" ng-model="project.architectEmail" name="architectEmail" required ng-class="{'invalid' : form.architectEmail.$invalid && submitted}">
+            <p class="validate-message" ng-if=" form.architectEmail.$error.required && submitted">Architect's email is required</p>
+          </div>
+        </div>
         <div clas="row">
           <div class="input-field col s12">
-            <label>
+            <label >
               <span ng-if="currentTeam.type == 'builder'">Client's Email: </span>
-              <span ng-if="currentTeam.type == 'homeOwner'">Builder's Email: </span>
+              <span ng-if="!project.hasArchitect && currentTeam.type == 'homeOwner'">Builder's Email: </span>
+              <span ng-if="currentTeam.type == 'architect'">Client's Email: </span>
             </label>
-            <input id="newProjClient" name="email" ng-model="project.package.to" required type="text"
+            <input ng-hide="project.hasArchitect && currentTeam.type == 'homeOwner'" id="newProjClient" name="email" ng-model="project.package.to" type="email"
                    ng-class="{'invalid' : form.email.$invalid && submitted}">
-            <p class="validate-message" ng-if=" form.email.$error.required && submitted">Email is required</p>
+            <p ng-hide="project.hasArchitect && currentTeam.type == 'homeOwner'" class="validate-message" ng-if="!currentTeam.type == 'homeOwner' &&(form.email.$error.required && submitted)">Email is required</p>
           </div>
           <!--<div class="input-field col s12" ng-if="currentTeam.type == 'builder'">-->
             <!--<angucomplete-alt id="ex1"-->
