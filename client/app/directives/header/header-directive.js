@@ -57,7 +57,7 @@ angular.module('buiiltApp')
           {sref: 'materials({id :  currentProject._id})', label: 'materials'},
           {sref: 'projects.view({id :  currentProject._id})', label: 'documentation'}],
         architect: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
-          {sref: 'materials({id :  currentProject._id})', label: 'design'},
+          {sref: 'design.index({id :  currentProject._id})', label: 'design'},
           {sref: 'materials({id :  currentProject._id})', label: 'client'},
           {sref: 'materials({id :  currentProject._id})', label: 'builder'},
           {sref: 'projects.view({id :  currentProject._id})', label: 'documentation'}],

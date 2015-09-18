@@ -34,6 +34,7 @@ module.exports = function(app) {
   app.use('/api/addOnPackages', require('./api/addOnPackage'));
   app.use('/api/variationRequests', require('./api/variationRequest'));
   app.use('/api/devices', require('./api/device'));
+  app.use('/api/designs', require('./api/design'));
 
   app.use('/auth', require('./auth'));
 
