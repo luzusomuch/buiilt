@@ -84,7 +84,7 @@ angular.module('buiiltApp')
     };
 
     $scope.selectWinnerByQuoteDocument = function(value) {
-        quoteService.selectContractorWinnerByQuoteDocument({id: $scope.contractorRequest._id,selector: value}).$promise.then(function(res){
+        builderPackageService.selectWinner({id: builderRequest._id,selector: value}).$promise.then(function(res){
             $scope.winner = res;
             $state.go('builderRequest.inProgress', {id: res.project});
         });

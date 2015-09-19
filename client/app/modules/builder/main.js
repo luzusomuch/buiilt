@@ -30,8 +30,8 @@ angular.module('buiiltApp').config(function($stateProvider) {
     })
     .state('builderRequest.inProgress', {
         url: '/processing',
-        templateUrl: '/app/modules/builder/in-process/view.html',
-        controller: 'InProcessCtrl',
+        templateUrl: '/app/modules/builder/in-progress/view.html',
+        controller: 'InProgressCtrl',
         hasCurrentProject : true,
         authenticate : true
     })

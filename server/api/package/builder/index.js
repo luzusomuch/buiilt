@@ -11,5 +11,6 @@ router.get('/:id', auth.isAuthenticated(), controller.project, controller.getDef
 router.get('/:id/find-by-project', auth.isAuthenticated(), controller.findByProject);
 router.put('/:id', auth.isAuthenticated(), controller.updatePackage);
 router.put('/:id/decline-quote', auth.isAuthenticated(), controller.declineQuote);
+router.put('/:id/select-winner', auth.isAuthenticated(), controller.selectWinner);
 router.post('/:id/invite-builder', auth.isAuthenticated(), controller.inviteBuilder);
 module.exports = router;

@@ -161,7 +161,6 @@ exports.inviteBuilder = function(req, res) {
 };
 
 exports.declineQuote = function(req, res) {
-  console.log(req.body);
   BuilderPackage.findById(req.body.id, function(err, builderPackage) {
     if (err) {return res.send(500,err);}
     var ownerUser = {};
@@ -190,6 +189,44 @@ exports.declineQuote = function(req, res) {
       if (err) {return res.send(500,err);}
       else {
         return res.json(200, saved);
+      }
+    });
+  });
+};
+
+exports.selectWinner = function(req, res) {
+  BuilderPackage.findById(req.body.id, function(err, builderPackage){
+    if (err) {return res.send(500,err);}
+    if (!builderPackage) {return res.send(404);}
+    builderPackage.winner = req.body.selector;
+    builderPackage.hasWinner = true;
+    _.remove(builderPackage.to,{_id: req.body.selector});
+    _.each(builderPackage.invitees, function(invitee){
+      if (invitee._id) {
+        Team.findById(invitee._id, function(err,team){
+          if (err || !team) {return res.send(500,err);}
+          var index = team.project.indexOf(builderPackage.project);
+          team.project.splice(index,1);
+          team.markModified('project');
+          team._user = req.user;
+          team.save(function(err){
+            if (err) {return res.send(500,err);}
+          });
+        });
+      }
+    });
+    builderPackage.markModified('selectQuote');
+    builderPackage._ownerUser = req.body.selector;
+    builderPackage._editUser = req.user;
+    builderPackage.save(function(err, saved) {
+      if (err) {return res.send(500,err);}
+      else {
+        BuilderPackage.findById(saved._id).populate('winner').exec(function(err,builderPackage) {
+          if (err) {return res.send(500,err);}
+          else {
+            return res.json(200,builderPackage);
+          }
+        }); 
       }
     });
   });

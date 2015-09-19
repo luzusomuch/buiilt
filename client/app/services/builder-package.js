@@ -33,6 +33,13 @@ angular.module('buiiltApp')
                 id: '@id',
                 action: 'decline-quote'
             }
+        },
+        selectWinner: {
+            method: 'put',
+            params: {
+                id: '@id',
+                action: 'select-winner'
+            }
         }
       }
     );
