@@ -7,6 +7,7 @@ var ContractorPackage = require('./../../models/contractorPackage.model');
 var MaterialPackage = require('./../../models/materialPackage.model');
 var StaffPackage = require('./../../models/staffPackage.model');
 var Variation = require('./../../models/variation.model');
+var Design = require('./../../models/design.model');
 var File = require('./../../models/file.model');
 var Document = require('./../../models/document.model');
 var Notification = require('./../../models/notification.model');
@@ -305,7 +306,34 @@ exports.uploadInPackge = function(req, res){
                     async.parallel([
                         function(cb) {
                             var owners = [];
-                            if (saved.belongToType == 'contractor') {
+                            if (saved.belongToType == 'design') {
+                                Design.findById(saved.belongTo)
+                                .populate('owner')
+                                .exec(function(err, design){
+                                    if (err || !design) {return cb(err);}
+                                    owners = _.union(design.owner.leader, design.invitees);
+                                    _.each(design.owner.member, function(member){
+                                        if (member._id) {
+                                            owners.push(member._id);
+                                        }
+                                    });
+                                    _.remove(owners, req.user._id);
+                                    async.each(owners, function(owner, callback){
+                                        var notification = new Notification({
+                                            owner: owner,
+                                            fromUser: req.user._id,
+                                            toUser: owner,
+                                            element: {file: saved.toJSON(),
+                                                uploadIn: design,
+                                                projectId: design.project},
+                                            referenceTo: "DocumentDesign",
+                                            type: 'uploadDocument'
+                                        })
+                                    }, cb);
+                                    design.save();
+                                });
+                            }
+                            else if (saved.belongToType == 'contractor') {
                                 ContractorPackage.findById(saved.belongTo).populate('owner')
                                 .populate('winnerTeam._id').exec(function(err, contractorPackage) {
                                     if (err || !contractorPackage) {return cb();}

@@ -49,12 +49,14 @@
 <div id="modal_createNewThread" class="modal modal-fixed-footer">
   <form class="col s12" name="form" novalidate ng-submit="saveThread(form)">
     <div class="modal-content">
+      <h5>New chat thread</h5>
       <div class="input-field col s12">
         <input id="thread_name" type="text" ng-model="thread.name" required name="name" ng-class="{'invalid' : form.name.$invalid && submitted}">
         <label for="thread_name">Name</label>
         <p class="validate-message" ng-show="form.name.$error.required && submitted">Thread name is required</p>
       </div>
       <div class="row current-assign">
+        <p>Current assignees:</p>
         <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="user in thread.users" ng-class="{'admin' : user.team.role == 'admin'}">
           {{user | name}} <span><a href="#!" ng-click="revoke(user,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
         </div>
@@ -63,7 +65,7 @@
       <div class="divider"></div>
 
       <div class="row available-assign" id="newThreadAvailRecipients">
-        <p style="">Available user:</p>
+        <p style="">Available users:</p>
         <a href="#!" ng-click="assign(user,$index)" ng-repeat="user in available track by $index" >
           <div class="card col" style="padding: 5px; margin-left: 10px" ng-class="{'admin' : user.team.role == 'admin'}">
             {{user | name}}

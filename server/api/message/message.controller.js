@@ -8,7 +8,8 @@ var StaffPackage = require('./../../models/staffPackage.model'),
   MaterialPackage = require('./../../models/materialPackage.model'),
   Variation = require('./../../models/variation.model'),
   Notification = require('./../../models/notification.model'),
-  Project = require('./../../models/project.model');
+  Project = require('./../../models/project.model'),
+  Design = require('./../../models/design.model');
 var ThreadValidator = require('./../../validators/thread');
 var errorsHelper = require('../../components/helpers/errors');
 var _ = require('lodash');
@@ -31,7 +32,9 @@ var getPackage = function(type) {
       _package = MaterialPackage;
       break;
     case 'variation' :
-      _package = Variation
+      _package = Variation;
+    case 'design':
+      _package = Design;
     default :
       break;
   }

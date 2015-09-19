@@ -7,45 +7,28 @@ var Notification = require('./../../models/notification.model');
 var _ = require('lodash');
 var async = require('async');
 
-/**
- * Get a single project
- * @param req
- * @param res
- * @param next
- */
 exports.project = function(req,res,next) {
-  Project.findById(req.params.id,function(err,project) {
-    if (err || !project) {
-      return res.send(500, err);
+    Project.findById(req.params.id,function(err,project) {
+        if (err || !project) {
+            return res.send(500, err);
     }
     req.project = project;
     next();
-  })
+    })
 };
 
-/**
- * Get a single staff package
- * @param req
- * @param res
- * @param next
- */
+
 exports.Design = function(req,res,next) {
-  Design.findById(req.params.id,function(err,Design) {
-    if (err || !Design) {
-      return res.send(500, err);
-    }
-    req.Design = Design;
-    next();
-  })
+    Design.findById(req.params.id,function(err,Design) {
+        if (err || !Design) {
+            return res.send(500, err);
+        }
+        req.Design = Design;
+        next();
+    })
 }
 
-/**
- * Create a new staff package
- * @param req
- * @param res
- */
 exports.createDesign = function(req,res) {
-    console.log(req.body);
     var user = req.user;
     var invitees = [];
     var design = new Design();
@@ -68,34 +51,28 @@ exports.createDesign = function(req,res) {
     });
 };
 
-/**
- * Get all staff pacakge
- * @param req
- * @param res
- */
 exports.getAll = function(req,res) {
-  // var project = req.project;
-  var user = req.user;
-  Design.find({'project' : req.params.id},function(err,designs) {
-    if (err) {
-      return res.status(400).json(err);
-    }
-    async.each(designs,function(item,callback) {
-      Notification.find({owner: user._id,'element.package' : item._id, unread : true}).count(function(err,count) {
-        item.__v = count;
-        callback();
-      })
-    },function() {
-      return res.json(designs)
+    var user = req.user;
+    Design.find({'project' : req.params.id},function(err,designs) {
+        if (err) {
+            return res.status(400).json(err);
+        }
+        async.each(designs,function(item,callback) {
+            Notification.find({owner: user._id,'element.package' : item._id, unread : true}).count(function(err,count) {
+                item.__v = count;
+                callback();
+            })
+        },function() {
+            return res.json(designs)
+        });
     });
-  })
 };
 
 exports.getAllDesign = function(req, res){
-  Design.find({}, function(err, Designs){
-    if (err) {return res.send(500,err);}
-    return res.send(200,Designs);
-  })
+    Design.find({}, function(err, Designs){
+        if (err) {return res.send(500,err);}
+        return res.send(200,Designs);
+    });
 };
 
 exports.destroy = function (req, res) {
@@ -111,23 +88,25 @@ exports.destroy = function (req, res) {
   });
 };
 
-/**
- * Get a staff package
- * @param req
- * @param res
- */
 exports.get = function(req,res) {
-  var Design = req.Design;
-  Design.populate(Design,
-    [{path:"project"},
-      {path:"owner"},
-      {path:"staffs"}
-    ], function(err, staffPakacge ) {
-      if (err) {
-        return res.status(400).json(err);
-      }
-      return res.json(Design);
+  Design.findById(req.params.id)
+  .populate('project')
+  .populate('owner')
+  .populate('invitees').exec(function(err, design){
+    if (err) {return res.send(500,err);}
+    if (!design) {return res.send(404, 'Design not existed!');}
+    return res.json(200, design);
   });
+  // Design.populate(Design,
+  //   [{path:"project"},
+  //     {path:"owner"},
+  //     {path:"invitees"}
+  //   ], function(err, staffPakacge ) {
+  //     if (err) {
+  //       return res.status(400).json(err);
+  //     }
+  //     return res.json(Design);
+  // });
 };
 
 exports.complete = function(req,res) {

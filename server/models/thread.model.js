@@ -44,7 +44,7 @@ var ThreadSchema = new Schema({
   },
   type : {
     type : String,
-    enum : ['material','staff','contractor','builder','variation'],
+    enum : ['material','staff','contractor','builder','variation','design'],
     required : true,
   },
   users : [{

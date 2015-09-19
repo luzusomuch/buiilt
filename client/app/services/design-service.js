@@ -13,8 +13,7 @@ angular.module('buiiltApp')
             get : {
                 method : 'GET',
                 params: {
-                },
-                isArray: true
+                }
             },
             create: {
                 method: 'POST'

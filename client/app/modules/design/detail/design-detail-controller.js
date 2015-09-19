@@ -1,14 +1,14 @@
 angular.module('buiiltApp').controller('DesignDetailCtrl',
-    function($scope, $rootScope,filterFilter,currentTeam,staffPackage,staffPackageService,currentUser,notificationService) {
-      $scope.staffPackage = staffPackage;
+    function($scope, $rootScope,filterFilter,currentTeam,design,designService,currentUser,notificationService) {
+      $scope.design = design;
       $scope.currentUser = currentUser;
-      notificationService.markReadByPackage({_id : staffPackage._id}).$promise
+      notificationService.markReadByPackage({_id : design._id}).$promise
         .then(function(res) {
         });
       $scope.complete = function() {
-        staffPackageService.complete({_id : $scope.staffPackage._id}).$promise
+        designService.complete({_id : $scope.design._id}).$promise
           .then(function(res) {
-            $scope.staffPackage = res;
+            $scope.design = res;
             $('#modal_complete').closeModal();
           })
       }

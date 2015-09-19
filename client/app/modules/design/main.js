@@ -40,7 +40,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
     })
     .state('design.detail', {
         url: '/:packageId/',
-        templateUrl: '/app/modules/design/detail/detal.html',
+        templateUrl: '/app/modules/design/detail/detail.html',
         controller: 'DesignDetailCtrl',
         hasCurrentProject : true,
         authenticate : true,

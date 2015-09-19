@@ -129,9 +129,10 @@ angular.module('buiiltApp').directive('upload', function(){
             $scope.uploadAll = function(form){
                 if (form.$valid && !$scope.tagsError) {
                     hideModalAfterUploading = true;
-                    uploader.uploadAll();
                     $('#attachDocument').closeModal();
+                    $('#modal_attachDocument').closeModal();
                     Materialize.toast('<p style="width:300px;">Upload in progress</p><div class="progress"><div class="indeterminate"></div></div>',35000);    
+                    uploader.uploadAll();
                 }
             };
 

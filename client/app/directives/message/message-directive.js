@@ -153,6 +153,11 @@ angular.module('buiiltApp')
                   }
                 });
                 _.remove($scope.available,{_id : $scope.currentUser._id});
+              case 'design':
+                $scope.available = [];
+                $scope.available = angular.copy($scope.package.invitees);
+                $scope.available = _.union($scope.available, $scope.currentTeam.leader);
+                _.remove($scope.available, {_id: $scope.currentUser._id});
               default :
                 break
             }

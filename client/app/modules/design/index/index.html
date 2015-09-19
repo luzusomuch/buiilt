@@ -21,7 +21,7 @@
             </div>
 
             <div style="height: {{contentHeight -30}}px; overflow-y: auto; background-color: white; overflow-x:hidden;">
-                <div ng-show="item.canSee || isLeader" style="cursor:pointer;" ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="item in designs | filter: filter" ng-click="goToStaffPacakgeDetail(item)">
+                <div ng-show="item.canSee || isLeader" style="cursor:pointer;" ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="item in designs | filter: filter" ng-click="goToDesignDetail(item)">
                     <div class="col s9">{{item.name}}</div>
                     <div style="color: #757575">
                         <div class="col s1 valign-wrapper">

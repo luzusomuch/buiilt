@@ -56,7 +56,6 @@ angular.module('buiiltApp')
 
     socket.on('notification:new', function (notification) {
       if (notification) {
-        console.log(notification);
         var staffPackage = _.find($scope.designs,{_id : notification.element.package});
         if (staffPackage) {
           staffPackage.__v++;
@@ -125,7 +124,9 @@ angular.module('buiiltApp')
         $scope.design.staffs.splice(index,1);
     };
 
-
+    $scope.goToDesignDetail = function(item) {
+        $state.go("design.detail",{id: item.project,packageId : item._id});
+    };
 
     $scope.createDesign = function(form) {
         $scope.submitted = true;
@@ -140,7 +141,7 @@ angular.module('buiiltApp')
         if (form.$valid && !$scope.assgineesError && !$scope.descriptionError ) {
             designService.create({id : $scope.currentProject._id},$scope.design).$promise
                 .then(function(res) {
-                // $state.go('staff.view',{id : res.project, packageId : res._id});
+                $state.go('design.detail',{id : res.project, packageId : res._id});
                 $('#newDesign').closeModal();
             })
         }

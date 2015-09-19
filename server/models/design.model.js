@@ -12,6 +12,10 @@ var DesignSchema = new Schema({
     ref: 'Team',
     required: true
   },
+  project: {
+    type: Schema.Types.ObjectId,
+    ref: 'Project'
+  },
   name: String,
   descriptions: [String],
   type: {type: String},

@@ -572,18 +572,18 @@
        <ul id='itemFilter' class='dropdown-content'>
        <li><a ng-click="showOverView()" href="#!">OVERVIEW</a></li>
        <li><a ng-click="showTasks()" href="#!">TASKS</a></li>
-       <li ng-hide="type == 'variation' || type == 'staff'"><a ng-click="showVariations()" href="#!">VARIATIONS</a></li>
+       <li ng-hide="type == 'variation' || type == 'staff' || type == 'design'"><a ng-click="showVariations()" href="#!">VARIATIONS</a></li>
        <li><a ng-click="showDocuments()" href="#!">DOCUMENTS</a></li>
        </ul>
   </div>
   <div class="col right" style="margin-top: 10px">
      <a id="packageNewTaskBtn" ng-click="newTask(); startNewTaskWizard()" class="modal-trigger" href="#modal_createNewTask" style="margin-left:30px; padding: 5px; font-size: 12px; color: black">NEW TASK</a>
      <a id="packageNewDocumentBtn" class="modal-trigger" href="#modal_attachDocument" style="margin-left:30px; padding: 5px; font-size: 12px; color: black" ng-click="startNewDocumentWizard()">NEW DOCUMENT</a>
-     <a id="packageNewVariationBtn" ng-hide="type == 'variation' || type == 'staff'" class="modal-trigger" href="#modal_attachVariation" style="margin-left:30px; padding: 5px; font-size: 12px; color: black" ng-click="startNewVariationWizard()">NEW VARIATION</a>
+     <a id="packageNewVariationBtn" ng-hide="type == 'variation' || type == 'staff' || type == 'design'" class="modal-trigger" href="#modal_attachVariation" style="margin-left:30px; padding: 5px; font-size: 12px; color: black" ng-click="startNewVariationWizard()">NEW VARIATION</a>
   </div>
 </div>
   <!-- show overview -->
-  <div ng-hide="type == 'builder' || type == 'staff'" ng-if="isShowOverView" style="height: {{contentHeight + 10}}px; overflow-y: auto; background-color: white; overflow-x: hidden;">
+  <div ng-hide="type == 'builder' || type == 'staff' || type == 'design'" ng-if="isShowOverView" style="height: {{contentHeight + 10}}px; overflow-y: auto; background-color: white; overflow-x: hidden;">
     <div class="col s12">
       <table class="bordered centered">
         <thead>
@@ -627,7 +627,7 @@
     </div>
   </div>
 
-  <div ng-show="type == 'builder' || type == 'staff'" ng-if="isShowOverView" style="height: {{contentHeight + 10}}px; overflow-y: auto; background-color: white; overflow-x: hidden;">
+  <div ng-show="type == 'builder' || type == 'staff' || type == 'design'" ng-if="isShowOverView" style="height: {{contentHeight + 10}}px; overflow-y: auto; background-color: white; overflow-x: hidden;">
     <div class="col s12">
       <table class="bordered centered">
         <thead>
