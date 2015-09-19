@@ -160,28 +160,58 @@ exports.sendToDocument = function(req, res) {
         if (err) {return res.send(500,err);}
         if (!file) {return res.send(404);}
         console.log(file);
-        var _file = new File({
-            documentDesignId: mongoose.Types.ObjectId(file._id.toString()),
-            wasBelongTo: file.belongTo,
-            isSendToDocumentation: true,
-            belongTo: req.body.projectId,
-            belongToType: file.belongToType,
-            size: file.size,
-            description: file.description,
-            mimeType: file.mimeType,
-            path: file.path,
-            user: file.user,
-            server: file.server,
-            name: file.name,
-            title: file.title,
-            isQuote: file.isQuote,
-            tags: file.tags,
-            usersInterestedIn: file.usersInterestedIn,
-            usersRelatedTo: file.usersInterestedIn
-        });
-        _file.save(function(err){
-            if (err) {console.log(err);return res.send(500,err);}
-            return res.send(200, _file);
+        File.findOne({belongTo: req.body.projectId, isSendToDocumentation: true, wasBelongTo: req.body.package}, function(err, _file){
+            if (err) {return res.send(500,err);}
+            if (!_file) {
+                var newFile = new File({
+                    documentDesignId: mongoose.Types.ObjectId(file._id.toString()),
+                    wasBelongTo: file.belongTo,
+                    isSendToDocumentation: true,
+                    belongTo: req.body.projectId,
+                    belongToType: file.belongToType,
+                    size: file.size,
+                    description: file.description,
+                    mimeType: file.mimeType,
+                    path: file.path,
+                    user: file.user,
+                    server: file.server,
+                    name: file.name,
+                    title: file.title,
+                    isQuote: file.isQuote,
+                    tags: file.tags,
+                    usersInterestedIn: file.usersInterestedIn,
+                    usersRelatedTo: file.usersInterestedIn,
+                    version: 0
+                });
+                newFile.save(function(err){
+                    if (err) {console.log(err);return res.send(500,err);}
+                    return res.send(200, newFile);
+                });
+            } else {
+                _file.documentDesignId = mongoose.Types.ObjectId(file._id.toString());
+                _file.wasBelongTo = file.belongTo;
+                _file.isSendToDocumentation = true;
+                _file.belongTo = req.body.projectId;
+                _file.belongToType = file.belongToType;
+                _file.size = file.size;
+                _file.description = file.description;
+                _file.mimeType = file.mimeType;
+                _file.path = file.path;
+                _file.user = file.user;
+                _file.server = file.server;
+                _file.name = file.name;
+                _file.title = file.title;
+                _file.isQuote = file.isQuote;
+                _file.tags = file.tags;
+                _file.usersInterestedIn = file.usersInterestedIn;
+                _file.usersRelatedTo = file.usersInterestedIn;
+                _file.version = file.version + 1;
+
+                _file.save(function(err){
+                    if (err) {return res.send(500,err);}
+                    return res.send(200,_file);
+                });
+            }
         });
     });
 };

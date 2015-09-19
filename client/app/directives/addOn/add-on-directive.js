@@ -681,9 +681,9 @@ angular.module('buiiltApp').directive('addon', function(){
 
               $scope.sendToDocumentation = function(){
                 var newestDocument = _.last($scope.documents);
-                fileService.sendToDocumentation({id: newestDocument._id},{projectId: $scope.currentProject._id}).$promise.then(function(res){
+                fileService.sendToDocumentation({id: newestDocument._id},{projectId: $scope.currentProject._id, package: $scope.package._id}).$promise.then(function(res){
                   console.log(res);
-                })
+                });
               };
             }
           }
