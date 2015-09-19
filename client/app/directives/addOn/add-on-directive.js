@@ -20,7 +20,6 @@ angular.module('buiiltApp').directive('addon', function(){
         inline_manual_player.activateTopic('4969', '1');
       };
 
-console.log($scope.package);console.log($scope.type);
       $scope.activeHover = function($event){
         angular.element($event.currentTarget).addClass("item-hover")
       };
@@ -557,103 +556,102 @@ console.log($scope.package);console.log($scope.type);
                 // delete $scope.rate.lineWithPrice.rateTotal[index];
               };
 
-              $scope.sendInvoice = function() {
-                if ($scope.rate.lineWithRate) {
-                  $scope.lineWithRates.push({
-                    description: $scope.rate.lineWithRate.rateDescription,
-                    rate: $scope.rate.lineWithRate.rate,
-                    quantity: $scope.rate.lineWithRate.rateQuantity,
-                    total: $scope.rate.lineWithRate.rate * $scope.rate.lineWithRate.rateQuantity
-                  });
-                }
-                if ($scope.price.lineWithPrice) {
-                  $scope.lineWithPrices.push({
-                    description: $scope.price.lineWithPrice.description,
-                    price: $scope.price.lineWithPrice.price,
-                    quantity: 1,
-                    total: $scope.price.lineWithPrice.price
-                  });
-                }
-                addOnPackageService.sendInvoice({id: $scope.package._id, packageType: $scope.type, invoice: $scope.invoice, rate: $scope.lineWithRates, price: $scope.lineWithPrices}).$promise.then(function(data){
-                  $scope.data = data;
-                  $scope.package.invoices = data.invoices;
-                  $scope.lineWithPrices = [];
-                  $scope.lineWithRates = [];
-                  $scope.invoice = {};
+            $scope.sendInvoice = function() {
+              if ($scope.rate.lineWithRate) {
+                $scope.lineWithRates.push({
+                  description: $scope.rate.lineWithRate.rateDescription,
+                  rate: $scope.rate.lineWithRate.rate,
+                  quantity: $scope.rate.lineWithRate.rateQuantity,
+                  total: $scope.rate.lineWithRate.rate * $scope.rate.lineWithRate.rateQuantity
                 });
-              };
-
-              $scope.$watch('rate.lineWithRate',function(value) {
-                $scope.subTotalRate = 0;
-                if (value && value.rateTotal) {
-                  _.forEach(value.rateTotal, function (item) {
-                    if (!isNaN(item)) {
-                      $scope.subTotalRate += parseFloat(item);
-                    }
-                  });
-                }
-
-              },true)
-
-              $scope.$watch('price.lineWithPrice',function(value) {
-                $scope.subTotalPrice = 0;
-                if (value && value.price) {
-                  _.forEach(value.price, function (item) {
-
-                    if (!isNaN(item)) {
-                      $scope.subTotalPrice += parseFloat(item);
-                    }
-                  })
-                }
-
-              },true);
-
-              $scope.formData = {
-                title: '',
-                belongToType: ''
-              };
-              $scope.safeApply = function (fn) {
-                var phase = this.$root.$$phase;
-                if (phase == '$apply' || phase == '$digest') {
-                  if (fn && (typeof (fn) === 'function')) {
-                    fn();
-                  }
-                } else {
-                  this.$apply(fn);
-                }
-              };
-
-              var uploader = $scope.uploader = new FileUploader({
-                url: 'api/uploads/'+ $scope.package._id + '/file-package',
-                headers : {
-                  Authorization: 'Bearer ' + $cookieStore.get('token')
-                },
-                formData: [$scope.formData]
+              }
+              if ($scope.price.lineWithPrice) {
+                $scope.lineWithPrices.push({
+                  description: $scope.price.lineWithPrice.description,
+                  price: $scope.price.lineWithPrice.price,
+                  quantity: 1,
+                  total: $scope.price.lineWithPrice.price
+                });
+              }
+              addOnPackageService.sendInvoice({id: $scope.package._id, packageType: $scope.type, invoice: $scope.invoice, rate: $scope.lineWithRates, price: $scope.lineWithPrices}).$promise.then(function(data){
+                $scope.data = data;
+                $scope.package.invoices = data.invoices;
+                $scope.lineWithPrices = [];
+                $scope.lineWithRates = [];
+                $scope.invoice = {};
               });
-              uploader.onProgressAll = function (progress) {
-                $scope.progress = progress;
-              };
-              uploader.onAfterAddingFile = function (item) {
-                //item.file.name = ''; try to change file name
-                var reader = new FileReader();
+            };
 
-                reader.onload = function (e) {
-                  item.src = e.target.result;
-                  $scope.safeApply();
-                };
+            $scope.$watch('rate.lineWithRate',function(value) {
+              $scope.subTotalRate = 0;
+              if (value && value.rateTotal) {
+                _.forEach(value.rateTotal, function (item) {
+                  if (!isNaN(item)) {
+                    $scope.subTotalRate += parseFloat(item);
+                  }
+                });
+              }
 
-                reader.readAsDataURL(item._file);
+            },true);
+
+            $scope.$watch('price.lineWithPrice',function(value) {
+              $scope.subTotalPrice = 0;
+              if (value && value.price) {
+                _.forEach(value.price, function (item) {
+
+                  if (!isNaN(item)) {
+                    $scope.subTotalPrice += parseFloat(item);
+                  }
+                })
+              }
+
+            },true);
+
+            $scope.formData = {
+              title: '',
+              belongToType: ''
+            };
+            $scope.safeApply = function (fn) {
+              var phase = this.$root.$$phase;
+              if (phase == '$apply' || phase == '$digest') {
+                if (fn && (typeof (fn) === 'function')) {
+                  fn();
+                }
+              } else {
+                this.$apply(fn);
+              }
+            };
+
+            var uploader = $scope.uploader = new FileUploader({
+              url: 'api/uploads/'+ $scope.package._id + '/file-package',
+              headers : {
+                Authorization: 'Bearer ' + $cookieStore.get('token')
+              },
+              formData: [$scope.formData]
+            });
+            uploader.onProgressAll = function (progress) {
+              $scope.progress = progress;
+            };
+            uploader.onAfterAddingFile = function (item) {
+              //item.file.name = ''; try to change file name
+              var reader = new FileReader();
+
+              reader.onload = function (e) {
+                item.src = e.target.result;
+                $scope.safeApply();
               };
-              var newPhoto = null;
-              uploader.onCompleteItem = function (fileItem, response, status, headers) {
-                newPhoto = response;
+
+              reader.readAsDataURL(item._file);
+            };
+            var newPhoto = null;
+            uploader.onCompleteItem = function (fileItem, response, status, headers) {
+              newPhoto = response;
               // $state.reload();
               fileService.getFileByStateParam({'id': $scope.package._id}).$promise.then(function(data) {
                 $scope.documents = data;
               });
             };
             uploader.onBeforeUploadItem = function (item) {
-
               $scope.formData._id = $scope.fileId;
               $scope.formData.title = item.title;
               $scope.formData.belongToType = $scope.type;
@@ -681,6 +679,12 @@ console.log($scope.package);console.log($scope.type);
                 Materialize.toast('Upload completed',3000);
               };
 
+              $scope.sendToDocumentation = function(){
+                var newestDocument = _.last($scope.documents);
+                fileService.sendToDocumentation({id: newestDocument._id},{projectId: $scope.currentProject._id}).$promise.then(function(res){
+                  console.log(res);
+                })
+              };
             }
           }
         });

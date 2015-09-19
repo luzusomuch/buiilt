@@ -84,6 +84,17 @@ var FileSchema = new Schema({
   },
   isNewNotification: {
     type: Boolean
+  },
+  isSendToDocumentation: {
+    type :Boolean,
+    default: false
+  },
+  wasBelongTo: {
+    type: Schema.Types.ObjectId
+  },
+  documentDesignId: {
+    type: Schema.Types.ObjectId,
+    ref: 'File'
   }
 });
 
@@ -137,7 +148,9 @@ FileSchema.methods.toJSON = function() {
     isQuote: this.isQuote,
     updatedAt: this.updatedAt,
     createdAt: this.createdAt,
-    isNewNotification: this.isNewNotification
+    isNewNotification: this.isNewNotification,
+    isSendToDocumentation: this.isSendToDocumentation,
+    documentDesignId: this.documentDesignId
   };
 };
 

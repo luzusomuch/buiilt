@@ -94,7 +94,9 @@ angular.module('buiiltApp')
         });
         if (builderPackage.to.team.member.length > 1) {
             _.each(builderPackage.to.team.member, function(member){
-                $scope.available.push(member);
+                if (member._id || member.status == 'Active') {
+                    $scope.available.push(member._id);
+                }
             });
         }
         //currently we got no winner team.

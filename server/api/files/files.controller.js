@@ -7,6 +7,7 @@ var ProjectValidator = require('./../../validators/project');
 var _ = require('lodash');
 var async = require('async');
 var s3 = require('../../components/S3');
+var mongoose = require('mongoose');
 
 exports.getByDocument = function(req, res) {
     File.find({package: req.params.id}, function(err, files) {
@@ -150,5 +151,37 @@ exports.deleteFile = function(req, res) {
     File.findByIdAndRemove(req.params.id, function(err, file) {
         if (err) {return res.send(500,err);}
         return res.send(200);
+    });
+};
+
+exports.sendToDocument = function(req, res) {
+    console.log(req.body);
+    File.findById(req.params.id, function(err, file){
+        if (err) {return res.send(500,err);}
+        if (!file) {return res.send(404);}
+        console.log(file);
+        var _file = new File({
+            documentDesignId: mongoose.Types.ObjectId(file._id.toString()),
+            wasBelongTo: file.belongTo,
+            isSendToDocumentation: true,
+            belongTo: req.body.projectId,
+            belongToType: file.belongToType,
+            size: file.size,
+            description: file.description,
+            mimeType: file.mimeType,
+            path: file.path,
+            user: file.user,
+            server: file.server,
+            name: file.name,
+            title: file.title,
+            isQuote: file.isQuote,
+            tags: file.tags,
+            usersInterestedIn: file.usersInterestedIn,
+            usersRelatedTo: file.usersInterestedIn
+        });
+        _file.save(function(err){
+            if (err) {console.log(err);return res.send(500,err);}
+            return res.send(200, _file);
+        });
     });
 };

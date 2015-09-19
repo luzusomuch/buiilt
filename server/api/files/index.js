@@ -21,6 +21,6 @@ router.get('/:id/download-all', auth.isAuthenticated(), controller.downloadAll);
 router.get('/:id/:type/get-by-package', auth.isAuthenticated(), controller.getFileByPackage);
 router.delete('/:id', auth.isAuthenticated(), controller.deleteFile);
 // router.get('/me', auth.isAuthenticated(), controller.getMyFile);
-// router.post('/', controller.create);
+router.post('/:id/send-to-document', auth.isAuthenticated(), controller.sendToDocument);
 
 module.exports = router;

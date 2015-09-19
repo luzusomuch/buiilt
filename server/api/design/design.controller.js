@@ -45,6 +45,7 @@ exports.createDesign = function(req,res) {
     design._editUser = user;
     design.save(function(err) {
         if (err) {
+          console.log(err);
             return res.send(500, err);
         }
         return res.json(design)
