@@ -29,14 +29,14 @@
                 </div>
             </div>
 
-            <div ng-if="showTenders" id="tenderLists">
+            <div ng-if="showTenders" class="tenderLists">
                 <div class="row collection-header" style="margin-bottom:0px;">
                     <div class="col right" style="font-size:12px">
                         <a class="modal-trigger" href="#modal_inviteBuilder" style="padding: 5px;">INVITE ANOTHER TENDERER</a>
                     </div>
                 </div>
                 <div style="height: {{contentHeight -30}}px; overflow-y: auto; background-color: white; overflow-x: hidden">
-                    <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="tender in contractorRequest.to | filter: {isDecline:false}">
+                    <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="tender in builderRequest.invitees | filter: {isDecline:false}">
                         <div class="col s9">
                             <div><a ng-click="viewTenderDetail(tender)" href="#">{{tender.email}}</a></div>
                         </div>
@@ -58,7 +58,7 @@
                 <div class="row collection-header" style="margin-bottom:0px;">
                     <div class="col s12" style="font-size:12px">
                         <a class="backToTendersList" href="#!" ng-click="backToList()" style="margin-left:30px; padding: 5px;">&lt; BACK TO TENDERS</a>
-                        <div class="right">
+                        <div class="right" ng-if="tender._id">
                             <a ng-click="declineQuote(tender._id)" style="padding: 5px;">DECLINE TENDER</a>
                             <a ng-click="selectWinnerByQuoteDocument(tender._id)" style="padding: 5px;">ACCEPT TENDER</a>
                         </div>

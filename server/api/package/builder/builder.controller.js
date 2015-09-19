@@ -1,6 +1,7 @@
 'use strict';
 
 var User = require('./../../../models/user.model');
+var Team = require('./../../../models/team.model');
 var Project = require('./../../../models/project.model');
 var BuilderPackage = require('./../../../models/builderPackage.model');
 var errorsHelper = require('./../../../components/helpers/errors');
@@ -97,4 +98,99 @@ exports.updatePackage = function(req, res) {
     if (err) {return res.send(500,err);}
     return res.send(200,saved);
   })
+};
+
+exports.inviteBuilder = function(req, res) {
+  BuilderPackage.findById(req.params.id, function(err, builderPackage){
+    if (err) {return res.send(500,err);}
+    if (!builderPackage) {return res.send(404);}
+    var newInvitess = [];
+    var invitees = builderPackage.invitees;
+    async.each(req.body.toBuilder, function(builder, cb){
+      User.findOne({email: builder.email}, function(err, user){
+        if (err) {return cb(err);}
+        if (!user) {
+          invitees.push({
+            email: builder.email,
+            phoneNumber: builder.phoneNumber
+          });
+          newInvitess.push({
+            email: builder.email,
+            phoneNumber: builder.phoneNumber
+          });
+          cb()
+        } else {
+          if (user.team._id) {
+            invitees.push({
+              _id: user.team._id,
+              email: builder.email,
+              phoneNumber: builder.phoneNumber
+            });
+            newInvitess.push({
+              _id: user.team._id,
+              email: builder.email,
+              phoneNumber: builder.phoneNumber
+            });
+            Team.findById(user.team._id, function(err, team){
+              if (err) {return cb(err);}
+              team.project.push(builderPackage.project);
+              team._user = req.user;
+              team.save(function(err){
+                if (err) {return res.send(500,err);}
+              });
+            });
+            cb();
+          } else {
+            cb();
+          }
+        }
+      });
+    }, function(err){
+      if (err) {return res.send(500,err);}
+      builderPackage.invitees = invitees;
+      builderPackage.newInvitess = newInvitess;
+      builderPackage._ownerUser = req.user;
+      builderPackage._editUser = req.user;
+      builderPackage.markModified('inviteBuilder');
+      builderPackage.save(function(err){
+        if (err) {return res.send(500,err);}
+        return res.send(200, builderPackage);
+      });
+    });
+  });
+};
+
+exports.declineQuote = function(req, res) {
+  console.log(req.body);
+  BuilderPackage.findById(req.body.id, function(err, builderPackage) {
+    if (err) {return res.send(500,err);}
+    var ownerUser = {};
+    _.each(builderPackage.invitees, function(invitee){
+      if (invitee._id == req.body.belongTo) {
+        invitee.isDecline = true;
+        ownerUser = req.body.belongTo;
+        Team.findById(invitee._id, function(err,team){
+          if (err || !team) {return res.send(500,err);}
+          var index = team.project.indexOf(builderPackage.project);
+          team.project.splice(index,1);
+          team.markModified('project');
+          team._user = req.user;
+          team.save(function(err){
+            if (err) {return res.send(500,err);}
+          });
+        });
+        invitee._id = null;
+        invitee.quoteDocument = [];
+      }
+    });
+    builderPackage.markModified('decline-quote');
+    builderPackage._ownerUser = ownerUser;
+    builderPackage._editUser = req.user;
+    builderPackage.save(function(err, saved) {
+      if (err) {return res.send(500,err);}
+      else {
+        return res.json(200, saved);
+      }
+    });
+  });
 };

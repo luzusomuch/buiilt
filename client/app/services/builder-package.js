@@ -26,6 +26,13 @@ angular.module('buiiltApp')
                 id: '@id',
                 action: 'invite-builder'
             }
+        },
+        declineQuote: {
+            method: 'put',
+            params: {
+                id: '@id',
+                action: 'decline-quote'
+            }
         }
       }
     );

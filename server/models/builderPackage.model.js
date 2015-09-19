@@ -74,6 +74,11 @@ var BuilderPackageSchema = new Schema({
     isDecline: {type: Boolean, default: false},
     quoteDocument: [{type: Schema.Types.ObjectId, ref: 'File'}]
   }],
+  newInvitees: [{
+    _id: {type: Schema.Types.ObjectId, ref: 'Team'},
+    email: String,
+    phoneNumber:Number
+  }],
   winner: {
     type: Schema.Types.ObjectId, ref: 'Team'
   },

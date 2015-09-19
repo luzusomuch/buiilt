@@ -1,6 +1,6 @@
 angular.module('buiiltApp')
 .controller('ViewRequestCtrl', function(socket,$rootScope,$scope, $window, $state, $stateParams,fileService,currentTeam, $cookieStore, authService, userService, builderRequest, contractorRequestService, quoteService, builderPackageService) {
-    console.log(builderRequest);
+  console.log(builderRequest);
     $scope.builderRequest = builderRequest;
     if ($scope.builderRequest.hasWinner) {
         $state.go('builderRequest.inProgress', {id: $scope.builderRequest.project._id});
@@ -34,7 +34,7 @@ angular.module('buiiltApp')
         $scope.tender = {};
         $("div.showTenderDetail").hide();
         $("div.tenderLists").show("slide", { direction: "left" }, 500);
-    ;
+    };
 
     $scope.activeHover = function($event){
         angular.element($event.currentTarget).addClass("item-hover")
@@ -77,8 +77,8 @@ angular.module('buiiltApp')
     };
 
     $scope.declineQuote = function(value) {
-        contractorRequestService.declineQuote({id: contractorRequest._id, belongTo: value}).$promise.then(function(data){
-            $scope.contractorRequest = data;
+        builderPackageService.declineQuote({id: builderRequest._id, belongTo: value}).$promise.then(function(data){
+            $scope.builderRequest = data;
             $scope.backToList();
         });
     };
@@ -91,7 +91,7 @@ angular.module('buiiltApp')
     };
 
     //invite new builder team to submit quote
-    $scope.sendInvitationInContractor = function() {
+    $scope.inviteBuilder = function() {
         builderPackageService.inviteBuilder({id: $scope.builderRequest._id, toBuilder: $scope.emailsPhone})
         .$promise.then(function(data){
             $scope.builderRequest = data;
@@ -125,7 +125,5 @@ angular.module('buiiltApp')
                 });
             });
         }
-    };
-
-    
+    };  
 });
