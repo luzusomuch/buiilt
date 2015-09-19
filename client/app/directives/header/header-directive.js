@@ -3,7 +3,7 @@ angular.module('buiiltApp')
   return {
     restrict: 'E',
     templateUrl: 'app/directives/header/header.html',
-    controller: function($scope,$state, $stateParams, $rootScope,materialPackageService, authService, projectService, contractorService,teamService,filterFilter) {
+    controller: function($scope,$state, $stateParams, $rootScope,materialPackageService, authService, projectService, contractorService,teamService,filterFilter, builderPackageService) {
       $scope.projects = [];
       $scope.submitted = false;
 	  
@@ -40,6 +40,8 @@ angular.module('buiiltApp')
       //get header height
       $rootScope.headerHeight = $('nav').outerHeight() + 48;
 
+      console.log($rootScope.currentProject);
+
       $scope.menuTypes = {
         homeOwner: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
           {sref: 'client.list({id :  currentProject._id})', label: 'builder'},
@@ -59,7 +61,7 @@ angular.module('buiiltApp')
         architect: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
           {sref: 'design.index({id :  currentProject._id})', label: 'design'},
           {sref: 'materials({id :  currentProject._id})', label: 'client'},
-          {sref: 'materials({id :  currentProject._id})', label: 'builder'},
+          {sref: 'builderRequest.viewRequest({id :  currentProject._id})', label: 'builder'},
           {sref: 'projects.view({id :  currentProject._id})', label: 'documentation'}],
         other : [{sref: 'team.manager', label: 'team manager'},
           {sref: 'user', label: 'User profile'}]

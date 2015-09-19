@@ -19,6 +19,13 @@ angular.module('buiiltApp')
             params: {
                 id: '@id'
             }
+        },
+        inviteBuilder: {
+            method: 'post',
+            params: {
+                id: '@id',
+                action: 'invite-builder'
+            }
         }
       }
     );

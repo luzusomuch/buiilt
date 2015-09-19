@@ -29,13 +29,13 @@ angular.module('buiiltApp')
     }
 
     _.each($scope.designs, function(item) {
-        fileService.getFileByPackage({id: item._id, type: 'staff'}).$promise.then(function(files){
+        fileService.getFileByPackage({id: item._id, type: 'design'}).$promise.then(function(files){
           item.files = files;
         });
-        taskService.getByPackage({id: item._id, type: 'staff'}).$promise.then(function(tasks){
+        taskService.getByPackage({id: item._id, type: 'design'}).$promise.then(function(tasks){
           item.tasks = tasks;
         });
-        messageService.getByPackage({id: item._id, type: 'staff'}).$promise.then(function(threads){
+        messageService.getByPackage({id: item._id, type: 'design'}).$promise.then(function(threads){
             item.threads = threads;
         })
     });

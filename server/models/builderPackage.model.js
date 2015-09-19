@@ -52,8 +52,33 @@ var BuilderPackageSchema = new Schema({
       enum : ['homeOwner','builder']
     }
   },
+  messages: [{
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: 'Team'
+    },
+    to: {
+      type: Schema.Types.ObjectId,
+      ref: 'Team'
+    },
+    sendBy: {
+      type: Schema.Types.ObjectId,
+      ref: 'Team'
+    },
+    message: {type: String}
+  }],
+  invitees: [{
+    email: String,
+    phoneNumber: Number,
+    _id: {type: Schema.Types.ObjectId, ref: 'Team'},
+    isDecline: {type: Boolean, default: false},
+    quoteDocument: [{type: Schema.Types.ObjectId, ref: 'File'}]
+  }],
   winner: {
     type: Schema.Types.ObjectId, ref: 'Team'
+  },
+  hasWinner: {
+    type: Boolean, default: false
   },
   architect: {
     team:{type: Schema.Types.ObjectId, ref: 'Team'},

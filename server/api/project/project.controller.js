@@ -75,13 +75,15 @@ exports.create = function(req, res){
             team.save();
           });
         }
+        var descriptions = [];
+        descriptions.push(project.description);
         var builderPackage = new BuilderPackage({
           type: 'BuilderPackage',
           location : req.body.package.location,
           owner : user.team._id,
           project : project._id,
           name : project.name,
-          description : project.description
+          descriptions : descriptions
         });
         if (to.type == '') {
           to = {};

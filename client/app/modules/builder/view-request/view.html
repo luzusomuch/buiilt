@@ -1,0 +1,149 @@
+<div class="row" style="padding: 12px">
+    <div class="col s8">
+        <div class="collection with-header">
+            <div class="row collection-header" style="margin-bottom:0px">
+                <div class="row">
+                    <a class='dropdown-button btn-flat' href='#' data-activates='inTender' style="font-size: 12px;" dropdown>{{(defaultText) ? defaultText : "SCOPE"}}<i class="mdi-navigation-arrow-drop-down"></i></a>
+                    <ul id='inTender' class='dropdown-content'>
+                        <li><a ng-click="clickShowScopes()" href="#!">SCOPE</a></li>
+                        <li><a ng-click="clickShowTenders()" href="#!">TENDERERS</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div ng-if="showScope">
+                <div class="row collection-header" style="margin-bottom:0px;">
+                    <div class="col right" style="font-size:12px">
+                        <!-- <a ng-click="cancelPackage()" class="" style="padding: 5px;">CANCEL PACKAGE</a> -->
+                    </div>
+                </div>
+                <div style="height: {{contentHeight - 30}}px; overflow-y: auto; background-color: white; overflow-x: hidden">
+                    <div style="padding: 10px">
+                        <strong>Start date</strong>: {{builderRequest.dateStart | date: longDate}}
+                        <div class="row">
+                            <div class="col s12" ng-if="builderRequest.descriptions.length > 0">
+                                <p>{{builderRequest.descriptions[0]}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div ng-if="showTenders" id="tenderLists">
+                <div class="row collection-header" style="margin-bottom:0px;">
+                    <div class="col right" style="font-size:12px">
+                        <a class="modal-trigger" href="#modal_inviteBuilder" style="padding: 5px;">INVITE ANOTHER TENDERER</a>
+                    </div>
+                </div>
+                <div style="height: {{contentHeight -30}}px; overflow-y: auto; background-color: white; overflow-x: hidden">
+                    <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="tender in contractorRequest.to | filter: {isDecline:false}">
+                        <div class="col s9">
+                            <div><a ng-click="viewTenderDetail(tender)" href="#">{{tender.email}}</a></div>
+                        </div>
+                        <div style="color: #757575">
+                            <div class="col s1 valign-wrapper">
+                                <div style="font-size:15px;">{{tender.totalMessages}}</div>
+                                <i style="font-size: 15px; margin-left: 5px" class="material-icons valign">message</i>
+                            </div>
+                            <div class="col s1 valign-wrapper">
+                                <div style="font-size:15px;">{{tender.quoteDocument.length}} </div>
+                                <i style="font-size: 15px; margin-left: 5px" class="material-icons valign">insert_drive_file</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="showTenderDetail" style="display:none">
+                <div class="row collection-header" style="margin-bottom:0px;">
+                    <div class="col s12" style="font-size:12px">
+                        <a class="backToTendersList" href="#!" ng-click="backToList()" style="margin-left:30px; padding: 5px;">&lt; BACK TO TENDERS</a>
+                        <div class="right">
+                            <a ng-click="declineQuote(tender._id)" style="padding: 5px;">DECLINE TENDER</a>
+                            <a ng-click="selectWinnerByQuoteDocument(tender._id)" style="padding: 5px;">ACCEPT TENDER</a>
+                        </div>
+                    </div>
+                </div>
+                <div style="height: {{contentHeight -30}}px; overflow-y: auto; background-color: white; overflow-x: hidden">
+                    <div class="collection-item row" ng-repeat="quote in tender.quoteDocument">
+                        <div class="col s9" ng-if="$last">
+                            <a href="{{quote.fileUrl}}" download="{{quote.title}}">
+                                <span>
+                                    {{quote.title}} - <i class="material-icons">cloud_download</i>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col s4">
+        <div class="collection with-header">
+            <div style="height: {{contentHeight + 65}}px; overflow-y: auto; background-color:#fafafa; overflow-x: hidden" class="" scroll-to-bottom="contractorRequest.messages">
+                <div style="height: {{messageScreenHeight + 50}}px; overflow-y: auto">
+                    <div ng-class="{fromOther: !message.owner, fromMe: message.owner}" class="row" ng-if="viewMessages && message.to == tender._id" ng-repeat="message in contractorRequest.messages" style="font-size: 13px; margin: 12px; border-radius: 3px;">
+                        <div class="col s12">
+                            <p>{{message.message}} - <strong>From {{(currentTeam._id == message.sendBy._id) ? "Me" : message.sendBy.name}}</strong></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div ng-if="viewMessages" class="row collection-footer" style="margin-bottom: 0px; background-color: white; padding: 12px; padding-top: 0px; border-top: 1px solid #E0E0E0; position:absolute; bottom:0px; left: 1px; right: 1px;">
+                    <form ng-submit="sendMessage()">
+                        <div class="input-field col s12" style="margin-top: 0px; margin-bottom: 0px;">
+                            <textarea id="textarea1" class="materialize-textarea" ng-model="message.message" ng-keydown="enterMessage($event);"></textarea>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal_inviteBuilder" class="modal modal-fixed-bottom">
+    <form ng-submit="inviteBuilder()" name="form">
+        <div class="modal-content">
+            <div class="row">
+                <div class="col s12">
+                    <h5>Invite more builder to package {{builderRequest.name}}</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <ul class="collection z-depth-1">
+                        <li class="collection-item vlalign-wrapper">
+                            <div class="row form" style="margin-bottom: 0px">
+                                <div class="col s12"><p>Enter tradesmen's details below:</p></div>
+                                <div class="input-field col s7">
+                                    <input id="email_address" type="email" class="validate" ng-model="user.newEmail">
+                                    <label for="email_address">Email</label>
+                                </div>
+                                <div class="input-field col s3">
+                                    <input id="phone_number" type="number" name="phoneNumber" class="validate" ng-model="user.newPhoneNumber">
+                                    <label for="phone_number">Phone Number</label>
+                                    <p class="validate-message" ng-if="form.phoneNumber.$valid == false">Please input number</p>
+                                </div>
+                                <div class="valign col s2">
+                                    <a ng-if="form.phoneNumber.$valid == true" href="#" ng-click="addUser()" class="btn" style="margin-top: 28px">Add</a>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="collection-item vlalign" ng-repeat="emailPhone in emailsPhone">
+                            <div class="row" style="margin-bottom: 0px">
+                                <div class="col s7">{{emailPhone.email}}</div>
+                                <div class="col s3">{{emailPhone.phoneNumber}}</div>
+                                <div class="col s2" style="float:right"><a class="btn-flat btn-flat" ng-click="removeUser($index)" >Remove</a></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="divider"></div>
+        <div class="modal-footer">
+            <button type="submit" class="modal-action modal-close waves-effect waves-green btn-flat ">Send Invitations!</button>
+            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
+        </div>
+    </form>
+</div>
