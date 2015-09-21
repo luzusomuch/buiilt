@@ -274,6 +274,24 @@ exports.createUserWithInviteToken = function(req, res, next) {
                     });
                   }
                 });
+              } else if (packageInvite.inviteType == 'architect') {
+                BuilderPackage.findById(packageInvite.package, function(err, builderPackage){
+                  if (err) {return res.send(500,err);}
+                  builderPackage.architect.team = savedTeam._id;
+                  builderPackage.architect.email = null;
+                  builderPackage.save(function(err){
+                    if (err) {return res.send(500,err);}
+                    var data = {
+                      token: token,
+                      emailVerified: true,
+                      package: builderPackage
+                    };
+                    packageInvite.remove(function(err){
+                      if (err) {return res.send(500);}
+                      return res.json(200,data);
+                    });
+                  });
+                });
               }
             }
           });

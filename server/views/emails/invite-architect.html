@@ -1,0 +1,12 @@
+{% extends 'layouts/default.html' %}
+
+{% block content %}
+<p>
+  <%= user.firstName %> <%= user.lastName %> has invited you to join their project on buiilt.
+</p>
+
+<p>
+  Please click <a href="<%= link %>">here</a> to join them and view the project.
+</p>
+
+{% endblock %}
