@@ -1,6 +1,7 @@
 angular.module('buiiltApp')
-.controller('ViewContractorRequestCtrl', function(socket,$rootScope,$scope, $window, $state, $stateParams,fileService,currentTeam, $cookieStore, authService, userService, contractorRequest, contractorRequestService, quoteService) {
+.controller('ViewContractorRequestCtrl', function(socket,$rootScope,$scope, $window, $state, $stateParams,fileService,currentTeam, $cookieStore, authService, userService, contractorRequest, contractorRequestService, quoteService, builderPackage) {
   $scope.currentTeam = currentTeam;
+  $scope.builderPackage = builderPackage;
   if ($scope.currentTeam.type != 'builder' && contractorRequest.owner._id != currentTeam._id) {
     $state.go('team.manager');
   }

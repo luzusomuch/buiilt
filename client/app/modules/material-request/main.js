@@ -5,7 +5,12 @@ angular.module('buiiltApp').config(function($stateProvider) {
     hasCurrentProject : true,
     authenticate : true,
     template: '<ui-view/>',
-    authenticate : true
+    authenticate : true,
+    resolve: {
+      builderPackage: function(builderPackageService, $stateParams) {
+        return builderPackageService.findDefaultByProject({id: $stateParams.id}).$promise;
+      }
+    }
   })
   .state('materialRequest.sendQuote', {
     url: '/:packageId',

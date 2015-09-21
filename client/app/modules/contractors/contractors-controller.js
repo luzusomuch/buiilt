@@ -1,5 +1,5 @@
 angular.module('buiiltApp').controller('ContractorsCtrl',
-  function(messageService,taskService,fileService,teamService,$scope, $state,socket, team, $stateParams, $rootScope, $timeout, $q, contractorService, authService, projectService, teamService,contractorPackages) {
+  function(messageService,taskService,fileService,teamService,$scope, $state,socket, team, $stateParams, $rootScope, $timeout, $q, contractorService, authService, projectService, teamService,contractorPackages, builderPackage) {
     
     $scope.contentHeight = $rootScope.maximunHeight - $rootScope.headerHeight - $rootScope.footerHeight - 130;
 
@@ -7,6 +7,7 @@ angular.module('buiiltApp').controller('ContractorsCtrl',
       descriptions : [],
       isSkipInTender: false
     };
+    $scope.builderPackage = builderPackage;
     $scope.contractorPackages = contractorPackages;
     $scope.currentProject = $rootScope.currentProject;
     $scope.currentTeam = team;

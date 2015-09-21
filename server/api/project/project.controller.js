@@ -47,7 +47,9 @@ exports.create = function(req, res){
         res.send(422,err);
       }
       var to = {};
+      var currentTeam = {};
       Team.findById(user.team._id,function(err,team) {
+        currentTeam = team;
         team.project.push(project._id);
         team.markModified('project');
         team._user = user;
@@ -90,7 +92,11 @@ exports.create = function(req, res){
         } else {
           builderPackage.to = to;
         }
-        var architect = {};
+        if (currentTeam.type == 'architect') {
+          var architect = {team: currentTeam._id};
+        } else {
+          var architect = {};
+        }
         if (req.body.architectEmail != '' && req.body.architectEmail) {
           User.findOne({'email': req.body.architectEmail}, function(err,_architect){
             if (err) {return res.send(500,err);}

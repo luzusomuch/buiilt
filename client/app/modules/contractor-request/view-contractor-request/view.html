@@ -90,7 +90,7 @@
         <div class="row collection-header" style="margin-bottom:0px;">
           <div class="col s12" style="font-size:12px">
             <a class="backToTendersList" href="#!" ng-click="backToList()" style="margin-left:30px; padding: 5px;">&lt; BACK TO TENDERS</a>
-            <div class="right">
+            <div class="right" ng-if="builderPackage.hasWinner">
               <a ng-click="declineQuote(tender._id)" style="padding: 5px;">DECLINE TENDER</a>
               <!-- <a ng-click="selectQuote(tender.quote._id)" style="padding: 5px;">ACCEPT TENDER</a> -->
               <a ng-click="selectWinnerByQuoteDocument(tender._id)" style="padding: 5px;">ACCEPT TENDER</a>

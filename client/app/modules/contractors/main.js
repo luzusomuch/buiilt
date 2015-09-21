@@ -13,6 +13,9 @@ angular.module('buiiltApp').config(function($stateProvider) {
       },
       contractorPackages : function(contractorService,$stateParams) {
         return contractorService.get({id : $stateParams.id}).$promise;
+      },
+      builderPackage: function(builderPackageService, $stateParams) {
+        return builderPackageService.findDefaultByProject({id: $stateParams.id}).$promise;
       }
     }
   })

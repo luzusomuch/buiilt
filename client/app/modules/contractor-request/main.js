@@ -4,7 +4,12 @@ angular.module('buiiltApp').config(function($stateProvider) {
     url: '/:id/contractor-requests',
     hasCurrentProject : true,
     authenticate : true,
-    template: '<ui-view/>'
+    template: '<ui-view/>',
+    resolve: {
+      builderPackage: function($stateParams, builderPackageService) {
+        return builderPackageService.findDefaultByProject({id: $stateParams.id});
+      }
+    }
   })
   .state('contractorRequest.sendQuote', {
     url: '/:packageId',

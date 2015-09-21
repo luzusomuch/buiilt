@@ -1,5 +1,5 @@
 angular.module('buiiltApp').controller('MaterialsCtrl',
-  function (messageService,$state,taskService,fileService,$scope,socket, $stateParams, $rootScope, $timeout, $q, authService, teamService, materialPackageService, materialPackages, team) {
+  function (messageService,$state,taskService,fileService,$scope,socket, $stateParams, $rootScope, $timeout, $q, authService, teamService, materialPackageService, materialPackages, team, builderPackage) {
     
     $scope.contentHeight = $rootScope.maximunHeight - $rootScope.headerHeight - $rootScope.footerHeight - 130;
     
@@ -7,6 +7,7 @@ angular.module('buiiltApp').controller('MaterialsCtrl',
       descriptions: [],
       isSkipInTender: false
     };
+    $scope.builderPackage = builderPackage;
     $scope.materialPackages = materialPackages;
     $scope.currentProject = $rootScope.currentProject;
     $scope.currentTeam = team;

@@ -136,7 +136,7 @@
           <label for="project_name">Contractor Package Title</label>
           <p class="validate-message" ng-if="contractorForm.name.$error.required && contractorSubmitted">Package name is required</p>
         </div>
-        <div class="input-field col s3">
+        <div class="input-field col s3" ng-if="builderPackage.hasWinner">
           <p>
             <input class="valign" type="checkbox" ng-model="contractor.isSkipInTender" id="supplierSkipInTender"/>
             <label id="subcontractorSkipTender" for="supplierSkipInTender">Skip Tender Stage</label>

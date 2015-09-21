@@ -131,7 +131,7 @@
 
           <p class="validate-message" ng-if="materialForm.name.$error.required && materialSubmitted">Please provide a name for the material package.</p>
         </div>
-        <div class="input-field col s3">
+        <div class="input-field col s3" ng-if="builderPackage.hasWinner">
           <p>
             <input class="valign" type="checkbox" ng-model="material.isSkipInTender" id="skipInTender"/>
             <label for="skipInTender" id="supplierSkipInTender">Skip Tender Stage</label>

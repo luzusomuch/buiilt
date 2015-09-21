@@ -13,6 +13,9 @@ angular.module('buiiltApp').config(function($stateProvider) {
         },
         materialPackages : function(materialPackageService,$stateParams) {
           return materialPackageService.get({id : $stateParams.id}).$promise;
+        },
+        builderPackage: function(builderPackageService, $stateParams) {
+          return builderPackageService.findDefaultByProject({id: $stateParams.id}).$promise;
         }
       }
     });

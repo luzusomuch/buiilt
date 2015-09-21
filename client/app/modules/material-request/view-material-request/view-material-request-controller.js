@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-.controller('ViewMaterialRequestCtrl', function(socket,$scope,$rootScope,$window, $state, $stateParams,currentTeam,fileService, $cookieStore, authService, userService, materialRequest, materialRequestService, quoteService) {
+.controller('ViewMaterialRequestCtrl', function(socket,$scope,$rootScope,$window, $state, $stateParams,currentTeam,fileService, $cookieStore, authService, userService, materialRequest, materialRequestService, quoteService, builderPacakge) {
   /**
    * quote data
    */
@@ -45,6 +45,7 @@ angular.module('buiiltApp')
   $scope.currentTeam = currentTeam;
 
   $scope.emailsPhone = [];
+  $scope.builderPacakge = builderPacakge;
   $scope.materialRequest = materialRequest;
   socket.emit('join',$scope.materialRequest._id);
   _.each($scope.materialRequest.to, function(item) {
