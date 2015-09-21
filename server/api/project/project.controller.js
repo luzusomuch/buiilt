@@ -91,11 +91,19 @@ exports.create = function(req, res){
           to = {};
         } else {
           builderPackage.to = to;
+          if (to.type == 'builder') {
+            builderPackage.hasWinner = true;
+            builderPackage.winner = to.team;
+          }
         }
         if (currentTeam.type == 'architect') {
           var architect = {team: currentTeam._id};
         } else {
           var architect = {};
+        }
+        if (currentTeam.type == 'builder') {
+          builderPackage.hasWinner = true;
+          builderPackage.winner = currentTeam._id;
         }
         if (req.body.architectEmail != '' && req.body.architectEmail) {
           User.findOne({'email': req.body.architectEmail}, function(err,_architect){
