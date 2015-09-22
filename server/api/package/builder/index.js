@@ -13,4 +13,6 @@ router.put('/:id', auth.isAuthenticated(), controller.updatePackage);
 router.put('/:id/decline-quote', auth.isAuthenticated(), controller.declineQuote);
 router.put('/:id/select-winner', auth.isAuthenticated(), controller.selectWinner);
 router.post('/:id/invite-builder', auth.isAuthenticated(), controller.inviteBuilder);
+router.post('/:id/send-message', auth.isAuthenticated(), controller.sendMessage);
+router.post('/:id/send-message-to-architect', auth.isAuthenticated(), controller.sendMessageToArchitect);
 module.exports = router;

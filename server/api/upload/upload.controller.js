@@ -483,6 +483,15 @@ exports.uploadInPackge = function(req, res){
                                 BuilderPackage.findById(saved.belongTo)
                                 .populate('owner').populate('to.team').exec(function(err, builderPackage){
                                     if (err || !builderPackage) {return cb();}
+                                    if (builderPackage.invitees.length > 0) {
+                                        _.each(builderPackage.invitees, function(invitee){
+                                            if (invitee._id && invitee._id.toString() == req.user.team._id.toString()) {
+                                                invitee.quoteDocument.push(saved._id);
+                                                builderPackage.markModified('invitee.quoteDocument');
+                                            }
+                                        });
+                                    }
+
                                     owners = builderPackage.owner.leader;
                                     _.each(builderPackage.owner.member, function(member){
                                         if (member._id) {
@@ -498,6 +507,7 @@ exports.uploadInPackge = function(req, res){
                                         });
                                     }
                                     _.remove(owners, req.user._id);
+                                    builderPackage.save();
                                     async.each(owners, function(leader,callback){
                                         var notification = new Notification({
                                             owner: leader,

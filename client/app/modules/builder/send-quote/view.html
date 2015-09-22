@@ -1,1 +1,90 @@
-view.html
+<div class="row" style="padding: 12px">
+    <div class="col s8">
+        <div class="collection with-header">
+            <div class="row collection-header" style="margin-bottom:0px">
+                <div class="col">
+                    <a class='dropdown-button btn-flat' href='#' data-activates='inTender' style="font-size: 12px;" dropdown>{{(defaultText) ? defaultText : "SCOPE"}}<i class="mdi-navigation-arrow-drop-down"></i></a>
+                    <ul id='inTender' class='dropdown-content'>
+                        <li><a ng-click="clickShowScopes()" href="#!">SCOPE</a></li>
+                        <li><a ng-click="clickShowQuotes()" href="#!">QUOTES</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div ng-if="showScope">
+                <div style="height: {{contentHeight + 8}}px; overflow-y: auto; background-color: white;">
+                    <div class="col s12">
+                        <strong>Start date</strong>: {{builderRequest.dateStart | date: longDate}}
+                        <div class="row">
+                            <div class="col s12" ng-if="builderRequest.descriptions.length > 0">
+                                <p>{{builderRequest.descriptions[0]}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quotesList" ng-if="showQuotes">
+                <div class="row collection-header" style="margin-bottom:0px;">
+                    <div class="col right" style="font-size:12px">
+                        <a class="modal-trigger" href="#modal_attachDocument" style="padding: 5px;">ATTACT QUOTE</a>
+                    </div>
+                </div>
+                <div ng-if="currentTeam._id == tender._id" ng-repeat="tender in builderRequest.invitees" style="height: {{contentHeight - 30}}px; overflow-y: auto; background-color: white;">
+                    <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="quote in tender.quoteDocument">
+                        <div class="col s9">
+                            <div><a ng-click="viewQuoteDetail(quote)" href="#">{{quote.title}}</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="showQuoteDetail" style="display:none">
+                <div class="row collection-header" style="margin-bottom:0px;">
+                    <div class="col s12" style="font-size:12px">
+                        <a href="#!" ng-click="backToList()" style="margin-left:30px; padding: 5px;">&lt; BACK TO TENDERS</a>
+                        <div class="right">
+                            <a href="#modal_attachDocument" style="padding: 5px;">ATTACH QUOTE</a>
+                        </div>
+                    </div>
+                </div>
+                <div style="height: {{contentHeight -30}}px; overflow-y: auto; background-color: white;">
+                    <div class="col s9">
+                        <div>
+                            <a href="{{quote.fileUrl}}" download="{{quote.name}}">
+                                <span>{{quote.title}} - <i class="material-icons">cloud_download</i></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col s4">
+        <div class="collection with-header">
+            <div style="height: {{contentHeight + 65}}px; overflow-y: auto; background-color:#fafafa;" class="">
+                <div style="height: {{contentHeight - 85}}px; overflow-y: auto">
+                    <div ng-class="{fromOther: !message.owner, fromMe: message.owner}" ng-if="message.to == currentTeam._id" ng-repeat="message in builderRequest.messages" class="row" style="font-size: 13px; margin: 12px; border-radius: 3px;">
+                        <div class="col s12">
+                            <p>{{message.message}} - <strong>From {{(currentTeam._id == message.sendBy._id) ? "Me" : message.sendBy.name}}</strong></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row collection-footer" style="margin-bottom: 0px; background-color: white; padding: 12px; padding-top: 0px; border-top: 1px solid #E0E0E0;position:absolute; bottom:0px; left: 1px; right: 1px;">
+                    <form ng-submit="sendMessage()">
+                        <div class="input-field col s12" style="margin-top: 0px; margin-bottom: 0px;">
+                            <textarea id="textarea1" class="materialize-textarea" ng-model="message" ng-keydown="enterMessage($event);"></textarea>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal_attachDocument" class="modal">
+    <div class="modal-content">
+        <upload package="builderRequest" type="package" is-quote="true"></upload>
+    </div>
+</div>

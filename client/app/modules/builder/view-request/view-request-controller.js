@@ -99,6 +99,20 @@ angular.module('buiiltApp')
     };
 
     //messages section
+    socket.on('messageInBuilderPackageTender:new', function (package) {
+        $scope.builderRequest = package;
+        _.each($scope.builderRequest.invitees, function(item) {
+            _.each($scope.builderRequest.messages, function(message){
+                if (message.sendBy._id != $scope.currentTeam._id) {
+                    message.owner = false;
+                }
+                else {
+                    message.owner = true;
+                }
+          });
+        });
+    });
+
     $scope.enterMessage = function ($event) {
         if ($event.keyCode === 13) {
             $event.preventDefault();
@@ -110,12 +124,12 @@ angular.module('buiiltApp')
         if ($scope.tender._id == 'undefined' || !$scope.tender._id) {
         }
         else if ($scope.tender._id != 'undefined' || $scope.tender._id){
-            contractorRequestService.sendMessage({id: $stateParams.packageId, to: $scope.tender._id, team: $scope.currentTeam._id, message: $scope.message.message})
+            builderPackageService.sendMessage({id: builderRequest._id, to: $scope.tender._id, owner: $scope.currentTeam._id, message: $scope.message.message})
             .$promise.then(function(data) {
-                $scope.contractorRequest = data;
+                $scope.builderRequest = data;
                 $scope.message.message = null;
-                _.each($scope.contractorRequest.to, function(item) {
-                    _.each($scope.contractorRequest.messages, function(message){
+                _.each($scope.builderRequest.invitees, function(item) {
+                    _.each($scope.builderRequest.messages, function(message){
                         if (message.sendBy._id != $scope.currentTeam._id) {
                             message.owner = false;
                         } else {

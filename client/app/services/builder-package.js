@@ -40,6 +40,20 @@ angular.module('buiiltApp')
                 id: '@id',
                 action: 'select-winner'
             }
+        },
+        sendMessage: {
+            method: 'post',
+            params: {
+                id: '@id',
+                action: 'send-message'
+            }
+        },
+        sendMessageToArchitect: {
+            method: 'post',
+            params: {
+                id: '@id',
+                action: 'send-message-to-architect'
+            }
         }
       }
     );

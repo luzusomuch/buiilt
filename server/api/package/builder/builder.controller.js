@@ -8,6 +8,7 @@ var errorsHelper = require('./../../../components/helpers/errors');
 var ProjectValidator = require('./../../../validators/project');
 var _ = require('lodash');
 var async = require('async');
+var EventBus = require('./../../../components/EventBus');
 
 exports.project = function(req, res, next) {
   Project.findById(req.params.id,function(err,project) {
@@ -23,6 +24,7 @@ exports.project = function(req, res, next) {
 };
 
 exports.getDefaultPackageByProject = function(req, res) {
+  var user = req.user;
   var project = req.project;
   BuilderPackage.findOne({
     project: project._id,
@@ -32,18 +34,35 @@ exports.getDefaultPackageByProject = function(req, res) {
   .populate('owner')
   .populate('to.team')
   .populate('variations')
+  .populate('messages.sendBy')
+  .populate('winner')
+  .populate('architect.team')
+  .populate('invitees.quoteDocument', '_id mimeType title')
   .exec(function(err, builderPackage) {
     if (err){console.log(err); return res.send(500, err); }
     User.populate(builderPackage,[
       {path : 'owner.member._id'},
       {path : 'owner.leader'},
       {path : 'to.team.member._id'},
-      {path : 'to.team.leader'}
+      {path : 'to.team.leader'},
+      {path : 'architect.team.leader'},
+      {path : 'architect.team.member._id'}
     ],function(err,builderPackage) {
       if (err){ console.log(err);return res.send(500, err); }
-      return res.json(builderPackage);
-    })
-
+      if (builderPackage.architect.team._id.toString() == user.team._id.toString()) {
+        return res.json(builderPackage);
+      } else {
+        var messagesFiltered = [];
+        _.each(builderPackage.messages, function(message){
+          if (message.to.toString() == user.team._id.toString()) {
+            messagesFiltered.push(message);
+          }
+        });
+        builderPackage.messages = [];
+        builderPackage.messages = messagesFiltered;
+        return res.json(builderPackage);
+      }
+    });
   });
 };
 
@@ -83,7 +102,6 @@ exports.destroy = function (req, res) {
     if (err) {
       return res.send(500, err);
     }
-    console.log(builderPackage);
     BuilderPackage.find({}, function(err,builderPackages){
       if (err) {return res.send(500,err);}
       return res.send(200, builderPackages);
@@ -229,5 +247,77 @@ exports.selectWinner = function(req, res) {
         }); 
       }
     });
+  });
+};
+
+exports.sendMessage = function(req, res) {
+  BuilderPackage.findById(req.params.id, function(err, builderPackage) {
+    if (err) {return res.send(500,err)}
+    if (!builderPackage) {return res.send(404)}
+    else {
+      builderPackage.messages.push({
+        owner: req.body.owner,
+        to: req.body.to,
+        sendBy: req.user.team._id,
+        message: req.body.message
+      });
+      builderPackage.markModified('sendMessage');
+      builderPackage._editUser = req.body.to;
+      builderPackage._ownerUser = req.user;
+      builderPackage.save(function(err, saved) {
+        if (err) {return res.send(500, err)}
+        else {
+          BuilderPackage.populate(saved,[{path:'messages.sendBy'},{path: 'invitees.quoteDocument'}] , function(err,builderPackage){
+            if (err) {return res.send(500,err);}
+            EventBus.emit('socket:emit', {
+              event: 'messageInBuilderPackageTender:new',
+              room: builderPackage._id.toString(),
+              data: builderPackage
+            });
+            return res.json(200,builderPackage);
+          });
+        }
+      });
+    }
+  });
+};
+
+exports.sendMessageToArchitect = function(req, res) {
+  var user = req.user;
+  BuilderPackage.findById(req.params.id, function(err, builderPackage) {
+    if (err) {return res.send(500,err)}
+    if (!builderPackage) {return res.send(404,err)}
+    else {
+      builderPackage.messages.push({
+        owner: builderPackage.architect.team,
+        to: req.body.to,
+        sendBy: req.user.team._id,
+        message: req.body.message
+      });
+      builderPackage.markModified('sendMessageToArchitect');
+      builderPackage._editUser = req.user;
+      builderPackage.save(function(err, saved) {
+        if (err) {return res.send(500, err)}
+        else {
+          BuilderPackage.populate(saved,[{path:'messages.sendBy'},{path: 'invitees.quoteDocument'}] , function(err,builderPackage){
+            if (err) {return res.send(500,err);}
+            EventBus.emit('socket:emit', {
+              event: 'messageInBuilderPackageTender:new',
+              room: builderPackage._id.toString(),
+              data: builderPackage
+            });
+            var messagesFiltered = [];
+            _.each(builderPackage.messages, function(message){
+              if (message.to.toString() == user.team._id.toString()) {
+                messagesFiltered.push(message);
+              }
+            });
+            builderPackage.messages = [];
+            builderPackage.messages = messagesFiltered;
+            return res.json(200,builderPackage);
+          });
+        }
+      });
+    }
   });
 };

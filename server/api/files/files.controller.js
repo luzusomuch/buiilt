@@ -155,11 +155,9 @@ exports.deleteFile = function(req, res) {
 };
 
 exports.sendToDocument = function(req, res) {
-    console.log(req.body);
     File.findById(req.params.id, function(err, file){
         if (err) {return res.send(500,err);}
         if (!file) {return res.send(404);}
-        console.log(file);
         File.findOne({belongTo: req.body.projectId, isSendToDocumentation: true, wasBelongTo: req.body.package}, function(err, _file){
             if (err) {return res.send(500,err);}
             if (!_file) {

@@ -73,6 +73,7 @@ angular.module('buiiltApp')
     };
     $scope.submitted = false;
     var getAvailableAssign =  function() {
+        console.log(builderPackage);
         // if ($scope.currentTeam) {
         //     _.forEach($scope.currentTeam.member, function(member) {
         //         if (member.status == 'Active') {
@@ -82,24 +83,50 @@ angular.module('buiiltApp')
         // }
         // console.log(builderPackage);
         $scope.available = builderPackage.owner.leader;
-        if (builderPackage.owner.member.length > 1) {
+        var availableEachTeam = [];
+        if (builderPackage.owner.member.length > 0) {
             _.each(builderPackage.owner.member, function(member){
                 if (member.status == 'Active') {
                     $scope.available.push(member._id);
                 }
             });
         }
-        _.each(builderPackage.to.team.leader, function(leader){
-            $scope.available.push(leader);
-        });
-        if (builderPackage.to.team.member.length > 1) {
-            _.each(builderPackage.to.team.member, function(member){
-                if (member._id || member.status == 'Active') {
-                    $scope.available.push(member._id);
-                }
+        if (builderPackage.to) {
+            _.each(builderPackage.to.team.leader, function(leader){
+                availableEachTeam.push(leader);
             });
+            if (builderPackage.to.team.member.length > 0) {
+                _.each(builderPackage.to.team.member, function(member){
+                    if (member._id || member.status == 'Active') {
+                        availableEachTeam.push(member._id);
+                    }
+                });
+            }
+            $scope.available = _.union($scope.available, availableEachTeam);
         }
-        //currently we got no winner team.
+        if (builderPackage.winner) {
+            _.each(builderPackage.winner.leader, function(leader) {
+                availableEachTeam.push(leader);
+            });
+            if (builderPackage.winner.member.length > 0) {
+                _.each(builderPackage.winner.member, function(member) {
+                    availableEachTeam.push(member)
+                });
+            }
+            $scope.available = _.union($scope.available, availableEachTeam);
+        }
+        if (builderPackage.architect.team._id) {
+            _.each(builderPackage.architect.team.leader, function(leader) {
+                availableEachTeam.push(leader);
+            });
+            if (builderPackage.architect.team.member.length > 0) {
+                _.each(builderPackage.architect.team.member, function(member) {
+                    availableEachTeam.push(member)
+                });
+            }
+            $scope.available = _.union($scope.available, availableEachTeam);
+        }
+        console.log($scope.available);
     };
 
     getAvailableAssign();

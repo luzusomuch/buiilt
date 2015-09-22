@@ -53,18 +53,19 @@ angular.module('buiiltApp')
     $scope.currentUser = user;
     _.each($scope.contractorRequest.to, function(item) {
     item.totalMessages = 0;
-    _.each($scope.contractorRequest.messages, function(message){
-      if (message.sendBy._id != $scope.currentTeam._id) {
-        message.owner = false;
-      }
-      else {
-        message.owner = true;
-      }
-      if (message.sendBy._id == item._id) {
-        item.totalMessages ++;
-      }
+      _.each($scope.contractorRequest.messages, function(message){
+        if (message.sendBy._id != $scope.currentTeam._id) {
+          message.owner = false;
+        }
+        else {
+          message.owner = true;
+        }
+        if (message.sendBy._id == item._id) {
+          item.totalMessages ++;
+        }
+      });
     });
-  });
+    console.log($scope.contractorRequest);
   })
   
   
