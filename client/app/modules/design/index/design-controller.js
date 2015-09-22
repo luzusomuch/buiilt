@@ -73,7 +73,6 @@ angular.module('buiiltApp')
     };
     $scope.submitted = false;
     var getAvailableAssign =  function() {
-        console.log(builderPackage);
         // if ($scope.currentTeam) {
         //     _.forEach($scope.currentTeam.member, function(member) {
         //         if (member.status == 'Active') {
