@@ -68,19 +68,52 @@ angular.module('buiiltApp')
           var getAvailableUser = function(type) {
             switch(type) {
               case 'builder' :
+                // $scope.available = [];
+                // $scope.available = _.union($scope.available,$scope.currentTeam.leader);
+                // if ($scope.currentTeam._id == $scope.package.owner._id && $scope.isLeader) {
+                //   if ($scope.package.to.team) {
+                //     _.forEach($scope.package.to.team.leader, function (leader) {
+                //       $scope.available.push(leader);
+                //     })
+                //   }
+                // }
+                // if ($scope.package.to.team && $scope.currentTeam._id == $scope.package.to.team._id && $scope.isLeader) {
+                //   _.forEach($scope.package.owner.leader, function (leader) {
+                //     $scope.available.push(leader);
+                //   })
+                // }
+                // _.forEach($scope.currentTeam.member,function(member) {
+                //   if (member.status == 'Active') {
+                //     $scope.available.push(member._id);
+                //   }
+                // });
+                // _.remove($scope.available,{_id : $scope.currentUser._id});
                 $scope.available = [];
+                var tempAvailable = [];
                 $scope.available = _.union($scope.available,$scope.currentTeam.leader);
-                if ($scope.currentTeam._id == $scope.package.owner._id && $scope.isLeader) {
-                  if ($scope.package.to.team) {
-                    _.forEach($scope.package.to.team.leader, function (leader) {
-                      $scope.available.push(leader);
-                    })
-                  }
+                if ($scope.currentTeam._id != $scope.package.owner._id && $scope.isLeader) {
+                  _.each($scope.package.owner.leader, function(leader){
+                    tempAvailable.push(leader);
+                  });
+                  $scope.available = _.union($scope.available, tempAvailable);
                 }
-                if ($scope.package.to.team && $scope.currentTeam._id == $scope.package.to.team._id && $scope.isLeader) {
-                  _.forEach($scope.package.owner.leader, function (leader) {
-                    $scope.available.push(leader);
-                  })
+                if ($scope.package.to && $scope.package.to.team._id != $scope.currentTeam._id && $scope.isLeader) {
+                  _.forEach($scope.package.to.team.leader, function (leader) {
+                    tempAvailable.push(leader);
+                  });
+                  $scope.available = _.union($scope.available, tempAvailable);
+                }
+                if ($scope.package.architect && $scope.package.architect.team._id != $scope.currentTeam._id && $scope.isLeader) {
+                  _.each($scope.package.architect.team.leader, function(leader){
+                    tempAvailable.push(leader);
+                  });
+                  $scope.available = _.union($scope.available, tempAvailable);
+                }
+                if ($scope.package.winner && $scope.package.winner._id != $scope.currentTeam._id && $scope.package.winner._id != $scope.package.owner._id) {
+                  _.each($scope.package.winner.leader, function(leader){
+                    tempAvailable.push(leader);
+                  });
+                  $scope.available = _.union($scope.available, tempAvailable);
                 }
                 _.forEach($scope.currentTeam.member,function(member) {
                   if (member.status == 'Active') {
