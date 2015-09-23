@@ -232,7 +232,7 @@ exports.selectWinner = function(req, res) {
     if (!builderPackage) {return res.send(404);}
     builderPackage.winner = req.body.selector;
     builderPackage.hasWinner = true;
-    _.remove(builderPackage.to,{_id: req.body.selector});
+    _.remove(builderPackage.invitees,{_id: builderPackage.winner});
     _.each(builderPackage.invitees, function(invitee){
       if (invitee._id) {
         Team.findById(invitee._id, function(err,team){

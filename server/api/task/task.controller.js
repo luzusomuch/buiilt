@@ -1,6 +1,7 @@
 'use strict';
 
 var User = require('./../../models/user.model');
+var Team = require('./../../models/team.model');
 var Task = require('./../../models/task.model');
 var StaffPackage = require('./../../models/staffPackage.model'),
     BuilderPackage = require('./../../models/builderPackage.model'),
@@ -14,6 +15,7 @@ var TaskValidator = require('./../../validators/task');
 var errorsHelper = require('../../components/helpers/errors');
 var _ = require('lodash');
 var async = require('async');
+var mongoose = require('mongoose');
 
 var getPackage = function(type) {
   var _package = {};
@@ -165,7 +167,18 @@ exports.create = function(req,res) {
       return errorsHelper.validationErrors(res,err)
     }
     var task = new Task(data);
+    var architectTeamLeader = [];
     if (aPackage.type == 'BuilderPackage') {
+      if (aPackage.hasArchitectManager) {
+        Team.findById(mongoose.Types.ObjectId(aPackage.architect.team), function(err, team){
+          if (err) {return res.send(500,err);}
+          _.each(team.leader, function(leader){
+            architectTeamLeader.push(leader);
+          });
+        });
+      } else {
+        architectTeamLeader = [];
+      }
     }
     task.description = req.body.description;
     task.package = aPackage;
@@ -173,6 +186,7 @@ exports.create = function(req,res) {
     task.user = user;
     task.type = req.params.type;
     task.dateStart = new Date();
+    task.assignees = _.union(task.assignees, architectTeamLeader);
     task.save(function(err) {
       if (err) {
         return res.send(500,err)

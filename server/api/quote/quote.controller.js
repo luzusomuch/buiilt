@@ -282,7 +282,7 @@ exports.selectContractorQuoteByDocument = function(req, res){
     if (!contractorPackage) {return res.send(404);}
     contractorPackage.winnerTeam._id = req.body.selector;
     contractorPackage.isAccept = true;
-    _.remove(contractorPackage.to,{_id: req.body.selector});
+    _.remove(contractorPackage.to,{_id: contractorPackage.winnerTeam._id});
     _.each(contractorPackage.to, function(toContractor){
       if (toContractor._id) {
         Team.findById(toContractor._id, function(err,team){
@@ -320,7 +320,7 @@ exports.selectMaterialQuoteByDocument = function(req, res){
     if (!materialPackage) {return res.send(404);}
     materialPackage.winnerTeam._id = req.body.selector;
     materialPackage.isSelect = true;
-    _.remove(materialPackage.to,{_id: req.body.selector});
+    _.remove(materialPackage.to,{_id: materialPackage.winnerTeam._id});
     _.each(materialPackage.to, function(toContractor){
       if (toContractor._id) {
         Team.findById(toContractor._id, function(err,team){
