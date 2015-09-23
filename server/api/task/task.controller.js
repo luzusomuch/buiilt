@@ -165,6 +165,8 @@ exports.create = function(req,res) {
       return errorsHelper.validationErrors(res,err)
     }
     var task = new Task(data);
+    if (aPackage.type == 'BuilderPackage') {
+    }
     task.description = req.body.description;
     task.package = aPackage;
     task.project = aPackage.project;

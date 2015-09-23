@@ -89,6 +89,7 @@ var BuilderPackageSchema = new Schema({
     team:{type: Schema.Types.ObjectId, ref: 'Team'},
     email: String
   },
+  hasArchitectManager: {type: Boolean, default: false},
   variations : [{type: Schema.Types.ObjectId, ref: 'Variation'}],
   defects : [{
     owner: {

@@ -97,6 +97,7 @@ exports.create = function(req, res){
           }
         }
         if (currentTeam.type == 'architect') {
+          builderPackage.hasArchitectManager = true;
           var architect = {team: currentTeam._id};
         } else {
           var architect = {};
@@ -119,6 +120,7 @@ exports.create = function(req, res){
                 team.save();
               });
             }
+            builderPackage.hasArchitectManager = true;
             builderPackage.architect = architect;
             builderPackage._editUser = req.user;
             builderPackage.save(function(err) {

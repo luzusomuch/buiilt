@@ -51,8 +51,20 @@ exports.getDefaultPackageByProject = function(req, res) {
       {path : 'winner.member._id'}
     ],function(err,builderPackage) {
       if (err){ console.log(err);return res.send(500, err); }
-      if (builderPackage.architect.team._id.toString() == user.team._id.toString()) {
-        return res.json(builderPackage);
+      if (builderPackage.hasArchitectManager) {
+        if (builderPackage.architect.team._id.toString() == user.team._id.toString()) {
+          return res.json(builderPackage);
+        } else {
+          var messagesFiltered = [];
+          _.each(builderPackage.messages, function(message){
+            if (message.to.toString() == user.team._id.toString()) {
+              messagesFiltered.push(message);
+            }
+          });
+          builderPackage.messages = [];
+          builderPackage.messages = messagesFiltered;
+          return res.json(builderPackage);
+        }
       } else {
         var messagesFiltered = [];
         _.each(builderPackage.messages, function(message){

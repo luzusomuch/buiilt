@@ -40,11 +40,9 @@ angular.module('buiiltApp')
       //get header height
       $rootScope.headerHeight = $('nav').outerHeight() + 48;
 
-      console.log($rootScope.currentProject);
-
-      $scope.menuTypes = {
+      $scope.menuTypesHasArchitectManager = {
         homeOwner: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
-          {sref: 'client.list({id :  currentProject._id})', label: 'builder'},
+          {sref: 'builderRequest.viewRequest({id :  currentProject._id})', label: 'architect'},
           {sref: 'projects.view({id :  currentProject._id})', label: 'documentation'}],
         contractor: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
           {sref: 'contractors({id :  currentProject._id})', label: 'contracts'},
@@ -52,6 +50,32 @@ angular.module('buiiltApp')
         builder: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
           // {sref: 'client.list({id :  currentProject._id})', label: 'client'},
           {sref: 'builderRequest.sendQuote({id :  currentProject._id})', label: 'architect'},
+          {sref: 'contractors({id :  currentProject._id})', label: 'subcontractors'},
+          {sref: 'materials({id :  currentProject._id})', label: 'suppliers'},
+          {sref: 'staff.index({id :  currentProject._id})', label: 'employees'},
+          {sref: 'projects.view({id :  currentProject._id})', label: 'documentation'}],
+        supplier: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
+          {sref: 'materials({id :  currentProject._id})', label: 'materials'},
+          {sref: 'projects.view({id :  currentProject._id})', label: 'documentation'}],
+        architect: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
+          {sref: 'design.index({id :  currentProject._id})', label: 'design'},
+          {sref: 'client.view({id :  currentProject._id})', label: 'client'},
+          {sref: 'builderRequest.viewRequest({id :  currentProject._id})', label: 'builder'},
+          {sref: 'projects.view({id :  currentProject._id})', label: 'documentation'}],
+        other : [{sref: 'team.manager', label: 'team manager'},
+          {sref: 'user', label: 'User profile'}]
+      };
+
+      $scope.menuTypesHasNoArchitectManager = {
+        homeOwner: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
+          {sref: 'client.list({id :  currentProject._id})', label: 'builder'},
+          {sref: 'projects.view({id :  currentProject._id})', label: 'documentation'}],
+        contractor: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
+          {sref: 'contractors({id :  currentProject._id})', label: 'contracts'},
+          {sref: 'projects.view({id :  currentProject._id})', label: 'documentation'}],
+        builder: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
+          {sref: 'client.list({id :  currentProject._id})', label: 'client'},
+          // {sref: 'builderRequest.sendQuote({id :  currentProject._id})', label: 'architect'},
           {sref: 'contractors({id :  currentProject._id})', label: 'subcontractors'},
           {sref: 'materials({id :  currentProject._id})', label: 'suppliers'},
           {sref: 'staff.index({id :  currentProject._id})', label: 'employees'},
@@ -97,25 +121,45 @@ angular.module('buiiltApp')
                     $scope.currentTeam = res;
                     $scope.projects = $scope.currentTeam.project;
                     if ($stateParams.id) {
-                      if ($scope.currentTeam.type === 'homeOwner') {
-                        $scope.tabs = $scope.menuTypes['homeOwner'];
-                        $scope.project.hasArchitect = true;
-                      }
-                      else if ($scope.currentTeam.type === 'builder') {
-                        $scope.tabs = $scope.menuTypes['builder'];
-                        $scope.project.hasArchitect = true;
-                      }
-                      else if ($scope.currentTeam.type === 'contractor') {
-                        $scope.tabs = $scope.menuTypes['contractor'];
-                      }
-                      else if ($scope.currentTeam.type === 'supplier') {
-                        $scope.tabs = $scope.menuTypes['supplier'];
-                      }
-                      else if ($scope.currentTeam.type == 'architect') {
-                        $scope.tabs = $scope.menuTypes['architect'];
-                      }
+                      builderPackageService.findDefaultByProject({id: $stateParams.id}).$promise.then(function(res){
+                        if (res.hasArchitectManager) {
+                          if ($scope.currentTeam.type === 'homeOwner') {
+                            $scope.tabs = $scope.menuTypesHasArchitectManager['homeOwner'];
+                            $scope.project.hasArchitect = true;
+                          }
+                          else if ($scope.currentTeam.type === 'builder') {
+                            $scope.tabs = $scope.menuTypesHasArchitectManager['builder'];
+                            $scope.project.hasArchitect = true;
+                          }
+                          else if ($scope.currentTeam.type === 'contractor') {
+                            $scope.tabs = $scope.menuTypesHasArchitectManager['contractor'];
+                          }
+                          else if ($scope.currentTeam.type === 'supplier') {
+                            $scope.tabs = $scope.menuTypesHasArchitectManager['supplier'];
+                          }
+                          else if ($scope.currentTeam.type == 'architect') {
+                            $scope.tabs = $scope.menuTypesHasArchitectManager['architect'];
+                          }
+                        } else {
+                          if ($scope.currentTeam.type === 'homeOwner') {
+                            $scope.tabs = $scope.menuTypesHasNoArchitectManager['homeOwner'];
+                            $scope.project.hasArchitect = true;
+                          }
+                          else if ($scope.currentTeam.type === 'builder') {
+                            $scope.tabs = $scope.menuTypesHasNoArchitectManager['builder'];
+                            $scope.project.hasArchitect = true;
+                          }
+                          else if ($scope.currentTeam.type === 'contractor') {
+                            $scope.tabs = $scope.menuTypesHasNoArchitectManager['contractor'];
+                          }
+                          else if ($scope.currentTeam.type === 'supplier') {
+                            $scope.tabs = $scope.menuTypesHasNoArchitectManager['supplier'];
+                          }
+                        }
+                      });
+                      
                     } else {
-                      $scope.tabs = $scope.menuTypes['other'];
+                      $scope.tabs = $scope.menuTypesHasNoArchitectManager['other'];
                     }
                     return cb();
                   });
@@ -176,7 +220,7 @@ angular.module('buiiltApp')
 
       $rootScope.sendVerification = function() {
         $scope.duration = 0;
-        console.log($scope.duration);
+        // console.log($scope.duration);
         //authService.sendVerification().$promise
         //  .then(function(res) {
         //
