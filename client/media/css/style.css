@@ -293,6 +293,10 @@ ul.pagination {
   background-color: white;
 }
 
+.padding-4 {
+  padding: 4px;
+}
+
 /*body{
   background-image: url("../old-and-new.png");
   background-size: 100%;

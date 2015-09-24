@@ -2,16 +2,14 @@ angular.module('buiiltApp')
 .controller('SendQuoteCtrl', function(socket,$rootScope,$scope, $window, $state, $stateParams,fileService,currentTeam, $cookieStore, authService, userService, builderRequest, builderPackageService, quoteService) {
     $scope.builderRequest = builderRequest;
     $scope.currentTeam = currentTeam;
-    console.log(builderRequest);
-    console.log(builderRequest.hasWinner);
-    console.log(builderRequest.winner._id.toString());
-    console.log(currentTeam._id.toString());
-    if (builderRequest.hasWinner && builderRequest.winner._id.toString() == currentTeam._id.toString()) {
-        $state.go('builderRequest.inProgress', {id: builderRequest.project._id});
+    if (builderRequest.hasWinner) {
+        if (builderRequest.winner._id.toString() == currentTeam._id.toString()) {
+            $state.go('builderRequest.inProgress', {id: builderRequest.project._id});
+        } else {
+            $state.go('team.manager');
+        }
     } else {
         if (_.findIndex(builderRequest.invitees, {_id:currentTeam._id}) == -1) {
-            $state.go('team.manager');
-        } else {
             $state.go('team.manager');
         }
     }
