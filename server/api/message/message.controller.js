@@ -1,6 +1,7 @@
 'use strict';
 
 var User = require('./../../models/user.model');
+var Team = require('./../../models/team.model');
 var Thread = require('./../../models/thread.model');
 var StaffPackage = require('./../../models/staffPackage.model'),
   BuilderPackage = require('./../../models/builderPackage.model'),
@@ -121,13 +122,27 @@ exports.create = function(req,res) {
     thread.project = aPackage.project;
     thread.owner = user;
     thread.type = req.params.type;
-    thread.save(function(err) {
-      if (err) {
-        return res.send(500,err)
-      }
-      return res.json(thread);
-    })
-  })
+    var architectTeamLeader = [];
+    if (aPackage.type == 'BuilderPackage' && aPackage.hasArchitectManager) {
+      Team.findById(aPackage.architect.team, function(err, team){
+        if (err) {return res.send(500,err);}
+        _.each(team.leader, function(leader){
+          architectTeamLeader.push(leader);
+        });
+        thread.users = _.union(thread.users, architectTeamLeader);
+        thread.save(function(err){
+          if (err) {return res.send(500,err);}
+          return res.json(thread);
+        });
+      });
+    } else {
+      thread.users = _.union(thread.users, architectTeamLeader);
+      thread.save(function(err){
+        if (err) {return res.send(500,err);}
+        return res.json(thread);
+      });
+    }
+  });
 };
 
 exports.update = function(req,res) {

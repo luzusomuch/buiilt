@@ -167,35 +167,42 @@ exports.create = function(req,res) {
       return errorsHelper.validationErrors(res,err)
     }
     var task = new Task(data);
-    var architectTeamLeader = [];
-    if (aPackage.type == 'BuilderPackage') {
-      if (aPackage.hasArchitectManager) {
-        Team.findById(mongoose.Types.ObjectId(aPackage.architect.team), function(err, team){
-          if (err) {return res.send(500,err);}
-          _.each(team.leader, function(leader){
-            architectTeamLeader.push(leader);
-          });
-        });
-      } else {
-        architectTeamLeader = [];
-      }
-    }
     task.description = req.body.description;
     task.package = aPackage;
     task.project = aPackage.project;
     task.user = user;
     task.type = req.params.type;
     task.dateStart = new Date();
-    task.assignees = _.union(task.assignees, architectTeamLeader);
-    task.save(function(err) {
-      if (err) {
-        return res.send(500,err)
-      }
-      Task.populate(task, {path:'assignees'}, function(err, task){
+    var architectTeamLeader = [];
+    if (aPackage.type == 'BuilderPackage' && aPackage.hasArchitectManager) {
+      Team.findById(mongoose.Types.ObjectId(aPackage.architect.team), function(err, team){
         if (err) {return res.send(500,err);}
-        return res.json(task);
+        _.each(team.leader, function(leader){
+          architectTeamLeader.push(leader);
+        });
+        task.assignees = _.union(task.assignees, architectTeamLeader);
+        task.save(function(err) {
+          if (err) {
+            return res.send(500,err)
+          }
+          Task.populate(task, {path:'assignees'}, function(err, task){
+            if (err) {return res.send(500,err);}
+            return res.json(task);
+          });
+        });
       });
-    });
+    } else {
+      task.assignees = _.union(task.assignees, architectTeamLeader);
+      task.save(function(err) {
+        if (err) {
+          return res.send(500,err)
+        }
+        Task.populate(task, {path:'assignees'}, function(err, task){
+          if (err) {return res.send(500,err);}
+          return res.json(task);
+        });
+      });
+    }
   });
 };
 
