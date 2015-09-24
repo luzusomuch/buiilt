@@ -594,7 +594,7 @@
   </div>
   <!-- end show side menu -->
   <!-- show overview -->
-  <div class="col s9" ng-hide="type == 'builder' || type == 'staff' || type == 'design'" ng-if="isShowOverView" style="height: {{contentHeight + 10}}px; overflow-y: auto; background-color: white; overflow-x: hidden;">
+  <div class="col s9 white-background content-scroll" ng-hide="type == 'builder' || type == 'staff' || type == 'design'" ng-if="isShowOverView" style="height: {{contentHeight + 10}}px;">
     <div class="col s12">
       <table class="bordered centered">
         <thead>
@@ -615,7 +615,7 @@
     </div>
   </div>
 
-  <div class="col s9" ng-show="type == 'builder' || type == 'staff' || type == 'design'" ng-if="isShowOverView" style="height: {{contentHeight + 10}}px; overflow-y: auto; background-color: white; overflow-x: hidden;">
+  <div class="col s9 white-background content-scroll" ng-show="type == 'builder' || type == 'staff' || type == 'design'" ng-if="isShowOverView" style="height: {{contentHeight + 10}}px;">
     <div class="col s12">
       <table class="bordered centered">
         <thead>
@@ -636,23 +636,28 @@
   <!-- end show overview -->
   
 <!-- show list of tasks -->
-  <div class="col s9" ng-if="isShowTasks" style="overflow-y: auto; background-color: white; overflow-x: hidden;">
+  <div class="col s9 white-background content-scroll" ng-if="isShowTasks">
     <div ng-if="showListTasks" class="listTasks">
      <div class="row collection-header" style="margin-bottom:0px;">
        <div class="col s12">
-         <div style="font-size: 12px">
-           <a ng-click="filter = 'all'" style="margin-left:30px; padding: 5px;" ng-class="{'current-select' : filter == 'all'}">ALL TASKS</a>
-           <a ng-click="filter = {'myTask' : currentUser._id}" style="margin-left:30px; padding: 5px;" ng-class="{'current-select' : filter.myTask == currentUser._id}">MY TASKS</a>
-           <a ng-click="filter = 'completed'" style="margin-left:30px; padding: 5px;" ng-class="{'current-select' : filter == 'completed'}">COMPLETED TASKS</a>
-         </div>
+        <a id="itemTypeSelector" dropdown class='dropdown-button btn-flat' href='#' data-activates='itemTaskFilter' style="font-size: 12px;">{{(allItemsText) ? allItemsText : 'ALL TASKS'}}<i class="mdi-navigation-arrow-drop-down"></i></a>
+        <ul id='itemTaskFilter' class='dropdown-content'>
+          <li>
+            <a ng-click="filter = 'all'; allItemsText = 'ALL TASKS'" ng-class="{'current-select' : filter == 'all'}" href="#!">ALL TASKS</a>
+          </li>
+          <li>
+            <a ng-click="filter = {'myTask' : currentUser._id}; allItemsText='MY TASK'" ng-class="{'current-select' : filter.myTask == currentUser._id}" href="#!">MY TASK</a>
+          </li>
+          <li>
+            <a ng-click="filter = 'completed'; allItemsText='COMPLETED TASKS'" ng-class="{'current-select' : filter == 'completed'}" href="#!">COMPLETED TASKS</a>
+          </li>
+        </ul>
        </div>
      </div>
-     <div  style="height: {{contentHeight - 29}}px; overflow-x:hidden; overflow-y: auto; background-color: white;">
+     <div class="content-scroll" style="height: {{contentHeight - 29}}px;">
        <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="task in tasks | taskFilter : filter" ng-click="showTaskDetail(task)" style="cursor:pointer">
          <div class="col s12">
            <div>
-            <!-- <input ng-if="!task.completed" type="checkbox" id="complete" /> -->
-            <!-- <input ng-if="task.completed" checked="true" type="checkbox" id="complete" /> -->
             <label style="color: black" for="complete">{{task.name}}</label>
           </div>
          </div>
@@ -721,12 +726,33 @@
       <div class="row collection-header" style="margin-bottom:0px;">
        <div class="col s12">
          <div style="font-size: 12px;">
-           <a ng-click="documentFilter = {isShowAll: true}" style="margin-left:30px; padding: 5px;" ng-class="{'current-select' : documentFilter.isShowAll}">ALL DOCUMENTS</a>
+           <!-- <a ng-click="documentFilter = {isShowAll: true}" style="margin-left:30px; padding: 5px;" ng-class="{'current-select' : documentFilter.isShowAll}">ALL DOCUMENTS</a>
            <a ng-click="documentFilter = {isQuote: true}" style="margin-left:30px; padding: 5px;" ng-class="{'current-select' : documentFilter.isQuote}">QUOTES</a>
            <a ng-click="documentFilter = {isInvoice: true}" style="margin-left:30px; padding: 5px;" ng-class="{'current-select' : documentFilter.isInvoice}">INVOICES</a>
            <a ng-click="documentFilter = {isDesign: true}" style="margin-left:30px; padding: 5px;" ng-class="{'current-select' : documentFilter.isDesign}">DESIGNS</a>
            <a ng-click="documentFilter = {isSpec: true}" style="margin-left:30px; padding: 5px;" ng-class="{'current-select' : documentFilter.isSpec}">SPECS</a>
-           <a ng-click="documentFilter = {isOther: true}" style="margin-left:30px; padding: 5px;" ng-class="{'current-select' : documentFilter.isOther}">OTHERS</a>
+           <a ng-click="documentFilter = {isOther: true}" style="margin-left:30px; padding: 5px;" ng-class="{'current-select' : documentFilter.isOther}">OTHERS</a> -->
+            <a id="itemTypeSelector" dropdown class='dropdown-button btn-flat' href='#' data-activates='itemDocumentFilter' style="font-size: 12px;">{{(allItemsText) ? allItemsText : 'ALL DOCUMENTS'}}<i class="mdi-navigation-arrow-drop-down"></i></a>
+            <ul id='itemDocumentFilter' class='dropdown-content'>
+              <li>
+                <a ng-click="documentFilter = {isShowAll: true}; allItemsText = 'ALL DOCUMENTS'" ng-class="{'current-select' : documentFilter.isShowAll}" href="#!">ALL DOCUMENTS</a>
+              </li>
+              <li>
+                <a ng-click="documentFilter = {isQuote: true}; allItemsText='QUOTES'" ng-class="{'current-select' : documentFilter.isQuote}" href="#!">QUOTES</a>
+              </li>
+              <li>
+                <a ng-click="documentFilter = {isInvoice: true}; allItemsText='INVOICES'" ng-class="{'current-select' : documentFilter.isInvoice}">INVOICES</a>
+              </li>
+              <li>
+                <a ng-click="documentFilter = {isDesign: true}; allItemsText='DESIGNS'" ng-class="{'current-select' : documentFilter.isDesign}" href="#!">DESIGNS</a>
+              </li>
+              <li>
+                <a ng-click="documentFilter = {isSpec: true}; allItemsText='SPEC'" ng-class="{'current-select' : documentFilter.isSpec}" href="#!">SPEC</a>
+              </li>
+              <li>
+                <a ng-click="documentFilter = {isOther: true}; allItemsText='OTHERS'" ng-class="{'current-select' : documentFilter.isOther}" href="#!">OTHERS</a>
+              </li>
+            </ul>
          </div>
        </div>
       </div>
