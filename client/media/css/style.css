@@ -289,6 +289,10 @@ ul.pagination {
   background-color: #BBDEFB;
 }
 
+.white-background {
+  background-color: white;
+}
+
 /*body{
   background-image: url("../old-and-new.png");
   background-size: 100%;

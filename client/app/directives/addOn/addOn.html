@@ -567,7 +567,7 @@
 <div class="collection with-header" id="inProgressPanel">
    <div class="row collection-header" style="margin-bottom:0px">
    
-   <div class="col">
+   <!-- <div class="col">
      <a id="itemTypeSelector" dropdown class='dropdown-button btn-flat' href='#' data-activates='itemFilter' style="font-size: 12px;">{{(allItemsText) ? allItemsText : 'OVERVIEW'}}<i class="mdi-navigation-arrow-drop-down"></i></a>
        <ul id='itemFilter' class='dropdown-content'>
        <li><a ng-click="showOverView()" href="#!">OVERVIEW</a></li>
@@ -575,7 +575,7 @@
        <li ng-hide="type == 'variation' || type == 'staff' || type == 'design'"><a ng-click="showVariations()" href="#!">VARIATIONS</a></li>
        <li><a ng-click="showDocuments()" href="#!">DOCUMENTS</a></li>
        </ul>
-  </div>
+  </div> -->
   <div class="col right" style="margin-top: 10px">
      <a id="packageNewTaskBtn" ng-click="newTask(); startNewTaskWizard()" class="modal-trigger" href="#modal_createNewTask" style="margin-left:30px; padding: 5px; font-size: 12px; color: black">NEW TASK</a>
      <a id="packageNewDocumentBtn" class="modal-trigger" href="#modal_attachDocument" style="margin-left:30px; padding: 5px; font-size: 12px; color: black" ng-click="startNewDocumentWizard()">NEW DOCUMENT</a>
@@ -583,8 +583,18 @@
      <a ng-if="isLeader && currentTeam.type == 'architect' && type == 'design'" href="#" ng-click="sendToDocumentation()" style="margin-left:30px; padding: 5px; font-size: 12px; color: black">SEND TO DOCUMENTATION</a>
   </div>
 </div>
+
+  <!-- show side menu -->
+  <div class="col s3" style="margin: 0px; padding:0px; background-color: white; height: {{contentHeight + 10}}px;">
+    <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-click="showOverView()" class="collection-item" style="font-size:12px">OVERVIEW</div>
+    <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-click="showTasks()" class="collection-item" style="font-size:12px">TASKS</div>
+    <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-hide="type == 'variation' || type == 'staff' || type == 'design'" ng-click="showVariations()" class="collection-item" style="font-size:12px">VARIATIONS</div>
+    <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-click="showDocuments()" class="collection-item" style="font-size:12px">DOCUMENTS</div>
+    <div class="collection-item" style="font-size:12px"></div>
+  </div>
+  <!-- end show side menu -->
   <!-- show overview -->
-  <div ng-hide="type == 'builder' || type == 'staff' || type == 'design'" ng-if="isShowOverView" style="height: {{contentHeight + 10}}px; overflow-y: auto; background-color: white; overflow-x: hidden;">
+  <div class="col s9" ng-hide="type == 'builder' || type == 'staff' || type == 'design'" ng-if="isShowOverView" style="height: {{contentHeight + 10}}px; overflow-y: auto; background-color: white; overflow-x: hidden;">
     <div class="col s12">
       <table class="bordered centered">
         <thead>
@@ -605,7 +615,7 @@
     </div>
   </div>
 
-  <div ng-show="type == 'builder' || type == 'staff' || type == 'design'" ng-if="isShowOverView" style="height: {{contentHeight + 10}}px; overflow-y: auto; background-color: white; overflow-x: hidden;">
+  <div class="col s9" ng-show="type == 'builder' || type == 'staff' || type == 'design'" ng-if="isShowOverView" style="height: {{contentHeight + 10}}px; overflow-y: auto; background-color: white; overflow-x: hidden;">
     <div class="col s12">
       <table class="bordered centered">
         <thead>
@@ -623,10 +633,10 @@
       </table>
     </div>
   </div>
-        
+  <!-- end show overview -->
   
 <!-- show list of tasks -->
-  <div ng-if="isShowTasks">
+  <div class="col s9" ng-if="isShowTasks" style="overflow-y: auto; background-color: white; overflow-x: hidden;">
     <div ng-if="showListTasks" class="listTasks">
      <div class="row collection-header" style="margin-bottom:0px;">
        <div class="col s12">
@@ -658,7 +668,7 @@
      </div>
     </div>
     <!-- show task detail -->
-    <div ng-if="showDetailOfTask" class="taskDetail">
+    <div ng-if="showDetailOfTask" class="taskDetail" style="overflow-y: auto; background-color: white; overflow-x: hidden;">
       <div class="row collection-header" style="margin-bottom:0px;">
        <div class="col s12">
          <div class="" style="font-size: 12px;">
@@ -688,7 +698,7 @@
   </div>
 
   <!-- list of variations -->
-  <div ng-if="isShowVariations" class="variationsList">
+  <div ng-if="isShowVariations" class="variationsList col s9" style="overflow-y: auto; background-color: white; overflow-x: hidden;">
     <div class="row collection-header" style="margin-bottom:0px;">
      <div class="col s12">
        <div style="font-size: 12px;">
@@ -706,7 +716,7 @@
   </div>
 
   <!-- list of documents -->
-  <div ng-if="isShowDocuments">
+  <div ng-if="isShowDocuments" class="col s9" style="overflow-y: auto; background-color: white; overflow-x: hidden;">
     <div class="documentsList">
       <div class="row collection-header" style="margin-bottom:0px;">
        <div class="col s12">

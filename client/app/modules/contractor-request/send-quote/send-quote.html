@@ -1,7 +1,7 @@
 <div class="row" style="padding: 12px">
   <div class="col s8">
     <div class="collection with-header">
-      <div class="row collection-header" style="margin-bottom:0px">
+      <!-- <div class="row collection-header" style="margin-bottom:0px">
         <div class="col">
          <a class='dropdown-button btn-flat' href='#' data-activates='inTender' style="font-size: 12px;" dropdown>{{(defaultText) ? defaultText : "SCOPE"}}<i class="mdi-navigation-arrow-drop-down"></i></a>
            <ul id='inTender' class='dropdown-content'>
@@ -9,17 +9,14 @@
            <li><a ng-click="clickShowQuotes()" href="#!">QUOTES</a></li>
            </ul>
         </div>
-            
+      </div> -->
+      <div class="col s3" style="margin: 0px; padding:0px; background-color: white; height: {{contentHeight + 65}}px;">
+        <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-click="clickShowScopes()" class="collection-item" style="font-size:12px">SCOPE</div>
+        <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-click="clickShowQuotes()" class="collection-item" style="font-size:12px">QUOTES</div>
       </div>
-      <div ng-if="showScope">
-        <!-- <div class="row collection-header" style="margin-bottom:0px;">
-          <div class="col right" style="font-size:12px">
-             <a ng-click="cancelPackage()" class="" style="padding: 5px;">CANCEL PACKAGE</a>
-             <a class="modal-trigger" href="#modal_attachAddendum" style="padding: 5px;">ATTACH ADDENDUM</a>
-          </div>
-        </div> -->
-        <div style="height: {{contentHeight + 8}}px; overflow-y: auto; background-color: white;">
-          <div class="col s12">
+      <div class="col s9 white-background">
+        <div ng-if="showScope" style="height: {{contentHeight + 65}}px;">
+          <div class="col s12" style="padding: 10px;">
             <strong>Start date</strong>: {{contractorRequest.dateStart | date: longDate}}
             <table class="bordered centered">
               <thead>
@@ -36,52 +33,44 @@
               </tbody>
             </table>
           </div>
-          <!-- <ul class="collapsible" data-collapsible="accordion">
-            <li class="active">
-              <div class="collapsible-header active"><i class=""></i>Details</div>
-              <div class="collapsible-body" style="background-color: #FFF; padding:10px">
-                
-              </div>
-            </li>
-          </ul> -->
         </div>
-      </div>
-
-      <div class="quotesList" ng-if="showQuotes">
-        <div class="row collection-header" style="margin-bottom:0px;">
-          <div class="col right" style="font-size:12px">
-            <a class="modal-trigger" href="#modal_attachDocument" style="padding: 5px;">ATTACT QUOTE</a>
+        
+        <div class="quotesList" ng-if="showQuotes" style="padding: 4px;">
+          <div class="row collection-header" style="margin-bottom:0px;">
+            <div class="col right" style="font-size:12px">
+              <a class="modal-trigger" href="#modal_attachDocument" style="padding: 5px;">ATTACT QUOTE</a>
+            </div>
           </div>
-        </div>
-        <div ng-if="currentTeam._id == tender._id" ng-repeat="tender in contractorRequest.to" style="height: {{contentHeight - 30}}px; overflow-y: auto; background-color: white;">
-          <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="quote in tender.quoteDocument">
-             <div class="col s9">
-               <div><a ng-click="viewQuoteDetail(quote)" href="#">{{quote.title}}</a></div>
-             </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="showQuoteDetail" style="display:none">
-        <div class="row collection-header" style="margin-bottom:0px;">
-          <div class="col s12" style="font-size:12px">
-            <a href="#!" ng-click="backToList()" style="margin-left:30px; padding: 5px;">&lt; BACK TO TENDERS</a>
-            <div class="right">
-              <a href="#modal_attachDocument" style="padding: 5px;">ATTACH QUOTE</a>
-              <!-- <a ng-click="selectQuote(tender.quote._id)" style="padding: 5px;">ACCEPT TENDER</a> -->
+          <div ng-if="currentTeam._id == tender._id" ng-repeat="tender in contractorRequest.to" style="height: {{contentHeight + 17}}px;">
+            <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="quote in tender.quoteDocument">
+               <div class="col s9">
+                 <div><a ng-click="viewQuoteDetail(quote)" href="#">{{quote.title}}</a></div>
+               </div>
             </div>
           </div>
         </div>
-        <div  style="height: {{contentHeight -30}}px; overflow-y: auto; background-color: white;">
-         <div class="col s9">
-           <div>
-            <a href="{{quote.fileUrl}}" download="{{quote.name}}">
-              <span>
-                {{quote.title}} - <i class="material-icons">cloud_download</i>
-              </span>
-            </a>
+        
+        <div class="showQuoteDetail" style="display:none; padding: 4px;">
+          <div class="row collection-header" style="margin-bottom:0px;">
+            <div class="col s12" style="font-size:12px">
+              <a href="#!" ng-click="backToList()" style="margin-left:30px; padding: 5px;">&lt; BACK TO TENDERS</a>
+              <div class="right">
+                <a href="#modal_attachDocument" style="padding: 5px;">ATTACH QUOTE</a>
+                <!-- <a ng-click="selectQuote(tender.quote._id)" style="padding: 5px;">ACCEPT TENDER</a> -->
+              </div>
+            </div>
           </div>
-         </div>
+          <div  style="height: {{contentHeight + 17}}px; overflow-y: auto;">
+           <div class="col s9">
+             <div>
+              <a href="{{quote.fileUrl}}" download="{{quote.name}}">
+                <span>
+                  {{quote.title}} - <i class="material-icons">cloud_download</i>
+                </span>
+              </a>
+            </div>
+           </div>
+          </div>
         </div>
       </div>
     </div>
