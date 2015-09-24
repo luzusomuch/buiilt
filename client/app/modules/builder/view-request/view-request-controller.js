@@ -15,6 +15,9 @@ angular.module('buiiltApp')
         $scope.defaultText = "SCOPE";
         $scope.showScope = true;
         $scope.showTenders = false;
+        $scope.viewMessages = false;
+        $scope.tender = {};
+        $("div.showTenderDetail").hide();
     };
     $scope.clickShowTenders = function(){
         $scope.defaultText = "TENDERS";

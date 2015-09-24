@@ -44,7 +44,7 @@
               <a class="modal-trigger" href="#modal_attachDocument" style="padding: 5px;">ATTACT QUOTE</a>
             </div>
           </div>
-          <div ng-if="currentTeam._id == tender._id" ng-repeat="tender in materialRequest.to" style="height: {{contentHeight +17}}px;">
+          <div class='content-scroll' ng-if="currentTeam._id == tender._id" ng-repeat="tender in materialRequest.to" style="height: {{contentHeight +17}}px;">
             <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="quote in tender.quoteDocument">
                <div class="col s9">
                  <div><a ng-click="viewQuoteDetail(quote)" href="#">{{quote.title}}</a></div>

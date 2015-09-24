@@ -297,6 +297,11 @@ ul.pagination {
   padding: 4px;
 }
 
+.content-scroll {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 /*body{
   background-image: url("../old-and-new.png");
   background-size: 100%;

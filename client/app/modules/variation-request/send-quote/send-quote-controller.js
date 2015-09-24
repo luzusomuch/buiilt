@@ -22,6 +22,8 @@ angular.module('buiiltApp')
     $scope.defaultText = "SCOPE";
     $scope.showScope = true;
     $scope.showQuotes = false;
+    $scope.quote = {};
+    $("div.showQuoteDetail").hide();
   };
   $scope.clickShowQuotes = function() {
     $scope.defaultText = "QUOTES";
