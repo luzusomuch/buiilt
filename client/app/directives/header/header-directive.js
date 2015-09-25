@@ -42,14 +42,14 @@ angular.module('buiiltApp')
 
       $scope.menuTypesHasArchitectManager = {
         homeOwner: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
-          {sref: 'builderRequest.viewRequest({id :  currentProject._id})', label: 'architect'},
+          {sref: 'builderRequest.list({id :  currentProject._id})', label: 'architect'},
           {sref: 'projects.view({id :  currentProject._id})', label: 'documentation'}],
         contractor: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
           {sref: 'contractors({id :  currentProject._id})', label: 'contracts'},
           {sref: 'projects.view({id :  currentProject._id})', label: 'documentation'}],
         builder: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
           // {sref: 'client.list({id :  currentProject._id})', label: 'client'},
-          {sref: 'builderRequest.sendQuote({id :  currentProject._id})', label: 'architect'},
+          {sref: 'builderRequest.list({id :  currentProject._id})', label: 'architect'},
           {sref: 'contractors({id :  currentProject._id})', label: 'subcontractors'},
           {sref: 'materials({id :  currentProject._id})', label: 'suppliers'},
           {sref: 'staff.index({id :  currentProject._id})', label: 'employees'},

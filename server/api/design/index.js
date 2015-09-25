@@ -12,6 +12,7 @@ router.post('/:id', auth.isAuthenticated(), controller.createDesign);
 
 router.get('/:id',  auth.isAuthenticated(), controller.get);
 router.get('/:id/list', auth.isAuthenticated(), controller.getAll);
+router.get('/:id/get-list-in-architect', auth.isAuthenticated(), controller.getListInArchitect);
 
 router.put('/:id', auth.isAuthenticated(), controller.updateDesign);
 module.exports = router;

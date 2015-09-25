@@ -34,6 +34,13 @@ angular.module('buiiltApp')
                     action: 'get-by-package'
                 },
                 isArray: true
+            },
+            getListInArchitect: {
+                method: 'get',
+                params: {
+                    action: 'get-list-in-architect'
+                },
+                isArray: true
             }
         }
     );

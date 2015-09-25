@@ -19,7 +19,12 @@ angular.module('buiiltApp').config(function($stateProvider) {
         templateUrl: '/app/modules/builder/list/view.html',
         controller: 'ArchitectListPageController',
         hasCurrentProject: true,
-        authenticate: true
+        authenticate: true,
+        resolve: {
+            designs: function(designService, $stateParams) {
+                return designService.getListInArchitect({id: $stateParams.id});
+            }
+        }
     })
     .state('builderRequest.sendQuote', {
         url: '/sendQuote',

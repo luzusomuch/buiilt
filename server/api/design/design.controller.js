@@ -138,3 +138,10 @@ exports.updateDesign = function(req, res) {
     return res.send(200,saved);
   })
 };
+
+exports.getListInArchitect = function(req, res) {
+  Design.find({project: req.params.id, invitees: req.user._id}, function(err, designs){
+    if (err) {return res.send(500,err);}
+    return res.json(designs);
+  })
+}
