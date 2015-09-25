@@ -350,7 +350,7 @@ exports.sendInvitationInContractor = function(req, res) {
               contractorPackage.save(function(err, saved){
                 if (err) {return res.send(500,err);}
                 else {
-                  saved.populate('to.quote', function(err){
+                  saved.populate('to.quoteDocument', function(err){
                     if (err) {return res.send(500,err);}
                     return res.json(200,saved);
                   });

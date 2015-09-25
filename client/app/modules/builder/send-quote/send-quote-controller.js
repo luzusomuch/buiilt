@@ -2,7 +2,7 @@ angular.module('buiiltApp')
 .controller('SendQuoteCtrl', function(socket,$rootScope,$scope, $window, $state, $stateParams,fileService,currentTeam, $cookieStore, authService, userService, builderRequest, builderPackageService, quoteService) {
     $scope.builderRequest = builderRequest;
     $scope.currentTeam = currentTeam;
-    if (builderRequest.hasWinner) {
+    if (builderRequest.hasWinner && !builderRequest.hasTempWinner) {
         if (builderRequest.winner._id.toString() == currentTeam._id.toString()) {
             $state.go('builderRequest.inProgress', {id: builderRequest.project._id});
         } else {

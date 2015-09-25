@@ -11,6 +11,68 @@ var PackageInvite = require('./../../models/packageInvite.model');
 var config = require('./../../config/environment');
 var async = require('async');
 
+EventBus.onSeries('BuilderPackage.Updated', function(request, next){
+  if (request._modifiedPaths.indexOf('inviteBuilder') != -1) {
+    async.parallel({
+      team: function(cb) {
+        Team.findById(request.owner, cb);
+      },
+      project: function(cb){
+        Project.findById(request.project, cb);
+      },
+      user: function(cb) {
+        User.findById(request.editUser, cb)
+      }
+    },function(err,result){
+      if (err) {return next();}
+      var from = result.user.firstName + " " + result.user.lastName + " | " + result.team.name + "<"+result.user.email+">";
+      async.each(request.newInvitees, function(invitee, cb){
+        if (!invitee._id) {
+          var packageInvite = new PackageInvite({
+            owner: request.owner,
+            project: request.project,
+            package: request._id,
+            inviteType : 'builder',
+            to: invitee.email,
+            user: result.user._id
+          });
+          packageInvite.save(function(err,saved){
+            if (err) {return cb(err);}
+            Mailer.sendMail('invite-builder-has-no-account.html', from, saved.to, {
+              user: result.user.toJSON(),
+              project: result.project.toJSON(),
+              team: result.team.toJSON(),
+              registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
+              subject: 'Join ' + result.project.name + ' on buiilt'
+            },function(){
+             return cb();
+            });
+          })
+        } else {
+          Team.findById(request.to.team)
+          .populate('leader')
+          .exec(function(err, team) {
+            if(err || !team){ return cb(err); }
+            async.each(team.leader, function(leader, cb) {
+              Mailer.sendMail('invite-builder.html', from, leader.email, {
+                user: result.user.toJSON(),
+                project: result.project.toJSON(),
+                team: result.team.toJSON(),
+                link: config.baseUrl + request.project + '/dashboard',
+                subject: 'Join ' + result.project.name + ' on buiilt'
+              }, function () {
+                return cb();
+              });
+            }, function(){return cb();})
+          });
+        }
+      }, function() {return next();});
+    });
+  } else {
+    return next();
+  }
+});
+
 EventBus.onSeries('BuilderPackage.Inserted', function(request, next) {
   async.parallel({
     team: function(cb) {

@@ -113,8 +113,9 @@ EventBus.onSeries('BuilderPackage.Updated', function(builderPackage, next) {
         });
       }
     });
-  }
-  else {
+  } else if (builderPackage._modifiedPaths.indexOf('inviteBuilder') != -1) {
+    return next();
+  } else {
     return next();
   }
 });

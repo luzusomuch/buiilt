@@ -220,8 +220,14 @@ exports.createUserWithInviteToken = function(req, res, next) {
                         project.save()
                       }
                     });
-                    builderPackage.to.team = savedTeam._id;
-                    builderPackage.to.email = null;
+                    // builderPackage.to.team = savedTeam._id;
+                    // builderPackage.to.email = null;
+                    _.each(builderPackage.invitees, function(to) {
+                      if (to.email === packageInvite.to) {
+                        to._id = savedTeam._id;
+                        to.email = packageInvite.to;
+                      }
+                    });
                     builderPackage.save(function(err, saved){
                       if (err) {return res.send(500,err);}
                       else {
@@ -254,6 +260,9 @@ exports.createUserWithInviteToken = function(req, res, next) {
                         });
                       }
                     });
+                    if (builderPackage.winner == undefined) {
+                      builderPackage.winner = savedTeam._id;
+                    }
                     builderPackage.to.team = savedTeam._id;
                     builderPackage.to.email = null;
                     builderPackage.save(function(err, saved){

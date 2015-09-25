@@ -136,7 +136,7 @@ exports.inviteBuilder = function(req, res) {
   BuilderPackage.findById(req.params.id, function(err, builderPackage){
     if (err) {return res.send(500,err);}
     if (!builderPackage) {return res.send(404);}
-    var newInvitess = [];
+    var newInvitees = [];
     var invitees = builderPackage.invitees;
     async.each(req.body.toBuilder, function(builder, cb){
       User.findOne({email: builder.email}, function(err, user){
@@ -146,7 +146,7 @@ exports.inviteBuilder = function(req, res) {
             email: builder.email,
             phoneNumber: builder.phoneNumber
           });
-          newInvitess.push({
+          newInvitees.push({
             email: builder.email,
             phoneNumber: builder.phoneNumber
           });
@@ -158,7 +158,7 @@ exports.inviteBuilder = function(req, res) {
               email: builder.email,
               phoneNumber: builder.phoneNumber
             });
-            newInvitess.push({
+            newInvitees.push({
               _id: user.team._id,
               email: builder.email,
               phoneNumber: builder.phoneNumber
@@ -180,13 +180,16 @@ exports.inviteBuilder = function(req, res) {
     }, function(err){
       if (err) {return res.send(500,err);}
       builderPackage.invitees = invitees;
-      builderPackage.newInvitess = newInvitess;
+      builderPackage.newInvitees = newInvitees;
       builderPackage._ownerUser = req.user;
       builderPackage._editUser = req.user;
       builderPackage.markModified('inviteBuilder');
       builderPackage.save(function(err){
         if (err) {return res.send(500,err);}
-        return res.send(200, builderPackage);
+        builderPackage.populate('invitees.quoteDocument', function(err){
+          if (err) {return res.send(500,err);}
+          return res.json(200,builderPackage);
+        });
       });
     });
   });
@@ -232,6 +235,7 @@ exports.selectWinner = function(req, res) {
     if (!builderPackage) {return res.send(404);}
     builderPackage.winner = req.body.selector;
     builderPackage.hasWinner = true;
+    builderPackage.hasTempWinner = false;
     _.remove(builderPackage.invitees,{_id: builderPackage.winner});
     _.each(builderPackage.invitees, function(invitee){
       if (invitee._id) {

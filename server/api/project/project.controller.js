@@ -85,13 +85,18 @@ exports.create = function(req, res){
           owner : user.team._id,
           project : project._id,
           name : project.name,
-          descriptions : descriptions
+          descriptions : descriptions,
+
         });
         if (to.type == '') {
           to = {};
         } else {
           builderPackage.to = to;
           if (to.type == 'builder') {
+            builderPackage.hasWinner = true;
+            builderPackage.winner = to.team;
+          } else {
+            builderPackage.hasTempWinner = true;
             builderPackage.hasWinner = true;
             builderPackage.winner = to.team;
           }

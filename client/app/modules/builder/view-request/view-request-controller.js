@@ -2,8 +2,15 @@ angular.module('buiiltApp')
 .controller('ViewRequestCtrl', function(socket,$rootScope,$scope, $window, $state, $stateParams,fileService,currentTeam, $cookieStore, authService, userService, builderRequest, contractorRequestService, quoteService, builderPackageService) {
   console.log(builderRequest);
     $scope.builderRequest = builderRequest;
-    if ($scope.builderRequest.hasWinner) {
-        $state.go('builderRequest.inProgress', {id: $scope.builderRequest.project._id});
+    $scope.currentTeam = currentTeam;
+    if (currentTeam.type == 'architect') {
+        if ($scope.builderRequest.hasWinner && !$scope.builderRequest.hasTempWinner) {
+            $state.go('builderRequest.inProgress', {id: $scope.builderRequest.project._id});
+        }
+    } else {
+        if ($scope.builderRequest.hasWinner) {
+            $state.go('builderRequest.inProgress', {id: $scope.builderRequest.project._id});   
+        }
     }
     $scope.defaultText = "SCOPE";
     $scope.showScope = true;

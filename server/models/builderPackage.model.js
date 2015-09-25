@@ -85,6 +85,9 @@ var BuilderPackageSchema = new Schema({
   hasWinner: {
     type: Boolean, default: false
   },
+  hasTempWinner: {
+    type: Boolean, default: false
+  },
   architect: {
     team:{type: Schema.Types.ObjectId, ref: 'Team'},
     email: String
