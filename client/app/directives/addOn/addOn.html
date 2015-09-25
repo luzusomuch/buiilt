@@ -586,7 +586,7 @@
 
   <!-- show side menu -->
   <div class="col s3" style="margin: 0px; padding:0px; background-color: white; height: {{contentHeight + 10}}px;">
-    <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-click="showOverView()" class="collection-item" style="font-size:12px">OVERVIEW</div>
+    <div ng-hide="type == 'design'" ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-click="showOverView()" class="collection-item" style="font-size:12px">OVERVIEW</div>
     <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-click="showTasks()" class="collection-item" style="font-size:12px">TASKS</div>
     <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-hide="type == 'variation' || type == 'staff' || type == 'design'" ng-click="showVariations()" class="collection-item" style="font-size:12px">VARIATIONS</div>
     <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-click="showDocuments()" class="collection-item" style="font-size:12px">DOCUMENTS</div>

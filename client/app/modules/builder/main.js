@@ -14,6 +14,13 @@ angular.module('buiiltApp').config(function($stateProvider) {
             }
         }
     })
+    .state('builderRequest.list', {
+        url: '/list',
+        templateUrl: '/app/modules/builder/list/view.html',
+        controller: 'ArchitectListPageController',
+        hasCurrentProject: true,
+        authenticate: true
+    })
     .state('builderRequest.sendQuote', {
         url: '/sendQuote',
         templateUrl: '/app/modules/builder/send-quote/view.html',
