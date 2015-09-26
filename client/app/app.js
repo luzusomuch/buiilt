@@ -1,7 +1,7 @@
 angular.module('buiiltApp', [
   'ui.utils',
   'ui.router',
-  // 'ngAnimate',
+  'ngAnimate',
   'angularFileUpload',
   'ngCookies',
   'ngSanitize',
@@ -21,7 +21,6 @@ angular.module('buiiltApp', [
 
 angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider, $locationProvider, $urlRouterProvider, $httpProvider, $sceDelegateProvider, cfpLoadingBarProvider, filepickerProvider) {
   $sceDelegateProvider.resourceUrlWhitelist(['^(?:http(?:s)?:\/\/)?(?:[^\.]+\.)?\(vimeo|youtube)\.com(/.*)?$', 'self']);
-  filepickerProvider.setKey('AM6Wn3DzwRimryydBnsj7z');
   /* Add New States Above */
   $urlRouterProvider.otherwise('/');
 
@@ -30,6 +29,7 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
 
   //angular loading bar
   cfpLoadingBarProvider.includeSpinner = true;
+  filepickerProvider.setKey('AM6Wn3DzwRimryydBnsj7z');
 })
   .factory('authInterceptor', function ($q, $cookieStore, $location) {
     return {

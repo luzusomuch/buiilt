@@ -96,7 +96,8 @@ var FileSchema = new Schema({
   documentDesignId: {
     type: Schema.Types.ObjectId,
     ref: 'File'
-  }
+  },
+  key: String
 });
 
 /**
@@ -105,7 +106,9 @@ var FileSchema = new Schema({
 FileSchema.virtual('fileUrl')
   .get(function() {
   if (this.server === 's3') {
-    return s3.getPublicUrl(this.name);
+    // return s3.getPublicUrl(this.name); old version
+    // new version
+    return s3.getPublicUrl(this.key);
   }
   return this.path;
 });
