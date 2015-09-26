@@ -1,5 +1,6 @@
 'use strict';
 var s3 = require('../components/S3');
+var EventBus = require('./../components/EventBus');
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
@@ -118,6 +119,11 @@ FileSchema.pre('save', function(next) {
     this.createdAt = new Date();
   }
   next();
+});
+
+FileSchema.post('save', function(doc){
+  var evtName = this.wasNew ? 'File.Inserted' : 'File.Updated';
+  EventBus.emit(evtName, doc);
 });
 
 /**
