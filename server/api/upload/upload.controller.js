@@ -36,223 +36,251 @@ var validationError = function (res, err) {
  */
 exports.upload = function(req, res){
     console.log('11111111111111111');
+    console.log(req.body);
+    console.log(req.params.id);
+    var request = req.body.file;
+    if (request._id != '') {
+
+    } else {
+        console.log('aaaaaaaaa');
+        console.log(request.tags);
+        // var tags = request.tags.split(',');
+        var file = new File({
+            title: request.title,
+            name: request.file.filename,
+            path: request.file.url,
+            server: 'not give',
+            mimeType: request.file.mimeType,
+            description: request.desc,
+            size: request.file.size,
+            user: req.user._id,
+            belongTo: req.params.id,
+            tags: request.tags
+        });
+        file.save(function(err){
+            if (err) {console.log(err);return res.send(500,err);}
+            return res.json(file);
+        });
+    }
+
+
     // var root = path.normalize(__dirname + '/../../..');
-    var form = new formidable.IncomingForm();
-    var files = [];
-    var uploadedFile = null;
-    var uploadDir = "./client/media/files";
-    var usersRelatedTo;
-    var uploadedField = null;
-    mkdirp(uploadDir, function(err) {
-        if (err) {console.log(err);}
-    });
-    form.uploadDir = uploadDir;
-    form.keepExtensions = true;
-    form.maxFieldsSize = 10 * 1024 * 1024;
-    form.parse(req, function(err, fields, files) {
-        if (err) {console.log(err);}
-        uploadedField = fields;
-    });
+    // var form = new formidable.IncomingForm();
+    // var files = [];
+    // var uploadedFile = null;
+    // var uploadDir = "./client/media/files";
+    // var usersRelatedTo;
+    // var uploadedField = null;
+    // mkdirp(uploadDir, function(err) {
+    //     if (err) {console.log(err);}
+    // });
+    // form.uploadDir = uploadDir;
+    // form.keepExtensions = true;
+    // form.maxFieldsSize = 10 * 1024 * 1024;
+    // form.parse(req, function(err, fields, files) {
+    //     if (err) {console.log(err);}
+    //     uploadedField = fields;
+    // });
     
-    form.on('file', function (field, file) {
-        if (field === 'file') {
-            uploadedFile = file;
-            files.push([field, file]);
-        }
-    })
-    .on('end', function() {
-        console.log(uploadedFile, uploadedField);
-        if (uploadedFile && uploadedField) {
-            if (uploadedField._id != 'undefined') {
-                var tags = uploadedField.tags.split(',');
-                File.findById(uploadedField._id, function(err, file) {
-                    if (err) {console.log(err);}
-                    file.title = uploadedField.title;
-                    file.name = uploadedFile.name;
-                    file.path = uploadedFile.path;
-                    file.server = 's3';
-                    file.mimeType = uploadedFile.type;
-                    file.description = uploadedField.desc;
-                    file.size = uploadedFile.size;
-                    file.version = file.version + 1;
-                    file.belongTo = req.params.id;
-                    file.tags = tags;
-                    file.save(function(err, saved) {
-                        if (err) {return res.send(500,err);}
-                        else {
-                            var owners = [];
-                            async.parallel([
-                                function(cb) {
-                                    BuilderPackage.findOne({project: saved.belongTo})
-                                    .populate('owner').populate("project").populate('to.team').exec(function(err,builderPackage){
-                                        if (err || !builderPackage) {return cb(err);}
-                                        else {
-                                            owners = builderPackage.owner.leader;
-                                            _.each(builderPackage.owner.member, function(member){
-                                                if (member._id) {
-                                                    owners.push(member._id);
-                                                }
-                                            });
-                                            if (builderPackage.to.team) {
-                                                owners = _.union(builderPackage.owner.leader, builderPackage.to.team.leader);
-                                                _.each(builderPackage.to.team.member, function(member){
-                                                    if (member._id) {
-                                                        owners.push(member._id);
-                                                    }
-                                                });
-                                            }
-                                            _.remove(owners, req.user._id);
-                                            async.each(owners, function(leader, callback){
-                                                var notification = new Notification({
-                                                    owner: leader,
-                                                    fromUser: req.user._id,
-                                                    toUser: leader,
-                                                    element: {file: saved.toJSON(), 
-                                                        uploadIn: builderPackage,
-                                                        projectId: builderPackage.project},
-                                                    referenceTo: "DocumentInProject",
-                                                    type: 'uploadNewDocumentVersion'
-                                                });
-                                                notification.save(callback);
-                                            }, cb);
-                                        }
-                                    });
-                                },
-                                function(cb) {
-                                    s3.uploadFile(saved, function(err, data) {
-                                        if (err || !data) {return cb(err);}
-                                        else {
-                                            if (saved.mimeType == 'image/png' || saved.mimeType == 'image/jpeg') {
-                                                gm(config.root +'/' + saved.path)
-                                                .resize(320, 480)
-                                                .write(config.media +saved._id + '.jpg', function(err,data) {
-                                                    if (err) {return cb(err);}
-                                                    else {
-                                                        cb(data);        
-                                                    }
-                                                });
-                                            }
-                                            else if (saved.mimeType == 'application/pdf') {
-                                                exec("gs -dNOPAUSE -sDEVICE=jpeg -dFirstPage=1 -dLastPage=1 -r144 -sOutputFile="+ config.media +saved._id +".jpg "+ config.root + '/' + saved.path, function(err,stdout,stderr){
-                                                    if (err) {return cb(err);}
-                                                    else {
-                                                        cb(stdout);
-                                                    }
-                                                });
-                                                setTimeout(function() {
-                                                    cb(data);
-                                                }, 2000);
-                                            }
-                                            else {
-                                                return cb(data); 
-                                            }
-                                        }
-                                    });
-                                }
-                            ], function(){
-                                return res.send(200,saved);
-                            });
-                        }
-                    });
-                });
-            }
-            else {
-                var tags = uploadedField.tags.split(',');
-                var file = new File({
-                    title: uploadedField.title,
-                    name: uploadedFile.name,
-                    path: uploadedFile.path,
-                    server: 's3',
-                    mimeType: uploadedFile.type,
-                    description: uploadedField.desc,
-                    size: uploadedFile.size,
-                    user: req.user._id,
-                    belongTo: req.params.id,
-                    tags: tags
-                });
-                file.save(function(err, saved){
-                    file.save(function(err, fileSaved) {
-                        if (err) {return res.send(500,err);}
-                        else {
-                            var owners = [];
-                            async.parallel([
-                                function(cb) {
-                                    BuilderPackage.findOne({project: saved.belongTo})
-                                    .populate('owner').populate("project").populate('to.team').exec(function(err,builderPackage){
-                                        if (err || !builderPackage) {return cb(err);}
-                                        else {
-                                            owners = builderPackage.owner.leader;
-                                            _.each(builderPackage.owner.member, function(member){
-                                                if (member._id) {
-                                                    owners.push(member._id);
-                                                }
-                                            });
-                                            if (builderPackage.to.team) {
-                                                owners = _.union(builderPackage.owner.leader, builderPackage.to.team.leader);
-                                                _.each(builderPackage.to.team.member, function(member){
-                                                    if (member._id) {
-                                                        owners.push(member._id);
-                                                    }
-                                                });
-                                            }
-                                            _.remove(owners, req.user._id);
-                                            async.each(owners, function(leader,callback){
-                                                var notification = new Notification({
-                                                    owner: leader,
-                                                    fromUser: req.user._id,
-                                                    toUser: leader,
-                                                    element: {file: saved.toJSON(), 
-                                                        uploadIn: builderPackage,
-                                                        projectId: builderPackage.project},
-                                                    referenceTo: "DocumentInProject",
-                                                    type: 'uploadDocument'
-                                                });
-                                                notification.save(callback);
-                                            }, cb);
-                                        }
-                                    });
-                                },
-                                function(cb) {
-                                    s3.uploadFile(saved, function(err, data) {
-                                        if (err) {return cb(err);}
-                                        else {
-                                            if (saved.mimeType == 'image/png' || saved.mimeType == 'image/jpeg') {
-                                                gm(config.root + '/' + saved.path)
-                                                .resize(320, 480)
-                                                .write(config.media +saved._id + '.jpg', function(err,data) {
-                                                    if (err) {return cb(err);}
-                                                    else {
-                                                        cb(data);        
-                                                    }
-                                                });
-                                            }
-                                            else if (saved.mimeType == 'application/pdf') {
-                                                // exec("C:/Program Files (x86)/gs/gs9.16/bin/gswin32c.exe -dNOPAUSE -sDEVICE=jpeg -r144 -sOutputFile="+ config.media +saved._id + '-' +saved.title+".jpg "+ config.root + '/' + saved.path, function(err,data){
-                                                exec("gs -dNOPAUSE -sDEVICE=jpeg -dFirstPage=1 -dLastPage=1 -r144 -sOutputFile="+ config.media +saved._id +".jpg "+ config.root + '/' + saved.path, function(err,stdout,stderr){
-                                                    if (err) {return cb(err);}
-                                                    else {
-                                                        cb(stdout);
-                                                    }
-                                                });
-                                                setTimeout(function() {
-                                                    cb(data);
-                                                }, 2000);
-                                            }
-                                            else {
-                                                return cb(data);
-                                            }
-                                        }
-                                    });
-                                }
-                            ],function(){
-                                return res.send(200,saved);
-                            })
-                        }
-                    });
-                });
-            }
-        }
-    })
+    // form.on('file', function (field, file) {
+    //     if (field === 'file') {
+    //         uploadedFile = file;
+    //         files.push([field, file]);
+    //     }
+    // })
+    // .on('end', function() {
+    //     console.log(uploadedFile, uploadedField);
+    //     if (uploadedFile && uploadedField) {
+    //         if (uploadedField._id != 'undefined') {
+    //             var tags = uploadedField.tags.split(',');
+    //             File.findById(uploadedField._id, function(err, file) {
+    //                 if (err) {console.log(err);}
+    //                 file.title = uploadedField.title;
+    //                 file.name = uploadedFile.name;
+    //                 file.path = uploadedFile.path;
+    //                 file.server = 's3';
+    //                 file.mimeType = uploadedFile.type;
+    //                 file.description = uploadedField.desc;
+    //                 file.size = uploadedFile.size;
+    //                 file.version = file.version + 1;
+    //                 file.belongTo = req.params.id;
+    //                 file.tags = tags;
+    //                 file.save(function(err, saved) {
+    //                     if (err) {return res.send(500,err);}
+    //                     else {
+    //                         var owners = [];
+    //                         async.parallel([
+    //                             function(cb) {
+    //                                 BuilderPackage.findOne({project: saved.belongTo})
+    //                                 .populate('owner').populate("project").populate('to.team').exec(function(err,builderPackage){
+    //                                     if (err || !builderPackage) {return cb(err);}
+    //                                     else {
+    //                                         owners = builderPackage.owner.leader;
+    //                                         _.each(builderPackage.owner.member, function(member){
+    //                                             if (member._id) {
+    //                                                 owners.push(member._id);
+    //                                             }
+    //                                         });
+    //                                         if (builderPackage.to.team) {
+    //                                             owners = _.union(builderPackage.owner.leader, builderPackage.to.team.leader);
+    //                                             _.each(builderPackage.to.team.member, function(member){
+    //                                                 if (member._id) {
+    //                                                     owners.push(member._id);
+    //                                                 }
+    //                                             });
+    //                                         }
+    //                                         _.remove(owners, req.user._id);
+    //                                         async.each(owners, function(leader, callback){
+    //                                             var notification = new Notification({
+    //                                                 owner: leader,
+    //                                                 fromUser: req.user._id,
+    //                                                 toUser: leader,
+    //                                                 element: {file: saved.toJSON(), 
+    //                                                     uploadIn: builderPackage,
+    //                                                     projectId: builderPackage.project},
+    //                                                 referenceTo: "DocumentInProject",
+    //                                                 type: 'uploadNewDocumentVersion'
+    //                                             });
+    //                                             notification.save(callback);
+    //                                         }, cb);
+    //                                     }
+    //                                 });
+    //                             },
+    //                             function(cb) {
+    //                                 s3.uploadFile(saved, function(err, data) {
+    //                                     if (err || !data) {return cb(err);}
+    //                                     else {
+    //                                         if (saved.mimeType == 'image/png' || saved.mimeType == 'image/jpeg') {
+    //                                             gm(config.root +'/' + saved.path)
+    //                                             .resize(320, 480)
+    //                                             .write(config.media +saved._id + '.jpg', function(err,data) {
+    //                                                 if (err) {return cb(err);}
+    //                                                 else {
+    //                                                     cb(data);        
+    //                                                 }
+    //                                             });
+    //                                         }
+    //                                         else if (saved.mimeType == 'application/pdf') {
+    //                                             exec("gs -dNOPAUSE -sDEVICE=jpeg -dFirstPage=1 -dLastPage=1 -r144 -sOutputFile="+ config.media +saved._id +".jpg "+ config.root + '/' + saved.path, function(err,stdout,stderr){
+    //                                                 if (err) {return cb(err);}
+    //                                                 else {
+    //                                                     cb(stdout);
+    //                                                 }
+    //                                             });
+    //                                             setTimeout(function() {
+    //                                                 cb(data);
+    //                                             }, 2000);
+    //                                         }
+    //                                         else {
+    //                                             return cb(data); 
+    //                                         }
+    //                                     }
+    //                                 });
+    //                             }
+    //                         ], function(){
+    //                             return res.send(200,saved);
+    //                         });
+    //                     }
+    //                 });
+    //             });
+    //         }
+    //         else {
+    //             var tags = uploadedField.tags.split(',');
+    //             var file = new File({
+    //                 title: uploadedField.title,
+    //                 name: uploadedFile.name,
+    //                 path: uploadedFile.path,
+    //                 server: 's3',
+    //                 mimeType: uploadedFile.type,
+    //                 description: uploadedField.desc,
+    //                 size: uploadedFile.size,
+    //                 user: req.user._id,
+    //                 belongTo: req.params.id,
+    //                 tags: tags
+    //             });
+    //             file.save(function(err, saved){
+    //                 file.save(function(err, fileSaved) {
+    //                     if (err) {return res.send(500,err);}
+    //                     else {
+    //                         var owners = [];
+    //                         async.parallel([
+    //                             function(cb) {
+    //                                 BuilderPackage.findOne({project: saved.belongTo})
+    //                                 .populate('owner').populate("project").populate('to.team').exec(function(err,builderPackage){
+    //                                     if (err || !builderPackage) {return cb(err);}
+    //                                     else {
+    //                                         owners = builderPackage.owner.leader;
+    //                                         _.each(builderPackage.owner.member, function(member){
+    //                                             if (member._id) {
+    //                                                 owners.push(member._id);
+    //                                             }
+    //                                         });
+    //                                         if (builderPackage.to.team) {
+    //                                             owners = _.union(builderPackage.owner.leader, builderPackage.to.team.leader);
+    //                                             _.each(builderPackage.to.team.member, function(member){
+    //                                                 if (member._id) {
+    //                                                     owners.push(member._id);
+    //                                                 }
+    //                                             });
+    //                                         }
+    //                                         _.remove(owners, req.user._id);
+    //                                         async.each(owners, function(leader,callback){
+    //                                             var notification = new Notification({
+    //                                                 owner: leader,
+    //                                                 fromUser: req.user._id,
+    //                                                 toUser: leader,
+    //                                                 element: {file: saved.toJSON(), 
+    //                                                     uploadIn: builderPackage,
+    //                                                     projectId: builderPackage.project},
+    //                                                 referenceTo: "DocumentInProject",
+    //                                                 type: 'uploadDocument'
+    //                                             });
+    //                                             notification.save(callback);
+    //                                         }, cb);
+    //                                     }
+    //                                 });
+    //                             },
+    //                             function(cb) {
+    //                                 s3.uploadFile(saved, function(err, data) {
+    //                                     if (err) {return cb(err);}
+    //                                     else {
+    //                                         if (saved.mimeType == 'image/png' || saved.mimeType == 'image/jpeg') {
+    //                                             gm(config.root + '/' + saved.path)
+    //                                             .resize(320, 480)
+    //                                             .write(config.media +saved._id + '.jpg', function(err,data) {
+    //                                                 if (err) {return cb(err);}
+    //                                                 else {
+    //                                                     cb(data);        
+    //                                                 }
+    //                                             });
+    //                                         }
+    //                                         else if (saved.mimeType == 'application/pdf') {
+    //                                             // exec("C:/Program Files (x86)/gs/gs9.16/bin/gswin32c.exe -dNOPAUSE -sDEVICE=jpeg -r144 -sOutputFile="+ config.media +saved._id + '-' +saved.title+".jpg "+ config.root + '/' + saved.path, function(err,data){
+    //                                             exec("gs -dNOPAUSE -sDEVICE=jpeg -dFirstPage=1 -dLastPage=1 -r144 -sOutputFile="+ config.media +saved._id +".jpg "+ config.root + '/' + saved.path, function(err,stdout,stderr){
+    //                                                 if (err) {return cb(err);}
+    //                                                 else {
+    //                                                     cb(stdout);
+    //                                                 }
+    //                                             });
+    //                                             setTimeout(function() {
+    //                                                 cb(data);
+    //                                             }, 2000);
+    //                                         }
+    //                                         else {
+    //                                             return cb(data);
+    //                                         }
+    //                                     }
+    //                                 });
+    //                             }
+    //                         ],function(){
+    //                             return res.send(200,saved);
+    //                         })
+    //                     }
+    //                 });
+    //             });
+    //         }
+    //     }
+    // })
 };
 
 

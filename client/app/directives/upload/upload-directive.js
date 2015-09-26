@@ -12,7 +12,49 @@ angular.module('buiiltApp').directive('upload', function(){
             type: '@',
             isQuote: '@'
         },
-        controller: function($scope, $state, $cookieStore, $stateParams, $rootScope, $location, fileService, packageService, userService, projectService, FileUploader, documentService) {
+        controller: function($scope, $state, $cookieStore, $stateParams, $rootScope, $location, fileService, packageService, userService, projectService, FileUploader, documentService, filepickerService,uploadService) {
+            $scope.uploadFile = {};
+            $scope.pickFile = pickFile;
+
+            $scope.onSuccess = onSuccess;
+
+            function pickFile(){
+                filepickerService.pick(
+                    {mimetype: 'image/*'},
+                    onSuccess
+                );
+            };
+
+            function onSuccess(file){
+
+                $scope.uploadFile = {
+                    file: file,
+                    _id: ($scope.fileId) ? $scope.fileId : '',
+                    belongToType: ($scope.package) ? $scope.package.type : 'project',
+                    tags: $scope.selectedTags,
+                    isQuote: $scope.isQuote
+                };
+            };
+
+            $scope.uploadNewDocument = function() {
+                console.log($scope.uploadFile);
+                if ($stateParams.packageId) {
+                    uploadService.uploadInPackage({id: $stateParams.packageId, file: $scope.uploadFile}).$promise.then(function(res){
+                        console.log(res);
+                    });
+                }
+                else if($scope.package && $scope.package != '') {
+                    uploadService.uploadInPackage({id: $scope.package._id, file: $scope.uploadFile}).$promise.then(function(res){
+                        console.log(res);
+                    });
+                }
+                else {
+                    uploadService.upload({id: $stateParams.id, file: $scope.uploadFile}).$promise.then(function(res){
+                        console.log(res);
+                    });
+                }
+            };
+
             $scope.errors = {};
             $scope.success = {};
             $scope.file = {};
@@ -34,6 +76,7 @@ angular.module('buiiltApp').directive('upload', function(){
 
             $scope.selectedTags = [];
             $scope.selectTag = function(tag, index) {
+                console.log(tag);
                 $scope.selectedTags.push(tag);
                 $scope.tags.splice(index,1);
             };

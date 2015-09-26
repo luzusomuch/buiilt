@@ -230,5 +230,4 @@ angular.module('buiiltApp')
   if ($rootScope.newestDocument != null) {
     $timeout(function(){$scope.getFileDetail($rootScope.newestDocument)},1500);
   }
-
 });

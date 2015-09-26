@@ -1,7 +1,7 @@
 angular.module('buiiltApp', [
   'ui.utils',
   'ui.router',
-  'ngAnimate',
+  // 'ngAnimate',
   'angularFileUpload',
   'ngCookies',
   'ngSanitize',
@@ -15,12 +15,13 @@ angular.module('buiiltApp', [
   '720kb.tooltips',
   'angucomplete-alt',
   'btford.socket-io',
-  'ngTable'
+  'ngTable',
+  'angular-filepicker'
 ]);
 
-angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider, $locationProvider, $urlRouterProvider, $httpProvider, $sceDelegateProvider, cfpLoadingBarProvider) {
+angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider, $locationProvider, $urlRouterProvider, $httpProvider, $sceDelegateProvider, cfpLoadingBarProvider, filepickerProvider) {
   $sceDelegateProvider.resourceUrlWhitelist(['^(?:http(?:s)?:\/\/)?(?:[^\.]+\.)?\(vimeo|youtube)\.com(/.*)?$', 'self']);
-
+  filepickerProvider.setKey('AM6Wn3DzwRimryydBnsj7z');
   /* Add New States Above */
   $urlRouterProvider.otherwise('/');
 

@@ -7,8 +7,15 @@ angular.module('buiiltApp')
         upload: {
             method: 'POST',
             params: {
-                id: 'id',
+                id: '@id',
                 action: 'file'
+            }
+        },
+        uploadInPackage: {
+            method: 'POST', 
+            params: {
+                id: '@id',
+                action: 'file-package'
             }
         }
     }

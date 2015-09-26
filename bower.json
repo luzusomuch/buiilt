@@ -33,7 +33,8 @@
     "angular-socket-io": "~0.7.0",
     "jquery-ui": "#1.10.4",
     "ng-table": "~v0.8.0",
-    "colorbox": "~1.6.3"
+    "colorbox": "~1.6.3",
+    "angular-filepicker":"master"
   },
   "resolutions": {
     "angular": "#1.3.15"
