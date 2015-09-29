@@ -94,7 +94,7 @@
        </div>
        <div style="height: {{contentHeight -15}}px; overflow-y: auto; background-color: white; display: none; overflow-x: hidden" class="valign-wrapper showFileDetail">
 
-          <div style="display:none" class="col s8 offset-s2 center valign" ng-switch="file.mimeType" ng-repeat="file in files" colorbox>
+          <!-- <div style="display:none" class="col s8 offset-s2 center valign" ng-switch="file.mimeType" ng-repeat="file in files" colorbox>
             <span ng-switch-when="image/jpeg">
               <a class="gallery" data-filetype="jpg" data-rel="group1" rel="jpg" href="../../media/files/{{file._id}}.jpg">
                 <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}.jpg" alt="">
@@ -115,7 +115,7 @@
                 <img class="materialboxed" width="90%" src="../../media/sample-1.jpg" alt="">
               </a>
             </span>
-          </div>
+          </div> -->
 
           <!-- if there is a document uploaded in project -->
           <div colorbox data-current="true" class="col s8 offset-s2 center valign" ng-if="!file.isSendToDocumentation">
