@@ -41,16 +41,22 @@ angular.module('buiiltApp').directive('upload', function(){
                 if ($stateParams.packageId) {
                     uploadService.uploadInPackage({id: $stateParams.packageId, file: $scope.uploadFile}).$promise.then(function(res){
                         console.log(res);
+                        $('#attachDocument').closeModal();
+                        $state.reload();
                     });
                 }
                 else if($scope.package && $scope.package != '') {
                     uploadService.uploadInPackage({id: $scope.package._id, file: $scope.uploadFile}).$promise.then(function(res){
                         console.log(res);
+                        $('#attachDocument').closeModal();
+                        $state.reload();
                     });
                 }
                 else {
                     uploadService.upload({id: $stateParams.id, file: $scope.uploadFile}).$promise.then(function(res){
                         console.log(res);
+                        $('#attachDocument').closeModal();
+                        $state.reload();
                     });
                 }
             };

@@ -118,8 +118,8 @@
           </div>
 
           <!-- if there is a document uploaded in project -->
-          <div colorbox data-current="true" class="col s8 offset-s2 center valign" ng-switch="file.mimeType" ng-if="!file.isSendToDocumentation">
-            <span ng-switch-when="image/jpeg">
+          <div colorbox data-current="true" class="col s8 offset-s2 center valign" ng-if="!file.isSendToDocumentation">
+            <!-- <span ng-switch-when="image/jpeg">
               <a ng-class="{isCurrent: currentSelect}" class="gallery" data-filetype="jpg" data-rel="group1" rel="jpg" href="../../media/files/{{file._id}}.jpg">
                 <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}.jpg" alt="">
               </a>
@@ -138,7 +138,8 @@
               <a ng-class="{isCurrent: currentSelect}" class="gallery" data-filetype="jpg" data-rel="group1" rel="jpg" href="../../media/sample-1.jpg">
                 <img class="materialboxed" width="90%" src="../../media/sample-1.jpg" alt="">
               </a>
-            </span>
+            </span> -->
+            <div type="filepicker-preview" data-fp-url="{{file.preview}}" style="width:75%; height:500px"> </div>
             <!-- file description -->
             <span style="cursor:pointer;" ng-click="likeDocument(file);">
               <div class="col s4" style="display:inline-block">{{(file.isInterested) ? 'Dislike' : 'Like'}}</div>
@@ -154,7 +155,7 @@
 
           <!-- if there is a document send by design package -->
           <div colorbox data-current="true" class="col s8 offset-s2 center valign" ng-switch="file.mimeType" ng-if="file.isSendToDocumentation">
-            <span ng-switch-when="image/jpeg">
+            <!-- <span ng-switch-when="image/jpeg">
               <a ng-class="{isCurrent: currentSelect}" class="gallery" data-filetype="jpg" data-rel="group1" rel="jpg" href="../../media/files/{{file.documentDesignId}}.jpg">
                 <img class="materialboxed" width="90%" src="../../media/files/{{file.documentDesignId}}.jpg" alt="">
               </a>
@@ -173,7 +174,8 @@
               <a ng-class="{isCurrent: currentSelect}" class="gallery" data-filetype="jpg" data-rel="group1" rel="jpg" href="../../media/sample-1.jpg">
                 <img class="materialboxed" width="90%" src="../../media/sample-1.jpg" alt="">
               </a>
-            </span>
+            </span> -->
+            <div type="filepicker-preview" data-fp-url="{{file.preview}}" style="width:75%; height:500px"> </div>
             <!-- file description -->
             <span style="cursor:pointer;" ng-click="likeDocument(file);">
               <div class="col s4" style="display:inline-block">{{(file.isInterested) ? 'Dislike' : 'Like'}}</div>

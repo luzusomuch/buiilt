@@ -90,7 +90,7 @@ angular.module('buiiltApp')
         //         }
         //     });
         // }
-        if (builderPackage.to) {
+        if (builderPackage.to.team) {
             _.each(builderPackage.to.team.leader, function(leader){
                 availableEachTeam.push(leader);
             });

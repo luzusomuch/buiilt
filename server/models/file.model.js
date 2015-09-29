@@ -144,6 +144,7 @@ FileSchema.methods.toJSON = function() {
     size: this.size,
     type: this.type,
     fileUrl: this.fileUrl,
+    path: this.path,
     previewData: this.previewData,
     usersRelatedTo: this.usersRelatedTo,
     usersInterestedIn: this.usersInterestedIn,

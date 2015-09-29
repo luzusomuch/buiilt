@@ -15,15 +15,15 @@
         <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-click="clickShowTenders()" class="collection-item" style="font-size:12px">TENDERERS</div>
       </div>
 
-      <div class="col s9 white-background">
-        <div class="padding-4" ng-if="showScope">
-          <div class="row collection-header" style="margin-bottom:0px;">
+      <div class="col s9 white-background" style="padding: 0px;">
+        <div class="" ng-if="showScope">
+          <div class="row collection-header" style="margin:0px; margin-top: 4px;">
             <div class="col right" style="font-size:12px">
                <a ng-click="cancelPackage()" class="" style="padding: 5px;">CANCEL PACKAGE</a>
                <a class="modal-trigger" href="#modal_attachAddendum" style="padding: 5px;">ATTACH ADDENDUM</a>
             </div>
           </div>
-          <div class="content-scroll" style="height: {{contentHeight +17}}px;">
+          <div class="content-scroll" style="height: {{contentHeight +23}}px;">
             <div class="col s12">
               <strong>Start date</strong>: {{materialRequest.dateStart | date: longDate}}
               <table class="bordered centered">
@@ -46,13 +46,13 @@
           </div>
         </div>
         
-        <div class="tenderLists white-background padding-4" ng-if="showTenders">
-          <div class="row collection-header" style="margin-bottom:0px;">
+        <div class="tenderLists white-background" ng-if="showTenders">
+          <div class="row collection-header" style="margin:0px; margin-top: 4px;">
             <div class="col right" style="font-size:12px">
               <a class="modal-trigger" href="#modal_inviteSupplier" style="padding: 5px;">INVITE ANOTHER TENDERER</a>
             </div>
           </div>
-          <div class="content-scroll" style="height: {{contentHeight +17}}px;">
+          <div class="content-scroll" style="height: {{contentHeight +23}}px;">
             <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="tender in materialRequest.to | filter: {isDecline:false}">
                <div class="col s9">
                  <div><a ng-click="viewTenderDetail(tender)" href="#">{{tender.email}}</a></div>
@@ -71,8 +71,8 @@
           </div>
         </div>
         
-        <div class="showTenderDetail padding-4 white-background" style="display:none">
-          <div class="row collection-header" style="margin-bottom:0px;">
+        <div class="showTenderDetail white-background" style="display:none">
+          <div class="row collection-header" style="margin:0px; margin-top: 4px;">
             <div class="col s12" style="font-size:12px">
               <a class="backToTendersList" href="#!" ng-click="backToList()" style="margin-left:30px; padding: 5px;">&lt; BACK TO TENDERS</a>
               <div class="right" ng-if="builderPackage.hasWinner">
@@ -81,7 +81,7 @@
               </div>
             </div>
           </div>
-          <div class="content-scroll" style="height: {{contentHeight +17}}px;">
+          <div class="content-scroll" style="height: {{contentHeight +23}}px;">
             <div class="collection-item row" ng-repeat="quote in tender.quoteDocument">
                <div class="col s9" ng-if="$last">
                  <div>

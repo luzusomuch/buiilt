@@ -27,6 +27,7 @@ angular.module('buiiltApp')
     fileService.getFileByStateParam({'id': $stateParams.id}).$promise.then(function(data) {
       $scope.files = data;
       _.each($scope.files, function(file){
+        file.preview = file.path.replace('/file/', '/preview/');
         file.totalLike = file.usersInterestedIn.length;
         if (_.find(file.usersInterestedIn,{_id: $scope.currentUser._id})) {
             file.isInterested = true;
