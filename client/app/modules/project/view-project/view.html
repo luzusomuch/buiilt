@@ -139,7 +139,8 @@
                 <img class="materialboxed" width="90%" src="../../media/sample-1.jpg" alt="">
               </a>
             </span> -->
-            <div type="filepicker-preview" data-fp-url="{{file.preview}}" style="width:75%; height:500px"> </div>
+            <img ng-src="{{file.path | fpConvert: {w:500} }}">
+            <!-- <div type="filepicker-preview" data-fp-url="{{file.path}}" style="width:75%; height:300px"> </div> -->
             <!-- file description -->
             <span style="cursor:pointer;" ng-click="likeDocument(file);">
               <div class="col s4" style="display:inline-block">{{(file.isInterested) ? 'Dislike' : 'Like'}}</div>
@@ -175,7 +176,8 @@
                 <img class="materialboxed" width="90%" src="../../media/sample-1.jpg" alt="">
               </a>
             </span> -->
-            <div type="filepicker-preview" data-fp-url="{{file.preview}}" style="width:75%; height:500px"> </div>
+            <img ng-src="{{file.path | fpConvert: {w:200} }}">
+            <!-- <div filepicker-preview type="filepicker-preview" data-fp-url="{{file.path}}" style="width:75%; height:500px"> </div> -->
             <!-- file description -->
             <span style="cursor:pointer;" ng-click="likeDocument(file);">
               <div class="col s4" style="display:inline-block">{{(file.isInterested) ? 'Dislike' : 'Like'}}</div>
