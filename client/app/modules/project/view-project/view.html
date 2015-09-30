@@ -86,7 +86,7 @@
            <div  style="font-size: 12px;">
              <span id="backToListDocuments" ng-click="backToList()" style="margin-left:30px; padding: 5px;">&lt; BACK TO ALL DOCUMENTS</span>
              <div class="right">
-               <a class="modal-trigger" href="#uploadReversion" style="margin-left:30px; padding: 5px;">UPLOAD A REVISION</a>
+               <a ng-click="getUploadReversionFile(file)" class="modal-trigger" href="#uploadReversion" style="margin-left:30px; padding: 5px;">UPLOAD A REVISION</a>
                <a href='{{file.fileUrl}}' download="file.name" style="margin-left:30px; padding: 5px;">DOWNLOAD THIS DOCUMENT</a>
              </div>
            </div>
@@ -199,9 +199,9 @@
 </div>
 
 <div id="uploadReversion" class="modal modal-fixed-footer">
-  <form ng-submit="uploadAll()">
+  <form ng-submit="uploadReversionDocument()" name="uploadForm">
   <div class="modal-content">
-  <div class="row" style="margin-top: 50px">
+  <!-- <div class="row" style="margin-top: 50px">
     <div class="col s8 offset-s2">
       <div class="file-field input-field">
         <div class="btn tooltipped" data-position="top" data-delay="1" data-tooltip="Attach a File">
@@ -254,11 +254,48 @@
         </div>
       </div>
     </div>
+  </div> -->
+  <div class="row">
+    <div class="input-field col s8 offset-s2">
+      <textarea id="docAttachTitle" class="materialize-textarea" ng-model="uploadReversionFile.title" id="textarea1" name="title" required></textarea>
+      <label for="">Title</label>
+      <p class="validate-message" ng-if="uploadForm.title.$error.required || uploadFile.title == ' '">Document name is required</p>
+    </div>
   </div>
-</div>
+  <div class="row">
+    <div class="input-field col s8 offset-s2">
+      <input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s8 offset-s2">
+      <textarea id="docAttachDesc" name="description" class="materialize-textarea" ng-model="uploadReversionFile.description" id="textarea1" required></textarea>
+      <label for="">Description</label>
+      <p class="validate-message" ng-if="uploadForm.description.$error.required || uploadFile.description == ' '">Document name is required</p>
+    </div>
+  </div>
+  <div class="row">
+      <div class="input-field col s8 offset-s2">
+        <p>Current tags: </p>
+        <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="tag in selectedTags">
+          {{tag}}<span><a href="#!" ng-click="deselect(tag,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
+        </div>
+        <p class="validate-message" ng-if="tagsError">Please provide at least one tag of document</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s8 offset-s2" id="docAttachTags">
+        <p>Avaiable tags: </p>
+        <a href="#!" ng-click="selectTag(tag, $index)" ng-repeat="tag in tags">
+          <div class="card col" style="padding: 5px; margin-left: 10px">
+            {{tag}}
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
   <div class="modal-footer">
-    <button ng-click="getFileId(file)" type="submit" class="modal-action modal-close waves-effect waves-green btn-flat" ng-disabled="uploader.isReady || uploader.isUploading || uploader.isSuccess">Attach Document!</button>
-    <!-- <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="uploadAll()" ng-disabled="uploader.isReady || uploader.isUploading || uploader.isSuccess">Attach Document!</a> -->
+    <button type="submit" class="modal-action waves-effect waves-green btn-flat">Attach Document!</button>
     <a class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
   </div>
 </form>

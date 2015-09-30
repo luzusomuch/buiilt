@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-.controller('ViewProjectCtrl', function($timeout,$rootScope,$window,$scope, $stateParams, authService,documentService, projectService, project, packageService, fileService,FileUploader,$cookieStore) {
+.controller('ViewProjectCtrl', function($timeout,$rootScope,$window,$scope, $stateParams, authService,documentService, projectService, project, packageService, fileService,FileUploader,$cookieStore, filepickerService,uploadService, $state) {
   $scope.activeHover = function($event){
     angular.element($event.currentTarget).addClass("item-hover")
   };
@@ -90,101 +90,58 @@ angular.module('buiiltApp')
   };
 
   //upload reversion
-  var uploader = $scope.uploader = new FileUploader({
-      url: 'api/uploads/'+ $stateParams.id + '/file',
-      headers : {
-        Authorization: 'Bearer ' + $cookieStore.get('token')
-      },
-      formData: [$scope.formData]
-  });
-  $scope.getFileId = function(value) {
-      var fileId = value._id;
-      $scope.formData = {
-          fileId: '',
-          date: new Date(),
-          // album: {},
-          title: '',
-          // belongTo: {},
-          // doc: {},
-          desc: '',
-          tags: []
-          // usersRelatedTo: []
-      };
-
-      $scope.safeApply = function (fn) {
-          var phase = this.$root.$$phase;
-          if (phase == '$apply' || phase == '$digest') {
-            if (fn && (typeof (fn) === 'function')) {
-              fn();
-            }
-          } else {
-            this.$apply(fn);
-          }
-      };
-
-      
-
-      uploader.onProgressAll = function (progress) {
-          $scope.progress = progress;
-      };
-      uploader.onAfterAddingFile = function (item) {
-          //item.file.name = ''; try to change file name
-          var reader = new FileReader();
-
-          reader.onload = function (e) {
-              item.src = e.target.result;
-              $scope.safeApply();
-          };
-
-          reader.readAsDataURL(item._file);
-      };
-      var newPhoto = null;
-      uploader.onCompleteItem = function (fileItem, response, status, headers) {
-          newPhoto = response;
-          // $state.reload();
-          fileService.getFileByStateParam({'id': $stateParams.id}).$promise.then(function(data) {
-              $scope.files = data;
-          });
-      };
-
-      uploader.onBeforeUploadItem = function (item) {
-          $scope.formData._id = fileId;
-          $scope.formData.title = value.title;
-          // $scope.formData.belongTo = $stateParams.id;
-          // $scope.formData.doc = $scope.documentId;
-          $scope.formData.desc = value.description;
-          $scope.formData.tags = $scope.selectedTags;
-          // $scope.formData.usersRelatedTo = item.file.usersRelatedTo || "";
-          //angular.forEach(item.file.tags, function (tag) {
-          //  $scope.formData.tags.push(tag.text);
-          //});
-          item.formData.push($scope.formData);
-      };
-
-      var hideModalAfterUploading = false;
-      $scope.uploadAll = function(){
-          hideModalAfterUploading = true;
-          uploader.uploadAll();
-          Materialize.toast('<p style="width:300px;">Upload in progress</p><div class="progress"><div class="indeterminate"></div></div>',35000);
-      };
-
-      uploader.onCompleteAll = function () {
-          if(hideModalAfterUploading){
-              // $modalInstance.close(newPhoto);
-          }
-          // $state.reload();
-          if ($stateParams.id) {
-              fileService.getFileByStateParam({'id': $stateParams.id}).$promise.then(function(data) {
-                  $scope.files = data;
-              });    
-          }
-          $('.toast').css('opacity','0');
-          Materialize.toast('Upload completed',3000);
-      };
+  $scope.uploadFile = {};
+  $scope.selectedTags = [];
+  $scope.tags = ['architectural','engineering','council','other'];
+  $scope.getUploadReversionFile = function(file) {
+    $scope.uploadReversionFile = file;
+    $scope.selectedTags = $scope.uploadReversionFile.tags;
+    _.each($scope.selectedTags, function(selectedTag){
+      _.each($scope.tags, function(tag, key){
+        if (selectedTag == tag) {
+          $scope.tags.splice(key,1);
+        }
+      });
+    });
+    $scope.$watch('uploadReversionFile.title', function(value){
+      $scope.uploadFile.title = value;
+    });
+    $scope.$watch('uploadReversionFile.description', function(value){
+      $scope.uploadFile.desc = value;
+    });
   };
 
-  $scope.tags = ['architectural','engineering','council','other'];
-  $scope.selectedTags = [];
+  $scope.pickFile = pickFile;
+
+  $scope.onSuccess = onSuccess;
+
+  function pickFile(){
+    filepickerService.pick(
+      {mimetype: 'image/*'},
+      onSuccess
+    );
+  };
+
+  function onSuccess(file){
+    $scope.uploadFile = {
+      file: file,
+      _id: ($scope.uploadReversionFile) ? $scope.uploadReversionFile._id : '',
+      belongToType: ($scope.package) ? $scope.package.type : 'project',
+      tags: $scope.selectedTags,
+      isQuote: $scope.isQuote,
+      title: '',
+      desc: ''
+    };
+  };
+
+  $scope.uploadReversionDocument = function() {
+    uploadService.upload({id: $stateParams.id, file: $scope.uploadFile}).$promise.then(function(res){
+      $('#uploadReversion').closeModal();
+      $rootScope.newestDocument = res;
+      $state.reload();
+    });
+  };
+  
   $scope.selectTag = function(tag, index) {
     $scope.selectedTags.push(tag);
     $scope.tags.splice(index,1);

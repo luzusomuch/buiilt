@@ -93,7 +93,7 @@
       <div class="input-field col s8 offset-s2">
         <p>Current tags: </p>
         <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="tag in selectedTags">
-          {{tag}}<span><div ng-click="deselect(tag,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></div></span>
+          {{tag}}<span><a href="#!" ng-click="deselect(tag,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
         </div>
         <p class="validate-message" ng-if="tagsError">Please provide at least one tag of document</p>
       </div>
@@ -101,11 +101,11 @@
     <div class="row">
       <div class="input-field col s8 offset-s2" id="docAttachTags">
         <p>Avaiable tags: </p>
-        <div ng-click="selectTag(tag, $index)" ng-repeat="tag in tags">
+        <a href="#!" ng-click="selectTag(tag, $index)" ng-repeat="tag in tags">
           <div class="card col" style="padding: 5px; margin-left: 10px">
             {{tag}}
           </div>
-        </div>
+        </a>
       </div>
     </div>
   </div>

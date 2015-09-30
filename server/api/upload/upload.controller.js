@@ -35,16 +35,71 @@ var validationError = function (res, err) {
  * @returns {undefined}
  */
 exports.upload = function(req, res){
-    console.log('11111111111111111');
-    console.log(req.body);
-    console.log(req.params.id);
     var request = req.body.file;
     if (request._id != '') {
-
+        File.findById(request._id, function(err, file) {
+            if (err) {console.log(err);return res.send(500,err);}
+            file.title = request.title;
+            file.name = request.file.filename;
+            file.path = request.file.url;
+            file.server = 's3';
+            file.mimeType = request.file.mimetype;
+            file.description = request.desc;
+            file.size = request.file.size;
+            file.version = file.version + 1;
+            file.belongTo = req.params.id;
+            file.tags = request.tags;
+            file.save(function(err, saved) {
+                if (err) {console.log(err);return res.send(500,err);}
+                var owners = [];
+                BuilderPackage.findOne({project: saved.belongTo})
+                .populate('owner')
+                .populate("project")
+                .populate('to.team')
+                .populate('member').exec(function(err,builderPackage){
+                    if (err) {return res.send(500,err);}
+                    owners = builderPackage.owner.leader;
+                    _.each(builderPackage.owner.member, function(member){
+                        if (member._id) {
+                            owners.push(member._id);
+                        }
+                    });
+                    if (builderPackage.to.team) {
+                        owners = _.union(owners, builderPackage.to.team.leader);
+                        _.each(builderPackage.to.team.member, function(member){
+                            if (member._id) {
+                                owners.push(member._id);
+                            }
+                        });
+                    } else if (builderPackage.winner) {
+                        owners = _.union(owners, builderPackage.winner.leader);
+                        _.each(builderPackage.winner.member, function(member){
+                            if (member._id) {
+                                owners.push(member._id);
+                            }
+                        });
+                    }
+                    _.remove(owners, req.user._id);
+                    async.each(owners, function(leader, callback){
+                        var notification = new Notification({
+                            owner: leader,
+                            fromUser: req.user._id,
+                            toUser: leader,
+                            element: {file: saved.toJSON(), 
+                                uploadIn: builderPackage,
+                                projectId: builderPackage.project},
+                            referenceTo: "DocumentInProject",
+                            type: 'uploadNewDocumentVersion'
+                        });
+                        notification.save(callback);
+                    }, function(err){
+                        if (err) {return res.send(500,err);}
+                        return res.send(file.toJSON());
+                    });
+                });
+            });
+        });
     } else {
-        console.log('aaaaaaaaa');
-        console.log(request.tags);
-        // var tags = request.tags.split(',');
         var file = new File({
             title: request.title,
             name: request.file.filename,
@@ -59,47 +114,55 @@ exports.upload = function(req, res){
             tags: request.tags
         });
         file.save(function(err){
-            if (err) {console.log(err);return res.send(500,err);}
-            else {
-                var owners = [];
-                BuilderPackage.findOne({project: file.belongTo})
-                .populate('owner').populate("project").populate('to.team').exec(function(err,builderPackage){
-                    if (err || !builderPackage) {return cb(err);}
-                    else {
-                        owners = builderPackage.owner.leader;
-                        _.each(builderPackage.owner.member, function(member){
+            if (err) {return res.send(500,err);}
+            var owners = [];
+            BuilderPackage.findOne({project: file.belongTo})
+            .populate('owner')
+            .populate("project")
+            .populate('to.team')
+            .populate('winner').exec(function(err,builderPackage){
+                if (err || !builderPackage) {return cb(err);}
+                else {
+                    owners = builderPackage.owner.leader;
+                    _.each(builderPackage.owner.member, function(member){
+                        if (member._id) {
+                            owners.push(member._id);
+                        }
+                    });
+                    if (builderPackage.to.team) {
+                        owners = _.union(builderPackage.owner.leader, builderPackage.to.team.leader);
+                        _.each(builderPackage.to.team.member, function(member){
                             if (member._id) {
                                 owners.push(member._id);
                             }
                         });
-                        if (builderPackage.to.team) {
-                            owners = _.union(builderPackage.owner.leader, builderPackage.to.team.leader);
-                            _.each(builderPackage.to.team.member, function(member){
-                                if (member._id) {
-                                    owners.push(member._id);
-                                }
-                            });
-                        }
-                        _.remove(owners, req.user._id);
-                        async.each(owners, function(leader, callback){
-                            var notification = new Notification({
-                                owner: leader,
-                                fromUser: req.user._id,
-                                toUser: leader,
-                                element: {file: file.toJSON(), 
-                                    uploadIn: builderPackage,
-                                    projectId: builderPackage.project},
-                                referenceTo: "DocumentInProject",
-                                type: 'uploadNewDocumentVersion'
-                            });
-                            notification.save(callback);
-                        }, function(err) {
-                            if (err) {return res.send(500,err);}
-                            return res.send(file.toJSON());
+                    } else if (builderPackage.winner) {
+                        owners = _.union(owners, builderPackage.winner.leader);
+                        _.each(builderPackage.winner.member, function(member){
+                            if (member._id) {
+                                owners.push(member._id);
+                            }
                         });
                     }
-                });
-            }
+                    _.remove(owners, req.user._id);
+                    async.each(owners, function(leader, callback){
+                        var notification = new Notification({
+                            owner: leader,
+                            fromUser: req.user._id,
+                            toUser: leader,
+                            element: {file: file.toJSON(), 
+                                uploadIn: builderPackage,
+                                projectId: builderPackage.project},
+                            referenceTo: "DocumentInProject",
+                            type: 'uploadNewDocumentVersion'
+                        });
+                        notification.save(callback);
+                    }, function(err) {
+                        if (err) {return res.send(500,err);}
+                        return res.send(file.toJSON());
+                    });
+                }
+            });
         });
     }
 };
@@ -128,7 +191,7 @@ exports.uploadInPackge = function(req, res){
             Design.findById(file.belongTo)
             .populate('owner')
             .exec(function(err, design){
-                if (err || !design) {return cb(err);}
+                if (err) {return res.send(500,err);}
                 owners = _.union(design.owner.leader, design.invitees);
                 _.each(design.owner.member, function(member){
                     if (member._id) {
@@ -160,7 +223,7 @@ exports.uploadInPackge = function(req, res){
         else if (file.belongToType == 'contractor') {
             ContractorPackage.findById(file.belongTo).populate('owner')
             .populate('winnerTeam._id').exec(function(err, contractorPackage) {
-                if (err || !contractorPackage) {return cb();}
+                if (err) {return res.send(500,err);}
                 
                 _.each(contractorPackage.to, function(toContractor){
                     if (toContractor._id && toContractor._id.toString() == req.user.team._id.toString()) {
@@ -208,7 +271,7 @@ exports.uploadInPackge = function(req, res){
         else if (file.belongToType == 'material') {
             MaterialPackage.findById(file.belongTo).populate('owner')
             .populate('winnerTeam._id').exec(function(err, materialPackage) {
-                if (err || !materialPackage) {return cb();}
+                if (err) {return res.send(500,err);}
                 _.each(materialPackage.to, function(toSupplier){
                     if (toSupplier._id && toSupplier._id.toString() == req.user.team._id.toString()) {
                         toSupplier.quoteDocument.push(file._id);
@@ -254,7 +317,7 @@ exports.uploadInPackge = function(req, res){
         }
         else if (file.belongToType == 'staffPackage') {
             StaffPackage.findById(file.belongTo).populate('owner').exec(function(err, staffPackage) {
-                if (err || !staffPackage) {return cb();}
+                if (err) {return res.send(500,err);}
                 owners = _.union(staffPackage.owner.leader, staffPackage.staffs);
                 _.remove(owners, req.user._id);
                 async.each(owners, function(leader,callback){
@@ -277,7 +340,7 @@ exports.uploadInPackge = function(req, res){
         }
         else if (file.belongToType == 'variation') {
             Variation.findById(file.belongTo).populate('owner').populate('to._id').exec(function(err, variation) {
-                if (err || !variation) {return cb();}
+                if (err) {return res.send(500,err);}
 
                 owners = variation.to._id.leader;
                 _.each(variation.to._id.member, function(member){
@@ -325,7 +388,7 @@ exports.uploadInPackge = function(req, res){
             .populate('owner')
             .populate('to.team')
             .populate('winner').exec(function(err, builderPackage){
-                if (err || !builderPackage) {return cb();}
+                if (err) {return res.send(500,err);}
                 if (builderPackage.invitees.length > 0) {
                     _.each(builderPackage.invitees, function(invitee){
                         if (invitee._id && invitee._id.toString() == req.user.team._id.toString()) {
