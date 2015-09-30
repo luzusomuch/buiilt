@@ -345,6 +345,7 @@ angular.module('buiiltApp').directive('addon', function(){
               $scope.document = document;
               $("div.documentsList").hide();
               $("div.documentDetail").show("slide", { direction: "right" }, 500);
+              $rootScope.newestDocument = null;
             }
 
             $("a."+$scope.package._id).colorbox({rel:'group1'});

@@ -161,6 +161,7 @@ angular.module('buiiltApp')
     $scope.file = file;
     $("div.notShowFileDetail").hide();
     $("div.showFileDetail").show("slide", { direction: "right" }, 500);
+    $rootScope.newestDocument = null;
   };
 
   // $("a."+$scope.file._id).colorbox({rel: '$scope.file._id'});
