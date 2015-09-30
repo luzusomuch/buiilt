@@ -781,7 +781,7 @@
          <div style="font-size: 12px;">
            <a ng-click="backToDocumentsList()" style="margin-left:30px; padding: 5px;">&lt; BACK TO DOCUMENTS</a>
            <div class="right">
-              <a href="{{document.fileUrl}}" download="{{document.title}}" class="" style="padding: 5px;">DOWNLOAD</a>
+              <a href="{{document.fileUrl}}" download="{{document.name}}" class="" style="padding: 5px;">DOWNLOAD</a>
               
            </div>
          </div>
@@ -792,8 +792,8 @@
           <p>{{document.title}}</p>
           <p>{{document.description}}</p>
         </div>
-        <div class="row center" ng-switch="document.mimeType">
-          <span ng-switch-when="image/jpeg">
+        <div class="row center">
+          <!-- <span ng-switch-when="image/jpeg">
               <img class="materialboxed" width="70%" src="../../media/files/{{document._id}}-{{document.title}}.jpg" alt="" colorbox="../../media/files/{{document._id}}-{{document.title}}.jpg">
             </span>
             <span ng-switch-when="image/png">
@@ -804,7 +804,8 @@
             </span>
             <span ng-switch-default>
               <img class="materialboxed" width="70%" src="../../media/sample-1.jpg" alt="" colorbox="../../media/media/sample-1.jpg">
-            </span>
+            </span> -->
+          <img ng-src="{{document.path | fpConvert: {w:500} }}">
         </div>
       </div>
     </div>

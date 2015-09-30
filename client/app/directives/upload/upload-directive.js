@@ -26,7 +26,6 @@ angular.module('buiiltApp').directive('upload', function(){
             };
 
             function onSuccess(file){
-
                 $scope.uploadFile = {
                     file: file,
                     _id: ($scope.fileId) ? $scope.fileId : '',
@@ -37,25 +36,24 @@ angular.module('buiiltApp').directive('upload', function(){
             };
 
             $scope.uploadNewDocument = function() {
-                console.log($scope.uploadFile);
                 if ($stateParams.packageId) {
                     uploadService.uploadInPackage({id: $stateParams.packageId, file: $scope.uploadFile}).$promise.then(function(res){
-                        console.log(res);
-                        $('#attachDocument').closeModal();
+                        $('#modal_attachDocument').closeModal();
+                        $rootScope.newestDocument = _.last(res);
                         $state.reload();
                     });
                 }
                 else if($scope.package && $scope.package != '') {
                     uploadService.uploadInPackage({id: $scope.package._id, file: $scope.uploadFile}).$promise.then(function(res){
-                        console.log(res);
-                        $('#attachDocument').closeModal();
+                        $('#modal_attachDocument').closeModal();
+                        $rootScope.newestDocument = _.last(res);
                         $state.reload();
                     });
                 }
                 else {
                     uploadService.upload({id: $stateParams.id, file: $scope.uploadFile}).$promise.then(function(res){
-                        console.log(res);
-                        $('#attachDocument').closeModal();
+                        $('#modal_attachDocument').closeModal();
+                        $rootScope.newestDocument = _.last(res);
                         $state.reload();
                     });
                 }
