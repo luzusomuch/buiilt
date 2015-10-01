@@ -69,6 +69,8 @@ var all = {
 		  
   Bucket: 'buiilt',
 
+  ssl: false
+
   // s3Options: {
   //           accessKeyId: 'AKIAI7KKFT6PBJRLBZKQ',
   //           secretAccessKey: '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',
