@@ -4,6 +4,7 @@ var User = require('./../../models/user.model');
 var Project = require('./../../models/project.model');
 var Design = require('./../../models/design.model');
 var Notification = require('./../../models/notification.model');
+var File = require('./../../models/file.model');
 var _ = require('lodash');
 var async = require('async');
 
@@ -29,27 +30,44 @@ exports.Design = function(req,res,next) {
 }
 
 exports.createDesign = function(req,res) {
-    var user = req.user;
-    var invitees = [];
-    var design = new Design();
-    design.name = req.body.name,
-    design.owner = user.team._id;
-    design.project = req.params.id;
-    design.descriptions = req.body.descriptions,
-    design.type = 'design';
-    _.each(req.body.staffs, function(item){
-        invitees.push(item._id);
-    })    
-    design.invitees = invitees;
-    design.markModified('invitees');
-    design._editUser = user;
-    design.save(function(err) {
-        if (err) {
-          console.log(err);
-            return res.send(500, err);
-        }
-        return res.json(design)
+  var user = req.user;
+  var invitees = [];
+  var design = new Design();
+  design.name = req.body.name,
+  design.owner = user.team._id;
+  design.project = req.params.id;
+  design.descriptions = req.body.descriptions,
+  design.type = 'design';
+  _.each(req.body.staffs, function(item){
+      invitees.push(item._id);
+  })    
+  design.invitees = invitees;
+  design.markModified('invitees');
+  design._editUser = user;
+  design.save(function(err) {
+    if (err) {
+      return res.send(500, err);
+    }
+    var file = new File({
+      title : req.body.name,
+      name : req.body.uploadFile.file.filename,
+      path: req.body.uploadFile.file.url,
+      server: 's3',
+      mimetype: req.body.uploadFile.file.mimetype,
+      description: ' ',
+      size: req.body.uploadFile.file.size,
+      belongTo: design._id,
+      belongToType: req.body.uploadFile.belongToType,
+      tags: req.body.uploadFile.tags,
+      uploadBy: req.user.team._id,
+      isDesignDescription: true,
+      user: req.user._id
     });
+    file.save(function(err){
+      if (err) {return res.send(500,err);}
+      return res.json(design);
+    });
+  });
 };
 
 exports.getAll = function(req,res) {

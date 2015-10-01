@@ -97,7 +97,10 @@ var FileSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'File'
   },
-  key: String
+  key: String,
+  isDesignDescription: {
+    type: Boolean, default: false
+  }
 });
 
 /**

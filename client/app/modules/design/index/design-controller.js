@@ -1,6 +1,6 @@
 angular.module('buiiltApp')
   .controller('DesignCtrl',
-  function(messageService,$state,taskService,fileService,$scope, $timeout, $q, authService, $rootScope,designService,filterFilter,currentTeam,currentUser,designs,socket, builderPackage) {
+  function(messageService,$state,taskService,fileService,$scope, $timeout, $q, authService, $rootScope,designService,filterFilter,currentTeam,currentUser,designs,socket, builderPackage,  filepickerService,uploadService) {
 
     $scope.activeHover = function($event){
         angular.element($event.currentTarget).addClass("item-hover")
@@ -69,7 +69,8 @@ angular.module('buiiltApp')
     $scope.available = [];
     $scope.design = {
         staffs : [],
-        descriptions: []
+        descriptions: [],
+        uploadFile: {}
     };
     $scope.submitted = false;
     var getAvailableAssign =  function() {
@@ -160,17 +161,34 @@ angular.module('buiiltApp')
         $state.go("design.detail",{id: item.project,packageId : item._id});
     };
 
+    $scope.uploadFile = {};
+    $scope.pickFile = pickFile;
+    $scope.selectedTags = [];
+
+    $scope.onSuccess = onSuccess;
+
+    function pickFile(){
+        filepickerService.pick(
+            {mimetype: 'image/*'},
+            onSuccess
+        );
+    };
+
+    function onSuccess(file){
+        $scope.design.uploadFile = {
+            file: file,
+            belongToType: 'design',
+            tags: $scope.selectedTags,
+            isQuote: $scope.isQuote
+        };
+    };
+
     $scope.createDesign = function(form) {
         $scope.submitted = true;
-        $scope.$watchGroup(['design.descriptions.length','submitted'],function(value) {
-            $scope.descriptionError = (value[0] <= 0 && value[1]);
-        });
-
         $scope.$watchGroup(['design.staffs.length','submitted'],function(value) {
             $scope.assgineesError = (value[0] <= 0 && value[1]);
-
         });
-        if (form.$valid && !$scope.assgineesError && !$scope.descriptionError ) {
+        if (form.$valid && !$scope.assgineesError) {
             designService.create({id : $scope.currentProject._id},$scope.design).$promise
                 .then(function(res) {
                 $state.go('design.detail',{id : res.project, packageId : res._id});
