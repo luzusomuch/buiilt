@@ -69,7 +69,7 @@ var all = {
 		  
   Bucket: 'buiilt',
 
-  ssl: process.env.PORT || false
+  ssl: process.env.SSL || false
 
   // s3Options: {
   //           accessKeyId: 'AKIAI7KKFT6PBJRLBZKQ',
