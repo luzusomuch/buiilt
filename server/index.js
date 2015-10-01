@@ -49,7 +49,7 @@ require('./config/express')(app);
 require('./routes')(app);
 
 // Start server
-server.listen(config.port, config.ip, function () {
+server.listen(config.port, (port) ? port : config.port, function () {
   console.log('Express server listening on %d, in %s mode', config.port, app.get('env'));
   // NotificationDigest.run();
 });
