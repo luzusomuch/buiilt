@@ -7,7 +7,6 @@
 // Set default node environment to development
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
-var https = require('https');
 var express = require('express');
 var mongoose = require('mongoose');
 var config = require('./config/environment');
@@ -32,7 +31,7 @@ if (config.ssl) {
         rejectUnauthorized: true
     };
     var port = 9001;
-    var server = require('https').createServer(options.https, app);
+    var server = require('https').createServer(options, app);
 } else {
     var server = require('http').createServer(app);
 }
