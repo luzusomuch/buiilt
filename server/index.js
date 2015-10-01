@@ -30,7 +30,7 @@ if (config.ssl) {
         requestCert: false,
         rejectUnauthorized: true
     };
-    var port = 9001;
+    config.port = 9001;
     var server = require('https').createServer(options, app);
 } else {
     var server = require('http').createServer(app);
@@ -49,7 +49,7 @@ require('./config/express')(app);
 require('./routes')(app);
 
 // Start server
-server.listen(config.port, (port) ? port : config.port, function () {
+server.listen(config.port, config.ip, function () {
   console.log('Express server listening on %d, in %s mode', config.port, app.get('env'));
   // NotificationDigest.run();
 });
