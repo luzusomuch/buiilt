@@ -30,7 +30,7 @@ if (config.ssl) {
         requestCert: false,
         rejectUnauthorized: true
     };
-    var port = 9000;
+    var port = 9001;
     var server = require('https').createServer(options.https, app);
 } else {
     var server = require('http').createServer(app);
