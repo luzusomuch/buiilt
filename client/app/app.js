@@ -22,7 +22,7 @@ angular.module('buiiltApp', [
 angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider, $locationProvider, $urlRouterProvider, $httpProvider, $sceDelegateProvider, cfpLoadingBarProvider, filepickerProvider) {
   $sceDelegateProvider.resourceUrlWhitelist(['^(?:http(?:s)?:\/\/)?(?:[^\.]+\.)?\(vimeo|youtube)\.com(/.*)?$', 'self']);
   /* Add New States Above */
-  $urlRouterProvider.otherwise('/');
+  $urlRouterProvider.otherwise('/home');
 
   $locationProvider.html5Mode(true);
   $httpProvider.interceptors.push('authInterceptor');
@@ -44,7 +44,7 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
       // Intercept 401s and redirect you to login
       responseError: function (response) {
         if (response.status === 401) {
-          $location.path('/');
+          $location.path('/signin');
           // remove any stale tokens
           $cookieStore.remove('token');
           return $q.reject(response);
