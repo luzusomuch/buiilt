@@ -10,12 +10,18 @@
            </ul>
         </div>
       </div> -->
-      <div class="col s3" style="margin: 0px; padding:0px; background-color: white; height: {{contentHeight + 65}}px; border-right:1px solid #EEE">
+      <div class="row collection-header" style="margin-bottom:0px;">
+        <div class="col right" style="font-size:12px">
+          <a class="modal-trigger" href="#modal_attachDocument" style="padding: 5px;">ATTACH QUOTE</a>
+        </div>
+      </div>
+
+      <div class="col s3" style="margin: 0px; padding:0px; background-color: white; height: {{contentHeight + 25}}px; border-right:1px solid #EEE">
         <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-click="clickShowScopes()" class="collection-item" style="font-size:12px">SCOPE</div>
         <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-click="clickShowQuotes()" class="collection-item" style="font-size:12px">QUOTES</div>
       </div>
-      <div class="col s9 white-background">
-        <div ng-if="showScope" style="height: {{contentHeight + 65}}px;">
+      <div class="col s9 white-background" style="padding: 0px;">
+        <div ng-if="showScope" style="height: {{contentHeight + 25}}px;">
           <div class="col s12">
             <strong>Start date</strong>: {{variationRequest.dateStart | date: longDate}}
             <table class="bordered centered">
@@ -35,13 +41,8 @@
           </div>
         </div>
         
-        <div class="quotesList padding-4" ng-if="showQuotes">
-          <div class="row collection-header" style="margin-bottom:0px;">
-            <div class="col right" style="font-size:12px">
-              <a class="modal-trigger" href="#modal_attachDocument" style="padding: 5px;">ATTACH QUOTE</a>
-            </div>
-          </div>
-          <div class="content-scroll" style="height: {{contentHeight +17}}px;">
+        <div class="quotesList" ng-if="showQuotes">
+          <div class="content-scroll" style="height: {{contentHeight +25}}px;">
             <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="quote in variationRequest.to.quoteDocument">
                <div class="col s9">
                  <div><a ng-click="viewQuoteDetail(quote)" href="#">{{quote.title}}</a></div>
@@ -50,16 +51,13 @@
           </div>
         </div>
         
-        <div class="showQuoteDetail padding-4" style="display:none">
-          <div class="row collection-header" style="margin-bottom:0px;">
+        <div class="showQuoteDetail" style="display:none">
+          <div class="row collection-header" style="margin-bottom:0px; margin-left: 0px; margin-top: 4px;">
             <div class="col s12" style="font-size:12px">
               <a href="#!" ng-click="backToList()" style="margin-left:30px; padding: 5px;">&lt; BACK TO TENDERS</a>
-              <div class="right">
-                <a href="#modal_attachDocument" style="padding: 5px;">ATTACH QUOTE</a>
-              </div>
             </div>
           </div>
-          <div  style="height: {{contentHeight +17}}px;">
+          <div  style="height: {{contentHeight -17}}px;">
            <div class="col s9">
              <div>
               <a href="{{quote.fileUrl}}" download="{{quote.name}}">

@@ -10,19 +10,20 @@
            </ul>
         </div>
       </div> -->
-      <div class="col s3" style="margin: 0px; padding:0px; background-color: white; height: {{contentHeight + 65}}px; border-right:1px solid #EEE">
+      <div class="row collection-header" style="margin:0px;">
+        <div class="col right" style="font-size:12px">
+           <a ng-click="cancelPackage()" class="" style="padding: 5px;">CANCEL PACKAGE</a>
+           <a class="modal-trigger" href="#modal_attachAddendum" style="padding: 5px;">ATTACH ADDENDUM</a>
+        </div>
+      </div>
+
+      <div class="col s3" style="margin: 0px; padding:0px; background-color: white; height: {{contentHeight + 25}}px; border-right:1px solid #EEE">
         <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-click="clickShowScopes()" class="collection-item" style="font-size:12px">SCOPE</div>
         <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-click="clickShowTenders()" class="collection-item" style="font-size:12px">TENDERERS</div>
       </div>
       <div class="col s9 white-background" style="padding: 0px;">
         <div class="" ng-if="showScope">
-          <div class="row collection-header" style="margin:0px; margin-top: 4px;">
-            <div class="col right" style="font-size:12px">
-               <a ng-click="cancelPackage()" class="" style="padding: 5px;">CANCEL PACKAGE</a>
-               <a class="modal-trigger" href="#modal_attachAddendum" style="padding: 5px;">ATTACH ADDENDUM</a>
-            </div>
-          </div>
-          <div class="content-scroll" style="height: {{contentHeight +23}}px;">
+          <div class="content-scroll" style="height: {{contentHeight +25}}px;">
             <div class="col s12">
               <strong>Start date</strong>: {{variationRequest.dateStart | date: longDate}}
               <table class="bordered centered">
@@ -44,11 +45,7 @@
         </div>
         
         <div class="tenderLists" ng-if="showTenders">
-          <div class="row collection-header" style="margin:0px; margin-top: 4px; padding:19px 0px">
-            <div class="col right" style="font-size:12px">
-            </div>
-          </div>
-          <div class="content-scroll" style="height: {{contentHeight +23}}px;">
+          <div class="content-scroll" style="height: {{contentHeight +25}}px;">
             <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row">
                <div class="col s9">
                  <div><a ng-click="viewTenderDetail(variationRequest)" href="#">{{variationRequest.to._id.name}}</a></div>
@@ -77,9 +74,9 @@
               </div>
             </div>
           </div>
-          <div class="content-scroll" style="height: {{contentHeight +17}}px;">
-            <div class="collection-item row" ng-repeat="quote in variationRequest.to.quoteDocument">
-               <div class="col s9" ng-if="$last">
+          <div class="content-scroll" style="height: {{contentHeight -17}}px;">
+            <div class="collection-item row" ng-repeat="quote in variationRequest.to.quoteDocument" ng-if="$last">
+               <div class="col s9">
                  <div>
                     <a href="{{quote.fileUrl}}" download="{{quote.title}}">
                     <span>

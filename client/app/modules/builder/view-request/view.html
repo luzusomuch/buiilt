@@ -1,27 +1,18 @@
 <div class="row" style="padding: 12px">
     <div class="col s8">
-        <div class="collection with-header">
-            <!-- <div class="row collection-header" style="margin-bottom:0px">
-                <div class="row">
-                    <a class='dropdown-button btn-flat' href='#' data-activates='inTender' style="font-size: 12px;" dropdown>{{(defaultText) ? defaultText : "SCOPE"}}<i class="mdi-navigation-arrow-drop-down"></i></a>
-                    <ul id='inTender' class='dropdown-content'>
-                        <li><a ng-click="clickShowScopes()" href="#!">SCOPE</a></li>
-                        <li><a ng-click="clickShowTenders()" href="#!">TENDERERS</a></li>
-                    </ul>
+        <div class="collection with-header" id="inProgressPanel">
+            <div class="row collection-header" style="margin-bottom:0px;">
+                <div class="col right" style="font-size:12px">
+                    <a class="modal-trigger" href="#modal_inviteBuilder" style="padding: 5px;">INVITE ANOTHER TENDERER</a>
                 </div>
-            </div> -->
-            <div class="col s3" style="margin: 0px; padding:0px; background-color: white; height: {{contentHeight + 65}}px; border-right:1px solid #EEE">
+            </div>
+            <div class="col s3" style="margin: 0px; padding:0px; background-color: white; height: {{contentHeight +25}}px; border-right:1px solid #EEE">
                 <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-click="clickShowScopes()" class="collection-item" style="font-size:12px">SCOPE</div>
                 <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-click="clickShowTenders()" class="collection-item" style="font-size:12px">TENDERERS</div>
             </div>
 
             <div class="col s9 white-background" style="padding:0px;">
-                <div ng-if="showScope" style="height: {{contentHeight +65}}px;">
-                    <div class="row collection-header" style="margin-bottom:0px; margin-left: 0px; margin-top: 4px;">
-                        <div class="col right" style="font-size:12px">
-                            <a class="modal-trigger" href="#modal_inviteBuilder" style="padding: 5px;">INVITE ANOTHER TENDERER</a>
-                        </div>
-                    </div>
+                <div ng-if="showScope" style="height: {{contentHeight +25}}px;">
                     <div style="padding: 10px">
                         <strong>Start date</strong>: {{builderRequest.dateStart | date: longDate}}
                         <div class="row">
@@ -32,13 +23,8 @@
                     </div>
                 </div>
                 
-                <div ng-if="showTenders" class="tenderLists white-background padding-4">
-                    <div class="row collection-header" style="margin-bottom:0px; margin-left: -4px;">
-                        <div class="col right" style="font-size:12px">
-                            <a class="modal-trigger" href="#modal_inviteBuilder" style="padding: 5px;">INVITE ANOTHER TENDERER</a>
-                        </div>
-                    </div>
-                    <div class="content-scroll" style="height: {{contentHeight +17}}px;">
+                <div ng-if="showTenders" class="tenderLists white-background">
+                    <div class="content-scroll" style="height: {{contentHeight +25}}px;">
                         <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="tender in builderRequest.invitees | filter: {isDecline:false}">
                             <div class="col s9">
                                 <div><a ng-click="viewTenderDetail(tender)" href="#">{{tender.email}}</a></div>
@@ -57,8 +43,8 @@
                     </div>
                 </div>
                 
-                <div class="showTenderDetail white-background padding-4" style="display:none">
-                    <div class="row collection-header" style="margin-bottom:0px; margin-left: -4px;">
+                <div class="showTenderDetail white-background" style="display:none">
+                    <div class="row collection-header" style="margin-bottom:0px; margin-left: 0px; margin-top: 4px;">
                         <div class="col s12" style="font-size:12px">
                             <a class="backToTendersList" href="#!" ng-click="backToList()" style="margin-left:30px; padding: 5px;">&lt; BACK TO TENDERS</a>
                             <div class="right" ng-if="tender._id">
@@ -67,9 +53,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="content-scroll" style="height: {{contentHeight +17}}px;">
-                        <div class="collection-item row" ng-repeat="quote in tender.quoteDocument">
-                            <div class="col s9" ng-if="$last">
+                    <div class="content-scroll" style="height: {{contentHeight -18}}px;">
+                        <div class="collection-item row" ng-repeat="quote in tender.quoteDocument" ng-if="$last">
+                            <div class="col s9">
                                 <a href="{{quote.fileUrl}}" download="{{quote.title}}">
                                     <span>
                                         {{quote.title}} - <i class="material-icons">cloud_download</i>

@@ -1,29 +1,21 @@
 <div class="row" style="padding: 12px">
   <div class="col s8">
     <div class="collection with-header">
-      <!-- <div class="row collection-header" style="margin-bottom:0px">
-        <div class="col">
-         <a class='dropdown-button btn-flat' href='#' data-activates='inTender' style="font-size: 12px;" dropdown>{{(defaultText) ? defaultText : "SCOPE"}}<i class="mdi-navigation-arrow-drop-down"></i></a>
-           <ul id='inTender' class='dropdown-content'>
-           <li><a ng-click="clickShowScopes()" href="#!">SCOPE</a></li>
-           <li><a ng-click="clickShowTenders()" href="#!">TENDERERS</a></li>
-           </ul>
+      <div class="row collection-header" style="margin:0px;">
+        <div class="col right" style="font-size:12px">
+           <a ng-click="cancelPackage()" class="" style="padding: 5px;">CANCEL PACKAGE</a>
+           <a class="modal-trigger" href="#modal_attachAddendum" style="padding: 5px;">ATTACH ADDENDUM</a>
         </div>
-      </div> -->
-      <div class="col s3" style="margin: 0px; padding:0px; background-color: white; height: {{contentHeight + 65}}px; border-right:1px solid #EEE">
+      </div>
+
+      <div class="col s3" style="margin: 0px; padding:0px; background-color: white; height: {{contentHeight + 25}}px; border-right:1px solid #EEE">
         <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-click="clickShowScopes()" class="collection-item" style="font-size:12px">SCOPE</div>
         <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-click="clickShowTenders()" class="collection-item" style="font-size:12px">TENDERERS</div>
       </div>
 
       <div class="col s9 white-background" style="padding: 0px;">
-        <div class="" ng-if="showScope">
-          <div class="row collection-header" style="margin:0px; margin-top: 4px;">
-            <div class="col right" style="font-size:12px">
-               <a ng-click="cancelPackage()" class="" style="padding: 5px;">CANCEL PACKAGE</a>
-               <a class="modal-trigger" href="#modal_attachAddendum" style="padding: 5px;">ATTACH ADDENDUM</a>
-            </div>
-          </div>
-          <div class="content-scroll" style="height: {{contentHeight +23}}px;">
+        <div ng-if="showScope">
+          <div class="content-scroll" style="height: {{contentHeight +25}}px;">
             <div class="" style="padding: 10px">
               <strong>Start date</strong>: {{contractorRequest.dateStart | date: longDate}}
               <table class="bordered centered">
@@ -50,7 +42,7 @@
               <a class="modal-trigger" href="#modal_inviteContractor" style="padding: 5px;">INVITE ANOTHER TENDERER</a>
             </div>
           </div>
-          <div class="content-scroll" style="height: {{contentHeight +23}}px">
+          <div class="content-scroll" style="height: {{contentHeight -17}}px">
             <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" class="collection-item row" ng-repeat="tender in contractorRequest.to | filter: {isDecline:false}">
                <div class="col s9">
                  <div><a ng-click="viewTenderDetail(tender)" href="#">{{tender.email}}</a></div>
@@ -79,7 +71,7 @@
               </div>
             </div>
           </div>
-          <div class="content-scroll" style="height: {{contentHeight +23}}px;">
+          <div class="content-scroll" style="height: {{contentHeight -17}}px;">
             <div class="collection-item row" ng-repeat="quote in tender.quoteDocument">
                <div class="col s9" ng-if="$last">
                  <div>
