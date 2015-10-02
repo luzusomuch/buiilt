@@ -58,6 +58,7 @@
            </div>
        </div>
        <div class="notShowFileDetail" style="height: {{contentHeight -15}}px; overflow-y: auto; background-color: white; overflow-x: hidden">
+
             <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-if="!hasFilter" class="collection-item row" ng-repeat="file in files" ng-click="getFileDetail(file)" style="cursor:pointer">
                 <div class="col s10"> {{file.title}}</div>
                 <!-- <div class="col s2"><a><i  class="material-icons" style="color:black">remove_red_eye</i></a></div> -->
@@ -93,54 +94,9 @@
          </div>
        </div>
        <div style="height: {{contentHeight -15}}px; overflow-y: auto; background-color: white; display: none; overflow-x: hidden" class="valign-wrapper showFileDetail">
-
-          <!-- <div style="display:none" class="col s8 offset-s2 center valign" ng-switch="file.mimeType" ng-repeat="file in files" colorbox>
-            <span ng-switch-when="image/jpeg">
-              <a class="gallery" data-filetype="jpg" data-rel="group1" rel="jpg" href="../../media/files/{{file._id}}.jpg">
-                <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}.jpg" alt="">
-              </a>
-            </span>
-            <span ng-switch-when="image/png">
-              <a class="gallery" data-filetype="jpg" data-rel="group1" rel="jpg" href="../../media/files/{{file._id}}.jpg">
-                <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}.jpg" alt="">
-              </a>
-            </span>
-            <span ng-switch-when="application/pdf">
-              <a class="gallery" data-filetype="pdf" data-rel="group1" rel="pdf" href="../../media/files/{{file._id}}.jpg">
-                <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}.jpg" alt="">
-              </a>
-            </span>
-            <span ng-switch-default>
-              <a class="gallery" data-filetype="jpg" data-rel="group1" rel="jpg" href="../../media/sample-1.jpg">
-                <img class="materialboxed" width="90%" src="../../media/sample-1.jpg" alt="">
-              </a>
-            </span>
-          </div> -->
-
           <!-- if there is a document uploaded in project -->
-          <div colorbox data-current="true" class="col s8 offset-s2 center valign" ng-if="!file.isSendToDocumentation">
-            <!-- <span ng-switch-when="image/jpeg">
-              <a ng-class="{isCurrent: currentSelect}" class="gallery" data-filetype="jpg" data-rel="group1" rel="jpg" href="../../media/files/{{file._id}}.jpg">
-                <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}.jpg" alt="">
-              </a>
-            </span>
-            <span ng-switch-when="image/png">
-              <a ng-class="{isCurrent: currentSelect}" class="gallery" data-filetype="jpg" data-rel="group1" rel="jpg" href="../../media/files/{{file._id}}.jpg">
-                <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}.jpg" alt="">
-              </a>
-            </span>
-            <span ng-switch-when="application/pdf">
-              <a ng-class="{isCurrent: currentSelect}" class="gallery" data-filetype="pdf" data-rel="group1" rel="pdf" href="../../media/files/{{file._id}}.jpg">
-                <img class="materialboxed" width="90%" src="../../media/files/{{file._id}}.jpg" alt="">
-              </a>
-            </span>
-            <span ng-switch-default>
-              <a ng-class="{isCurrent: currentSelect}" class="gallery" data-filetype="jpg" data-rel="group1" rel="jpg" href="../../media/sample-1.jpg">
-                <img class="materialboxed" width="90%" src="../../media/sample-1.jpg" alt="">
-              </a>
-            </span> -->
-            <img ng-src="{{file.path | fpConvert: {w:500} }}">
-            <!-- <div type="filepicker-preview" data-fp-url="{{file.path}}" style="width:75%; height:300px"> </div> -->
+          <div data-current="true" class="col s8 offset-s2 center valign" ng-if="!file.isSendToDocumentation">
+            <div file-picker-previewer type="filepicker-preview" url="{{file.path}}" style="height:500px; margin-top: 200px;"> </div>
             <!-- file description -->
             <span style="cursor:pointer;" ng-click="likeDocument(file);">
               <div class="col s4" style="display:inline-block">{{(file.isInterested) ? 'Dislike' : 'Like'}}</div>
@@ -155,29 +111,8 @@
           </div>
 
           <!-- if there is a document send by design package -->
-          <div colorbox data-current="true" class="col s8 offset-s2 center valign" ng-switch="file.mimeType" ng-if="file.isSendToDocumentation">
-            <!-- <span ng-switch-when="image/jpeg">
-              <a ng-class="{isCurrent: currentSelect}" class="gallery" data-filetype="jpg" data-rel="group1" rel="jpg" href="../../media/files/{{file.documentDesignId}}.jpg">
-                <img class="materialboxed" width="90%" src="../../media/files/{{file.documentDesignId}}.jpg" alt="">
-              </a>
-            </span>
-            <span ng-switch-when="image/png">
-              <a ng-class="{isCurrent: currentSelect}" class="gallery" data-filetype="jpg" data-rel="group1" rel="jpg" href="../../media/files/{{file.documentDesignId}}.jpg">
-                <img class="materialboxed" width="90%" src="../../media/files/{{file.documentDesignId}}.jpg" alt="">
-              </a>
-            </span>
-            <span ng-switch-when="application/pdf">
-              <a ng-class="{isCurrent: currentSelect}" class="gallery" data-filetype="pdf" data-rel="group1" rel="pdf" href="../../media/files/{{file.documentDesignId}}.jpg">
-                <img class="materialboxed" width="90%" src="../../media/files/{{file.documentDesignId}}.jpg" alt="">
-              </a>
-            </span>
-            <span ng-switch-default>
-              <a ng-class="{isCurrent: currentSelect}" class="gallery" data-filetype="jpg" data-rel="group1" rel="jpg" href="../../media/sample-1.jpg">
-                <img class="materialboxed" width="90%" src="../../media/sample-1.jpg" alt="">
-              </a>
-            </span> -->
-            <img ng-src="{{file.path | fpConvert: {w:200} }}">
-            <!-- <div filepicker-preview type="filepicker-preview" data-fp-url="{{file.path}}" style="width:75%; height:500px"> </div> -->
+          <div data-current="true" class="col s8 offset-s2 center valign" ng-switch="file.mimeType" ng-if="file.isSendToDocumentation">
+            <div file-picker-previewer type="filepicker-preview" url="{{file.path}}" style="height:500px; margin-top: 200px;"> </div>
             <!-- file description -->
             <span style="cursor:pointer;" ng-click="likeDocument(file);">
               <div class="col s4" style="display:inline-block">{{(file.isInterested) ? 'Dislike' : 'Like'}}</div>
