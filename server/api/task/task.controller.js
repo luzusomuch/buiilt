@@ -295,3 +295,21 @@ exports.show = function(req, res) {
     });
   });
 };
+
+exports.getAllByUser = function(req, res) {
+  Task.find({$or:[{user: req.user._id},{assignees: req.user._id}]})
+  .populate('user')
+  .populate('assignees').exec(function(err, tasks){
+    if (err) {return res.send(500,err);}
+    return res.send(200,tasks);
+  });
+};
+
+exports.getAllByProject = function(req, res) {
+  Task.find({project: req.params.id})
+  .populate('user')
+  .populate('assignees').exec(function(err, tasks){
+    if (err) {return res.send(500,err);}
+    return res.send(200,tasks);
+  });
+};

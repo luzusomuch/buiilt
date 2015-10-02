@@ -11,7 +11,9 @@ router.post('/:id/:type', auth.isAuthenticated(), controller.package, controller
 router.post('/:id/:type/message', auth.isAuthenticated(), controller.thread, controller.saveMessage);
 router.put('/:id/:type', auth.isAuthenticated(), controller.thread, controller.update);
 router.get('/list', auth.isAuthenticated(), controller.getAll);
+router.get('/list-by-user', auth.isAuthenticated(), controller.getAllByUser);
 router.get('/:id', auth.isAuthenticated(), controller.getById);
+router.get('/:id/list-by-project', auth.isAuthenticated(), controller.getAllByProject);
 router.get('/:id/get-thread', auth.isAuthenticated(), controller.getThreadById);
 router.get('/:id/:type', auth.isAuthenticated(), controller.package, controller.getMessages);
 router.get('/:id/:type/ios', auth.isAuthenticated(), controller.package, controller.getMessagesIos);

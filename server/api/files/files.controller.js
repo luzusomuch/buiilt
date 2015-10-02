@@ -213,3 +213,10 @@ exports.sendToDocument = function(req, res) {
         });
     });
 };
+
+exports.getAllByUser = function(req, res) {
+    Notification.find({owner: req.user._id, unread: true, $or:[{type: 'uploadNewDocumentVersion'},{type: 'uploadDocument'}]}, function(err, documents){
+        if (err) {return res.send(500,err);}
+        return res.send(200,documents);
+    });
+};

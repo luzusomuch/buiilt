@@ -304,3 +304,21 @@ exports.getByPackage = function(req, res){
     return res.send(200,threads);
   });
 };
+
+exports.getAllByUser = function(req, res) {
+  Thread.find({$or:[{owner: req.user._id},{users: req.user._id}]})
+  .populate('owner')
+  .populate('users').exec(function(err, threads){
+    if (err) {return res.send(500,err);}
+    return res.send(200,threads);
+  });
+};
+
+exports.getAllByProject = function(req, res) {
+  Thread.find({project: req.params.id})
+  .populate('owner')
+  .populate('users').exec(function(err, threads){
+    if (err) {return res.send(500,err);}
+    return res.send(200,threads);
+  });
+};
