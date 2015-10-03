@@ -97,29 +97,36 @@ angular.module('buiiltApp')
                   });
                   $scope.available = _.union($scope.available, tempAvailable);
                 }
-                if ($scope.package.to && $scope.package.to.team._id != $scope.currentTeam._id && $scope.isLeader) {
-                  _.forEach($scope.package.to.team.leader, function (leader) {
-                    tempAvailable.push(leader);
-                  });
-                  $scope.available = _.union($scope.available, tempAvailable);
+                if ($scope.package.to.team) {
+                  if ($scope.package.to.team._id != $scope.currentTeam._id && $scope.isLeader) {
+                    _.forEach($scope.package.to.team.leader, function (leader) {
+                      tempAvailable.push(leader);
+                    });
+                    $scope.available = _.union($scope.available, tempAvailable);
+                  }
                 }
-                if ($scope.package.architect && $scope.package.architect.team._id != $scope.currentTeam._id && $scope.isLeader) {
-                  _.each($scope.package.architect.team.leader, function(leader){
-                    tempAvailable.push(leader);
-                  });
-                  $scope.available = _.union($scope.available, tempAvailable);
+                if ($scope.package.architect.team) {
+                  if ($scope.package.architect.team._id != $scope.currentTeam._id && $scope.isLeader) {
+                    _.each($scope.package.architect.team.leader, function(leader){
+                      tempAvailable.push(leader);
+                    });
+                    $scope.available = _.union($scope.available, tempAvailable);
+                  }
                 }
-                if ($scope.package.winner && $scope.package.winner._id != $scope.currentTeam._id && $scope.package.winner._id != $scope.package.owner._id) {
-                  _.each($scope.package.winner.leader, function(leader){
-                    tempAvailable.push(leader);
-                  });
-                  $scope.available = _.union($scope.available, tempAvailable);
+                if ($scope.package.winner) {
+                  if ($scope.package.winner._id != $scope.currentTeam._id && $scope.package.winner._id != $scope.package.owner._id) {
+                    _.each($scope.package.winner.leader, function(leader){
+                      tempAvailable.push(leader);
+                    });
+                    $scope.available = _.union($scope.available, tempAvailable);
+                  }
                 }
                 _.forEach($scope.currentTeam.member,function(member) {
                   if (member.status == 'Active') {
                     $scope.available.push(member._id);
                   }
                 });
+                $scope.available = _.uniq($scope.available, '_id');
                 _.remove($scope.available,{_id : $scope.currentUser._id});
                 break;
               case 'staff' :
