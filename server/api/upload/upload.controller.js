@@ -114,7 +114,7 @@ exports.upload = function(req, res){
             tags: request.tags
         });
         file.save(function(err){
-            if (err) {return res.send(500,err);}
+            if (err) {console.log(err);return res.send(500,err);}
             var owners = [];
             BuilderPackage.findOne({project: file.belongTo})
             .populate('owner')

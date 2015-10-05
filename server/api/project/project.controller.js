@@ -109,6 +109,7 @@ exports.create = function(req, res){
         }
         if (currentTeam.type == 'builder') {
           builderPackage.hasWinner = true;
+          builderPackage.hasTempWinner = false;
           builderPackage.winner = currentTeam._id;
         }
         if (req.body.architectEmail != '' && req.body.architectEmail) {

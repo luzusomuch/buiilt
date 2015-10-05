@@ -51,7 +51,7 @@ exports.getDefaultPackageByProject = function(req, res) {
       {path : 'winner.member._id'}
     ],function(err,builderPackage) {
       if (err){ console.log(err);return res.send(500, err); }
-      if (builderPackage.hasArchitectManager) {
+      if (builderPackage.hasArchitectManager && builderPackage.architect.team) {
         if (builderPackage.architect.team._id.toString() == user.team._id.toString()) {
           return res.json(builderPackage);
         } else {
