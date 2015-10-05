@@ -53,6 +53,7 @@ exports.project = function(req,res,next) {
 };
 
 exports.package = function(req,res,next) {
+  console.log(req.params);
   var _package = getPackage(req.params.type);
   _package.findById(req.params.id,function(err,aPackage) {
     if (err || !aPackage) {
@@ -174,7 +175,7 @@ exports.create = function(req,res) {
     task.type = req.params.type;
     task.dateStart = new Date();
     var architectTeamLeader = [];
-    if (aPackage.type == 'BuilderPackage' && aPackage.hasArchitectManager) {
+    if (aPackage.type == 'BuilderPackage' && aPackage.hasArchitectManager && aPackage.architect.team) {
       Team.findById(mongoose.Types.ObjectId(aPackage.architect.team), function(err, team){
         if (err) {return res.send(500,err);}
         _.each(team.leader, function(leader){

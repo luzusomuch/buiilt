@@ -123,7 +123,7 @@ exports.create = function(req,res) {
     thread.owner = user;
     thread.type = req.params.type;
     var architectTeamLeader = [];
-    if (aPackage.type == 'BuilderPackage' && aPackage.hasArchitectManager) {
+    if (aPackage.type == 'BuilderPackage' && aPackage.hasArchitectManager && aPackage.architect.team) {
       Team.findById(aPackage.architect.team, function(err, team){
         if (err) {return res.send(500,err);}
         _.each(team.leader, function(leader){
