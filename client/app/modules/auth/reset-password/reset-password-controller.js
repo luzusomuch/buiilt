@@ -21,7 +21,7 @@ angular.module('buiiltApp')
             $scope.reset = {};
 
             $scope.submitted = false;
-          })
+          });
       }
-    }
+    };
   });

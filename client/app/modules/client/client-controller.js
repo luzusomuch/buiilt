@@ -39,11 +39,11 @@ angular.module('buiiltApp').controller('ClientCtrl', function(messageService,add
     $scope.isShowAll = true;
 
     $scope.activeHover = function($event){
-        angular.element($event.currentTarget).addClass("item-hover")
+        angular.element($event.currentTarget).addClass("item-hover");
     };
     $scope.removeHover = function($event) {
-        angular.element($event.currentTarget).removeClass("item-hover")
-    }
+        angular.element($event.currentTarget).removeClass("item-hover");
+    };
 
     
     fileService.getFileByPackage({id: $scope.builderPackage._id, type: 'builder'}).$promise.then(function(files){
@@ -54,7 +54,7 @@ angular.module('buiiltApp').controller('ClientCtrl', function(messageService,add
     });    
     messageService.getByPackage({id: $scope.builderPackage._id, type: 'builder'}).$promise.then(function(threads){
         $scope.builderPackage.threads = threads;
-    })
+    });
     
     if ($scope.currentTeam.type == 'contractor' || $scope.currentTeam.type == 'supplier') {
       $state.go('team.manager');
@@ -97,7 +97,7 @@ angular.module('buiiltApp').controller('ClientCtrl', function(messageService,add
             });    
             messageService.getByPackage({id: variation._id, type: 'variation'}).$promise.then(function(threads){
                 variation.threads = threads;
-            })
+            });
         });
     });
 
@@ -116,7 +116,7 @@ angular.module('buiiltApp').controller('ClientCtrl', function(messageService,add
         $scope.variation.descriptions.splice(index,1);
     };
     $scope.$watchGroup(['variation.descriptions.length','submitted'],function(value) {
-        $scope.descriptionError = (value[0] <= 0 && value[1])
+        $scope.descriptionError = (value[0] <= 0 && value[1]);
     });
     $scope.sendVariation = function() {
         if ($scope.variation.title) {

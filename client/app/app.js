@@ -89,7 +89,7 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
               uid: $rootScope.currentUser._id, // String or Int e.g. "123"
               email: $rootScope.currentUser.email, // String e.g. "johndoe@example.com"
               roles: [currentTeamType], // Array of roles, e.g. ["builder"]
-            }
+            };
           });
         });
       }
@@ -105,12 +105,12 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
         if (loggedIn) {
           authService.getCurrentTeam().$promise.then(function(res){
             $rootScope.currentTeam = res;
-          })
+          });
         }
         if (toState.authenticate && !loggedIn) {
           $location.path('/');
         } else if (!toState.authenticate && loggedIn) {
-          $state.go('team.manager')
+          $state.go('team.manager');
         }
       });
       if (toState.noHeader) {
@@ -126,7 +126,7 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
           .then(function(res) {
             if (toState.canAccess.indexOf(res.type) == -1) {
               if (toState.hasCurrentProject) {
-                $state.go('dashboard',{id : toParams.id })
+                $state.go('dashboard',{id : toParams.id });
               } else {
                 $state.go('team.manager');
               }
@@ -155,7 +155,7 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
               $rootScope.currentProjectBackend = null;
               $location.path('/backend/projects');
             }
-          })
+          });
         }
       }
       else {
@@ -174,7 +174,7 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
                 $rootScope.currentProject = null;
                 $location.path('/team/manager');
               }
-            })
+            });
         }
 
       } else {

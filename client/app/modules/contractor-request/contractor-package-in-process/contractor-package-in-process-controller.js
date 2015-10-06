@@ -38,6 +38,6 @@ angular.module('buiiltApp')
         .then(function(res) {
           $scope.contractorRequest = res;
           $('#modal_complete').closeModal();
-        })
+        });
     }
 });

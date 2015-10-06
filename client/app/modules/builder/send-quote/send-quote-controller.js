@@ -14,11 +14,11 @@ angular.module('buiiltApp')
         }
     }
     $scope.activeHover = function($event){
-        angular.element($event.currentTarget).addClass("item-hover")
+        angular.element($event.currentTarget).addClass("item-hover");
     };
     $scope.removeHover = function($event) {
-        angular.element($event.currentTarget).removeClass("item-hover")
-    }
+        angular.element($event.currentTarget).removeClass("item-hover");
+    };
 
     $scope.contentHeight = $rootScope.maximunHeight - $rootScope.headerHeight - $rootScope.footerHeight - 130;
 

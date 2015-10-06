@@ -15,6 +15,6 @@ angular.module('buiiltApp').controller('UserBackendCtrl', function(ngTableParams
         userService.delete({'id': user._id}).$promise.then(function(users){
             _.remove(data, {_id: user._id});
             $scope.tableParams.reload();
-        })
+        });
     };
 });

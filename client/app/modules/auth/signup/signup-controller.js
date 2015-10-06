@@ -15,9 +15,9 @@ angular.module('buiiltApp')
     inviteTokenService.get({id : $stateParams.inviteToken}).$promise
       .then(function(res) {
         $scope.user.invite = res;
-        $scope.user.invite
+        $scope.user.invite;
         $scope.user.email = res.email;
-      })
+      });
   }
   $scope.submitted = false;
   $scope.errors = {};

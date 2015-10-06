@@ -88,4 +88,4 @@ angular.module('buiiltApp').directive('contenteditable', function($window, $docu
       // });
     }
   };
-})
+});

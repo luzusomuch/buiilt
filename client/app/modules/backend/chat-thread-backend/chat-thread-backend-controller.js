@@ -15,6 +15,6 @@ angular.module('buiiltApp').controller('ChatThreadBackendCtrl', function(ngTable
         messageService.delete({'id': thread._id}).$promise.then(function(threads){
             _.remove(data, {_id: thread._id});
             $scope.tableParams.reload();
-        })
+        });
     };
 });

@@ -29,7 +29,7 @@ angular.module('buiiltApp')
         projectService.delete({'id': project._id}).$promise.then(function(projects){
             _.remove(data, {_id: project._id});
             $scope.tableParams.reload();
-        })
+        });
     };
 
     $scope.getCurrentProject = function(project) {

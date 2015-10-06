@@ -28,7 +28,6 @@
     </div>
     <script src="/bower_components/jquery/dist/jquery.js"></script>
     <script src="/bower_components/jquery-ui/ui/jquery-ui.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/js/materialize.min.js"></script>
     <script src="/bower_components/prism/prism.js"></script>
     <script src="/bower_components/lodash/dist/lodash.js"></script>
     <script src="/bower_components/moment/min/moment.min.js"></script>
@@ -72,8 +71,9 @@
   <div ng-if="authService.isLoggedIn()" sp-socket></div>
   
   <built-footer  ng-if="hasFooter"></built-footer>
-
-  <script src="/app/components/angular-materialize/src/angular-materialize.js"></script>
+    
+    <script src="/app/components/angular-materialize/src/materialize.min.js"></script>
+    <script src="/app/components/angular-materialize/src/angular-materialize.js"></script>
     <script src="/app/components/filters.js"></script>
     <script src="/app/components/directive.js"></script>
     <script src="/app/components/angular-slimscroll/angular-slimscroll.js"></script>

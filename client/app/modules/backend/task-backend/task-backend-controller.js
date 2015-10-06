@@ -15,6 +15,6 @@ angular.module('buiiltApp').controller('TaskBackendCtrl', function(ngTableParams
         taskService.delete({'id': task._id}).$promise.then(function(tasks){
             _.remove(data, {_id: task._id});
             $scope.tableParams.reload();
-        })
+        });
     };
 });

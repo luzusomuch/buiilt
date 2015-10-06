@@ -30,5 +30,5 @@ angular.module('buiiltApp').directive('quote', function(){
                 $scope.project = data;
             });
         }
-    }
+    };
 });

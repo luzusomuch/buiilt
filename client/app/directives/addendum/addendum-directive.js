@@ -75,7 +75,7 @@ angular.module('buiiltApp').directive('addendum', function(){
 
             $scope.getAddendumScopeUpdate = function(value){
                 $scope.addendumScopeId = value;
-            }
+            };
         }
-    }
+    };
 });

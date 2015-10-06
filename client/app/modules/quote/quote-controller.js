@@ -19,7 +19,7 @@ angular.module('buiiltApp')
       currentUser = user;
       var index = _.findIndex(project.requestedHomeBuilders, function(req){
         return req.email === currentUser.email;
-      })
+      });
       if(index === -1){
         $state.go('home',{}, {reload : true});
       } 

@@ -6,9 +6,9 @@ angular.module('buiiltApp').controller('ProjectListCtrl', function($scope, $time
     angular.forEach(data, function(project) {
       packageService.getPackageByProject({'id': project._id}).$promise.then(function(data) {
         $scope.builderPackage = data;
-      })  
+      });  
     });
   }, function(res) {
     $scope.errors = res.data;
-  })
+  });
 });

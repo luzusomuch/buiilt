@@ -90,7 +90,7 @@ angular.module('buiiltApp').controller('UserCtrl', function($scope,$rootScope, $
 
         });
     }
-  }
+  };
 });
 
 angular.module('buiiltApp').controller('TeamInvitationCtrl', function($scope, $state, authService,invitations) {

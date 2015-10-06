@@ -4,11 +4,11 @@ angular.module('buiiltApp')
     //Init Params
 
     $scope.activeHover = function($event){
-        angular.element($event.currentTarget).addClass("item-hover")
+        angular.element($event.currentTarget).addClass("item-hover");
     };
     $scope.removeHover = function($event) {
-        angular.element($event.currentTarget).removeClass("item-hover")
-    }
+        angular.element($event.currentTarget).removeClass("item-hover");
+    };
 
     $scope.contentHeight = $rootScope.maximunHeight - $rootScope.headerHeight - $rootScope.footerHeight - 130;
 
@@ -38,20 +38,20 @@ angular.module('buiiltApp')
         });
         messageService.getByPackage({id: item._id, type: 'staff'}).$promise.then(function(threads){
             item.threads = threads;
-        })
+        });
     });
 
     // Real time process
     $rootScope.$on('notification:allRead',function(event) {
       _.forEach($scope.staffPackages,function(item) {
         item.__v =  0;
-      })
+      });
     });
 
     $scope.$watch('staffPackages',function(value) {
       $scope.inProgressTotal = 0;
       _.forEach(value,function(item) {
-        $scope.inProgressTotal += item.__v
+        $scope.inProgressTotal += item.__v;
       });
     },true);
 
@@ -133,7 +133,7 @@ angular.module('buiiltApp')
               //$scope.submitted = false;
               //getAvailableAssign();
                 $('#newWorkPackage').closeModal();
-            })
+            });
         }
     };
 
@@ -232,6 +232,6 @@ angular.module('buiiltApp')
           .then(function(res) {
             $scope.staffPackage = res;
             $('#modal_complete').closeModal();
-          })
-      }
+          });
+      };
   });

@@ -5,11 +5,11 @@ angular.module('buiiltApp')
    */
 
   $scope.activeHover = function($event){
-    angular.element($event.currentTarget).addClass("item-hover")
+    angular.element($event.currentTarget).addClass("item-hover");
   };
   $scope.removeHover = function($event) {
-    angular.element($event.currentTarget).removeClass("item-hover")
-  }
+    angular.element($event.currentTarget).removeClass("item-hover");
+  };
 
   $scope.contentHeight = $rootScope.maximunHeight - $rootScope.headerHeight - $rootScope.footerHeight - 130;
 
@@ -94,10 +94,10 @@ angular.module('buiiltApp')
         if (!isNaN(item)) {
           $scope.subTotalRate += parseFloat(item);
         }
-      })
+      });
     }
 
-  },true)
+  },true);
 
   $scope.$watch('price.lineWithPrice',function(value) {
     $scope.subTotalPrice = 0;
@@ -107,7 +107,7 @@ angular.module('buiiltApp')
         if (!isNaN(item)) {
           $scope.subTotalPrice += parseFloat(item);
         }
-      })
+      });
     }
 
   },true);
@@ -291,7 +291,7 @@ angular.module('buiiltApp')
       $scope.user = {
         allowNewsletter: true
       };
-      alert('Registry successfully, please confirm your email!')
+      alert('Registry successfully, please confirm your email!');
       $window.location.href = $scope.quoteRequest.project._id + '/dashboard';
     }, function(res) {
       $scope.errors = res.data;

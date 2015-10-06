@@ -25,7 +25,7 @@ angular.module('buiiltApp')
           _.remove($scope.users, {_id : member._id._id});
       });
       _.remove($scope.users, {_id : $scope.currentUser._id});
-    }
+    };
 
     getLocalData();
 
@@ -39,7 +39,7 @@ angular.module('buiiltApp')
           $scope.currentTeam = team;
           $rootScope.$emit('TeamUpdate',team);
           $scope.isEdit = false;
-        })
+        });
     };
 
 
@@ -124,7 +124,7 @@ angular.module('buiiltApp')
               $scope.currentTeam = team;
               $rootScope.$emit('TeamUpdate',team);
               getLocalData();
-            })
+            });
         }
       });
     };
@@ -136,9 +136,9 @@ angular.module('buiiltApp')
           teamService.leaveTeam({_id: $scope.currentTeam._id}).$promise
             .then(function (team) {
               $state.go($state.current, {}, {reload: true});
-            })
+            });
         }
-      })
+      });
     };
 
     $scope.addNewMember = function(){
@@ -166,7 +166,7 @@ angular.module('buiiltApp')
             }, function (err) {
             });
         }
-      })
+      });
     };
 
     //Todo add confirm when remove invitation
@@ -180,7 +180,7 @@ angular.module('buiiltApp')
             }, function (err) {
             });
         }
-      })
+      });
     };
 
     //Todo add confirm when join team
@@ -195,7 +195,7 @@ angular.module('buiiltApp')
             }, function (err) {
             });
         }
-      })
+      });
     };
 
     //Todo add confirm when reject team
@@ -209,6 +209,6 @@ angular.module('buiiltApp')
             }, function (err) {
             });
         }
-      })
+      });
     }
   });

@@ -17,7 +17,7 @@ angular.module('buiiltApp')
         $scope.submitted = false;
         $timeout(function() {
           //$scope.success = false;
-        },3000)
+        },3000);
       }, function (res) {
           angular.forEach(res.data.errors, function (error, field) {
             console.log(field);

@@ -18,10 +18,10 @@ angular.module('buiiltApp')
 
 
     $scope.activeHover = function($event){
-        angular.element($event.currentTarget).addClass("item-hover")
+        angular.element($event.currentTarget).addClass("item-hover");
     };
     $scope.removeHover = function($event) {
-        angular.element($event.currentTarget).removeClass("item-hover")
+        angular.element($event.currentTarget).removeClass("item-hover");
     };
 
     $scope.backToDocumentsList = function(){
@@ -46,10 +46,10 @@ angular.module('buiiltApp')
       $scope.currentThread = thread;
       _.each(thread.messages, function(message){
         if (message.user._id != $scope.currentUser._id) {
-          $scope.backgroundColor = {'background-color':'#eee'}
+          $scope.backgroundColor = {'background-color':'#eee'};
         }
         else {
-          $scope.backgroundColor = {'background-color':'#BBDEFB'}
+          $scope.backgroundColor = {'background-color':'#BBDEFB'};
         }
       });
       $("div#threadsList").hide();
@@ -65,13 +65,13 @@ angular.module('buiiltApp')
             if ($package.to.team) {
               _.forEach($package.to.team.leader, function (leader) {
                 $scope.available.push(leader);
-              })
+              });
             }
           }
           if ($package.to.team && $scope.currentTeam._id == $package.to.team._id && $scope.isLeader) {
             _.forEach($package.owner.leader, function (leader) {
               $scope.available.push(leader);
-            })
+            });
           }
           _.forEach($scope.currentTeam.member,function(member) {
             if (member.status == 'Active') {
@@ -208,7 +208,7 @@ angular.module('buiiltApp')
       $scope.currentThread = thread;
       $scope.index = index;
       socket.emit('join',thread._id);
-      notificationService.read({_id : thread._id})
+      notificationService.read({_id : thread._id});
     };
 
     socket.on('message:new', function (thread) {
@@ -242,9 +242,9 @@ angular.module('buiiltApp')
           task.completed = true;
           $timeout(function() {
             $scope.myTasks.splice(index,1);
-          },500)
+          },500);
 
-        })
+        });
     };
 
     $scope.saveTask = function(form) {
@@ -252,7 +252,7 @@ angular.module('buiiltApp')
         taskService.update({id : $scope.task._id, type : $scope.task.type},$scope.task).$promise
           .then(function(res) {
             $scope.isShow = true;
-          })
+          });
       }
     };
 

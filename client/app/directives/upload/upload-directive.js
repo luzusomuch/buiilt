@@ -205,6 +205,6 @@ angular.module('buiiltApp').directive('upload', function(){
                 $('.toast').css('opacity','0');
                 Materialize.toast('Upload completed',3000);
             };
-        },
-    }
+        }
+    };
 });

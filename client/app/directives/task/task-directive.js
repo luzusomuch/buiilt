@@ -37,13 +37,13 @@ angular.module('buiiltApp')
                 if ($scope.package.to.team) {
                     _.forEach($scope.package.to.team.leader, function (leader) {
                       $scope.available.push(leader);
-                    })
+                    });
                 }
               }
               if ($scope.package.to.team && $scope.currentTeam._id == $scope.package.to.team._id && $scope.isLeader) {
                 _.forEach($scope.package.owner.leader, function (leader) {
                   $scope.available.push(leader);
-                })
+                });
               }
               _.forEach($scope.currentTeam.member,function(member) {
                 if (member.status == 'Active') {
@@ -127,7 +127,7 @@ angular.module('buiiltApp')
               _.forEach($scope.tasks,function(task) {
                 task.isOwner = (_.findIndex(task.assignees,{_id : $scope.currentUser._id}) != -1) || (task.user == $scope.currentUser._id);
                 task.dateEnd = (task.dateEnd) ? new Date(task.dateEnd) : null;
-              })
+              });
 
             });
         };
@@ -201,7 +201,7 @@ angular.module('buiiltApp')
             .then(function(res) {
               //$('.card-title').trigger('click');
               updateTasks();
-            })
+            });
         };
 
         //Submit form function
@@ -212,17 +212,17 @@ angular.module('buiiltApp')
                 .then(function(res) {
                   $('.card-title').trigger('click');
                   updateTasks();
-                })
+                });
             } else {
               taskService.update({id : $scope.task._id, type : $scope.type},$scope.task).$promise
                 .then(function(res) {
                   $('.card-title').trigger('click');
                   updateTasks();
-                })
+                });
             }
 
           }
         };
       }
-  }
+  };
 });

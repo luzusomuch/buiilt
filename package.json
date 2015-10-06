@@ -1,5 +1,5 @@
 {
-  "name": "buiilt",
+  "name": "buiiltApp",
   "version": "0.0.0",
   "main": "server/app.js",
   "dependencies": {

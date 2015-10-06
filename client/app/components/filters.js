@@ -111,5 +111,5 @@ angular.module('buiiltApp')
       }
     });
     return filtered;
-  }
+  };
 });

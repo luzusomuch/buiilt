@@ -15,6 +15,6 @@ angular.module('buiiltApp').controller('DocumentBackendCtrl', function($scope, d
         fileService.delete({'id': value._id}).$promise.then(function(documents){
             _.remove(data, {_id: value._id});
             $scope.tableParams.reload();
-        })
+        });
     };
 });

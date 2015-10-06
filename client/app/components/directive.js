@@ -24,7 +24,7 @@ angular.module('buiiltApp')
           }
         });
       }
-    }
+    };
   }])
   .directive("compareTo", function() {
     return {

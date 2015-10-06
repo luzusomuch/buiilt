@@ -15,5 +15,5 @@ angular.module('buiiltApp').directive('datepicker', function(){
                 });
             });
         }
-    }
+    };
 });

@@ -70,9 +70,9 @@ angular.module('buiiltApp').directive('createPackage', function(){
               //$scope.submitted = false;
               //getAvailableAssign();
               $('#newWorkPackage').closeModal();
-            })
+            });
         }
-      }
+      };
 
 
       $scope.contractor = {
@@ -89,7 +89,7 @@ angular.module('buiiltApp').directive('createPackage', function(){
             if (member._id) {
               contractorTeamMember.push({_id: member._id._id, email: member._id.email});
             }
-          })
+          });
         });
         $scope.contractorTeamMember = contractorTeamMember;
       });
@@ -111,7 +111,7 @@ angular.module('buiiltApp').directive('createPackage', function(){
         console.log($scope.contractorTextString);
         if ($scope.contractorMember.email.title) {
           if (!(_.find($scope.contractorMember.emailsPhone,{email : $scope.contractorMember.email.title}))) {
-            $scope.contractorMember.emailsPhone.push({email: $scope.contractorMember.email.title, phoneNumber: $scope.newPhoneNumber})
+            $scope.contractorMember.emailsPhone.push({email: $scope.contractorMember.email.title, phoneNumber: $scope.newPhoneNumber});
             _.remove($scope.contractorTeamMember, {email : $scope.contractorMember.email.title});
             $scope.contractorMember.email = {};
           }
@@ -154,7 +154,7 @@ angular.module('buiiltApp').directive('createPackage', function(){
       });
 
       $scope.$watchGroup(['contractorMember.emailsPhone.length','contractorSubmitted'],function(value) {
-        $scope.trademenError = (value[0] <= 0 && value[1])
+        $scope.trademenError = (value[0] <= 0 && value[1]);
       });
 
       $scope.contractorDescriptionError = false;
@@ -194,7 +194,7 @@ angular.module('buiiltApp').directive('createPackage', function(){
             if (member._id) {
               supplierTeamMember.push({_id: member._id._id, email: member._id.email});
             }
-          })
+          });
         });
         $scope.supplierTeamMember = supplierTeamMember;
       });
@@ -286,5 +286,5 @@ angular.module('buiiltApp').directive('createPackage', function(){
         }
       };
     }
-  }
+  };
 });

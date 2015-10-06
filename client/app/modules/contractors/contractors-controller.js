@@ -32,20 +32,20 @@ angular.module('buiiltApp').controller('ContractorsCtrl',
         });
         messageService.getByPackage({id: contractorPackage._id, type: 'contractor'}).$promise.then(function(threads){
           contractorPackage.threads = threads;
-        })
+        });
     });
 
     // Real time process
     $rootScope.$on('notification:allRead',function(event) {
       _.forEach($scope.contractorPackages,function(item) {
         item.__v =  0;
-      })
+      });
     });
 
     $scope.$watch('contractorPackages',function(value) {
       $scope.inProgressTotal = 0;
       _.forEach(value,function(item) {
-        $scope.inProgressTotal += item.__v
+        $scope.inProgressTotal += item.__v;
       });
     },true);
 
@@ -74,7 +74,7 @@ angular.module('buiiltApp').controller('ContractorsCtrl',
           if (member._id) {
             contractorTeamMember.push({_id: member._id._id, email: member._id.email});
           }
-        })
+        });
       });
       $scope.contractorTeamMember = contractorTeamMember;
     });
@@ -94,7 +94,7 @@ angular.module('buiiltApp').controller('ContractorsCtrl',
     $scope.contractorAddUser = function() {
       if ($scope.contractorMember.email.title) {
         if (!(_.find($scope.contractorMember.emailsPhone,{email : $scope.contractorMember.email.title}))) {
-          $scope.contractorMember.emailsPhone.push({email: $scope.contractorMember.email.title, phoneNumber: $scope.newPhoneNumber})
+          $scope.contractorMember.emailsPhone.push({email: $scope.contractorMember.email.title, phoneNumber: $scope.newPhoneNumber});
           _.remove($scope.contractorTeamMember, {email : $scope.contractorMember.email.title});
           $scope.contractorMember.email = {};
         }
@@ -143,7 +143,7 @@ angular.module('buiiltApp').controller('ContractorsCtrl',
     });
 
     $scope.$watchGroup(['contractorMember.emailsPhone.length','contractorSubmitted'],function(value) {
-      $scope.trademenError = (value[0] <= 0 && value[1])
+      $scope.trademenError = (value[0] <= 0 && value[1]);
     });
 
     $scope.contractorDescriptionError = false;
@@ -174,10 +174,10 @@ angular.module('buiiltApp').controller('ContractorsCtrl',
     };
 
     $scope.activeHover = function($event){
-      angular.element($event.currentTarget).addClass("item-hover")
+      angular.element($event.currentTarget).addClass("item-hover");
     };
     $scope.removeHover = function($event) {
-      angular.element($event.currentTarget).removeClass("item-hover")
+      angular.element($event.currentTarget).removeClass("item-hover");
     };
 
     $scope.goToContractorPackageRequest = function(contractorPackage) {

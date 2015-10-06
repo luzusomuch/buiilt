@@ -33,6 +33,6 @@ angular.module('buiiltApp')
       .then(function(res) {
         $scope.materialRequest = res;
         $('#modal_complete').closeModal();
-      })
-  }
+      });
+  };
 });

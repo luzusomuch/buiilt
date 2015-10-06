@@ -3,11 +3,11 @@ angular.module('buiiltApp')
   function(messageService,$state,taskService,fileService,$scope, $timeout, $q, authService, $rootScope,designService,filterFilter,currentTeam,currentUser,designs,socket, builderPackage,  filepickerService,uploadService) {
 
     $scope.activeHover = function($event){
-        angular.element($event.currentTarget).addClass("item-hover")
+        angular.element($event.currentTarget).addClass("item-hover");
     };
     $scope.removeHover = function($event) {
-        angular.element($event.currentTarget).removeClass("item-hover")
-    }
+        angular.element($event.currentTarget).removeClass("item-hover");
+    };
 
     $scope.contentHeight = $rootScope.maximunHeight - $rootScope.headerHeight - $rootScope.footerHeight - 130;
 
@@ -37,20 +37,20 @@ angular.module('buiiltApp')
         });
         messageService.getByPackage({id: item._id, type: 'design'}).$promise.then(function(threads){
             item.threads = threads;
-        })
+        });
     });
 
     // Real time process
     $rootScope.$on('notification:allRead',function(event) {
       _.forEach($scope.designs,function(item) {
         item.__v =  0;
-      })
+      });
     });
 
     $scope.$watch('designs',function(value) {
       $scope.inProgressTotal = 0;
       _.forEach(value,function(item) {
-        $scope.inProgressTotal += item.__v
+        $scope.inProgressTotal += item.__v;
       });
     },true);
 
@@ -129,7 +129,7 @@ angular.module('buiiltApp')
         if ($scope.currentTeam.member.length > 0) {
             _.each($scope.currentTeam.member, function(member){
                 available.push(member);
-            })
+            });
         }
     };
 
@@ -193,8 +193,8 @@ angular.module('buiiltApp')
                 .then(function(res) {
                 $state.go('design.detail',{id : res.project, packageId : res._id});
                 $('#newDesign').closeModal();
-            })
+            });
         }
     };
-})
+});
 

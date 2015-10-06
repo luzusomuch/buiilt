@@ -24,7 +24,7 @@ angular.module('buiiltApp').directive('file', function(){
                         else {
                             file.isInterested = false;
                         }
-                    })
+                    });
                 });
             });
             authService.getCurrentTeam().$promise.then(function(team){
@@ -150,5 +150,5 @@ angular.module('buiiltApp').directive('file', function(){
                 };
             };
         }
-    }
+    };
 });

@@ -211,7 +211,7 @@ angular.module('buiiltApp')
               var toast = document.getElementsByClassName('toast');
               toast[0].style.display = 'none';
               Materialize.toast('<span>Verification email has been sent to your email address</span>', $scope.duration,'rounded');
-            })
+            });
         }
       });
 

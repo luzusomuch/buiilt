@@ -11,19 +11,19 @@ angular.module('buiiltApp')
         var params = {
           fromUser : function() {
             if (scope.notification.fromUser.email == scope.currentUser.email) {
-              return '<span class="highlight">You</span> '
+              return '<span class="highlight">You</span> ';
             }
-            return '<span class="highlight">{{(notification.fromUser.firstName) ? notification.fromUser.firstName + " " + notification.fromUser.lastName : notification.fromUser.email}}</span> '
+            return '<span class="highlight">{{(notification.fromUser.firstName) ? notification.fromUser.firstName + " " + notification.fromUser.lastName : notification.fromUser.email}}</span> ';
           },
           toUser : function () {
             if (scope.notification.toUser.email == scope.currentUser.email) {
-              return '<span class="highlight">You</span> '
+              return '<span class="highlight">You</span> ';
             }
             return '<span class="highlight">{{(notification.toUser.firstName) ? notification.toUser.firstName + " "+ notification.toUser.lastName : notification.toUser.email}}</span>';
           },
           team : function() {
             if (scope.notification.element._id == scope.currentUser.team._id) {
-              return '<span class="highlight">your team</span> '
+              return '<span class="highlight">your team</span> ';
             }
             return 'team <span class="highlight">{{notification.element.name}}</span>';
           },
@@ -257,10 +257,10 @@ angular.module('buiiltApp')
           notificationService.markAsRead({_id : notification._id}).$promise
             .then(function(res) {
               $rootScope.$emit('notification:read',notification);
-            })
+            });
         };
       }
-    }
+    };
   })
   .directive('spNotification',function() {
     return {
@@ -288,7 +288,7 @@ angular.module('buiiltApp')
                   if (limit > res.length) {
                     $scope.readMore = false;
                   }
-                })
+                });
             }
           };
 
@@ -304,7 +304,7 @@ angular.module('buiiltApp')
                 $scope.total = 0;
                 $rootScope.$emit('notification:allRead');
                 $('#slimScrollDiv').hide();
-              })
+              });
           };
 
           $scope.$watch('total',function(value) {
@@ -312,7 +312,7 @@ angular.module('buiiltApp')
               $('.slimScrollDiv').hide();
             } else
               $('.slimScrollDiv').show();
-          })
+          });
 
           $rootScope.$on('notification:read',function(event,notification) {
             _.remove($scope.notifications,{_id : notification._id});
@@ -334,8 +334,8 @@ angular.module('buiiltApp')
             });
             $scope.total -= notifications.length;
 
-          })
+          });
         }]
 
-    }
+    };
   });

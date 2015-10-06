@@ -5,6 +5,6 @@ angular.module('buiiltApp').controller('ViewNotificationCtrl',
       notificationService.markAllAsRead().$promise
         .then(function(res) {
           $scope.notifications = res;
-        })
-    }
+        });
+    };
   });

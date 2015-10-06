@@ -10,6 +10,6 @@ angular.module('buiiltApp').controller('DesignDetailCtrl',
           .then(function(res) {
             $scope.design = res;
             $('#modal_complete').closeModal();
-          })
-      }
+          });
+      };
 });

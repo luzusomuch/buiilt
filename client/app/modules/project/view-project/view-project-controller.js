@@ -1,11 +1,11 @@
 angular.module('buiiltApp')
 .controller('ViewProjectCtrl', function($timeout,$rootScope,$window,$scope, $stateParams, authService,documentService, projectService, project, packageService, fileService,FileUploader,$cookieStore, filepickerService,uploadService, $state) {
   $scope.activeHover = function($event){
-    angular.element($event.currentTarget).addClass("item-hover")
+    angular.element($event.currentTarget).addClass("item-hover");
   };
   $scope.removeHover = function($event) {
-    angular.element($event.currentTarget).removeClass("item-hover")
-  }
+    angular.element($event.currentTarget).removeClass("item-hover");
+  };
 
   $scope.errors = {};
   //content height

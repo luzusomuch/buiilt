@@ -36,4 +36,7 @@ module.exports = {
     // api_key: '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',
    }
   },
+  logentries : {
+    token : process.env.LOGENTRIES_TOKEN
+  }
 };

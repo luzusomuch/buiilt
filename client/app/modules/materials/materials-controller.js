@@ -32,20 +32,20 @@ angular.module('buiiltApp').controller('MaterialsCtrl',
         });
         messageService.getByPackage({id: materialPackage._id, type: 'material'}).$promise.then(function(threads){
           materialPackage.threads = threads;
-        })
+        });
     });
 
     // Real time process
     $rootScope.$on('notification:allRead',function(event) {
       _.forEach($scope.materialPackages,function(item) {
         item.__v =  0;
-      })
+      });
     });
 
     $scope.$watch('materialPackages',function(value) {
       $scope.inProgressTotal = 0;
       _.forEach(value,function(item) {
-        $scope.inProgressTotal += item.__v
+        $scope.inProgressTotal += item.__v;
       });
     },true);
 
@@ -78,7 +78,7 @@ angular.module('buiiltApp').controller('MaterialsCtrl',
           if (member._id) {
             supplierTeamMember.push({_id: member._id._id, email: member._id.email});
           }
-        })
+        });
       });
       $scope.supplierTeamMember = supplierTeamMember;
     });
@@ -182,10 +182,10 @@ angular.module('buiiltApp').controller('MaterialsCtrl',
     };
 
     $scope.activeHover = function($event){
-        angular.element($event.currentTarget).addClass("item-hover")
+        angular.element($event.currentTarget).addClass("item-hover");
     };
     $scope.removeHover = function($event) {
-        angular.element($event.currentTarget).removeClass("item-hover")
+        angular.element($event.currentTarget).removeClass("item-hover");
     };
 
     $scope.goToMaterialPackageRequest = function(materialPackage) {

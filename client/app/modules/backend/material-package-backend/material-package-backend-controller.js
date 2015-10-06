@@ -9,7 +9,7 @@ angular.module('buiiltApp').controller('MaterialPackageBackendCtrl', function($f
         });    
         messageService.getByPackage({id: materialPackage._id, type: 'material'}).$promise.then(function(threads){
             materialPackage.threads = threads.length;
-        })
+        });
     });
 
     $scope.tableParams = new ngTableParams({
@@ -32,7 +32,7 @@ angular.module('buiiltApp').controller('MaterialPackageBackendCtrl', function($f
         materialPackageService.delete({'id': package._id}).$promise.then(function(materialPackages){
             _.remove(data, {_id: package._id});
             $scope.tableParams.reload();
-        })
+        });
     };
 
     $scope.getEditPackage = function(package) {

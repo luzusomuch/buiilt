@@ -18,11 +18,11 @@ angular.module('buiiltApp')
 		  
 		  //Init Params
           $scope.activeHover = function($event){
-            angular.element($event.currentTarget).addClass("item-hover")
+            angular.element($event.currentTarget).addClass("item-hover");
           };
           $scope.removeHover = function($event) {
-            angular.element($event.currentTarget).removeClass("item-hover")
-          }
+            angular.element($event.currentTarget).removeClass("item-hover");
+          };
 
 
           $scope.contentHeight = $rootScope.maximunHeight - $rootScope.headerHeight - $rootScope.footerHeight - 105;
@@ -217,7 +217,7 @@ angular.module('buiiltApp')
                     thread.isOwner = true;
                   } else {
                     thread.canSee = false;
-                    thread.isOwner = false
+                    thread.isOwner = false;
                   }
                   _.each(thread.users, function(user){
                       if (user.team.role == 'admin' || user.team._id.toString() == $rootScope.currentTeam._id.toString()) {
@@ -327,8 +327,8 @@ angular.module('buiiltApp')
           };
 
           $scope.close = function() {
-            $scope.submitted = false
-          }
+            $scope.submitted = false;
+          };
 
           $scope.saveThread = function(form) {
             $scope.submitted = true;
@@ -340,18 +340,18 @@ angular.module('buiiltApp')
                     $scope.currentThread = res;
                     socket.emit('join',res._id);
                     updateThread();
-                  })
+                  });
               } else {
                 messageService.update({id : $scope.thread._id, type : $scope.type},$scope.thread).$promise
                   .then(function(res) {
                     $('.card-title').trigger('click');
                     updateThread();
-                  })
+                  });
               }
             }
           };
 
 
         }
-    }
+    };
   });

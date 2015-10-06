@@ -21,10 +21,10 @@ angular.module('buiiltApp').directive('addon', function(){
       };
 
       $scope.activeHover = function($event){
-        angular.element($event.currentTarget).addClass("item-hover")
+        angular.element($event.currentTarget).addClass("item-hover");
       };
       $scope.removeHover = function($event) {
-        angular.element($event.currentTarget).removeClass("item-hover")
+        angular.element($event.currentTarget).removeClass("item-hover");
       }
 
       $scope.contentHeight = $rootScope.maximunHeight - $rootScope.headerHeight - $rootScope.footerHeight - 130;
@@ -258,7 +258,7 @@ angular.module('buiiltApp').directive('addon', function(){
               .then(function(res) {
                   //$('.card-title').trigger('click');
                   updateTasks();
-                })
+                });
             };
 
             //Submit form function
@@ -271,7 +271,7 @@ angular.module('buiiltApp').directive('addon', function(){
                     $scope.showTasks();
                     $scope.showTaskDetail(res);
                     updateTasks();
-                  })
+                  });
                 } else {
                   taskService.update({id : $scope.task._id, type : $scope.type},$scope.task).$promise
                   .then(function(res) {
@@ -279,7 +279,7 @@ angular.module('buiiltApp').directive('addon', function(){
                     $scope.showTasks();
                     $scope.showTaskDetail(res);
                     updateTasks();
-                  })
+                  });
                 }
 
               }
@@ -326,7 +326,7 @@ angular.module('buiiltApp').directive('addon', function(){
                   else if (tag == 'other') {
                     item.isOther = true;
                   }
-                })
+                });
               });
             });
 
@@ -341,7 +341,7 @@ angular.module('buiiltApp').directive('addon', function(){
               $("div.documentsList").hide();
               $("div.documentDetail").show("slide", { direction: "right" }, 500);
               $rootScope.newestDocument = null;
-            }
+            };
 
             $("a."+$scope.package._id).colorbox({rel:'group1'});
 
@@ -434,7 +434,7 @@ angular.module('buiiltApp').directive('addon', function(){
                   }
                 }
               });
-};
+            };
 
             //send variation
             $scope.variation = {
@@ -451,7 +451,7 @@ angular.module('buiiltApp').directive('addon', function(){
               $scope.variation.descriptions.splice(index,1);
             };
             $scope.$watchGroup(['variation.descriptions.length','submitted'],function(value) {
-              $scope.descriptionError = (value[0] <= 0 && value[1])
+              $scope.descriptionError = (value[0] <= 0 && value[1]);
             });
             $scope.sendVariation = function() {
               if ($scope.rate.lineWithRate) {
@@ -508,8 +508,8 @@ angular.module('buiiltApp').directive('addon', function(){
                     }
                   }
                 });
-}
-};
+              }
+            };
 
             //send defect
             $scope.defect = {};
@@ -623,7 +623,7 @@ angular.module('buiiltApp').directive('addon', function(){
                   if (!isNaN(item)) {
                     $scope.subTotalPrice += parseFloat(item);
                   }
-                })
+                });
               }
 
             },true);
@@ -706,5 +706,5 @@ angular.module('buiiltApp').directive('addon', function(){
                 });
               };
             }
-          }
+          };
         });

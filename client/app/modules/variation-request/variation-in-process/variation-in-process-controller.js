@@ -57,7 +57,7 @@ angular.module('buiiltApp')
         .then(function(res) {
           $scope.variationRequest = res;
           $('#modal_complete').closeModal();
-        })
-    }
+        });
+    };
 
 });

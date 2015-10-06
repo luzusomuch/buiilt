@@ -26,10 +26,10 @@ angular.module('buiiltApp').controller('SendQuoteBuilderPackageCtrl', function($
         if (!isNaN(item)) {
           $scope.subTotalRate += parseFloat(item);
         }
-      })
+      });
     }
 
-  },true)
+  },true);
 
   $scope.$watch('price.lineWithPrice',function(value) {
     $scope.subTotalPrice = 0;
@@ -39,7 +39,7 @@ angular.module('buiiltApp').controller('SendQuoteBuilderPackageCtrl', function($
         if (!isNaN(item)) {
           $scope.subTotalPrice += parseFloat(item);
         }
-      })
+      });
     }
 
   },true);
