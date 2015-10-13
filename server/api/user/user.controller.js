@@ -459,15 +459,16 @@ exports.all = function (req, res, next) {
 exports.sendVerification = function(req,res) {
   var user = req.user;
   if(!user.emailVerified){
-    Mailer.sendMail('confirm-email.html', user.email, {
+    Mailer.sendMail('confirm-email.html', config.emailFrom, user.email, {
       user: user,
       confirmation: config.baseUrl + 'auth/confirm-email/' + user.emailVerifyToken,
       subject: 'Confirm email from buiilt.com'
     }, function(err){
       if (err) {
         return res.send(500,err);
+      } else {
+        return res.json(200, 'successful');
       }
-      return res.json(true);
     });
   }else{
     return res.send(422,{msg: 'blah blah blah'})
@@ -530,7 +531,3 @@ exports.getResetPasswordToken = function(req,res) {
 exports.authCallback = function (req, res, next) {
   res.redirect('/');
 };
-
-exports.sendVerificationTest = function(req, res) {
-  console.log(req.user._id);
-}

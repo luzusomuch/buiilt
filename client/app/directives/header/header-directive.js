@@ -208,7 +208,6 @@ angular.module('buiiltApp')
         {
           authService.sendVerification().$promise
             .then(function(res) {
-              console.log(res);
               var toast = document.getElementsByClassName('toast');
               toast[0].style.display = 'none';
               Materialize.toast('<span>Verification email has been sent to your email address</span>', $scope.duration,'rounded');
