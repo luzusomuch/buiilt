@@ -316,7 +316,7 @@ exports.createUserWithInviteToken = function(req, res, next) {
 exports.show = function (req, res, next) {
   var userId = req.params.id;
 
-  User.findById(userId, function (err, user) {
+  User.findById(userId, '-salt -hashedPassword', function (err, user) {
     if (err) {
       return next(err);
     }
@@ -447,7 +447,7 @@ exports.me = function (req, res, next) {
 };
 
 exports.all = function (req, res, next) {
-  User.find({},function(err,users) {
+  User.find({}, '-salt -hashedPassword',function(err,users) {
     if (err) {
       // return validationError(res,err);
       return res.send(500,err);
@@ -530,3 +530,7 @@ exports.getResetPasswordToken = function(req,res) {
 exports.authCallback = function (req, res, next) {
   res.redirect('/');
 };
+
+exports.sendVerificationTest = function(req, res) {
+  console.log(req.user._id);
+}

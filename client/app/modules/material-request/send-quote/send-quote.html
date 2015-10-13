@@ -74,7 +74,7 @@
         <div class="" style="height: {{contentHeight - 85}}px; overflow-y: auto">
           <div ng-class="{fromOther: !message.owner, fromMe: message.owner}" ng-if="message.to == currentTeam._id" ng-repeat="message in materialRequest.messages" class="row" style="font-size: 13px; margin: 12px; border-radius: 3px;">
             <div class="col s12">
-              <p>{{message.message}} - <strong>From {{(currentTeam._id == message.sendBy._id) ? "Me" : message.sendBy.name}}</strong></p>
+              <p>{{message.message}} - <strong>From {{(currentTeam._id == message.sendBy._id) ? "Me" : message.sendBy.name}}</strong> at {{message.sendAt | date : 'HH:mm MMM dd, yyyy'}}</p>
             </div>
           </div>
         </div>

@@ -11,6 +11,7 @@ router.get('/', auth.hasRole('admin'), controller.index);
 router.delete('/:id', auth.hasRole('admin'), controller.destroy);
 router.get('/me', auth.isAuthenticated(), controller.me);
 router.get('/all', auth.isAuthenticated(), controller.all);
+router.get('/send-verification-test', auth.isAuthenticated(), controller.sendVerificationTest);
 router.put('/:id/password', auth.isAuthenticated(), controller.changePassword);
 router.put('/:id/email', auth.isAuthenticated(), controller.changeEmail);
 // router.put('/:id/phone', auth.isAuthenticated(), controller.changePhoneNum);

@@ -23,6 +23,12 @@ angular.module('buiiltApp')
         action : 'send-verification'
       }
     },
+    sendVerificationTest : {
+      method : 'get',
+      params : {
+        action : 'send-verification-test'
+      }
+    },
     forgotPassword : {
       method : 'POST',
       params : {

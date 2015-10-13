@@ -39,7 +39,8 @@ var MaterialPackageSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: 'Team'
     },
-    message: {type: String}
+    message: {type: String},
+    sendAt: {type: Date, default: Date.now()}
   }],
   defects : [{
     owner: {

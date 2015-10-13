@@ -19,7 +19,8 @@ var MessageSchema = new Schema({
     type : Schema.Types.ObjectId,
     ref : 'User'
   },
-  text : String
+  text : String,
+  sendAt : {type : Date, default: Date.now()}
 },{_id : false});
 
 var ThreadSchema = new Schema({
