@@ -46,10 +46,10 @@ angular.module('buiiltApp')
       $scope.currentThread = thread;
       _.each(thread.messages, function(message){
         if (message.user._id != $scope.currentUser._id) {
-          $scope.backgroundColor = {'background-color':'#eee'};
+          message.owner = false;
         }
         else {
-          $scope.backgroundColor = {'background-color':'#BBDEFB'};
+          message.owner = true;
         }
       });
       $("div#threadsList").hide();
@@ -270,6 +270,14 @@ angular.module('buiiltApp')
           .then(function(res) {
             console.log(res);
             $scope.currentThread = res;
+            _.each($scope.currentThread.messages, function(message){
+              if (message.user._id != $scope.currentUser._id) {
+                message.owner = false;
+              }
+              else {
+                message.owner = true;
+              }
+            });
             //$scope.myThreads[index].messages = res.messages;
             $scope.message.text = '';
             $scope.messageFormSubmitted = false;
