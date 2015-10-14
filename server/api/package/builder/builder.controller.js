@@ -312,7 +312,7 @@ exports.sendMessageToArchitect = function(req, res) {
         to: req.body.to,
         sendBy: req.user.team._id,
         message: req.body.message,
-        sendAt: new Date();
+        sendAt: new Date()
       });
       builderPackage.markModified('sendMessageToArchitect');
       builderPackage._editUser = req.user;
