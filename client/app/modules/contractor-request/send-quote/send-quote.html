@@ -70,16 +70,12 @@
         <div class="" style="height: {{contentHeight - 85}}px; overflow-y: auto">
           <div ng-class="{fromOther: !message.owner, fromMe: message.owner}" ng-if="message.to == currentTeam._id" ng-repeat="message in contractorRequest.messages" class="row" style="font-size: 13px; margin: 12px; border-radius: 3px;">
             <div class="col s12">
-              <p>{{message.message}} - <strong>From {{(currentTeam._id == message.sendBy._id) ? "Me" : message.sendBy.name}}</strong> at {{message.sendAt | date : 'HH:mm MMM dd, yyyy'}}</p>
+              <p>{{message.message}} <p> 
+              <br>
+              <p style="font-size:10px"><strong>{{(currentTeam._id == message.sendBy._id) ? "Me" : message.sendBy.name}}</strong> at {{message.sendAt | date : 'MMM d, y h:mm:ss a'}}</p>
             </div>
           </div>
         </div>
-        <div style="display:none" class="row" style="font-size: 13px; background-color: #BBDEFB; margin: 12px; border-radius: 3px;">
-          <div class="col s12">
-            <p class="right">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s - <strong>From Me</strong></p>
-          </div>
-        </div>
-        
         <div class="row collection-footer" style="margin-bottom: 0px; background-color: white; padding: 12px; padding-top: 0px; border-top: 1px solid #E0E0E0;position:absolute; bottom:0px; left: 1px; right: 1px;">
            <form ng-submit="sendMessage()">
                <div class="input-field col s12" style="margin-top: 0px; margin-bottom: 0px;">
