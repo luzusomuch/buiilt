@@ -90,9 +90,13 @@ angular.module('buiiltApp')
                 // _.remove($scope.available,{_id : $scope.currentUser._id});
                 $scope.available = [];
                 var tempAvailable = [];
-                $scope.available = _.union($scope.available,$scope.currentTeam.leader);
+                _.each($scope.currentTeam.leader, function(leader){
+                  leader.teamType = $scope.currentTeam.type;
+                  $scope.available.push(leader);
+                });
                 if ($scope.currentTeam._id != $scope.package.owner._id && $scope.isLeader) {
                   _.each($scope.package.owner.leader, function(leader){
+                    leader.teamType = $scope.package.owner.type;
                     tempAvailable.push(leader);
                   });
                   $scope.available = _.union($scope.available, tempAvailable);
@@ -100,22 +104,27 @@ angular.module('buiiltApp')
                 if ($scope.package.to.team) {
                   if ($scope.package.to.team._id != $scope.currentTeam._id && $scope.isLeader) {
                     _.forEach($scope.package.to.team.leader, function (leader) {
+                      leader.teamType = $scope.package.to.team.type;
                       tempAvailable.push(leader);
                     });
                     $scope.available = _.union($scope.available, tempAvailable);
                   }
                 }
-                if ($scope.package.architect.team) {
-                  if ($scope.package.architect.team._id != $scope.currentTeam._id && $scope.isLeader) {
-                    _.each($scope.package.architect.team.leader, function(leader){
-                      tempAvailable.push(leader);
-                    });
-                    $scope.available = _.union($scope.available, tempAvailable);
+                if ($scope.package.architect) {
+                  if ($scope.package.architect.team) {
+                    if ($scope.package.architect.team._id != $scope.currentTeam._id && $scope.isLeader) {
+                      _.each($scope.package.architect.team.leader, function(leader){
+                        leader.teamType = $scope.package.architect.team.type;
+                        tempAvailable.push(leader);
+                      });
+                      $scope.available = _.union($scope.available, tempAvailable);
+                    }
                   }
                 }
                 if ($scope.package.winner) {
                   if ($scope.package.winner._id != $scope.currentTeam._id && $scope.package.winner._id != $scope.package.owner._id) {
                     _.each($scope.package.winner.leader, function(leader){
+                      leader.teamType = $scope.package.winner.type;
                       tempAvailable.push(leader);
                     });
                     $scope.available = _.union($scope.available, tempAvailable);
@@ -123,11 +132,19 @@ angular.module('buiiltApp')
                 }
                 _.forEach($scope.currentTeam.member,function(member) {
                   if (member.status == 'Active') {
+                    member.teamType = $scope.currentTeam.type;
                     $scope.available.push(member._id);
                   }
                 });
                 $scope.available = _.uniq($scope.available, '_id');
                 _.remove($scope.available,{_id : $scope.currentUser._id});
+                if ($scope.package.hasArchitectManager) {
+                  if ($scope.currentTeam.type == 'builder') {
+                    _.remove($scope.available, {teamType: 'homeOwner'});
+                  } else if ($scope.currentTeam.type == 'homeOwner') {
+                    _.remove($scope.available, {teamType: 'builder'});
+                  }
+                }
                 break;
               case 'staff' :
                 $scope.available =  angular.copy($scope.package.staffs);
