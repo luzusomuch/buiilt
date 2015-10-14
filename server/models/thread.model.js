@@ -20,7 +20,7 @@ var MessageSchema = new Schema({
     ref : 'User'
   },
   text : String,
-  sendAt : {type : Date, default: Date.now()}
+  sendAt : {type : Date}
 },{_id : false});
 
 var ThreadSchema = new Schema({

@@ -172,7 +172,8 @@ exports.saveMessage = function(req,res) {
   ThreadValidator.validateMessage(req,function(err,data) {
     var message = {
       text : data.text,
-      user : user
+      user : user,
+      sendAt: new Date()
     };
     thread.messages.push(message);
     thread._evtName = 'Thread.NewMessage';

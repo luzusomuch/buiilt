@@ -47,7 +47,7 @@ var VariationSchema = new Schema({
       ref: 'Team'
     },
     message: {type: String},
-    sendAt: {type: Date, default: Date.now()}
+    sendAt: {type: Date}
   }],
   to: {
     _id: {

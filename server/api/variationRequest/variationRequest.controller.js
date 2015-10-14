@@ -116,7 +116,8 @@ exports.sendMessage = function(req, res) {
         owner: req.body.team,
         to: req.body.to,
         sendBy: req.user.team._id,
-        message: req.body.message
+        message: req.body.message,
+        sendAt: new Date()
       });
       variation.markModified('sendMessage');
       variation._editUser = req.body.to;
@@ -148,7 +149,8 @@ exports.sendMessageToBuilder = function(req, res) {
         owner: variation.owner,
         to: req.body.team,
         sendBy: req.user.team._id,
-        message: req.body.message.message
+        message: req.body.message.message,
+        sendAt: new Date()
       });
       variation.markModified('sendMessageToBuilder');
       variation._editUser = req.user;

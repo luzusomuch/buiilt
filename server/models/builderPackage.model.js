@@ -66,7 +66,7 @@ var BuilderPackageSchema = new Schema({
       ref: 'Team'
     },
     message: {type: String},
-    sendAt: {type: Date, default: Date.now()}
+    sendAt: {type: Date}
   }],
   invitees: [{
     email: String,

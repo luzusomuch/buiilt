@@ -75,7 +75,8 @@ exports.sendMessage = function(req, res) {
         messages.push({
           owner: req.body.team,
           to: req.body.to,
-          message: req.body.message
+          message: req.body.message,
+          sendAt: new Date()
         });
         contractorPackage.messages = messages;
         contractorPackage.save(function(err, saved) {
@@ -90,7 +91,8 @@ exports.sendMessage = function(req, res) {
           owner: req.body.team,
           to: req.body.to,
           sendBy: req.user.team._id,
-          message: req.body.message
+          message: req.body.message,
+          sendAt: new Date()
         });
         contractorPackage.markModified('sendMessage');
         contractorPackage._editUser = req.body.to;
@@ -126,7 +128,8 @@ exports.sendMessageToBuilder = function(req, res) {
           owner: contractorPackage.owner,
           to: req.body.team,
           sendBy: req.user.team._id,
-          message: req.body.message
+          message: req.body.message,
+          sendAt: new Date()
         });
         contractorPackage.messages = messages;
         contractorPackage.save(function(err, saved) {
@@ -141,7 +144,8 @@ exports.sendMessageToBuilder = function(req, res) {
           owner: contractorPackage.owner,
           to: req.body.team,
           sendBy: req.user.team._id,
-          message: req.body.message
+          message: req.body.message,
+          sendAt: new Date()
         });
         contractorPackage.markModified('sendMessageToBuilder');
         contractorPackage._editUser = req.user;

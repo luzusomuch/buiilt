@@ -277,7 +277,8 @@ exports.sendMessage = function(req, res) {
         owner: req.body.owner,
         to: req.body.to,
         sendBy: req.user.team._id,
-        message: req.body.message
+        message: req.body.message,
+        sendAt: new Date()
       });
       builderPackage.markModified('sendMessage');
       builderPackage._editUser = req.body.to;
@@ -310,7 +311,8 @@ exports.sendMessageToArchitect = function(req, res) {
         owner: builderPackage.architect.team,
         to: req.body.to,
         sendBy: req.user.team._id,
-        message: req.body.message
+        message: req.body.message,
+        sendAt: new Date();
       });
       builderPackage.markModified('sendMessageToArchitect');
       builderPackage._editUser = req.user;
