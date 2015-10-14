@@ -67,27 +67,7 @@ angular.module('buiiltApp')
           //Get Available assignee to assign to task
           var getAvailableUser = function(type) {
             switch(type) {
-              case 'builder' :
-                // $scope.available = [];
-                // $scope.available = _.union($scope.available,$scope.currentTeam.leader);
-                // if ($scope.currentTeam._id == $scope.package.owner._id && $scope.isLeader) {
-                //   if ($scope.package.to.team) {
-                //     _.forEach($scope.package.to.team.leader, function (leader) {
-                //       $scope.available.push(leader);
-                //     })
-                //   }
-                // }
-                // if ($scope.package.to.team && $scope.currentTeam._id == $scope.package.to.team._id && $scope.isLeader) {
-                //   _.forEach($scope.package.owner.leader, function (leader) {
-                //     $scope.available.push(leader);
-                //   })
-                // }
-                // _.forEach($scope.currentTeam.member,function(member) {
-                //   if (member.status == 'Active') {
-                //     $scope.available.push(member._id);
-                //   }
-                // });
-                // _.remove($scope.available,{_id : $scope.currentUser._id});
+              case 'client':
                 $scope.available = [];
                 var tempAvailable = [];
                 _.each($scope.currentTeam.leader, function(leader){
@@ -143,6 +123,69 @@ angular.module('buiiltApp')
                     _.remove($scope.available, {teamType: 'homeOwner'});
                   } else if ($scope.currentTeam.type == 'homeOwner') {
                     _.remove($scope.available, {teamType: 'builder'});
+                  } else if ($scope.currentTeam.type == 'architect') {
+                    _.remove($scope.available, {teamType: 'builder'});
+                  }
+                }
+                break;
+              case 'builder' :
+                $scope.available = [];
+                var tempAvailable = [];
+                _.each($scope.currentTeam.leader, function(leader){
+                  leader.teamType = $scope.currentTeam.type;
+                  $scope.available.push(leader);
+                });
+                if ($scope.currentTeam._id != $scope.package.owner._id && $scope.isLeader) {
+                  _.each($scope.package.owner.leader, function(leader){
+                    leader.teamType = $scope.package.owner.type;
+                    tempAvailable.push(leader);
+                  });
+                  $scope.available = _.union($scope.available, tempAvailable);
+                }
+                if ($scope.package.to.team) {
+                  if ($scope.package.to.team._id != $scope.currentTeam._id && $scope.isLeader) {
+                    _.forEach($scope.package.to.team.leader, function (leader) {
+                      leader.teamType = $scope.package.to.team.type;
+                      tempAvailable.push(leader);
+                    });
+                    $scope.available = _.union($scope.available, tempAvailable);
+                  }
+                }
+                if ($scope.package.architect) {
+                  if ($scope.package.architect.team) {
+                    if ($scope.package.architect.team._id != $scope.currentTeam._id && $scope.isLeader) {
+                      _.each($scope.package.architect.team.leader, function(leader){
+                        leader.teamType = $scope.package.architect.team.type;
+                        tempAvailable.push(leader);
+                      });
+                      $scope.available = _.union($scope.available, tempAvailable);
+                    }
+                  }
+                }
+                if ($scope.package.winner) {
+                  if ($scope.package.winner._id != $scope.currentTeam._id && $scope.package.winner._id != $scope.package.owner._id) {
+                    _.each($scope.package.winner.leader, function(leader){
+                      leader.teamType = $scope.package.winner.type;
+                      tempAvailable.push(leader);
+                    });
+                    $scope.available = _.union($scope.available, tempAvailable);
+                  }
+                }
+                _.forEach($scope.currentTeam.member,function(member) {
+                  if (member.status == 'Active') {
+                    member.teamType = $scope.currentTeam.type;
+                    $scope.available.push(member._id);
+                  }
+                });
+                $scope.available = _.uniq($scope.available, '_id');
+                _.remove($scope.available,{_id : $scope.currentUser._id});
+                if ($scope.package.hasArchitectManager) {
+                  if ($scope.currentTeam.type == 'builder') {
+                    _.remove($scope.available, {teamType: 'homeOwner'});
+                  } else if ($scope.currentTeam.type == 'homeOwner') {
+                    _.remove($scope.available, {teamType: 'builder'});
+                  } else if ($scope.currentTeam.type == 'architect') {
+                    _.remove($scope.available, {teamType: 'homeOwner'});
                   }
                 }
                 break;
@@ -222,6 +265,7 @@ angular.module('buiiltApp')
 
           //Update Thread List
           var updateThread = function() {
+            $scope.type = ($scope.type == 'client') ? 'builder' : $scope.type;
             messageService.get({id : $scope.package._id, type : $scope.type}).$promise
               .then(function(res) {
                 $scope.threads = res;
@@ -310,7 +354,6 @@ angular.module('buiiltApp')
                 message.owner = true;
               }
             });
-            // console.log($scope.scrollHeight = $('#messages')[0].scrollHeight);
           });
 
           $scope.enterMessage = function ($event) {
@@ -322,6 +365,7 @@ angular.module('buiiltApp')
           $scope.message = {};
           $scope.sendMessage = function() {
             if ($scope.message.text != '') {
+              $scope.type = ($scope.type == 'client') ? 'builder' : $scope.type;
               messageService.sendMessage({id: $scope.currentThread._id, type: $scope.type}, $scope.message).$promise
                 .then(function (res) {
                   // _.remove($scope.threads, {_id: res._id});
@@ -349,6 +393,7 @@ angular.module('buiiltApp')
 
           $scope.saveThread = function(form) {
             $scope.submitted = true;
+            $scope.type = ($scope.type == 'client') ? 'builder' : $scope.type;
             if (form.$valid) {
               if ($scope.isNew) {
                 messageService.create({id: $scope.package._id, type: $scope.type}, $scope.thread).$promise

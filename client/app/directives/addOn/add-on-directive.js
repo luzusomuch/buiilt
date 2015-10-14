@@ -54,6 +54,66 @@ angular.module('buiiltApp').directive('addon', function(){
             //Get Available assignee to assign to task
             var getAvailableAssignee = function(type) {
               switch(type) {
+                case 'client' :
+                $scope.available = [];
+                var tempAvailable = [];
+                _.each($scope.currentTeam.leader, function(leader){
+                  leader.teamType = $scope.currentTeam.type;
+                  $scope.available.push(leader);
+                });
+                if ($scope.currentTeam._id != $scope.package.owner._id && $scope.isLeader) {
+                  _.each($scope.package.owner.leader, function(leader){
+                    leader.teamType = $scope.package.owner.type;
+                    tempAvailable.push(leader);
+                  });
+                  $scope.available = _.union($scope.available, tempAvailable);
+                }
+                if ($scope.package.to.team) {
+                  if ($scope.package.to.team._id != $scope.currentTeam._id && $scope.isLeader) {
+                    _.forEach($scope.package.to.team.leader, function (leader) {
+                      leader.teamType = $scope.package.to.type;
+                      tempAvailable.push(leader);
+                    });
+                    $scope.available = _.union($scope.available, tempAvailable);
+                  }
+                }
+                if ($scope.package.architect) {
+                  if ($scope.package.architect.team) {
+                    if ($scope.package.architect.team._id != $scope.currentTeam._id && $scope.isLeader) {
+                      _.each($scope.package.architect.team.leader, function(leader){
+                        leader.teamType = $scope.package.architect.team.type;
+                        tempAvailable.push(leader);
+                      });
+                      $scope.available = _.union($scope.available, tempAvailable);
+                    }
+                  }
+                }
+                if ($scope.package.winner) {
+                  if ($scope.package.winner._id != $scope.currentTeam._id && $scope.package.winner._id != $scope.package.owner._id) {
+                    _.each($scope.package.winner.leader, function(leader){
+                      leader.teamType = $scope.package.winner.type;
+                      tempAvailable.push(leader);
+                    });
+                    $scope.available = _.union($scope.available, tempAvailable);
+                  }
+                }
+                _.forEach($scope.currentTeam.member,function(member) {
+                  if (member.status == 'Active') {
+                    member.teamType = $scope.currentTeam.type;
+                    $scope.available.push(member._id);
+                  }
+                });
+                $scope.available = _.uniq($scope.available, '_id');
+                if ($scope.package.hasArchitectManager) {
+                  if ($scope.currentTeam.type == 'builder') {
+                    _.remove($scope.available, {teamType: 'homeOwner'});
+                  } else if ($scope.currentTeam.type == 'homeOwner') {
+                    _.remove($scope.available, {teamType: 'builder'});
+                  } else if ($scope.currentTeam.type == 'architect') {
+                    _.remove($scope.available, {teamType: 'builder'});
+                  }
+                }
+                break;
                 case 'builder' :
                 $scope.available = [];
                 var tempAvailable = [];
@@ -109,6 +169,8 @@ angular.module('buiiltApp').directive('addon', function(){
                     _.remove($scope.available, {teamType: 'homeOwner'});
                   } else if ($scope.currentTeam.type == 'homeOwner') {
                     _.remove($scope.available, {teamType: 'builder'});
+                  } else if ($scope.currentTeam.type == 'architect') {
+                    _.remove($scope.available, {teamType: 'homeOwner'});
                   }
                 }
                 break;
@@ -187,8 +249,11 @@ angular.module('buiiltApp').directive('addon', function(){
 
             //Update Task List
             var updateTasks = function() {
+              $scope.tempType = $scope.type;
+              $scope.type = ($scope.type == 'client') ? 'builder' : $scope.type;
               taskService.get({id : $scope.package._id, type : $scope.type}).$promise
               .then(function(res) {
+                $scope.type = $scope.tempType;
                 $scope.tasks = res;
                 _.forEach($scope.tasks,function(task) {
                   task.isOwner = (_.findIndex(task.assignees,{_id : $scope.currentUser._id}) != -1) || (task.user == $scope.currentUser._id);
@@ -271,8 +336,11 @@ angular.module('buiiltApp').directive('addon', function(){
                 task.completedBy = null;
                 task.completedAt = null;
               }
+              $scope.tempType = $scope.type;
+              $scope.type = ($scope.type == 'client') ? 'builder' : $scope.type;
               taskService.update({id : task._id, type : $scope.type},task).$promise
               .then(function(res) {
+                $scope.type = $scope.tempType;
                   //$('.card-title').trigger('click');
                   updateTasks();
                 });
@@ -280,10 +348,13 @@ angular.module('buiiltApp').directive('addon', function(){
 
             //Submit form function
             $scope.save = function(form) {
+              $scope.tempType = $scope.type;
               if (form.$valid) {
+                $scope.type = ($scope.type == 'client') ? 'builder' : $scope.type;
                 if ($scope.isNew) {
                   taskService.create({id : $scope.package._id, type : $scope.type},$scope.task).$promise
                   .then(function(res) {
+                    $scope.type = $scope.tempType;
                     $('.card-title').trigger('click');
                     $scope.showTasks();
                     $scope.showTaskDetail(res);
@@ -292,6 +363,7 @@ angular.module('buiiltApp').directive('addon', function(){
                 } else {
                   taskService.update({id : $scope.task._id, type : $scope.type},$scope.task).$promise
                   .then(function(res) {
+                    $scope.type = $scope.tempType;
                     $('.card-title').trigger('click');
                     $scope.showTasks();
                     $scope.showTaskDetail(res);
@@ -471,6 +543,8 @@ angular.module('buiiltApp').directive('addon', function(){
               $scope.descriptionError = (value[0] <= 0 && value[1]);
             });
             $scope.sendVariation = function() {
+              $scope.tempType = $scope.type;
+              $scope.type = ($scope.type == 'client') ? 'builder' : $scope.type;
               if ($scope.rate.lineWithRate) {
                 $scope.lineWithRates.push({
                   description: $scope.rate.lineWithRate.rateDescription,
@@ -493,6 +567,7 @@ angular.module('buiiltApp').directive('addon', function(){
                   packageType: $scope.type, variation: $scope.variation,
                   rate: $scope.lineWithRates, price: $scope.lineWithPrices})
                 .$promise.then(function(data) {
+                  $scope.type = $scope.tempType;
                   $scope.package.variations.push(data);
                   $scope.variation.title = null;
                   $scope.variation.descriptions = [];
@@ -531,8 +606,11 @@ angular.module('buiiltApp').directive('addon', function(){
             //send defect
             $scope.defect = {};
             $scope.sendDefect = function() {
+              $scope.tempType = $scope.type;
+              $scope.type = ($scope.type == 'client') ? 'builder' : $scope.type;
               addOnPackageService.sendDefect({id: $scope.package._id, packageType: $scope.type, defect: $scope.defect})
               .$promise.then(function(data) {
+                $scope.type = $scope.tempType;
                 $scope.data = data;
                 $scope.package.defects = data.defects;
                 $scope.defect = {};
@@ -595,6 +673,8 @@ angular.module('buiiltApp').directive('addon', function(){
               };
 
             $scope.sendInvoice = function() {
+              $scope.tempType = $scope.type;
+              $scope.type = ($scope.type == 'client') ? 'builder' : $scope.type;
               if ($scope.rate.lineWithRate) {
                 $scope.lineWithRates.push({
                   description: $scope.rate.lineWithRate.rateDescription,
@@ -617,6 +697,7 @@ angular.module('buiiltApp').directive('addon', function(){
                 $scope.lineWithPrices = [];
                 $scope.lineWithRates = [];
                 $scope.invoice = {};
+                $scope.type = $scope.tempType;
               });
             };
 
