@@ -68,13 +68,15 @@ angular.module('buiiltApp').directive('addon', function(){
                   });
                   $scope.available = _.union($scope.available, tempAvailable);
                 }
-                if ($scope.package.to.team) {
-                  if ($scope.package.to.team._id != $scope.currentTeam._id && $scope.isLeader) {
-                    _.forEach($scope.package.to.team.leader, function (leader) {
-                      leader.teamType = $scope.package.to.type;
-                      tempAvailable.push(leader);
-                    });
-                    $scope.available = _.union($scope.available, tempAvailable);
+                if ($scope.package.to) {
+                  if ($scope.package.to.team) {
+                    if ($scope.package.to.team._id != $scope.currentTeam._id && $scope.isLeader) {
+                      _.forEach($scope.package.to.team.leader, function (leader) {
+                        leader.teamType = $scope.package.to.type;
+                        tempAvailable.push(leader);
+                      });
+                      $scope.available = _.union($scope.available, tempAvailable);
+                    }
                   }
                 }
                 if ($scope.package.architect) {
@@ -128,13 +130,15 @@ angular.module('buiiltApp').directive('addon', function(){
                   });
                   $scope.available = _.union($scope.available, tempAvailable);
                 }
-                if ($scope.package.to.team) {
-                  if ($scope.package.to.team._id != $scope.currentTeam._id && $scope.isLeader) {
-                    _.forEach($scope.package.to.team.leader, function (leader) {
-                      leader.teamType = $scope.package.to.type;
-                      tempAvailable.push(leader);
-                    });
-                    $scope.available = _.union($scope.available, tempAvailable);
+                if ($scope.package.to) {
+                  if ($scope.package.to.team) {
+                    if ($scope.package.to.team._id != $scope.currentTeam._id && $scope.isLeader) {
+                      _.forEach($scope.package.to.team.leader, function (leader) {
+                        leader.teamType = $scope.package.to.type;
+                        tempAvailable.push(leader);
+                      });
+                      $scope.available = _.union($scope.available, tempAvailable);
+                    }
                   }
                 }
                 if ($scope.package.architect) {

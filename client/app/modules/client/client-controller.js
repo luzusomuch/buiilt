@@ -60,27 +60,39 @@ angular.module('buiiltApp').controller('ClientCtrl', function(messageService,add
       $state.go('team.manager');
     }
     else {
-        if (builderPackage.to.type == 'homeOwner') {
+        if (builderPackage.hasArchitectManager) {
             if (team.type == 'builder') {
-                if (builderPackage.owner._id != team._id) {
+                $state.go('team.manager');
+            } else if (builderPackage.architect.team) {
+                if (team._id != builderPackage.architect.team._id) {
                     $state.go('team.manager');
                 }
+            } else if (team._id != builderPackage.owner._id) {
+                $state.go('team.manager');
             }
-            else if (team.type == 'homeOwner') {
-                if (builderPackage.to.team._id != team._id) {
-                    $state.go('team.manager');
+        } else {
+            if (builderPackage.to.type == 'homeOwner') {
+                if (team.type == 'builder') {
+                    if (builderPackage.owner._id != team._id) {
+                        $state.go('team.manager');
+                    }
+                }
+                else if (team.type == 'homeOwner') {
+                    if (builderPackage.to.team._id != team._id) {
+                        $state.go('team.manager');
+                    }
                 }
             }
-        }
-        else {
-            if (team.type == 'builder') {
-                if (builderPackage.to.team._id != team._id) {
-                    $state.go('team.manager');
+            else {
+                if (team.type == 'builder') {
+                    if (builderPackage.to.team._id != team._id) {
+                        $state.go('team.manager');
+                    }
                 }
-            }
-            else if (team.type == 'homeOwner') {
-                if (builderPackage.owner._id != team._id) {
-                    $state.go('team.manager');
+                else if (team.type == 'homeOwner') {
+                    if (builderPackage.owner._id != team._id) {
+                        $state.go('team.manager');
+                    }
                 }
             }
         }
@@ -147,29 +159,67 @@ angular.module('buiiltApp').controller('ClientCtrl', function(messageService,add
       $state.go('team.manager');
     }
     else {
-        if (builderPackage.to.type == 'homeOwner') {
+        console.log(builderPackage);
+        if (builderPackage.hasArchitectManager) {
             if (team.type == 'builder') {
-                if (builderPackage.owner._id != team._id) {
+                $state.go('team.manager');
+            } else if (builderPackage.architect.team) {
+                if (team._id != builderPackage.architect.team._id) {
                     $state.go('team.manager');
                 }
+            } else if (team._id != builderPackage.owner._id) {
+                $state.go('team.manager');
             }
-            else if (team.type == 'homeOwner') {
-                if (builderPackage.to.team._id != team._id) {
-                    $state.go('team.manager');
+        } else {
+            if (builderPackage.to.type == 'homeOwner') {
+                if (team.type == 'builder') {
+                    if (builderPackage.owner._id != team._id) {
+                        $state.go('team.manager');
+                    }
+                }
+                else if (team.type == 'homeOwner') {
+                    if (builderPackage.to.team._id != team._id) {
+                        $state.go('team.manager');
+                    }
+                }
+            }
+            else {
+                if (team.type == 'builder') {
+                    if (builderPackage.to.team._id != team._id) {
+                        $state.go('team.manager');
+                    }
+                }
+                else if (team.type == 'homeOwner') {
+                    if (builderPackage.owner._id != team._id) {
+                        $state.go('team.manager');
+                    }
                 }
             }
         }
-        else {
-            if (team.type == 'builder') {
-                if (builderPackage.to.team._id != team._id) {
-                    $state.go('team.manager');
-                }
-            }
-            else if (team.type == 'homeOwner') {
-                if (builderPackage.owner._id != team._id) {
-                    $state.go('team.manager');
-                }
-            }
-        }
+        // if (builderPackage.) {};
+        // if (builderPackage.to.type == 'homeOwner') {
+        //     if (team.type == 'builder') {
+        //         if (builderPackage.owner._id != team._id) {
+        //             $state.go('team.manager');
+        //         }
+        //     }
+        //     else if (team.type == 'homeOwner') {
+        //         if (builderPackage.to.team._id != team._id) {
+        //             $state.go('team.manager');
+        //         }
+        //     }
+        // }
+        // else {
+        //     if (team.type == 'builder') {
+        //         if (builderPackage.to.team._id != team._id) {
+        //             $state.go('team.manager');
+        //         }
+        //     }
+        //     else if (team.type == 'homeOwner') {
+        //         if (builderPackage.owner._id != team._id) {
+        //             $state.go('team.manager');
+        //         }
+        //     }
+        // }
     }
 });

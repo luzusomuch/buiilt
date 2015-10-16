@@ -65,7 +65,6 @@ angular.module('buiiltApp')
 
     // End Real time process
 
-    $scope.currentTeam = $rootScope.currentTeam;
     $scope.available = [];
     $scope.design = {
         staffs : [],
@@ -131,6 +130,7 @@ angular.module('buiiltApp')
                 available.push(member);
             });
         }
+        $scope.available = _.uniq($scope.available, '_id');
     };
 
     getAvailableAssign();
