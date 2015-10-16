@@ -1,6 +1,7 @@
 'use strict';
 
 var User = require('./../../models/user.model');
+var Team = require('./../../models/team.model');
 var Project = require('./../../models/project.model');
 var BuilderPackage = require('./../../models/builderPackage.model');
 var ContractorPackage = require('./../../models/contractorPackage.model');
@@ -387,7 +388,9 @@ exports.uploadInPackge = function(req, res){
             BuilderPackage.findById(file.belongTo)
             .populate('owner')
             .populate('to.team')
-            .populate('winner').exec(function(err, builderPackage){
+            .populate('architect.team')
+            .populate('winner')
+            .exec(function(err, builderPackage){
                 if (err) {return res.send(500,err);}
                 if (builderPackage.invitees.length > 0) {
                     _.each(builderPackage.invitees, function(invitee){
@@ -397,51 +400,144 @@ exports.uploadInPackge = function(req, res){
                         }
                     });
                 }
-
-                owners = builderPackage.owner.leader;
-                _.each(builderPackage.owner.member, function(member){
-                    if (member._id) {
-                        owners.push(member._id);
-                    }
-                });
-                if (builderPackage.to.team) {
-                    owners = _.union(owners, builderPackage.to.team.leader);
-                    _.each(builderPackage.to.team.member, function(member){
+                if (builderPackage.hasArchitectManager) {
+                    async.parallel({
+                        team: function(cb) {
+                            Team.findById(req.user.team._id, function(err, result){
+                                if (err || !result) {return cb();}
+                                cb(null, result);
+                            });
+                        },
+                        owners: function(cb) {
+                            var ownersTemp = [];
+                            _.each(builderPackage.owner.leader, function(leader){
+                                ownersTemp.push({_id:leader, teamType: builderPackage.owner.type});
+                            });
+                            _.each(builderPackage.owner.member, function(member){
+                                if (member._id) {
+                                    ownersTemp.push({_id:member._id, teamType: builderPackage.owner.type});
+                                }
+                            });
+                            if (builderPackage.architect.team) {
+                                _.each(builderPackage.architect.team.leader, function(leader){
+                                    ownersTemp.push({_id:leader, teamType: builderPackage.architect.team.type});
+                                });
+                                _.each(builderPackage.architect.team.member, function(member){
+                                    if (member._id) {
+                                        ownersTemp.push({_id:member._id, teamType: builderPackage.architect.team.type});
+                                    }
+                                });
+                            }
+                            if (builderPackage.to) {
+                                if (builderPackage.to.team) {
+                                    _.each(builderPackage.to.team.leader, function(leader){
+                                        ownersTemp.push({_id:leader, teamType: builderPackage.to.team.type});
+                                    });
+                                    _.each(builderPackage.to.team.member, function(member) {
+                                        if (member._id) {
+                                            ownersTemp.push({_id:member._id, teamType: builderPackage.to.team.type});
+                                        }
+                                    });
+                                }
+                            }
+                            if (builderPackage.winner) {
+                                _.each(builderPackage.winner.leader, function(leader){
+                                    ownersTemp.push({_id:leader, teamType: builderPackage.winner.type});
+                                });
+                                _.each(builderPackage.winner.member, function(member) {
+                                    if (member._id) {
+                                        ownersTemp.push({_id:member._id, teamType: builderPackage.winner.type});
+                                    }
+                                });
+                            }
+                            cb(null, ownersTemp);
+                        }
+                    }, function(err, result){
+                        if (err) {return res.send(500,err);}
+                        var team = result.team;
+                        if (team.type == 'builder') {
+                            _.remove(result.owners, {teamType: 'homeOwner'});
+                        } else if (team.type == 'homeOwner') {
+                            _.remove(result.owners, {teamType: 'builder'});
+                        }
+                        result.owners = _.map(_.groupBy(result.owners,function(item){
+                            return item._id;
+                        }),function(grouped){
+                            return grouped[0];
+                        });
+                        _.each(result.owners, function(item){
+                            owners.push(item._id);
+                        });
+                        _.remove(owners, req.user._id);
+                        async.each(owners, function(leader,callback){
+                            var notification = new Notification({
+                                owner: leader,
+                                fromUser: req.user._id,
+                                toUser: leader,
+                                element: {file:file.toJSON(),
+                                    uploadIn: builderPackage,
+                                    projectId: builderPackage.project},
+                                referenceTo: "DocumentBuilderPackage",
+                                type: 'uploadDocument'
+                            });
+                            notification.save(function(err) {
+                                if (err) {callback(err);}
+                                callback();
+                            });
+                        },function(err) {
+                            if (err) {return res.send(500,err);}
+                            builderPackage.save(function(err){
+                                if (err) {return res.send(500,err);}
+                                return res.send(file.toJSON());
+                            });
+                        });
+                    });
+                } else {
+                    owners = builderPackage.owner.leader;
+                    _.each(builderPackage.owner.member, function(member){
                         if (member._id) {
                             owners.push(member._id);
                         }
                     });
-                } else if (builderPackage.winner) {
-                    owners = _.union(owners, builderPackage.winner.leader);
-                    _.each(builderPackage.winner.member, function(member) {
-                        if (member._id) {
-                            owners.push(member._id);
-                        }
+                    if (builderPackage.to.team) {
+                        owners = _.union(owners, builderPackage.to.team.leader);
+                        _.each(builderPackage.to.team.member, function(member){
+                            if (member._id) {
+                                owners.push(member._id);
+                            }
+                        });
+                    } else if (builderPackage.winner) {
+                        owners = _.union(owners, builderPackage.winner.leader);
+                        _.each(builderPackage.winner.member, function(member) {
+                            if (member._id) {
+                                owners.push(member._id);
+                            }
+                        });
+                    }
+                    _.remove(owners, req.user._id);
+                    async.each(owners, function(leader,callback){
+                        var notification = new Notification({
+                            owner: leader,
+                            fromUser: req.user._id,
+                            toUser: leader,
+                            element: {file:file.toJSON(),
+                                uploadIn: builderPackage,
+                                projectId: builderPackage.project},
+                            referenceTo: "DocumentBuilderPackage",
+                            type: 'uploadDocument'
+                        });
+                        notification.save(function(err) {
+                            if (err) {callback(err);}
+                            callback();
+                        });
+                    },function(err) {
+                        if (err) {return res.send(500,err);}
+                        builderPackage.save(function(err){
+                            if (err) {return res.send(500,err);}
+                            return res.send(file.toJSON());
+                        });
                     });
                 }
-                _.remove(owners, req.user._id);
-                async.each(owners, function(leader,callback){
-                    var notification = new Notification({
-                        owner: leader,
-                        fromUser: req.user._id,
-                        toUser: leader,
-                        element: {file:file.toJSON(),
-                            uploadIn: builderPackage,
-                            projectId: builderPackage.project},
-                        referenceTo: "DocumentBuilderPackage",
-                        type: 'uploadDocument'
-                    });
-                    notification.save(function(err) {
-                        if (err) {callback(err);}
-                        callback();
-                    });
-                },function(err) {
-                    if (err) {return res.send(500,err);}
-                    builderPackage.save(function(err){
-                        if (err) {return res.send(500,err);}
-                        return res.send(file.toJSON());
-                    });
-                });
             });
         }
     });
