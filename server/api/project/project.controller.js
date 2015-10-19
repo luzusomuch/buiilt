@@ -344,51 +344,59 @@ exports.createProjectNewVersion = function(req, res) {
       });
       var projectManager = {};
       if (req.body.selectedOwnerUserType == 'homeOwner') {
-        if (req.body.homeOwnerHireArchitect == 'true' && req.body.architectEmail != '') {
-          User.findOne({'email': req.body.architectEmail}, function(err, _architect){
-            if (err) {return res.send(500,err);}
-            if (!_architect) {
-              projectManager.email = req.body.architectEmail;
-              projectManager.type = 'architect';
-            } else {
-              _architect.projects.push(project._id);
-              _architect.markModified('projects');
-              _architect.save();
-              projectManager._id = _architect._id;
-              projectManager.type = 'architect';
-            }
-            builderPackage.projectManager = projectManager;
-            builderPackage._editUser = req.user;
-            builderPackage.save(function(err){
-              if (err) {
-                return res.send(500,err)
+        if (req.body.homeOwnerHireArchitect == 'true' && req.body.architectEmail) {
+          if (req.body.architectEmail.length > 0) {
+            User.findOne({'email': req.body.architectEmail}, function(err, _architect){
+              if (err) {return res.send(500,err);}
+              if (!_architect) {
+                projectManager.email = req.body.architectEmail;
+                projectManager.type = 'architect';
+              } else {
+                _architect.projects.push(project._id);
+                _architect.markModified('projects');
+                _architect.save();
+                projectManager._id = _architect._id;
+                projectManager.type = 'architect';
               }
-              return res.json(project);
+              builderPackage.projectManager = projectManager;
+              builderPackage._editUser = req.user;
+              builderPackage.save(function(err){
+                if (err) {
+                  return res.send(500,err)
+                }
+                return res.json(project);
+              });
             });
-          });
-        } else if (req.body.homeOwnerAssignBuilder == 'true' && req.body.builderEmail != '') {
-          User.findOne({'email': req.body.builderEmail}, function(err, _builder){
-            if (err) {return res.send(500,err);}
-            if (!_builder) {
-              projectManager.email = req.body.builderEmail;
-              projectManager.type = 'builder';
-            } else {
-              _builder.projects.push(project._id);
-              _builder.markModified('projects');
-              _builder.save();
-              projectManager._id = _builder._id;
-              projectManager.type = 'builder';
-            }
-            builderPackage.projectManager = projectManager;
-            builderPackage._editUser = req.user;
-            builderPackage.save(function(err){
-              if (err) {
-                return res.send(500,err)
+          } else {
+            return res.send(422, {msg: 'Please check your architect email'});
+          }
+        } else if (req.body.homeOwnerAssignBuilder == 'true' && req.body.builderEmail) {
+          if (req.body.builderEmail.length > 0) {
+            User.findOne({'email': req.body.builderEmail}, function(err, _builder){
+              if (err) {return res.send(500,err);}
+              if (!_builder) {
+                projectManager.email = req.body.builderEmail;
+                projectManager.type = 'builder';
+              } else {
+                _builder.projects.push(project._id);
+                _builder.markModified('projects');
+                _builder.save();
+                projectManager._id = _builder._id;
+                projectManager.type = 'builder';
               }
-              return res.json(project);
+              builderPackage.projectManager = projectManager;
+              builderPackage._editUser = req.user;
+              builderPackage.save(function(err){
+                if (err) {
+                  return res.send(500,err)
+                }
+                return res.json(project);
+              });
             });
-          });
-        } else {
+          } else {
+            return res.send(422, {msg: 'Please check your builder email'});
+          }
+        } else if (req.body.homeOwnerHireArchitect == 'false' && req.body.homeOwnerAssignBuilder == 'false') {
           User.findById(req.user._id, function(err, _user){
             if (err) {return res.send(500,err);}
             else {
@@ -404,6 +412,8 @@ exports.createProjectNewVersion = function(req, res) {
               return res.json(project);
             });
           });
+        } else {
+          return res.send(422, {msg: 'Please check your input'});
         }
       } else if (req.body.selectedOwnerUserType == 'architect') {
         if (req.body.architectManagerHisProject == 'true') {
@@ -533,7 +543,7 @@ exports.createProjectNewVersion = function(req, res) {
           } else {
             return res.send(422, {msg: 'Please check your home owner email'});
           }
-        } else {
+        } else if (req.body.builderHireArchitect == 'false' && req.body.builderAssignHomeOwner == 'true') {
           User.findById(req.user._id, function(err, _user){
             if (err) {return res.send(500,err);}
             else {
@@ -549,6 +559,8 @@ exports.createProjectNewVersion = function(req, res) {
               return res.json(project);
             });
           });
+        } else {
+          return res.send(422, {msg: 'Please check your input'});
         }
       }
       return;

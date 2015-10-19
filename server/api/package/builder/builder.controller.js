@@ -4,11 +4,13 @@ var User = require('./../../../models/user.model');
 var Team = require('./../../../models/team.model');
 var Project = require('./../../../models/project.model');
 var BuilderPackage = require('./../../../models/builderPackage.model');
+var BuilderPackageNewVersion = require('./../../../models/builderPackageNew.model');
 var errorsHelper = require('./../../../components/helpers/errors');
 var ProjectValidator = require('./../../../validators/project');
 var _ = require('lodash');
 var async = require('async');
 var EventBus = require('./../../../components/EventBus');
+var mongoose = require('mongoose');
 
 exports.project = function(req, res, next) {
   Project.findById(req.params.id,function(err,project) {
@@ -26,9 +28,8 @@ exports.project = function(req, res, next) {
 exports.getDefaultPackageByProject = function(req, res) {
   var user = req.user;
   var project = req.project;
-  BuilderPackage.findOne({
-    project: project._id,
-    isSendQuote: false
+  BuilderPackageNewVersion.findOne({
+    project: mongoose.Types.ObjectId(project._id)
   })
   .populate('project')
   .populate('owner')
@@ -40,6 +41,7 @@ exports.getDefaultPackageByProject = function(req, res) {
   .populate('invitees.quoteDocument', '_id mimeType title')
   .exec(function(err, builderPackage) {
     if (err){console.log(err); return res.send(500, err); }
+    console.log(builderPackage);
     User.populate(builderPackage,[
       {path : 'owner.member._id'},
       {path : 'owner.leader'},

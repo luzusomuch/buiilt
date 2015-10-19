@@ -126,7 +126,11 @@ angular.module('buiiltApp')
                 authService.getCurrentTeam().$promise
                   .then(function(res) {
                     $scope.currentTeam = res;
-                    $scope.projects = $scope.currentTeam.project;
+                    // old version
+                    // $scope.projects = $scope.currentTeam.project;
+
+                    // new version
+                    $scope.projects = $scope.user.projects;
                     if ($stateParams.id) {
                       builderPackageService.findDefaultByProject({id: $stateParams.id}).$promise.then(function(res){
                         if (res.hasArchitectManager) {
@@ -226,16 +230,8 @@ angular.module('buiiltApp')
         $scope.duration = 0;
       };
 
-      $scope.$watch('project.homeOwnerHireArchitect', function(value){
-        console.log(value);
-      });
-      $scope.$watch('project.homeOwnerAssignBuilder', function(value){
-        console.log(value);
-      });
-
       $scope.create = function(form) {
         $scope.submitted = true;
-        console.log(form);
         if (form.$valid) {
           // projectService.create($scope.project).$promise.then(function(data) {
           //   $scope.projects.push(data);
@@ -256,8 +252,12 @@ angular.module('buiiltApp')
           // new version
           projectService.createProjectNewVersion($scope.project).$promise.then(function(data){
             console.log(data);
+            $scope.projects.push(data);
+            $state.go('dashboard', {id: data._id},{reload: true});
+            $scope.submitted = false;
+            $("#createProject").closeModal();
           }, function(res) {
-            console.log(res);
+            $scope.errors = res.data.msg;
           });
         }
       };
