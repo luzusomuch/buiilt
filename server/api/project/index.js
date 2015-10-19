@@ -8,6 +8,7 @@ var auth = require('../../auth/auth.service');
 var router = express.Router();
 
 router.post('/', auth.isAuthenticated(), controller.create);
+router.post('/create-project-new-version', auth.isAuthenticated(), controller.createProjectNewVersion);
 router.delete('/:id', auth.hasRole('admin'), controller.destroy);
 router.get('/', auth.isAuthenticated(), controller.index);
 // router.get('/:id', auth.isAuthenticated(), controller.show);

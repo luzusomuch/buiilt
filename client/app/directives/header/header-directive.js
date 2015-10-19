@@ -99,6 +99,13 @@ angular.module('buiiltApp')
             $scope.isLoggedIn = true;
             $scope.project = {
               hasArchitect: false,
+              selectedOwnerUserType: '',
+              homeOwnerHireArchitect: 'true',
+              homeOwnerAssignBuilder: 'true',
+              architectManagerHisProject: 'true',
+              haveContracted: 'true',
+              builderHireArchitect: 'true',
+              builderAssignHomeOwner: 'true',
               package : {
                 location: {},
                 to : ''
@@ -215,35 +222,43 @@ angular.module('buiiltApp')
         }
       });
 
-
-
-
       $rootScope.sendVerification = function() {
         $scope.duration = 0;
-        // console.log($scope.duration);
-        //authService.sendVerification().$promise
-        //  .then(function(res) {
-        //
-        //  })
       };
+
+      $scope.$watch('project.homeOwnerHireArchitect', function(value){
+        console.log(value);
+      });
+      $scope.$watch('project.homeOwnerAssignBuilder', function(value){
+        console.log(value);
+      });
+
       $scope.create = function(form) {
         $scope.submitted = true;
+        console.log(form);
         if (form.$valid) {
-            projectService.create($scope.project).$promise.then(function(data) {
-              $scope.projects.push(data);
-              $state.go('dashboard',{id : data._id},{reload : true});
-              $scope.project = {
-                package : {
-                  location: {},
-                  to : ''
-                }
-              };
-              $scope.submitted = false;
-              $scope.project.hasArchitect = false;
-              $('#createProject').closeModal();
-            }, function(res) {
-              $scope.errors = res.data;
-            });
+          // projectService.create($scope.project).$promise.then(function(data) {
+          //   $scope.projects.push(data);
+          //   $state.go('dashboard',{id : data._id},{reload : true});
+          //   $scope.project = {
+          //     package : {
+          //       location: {},
+          //       to : ''
+          //     }
+          //   };
+          //   $scope.submitted = false;
+          //   $scope.project.hasArchitect = false;
+          //   $('#createProject').closeModal();
+          // }, function(res) {
+          //   $scope.errors = res.data;
+          // });
+          
+          // new version
+          projectService.createProjectNewVersion($scope.project).$promise.then(function(data){
+            console.log(data);
+          }, function(res) {
+            console.log(res);
+          });
         }
       };
 

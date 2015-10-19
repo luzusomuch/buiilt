@@ -59,6 +59,14 @@ angular.module('buiiltApp')
           params: {
             id: '@id'
           }
+        },
+
+        // new version
+        createProjectNewVersion: {
+          method: 'post',
+          params: {
+            action: 'create-project-new-version'
+          }
         }
     }
 );

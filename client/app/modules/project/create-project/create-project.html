@@ -1,103 +1,182 @@
 <div class="modal modal-fixed-footer" id="createProject">
-  <form method="post" name="form" ng-submit="create(form)"  novalidate>
-    <div class="modal-content">
-
-        <h3>New project</h3>
-        <div clas="row">
-          <div class="input-field col s12">
-            <label>Name </label>
-            <input id="newProjName" name="name" ng-model="project.name" required type="text"
-                   ng-class="{'invalid' : form.name.$invalid && submitted}">
-            <p class="validate-message" ng-if=" form.name.$error.required && submitted">Project name is required</p>
-          </div>
-        </div>
-        <div clas="row">
-          <div class="input-field col s12">
-            <label>Description </label>
-            <input id="newProjDesc" name="description" ng-model="project.description" required type="text"
-                   ng-class="{'invalid' : form.description.$invalid && submitted}">
-            <p class="validate-message" ng-if=" form.description.$error.required && submitted">Project description is required</p>
-          </div>
-        </div>
-        <div clas="row">
-          <div class="input-field col s12">
-            <label>Address </label>
-            <input id="newProjAddress" ng-model="project.package.location.address" type="text">
-          </div>
-        </div>
-        <div class="row">
-          <div class="input-field col s6">
-            <label>Suburb </label>
-            <input id="newProjSub" ng-model="project.package.location.suburb" type="text">
-          </div>
-          <div class="input-field col s6">
-            <label>Postcode </label>
-            <input id="newProjPostcode" ng-model="project.package.location.postcode" type="text">
-          </div>
-        </div>
-        <div class="row" ng-if="currentTeam.type == 'homeOwner' || currentTeam.type == 'builder' ">
-          <class class="input-field col s12">
-            <input class="valign" id="hasArchitect" type="checkbox" ng-model="project.hasArchitect"/>
-            <label id="" for="hasArchitect">Is an architect project managing this project?</label>
-          </class>
-        </div>
-        <div class="row" ng-if="project.hasArchitect">
-          <div class="input-field col s12">
-            <label for="">Architect's Email</label>
-            <input type="email" ng-model="project.architectEmail" name="architectEmail" required ng-class="{'invalid' : form.architectEmail.$invalid && submitted}">
-            <p class="validate-message" ng-if=" form.architectEmail.$error.required && submitted">Architect's email is required</p>
-          </div>
-        </div>
-        <div clas="row">
-          <div class="input-field col s12">
-            <label >
-              <span ng-if="currentTeam.type == 'builder'">Client's Email: </span>
-              <span ng-if="!project.hasArchitect && currentTeam.type == 'homeOwner'">Builder's Email: </span>
-              <span ng-if="currentTeam.type == 'architect'">Client's Email: </span>
-            </label>
-            <input ng-hide="project.hasArchitect && currentTeam.type == 'homeOwner'" id="newProjClient" name="email" ng-model="project.package.to" type="email"
+    <form method="post" name="form" ng-submit="create(form)"  novalidate>
+        <div class="modal-content">
+            <h3>New project</h3>
+            <div clas="row">
+                <div class="input-field col s12">
+                    <label>Name </label>
+                    <input id="newProjName" name="name" ng-model="project.name" required type="text"
+                           ng-class="{'invalid' : form.name.$invalid && submitted}">
+                    <p class="validate-message" ng-if=" form.name.$error.required && submitted">Project name is required</p>
+                </div>
+            </div>
+            <div clas="row">
+                <div class="input-field col s12">
+                    <label>Description </label>
+                    <input id="newProjDesc" name="description" ng-model="project.description" required type="text"
+                           ng-class="{'invalid' : form.description.$invalid && submitted}">
+                    <p class="validate-message" ng-if=" form.description.$error.required && submitted">Project description is required</p>
+                </div>
+            </div>
+            <div clas="row">
+                <div class="input-field col s12">
+                    <label>Address </label>
+                    <input id="newProjAddress" ng-model="project.package.location.address" type="text">
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s6">
+                    <label>Suburb </label>
+                    <input id="newProjSub" ng-model="project.package.location.suburb" type="text">
+                </div>
+                <div class="input-field col s6">
+                    <label>Postcode </label>
+                    <input id="newProjPostcode" ng-model="project.package.location.postcode" type="text">
+                </div>
+            </div>
+            <!-- old version -->
+            <!-- <div class="row" ng-if="currentTeam.type == 'homeOwner' || currentTeam.type == 'builder' ">
+              <class class="input-field col s12">
+                <input class="valign" id="hasArchitect" type="checkbox" ng-model="project.hasArchitect"/>
+                <label id="" for="hasArchitect">Is an architect project managing this project?</label>
+              </class>
+            </div>
+            <div class="row" ng-if="project.hasArchitect">
+              <div class="input-field col s12">
+                <label for="">Architect's Email</label>
+                <input type="email" ng-model="project.architectEmail" name="architectEmail" required ng-class="{'invalid' : form.architectEmail.$invalid && submitted}">
+                <p class="validate-message" ng-if=" form.architectEmail.$error.required && submitted">Architect's email is required</p>
+              </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <label >
+                    <span ng-if="currentTeam.type == 'builder'">Client's Email: </span>
+                    <span ng-if="!project.hasArchitect && currentTeam.type == 'homeOwner'">Builder's Email: </span>
+                    <span ng-if="currentTeam.type == 'architect'">Client's Email: </span>
+                    </label>
+                    <input ng-hide="project.hasArchitect && currentTeam.type == 'homeOwner'" id="newProjClient" name="email" ng-model="project.package.to" type="email"
                    ng-class="{'invalid' : form.email.$invalid && submitted}">
-            <p ng-hide="project.hasArchitect && currentTeam.type == 'homeOwner'" class="validate-message" ng-if="!currentTeam.type == 'homeOwner' &&(form.email.$error.required && submitted)">Email is required</p>
-          </div>
-          <!--<div class="input-field col s12" ng-if="currentTeam.type == 'builder'">-->
-            <!--<angucomplete-alt id="ex1"-->
-                                    <!--pause="100"-->
-                                    <!--placeHolder="Home owner email"-->
-                                    <!--selected-object="project.email"-->
-                                    <!--local-data="homeOwnerTeamMember"-->
-                                    <!--search-fields="email"-->
-                                    <!--title-field="email"-->
-                                    <!--minlength="1"-->
-                                    <!--input-changed="inputChanged"-->
-                                    <!--template-url="/my-custom-template.html"-->
-                                    <!--input-class="col s12"></angucomplete-alt>-->
-          <!--</div>-->
-          <!--<div class="input-field col s12" ng-if="currentTeam.type == 'homeOwner'">-->
-            <!--<angucomplete-alt id="ex1"-->
-                                    <!--pause="100"-->
-                                    <!--placeHolder="Home builder email"-->
-                                    <!--selected-object="project.email"-->
-                                    <!--local-data="homeBuilderTeamMember"-->
-                                    <!--search-fields="email"-->
-                                    <!--title-field="email"-->
-                                    <!--minlength="1"-->
-                                    <!--input-changed="inputChanged"-->
-                                    <!--template-url="/my-custom-template.html"-->
-                                    <!--input-class="col s12"></angucomplete-alt>-->
-          <!--</div>-->
-        </div>
-        <div clas="row">
-          <div class="input-field col s12">
-            <h6>This Project is Free</h6>
+                    <p ng-hide="project.hasArchitect && currentTeam.type == 'homeOwner'" class="validate-message" ng-if="!currentTeam.type == 'homeOwner' &&(form.email.$error.required && submitted)">Email is required</p>
+                </div>
+            </div> -->
+
+            <!-- new version -->
+            <div class="row">
+                <div class="input-field col s12">
+                    <select class="" ng-model="project.selectedOwnerUserType" material-select watch>
+                        <option value="" selected>Select the owner type below.</option>
+                        <option value="homeOwner">Home owner</option>
+                        <option value="architect">Architect/Designer</option>
+                        <option value="builder">Builder</option>
+                    </select>
+                </div>
+                <!-- home owner selected -->
+                <div class="input-field col s12" ng-if="project.selectedOwnerUserType == 'homeOwner'">
+                    <p>Will you be hiring an Architect to manage the construction?</p>
+                    <p>
+                        <input id="yes" type="radio" ng-model="project.homeOwnerHireArchitect" name="homeOwnerHireArchitect" value="true" checked="true"/>
+                        <label for="yes">Yes</label>
+                    </p>
+                    <p>
+                        <input id="no" type="radio" name="homeOwnerHireArchitect" ng-model="project.homeOwnerHireArchitect" value="false"/>
+                        <label for="no">No</label>
+                    </p>
+                    <div class="input-field col s12" ng-if="project.homeOwnerHireArchitect == 'true'">
+                        <label for="">Architect's Email</label>
+                        <input type="email" ng-model="project.architectEmail" name="architectEmail" ng-class="{'invalid' : form.architectEmail.$invalid && submitted}">
+                    </div>
+                    <div class="input-field col s12" ng-if="project.homeOwnerHireArchitect == 'false'">
+                        <p>Will the Builder be overseeing the design?</p>
+                        <p>
+                            <input id="homeOwnerAssignBuilder-yes" type="radio" ng-model="project.homeOwnerAssignBuilder" name="homeOwnerAssignBuilder" value="true" checked="true"/>
+                            <label for="homeOwnerAssignBuilder-yes">Yes</label>
+                        </p>
+                        <p>
+                            <input id="homeOwnerAssignBuilder-no" type="radio" name="homeOwnerAssignBuilder" ng-model="project.homeOwnerAssignBuilder" value="false"/>
+                            <label for="homeOwnerAssignBuilder-no">No</label>
+                        </p>
+                        <div class="input-field col s12" ng-if="project.homeOwnerAssignBuilder == 'true'">
+                            <label for="">Builder's Email</label>
+                            <input type="email" ng-model="project.builderEmail" name="builderEmail" ng-class="{'invalid' : form.builderEmail.$invalid && submitted}">
+                        </div>
+                    </div>
+                </div>
+                <!-- architect selected -->
+                <div class="input-field col s12" ng-show="project.selectedOwnerUserType == 'architect'">
+                    <p>Will you be Managing the project during construction?</p>
+                    <p>
+                        <input id="architectManagerHisProject-yes" type="radio" ng-model="project.architectManagerHisProject" name="architectManagerHisProject" value="true" checked="true"/>
+                        <label for="architectManagerHisProject-yes">Yes</label>
+                    </p>
+                    <p>
+                        <input id="architectManagerHisProject-no" type="radio" name="architectManagerHisProject" ng-model="project.architectManagerHisProject" value="false"/>
+                        <label for="architectManagerHisProject-no">No</label>
+                    </p>
+                    <div class="input-field col s12" ng-if="project.architectManagerHisProject == 'false'">
+                        <p>Have you been contracted by home owner or builder for this project?</p>
+                        <p>
+                            <input id="haveContracted-yes" type="radio" ng-model="project.haveContracted" name="haveContracted" value="true" checked="true"/>
+                            <label for="haveContracted-yes">Home owner</label>
+                        </p>
+                        <p>
+                            <input id="haveContracted-no" type="radio" name="haveContracted" ng-model="project.haveContracted" value="false"/>
+                            <label for="haveContracted-no">Builder</label>
+                        </p>
+                        <div class="input-field col s12" ng-if="project.haveContracted == 'true'">
+                            <label for="">Home owner's Email</label>
+                            <input type="email" ng-model="project.homeOwnerEmail" name="homeOwnerEmail" ng-class="{'invalid' : form.homeOwnerEmail.$invalid && submitted}">
+                        </div>
+                        <div class="input-field col s12" ng-if="project.haveContracted == 'false'">
+                            <label for="">Builder's Email</label>
+                            <input type="email" ng-model="project.builderEmail" name="builderEmail" ng-class="{'invalid' : form.builderEmail.$invalid && submitted}">
+                        </div>
+                    </div>
+                </div>
+                <!-- builder selected -->
+                <div class="input-field col s12" ng-show="project.selectedOwnerUserType == 'builder'">
+                    <p>Is an architect managing this project during construction?</p>
+                    <p>
+                        <input id="builderHireArchitect-yes" type="radio" ng-model="project.builderHireArchitect" name="builderHireArchitect" value="true" checked="true"/>
+                        <label for="builderHireArchitect-yes">Yes</label>
+                    </p>
+                    <p>
+                        <input id="builderHireArchitect-no" type="radio" name="builderHireArchitect" ng-model="project.builderHireArchitect" value="false"/>
+                        <label for="builderHireArchitect-no">No</label>
+                    </p>
+                    <div class="input-field col s12" ng-if="project.builderHireArchitect == 'true'">
+                        <label for="">Architect's Email</label>
+                        <input type="email" ng-model="project.architectEmail" name="architectEmail" ng-class="{'invalid' : form.architectEmail.$invalid && submitted}">
+                    </div>
+                    <div class="input-field col s12" ng-if="project.builderHireArchitect == 'false'">
+                        <p>Will you managing the design of this project?</p>
+                        <p>
+                            <input id="builderAssignHomeOwner-yes" type="radio" ng-model="project.builderAssignHomeOwner" name="builderAssignHomeOwner" value="true" checked="true"/>
+                            <label for="builderAssignHomeOwner-yes">Yes</label>
+                        </p>
+                        <p>
+                            <input id="builderAssignHomeOwner-no" type="radio" name="builderAssignHomeOwner" ng-model="project.builderAssignHomeOwner" value="false"/>
+                            <label for="builderAssignHomeOwner-no">No</label>
+                        </p>
+                        <div class="input-field col s12" ng-if="project.builderAssignHomeOwner == 'false'">
+                            <label for="">Home owner's Email</label>
+                            <input type="email" ng-model="project.homeOwnerEmail" name="homeOwnerEmail" ng-class="{'invalid' : form.homeOwnerEmail.$invalid && submitted}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div clas="row">
+                <div class="input-field col s12">
+                    <h6>This Project is Free</h6>
+                </div>
+            </div>
         </div>
 
-    </div>
-  </div>
-    <div class="modal-footer">
-      <button id="newProjSubmit" class="waves-effect waves-light btn modal-action">Create project</button>
-      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
-    </div>
-  </form>
+        <div class="modal-footer">
+            <button id="newProjSubmit" class="waves-effect waves-light btn modal-action">Create project</button>
+            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
+        </div>
+    </form>
 </div>
 
 <script type="text/ng-template" id="/my-custom-template.html">
