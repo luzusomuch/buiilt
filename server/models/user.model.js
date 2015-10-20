@@ -36,7 +36,7 @@ var UserSchema = new Schema({
   phoneNumber: Number,
   country: String,
   packageToken: String,
-  projects: [{type: Schema.Types.ObjectId, rel: 'project'}],
+  projects: [{type: Schema.Types.ObjectId, ref: 'Project'}],
   createdAt: {type: Date, default: Date.now},
   updatedAt: {type: Date, default: Date.now}
 }, {

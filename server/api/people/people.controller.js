@@ -14,103 +14,133 @@ exports.invitePeople = function(req, res) {
         if (!people) {return res.send(404,err);}
         else {
             if (invite.type == 'addBuilder') {
-                var _people = new People({});
                 User.findOne({'email': invite.email}, function(err, builder) {
                     if (err) {return res.send(500,err);}
                     if (!builder) {
-                        _people.builders.push({
+                        people.builders.push({
                             email: invite.email
                         });
                     } else {
-                        _people.builders.push({
+                        people.builders.push({
                             _id: builder._id
                         });
                         builder.projects.push(people.project);
                     }
-                    _people.markModified('builders');
-                    _people.save(function(err){
+                    people.markModified('builders');
+                    people.save(function(err){
                         if (err) {return res.send(500,err);}
-                        return res.send(200,_people);
+                        People.populate(people, 
+                        [{path:"builders._id", select: "_id email name"},
+                        {path:"architects._id", select: "_id email name"},
+                        {path:"clients._id", select: "_id email name"},
+                        {path:"subcontractors._id", select: "_id email name"},
+                        {path: "consultants._id", select: "_id email name"}], function(err, people) {
+                            return res.json(people);
+                        });
                     });
                 });
             } else if (invite.type == 'addArchitect') {
-                var _people = new People({});
                 User.findOne({'email': invite.email}, function(err, architect) {
                     if (err) {return res.send(500,err);}
                     if (!architect) {
-                        _people.architects.push({
+                        people.architects.push({
                             email: invite.email
                         });
                     } else {
-                        _people.architects.push({
+                        people.architects.push({
                             _id: architect._id
                         });
                         architect.projects.push(people.project);
                     }
-                    _people.markModified('architects');
-                    _people.save(function(err){
+                    people.markModified('architects');
+                    people.save(function(err){
                         if (err) {return res.send(500,err);}
-                        return res.send(200,_people);
+                        People.populate(people, 
+                        [{path:"builders._id", select: "_id email name"},
+                        {path:"architects._id", select: "_id email name"},
+                        {path:"clients._id", select: "_id email name"},
+                        {path:"subcontractors._id", select: "_id email name"},
+                        {path: "consultants._id", select: "_id email name"}], function(err, people) {
+                            return res.json(people);
+                        });
                     });
                 });
             } else if (invite.type == 'addClient') {
-                var _people = new People({});
                 User.findOne({'email': invite.email}, function(err, client) {
                     if (err) {return res.send(500,err);}
                     if (!client) {
-                        _people.clients.push({
+                        people.clients.push({
                             email: invite.email
                         });
                     } else {
-                        _people.clients.push({
+                        people.clients.push({
                             _id: client._id
                         });
                         client.projects.push(people.project);
                     }
-                    _people.markModified('clients');
-                    _people.save(function(err){
+                    people.markModified('clients');
+                    people.save(function(err){
                         if (err) {return res.send(500,err);}
-                        return res.send(200,_people);
+                        People.populate(people, 
+                        [{path:"builders._id", select: "_id email name"},
+                        {path:"architects._id", select: "_id email name"},
+                        {path:"clients._id", select: "_id email name"},
+                        {path:"subcontractors._id", select: "_id email name"},
+                        {path: "consultants._id", select: "_id email name"}], function(err, people) {
+                            return res.json(people);
+                        });
                     });
                 });
             } else if (invite.type == 'addSubcontractor') {
-                var _people = new People({});
                 User.findOne({'email': invite.email}, function(err, contractor) {
                     if (err) {return res.send(500,err);}
                     if (!contractor) {
-                        _people.subcontractors.push({
+                        people.subcontractors.push({
                             email: invite.email
                         });
                     } else {
-                        _people.subcontractors.push({
+                        people.subcontractors.push({
                             _id: contractor._id
                         });
                         contractor.projects.push(people.project);
                     }
-                    _people.markModified('subcontractors');
-                    _people.save(function(err){
+                    people.markModified('subcontractors');
+                    people.save(function(err){
                         if (err) {return res.send(500,err);}
-                        return res.send(200,_people);
+                        People.populate(people, 
+                        [{path:"builders._id", select: "_id email name"},
+                        {path:"architects._id", select: "_id email name"},
+                        {path:"clients._id", select: "_id email name"},
+                        {path:"subcontractors._id", select: "_id email name"},
+                        {path: "consultants._id", select: "_id email name"}], function(err, people) {
+                            return res.json(people);
+                        });
                     });
                 });
             } else if (invite.type == 'addConsultant') {
-                var _people = new People({});
                 User.findOne({'email': invite.email}, function(err, consultant) {
                     if (err) {return res.send(500,err);}
                     if (!consultant) {
-                        _people.consultants.push({
+                        people.consultants.push({
                             email: invite.email
                         });
                     } else {
-                        _people.consultants.push({
+                        people.consultants.push({
                             _id: consultant._id
                         });
                         consultant.projects.push(people.project);
                     }
-                    _people.markModified('consultants');
-                    _people.save(function(err){
+                    people.markModified('consultants');
+                    people.save(function(err){
                         if (err) {return res.send(500,err);}
-                        return res.send(200,_people);
+                        People.populate(people, 
+                        [{path:"builders._id", select: "_id email name"},
+                        {path:"architects._id", select: "_id email name"},
+                        {path:"clients._id", select: "_id email name"},
+                        {path:"subcontractors._id", select: "_id email name"},
+                        {path: "consultants._id", select: "_id email name"}], function(err, people) {
+                            return res.json(people);
+                        });
                     });
                 });
             } else {

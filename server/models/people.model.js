@@ -9,23 +9,23 @@ var EventBus = require('./../components/EventBus');
 var PeopleSchema = new Schema({
     project: {type: Schema.Types.ObjectId, ref: 'Project'},
     builders: [{
-        _id: {type: Schema.Types.ObjectId, rel: 'User'},
+        _id: {type: Schema.Types.ObjectId, ref: 'User'},
         email: {type: String}
     }],
     architects: [{
-        _id: {type: Schema.Types.ObjectId, rel: 'User'},
+        _id: {type: Schema.Types.ObjectId, ref: 'User'},
         email: {type: String}
     }],
     clients: [{
-        _id: {type: Schema.Types.ObjectId, rel: 'User'},
+        _id: {type: Schema.Types.ObjectId, ref: 'User'},
         email: {type: String}
     }],
     subcontractors: [{
-        _id: {type: Schema.Types.ObjectId, rel: 'User'},
+        _id: {type: Schema.Types.ObjectId, ref: 'User'},
         email: {type: String}
     }],
     consultants: [{
-        _id: {type: Schema.Types.ObjectId, rel: 'User'},
+        _id: {type: Schema.Types.ObjectId, ref: 'User'},
         email: {type: String}
     }]
 });
