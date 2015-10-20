@@ -443,6 +443,7 @@ exports.me = function (req, res, next) {
     if (!user) {
       return res.json(404);
     }
+    console.log(user);
     return res.json(user);
   });
 };

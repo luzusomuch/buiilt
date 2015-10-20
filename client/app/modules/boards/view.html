@@ -1,0 +1,173 @@
+<div class="row card" style="margin-top: 10px">
+                
+    <div class="col s2" style="margin-right: 1px solid #eee; max-height: 81vh; overflow-y: scroll; font-size: 12px; color: #757575;">
+        <p>BOARDS</p>
+        <p style="margin-left: 10px; color: black">Board 1</p>
+        <p style="margin-left: 10px; color: black">Board 2</p>
+        <p style="margin-left: 10px; color: #42A5F5"><strong>Board 3</strong></p>
+        <p style="margin-left: 10px; color: black" class="modal-trigger" href="#new_board">+ Add a Board</p>
+    </div>
+    
+    <div class="col s7" style="border-left: 1px solid #eee; border-right: 1px solid #eee;">
+        
+        <div style="height: 69vh; overflow-y: scroll; position: relative;">
+            
+            <div class="row chat-paragraph valign-wrapper" style="border-bottom: 1px solid #eee; margin-bottom: 5px">
+                <div class="col">
+                    <i class="tiny material-icons valign" style="color: #64B5F6">brightness_1</i>
+                </div>
+                <div class="col">
+                    <p class="row chat-name" style="font-size: 13px; color: #757575; margin-bottom: 0px"><strong>Myles Condon</strong><span style="font-size: 12px"> - Date and Time.</span></p>    
+                    <p class="row chat-text" style="font-size: 13px; margin-top:3px">
+                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor
+                    </p>
+                </div>
+            </div>
+            
+            <div class="row chat-paragraph valign-wrapper" style="border-bottom: 1px solid #eee;">
+                <div class="col">
+                    <i class="tiny material-icons valign" style="color: white">brightness_1</i>
+                </div>
+                <div class="col">
+                    <p class="row chat-name" style="font-size: 13px; color: #757575; margin-bottom: 0px"><strong>Myles Condon</strong><span style="font-size: 12px"> - Date and Time.</span></p>    
+                    <p class="row chat-text" style="font-size: 13px; margin-top:3px">
+                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor
+                    </p>
+                </div>
+            </div>
+            
+            
+            
+        </div>
+        
+        <div class="valign-wrapper" style="border-top: 1px solid #eee;">
+            <form class="col s11">
+                <div class="row" style="margin-bottom: -5px; margin-top: -18px">
+                    <div class="input-field col s12">
+                        <textarea placeholder="Send a Message..." id="textarea1" class="materialize-textarea"></textarea>
+                    </div>
+                </div>
+            </form>
+            <div class="col s1 valign">
+                <a><i class="material-icons modal-trigger" href="#new_attachment" style="color: #64B5F6">attach_file</i></a>
+                <a><i class="material-icons valign modal-trigger" href="#new_task" style="color: #64B5F6">done</i></a>
+                
+            </div>
+        </div>
+            
+    </div>
+        
+    <div class="col s3">
+        
+        <div class="row">
+            <div class="col s12" style="margin-top: 15px;">
+                <ul class="tabs">
+                    <li class="tab col s3"><a class="active" href="#info"><i class="material-icons">info_outline</i></a></li>
+                    <li class="tab col s3"><a href="#attachments"><i class="material-icons">attachment</i></a></li>
+                    <li class="tab col s3"><a href="#tasks"><i class="material-icons">done_all</i></a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="info" style="height: 65vh; overflow-y: scroll">
+            
+            
+            <div class="person-row" style="font-size: 12px; border-bottom: 1px solid #eee">
+                <p>+ Invite Other People</p>
+            </div>
+            <div class="person-row" style="font-size: 12px; border-bottom: 1px solid #eee">
+                <p>Person 1</p>
+            </div>
+            <div class="person-row" style="font-size: 12px; border-bottom: 1px solid #eee">
+                <p>Person 2</p>
+            </div>
+            <div class="person-row" style="font-size: 12px; border-bottom: 1px solid #eee">
+                <p>Person 3</p>
+            </div>
+            
+            
+        </div>
+        
+        <div id="tasks" style="height: 69vh; overflow-y: scroll">
+            
+            <div class="task-row" style="font-size: 12px; border-bottom: 1px solid #eee">
+                <p>+ Add a Task</p>
+            </div>
+            <div class="task-row" style="font-size: 12px; border-bottom: 1px solid #eee">
+                <p>task</p>
+            </div>
+            <div class="task-row" style="font-size: 12px; border-bottom: 1px solid #eee">
+                <p>task</p>
+            </div>
+            
+            
+        </div>
+        
+        <div id="attachments" style="height: 65vh; overflow-y: scroll">
+            
+            <div class="attachment-row" style="font-size: 12px; border-bottom: 1px solid #eee">
+                <p>+ Add an Attachment</p>
+            </div>
+            <div class="attachment-row" style="font-size: 12px; border-bottom: 1px solid #eee">
+                <p>attachment</p>
+            </div>
+            <div class="attachment-row" style="font-size: 12px; border-bottom: 1px solid #eee">
+                <p>attachment</p>
+            </div>
+            
+        </div>
+        
+    </div>  
+</div>
+
+<div id="new_attachment" class="modal modal-fixed-footer">
+    <div class="modal-content">
+        <h5>New Attachment</h5>
+        <div class="row">
+            <p>File picker dialog</p>
+        </div>
+        <div class="row">
+            <p>Title</p>
+            <p>Name</p>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-action modal-close btn-flat">Attach</a>
+        <a href="#!" class="modal-action modal-close btn-flat">Cancel</a>
+    </div>
+</div>
+
+<div id="new_task" class="modal modal-fixed-footer">
+    <div class="modal-content">
+        <h5>New Task</h5>
+        <div class="row">
+            <p>Task Description</p>
+        </div>
+        <div class="row">
+            <p>Title</p>
+        </div>
+        <div class="row">
+            <p>Assignees</p>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-action modal-close btn-flat">Save</a>
+        <a href="#!" class="modal-action modal-close btn-flat">Cancel</a>
+    </div>
+</div>
+
+<div id="new_board" class="modal modal-fixed-footer">
+    <div class="modal-content">
+        <h5>New Board</h5>
+        <div class="row">
+            <p>Name</p>
+        </div>
+        <div class="row">
+            <p>Assignees</p>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-action modal-close btn-flat">Save</a>
+        <a href="#!" class="modal-action modal-close btn-flat">Cancel</a>
+    </div>
+</div>

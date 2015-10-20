@@ -122,7 +122,8 @@ exports.upload = function(req, res){
             .populate("project")
             .populate('to.team')
             .populate('winner').exec(function(err,builderPackage){
-                if (err || !builderPackage) {return cb(err);}
+                if (err) {return res.send(500,err);}
+                if (!builderPackage) {return res.send(404);}
                 else {
                     owners = builderPackage.owner.leader;
                     _.each(builderPackage.owner.member, function(member){
@@ -166,6 +167,28 @@ exports.upload = function(req, res){
             });
         });
     }
+};
+
+exports.uploadInPeople = function(req, res) {
+    var request = req.body.file;
+    var file = new File({
+        title: request.title,
+        name: request.file.filename,
+        path: request.file.url,
+        key: request.file.key,
+        server: 's3',
+        mimeType: request.file.mimeType,
+        description: request.desc,
+        size: request.file.size,
+        user: req.user._id,
+        belongTo: req.params.id,
+        belongToType: request.belongToType,
+        tags: request.tags
+    });
+    file.save(function(err) {
+        if (err) {return res.send(500,err);}
+        return res.json(200,file);
+    });
 };
 
 exports.uploadInPackge = function(req, res){ 

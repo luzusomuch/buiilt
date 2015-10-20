@@ -72,6 +72,13 @@ id: '@_id'},{
         id: '@id',
         action: 'send-to-document'
       }
-    }
+    },
+    getFileInPeople: {
+      method: 'get',
+      params: {
+        action: 'get-in-people'
+      },
+      isArray: true
+    },
   });
 });

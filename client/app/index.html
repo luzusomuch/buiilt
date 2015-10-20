@@ -21,7 +21,8 @@
     <link rel="stylesheet" href="/bower_components/colorbox/example2/colorbox.css">
 
   </head>
-  <body style="max-height: {{maximunHeight}}px; overflow-y: hidden;">
+  <!-- remove the overflow-y:hidden -->
+  <body style="max-height: {{maximunHeight}}px;">
     <!-- JS from Bower Components -->
     <div class="overlay-bg" ng-class="{'hidden' : !overlay}">
       <i class="fa fa-spinner fa-pulse"></i>
@@ -70,7 +71,7 @@
   </main>
   <div ng-if="authService.isLoggedIn()" sp-socket></div>
   
-  <built-footer  ng-if="hasFooter"></built-footer>
+  <!-- <built-footer  ng-if="hasFooter"></built-footer> -->
     
     <script src="/app/components/angular-materialize/src/materialize.min.js"></script>
     <script src="/app/components/angular-materialize/src/angular-materialize.js"></script>
@@ -157,6 +158,10 @@
     <script src="/app/modules/builder/send-quote/send-quote-controller.js"></script>
     <script src="/app/modules/builder/view-request/view-request-controller.js"></script>
     <script src="/app/modules/builder/list/architect-list-page-controller.js"></script>
+    <script src="/app/modules/people/main.js"></script>
+    <script src="/app/modules/people/people-controller.js"></script>
+    <script src="/app/modules/boards/main.js"></script>
+    <script src="/app/modules/boards/boards-controller.js"></script>
 
     <script src="/app/services/auth-service.js"></script>
     <script src="/app/services/user-service.js"></script>

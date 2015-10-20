@@ -12,6 +12,7 @@ var router = express.Router();
 // router.get('/:id', auth.isAuthenticated(), controller.show);
 router.post('/:id/file', auth.isAuthenticated(), controller.upload);
 router.post('/:id/file-package', auth.isAuthenticated(), controller.uploadInPackge);
+router.post('/:id/file-in-people', auth.isAuthenticated(), controller.uploadInPeople);
 // router.get('/:id/project', auth.isAuthenticated(), controller.getByProjectId)
 // router.post('/', controller.create);
 

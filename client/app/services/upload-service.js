@@ -17,6 +17,13 @@ angular.module('buiiltApp')
                 id: '@id',
                 action: 'file-package'
             }
+        },
+        uploadInPeople: {
+            method: 'POST', 
+            params: {
+                id: '@id',
+                action: 'file-in-people'
+            }
         }
     }
 );

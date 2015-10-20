@@ -92,6 +92,15 @@ angular.module('buiiltApp')
           {sref: 'user', label: 'User profile'}]
       };
 
+      $scope.menuTypesNewVersion = {
+        hasProject: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
+          {sref: 'people({id :  currentProject._id})', label: 'people'},
+          {sref: 'board({id :  currentProject._id})', label: 'boards'},
+          {sref: 'projects.view({id :  currentProject._id})', label: 'documentation'}],
+        other : [{sref: 'team.manager', label: 'team manager'},
+          {sref: 'user', label: 'User profile'}]
+      };
+
       function queryProjects(callback){
         var cb = callback || angular.noop;
         authService.isLoggedInAsync(function(isLoggedIn){
@@ -133,44 +142,46 @@ angular.module('buiiltApp')
                     $scope.projects = $scope.user.projects;
                     if ($stateParams.id) {
                       builderPackageService.findDefaultByProject({id: $stateParams.id}).$promise.then(function(res){
-                        if (res.hasArchitectManager) {
-                          if ($scope.currentTeam.type === 'homeOwner') {
-                            $scope.tabs = $scope.menuTypesHasArchitectManager['homeOwner'];
-                            $scope.project.hasArchitect = true;
-                          }
-                          else if ($scope.currentTeam.type === 'builder') {
-                            $scope.tabs = $scope.menuTypesHasArchitectManager['builder'];
-                            $scope.project.hasArchitect = true;
-                          }
-                          else if ($scope.currentTeam.type === 'contractor') {
-                            $scope.tabs = $scope.menuTypesHasArchitectManager['contractor'];
-                          }
-                          else if ($scope.currentTeam.type === 'supplier') {
-                            $scope.tabs = $scope.menuTypesHasArchitectManager['supplier'];
-                          }
-                          else if ($scope.currentTeam.type == 'architect') {
-                            $scope.tabs = $scope.menuTypesHasArchitectManager['architect'];
-                          }
-                        } else {
-                          if ($scope.currentTeam.type === 'homeOwner') {
-                            $scope.tabs = $scope.menuTypesHasNoArchitectManager['homeOwner'];
-                            $scope.project.hasArchitect = true;
-                          }
-                          else if ($scope.currentTeam.type === 'builder') {
-                            $scope.tabs = $scope.menuTypesHasNoArchitectManager['builder'];
-                            $scope.project.hasArchitect = true;
-                          }
-                          else if ($scope.currentTeam.type === 'contractor') {
-                            $scope.tabs = $scope.menuTypesHasNoArchitectManager['contractor'];
-                          }
-                          else if ($scope.currentTeam.type === 'supplier') {
-                            $scope.tabs = $scope.menuTypesHasNoArchitectManager['supplier'];
-                          }
-                        }
+                        // if (res.hasArchitectManager) {
+                        //   if ($scope.currentTeam.type === 'homeOwner') {
+                        //     $scope.tabs = $scope.menuTypesHasArchitectManager['homeOwner'];
+                        //     $scope.project.hasArchitect = true;
+                        //   }
+                        //   else if ($scope.currentTeam.type === 'builder') {
+                        //     $scope.tabs = $scope.menuTypesHasArchitectManager['builder'];
+                        //     $scope.project.hasArchitect = true;
+                        //   }
+                        //   else if ($scope.currentTeam.type === 'contractor') {
+                        //     $scope.tabs = $scope.menuTypesHasArchitectManager['contractor'];
+                        //   }
+                        //   else if ($scope.currentTeam.type === 'supplier') {
+                        //     $scope.tabs = $scope.menuTypesHasArchitectManager['supplier'];
+                        //   }
+                        //   else if ($scope.currentTeam.type == 'architect') {
+                        //     $scope.tabs = $scope.menuTypesHasArchitectManager['architect'];
+                        //   }
+                        // } else {
+                        //   if ($scope.currentTeam.type === 'homeOwner') {
+                        //     $scope.tabs = $scope.menuTypesHasNoArchitectManager['homeOwner'];
+                        //     $scope.project.hasArchitect = true;
+                        //   }
+                        //   else if ($scope.currentTeam.type === 'builder') {
+                        //     $scope.tabs = $scope.menuTypesHasNoArchitectManager['builder'];
+                        //     $scope.project.hasArchitect = true;
+                        //   }
+                        //   else if ($scope.currentTeam.type === 'contractor') {
+                        //     $scope.tabs = $scope.menuTypesHasNoArchitectManager['contractor'];
+                        //   }
+                        //   else if ($scope.currentTeam.type === 'supplier') {
+                        //     $scope.tabs = $scope.menuTypesHasNoArchitectManager['supplier'];
+                        //   }
+                        // }
+                        $scope.tabs = $scope.menuTypesNewVersion['hasProject'];
                       });
                       
                     } else {
-                      $scope.tabs = $scope.menuTypesHasNoArchitectManager['other'];
+                      // $scope.tabs = $scope.menuTypesHasNoArchitectManager['other'];
+                      $scope.tabs = $scope.menuTypesNewVersion['other'];
                     }
                     return cb();
                   });
