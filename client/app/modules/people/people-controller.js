@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-.controller('PeopleCtrl', function ($scope, $rootScope, team, builderPackage, teamService, filepickerService, uploadService, $stateParams, $state, fileService) {
+.controller('PeopleCtrl', function ($scope, $rootScope, team, builderPackage, teamService, filepickerService, uploadService, $stateParams, $state, fileService, peopleService) {
     $scope.team = team;
     $scope.currentTeamMember = [];
     $scope.currentTeamMember = $scope.team.leader;
@@ -27,9 +27,17 @@ angular.module('buiiltApp')
                     $scope.submitted = false;
                     $("#tender_modal").closeModal();
                 }, function(err){
+                    console.log(err);
                 });
             } else {
-
+                peopleService.update({id: $stateParams.id},$scope.invite).$promise.then(function(res){
+                    console.log(res);
+                    $scope.invite = {};
+                    $scope.submitted = false;
+                    $("#tender_modal").closeModal();
+                }, function(res){
+                    console.log(res);
+                });
             }
         }
     };

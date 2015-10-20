@@ -9,6 +9,7 @@ var ValidateInvite = require('./../../models/validateInvite.model');
 var errorsHelper = require('../../components/helpers/errors');
 var ProjectValidator = require('./../../validators/project');
 var PackageInvite = require('./../../models/packageInvite.model');
+var People = require('./../../models/people.model');
 var _ = require('lodash');
 var async = require('async');
 
@@ -327,6 +328,10 @@ exports.createProjectNewVersion = function(req, res) {
       if (err) {
         res.send(422,err);
       }
+      var people = new People({
+        project: project._id
+      });
+      people.save();
       user.projects.push(project._id);
       user.markModified('projects');
       user.save();

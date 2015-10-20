@@ -35,6 +35,7 @@ module.exports = function(app) {
   app.use('/api/variationRequests', require('./api/variationRequest'));
   app.use('/api/devices', require('./api/device'));
   app.use('/api/designs', require('./api/design'));
+  app.use('/api/peoples', require('./api/people'));
 
   app.use('/auth', require('./auth'));
 
