@@ -27,7 +27,7 @@ var TaskSchema = new Schema({
   },
   type : {
     type : String,
-    enum : ['staff','contractor','builder','material','variation','design']
+    enum : ['staff','contractor','builder','material','variation','design','people']
   },
   package : {
     type : Schema.Types.ObjectId,

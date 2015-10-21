@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-.controller('PeopleCtrl', function ($scope, $rootScope, team, builderPackage, teamService, filepickerService, uploadService, $stateParams, $state, fileService, peopleService) {
+.controller('PeopleCtrl', function ($scope, $rootScope, team, builderPackage, teamService, filepickerService, uploadService, $stateParams, $state, fileService, peopleService, taskService) {
     $scope.team = team;
     $scope.currentTeamMember = [];
     $scope.currentTeamMember = $scope.team.leader;
@@ -12,9 +12,45 @@ angular.module('buiiltApp')
     $scope.submitted = false;  
     $scope.currentSelect = 'info';
 
+    function getAvailableUser(invitePeople) {
+        $scope.available = $scope.currentTeamMember;
+        _.each(invitePeople.builders, function(builder){
+            if (builder._id) {
+                $scope.available.push(builder._id);
+            }
+        });
+        _.each(invitePeople.architects, function(architect){
+            if (architect._id) {
+                $scope.available.push(architect._id);
+            }
+        });
+        _.each(invitePeople.clients, function(client){
+            if (client._id) {
+                $scope.available.push(client._id);
+            }
+        });
+        _.each(invitePeople.subcontractors, function(subcontractor){
+            if (subcontractor._id) {
+                $scope.available.push(subcontractor._id);
+            }
+        });
+        _.each(invitePeople.consultants, function(consultant){
+            if (consultant._id) {
+                $scope.available.push(consultant._id);
+            }
+        });
+        console.log($scope.available)
+    };
+
     peopleService.getInvitePeople({id: $stateParams.id}).$promise.then(function(res){
         $scope.invitePeople = res;
+        getAvailableUser($scope.invitePeople);
         console.log(res);
+
+        taskService.get({id: res._id, type: 'people'}).$promise.then(function(res){
+            $scope.tasks = res;
+            console.log(res);
+        });
     });
 
     $scope.invite = {};
@@ -37,6 +73,8 @@ angular.module('buiiltApp')
             } else {
                 peopleService.update({id: $stateParams.id},$scope.invite).$promise.then(function(res){
                     console.log(res);
+                    $scope.invitePeople = res;
+                    getAvailableUser($scope.invitePeople);
                     $scope.invite = {};
                     $scope.submitted = false;
                     $("#tender_modal").closeModal();
@@ -81,4 +119,37 @@ angular.module('buiiltApp')
             $state.reload();
         });
     };
+
+    $scope.assign = function(staff,index) {
+        staff.canRevoke = true;
+        $scope.task.assignees.push(staff);
+        $scope.available.splice(index,1);
+    };
+
+    $scope.revoke = function(assignee,index) {
+        $scope.available.push(assignee);
+        $scope.task.assignees.splice(index,1);
+    };
+
+    $scope.task = {
+        assignees : []
+    };
+
+    $scope.addNewTask = function(form) {
+        $scope.submitted = true;
+        if (form.$valid) {
+            taskService.create({id: $scope.invitePeople._id, type: 'people'},$scope.task).$promise.then(function(res){
+                console.log(res);
+                $scope.tasks.push(res);
+                $("#new_task").closeModal();
+                $scope.task = {
+                    assignees : []
+                };
+                getAvailableUser($scope.invitePeople);
+                $scope.submitted = false;
+            }, function(res){
+                console.log(res);
+            });
+        }
+    }
 });

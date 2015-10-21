@@ -10,7 +10,8 @@ var StaffPackage = require('./../../models/staffPackage.model'),
     Variation = require('./../../models/variation.model'),
     Notification = require('./../../models/notification.model'),
     Project = require('./../../models/project.model'),
-    Design = require('./../../models/design.model');
+    Design = require('./../../models/design.model'),
+    People = require('./../../models/people.model');
 var TaskValidator = require('./../../validators/task');
 var errorsHelper = require('../../components/helpers/errors');
 var _ = require('lodash');
@@ -36,6 +37,8 @@ var getPackage = function(type) {
       _package = Variation;
     case 'design':
       _package = Design;
+    case 'people':
+      _package = People;
     default :
       break;
   }
@@ -186,7 +189,7 @@ exports.create = function(req,res) {
           if (err) {
             return res.send(500,err)
           }
-          Task.populate(task, {path:'assignees'}, function(err, task){
+          Task.populate(task, {path:'assignees', select: '-hashedPassword -salt'}, function(err, task){
             if (err) {return res.send(500,err);}
             return res.json(task);
           });
@@ -198,7 +201,7 @@ exports.create = function(req,res) {
         if (err) {
           return res.send(500,err)
         }
-        Task.populate(task, {path:'assignees'}, function(err, task){
+        Task.populate(task, {path:'assignees', select: '-hashedPassword -salt'}, function(err, task){
           if (err) {return res.send(500,err);}
           return res.json(task);
         });
@@ -223,7 +226,7 @@ exports.update = function(req,res) {
       if (err) {
         return res.send(500,err)
       }
-      Task.populate(task, {path:'assignees'}, function(err, task){
+      Task.populate(task, {path:'assignees', select: '-hashedPassword -salt'}, function(err, task){
         if (err) {return res.send(500,err);}
         return res.json(task);
       });
@@ -237,7 +240,7 @@ exports.getTask = function(req,res) {
   Task.find({$and:[{package : aPackage}, {$or:[{user: user._id},{assignees: user._id}]}]})
     .sort('hasDateEnd')
     .sort({'dateEnd': -1})
-    .populate('assignees')
+    .populate('assignees', '-hashedPassword -salt')
     .exec(function(err,tasks) {
     if (err) {
       return res.send(500,err);
@@ -248,7 +251,7 @@ exports.getTask = function(req,res) {
 
 exports.getByPackage = function(req, res){
   Task.find({package: req.params.id, type: req.params.type})
-  .populate('assignees').exec(function(err, tasks){
+  .populate('assignees', '-hashedPassword -salt').exec(function(err, tasks){
     if (err) {return res.send(500,err);}
     if (!tasks) {return res.send(404);}
     return res.send(200,tasks);
@@ -256,14 +259,14 @@ exports.getByPackage = function(req, res){
 };
 
 exports.getAll = function(req, res) {
-  Task.find({}).populate('assignees').exec(function(err, tasks){
+  Task.find({}).populate('assignees', '-hashedPassword -salt').exec(function(err, tasks){
     if (err) {return res.send(500,err);}
     return res.json(200, tasks);
   });
 };
 
 exports.getOne = function(req, res) {
-  Task.findById(req.params.id).populate('assignees').exec(function(err, task){
+  Task.findById(req.params.id).populate('assignees', '-hashedPassword -salt').exec(function(err, task){
     if (err) {return res.send(500,err);}
     if (!task) {return res.send(404);}
     return res.send(200,task);
@@ -285,7 +288,7 @@ exports.destroy = function (req, res) {
 exports.show = function(req, res) {
   var _package = getPackage(req.params.type);
   Task.findById(req.params.id)
-  .populate('assignees')
+  .populate('assignees', '-hashedPassword -salt')
   .populate('project').exec(function(err, task){
     if (err) {return res.send(500,err);}
     if (!task) {return res.send(404);}

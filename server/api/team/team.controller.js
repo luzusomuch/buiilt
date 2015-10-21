@@ -41,8 +41,8 @@ exports.me = function(req,res) {
     return res.send(500);
   }
   Team.findById(user.team._id)
-    .populate('leader')
-    .populate('member._id')
+    .populate('leader', '-hashedPassword -salt')
+    .populate('member._id', '-hashedPassword -salt')
     .populate('project')
     .exec(function (err,team) {
     if (err) {
