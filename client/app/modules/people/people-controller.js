@@ -1,19 +1,22 @@
 angular.module('buiiltApp')
-.controller('PeopleCtrl', function ($scope, $rootScope, team, builderPackage, teamService, filepickerService, uploadService, $stateParams, $state, fileService, peopleService, taskService) {
+.controller('PeopleCtrl', function ($scope, $rootScope, team, builderPackage, teamService, filepickerService, uploadService, $stateParams, $state, fileService, peopleService, taskService, peopleChatService) {
     $scope.team = team;
-    $scope.currentTeamMember = [];
-    $scope.currentTeamMember = $scope.team.leader;
-    _.each($scope.team.member, function(member){
-        if (member._id && member.status == 'Active') {
-            $scope.currentTeamMember.push(member._id);
-        }
-    });
     $scope.builderPackage = builderPackage;
     $scope.submitted = false;  
-    $scope.currentSelect = 'info';
+    $scope.selectedUser = {};
 
     function getAvailableUser(invitePeople) {
-        $scope.available = $scope.currentTeamMember;
+        $scope.currentTeamMembers = [];
+        _.each($scope.team.leader, function(leader){
+            $scope.currentTeamMembers.push({member: leader, type: 'currentTeam'});
+        });
+        $scope.available = $scope.team.leader;
+        _.each($scope.team.member, function(member){
+            if (member._id && member.status == 'Active') {
+                $scope.available.push(member._id);
+                $scope.currentTeamMembers.push({member:member._id, type: 'currentTeam'});
+            }
+        });
         _.each(invitePeople.builders, function(builder){
             if (builder._id) {
                 $scope.available.push(builder._id);
@@ -39,7 +42,7 @@ angular.module('buiiltApp')
                 $scope.available.push(consultant._id);
             }
         });
-        console.log($scope.available)
+        $scope.available = _.uniq($scope.available, '_id');
     };
 
     peopleService.getInvitePeople({id: $stateParams.id}).$promise.then(function(res){
@@ -60,9 +63,10 @@ angular.module('buiiltApp')
             if ($scope.invite.type == 'addTeamMember') {
                 var emails = [];
                 emails.push({email:$scope.invite.email});
-                teamService.addMember({id: $scope.currentTeam._id},emails).$promise
+                teamService.addMember({id: $scope.team._id},emails).$promise
                 .then(function(team) {
-                    $scope.currentTeam = team;
+                    $scope.team = team;
+                    getAvailableUser($scope.invitePeople);
                     $rootScope.$emit('TeamUpdate',team);
                     $scope.invite = {};
                     $scope.submitted = false;
@@ -151,5 +155,38 @@ angular.module('buiiltApp')
                 console.log(res);
             });
         }
-    }
+    };
+
+    $scope.selectUser = function(user, type) {
+        $scope.selectedUser = user;
+        $scope.selectedUser.type = type;
+
+        peopleChatService.selectPeople(
+            {id: $scope.invitePeople._id},
+            {project: $stateParams.id, user: user._id}
+        ).$promise.then(function(res){
+            console.log(res);
+            $scope.selectedChatPeople = res;
+        }, function(err){
+            console.log(err);
+        });
+    };
+
+    $scope.enterMessage = function ($event) {
+        if ($event.keyCode === 13) {
+            $event.preventDefault();
+            $scope.sendMessage();
+        }
+    };
+
+    $scope.message = {};
+    $scope.sendMessage = function() {
+        peopleChatService.sendMessage({id: $scope.selectedChatPeople._id}, $scope.message).$promise.then(function(res) {
+            console.log(res);
+            $scope.selectedChatPeople = res;
+            $scope.message.text = null;
+        }, function(err){
+            console.log(err);
+        });
+    };
 });
