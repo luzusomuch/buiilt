@@ -2,9 +2,10 @@
                 
     <div class="col s2" style="margin-right: 1px solid #eee; max-height: 81vh; overflow-y: scroll; font-size: 12px; color: #757575;">
         <p>BOARDS</p>
-        <p style="margin-left: 10px; color: black">Board 1</p>
-        <p style="margin-left: 10px; color: black">Board 2</p>
-        <p style="margin-left: 10px; color: #42A5F5"><strong>Board 3</strong></p>
+        <p style="margin-left: 10px; color: black" ng-repeat="board in boards" ng-click="selectBoard(board)">
+            {{board.name}}       
+        </p>
+        <!-- <p style="margin-left: 10px; color: #42A5F5"><strong>Board 3</strong></p> -->
         <p style="margin-left: 10px; color: black" class="modal-trigger" href="#new_board">+ Add a Board</p>
     </div>
     
@@ -62,112 +63,158 @@
         <div class="row">
             <div class="col s12" style="margin-top: 15px;">
                 <ul class="tabs">
-                    <li class="tab col s3"><a class="active" href="#info"><i class="material-icons">info_outline</i></a></li>
-                    <li class="tab col s3"><a href="#attachments"><i class="material-icons">attachment</i></a></li>
-                    <li class="tab col s3"><a href="#tasks"><i class="material-icons">done_all</i></a></li>
+                    <ul class="tabs" tabs>
+                        <li class="tab col s3"><a class="active" href="#test1">
+                            <i class="material-icons">info_outline</i>
+                        </a></li>
+                        <li class="tab col s3"><a href="#test2">
+                            <i class="material-icons">attachment</i>
+                        </a></li>
+                        <li class="tab col s3"><a href="#test3">
+                            <i class="material-icons">done_all</i>
+                        </a></li>
+                    </ul>
                 </ul>
             </div>
+            <div id="test1" class="col s12" style="height: 65vh; overflow-y: scroll">
+                <div class="person-row" style="font-size: 12px; border-bottom: 1px solid #eee">
+                    <p><a href="#invite_people" class="modal-trigger">+ Invite Other People</a></p>
+                </div>
+                <div ng-if="currentBoard._id" class="person-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-repeat="invitee in currentBoard.invitees">
+                    <p>{{invitee._id.name}}</p>
+                </div>
+            </div>
+            
+            <div id="test2" class="col s12" style="height: 65vh; overflow-y: scroll">
+                <div class="attachment-row" style="font-size: 12px; border-bottom: 1px solid #eee">
+                    <p><a class="modal-trigger" href="#new_attachment">+ Add an Attachment</a></p>
+                </div>
+                <div class="attachment-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-repeat="file in files">
+                    <p>{{file.title}}</p>
+                </div>
+            </div>
+            
+            <div id="test3" class="col s12" style="height: 69vh; overflow-y: scroll">
+                <div class="task-row" style="font-size: 12px; border-bottom: 1px solid #eee">
+                    <p><a href="#new_task" class="modal-trigger">+ Add a Task</a></p>
+                </div>
+                <div class="task-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-repeat="task in tasks">
+                    <p>{{task.name}}</p>
+                </div>
+            </div>
         </div>
-        
-        <div id="info" style="height: 65vh; overflow-y: scroll">
-            
-            
-            <div class="person-row" style="font-size: 12px; border-bottom: 1px solid #eee">
-                <p>+ Invite Other People</p>
-            </div>
-            <div class="person-row" style="font-size: 12px; border-bottom: 1px solid #eee">
-                <p>Person 1</p>
-            </div>
-            <div class="person-row" style="font-size: 12px; border-bottom: 1px solid #eee">
-                <p>Person 2</p>
-            </div>
-            <div class="person-row" style="font-size: 12px; border-bottom: 1px solid #eee">
-                <p>Person 3</p>
-            </div>
-            
-            
-        </div>
-        
-        <div id="tasks" style="height: 69vh; overflow-y: scroll">
-            
-            <div class="task-row" style="font-size: 12px; border-bottom: 1px solid #eee">
-                <p>+ Add a Task</p>
-            </div>
-            <div class="task-row" style="font-size: 12px; border-bottom: 1px solid #eee">
-                <p>task</p>
-            </div>
-            <div class="task-row" style="font-size: 12px; border-bottom: 1px solid #eee">
-                <p>task</p>
-            </div>
-            
-            
-        </div>
-        
-        <div id="attachments" style="height: 65vh; overflow-y: scroll">
-            
-            <div class="attachment-row" style="font-size: 12px; border-bottom: 1px solid #eee">
-                <p>+ Add an Attachment</p>
-            </div>
-            <div class="attachment-row" style="font-size: 12px; border-bottom: 1px solid #eee">
-                <p>attachment</p>
-            </div>
-            <div class="attachment-row" style="font-size: 12px; border-bottom: 1px solid #eee">
-                <p>attachment</p>
-            </div>
-            
-        </div>
-        
     </div>  
 </div>
 
 <div id="new_attachment" class="modal modal-fixed-footer">
-    <div class="modal-content">
-        <h5>New Attachment</h5>
-        <div class="row">
-            <p>File picker dialog</p>
+    <form name="uploadForm" ng-submit="uploadNewAttachment()">
+        <div class="modal-content">
+            <h5>New Attachment</h5>
+            <div class="row">
+                <input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/>
+            </div>
+            <div class="row">
+                <label>Title</label>
+                <textarea id="docAttachTitle" class="materialize-textarea" ng-model="uploadFile.title" id="textarea1" name="title" required></textarea>
+                <p class="validate-message" ng-if="uploadForm.title.$error.required || uploadFile.title == ' '">Document title is required</p>
+            </div>
+            <div class="row">
+                <label>Description</label>
+                <textarea id="docAttachDesc" name="description" class="materialize-textarea" ng-model="uploadFile.desc" id="textarea1" required></textarea>
+                <p class="validate-message" ng-if="uploadForm.description.$error.required || uploadFile.description == ' '">Document description is required</p>
+            </div>
         </div>
-        <div class="row">
-            <p>Title</p>
-            <p>Name</p>
+        <div class="modal-footer">
+            <button type="submit" class="modal-action btn-flat">Attach</button>
+            <button type="button" class="modal-action modal-close btn-flat">Cancel</button>
         </div>
-    </div>
-    <div class="modal-footer">
-        <a href="#!" class="modal-action modal-close btn-flat">Attach</a>
-        <a href="#!" class="modal-action modal-close btn-flat">Cancel</a>
-    </div>
+    </form>
 </div>
 
 <div id="new_task" class="modal modal-fixed-footer">
-    <div class="modal-content">
-        <h5>New Task</h5>
-        <div class="row">
-            <p>Task Description</p>
+    <form name="newTaskForm" ng-submit="addNewTask(newTaskForm)">
+        <div class="modal-content">
+            <h5>New Task</h5>
+            <div class="row">
+                <label>Title</label>
+                <input type="text" name="name" ng-model="task.name" ng-class="{'invalid' : newTaskForm.name.$invalid && submitted}" required>
+                <p class="validate-message" ng-show="newTaskForm.name.$error.required && submitted">Task title is required</p>
+            </div>
+            <div class="row">
+                <label>Task Description</label>
+                <textarea name="description" id="description" ng-model="task.description" ng-class="{'invalid' : newTaskForm.description.$invalid && submitted}" required></textarea>
+                <p class="validate-message" ng-show="newTaskForm.description.$error.required && submitted">Task description is required</p>
+            </div>
+            <div class="row">
+                <label for="">Task due date</label>
+                <input type="text"
+                    name="created"
+                    id="dueDate"
+                    ng-model="task.dateEnd"
+                    format="mm/dd/yyyy"
+                    datepicker
+                />
+            </div>
+            <div class="row">
+                <p>Assignees</p>
+                <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="assignee in task.assignees">
+                    {{assignee.name}} <span ng-if="assignee.canRevoke"><a href="#!" ng-click="revoke(assignee,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
+                </div>
+            </div>
+            <div class="row">
+                <p>Available Assignee's:</p>
+                <a href="#!" ng-click="assign(staff,$index)" ng-repeat="staff in available track by $index">
+                    <div class="card col" style="padding: 5px; margin-left: 10px">
+                        {{staff.name}}
+                    </div>
+                </a>
+            </div>
         </div>
-        <div class="row">
-            <p>Title</p>
+        <div class="modal-footer">
+            <button type="submit" class="modal-action btn-flat">Save</button>
+            <button type="button" class="modal-action modal-close btn-flat">Cancel</button>
         </div>
-        <div class="row">
-            <p>Assignees</p>
-        </div>
-    </div>
-    <div class="modal-footer">
-        <a href="#!" class="modal-action modal-close btn-flat">Save</a>
-        <a href="#!" class="modal-action modal-close btn-flat">Cancel</a>
-    </div>
+    </form>
 </div>
 
 <div id="new_board" class="modal modal-fixed-footer">
-    <div class="modal-content">
-        <h5>New Board</h5>
-        <div class="row">
-            <p>Name</p>
+    <form name="newBoardForm" ng-submit="createNewBoard(newBoardForm)">
+        <div class="modal-content">
+            <h5>New Board</h5>
+            <div class="row">
+                <label for="">Name</label>
+                <input type="text" name="name" ng-model="board.name" required >
+            </div>
+            <div class="row">
+                <label for="">Email</label>
+                <input type="email" name="email" ng-model="board.email" required>
+            </div>
         </div>
-        <div class="row">
-            <p>Assignees</p>
+        <div class="modal-footer">
+            <button type="submit" class="modal-action btn-flat">Save</button>
+            <button type="button" class="modal-action modal-close btn-flat">Cancel</button>
         </div>
-    </div>
-    <div class="modal-footer">
-        <a href="#!" class="modal-action modal-close btn-flat">Save</a>
-        <a href="#!" class="modal-action modal-close btn-flat">Cancel</a>
-    </div>
+    </form>
+</div>
+
+<div id="invite_people" class="modal modal-fixed-footer">
+    <form name="inviteForm" ng-submit="invitePeople(inviteForm)">
+        <div class="modal-content">
+            <h5>Invite more people</h5>
+            <div class="row">
+                <label for="">Description</label>
+                <input type="text" name="description" ng-model="invite.description" required ng-class="{'invalid' : inviteForm.description.$invalid && submitted}">
+                <p class="validate-message" ng-show="inviteForm.description.$error.required && submitted">Invite description is required</p>
+            </div>
+            <div class="row">
+                <label for="">Email</label>
+                <input type="email" name="email" ng-model="invite.email" required ng-class="{'invalid' : inviteForm.email.$invalid && submitted}">
+                <p class="validate-message" ng-show="inviteForm.email.$error.required && submitted">Email is required</p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="modal-action btn-flat">Invite</button>
+            <button type="button" class="modal-action modal-close btn-flat">Cancel</button>
+        </div>
+    </form>
 </div>

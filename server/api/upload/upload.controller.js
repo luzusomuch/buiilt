@@ -191,6 +191,28 @@ exports.uploadInPeople = function(req, res) {
     });
 };
 
+exports.uploadInBoard = function(req, res) {
+    var request = req.body.file;
+    var file = new File({
+        title: request.title,
+        name: request.file.filename,
+        path: request.file.url,
+        key: request.file.key,
+        server: 's3',
+        mimeType: request.file.mimeType,
+        description: request.desc,
+        size: request.file.size,
+        user: req.user._id,
+        belongTo: req.params.id,
+        belongToType: request.belongToType,
+        tags: request.tags
+    });
+    file.save(function(err) {
+        if (err) {return res.send(500,err);}
+        return res.json(200,file);
+    });
+};
+
 exports.uploadInPackge = function(req, res){ 
     var request = req.body.file;
     var file = new File();

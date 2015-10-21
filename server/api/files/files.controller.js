@@ -227,3 +227,10 @@ exports.getInPeople = function(req, res) {
         return res.send(200,files);
     });
 };
+
+exports.getInBoard = function(req, res) {
+    File.find({belongTo: req.params.id, belongToType: 'board'}, function(err, files){
+        if (err) {return res.send(500,err);}
+        return res.send(200,files);
+    });
+};

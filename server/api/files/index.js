@@ -20,6 +20,7 @@ router.get('/:id/params-ios', auth.isAuthenticated(), controller.getFileByStateP
 router.get('/:id/download', auth.isAuthenticated(), controller.downloadFile);
 router.get('/:id/download-all', auth.isAuthenticated(), controller.downloadAll);
 router.get('/:id/get-in-people', auth.isAuthenticated(), controller.getInPeople);
+router.get('/:id/get-in-board', auth.isAuthenticated(), controller.getInBoard);
 router.get('/:id/:type/get-by-package', auth.isAuthenticated(), controller.getFileByPackage);
 router.delete('/:id', auth.isAuthenticated(), controller.deleteFile);
 // router.get('/me', auth.isAuthenticated(), controller.getMyFile);

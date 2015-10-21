@@ -11,6 +11,7 @@ var StaffPackage = require('./../../models/staffPackage.model'),
     Notification = require('./../../models/notification.model'),
     Project = require('./../../models/project.model'),
     Design = require('./../../models/design.model'),
+    Board = require('./../../models/board.model'),
     People = require('./../../models/people.model');
 var TaskValidator = require('./../../validators/task');
 var errorsHelper = require('../../components/helpers/errors');
@@ -39,6 +40,8 @@ var getPackage = function(type) {
       _package = Design;
     case 'people':
       _package = People;
+    case 'board':
+      _package = Board;
     default :
       break;
   }

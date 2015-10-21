@@ -24,6 +24,13 @@ angular.module('buiiltApp')
                 id: '@id',
                 action: 'file-in-people'
             }
+        },
+        uploadInBoard: {
+            method: 'POST', 
+            params: {
+                id: '@id',
+                action: 'file-in-board'
+            }
         }
     }
 );

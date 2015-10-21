@@ -80,5 +80,12 @@ id: '@_id'},{
       },
       isArray: true
     },
+    getFileInBoard: {
+      method: 'get',
+      params: {
+        action: 'get-in-board'
+      },
+      isArray: true
+    },
   });
 });
