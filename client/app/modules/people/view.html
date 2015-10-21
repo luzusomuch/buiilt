@@ -6,24 +6,29 @@
         </p>
         <p style="margin-left: 10px; color: black" class="modal-trigger" href="#tender_modal" ng-click="invite.type = 'addTeamMember'">+ Add a team member</p>
         <p>BUILDER</p>
-        <p style="margin-left: 10px; color: black">Builder 1</p>
-        <p style="margin-left: 10px; color: black">Builder 2</p>
+        <p style="margin-left: 10px; color: black" ng-repeat="builder in invitePeople.builders" ng-if="builder._id">
+            {{builder._id.name}}
+        </p>
         <p style="margin-left: 10px; color: black" class="modal-trigger" href="#tender_modal" ng-click="invite.type = 'addBuilder'">+ Add a Builder</p>
         <p>ARCHITECT</p>
-        <p style="margin-left: 10px; color: black">Architect 1</p>
-        <p style="margin-left: 10px; color: black">Architect 2</p>
+        <p style="margin-left: 10px; color: black" ng-repeat="architect in invitePeople.architects" ng-if="architect._id">
+            {{architect._id.name}}
+        </p>
         <p style="margin-left: 10px; color: black" class="modal-trigger" href="#tender_modal" ng-click="invite.type = 'addArchitect'">+ Add an Architect</p>
         <p>CLIENT</p>
-        <p style="margin-left: 10px; color: black">Client 1</p>
-        <p style="margin-left: 10px; color: black">Client 2</p>
+        <p style="margin-left: 10px; color: black" ng-repeat="client in invitePeople.clients" ng-if="client._id">
+            {{client._id.name}}
+        </p>
         <p style="margin-left: 10px; color: black" class="modal-trigger" href="#tender_modal" ng-click="invite.type = 'addClient'">+ Add a Client</p>
         <p>SUBCONTRACTORS</p>
-        <p style="margin-left: 10px; color: black">Subcontractor 1</p>
-        <p style="margin-left: 10px; color: black">Subcontractor 2</p>
+        <p style="margin-left: 10px; color: black" ng-repeat="subcontractor in invitePeople.subcontractors" ng-if="subcontractor._id">
+            {{subcontractor._id.name}}
+        </p>
         <p style="margin-left: 10px; color: black" class="modal-trigger" href="#tender_modal" ng-click="invite.type = 'addSubcontractor'">+ Add a Subcontractor</p>
         <p>CONSULTANTS</p>
-        <p style="margin-left: 10px; color: black">Consultant 1</p>
-        <p style="margin-left: 10px; color: black">Consultant 2</p>
+        <p style="margin-left: 10px; color: black" ng-repeat="consultant in invitePeople.consultants" ng-if="consultant._id">
+            {{consultant._id.name}}
+        </p>
         <p style="margin-left: 10px; color: black" class="modal-trigger" href="#tender_modal" ng-click="invite.type = 'addConsultant'">+ Add a Consultant</p>
     </div>
 

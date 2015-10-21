@@ -5,6 +5,12 @@ angular.module('buiiltApp')
             //invite people
             update: {
                 method: 'PUT',
+            },
+            getInvitePeople: {
+                method: 'get',
+                params: {
+                    action: 'get-invite-people'
+                }
             }
         });
 });

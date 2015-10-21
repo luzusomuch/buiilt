@@ -149,3 +149,18 @@ exports.invitePeople = function(req, res) {
         }
     });
 };
+
+exports.getInvitePeople = function(req, res) {
+    console.log(req.params.id);
+    People.findOne({project: req.params.id})
+    .populate("builders._id", "_id email name")
+    .populate("architects._id", "_id email name")
+    .populate("clients._id", "_id email name")
+    .populate("subcontractors._id", "_id email name")
+    .populate("consultants._id", "_id email name")
+    .exec(function(err, people){
+        if (err) {return res.send(500,err);}
+        if (!people) {return res.send(404);}
+        return res.send(200, people);
+    });
+};

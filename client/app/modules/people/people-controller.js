@@ -12,6 +12,11 @@ angular.module('buiiltApp')
     $scope.submitted = false;  
     $scope.currentSelect = 'info';
 
+    peopleService.getInvitePeople({id: $stateParams.id}).$promise.then(function(res){
+        $scope.invitePeople = res;
+        console.log(res);
+    });
+
     $scope.invite = {};
     $scope.invitePeople = function(form) {
         $scope.submitted = true;
