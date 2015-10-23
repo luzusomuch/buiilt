@@ -5,6 +5,7 @@ var PeopleChat = require('./../../models/peopleChat.model');
 var User = require('./../../models/user.model');
 var _ = require('lodash');
 var async = require('async');
+var EventBus = require('../../components/EventBus');
 
 exports.selectPeople = function(req, res) {
     PeopleChat.findOne({project: req.body.project, people: req.params.id, owner: req.body.user}, function(err, chat) {
@@ -43,6 +44,11 @@ exports.sendMessage = function(req, res) {
                 if (err) {return res.send(500,err);}
                 PeopleChat.populate(chat, 
                 [{path: "messages.user", select: "_id email name"}], function(err, chat) {
+                    EventBus.emit('socket:emit', {
+                        event: 'peopleChat:new',
+                        room: chat._id.toString(),
+                        data: chat
+                    });
                     return res.json(chat);
                 });
             });

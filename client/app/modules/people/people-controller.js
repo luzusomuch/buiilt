@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-.controller('PeopleCtrl', function ($scope, $rootScope, team, builderPackage, teamService, filepickerService, uploadService, $stateParams, $state, fileService, peopleService, taskService, peopleChatService, authService) {
+.controller('PeopleCtrl', function ($scope, $rootScope, team, builderPackage, teamService, filepickerService, uploadService, $stateParams, $state, fileService, peopleService, taskService, peopleChatService, authService, socket) {
     $scope.team = team;
     $scope.builderPackage = builderPackage;
     $scope.submitted = false;  
@@ -176,11 +176,17 @@ angular.module('buiiltApp')
             {project: $stateParams.id, user: user._id}
         ).$promise.then(function(res){
             console.log(res);
+            socket.emit('join',res._id);
             $scope.selectedChatPeople = res;
         }, function(err){
             console.log(err);
         });
     };
+
+    socket.on('peopleChat:new', function (peopleChat) {
+        console.log(peopleChat);
+        $scope.selectedChatPeople = peopleChat;
+    });
 
     $scope.enterMessage = function ($event) {
         if ($event.keyCode === 13) {
