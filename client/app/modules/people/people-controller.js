@@ -7,10 +7,11 @@ angular.module('buiiltApp')
 
     function getAvailableUser(invitePeople) {
         $scope.currentTeamMembers = [];
+        $scope.available = [];
         _.each($scope.team.leader, function(leader){
             $scope.currentTeamMembers.push(leader);
+            $scope.available.push(leader);
         });
-        $scope.available = $scope.team.leader;
         _.each($scope.team.member, function(member){
             if (member._id && member.status == 'Active') {
                 $scope.available.push(member._id);
@@ -64,9 +65,11 @@ angular.module('buiiltApp')
     });
 
     $scope.invite = {};
-    $scope.invitePeople = function(form) {
+    $scope.inviteMorePeople = function(form) {
         $scope.submitted = true;
+        console.log(form.$valid);
         if (form.$valid) {
+            console.log($scope.invite);
             if ($scope.invite.type == 'addTeamMember') {
                 var emails = [];
                 emails.push({email:$scope.invite.email});

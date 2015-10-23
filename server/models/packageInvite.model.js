@@ -9,8 +9,11 @@ var EventBus = require('./../components/EventBus');
 var PackageInviteSchema = new Schema({
   owner: {
     type: Schema.Types.ObjectId,
-    ref: 'Team',
-    required: true
+    // Old version the ref is TEAM 
+    // ref: 'Team'
+
+    // New version the ref is USER
+    ref: 'User'
   },
   to: String,
   inviteType: String,

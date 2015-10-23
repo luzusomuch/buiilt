@@ -1,17 +1,18 @@
 <div class="main-content container" style="margin-top:50px; height: {{contentHeight + 70}}px; overflow-y: auto;">
   <div class="row">
     <div class="col-sm-12">
-      <!-- sign-up form -->
       <div class="add-comment contact-form boxed">
         <div class="card collection">
           <form method="post" ng-submit="signup(signupForm)" name="signupForm" novalidate style="padding:10px 50px">
             <div class="row">
               <h5>
-                {{packageInvite.owner.name}} has invited you to privide a quote for their project.
-                Please create account below to view the tender details and submit quote.
+                {{packageInvite.owner.name}} has invited you to join their project.
+                Please fill all field below to create account .
               </h5>
             </div>
-            <div class="row">
+
+            <!-- OLD VERSION -->
+            <!-- <div class="row">
               <div input-field class="col s12">
                 <label for="teamName">Team name</label>
                 <input type="text" id="teamName" name="teamName" ng-model="user.teamName" required>
@@ -55,14 +56,47 @@
             <div class="row">
               <button class="waves-effect waves-light btn">Sign up</button>
             </div>
-          </form>
+            -->
+          
+
+          <!-- NEW VERSION -->
+            <div class="row">
+              <div class="input-field col s6">
+                <input type="text" name="firstName" ng-model="user.firstName" required>
+                <label for="firstName">First name</label>
+              </div>
+              <div class="input-field col s6">
+                <input type="text" name="lastName" ng-model="user.lastName" required>
+                <label for="lastName">Last name</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col s12">
+                <label>Email</label>
+                <input ng-model="packageInvite.to" required type="text" disabled>
+              </div>
+            </div>
+            <div class="row">
+              <div input-field class="col s12">
+                <label>Password</label>
+                <input ng-model="user.password" name="password" required type="password" ng-minlength="6" required>
+                <p class="validate-message" ng-show="signupForm.password.$error.minlength && submitted">Password need at least 6 character</p>
+              </div>
+            </div>
+            <div class="row">
+              <div input-field class="col s12">
+                <input id="repassword" name="repassword" ng-model="user.repassword" compare-to="user.password" type="password">
+                <label for="repassword">Confirm Password</label>
+                <p class="validate-message" ng-show="signupForm.repassword.$error.compareTo && submitted">Confirm password dose not match</p>
+              </div>
+            </div>
+            <div class="row">
+              <button type="submit" class="waves-effect waves-light btn">Sign up</button>
+            </div>
+            <!-- END NEW VERSION -->
+          </form> 
         </div>
       </div>
     </div>
-
-    <!-- right sidebar -->
-    <!-- <div class="col-sm-4">
-      <div ng-include="'/app/partials/right-sidebar-no-login.html'"></div>
-    </div> -->
-  </div><!--/.row-->
+  </div>
 </div>

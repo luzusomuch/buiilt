@@ -7,6 +7,7 @@ var okay = require('okay');
 var EventBus = require('./../components/EventBus');
 
 var PeopleSchema = new Schema({
+    type: {type: String, default: 'people'},
     project: {type: Schema.Types.ObjectId, ref: 'Project'},
     builders: [{
         _id: {type: Schema.Types.ObjectId, ref: 'User'},
@@ -33,7 +34,10 @@ var PeopleSchema = new Schema({
 PeopleSchema
 .pre('save', function(next) {
     this.wasNew = this.isNew;
-
+    this.editUser = this._editUser;
+    this.newInvitee = this._newInvitee;
+    this.newInviteType = this._newInviteType;
+    this._modifiedPaths = this.modifiedPaths();
     if (!this.isNew){
         this.updatedAt = new Date();
     }
@@ -43,7 +47,12 @@ PeopleSchema
 
 PeopleSchema.post('save', function (doc) {
     var evtName = this.wasNew ? 'People.Inserted' : 'People.Updated';
-
+    if (this._modifiedPaths) {
+        doc._modifiedPaths = this._modifiedPaths
+    }
+    doc.editUser = this._editUser;
+    doc.newInvitee = this._newInvitee;
+    doc.newInviteType = this._newInviteType;
     EventBus.emit(evtName, doc);
 });
 

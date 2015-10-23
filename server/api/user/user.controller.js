@@ -7,6 +7,7 @@ var PackageInvite = require('./../../models/packageInvite.model');
 var ContractorPackage = require('./../../models/contractorPackage.model');
 var BuilderPackage = require('./../../models/builderPackage.model');
 var MaterialPackage = require('./../../models/materialPackage.model');
+var People = require('./../../models/people.model');
 var Team = require('./../../models/team.model');
 var InviteToken = require('./../../models/inviteToken.model');
 var passport = require('passport');
@@ -111,202 +112,350 @@ exports.create = function (req, res, next) {
 
 //create user with invite token
 exports.createUserWithInviteToken = function(req, res, next) {
+  // THIS IS THE OLD VERSION
+
+  // PackageInvite.findById(req.body.packageInviteToken, function(err, packageInvite) {
+  //   if (err) {return res.send(500,err);}
+  //   else {
+  //     var newUser = new User();
+  //     newUser.email = packageInvite.to;
+  //     newUser.password = req.body.password;
+  //     newUser.provider = 'local';
+  //     newUser.role = 'user';
+  //     newUser.emailVerified = true;
+  //     newUser.firstName = req.body.firstName;
+  //     newUser.lastName = req.body.lastName;
+  //     newUser.name = req.body.firstName + ' ' + req.body.lastName;
+  //     newUser.save(function(err, user){
+  //       if (err) {return validationError(res, err);}
+  //       else {
+  //         var token = jwt.sign({_id: user._id}, config.secrets.session, {expiresInMinutes: 60 * 5});
+  //         var team = new Team({
+  //           name: req.body.teamName,
+  //           type: packageInvite.inviteType
+  //         });
+  //         team.leader.push(user._id);
+  //         team.project.push(packageInvite.project);
+  //         team._user = user;
+  //         team.save(function(err, savedTeam){
+  //           if (err) {return res.send(500,err);}
+  //           else {
+  //             user.team = {
+  //               _id : savedTeam._id,
+  //               role : 'admin'
+  //             };
+  //             user.save();
+  //             if (packageInvite.inviteType == 'contractor') {
+  //               ContractorPackage.findById(packageInvite.package, function(err, contractorPackge){
+  //                 if (err) {return res.send(500);}
+  //                 else {
+  //                   if (packageInvite.isSkipInTender) {
+  //                     contractorPackge.winnerTeam._id = savedTeam._id;
+  //                   }
+  //                   _.each(contractorPackge.to, function(to) {
+  //                     if (to.email === packageInvite.to) {
+  //                       to._id = savedTeam._id;
+  //                       to.email = packageInvite.to;
+  //                     }
+  //                   });
+  //                   contractorPackge.save(function(err, saved) {
+  //                     if (err) {return res.send(500,err);}
+  //                     else {
+  //                       var data = {
+  //                         token: token,
+  //                         emailVerified: true,
+  //                         package: saved
+  //                       };
+  //                       packageInvite.remove(function(err){
+  //                         if (err) {
+  //                           return res.send(500,err);
+  //                         }
+  //                         return res.json(200,data);
+  //                       });
+  //                     }
+  //                   });
+  //                 }
+  //               });
+  //             }
+  //             else if(packageInvite.inviteType == 'supplier') {
+  //               MaterialPackage.findById(packageInvite.package, function(err, materialPackage){
+  //                 if (err) {return res.send(500);}
+  //                 else {
+  //                   if (packageInvite.isSkipInTender) {
+  //                     materialPackage.winnerTeam._id = savedTeam._id;
+  //                   }
+  //                   _.each(materialPackage.to, function(to) {
+  //                     if (to.email === packageInvite.to) {
+  //                       to._id = savedTeam._id;
+  //                       to.email = packageInvite.to;
+  //                     }
+  //                   });
+  //                   materialPackage.save(function(err, saved) {
+  //                     if (err) {return res.send(500,err);}
+  //                     else {
+  //                       var data = {
+  //                         token: token,
+  //                         emailVerified: true,
+  //                         package: saved
+  //                       };
+  //                       packageInvite.remove(function(err){
+  //                         if (err) {
+  //                           return res.send(500,err);
+  //                         }
+  //                         return res.json(200,data);
+  //                       });
+  //                     }
+  //                   });
+  //                 }
+  //               });
+  //             }
+  //             else if(packageInvite.inviteType == 'builder') {
+  //               BuilderPackage.findById(packageInvite.package, function(err, builderPackage){
+  //                 if (err) {return res.send(500);}
+  //                 else {
+  //                   Project.findById(packageInvite.project, function(err,project){
+  //                     if (err) {return res.send(500,err);}
+  //                     else {
+  //                       project.status = 'open';
+  //                       project.save()
+  //                     }
+  //                   });
+  //                   _.each(builderPackage.invitees, function(to) {
+  //                     if (to.email === packageInvite.to) {
+  //                       to._id = savedTeam._id;
+  //                       to.email = packageInvite.to;
+  //                     }
+  //                   });
+  //                   builderPackage.save(function(err, saved){
+  //                     if (err) {return res.send(500,err);}
+  //                     else {
+  //                       packageInvite.remove();
+  //                       var data = {
+  //                         token: token,
+  //                         emailVerified: true,
+  //                         package: saved
+  //                       };
+  //                       packageInvite.remove(function(err){
+  //                         if (err) {
+  //                           return res.send(500,err);
+  //                         }
+  //                         return res.json(200,data);
+  //                       });
+  //                     }
+  //                   });
+  //                 }
+  //               });
+  //             }
+  //             else if(packageInvite.inviteType == 'homeOwner'){
+  //               BuilderPackage.findById(packageInvite.package, function(err, builderPackage){
+  //                 if (err) {return res.send(500);}
+  //                 else {
+  //                   Project.findById(packageInvite.project, function(err,project){
+  //                     if (err) {return res.send(500,err);}
+  //                     else {
+  //                       project.status = 'open';
+  //                       project.save(function(err, savedProject){
+  //                       });
+  //                     }
+  //                   });
+  //                   if (builderPackage.winner == undefined) {
+  //                     builderPackage.winner = savedTeam._id;
+  //                   }
+  //                   builderPackage.to.team = savedTeam._id;
+  //                   builderPackage.to.email = null;
+  //                   builderPackage.save(function(err, saved){
+  //                     if (err) {return res.send(500,err);}
+  //                     else {
+  //                       var data = {
+  //                         token: token,
+  //                         emailVerified: true,
+  //                         package: saved
+  //                       };
+  //                       packageInvite.remove(function(err){
+  //                         if (err) {
+  //                           return res.send(500,err);
+  //                         }
+  //                         return res.json(200,data);
+  //                       });
+  //                     }
+  //                   });
+  //                 }
+  //               });
+  //             } else if (packageInvite.inviteType == 'architect') {
+  //               BuilderPackage.findById(packageInvite.package, function(err, builderPackage){
+  //                 if (err) {return res.send(500,err);}
+  //                 builderPackage.architect.team = savedTeam._id;
+  //                 builderPackage.architect.email = null;
+  //                 builderPackage.save(function(err){
+  //                   if (err) {return res.send(500,err);}
+  //                   var data = {
+  //                     token: token,
+  //                     emailVerified: true,
+  //                     package: builderPackage
+  //                   };
+  //                   packageInvite.remove(function(err){
+  //                     if (err) {return res.send(500);}
+  //                     return res.json(200,data);
+  //                   });
+  //                 });
+  //               });
+  //             }
+  //           }
+  //         });
+  //       }
+  //     });
+  //   }
+  // });
+
+  // THIS IS THE NEW VERSION
   PackageInvite.findById(req.body.packageInviteToken, function(err, packageInvite) {
     if (err) {return res.send(500,err);}
-    else {
-      var newUser = new User();
-      newUser.email = packageInvite.to;
-      newUser.password = req.body.password;
-      newUser.provider = 'local';
-      newUser.role = 'user';
-      newUser.emailVerified = true;
-      newUser.firstName = req.body.firstName;
-      newUser.lastName = req.body.lastName;
-      newUser.name = req.body.firstName + ' ' + req.body.lastName;
-      newUser.save(function(err, user){
-        if (err) {return validationError(res, err);}
-        else {
-          var token = jwt.sign({_id: user._id}, config.secrets.session, {expiresInMinutes: 60 * 5});
-          // res.json({token: token,emailVerified : true});
-          var team = new Team({
-            name: req.body.teamName,
-            type: packageInvite.inviteType
-          });
-          team.leader.push(user._id);
-          team.project.push(packageInvite.project);
-          team._user = user;
-          team.save(function(err, savedTeam){
+    if (!packageInvite) {return res.send(404);}
+    var newUser = new User();
+    newUser.email = packageInvite.to;
+    newUser.password = req.body.password;
+    newUser.provider = 'local';
+    newUser.role = 'user';
+    newUser.emailVerified = true;
+    newUser.firstName = req.body.firstName;
+    newUser.lastName = req.body.lastName;
+    newUser.name = req.body.firstName + ' ' + req.body.lastName;
+    newUser.save(function(err, user){
+      if (err) {return validationError(res, err);}
+      else {
+        user.projects.push(packageInvite.project);
+        user.save();
+        var token = jwt.sign({_id: user._id}, config.secrets.session, {expiresInMinutes: 60 * 5});
+        if (packageInvite.inviteType == 'peopleBuilder') {
+          People.findById(packageInvite.package, function(err, people) {
             if (err) {return res.send(500,err);}
+            if (!people) {return res.send(404);}
             else {
-              user.team = {
-                _id : savedTeam._id,
-                role : 'admin'
-              };
-              user.save();
-              if (packageInvite.inviteType == 'contractor') {
-                ContractorPackage.findById(packageInvite.package, function(err, contractorPackge){
+              _.each(people.builders, function(builder){
+                if (builder.email == packageInvite.to) {
+                  builder._id = user._id;
+                  builder.email = null;
+                }
+              });
+              people.save(function(err){
+                if (err) {return res.send(500,err);}
+                var data = {
+                  token: token,
+                  emailVerified: true,
+                  package: people
+                };
+                packageInvite.remove(function(err){
                   if (err) {return res.send(500);}
-                  else {
-                    if (packageInvite.isSkipInTender) {
-                      contractorPackge.winnerTeam._id = savedTeam._id;
-                      // contractorPackge.isAccept = true;
-                    }
-                    _.each(contractorPackge.to, function(to) {
-                      if (to.email === packageInvite.to) {
-                        to._id = savedTeam._id;
-                        to.email = packageInvite.to;
-                      }
-                    });
-                    contractorPackge.save(function(err, saved) {
-                      if (err) {return res.send(500,err);}
-                      else {
-                        var data = {
-                          token: token,
-                          emailVerified: true,
-                          package: saved
-                        };
-                        packageInvite.remove(function(err){
-                          if (err) {
-                            return res.send(500,err);
-                          }
-                          return res.json(200,data);
-                        });
-                      }
-                    });
-                  }
+                  return res.json(200,data);
                 });
-              }
-              else if(packageInvite.inviteType == 'supplier') {
-                MaterialPackage.findById(packageInvite.package, function(err, materialPackage){
-                  if (err) {return res.send(500);}
-                  else {
-                    if (packageInvite.isSkipInTender) {
-                      materialPackage.winnerTeam._id = savedTeam._id;
-                      // materialPackage.isAccept = true;
-                    }
-                    _.each(materialPackage.to, function(to) {
-                      if (to.email === packageInvite.to) {
-                        to._id = savedTeam._id;
-                        to.email = packageInvite.to;
-                      }
-                    });
-                    materialPackage.save(function(err, saved) {
-                      if (err) {return res.send(500,err);}
-                      else {
-                        var data = {
-                          token: token,
-                          emailVerified: true,
-                          package: saved
-                        };
-                        packageInvite.remove(function(err){
-                          if (err) {
-                            return res.send(500,err);
-                          }
-                          return res.json(200,data);
-                        });
-                      }
-                    });
-                  }
-                });
-              }
-              else if(packageInvite.inviteType == 'builder') {
-                BuilderPackage.findById(packageInvite.package, function(err, builderPackage){
-                  if (err) {return res.send(500);}
-                  else {
-                    Project.findById(packageInvite.project, function(err,project){
-                      if (err) {return res.send(500,err);}
-                      else {
-                        project.status = 'open';
-                        project.save()
-                      }
-                    });
-                    // builderPackage.to.team = savedTeam._id;
-                    // builderPackage.to.email = null;
-                    _.each(builderPackage.invitees, function(to) {
-                      if (to.email === packageInvite.to) {
-                        to._id = savedTeam._id;
-                        to.email = packageInvite.to;
-                      }
-                    });
-                    builderPackage.save(function(err, saved){
-                      if (err) {return res.send(500,err);}
-                      else {
-                        packageInvite.remove();
-                        var data = {
-                          token: token,
-                          emailVerified: true,
-                          package: saved
-                        };
-                        packageInvite.remove(function(err){
-                          if (err) {
-                            return res.send(500,err);
-                          }
-                          return res.json(200,data);
-                        });
-                      }
-                    });
-                  }
-                });
-              }
-              else if(packageInvite.inviteType == 'homeOwner'){
-                BuilderPackage.findById(packageInvite.package, function(err, builderPackage){
-                  if (err) {return res.send(500);}
-                  else {
-                    Project.findById(packageInvite.project, function(err,project){
-                      if (err) {return res.send(500,err);}
-                      else {
-                        project.status = 'open';
-                        project.save(function(err, savedProject){
-                        });
-                      }
-                    });
-                    if (builderPackage.winner == undefined) {
-                      builderPackage.winner = savedTeam._id;
-                    }
-                    builderPackage.to.team = savedTeam._id;
-                    builderPackage.to.email = null;
-                    builderPackage.save(function(err, saved){
-                      if (err) {return res.send(500,err);}
-                      else {
-                        var data = {
-                          token: token,
-                          emailVerified: true,
-                          package: saved
-                        };
-                        packageInvite.remove(function(err){
-                          if (err) {
-                            return res.send(500,err);
-                          }
-                          return res.json(200,data);
-                        });
-                      }
-                    });
-                  }
-                });
-              } else if (packageInvite.inviteType == 'architect') {
-                BuilderPackage.findById(packageInvite.package, function(err, builderPackage){
-                  if (err) {return res.send(500,err);}
-                  builderPackage.architect.team = savedTeam._id;
-                  builderPackage.architect.email = null;
-                  builderPackage.save(function(err){
-                    if (err) {return res.send(500,err);}
-                    var data = {
-                      token: token,
-                      emailVerified: true,
-                      package: builderPackage
-                    };
-                    packageInvite.remove(function(err){
-                      if (err) {return res.send(500);}
-                      return res.json(200,data);
-                    });
-                  });
-                });
-              }
+              });
             }
           });
+        } else if (packageInvite.inviteType == 'peopleArchitect') {
+          People.findById(packageInvite.package, function(err, people) {
+            if (err) {return res.send(500,err);}
+            if (!people) {return res.send(404);}
+            else {
+              _.each(people.architects, function(architect){
+                if (architect.email == packageInvite.to) {
+                  architect._id = user._id;
+                  architect.email = null;
+                }
+              });
+              people.save(function(err){
+                if (err) {return res.send(500,err);}
+                var data = {
+                  token: token,
+                  emailVerified: true,
+                  package: people
+                };
+                packageInvite.remove(function(err){
+                  if (err) {return res.send(500);}
+                  return res.json(200,data);
+                });
+              });
+            }
+          });
+        } else if (packageInvite.inviteType == 'peopleClient') {
+          People.findById(packageInvite.package, function(err, people) {
+            if (err) {return res.send(500,err);}
+            if (!people) {return res.send(404);}
+            else {
+              _.each(people.clients, function(client){
+                if (client.email == packageInvite.to) {
+                  client._id = user._id;
+                  client.email = null;
+                }
+              });
+              people.save(function(err){
+                if (err) {return res.send(500,err);}
+                var data = {
+                  token: token,
+                  emailVerified: true,
+                  package: people
+                };
+                packageInvite.remove(function(err){
+                  if (err) {return res.send(500);}
+                  return res.json(200,data);
+                });
+              });
+            }
+          });
+        } else if (packageInvite.inviteType == 'peopleSubcontractor') {
+          People.findById(packageInvite.package, function(err, people) {
+            if (err) {return res.send(500,err);}
+            if (!people) {return res.send(404);}
+            else {
+              _.each(people.subcontractors, function(subcontractor){
+                if (subcontractor.email == packageInvite.to) {
+                  subcontractor._id = user._id;
+                  subcontractor.email = null;
+                }
+              });
+              people.save(function(err){
+                if (err) {return res.send(500,err);}
+                var data = {
+                  token: token,
+                  emailVerified: true,
+                  package: people
+                };
+                packageInvite.remove(function(err){
+                  if (err) {return res.send(500);}
+                  return res.json(200,data);
+                });
+              });
+            }
+          });
+        } else if (packageInvite.inviteType == 'peopleConsultant') {
+          People.findById(packageInvite.package, function(err, people) {
+            if (err) {return res.send(500,err);}
+            if (!people) {return res.send(404);}
+            else {
+              _.each(people.consultants, function(consultant){
+                if (consultant.email == packageInvite.to) {
+                  consultant._id = user._id;
+                  consultant.email = null;
+                }
+              });
+              people.save(function(err){
+                if (err) {return res.send(500,err);}
+                var data = {
+                  token: token,
+                  emailVerified: true,
+                  package: people
+                };
+                packageInvite.remove(function(err){
+                  if (err) {return res.send(500);}
+                  return res.json(200,data);
+                });
+              });
+            }
+          });
+        } else {
+          return res.send(500);
         }
-      });
-    }
+      }
+    });
   });
 };
 

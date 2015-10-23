@@ -82,16 +82,16 @@ angular.module('buiiltApp')
             } else {
               $state.go('contractorRequest.contractorPackageInProcess', {id:data.package.project, packageId: data.package._id});  
             }
-          }
-          else if (data.package.type === 'material') {
+          } else if (data.package.type === 'material') {
             if (!data.package.isSelect) {
               $state.go('materialRequest.sendQuote', {id: data.package.project, packageId: data.package._id});
             } else {
               $state.go('materialRequest.materialPackageInProcess', {id: data.package.project, packageId: data.package._id});
             }
-          }
-          else if (data.package.type === 'BuilderPackage') {
+          } else if (data.package.type === 'BuilderPackage') {
             $state.go('dashboard', {id: data.package.project});
+          } else if (data.package.type == 'people') {
+            $state.go('people', {id: data.package.project});
           }
           // $state.go('team.manager')
 

@@ -9,7 +9,9 @@ var _ = require('lodash');
 var async = require('async');
 
 exports.getByPackageInviteToken = function(req, res) {
-    PackageInvite.findById(req.params.id).populate('owner').exec(function(err, packageInvite){
+    PackageInvite.findById(req.params.id)
+    .populate('owner', '-hashedPassword -salt')
+    .exec(function(err, packageInvite){
         if (err) {return res.send(500,err);}
         else {
             return res.json(200,packageInvite);

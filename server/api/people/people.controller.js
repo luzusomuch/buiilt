@@ -6,9 +6,7 @@ var _ = require('lodash');
 var async = require('async');
 
 exports.invitePeople = function(req, res) {
-    console.log(req.body);
     var invite = req.body;
-    console.log(req.params);
     People.findOne({project:req.params.id}, function(err, people){
         if (err) {return res.send(500,err);}
         if (!people) {return res.send(404,err);}
@@ -20,13 +18,16 @@ exports.invitePeople = function(req, res) {
                         people.builders.push({
                             email: invite.email
                         });
+                        people._newInvitee = invite.email;
+                        people._newInviteType = 'peopleBuilder';
                     } else {
                         people.builders.push({
                             _id: builder._id
                         });
                         builder.projects.push(people.project);
                     }
-                    people.markModified('builders');
+                    people.markModified('invitePeople');
+                    people._editUser = req.user;
                     people.save(function(err){
                         if (err) {return res.send(500,err);}
                         People.populate(people, 
@@ -46,13 +47,16 @@ exports.invitePeople = function(req, res) {
                         people.architects.push({
                             email: invite.email
                         });
+                        people._newInvitee = invite.email;
+                        people._newInviteType = 'peopleArchitect';
                     } else {
                         people.architects.push({
                             _id: architect._id
                         });
                         architect.projects.push(people.project);
                     }
-                    people.markModified('architects');
+                    people.markModified('invitePeople');
+                    people._editUser = req.user;
                     people.save(function(err){
                         if (err) {return res.send(500,err);}
                         People.populate(people, 
@@ -72,13 +76,16 @@ exports.invitePeople = function(req, res) {
                         people.clients.push({
                             email: invite.email
                         });
+                        people._newInvitee = invite.email;
+                        people._newInviteType = 'peopleClient';
                     } else {
                         people.clients.push({
                             _id: client._id
                         });
                         client.projects.push(people.project);
                     }
-                    people.markModified('clients');
+                    people.markModified('invitePeople');
+                    people._editUser = req.user;
                     people.save(function(err){
                         if (err) {return res.send(500,err);}
                         People.populate(people, 
@@ -98,13 +105,16 @@ exports.invitePeople = function(req, res) {
                         people.subcontractors.push({
                             email: invite.email
                         });
+                        people._newInvitee = invite.email;
+                        people._newInviteType = 'peopleSubcontractor';
                     } else {
                         people.subcontractors.push({
                             _id: contractor._id
                         });
                         contractor.projects.push(people.project);
                     }
-                    people.markModified('subcontractors');
+                    people.markModified('invitePeople');
+                    people._editUser = req.user;
                     people.save(function(err){
                         if (err) {return res.send(500,err);}
                         People.populate(people, 
@@ -124,13 +134,16 @@ exports.invitePeople = function(req, res) {
                         people.consultants.push({
                             email: invite.email
                         });
+                        people._newInvitee = invite.email;
+                        people._newInviteType = 'peopleConsultant';
                     } else {
                         people.consultants.push({
                             _id: consultant._id
                         });
                         consultant.projects.push(people.project);
                     }
-                    people.markModified('consultants');
+                    people.markModified('invitePeople');
+                    people._editUser = req.user;
                     people.save(function(err){
                         if (err) {return res.send(500,err);}
                         People.populate(people, 
