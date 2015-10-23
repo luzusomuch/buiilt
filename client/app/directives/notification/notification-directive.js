@@ -43,6 +43,7 @@ angular.module('buiiltApp')
         var inProgressArray = ['select-quote'];
         var addOnNotification = ['send-variation','send-invoice','send-defect'];
         var documentNotification = ['uploadDocument','uploadNewDocumentVersion'];
+
         var getSref = function(notification) {
           if (serviceArray.indexOf(notification.type) != -1)  {
             switch (notification.element.type) {
@@ -143,6 +144,11 @@ angular.module('buiiltApp')
           }
           if (notification.type == 'decline-quote') {
             return 'team.manager';
+          }
+
+          // NEW VERSION
+          if (notification.referenceTo == 'people-chat') {
+            return 'people({id: notification.element.project})';
           }
         };
 
@@ -245,6 +251,11 @@ angular.module('buiiltApp')
         }
         if (scope.notification.type == 'decline-quote') {
           text = params.fromUser() + 'has declined your quote in ' + params.packageName;
+        }
+
+        // NEW VERSION
+        if (scope.notification.referenceTo == 'people-chat') {
+          text = params.fromUser() + 'has send you a message';
         }
 
         scope.notification.sref = getSref(scope.notification);

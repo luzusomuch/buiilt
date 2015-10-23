@@ -20,7 +20,7 @@ var PeopleChatSchema = new Schema({
 PeopleChatSchema
 .pre('save', function(next) {
     this.wasNew = this.isNew;
-
+    this.editUser = this._editUser;
     if (!this.isNew){
         this.updatedAt = new Date();
     }
@@ -30,7 +30,7 @@ PeopleChatSchema
 
 PeopleChatSchema.post('save', function (doc) {
     var evtName = this.wasNew ? 'PeopleChat.Inserted' : 'PeopleChat.Updated';
-
+    doc.editUser = this._editUser;
     EventBus.emit(evtName, doc);
 });
 

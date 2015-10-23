@@ -38,6 +38,7 @@ exports.sendMessage = function(req, res) {
                 text: req.body.text,
                 sendAt: new Date()
             });
+            chat._editUser = req.user;
             chat.save(function(err){
                 if (err) {return res.send(500,err);}
                 PeopleChat.populate(chat, 
