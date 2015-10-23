@@ -17,6 +17,12 @@ angular.module('buiiltApp')
                 params: {
                     action: 'get-invite-people'
                 }
+            },
+            sendMessage: {
+                method: 'post',
+                params: {
+                    action: 'send-message'
+                }
             }
         });
 });

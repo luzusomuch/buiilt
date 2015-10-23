@@ -36,12 +36,16 @@ var getPackage = function(type) {
       break;
     case 'variation' :
       _package = Variation;
+      break;
     case 'design':
       _package = Design;
+      break;
     case 'people':
       _package = People;
+      break;
     case 'board':
       _package = Board;
+      break;
     default :
       break;
   }
@@ -62,9 +66,10 @@ exports.package = function(req,res,next) {
   console.log(req.params);
   var _package = getPackage(req.params.type);
   _package.findById(req.params.id,function(err,aPackage) {
-    if (err || !aPackage) {
+    if (err) {
       return res.send(500,err);
-    }
+    } 
+    if (!aPackage) {return res.send(404);}
     req.aPackage = aPackage;
     next();
   })
@@ -168,6 +173,7 @@ exports.myTask = function(req,res) {
 
 exports.create = function(req,res) {
   var aPackage = req.aPackage;
+  console.log(aPackage);
   var user = req.user;
   TaskValidator.validateCreate(req,function(err,data) {
     if (err) {
@@ -202,10 +208,11 @@ exports.create = function(req,res) {
       task.assignees = _.union(task.assignees, architectTeamLeader);
       task.save(function(err) {
         if (err) {
+          console.log(err);
           return res.send(500,err)
         }
         Task.populate(task, {path:'assignees', select: '-hashedPassword -salt'}, function(err, task){
-          if (err) {return res.send(500,err);}
+          if (err) {console.log(err);return res.send(500,err);}
           return res.json(task);
         });
       });

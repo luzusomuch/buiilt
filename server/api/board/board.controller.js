@@ -14,7 +14,7 @@ exports.createBoard = function(req, res) {
     User.findOne({email: req.body.email}, function(err, user) {
         if (err) {return res.send(500,err);}
         if (!user) {
-            board.invitees.push({email: req/body.email});
+            board.invitees.push({email: req.body.email});
         } else {
             board.invitees.push({_id: user._id});
             user.projects.push(req.params.id);
@@ -46,7 +46,10 @@ exports.invitePeople = function(req, res) {
             }
             board.save(function(err){
                 if (err) {return res.send(500,err);}
-                Board.populate(board, [{path: 'invitees._id', select: '_id email name'}], function(err, board) {
+                Board.populate(board, [
+                    {path: 'invitees._id', select: '_id email name'},
+                    {path: 'messages.user', select: '_id email name'}
+                    ], function(err, board) {
                     return res.send(200, board);
                 });
             });
@@ -56,8 +59,30 @@ exports.invitePeople = function(req, res) {
 
 exports.getBoards = function(req, res) {
     Board.find({project: req.params.id})
-    .populate('invitees._id', '_id email name').exec(function(err, boards) {
+    .populate('invitees._id', '_id email name')
+    .populate('messages.user', '_id email name').exec(function(err, boards) {
         if (err) {return res.send(500,err);}
         return res.send(200, boards);
+    });
+};
+
+exports.sendMessage = function(req, res) {
+    Board.findById(req.params.id, function(err, board){
+        if (err) {return res.send(500,err);}
+        if (!board) {return res.send(404);}
+        board.messages.push({
+            user: req.user._id,
+            text: req.body.text,
+            sendAt: new Date()
+        });
+        board.save(function(err){
+            if (err) {return res.send(500,err);}
+            Board.populate(board, [
+                {path: 'invitees._id', select: '_id email name'},
+                {path: 'messages.user', select: '_id email name'}
+                ], function(err, board) {
+                return res.send(200, board);
+            });
+        });
     });
 };

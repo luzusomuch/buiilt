@@ -2,7 +2,7 @@
                 
     <div class="col s2" style="margin-right: 1px solid #eee; max-height: 81vh; overflow-y: scroll; font-size: 12px; color: #757575;">
         <p>BOARDS</p>
-        <p style="margin-left: 10px; color: black" ng-repeat="board in boards" ng-click="selectBoard(board)">
+        <p style="margin-left: 10px;" ng-repeat="board in boards" ng-click="selectBoard(board)" ng-style="board._id == currentBoard._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             {{board.name}}       
         </p>
         <!-- <p style="margin-left: 10px; color: #42A5F5"><strong>Board 3</strong></p> -->
@@ -13,26 +13,14 @@
         
         <div style="height: 69vh; overflow-y: scroll; position: relative;">
             
-            <div class="row chat-paragraph valign-wrapper" style="border-bottom: 1px solid #eee; margin-bottom: 5px">
+            <div class="row chat-paragraph valign-wrapper" style="border-bottom: 1px solid #eee;" ng-repeat="message in currentBoard.messages">
                 <div class="col">
                     <i class="tiny material-icons valign" style="color: #64B5F6">brightness_1</i>
                 </div>
                 <div class="col">
-                    <p class="row chat-name" style="font-size: 13px; color: #757575; margin-bottom: 0px"><strong>Myles Condon</strong><span style="font-size: 12px"> - Date and Time.</span></p>    
+                    <p class="row chat-name" style="font-size: 13px; color: #757575; margin-bottom: 0px"><strong>{{message.user.name}}</strong><span style="font-size: 12px"> - {{message.sendAt | date : 'MMM d, y h:mm:ss a'}}.</span></p>    
                     <p class="row chat-text" style="font-size: 13px; margin-top:3px">
-                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor
-                    </p>
-                </div>
-            </div>
-            
-            <div class="row chat-paragraph valign-wrapper" style="border-bottom: 1px solid #eee;">
-                <div class="col">
-                    <i class="tiny material-icons valign" style="color: white">brightness_1</i>
-                </div>
-                <div class="col">
-                    <p class="row chat-name" style="font-size: 13px; color: #757575; margin-bottom: 0px"><strong>Myles Condon</strong><span style="font-size: 12px"> - Date and Time.</span></p>    
-                    <p class="row chat-text" style="font-size: 13px; margin-top:3px">
-                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor
+                        {{message.text}}
                     </p>
                 </div>
             </div>
@@ -45,7 +33,7 @@
             <form class="col s11">
                 <div class="row" style="margin-bottom: -5px; margin-top: -18px">
                     <div class="input-field col s12">
-                        <textarea placeholder="Send a Message..." id="textarea1" class="materialize-textarea"></textarea>
+                        <textarea placeholder="Send a Message..." id="textarea1" class="materialize-textarea" ng-model="message.text" ng-keydown="enterMessage($event);"></textarea>
                     </div>
                 </div>
             </form>

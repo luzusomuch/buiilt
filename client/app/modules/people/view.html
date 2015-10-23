@@ -1,32 +1,32 @@
 <div class="row card" style="margin-top: 10px">
     <div class="col s2" style="margin-right: 1px solid #eee; max-height: 81vh; overflow-y: scroll; font-size: 12px; color: #757575;">
         <p>TEAM</p>
-        <p style="margin-left: 10px; color: black" ng-repeat="currentTeamMember in currentTeamMembers" ng-click="selectUser(currentTeamMember.member, 'team')">
-            {{currentTeamMember.member.name}}
+        <p style="margin-left: 10px" ng-repeat="currentTeamMember in currentTeamMembers" ng-click="selectUser(currentTeamMember, 'team')" ng-style="currentTeamMember._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
+            {{currentTeamMember.name}}
         </p>
         <p style="margin-left: 10px; color: black" class="modal-trigger" href="#tender_modal" ng-click="invite.type = 'addTeamMember'">+ Add a team member</p>
         <p>BUILDER</p>
-        <p style="margin-left: 10px; color: black" ng-repeat="builder in invitePeople.builders" ng-if="builder._id" ng-click="selectUser(builder._id, 'builder')">
+        <p style="margin-left: 10px;" ng-repeat="builder in invitePeople.builders" ng-if="builder._id" ng-click="selectUser(builder._id, 'builder')" ng-style="builder._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             {{builder._id.name}}
         </p>
         <p style="margin-left: 10px; color: black" class="modal-trigger" href="#tender_modal" ng-click="invite.type = 'addBuilder'">+ Add a Builder</p>
         <p>ARCHITECT</p>
-        <p style="margin-left: 10px; color: black" ng-repeat="architect in invitePeople.architects" ng-if="architect._id" ng-click="selectUser(architect._id, 'architect')">
+        <p style="margin-left: 10px;" ng-repeat="architect in invitePeople.architects" ng-if="architect._id" ng-click="selectUser(architect._id, 'architect')" ng-style="architect._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             {{architect._id.name}}
         </p>
         <p style="margin-left: 10px; color: black" class="modal-trigger" href="#tender_modal" ng-click="invite.type = 'addArchitect'">+ Add an Architect</p>
         <p>CLIENT</p>
-        <p style="margin-left: 10px; color: black" ng-repeat="client in invitePeople.clients" ng-if="client._id" ng-click="selectUser(client._id, 'client')">
+        <p style="margin-left: 10px;" ng-repeat="client in invitePeople.clients" ng-if="client._id" ng-click="selectUser(client._id, 'client')" ng-style="client._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             {{client._id.name}}
         </p>
         <p style="margin-left: 10px; color: black" class="modal-trigger" href="#tender_modal" ng-click="invite.type = 'addClient'">+ Add a Client</p>
         <p>SUBCONTRACTORS</p>
-        <p style="margin-left: 10px; color: black" ng-repeat="subcontractor in invitePeople.subcontractors" ng-if="subcontractor._id" ng-click="selectUser(subcontractor._id, 'subcontractor')">
+        <p style="margin-left: 10px;" ng-repeat="subcontractor in invitePeople.subcontractors" ng-if="subcontractor._id" ng-click="selectUser(subcontractor._id, 'subcontractor')" ng-style="subcontractor._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             {{subcontractor._id.name}}
         </p>
         <p style="margin-left: 10px; color: black" class="modal-trigger" href="#tender_modal" ng-click="invite.type = 'addSubcontractor'">+ Add a Subcontractor</p>
         <p>CONSULTANTS</p>
-        <p style="margin-left: 10px; color: black" ng-repeat="consultant in invitePeople.consultants" ng-if="consultant._id" ng-click="selectUser(consultant._id, 'consultant')">
+        <p style="margin-left: 10px" ng-repeat="consultant in invitePeople.consultants" ng-if="consultant._id" ng-click="selectUser(consultant._id, 'consultant')" ng-style="consultant._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             {{consultant._id.name}}
         </p>
         <p style="margin-left: 10px; color: black" class="modal-trigger" href="#tender_modal" ng-click="invite.type = 'addConsultant'">+ Add a Consultant</p>
@@ -105,8 +105,8 @@
             <div id="test1" class="col s12" style="height: 65vh; overflow-y: scroll">
                 <div class="attachment-row" style="font-size: 12px; border-bottom: 1px solid #eee">
                     <div style="border: 1px solid #BBDEFB; background-color: #E3F2FD; border-radius: 3px; padding: 3px">
-                        <p style="">This person is currently tendering for.</p>
-                        <p><a class="modal-trigger" href="#tender_modal">View Tender Details</a></p>
+                        <p style="">This person is currently tendering for {{builderPackage.name}}.</p>
+                        <p><a class="modal-trigger" href="#view_tender_detail_{{selectedUser._id}}">View Tender Details</a></p>
                     </div>
                 </div>
             </div>
@@ -224,4 +224,15 @@
             <button type="button" class="modal-action modal-close btn-flat">Cancel</button>
         </div>
     </form>
+</div>
+
+<div class="modal modal-fixed-bottom" id="view_tender_detail_{{member._id}}" ng-repeat="member in available">
+    <h5>View detail of tender {{member.name}}</h5>
+    <div class="modal-content">
+        <p>{{member.name}}</p>
+        <p>{{member.email}}</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="modal-action modal-close btn-flat">Close</button>
+    </div>
 </div>

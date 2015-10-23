@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-.controller('PeopleCtrl', function ($scope, $rootScope, team, builderPackage, teamService, filepickerService, uploadService, $stateParams, $state, fileService, peopleService, taskService, peopleChatService) {
+.controller('PeopleCtrl', function ($scope, $rootScope, team, builderPackage, teamService, filepickerService, uploadService, $stateParams, $state, fileService, peopleService, taskService, peopleChatService, authService) {
     $scope.team = team;
     $scope.builderPackage = builderPackage;
     $scope.submitted = false;  
@@ -8,14 +8,18 @@ angular.module('buiiltApp')
     function getAvailableUser(invitePeople) {
         $scope.currentTeamMembers = [];
         _.each($scope.team.leader, function(leader){
-            $scope.currentTeamMembers.push({member: leader, type: 'currentTeam'});
+            $scope.currentTeamMembers.push(leader);
         });
         $scope.available = $scope.team.leader;
         _.each($scope.team.member, function(member){
             if (member._id && member.status == 'Active') {
                 $scope.available.push(member._id);
-                $scope.currentTeamMembers.push({member:member._id, type: 'currentTeam'});
+                $scope.currentTeamMembers.push(member._id);
             }
+        });
+        $scope.currentTeamMembers = _.uniq($scope.currentTeamMembers, '_id');
+        authService.getCurrentUser().$promise.then(function(res){
+            _.remove($scope.currentTeamMembers, {_id: res._id});
         });
         _.each(invitePeople.builders, function(builder){
             if (builder._id) {
@@ -43,6 +47,9 @@ angular.module('buiiltApp')
             }
         });
         $scope.available = _.uniq($scope.available, '_id');
+        if ($scope.available.length > 1) {
+            $scope.selectUser($scope.available[1], '');
+        }
     };
 
     peopleService.getInvitePeople({id: $stateParams.id}).$promise.then(function(res){
@@ -50,7 +57,7 @@ angular.module('buiiltApp')
         getAvailableUser($scope.invitePeople);
         console.log(res);
 
-        taskService.get({id: res._id, type: 'people'}).$promise.then(function(res){
+        taskService.getByPackage({id: res._id, type: 'people'}).$promise.then(function(res){
             $scope.tasks = res;
             console.log(res);
         });

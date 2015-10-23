@@ -17,14 +17,16 @@ angular.module('buiiltApp')
     $scope.boards = [];
     $scope.currentBoard = {};
     boardService.getBoards({id: $stateParams.id}).$promise.then(function(res){
+        console.log(res);
         $scope.boards = res;
-        $scope.currentBoard = _.first($scope.boards);
+        $scope.currentBoard = $scope.boards[0];
+        console.log($scope.currentBoard);
         getAvailable($scope.currentBoard);
         fileService.getFileInBoard({id: $scope.currentBoard._id}).$promise.then(function(res){
             $scope.files = res;
             console.log(res);
         });
-        taskService.get({id: $scope.currentBoard._id, type: 'board'}).$promise.then(function(res){
+        taskService.getByPackage({id: $scope.currentBoard._id, type: 'board'}).$promise.then(function(res){
             $scope.tasks = res;
             console.log(res);
         });
@@ -132,5 +134,23 @@ angular.module('buiiltApp')
                 console.log(res);
             });
         }
+    };
+
+    $scope.enterMessage = function ($event) {
+        if ($event.keyCode === 13) {
+            $event.preventDefault();
+            $scope.sendMessage();
+        }
+    };
+
+    $scope.message = {};
+    $scope.sendMessage = function() {
+        boardService.sendMessage({id: $scope.currentBoard._id}, $scope.message).$promise.then(function(res) {
+            console.log(res);
+            $scope.currentBoard = res;
+            $scope.message.text = null;
+        }, function(err){
+            console.log(err);
+        });
     };
 });
