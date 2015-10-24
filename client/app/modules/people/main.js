@@ -10,6 +10,9 @@ angular.module('buiiltApp').config(function($stateProvider) {
             team: function(authService){
                 return authService.getCurrentTeam().$promise;
             },
+            currentUser: function(authService){
+                return authService.getCurrentUser().$promise;
+            },
             builderPackage: function(builderPackageService, $stateParams) {
                 return builderPackageService.findDefaultByProject({id: $stateParams.id}).$promise;
             }

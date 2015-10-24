@@ -289,6 +289,7 @@ angular.module('buiiltApp')
 
           notificationService.getTotal().$promise
             .then(function(res) {
+              console.log(res);
               $scope.total = res.count;
             });
           var getNotifications = function(limit) {
@@ -302,6 +303,10 @@ angular.module('buiiltApp')
                 });
             }
           };
+
+          notificationService.get().$promise.then(function(res){
+            $rootScope.unreadMessages = res;
+          });
 
           $scope.loadMore = function() {
             limit += 10;

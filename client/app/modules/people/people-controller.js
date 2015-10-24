@@ -1,7 +1,8 @@
 angular.module('buiiltApp')
-.controller('PeopleCtrl', function ($scope, $rootScope, team, builderPackage, teamService, filepickerService, uploadService, $stateParams, $state, fileService, peopleService, taskService, peopleChatService, authService, socket) {
+.controller('PeopleCtrl', function ($scope, $rootScope, team, currentUser, builderPackage, teamService, filepickerService, uploadService, $stateParams, $state, fileService, peopleService, taskService, peopleChatService, authService, socket) {
     $scope.team = team;
     $scope.builderPackage = builderPackage;
+    $scope.currentUser = currentUser;
     $scope.submitted = false;  
     $scope.selectedUser = {};
 
@@ -56,20 +57,16 @@ angular.module('buiiltApp')
     peopleService.getInvitePeople({id: $stateParams.id}).$promise.then(function(res){
         $scope.invitePeople = res;
         getAvailableUser($scope.invitePeople);
-        console.log(res);
 
         taskService.getByPackage({id: res._id, type: 'people'}).$promise.then(function(res){
             $scope.tasks = res;
-            console.log(res);
         });
     });
 
     $scope.invite = {};
     $scope.inviteMorePeople = function(form) {
         $scope.submitted = true;
-        console.log(form.$valid);
         if (form.$valid) {
-            console.log($scope.invite);
             if ($scope.invite.type == 'addTeamMember') {
                 var emails = [];
                 emails.push({email:$scope.invite.email});
@@ -86,7 +83,6 @@ angular.module('buiiltApp')
                 });
             } else {
                 peopleService.update({id: $stateParams.id},$scope.invite).$promise.then(function(res){
-                    console.log(res);
                     $scope.invitePeople = res;
                     getAvailableUser($scope.invitePeople);
                     $scope.invite = {};
@@ -101,7 +97,6 @@ angular.module('buiiltApp')
 
     fileService.getFileInPeople({id: $stateParams.id}).$promise.then(function(res){
         $scope.files = res;
-        console.log(res);
     });
 
     $scope.uploadFile = {};
@@ -153,7 +148,6 @@ angular.module('buiiltApp')
         $scope.submitted = true;
         if (form.$valid) {
             taskService.create({id: $scope.invitePeople._id, type: 'people'},$scope.task).$promise.then(function(res){
-                console.log(res);
                 $scope.tasks.push(res);
                 $("#new_task").closeModal();
                 $scope.task = {
@@ -175,16 +169,36 @@ angular.module('buiiltApp')
             {id: $scope.invitePeople._id},
             {project: $stateParams.id, user: user._id}
         ).$promise.then(function(res){
-            console.log(res);
             socket.emit('join',res._id);
             $scope.selectedChatPeople = res;
+            $scope.unreadMessages = $rootScope.unreadMessages;
+            console.log($scope.unreadMessages);
+            var unreadMessagesNumber = 0;
+            _.each($scope.unreadMessages, function(message){
+                if (message.element._id == $scope.selectedChatPeople._id) {
+                    $scope.selectedChatPeople.hasUnreadMessage = true;
+                    for (var i = $scope.selectedChatPeople.messages.length - 1; i >= 0; i--) {
+                        if ($scope.selectedChatPeople.messages[i].user._id != $scope.currentUser._id) {
+                            $scope.selectedChatPeople.messages[i].unread = true;
+                            unreadMessagesNumber++;
+                        } else {
+                            $scope.selectedChatPeople.messages[i].unread = false;
+                        }
+                        if (unreadMessagesNumber == $scope.unreadMessages.length) {
+                            break;
+                        }
+                    };
+                } else {
+                    $scope.selectedChatPeople.hasUnreadMessage = false;
+                }
+            });
+            console.log($scope.selectedChatPeople);
         }, function(err){
             console.log(err);
         });
     };
 
     socket.on('peopleChat:new', function (peopleChat) {
-        console.log(peopleChat);
         $scope.selectedChatPeople = peopleChat;
     });
 
@@ -198,7 +212,6 @@ angular.module('buiiltApp')
     $scope.message = {};
     $scope.sendMessage = function() {
         peopleChatService.sendMessage({id: $scope.selectedChatPeople._id}, $scope.message).$promise.then(function(res) {
-            console.log(res);
             $scope.selectedChatPeople = res;
             $scope.message.text = null;
         }, function(err){

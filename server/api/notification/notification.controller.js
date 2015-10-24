@@ -38,9 +38,9 @@ exports.get = function(req,res) {
   Notification.find({owner : user._id,unread : true})
     .sort('-createdAt')
     .limit(limit)
-    .populate('owner')
-    .populate('fromUser')
-    .populate('toUser')
+    .populate('owner', '-hashedPassword -salt')
+    .populate('fromUser', '-hashedPassword -salt')
+    .populate('toUser', '-hashedPassword -salt')
     .exec(function(err, notifications) {
       if (err || !notifications) {
         return res.send(500,err);
@@ -111,10 +111,10 @@ exports.allRead = function(req,res) {
     }
     Notification.find({owner : user._id})
       .sort('-createdDate')
-      .populate('owner')
-      .populate('fromUser')
-      .populate('toUser')
-      .populate('toUser')
+      .populate('owner', '-hashedPassword -salt')
+      .populate('fromUser', '-hashedPassword -salt')
+      .populate('toUser', '-hashedPassword -salt')
+      .populate('toUser', '-hashedPassword -salt')
       .exec(function(err, notifications) {
         if (err || !notifications) {
           return res.send(500,err);
