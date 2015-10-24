@@ -8,6 +8,7 @@ var ContractorPackage = require('./../../models/contractorPackage.model');
 var BuilderPackage = require('./../../models/builderPackage.model');
 var MaterialPackage = require('./../../models/materialPackage.model');
 var People = require('./../../models/people.model');
+var Board = require('./../../models/board.model');
 var Team = require('./../../models/team.model');
 var InviteToken = require('./../../models/inviteToken.model');
 var passport = require('passport');
@@ -450,6 +451,29 @@ exports.createUserWithInviteToken = function(req, res, next) {
                 });
               });
             }
+          });
+        } else if (packageInvite.inviteType == 'inviteToBoardPage') {
+          Board.findById(packageInvite.package, function(err, board) {
+            if (err) {return res.send(500,err);}
+            if (!board) {return res.send(404);}
+            _.each(board.invitees, function(invitee) {
+              if (invitee.email == packageInvite.to) {
+                invitee._id = user._id;
+                invitee.email = null;
+              }
+            });
+            board.save(function(err){
+              if (err) {return res.send(500,err);}
+              var data = {
+                token: token,
+                emailVerified: true,
+                package: board
+              };
+              packageInvite.remove(function(err){
+                if (err) {return res.send(500);}
+                return res.json(200,data);
+              });
+            });
           });
         } else {
           return res.send(500);

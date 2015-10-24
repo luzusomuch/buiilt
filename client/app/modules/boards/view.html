@@ -2,7 +2,7 @@
                 
     <div class="col s2" style="margin-right: 1px solid #eee; max-height: 81vh; overflow-y: scroll; font-size: 12px; color: #757575;">
         <p>BOARDS</p>
-        <p style="margin-left: 10px;" ng-repeat="board in boards" ng-click="selectBoard(board)" ng-style="board._id == currentBoard._id ? {'color': '#64B5F6'} : {'color': 'black'}">
+        <p style="margin-left: 10px;" ng-repeat="board in boards" ng-click="selectBoard(board)" ng-style="board._id == currentBoard._id ? {'color': '#64B5F6'} : {'color': 'black'}" ng-if="board.isOwner || board.owner == currentUser._id">
             {{board.name}}       
         </p>
         <!-- <p style="margin-left: 10px; color: #42A5F5"><strong>Board 3</strong></p> -->
@@ -11,11 +11,11 @@
     
     <div class="col s7" style="border-left: 1px solid #eee; border-right: 1px solid #eee;">
         
-        <div style="height: 69vh; overflow-y: scroll; position: relative;">
+        <div id="boardChatContent" style="height: 69vh; overflow-y: scroll; position: relative;">
             
             <div class="row chat-paragraph valign-wrapper" style="border-bottom: 1px solid #eee;" ng-repeat="message in currentBoard.messages">
                 <div class="col">
-                    <i class="tiny material-icons valign" style="color: #64B5F6">brightness_1</i>
+                    <i class="tiny material-icons valign" ng-style="message.unread ? {'color': '#64B5F6'} : {'color': 'white'}">brightness_1</i>
                 </div>
                 <div class="col">
                     <p class="row chat-name" style="font-size: 13px; color: #757575; margin-bottom: 0px"><strong>{{message.user.name}}</strong><span style="font-size: 12px"> - {{message.sendAt | date : 'MMM d, y h:mm:ss a'}}.</span></p>    
@@ -77,7 +77,7 @@
                 <div class="attachment-row" style="font-size: 12px; border-bottom: 1px solid #eee">
                     <p><a class="modal-trigger" href="#new_attachment">+ Add an Attachment</a></p>
                 </div>
-                <div class="attachment-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-repeat="file in files">
+                <div class="attachment-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-repeat="file in files" ng-if="file.isOwner || file.user == currentUser._id">
                     <p>{{file.title}}</p>
                 </div>
             </div>
@@ -86,7 +86,7 @@
                 <div class="task-row" style="font-size: 12px; border-bottom: 1px solid #eee">
                     <p><a href="#new_task" class="modal-trigger">+ Add a Task</a></p>
                 </div>
-                <div class="task-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-repeat="task in tasks">
+                <div class="task-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-repeat="task in tasks" ng-if="task.isOwner || task.user == currentUser._id">
                     <p>{{task.name}}</p>
                 </div>
             </div>
@@ -110,6 +110,20 @@
                 <label>Description</label>
                 <textarea id="docAttachDesc" name="description" class="materialize-textarea" ng-model="uploadFile.desc" id="textarea1" required></textarea>
                 <p class="validate-message" ng-if="uploadForm.description.$error.required || uploadFile.description == ' '">Document description is required</p>
+            </div>
+            <div class="row">
+                <p>Assignees</p>
+                <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="assignee in uploadFile.assignees">
+                    {{assignee.name}} <span ng-if="assignee.canRevoke"><a href="#!" ng-click="revokeFromDocument(assignee,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
+                </div>
+            </div>
+            <div class="row">
+                <p>Available Assignee's:</p>
+                <a href="#!" ng-click="assignToDocument(staff,$index)" ng-repeat="staff in available track by $index">
+                    <div class="card col" style="padding: 5px; margin-left: 10px">
+                        {{staff.name}}
+                    </div>
+                </a>
             </div>
         </div>
         <div class="modal-footer">

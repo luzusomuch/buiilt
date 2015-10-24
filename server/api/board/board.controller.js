@@ -38,12 +38,15 @@ exports.invitePeople = function(req, res) {
             if (err) {return res.send(500,err);}
             if (!user) {
                 board.invitees.push({email: req.body.email});
+                board._inviteEmail = req.body.email;
             } else {
                 board.invitees.push({_id: user._id});
+                board._inviteUser = user._id;
                 user.projects.push(board.project);
                 user.markModified('projects');
                 user.save();
             }
+            board.markModified('invitePeople');
             board.save(function(err){
                 if (err) {return res.send(500,err);}
                 Board.populate(board, [
@@ -75,6 +78,8 @@ exports.sendMessage = function(req, res) {
             text: req.body.text,
             sendAt: new Date()
         });
+        board._editUser = req.user;
+        board.markModified('sendMessage');
         board.save(function(err){
             if (err) {return res.send(500,err);}
             Board.populate(board, [

@@ -6,6 +6,8 @@ var File = require('./../models/file.model');
 var Project = require('./../models/project.model');
 var BuilderPackage = require('./../models/builderPackage.model');
 var Team = require('./../models/team.model');
+var Board = require('./../models/board.model');
+var People = require('./../models/people.model');
 var Notification = require('./../models/notification.model');
 var NotificationHelper = require('./../components/helpers/notification');
 var Mailer = require('./../components/Mailer');
@@ -26,16 +28,30 @@ EventBus.onSeries('File.Inserted', function(request, next) {
                 return next();
             }
         });
-    } else if (request.belongToType == "people") {
-        var params = {
-            owners : request.usersRelatedTo,
-            fromUser : request.user,
-            element : request,
-            referenceTo : 'documentInPeople',
-            type : 'uploadDocument'
-        };
-        NotificationHelper.create(params, function() {
-            next();
+    } else if (request.belongToType == "people" || request.belongToType == "board") {
+        var _package = {};
+        if (request.belongToType == "people") {
+            _package = People;
+        } else {
+            _package = Board;
+        }
+        _package.findById(request.belongTo, function(err, _package) {
+            if (err) {console.log(err);return next();}
+            if (!_package) {console.log('no package found!');return next();}
+            var referenceTo = "documentIn" + request.belongToType;
+            var params = {
+                owners : request.usersRelatedTo,
+                fromUser : request.user,
+                element : {
+                    file: request,
+                    package: _package
+                },
+                referenceTo : referenceTo,
+                type : 'uploadDocument'
+            };
+            NotificationHelper.create(params, function() {
+                next();
+            });
         });
     } else {
         return next();

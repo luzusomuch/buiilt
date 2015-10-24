@@ -59,6 +59,8 @@ angular.module('buiiltApp')
                 return 'variationRequest.inProcess({id : notification.element.project, variationId : notification.element.package})';
               case 'people':
                 return 'people({id: notification.element.project})';
+              case 'board':
+                return 'board({id: notification.element.project})';
             }
           }
           if (teamArray.indexOf(notification.type) != -1)  {
@@ -116,8 +118,10 @@ angular.module('buiiltApp')
                 return 'variationRequest.inProcess({id: notification.element.projectId, packageId: notification.element.uploadIn._id})';
               case 'DocumentBuilderPackage': 
                 return 'client({id: notification.element.projectId})';
-              case 'documentInPeople':
-                return 'people({id: notification.element.belongTo})';
+              case 'documentInpeople':
+                return 'people({id: notification.element.package.belongTo})';
+              case 'documentInboard':
+                return 'board({id: notification.element.package.belongTo})';
             }
           }
           if (builderNotificationArray.indexOf(notification.type) != -1) {
@@ -153,6 +157,15 @@ angular.module('buiiltApp')
           // NEW VERSION
           if (notification.referenceTo == 'people-chat') {
             return 'people({id: notification.element.project})';
+          }
+          if (notification.type == 'NewBoard') {
+            return 'board({id: notification.element.project})';
+          }
+          if (notification.type == 'InvitePeopleToBoard') {
+            return 'board({id: notification.element.project})'; 
+          }
+          if (notification.referenceTo == 'board-chat') {
+            return 'board({id: notification.element.project})';
           }
         };
 
@@ -259,10 +272,22 @@ angular.module('buiiltApp')
 
         // NEW VERSION
         if (scope.notification.referenceTo == 'people-chat') {
-          text = params.fromUser() + 'has send you a message';
+          text = params.fromUser() + 'has send you a message in ' + params.element;
         }
-        if (scope.notification.referenceTo == 'documentInPeople') {
-          text = params.fromUser() + 'has upload document in people page';
+        if (scope.notification.referenceTo == 'documentInpeople') {
+          text = params.fromUser() + 'has upload document in people ' + params.packageName;
+        }
+        if (scope.notification.type == 'NewBoard') {
+          text = params.fromUser() + 'has added you to new board ' + params.element;
+        }
+        if (scope.notification.referenceTo == 'documentInboard') {
+          text = params.fromUser() + 'has upload document in board ' + params.packageName;
+        }
+        if (scope.notification.type == 'InvitePeopleToBoard') {
+          text = params.fromUser() + 'has invited you to board ' + params.element;
+        }
+        if (scope.notification.referenceTo == 'board-chat') {
+          text = params.fromUser() + 'has send you a message in ' + params.element;
         }
 
         scope.notification.sref = getSref(scope.notification);

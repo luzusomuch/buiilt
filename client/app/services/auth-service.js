@@ -92,6 +92,8 @@ angular.module('buiiltApp')
             $state.go('dashboard', {id: data.package.project});
           } else if (data.package.type == 'people') {
             $state.go('people', {id: data.package.project});
+          } else if (data.package.type == 'board') {
+            $state.go('board', {id: data.package.project});
           }
           // $state.go('team.manager')
 
