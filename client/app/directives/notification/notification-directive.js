@@ -57,6 +57,8 @@ angular.module('buiiltApp')
                 return 'materialRequest.materialPackageInProcess({id : notification.element.project, packageId : notification.element.package})';
               case 'variation' :
                 return 'variationRequest.inProcess({id : notification.element.project, variationId : notification.element.package})';
+              case 'people':
+                return 'people({id: notification.element.project})';
             }
           }
           if (teamArray.indexOf(notification.type) != -1)  {
@@ -114,6 +116,8 @@ angular.module('buiiltApp')
                 return 'variationRequest.inProcess({id: notification.element.projectId, packageId: notification.element.uploadIn._id})';
               case 'DocumentBuilderPackage': 
                 return 'client({id: notification.element.projectId})';
+              case 'documentInPeople':
+                return 'people({id: notification.element.belongTo})';
             }
           }
           if (builderNotificationArray.indexOf(notification.type) != -1) {
@@ -256,6 +260,9 @@ angular.module('buiiltApp')
         // NEW VERSION
         if (scope.notification.referenceTo == 'people-chat') {
           text = params.fromUser() + 'has send you a message';
+        }
+        if (scope.notification.referenceTo == 'documentInPeople') {
+          text = params.fromUser() + 'has upload document in people page';
         }
 
         scope.notification.sref = getSref(scope.notification);

@@ -26,6 +26,17 @@ EventBus.onSeries('File.Inserted', function(request, next) {
                 return next();
             }
         });
+    } else if (request.belongToType == "people") {
+        var params = {
+            owners : request.usersRelatedTo,
+            fromUser : request.user,
+            element : request,
+            referenceTo : 'documentInPeople',
+            type : 'uploadDocument'
+        };
+        NotificationHelper.create(params, function() {
+            next();
+        });
     } else {
         return next();
     }

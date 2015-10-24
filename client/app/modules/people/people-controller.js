@@ -57,9 +57,16 @@ angular.module('buiiltApp')
     peopleService.getInvitePeople({id: $stateParams.id}).$promise.then(function(res){
         $scope.invitePeople = res;
         getAvailableUser($scope.invitePeople);
-
         taskService.getByPackage({id: res._id, type: 'people'}).$promise.then(function(res){
             $scope.tasks = res;
+            _.each($scope.tasks, function(task){
+                task.isOwner = false;
+                _.each(task.assignees, function(assignee){
+                    if (assignee._id == $scope.currentUser._id) {
+                        task.isOwner = true;
+                    }
+                });
+            });
         });
     });
 
@@ -97,9 +104,20 @@ angular.module('buiiltApp')
 
     fileService.getFileInPeople({id: $stateParams.id}).$promise.then(function(res){
         $scope.files = res;
+        _.each($scope.files, function(file) {
+            file.isOwner = false;
+            _.each(file.usersRelatedTo, function(user) {
+                if (user == $scope.currentUser._id) {
+                    file.isOwner = true;
+                }
+            });
+        });
+        console.log($scope.files);
     });
 
-    $scope.uploadFile = {};
+    $scope.uploadFile = {
+        assignees : []
+    };
     $scope.selectedTags = [];
     $scope.pickFile = pickFile;
 
@@ -119,7 +137,19 @@ angular.module('buiiltApp')
             belongToType: 'people',
             tags: $scope.selectedTags,
             isQuote: $scope.isQuote,
+            assignees : []
         };
+    };
+
+    $scope.assignToDocument = function(staff,index) {
+        staff.canRevoke = true;
+        $scope.uploadFile.assignees.push(staff);
+        $scope.available.splice(index,1);
+    };
+
+    $scope.revokeFromDocument = function(assignee,index) {
+        $scope.available.push(assignee);
+        $scope.uploadFile.assignees.splice(index,1);
     };
 
     $scope.uploadNewAttachment = function() {
@@ -148,6 +178,12 @@ angular.module('buiiltApp')
         $scope.submitted = true;
         if (form.$valid) {
             taskService.create({id: $scope.invitePeople._id, type: 'people'},$scope.task).$promise.then(function(res){
+                res.isOwner = false;
+                _.each(res.assignees, function(assignee){
+                    if (assignee._id == $scope.currentUser._id) {
+                        res.isOwner = true;
+                    }
+                });
                 $scope.tasks.push(res);
                 $("#new_task").closeModal();
                 $scope.task = {

@@ -22,13 +22,8 @@ var FileSchema = new Schema({
     createAt: { type: Date, default: Date.now }
   }],
   usersRelatedTo: [{
-    _id: {
-      type: Schema.Types.ObjectId,
-      ref: 'User'
-    },
-    email: {
-      type: String
-    }
+    type: Schema.Types.ObjectId,
+    ref: 'User'
   }],
   //Maybe project or package ...
   belongTo: {type: Schema.Types.ObjectId},
@@ -163,7 +158,8 @@ FileSchema.methods.toJSON = function() {
     createdAt: this.createdAt,
     isNewNotification: this.isNewNotification,
     isSendToDocumentation: this.isSendToDocumentation,
-    documentDesignId: this.documentDesignId
+    documentDesignId: this.documentDesignId,
+    user: this.user
   };
 };
 

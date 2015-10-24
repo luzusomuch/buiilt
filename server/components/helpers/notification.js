@@ -18,9 +18,9 @@ exports.create = function(params,cb){
         return callback(err);
       }
       Notification.populate(notification,[
-        {path : 'owner'},
-        {path : 'fromUser'},
-        {path : 'toUser'}
+        {path : 'owner', select: '-hashedPassword -salt'},
+        {path : 'fromUser', select: '-hashedPassword -salt'},
+        {path : 'toUser', select: '-hashedPassword -salt'}
       ],function(err, notification) {
         EventBus.emit('socket:emit', {
           event: 'notification:new',

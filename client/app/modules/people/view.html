@@ -114,7 +114,7 @@
                 <div class="attachment-row" style="font-size: 12px; border-bottom: 1px solid #eee">
                     <p><a class="modal-trigger" href="#new_attachment">+ Add an Attachment</a></p>
                 </div>
-                <div class="attachment-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-repeat="file in files">
+                <div class="attachment-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-repeat="file in files" ng-if="file.isOwner || file.user == currentUser._id">
                     <p>{{file.title}}</p>
                 </div>
             </div>
@@ -122,7 +122,7 @@
                 <div class="task-row" style="font-size: 12px; border-bottom: 1px solid #eee">
                     <p><a class="modal-trigger" href="#new_task">+ Add a Task</a></p>
                 </div>
-                <div class="task-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-repeat="task in tasks">
+                <div class="task-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-repeat="task in tasks" ng-if="task.isOwner || task.user == currentUser._id">
                     <p>{{task.name}}</p>
                 </div>
             </div>
@@ -146,6 +146,20 @@
                 <label>Description</label>
                 <textarea id="docAttachDesc" name="description" class="materialize-textarea" ng-model="uploadFile.desc" id="textarea1" required></textarea>
                 <p class="validate-message" ng-if="uploadForm.description.$error.required || uploadFile.description == ' '">Document description is required</p>
+            </div>
+            <div class="row">
+                <p>Assignees</p>
+                <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="assignee in uploadFile.assignees">
+                    {{assignee.name}} <span ng-if="assignee.canRevoke"><a href="#!" ng-click="revokeFromDocument(assignee,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
+                </div>
+            </div>
+            <div class="row">
+                <p>Available Assignee's:</p>
+                <a href="#!" ng-click="assignToDocument(staff,$index)" ng-repeat="staff in available track by $index">
+                    <div class="card col" style="padding: 5px; margin-left: 10px">
+                        {{staff.name}}
+                    </div>
+                </a>
             </div>
         </div>
         <div class="modal-footer">

@@ -105,7 +105,11 @@ function run(){
                             }
                         }, function(err, result){
                             if (!err) {
-                                var from = result.user.firstName + " " + result.user.lastName + " | " + result.team.name + "<"+result.user.email+">";
+                                if (result.team) {
+                                    var from = result.user.firstName + " " + result.user.lastName + " | " + result.team.name + "<"+result.user.email+">";
+                                } else {
+                                    var from = result.user.firstName + " " + result.user.lastName + "<"+result.user.email+">";
+                                }
                                 Mailer.sendMail(templateUrl, from, data.to, {
                                     team: result.team.toJSON(),
                                     user: result.user.toJSON(),
