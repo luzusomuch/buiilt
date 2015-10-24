@@ -6,34 +6,34 @@
         </p>
         <p style="margin-left: 10px; color: black" class="modal-trigger" href="#tender_modal" ng-click="invite.type = 'addTeamMember'">+ Add a team member</p>
         <p>BUILDER</p>
-        <p style="margin-left: 10px;" ng-repeat="builder in invitePeople.builders" ng-if="builder._id" ng-click="selectUser(builder._id, 'builder')" ng-style="builder._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
+        <p style="margin-left: 10px;" ng-repeat="builder in invitePeople.builders" ng-if="builder._id" ng-click="selectUser(builder._id, 'builder')" ng-style="builder._id._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             {{builder._id.name}}
         </p>
         <p style="margin-left: 10px; color: black" class="modal-trigger" href="#tender_modal" ng-click="invite.type = 'addBuilder'">+ Add a Builder</p>
         <p>ARCHITECT</p>
-        <p style="margin-left: 10px;" ng-repeat="architect in invitePeople.architects" ng-if="architect._id" ng-click="selectUser(architect._id, 'architect')" ng-style="architect._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
+        <p style="margin-left: 10px;" ng-repeat="architect in invitePeople.architects" ng-if="architect._id" ng-click="selectUser(architect._id, 'architect')" ng-style="architect._id._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             {{architect._id.name}}
         </p>
         <p style="margin-left: 10px; color: black" class="modal-trigger" href="#tender_modal" ng-click="invite.type = 'addArchitect'">+ Add an Architect</p>
         <p>CLIENT</p>
-        <p style="margin-left: 10px;" ng-repeat="client in invitePeople.clients" ng-if="client._id" ng-click="selectUser(client._id, 'client')" ng-style="client._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
+        <p style="margin-left: 10px;" ng-repeat="client in invitePeople.clients" ng-if="client._id" ng-click="selectUser(client._id, 'client')" ng-style="client._id == selectedUser._id._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             {{client._id.name}}
         </p>
         <p style="margin-left: 10px; color: black" class="modal-trigger" href="#tender_modal" ng-click="invite.type = 'addClient'">+ Add a Client</p>
         <p>SUBCONTRACTORS</p>
-        <p style="margin-left: 10px;" ng-repeat="subcontractor in invitePeople.subcontractors" ng-if="subcontractor._id" ng-click="selectUser(subcontractor._id, 'subcontractor')" ng-style="subcontractor._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
+        <p style="margin-left: 10px;" ng-repeat="subcontractor in invitePeople.subcontractors" ng-if="subcontractor._id" ng-click="selectUser(subcontractor._id, 'subcontractor')" ng-style="subcontractor._id._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             {{subcontractor._id.name}}
         </p>
         <p style="margin-left: 10px; color: black" class="modal-trigger" href="#tender_modal" ng-click="invite.type = 'addSubcontractor'">+ Add a Subcontractor</p>
         <p>CONSULTANTS</p>
-        <p style="margin-left: 10px" ng-repeat="consultant in invitePeople.consultants" ng-if="consultant._id" ng-click="selectUser(consultant._id, 'consultant')" ng-style="consultant._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
+        <p style="margin-left: 10px" ng-repeat="consultant in invitePeople.consultants" ng-if="consultant._id" ng-click="selectUser(consultant._id, 'consultant')" ng-style="consultant._id._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             {{consultant._id.name}}
         </p>
         <p style="margin-left: 10px; color: black" class="modal-trigger" href="#tender_modal" ng-click="invite.type = 'addConsultant'">+ Add a Consultant</p>
     </div>
 
     <div class="col s7" style="border-left: 1px solid #eee; border-right: 1px solid #eee;">
-        <div ng-if="selectedUser._id" style="height: 69vh; overflow-y: scroll; position: relative;">
+        <div ng-if="selectedUser._id" style="height: 69vh; overflow-y: scroll; position: relative;" id="peopleChatContent">
             <!-- <div class="row chat-paragraph valign-wrapper" style="border-bottom: 1px solid #eee; margin-bottom: 5px">
                 <div class="col">
                     <i class="tiny material-icons valign" style="color: #64B5F6">brightness_1</i>

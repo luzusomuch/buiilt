@@ -333,6 +333,9 @@ angular.module('buiiltApp')
           $rootScope.$on('notification:read',function(event,notification) {
             _.remove($scope.notifications,{_id : notification._id});
             $scope.total--;
+            notificationService.get().$promise.then(function(res){
+              $rootScope.unreadMessages = res;
+            });
           });
 
           getNotifications(limit);

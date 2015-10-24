@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-.controller('PeopleCtrl', function ($scope, $rootScope, team, currentUser, builderPackage, teamService, filepickerService, uploadService, $stateParams, $state, fileService, peopleService, taskService, peopleChatService, authService, socket) {
+.controller('PeopleCtrl', function ($scope, $rootScope, team, currentUser, builderPackage, teamService, filepickerService, uploadService, $stateParams, $state, fileService, peopleService, taskService, peopleChatService, authService, socket, notificationService) {
     $scope.team = team;
     $scope.builderPackage = builderPackage;
     $scope.currentUser = currentUser;
@@ -172,7 +172,6 @@ angular.module('buiiltApp')
             socket.emit('join',res._id);
             $scope.selectedChatPeople = res;
             $scope.unreadMessages = $rootScope.unreadMessages;
-            console.log($scope.unreadMessages);
             var unreadMessagesNumber = 0;
             _.each($scope.unreadMessages, function(message){
                 if (message.element._id == $scope.selectedChatPeople._id) {
@@ -192,7 +191,23 @@ angular.module('buiiltApp')
                     $scope.selectedChatPeople.hasUnreadMessage = false;
                 }
             });
-            console.log($scope.selectedChatPeople);
+            if ($scope.selectedChatPeople.hasUnreadMessage) {
+                $("div#peopleChatContent").scroll(function() {
+                    if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
+                        _.each($scope.unreadMessages, function(message){
+                            if (message.element._id == $scope.selectedChatPeople._id) {
+                                notificationService.markAsRead({_id: message._id}).$promise.then(function(res){
+                                    $rootScope.$broadcast("notification:read", res);
+                                });
+                                $scope.selectedChatPeople.hasUnreadMessage = false;
+                                _.each($scope.selectedChatPeople.messages, function(message){
+                                    message.unread = false;
+                                });
+                            }
+                        });
+                    }
+                });
+            }
         }, function(err){
             console.log(err);
         });
