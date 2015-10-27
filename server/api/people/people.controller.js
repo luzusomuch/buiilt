@@ -25,6 +25,8 @@ exports.invitePeople = function(req, res) {
                             _id: builder._id
                         });
                         builder.projects.push(people.project);
+                        builder.markModified('projects');
+                        builder.save();
                     }
                     people.markModified('invitePeople');
                     people._editUser = req.user;
@@ -54,6 +56,8 @@ exports.invitePeople = function(req, res) {
                             _id: architect._id
                         });
                         architect.projects.push(people.project);
+                        architect.markModified('projects');
+                        architect.save();
                     }
                     people.markModified('invitePeople');
                     people._editUser = req.user;
@@ -83,6 +87,8 @@ exports.invitePeople = function(req, res) {
                             _id: client._id
                         });
                         client.projects.push(people.project);
+                        client.markModified('projects');
+                        client.save();
                     }
                     people.markModified('invitePeople');
                     people._editUser = req.user;
@@ -112,6 +118,8 @@ exports.invitePeople = function(req, res) {
                             _id: contractor._id
                         });
                         contractor.projects.push(people.project);
+                        contractor.markModified('projects');
+                        contractor.save();
                     }
                     people.markModified('invitePeople');
                     people._editUser = req.user;
@@ -141,6 +149,8 @@ exports.invitePeople = function(req, res) {
                             _id: consultant._id
                         });
                         consultant.projects.push(people.project);
+                        consultant.markModified('projects');
+                        consultant.save();
                     }
                     people.markModified('invitePeople');
                     people._editUser = req.user;

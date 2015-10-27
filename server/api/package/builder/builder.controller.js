@@ -32,25 +32,26 @@ exports.getDefaultPackageByProject = function(req, res) {
     project: mongoose.Types.ObjectId(project._id)
   })
   .populate('project')
-  .populate('owner')
+  .populate('owner', '-hashedPassword -salt')
   .populate('to.team')
   .populate('variations')
   .populate('messages.sendBy')
   .populate('winner')
   .populate('architect.team')
   .populate('invitees.quoteDocument', '_id mimeType title')
+  .populate('projectManager._id')
   .exec(function(err, builderPackage) {
     if (err){console.log(err); return res.send(500, err); }
     console.log(builderPackage);
     User.populate(builderPackage,[
-      {path : 'owner.member._id'},
-      {path : 'owner.leader'},
-      {path : 'to.team.member._id'},
-      {path : 'to.team.leader'},
-      {path : 'architect.team.leader'},
-      {path : 'architect.team.member._id'},
-      {path : 'winner.leader'},
-      {path : 'winner.member._id'}
+      {path : 'owner.member._id', select: '-hashedPassword -salt'},
+      {path : 'owner.leader', select: '-hashedPassword -salt'},
+      {path : 'to.team.member._id', select: '-hashedPassword -salt'},
+      {path : 'to.team.leader', select: '-hashedPassword -salt'},
+      {path : 'architect.team.leader', select: '-hashedPassword -salt'},
+      {path : 'architect.team.member._id', select: '-hashedPassword -salt'},
+      {path : 'winner.leader', select: '-hashedPassword -salt'},
+      {path : 'winner.member._id', select: '-hashedPassword -salt'}
     ],function(err,builderPackage) {
       if (err){ console.log(err);return res.send(500, err); }
       if (builderPackage.hasArchitectManager && builderPackage.architect.team) {
