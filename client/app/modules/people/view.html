@@ -1,36 +1,87 @@
 <div class="row card" style="margin-top: 10px">
-    <div class="col s2" style="margin-right: 1px solid #eee; max-height: 81vh; overflow-y: scroll; font-size: 12px; color: #757575;">
+    <!-- IF THE PROJECT MANAGER IS THE BUILDER -->
+    <div ng-if="builderPackage.projectManager.type == 'builder'" class="col s2" style="margin-right: 1px solid #eee; max-height: 81vh; overflow-y: scroll; font-size: 12px; color: #757575;">
         <p><a class="modal-trigger" href="#tender_modal">INVITE PEOPLE</a></p>
         <p ng-click="accordian = 1">TEAM</p>
         <p ng-show="accordian == 1" style="margin-left: 10px" ng-repeat="currentTeamMember in currentTeamMembers" ng-click="selectUser(currentTeamMember, 'team')" ng-style="currentTeamMember._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             {{currentTeamMember.name}}
         </p>
-        <!-- <p style="margin-left: 10px; color: black" class="modal-trigger" href="#tender_modal" ng-click="invite.type = 'addTeamMember'">+ Add a team member</p> -->
-        <p ng-click="accordian = 2">BUILDER</p>
+        <p ng-show="currentUser.type == 'client' || currentUser.type == 'architect'" ng-click="accordian = 2">BUILDER</p>
         <p ng-show="accordian == 2" style="margin-left: 10px;" ng-repeat="builder in invitePeople.builders" ng-if="builder._id" ng-click="selectUser(builder._id, 'builder')" ng-style="builder._id._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             {{builder._id.name}}
         </p>
-        <!-- <p style="margin-left: 10px; color: black" class="modal-trigger" href="#tender_modal" ng-click="invite.type = 'addBuilder'">+ Add a Builder</p> -->
-        <p ng-click="accordian = 3">ARCHITECT</p>
+        <p ng-show="currentUser.type == 'builder'" ng-click="accordian = 3">ARCHITECT</p>
         <p ng-show="accordian == 3" style="margin-left: 10px;" ng-repeat="architect in invitePeople.architects" ng-if="architect._id" ng-click="selectUser(architect._id, 'architect')" ng-style="architect._id._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             {{architect._id.name}}
         </p>
-        <!-- <p style="margin-left: 10px; color: black" class="modal-trigger" href="#tender_modal" ng-click="invite.type = 'addArchitect'">+ Add an Architect</p> -->
-        <p ng-click='accordian = 4'>CLIENT</p>
+        <p ng-show="currentUser.type == 'builder'" ng-click='accordian = 4'>CLIENT</p>
         <p ng-show="accordian == 4" style="margin-left: 10px;" ng-repeat="client in invitePeople.clients" ng-if="client._id" ng-click="selectUser(client._id, 'client')" ng-style="client._id == selectedUser._id._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             {{client._id.name}}
         </p>
-        <!-- <p style="margin-left: 10px; color: black" class="modal-trigger" href="#tender_modal" ng-click="invite.type = 'addClient'">+ Add a Client</p> -->
-        <p ng-click="accordian = 5">SUBCONTRACTORS</p>
+        <p ng-show="currentUser.type == 'builder'" ng-click="accordian = 5">SUBCONTRACTORS</p>
         <p ng-show="accordian == 5" style="margin-left: 10px;" ng-repeat="subcontractor in invitePeople.subcontractors" ng-if="subcontractor._id" ng-click="selectUser(subcontractor._id, 'subcontractor')" ng-style="subcontractor._id._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             {{subcontractor._id.name}}
         </p>
-        <!-- <p style="margin-left: 10px; color: black" class="modal-trigger" href="#tender_modal" ng-click="invite.type = 'addSubcontractor'">+ Add a Subcontractor</p> -->
-        <p ng-click="accordian = 6">CONSULTANTS</p>
+        <p ng-show="currentUser.type == 'client' || currentUser.type == 'builder' || currentUser.type == 'architect'" ng-click="accordian = 6">CONSULTANTS</p>
         <p ng-show="accordian == 6" style="margin-left: 10px" ng-repeat="consultant in invitePeople.consultants" ng-if="consultant._id" ng-click="selectUser(consultant._id, 'consultant')" ng-style="consultant._id._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             {{consultant._id.name}}
         </p>
-        <!-- <p style="margin-left: 10px; color: black" class="modal-trigger" href="#tender_modal" ng-click="invite.type = 'addConsultant'">+ Add a Consultant</p> -->
+    </div>
+    <!-- IF THE PROJECT MANAGER IS THE ARCHITECT -->
+    <div ng-if="builderPackage.projectManager.type == 'architect'" class="col s2" style="margin-right: 1px solid #eee; max-height: 81vh; overflow-y: scroll; font-size: 12px; color: #757575;">
+        <p><a class="modal-trigger" href="#tender_modal">INVITE PEOPLE</a></p>
+        <p ng-click="accordian = 1">TEAM</p>
+        <p ng-show="accordian == 1" style="margin-left: 10px" ng-repeat="currentTeamMember in currentTeamMembers" ng-click="selectUser(currentTeamMember, 'team')" ng-style="currentTeamMember._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
+            {{currentTeamMember.name}}
+        </p>
+        <p ng-show="currentUser.type == 'architect'" ng-click="accordian = 2">BUILDER</p>
+        <p ng-show="accordian == 2" style="margin-left: 10px;" ng-repeat="builder in invitePeople.builders" ng-if="builder._id" ng-click="selectUser(builder._id, 'builder')" ng-style="builder._id._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
+            {{builder._id.name}}
+        </p>
+        <p ng-show="currentUser.type == 'client' || currentUser.type == 'builder'" ng-click="accordian = 3">ARCHITECT</p>
+        <p ng-show="accordian == 3" style="margin-left: 10px;" ng-repeat="architect in invitePeople.architects" ng-if="architect._id" ng-click="selectUser(architect._id, 'architect')" ng-style="architect._id._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
+            {{architect._id.name}}
+        </p>
+        <p ng-show="currentUser.type == 'architect'" ng-click='accordian = 4'>CLIENT</p>
+        <p ng-show="accordian == 4" style="margin-left: 10px;" ng-repeat="client in invitePeople.clients" ng-if="client._id" ng-click="selectUser(client._id, 'client')" ng-style="client._id == selectedUser._id._id ? {'color': '#64B5F6'} : {'color': 'black'}">
+            {{client._id.name}}
+        </p>
+        <p ng-show="currentUser.type == 'builder'" ng-click="accordian = 5">SUBCONTRACTORS</p>
+        <p ng-show="accordian == 5" style="margin-left: 10px;" ng-repeat="subcontractor in invitePeople.subcontractors" ng-if="subcontractor._id" ng-click="selectUser(subcontractor._id, 'subcontractor')" ng-style="subcontractor._id._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
+            {{subcontractor._id.name}}
+        </p>
+        <p ng-show="currentUser.type == 'client' || currentUser.type == 'builder' || currentUser.type == 'architect'" ng-click="accordian = 6">CONSULTANTS</p>
+        <p ng-show="accordian == 6" style="margin-left: 10px" ng-repeat="consultant in invitePeople.consultants" ng-if="consultant._id" ng-click="selectUser(consultant._id, 'consultant')" ng-style="consultant._id._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
+            {{consultant._id.name}}
+        </p>
+    </div>
+    <!-- IF THE PROJECT MANAGER IS THE HOMEOWNER -->
+    <div ng-if="builderPackage.projectManager.type == 'homeOwner'" class="col s2" style="margin-right: 1px solid #eee; max-height: 81vh; overflow-y: scroll; font-size: 12px; color: #757575;">
+        <p><a class="modal-trigger" href="#tender_modal">INVITE PEOPLE</a></p>
+        <p ng-click="accordian = 1">TEAM</p>
+        <p ng-show="accordian == 1" style="margin-left: 10px" ng-repeat="currentTeamMember in currentTeamMembers" ng-click="selectUser(currentTeamMember, 'team')" ng-style="currentTeamMember._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
+            {{currentTeamMember.name}}
+        </p>
+        <p ng-show="currentUser.type == 'client'" ng-click="accordian = 2">BUILDER</p>
+        <p ng-show="accordian == 2" style="margin-left: 10px;" ng-repeat="builder in invitePeople.builders" ng-if="builder._id" ng-click="selectUser(builder._id, 'builder')" ng-style="builder._id._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
+            {{builder._id.name}}
+        </p>
+        <p ng-show="currentUser.type == 'client'" ng-click="accordian = 3">ARCHITECT</p>
+        <p ng-show="accordian == 3" style="margin-left: 10px;" ng-repeat="architect in invitePeople.architects" ng-if="architect._id" ng-click="selectUser(architect._id, 'architect')" ng-style="architect._id._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
+            {{architect._id.name}}
+        </p>
+        <p ng-show="currentUser.type == 'builder' || currentUser.type == 'architect'" ng-click='accordian = 4'>CLIENT</p>
+        <p ng-show="accordian == 4" style="margin-left: 10px;" ng-repeat="client in invitePeople.clients" ng-if="client._id" ng-click="selectUser(client._id, 'client')" ng-style="client._id == selectedUser._id._id ? {'color': '#64B5F6'} : {'color': 'black'}">
+            {{client._id.name}}
+        </p>
+        <p ng-show="currentUser.type == 'builder'" ng-click="accordian = 5">SUBCONTRACTORS</p>
+        <p ng-show="accordian == 5" style="margin-left: 10px;" ng-repeat="subcontractor in invitePeople.subcontractors" ng-if="subcontractor._id" ng-click="selectUser(subcontractor._id, 'subcontractor')" ng-style="subcontractor._id._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
+            {{subcontractor._id.name}}
+        </p>
+        <p ng-show="currentUser.type == 'client' || currentUser.type == 'builder' || currentUser.type == 'architect'" ng-click="accordian = 6">CONSULTANTS</p>
+        <p ng-show="accordian == 6" style="margin-left: 10px" ng-repeat="consultant in invitePeople.consultants" ng-if="consultant._id" ng-click="selectUser(consultant._id, 'consultant')" ng-style="consultant._id._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
+            {{consultant._id.name}}
+        </p>
     </div>
 
     <div class="col s7" style="border-left: 1px solid #eee; border-right: 1px solid #eee;">

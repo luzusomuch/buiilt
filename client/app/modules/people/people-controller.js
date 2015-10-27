@@ -53,27 +53,39 @@ angular.module('buiiltApp')
         if ($scope.available.length > 1) {
             $scope.selectUser($scope.available[1], '');
         }
-        console.log($scope.currentUser._id);
-        console.log(invitePeople.architects[0]._id);
-        console.log(_.findIndex(invitePeople.builders, {'_id._id': $scope.currentUser._id.toString()}));
-        console.log(_.findIndex(invitePeople.architects, {'_id._id': $scope.currentUser._id.toString()}));
-        console.log(_.findIndex(invitePeople.clients, {'_id._id': $scope.currentUser._id.toString()}));
-        console.log(_.findIndex(invitePeople.subcontractors, {'_id._id': $scope.currentUser._id.toString()}));
-        console.log(_.findIndex(invitePeople.consultants, {'_id._id': $scope.currentUser._id.toString()}));
-        if (_.findIndex(invitePeople.builders, {'_id': $scope.currentUser._id}) != -1) {
+
+        if (_.findIndex(invitePeople.builders, function(item) {
+            if (item._id) {
+                return item._id._id == $scope.currentUser._id;
+            }}) != -1) {
             $scope.currentUser.type = 'builder';
-        } else if (_.findIndex(invitePeople.architects, {'_id._id': $scope.currentUser._id}) != -1) {
+        } else if (_.findIndex(invitePeople.architects, function(item) {
+            if (item._id) {return item._id._id == $scope.currentUser._id;}
+            }) != -1) {
             $scope.currentUser.type = 'architect';
-        } else if (_.findIndex(invitePeople.clients, {'_id._id': $scope.currentUser._id}) != -1) {
+        } else if (_.findIndex(invitePeople.clients, function(item){
+            if (item._id) {return item._id._id == $scope.currentUser._id;}
+            }) != -1) {
             $scope.currentUser.type = 'client';
-        } else if (_.findIndex(invitePeople.subcontractors, {'_id._id': $scope.currentUser._id}) != -1) {
+        } else if (_.findIndex(invitePeople.subcontractors, function(item){
+            if (item._id) {return item._id._id == $scope.currentUser._id;}
+            }) != -1) {
             $scope.currentUser.type = 'subcontractor';
-        } else if (_.findIndex(invitePeople.consultants, {'_id._id': $scope.currentUser._id}) != -1) {
+        } else if (_.findIndex(invitePeople.consultants, function(item){
+            if (item._id) {return item._id._id == $scope.currentUser._id;}
+            }) != -1) {
             $scope.currentUser.type = 'consultant';
         } else {
             $scope.currentUser.type = 'default';
         }
-        console.log($scope.currentUser);
+        console.log($scope.builderPackage);
+        if ($scope.builderPackage.projectManager.type == 'architect') {
+
+        } else if ($scope.builderPackage.projectManager.type == 'builder') {
+
+        } else {
+            
+        }
     };
 
     peopleService.getInvitePeople({id: $stateParams.id}).$promise.then(function(res){
