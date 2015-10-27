@@ -111,7 +111,7 @@ function run(){
                                     var from = result.user.firstName + " " + result.user.lastName + "<"+result.user.email+">";
                                 }
                                 Mailer.sendMail(templateUrl, from, data.to, {
-                                    team: result.team.toJSON(),
+                                    // team: result.team.toJSON(),
                                     user: result.user.toJSON(),
                                     registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + data._id,
                                     subject: result.team.name + ' would like a quote'

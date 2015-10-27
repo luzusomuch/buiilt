@@ -243,7 +243,18 @@ angular.module('buiiltApp')
         }
     };
 
-    $scope.message = {};
+    $scope.message = {
+    };
+    $scope.showPopup = false;
+    $scope.$watch('message.text', function(newValue, oldValue) {
+        if (newValue) {
+            if (newValue.slice(-1) == "@") {
+                $scope.showPopup = true;
+                console.log($scope.available);
+            }
+        }
+    });
+
     $scope.sendMessage = function() {
         boardService.sendMessage({id: $scope.currentBoard._id}, $scope.message).$promise.then(function(res) {
             $scope.currentBoard = res;

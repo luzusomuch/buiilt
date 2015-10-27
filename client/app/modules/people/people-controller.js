@@ -139,17 +139,7 @@ angular.module('buiiltApp')
             isQuote: $scope.isQuote,
             assignees : []
         };
-    };
-
-    $scope.assignToDocument = function(staff,index) {
-        staff.canRevoke = true;
-        $scope.uploadFile.assignees.push(staff);
-        $scope.available.splice(index,1);
-    };
-
-    $scope.revokeFromDocument = function(assignee,index) {
-        $scope.available.push(assignee);
-        $scope.uploadFile.assignees.splice(index,1);
+        $scope.uploadFile.assignees.push($scope.selectedUser._id);
     };
 
     $scope.uploadNewAttachment = function() {
@@ -159,17 +149,6 @@ angular.module('buiiltApp')
         });
     };
 
-    $scope.assign = function(staff,index) {
-        staff.canRevoke = true;
-        $scope.task.assignees.push(staff);
-        $scope.available.splice(index,1);
-    };
-
-    $scope.revoke = function(assignee,index) {
-        $scope.available.push(assignee);
-        $scope.task.assignees.splice(index,1);
-    };
-
     $scope.task = {
         assignees : []
     };
@@ -177,23 +156,26 @@ angular.module('buiiltApp')
     $scope.addNewTask = function(form) {
         $scope.submitted = true;
         if (form.$valid) {
-            taskService.create({id: $scope.invitePeople._id, type: 'people'},$scope.task).$promise.then(function(res){
-                res.isOwner = false;
-                _.each(res.assignees, function(assignee){
-                    if (assignee._id == $scope.currentUser._id) {
-                        res.isOwner = true;
-                    }
+            $scope.task.assignees.push($scope.selectedUser);
+            $timeout(function(){
+                taskService.create({id: $scope.invitePeople._id, type: 'people'},$scope.task).$promise.then(function(res){
+                    res.isOwner = false;
+                    _.each(res.assignees, function(assignee){
+                        if (assignee._id == $scope.currentUser._id) {
+                            res.isOwner = true;
+                        }
+                    });
+                    $scope.tasks.push(res);
+                    $("#new_task").closeModal();
+                    $scope.task = {
+                        assignees : []
+                    };
+                    getAvailableUser($scope.invitePeople);
+                    $scope.submitted = false;
+                }, function(res){
+                    console.log(res);
                 });
-                $scope.tasks.push(res);
-                $("#new_task").closeModal();
-                $scope.task = {
-                    assignees : []
-                };
-                getAvailableUser($scope.invitePeople);
-                $scope.submitted = false;
-            }, function(res){
-                console.log(res);
-            });
+            },500);
         }
     };
 

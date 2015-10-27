@@ -124,7 +124,7 @@
                 <textarea id="docAttachDesc" name="description" class="materialize-textarea" ng-model="uploadFile.desc" id="textarea1" required></textarea>
                 <p class="validate-message" ng-if="uploadForm.description.$error.required || uploadFile.description == ' '">Document description is required</p>
             </div>
-            <div class="row">
+            <!-- <div class="row">
                 <p>Assignees</p>
                 <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="assignee in uploadFile.assignees">
                     {{assignee.name}} <span ng-if="assignee.canRevoke"><a href="#!" ng-click="revokeFromDocument(assignee,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
@@ -137,7 +137,7 @@
                         {{staff.name}}
                     </div>
                 </a>
-            </div>
+            </div> -->
         </div>
         <div class="modal-footer">
             <button type="submit" class="modal-action btn-flat">Attach</button>
@@ -170,7 +170,7 @@
                     datepicker
                 />
             </div>
-            <div class="row">
+            <!-- <div class="row">
                 <p>Assignees</p>
                 <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="assignee in task.assignees">
                     {{assignee.name}} <span ng-if="assignee.canRevoke"><a href="#!" ng-click="revoke(assignee,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
@@ -183,7 +183,7 @@
                         {{staff.name}}
                     </div>
                 </a>
-            </div>
+            </div> -->
         </div>
         <div class="modal-footer">
             <button type="submit" class="modal-action btn-flat">Save</button>
