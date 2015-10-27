@@ -250,11 +250,8 @@
             <div class="row">
                 <label for="">Select invite type</label>
                 <select class="" ng-model="invite.type" material-select watch>
-                    <option value="addTeamMember" selected>Team</option>
-                    <option value="addBuilder">Builder</option>
-                    <option value="addClient">Client</option>
-                    <option value="addSubcontractor">Subcontractor</option>
-                    <option value="addConsultant">Consultant</option>
+                    <option value="" selected>Please select the type below</option>
+                    <option ng-repeat="type in availableUserType" value="{{type.value}}" >{{type.text}}</option>
                 </select>
             </div>
             <div class="row">
