@@ -1,5 +1,6 @@
 angular.module('buiiltApp')
-.controller('ViewProjectCtrl', function($timeout,$rootScope,$window,$scope, $stateParams, authService,documentService, projectService, project, packageService, fileService,FileUploader,$cookieStore, filepickerService,uploadService, $state) {
+.controller('ViewProjectCtrl', function($timeout,builderPackage,$rootScope,$window,$scope, $stateParams, authService,documentService, projectService, project, packageService, fileService,FileUploader,$cookieStore, filepickerService,uploadService, $state) {
+  $scope.builderPackage = builderPackage;
   $scope.activeHover = function($event){
     angular.element($event.currentTarget).addClass("item-hover");
   };
@@ -18,9 +19,6 @@ angular.module('buiiltApp')
     authService.getCurrentUser().$promise.then(function(user){
       $scope.isLeader = (_.find(team.leader,{_id : user._id})) ? true : false;
     });
-  });
-  packageService.getPackageByProject({'id': $stateParams.id}).$promise.then(function(data) {
-    $scope.builderPackage = data;
   });
   authService.getCurrentUser().$promise.then(function(data){
     $scope.currentUser = data;

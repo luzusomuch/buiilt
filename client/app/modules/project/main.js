@@ -33,6 +33,9 @@ angular.module('buiiltApp').config(function($stateProvider) {
     resolve: {
       project: function($stateParams, projectService) {
         return projectService.get({id: $stateParams.id}).$promise;
+      },
+      builderPackage: function(builderPackageService, $stateParams) {
+        return builderPackageService.findDefaultByProject({id: $stateParams.id}).$promise;
       }
     },
     hasCurrentProject : true

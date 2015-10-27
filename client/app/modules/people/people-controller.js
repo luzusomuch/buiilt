@@ -1,10 +1,11 @@
 angular.module('buiiltApp')
-.controller('PeopleCtrl', function ($scope, $rootScope, team, currentUser, builderPackage, teamService, filepickerService, uploadService, $stateParams, $state, fileService, peopleService, taskService, peopleChatService, authService, socket, notificationService) {
+.controller('PeopleCtrl', function ($scope, $rootScope, team, currentUser, builderPackage, teamService, filepickerService, uploadService, $stateParams, $state, fileService, peopleService, taskService, peopleChatService, authService, socket, notificationService, $timeout) {
     $scope.team = team;
     $scope.builderPackage = builderPackage;
     $scope.currentUser = currentUser;
     $scope.submitted = false;  
     $scope.selectedUser = {};
+    $scope.accordian = 1;
 
     function getAvailableUser(invitePeople) {
         $scope.currentTeamMembers = [];
@@ -112,7 +113,6 @@ angular.module('buiiltApp')
                 }
             });
         });
-        console.log($scope.files);
     });
 
     $scope.uploadFile = {
@@ -209,18 +209,24 @@ angular.module('buiiltApp')
             $scope.selectedChatPeople = res;
             $scope.unreadMessages = $rootScope.unreadMessages;
             var unreadMessagesNumber = 0;
+            var temp = 0;
             _.each($scope.unreadMessages, function(message){
-                if (message.element._id == $scope.selectedChatPeople._id) {
+                if (message.element._id == $scope.selectedChatPeople._id && message.referenceTo == "people-chat") {
+                    unreadMessagesNumber++;
+                }
+            });
+            _.each($scope.unreadMessages, function(message){
+                if (message.element._id == $scope.selectedChatPeople._id && message.referenceTo == "people-chat") {
                     $scope.selectedChatPeople.hasUnreadMessage = true;
                     for (var i = $scope.selectedChatPeople.messages.length - 1; i >= 0; i--) {
                         if ($scope.selectedChatPeople.messages[i].user._id != $scope.currentUser._id) {
                             $scope.selectedChatPeople.messages[i].unread = true;
-                            unreadMessagesNumber++;
+                            temp += 1;
                         } else {
                             $scope.selectedChatPeople.messages[i].unread = false;
                         }
-                        if (unreadMessagesNumber == $scope.unreadMessages.length) {
-                            break;
+                        if (temp == unreadMessagesNumber) {
+                            return false;
                         }
                     };
                 } else {

@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-.controller('BoardsCtrl', function ($scope, $rootScope, $state, team, currentUser, builderPackage, boardService, $stateParams, fileService, filepickerService, uploadService, taskService) {
+.controller('BoardsCtrl', function ($scope, $rootScope, $state, team, currentUser, builderPackage, boardService, $stateParams, fileService, filepickerService, uploadService, taskService, socket, notificationService) {
     $scope.team = team;
     $scope.builderPackage = builderPackage;
     $scope.currentUser = currentUser;
@@ -39,22 +39,28 @@ angular.module('buiiltApp')
         });
     };
 
-    function getUnreadMessage = function(board) {
+    function getUnreadMessage(board) {
         socket.emit('join',board._id);
         $scope.unreadMessages = $rootScope.unreadMessages;
         var unreadMessagesNumber = 0;
+        var temp = 0;
+        _.each($scope.unreadMessages, function(message) {
+            if (message.element._id == board._id && message.referenceTo == "board-chat") {
+                unreadMessagesNumber++;
+            }
+        });
         _.each($scope.unreadMessages, function(message){
-            if (message.element._id == board._id) {
+            if (message.element._id == board._id && message.referenceTo == "board-chat") {
                 board.hasUnreadMessage = true;
                 for (var i = board.messages.length - 1; i >= 0; i--) {
                     if (board.messages[i].user._id != $scope.currentUser._id) {
                         board.messages[i].unread = true;
-                        unreadMessagesNumber++;
+                        temp += 1;
                     } else {
                         board.messages[i].unread = false;
                     }
-                    if (unreadMessagesNumber == $scope.unreadMessages.length) {
-                        break;
+                    if (temp == unreadMessagesNumber) {
+                        return false;
                     }
                 };
             } else {
@@ -79,6 +85,13 @@ angular.module('buiiltApp')
             });
         }
     };
+
+    socket.on('boardChat:new', function (board) {
+        $scope.currentBoard = board;
+        getUnreadMessage(board);
+        getAvailable(board);
+        getTasksAndFilesByBoard(board);
+    });
 
     $scope.boards = [];
     $scope.currentBoard = {};

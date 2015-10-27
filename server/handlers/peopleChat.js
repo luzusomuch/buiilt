@@ -23,8 +23,8 @@ EventBus.onSeries('PeopleChat.Updated', function(req, next) {
     _.remove(newOwners, req.editUser._id);
     var params = {
         owners: newOwners,
-        fromUser: board.editUser._id,
-        element: board,
+        fromUser: req.editUser._id,
+        element: req,
         referenceTo: 'people-chat',
         type: 'chat'
     };

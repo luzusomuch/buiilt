@@ -4,6 +4,7 @@ var Board = require('./../../models/board.model');
 var User = require('./../../models/user.model');
 var _ = require('lodash');
 var async = require('async');
+var EventBus = require('../../components/EventBus');
 
 exports.createBoard = function(req, res) {
     var board = new Board({
@@ -83,9 +84,14 @@ exports.sendMessage = function(req, res) {
         board.save(function(err){
             if (err) {return res.send(500,err);}
             Board.populate(board, [
-                {path: 'invitees._id', select: '_id email name'},
-                {path: 'messages.user', select: '_id email name'}
-                ], function(err, board) {
+            {path: 'invitees._id', select: '_id email name'},
+            {path: 'messages.user', select: '_id email name'}
+            ], function(err, board) {
+                EventBus.emit('socket:emit', {
+                    event: 'boardChat:new',
+                    room: board._id.toString(),
+                    data: board
+                });
                 return res.send(200, board);
             });
         });

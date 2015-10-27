@@ -272,7 +272,7 @@ angular.module('buiiltApp')
 
         // NEW VERSION
         if (scope.notification.referenceTo == 'people-chat') {
-          text = params.fromUser() + 'has send you a message in ' + params.element;
+          text = params.fromUser() + 'has send you a message in people page';
         }
         if (scope.notification.referenceTo == 'documentInpeople') {
           text = params.fromUser() + 'has upload document in people ' + params.packageName;
