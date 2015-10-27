@@ -17,14 +17,6 @@ angular.module('buiiltApp')
     function getTasksAndFilesByBoard(board) {
         fileService.getFileInBoard({id: board._id}).$promise.then(function(res){
             $scope.files = res;
-            _.each($scope.files, function(file){
-                file.isOwner = false;
-                _.each(file.usersRelatedTo, function(user) {
-                    if (user == $scope.currentUser._id) {
-                        file.isOwner = true
-                    }
-                });
-            });
         });
         taskService.getByPackage({id: board._id, type: 'board'}).$promise.then(function(res){
             $scope.tasks = res;
@@ -184,17 +176,6 @@ angular.module('buiiltApp')
             isQuote: $scope.isQuote,
             assignees : []
         };
-    };
-
-    $scope.assignToDocument = function(staff,index) {
-        staff.canRevoke = true;
-        $scope.uploadFile.assignees.push(staff);
-        $scope.available.splice(index,1);
-    };
-
-    $scope.revokeFromDocument = function(assignee,index) {
-        $scope.available.push(assignee);
-        $scope.uploadFile.assignees.splice(index,1);
     };
 
     $scope.uploadNewAttachment = function() {

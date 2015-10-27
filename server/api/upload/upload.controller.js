@@ -210,9 +210,6 @@ exports.uploadInBoard = function(req, res) {
         belongToType: request.belongToType,
         tags: request.tags
     });
-    _.each(request.assignees, function(assignee) {
-        file.usersRelatedTo.push(assignee._id);
-    });
     file.save(function(err) {
         if (err) {return res.send(500,err);}
         return res.json(200,file);
