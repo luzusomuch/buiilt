@@ -167,6 +167,9 @@ angular.module('buiiltApp')
           if (notification.referenceTo == 'board-chat') {
             return 'board({id: notification.element.project})';
           }
+          if (notification.type == 'invite-people') {
+            return 'people({id: notification.element.project})';
+          }
         };
 
         var text;
@@ -288,6 +291,9 @@ angular.module('buiiltApp')
         }
         if (scope.notification.referenceTo == 'board-chat') {
           text = params.fromUser() + 'has send you a message in ' + params.element;
+        }
+        if (scope.notification.type == 'invite-people') {
+          text = params.fromUser() + 'has invited you in people page';
         }
 
         scope.notification.sref = getSref(scope.notification);

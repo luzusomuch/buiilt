@@ -81,6 +81,10 @@ angular.module('buiiltApp')
         }
 
         if ($scope.builderPackage.projectManager.type == 'architect') {
+            if ($scope.builderPackage.ownerType == 'homeOwner') {
+                invitePeople.clients.push({_id: $scope.builderPackage.owner});
+                $scope.currentUser.type = 'client';
+            }
             invitePeople.architects.push({_id: $scope.builderPackage.projectManager._id});
             if ($scope.builderPackage.projectManager._id._id == $scope.currentUser._id) {
                 $scope.currentUser.type = 'architect';
@@ -259,19 +263,32 @@ angular.module('buiiltApp')
         });
     });
 
-    $scope.invite = {};
+    $scope.invite = {
+        invitees: []
+    };
+
+    $scope.addInvitee = function(invitee) {
+        if (invitee && invitee != '') {
+            $scope.invite.invitees.push({email: invitee});
+            $scope.invite.email = null;
+        }
+    };
+    $scope.removeInvitee = function(index) {
+        $scope.invite.invitees.splice(index, 1);
+    };
+
     $scope.inviteMorePeople = function(form) {
         $scope.submitted = true;
         if (form.$valid) {
             if ($scope.invite.type == 'addTeamMember') {
-                var emails = [];
-                emails.push({email:$scope.invite.email});
-                teamService.addMember({id: $scope.team._id},emails).$promise
+                teamService.addMember({id: $scope.team._id},$scope.invite.invitees).$promise
                 .then(function(team) {
                     $scope.team = team;
                     getAvailableUser($scope.invitePeople);
                     $rootScope.$emit('TeamUpdate',team);
-                    $scope.invite = {};
+                    $scope.invite = {
+                        invitees: []
+                    };
                     $scope.submitted = false;
                     $("#tender_modal").closeModal();
                 }, function(err){

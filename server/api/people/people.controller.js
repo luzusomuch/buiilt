@@ -12,22 +12,36 @@ exports.invitePeople = function(req, res) {
         if (!people) {return res.send(404,err);}
         else {
             if (invite.type == 'addBuilder') {
-                User.findOne({'email': invite.email}, function(err, builder) {
+                var builders = people.builders;
+                var newInviteeNotSignUp = [];
+                var newInviteeSignUpAlready = [];
+                async.each(invite.invitees, function(invitee, cb) {
+                    User.findOne({email: invitee.email}, function(err, builder) {
+                        if (err) {return cb(err);}
+                        if (!builder) {
+                            builders.push({
+                                inviter: req.user._id,
+                                email: invitee.email
+                            });
+                            newInviteeNotSignUp.push(invitee.email);
+                            cb();
+                        } else {
+                            builders.push({
+                                inviter: req.user._id,
+                                _id: builder._id
+                            });
+                            newInviteeSignUpAlready.push(builder._id);
+                            builder.projects.push(people.project);
+                            builder.markModified('projects');
+                            builder.save(cb());
+                        }
+                    })
+                }, function(err) {
                     if (err) {return res.send(500,err);}
-                    if (!builder) {
-                        people.builders.push({
-                            email: invite.email
-                        });
-                        people._newInvitee = invite.email;
-                        people._newInviteType = 'peopleBuilder';
-                    } else {
-                        people.builders.push({
-                            _id: builder._id
-                        });
-                        builder.projects.push(people.project);
-                        builder.markModified('projects');
-                        builder.save();
-                    }
+                    people.builders = builders;
+                    people._newInviteeNotSignUp = newInviteeNotSignUp;
+                    people._newInviteeSignUpAlready = newInviteeSignUpAlready;
+                    people._newInviteType = 'peopleBuilder';
                     people.markModified('invitePeople');
                     people._editUser = req.user;
                     people.save(function(err){
@@ -47,12 +61,14 @@ exports.invitePeople = function(req, res) {
                     if (err) {return res.send(500,err);}
                     if (!architect) {
                         people.architects.push({
+                            inviter: req.user._id,
                             email: invite.email
                         });
                         people._newInvitee = invite.email;
                         people._newInviteType = 'peopleArchitect';
                     } else {
                         people.architects.push({
+                            inviter: req.user._id,
                             _id: architect._id
                         });
                         architect.projects.push(people.project);
@@ -78,12 +94,14 @@ exports.invitePeople = function(req, res) {
                     if (err) {return res.send(500,err);}
                     if (!client) {
                         people.clients.push({
+                            inviter: req.user._id,
                             email: invite.email
                         });
                         people._newInvitee = invite.email;
                         people._newInviteType = 'peopleClient';
                     } else {
                         people.clients.push({
+                            inviter: req.user._id,
                             _id: client._id
                         });
                         client.projects.push(people.project);
@@ -109,12 +127,14 @@ exports.invitePeople = function(req, res) {
                     if (err) {return res.send(500,err);}
                     if (!contractor) {
                         people.subcontractors.push({
+                            inviter: req.user._id,
                             email: invite.email
                         });
                         people._newInvitee = invite.email;
                         people._newInviteType = 'peopleSubcontractor';
                     } else {
                         people.subcontractors.push({
+                            inviter: req.user._id,
                             _id: contractor._id
                         });
                         contractor.projects.push(people.project);
@@ -140,12 +160,14 @@ exports.invitePeople = function(req, res) {
                     if (err) {return res.send(500,err);}
                     if (!consultant) {
                         people.consultants.push({
+                            inviter: req.user._id,
                             email: invite.email
                         });
                         people._newInvitee = invite.email;
                         people._newInviteType = 'peopleConsultant';
                     } else {
                         people.consultants.push({
+                            inviter: req.user._id,
                             _id: consultant._id
                         });
                         consultant.projects.push(people.project);

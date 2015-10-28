@@ -10,22 +10,27 @@ var PeopleSchema = new Schema({
     type: {type: String, default: 'people'},
     project: {type: Schema.Types.ObjectId, ref: 'Project'},
     builders: [{
+        inviter: {type: Schema.Types.ObjectId, ref: 'User'},
         _id: {type: Schema.Types.ObjectId, ref: 'User'},
         email: {type: String}
     }],
     architects: [{
+        inviter: {type: Schema.Types.ObjectId, ref: 'User'},
         _id: {type: Schema.Types.ObjectId, ref: 'User'},
         email: {type: String}
     }],
     clients: [{
+        inviter: {type: Schema.Types.ObjectId, ref: 'User'},
         _id: {type: Schema.Types.ObjectId, ref: 'User'},
         email: {type: String}
     }],
     subcontractors: [{
+        inviter: {type: Schema.Types.ObjectId, ref: 'User'},
         _id: {type: Schema.Types.ObjectId, ref: 'User'},
         email: {type: String}
     }],
     consultants: [{
+        inviter: {type: Schema.Types.ObjectId, ref: 'User'},
         _id: {type: Schema.Types.ObjectId, ref: 'User'},
         email: {type: String}
     }]
@@ -35,7 +40,8 @@ PeopleSchema
 .pre('save', function(next) {
     this.wasNew = this.isNew;
     this.editUser = this._editUser;
-    this.newInvitee = this._newInvitee;
+    this.newInviteeNotSignUp = this._newInviteeNotSignUp;
+    this.newInviteeSignUpAlready = this._newInviteeSignUpAlready;
     this.newInviteType = this._newInviteType;
     this._modifiedPaths = this.modifiedPaths();
     if (!this.isNew){
@@ -51,7 +57,8 @@ PeopleSchema.post('save', function (doc) {
         doc._modifiedPaths = this._modifiedPaths
     }
     doc.editUser = this._editUser;
-    doc.newInvitee = this._newInvitee;
+    doc.newInviteeNotSignUp = this._newInviteeNotSignUp;
+    doc.newInviteeSignUpAlready = this._newInviteeSignUpAlready;
     doc.newInviteType = this._newInviteType;
     EventBus.emit(evtName, doc);
 });

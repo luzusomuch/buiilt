@@ -260,9 +260,23 @@
                 <p ng-if="formInvite.description.$erorr.required && submitted" class="validate-message">Description is required</p>
             </div>
             <div class="row">
-                <label for="">Email</label>
-                <input type="email" name="email" ng-model="invite.email" required ng-class="{'invalid' : formInvite.email.$invalid && submitted}">
-                <p ng-if="formInvite.email.$erorr.required && submitted" class="validate-message">Email is required</p>
+                <div class="col s8">
+                    <label for="">Email</label>
+                    <input type="email" name="email" ng-model="invite.email" ng-class="{'invalid' : formInvite.email.$invalid && submitted}">
+                </div>
+                <div class="col s4">
+                    <button type="button" class="btn" ng-click="addInvitee(invite.email)">Add</button>
+                </div>
+            </div>
+            <div class="row">
+                <ul>
+                    <li ng-repeat="invitee in invite.invitees">
+                        <div class="col s8">{{invitee.email}}</div>
+                        <div class="col s4">
+                            <button type="button" class="btn" ng-click="removeInvitee($index)">Remove</button>
+                        </div>
+                    </li>
+                </ul>
             </div>
         </div>
         <div class="modal-footer">
