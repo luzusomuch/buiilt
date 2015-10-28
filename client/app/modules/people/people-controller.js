@@ -87,6 +87,11 @@ angular.module('buiiltApp')
                 if ($scope.builderPackage.owner._id == $scope.currentUser._id) {
                     $scope.currentUser.type = 'client';
                 }
+            } else if ($scope.builderPackage.ownerType == 'builder') {
+                invitePeople.builders.push({_id: $scope.builderPackage.owner});
+                if ($scope.builderPackage.owner._id == $scope.currentUser._id) {
+                    $scope.currentUser.type = 'builder';
+                }
             }
             invitePeople.architects.push({_id: $scope.builderPackage.projectManager._id});
             if ($scope.builderPackage.projectManager._id._id == $scope.currentUser._id) {
@@ -136,6 +141,17 @@ angular.module('buiiltApp')
                 }
             }
         } else if ($scope.builderPackage.projectManager.type == 'builder') {
+            if ($scope.builderPackage.ownerType == 'homeOwner') {
+                invitePeople.clients.push({_id: $scope.builderPackage.owner});
+                if ($scope.builderPackage.owner._id == $scope.currentUser._id) {
+                    $scope.currentUser.type = 'client';
+                }
+            } else if ($scope.builderPackage.ownerType == 'architect') {
+                invitePeople.architects.push({_id: $scope.builderPackage.owner});
+                if ($scope.builderPackage.owner._id == $scope.currentUser._id) {
+                    $scope.currentUser.type = 'architect';
+                }
+            }
             invitePeople.builders.push({_id: $scope.builderPackage.projectManager._id});
             if ($scope.builderPackage.projectManager._id._id == $scope.currentUser._id) {
                 $scope.currentUser.type = 'builder';
@@ -185,6 +201,17 @@ angular.module('buiiltApp')
                 }
             }
         } else {
+            if ($scope.builderPackage.ownerType == 'builder') {
+                invitePeople.builders.push({_id: $scope.builderPackage.owner});
+                if ($scope.builderPackage.owner._id == $scope.currentUser._id) {
+                    $scope.currentUser.type = 'builder';
+                }
+            } else if ($scope.builderPackage.ownerType == 'architect') {
+                invitePeople.architects.push({_id: $scope.builderPackage.owner});
+                if ($scope.builderPackage.owner._id == $scope.currentUser._id) {
+                    $scope.currentUser.type = 'architect';
+                }
+            }
             invitePeople.clients.push({_id: $scope.builderPackage.projectManager._id});
             if ($scope.builderPackage.projectManager._id._id == $scope.currentUser._id) {
                 $scope.currentUser.type = 'client';
