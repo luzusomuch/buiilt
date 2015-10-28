@@ -32,6 +32,11 @@
         <div class="valign-wrapper" style="border-top: 1px solid #eee;">
             <form class="col s11">
                 <div class="row" style="margin-bottom: -5px; margin-top: -18px">
+                    <div id="mentionPeople" class="col s12" ng-if="showPopup" style="position: fixed; bottom: 150px; height: 100px; width:200px; background-color:#64B5F6; overflow-y: auto">
+                        <ul>
+                            <li ng-click="getMentionValue(mention)" ng-repeat="mention in available">{{mention.name}}</li>
+                        </ul>
+                    </div>
                     <div class="input-field col s12">
                         <textarea placeholder="Send a Message..." id="textarea1" class="materialize-textarea" ng-model="message.text" ng-keydown="enterMessage($event);"></textarea>
                     </div>

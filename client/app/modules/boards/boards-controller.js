@@ -127,6 +127,8 @@ angular.module('buiiltApp')
                 $("#invite_people").closeModal();
                 $scope.invite.description = null;
                 $scope.invite.email = null;
+                getAvailable(res);
+                getTasksAndFilesByBoard(res);
             }, function(err){
                 console.log(err);
             });
@@ -221,17 +223,26 @@ angular.module('buiiltApp')
         if ($event.keyCode === 13) {
             $event.preventDefault();
             $scope.sendMessage();
+        } else if (($event.keyCode === 32 || $event.keyCode === 8) && $scope.showPopup) {
+            $scope.showPopup = false;
         }
     };
+
 
     $scope.message = {
     };
     $scope.showPopup = false;
+
+    $scope.getMentionValue = function(mention) {
+        $scope.message.text = $scope.message.text.substring(0, $scope.message.text.length -1);
+        $scope.message.text += mention.name;  
+        $scope.showPopup = false;
+    };
+
     $scope.$watch('message.text', function(newValue, oldValue) {
         if (newValue) {
             if (newValue.slice(-1) == "@") {
                 $scope.showPopup = true;
-                console.log($scope.available);
             }
         }
     });
