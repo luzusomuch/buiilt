@@ -286,8 +286,6 @@ angular.module('buiiltApp')
                 }
             });
         }
-
-        console.log($scope.currentUser);
     };
 
     $scope.getTenderListByType = function(type) {
@@ -538,10 +536,30 @@ angular.module('buiiltApp')
         if ($event.keyCode === 13) {
             $event.preventDefault();
             $scope.sendMessage();
+        } else if (($event.keyCode === 32 || $event.keyCode === 8) && $scope.showPopup) {
+            $scope.showPopup = false;
         }
     };
 
     $scope.message = {};
+
+    $scope.showPopup = false;
+
+    $scope.getMentionValue = function(mention) {
+        $scope.message.text = $scope.message.text.substring(0, $scope.message.text.length -1);
+        $scope.message.text += mention.name;  
+        $scope.showPopup = false;
+    };
+
+    $scope.$watch('message.text', function(newValue, oldValue) {
+        $scope.mentionPeople = [];
+        if (newValue) {
+            if (newValue.slice(-1) == "@") {
+                $scope.showPopup = true;   
+            }
+        }
+    });
+
     $scope.sendMessage = function() {
         peopleChatService.sendMessage({id: $scope.selectedChatPeople._id}, $scope.message).$promise.then(function(res) {
             $scope.selectedChatPeople = res;
