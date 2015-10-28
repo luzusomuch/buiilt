@@ -286,8 +286,143 @@ exports.selectWinnerTender = function(req, res) {
                         return res.json(people);
                     });
                 });
-            }
-            else {
+            } else if (req.body.type == 'builder') {
+                var winnerTender = _.remove(people.builders, function(item) {
+                    return item.inviter == req.body.tender.inviter && item._id == req.body.tender._id._id;
+                });
+                winnerTenderNotification.push(req.body.tender._id._id);
+                _.each(people.builders, function(builder) {
+                    if (builder._id) {
+                        loserTender.push(builder._id);
+                        User.findById(builder._id, function(err, user) {
+                            if (err) {return res.send(500,err);}
+                            if (!user) {return res.send(404);}
+                            var index = user.projects.indexOf(people.project);
+                            user.projects.splice(index,1);
+                            user.markModified('projects');
+                            user.save();
+                        });
+                    }
+                });
+                people.builders = winnerTender;
+                people._winnerTender = winnerTenderNotification;
+                people._loserTender = loserTender;
+                people.markModified('selectWinnerTender');
+                people._editUser = req.user;
+                people.save(function(err){
+                    if (err) {return res.send(500,err);}
+                    People.populate(people, 
+                    [{path:"builders._id", select: "_id email name"},
+                    {path:"architects._id", select: "_id email name"},
+                    {path:"clients._id", select: "_id email name"},
+                    {path:"subcontractors._id", select: "_id email name"},
+                    {path: "consultants._id", select: "_id email name"}], function(err, people) {
+                        return res.json(people);
+                    });
+                });
+            } else if (req.body.type == 'consultant') {
+                var winnerTender = _.remove(people.consultants, function(item) {
+                    return item.inviter == req.body.tender.inviter && item._id == req.body.tender._id._id;
+                });
+                winnerTenderNotification.push(req.body.tender._id._id);
+                _.each(people.consultants, function(consultant) {
+                    if (consultant._id) {
+                        loserTender.push(consultant._id);
+                        User.findById(consultant._id, function(err, user) {
+                            if (err) {return res.send(500,err);}
+                            if (!user) {return res.send(404);}
+                            var index = user.projects.indexOf(people.project);
+                            user.projects.splice(index,1);
+                            user.markModified('projects');
+                            user.save();
+                        });
+                    }
+                });
+                people.consultants = winnerTender;
+                people._winnerTender = winnerTenderNotification;
+                people._loserTender = loserTender;
+                people.markModified('selectWinnerTender');
+                people._editUser = req.user;
+                people.save(function(err){
+                    if (err) {return res.send(500,err);}
+                    People.populate(people, 
+                    [{path:"builders._id", select: "_id email name"},
+                    {path:"architects._id", select: "_id email name"},
+                    {path:"clients._id", select: "_id email name"},
+                    {path:"subcontractors._id", select: "_id email name"},
+                    {path: "consultants._id", select: "_id email name"}], function(err, people) {
+                        return res.json(people);
+                    });
+                });
+            } else if (req.body.type == 'client') {
+                var winnerTender = _.remove(people.clients, function(item) {
+                    return item.inviter == req.body.tender.inviter && item._id == req.body.tender._id._id;
+                });
+                winnerTenderNotification.push(req.body.tender._id._id);
+                _.each(people.clients, function(client) {
+                    if (client._id) {
+                        loserTender.push(client._id);
+                        User.findById(client._id, function(err, user) {
+                            if (err) {return res.send(500,err);}
+                            if (!user) {return res.send(404);}
+                            var index = user.projects.indexOf(people.project);
+                            user.projects.splice(index,1);
+                            user.markModified('projects');
+                            user.save();
+                        });
+                    }
+                });
+                people.clients = winnerTender;
+                people._winnerTender = winnerTenderNotification;
+                people._loserTender = loserTender;
+                people.markModified('selectWinnerTender');
+                people._editUser = req.user;
+                people.save(function(err){
+                    if (err) {return res.send(500,err);}
+                    People.populate(people, 
+                    [{path:"builders._id", select: "_id email name"},
+                    {path:"architects._id", select: "_id email name"},
+                    {path:"clients._id", select: "_id email name"},
+                    {path:"subcontractors._id", select: "_id email name"},
+                    {path: "consultants._id", select: "_id email name"}], function(err, people) {
+                        return res.json(people);
+                    });
+                });
+            } else if (req.body.type == 'architect') {
+                var winnerTender = _.remove(people.architects, function(item) {
+                    return item.inviter == req.body.tender.inviter && item._id == req.body.tender._id._id;
+                });
+                winnerTenderNotification.push(req.body.tender._id._id);
+                _.each(people.architects, function(architect) {
+                    if (architect._id) {
+                        loserTender.push(architect._id);
+                        User.findById(architect._id, function(err, user) {
+                            if (err) {return res.send(500,err);}
+                            if (!user) {return res.send(404);}
+                            var index = user.projects.indexOf(people.project);
+                            user.projects.splice(index,1);
+                            user.markModified('projects');
+                            user.save();
+                        });
+                    }
+                });
+                people.architects = winnerTender;
+                people._winnerTender = winnerTenderNotification;
+                people._loserTender = loserTender;
+                people.markModified('selectWinnerTender');
+                people._editUser = req.user;
+                people.save(function(err){
+                    if (err) {return res.send(500,err);}
+                    People.populate(people, 
+                    [{path:"builders._id", select: "_id email name"},
+                    {path:"architects._id", select: "_id email name"},
+                    {path:"clients._id", select: "_id email name"},
+                    {path:"subcontractors._id", select: "_id email name"},
+                    {path: "consultants._id", select: "_id email name"}], function(err, people) {
+                        return res.json(people);
+                    });
+                });
+            } else {
                 return res.send(500);
             }
         }

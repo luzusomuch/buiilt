@@ -240,13 +240,39 @@ angular.module('buiiltApp')
                     $scope.tendersList.push({tender: subcontractor, type: 'subcontractor'});
                 }
             });
+        } else if (type == 'builder') {
+            _.each($scope.invitePeople.builders, function(builder) {
+                if (builder._id && builder.inviter == $scope.currentUser._id) {
+                    $scope.tendersList.push({tender: builder, type: 'builder'});
+                }
+            });
+        } else if (type == 'client') {
+            _.each($scope.invitePeople.clients, function(client) {
+                if (client._id && client.inviter == $scope.currentUser._id) {
+                    $scope.tendersList.push({tender: client, type: 'client'});
+                }
+            });
+        } else if (type == 'architect') {
+            _.each($scope.invitePeople.architects, function(architect) {
+                if (architect._id && architect.inviter == $scope.currentUser._id) {
+                    $scope.tendersList.push({tender: architect, type: 'architect'});
+                }
+            });
+        } else if (type == 'consultant') {
+            _.each($scope.invitePeople.consultants, function(consultant) {
+                if (consultant._id && consultant.inviter == $scope.currentUser._id) {
+                    $scope.tendersList.push({tender: consultant, type: 'consultant'});
+                }
+            });
         }
         console.log($scope.tendersList);
     };
 
     $scope.selectWinnerTender = function(tender) {
         peopleService.selectWinnerTender({id: $stateParams.id}, tender).$promise.then(function(res) {
-            console.log(res);
+            $scope.invitePeople = res;
+            getAvailableUser(res);
+            $("#view_tender_detail").closeModal();
         }, function(err) {
             console.log(err);
         });
