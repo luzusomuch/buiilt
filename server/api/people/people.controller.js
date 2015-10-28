@@ -256,6 +256,7 @@ exports.selectWinnerTender = function(req, res) {
                 var winnerTender = _.remove(people.subcontractors, function(item) {
                     return item.inviter == req.body.tender.inviter && item._id == req.body.tender._id._id;
                 });
+                winnerTender[0].hasSelect = true;
                 winnerTenderNotification.push(req.body.tender._id._id);
                 _.each(people.subcontractors, function(subcontractor) {
                     if (subcontractor._id) {
@@ -290,6 +291,7 @@ exports.selectWinnerTender = function(req, res) {
                 var winnerTender = _.remove(people.builders, function(item) {
                     return item.inviter == req.body.tender.inviter && item._id == req.body.tender._id._id;
                 });
+                winnerTender[0].hasSelect = true;
                 winnerTenderNotification.push(req.body.tender._id._id);
                 _.each(people.builders, function(builder) {
                     if (builder._id) {
@@ -324,6 +326,7 @@ exports.selectWinnerTender = function(req, res) {
                 var winnerTender = _.remove(people.consultants, function(item) {
                     return item.inviter == req.body.tender.inviter && item._id == req.body.tender._id._id;
                 });
+                winnerTender[0].hasSelect = true;
                 winnerTenderNotification.push(req.body.tender._id._id);
                 _.each(people.consultants, function(consultant) {
                     if (consultant._id) {
@@ -358,6 +361,7 @@ exports.selectWinnerTender = function(req, res) {
                 var winnerTender = _.remove(people.clients, function(item) {
                     return item.inviter == req.body.tender.inviter && item._id == req.body.tender._id._id;
                 });
+                winnerTender[0].hasSelect = true;
                 winnerTenderNotification.push(req.body.tender._id._id);
                 _.each(people.clients, function(client) {
                     if (client._id) {
@@ -392,6 +396,7 @@ exports.selectWinnerTender = function(req, res) {
                 var winnerTender = _.remove(people.architects, function(item) {
                     return item.inviter == req.body.tender.inviter && item._id == req.body.tender._id._id;
                 });
+                winnerTender[0].hasSelect = true;
                 winnerTenderNotification.push(req.body.tender._id._id);
                 _.each(people.architects, function(architect) {
                     if (architect._id) {

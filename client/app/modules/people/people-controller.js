@@ -8,6 +8,7 @@ angular.module('buiiltApp')
     $scope.accordian = 1;
 
     function getAvailableUser(invitePeople) {
+        $scope.currentUser.hasSelect = false;
         $scope.availableUserType = [];
         $scope.currentTeamMembers = [];
         $scope.available = [];
@@ -90,6 +91,7 @@ angular.module('buiiltApp')
             invitePeople.architects.push({_id: $scope.builderPackage.projectManager._id});
             if ($scope.builderPackage.projectManager._id._id == $scope.currentUser._id) {
                 $scope.currentUser.type = 'architect';
+                $scope.currentUser.hasSelect = true;
                 $scope.availableUserType = [
                     {value: 'addTeamMember', text: 'team'}, 
                     {value: 'addClient', text: 'client'}, 
@@ -137,6 +139,7 @@ angular.module('buiiltApp')
             invitePeople.builders.push({_id: $scope.builderPackage.projectManager._id});
             if ($scope.builderPackage.projectManager._id._id == $scope.currentUser._id) {
                 $scope.currentUser.type = 'builder';
+                $scope.currentUser.hasSelect = true;
                 $scope.availableUserType = [
                     {value: 'addTeamMember', text: 'team'}, 
                     {value: 'addClient', text: 'client'}, 
@@ -185,6 +188,7 @@ angular.module('buiiltApp')
             invitePeople.clients.push({_id: $scope.builderPackage.projectManager._id});
             if ($scope.builderPackage.projectManager._id._id == $scope.currentUser._id) {
                 $scope.currentUser.type = 'client';
+                $scope.currentUser.hasSelect = true;
                 $scope.availableUserType = [
                     {value: 'addTeamMember', text: 'team'}, 
                     {value: 'addBuilder', text: 'builder'}, 
@@ -229,6 +233,34 @@ angular.module('buiiltApp')
                 }
             }
         }
+
+        if ($scope.currentUser.type == 'builder') {
+            _.each(invitePeople.builders, function(builder) {
+                if (builder._id) {
+                    if (builder._id._id == $scope.currentUser._id && builder.hasSelect) {
+                        $scope.currentUser.hasSelect = true;
+                    }
+                }
+            });
+        } else if ($scope.currentUser.type == 'client') {
+            _.each(invitePeople.clients, function(client) {
+                if (client._id) {
+                    if (client._id._id == $scope.currentUser._id && client.hasSelect) {
+                        $scope.currentUser.hasSelect = true;
+                    }
+                }
+            });
+        } else if ($scope.currentUser.type == 'architect') {
+            _.each(invitePeople.architects, function(architect) {
+                if (architect._id) {
+                    if (architect._id._id == $scope.currentUser._id && architect.hasSelect) {
+                        $scope.currentUser.hasSelect = true;
+                    }
+                }
+            });
+        }
+
+        console.log($scope.currentUser);
     };
 
     $scope.getTenderListByType = function(type) {

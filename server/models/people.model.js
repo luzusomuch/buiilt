@@ -12,27 +12,32 @@ var PeopleSchema = new Schema({
     builders: [{
         inviter: {type: Schema.Types.ObjectId, ref: 'User'},
         _id: {type: Schema.Types.ObjectId, ref: 'User'},
-        email: {type: String}
+        email: {type: String},
+        hasSelect: {type: Boolean, default: false}
     }],
     architects: [{
         inviter: {type: Schema.Types.ObjectId, ref: 'User'},
         _id: {type: Schema.Types.ObjectId, ref: 'User'},
-        email: {type: String}
+        email: {type: String},
+        hasSelect: {type: Boolean, default: false}
     }],
     clients: [{
         inviter: {type: Schema.Types.ObjectId, ref: 'User'},
         _id: {type: Schema.Types.ObjectId, ref: 'User'},
-        email: {type: String}
+        email: {type: String},
+        hasSelect: {type: Boolean, default: false}
     }],
     subcontractors: [{
         inviter: {type: Schema.Types.ObjectId, ref: 'User'},
         _id: {type: Schema.Types.ObjectId, ref: 'User'},
-        email: {type: String}
+        email: {type: String},
+        hasSelect: {type: Boolean, default: false}
     }],
     consultants: [{
         inviter: {type: Schema.Types.ObjectId, ref: 'User'},
         _id: {type: Schema.Types.ObjectId, ref: 'User'},
-        email: {type: String}
+        email: {type: String},
+        hasSelect: {type: Boolean, default: false}
     }]
 });
 

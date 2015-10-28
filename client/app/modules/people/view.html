@@ -296,7 +296,7 @@
                     <div class="col s6">{{tender.tender._id.email}}</div>
                 </div>
                 <div class="col s2">
-                    <button type="button" class="btn" ng-click="selectWinnerTender(tender)">Select this tender</button>
+                    <button ng-if="currentUser.hasSelect" type="button" class="btn" ng-click="selectWinnerTender(tender)">Select this tender</button>
                 </div>
             </li>
         </ul>
