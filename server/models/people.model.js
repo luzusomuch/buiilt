@@ -42,6 +42,8 @@ PeopleSchema
     this.editUser = this._editUser;
     this.newInviteeNotSignUp = this._newInviteeNotSignUp;
     this.newInviteeSignUpAlready = this._newInviteeSignUpAlready;
+    this.winnerTender = this._winnerTender;
+    this.loserTender = this._loserTender;
     this.newInviteType = this._newInviteType;
     this._modifiedPaths = this.modifiedPaths();
     if (!this.isNew){
@@ -59,6 +61,8 @@ PeopleSchema.post('save', function (doc) {
     doc.editUser = this._editUser;
     doc.newInviteeNotSignUp = this._newInviteeNotSignUp;
     doc.newInviteeSignUpAlready = this._newInviteeSignUpAlready;
+    doc.winnerTender = this._winnerTender;
+    doc.loserTender = this._loserTender;
     doc.newInviteType = this._newInviteType;
     EventBus.emit(evtName, doc);
 });

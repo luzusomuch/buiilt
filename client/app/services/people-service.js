@@ -2,9 +2,17 @@ angular.module('buiiltApp')
 .factory('peopleService', function($rootScope, $q, $resource) {
     return $resource('/api/peoples/:id/:action',{id: '@_id'},
         {
-            //invite people
             update: {
                 method: 'PUT',
+                params: {
+                    action: 'invite'
+                }
+            },
+            selectWinnerTender: {
+                method: 'put',
+                params: {
+                    action: 'select-winner-tender'
+                }
             },
             getInvitePeople: {
                 method: 'get',

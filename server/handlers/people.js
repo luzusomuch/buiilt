@@ -10,6 +10,9 @@ var _ = require('lodash');
 var mongoose = require('mongoose');
 
 EventBus.onSeries('People.Updated', function(req, next) {
+    console.log(req._modifiedPaths);
+    console.log(req.winnerTender);
+    console.log(req.loserTender);
     if (req._modifiedPaths.indexOf('invitePeople') != -1) {
         if (req.newInviteeSignUpAlready && req.newInviteeSignUpAlready.length > 0) {
             var params = {
@@ -23,6 +26,34 @@ EventBus.onSeries('People.Updated', function(req, next) {
                 next();
             });
         } else {
+            return next();
+        }
+    } else if (req._modifiedPaths.indexOf('selectWinnerTender') != -1) {
+        if (req.winnerTender.length > 0) {
+            var params = {
+                owners: req.winnerTender,
+                fromUser: req.editUser._id,
+                element: req,
+                referenceTo: 'people',
+                type: 'winner-tender'
+            };
+            NotificationHelper.create(params, function(){
+                next();
+            });
+        }
+        if (req.loserTender.length > 0) {
+            var params = {
+                owners: req.loserTender,
+                fromUser: req.editUser._id,
+                element: req,
+                referenceTo: 'people',
+                type: 'loser-tender'
+            };
+            NotificationHelper.create(params, function(){
+                next();
+            });
+        }
+        else {
             return next();
         }
     } else {

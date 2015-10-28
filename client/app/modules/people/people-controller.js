@@ -83,7 +83,9 @@ angular.module('buiiltApp')
         if ($scope.builderPackage.projectManager.type == 'architect') {
             if ($scope.builderPackage.ownerType == 'homeOwner') {
                 invitePeople.clients.push({_id: $scope.builderPackage.owner});
-                $scope.currentUser.type = 'client';
+                if ($scope.builderPackage.owner._id == $scope.currentUser._id) {
+                    $scope.currentUser.type = 'client';
+                }
             }
             invitePeople.architects.push({_id: $scope.builderPackage.projectManager._id});
             if ($scope.builderPackage.projectManager._id._id == $scope.currentUser._id) {
@@ -92,7 +94,6 @@ angular.module('buiiltApp')
                     {value: 'addTeamMember', text: 'team'}, 
                     {value: 'addClient', text: 'client'}, 
                     {value: 'addBuilder', text: 'builder'}, 
-                    {value: 'addArchitect', text: 'architect'}, 
                     {value: 'addConsultant', text: 'consultant'}
                 ];
             } else {
@@ -100,14 +101,12 @@ angular.module('buiiltApp')
                     case 'client': 
                         $scope.availableUserType = [
                             {value: 'addTeamMember', text: 'team'}, 
-                            {value: 'addClient', text: 'client'}, 
                             {value: 'addConsultant', text: 'consultant'}
                         ];
                         break;
                     case 'builder':
                         $scope.availableUserType = [
                             {value: 'addTeamMember', text: 'team'}, 
-                            {value: 'addBuilder', text: 'builder'}, 
                             {value: 'addSubcontractor', text: 'subcontractor'}, 
                             {value: 'addConsultant', text: 'consultant'}
                         ];
@@ -117,20 +116,17 @@ angular.module('buiiltApp')
                             {value: 'addTeamMember', text: 'team'}, 
                             {value: 'addClient', text: 'client'}, 
                             {value: 'addBuilder', text: 'builder'}, 
-                            {value: 'addArchitect', text: 'architect'}, 
                             {value: 'addConsultant', text: 'consultant'}
                         ];
                         break;
                     case 'subcontractor':
                         $scope.availableUserType = [
-                            {value: 'addTeamMember', text: 'team'}, 
-                            {value: 'addSubcontractor', text: 'subcontractor'}
+                            {value: 'addTeamMember', text: 'team'}
                         ];
                         break;
                     case 'consultant':
                         $scope.availableUserType = [
-                            {value: 'addTeamMember', text: 'team'}, 
-                            {value: 'addConsultant', text: 'consultant'}
+                            {value: 'addTeamMember', text: 'team'}
                         ];
                         break;
                     default: 
@@ -144,7 +140,6 @@ angular.module('buiiltApp')
                 $scope.availableUserType = [
                     {value: 'addTeamMember', text: 'team'}, 
                     {value: 'addClient', text: 'client'}, 
-                    {value: 'addBuilder', text: 'builder'}, 
                     {value: 'addArchitect', text: 'architect'}, 
                     {value: 'addSubcontractor', text: 'subcontractor'}, 
                     {value: 'addConsultant', text: 'consultant'}
@@ -154,7 +149,6 @@ angular.module('buiiltApp')
                     case 'client': 
                         $scope.availableUserType = [
                             {value: 'addTeamMember', text: 'team'}, 
-                            {value: 'addClient', text: 'client'}, 
                             {value: 'addConsultant', text: 'consultant'}
                         ];
                         break;
@@ -162,7 +156,6 @@ angular.module('buiiltApp')
                         $scope.availableUserType = [
                             {value: 'addTeamMember', text: 'team'}, 
                             {value: 'addClient', text: 'client'}, 
-                            {value: 'addBuilder', text: 'builder'}, 
                             {value: 'addArchitect', text: 'architect'}, 
                             {value: 'addSubcontractor', text: 'subcontractor'}, 
                             {value: 'addConsultant', text: 'consultant'}
@@ -171,20 +164,17 @@ angular.module('buiiltApp')
                     case 'architect':
                         $scope.availableUserType = [
                             {value: 'addTeamMember', text: 'team'}, 
-                            {value: 'addArchitect', text: 'architect'}, 
                             {value: 'addConsultant', text: 'consultant'}
                         ];
                         break;
                     case 'subcontractor':
                         $scope.availableUserType = [
-                            {value: 'addTeamMember', text: 'team'}, 
-                            {value: 'addSubcontractor', text: 'subcontractor'}
+                            {value: 'addTeamMember', text: 'team'}
                         ];
                         break;
                     case 'consultant':
                         $scope.availableUserType = [
-                            {value: 'addTeamMember', text: 'team'}, 
-                            {value: 'addConsultant', text: 'consultant'}
+                            {value: 'addTeamMember', text: 'team'}
                         ];
                         break;
                     default: 
@@ -194,10 +184,9 @@ angular.module('buiiltApp')
         } else {
             invitePeople.clients.push({_id: $scope.builderPackage.projectManager._id});
             if ($scope.builderPackage.projectManager._id._id == $scope.currentUser._id) {
-                $scope.currentUser.type = 'builder';
+                $scope.currentUser.type = 'client';
                 $scope.availableUserType = [
                     {value: 'addTeamMember', text: 'team'}, 
-                    {value: 'addClient', text: 'client'}, 
                     {value: 'addBuilder', text: 'builder'}, 
                     {value: 'addArchitect', text: 'architect'}, 
                     {value: 'addConsultant', text: 'consultant'}
@@ -207,7 +196,6 @@ angular.module('buiiltApp')
                     case 'client': 
                         $scope.availableUserType = [
                             {value: 'addTeamMember', text: 'team'}, 
-                            {value: 'addClient', text: 'client'}, 
                             {value: 'addBuilder', text: 'builder'}, 
                             {value: 'addArchitect', text: 'architect'}, 
                             {value: 'addConsultant', text: 'consultant'}
@@ -216,7 +204,6 @@ angular.module('buiiltApp')
                     case 'builder':
                         $scope.availableUserType = [
                             {value: 'addTeamMember', text: 'team'}, 
-                            {value: 'addBuilder', text: 'builder'}, 
                             {value: 'addSubcontractor', text: 'subcontractor'}, 
                             {value: 'addConsultant', text: 'consultant'}
                         ];
@@ -224,20 +211,17 @@ angular.module('buiiltApp')
                     case 'architect':
                         $scope.availableUserType = [
                             {value: 'addTeamMember', text: 'team'}, 
-                            {value: 'addArchitect', text: 'architect'}, 
                             {value: 'addConsultant', text: 'consultant'}
                         ];
                         break;
                     case 'subcontractor':
                         $scope.availableUserType = [
-                            {value: 'addTeamMember', text: 'team'}, 
-                            {value: 'addSubcontractor', text: 'subcontractor'}
+                            {value: 'addTeamMember', text: 'team'}
                         ];
                         break;
                     case 'consultant':
                         $scope.availableUserType = [
-                            {value: 'addTeamMember', text: 'team'}, 
-                            {value: 'addConsultant', text: 'consultant'}
+                            {value: 'addTeamMember', text: 'team'}
                         ];
                         break;
                     default: 
@@ -245,6 +229,27 @@ angular.module('buiiltApp')
                 }
             }
         }
+    };
+
+    $scope.getTenderListByType = function(type) {
+        $scope.selectedTeamType = type;
+        $scope.tendersList = [];
+        if (type == 'subcontractor') {
+            _.each($scope.invitePeople.subcontractors, function(subcontractor) {
+                if (subcontractor._id && subcontractor.inviter == $scope.currentUser._id) {
+                    $scope.tendersList.push({tender: subcontractor, type: 'subcontractor'});
+                }
+            });
+        }
+        console.log($scope.tendersList);
+    };
+
+    $scope.selectWinnerTender = function(tender) {
+        peopleService.selectWinnerTender({id: $stateParams.id}, tender).$promise.then(function(res) {
+            console.log(res);
+        }, function(err) {
+            console.log(err);
+        });
     };
 
     peopleService.getInvitePeople({id: $stateParams.id}).$promise.then(function(res){
@@ -286,9 +291,7 @@ angular.module('buiiltApp')
                     $scope.team = team;
                     getAvailableUser($scope.invitePeople);
                     $rootScope.$emit('TeamUpdate',team);
-                    $scope.invite = {
-                        invitees: []
-                    };
+                    $scope.invite.invitees = [];
                     $scope.submitted = false;
                     $("#tender_modal").closeModal();
                 }, function(err){

@@ -6,15 +6,15 @@
         <p ng-show="accordian == 1" style="margin-left: 10px" ng-repeat="currentTeamMember in currentTeamMembers" ng-click="selectUser(currentTeamMember, 'team')" ng-style="currentTeamMember._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             {{currentTeamMember.name}}
         </p>
-        <p ng-show="currentUser.type == 'client' || currentUser.type == 'architect' || currentUser.type == 'builder'" ng-click="accordian = 2">BUILDER</p>
+        <p ng-show="currentUser.type == 'client' || currentUser.type == 'architect'" ng-click="accordian = 2">BUILDER</p>
         <p ng-show="accordian == 2" style="margin-left: 10px;" ng-repeat="builder in invitePeople.builders" ng-if="builder._id" ng-click="selectUser(builder._id, 'builder')" ng-style="builder._id._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             {{builder._id.name}}
         </p>
-        <p ng-show="currentUser.type == 'builder' || currentUser.type == 'architect'" ng-click="accordian = 3">ARCHITECT</p>
+        <p ng-show="currentUser.type == 'builder'" ng-click="accordian = 3">ARCHITECT</p>
         <p ng-show="accordian == 3" style="margin-left: 10px;" ng-repeat="architect in invitePeople.architects" ng-if="architect._id" ng-click="selectUser(architect._id, 'architect')" ng-style="architect._id._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             {{architect._id.name}}
         </p>
-        <p ng-show="currentUser.type == 'builder' || currentUser.type == 'client'" ng-click='accordian = 4'>CLIENT</p>
+        <p ng-show="currentUser.type == 'builder'" ng-click='accordian = 4'>CLIENT</p>
         <p ng-show="accordian == 4" style="margin-left: 10px;" ng-repeat="client in invitePeople.clients" ng-if="client._id" ng-click="selectUser(client._id, 'client')" ng-style="client._id == selectedUser._id._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             {{client._id.name}}
         </p>
@@ -34,7 +34,7 @@
         <p ng-show="accordian == 1" style="margin-left: 10px" ng-repeat="currentTeamMember in currentTeamMembers" ng-click="selectUser(currentTeamMember, 'team')" ng-style="currentTeamMember._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             {{currentTeamMember.name}}
         </p>
-        <p ng-show="currentUser.type == 'architect' || currentUser.type == 'builder'" ng-click="accordian = 2">BUILDER</p>
+        <p ng-show="currentUser.type == 'architect'" ng-click="accordian = 2; getTenderListByType('builder')">BUILDER</p>
         <p ng-show="accordian == 2" style="margin-left: 10px;" ng-repeat="builder in invitePeople.builders" ng-if="builder._id" ng-click="selectUser(builder._id, 'builder')" ng-style="builder._id._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             {{builder._id.name}}
         </p>
@@ -42,15 +42,15 @@
         <p ng-show="accordian == 3" style="margin-left: 10px;" ng-repeat="architect in invitePeople.architects" ng-if="architect._id" ng-click="selectUser(architect._id, 'architect')" ng-style="architect._id._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             {{architect._id.name}}
         </p>
-        <p ng-show="currentUser.type == 'architect' || currentUser.type == 'client'" ng-click='accordian = 4'>CLIENT</p>
+        <p ng-show="currentUser.type == 'architect'" ng-click='accordian = 4'>CLIENT</p>
         <p ng-show="accordian == 4" style="margin-left: 10px;" ng-repeat="client in invitePeople.clients" ng-if="client._id" ng-click="selectUser(client._id, 'client')" ng-style="client._id == selectedUser._id._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             {{client._id.name}}
         </p>
-        <p ng-show="currentUser.type == 'builder' || currentUser.type == 'subcontractor'" ng-click="accordian = 5">SUBCONTRACTORS</p>
+        <p ng-show="currentUser.type == 'builder' || currentUser.type == 'subcontractor'" ng-click="accordian = 5; getTenderListByType('subcontractor')">SUBCONTRACTORS</p>
         <p ng-show="accordian == 5" style="margin-left: 10px;" ng-repeat="subcontractor in invitePeople.subcontractors" ng-if="subcontractor._id" ng-click="selectUser(subcontractor._id, 'subcontractor')" ng-style="subcontractor._id._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             {{subcontractor._id.name}}
         </p>
-        <p ng-show="currentUser.type == 'client' || currentUser.type == 'builder' || currentUser.type == 'architect' || currentUser.type == 'consultant'" ng-click="accordian = 6">CONSULTANTS</p>
+        <p ng-show="currentUser.type == 'client' || currentUser.type == 'builder' || currentUser.type == 'architect' || currentUser.type == 'consultant'" ng-click="accordian = 6; getTenderListByType('consultant')">CONSULTANTS</p>
         <p ng-show="accordian == 6" style="margin-left: 10px" ng-repeat="consultant in invitePeople.consultants" ng-if="consultant._id" ng-click="selectUser(consultant._id, 'consultant')" ng-style="consultant._id._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             {{consultant._id.name}}
         </p>
@@ -62,11 +62,11 @@
         <p ng-show="accordian == 1" style="margin-left: 10px" ng-repeat="currentTeamMember in currentTeamMembers" ng-click="selectUser(currentTeamMember, 'team')" ng-style="currentTeamMember._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             {{currentTeamMember.name}}
         </p>
-        <p ng-show="currentUser.type == 'client' || currentUser.type == 'builder'" ng-click="accordian = 2">BUILDER</p>
+        <p ng-show="currentUser.type == 'client'" ng-click="accordian = 2">BUILDER</p>
         <p ng-show="accordian == 2" style="margin-left: 10px;" ng-repeat="builder in invitePeople.builders" ng-if="builder._id" ng-click="selectUser(builder._id, 'builder')" ng-style="builder._id._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             {{builder._id.name}}
         </p>
-        <p ng-show="currentUser.type == 'client' || currentUser.type == 'architect'" ng-click="accordian = 3">ARCHITECT</p>
+        <p ng-show="currentUser.type == 'client'" ng-click="accordian = 3">ARCHITECT</p>
         <p ng-show="accordian == 3" style="margin-left: 10px;" ng-repeat="architect in invitePeople.architects" ng-if="architect._id" ng-click="selectUser(architect._id, 'architect')" ng-style="architect._id._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             {{architect._id.name}}
         </p>
@@ -134,7 +134,7 @@
                 <div class="attachment-row" style="font-size: 12px; border-bottom: 1px solid #eee">
                     <div style="border: 1px solid #BBDEFB; background-color: #E3F2FD; border-radius: 3px; padding: 3px">
                         <p style="">This person is currently tendering for {{builderPackage.name}}.</p>
-                        <p><a class="modal-trigger" href="#view_tender_detail_{{selectedUser._id}}">View Tender Details</a></p>
+                        <p><a class="modal-trigger" href="#view_tender_detail">View Tender Details</a></p>
                     </div>
                 </div>
             </div>
@@ -286,11 +286,20 @@
     </form>
 </div>
 
-<div class="modal modal-fixed-bottom" id="view_tender_detail_{{member._id}}" ng-repeat="member in available">
-    <h5>View detail of tender {{member.name}}</h5>
+<div class="modal modal-fixed-bottom" id="view_tender_detail">
+    <h5>View detail of tender type {{selectedTeamType}}</h5>
     <div class="modal-content">
-        <p>{{member.name}}</p>
-        <p>{{member.email}}</p>
+        <ul>
+            <li ng-repeat="tender in tendersList">
+                <div class="col s10">
+                    <div class="col s6">{{tender.tender._id.name}}</div>
+                    <div class="col s6">{{tender.tender._id.email}}</div>
+                </div>
+                <div class="col s2">
+                    <button type="button" class="btn" ng-click="selectWinnerTender(tender)">Select this tender</button>
+                </div>
+            </li>
+        </ul>
     </div>
     <div class="modal-footer">
         <button type="button" class="modal-action modal-close btn-flat">Close</button>

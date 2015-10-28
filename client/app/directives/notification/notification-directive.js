@@ -170,6 +170,12 @@ angular.module('buiiltApp')
           if (notification.type == 'invite-people') {
             return 'people({id: notification.element.project})';
           }
+          if (notification.type == 'winner-tender') {
+            return 'people({id: notification.element.project})';
+          }
+          if (notification.type == 'loser-tender') {
+            return 'team.manager';
+          }
         };
 
         var text;
@@ -294,6 +300,12 @@ angular.module('buiiltApp')
         }
         if (scope.notification.type == 'invite-people') {
           text = params.fromUser() + 'has invited you in people page';
+        }
+        if (scope.notification.type == 'winner-tender') {
+          text = params.fromUser() + 'has selected you for people page';
+        }
+        if (scope.notification.type == 'loser-tender') {
+          text = params.fromUser() + ' thanks you for provide a quote' ;
         }
 
         scope.notification.sref = getSref(scope.notification);
