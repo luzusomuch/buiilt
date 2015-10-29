@@ -74,7 +74,7 @@
                     <p><a href="#invite_people" class="modal-trigger">+ Invite Other People</a></p>
                 </div>
                 <div ng-if="currentBoard._id" class="person-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-repeat="invitee in currentBoard.invitees">
-                    <p>{{invitee._id.name}}</p>
+                    <i class="tiny material-icons valign" style="color: #64B5F6" ng-style="invitee.isOnline ? {'color': '#4BBF6B'} : {'color': '#EDEFF0'}">brightness_1</i>{{invitee._id.name}}
                 </div>
             </div>
             

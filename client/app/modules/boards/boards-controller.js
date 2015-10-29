@@ -85,6 +85,23 @@ angular.module('buiiltApp')
         getTasksAndFilesByBoard(board);
     });
 
+    socket.on('onlineUser', function(users) {
+        var onlineUsersList = [];
+        _.each(users, function(user) {
+            var index = _.findIndex($scope.currentBoard.invitees, function(item) {
+                if (item._id) {
+                    return item._id._id == user;
+                }
+            });
+            if (index != -1) {
+                onlineUsersList.push(index);
+            }
+        });
+        _.each(onlineUsersList, function(user) {
+            $scope.currentBoard.invitees[user].isOnline = true;
+        });
+    });
+
     $scope.boards = [];
     $scope.currentBoard = {};
     boardService.getBoards({id: $stateParams.id}).$promise.then(function(res){

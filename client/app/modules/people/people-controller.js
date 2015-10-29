@@ -288,6 +288,21 @@ angular.module('buiiltApp')
         }
     };
 
+    socket.on('onlineUser', function(users) {
+        var onlineUsersList = [];
+        _.each(users, function(user) {
+            var index = _.findIndex($scope.available, function(item) {
+                return item._id == user;
+            });
+            if (index != -1) {
+                onlineUsersList.push(index);
+            }
+        });
+        _.each(onlineUsersList, function(user) {
+            $scope.available[user].isOnline = true;
+        });
+    });
+
     $scope.getTenderListByType = function(type) {
         $scope.selectedTeamType = type;
         $scope.tendersList = [];

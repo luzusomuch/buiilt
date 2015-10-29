@@ -104,7 +104,6 @@ angular.module('buiiltApp')
       function queryProjects(callback){
         var cb = callback || angular.noop;
         authService.isLoggedInAsync(function(isLoggedIn){
-          console.log(isLoggedIn);
           if(isLoggedIn){
             $scope.isLoggedIn = true;
             $scope.project = {
@@ -197,9 +196,7 @@ angular.module('buiiltApp')
 
       //first load
       queryProjects();
-      socket.on('onlineUser', function(users) {
-        console.log(users);
-      });
+      
       //check menu when state changes
       $rootScope.$on('$stateChangeSuccess', function (event, next) {
         queryProjects(function() {
