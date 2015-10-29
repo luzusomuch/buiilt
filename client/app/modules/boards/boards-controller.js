@@ -1,9 +1,142 @@
 angular.module('buiiltApp')
-.controller('BoardsCtrl', function ($scope, $rootScope, $state, team, currentUser, builderPackage, boardService, $stateParams, fileService, filepickerService, uploadService, taskService, socket, notificationService) {
+.controller('BoardsCtrl', function ($scope, $rootScope, $state, team, currentUser, builderPackage, boardService, $stateParams, fileService, filepickerService, uploadService, taskService, socket, notificationService, peopleService) {
     $scope.team = team;
     $scope.builderPackage = builderPackage;
     $scope.currentUser = currentUser;
     $scope.submitted = false;
+    $scope.availableInvite = [];
+
+    peopleService.getInvitePeople({id: $stateParams.id}).$promise.then(function(res){
+        console.log(res);
+        if (_.findIndex(res.builders, function(item) {
+            if (item._id) {
+                return item._id._id == $scope.currentUser._id;
+            }}) != -1) {
+            $scope.currentUser.type = 'builder';
+        } else if (_.findIndex(res.architects, function(item) {
+            if (item._id) {return item._id._id == $scope.currentUser._id;}
+            }) != -1) {
+            $scope.currentUser.type = 'architect';
+        } else if (_.findIndex(res.clients, function(item){
+            if (item._id) {return item._id._id == $scope.currentUser._id;}
+            }) != -1) {
+            $scope.currentUser.type = 'client';
+        } else if (_.findIndex(res.subcontractors, function(item){
+            if (item._id) {return item._id._id == $scope.currentUser._id;}
+            }) != -1) {
+            $scope.currentUser.type = 'subcontractor';
+        } else if (_.findIndex(res.consultants, function(item){
+            if (item._id) {return item._id._id == $scope.currentUser._id;}
+            }) != -1) {
+            $scope.currentUser.type = 'consultant';
+        } else {
+            $scope.currentUser.type = 'default';
+        }
+        console.log($scope.currentUser);
+        if ($scope.builderPackage.projectManager.type == 'architect') {
+            if ($scope.currentUser.type == 'builder' || $scope.currentUser.type == 'client') {
+                _.each(res.architects, function(architect) {
+                    if (architect._id) {
+                        $scope.availableInvite.push(architect._id);
+                    }
+                });
+                _.each(res.consultants, function(consultant) {
+                    if (consultant._id) {
+                        $scope.availableInvite.push(consultant._id);
+                    }
+                });
+                if ($scope.currentUser.type == 'builder') {
+                    _.each(res.subcontractors, function(subcontractor) {
+                    if (subcontractor._id) {
+                        $scope.availableInvite.push(subcontractor._id);
+                    }
+                });
+                }
+            } else if ($scope.currentUser.type == 'architect') {
+                _.each(res.builders, function(builder) {
+                    if (builder._id) {
+                        $scope.availableInvite.push(builder._id);
+                    }
+                });
+                _.each(res.clients, function(client) {
+                    if (client._id) {
+                        $scope.availableInvite.push(client._id);
+                    }
+                });
+                _.each(res.consultants, function(consultant) {
+                    if (consultant._id) {
+                        $scope.availableInvite.push(consultant._id);
+                    }
+                });
+            }
+        } else if ($scope.builderPackage.projectManager.type == 'builder') {
+            if ($scope.currentUser.type == 'builder') {
+                _.each(res.architects, function(architect) {
+                    if (architect._id) {
+                        $scope.availableInvite.push(architect._id);
+                    }
+                });
+                _.each(res.consultants, function(consultant) {
+                    if (consultant._id) {
+                        $scope.availableInvite.push(consultant._id);
+                    }
+                });
+                _.each(res.subcontractors, function(subcontractor) {
+                    if (subcontractor._id) {
+                        $scope.availableInvite.push(subcontractor._id);
+                    }
+                });
+                _.each(res.clients, function(client) {
+                    if (client._id) {
+                        $scope.availableInvite.push(client._id);
+                    }
+                });
+            } else if ($scope.currentUser.type == 'client' || $scope.currentUser.type == 'architect') {
+                _.each(res.builders, function(builder) {
+                    if (builder._id) {
+                        $scope.availableInvite.push(builder._id);
+                    }
+                });
+                _.each(res.consultants, function(consultant) {
+                    if (consultant._id) {
+                        $scope.availableInvite.push(consultant._id);
+                    }
+                });
+            } 
+        } else {
+            if ($scope.currentUser.type == 'client') {
+                _.each(res.builders, function(builder) {
+                    if (builder._id) {
+                        $scope.availableInvite.push(builder._id);
+                    }
+                });
+                _.each(res.architects, function(architect) {
+                    if (architect._id) {
+                        $scope.availableInvite.push(architect._id);
+                    }
+                });
+                _.each(res.consultants, function(consultant) {
+                    if (consultant._id) {
+                        $scope.availableInvite.push(consultant._id);
+                    }
+                });
+            } else if ($scope.currentUser.type == 'builder' || $scope.currentUser.type == 'architect') {
+                _.each(res.clients, function(client) {
+                    if (client._id) {
+                        $scope.availableInvite.push(client._id);
+                    }
+                });
+                if ($scope.currentUser.type == 'builder') {
+                    _.each(res.subcontractors, function(subcontractor) {
+                        if (subcontractor._id) {
+                            $scope.availableInvite.push(subcontractor._id);
+                        }
+                    });
+                }
+            }
+        }
+        console.log($scope.availableInvite);
+    });
 
     function getAvailable(board) {
         $scope.available = [];
@@ -152,7 +285,21 @@ angular.module('buiiltApp')
         }
     };
 
-    $scope.board = {};
+    $scope.board = {
+        invitees: []
+    };
+
+    $scope.inviteUser = function(invitee,index) {
+        invitee.canRevoke = true;
+        $scope.board.invitees.push(invitee);
+        $scope.availableInvite.splice(index,1);
+    };
+
+    $scope.revokeUser = function(assignee,index) {
+        $scope.availableInvite.push(assignee);
+        $scope.board.invitees.splice(index,1);
+    };
+
     $scope.createNewBoard = function(form) {
         $scope.submitted = true;
         if (form.$valid) {

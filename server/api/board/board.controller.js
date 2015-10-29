@@ -12,17 +12,20 @@ exports.createBoard = function(req, res) {
         owner: req.user._id,
         name: req.body.name
     });
-    User.findOne({email: req.body.email}, function(err, user) {
-        if (err) {return res.send(500,err);}
-        if (!user) {
-            board.invitees.push({email: req.body.email});
-        } else {
-            board.invitees.push({_id: user._id});
-            user.projects.push(req.params.id);
-            user.markModified('projects');
-            user.save();
-        }
-        board.save(function(err){
+    var invitees = [];
+    async.each(req.body.invitees, function(invitee, cb) {
+        User.findById(invitee._id, function(err, user) {
+            if (err || !user) {return cb(err);}
+            else {
+                invitees.push({_id: user._id});
+                user.projects.push(req.params.id);
+                user.markModified('projects');
+                user.save(cb());
+            }
+        });
+    }, function() {
+        board.invitees = invitees;
+        board.save(function(err) {
             if (err) {return res.send(500,err);}
             Board.populate(board, [{path: 'invitees._id', select: '_id email name'}], function(err, board) {
                 return res.send(200, board);

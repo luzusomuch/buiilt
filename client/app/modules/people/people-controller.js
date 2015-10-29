@@ -104,6 +104,7 @@ angular.module('buiiltApp')
                     {value: 'addConsultant', text: 'consultant'}
                 ];
             } else {
+                console.log($scope.currentUser.type);
                 switch ($scope.currentUser.type) {
                     case 'client': 
                         $scope.availableUserType = [

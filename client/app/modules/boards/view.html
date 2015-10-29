@@ -193,8 +193,18 @@
                 <input type="text" name="name" ng-model="board.name" required >
             </div>
             <div class="row">
-                <label for="">Email</label>
-                <input type="email" name="email" ng-model="board.email" required>
+                <p>Invitees</p>
+                <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="assignee in board.invitees">
+                    {{assignee.name}} <span ng-if="assignee.canRevoke"><a href="#!" ng-click="revokeUser(assignee,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
+                </div>
+            </div>
+            <div class="row">
+                <p>Available Invitees's:</p>
+                <a href="#!" ng-click="inviteUser(invitee,$index)" ng-repeat="invitee in availableInvite track by $index">
+                    <div class="card col" style="padding: 5px; margin-left: 10px">
+                        {{invitee.name}}
+                    </div>
+                </a>
             </div>
         </div>
         <div class="modal-footer">
