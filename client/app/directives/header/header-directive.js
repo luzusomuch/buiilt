@@ -3,7 +3,7 @@ angular.module('buiiltApp')
   return {
     restrict: 'E',
     templateUrl: 'app/directives/header/header.html',
-    controller: function($scope,$state, $stateParams, $rootScope,materialPackageService, authService, projectService, contractorService,teamService,filterFilter, builderPackageService) {
+    controller: function($scope,$state, $stateParams, $rootScope,materialPackageService, authService, projectService, contractorService,teamService,filterFilter, builderPackageService, socket) {
       $scope.projects = [];
       $scope.submitted = false;
 	  
@@ -104,6 +104,7 @@ angular.module('buiiltApp')
       function queryProjects(callback){
         var cb = callback || angular.noop;
         authService.isLoggedInAsync(function(isLoggedIn){
+          console.log(isLoggedIn);
           if(isLoggedIn){
             $scope.isLoggedIn = true;
             $scope.project = {
@@ -124,7 +125,6 @@ angular.module('buiiltApp')
             authService.getCurrentUser().$promise
               .then(function(res) {
                 $rootScope.user = $scope.user = res;
-
                 if ($state.current.name == 'dashboard' && ! res.emailVerified) {
                   Materialize.toast('<span>You must confirm your email to hide this message!</span><a class="btn-flat yellow-text" id="sendVerification">Send Verification Email Again<a>', $scope.duration,'rounded');
                 }
@@ -197,6 +197,9 @@ angular.module('buiiltApp')
 
       //first load
       queryProjects();
+      socket.on('onlineUser', function(users) {
+        console.log(users);
+      });
       //check menu when state changes
       $rootScope.$on('$stateChangeSuccess', function (event, next) {
         queryProjects(function() {

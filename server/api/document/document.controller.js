@@ -10,7 +10,6 @@ exports.getByProjectAndPackage = function(req, res) {
     Document.find({package: req.params.id}, function(err, documents) {
         if (err) 
             return res.send(500, err);
-         //console.log(documents);
         res.json(200, documents);
     });
 }
@@ -32,9 +31,4 @@ exports.create = function(req, res) {
             });
         }
     })
-    // console.log(req.body);
-    // var document = new Document({
-    //     user: req.user._id
-
-    // });
 }

@@ -77,7 +77,7 @@ exports.sendQuote =function(req, res) {
             }
             callback();
         }, function(err){
-            if (err) {console.log(err);return res.send(500,err);}
+            if (err) {return res.send(500,err);}
             else {
               quoteRequest.quotePrice = quotePrice;
               quoteRequest.subTotal = subTotal;

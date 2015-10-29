@@ -4,7 +4,6 @@ var redis = require('redis'),
     EventBus = require('./EventBus'),
     config = require('./../config');
     store = redis.createClient(config.redis.port, config.redis.host, { detect_buffers : true, auth_pass : config.redis.pass });
-
 store.select(config.socketsStorageDb);
 store.on('error', function (err) {
   console.error("Redis error: " + err);

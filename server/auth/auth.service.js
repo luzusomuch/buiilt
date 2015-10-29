@@ -43,7 +43,6 @@ function isInProjectInvite(){
       Project.findById(req.params.id, function (err, project) {
         if (err) { return res.send(401);}
         else {
-          console.log(project);
           if (project.requestedHomeBuilders._id == req.user._id) {
             next();
           }

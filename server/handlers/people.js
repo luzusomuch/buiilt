@@ -10,9 +10,6 @@ var _ = require('lodash');
 var mongoose = require('mongoose');
 
 EventBus.onSeries('People.Updated', function(req, next) {
-    console.log(req._modifiedPaths);
-    console.log(req.winnerTender);
-    console.log(req.loserTender);
     if (req._modifiedPaths.indexOf('invitePeople') != -1) {
         if (req.newInviteeSignUpAlready && req.newInviteeSignUpAlready.length > 0) {
             var params = {

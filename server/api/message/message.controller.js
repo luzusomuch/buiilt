@@ -288,7 +288,6 @@ exports.destroy = function (req, res) {
     if (err) {
       return res.send(500, err);
     }
-    console.log(thread);
     Thread.find({}, function(err,threads){
       if (err) {return res.send(500,err);}
       return res.send(200, threads);

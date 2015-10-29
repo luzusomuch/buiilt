@@ -22,7 +22,6 @@ exports.findOne = function(req, res) {
   .populate('messages.sendBy')
   .exec(function(err, contractorPackage) {
     if (err) {
-      console.log(err);
       return res.send(500, err);
     }
     User.populate(contractorPackage, [
@@ -182,7 +181,7 @@ exports.getMessageForBuilder = function(req, res) {
     else {
       ContractorPackage.findOne({$and:[{_id: req.params.id},{'messages.owner': team._id}]})
       .populate('messages.sendBy').exec(function(err, contractorPackage) {
-        if (err) {console.log(err);}
+        if (err) {return res.send(500,err);}
         if (!contractorPackage) {return res.send(404,err)}
         else {
           return res.json(200,contractorPackage);

@@ -13,7 +13,6 @@ exports.getByDocument = function(req, res) {
     File.find({package: req.params.id}, function(err, files) {
         if (err) 
             return res.send(500, err);
-         //console.log(documents);
         res.json(200, files);
     });
 };
@@ -22,7 +21,6 @@ exports.show = function(req, res) {
     File.findById(req.params.id, function(err, file) {
         if (err) 
             return res.send(500, err);
-        // console.log(file);
         return res.json(file);
     });
 };
@@ -98,13 +96,6 @@ exports.downloadFile = function(req, res) {
         else {
             var fileUrl = {url: s3.getPublicUrl(file.name)};
             return res.json(200,fileUrl);
-            // s3.downloadFile(file, function(err, data) {
-            //     if (err) {return res.send(500,err);}
-            //     else {
-            //         console.log(data)
-            //         return res.json(200,data);
-            //     }
-            // });
         }
     });
 };
@@ -119,15 +110,6 @@ exports.downloadAll = function(req, res) {
                 listFileUrls.push(fileUrl);
             });
             return res.json(200,listFileUrls);
-            
-            // return res.json(200,fileUrl);
-            // s3.downloadFile(file, function(err, data) {
-            //     if (err) {return res.send(500,err);}
-            //     else {
-            //         console.log(data)
-            //         return res.json(200,data);
-            //     }
-            // });
         }
     });
 };
@@ -182,7 +164,7 @@ exports.sendToDocument = function(req, res) {
                     version: 0
                 });
                 newFile.save(function(err){
-                    if (err) {console.log(err);return res.send(500,err);}
+                    if (err) {return res.send(500,err);}
                     return res.send(200, newFile);
                 });
             } else {

@@ -194,7 +194,7 @@ exports.update = function(req, res) {
 
 exports.selectWinner = function(req, res) {
   Project.findById(req.params.id, function(err, project) {
-    if (err) {console.log(err);}
+    if (err) {return res.send(500,err);}
     else {
       project.quote = req.body.quote;
       project.homeBuilder = req.body.homeBuilder;
@@ -298,7 +298,6 @@ exports.destroy = function (req, res) {
     if (err) {
       return res.send(500, err);
     }
-    console.log(project);
     Project.find({}, function(err,projects){
       if (err) {return res.send(500,err);}
       return res.send(200, projects);
@@ -309,14 +308,13 @@ exports.destroy = function (req, res) {
 exports.updateProject = function(req, res) {
   Project.update({_id: req.params.id},
   {name: req.body.project.name, description: req.body.project.description}, function(err, saved){
-    if (err) {console.log(err);return res.send(500,err);}
+    if (err) {return res.send(500,err);}
     return res.send(200,saved);
   });
 };
 
 exports.createProjectNewVersion = function(req, res) {
   var user = req.user;
-  console.log(req.body);
   ProjectValidator.validateCreate(req,function(err,data) {
     if (err) {
       res.send(422,err);

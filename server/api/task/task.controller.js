@@ -63,7 +63,6 @@ exports.project = function(req,res,next) {
 };
 
 exports.package = function(req,res,next) {
-  console.log(req.params);
   var _package = getPackage(req.params.type);
   _package.findById(req.params.id,function(err,aPackage) {
     if (err) {
@@ -173,7 +172,6 @@ exports.myTask = function(req,res) {
 
 exports.create = function(req,res) {
   var aPackage = req.aPackage;
-  console.log(aPackage);
   var user = req.user;
   TaskValidator.validateCreate(req,function(err,data) {
     if (err) {
@@ -208,11 +206,10 @@ exports.create = function(req,res) {
       task.assignees = _.union(task.assignees, architectTeamLeader);
       task.save(function(err) {
         if (err) {
-          console.log(err);
           return res.send(500,err)
         }
         Task.populate(task, {path:'assignees', select: '-hashedPassword -salt'}, function(err, task){
-          if (err) {console.log(err);return res.send(500,err);}
+          if (err) {return res.send(500,err);}
           return res.json(task);
         });
       });

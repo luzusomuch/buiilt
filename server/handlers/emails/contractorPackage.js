@@ -143,9 +143,6 @@ EventBus.onSeries('ContractorPackage.Inserted', function(request, next) {
 });
 
 EventBus.onSeries('ContractorPackage.Updated', function(request, next) {
-  console.log(request);
-  console.log(request._modifiedPaths);
-
   if (request._modifiedPaths.indexOf('inviteContractor') != -1) {
     async.parallel({
       user: function(cb){

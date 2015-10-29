@@ -13,7 +13,6 @@ exports.getPackageByProject = function(req, res) {
   BuilderPackage.findOne({'project': req.params.id}, function(err, builderPackages) {
     if (err) 
       return res.send(500, err);
-    // console.log(builderPackages);
     res.json(200, builderPackages);
   });
 };

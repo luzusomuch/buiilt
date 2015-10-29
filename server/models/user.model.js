@@ -36,6 +36,7 @@ var UserSchema = new Schema({
   phoneNumber: Number,
   country: String,
   packageToken: String,
+  status: {type: String, default: 'offline'},
   projects: [{type: Schema.Types.ObjectId, ref: 'Project'}],
   createdAt: {type: Date, default: Date.now},
   updatedAt: {type: Date, default: Date.now}

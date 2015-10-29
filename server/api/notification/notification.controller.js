@@ -155,7 +155,6 @@ exports.countTotalForIOS = function(req, res) {
 };
 
 exports.getOne = function(req, res) {
-  console.log(req.params.id);
   Notification.findById(req.params.id, function(err, notification){
     if (err) {return res.send(500,err);}
     if (!notification) {return res.send(404);}

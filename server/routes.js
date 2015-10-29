@@ -47,12 +47,10 @@ module.exports = function(app) {
 
    app.route('/backend/*')
     .get(function(req, res) {
-      console.log('ccccccccccccccc');
       res.sendfile(app.get('appPath') + '/backend.html')
     });
     app.route('/')
     .get(function(req, res) {
-      console.log('aaaaaaaaaaaaa');
       res.sendfile(app.get('appPath') + '/home.html')
     });
   // All other routes should redirect to the index.html
@@ -61,7 +59,6 @@ module.exports = function(app) {
 
   app.route('/*')
     .get(function(req, res) {
-      console.log('bbbbbbbbbbbb')
       res.sendfile(app.get('appPath') + '/index.html');
     });
 

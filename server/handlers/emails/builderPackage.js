@@ -89,7 +89,6 @@ EventBus.onSeries('BuilderPackage.Inserted', function(request, next) {
     var from = result.user.firstName + " " + result.user.lastName + " | " + result.team.name + "<"+result.user.email+">";
     // var subjectType = (request.to.type == 'homeOwner') ? 'homeowner' : 'builder';
     if (request.to.type == 'homeOwner' && (request.architect.email || request.architect.team)) {
-      console.log('in first');
       async.parallel([
         function(cb) {
           if (request.architect.email) {
@@ -183,7 +182,6 @@ EventBus.onSeries('BuilderPackage.Inserted', function(request, next) {
       
     }
     else if (request.to.type == 'homeOwner') {
-      console.log('in homeowner');
       // subjectType = 'homeowner';
       if (request.to.email) {
         var packageInvite = new PackageInvite({
@@ -230,7 +228,6 @@ EventBus.onSeries('BuilderPackage.Inserted', function(request, next) {
         });
       }
     } else if (request.to.type == 'builder' || request.winner) {
-      console.log('in builder');
       // subjectType = 'builder';
       if (request.to.email) {
         var packageInvite = new PackageInvite({
@@ -277,7 +274,6 @@ EventBus.onSeries('BuilderPackage.Inserted', function(request, next) {
         });
       }
     } else if(request.architect.team || request.architect.email) {
-      console.log('in architect');
       // subjectType = 'architect'
       if (request.architect.email) {
         var packageInvite = new PackageInvite({

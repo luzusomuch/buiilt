@@ -8,6 +8,13 @@ var config = require('./environment');
 var path = require('path');
 var fs = require('fs');
 var EventBus = require('./../components/EventBus');
+var User = require('./../models/user.model');
+var _ = require('lodash');
+var async = require('async');
+var mongoose = require('mongoose');
+var listOnlineUser = [];
+var listOfUserOnline = [];
+var uniqueUserList = [];
 
 function _parse(initPath, callback) {
 
@@ -49,7 +56,18 @@ function onConnect(socket) {
 
   socket.on('join', function (id) {
     console.log('user join room [%s] socket id [%s]', id, socket.id);
+    socket.userId = id;
     socket.join(id);
+    listOnlineUser.push(socket.userId);
+    console.log(listOnlineUser);
+    uniqueUserList = _.uniq(listOnlineUser);
+    _.each(uniqueUserList, function(user){
+      EventBus.emit('socket:emit', {
+        event: 'onlineUser',
+        room: user,
+        data: uniqueUserList
+      });
+    });
   });
 
   //new TwilioSocket(socket);
@@ -78,7 +96,7 @@ module.exports = function (socketio) {
   //   secret: config.secrets.session,
   //   handshake: true
   // }));
-
+  
   socketio.on('connection', function (socket) {
     socket.address = socket.handshake.address !== null ?
             socket.handshake.address + ':9000' :
@@ -90,6 +108,19 @@ module.exports = function (socketio) {
     socket.on('disconnect', function () {
       onDisconnect(socket);
       console.info('[%s] DISCONNECTED', socket.address);
+      console.log(socket.userId);
+      if (socket.userId) {
+        var abc = _.remove(uniqueUserList, function(item){
+          return item == socket.userId.toString();
+        });
+        _.each(uniqueUserList, function(user) {
+          EventBus.emit('socket:emit', {
+            event: 'onlineUser',
+            room: user,
+            data: uniqueUserList
+          });
+        });
+      }
     });
 
     // Call onConnect.

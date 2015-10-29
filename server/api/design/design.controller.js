@@ -99,7 +99,6 @@ exports.destroy = function (req, res) {
     if (err) {
       return res.send(500, err);
     }
-    console.log(Design);
     Design.find({}, function(err,Designs){
       if (err) {return res.send(500,err);}
       return res.send(200, Designs);

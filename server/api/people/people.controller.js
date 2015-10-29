@@ -6,7 +6,6 @@ var _ = require('lodash');
 var async = require('async');
 
 exports.invitePeople = function(req, res) {
-    console.log('it goes there');
     var invite = req.body;
     People.findOne({project:req.params.id}, function(err, people){
         if (err) {return res.send(500,err);}
@@ -245,7 +244,6 @@ exports.invitePeople = function(req, res) {
 };
 
 exports.selectWinnerTender = function(req, res) {
-    console.log(req.body);
     People.findOne({project: req.params.id}, function(err, people) {
         if (err) {return res.send(500,err);}
         if (!people) {return res.send(404);}
@@ -435,7 +433,6 @@ exports.selectWinnerTender = function(req, res) {
 };
 
 exports.getInvitePeople = function(req, res) {
-    console.log(req.params.id);
     People.findOne({project: req.params.id})
     .populate("builders._id", "_id email name")
     .populate("architects._id", "_id email name")

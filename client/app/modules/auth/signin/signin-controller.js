@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-  .controller('SigninCtrl', function ($scope, authService, $window,$stateParams,$state) {
+  .controller('SigninCtrl', function ($scope, authService, $window,$stateParams,$state, socket) {
     $scope.user = {};
     $scope.errors = {};
     $scope.submitted = false;
@@ -14,8 +14,9 @@ angular.module('buiiltApp')
     $scope.signin = function (form) {
       $scope.submitted = true;
       if (form.$valid) {
-        authService.login($scope.user).then(function () {
+        authService.login($scope.user).then(function (res) {
           //show alert
+          socket.emit('join', res.id);
           $state.go('team.manager');
         }, function (res) {
           $scope.error = true;

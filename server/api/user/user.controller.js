@@ -509,7 +509,6 @@ exports.destroy = function (req, res) {
     if (err) {
       return res.send(500, err);
     }
-    console.log(user);
     if (user.team._id) {
       Team.findById(user.team._id, function(err, team){
         if (err) {return res.send(500,err);}
@@ -616,7 +615,6 @@ exports.me = function (req, res, next) {
     if (!user) {
       return res.json(404);
     }
-    console.log(user);
     return res.json(user);
   });
 };

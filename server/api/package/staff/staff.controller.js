@@ -104,7 +104,6 @@ exports.destroy = function (req, res) {
     if (err) {
       return res.send(500, err);
     }
-    console.log(staffPackage);
     StaffPackage.find({}, function(err,staffPackages){
       if (err) {return res.send(500,err);}
       return res.send(200, staffPackages);

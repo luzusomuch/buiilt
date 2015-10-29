@@ -225,9 +225,6 @@ exports.getByProjectId = function(req, res) {
     if (err) {return res.send(500, err);}
     else {
       return res.json(quoteRequests);
-      // _.each(quoteRequests, function(quoteRequest) {
-      //   console.log(quoteRequest);
-      // });
     }
   });
 };
@@ -253,22 +250,6 @@ exports.createUserForHomeBuilderRequest = function(req, res, next) {
           });  
         }
       });
-      //update project for user
-      // Project.find({'requestedHomeBuilders.email': req.body.email}, function (err, projects) {
-      //   if (err) {
-      //     console.log(err);
-      //   }
-      //   else {
-      //     _.each(projects, function (pj) {
-      //       _.each(pj.requestedHomeBuilders, function (builder) {
-      //         if (builder.email === req.body.email) {
-      //           builder._id = newUser._id;
-      //           pj.save();
-      //         }
-      //       });
-      //     });
-      //   }
-      // });
 
       var token = jwt.sign({_id: user._id}, config.secrets.session, {expiresInMinutes: 60 * 5});
       res.json({token: token});

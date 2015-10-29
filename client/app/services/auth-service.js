@@ -21,6 +21,7 @@ angular.module('buiiltApp')
         password: user.password
       })
       .success(function(data) {
+        console.log(data);
         $cookieStore.put('token', data.token);
         currentUser = userService.get();
         deferred.resolve(data);

@@ -41,8 +41,7 @@ exports.getDefaultPackageByProject = function(req, res) {
   .populate('invitees.quoteDocument', '_id mimeType title')
   .populate('projectManager._id')
   .exec(function(err, builderPackage) {
-    if (err){console.log(err); return res.send(500, err); }
-    console.log(builderPackage);
+    if (err){return res.send(500, err); }
     User.populate(builderPackage,[
       {path : 'owner.member._id', select: '-hashedPassword -salt'},
       {path : 'owner.leader', select: '-hashedPassword -salt'},
@@ -53,7 +52,7 @@ exports.getDefaultPackageByProject = function(req, res) {
       {path : 'winner.leader', select: '-hashedPassword -salt'},
       {path : 'winner.member._id', select: '-hashedPassword -salt'}
     ],function(err,builderPackage) {
-      if (err){ console.log(err);return res.send(500, err); }
+      if (err){ return res.send(500, err); }
       if (builderPackage.hasArchitectManager && builderPackage.architect.team) {
         if (builderPackage.architect.team._id.toString() == user.team._id.toString()) {
           return res.json(builderPackage);
@@ -101,7 +100,7 @@ exports.findByProject = function(req, res){
       {path : 'to.team.member._id'},
       {path : 'to.team.leader'}
     ],function(err,builderPackage) {
-      if (err){ console.log(err);return res.send(500, err); }
+      if (err){ return res.send(500, err); }
       return res.json(builderPackage);
     });
   });

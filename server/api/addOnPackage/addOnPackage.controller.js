@@ -128,7 +128,6 @@ exports.sendDefect = function(req, res) {
 
 exports.sendVariation = function(req, res) {
     var packageType = req.body.packageType;
-    console.log(packageType);
     if (!req.body.quoteLater && req.body.quoteLater == false) {
         var quoteRate = [];
         var quotePrice = [];
@@ -1033,7 +1032,6 @@ exports.editAddendum = function(req, res) {
                     }
                 }
                 else if (variation.packageType == 'material') {
-                    console.log('sdsds');
                     var pack = _.findWhere(variation.addendums, function(id){
                         return id._id.toString() === req.body.addendumId;
                     });
