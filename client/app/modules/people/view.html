@@ -165,7 +165,7 @@
                     <p><a class="modal-trigger" href="#new_attachment">+ Add an Attachment</a></p>
                 </div>
                 <div class="attachment-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-repeat="file in files" ng-if="file.isOwner">
-                    <p>{{file.title}}</p>
+                    <p><a href="#modal-attachment-detail-{{file._id}}" class="modal-trigger">{{file.title}}</a></p>
                 </div>
             </div>
             <div id="test3" class="col s12" style="height: 65vh; overflow-y: scroll">
@@ -333,5 +333,16 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="modal-action modal-close btn-flat">Close</button>
+    </div>
+</div>
+
+<div class="modal modal-fixed-bottom" id="modal-attachment-detail-{{file._id}}" ng-repeat="file in files">
+    <h5>View attachment {{file.title}} detail</h5>
+    <div class="modal-content">
+        <div file-picker-previewer type="filepicker-preview" url="{{file.path}}" style="height:500px;"> </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="modal-action modal-close btn-flat">Close</button>
+        <button type="button" ng-click="downloadFile(file)" class="modal-action modal-close btn-flat">Download</button>
     </div>
 </div>
