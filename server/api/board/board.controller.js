@@ -27,7 +27,10 @@ exports.createBoard = function(req, res) {
         board.invitees = invitees;
         board.save(function(err) {
             if (err) {return res.send(500,err);}
-            Board.populate(board, [{path: 'invitees._id', select: '_id email name'}], function(err, board) {
+            Board.populate(board, [
+                {path: 'invitees._id', select: '_id email name'},
+                {path: 'owner', select: '_id email name'}
+                ], function(err, board) {
                 return res.send(200, board);
             });
         });
@@ -55,6 +58,7 @@ exports.invitePeople = function(req, res) {
                 if (err) {return res.send(500,err);}
                 Board.populate(board, [
                     {path: 'invitees._id', select: '_id email name'},
+                    {path: 'owner', select: '_id email name'},
                     {path: 'messages.user', select: '_id email name'}
                     ], function(err, board) {
                     return res.send(200, board);
@@ -66,6 +70,7 @@ exports.invitePeople = function(req, res) {
 
 exports.getBoards = function(req, res) {
     Board.find({project: req.params.id})
+    .populate('owner', '_id email name')
     .populate('invitees._id', '_id email name')
     .populate('messages.user', '_id email name').exec(function(err, boards) {
         if (err) {return res.send(500,err);}
@@ -88,6 +93,7 @@ exports.sendMessage = function(req, res) {
             if (err) {return res.send(500,err);}
             Board.populate(board, [
             {path: 'invitees._id', select: '_id email name'},
+            {path: 'owner', select: '_id email name'},
             {path: 'messages.user', select: '_id email name'}
             ], function(err, board) {
                 EventBus.emit('socket:emit', {

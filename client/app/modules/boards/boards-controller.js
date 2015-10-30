@@ -145,6 +145,8 @@ angular.module('buiiltApp')
                 $scope.available.push(invitee._id);
             }
         });
+        $scope.available.push(board.owner);
+        console.log($scope.available);
     };  
 
     function getTasksAndFilesByBoard(board) {
@@ -221,17 +223,15 @@ angular.module('buiiltApp')
     socket.on('onlineUser', function(users) {
         var onlineUsersList = [];
         _.each(users, function(user) {
-            var index = _.findIndex($scope.currentBoard.invitees, function(item) {
-                if (item._id) {
-                    return item._id._id == user;
-                }
+            var index = _.findIndex($scope.available, function(item) {
+                return item._id == user;
             });
             if (index != -1) {
                 onlineUsersList.push(index);
             }
         });
         _.each(onlineUsersList, function(user) {
-            $scope.currentBoard.invitees[user].isOnline = true;
+            $scope.available[user].isOnline = true;
         });
     });
 
@@ -258,6 +258,7 @@ angular.module('buiiltApp')
         getUnreadMessage($scope.currentBoard);
         getAvailable($scope.currentBoard);
         getTasksAndFilesByBoard($scope.currentBoard);
+        console.log($scope.boards);
     });
 
     $scope.selectBoard = function(board) {

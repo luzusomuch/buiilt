@@ -2,7 +2,7 @@
                 
     <div class="col s2" style="margin-right: 1px solid #eee; max-height: 81vh; overflow-y: scroll; font-size: 12px; color: #757575;">
         <p>BOARDS</p>
-        <p style="margin-left: 10px;" ng-repeat="board in boards" ng-click="selectBoard(board)" ng-style="board._id == currentBoard._id ? {'color': '#64B5F6'} : {'color': 'black'}" ng-if="board.isOwner || board.owner == currentUser._id">
+        <p style="margin-left: 10px;" ng-repeat="board in boards" ng-click="selectBoard(board)" ng-style="board._id == currentBoard._id ? {'color': '#64B5F6'} : {'color': 'black'}" ng-if="board.isOwner || board.owner._id == currentUser._id">
             {{board.name}}       
         </p>
         <!-- <p style="margin-left: 10px; color: #42A5F5"><strong>Board 3</strong></p> -->
@@ -73,8 +73,8 @@
                 <div class="person-row" style="font-size: 12px; border-bottom: 1px solid #eee">
                     <p><a href="#invite_people" class="modal-trigger">+ Invite Other People</a></p>
                 </div>
-                <div ng-if="currentBoard._id" class="person-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-repeat="invitee in currentBoard.invitees">
-                    <i class="tiny material-icons valign" style="color: #64B5F6" ng-style="invitee.isOnline ? {'color': '#4BBF6B'} : {'color': '#EDEFF0'}">brightness_1</i>{{invitee._id.name}}
+                <div ng-if="currentBoard._id" class="person-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-repeat="invitee in available">
+                    <i class="tiny material-icons valign" style="color: #64B5F6" ng-style="invitee.isOnline ? {'color': '#4BBF6B'} : {'color': '#EDEFF0'}">brightness_1</i>{{invitee.name}}
                 </div>
             </div>
             
