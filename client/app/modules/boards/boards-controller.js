@@ -139,13 +139,18 @@ angular.module('buiiltApp')
     });
 
     function getAvailable(board) {
+        console.log(board);
         $scope.available = [];
-        _.each(board.invitees, function(invitee) {
-            if (invitee._id) {
-                $scope.available.push(invitee._id);
+        if (board._id) {
+            if (board.invitees.length > 0) {
+                _.each(board.invitees, function(invitee) {
+                    if (invitee._id) {
+                        $scope.available.push(invitee._id);
+                    }
+                });
             }
-        });
-        $scope.available.push(board.owner);
+            $scope.available.push(board.owner);
+        }
         console.log($scope.available);
     };  
 
@@ -382,6 +387,23 @@ angular.module('buiiltApp')
                 console.log(res);
             });
         }
+    };
+
+    $scope.complete = function(task) {
+        task.completed = !task.completed;
+        if (task.completed) {
+            task.completedBy = $scope.currentUser._id;
+            task.completedAt = new Date();
+        } else {
+            task.completedBy = null;
+            task.completedAt = null;
+        }
+
+        taskService.update({id : task._id, type : task.type},task).$promise
+        .then(function(res) {
+            console.log(res);
+            getTasksAndFilesByBoard($scope.currentBoard);
+        });
     };
 
     $scope.enterMessage = function ($event) {

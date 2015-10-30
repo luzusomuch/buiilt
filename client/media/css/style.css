@@ -302,6 +302,10 @@ ul.pagination {
   overflow-x: hidden;
 }
 
+.margin-10-0 {
+  margin: 10px 0px;
+}
+
 /*body{
   background-image: url("../old-and-new.png");
   background-size: 100%;

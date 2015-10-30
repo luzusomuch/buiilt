@@ -1,12 +1,12 @@
 <div class="row card" style="margin-top: 10px">
                 
     <div class="col s2" style="margin-right: 1px solid #eee; max-height: 81vh; overflow-y: scroll; font-size: 12px; color: #757575;">
-        <p>BOARDS</p>
-        <p style="margin-left: 10px;" ng-repeat="board in boards" ng-click="selectBoard(board)" ng-style="board._id == currentBoard._id ? {'color': '#64B5F6'} : {'color': 'black'}" ng-if="board.isOwner || board.owner._id == currentUser._id">
+        <p class="margin-10-0">BOARDS</p>
+        <p class="margin-10-0" style="margin-left: 10px;" ng-repeat="board in boards" ng-click="selectBoard(board)" ng-style="board._id == currentBoard._id ? {'color': '#64B5F6'} : {'color': 'black'}" ng-if="board.isOwner || board.owner._id == currentUser._id">
             {{board.name}}       
         </p>
         <!-- <p style="margin-left: 10px; color: #42A5F5"><strong>Board 3</strong></p> -->
-        <p style="margin-left: 10px; color: black" class="modal-trigger" href="#new_board">+ Add a Board</p>
+        <p style="margin-left: 10px; color: black" class="modal-trigger margin-10-0" href="#new_board">+ Add a Board</p>
     </div>
     
     <div class="col s7" style="border-left: 1px solid #eee; border-right: 1px solid #eee;">
@@ -74,7 +74,7 @@
                     <p><a href="#invite_people" class="modal-trigger">+ Invite Other People</a></p>
                 </div>
                 <div ng-if="currentBoard._id" class="person-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-repeat="invitee in available">
-                    <i class="tiny material-icons valign" style="color: #64B5F6" ng-style="invitee.isOnline ? {'color': '#4BBF6B'} : {'color': '#EDEFF0'}">brightness_1</i>{{invitee.name}}
+                    <p class="margin-10-0"><i class="tiny material-icons valign" style="color: #64B5F6" ng-style="invitee.isOnline ? {'color': '#4BBF6B'} : {'color': '#EDEFF0'}">brightness_1</i>{{invitee.name}}</p>
                 </div>
             </div>
             
@@ -83,7 +83,7 @@
                     <p><a class="modal-trigger" href="#new_attachment">+ Add an Attachment</a></p>
                 </div>
                 <div class="attachment-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-repeat="file in files">
-                    <p>{{file.title}}</p>
+                    <p class="margin-10-0">{{file.title}}</p>
                 </div>
             </div>
             
@@ -92,7 +92,22 @@
                     <p><a href="#new_task" class="modal-trigger">+ Add a Task</a></p>
                 </div>
                 <div class="task-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-repeat="task in tasks" ng-if="task.isOwner || task.user == currentUser._id">
-                    <p>{{task.name}}</p>
+                    <div class="col s2">
+                        <p>
+                            <input ng-if="!task.completed" type="checkbox" id="complete" ng-click="complete(task)" ng-disabled="task.isOwner"/>
+                            <label for="complete"></label>
+                        </p>
+                        <p>
+                            <input ng-if="task.completed" checked="true" type="checkbox" id="completed" ng-click="complete(task)" ng-disabled="!task.isOwner"/>
+                            <label for="completed"></label>
+                        </p>
+                    </div>
+                    <div class="col s10">
+                        <p class="margin-10-0">
+                            <strong>{{task.name}}</strong>
+                        </p>
+                        <small>{{task.description}}</small>
+                    </div>
                 </div>
             </div>
         </div>
@@ -115,20 +130,6 @@
                 <label>Description</label>
                 <textarea id="docAttachDesc" name="description" class="materialize-textarea" ng-model="uploadFile.desc" id="textarea1" required></textarea>
                 <p class="validate-message" ng-if="uploadForm.description.$error.required || uploadFile.description == ' '">Document description is required</p>
-            </div>
-            <div class="row">
-                <p>Assignees</p>
-                <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="assignee in uploadFile.assignees">
-                    {{assignee.name}} <span ng-if="assignee.canRevoke"><a href="#!" ng-click="revokeFromDocument(assignee,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
-                </div>
-            </div>
-            <div class="row">
-                <p>Available Assignee's:</p>
-                <a href="#!" ng-click="assignToDocument(staff,$index)" ng-repeat="staff in available track by $index">
-                    <div class="card col" style="padding: 5px; margin-left: 10px">
-                        {{staff.name}}
-                    </div>
-                </a>
             </div>
         </div>
         <div class="modal-footer">
