@@ -1,7 +1,7 @@
 <div class="row card" style="margin-top: 10px">
     <!-- IF THE PROJECT MANAGER IS THE BUILDER -->
     <div ng-if="builderPackage.projectManager.type == 'builder'" class="col s2" style="margin-right: 1px solid #eee; max-height: 81vh; overflow-y: scroll; font-size: 12px; color: #757575;">
-        <p><a class="modal-trigger" href="#tender_modal">INVITE PEOPLE</a></p>
+        <p><a ng-click="setInvite()" class="modal-trigger" href="#tender_modal">INVITE PEOPLE</a></p>
         <p ng-mouseover="accordian = 1">TEAM</p>
         <p ng-show="accordian == 1" style="margin-left: 10px" ng-repeat="currentTeamMember in currentTeamMembers" ng-click="selectUser(currentTeamMember, 'team')" ng-style="currentTeamMember._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             <i class="tiny material-icons valign" style="color: #64B5F6" ng-style="currentTeamMember.isOnline ? {'color': '#4BBF6B'} : {'color': '#EDEFF0'}">brightness_1</i>
@@ -34,7 +34,7 @@
     </div>
     <!-- IF THE PROJECT MANAGER IS THE ARCHITECT -->
     <div ng-if="builderPackage.projectManager.type == 'architect'" class="col s2" style="margin-right: 1px solid #eee; max-height: 81vh; overflow-y: scroll; font-size: 12px; color: #757575;">
-        <p><a class="modal-trigger" href="#tender_modal">INVITE PEOPLE</a></p>
+        <p><a ng-click="setInvite()" class="modal-trigger" href="#tender_modal">INVITE PEOPLE</a></p>
         <p ng-mouseover="accordian = 1">TEAM</p>
         <p ng-show="accordian == 1" style="margin-left: 10px" ng-repeat="currentTeamMember in currentTeamMembers" ng-click="selectUser(currentTeamMember, 'team')" ng-style="currentTeamMember._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             <i class="tiny material-icons valign" style="color: #64B5F6" ng-style="currentTeamMember.isOnline ? {'color': '#4BBF6B'} : {'color': '#EDEFF0'}">brightness_1</i>
@@ -68,7 +68,7 @@
     </div>
     <!-- IF THE PROJECT MANAGER IS THE HOMEOWNER -->
     <div ng-if="builderPackage.projectManager.type == 'homeOwner'" class="col s2" style="margin-right: 1px solid #eee; max-height: 81vh; overflow-y: scroll; font-size: 12px; color: #757575;">
-        <p><a class="modal-trigger" href="#tender_modal">INVITE PEOPLE</a></p>
+        <p><a ng-click="setInvite()" class="modal-trigger" href="#tender_modal">INVITE PEOPLE</a></p>
         <p ng-mouseover="accordian = 1">TEAM</p>
         <p ng-show="accordian == 1" style="margin-left: 10px" ng-repeat="currentTeamMember in currentTeamMembers" ng-click="selectUser(currentTeamMember, 'team')" ng-style="currentTeamMember._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             <i class="tiny material-icons valign" style="color: #64B5F6" ng-style="currentTeamMember.isOnline ? {'color': '#4BBF6B'} : {'color': '#EDEFF0'}">brightness_1</i>
@@ -281,7 +281,15 @@
                 <input type="text" name="description" ng-model="invite.description" required ng-class="{'invalid' : formInvite.description.$invalid && submitted}">
                 <p ng-if="formInvite.description.$erorr.required && submitted" class="validate-message">Description is required</p>
             </div>
-            <div class="row">
+            <div class="row" ng-if="invite.type != 'addTeamMember'">
+                <input ng-model="invite.isTender" type="checkbox" id="complete"/>
+                <label for="complete">Do they need to provide a tender?</label>
+            </div>
+            <div class="row" ng-if="!invite.isTender && invite.type != 'addTeamMember'">
+                <label for="">Email</label>
+                <input type="email" name="email" ng-model="invite.email" ng-class="{'invalid' : formInvite.email.$invalid && submitted}">
+            </div>
+            <div class="row" ng-if="invite.isTender || invite.type == 'addTeamMember'">
                 <div class="col s8">
                     <label for="">Email</label>
                     <input type="email" name="email" ng-model="invite.email" ng-class="{'invalid' : formInvite.email.$invalid && submitted}">
@@ -290,7 +298,7 @@
                     <button type="button" class="btn" ng-click="addInvitee(invite.email)">Add</button>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" ng-if="invite.isTender || invite.type == 'addTeamMember'">
                 <ul>
                     <li ng-repeat="invitee in invite.invitees">
                         <div class="col s8">{{invitee.email}}</div>

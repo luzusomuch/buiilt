@@ -404,8 +404,11 @@ angular.module('buiiltApp')
         getAvailableUser($scope.invitePeople);
     });
 
-    $scope.invite = {
-        invitees: []
+    $scope.setInvite = function() {
+        $scope.invite = {
+            isTender : true,
+            invitees: []
+        };
     };
 
     $scope.addInvitee = function(invitee) {
@@ -422,22 +425,37 @@ angular.module('buiiltApp')
         $scope.submitted = true;
         if (form.$valid) {
             if ($scope.invite.type == 'addTeamMember') {
-                teamService.addMember({id: $scope.team._id},$scope.invite.invitees).$promise
-                .then(function(team) {
-                    $scope.team = team;
+                switch ($scope.currentUser.type) {
+                    case 'builder':
+                        $scope.invite.type = 'addBuilder';
+                        break;
+                    case 'client':
+                        $scope.invite.type = 'addClient';
+                        break;
+                    case 'architect':
+                        $scope.invite.type = 'addArchitect';
+                        break;
+                    case 'subcontractor':
+                        $scope.invite.type = 'addSubcontractor';
+                        break;
+                    case 'consultant':
+                        $scope.invite.type = 'addConsultant';
+                        break;
+                    default:
+                        break;
+                }
+                peopleService.update({id: $stateParams.id},$scope.invite).$promise.then(function(res){
+                    $scope.invitePeople = res;
                     getAvailableUser($scope.invitePeople);
-                    $rootScope.$emit('TeamUpdate',team);
-                    $scope.invite.invitees = [];
                     $scope.submitted = false;
                     $("#tender_modal").closeModal();
-                }, function(err){
-                    console.log(err);
+                }, function(res){
+                    console.log(res);
                 });
             } else {
                 peopleService.update({id: $stateParams.id},$scope.invite).$promise.then(function(res){
                     $scope.invitePeople = res;
                     getAvailableUser($scope.invitePeople);
-                    $scope.invite = {};
                     $scope.submitted = false;
                     $("#tender_modal").closeModal();
                 }, function(res){
@@ -446,8 +464,6 @@ angular.module('buiiltApp')
             }
         }
     };
-
-    
 
     $scope.uploadFile = {
         assignees : []
