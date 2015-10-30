@@ -12,15 +12,11 @@ exports.invitePeople = function(req, res) {
         if (err) {return res.send(500,err);}
         if (!people) {return res.send(404,err);}
         else {
-            var builders = people.builders;
-            var architects = people.architects;
-            var clients = people.clients;
-            var subcontractors = people.subcontractors;
-            var consultants = people.consultants;
             var newInviteeNotSignUp = [];
             var newInviteeSignUpAlready = [];
             if (invite.type == 'addBuilder') {
                 if (invite.isTender) {
+                    var builders = people.builders;
                     async.each(invite.invitees, function(invitee, cb) {
                         User.findOne({email: invitee.email}, function(err, builder) {
                             if (err) {return cb(err);}
@@ -65,7 +61,7 @@ exports.invitePeople = function(req, res) {
                 } else {
                     var builders = [];
                     User.findOne({email: invite.email}, function(err, builder) {
-                        if (err) {return cb(err);}
+                        if (err) {return res.send(500,err);}
                         if (!builder) {
                             builders.push({
                                 inviter: req.user._id,
@@ -107,6 +103,7 @@ exports.invitePeople = function(req, res) {
                 }
             } else if (invite.type == 'addArchitect') {
                 if (invite.isTender) {
+                    var architects = people.architects;
                     async.each(invite.invitees, function(invitee, cb) {
                         User.findOne({email: invitee.email}, function(err, architect) {
                             if (err) {return cb(err);}
@@ -133,7 +130,7 @@ exports.invitePeople = function(req, res) {
                         people.architects = architects;
                         people._newInviteeNotSignUp = newInviteeNotSignUp;
                         people._newInviteeSignUpAlready = newInviteeSignUpAlready;
-                        people._newInviteType = 'peopleBuilder';
+                        people._newInviteType = 'peopleArchitect';
                         people.markModified('invitePeople');
                         people._editUser = req.user;
                         people.save(function(err){
@@ -151,7 +148,7 @@ exports.invitePeople = function(req, res) {
                 } else {
                     var architects = [];
                     User.findOne({email: invite.email}, function(err, architect) {
-                        if (err) {return cb(err);}
+                        if (err) {return res.send(500,err);}
                         if (!architect) {
                             architects.push({
                                 inviter: req.user._id,
@@ -175,7 +172,7 @@ exports.invitePeople = function(req, res) {
                         people.architects = architects;
                         people._newInviteeNotSignUp = newInviteeNotSignUp;
                         people._newInviteeSignUpAlready = newInviteeSignUpAlready;
-                        people._newInviteType = 'peopleBuilder';
+                        people._newInviteType = 'peopleArchitect';
                         people.markModified('invitePeople');
                         people._editUser = req.user;
                         people.save(function(err){
@@ -193,6 +190,7 @@ exports.invitePeople = function(req, res) {
                 }
             } else if (invite.type == 'addClient') {
                 if (invite.isTender) {
+                    var clients = people.clients;
                     async.each(invite.invitees, function(invitee, cb) {
                         User.findOne({email: invitee.email}, function(err, client) {
                             if (err) {return cb(err);}
@@ -219,7 +217,7 @@ exports.invitePeople = function(req, res) {
                         people.clients = clients;
                         people._newInviteeNotSignUp = newInviteeNotSignUp;
                         people._newInviteeSignUpAlready = newInviteeSignUpAlready;
-                        people._newInviteType = 'peopleBuilder';
+                        people._newInviteType = 'peopleClient';
                         people.markModified('invitePeople');
                         people._editUser = req.user;
                         people.save(function(err){
@@ -237,7 +235,7 @@ exports.invitePeople = function(req, res) {
                 } else {
                     var clients = [];
                     User.findOne({email: invite.email}, function(err, client) {
-                        if (err) {return cb(err);}
+                        if (err) {return res.send(500,err);}
                         if (!client) {
                             clients.push({
                                 inviter: req.user._id,
@@ -261,7 +259,7 @@ exports.invitePeople = function(req, res) {
                         people.clients = clients;
                         people._newInviteeNotSignUp = newInviteeNotSignUp;
                         people._newInviteeSignUpAlready = newInviteeSignUpAlready;
-                        people._newInviteType = 'peopleBuilder';
+                        people._newInviteType = 'peopleClient';
                         people.markModified('invitePeople');
                         people._editUser = req.user;
                         people.save(function(err){
@@ -279,6 +277,7 @@ exports.invitePeople = function(req, res) {
                 }
             } else if (invite.type == 'addSubcontractor') {
                 if (invite.isTender) {
+                    var subcontractors = people.subcontractors;
                     async.each(invite.invitees, function(invitee, cb) {
                         User.findOne({email: invitee.email}, function(err, subcontractor) {
                             if (err) {return cb(err);}
@@ -305,7 +304,7 @@ exports.invitePeople = function(req, res) {
                         people.subcontractors = subcontractors;
                         people._newInviteeNotSignUp = newInviteeNotSignUp;
                         people._newInviteeSignUpAlready = newInviteeSignUpAlready;
-                        people._newInviteType = 'peopleBuilder';
+                        people._newInviteType = 'peopleSubcontractor';
                         people.markModified('invitePeople');
                         people._editUser = req.user;
                         people.save(function(err){
@@ -323,7 +322,7 @@ exports.invitePeople = function(req, res) {
                 } else {
                     var subcontractors = [];
                     User.findOne({email: invite.email}, function(err, subcontractor) {
-                        if (err) {return cb(err);}
+                        if (err) {return res.send(500,err);}
                         if (!subcontractor) {
                             subcontractors.push({
                                 inviter: req.user._id,
@@ -347,7 +346,7 @@ exports.invitePeople = function(req, res) {
                         people.subcontractors = subcontractors;
                         people._newInviteeNotSignUp = newInviteeNotSignUp;
                         people._newInviteeSignUpAlready = newInviteeSignUpAlready;
-                        people._newInviteType = 'peopleBuilder';
+                        people._newInviteType = 'peopleSubcontractor';
                         people.markModified('invitePeople');
                         people._editUser = req.user;
                         people.save(function(err){
@@ -365,6 +364,7 @@ exports.invitePeople = function(req, res) {
                 }
             } else if (invite.type == 'addConsultant') {
                 if (invite.isTender) {
+                    var consultants = people.consultants;
                     async.each(invite.invitees, function(invitee, cb) {
                         User.findOne({email: invitee.email}, function(err, consultant) {
                             if (err) {return cb(err);}
@@ -391,7 +391,7 @@ exports.invitePeople = function(req, res) {
                         people.consultants = consultants;
                         people._newInviteeNotSignUp = newInviteeNotSignUp;
                         people._newInviteeSignUpAlready = newInviteeSignUpAlready;
-                        people._newInviteType = 'peopleBuilder';
+                        people._newInviteType = 'peopleConsultant';
                         people.markModified('invitePeople');
                         people._editUser = req.user;
                         people.save(function(err){
@@ -409,7 +409,7 @@ exports.invitePeople = function(req, res) {
                 } else {
                     var consultants = []
                     User.findOne({email: invite.email}, function(err, consultant) {
-                        if (err) {return cb(err);}
+                        if (err) {return res.send(500,err);}
                         if (!consultant) {
                             consultants.push({
                                 inviter: req.user._id,
@@ -433,7 +433,7 @@ exports.invitePeople = function(req, res) {
                         people.consultants = consultants;
                         people._newInviteeNotSignUp = newInviteeNotSignUp;
                         people._newInviteeSignUpAlready = newInviteeSignUpAlready;
-                        people._newInviteType = 'peopleBuilder';
+                        people._newInviteType = 'peopleConsultant';
                         people.markModified('invitePeople');
                         people._editUser = req.user;
                         people.save(function(err){

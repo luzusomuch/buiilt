@@ -360,30 +360,50 @@ angular.module('buiiltApp')
             _.each($scope.invitePeople.subcontractors, function(subcontractor) {
                 if (subcontractor._id && subcontractor.inviter == $scope.currentUser._id) {
                     $scope.tendersList.push({tender: subcontractor, type: 'subcontractor'});
+                    if (subcontractor.hasSelect) {
+                        $scope.tendersList = [];
+                        return false;
+                    }
                 }
             });
         } else if (type == 'builder') {
             _.each($scope.invitePeople.builders, function(builder) {
                 if (builder._id && builder.inviter == $scope.currentUser._id) {
                     $scope.tendersList.push({tender: builder, type: 'builder'});
+                    if (builder.hasSelect) {
+                        $scope.tendersList = [];
+                        return false;
+                    }
                 }
             });
         } else if (type == 'client') {
             _.each($scope.invitePeople.clients, function(client) {
                 if (client._id && client.inviter == $scope.currentUser._id) {
                     $scope.tendersList.push({tender: client, type: 'client'});
+                    if (client.hasSelect) {
+                        $scope.tendersList = [];
+                        return false;
+                    }
                 }
             });
         } else if (type == 'architect') {
             _.each($scope.invitePeople.architects, function(architect) {
                 if (architect._id && architect.inviter == $scope.currentUser._id) {
                     $scope.tendersList.push({tender: architect, type: 'architect'});
+                    if (architect.hasSelect) {
+                        $scope.tendersList = [];
+                        return false;
+                    }
                 }
             });
         } else if (type == 'consultant') {
             _.each($scope.invitePeople.consultants, function(consultant) {
                 if (consultant._id && consultant.inviter == $scope.currentUser._id) {
                     $scope.tendersList.push({tender: consultant, type: 'consultant'});
+                    if (consultant.hasSelect) {
+                        $scope.tendersList = [];
+                        return false;
+                    }
                 }
             });
         }

@@ -91,10 +91,10 @@
                 <div class="task-row" style="font-size: 12px; border-bottom: 1px solid #eee">
                     <p><a href="#new_task" class="modal-trigger">+ Add a Task</a></p>
                 </div>
-                <div class="task-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-repeat="task in tasks" ng-if="task.isOwner || task.user == currentUser._id">
+                <div class="task-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-repeat="task in tasks" ng-if="task.isOwner">
                     <div class="col s2">
                         <p>
-                            <input ng-if="!task.completed" type="checkbox" id="complete" ng-click="complete(task)" ng-disabled="task.isOwner"/>
+                            <input ng-if="!task.completed" type="checkbox" id="complete" ng-click="complete(task)" ng-disabled="!task.isOwner"/>
                             <label for="complete"></label>
                         </p>
                         <p>

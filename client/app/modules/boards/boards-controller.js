@@ -163,6 +163,7 @@ angular.module('buiiltApp')
                     }
                 });
             });
+            console.log($scope.tasks);
         });
     };
 
@@ -372,6 +373,12 @@ angular.module('buiiltApp')
         $scope.submitted = true;
         if (form.$valid) {
             taskService.create({id: $scope.currentBoard._id, type: 'board'},$scope.task).$promise.then(function(res){
+                res.isOwner = false;
+                _.each(res.assignees, function(assignee){
+                    if (assignee._id == $scope.currentUser._id) {
+                        res.isOwner = true;
+                    }
+                });
                 $scope.tasks.push(res);
                 $("#new_task").closeModal();
                 $scope.task = {
