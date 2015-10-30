@@ -12,20 +12,20 @@ angular.module('buiiltApp')
         $scope.availableUserType = [];
         $scope.currentTeamMembers = [];
         $scope.available = [];
-        _.each($scope.team.leader, function(leader){
-            $scope.currentTeamMembers.push(leader);
-            $scope.available.push(leader);
-        });
-        _.each($scope.team.member, function(member){
-            if (member._id && member.status == 'Active') {
-                $scope.available.push(member._id);
-                $scope.currentTeamMembers.push(member._id);
-            }
-        });
-        $scope.currentTeamMembers = _.uniq($scope.currentTeamMembers, '_id');
-        authService.getCurrentUser().$promise.then(function(res){
-            _.remove($scope.currentTeamMembers, {_id: res._id});
-        });
+        // _.each($scope.team.leader, function(leader){
+        //     $scope.currentTeamMembers.push(leader);
+        //     $scope.available.push(leader);
+        // });
+        // _.each($scope.team.member, function(member){
+        //     if (member._id && member.status == 'Active') {
+        //         $scope.available.push(member._id);
+        //         $scope.currentTeamMembers.push(member._id);
+        //     }
+        // });
+        // $scope.currentTeamMembers = _.uniq($scope.currentTeamMembers, '_id');
+        // authService.getCurrentUser().$promise.then(function(res){
+        //     _.remove($scope.currentTeamMembers, {_id: res._id});
+        // });
         _.each(invitePeople.builders, function(builder){
             if (builder._id) {
                 $scope.available.push(builder._id);
@@ -61,22 +61,47 @@ angular.module('buiiltApp')
                 return item._id._id == $scope.currentUser._id;
             }}) != -1) {
             $scope.currentUser.type = 'builder';
+            _.each(invitePeople.builders, function(builder) {
+                if (builder._id) {
+                    $scope.currentTeamMembers.push(builder._id);
+                }
+            });
         } else if (_.findIndex(invitePeople.architects, function(item) {
             if (item._id) {return item._id._id == $scope.currentUser._id;}
             }) != -1) {
             $scope.currentUser.type = 'architect';
+            _.each(invitePeople.architects, function(architect) {
+                if (architect._id) {
+                    $scope.currentTeamMembers.push(architect._id);
+                }
+            });
         } else if (_.findIndex(invitePeople.clients, function(item){
             if (item._id) {return item._id._id == $scope.currentUser._id;}
             }) != -1) {
             $scope.currentUser.type = 'client';
+            _.each(invitePeople.clients, function(client) {
+                if (client._id) {
+                    $scope.currentTeamMembers.push(client._id);
+                }
+            });
         } else if (_.findIndex(invitePeople.subcontractors, function(item){
             if (item._id) {return item._id._id == $scope.currentUser._id;}
             }) != -1) {
             $scope.currentUser.type = 'subcontractor';
+            _.each(invitePeople.subcontractors, function(subcontractor) {
+                if (subcontractor._id) {
+                    $scope.currentTeamMembers.push(subcontractor._id);
+                }
+            });
         } else if (_.findIndex(invitePeople.consultants, function(item){
             if (item._id) {return item._id._id == $scope.currentUser._id;}
             }) != -1) {
             $scope.currentUser.type = 'consultant';
+            _.each(invitePeople.consultants, function(consultant) {
+                if (consultant._id) {
+                    $scope.currentTeamMembers.push(consultant._id);
+                }
+            });
         } else {
             $scope.currentUser.type = 'default';
         }
@@ -287,6 +312,9 @@ angular.module('buiiltApp')
                 }
             });
         }
+
+        console.log($scope.currentUser);
+        console.log($scope.currentTeamMembers);
     };
 
     socket.on('onlineUser', function(users) {
@@ -527,13 +555,15 @@ angular.module('buiiltApp')
                     if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
                         _.each($scope.unreadMessages, function(message){
                             if (message.element._id == $scope.selectedChatPeople._id) {
-                                notificationService.markAsRead({_id: message._id}).$promise.then(function(res){
-                                    $rootScope.$broadcast("notification:read", res);
-                                });
-                                $scope.selectedChatPeople.hasUnreadMessage = false;
-                                _.each($scope.selectedChatPeople.messages, function(message){
-                                    message.unread = false;
-                                });
+                                $timeout(function(){
+                                    notificationService.markAsRead({_id: message._id}).$promise.then(function(res){
+                                        $rootScope.$broadcast("notification:read", res);
+                                    });
+                                    $scope.selectedChatPeople.hasUnreadMessage = false;
+                                    _.each($scope.selectedChatPeople.messages, function(message){
+                                        message.unread = false;
+                                    });
+                                }, 2000);
                             }
                         });
                     }

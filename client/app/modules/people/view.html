@@ -4,6 +4,7 @@
         <p><a class="modal-trigger" href="#tender_modal">INVITE PEOPLE</a></p>
         <p ng-mouseover="accordian = 1">TEAM</p>
         <p ng-show="accordian == 1" style="margin-left: 10px" ng-repeat="currentTeamMember in currentTeamMembers" ng-click="selectUser(currentTeamMember, 'team')" ng-style="currentTeamMember._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
+            <i class="tiny material-icons valign" style="color: #64B5F6" ng-style="currentTeamMember.isOnline ? {'color': '#4BBF6B'} : {'color': '#EDEFF0'}">brightness_1</i>
             {{currentTeamMember.name}}
         </p>
         <p ng-show="currentUser.type == 'client' || currentUser.type == 'architect'" ng-mouseover="accordian = 2">BUILDER</p>
@@ -36,6 +37,7 @@
         <p><a class="modal-trigger" href="#tender_modal">INVITE PEOPLE</a></p>
         <p ng-mouseover="accordian = 1">TEAM</p>
         <p ng-show="accordian == 1" style="margin-left: 10px" ng-repeat="currentTeamMember in currentTeamMembers" ng-click="selectUser(currentTeamMember, 'team')" ng-style="currentTeamMember._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
+            <i class="tiny material-icons valign" style="color: #64B5F6" ng-style="currentTeamMember.isOnline ? {'color': '#4BBF6B'} : {'color': '#EDEFF0'}">brightness_1</i>
             {{currentTeamMember.name}}
         </p>
         <p ng-show="currentUser.type == 'architect'" ng-mouseover="accordian = 2; getTenderListByType('builder')">BUILDER</p>
@@ -69,6 +71,7 @@
         <p><a class="modal-trigger" href="#tender_modal">INVITE PEOPLE</a></p>
         <p ng-mouseover="accordian = 1">TEAM</p>
         <p ng-show="accordian == 1" style="margin-left: 10px" ng-repeat="currentTeamMember in currentTeamMembers" ng-click="selectUser(currentTeamMember, 'team')" ng-style="currentTeamMember._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
+            <i class="tiny material-icons valign" style="color: #64B5F6" ng-style="currentTeamMember.isOnline ? {'color': '#4BBF6B'} : {'color': '#EDEFF0'}">brightness_1</i>
             {{currentTeamMember.name}}
         </p>
         <p ng-show="currentUser.type == 'client'" ng-mouseover="accordian = 2">BUILDER</p>

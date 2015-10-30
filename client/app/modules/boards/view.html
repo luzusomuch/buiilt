@@ -70,7 +70,7 @@
                 </ul>
             </div>
             <div id="test1" class="col s12" style="height: 65vh; overflow-y: scroll">
-                <div class="person-row" style="font-size: 12px; border-bottom: 1px solid #eee">
+                <div class="person-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-if="currentBoard.owner._id == currentUser._id">
                     <p><a href="#invite_people" class="modal-trigger">+ Invite Other People</a></p>
                 </div>
                 <div ng-if="currentBoard._id" class="person-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-repeat="invitee in available">

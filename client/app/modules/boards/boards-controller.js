@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-.controller('BoardsCtrl', function ($scope, $rootScope, $state, team, currentUser, builderPackage, boardService, $stateParams, fileService, filepickerService, uploadService, taskService, socket, notificationService, peopleService) {
+.controller('BoardsCtrl', function ($scope, $rootScope, $state, team, currentUser, builderPackage, boardService, $stateParams, fileService, filepickerService, uploadService, taskService, socket, notificationService, peopleService, $timeout) {
     $scope.team = team;
     $scope.builderPackage = builderPackage;
     $scope.currentUser = currentUser;
@@ -203,15 +203,17 @@ angular.module('buiiltApp')
             $("div#boardChatContent").scroll(function() {
                 if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
                     _.each($scope.unreadMessages, function(message){
-                        if (message.element._id == board._id) {
-                            notificationService.markAsRead({_id: message._id}).$promise.then(function(res){
-                                $rootScope.$broadcast("notification:read", res);
-                            });
-                            board.hasUnreadMessage = false;
-                            _.each(board.messages, function(message){
-                                message.unread = false;
-                            });
-                        }
+                        $timeout(function(){
+                            if (message.element._id == board._id) {
+                                notificationService.markAsRead({_id: message._id}).$promise.then(function(res){
+                                    $rootScope.$broadcast("notification:read", res);
+                                });
+                                board.hasUnreadMessage = false;
+                                _.each(board.messages, function(message){
+                                    message.unread = false;
+                                });
+                            }
+                        },2000);
                     });
                 }
             });
