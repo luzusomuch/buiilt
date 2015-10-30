@@ -650,5 +650,5 @@ angular.module('buiiltApp')
                 console.log(Blob.url);
             }
         );
-    }
+    };
 });

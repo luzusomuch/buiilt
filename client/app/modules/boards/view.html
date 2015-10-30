@@ -83,7 +83,7 @@
                     <p><a class="modal-trigger" href="#new_attachment">+ Add an Attachment</a></p>
                 </div>
                 <div class="attachment-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-repeat="file in files">
-                    <p class="margin-10-0">{{file.title}}</p>
+                    <p class="margin-10-0"><a href="#modal-attachment-detail-{{file._id}}" class="modal-trigger">{{file.title}}</a></p>
                 </div>
             </div>
             
@@ -103,10 +103,12 @@
                         </p>
                     </div>
                     <div class="col s10">
-                        <p class="margin-10-0">
-                            <strong>{{task.name}}</strong>
-                        </p>
-                        <small>{{task.description}}</small>
+                        <a href="#modal-task-detail-{{task._id}}" class="modal-trigger">
+                            <p class="margin-10-0">
+                                <strong>{{task.name}}</strong>
+                            </p>
+                            <small>{{task.description}}</small>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -114,7 +116,7 @@
     </div>  
 </div>
 
-<div id="new_attachment" class="modal modal-fixed-footer">
+<div id="new_attachment" class="modal modal-fixed-footer" style="width: 60%">
     <form name="uploadForm" ng-submit="uploadNewAttachment()">
         <div class="modal-content">
             <h5>New Attachment</h5>
@@ -139,7 +141,7 @@
     </form>
 </div>
 
-<div id="new_task" class="modal modal-fixed-footer">
+<div id="new_task" class="modal modal-fixed-footer" style="width: 60%">
     <form name="newTaskForm" ng-submit="addNewTask(newTaskForm)">
         <div class="modal-content">
             <h5>New Task</h5>
@@ -185,7 +187,7 @@
     </form>
 </div>
 
-<div id="new_board" class="modal modal-fixed-footer">
+<div id="new_board" class="modal modal-fixed-footer" style="width: 60%">
     <form name="newBoardForm" ng-submit="createNewBoard(newBoardForm)">
         <div class="modal-content">
             <h5>New Board</h5>
@@ -215,7 +217,7 @@
     </form>
 </div>
 
-<div id="invite_people" class="modal modal-fixed-footer">
+<div id="invite_people" class="modal modal-fixed-footer" style="width: 60%">
     <form name="inviteForm" ng-submit="invitePeople(inviteForm)">
         <div class="modal-content">
             <h5>Invite more people</h5>
@@ -235,4 +237,25 @@
             <button type="button" class="modal-action modal-close btn-flat">Cancel</button>
         </div>
     </form>
+</div>
+
+<div class="modal modal-fixed-bottom" id="modal-attachment-detail-{{file._id}}" ng-repeat="file in files">
+    <h5>View attachment {{file.title}} detail</h5>
+    <div class="modal-content">
+        <div file-picker-previewer type="filepicker-preview" url="{{file.path}}" style="height:500px;"> </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="modal-action modal-close btn-flat">Close</button>
+        <button type="button" ng-click="downloadFile(file)" class="modal-action modal-close btn-flat">Download</button>
+    </div>
+</div>
+
+<div class="modal modal-fixed-bottom" id="modal-task-detail-{{task._id}}" ng-repeat="task in tasks" style="width: 60%">
+    <h5>View task {{task.name}} detail</h5>
+    <div class="modal-content">
+        <p>{{task.description}}</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="modal-action modal-close btn-flat">Close</button>
+    </div>
 </div>

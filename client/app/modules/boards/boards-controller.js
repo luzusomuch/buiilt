@@ -438,4 +438,21 @@ angular.module('buiiltApp')
             console.log(err);
         });
     };
+
+    $scope.downloadFile = function(file) {
+        console.log(file);
+        var blob = {
+            url: file.path,
+            filename: file.name,
+            mimetype: file.mimetype,
+            size: file.size
+        };
+
+        filepicker.exportFile(
+            blob,
+            function(Blob){
+                console.log(Blob.url);
+            }
+        );
+    };
 });

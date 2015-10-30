@@ -173,14 +173,14 @@
                     <p><a class="modal-trigger" href="#new_task">+ Add a Task</a></p>
                 </div>
                 <div class="task-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-repeat="task in tasks" ng-if="task.isOwner">
-                    <p>{{task.name}}</p>
+                    <p><a href="#modal-task-detail-{{task._id}}" class="modal-trigger">{{task.name}}</a></p>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div id="new_attachment" class="modal modal-fixed-footer">
+<div id="new_attachment" class="modal modal-fixed-footer" style="width: 60%">
     <form name="uploadForm" ng-submit="uploadNewAttachment()">
         <div class="modal-content">
             <h5>New Attachment</h5>
@@ -219,7 +219,7 @@
     </form>
 </div>
 
-<div id="new_task" class="modal modal-fixed-footer">
+<div id="new_task" class="modal modal-fixed-footer" style="width: 60%">
     <form name="newTaskForm" ng-submit="addNewTask(newTaskForm)">
         <div class="modal-content">
             <h5>New Task</h5>
@@ -265,7 +265,7 @@
     </form>
 </div>
 
-<div id="tender_modal" class="modal modal-fixed-footer">
+<div id="tender_modal" class="modal modal-fixed-footer" style="width: 60%">
     <form name="formInvite" ng-submit="inviteMorePeople(formInvite)">
         <div class="modal-content">
             <h5>Tender Details</h5>
@@ -316,7 +316,7 @@
     </form>
 </div>
 
-<div class="modal modal-fixed-bottom" id="view_tender_detail">
+<div class="modal modal-fixed-bottom" id="view_tender_detail" style="width: 60%">
     <h5>View detail of tender type {{selectedTeamType}}</h5>
     <div class="modal-content">
         <ul>
@@ -344,5 +344,15 @@
     <div class="modal-footer">
         <button type="button" class="modal-action modal-close btn-flat">Close</button>
         <button type="button" ng-click="downloadFile(file)" class="modal-action modal-close btn-flat">Download</button>
+    </div>
+</div>
+
+<div class="modal modal-fixed-bottom" id="modal-task-detail-{{task._id}}" ng-repeat="task in tasks" style="width: 60%">
+    <h5>View task {{task.name}} detail</h5>
+    <div class="modal-content">
+        <p>{{task.description}}</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="modal-action modal-close btn-flat">Close</button>
     </div>
 </div>
