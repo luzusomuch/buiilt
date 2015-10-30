@@ -7,7 +7,6 @@ angular.module('buiiltApp')
     $scope.availableInvite = [];
 
     peopleService.getInvitePeople({id: $stateParams.id}).$promise.then(function(res){
-        console.log(res);
         if (_.findIndex(res.builders, function(item) {
             if (item._id) {
                 return item._id._id == $scope.currentUser._id;
@@ -32,7 +31,6 @@ angular.module('buiiltApp')
         } else {
             $scope.currentUser.type = 'default';
         }
-        console.log($scope.currentUser);
         if ($scope.builderPackage.projectManager.type == 'architect') {
             if ($scope.currentUser.type == 'builder' || $scope.currentUser.type == 'client') {
                 _.each(res.architects, function(architect) {
@@ -135,11 +133,9 @@ angular.module('buiiltApp')
                 }
             }
         }
-        console.log($scope.availableInvite);
     });
 
     function getAvailable(board) {
-        console.log(board);
         $scope.available = [];
         if (board._id) {
             if (board.invitees.length > 0) {
@@ -151,7 +147,6 @@ angular.module('buiiltApp')
             }
             $scope.available.push(board.owner);
         }
-        console.log($scope.available);
     };  
 
     function getTasksAndFilesByBoard(board) {
@@ -265,7 +260,6 @@ angular.module('buiiltApp')
         getUnreadMessage($scope.currentBoard);
         getAvailable($scope.currentBoard);
         getTasksAndFilesByBoard($scope.currentBoard);
-        console.log($scope.boards);
     });
 
     $scope.selectBoard = function(board) {

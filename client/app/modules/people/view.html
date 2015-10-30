@@ -164,7 +164,7 @@
                 <div class="attachment-row" style="font-size: 12px; border-bottom: 1px solid #eee">
                     <p><a class="modal-trigger" href="#new_attachment">+ Add an Attachment</a></p>
                 </div>
-                <div class="attachment-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-repeat="file in files" ng-if="file.isOwner || file.user == currentUser._id">
+                <div class="attachment-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-repeat="file in files" ng-if="file.isOwner">
                     <p>{{file.title}}</p>
                 </div>
             </div>
@@ -172,7 +172,7 @@
                 <div class="task-row" style="font-size: 12px; border-bottom: 1px solid #eee">
                     <p><a class="modal-trigger" href="#new_task">+ Add a Task</a></p>
                 </div>
-                <div class="task-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-repeat="task in tasks" ng-if="task.isOwner || task.user == currentUser._id">
+                <div class="task-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-repeat="task in tasks" ng-if="task.isOwner">
                     <p>{{task.name}}</p>
                 </div>
             </div>

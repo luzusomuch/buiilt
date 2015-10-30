@@ -186,7 +186,7 @@ exports.uploadInPeople = function(req, res) {
         tags: request.tags
     });
     _.each(request.assignees, function(assignee) {
-        file.usersRelatedTo.push(assignee._id);
+        file.usersRelatedTo.push(assignee);
     });
     file.save(function(err) {
         if (err) {return res.send(500,err);}

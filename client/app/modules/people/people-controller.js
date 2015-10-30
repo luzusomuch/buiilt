@@ -129,7 +129,6 @@ angular.module('buiiltApp')
                     {value: 'addConsultant', text: 'consultant'}
                 ];
             } else {
-                console.log($scope.currentUser.type);
                 switch ($scope.currentUser.type) {
                     case 'client': 
                         $scope.availableUserType = [
@@ -312,9 +311,6 @@ angular.module('buiiltApp')
                 }
             });
         }
-
-        console.log($scope.currentUser);
-        console.log($scope.currentTeamMembers);
     };
 
     socket.on('onlineUser', function(users) {
@@ -331,6 +327,31 @@ angular.module('buiiltApp')
             $scope.available[user].isOnline = true;
         });
     });
+
+    function getTaskAndDocumentBySelectedUser(user) {
+        taskService.getByPackage({id: $scope.invitePeople._id, type: 'people'}).$promise.then(function(res){
+            $scope.tasks = res;
+            _.each($scope.tasks, function(task){
+                task.isOwner = false;
+                _.each(task.assignees, function(assignee){
+                    if (assignee._id == user._id) {
+                        task.isOwner = true;
+                    }
+                });
+            });
+        });
+        fileService.getFileInPeople({id: $stateParams.id}).$promise.then(function(res){
+            $scope.files = res;
+            _.each($scope.files, function(file) {
+                file.isOwner = false;
+                _.each(file.usersRelatedTo, function(userRelated) {
+                    if (userRelated == user._id) {
+                        file.isOwner = true;
+                    }
+                });
+            });
+        });
+    };
 
     $scope.getTenderListByType = function(type) {
         $scope.selectedTeamType = type;
@@ -366,7 +387,6 @@ angular.module('buiiltApp')
                 }
             });
         }
-        console.log($scope.tendersList);
     };
 
     $scope.selectWinnerTender = function(tender) {
@@ -382,17 +402,6 @@ angular.module('buiiltApp')
     peopleService.getInvitePeople({id: $stateParams.id}).$promise.then(function(res){
         $scope.invitePeople = res;
         getAvailableUser($scope.invitePeople);
-        taskService.getByPackage({id: res._id, type: 'people'}).$promise.then(function(res){
-            $scope.tasks = res;
-            _.each($scope.tasks, function(task){
-                task.isOwner = false;
-                _.each(task.assignees, function(assignee){
-                    if (assignee._id == $scope.currentUser._id) {
-                        task.isOwner = true;
-                    }
-                });
-            });
-        });
     });
 
     $scope.invite = {
@@ -438,17 +447,7 @@ angular.module('buiiltApp')
         }
     };
 
-    fileService.getFileInPeople({id: $stateParams.id}).$promise.then(function(res){
-        $scope.files = res;
-        _.each($scope.files, function(file) {
-            file.isOwner = false;
-            _.each(file.usersRelatedTo, function(user) {
-                if (user == $scope.currentUser._id) {
-                    file.isOwner = true;
-                }
-            });
-        });
-    });
+    
 
     $scope.uploadFile = {
         assignees : []
@@ -474,7 +473,7 @@ angular.module('buiiltApp')
             isQuote: $scope.isQuote,
             assignees : []
         };
-        $scope.uploadFile.assignees.push($scope.selectedUser._id);
+        $scope.uploadFile.assignees = [$scope.selectedUser._id, $scope.currentUser._id];
     };
 
     $scope.uploadNewAttachment = function() {
@@ -491,7 +490,11 @@ angular.module('buiiltApp')
     $scope.addNewTask = function(form) {
         $scope.submitted = true;
         if (form.$valid) {
-            $scope.task.assignees.push($scope.selectedUser);
+            var currentUser = {
+                _id: $scope.currentUser._id
+            };
+            $scope.task.assignees = [$scope.selectedUser, currentUser];
+            // $scope.task.assignees.push($scope.selectedUser);
             $timeout(function(){
                 taskService.create({id: $scope.invitePeople._id, type: 'people'},$scope.task).$promise.then(function(res){
                     res.isOwner = false;
@@ -517,6 +520,7 @@ angular.module('buiiltApp')
     $scope.selectUser = function(user, type) {
         $scope.selectedUser = user;
         $scope.selectedUser.type = type;
+        getTaskAndDocumentBySelectedUser(user);
 
         peopleChatService.selectPeople(
             {id: $scope.invitePeople._id},
