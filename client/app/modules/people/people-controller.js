@@ -10,6 +10,7 @@ angular.module('buiiltApp')
     function getAvailableUser(invitePeople) {
         $scope.builderPackage.projectManager._id.hasSelect = true;
         $scope.currentUser.hasSelect = false;
+        $scope.currentUser.roleAdmin = false;
         $scope.availableUserType = [];
         $scope.currentTeamMembers = [];
         $scope.available = [];
@@ -83,6 +84,7 @@ angular.module('buiiltApp')
             invitePeople.architects.push({_id: $scope.builderPackage.projectManager._id});
             if ($scope.builderPackage.projectManager._id._id == $scope.currentUser._id) {
                 $scope.currentUser.type = 'architect';
+                $scope.currentUser.roleAdmin = true;
                 $scope.currentUser.hasSelect = true;
                 $scope.availableUserType = [
                     {value: 'addTeamMember', text: 'team'}, 
@@ -142,6 +144,7 @@ angular.module('buiiltApp')
             invitePeople.builders.push({_id: $scope.builderPackage.projectManager._id});
             if ($scope.builderPackage.projectManager._id._id == $scope.currentUser._id) {
                 $scope.currentUser.type = 'builder';
+                $scope.currentUser.roleAdmin = true;
                 $scope.currentUser.hasSelect = true;
                 $scope.availableUserType = [
                     {value: 'addTeamMember', text: 'team'}, 
@@ -201,6 +204,7 @@ angular.module('buiiltApp')
             }
             invitePeople.clients.push({_id: $scope.builderPackage.projectManager._id});
             if ($scope.builderPackage.projectManager._id._id == $scope.currentUser._id) {
+                $scope.currentUser.roleAdmin = true;
                 $scope.currentUser.type = 'client';
                 $scope.currentUser.hasSelect = true;
                 $scope.availableUserType = [
@@ -344,7 +348,6 @@ angular.module('buiiltApp')
 
     function getAllChatMessageNotificationByUserInPeople(selectedChatPeople){
         notificationService.getAllChatMessageNotificationByBoard({id: selectedChatPeople._id}).$promise.then(function(res) {
-            console.log(res);
             for (var i = selectedChatPeople.messages.length - 1; i >= 0; i--) {
                 selectedChatPeople.messages[i].peopleHasSeen = [];
                 _.each(res, function(notification){
@@ -356,7 +359,6 @@ angular.module('buiiltApp')
                 });
                 selectedChatPeople.messages[i].peopleHasSeen = _.uniq(selectedChatPeople.messages[i].peopleHasSeen);
             };
-            console.log(selectedChatPeople);
         });
     };
 
