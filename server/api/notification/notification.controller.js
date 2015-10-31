@@ -161,3 +161,11 @@ exports.getOne = function(req, res) {
     return res.send(200,notification);
   });
 };
+
+exports.getAllChatMessageNotificationByBoard = function(req, res) {
+  Notification.find({'element._id': req.params.id, referenceTo: 'board-chat'}, function(err, notifications) {
+    if (err) {return res.send(500,err);}
+    console.log(notifications);
+    return res.send(200, notifications);
+  });
+};

@@ -67,6 +67,13 @@ angular.module('buiiltApp')
           params : {
             action : 'dashboard-read-document'
           }
+        },
+        getAllChatMessageNotificationByBoard: {
+          method: 'get', 
+          params: {
+            action: 'get-all-chat-by-board'
+          },
+          isArray: true
         }
         //update: {
         //  method: 'PUT'

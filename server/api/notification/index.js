@@ -10,6 +10,7 @@ router.get('/get-total', auth.isAuthenticated(), controller.countTotal);
 router.get('/get-total-ios', auth.isAuthenticated(), controller.countTotalForIOS);
 router.get('/:id/get-one', auth.isAuthenticated(), controller.getOne);
 router.get('/:id/my-file', auth.isAuthenticated(), controller.getMyFile);
+router.get('/:id/get-all-chat-by-board', auth.isAuthenticated(), controller.getAllChatMessageNotificationByBoard);
 router.put('/:id/mark-as-read', auth.isAuthenticated(),controller.notification, controller.update);
 router.put('/:id/dashboard-read', auth.isAuthenticated(), controller.dashboardRead);
 router.put('/:id/dashboard-read-document', auth.isAuthenticated(), controller.dashboardReadDocument);

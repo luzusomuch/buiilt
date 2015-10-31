@@ -39,7 +39,7 @@ exports.getDefaultPackageByProject = function(req, res) {
   .populate('winner')
   .populate('architect.team')
   .populate('invitees.quoteDocument', '_id mimeType title')
-  .populate('projectManager._id')
+  .populate('projectManager._id', '-hashedPassword -salt')
   .exec(function(err, builderPackage) {
     if (err){return res.send(500, err); }
     User.populate(builderPackage,[

@@ -5,8 +5,51 @@ angular.module('buiiltApp')
     $scope.currentUser = currentUser;
     $scope.submitted = false;
     $scope.availableInvite = [];
-
     peopleService.getInvitePeople({id: $stateParams.id}).$promise.then(function(res){
+        if ($scope.builderPackage.projectManager.type == 'builder') {
+            if ($scope.builderPackage.projectManager._id._id == $scope.currentUser._id) {
+                res.builders.push({_id:$scope.builderPackage.projectManager._id});
+                $scope.currentUser.type == 'builder';
+            }
+            if ($scope.builderPackage.ownerType == 'homeOwner' && $scope.builderPackage.owner._id == $scope.currentUser._id) {
+                res.clients.push({_id: $scope.builderPackage.owner});
+                res.builders.push({_id:$scope.builderPackage.projectManager._id});
+                $scope.currentUser.type = 'client';
+            } else if ($scope.builderPackage.ownerType == 'architect' && $scope.builderPackage.owner._id == $scope.currentUser._id) {
+                res.architects.push({_id: $scope.builderPackage.owner});
+                res.builders.push({_id:$scope.builderPackage.projectManager._id});
+                $scope.currentUser.type = 'architect';
+            }
+        } else if ($scope.builderPackage.projectManager.type == 'architect') {
+            if ($scope.builderPackage.projectManager._id._id == $scope.currentUser._id) {
+                res.architects.push({_id:$scope.builderPackage.projectManager._id});
+                $scope.currentUser.type == 'architect';
+            }
+            if ($scope.builderPackage.ownerType == 'homeOwner' && $scope.builderPackage.owner._id == $scope.currentUser._id) {
+                res.clients.push({_id: $scope.builderPackage.owner});
+                res.architects.push({_id:$scope.builderPackage.projectManager._id});
+                $scope.currentUser.type = 'client';
+            } else if ($scope.builderPackage.ownerType == 'builder' && $scope.builderPackage.owner._id == $scope.currentUser._id) {
+                res.builders.push({_id: $scope.builderPackage.owner});
+                res.architects.push({_id:$scope.builderPackage.projectManager._id});
+                $scope.currentUser.type = 'builder';
+            }
+        } else {
+            if ($scope.builderPackage.projectManager._id._id == $scope.currentUser._id) {
+                res.clients.push({_id:$scope.builderPackage.projectManager._id});
+                $scope.currentUser.type == 'client';
+            }
+            if ($scope.builderPackage.ownerType == 'architect' && $scope.builderPackage.owner._id == $scope.currentUser._id) {
+                res.architects.push({_id: $scope.builderPackage.owner});
+                res.clients.push({_id:$scope.builderPackage.projectManager._id});
+                $scope.currentUser.type = 'architect';
+            } else if ($scope.builderPackage.ownerType == 'builder' && $scope.builderPackage.owner._id == $scope.currentUser._id) {
+                res.builders.push({_id: $scope.builderPackage.owner});
+                res.clients.push({_id:$scope.builderPackage.projectManager._id});
+                $scope.currentUser.type = 'builder';
+            }
+        }
+
         if (_.findIndex(res.builders, function(item) {
             if (item._id) {
                 return item._id._id == $scope.currentUser._id;
@@ -31,6 +74,7 @@ angular.module('buiiltApp')
         } else {
             $scope.currentUser.type = 'default';
         }
+
         if ($scope.builderPackage.projectManager.type == 'architect') {
             if ($scope.currentUser.type == 'builder' || $scope.currentUser.type == 'client') {
                 _.each(res.architects, function(architect) {
@@ -133,6 +177,7 @@ angular.module('buiiltApp')
                 }
             }
         }
+        console.log($scope.availableInvite);
     });
 
     function getAvailable(board) {
@@ -163,7 +208,6 @@ angular.module('buiiltApp')
                     }
                 });
             });
-            console.log($scope.tasks);
         });
     };
 
@@ -216,11 +260,20 @@ angular.module('buiiltApp')
         }
     };
 
+    function getAllChatMessageNotificationByBoard(board) {
+        console.log(board);
+        notificationService.getAllChatMessageNotificationByBoard({id: board._id}).$promise.then(function(res) {
+            $scope.allMessageNotifications = res;
+            console.log(res);
+        });
+    };
+
     socket.on('boardChat:new', function (board) {
         $scope.currentBoard = board;
         getUnreadMessage(board);
         getAvailable(board);
         getTasksAndFilesByBoard(board);
+        getAllChatMessageNotificationByBoard(board);
     });
 
     socket.on('onlineUser', function(users) {
@@ -258,9 +311,12 @@ angular.module('buiiltApp')
                 return false;
             }
         });
-        getUnreadMessage($scope.currentBoard);
-        getAvailable($scope.currentBoard);
-        getTasksAndFilesByBoard($scope.currentBoard);
+        if ($scope.currentBoard._id) {
+            getUnreadMessage($scope.currentBoard);
+            getAvailable($scope.currentBoard);
+            getTasksAndFilesByBoard($scope.currentBoard);
+            getAllChatMessageNotificationByBoard($scope.currentBoard);
+        }
     });
 
     $scope.selectBoard = function(board) {
@@ -268,6 +324,7 @@ angular.module('buiiltApp')
         getUnreadMessage(board);
         getAvailable(board);
         getTasksAndFilesByBoard(board);
+        getAllChatMessageNotificationByBoard(board);
     };
 
     $scope.invite = {};
