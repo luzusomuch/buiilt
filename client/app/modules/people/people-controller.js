@@ -7,6 +7,15 @@ angular.module('buiiltApp')
     $scope.selectedUser = {};
     $scope.accordian = 1;
 
+    if ($scope.team._id) {
+        $scope.availableTeamMember = $scope.team.leader;
+        _.each($scope.team.member, function(member) {
+            if (member._id && member.status == 'Active') {
+                $scope.availableTeamMember.push(member._id);
+            }
+        });
+    }
+
     function getAvailableUser(invitePeople) {
         $scope.builderPackage.projectManager._id.hasSelect = true;
         $scope.currentUser.hasSelect = false;
@@ -437,6 +446,7 @@ angular.module('buiiltApp')
         $scope.invite = {
             isTender : true,
             isInviteTeamMember: false,
+            teamMember: [],
             invitees: []
         };
     };
@@ -446,9 +456,12 @@ angular.module('buiiltApp')
             $scope.invite.isTender = false;
             if (type == 'addTeamMember') {
                 $scope.invite.isInviteTeamMember = true;
+            } else {
+                $scope.invite.isInviteTeamMember = false;
             }
         } else {
             $scope.invite.isTender = true;
+            $scope.invite.isInviteTeamMember = false;
         }
     };
 
@@ -460,6 +473,17 @@ angular.module('buiiltApp')
     };
     $scope.removeInvitee = function(index) {
         $scope.invite.invitees.splice(index, 1);
+    };
+
+    $scope.inviteTeamMember = function(member, index) {
+        $scope.invite.teamMember.push(member);
+        $scope.availableTeamMember.splice(index,1);
+        member.canRevoke = true;
+    };
+    $scope.revokeTeamMember = function(member, index) {
+        $scope.availableTeamMember.push(member);
+        $scope.invite.teamMember.splice(index, 1);
+        member.canRevoke = false;
     };
 
     $scope.inviteMorePeople = function(form) {

@@ -7,7 +7,7 @@ var async = require('async');
 
 exports.invitePeople = function(req, res) {
     var invite = req.body;
-    console.log(invite)
+    console.log(invite);
     People.findOne({project:req.params.id}, function(err, people){
         if (err) {return res.send(500,err);}
         if (!people) {return res.send(404,err);}
@@ -61,6 +61,36 @@ exports.invitePeople = function(req, res) {
                 } else {
                     if (invite.isInviteTeamMember) {
                         var builders = people.builders;
+                        async.each(invite.teamMember, function(member, cb) {
+                            User.findById(member._id, function(err, user) {
+                                if (err || !user) {return cb(err);}
+                                else {
+                                    newInviteeSignUpAlready.push(user._id);
+                                    builders.push(user._id);
+                                    user.projects.push(people.project);
+                                    user.markModified('projects');
+                                    user.save(cb());
+                                }
+                            });
+                        }, function(){
+                            people.builders = builders;
+                            people._newInviteeNotSignUp = newInviteeNotSignUp;
+                            people._newInviteeSignUpAlready = newInviteeSignUpAlready;
+                            people._newInviteType = 'peopleArchitect';
+                            people.markModified('invitePeople');
+                            people._editUser = req.user;
+                            people.save(function(err){
+                                if (err) {return res.send(500,err);}
+                                People.populate(people, 
+                                [{path:"builders._id", select: "_id email name"},
+                                {path:"architects._id", select: "_id email name"},
+                                {path:"clients._id", select: "_id email name"},
+                                {path:"subcontractors._id", select: "_id email name"},
+                                {path: "consultants._id", select: "_id email name"}], function(err, people) {
+                                    return res.json(people);
+                                });
+                            });
+                        });
                     } else {
                         var builders = [];
                     }
@@ -152,6 +182,36 @@ exports.invitePeople = function(req, res) {
                 } else {
                     if (invite.isInviteTeamMember) {
                         var architects = people.architects;
+                        async.each(invite.teamMember, function(member, cb) {
+                            User.findById(member._id, function(err, user) {
+                                if (err || !user) {return cb(err);}
+                                else {
+                                    newInviteeSignUpAlready.push(user._id);
+                                    architects.push(user._id);
+                                    user.projects.push(people.project);
+                                    user.markModified('projects');
+                                    user.save(cb());
+                                }
+                            });
+                        }, function(){
+                            people.architects = architects;
+                            people._newInviteeNotSignUp = newInviteeNotSignUp;
+                            people._newInviteeSignUpAlready = newInviteeSignUpAlready;
+                            people._newInviteType = 'peopleArchitect';
+                            people.markModified('invitePeople');
+                            people._editUser = req.user;
+                            people.save(function(err){
+                                if (err) {return res.send(500,err);}
+                                People.populate(people, 
+                                [{path:"builders._id", select: "_id email name"},
+                                {path:"architects._id", select: "_id email name"},
+                                {path:"clients._id", select: "_id email name"},
+                                {path:"subcontractors._id", select: "_id email name"},
+                                {path: "consultants._id", select: "_id email name"}], function(err, people) {
+                                    return res.json(people);
+                                });
+                            });
+                        });
                     } else {
                         var architects = [];
                     }
@@ -243,6 +303,36 @@ exports.invitePeople = function(req, res) {
                 } else {
                     if (invite.isInviteTeamMember) {
                         var clients = people.clients;
+                        async.each(invite.teamMember, function(member, cb) {
+                            User.findById(member._id, function(err, user) {
+                                if (err || !user) {return cb(err);}
+                                else {
+                                    newInviteeSignUpAlready.push(user._id);
+                                    clients.push(user._id);
+                                    user.projects.push(people.project);
+                                    user.markModified('projects');
+                                    user.save(cb());
+                                }
+                            });
+                        }, function(){
+                            people.clients = clients;
+                            people._newInviteeNotSignUp = newInviteeNotSignUp;
+                            people._newInviteeSignUpAlready = newInviteeSignUpAlready;
+                            people._newInviteType = 'peopleArchitect';
+                            people.markModified('invitePeople');
+                            people._editUser = req.user;
+                            people.save(function(err){
+                                if (err) {return res.send(500,err);}
+                                People.populate(people, 
+                                [{path:"builders._id", select: "_id email name"},
+                                {path:"architects._id", select: "_id email name"},
+                                {path:"clients._id", select: "_id email name"},
+                                {path:"subcontractors._id", select: "_id email name"},
+                                {path: "consultants._id", select: "_id email name"}], function(err, people) {
+                                    return res.json(people);
+                                });
+                            });
+                        });
                     } else {
                         var clients = [];
                     }
@@ -334,6 +424,36 @@ exports.invitePeople = function(req, res) {
                 } else {
                     if (invite.isInviteTeamMember) {
                         var subcontractors = people.subcontractors;
+                        async.each(invite.teamMember, function(member, cb) {
+                            User.findById(member._id, function(err, user) {
+                                if (err || !user) {return cb(err);}
+                                else {
+                                    newInviteeSignUpAlready.push(user._id);
+                                    subcontractors.push(user._id);
+                                    user.projects.push(people.project);
+                                    user.markModified('projects');
+                                    user.save(cb());
+                                }
+                            });
+                        }, function(){
+                            people.subcontractors = subcontractors;
+                            people._newInviteeNotSignUp = newInviteeNotSignUp;
+                            people._newInviteeSignUpAlready = newInviteeSignUpAlready;
+                            people._newInviteType = 'peopleArchitect';
+                            people.markModified('invitePeople');
+                            people._editUser = req.user;
+                            people.save(function(err){
+                                if (err) {return res.send(500,err);}
+                                People.populate(people, 
+                                [{path:"builders._id", select: "_id email name"},
+                                {path:"architects._id", select: "_id email name"},
+                                {path:"clients._id", select: "_id email name"},
+                                {path:"subcontractors._id", select: "_id email name"},
+                                {path: "consultants._id", select: "_id email name"}], function(err, people) {
+                                    return res.json(people);
+                                });
+                            });
+                        });
                     } else {
                         var subcontractors = [];
                     }
@@ -425,6 +545,36 @@ exports.invitePeople = function(req, res) {
                 } else {
                     if (invite.isInviteTeamMember) {
                         var consultants = people.consultants;
+                        async.each(invite.teamMember, function(member, cb) {
+                            User.findById(member._id, function(err, user) {
+                                if (err || !user) {return cb(err);}
+                                else {
+                                    newInviteeSignUpAlready.push(user._id);
+                                    consultants.push(user._id);
+                                    user.projects.push(people.project);
+                                    user.markModified('projects');
+                                    user.save(cb());
+                                }
+                            });
+                        }, function(){
+                            people.consultants = consultants;
+                            people._newInviteeNotSignUp = newInviteeNotSignUp;
+                            people._newInviteeSignUpAlready = newInviteeSignUpAlready;
+                            people._newInviteType = 'peopleArchitect';
+                            people.markModified('invitePeople');
+                            people._editUser = req.user;
+                            people.save(function(err){
+                                if (err) {return res.send(500,err);}
+                                People.populate(people, 
+                                [{path:"builders._id", select: "_id email name"},
+                                {path:"architects._id", select: "_id email name"},
+                                {path:"clients._id", select: "_id email name"},
+                                {path:"subcontractors._id", select: "_id email name"},
+                                {path: "consultants._id", select: "_id email name"}], function(err, people) {
+                                    return res.json(people);
+                                });
+                            });
+                        });
                     } else {
                         var consultants = [];
                     }
