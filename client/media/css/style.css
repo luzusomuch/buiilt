@@ -306,6 +306,10 @@ ul.pagination {
   margin: 10px 0px;
 }
 
+.font-weight-600 {
+  font-weight: 500
+}
+
 /*body{
   background-image: url("../old-and-new.png");
   background-size: 100%;

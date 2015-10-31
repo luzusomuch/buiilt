@@ -59,16 +59,20 @@ exports.invitePeople = function(req, res) {
                         });
                     });
                 } else {
-                    var builders = [];
+                    if (invite.isInviteTeamMember) {
+                        var builders = people.builders;
+                    } else {
+                        var builders = [];
+                    }
                     User.findOne({email: invite.email}, function(err, builder) {
                         if (err) {return res.send(500,err);}
                         if (!builder) {
                             builders.push({
                                 inviter: req.user._id,
-                                email: invitee.email,
+                                email: invite.email,
                                 hasSelect: true
                             });
-                            newInviteeNotSignUp.push(invitee.email);
+                            newInviteeNotSignUp.push(invite.email);
                         } else {
                             builders.push({
                                 inviter: req.user._id,
@@ -146,16 +150,20 @@ exports.invitePeople = function(req, res) {
                         });
                     });
                 } else {
-                    var architects = [];
+                    if (invite.isInviteTeamMember) {
+                        var architects = people.architects;
+                    } else {
+                        var architects = [];
+                    }
                     User.findOne({email: invite.email}, function(err, architect) {
                         if (err) {return res.send(500,err);}
                         if (!architect) {
                             architects.push({
                                 inviter: req.user._id,
-                                email: invitee.email,
+                                email: invite.email,
                                 hasSelect: true
                             });
-                            newInviteeNotSignUp.push(invitee.email);
+                            newInviteeNotSignUp.push(invite.email);
                         } else {
                             architects.push({
                                 inviter: req.user._id,
@@ -233,16 +241,20 @@ exports.invitePeople = function(req, res) {
                         });
                     });
                 } else {
-                    var clients = [];
+                    if (invite.isInviteTeamMember) {
+                        var clients = people.clients;
+                    } else {
+                        var clients = [];
+                    }
                     User.findOne({email: invite.email}, function(err, client) {
                         if (err) {return res.send(500,err);}
                         if (!client) {
                             clients.push({
                                 inviter: req.user._id,
-                                email: invitee.email,
+                                email: invite.email,
                                 hasSelect: true
                             });
-                            newInviteeNotSignUp.push(invitee.email);
+                            newInviteeNotSignUp.push(invite.email);
                         } else {
                             clients.push({
                                 inviter: req.user._id,
@@ -320,16 +332,20 @@ exports.invitePeople = function(req, res) {
                         });
                     });
                 } else {
-                    var subcontractors = [];
+                    if (invite.isInviteTeamMember) {
+                        var subcontractors = people.subcontractors;
+                    } else {
+                        var subcontractors = [];
+                    }
                     User.findOne({email: invite.email}, function(err, subcontractor) {
                         if (err) {return res.send(500,err);}
                         if (!subcontractor) {
                             subcontractors.push({
                                 inviter: req.user._id,
-                                email: invitee.email,
+                                email: invite.email,
                                 hasSelect: true
                             });
-                            newInviteeNotSignUp.push(invitee.email);
+                            newInviteeNotSignUp.push(invite.email);
                         } else {
                             subcontractors.push({
                                 inviter: req.user._id,
@@ -407,16 +423,20 @@ exports.invitePeople = function(req, res) {
                         });
                     });
                 } else {
-                    var consultants = []
+                    if (invite.isInviteTeamMember) {
+                        var consultants = people.consultants;
+                    } else {
+                        var consultants = [];
+                    }
                     User.findOne({email: invite.email}, function(err, consultant) {
                         if (err) {return res.send(500,err);}
                         if (!consultant) {
                             consultants.push({
                                 inviter: req.user._id,
-                                email: invitee.email,
+                                email: invite.email,
                                 hasSelect: true
                             });
-                            newInviteeNotSignUp.push(invitee.email);
+                            newInviteeNotSignUp.push(invite.email);
                         } else {
                             consultants.push({
                                 inviter: req.user._id,

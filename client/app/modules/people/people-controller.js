@@ -427,8 +427,20 @@ angular.module('buiiltApp')
     $scope.setInvite = function() {
         $scope.invite = {
             isTender : true,
+            isInviteTeamMember: false,
             invitees: []
         };
+    };
+
+    $scope.getChangeTypeValue = function(type) {
+        if (type == 'addTeamMember' || type == 'addClient') {
+            $scope.invite.isTender = false;
+            if (type == 'addTeamMember') {
+                $scope.invite.isInviteTeamMember = true;
+            }
+        } else {
+            $scope.invite.isTender = true;
+        }
     };
 
     $scope.addInvitee = function(invitee) {
