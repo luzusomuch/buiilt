@@ -342,6 +342,24 @@ angular.module('buiiltApp')
         });
     };
 
+    function getAllChatMessageNotificationByUserInPeople(selectedChatPeople){
+        notificationService.getAllChatMessageNotificationByBoard({id: selectedChatPeople._id}).$promise.then(function(res) {
+            console.log(res);
+            for (var i = selectedChatPeople.messages.length - 1; i >= 0; i--) {
+                selectedChatPeople.messages[i].peopleHasSeen = [];
+                _.each(res, function(notification){
+                    _.each(notification.element.messages, function(message) {
+                        if (message._id == selectedChatPeople.messages[i]._id && !notification.unread) {
+                            selectedChatPeople.messages[i].peopleHasSeen.push(notification.owner.name);
+                        }
+                    });
+                });
+                selectedChatPeople.messages[i].peopleHasSeen = _.uniq(selectedChatPeople.messages[i].peopleHasSeen);
+            };
+            console.log(selectedChatPeople);
+        });
+    };
+
     $scope.getTenderListByType = function(type) {
         $scope.selectedTeamType = type;
         $scope.tendersList = [];
@@ -610,6 +628,7 @@ angular.module('buiiltApp')
                     }
                 });
             }
+            getAllChatMessageNotificationByUserInPeople($scope.selectedChatPeople);
         }, function(err){
             console.log(err);
         });
@@ -651,6 +670,7 @@ angular.module('buiiltApp')
         peopleChatService.sendMessage({id: $scope.selectedChatPeople._id}, $scope.message).$promise.then(function(res) {
             $scope.selectedChatPeople = res;
             $scope.message.text = null;
+            getAllChatMessageNotificationByUserInPeople($scope.selectedChatPeople);
         }, function(err){
             console.log(err);
         });

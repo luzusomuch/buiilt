@@ -14,7 +14,8 @@ exports.selectPeople = function(req, res) {
             var peopleChat = new PeopleChat({
                 project: req.body.project,
                 people: req.params.id,
-                owner: req.body.user
+                owner: req.body.user,
+                members: [req.body.user, req.user._id]
             });
             peopleChat.save(function(err){
                 if (err) {return res.send(500);}

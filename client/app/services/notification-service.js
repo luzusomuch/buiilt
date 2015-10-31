@@ -74,6 +74,13 @@ angular.module('buiiltApp')
             action: 'get-all-chat-by-board'
           },
           isArray: true
+        },
+        getAllChatMessageNotificationByUserInPeople: {
+          method: 'get', 
+          params: {
+            action: 'get-all-chat-by-user-in-people'
+          },
+          isArray: true
         }
         //update: {
         //  method: 'PUT'

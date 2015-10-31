@@ -170,3 +170,12 @@ exports.getAllChatMessageNotificationByBoard = function(req, res) {
     return res.send(200, notifications);
   });
 };
+
+exports.getAllChatMessageNotificationByUserInPeople = function(req, res) {
+  Notification.find({'element._id': mongoose.Types.ObjectId(req.params.id), referenceTo: "people-chat"})
+  .populate('owner', '-hashedPassword -salt')
+  .exec(function(err, notifications) {
+    if (err) {return res.send(500,err);}
+    return res.send(200, notifications);
+  });
+};

@@ -275,8 +275,6 @@ angular.module('buiiltApp')
 
     function getAllChatMessageNotificationByBoard(board) {
         notificationService.getAllChatMessageNotificationByBoard({id: board._id}).$promise.then(function(res) {
-            $scope.allMessageNotifications = res;
-            console.log(res);
             for (var i = board.messages.length - 1; i >= 0; i--) {
                 board.messages[i].peopleHasSeen = [];
                 _.each(res, function(notification){
@@ -288,7 +286,6 @@ angular.module('buiiltApp')
                 });
                 board.messages[i].peopleHasSeen = _.uniq(board.messages[i].peopleHasSeen);
             };
-            console.log(board);
         });
     };
 
@@ -522,6 +519,7 @@ angular.module('buiiltApp')
         boardService.sendMessage({id: $scope.currentBoard._id}, $scope.message).$promise.then(function(res) {
             $scope.currentBoard = res;
             $scope.message.text = null;
+            getAllChatMessageNotificationByBoard(res);
         }, function(err){
             console.log(err);
         });
