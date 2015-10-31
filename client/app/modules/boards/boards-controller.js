@@ -10,6 +10,11 @@ angular.module('buiiltApp')
             if ($scope.builderPackage.projectManager._id._id == $scope.currentUser._id) {
                 res.builders.push({_id:$scope.builderPackage.projectManager._id});
                 $scope.currentUser.type == 'builder';
+                if ($scope.builderPackage.ownerType == 'homeOwner') {
+                    res.clients.push({_id: $scope.builderPackage.owner});    
+                } else if ($scope.builderPackage.ownerType == 'architect') {
+                    res.architects.push({_id: $scope.builderPackage.owner});
+                }
             }
             if ($scope.builderPackage.ownerType == 'homeOwner' && $scope.builderPackage.owner._id == $scope.currentUser._id) {
                 res.clients.push({_id: $scope.builderPackage.owner});
@@ -24,6 +29,11 @@ angular.module('buiiltApp')
             if ($scope.builderPackage.projectManager._id._id == $scope.currentUser._id) {
                 res.architects.push({_id:$scope.builderPackage.projectManager._id});
                 $scope.currentUser.type == 'architect';
+                if ($scope.builderPackage.ownerType == 'homeOwner') {
+                    res.clients.push({_id: $scope.builderPackage.owner});    
+                } else if ($scope.builderPackage.ownerType == 'builder') {
+                    res.builders.push({_id: $scope.builderPackage.owner});
+                }
             }
             if ($scope.builderPackage.ownerType == 'homeOwner' && $scope.builderPackage.owner._id == $scope.currentUser._id) {
                 res.clients.push({_id: $scope.builderPackage.owner});
@@ -38,6 +48,11 @@ angular.module('buiiltApp')
             if ($scope.builderPackage.projectManager._id._id == $scope.currentUser._id) {
                 res.clients.push({_id:$scope.builderPackage.projectManager._id});
                 $scope.currentUser.type == 'client';
+                if ($scope.builderPackage.ownerType == 'builder') {
+                    res.builders.push({_id: $scope.builderPackage.owner});    
+                } else if ($scope.builderPackage.ownerType == 'architect') {
+                    res.architects.push({_id: $scope.builderPackage.owner});
+                }
             }
             if ($scope.builderPackage.ownerType == 'architect' && $scope.builderPackage.owner._id == $scope.currentUser._id) {
                 res.architects.push({_id: $scope.builderPackage.owner});
@@ -49,7 +64,6 @@ angular.module('buiiltApp')
                 $scope.currentUser.type = 'builder';
             }
         }
-
         if (_.findIndex(res.builders, function(item) {
             if (item._id) {
                 return item._id._id == $scope.currentUser._id;
@@ -177,7 +191,6 @@ angular.module('buiiltApp')
                 }
             }
         }
-        console.log($scope.availableInvite);
     });
 
     function getAvailable(board) {
@@ -504,7 +517,6 @@ angular.module('buiiltApp')
     };
 
     $scope.downloadFile = function(file) {
-        console.log(file);
         var blob = {
             url: file.path,
             filename: file.name,
