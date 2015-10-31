@@ -274,10 +274,21 @@ angular.module('buiiltApp')
     };
 
     function getAllChatMessageNotificationByBoard(board) {
-        console.log(board);
         notificationService.getAllChatMessageNotificationByBoard({id: board._id}).$promise.then(function(res) {
             $scope.allMessageNotifications = res;
             console.log(res);
+            for (var i = board.messages.length - 1; i >= 0; i--) {
+                board.messages[i].peopleHasSeen = [];
+                _.each(res, function(notification){
+                    _.each(notification.element.messages, function(message) {
+                        if (message._id == board.messages[i]._id && !notification.unread) {
+                            board.messages[i].peopleHasSeen.push(notification.owner.name);
+                        }
+                    });
+                });
+                board.messages[i].peopleHasSeen = _.uniq(board.messages[i].peopleHasSeen);
+            };
+            console.log(board);
         });
     };
 

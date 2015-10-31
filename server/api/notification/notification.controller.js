@@ -163,9 +163,10 @@ exports.getOne = function(req, res) {
 };
 
 exports.getAllChatMessageNotificationByBoard = function(req, res) {
-  Notification.find({'element._id': req.params.id, referenceTo: 'board-chat'}, function(err, notifications) {
+  Notification.find({'element._id': mongoose.Types.ObjectId(req.params.id), type: "chat"})
+  .populate('owner', '-hashedPassword -salt')
+  .exec(function(err, notifications) {
     if (err) {return res.send(500,err);}
-    console.log(notifications);
     return res.send(200, notifications);
   });
 };

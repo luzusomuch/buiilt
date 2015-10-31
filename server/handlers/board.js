@@ -49,17 +49,12 @@ EventBus.onSeries('Board.Updated', function(board, next) {
         }
     } else if (board._modifiedPaths.indexOf('sendMessage') != -1) {
         var owners = [];
-        _.each(board.messages, function(message) {
-            owners.push(message.user.toString());
+
+        _.each(board.invitees, function(invitee) {
+            owners.push(invitee._id);
         });
-        var filteredOwners = _.uniq(owners);
-        var newOwners = [];
-        _.each(filteredOwners, function(owner){
-            newOwners.push(mongoose.Types.ObjectId(owner));
-        });
-        _.remove(newOwners, board.editUser._id);
         var params = {
-            owners: newOwners,
+            owners: owners,
             fromUser: board.editUser._id,
             element: board,
             referenceTo: 'board-chat',

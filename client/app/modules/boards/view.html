@@ -22,6 +22,12 @@
                     <p class="row chat-text" style="font-size: 13px; margin-top:3px">
                         {{message.text}}
                     </p>
+                    <small ng-if="message.peopleHasSeen.length > 0">
+                        <span ng-repeat="seenUser in message.peopleHasSeen">
+                            {{seenUser}},    
+                        </span>
+                        has seen
+                    </small>
                 </div>
             </div>
             
