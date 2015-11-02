@@ -6,64 +6,6 @@ angular.module('buiiltApp')
     $scope.submitted = false;
     $scope.availableInvite = [];
     peopleService.getInvitePeople({id: $stateParams.id}).$promise.then(function(res){
-        if ($scope.builderPackage.projectManager.type == 'builder') {
-            if ($scope.builderPackage.projectManager._id._id == $scope.currentUser._id) {
-                res.builders.push({_id:$scope.builderPackage.projectManager._id});
-                $scope.currentUser.type == 'builder';
-                if ($scope.builderPackage.ownerType == 'homeOwner') {
-                    res.clients.push({_id: $scope.builderPackage.owner});    
-                } else if ($scope.builderPackage.ownerType == 'architect') {
-                    res.architects.push({_id: $scope.builderPackage.owner});
-                }
-            }
-            if ($scope.builderPackage.ownerType == 'homeOwner' && $scope.builderPackage.owner._id == $scope.currentUser._id) {
-                res.clients.push({_id: $scope.builderPackage.owner});
-                res.builders.push({_id:$scope.builderPackage.projectManager._id});
-                $scope.currentUser.type = 'client';
-            } else if ($scope.builderPackage.ownerType == 'architect' && $scope.builderPackage.owner._id == $scope.currentUser._id) {
-                res.architects.push({_id: $scope.builderPackage.owner});
-                res.builders.push({_id:$scope.builderPackage.projectManager._id});
-                $scope.currentUser.type = 'architect';
-            }
-        } else if ($scope.builderPackage.projectManager.type == 'architect') {
-            if ($scope.builderPackage.projectManager._id._id == $scope.currentUser._id) {
-                res.architects.push({_id:$scope.builderPackage.projectManager._id});
-                $scope.currentUser.type == 'architect';
-                if ($scope.builderPackage.ownerType == 'homeOwner') {
-                    res.clients.push({_id: $scope.builderPackage.owner});    
-                } else if ($scope.builderPackage.ownerType == 'builder') {
-                    res.builders.push({_id: $scope.builderPackage.owner});
-                }
-            }
-            if ($scope.builderPackage.ownerType == 'homeOwner' && $scope.builderPackage.owner._id == $scope.currentUser._id) {
-                res.clients.push({_id: $scope.builderPackage.owner});
-                res.architects.push({_id:$scope.builderPackage.projectManager._id});
-                $scope.currentUser.type = 'client';
-            } else if ($scope.builderPackage.ownerType == 'builder' && $scope.builderPackage.owner._id == $scope.currentUser._id) {
-                res.builders.push({_id: $scope.builderPackage.owner});
-                res.architects.push({_id:$scope.builderPackage.projectManager._id});
-                $scope.currentUser.type = 'builder';
-            }
-        } else {
-            if ($scope.builderPackage.projectManager._id._id == $scope.currentUser._id) {
-                res.clients.push({_id:$scope.builderPackage.projectManager._id});
-                $scope.currentUser.type == 'client';
-                if ($scope.builderPackage.ownerType == 'builder') {
-                    res.builders.push({_id: $scope.builderPackage.owner});    
-                } else if ($scope.builderPackage.ownerType == 'architect') {
-                    res.architects.push({_id: $scope.builderPackage.owner});
-                }
-            }
-            if ($scope.builderPackage.ownerType == 'architect' && $scope.builderPackage.owner._id == $scope.currentUser._id) {
-                res.architects.push({_id: $scope.builderPackage.owner});
-                res.clients.push({_id:$scope.builderPackage.projectManager._id});
-                $scope.currentUser.type = 'architect';
-            } else if ($scope.builderPackage.ownerType == 'builder' && $scope.builderPackage.owner._id == $scope.currentUser._id) {
-                res.builders.push({_id: $scope.builderPackage.owner});
-                res.clients.push({_id:$scope.builderPackage.projectManager._id});
-                $scope.currentUser.type = 'builder';
-            }
-        }
         if (_.findIndex(res.builders, function(item) {
             if (item._id) {
                 return item._id._id == $scope.currentUser._id;

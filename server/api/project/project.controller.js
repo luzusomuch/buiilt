@@ -347,6 +347,12 @@ exports.createProjectNewVersion = function(req, res) {
       });
       var projectManager = {};
       if (req.body.selectedOwnerUserType == 'homeOwner') {
+        people.clients.push({
+          inviter: req.user._id,
+          _id: req.user._id,
+          hasSelect: true
+        });
+        people.save();
         if (req.body.homeOwnerHireArchitect == 'true' && req.body.architectEmail) {
           if (req.body.architectEmail.length > 0) {
             User.findOne({'email': req.body.architectEmail}, function(err, _architect){
@@ -354,10 +360,32 @@ exports.createProjectNewVersion = function(req, res) {
               if (!_architect) {
                 projectManager.email = req.body.architectEmail;
                 projectManager.type = 'architect';
+                people.architects.push({
+                  inviter: req.user._id,
+                  email: req.body.architectEmail,
+                  hasSelect: true
+                });
+                people._newInviteeNotSignUp = [req.body.architectEmail];
+                people._newInviteType = 'peopleArchitect';
+                people.markModified('invitePeople');
+                people._editUser = req.user;
+                people.save();
               } else {
                 _architect.projects.push(project._id);
                 _architect.markModified('projects');
                 _architect.save();
+
+                people.architects.push({
+                  inviter: req.user._id,
+                  _id: _architect._id,
+                  hasSelect: true
+                });
+                people._newInviteeSignUpAlready = [_architect._id];
+                people._newInviteType = 'peopleArchitect';
+                people.markModified('invitePeople');
+                people._editUser = req.user;
+                people.save();
+
                 projectManager._id = _architect._id;
                 projectManager.type = 'architect';
               }
@@ -380,10 +408,33 @@ exports.createProjectNewVersion = function(req, res) {
               if (!_builder) {
                 projectManager.email = req.body.builderEmail;
                 projectManager.type = 'builder';
+
+                people.builders.push({
+                  inviter: req.user._id,
+                  email: req.body.builderEmail,
+                  hasSelect: true
+                });
+                people._newInviteeNotSignUp = [req.body.architectEmail];
+                people._newInviteType = 'peopleBuilder';
+                people.markModified('invitePeople');
+                people._editUser = req.user;
+                people.save();
               } else {
                 _builder.projects.push(project._id);
                 _builder.markModified('projects');
                 _builder.save();
+
+                people.builders.push({
+                  inviter: req.user._id,
+                  _id: _builder._id,
+                  hasSelect: true
+                });
+                people._newInviteeSignUpAlready = [_builder._id];
+                people._newInviteType = 'peopleBuilder';
+                people.markModified('invitePeople');
+                people._editUser = req.user;
+                people.save();
+
                 projectManager._id = _builder._id;
                 projectManager.type = 'builder';
               }
@@ -422,6 +473,12 @@ exports.createProjectNewVersion = function(req, res) {
           return res.send(422, {msg: 'Please check your input'});
         }
       } else if (req.body.selectedOwnerUserType == 'architect') {
+        people.architects.push({
+          inviter: req.user._id,
+          _id: req.user._id,
+          hasSelect: true
+        });
+        people.save();
         if (req.body.architectManagerHisProject == 'true') {
           builderPackage.projectManager._id = user._id;
           builderPackage.projectManager.type = 'architect';
@@ -442,11 +499,34 @@ exports.createProjectNewVersion = function(req, res) {
                     email: req.body.homeOwnerEmail,
                     type: 'homeOwner'
                   };
+
+                  people.clients.push({
+                    inviter: req.user._id,
+                    email: req.body.homeOwnerEmail,
+                    hasSelect: true
+                  });
+                  people._newInviteeNotSignUp = [req.body.homeOwnerEmail];
+                  people._newInviteType = 'peopleClient';
+                  people.markModified('invitePeople');
+                  people._editUser = req.user;
+                  people.save();
                 } else {
                   builderPackage.projectManager = {
                     _id: _homeOwner._id,
                     type: 'homeOwner'
                   };
+
+                  people.clients.push({
+                    inviter: req.user._id,
+                    _id: _homeOwner._id,
+                    hasSelect: true
+                  });
+                  people._newInviteeSignUpAlready = [_homeOwner._id];
+                  people._newInviteType = 'peopleClient';
+                  people.markModified('invitePeople');
+                  people._editUser = req.user;
+                  people.save();
+
                   _homeOwner.projects.push(project._id);
                   _homeOwner.markModified('projects');
                   _homeOwner.save();
@@ -472,11 +552,34 @@ exports.createProjectNewVersion = function(req, res) {
                     email: req.body.builderEmail,
                     type: 'builder'
                   };
+
+                  people.builders.push({
+                    inviter: req.user._id,
+                    email: req.body.builderEmail,
+                    hasSelect: true
+                  });
+                  people._newInviteeNotSignUp = [req.body.builderEmail];
+                  people._newInviteType = 'peopleBuilder';
+                  people.markModified('invitePeople');
+                  people._editUser = req.user;
+                  people.save();
                 } else {
                   builderPackage.projectManager = {
                     _id: _builder._id,
                     type: 'builder'
                   };
+
+                  people.builders.push({
+                    inviter: req.user._id,
+                    _id: _builder._id,
+                    hasSelect: true
+                  });
+                  people._newInviteeSignUpAlready = [_builder._id];
+                  people._newInviteType = 'peopleBuilder';
+                  people.markModified('invitePeople');
+                  people._editUser = req.user;
+                  people.save();
+
                   _builder.projects.push(project._id);
                   _builder.markModified('projects');
                   _builder.save();
@@ -497,6 +600,12 @@ exports.createProjectNewVersion = function(req, res) {
           }
         }
       } else if (req.body.selectedOwnerUserType == 'builder') {
+        people.builders.push({
+          inviter: req.user._id,
+          _id: req.user._id,
+          hasSelect: true
+        });
+        people.save();
         if (req.body.builderHireArchitect == 'true' && req.body.architectEmail) {
           if (req.body.architectEmail.length > 0) {
             User.findOne({'email': req.body.architectEmail}, function(err, _architect){
@@ -504,10 +613,33 @@ exports.createProjectNewVersion = function(req, res) {
               if (!_architect) {
                 projectManager.email = req.body.architectEmail;
                 projectManager.type = 'architect';
+
+                people.architects.push({
+                  inviter: req.user._id,
+                  email: req.body.architectEmail,
+                  hasSelect: true
+                });
+                people._newInviteeNotSignUp = [req.body.architectEmail];
+                people._newInviteType = 'peopleArchitect';
+                people.markModified('invitePeople');
+                people._editUser = req.user;
+                people.save();
               } else {
                 _architect.projects.push(project._id);
                 _architect.markModified('projects');
                 _architect.save();
+
+                people.architects.push({
+                  inviter: req.user._id,
+                  _id: _architect._id,
+                  hasSelect: true
+                });
+                people._newInviteeSignUpAlready = [_architect._id];
+                people._newInviteType = 'peopleArchitect';
+                people.markModified('invitePeople');
+                people._editUser = req.user;
+                people.save();
+
                 projectManager._id = _architect._id;
                 projectManager.type = 'architect';
               }
@@ -530,10 +662,33 @@ exports.createProjectNewVersion = function(req, res) {
               if (!_builder) {
                 projectManager.email = req.body.homeOwnerEmail;
                 projectManager.type = 'homeOwner';
+
+                people.clients.push({
+                  inviter: req.user._id,
+                  email: req.body.homeOwnerEmail,
+                  hasSelect: true
+                });
+                people._newInviteeNotSignUp = [req.body.homeOwnerEmail];
+                people._newInviteType = 'peopleClient';
+                people.markModified('invitePeople');
+                people._editUser = req.user;
+                people.save();
               } else {
                 _builder.projects.push(project._id);
                 _builder.markModified('projects');
                 _builder.save();
+
+                people.clients.push({
+                  inviter: req.user._id,
+                  _id: _builder._id,
+                  hasSelect: true
+                });
+                people._newInviteeSignUpAlready = [_builder._id];
+                people._newInviteType = 'peopleClient';
+                people.markModified('invitePeople');
+                people._editUser = req.user;
+                people.save();
+
                 projectManager._id = _builder._id;
                 projectManager.type = 'homeOwner';
               }

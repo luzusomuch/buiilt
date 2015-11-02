@@ -6,6 +6,7 @@ var Project = require('./../../models/project.model');
 var PackageInvite = require('./../../models/packageInvite.model');
 var ContractorPackage = require('./../../models/contractorPackage.model');
 var BuilderPackage = require('./../../models/builderPackage.model');
+var BuilderPackageNew = require('./../../models/builderPackageNew.model');
 var MaterialPackage = require('./../../models/materialPackage.model');
 var People = require('./../../models/people.model');
 var Board = require('./../../models/board.model');
@@ -370,9 +371,29 @@ exports.createUserWithInviteToken = function(req, res, next) {
                   emailVerified: true,
                   package: people
                 };
-                packageInvite.remove(function(err){
-                  if (err) {return res.send(500);}
-                  return res.json(200,data);
+                BuilderPackageNew.findOne({project: packageInvite.project}, function(err, builderPackageNew) {
+                  if (err || !builderPackageNew) {
+                    packageInvite.remove(function(err){
+                      if (err) {return res.send(500);}
+                      return res.json(200,data);
+                    });
+                  } else {
+                    if (builderPackageNew.projectManager.email && builderPackageNew.projectManager.email != '') {
+                      builderPackageNew.projectManager._id = user._id;
+                      builderPackageNew.projectManager.email = null;
+                      builderPackageNew.save(function(err){
+                        packageInvite.remove(function(err){
+                          if (err) {return res.send(500);}
+                          return res.json(200,data);
+                        });
+                      });
+                    } else {
+                      packageInvite.remove(function(err){
+                        if (err) {return res.send(500);}
+                        return res.json(200,data);
+                      });
+                    }
+                  }
                 });
               });
             }

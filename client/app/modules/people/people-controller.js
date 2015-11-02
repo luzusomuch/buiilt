@@ -17,9 +17,7 @@ angular.module('buiiltApp')
     }
 
     function getAvailableUser(invitePeople) {
-        $scope.builderPackage.projectManager._id.hasSelect = true;
         $scope.currentUser.hasSelect = false;
-        $scope.currentUser.roleAdmin = false;
         $scope.availableUserType = [];
         $scope.currentTeamMembers = [];
         $scope.available = [];
@@ -79,29 +77,7 @@ angular.module('buiiltApp')
         }
 
         if ($scope.builderPackage.projectManager.type == 'architect') {
-            if ($scope.builderPackage.ownerType == 'homeOwner') {
-                invitePeople.clients.push({_id: $scope.builderPackage.owner});
-                if ($scope.builderPackage.owner._id == $scope.currentUser._id) {
-                    $scope.currentUser.type = 'client';
-                }
-            } else if ($scope.builderPackage.ownerType == 'builder') {
-                invitePeople.builders.push({_id: $scope.builderPackage.owner});
-                if ($scope.builderPackage.owner._id == $scope.currentUser._id) {
-                    $scope.currentUser.type = 'builder';
-                }
-            }
-            invitePeople.architects.push({_id: $scope.builderPackage.projectManager._id});
-            if ($scope.builderPackage.projectManager._id._id == $scope.currentUser._id) {
-                $scope.currentUser.type = 'architect';
-                $scope.currentUser.roleAdmin = true;
-                $scope.currentUser.hasSelect = true;
-                $scope.availableUserType = [
-                    {value: 'addTeamMember', text: 'team'}, 
-                    {value: 'addClient', text: 'client'}, 
-                    {value: 'addBuilder', text: 'builder'}, 
-                    {value: 'addConsultant', text: 'consultant'}
-                ];
-            } else {
+            
                 switch ($scope.currentUser.type) {
                     case 'client': 
                         $scope.availableUserType = [
@@ -137,32 +113,8 @@ angular.module('buiiltApp')
                     default: 
                         break;
                 }
-            }
         } else if ($scope.builderPackage.projectManager.type == 'builder') {
-            if ($scope.builderPackage.ownerType == 'homeOwner') {
-                invitePeople.clients.push({_id: $scope.builderPackage.owner});
-                if ($scope.builderPackage.owner._id == $scope.currentUser._id) {
-                    $scope.currentUser.type = 'client';
-                }
-            } else if ($scope.builderPackage.ownerType == 'architect') {
-                invitePeople.architects.push({_id: $scope.builderPackage.owner});
-                if ($scope.builderPackage.owner._id == $scope.currentUser._id) {
-                    $scope.currentUser.type = 'architect';
-                }
-            }
-            invitePeople.builders.push({_id: $scope.builderPackage.projectManager._id});
-            if ($scope.builderPackage.projectManager._id._id == $scope.currentUser._id) {
-                $scope.currentUser.type = 'builder';
-                $scope.currentUser.roleAdmin = true;
-                $scope.currentUser.hasSelect = true;
-                $scope.availableUserType = [
-                    {value: 'addTeamMember', text: 'team'}, 
-                    {value: 'addClient', text: 'client'}, 
-                    {value: 'addArchitect', text: 'architect'}, 
-                    {value: 'addSubcontractor', text: 'subcontractor'}, 
-                    {value: 'addConsultant', text: 'consultant'}
-                ];
-            } else {
+            
                 switch ($scope.currentUser.type) {
                     case 'client': 
                         $scope.availableUserType = [
@@ -198,31 +150,8 @@ angular.module('buiiltApp')
                     default: 
                         break;
                 }
-            }
         } else {
-            if ($scope.builderPackage.ownerType == 'builder') {
-                invitePeople.builders.push({_id: $scope.builderPackage.owner});
-                if ($scope.builderPackage.owner._id == $scope.currentUser._id) {
-                    $scope.currentUser.type = 'builder';
-                }
-            } else if ($scope.builderPackage.ownerType == 'architect') {
-                invitePeople.architects.push({_id: $scope.builderPackage.owner});
-                if ($scope.builderPackage.owner._id == $scope.currentUser._id) {
-                    $scope.currentUser.type = 'architect';
-                }
-            }
-            invitePeople.clients.push({_id: $scope.builderPackage.projectManager._id});
-            if ($scope.builderPackage.projectManager._id._id == $scope.currentUser._id) {
-                $scope.currentUser.roleAdmin = true;
-                $scope.currentUser.type = 'client';
-                $scope.currentUser.hasSelect = true;
-                $scope.availableUserType = [
-                    {value: 'addTeamMember', text: 'team'}, 
-                    {value: 'addBuilder', text: 'builder'}, 
-                    {value: 'addArchitect', text: 'architect'}, 
-                    {value: 'addConsultant', text: 'consultant'}
-                ];
-            } else {
+            
                 switch ($scope.currentUser.type) {
                     case 'client': 
                         $scope.availableUserType = [
@@ -258,13 +187,15 @@ angular.module('buiiltApp')
                     default: 
                         break;
                 }
-            }
         }
 
         if ($scope.currentUser.type == 'builder') {
             _.each(invitePeople.builders, function(builder) {
                 if (builder._id) {
                     $scope.currentTeamMembers.push(builder._id);
+                    _.each(builder.teamMember, function(member) {
+                        $scope.currentTeamMembers.push(member);
+                    });
                 }
             });
             _.each(invitePeople.builders, function(builder) {
@@ -278,6 +209,9 @@ angular.module('buiiltApp')
             _.each(invitePeople.clients, function(client) {
                 if (client._id) {
                     $scope.currentTeamMembers.push(client._id);
+                    _.each(client.teamMember, function(member) {
+                        $scope.currentTeamMembers.push(member);
+                    });
                 }
             });
             _.each(invitePeople.clients, function(client) {
@@ -291,6 +225,9 @@ angular.module('buiiltApp')
             _.each(invitePeople.architects, function(architect) {
                 if (architect._id) {
                     $scope.currentTeamMembers.push(architect._id);
+                    _.each(architect.teamMember, function(member) {
+                        $scope.currentTeamMembers.push(member);
+                    });
                 }
             });
             _.each(invitePeople.architects, function(architect) {
@@ -304,15 +241,22 @@ angular.module('buiiltApp')
             _.each(invitePeople.subcontractors, function(subcontractor) {
                 if (subcontractor._id) {
                     $scope.currentTeamMembers.push(subcontractor._id);
+                    _.each(subcontractor.teamMember, function(member) {
+                        $scope.currentTeamMembers.push(member);
+                    });
                 }
             });
         } else if ($scope.currentUser.type == 'consultant') {
             _.each(invitePeople.consultants, function(consultant) {
                 if (consultant._id) {
                     $scope.currentTeamMembers.push(consultant._id);
+                    _.each(consultant.teamMember, function(member) {
+                        $scope.currentTeamMembers.push(member);
+                    });
                 }
             });
         }
+        console.log($scope.currentTeamMembers);
     };
 
     socket.on('onlineUser', function(users) {

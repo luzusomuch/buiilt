@@ -424,22 +424,74 @@ exports.invitePeople = function(req, res) {
                 } else {
                     if (invite.isInviteTeamMember) {
                         var subcontractors = people.subcontractors;
-                        async.each(invite.teamMember, function(member, cb) {
-                            User.findById(member._id, function(err, user) {
-                                if (err || !user) {return cb(err);}
-                                else {
-                                    newInviteeSignUpAlready.push(user._id);
-                                    subcontractors.push(user._id);
-                                    user.projects.push(people.project);
-                                    user.markModified('projects');
-                                    user.save(cb());
-                                }
-                            });
-                        }, function(){
+                        _.each(subcontractors, function(subcontractor){
+                            if (subcontractor._id.toString() == req.user._id.toString()) {
+                                async.each(invite.teamMember, function(member, cb) {
+                                    User.findById(member._id, function(err, user) {
+                                        if (err || !user) {return cb(err);}
+                                        else {
+                                            newInviteeSignUpAlready.push(user._id);
+                                            subcontractor.teamMember.push(user._id);
+                                            user.projects.push(people.project);
+                                            user.markModified('projects');
+                                            user.save(cb());
+                                        }
+                                    });
+                                }, function(){
+                                    people.subcontractors = subcontractors;
+                                    people._newInviteeNotSignUp = newInviteeNotSignUp;
+                                    people._newInviteeSignUpAlready = newInviteeSignUpAlready;
+                                    people._newInviteType = 'peopleSubcontractor';
+                                    people.markModified('invitePeople');
+                                    people._editUser = req.user;
+                                    people.save(function(err){
+                                        if (err) {return res.send(500,err);}
+                                        People.populate(people, 
+                                        [{path:"builders._id", select: "_id email name"},
+                                        {path:"builders.teamMember", select: "_id email name"},
+                                        {path:"architects._id", select: "_id email name"},
+                                        {path:"architects.teamMember", select: "_id email name"},
+                                        {path:"clients._id", select: "_id email name"},
+                                        {path:"clients.teamMember", select: "_id email name"},
+                                        {path:"subcontractors._id", select: "_id email name"},
+                                        {path:"subcontractors.teamMember", select: "_id email name"},
+                                        {path: "consultants._id", select: "_id email name"},
+                                        {path: "consultants.teamMember", select: "_id email name"}
+                                        ], function(err, people) {
+                                            return res.json(people);
+                                        });
+                                    });
+                                });
+                            } 
+                        });
+                    } else {
+                        var subcontractors = [];
+                        User.findOne({email: invite.email}, function(err, subcontractor) {
+                            if (err) {return res.send(500,err);}
+                            if (!subcontractor) {
+                                subcontractors.push({
+                                    inviter: req.user._id,
+                                    email: invite.email,
+                                    hasSelect: true
+                                });
+                                newInviteeNotSignUp.push(invite.email);
+                            } else {
+                                subcontractors.push({
+                                    inviter: req.user._id,
+                                    _id: subcontractor._id,
+                                    hasSelect: true
+                                });
+                                newInviteeSignUpAlready.push(subcontractor._id);
+                                subcontractor.projects.push(people.project);
+                                subcontractor.markModified('projects');
+                                subcontractor.save();
+                            }
+                        });
+                        setTimeout(function() {
                             people.subcontractors = subcontractors;
                             people._newInviteeNotSignUp = newInviteeNotSignUp;
                             people._newInviteeSignUpAlready = newInviteeSignUpAlready;
-                            people._newInviteType = 'peopleArchitect';
+                            people._newInviteType = 'peopleSubcontractor';
                             people.markModified('invitePeople');
                             people._editUser = req.user;
                             people.save(function(err){
@@ -453,50 +505,8 @@ exports.invitePeople = function(req, res) {
                                     return res.json(people);
                                 });
                             });
-                        });
-                    } else {
-                        var subcontractors = [];
+                        }, 2000);
                     }
-                    User.findOne({email: invite.email}, function(err, subcontractor) {
-                        if (err) {return res.send(500,err);}
-                        if (!subcontractor) {
-                            subcontractors.push({
-                                inviter: req.user._id,
-                                email: invite.email,
-                                hasSelect: true
-                            });
-                            newInviteeNotSignUp.push(invite.email);
-                        } else {
-                            subcontractors.push({
-                                inviter: req.user._id,
-                                _id: subcontractor._id,
-                                hasSelect: true
-                            });
-                            newInviteeSignUpAlready.push(subcontractor._id);
-                            subcontractor.projects.push(people.project);
-                            subcontractor.markModified('projects');
-                            subcontractor.save();
-                        }
-                    });
-                    setTimeout(function() {
-                        people.subcontractors = subcontractors;
-                        people._newInviteeNotSignUp = newInviteeNotSignUp;
-                        people._newInviteeSignUpAlready = newInviteeSignUpAlready;
-                        people._newInviteType = 'peopleSubcontractor';
-                        people.markModified('invitePeople');
-                        people._editUser = req.user;
-                        people.save(function(err){
-                            if (err) {return res.send(500,err);}
-                            People.populate(people, 
-                            [{path:"builders._id", select: "_id email name"},
-                            {path:"architects._id", select: "_id email name"},
-                            {path:"clients._id", select: "_id email name"},
-                            {path:"subcontractors._id", select: "_id email name"},
-                            {path: "consultants._id", select: "_id email name"}], function(err, people) {
-                                return res.json(people);
-                            });
-                        });
-                    }, 2000);
                 }
             } else if (invite.type == 'addConsultant') {
                 if (invite.isTender) {
@@ -818,10 +828,15 @@ exports.selectWinnerTender = function(req, res) {
 exports.getInvitePeople = function(req, res) {
     People.findOne({project: req.params.id})
     .populate("builders._id", "_id email name")
+    .populate("builders.teamMember", "_id email name")
     .populate("architects._id", "_id email name")
+    .populate("architects.teamMember", "_id email name")
     .populate("clients._id", "_id email name")
+    .populate("clients.teamMember", "_id email name")
     .populate("subcontractors._id", "_id email name")
+    .populate("subcontractors.teamMember", "_id email name")
     .populate("consultants._id", "_id email name")
+    .populate("consultants.teamMember", "_id email name")
     .exec(function(err, people){
         if (err) {return res.send(500,err);}
         if (!people) {return res.send(404);}
