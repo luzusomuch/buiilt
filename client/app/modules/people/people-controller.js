@@ -17,6 +17,7 @@ angular.module('buiiltApp')
     }
 
     function getAvailableUser(invitePeople) {
+        console.log(invitePeople);
         $scope.currentUser.hasSelect = false;
         $scope.availableUserType = [];
         $scope.currentTeamMembers = [];
@@ -342,6 +343,8 @@ angular.module('buiiltApp')
                 var subcontractors = [];
                 _.each(invitePeople.subcontractors, function(subcontractor) {
                     if (subcontractor._id) {
+                        subcontractor._id.inviter = subcontractor.inviter._id;
+                        subcontractor._id.hasSelect = subcontractor.hasSelect;
                         subcontractors.push(subcontractor._id);
                     }
                 });
@@ -350,7 +353,11 @@ angular.module('buiiltApp')
                 var consultants = [];
                 _.each(invitePeople.consultants, function(consultant) {
                     if (consultant._id) {
-                        consultants.push(consultant._id);
+                        consultant._id.inviter = consultant.inviter._id;
+                        consultant._id.hasSelect = consultant.hasSelect;
+                        if (consultant._id && consultant._id.inviter == $scope.currentUser._id) {
+                            consultants.push(consultant._id);
+                        }
                     }
                 });
                 invitePeople.consultants = consultants;
@@ -374,7 +381,11 @@ angular.module('buiiltApp')
                 var consultants = [];
                 _.each(invitePeople.consultants, function(consultant) {
                     if (consultant._id) {
-                        consultants.push(consultant._id);
+                        consultant._id.inviter = consultant.inviter._id;
+                        consultant._id.hasSelect = consultant.hasSelect;
+                        if (consultant._id && consultant._id.inviter == $scope.currentUser._id) {
+                            consultants.push(consultant._id);
+                        }
                     }
                 });
                 invitePeople.consultants = consultants;
@@ -398,7 +409,11 @@ angular.module('buiiltApp')
                 var consultants = [];
                 _.each(invitePeople.consultants, function(consultant) {
                     if (consultant._id) {
-                        consultants.push(consultant._id);
+                        consultant._id.inviter = consultant.inviter._id;
+                        consultant._id.hasSelect = consultant.hasSelect;
+                        if (consultant._id && consultant._id.inviter == $scope.currentUser._id) {
+                            consultants.push(consultant._id);
+                        }
                     }
                 });
                 invitePeople.consultants = consultants;
@@ -414,6 +429,7 @@ angular.module('buiiltApp')
                                 subcontractors.push(member);
                             });
                         }
+                        invitePeople.inviter = subcontractor.inviter;
                     }
                 });
                 invitePeople.subcontractors = subcontractors;
@@ -429,6 +445,7 @@ angular.module('buiiltApp')
                                 consultants.push(member);
                             });
                         }
+                        invitePeople.inviter = subcontractor.inviter;
                     }
                 });
                 invitePeople.consultants = consultants;
@@ -437,9 +454,6 @@ angular.module('buiiltApp')
             default:
                 break;
         }
-
-        console.log($scope.currentTeamMembers);
-        console.log(invitePeople);
     };
 
     socket.on('onlineUser', function(users) {
@@ -455,6 +469,13 @@ angular.module('buiiltApp')
         _.each(onlineUsersList, function(user) {
             $scope.available[user].isOnline = true;
         });
+        if ($scope.invitePeople.inviter) {
+            if (_.findIndex($scope.available, function(item) {
+                return item._id == $scope.invitePeople.inviter._id;
+            }) != -1) {
+                $scope.invitePeople.inviter.isOnline = true;
+            }
+        }
     });
 
     function getTaskAndDocumentBySelectedUser(user) {
@@ -566,6 +587,7 @@ angular.module('buiiltApp')
 
     peopleService.getInvitePeople({id: $stateParams.id}).$promise.then(function(res){
         $scope.invitePeople = res;
+        console.log(res);
         getAvailableUser($scope.invitePeople);
     });
 

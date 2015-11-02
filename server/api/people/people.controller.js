@@ -747,6 +747,7 @@ exports.invitePeople = function(req, res) {
 };
 
 exports.selectWinnerTender = function(req, res) {
+    console.log(req.body);
     People.findOne({project: req.params.id}, function(err, people) {
         if (err) {return res.send(500,err);}
         if (!people) {return res.send(404);}
@@ -755,10 +756,11 @@ exports.selectWinnerTender = function(req, res) {
             var loserTender = [];
             if (req.body.type == 'subcontractor') {
                 var winnerTender = _.remove(people.subcontractors, function(item) {
-                    return item.inviter == req.body.tender.inviter && item._id == req.body.tender._id._id;
+                    return item.inviter == req.body.tender.inviter && item._id == req.body.tender._id;
                 });
+                console.log(winnerTender);
                 winnerTender[0].hasSelect = true;
-                winnerTenderNotification.push(req.body.tender._id._id);
+                winnerTenderNotification.push(req.body.tender._id);
                 _.each(people.subcontractors, function(subcontractor) {
                     if (subcontractor._id) {
                         loserTender.push(subcontractor._id);
@@ -837,10 +839,10 @@ exports.selectWinnerTender = function(req, res) {
                 });
             } else if (req.body.type == 'consultant') {
                 var winnerTender = _.remove(people.consultants, function(item) {
-                    return item.inviter == req.body.tender.inviter && item._id == req.body.tender._id._id;
+                    return item.inviter == req.body.tender.inviter && item._id == req.body.tender._id;
                 });
                 winnerTender[0].hasSelect = true;
-                winnerTenderNotification.push(req.body.tender._id._id);
+                winnerTenderNotification.push(req.body.tender._id);
                 _.each(people.consultants, function(consultant) {
                     if (consultant._id) {
                         loserTender.push(consultant._id);
@@ -975,8 +977,10 @@ exports.getInvitePeople = function(req, res) {
     .populate("clients.teamMember", "_id email name")
     .populate("subcontractors._id", "_id email name")
     .populate("subcontractors.teamMember", "_id email name")
+    .populate("subcontractors.inviter", "_id email name")
     .populate("consultants._id", "_id email name")
     .populate("consultants.teamMember", "_id email name")
+    .populate("consultants.inviter", "_id email name")
     .exec(function(err, people){
         if (err) {return res.send(500,err);}
         if (!people) {return res.send(404);}
