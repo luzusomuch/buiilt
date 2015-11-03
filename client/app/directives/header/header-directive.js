@@ -6,9 +6,9 @@ angular.module('buiiltApp')
     controller: function($scope,$state, $stateParams, $rootScope,materialPackageService, authService, projectService, contractorService,teamService,filterFilter, builderPackageService, socket) {
       $scope.projects = [];
       $scope.submitted = false;
-	  
+
 	  //inline manual functions
-	  $rootScope.startSignupWizard = function() {
+	  /* $rootScope.startSignupWizard = function() {
 	  	inline_manual_player.activateTopic('4881', '1');
 	  };
 	  $rootScope.startNewProjectWizard = function() {
@@ -34,9 +34,9 @@ angular.module('buiiltApp')
 	  };
 	  $rootScope.startNewVariationWizard = function() {
 	  	inline_manual_player.activateTopic('4969', '1');
-	  };
-	  
-	  
+	  }; */
+
+
       //get header height
       $rootScope.headerHeight = $('nav').outerHeight() + 48;
 
@@ -177,7 +177,7 @@ angular.module('buiiltApp')
                         // }
                         $scope.tabs = $scope.menuTypesNewVersion['hasProject'];
                       });
-                      
+
                     } else {
                       // $scope.tabs = $scope.menuTypesHasNoArchitectManager['other'];
                       $scope.tabs = $scope.menuTypesNewVersion['other'];
@@ -196,7 +196,7 @@ angular.module('buiiltApp')
 
       //first load
       queryProjects();
-      
+
       //check menu when state changes
       $rootScope.$on('$stateChangeSuccess', function (event, next) {
         queryProjects(function() {
@@ -259,7 +259,7 @@ angular.module('buiiltApp')
           // }, function(res) {
           //   $scope.errors = res.data;
           // });
-          
+
           // new version
           projectService.createProjectNewVersion($scope.project).$promise.then(function(data){
             console.log(data);
