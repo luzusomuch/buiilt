@@ -335,10 +335,17 @@ angular.module('buiiltApp')
                                 builders.push(member);
                             });
                         }
+
+                        if (builder._id._id == $scope.currentUser._id) {
+                            $scope.currentUser.isLeader = true;
+                        } else {
+                            $scope.currentUser.isLeader = false;
+                        }
                     }
                 });
                 invitePeople.builders = builders;
                 $scope.currentTeamMembers = builders;
+                _.remove($scope.currentTeamMembers, {_id: $scope.currentUser._id});
 
                 var subcontractors = [];
                 _.each(invitePeople.subcontractors, function(subcontractor) {
@@ -377,6 +384,7 @@ angular.module('buiiltApp')
                 });
                 invitePeople.architects = architects;
                 $scope.currentTeamMembers = architects;
+                _.remove($scope.currentTeamMembers, {_id: $scope.currentUser._id});
 
                 var consultants = [];
                 _.each(invitePeople.consultants, function(consultant) {
@@ -405,6 +413,7 @@ angular.module('buiiltApp')
                 });
                 invitePeople.clients = clients;
                 $scope.currentTeamMembers = clients;
+                _.remove($scope.currentTeamMembers, {_id: $scope.currentUser._id});
 
                 var consultants = [];
                 _.each(invitePeople.consultants, function(consultant) {
@@ -434,6 +443,7 @@ angular.module('buiiltApp')
                 });
                 invitePeople.subcontractors = subcontractors;
                 $scope.currentTeamMembers = subcontractors;
+                _.remove($scope.currentTeamMembers, {_id: $scope.currentUser._id});
                 break;
             case 'consultant':
                 var consultants = [];
@@ -450,6 +460,7 @@ angular.module('buiiltApp')
                 });
                 invitePeople.consultants = consultants;
                 $scope.currentTeamMembers = consultants;
+                _.remove($scope.currentTeamMembers, {_id: $scope.currentUser._id});
                 break;
             default:
                 break;
