@@ -310,6 +310,18 @@ ul.pagination {
   font-weight: 500
 }
 
+.feature-btn-wrapper {
+    text-align: center;
+    margin: 15px;
+    font-size: 12px
+}
+
+.feature-btn {
+    border: 2px solid #BBDEFB;
+    border-radius: 3px;
+    padding: 7px
+}
+
 /*body{
   background-image: url("../old-and-new.png");
   background-size: 100%;
