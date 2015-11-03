@@ -10,9 +10,8 @@
         <div class="card collection">
         <form method="post" ng-submit="signup(form)" name="form" novalidate style="padding:10px 50px">
           <div ng-if="hasInviteToken && user.invite.type == 'team-invite'">
-            <h3>Team invitation</h3>
-            <h4>Team <span class="highlight">{{user.invite.element.name}}</span> has invited you to join them on Buiilt</h4>
-            <h4>Accept their invitation by signing up below</h4>
+            <h4>Join {{user.invite.element.name}} on buiilt.</h4>
+            <h5>Fill out your details below to accept their invitation.</h5>
           </div>
           <h3 ng-if="!hasInviteToken" id="createAcctHead">Create account</h3>
           <div class="row" ng-if="!hasInviteToken">
