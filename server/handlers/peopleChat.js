@@ -5,6 +5,7 @@ var EventBus = require('./../components/EventBus');
 var User = require('./../models/user.model');
 var Notification = require('./../models/notification.model');
 var NotificationHelper = require('./../components/helpers/notification');
+var PushNotificationHelper = require('./../components/helpers/PushNotification');
 var config = require('./../config/environment');
 var async = require('async');
 var _ = require('lodash');
@@ -22,4 +23,6 @@ EventBus.onSeries('PeopleChat.Updated', function(req, next) {
     NotificationHelper.create(params, function() {
         next();
     });
+    var data = _.last(req.messages);
+    PushNotificationHelper.getData(req.project,req._id,'People package', data.text, data.mentions, 'people');
 });

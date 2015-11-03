@@ -5,6 +5,7 @@ var EventBus = require('./../components/EventBus');
 var User = require('./../models/user.model');
 var Notification = require('./../models/notification.model');
 var NotificationHelper = require('./../components/helpers/notification');
+var PushNotificationHelper = require('./../components/helpers/PushNotification');
 var config = require('./../config/environment');
 var async = require('async');
 var _ = require('lodash');
@@ -24,6 +25,7 @@ EventBus.onSeries('Board.Inserted', function(board, next) {
         NotificationHelper.create(params, function() {
             next();
         });
+        PushNotificationHelper.getData(board.project, board._id, board.name, 'invite you to a new board', owners, 'board');
     } else {
         return next();
     }
@@ -44,6 +46,7 @@ EventBus.onSeries('Board.Updated', function(board, next) {
             NotificationHelper.create(params, function() {
                 next();
             });
+            PushNotificationHelper.getData(board.project, board._id, board.name, 'invite you to a new board', owners, 'board');
         } else {
             return next();
         }
@@ -63,6 +66,8 @@ EventBus.onSeries('Board.Updated', function(board, next) {
         NotificationHelper.create(params, function() {
             next();
         });
+        var data = _.last(board.messages);
+        PushNotificationHelper.getData(board.project, board._id, board.name, data.text, data.mentions, 'board');
     } else {
         return next();
     }
