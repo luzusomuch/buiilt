@@ -8,13 +8,15 @@ var async = require('async');
 var EventBus = require('../../components/EventBus');
 
 exports.selectPeople = function(req, res) {
-    PeopleChat.findOne({project: req.body.project, people: req.params.id, owner: req.body.user}, function(err, chat) {
+    PeopleChat.findOne({project: req.body.project, people: req.params.id, $or:[{owner: req.body.user, from: req.user._id},{owner: req.user._id, from: req.body.user}]}, function(err, chat) {
         if (err) {return res.send(500,err);}
+        console.log(chat);
         if (!chat) {
             var peopleChat = new PeopleChat({
                 project: req.body.project,
                 people: req.params.id,
                 owner: req.body.user,
+                from: req.user._id,
                 members: [req.body.user, req.user._id]
             });
             peopleChat.save(function(err){
