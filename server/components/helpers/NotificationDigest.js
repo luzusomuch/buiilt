@@ -9,11 +9,11 @@ var async = require('async');
 var _ = require('lodash');
 var CronJob = require('cron').CronJob;
 
-var job1 = new CronJob('00 00 12 * * *', function(){
+var job1 = new CronJob('00 00 12 * * 1-6', function(){
     run()
 }, null, false, 'Australia/Melbourne');
 
-var job2 = new CronJob('00 00 17 * * *', function(){
+var job2 = new CronJob('00 00 17 * * 1-6', function(){
     run();
 }, null, false, 'Australia/Melbourne');
 
