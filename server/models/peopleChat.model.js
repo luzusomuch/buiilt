@@ -16,6 +16,7 @@ var PeopleChatSchema = new Schema({
     }],
     messages: [{
         user: {type: Schema.Types.ObjectId, ref: 'User'},
+        mentions: [{type: Schema.Types.ObjectId, ref: 'User'}],
         text: {type: String},
         sendAt: {type: Date}
     }]

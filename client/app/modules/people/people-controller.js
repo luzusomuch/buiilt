@@ -539,6 +539,7 @@ angular.module('buiiltApp')
     };
 
     function getAllChatMessageNotificationByUserInPeople(selectedChatPeople){
+        console.log(selectedChatPeople);
         notificationService.getAllChatMessageNotificationByBoard({id: selectedChatPeople._id}).$promise.then(function(res) {
             for (var i = selectedChatPeople.messages.length - 1; i >= 0; i--) {
                 selectedChatPeople.messages[i].peopleHasSeen = [];
@@ -550,6 +551,9 @@ angular.module('buiiltApp')
                     });
                 });
                 selectedChatPeople.messages[i].peopleHasSeen = _.uniq(selectedChatPeople.messages[i].peopleHasSeen);
+                if (selectedChatPeople.messages[i].mentions.length > 0) {
+                    selectedChatPeople.messages[i].text = selectedChatPeople.messages[i].text.substring(selectedChatPeople.messages[i].mentions[0].name.length);
+                }
             };
         });
     };
@@ -853,7 +857,11 @@ angular.module('buiiltApp')
             $event.preventDefault();
             $scope.sendMessage();
         } else if (($event.keyCode === 32 || $event.keyCode === 8) && $scope.showPopup) {
+            $event.preventDefault();
             $scope.showPopup = false;
+        } else if ($event.keyCode === 9) {
+            $event.preventDefault();
+            $scope.getMentionValue($scope.selectedUser);
         }
     };
 
@@ -862,8 +870,10 @@ angular.module('buiiltApp')
     $scope.showPopup = false;
 
     $scope.getMentionValue = function(mention) {
+        $scope.message.mentions = [];
         $scope.message.text = $scope.message.text.substring(0, $scope.message.text.length -1);
         $scope.message.text += mention.name;  
+        $scope.message.mentions.push(mention._id);
         $scope.showPopup = false;
     };
 

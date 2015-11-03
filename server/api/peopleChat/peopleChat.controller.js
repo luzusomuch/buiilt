@@ -25,7 +25,8 @@ exports.selectPeople = function(req, res) {
             });
         } else {
             PeopleChat.populate(chat, 
-            [{path: "messages.user", select: "_id email name"}], function(err, chat) {
+            [{path: "messages.user", select: "_id email name"},
+            {path: "messages.mentions", select: "_id email name"}], function(err, chat) {
                 return res.json(chat);
             });
         }
@@ -33,6 +34,7 @@ exports.selectPeople = function(req, res) {
 };
 
 exports.sendMessage = function(req, res) {
+    console.log(req.body);
     PeopleChat.findById(req.params.id, function(err, chat){
         if (err) {return res.send(500,err);}
         if (!chat) {return res.send(404);}
@@ -40,13 +42,15 @@ exports.sendMessage = function(req, res) {
             chat.messages.push({
                 user: req.user._id,
                 text: req.body.text,
+                mentions: req.body.mentions,
                 sendAt: new Date()
             });
             chat._editUser = req.user;
             chat.save(function(err){
                 if (err) {return res.send(500,err);}
                 PeopleChat.populate(chat, 
-                [{path: "messages.user", select: "_id email name"}], function(err, chat) {
+                [{path: "messages.user", select: "_id email name"},
+                {path: "messages.mentions", select: "_id email name"}], function(err, chat) {
                     EventBus.emit('socket:emit', {
                         event: 'peopleChat:new',
                         room: chat._id.toString(),
