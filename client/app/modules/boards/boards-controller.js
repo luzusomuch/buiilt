@@ -227,6 +227,13 @@ angular.module('buiiltApp')
                     });
                 });
                 board.messages[i].peopleHasSeen = _.uniq(board.messages[i].peopleHasSeen);
+                if (board.messages[i].mentions.length > 0) {
+                    _.each(board.messages[i].mentions, function(mention) {
+                        if (board.messages[i].text.indexOf(mention.name) != -1) {
+                            board.messages[i].text = board.messages[i].text.substring(0, board.messages[i].text.indexOf(mention.name));
+                        }
+                    });
+                }
             };
         });
     };
@@ -435,24 +442,41 @@ angular.module('buiiltApp')
             $scope.sendMessage();
         } else if (($event.keyCode === 32 || $event.keyCode === 8) && $scope.showPopup) {
             $scope.showPopup = false;
+        } else if ($event.keyCode === 9) {
+            $event.preventDefault();
+            if ($scope.mentionPeople.length > 0) {
+                $scope.getMentionValue($scope.mentionPeople[0]);
+            } else {
+                $scope.getMentionValue($scope.available[0]);
+            }
         }
     };
 
 
     $scope.message = {
+        mentions: []
     };
     $scope.showPopup = false;
+    $scope.mentionString = '';
 
     $scope.getMentionValue = function(mention) {
-        $scope.message.text = $scope.message.text.substring(0, $scope.message.text.length -1);
+        $scope.message.text = $scope.message.text.substring(0, $scope.message.text.length - ($scope.mentionString.length +1));
         $scope.message.text += mention.name;  
+        $scope.message.mentions.push(mention._id);
         $scope.showPopup = false;
     };
 
     $scope.$watch('message.text', function(newValue, oldValue) {
         if (newValue) {
-            if (newValue.slice(-1) == "@") {
+            if (newValue.indexOf("@") != -1) {
                 $scope.showPopup = true;
+                $scope.mentionString = newValue.substring(newValue.indexOf("@") + 1);
+                $scope.mentionPeople = [];
+                _.each($scope.available, function(item) {
+                    if (item.name.indexOf($scope.mentionString) != -1) {
+                        $scope.mentionPeople.push(item);
+                    }
+                });
             }
         }
     });

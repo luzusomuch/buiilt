@@ -72,7 +72,9 @@ exports.getBoards = function(req, res) {
     Board.find({project: req.params.id})
     .populate('owner', '_id email name')
     .populate('invitees._id', '_id email name')
-    .populate('messages.user', '_id email name').exec(function(err, boards) {
+    .populate('messages.user', '_id email name')
+    .populate('messages.mentions', '_id email name')
+    .exec(function(err, boards) {
         if (err) {return res.send(500,err);}
         return res.send(200, boards);
     });
@@ -85,6 +87,7 @@ exports.sendMessage = function(req, res) {
         board.messages.push({
             user: req.user._id,
             text: req.body.text,
+            mentions: req.body.mentions,
             sendAt: new Date()
         });
         board._editUser = req.user;
@@ -94,7 +97,8 @@ exports.sendMessage = function(req, res) {
             Board.populate(board, [
             {path: 'invitees._id', select: '_id email name'},
             {path: 'owner', select: '_id email name'},
-            {path: 'messages.user', select: '_id email name'}
+            {path: 'messages.user', select: '_id email name'},
+            {path: 'messages.mentions', select: '_id email name'}
             ], function(err, board) {
                 EventBus.emit('socket:emit', {
                     event: 'boardChat:new',

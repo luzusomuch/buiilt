@@ -539,7 +539,6 @@ angular.module('buiiltApp')
     };
 
     function getAllChatMessageNotificationByUserInPeople(selectedChatPeople){
-        console.log(selectedChatPeople);
         notificationService.getAllChatMessageNotificationByBoard({id: selectedChatPeople._id}).$promise.then(function(res) {
             for (var i = selectedChatPeople.messages.length - 1; i >= 0; i--) {
                 selectedChatPeople.messages[i].peopleHasSeen = [];
@@ -552,7 +551,7 @@ angular.module('buiiltApp')
                 });
                 selectedChatPeople.messages[i].peopleHasSeen = _.uniq(selectedChatPeople.messages[i].peopleHasSeen);
                 if (selectedChatPeople.messages[i].mentions.length > 0) {
-                    selectedChatPeople.messages[i].text = selectedChatPeople.messages[i].text.substring(selectedChatPeople.messages[i].mentions[0].name.length);
+                    selectedChatPeople.messages[i].text = selectedChatPeople.messages[i].text.substring(0, selectedChatPeople.messages[i].text.indexOf(selectedChatPeople.messages[i].mentions[0].name));
                 }
             };
         });
