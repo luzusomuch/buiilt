@@ -380,6 +380,12 @@ angular.module('buiiltApp')
                                 architects.push(member);
                             });
                         }
+
+                        if (architect._id._id == $scope.currentUser._id) {
+                            $scope.currentUser.isLeader = true;
+                        } else {
+                            $scope.currentUser.isLeader = false;
+                        }
                     }
                 });
                 invitePeople.architects = architects;
@@ -408,6 +414,12 @@ angular.module('buiiltApp')
                             _.each(client.teamMember, function(member) {
                                 clients.push(member);
                             });
+                        }
+
+                        if (client._id._id == $scope.currentUser._id) {
+                            $scope.currentUser.isLeader = true;
+                        } else {
+                            $scope.currentUser.isLeader = false;
                         }
                     }
                 });
@@ -438,6 +450,12 @@ angular.module('buiiltApp')
                                 subcontractors.push(member);
                             });
                         }
+
+                        if (subcontractor._id._id == $scope.currentUser._id) {
+                            $scope.currentUser.isLeader = true;
+                        } else {
+                            $scope.currentUser.isLeader = false;
+                        }
                         invitePeople.inviter = subcontractor.inviter;
                     }
                 });
@@ -454,6 +472,12 @@ angular.module('buiiltApp')
                             _.each(consultant.teamMember, function(member) {
                                 consultants.push(member);
                             });
+                        }
+
+                        if (consultant._id._id == $scope.currentUser._id) {
+                            $scope.currentUser.isLeader = true;
+                        } else {
+                            $scope.currentUser.isLeader = false;
                         }
                         invitePeople.inviter = subcontractor.inviter;
                     }
