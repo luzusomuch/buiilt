@@ -10,7 +10,7 @@ angular.module('buiiltApp')
 
   $scope.errors = {};
   //content height
-  $scope.contentHeight = $rootScope.maximunHeight - $rootScope.headerHeight - $rootScope.footerHeight - 130;
+  $scope.contentHeight = $rootScope.maximunHeight - $rootScope.headerHeight - 130;
   
   $scope.project=project;
   $scope.docum = {};
@@ -22,7 +22,7 @@ angular.module('buiiltApp')
   });
   authService.getCurrentUser().$promise.then(function(data){
     $scope.currentUser = data;
-    fileService.getFileByStateParam({'id': $stateParams.id}).$promise.then(function(data) {
+    fileService.getFileInProject({'id': $stateParams.id}).$promise.then(function(data) {
       $scope.files = data;
       _.each($scope.files, function(file){
         file.totalLike = file.usersInterestedIn.length;
@@ -186,4 +186,24 @@ angular.module('buiiltApp')
   if ($rootScope.newestDocument != null) {
     $timeout(function(){$scope.getFileDetail($rootScope.newestDocument)},1500);
   }
+
+  console.log(filepicker);
+
+  $scope.downloadFile = function(file) {
+    console.log(file);
+    var blob = {
+      url: file.path,
+      filename: file.name,
+      mimetype: file.mimetype,
+      size: file.size
+    };
+
+    filepicker.exportFile(
+      blob,
+      function(Blob){
+        alert(Blob.url);
+          console.log(Blob.url);
+      }
+    );
+  };
 });

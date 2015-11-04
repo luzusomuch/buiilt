@@ -87,5 +87,12 @@ id: '@_id'},{
       },
       isArray: true
     },
+    getFileInProject: {
+      method: 'get',
+      params: {
+        action: 'get-in-project'
+      },
+      isArray: true
+    },
   });
 });

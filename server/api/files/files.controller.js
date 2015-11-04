@@ -216,3 +216,10 @@ exports.getInBoard = function(req, res) {
         return res.send(200,files);
     });
 };
+
+exports.getInProject = function(req, res) {
+    File.find({belongTo: req.params.id, belongToType: 'project'}, function(err, files){
+        if (err) {return res.send(500,err);}
+        return res.send(200,files);
+    });
+};

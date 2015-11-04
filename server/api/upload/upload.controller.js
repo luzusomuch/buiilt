@@ -50,6 +50,7 @@ exports.upload = function(req, res){
             file.size = request.file.size;
             file.version = file.version + 1;
             file.belongTo = req.params.id;
+            file.belongToType = 'project';
             file.tags = request.tags;
             file.save(function(err, saved) {
                 if (err) {console.log(err);return res.send(500,err);}
@@ -108,6 +109,7 @@ exports.upload = function(req, res){
             size: request.file.size,
             user: req.user._id,
             belongTo: req.params.id,
+            belongToType : 'project',
             tags: request.tags
         });
         file.save(function(err){
