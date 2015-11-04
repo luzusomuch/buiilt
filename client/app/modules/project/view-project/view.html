@@ -41,7 +41,7 @@
               <!-- THIS IS THE OLD VERSION -->
                <!-- <a ng-show="isLeader && (currentTeam.type == 'builder'|| currentTeam.type == 'architect')" class="modal-trigger" data-target="upload" href="#modal_attachDocument" id="uploadNewDoc" style="margin-left:30px; padding: 5px; font-size: 12px; color: black" ng-click="startUploadDocWizard()">UPLOAD NEW DOCUMENT</a> -->
                <!-- THIS IS THE NEW VERSION -->
-               <a ng-show="currentUser._id == builderPackage.projectManager._id" class="modal-trigger" data-target="upload" href="#modal_attachDocument" id="uploadNewDoc" style="margin-left:30px; padding: 5px; font-size: 12px; color: black" ng-click="startUploadDocWizard()">UPLOAD NEW DOCUMENT</a>
+               <a ng-show="currentUser._id == builderPackage.projectManager._id._id" class="modal-trigger" data-target="upload" href="#modal_attachDocument" id="uploadNewDoc" style="margin-left:30px; padding: 5px; font-size: 12px; color: black" ng-click="startUploadDocWizard()">UPLOAD NEW DOCUMENT</a>
                <a id="downloadAll" style="margin-left:30px; padding: 5px; font-size: 12px; color: black; cursor:pointer;">DOWNLOAD ALL DOCUMENTS</a>
                <span ng-repeat="file in files" style="display:none">
                     <a class="downloadFile" href='{{file.fileUrl}}' download="file.name">{{file.title}}</a>

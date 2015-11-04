@@ -4,6 +4,7 @@ var User = require('./../../models/user.model');
 var Team = require('./../../models/team.model');
 var Project = require('./../../models/project.model');
 var BuilderPackage = require('./../../models/builderPackage.model');
+var BuilderPackageNew = require('./../../models/builderPackageNew.model');
 var ContractorPackage = require('./../../models/contractorPackage.model');
 var MaterialPackage = require('./../../models/materialPackage.model');
 var StaffPackage = require('./../../models/staffPackage.model');
@@ -53,18 +54,13 @@ exports.upload = function(req, res){
             file.save(function(err, saved) {
                 if (err) {console.log(err);return res.send(500,err);}
                 var owners = [];
-                BuilderPackage.findOne({project: saved.belongTo})
+                BuilderPackageNew.findOne({project: saved.belongTo})
                 .populate('owner')
                 .populate("project")
                 .populate('to.team')
                 .populate('member').exec(function(err,builderPackage){
                     if (err) {return res.send(500,err);}
-                    owners = builderPackage.owner.leader;
-                    _.each(builderPackage.owner.member, function(member){
-                        if (member._id) {
-                            owners.push(member._id);
-                        }
-                    });
+                    owners.push(builderPackage.owner._id);
                     if (builderPackage.to.team) {
                         owners = _.union(owners, builderPackage.to.team.leader);
                         _.each(builderPackage.to.team.member, function(member){
@@ -80,21 +76,21 @@ exports.upload = function(req, res){
                             }
                         });
                     }
+                    if (builderPackage.projectManager._id) {
+                        owners.push(builderPackage.projectManager._id);
+                    }
                     _.remove(owners, req.user._id);
-                    async.each(owners, function(leader, callback){
-                        var notification = new Notification({
-                            owner: leader,
-                            fromUser: req.user._id,
-                            toUser: leader,
-                            element: {file: saved.toJSON(), 
-                                uploadIn: builderPackage,
-                                projectId: builderPackage.project},
-                            referenceTo: "DocumentInProject",
-                            type: 'uploadNewDocumentVersion'
-                        });
-                        notification.save(callback);
-                    }, function(err){
-                        if (err) {return res.send(500,err);}
+                    var params = {
+                        owners: owners,
+                        fromUser: req.user._id,
+                        element: {
+                            file: saved.toJSON(), 
+                            uploadIn: builderPackage,
+                            projectId: builderPackage.project},
+                        referenceTo: "DocumentInProject",
+                        type: 'uploadNewDocumentVersion'
+                    };
+                    NotificationHelper.create(params, function() {
                         return res.send(file.toJSON());
                     });
                 });
@@ -117,7 +113,7 @@ exports.upload = function(req, res){
         file.save(function(err){
             if (err) {console.log(err);return res.send(500,err);}
             var owners = [];
-            BuilderPackage.findOne({project: file.belongTo})
+            BuilderPackageNew.findOne({project: file.belongTo})
             .populate('owner')
             .populate("project")
             .populate('to.team')
@@ -125,12 +121,7 @@ exports.upload = function(req, res){
                 if (err) {return res.send(500,err);}
                 if (!builderPackage) {return res.send(404);}
                 else {
-                    owners = builderPackage.owner.leader;
-                    _.each(builderPackage.owner.member, function(member){
-                        if (member._id) {
-                            owners.push(member._id);
-                        }
-                    });
+                    owners.push(builderPackage.owner._id);
                     if (builderPackage.to.team) {
                         owners = _.union(builderPackage.owner.leader, builderPackage.to.team.leader);
                         _.each(builderPackage.to.team.member, function(member){
@@ -146,21 +137,22 @@ exports.upload = function(req, res){
                             }
                         });
                     }
+                    if (builderPackage.projectManager._id) {
+                        owners.push(builderPackage.projectManager._id);
+                    }
                     _.remove(owners, req.user._id);
-                    async.each(owners, function(leader, callback){
-                        var notification = new Notification({
-                            owner: leader,
-                            fromUser: req.user._id,
-                            toUser: leader,
-                            element: {file: file.toJSON(), 
-                                uploadIn: builderPackage,
-                                projectId: builderPackage.project},
-                            referenceTo: "DocumentInProject",
-                            type: 'uploadNewDocumentVersion'
-                        });
-                        notification.save(callback);
-                    }, function(err) {
-                        if (err) {return res.send(500,err);}
+                    var params = {
+                        owners: owners,
+                        fromUser: req.user._id,
+                        element: {
+                            file: file.toJSON(),
+                            uploadIn: builderPackage,
+                            projectId: builderPackage.project
+                        },
+                        referenceTo: "DocumentInProject",
+                        type: 'uploadNewDocumentVersion'
+                    };
+                    NotificationHelper.create(params, function(){
                         return res.send(file.toJSON());
                     });
                 }

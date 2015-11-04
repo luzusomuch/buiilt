@@ -17,8 +17,8 @@ var job2 = new CronJob('00 00 17 * * 1-6', function(){
     run();
 }, null, false, 'Australia/Melbourne');
 
-// job1.start();
-// job2.start();
+job1.start();
+job2.start();
 
 function getTaskInNext3Days(taskEndDate) {
     var date = new Date();
@@ -112,34 +112,34 @@ function run(){
                                 Team.findOne({_id: data.owner}, cb);
                             }
                         }, function(err, result){
-                            // if (!err) {
-                            //     if (result.team._id) {
-                            //         var from = result.user.firstName + " " + result.user.lastName + " | " + result.team.name + "<"+result.user.email+">";
-                            //     } else {
-                            //         var from = result.user.firstName + " " + result.user.lastName + "<"+result.user.email+">";
-                            //     }
-                            //     Mailer.sendMail(templateUrl, from, data.to, {
-                            //         // team: result.team.toJSON(),
-                            //         user: result.user.toJSON(),
-                            //         registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + data._id,
-                            //         subject: result.team.name + ' would like a quote'
-                            //     }, function(){});
-                            // }
+                            if (!err) {
+                                if (result.team._id) {
+                                    var from = result.user.firstName + " " + result.user.lastName + " | " + result.team.name + "<"+result.user.email+">";
+                                } else {
+                                    var from = result.user.firstName + " " + result.user.lastName + "<"+result.user.email+">";
+                                }
+                                Mailer.sendMail(templateUrl, from, data.to, {
+                                    // team: result.team.toJSON(),
+                                    user: result.user.toJSON(),
+                                    registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + data._id,
+                                    subject: result.team.name + ' would like a quote'
+                                }, function(){});
+                            }
                         });
                     });
                 }
                 else if (item.type == 'InviteToken') {
-                    // async.each(item.data, function(data, cb){
-                    //     User.findById(data.user, function(err, user){
-                    //         if (err || !user) {return cb(err);}
-                    //         var from = user.firstName + " " + user.lastName + " | " + data.element.name + "<"+user.email+">";
-                    //         Mailer.sendMail('invite-team-has-no-account.html', from, data.email, {
-                    //             request: user.toJSON,
-                    //             link: config.baseUrl + 'signup?inviteToken=' + data.inviteToken,
-                    //             subject: 'Join ' + data.element.name + ' on buiilt'
-                    //         }, function(err){return cb(err);});
-                    //     });
-                    // }, function(){console.log('success');});
+                    async.each(item.data, function(data, cb){
+                        User.findById(data.user, function(err, user){
+                            if (err || !user) {return cb(err);}
+                            var from = user.firstName + " " + user.lastName + " | " + data.element.name + "<"+user.email+">";
+                            Mailer.sendMail('invite-team-has-no-account.html', from, data.email, {
+                                request: user.toJSON,
+                                link: config.baseUrl + 'signup?inviteToken=' + data.inviteToken,
+                                subject: 'Join ' + data.element.name + ' on buiilt'
+                            }, function(err){return cb(err);});
+                        });
+                    }, function(){console.log('success');});
                 }
                 else if (item.type == 'Notification') {
                     var result = countDuplicate(item.data);
@@ -147,6 +147,7 @@ function run(){
                     var link = "";
                     var type = "";
                     var taskInNext3Days = [];
+                    var totalDocumentHasChanged = [];
                     _.each(result[0], function(owner, key){
                         totalNotificationByUser.push({owner: owner, totalNotifications: result[1][key], links: []});
                     });
@@ -163,10 +164,24 @@ function run(){
                         else if (data.type == 'uploadNewDocumentVersion') {
                             link = config.baseUrl +'projects/'+data.element.projectId;
                             type = "Upload New Documentation";
-                            _.each(totalNotificationByUser, function(item){
+                            _.each(totalNotificationByUser, function(item) {
                                 if (item.owner == data.owner.toString()) {
-                                    item.links.push({link:link, type: type});
+                                    totalDocumentHasChanged.push(item.owner);
                                 }
+                            });
+                            _.each(totalNotificationByUser, function(item) {
+                                var countTotalDocumentChange = 0;
+                                async.each(totalDocumentHasChanged, function(owner, cb) {
+                                    if (owner == item.owner) {
+                                        countTotalDocumentChange += 1;
+                                        cb()
+                                    } else {
+                                        cb();
+                                    }
+                                }, function(){
+                                    item.countTotalDocumentChange = countTotalDocumentChange;
+                                    item.links.push({link:link, type: type});
+                                });
                             });
                         }
                         else if (data.referenceTo == 'DocumentContractorPackage' || data.referenceTo == 'DocumentMaterialPackage' 
@@ -339,23 +354,22 @@ function run(){
                             });
                         }
                     });
-                    // async.each(totalNotificationByUser, function(notificationByUser, cb){
-                    //     User.findById(notificationByUser.owner, function(err, user){
-                    //         if (err || !user) {return cb(err);}
-                    //         Mailer.sendMail('crontab-notification.html', config.emailFrom, user.email, {
-                    //             user: user.toJSON(),
-                    //             request: notificationByUser,
-                    //             subject: 'Daily email on buiilt'
-                    //         }, function(err){return cb(err);});
-                    //     });
-                    // }, function(){
-                    //     console.log('success');
-                    // });
-                    console.log(totalNotificationByUser);
+                    async.each(totalNotificationByUser, function(notificationByUser, cb){
+                        User.findById(notificationByUser.owner, function(err, user){
+                            if (err || !user) {return cb(err);}
+                            Mailer.sendMail('crontab-notification.html', config.emailFrom, user.email, {
+                                user: user.toJSON(),
+                                request: notificationByUser,
+                                subject: 'Daily email on buiilt'
+                            }, function(err){return cb(err);});
+                        });
+                    }, function(){
+                        console.log('success');
+                    });
                 }
             });
         }
     });
 };
 
-run();
+// run();
