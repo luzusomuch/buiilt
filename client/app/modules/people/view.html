@@ -67,7 +67,7 @@
             <i class="tiny material-icons valign" style="color: #64B5F6; margin-right: 5px" ng-style="subcontractor.isOnline ? {'color': '#81C784'} : {'color': '#E0E0E0'}">brightness_1</i>
             {{subcontractor.name}}
         </p>
-        <p ng-show="(currentUser.type == 'client' || currentUser.type == 'builder' || currentUser.type == 'architect' && currentUser.isLeader" ng-mouseover="accordian = 6; getTenderListByType('consultant')">CONSULTANTS</p>
+        <p ng-show="(currentUser.type == 'client' || currentUser.type == 'builder' || currentUser.type == 'architect') && currentUser.isLeader" ng-mouseover="accordian = 6; getTenderListByType('consultant')">CONSULTANTS</p>
         <p class="margin-10-0 font-weight-600 valign-wrapper" ng-show="accordian == 6" style="margin-left: 10px" ng-repeat="consultant in invitePeople.consultants" ng-if="consultant._id" ng-click="selectUser(consultant, 'consultant')" ng-style="consultant._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             <i class="tiny material-icons valign" style="color: #64B5F6; margin-right: 5px" ng-style="consultant._id.isOnline ? {'color': '#81C784'} : {'color': '#E0E0E0'}">brightness_1</i>
             {{consultant.name}}
@@ -302,14 +302,19 @@
                     <option ng-repeat="type in availableUserType" value="{{type.value}}" >{{type.text}}</option>
                 </select>
             </div>
-            <div class="row">
+            <div class="row" ng-show="invite.isTender">
                 <label for="">Description</label>
-                <input type="text" name="description" ng-model="invite.description" required ng-class="{'invalid' : formInvite.description.$invalid && submitted}">
+                <input type="text" name="description" ng-model="invite.description" ng-class="{'invalid' : formInvite.description.$invalid && submitted}">
                 <p ng-if="formInvite.description.$erorr.required && submitted" class="validate-message">Description is required</p>
             </div>
             <div class="row" ng-hide="invite.type == 'addTeamMember' || invite.type == 'addClient'">
-                <input ng-model="invite.isTender" type="checkbox" id="complete"/>
-                <label for="complete">Do they need to provide a tender?</label>
+                <!-- <input ng-model="invite.isTender" type="checkbox" id="complete"/>
+                <label for="complete">Do they need to provide a tender?</label> -->
+                <p>Do they need to provide a tender?</p>
+                <input id="yes" type="radio" ng-model="invite.isTender" name="isTender" ng-value='true' checked="true"/>
+                <label for="yes">Yes</label>
+                <input id="no" type="radio" ng-model="invite.isTender" name="isTender" ng-value='false'/>
+                <label for="no">No</label>
             </div>
             <div class="row" ng-if="!invite.isTender" ng-hide="invite.isInviteTeamMember">
                 <label for="">Email</label>

@@ -183,11 +183,9 @@ angular.module('buiiltApp')
     });
   };
 
-  if ($rootScope.newestDocument != null) {
-    $timeout(function(){$scope.getFileDetail($rootScope.newestDocument)},1500);
-  }
-
-  console.log(filepicker);
+  // if ($rootScope.newestDocument != null) {
+  //   $timeout(function(){$scope.getFileDetail($rootScope.newestDocument)},1500);
+  // }
 
   $scope.downloadFile = function(file) {
     console.log(file);
