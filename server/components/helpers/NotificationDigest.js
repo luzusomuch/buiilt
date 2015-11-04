@@ -17,9 +17,17 @@ var job2 = new CronJob('00 00 17 * * 1-6', function(){
     run();
 }, null, false, 'Australia/Melbourne');
 
-job1.start();
-job2.start();
+// job1.start();
+// job2.start();
 
+function getTaskInNext3Days(taskEndDate) {
+    var date = new Date();
+    if (date.getDate() + 3 <= taskEndDate.getDate() && date.getMonth() <= taskEndDate.getMonth() && date.getYear() <= taskEndDate.getYear()) {
+        return true;
+    } else {
+        return false;
+    }
+};
 
 function countDuplicate(arr) {
     var a = [], b = [], prev = null;
@@ -104,40 +112,41 @@ function run(){
                                 Team.findOne({_id: data.owner}, cb);
                             }
                         }, function(err, result){
-                            if (!err) {
-                                if (result.team) {
-                                    var from = result.user.firstName + " " + result.user.lastName + " | " + result.team.name + "<"+result.user.email+">";
-                                } else {
-                                    var from = result.user.firstName + " " + result.user.lastName + "<"+result.user.email+">";
-                                }
-                                Mailer.sendMail(templateUrl, from, data.to, {
-                                    // team: result.team.toJSON(),
-                                    user: result.user.toJSON(),
-                                    registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + data._id,
-                                    subject: result.team.name + ' would like a quote'
-                                }, function(){});
-                            }
+                            // if (!err) {
+                            //     if (result.team._id) {
+                            //         var from = result.user.firstName + " " + result.user.lastName + " | " + result.team.name + "<"+result.user.email+">";
+                            //     } else {
+                            //         var from = result.user.firstName + " " + result.user.lastName + "<"+result.user.email+">";
+                            //     }
+                            //     Mailer.sendMail(templateUrl, from, data.to, {
+                            //         // team: result.team.toJSON(),
+                            //         user: result.user.toJSON(),
+                            //         registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + data._id,
+                            //         subject: result.team.name + ' would like a quote'
+                            //     }, function(){});
+                            // }
                         });
                     });
                 }
                 else if (item.type == 'InviteToken') {
-                    async.each(item.data, function(data, cb){
-                        User.findById(data.user, function(err, user){
-                            if (err || !user) {return cb(err);}
-                            var from = user.firstName + " " + user.lastName + " | " + data.element.name + "<"+user.email+">";
-                            Mailer.sendMail('invite-team-has-no-account.html', from, data.email, {
-                                request: user.toJSON,
-                                link: config.baseUrl + 'signup?inviteToken=' + data.inviteToken,
-                                subject: 'Join ' + data.element.name + ' on buiilt'
-                            }, function(err){console.log(err);return cb(err);});
-                        });
-                    }, function(){console.log('success');});
+                    // async.each(item.data, function(data, cb){
+                    //     User.findById(data.user, function(err, user){
+                    //         if (err || !user) {return cb(err);}
+                    //         var from = user.firstName + " " + user.lastName + " | " + data.element.name + "<"+user.email+">";
+                    //         Mailer.sendMail('invite-team-has-no-account.html', from, data.email, {
+                    //             request: user.toJSON,
+                    //             link: config.baseUrl + 'signup?inviteToken=' + data.inviteToken,
+                    //             subject: 'Join ' + data.element.name + ' on buiilt'
+                    //         }, function(err){return cb(err);});
+                    //     });
+                    // }, function(){console.log('success');});
                 }
                 else if (item.type == 'Notification') {
                     var result = countDuplicate(item.data);
                     var totalNotificationByUser = [];
                     var link = "";
                     var type = "";
+                    var taskInNext3Days = [];
                     _.each(result[0], function(owner, key){
                         totalNotificationByUser.push({owner: owner, totalNotifications: result[1][key], links: []});
                     });
@@ -182,6 +191,7 @@ function run(){
                                 case 'staffPackage':
                                     type = "Upload New Documentation In Staff Package";
                                     link = config.baseUrl +data.element.projectId + '/staff/' + data.element.uploadIn._id + '/';
+                                    break;
                             }
                             link = config.baseUrl +'projects/'+data.element.projectId;
                             _.each(totalNotificationByUser, function(item){
@@ -226,27 +236,67 @@ function run(){
                                 case 'staff' :
                                     type = type + ' In Staff Package';
                                     link = config.baseUrl +data.element.project + '/staff/' + data.element.package + '/';
+                                    if (getTaskInNext3Days(data.element.dateEnd)) {
+                                        taskInNext3Days.push(data.owner);
+                                    }
                                     break;
                                 case 'builder' :
                                     type = type + ' In Builder Pacakge';
                                     link = config.baseUrl +data.element.project + '/client/view';
+                                    if (getTaskInNext3Days(data.element.dateEnd)) {
+                                        taskInNext3Days.push(data.owner);
+                                    }
                                     break;
                                 case 'contractor' :
                                     type = type + ' In Contractor Package';
                                     link = config.baseUrl + data.element.project + '/contractor-requests/' + data.element.package + '/processing';
+                                    if (getTaskInNext3Days(data.element.dateEnd)) {
+                                        taskInNext3Days.push(data.owner);
+                                    }
                                     break;
                                 case 'material' :
                                     type = type + ' In Material Package';
                                     link = config.baseUrl + data.element.project + '/material-request/' + data.element.package + '/processing';
+                                    if (getTaskInNext3Days(data.element.dateEnd)) {
+                                        taskInNext3Days.push(data.owner);
+                                    }
                                     break;
                                 case 'variation' :
                                     type = type + ' In Variation Package';
                                     link = config.baseUrl + data.element.project + '/variation-requests/' + data.element.package + '/processing';
+                                    if (getTaskInNext3Days(data.element.dateEnd)) {
+                                        taskInNext3Days.push(data.owner);
+                                    }
+                                    break;
+                                case 'people' :
+                                    type = type + ' In people package';
+                                    link = config.baseUrl + data.element.project + '/people';
+                                    if (getTaskInNext3Days(data.element.dateEnd)) {
+                                        taskInNext3Days.push(data.owner);
+                                    }
+                                    break;
+                                case 'board' :
+                                    type = type + ' In board package';
+                                    link = config.baseUrl + data.element.project + '/board';
+                                    if (getTaskInNext3Days(data.element.dateEnd)) {
+                                        taskInNext3Days.push(data.owner);
+                                    }
                                     break;
                             }
                             _.each(totalNotificationByUser, function(item){
                                 if (item.owner == data.owner.toString()) {
-                                    item.links.push({link:link, type: type});
+                                    var totalTaskInNext3Days = 0;
+                                    async.each(taskInNext3Days, function(owner, cb) {
+                                        if (owner == item.owner) {
+                                            totalTaskInNext3Days += 1;
+                                            cb()
+                                        } else {
+                                            cb();
+                                        }
+                                    }, function(){
+                                        item.totalTaskInNext3Days = totalTaskInNext3Days;
+                                        item.links.push({link:link, type: type});
+                                    });
                                 }
                             });
                         }
@@ -273,6 +323,14 @@ function run(){
                                     type = type + ' In Variation Package';
                                     link = config.baseUrl + data.element.project + '/variation-requests/' + data.element.package + '/processing';
                                     break;
+                                case 'people' :
+                                    type = type + ' In people package';
+                                    link = config.baseUrl + data.element.project + '/people';
+                                    break;
+                                case 'board' :
+                                    type = type + ' In board package';
+                                    link = config.baseUrl + data.element.project + '/board';
+                                    break;
                             }
                             _.each(totalNotificationByUser, function(item){
                                 if (item.owner == data.owner.toString()) {
@@ -281,22 +339,23 @@ function run(){
                             });
                         }
                     });
-                    async.each(totalNotificationByUser, function(notificationByUser, cb){
-                        User.findById(notificationByUser.owner, function(err, user){
-                            if (err || !user) {return cb(err);}
-                            Mailer.sendMail('crontab-notification.html', config.emailFrom, user.email, {
-                                user: user.toJSON(),
-                                request: notificationByUser,
-                                subject: 'Daily email on buiilt'
-                            }, function(err){return cb(err);});
-                        });
-                    }, function(){
-                        console.log('success');
-                    });
+                    // async.each(totalNotificationByUser, function(notificationByUser, cb){
+                    //     User.findById(notificationByUser.owner, function(err, user){
+                    //         if (err || !user) {return cb(err);}
+                    //         Mailer.sendMail('crontab-notification.html', config.emailFrom, user.email, {
+                    //             user: user.toJSON(),
+                    //             request: notificationByUser,
+                    //             subject: 'Daily email on buiilt'
+                    //         }, function(err){return cb(err);});
+                    //     });
+                    // }, function(){
+                    //     console.log('success');
+                    // });
+                    console.log(totalNotificationByUser);
                 }
             });
         }
     });
 };
 
-// run();
+run();

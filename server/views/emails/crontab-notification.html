@@ -6,6 +6,7 @@
 </p>
 <p>
     You have <%= request.totalNotifications %> notification(s) unread.
+    And <%=  request.totalTaskInNext3Days %> need to complete in the next 3 days.
 </p>
 <div style="margin-left: 10px;">
     {% for detail in request.links %}
