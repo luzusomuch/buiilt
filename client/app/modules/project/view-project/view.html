@@ -91,7 +91,8 @@
              <span id="backToListDocuments" ng-click="backToList()" style="margin-left:30px; padding: 5px;">&lt; BACK TO ALL DOCUMENTS</span>
              <div class="right">
                <a ng-click="getUploadReversionFile(file)" class="modal-trigger" href="#uploadReversion" style="margin-left:30px; padding: 5px;">UPLOAD A REVISION</a>
-               <a href='{{file.fileUrl}}' download="file.name" style="margin-left:30px; padding: 5px;">DOWNLOAD THIS DOCUMENT</a>
+               <!-- <a href='{{file.fileUrl}}' download="file.name" style="margin-left:30px; padding: 5px;">DOWNLOAD THIS DOCUMENT</a> -->
+               <a href="#" ng-click="downloadFile(file)" style="margin-left:30px; padding: 5px;">DOWNLOAD THIS DOCUMENT</a>
              </div>
            </div>
          </div>
@@ -99,14 +100,17 @@
        <div style="height: {{contentHeight -15}}px; overflow-y: auto; background-color: white; display: none; overflow-x: hidden" class="valign-wrapper showFileDetail">
           <!-- if there is a document uploaded in project -->
           <div data-current="true" class="col s8 offset-s2 center valign" ng-if="!file.isSendToDocumentation">
-            <div file-picker-previewer type="filepicker-preview" url="{{file.path}}" style="height:500px; margin-top: 200px;"> </div>
+            <p>{{file.title}}</p>
+            <p>{{file.description}}</p>
+            <div file-picker-previewer type="filepicker-preview" url="{{file.path}}" style="height:500px;"> </div>
             <!-- file description -->
             <span style="cursor:pointer;" ng-click="likeDocument(file);">
               <div class="col s4" style="display:inline-block">{{(file.isInterested) ? 'Dislike' : 'Like'}}</div>
               <div class="col s4" style="display:inline-block">{{file.totalLike}} Like</div>
               <div class="col s4" style="display:inline-block">
                 <p style="cursor:pointer;">
-                  <a href='{{file.fileUrl}}' download="file.name">Download</a>
+                  <!-- <a href='{{file.fileUrl}}' download="file.name">Download</a> -->
+                  <a href="#" ng-click="downloadFile(file)">Download</a>
                 </p>
               </div>
             </span>
@@ -115,14 +119,17 @@
 
           <!-- if there is a document send by design package -->
           <div data-current="true" class="col s8 offset-s2 center valign" ng-switch="file.mimeType" ng-if="file.isSendToDocumentation">
-            <div file-picker-previewer type="filepicker-preview" url="{{file.path}}" style="height:500px; margin-top: 200px;"> </div>
+            <p>{{file.title}}</p>
+            <p>{{file.description}}</p>
+            <div file-picker-previewer type="filepicker-preview" url="{{file.path}}" style="height:500px;"> </div>
             <!-- file description -->
             <span style="cursor:pointer;" ng-click="likeDocument(file);">
               <div class="col s4" style="display:inline-block">{{(file.isInterested) ? 'Dislike' : 'Like'}}</div>
               <div class="col s4" style="display:inline-block">{{file.totalLike}} Like</div>
               <div class="col s4" style="display:inline-block">
                 <p style="cursor:pointer;">
-                  <a href='{{file.fileUrl}}' download="file.name">Download</a>
+                  <!-- <a href='{{file.fileUrl}}' download="file.name">Download</a> -->
+                  <a href="#" ng-click="downloadFile(file)">Download</a>
                 </p>
               </div>
             </span>
