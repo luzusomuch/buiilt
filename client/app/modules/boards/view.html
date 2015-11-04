@@ -1,41 +1,42 @@
 <div class="row card" style="margin-top: 10px">
-                
+
     <div class="col s2" style="margin-right: 1px solid #eee; max-height: 81vh; overflow-y: scroll; font-size: 12px; color: #757575;">
+        <p style="margin-left: 10px; color: black" class="modal-trigger margin-10-0 feature-btn-wrapper" href="#new_board"><a class="feature-btn">ADD A BOARD</a></p>
         <p class="margin-10-0">BOARDS</p>
         <p class="margin-10-0 font-weight-600" style="margin-left: 10px;" ng-repeat="board in boards" ng-click="selectBoard(board)" ng-style="board._id == currentBoard._id ? {'color': '#64B5F6'} : {'color': 'black'}" ng-if="board.isOwner || board.owner._id == currentUser._id">
-            {{board.name}}       
+            {{board.name}}
         </p>
         <!-- <p style="margin-left: 10px; color: #42A5F5"><strong>Board 3</strong></p> -->
-        <p style="margin-left: 10px; color: black" class="modal-trigger margin-10-0" href="#new_board">+ Add a Board</p>
+
     </div>
-    
+
     <div class="col s7" style="border-left: 1px solid #eee; border-right: 1px solid #eee;">
-        
+
         <div id="boardChatContent" style="height: 69vh; overflow-y: scroll; position: relative;" scroll-to-bottom="currentBoard.messages">
-            
+
             <div class="row chat-paragraph valign-wrapper" style="border-bottom: 1px solid #eee;" ng-repeat="message in currentBoard.messages">
                 <div class="col">
                     <i class="tiny material-icons valign" ng-style="message.unread ? {'color': '#64B5F6'} : {'color': 'white'}">brightness_1</i>
                 </div>
                 <div class="col">
-                    <p class="row chat-name" style="font-size: 13px; color: #757575; margin-bottom: 0px"><strong>{{message.user.name}}</strong><span style="font-size: 12px"> - {{message.sendAt | date : 'MMM d, y h:mm:ss a'}}.</span></p>    
+                    <p class="row chat-name" style="font-size: 13px; color: #757575; margin-bottom: 0px"><strong>{{message.user.name}}</strong><span style="font-size: 12px"> - {{message.sendAt | date : 'MMM d, y h:mm:ss a'}}.</span></p>
                     <p class="row chat-text" style="font-size: 13px; margin-top:3px">
                         <span ng-repeat="mention in message.mentions" style="background-color:#D6DADC; padding: 5px;">{{mention.name}}</span>
                         {{message.text}}
                     </p>
                     <small ng-if="message.peopleHasSeen.length > 0">
                         <span ng-repeat="seenUser in message.peopleHasSeen">
-                            {{seenUser}},    
+                            {{seenUser}},
                         </span>
                         has seen
                     </small>
                 </div>
             </div>
-            
-            
-            
+
+
+
         </div>
-        
+
         <div class="valign-wrapper" style="border-top: 1px solid #eee;">
             <form class="col s11">
                 <div class="row" style="margin-bottom: -5px; margin-top: -18px">
@@ -52,14 +53,14 @@
             <div class="col s1 valign">
                 <a><i class="material-icons modal-trigger" href="#new_attachment" style="color: #64B5F6">attach_file</i></a>
                 <a><i class="material-icons valign modal-trigger" href="#new_task" style="color: #64B5F6">done</i></a>
-                
+
             </div>
         </div>
-            
+
     </div>
-        
+
     <div class="col s3">
-        
+
         <div class="row">
             <div class="col s12" style="margin-top: 15px;">
                 <ul class="tabs">
@@ -78,25 +79,25 @@
             </div>
             <div id="test1" class="col s12" style="height: 65vh; overflow-y: scroll">
                 <div class="person-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-if="currentBoard.owner._id == currentUser._id">
-                    <p><a href="#invite_people" class="modal-trigger">+ Invite Other People</a></p>
+                    <p class="feature-btn-wrapper"><a href="#invite_people" class="modal-trigger feature-btn">INVITE OTHER PEOPLE</a></p>
                 </div>
                 <div ng-if="currentBoard._id" class="person-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-repeat="invitee in available">
                     <p class="margin-10-0"><i class="tiny material-icons valign" style="color: #64B5F6" ng-style="invitee.isOnline ? {'color': '#4BBF6B'} : {'color': '#EDEFF0'}">brightness_1</i>{{invitee.name}}</p>
                 </div>
             </div>
-            
+
             <div id="test2" class="col s12" style="height: 65vh; overflow-y: scroll">
                 <div class="attachment-row" style="font-size: 12px; border-bottom: 1px solid #eee">
-                    <p><a class="modal-trigger" href="#new_attachment">+ Add an Attachment</a></p>
+                    <p class="feature-btn-wrapper"><a class="modal-trigger feature-btn" href="#new_attachment">ADD AN ATTACHMENT</a></p>
                 </div>
                 <div class="attachment-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-repeat="file in files">
                     <p class="margin-10-0"><a href="#modal-attachment-detail-{{file._id}}" class="modal-trigger">{{file.title}}</a></p>
                 </div>
             </div>
-            
+
             <div id="test3" class="col s12" style="height: 69vh; overflow-y: scroll">
                 <div class="task-row" style="font-size: 12px; border-bottom: 1px solid #eee">
-                    <p><a href="#new_task" class="modal-trigger">+ Add a Task</a></p>
+                    <p class="feature-btn-wrapper"><a href="#new_task" class="modal-trigger feature-btn">ADD A TASK</a></p>
                 </div>
                 <div class="task-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-repeat="task in tasks" ng-if="task.isOwner">
                     <div class="col s2">
@@ -120,7 +121,7 @@
                 </div>
             </div>
         </div>
-    </div>  
+    </div>
 </div>
 
 <div id="new_attachment" class="modal modal-fixed-footer" style="width: 60%">
