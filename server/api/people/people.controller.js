@@ -534,6 +534,7 @@ exports.invitePeople = function(req, res) {
                                             {path:"clients.teamMember", select: "_id email name"},
                                             {path:"subcontractors._id", select: "_id email name"},
                                             {path:"subcontractors.teamMember", select: "_id email name"},
+                                            {path:"subcontractors.inviter", select: "_id email name"},
                                             {path: "consultants._id", select: "_id email name"},
                                             {path: "consultants.teamMember", select: "_id email name"}
                                             ], function(err, people) {
@@ -603,6 +604,7 @@ exports.invitePeople = function(req, res) {
                             if (!consultant) {
                                 consultants.push({
                                     inviter: req.user._id,
+                                    inviterType: invite.inviterType,
                                     email: invitee.email
                                 });
                                 newInviteeNotSignUp.push(invitee.email);
@@ -610,6 +612,7 @@ exports.invitePeople = function(req, res) {
                             } else {
                                 consultants.push({
                                     inviter: req.user._id,
+                                    inviterType: invite.inviterType,
                                     _id: consultant._id
                                 });
                                 newInviteeSignUpAlready.push(consultant._id);
@@ -680,7 +683,8 @@ exports.invitePeople = function(req, res) {
                                             {path:"subcontractors._id", select: "_id email name"},
                                             {path:"subcontractors.teamMember", select: "_id email name"},
                                             {path: "consultants._id", select: "_id email name"},
-                                            {path: "consultants.teamMember", select: "_id email name"}
+                                            {path: "consultants.teamMember", select: "_id email name"},
+                                            {path: "consultants.inviter", select: "_id email name"}
                                             ], function(err, people) {
                                                 return res.json(people);
                                             });
@@ -696,6 +700,7 @@ exports.invitePeople = function(req, res) {
                             if (!consultant) {
                                 consultants.push({
                                     inviter: req.user._id,
+                                    inviterType: invite.inviterType,
                                     email: invite.email,
                                     hasSelect: true
                                 });
@@ -703,6 +708,7 @@ exports.invitePeople = function(req, res) {
                             } else {
                                 consultants.push({
                                     inviter: req.user._id,
+                                    inviterType: invite.inviterType,
                                     _id: consultant._id,
                                     hasSelect: true
                                 });
@@ -762,7 +768,10 @@ exports.selectWinnerTender = function(req, res) {
                 winnerTender[0].hasSelect = true;
                 winnerTenderNotification.push(req.body.tender._id);
                 _.each(people.subcontractors, function(subcontractor) {
-                    if (subcontractor._id) {
+                    if (subcontractor.hasSelect) {
+                        winnerTender.push(subcontractor);
+                    }
+                    if (subcontractor._id && !subcontractor.hasSelect) {
                         loserTender.push(subcontractor._id);
                         User.findById(subcontractor._id, function(err, user) {
                             if (err) {return res.send(500,err);}
@@ -844,7 +853,10 @@ exports.selectWinnerTender = function(req, res) {
                 winnerTender[0].hasSelect = true;
                 winnerTenderNotification.push(req.body.tender._id);
                 _.each(people.consultants, function(consultant) {
-                    if (consultant._id) {
+                    if (consultant.hasSelect) {
+                        winnerTender.push(consultant);
+                    }
+                    if (consultant._id && !consultant.hasSelect) {
                         loserTender.push(consultant._id);
                         User.findById(consultant._id, function(err, user) {
                             if (err) {return res.send(500,err);}

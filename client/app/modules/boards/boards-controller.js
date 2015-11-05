@@ -35,35 +35,35 @@ angular.module('buiiltApp')
             if ($scope.builderPackage.projectManager.type == 'architect') {
                 if ($scope.currentUser.type == 'builder' || $scope.currentUser.type == 'client') {
                     _.each(board.architects, function(architect) {
-                        if (architect._id) {
+                        if (architect._id && architect.hasSelect) {
                             $scope.availableInvite.push(architect._id);
                         }
                     });
                     _.each(board.consultants, function(consultant) {
-                        if (consultant._id) {
+                        if (consultant._id && consultant.hasSelect) {
                             $scope.availableInvite.push(consultant._id);
                         }
                     });
                     if ($scope.currentUser.type == 'builder') {
                         _.each(board.subcontractors, function(subcontractor) {
-                        if (subcontractor._id) {
-                            $scope.availableInvite.push(subcontractor._id);
-                        }
-                    });
+                            if (subcontractor._id && subcontractor.hasSelect) {
+                                $scope.availableInvite.push(subcontractor._id);
+                            }
+                        });
                     }
                 } else if ($scope.currentUser.type == 'architect') {
                     _.each(board.builders, function(builder) {
-                        if (builder._id) {
+                        if (builder._id && builder.hasSelect) {
                             $scope.availableInvite.push(builder._id);
                         }
                     });
                     _.each(board.clients, function(client) {
-                        if (client._id) {
+                        if (client._id && client.hasSelect) {
                             $scope.availableInvite.push(client._id);
                         }
                     });
                     _.each(board.consultants, function(consultant) {
-                        if (consultant._id) {
+                        if (consultant._id && consultant.hasSelect) {
                             $scope.availableInvite.push(consultant._id);
                         }
                     });
@@ -71,33 +71,33 @@ angular.module('buiiltApp')
             } else if ($scope.builderPackage.projectManager.type == 'builder') {
                 if ($scope.currentUser.type == 'builder') {
                     _.each(board.architects, function(architect) {
-                        if (architect._id) {
+                        if (architect._id && architect.hasSelect) {
                             $scope.availableInvite.push(architect._id);
                         }
                     });
                     _.each(board.consultants, function(consultant) {
-                        if (consultant._id) {
+                        if (consultant._id && consultant.hasSelect) {
                             $scope.availableInvite.push(consultant._id);
                         }
                     });
                     _.each(board.subcontractors, function(subcontractor) {
-                        if (subcontractor._id) {
+                        if (subcontractor._id && subcontractor.hasSelect) {
                             $scope.availableInvite.push(subcontractor._id);
                         }
                     });
                     _.each(board.clients, function(client) {
-                        if (client._id) {
+                        if (client._id && client.hasSelect) {
                             $scope.availableInvite.push(client._id);
                         }
                     });
                 } else if ($scope.currentUser.type == 'client' || $scope.currentUser.type == 'architect') {
                     _.each(board.builders, function(builder) {
-                        if (builder._id) {
+                        if (builder._id && builder.hasSelect) {
                             $scope.availableInvite.push(builder._id);
                         }
                     });
                     _.each(board.consultants, function(consultant) {
-                        if (consultant._id) {
+                        if (consultant._id && consultant.hasSelect) {
                             $scope.availableInvite.push(consultant._id);
                         }
                     });
@@ -105,29 +105,29 @@ angular.module('buiiltApp')
             } else {
                 if ($scope.currentUser.type == 'client') {
                     _.each(board.builders, function(builder) {
-                        if (builder._id) {
+                        if (builder._id && builder.hasSelect) {
                             $scope.availableInvite.push(builder._id);
                         }
                     });
                     _.each(board.architects, function(architect) {
-                        if (architect._id) {
+                        if (architect._id && architect.hasSelect) {
                             $scope.availableInvite.push(architect._id);
                         }
                     });
                     _.each(board.consultants, function(consultant) {
-                        if (consultant._id) {
+                        if (consultant._id && consultant.hasSelect) {
                             $scope.availableInvite.push(consultant._id);
                         }
                     });
                 } else if ($scope.currentUser.type == 'builder' || $scope.currentUser.type == 'architect') {
                     _.each(board.clients, function(client) {
-                        if (client._id) {
+                        if (client._id && client.hasSelect) {
                             $scope.availableInvite.push(client._id);
                         }
                     });
                     if ($scope.currentUser.type == 'builder') {
                         _.each(board.subcontractors, function(subcontractor) {
-                            if (subcontractor._id) {
+                            if (subcontractor._id && subcontractor.hasSelect) {
                                 $scope.availableInvite.push(subcontractor._id);
                             }
                         });

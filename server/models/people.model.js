@@ -47,6 +47,7 @@ var PeopleSchema = new Schema({
     }],
     consultants: [{
         inviter: {type: Schema.Types.ObjectId, ref: 'User'},
+        inviterType: {type: String},
         _id: {type: Schema.Types.ObjectId, ref: 'User'},
         teamMember: [
             {type: Schema.Types.ObjectId, ref: 'User'}

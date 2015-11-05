@@ -68,12 +68,12 @@
             {{subcontractor.name}}
         </p>
         <p ng-show="(currentUser.type == 'client' || currentUser.type == 'builder' || currentUser.type == 'architect') && currentUser.isLeader" ng-mouseover="getTenderListByType('consultant')">CONSULTANTS</p>
-        <p ng-show="(currentUser.type == 'client' || currentUser.type == 'builder' || currentUser.type == 'architect') && currentUser.isLeader" class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px" ng-repeat="consultant in invitePeople.consultants" ng-if="consultant._id" ng-click="selectUser(consultant, 'consultant')" ng-style="consultant._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
+        <p ng-show="(currentUser.type == 'client' || currentUser.type == 'builder' || currentUser.type == 'architect') && currentUser.isLeader" class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px" ng-repeat="consultant in invitePeople.consultants" ng-if="consultant._id && consultant.inviter == currentUser._id" ng-click="selectUser(consultant, 'consultant')" ng-style="consultant._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             <i class="tiny material-icons valign" style="color: #64B5F6; margin-right: 5px; font-size: 8px" ng-style="consultant._id.isOnline ? {'color': '#81C784'} : {'color': '#E0E0E0'}">brightness_1</i>
             {{consultant.name}}
         </p>
 
-        <p ng-show="(currentUser.type == 'subcontractor' || currentUser.type == 'consultant') && currentUser.isLeader">INVITER</p>
+        <p ng-show="(currentUser.type == 'subcontractor' || currentUser.type == 'consultant') && currentUser.isLeader">{{inviterTypeText}}</p>
         <p ng-show="(currentUser.type == 'subcontractor' || currentUser.type == 'consultant') && currentUser.isLeader" class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px" ng-click="selectUser(invitePeople.inviter)" ng-style="invitePeople.inviter._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             <i class="tiny material-icons valign" style="color: #64B5F6; margin-right: 5px; font-size: 8px" ng-style="invitePeople.inviter.isOnline ? {'color': '#81C784'} : {'color': '#E0E0E0'}">brightness_1</i>
             {{invitePeople.inviter.name}}
@@ -371,10 +371,19 @@
     <h5>View detail of tender type {{selectedTeamType}}</h5>
     <div class="modal-content">
         <ul>
-            <li ng-repeat="tender in tendersList">
+            <li ng-repeat="tender in tendersList" ng-show="tendersList.type == 'subcontractor' || tendersList.type == 'consultant'">
                 <div class="col s10">
                     <div class="col s6">{{tender.tender.name}}</div>
                     <div class="col s6">{{tender.tender.email}}</div>
+                </div>
+                <div class="col s2">
+                    <button ng-if="currentUser.hasSelect" type="button" class="btn" ng-click="selectWinnerTender(tender)">Select this tender</button>
+                </div>
+            </li>
+            <li ng-repeat="tender in tendersList" ng-show="tendersList.type == 'client' || tendersList.type == 'builder' || tendersList.type == 'architect'">
+                <div class="col s10">
+                    <div class="col s6">{{tender.tender._id.name}}</div>
+                    <div class="col s6">{{tender.tender._id.email}}</div>
                 </div>
                 <div class="col s2">
                     <button ng-if="currentUser.hasSelect" type="button" class="btn" ng-click="selectWinnerTender(tender)">Select this tender</button>
