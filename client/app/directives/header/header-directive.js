@@ -241,6 +241,10 @@ angular.module('buiiltApp')
         $scope.duration = 0;
       };
 
+      $scope.selectedOwnerUserType = function(type) {
+        $scope.project.selectedOwnerUserType = type;
+      };
+
       $scope.create = function(form) {
         $scope.submitted = true;
         if (form.$valid) {

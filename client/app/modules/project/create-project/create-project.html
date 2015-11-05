@@ -66,12 +66,19 @@
             <!-- new version -->
             <div class="row">
                 <div class="input-field col s12">
-                    <select class="" ng-model="project.selectedOwnerUserType" material-select watch>
+                    <!-- <select class="" ng-model="project.selectedOwnerUserType" material-select watch>
                         <option value="" selected>What is your role in this project?</option>
                         <option value="homeOwner">I am the Home Owner</option>
                         <option value="architect">I am the Designer/Architect</option>
                         <option value="builder">I am the Builder</option>
-                    </select>
+                    </select> -->
+                    <p>What is your role in this project?</p>
+                    <input id="1" type="radio" ng-model="ownerUserType" name="ownerType" value="homeOwner" ng-click="selectedOwnerUserType(ownerUserType)"/>
+                    <label for="1">I am the Home Owner</label>
+                    <input id="2" type="radio" ng-model="ownerUserType" name="ownerType" value="architect" ng-click="selectedOwnerUserType(ownerUserType)"/>
+                    <label for="2">I am the Designer/Architect</label>
+                    <input id="3" type="radio" ng-model="ownerUserType" name="ownerType" value="builder" ng-click="selectedOwnerUserType(ownerUserType)"/>
+                    <label for="3">I am the Builder</label>
                 </div>
                 <!-- home owner selected -->
                 <div class="input-field col s12" ng-if="project.selectedOwnerUserType == 'homeOwner'">
