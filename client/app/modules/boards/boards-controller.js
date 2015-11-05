@@ -250,9 +250,9 @@ angular.module('buiiltApp')
                 board.messages[i].peopleHasSeen = _.uniq(board.messages[i].peopleHasSeen);
                 if (board.messages[i].mentions.length > 0) {
                     _.each(board.messages[i].mentions, function(mention) {
-                        if (board.messages[i].text.indexOf(mention.name) != -1) {
-                            board.messages[i].text = board.messages[i].text.substring(0, board.messages[i].text.indexOf(mention.name));
-                        }
+                        // if (board.messages[i].text.indexOf(mention.name) != -1) {
+                        //     board.messages[i].text = board.messages[i].text.substring(0, board.messages[i].text.indexOf(mention.name));
+                        // }
                     });
                 }
             };
@@ -297,7 +297,7 @@ angular.module('buiiltApp')
             });
         });
         _.each($scope.boards, function(board) {
-            if (board.isOwner || board.owner == $scope.currentUser._id) {
+            if (board.isOwner || board.owner._id == $scope.currentUser._id) {
                 $scope.currentBoard = board;
                 return false;
             }
@@ -529,6 +529,7 @@ angular.module('buiiltApp')
         boardService.sendMessage({id: $scope.currentBoard._id}, $scope.message).$promise.then(function(res) {
             $scope.currentBoard = res;
             $scope.message.text = null;
+            $scope.message.mentions = [];
             getAllChatMessageNotificationByBoard(res);
         }, function(err){
             console.log(err);

@@ -550,7 +550,7 @@ angular.module('buiiltApp')
                 });
                 selectedChatPeople.messages[i].peopleHasSeen = _.uniq(selectedChatPeople.messages[i].peopleHasSeen);
                 if (selectedChatPeople.messages[i].mentions.length > 0) {
-                    selectedChatPeople.messages[i].text = selectedChatPeople.messages[i].text.substring(0, selectedChatPeople.messages[i].text.indexOf(selectedChatPeople.messages[i].mentions[0].name));
+                    // selectedChatPeople.messages[i].text = selectedChatPeople.messages[i].text.substring(0, selectedChatPeople.messages[i].text.indexOf(selectedChatPeople.messages[i].mentions[0].name));
                 }
             };
         });

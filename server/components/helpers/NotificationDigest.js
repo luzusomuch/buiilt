@@ -113,7 +113,7 @@ function run(){
                             }
                         }, function(err, result){
                             if (!err) {
-                                if (result.team._id) {
+                                if (result.team) {
                                     var from = result.user.firstName + " " + result.user.lastName + " | " + result.team.name + "<"+result.user.email+">";
                                 } else {
                                     var from = result.user.firstName + " " + result.user.lastName + "<"+result.user.email+">";
