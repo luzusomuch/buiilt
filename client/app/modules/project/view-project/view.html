@@ -209,19 +209,7 @@
 
 <div class="modal modal-fixed-bottom" id="view-file-detail-{{file._id}}" ng-repeat="file in files">
   <div class="modal-content">
-    <p>{{file.name}}</p>
-    <p>{{file.description}}</p>
     <div file-picker-previewer type="filepicker-preview" url="{{file.path}}" style="height:500px;"> </div>
-    <span style="cursor:pointer;" ng-click="likeDocument(file);">
-      <div class="col s4" style="display:inline-block">{{(file.isInterested) ? 'Dislike' : 'Like'}}</div>
-      <div class="col s4" style="display:inline-block">{{file.totalLike}} Like</div>
-      <div class="col s4" style="display:inline-block">
-        <p style="cursor:pointer;">
-          <a href="#" ng-click="downloadFile(file)">Download</a>
-        </p>
-      </div>
-    </span>
-    <p>{{file.title}} <span><em>Revision {{file.version +1 }} of {{file.version +1 }}</em></span></p>
   </div>
   <div class="modal-footer">
     <a href="#" class="btn-flat modal-action modal-close" ng-click="downloadFile(file)">Download</a>
