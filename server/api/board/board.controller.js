@@ -41,18 +41,22 @@ exports.invitePeople = function(req, res) {
     Board.findById(req.params.id, function(err, board) {
         if (err) {return res.send(500,err);}
         if (!board) {return res.send(404);}
-        User.findOne({email: req.body.email}, function(err, user){
-            if (err) {return res.send(500,err);}
-            if (!user) {
-                board.invitees.push({email: req.body.email});
-                board._inviteEmail = req.body.email;
-            } else {
-                board.invitees.push({_id: user._id});
-                board._inviteUser = user._id;
-                user.projects.push(board.project);
-                user.markModified('projects');
-                user.save();
-            }
+        var invitees = board.invitees;
+        var newInvitees = [];
+        async.each(req.body.invitees, function(invitee, cb) {
+            User.findById(invitee._id, function(err, user) {
+                if (err || !user) {return cb(err);}
+                else {
+                    invitees.push({_id:user._id});
+                    newInvitees.push({_id: user._id});
+                    user.projects.push(board.project);
+                    user.markModified('projects');
+                    user.save(cb());
+                }
+            });
+        }, function() {
+            board.invitees = invitees;
+            board._inviteUser = newInvitees;
             board.markModified('invitePeople');
             board.save(function(err){
                 if (err) {return res.send(500,err);}

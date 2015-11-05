@@ -4,9 +4,9 @@ angular.module('buiiltApp')
     $scope.builderPackage = builderPackage;
     $scope.currentUser = currentUser;
     $scope.submitted = false;
-    $scope.availableInvite = [];
 
     function getAvailableAddedToNewBoard() {
+        $scope.availableInvite = [];
         peopleService.getInvitePeople({id: $stateParams.id}).$promise.then(function(board){
             if (_.findIndex(board.builders, function(item) {
                 if (item._id) {
@@ -143,6 +143,7 @@ angular.module('buiiltApp')
                         $scope.availableInvite.push(member._id);
                     }
                 });
+                _.uniq($scope.availableInvite, '_id');
                 _.remove($scope.availableInvite, {_id: $scope.currentUser._id});
             }
         });
@@ -313,7 +314,23 @@ angular.module('buiiltApp')
         getAvailableAddedToNewBoard();
     };
 
-    $scope.invite = {};
+    $scope.setInvite = function() {
+        $scope.invite = {
+            invitees: []
+        };
+    };
+
+    $scope.inviteInInviteUser = function(invitee,index) {
+        invitee.canRevoke = true;
+        $scope.invite.invitees.push(invitee);
+        $scope.availableInvite.splice(index,1);
+    };
+
+    $scope.revokeInInviteUser = function(assignee,index) {
+        $scope.availableInvite.push(assignee);
+        $scope.invite.invitees.splice(index,1);
+    };
+
     $scope.invitePeople = function(form) {
         $scope.submitted = true;
         if (form.$valid) {
@@ -322,7 +339,7 @@ angular.module('buiiltApp')
                 $scope.submitted = false;
                 $("#invite_people").closeModal();
                 $scope.invite.description = null;
-                $scope.invite.email = null;
+                $scope.invite.invitees = [];
                 getAvailable(res);
                 getTasksAndFilesByBoard(res);
                 getAvailableAddedToNewBoard();

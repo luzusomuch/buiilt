@@ -75,8 +75,8 @@
                 </ul>
             </div>
             <div id="test1" class="col s12" style="height: 65vh; overflow-y: scroll">
-                <div class="person-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-if="currentBoard.owner._id == currentUser._id">
-                    <p class="feature-btn-wrapper"><a href="#invite_people" class="modal-trigger feature-btn">INVITE OTHER PEOPLE</a></p>
+                <div class="person-row" style="font-size: 12px; border-bottom: 1px solid #eee">
+                    <p class="feature-btn-wrapper"><a ng-click="setInvite()" href="#invite_people" class="modal-trigger feature-btn">INVITE OTHER PEOPLE</a></p>
                 </div>
                 <div ng-if="currentBoard._id" class="person-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-repeat="invitee in available">
                     <p class="margin-10-0 valign-wrapper"><i class="tiny material-icons valign" style="color: #64B5F6; margin-right: 5px; font-size: 8px" ng-style="invitee.isOnline ? {'color': '#81C784'} : {'color': '#E0E0E0'}">brightness_1</i>{{invitee.name}}</p>
@@ -232,9 +232,18 @@
                 <p class="validate-message" ng-show="inviteForm.description.$error.required && submitted">Invite description is required</p>
             </div>
             <div class="row">
-                <label for="">Email</label>
-                <input type="email" name="email" ng-model="invite.email" required ng-class="{'invalid' : inviteForm.email.$invalid && submitted}">
-                <p class="validate-message" ng-show="inviteForm.email.$error.required && submitted">Email is required</p>
+                <p>Invitees</p>
+                <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="assignee in invite.invitees">
+                    {{assignee.name}} <span ng-if="assignee.canRevoke"><a href="#!" ng-click="revokeInInviteUser(assignee,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
+                </div>
+            </div>
+            <div class="row">
+                <p>Available Invitees's:</p>
+                <a href="#!" ng-click="inviteInInviteUser(invitee,$index)" ng-repeat="invitee in availableInvite track by $index">
+                    <div class="card col" style="padding: 5px; margin-left: 10px">
+                        {{invitee.name}}
+                    </div>
+                </a>
             </div>
         </div>
         <div class="modal-footer">

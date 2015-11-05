@@ -33,11 +33,9 @@ EventBus.onSeries('Board.Inserted', function(board, next) {
 
 EventBus.onSeries('Board.Updated', function(board, next) {
     if (board._modifiedPaths.indexOf('invitePeople') != -1) {
-        if (board.inviteUser) {
-            var owners = [];
-            owners.push(board.inviteUser);
+        if (board.inviteUser.length > 0) {
             var params = {
-                owners: owners,
+                owners: board.inviteUser,
                 fromUser: board.owner,
                 element: board,
                 referenceTo: 'Board',
