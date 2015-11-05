@@ -4,13 +4,27 @@ angular.module('buiiltApp')
     $scope.currentProject = $rootScope.currentProject;
     $scope.myTasks = myTasks;
     authService.getCurrentUser().$promise.then(function(res) {
-      $scope.currentUser = res;
+        $scope.currentUser = res;
+        $scope.myThreads = [];
+        _.each(myThreads, function(thread) {
+            console.log(thread);
+            _.each(thread.messages, function(message, key) {
+                if (key == thread.messages.length -1 && _.indexOf(message.mentions, res._id) != -1) {
+                    if (thread.people) {
+                        $scope.myThreads.push({project: thread.project, user: message.user.name, type: 'people'});                
+                    } else if (thread.type == 'board') {
+                        $scope.myThreads.push({project: thread.project, user: message.user.name, type: 'board'});                
+                    }
+                }
+            });
+        });
+    console.log($scope.myThreads);
     });
     // $scope.currentUser = $rootScope.currentUser;
     _.forEach($scope.myTasks,function(task) {
         task.dateEnd = (task.dateEnd) ? new Date(task.dateEnd) : null;
     });
-    $scope.myThreads = myThreads;
+    
     $scope.currentList = 'tasks';
     $scope.currentThread = {};
 
@@ -25,6 +39,17 @@ angular.module('buiiltApp')
         }
     };
 
+    $scope.goToThreadNewVersionDetail = function(thread) {
+        console.log(thread)
+        switch (thread.type) {
+            case "people":
+                $state.go('people', {id: thread.project});
+                break;
+            case "board":
+                $state.go('board', {id: thread.project});
+                break;
+        }
+    };
 
     $scope.activeHover = function($event){
         angular.element($event.currentTarget).addClass("item-hover");

@@ -10,6 +10,8 @@ var StaffPackage = require('./../../models/staffPackage.model'),
   Variation = require('./../../models/variation.model'),
   Notification = require('./../../models/notification.model'),
   Project = require('./../../models/project.model'),
+  PeopleChat = require('./../../models/peopleChat.model'),
+  Board = require('./../../models/board.model'),
   Design = require('./../../models/design.model');
 var ThreadValidator = require('./../../validators/thread');
 var errorsHelper = require('../../components/helpers/errors');
@@ -81,31 +83,57 @@ exports.getOne = function(req,res) {
 };
 
 exports.myThread = function(req,res) {
+
   var user = req.user;
   var project = req.project;
   var result = [];
   var query = Notification.find(
-    {owner : user._id,unread : true, referenceTo : 'thread','element.project' : project._id }
+    {owner : user._id,unread : true, $or:[{referenceTo : 'thread'},{type: 'chat'}] ,'element.project' : project._id }
   );
-  query.distinct('element._id');
-
   query.exec(function(err, threads) {
+    if (err) {return res.send(500,err);}
     async.each(threads,function(thread,callback) {
-      Thread.findById(thread)
-        .populate('messages.user')
-        .populate('users')
+      if (thread.referenceTo == 'people-chat') {
+        PeopleChat.findById(thread.element._id)
+        .populate('messages.user', '-hashedPassword -salt')
+        .exec(function(err, thread){
+          if (err || !thread) {return callback();}
+          else {
+            Notification.where({owner : user._id,'element._id' : thread._id,referenceTo : 'people-chat',unread : true}).count(function(err,count) {
+              thread.__v = count;
+              result.push(thread);
+              callback();
+            });
+          }
+        });
+      } else if (thread.referenceTo == 'board-chat') {
+        Board.findById(thread.element._id)
+        .populate('messages.user', '-hashedPassword -salt')
+        .exec(function(err, thread){
+          if (err || !thread) {return callback();}
+          else {
+            Notification.where({owner : user._id,'element._id' : thread._id,referenceTo : 'board-chat',unread : true}).count(function(err,count) {
+              thread.__v = count;
+              result.push(thread);
+              callback();
+            });
+          }
+        });
+      } else {
+        Thread.findById(thread)
+        .populate('messages.user','-hashedPassword -salt')
+        .populate('users','-hashedPassword -salt')
         .exec(function(err,thread) {
           if (err || !thread) {return callback(err);}
           Notification.where({owner : user._id,'element._id' : thread._id,referenceTo : 'thread',unread : true}).count(function(err,count) {
             thread.__v = count;
             result.push(thread);
             callback();
-          }) ;
-        })
+          });
+        });
+      }
     },function() {
-
         return res.json(result);
-
     })
   })
 };

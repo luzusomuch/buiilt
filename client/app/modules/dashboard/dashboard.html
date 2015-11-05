@@ -3,8 +3,8 @@
         <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-click="currentList = 'tasks'; backToTaskList(); backToDocumentsList(); backToThreadsList()" class="row collection-item" style="cursor: pointer">
             Tasks <span ng-if="myTasks.length > 0" class="item badge">{{myTasks.length}}</span>
         </div>
-        <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-click="currentList = 'docs'; backToTaskList(); backToDocumentsList(); backToThreadsList()" class="row collection-item" style="cursor: pointer">
-            Documents <span ng-if="myFiles.length > 0" class="new badge">{{myFiles.length}}</span>
+        <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-click="currentList = 'chats'; backToTaskList(); backToDocumentsList(); backToThreadsList()" class="row collection-item" style="cursor: pointer">
+            Messages <span ng-if="myThreads.length > 0" class="new badge">{{myThreads.length}}</span>
         </div>
     </div>
 </div>
@@ -18,6 +18,11 @@
                 <div class="col s12">
                     <span>Due date: {{task.dateEnd | date: longDate}}</span> - Assignees: <span ng-repeat="assignee in task.assignees">
                     {{(assignee.lastName) ? assignee.firstName +" "+ assignee.lastName : assignee.email}},</span>
+                </div>
+            </div>
+            <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-if="currentList == 'chats' && !showDetailOfTask" class="collection-item row" ng-repeat="thread in myThreads | orderBy : ['dateEnd']" ng-click="goToThreadNewVersionDetail(thread)" style="cursor:pointer">
+                <div class="col s12">
+                    {{thread.user}} has mention you in {{thread.type}}.
                 </div>
             </div>
         </div>

@@ -50,10 +50,10 @@ EventBus.onSeries('Board.Updated', function(board, next) {
         }
     } else if (board._modifiedPaths.indexOf('sendMessage') != -1) {
         var owners = [];
-
         _.each(board.invitees, function(invitee) {
             owners.push(invitee._id);
         });
+        owners.push(board.owner);
         var params = {
             owners: owners,
             fromUser: board.editUser._id,
