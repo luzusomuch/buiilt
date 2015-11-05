@@ -294,66 +294,70 @@
 <div id="tender_modal" class="modal modal-fixed-footer" style="width: 60%">
     <form name="formInvite" ng-submit="inviteMorePeople(formInvite)">
         <div class="modal-content">
-            <h5>Invite People to Join Project Name</h5>
+            <h5>Invite People to Join {{builderPackage.name}}</h5>
             <div class="row">
-                <label for="">Select invite type</label>
+                <!-- <label for="">Select invite type</label>
                 <select class="" ng-change="getChangeTypeValue(invite.type)" ng-model="invite.type" material-select watch>
                     <option value="" selected>Please select the type below</option>
                     <option ng-repeat="type in availableUserType" value="{{type.value}}" >{{type.text}}</option>
-                </select>
+                </select> -->
+                <span ng-repeat="type in availableUserType">
+                    <input id="{{type.value}}" type="radio" ng-model="invite.type" ng-value="type.value" name="inviteType" ng-click="getChangeTypeValue(invite.type)">
+                    <label for="{{type.value}}">{{type.text}}</label>
+                </span>
             </div>
-            <div class="row" ng-hide="invite.type == 'addTeamMember' || invite.type == 'addClient'">
-                <!-- <input ng-model="invite.isTender" type="checkbox" id="complete"/>
-                <label for="complete">Do they need to provide a tender?</label> -->
-                <p>Do they need to provide a tender?</p>
-                <input id="yes" type="radio" ng-model="invite.isTender" name="isTender" ng-value='true' checked="true"/>
-                <label for="yes">Yes</label>
-                <input id="no" type="radio" ng-model="invite.isTender" name="isTender" ng-value='false'/>
-                <label for="no">No</label>
-            </div>
-            <div class="row" ng-show="invite.isTender">
-                <label for="">Description</label>
-                <input type="text" name="description" ng-model="invite.description" ng-class="{'invalid' : formInvite.description.$invalid && submitted}">
-                <p ng-if="formInvite.description.$erorr.required && submitted" class="validate-message">Description is required</p>
-            </div>
-            <div class="row" ng-if="!invite.isTender" ng-hide="invite.isInviteTeamMember">
-                <label for="">Email</label>
-                <input type="email" name="email" ng-model="invite.email" ng-class="{'invalid' : formInvite.email.$invalid && submitted}">
-            </div>
-            <div class="row" ng-if="invite.isInviteTeamMember">
-                <div class="row">
-                    <p>Assignees</p>
-                    <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="member in invite.teamMember">
-                        {{member.name}} <span ng-if="member.canRevoke"><a href="#!" ng-click="revokeTeamMember(member,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
-                    </div>
+            <div ng-show="invitePeopleStep == 2">
+                <div class="row" ng-hide="invite.type == 'addTeamMember' || invite.type == 'addClient'">
+                    <p>Do they need to provide a tender?</p>
+                    <input id="yes" type="radio" ng-model="invite.isTender" name="isTender" ng-value='true' checked="true"/>
+                    <label for="yes">Yes</label>
+                    <input id="no" type="radio" ng-model="invite.isTender" name="isTender" ng-value='false'/>
+                    <label for="no">No</label>
                 </div>
-                <div class="row">
-                    <p>Available Assignee's:</p>
-                    <a href="#!" ng-click="inviteTeamMember(member,$index)" ng-repeat="member in availableTeamMember track by $index">
-                        <div class="card col" style="padding: 5px; margin-left: 10px">
-                            {{member.name}}
-                        </div>
-                    </a>
+                <div class="row" ng-show="invite.isTender">
+                    <label for="">Description</label>
+                    <input type="text" name="description" ng-model="invite.description" ng-class="{'invalid' : formInvite.description.$invalid && submitted}">
+                    <p ng-if="formInvite.description.$erorr.required && submitted" class="validate-message">Description is required</p>
                 </div>
-            </div>
-            <div class="row" ng-if="invite.isTender">
-                <div class="col s8">
+                <div class="row" ng-if="!invite.isTender" ng-hide="invite.isInviteTeamMember">
                     <label for="">Email</label>
                     <input type="email" name="email" ng-model="invite.email" ng-class="{'invalid' : formInvite.email.$invalid && submitted}">
                 </div>
-                <div class="col s4">
-                    <button type="button" class="btn" ng-click="addInvitee(invite.email)">Add</button>
-                </div>
-            </div>
-            <div class="row">
-                <ul>
-                    <li ng-repeat="invitee in invite.invitees">
-                        <div class="col s8">{{invitee.email}}</div>
-                        <div class="col s4">
-                            <button type="button" class="btn" ng-click="removeInvitee($index)">Remove</button>
+                <div class="row" ng-if="invite.isInviteTeamMember">
+                    <div class="row">
+                        <p>Assignees</p>
+                        <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="member in invite.teamMember">
+                            {{member.name}} <span ng-if="member.canRevoke"><a href="#!" ng-click="revokeTeamMember(member,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
                         </div>
-                    </li>
-                </ul>
+                    </div>
+                    <div class="row">
+                        <p>Available Assignee's:</p>
+                        <a href="#!" ng-click="inviteTeamMember(member,$index)" ng-repeat="member in availableTeamMember track by $index">
+                            <div class="card col" style="padding: 5px; margin-left: 10px">
+                                {{member.name}}
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="row" ng-if="invite.isTender">
+                    <div class="col s8">
+                        <label for="">Email</label>
+                        <input type="email" name="email" ng-model="invite.email" ng-class="{'invalid' : formInvite.email.$invalid && submitted}">
+                    </div>
+                    <div class="col s4">
+                        <button type="button" class="btn" ng-click="addInvitee(invite.email)">Add</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <ul>
+                        <li ng-repeat="invitee in invite.invitees">
+                            <div class="col s8">{{invitee.email}}</div>
+                            <div class="col s4">
+                                <button type="button" class="btn" ng-click="removeInvitee($index)">Remove</button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
         <div class="modal-footer">
