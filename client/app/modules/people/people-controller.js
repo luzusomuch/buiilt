@@ -5,7 +5,6 @@ angular.module('buiiltApp')
     $scope.currentUser = currentUser;
     $scope.submitted = false;  
     $scope.selectedUser = {};
-    $scope.accordian = 1;
 
     if ($scope.team._id) {
         $scope.availableTeamMember = $scope.team.leader;
