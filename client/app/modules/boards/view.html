@@ -227,11 +227,6 @@
         <div class="modal-content">
             <h5>Invite more people</h5>
             <div class="row">
-                <label for="">Description</label>
-                <input type="text" name="description" ng-model="invite.description" required ng-class="{'invalid' : inviteForm.description.$invalid && submitted}">
-                <p class="validate-message" ng-show="inviteForm.description.$error.required && submitted">Invite description is required</p>
-            </div>
-            <div class="row">
                 <p>Invitees</p>
                 <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="assignee in invite.invitees">
                     {{assignee.name}} <span ng-if="assignee.canRevoke"><a href="#!" ng-click="revokeInInviteUser(assignee,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>

@@ -143,9 +143,16 @@ angular.module('buiiltApp')
                         $scope.availableInvite.push(member._id);
                     }
                 });
-                _.uniq($scope.availableInvite, '_id');
-                _.remove($scope.availableInvite, {_id: $scope.currentUser._id});
             }
+            if ($scope.currentBoard._id) {
+                _.each($scope.currentBoard.invitees, function(invitee) {
+                    if (invitee._id) {
+                        _.remove($scope.availableInvite, {_id: invitee._id._id});
+                    }
+                });
+            }
+            _.uniq($scope.availableInvite, '_id');
+            _.remove($scope.availableInvite, {_id: $scope.currentUser._id});
         });
     };
 
