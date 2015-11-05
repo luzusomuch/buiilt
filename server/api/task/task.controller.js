@@ -5,6 +5,7 @@ var Team = require('./../../models/team.model');
 var Task = require('./../../models/task.model');
 var StaffPackage = require('./../../models/staffPackage.model'),
     BuilderPackage = require('./../../models/builderPackage.model'),
+    BuilderPackageNew = require('./../../models/builderPackageNew.model'),
     ContractorPackage = require('./../../models/contractorPackage.model'),
     MaterialPackage = require('./../../models/materialPackage.model'),
     Variation = require('./../../models/variation.model'),
@@ -159,6 +160,16 @@ exports.myTask = function(req,res) {
               result.push(task);
               callback(null)
             })
+          });
+        } else if (task.type == "people") {
+          Task.populate(task,{path : 'package',model : 'People'},function(err,task) {
+            result.push(task);
+            callback(null);
+          });
+        } else if (task.type == "board") {
+          Task.populate(task,{path : 'package',model : 'Board'},function(err,task) {
+            result.push(task);
+            callback(null);
           });
         }
       },function(err) {

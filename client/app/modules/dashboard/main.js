@@ -10,27 +10,18 @@ angular.module('buiiltApp').config(function($stateProvider) {
       myTasks : [
         'taskService','$stateParams',
         function(taskService,$stateParams) {
-          return
-         // return taskService.myTask({id : $stateParams.id}).$promise
+          return taskService.myTask({id : $stateParams.id}).$promise;
         }
       ],
       myThreads : [
         'messageService','$stateParams',
         function(messageService,$stateParams) {
-          return 
-          // return messageService.myThread({id : $stateParams.id}).$promise
+          return messageService.myThread({id : $stateParams.id}).$promise;
         }
       ],
-      // myFiles : [
-      //   'notificationService',
-      //   function(notificationService, $stateParams) {
-      //    return notificationService.getMyFile({'id': stateParams.id}).$promise
-      //   }
-      // ],
-      myFiles: function($stateParams, notificationService){
-        return
+      // myFiles: function($stateParams, notificationService){
         // return notificationService.getMyFile({'id':$stateParams.id}).$promise;
-      }
+      // }
     }
   });
 });

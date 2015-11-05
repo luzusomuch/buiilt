@@ -1,7 +1,6 @@
 angular.module('buiiltApp')
-  .controller('DashboardCtrl', function($scope,$state, socket, $q, userService,$timeout, $rootScope,myFiles,myTasks,myThreads,authService,taskService,messageService,notificationService) {
-    $scope.contentHeight = $rootScope.maximunHeight - $rootScope.headerHeight - $rootScope.footerHeight - 130;
-    
+  .controller('DashboardCtrl', function($scope,$state, socket, $q, userService,$timeout, $rootScope,myTasks,myThreads,authService,taskService,messageService,notificationService) {
+    $scope.contentHeight = $rootScope.maximunHeight - $rootScope.headerHeight - 130;
     $scope.currentProject = $rootScope.currentProject;
     $scope.myTasks = myTasks;
     authService.getCurrentUser().$promise.then(function(res) {
@@ -9,12 +8,22 @@ angular.module('buiiltApp')
     });
     // $scope.currentUser = $rootScope.currentUser;
     _.forEach($scope.myTasks,function(task) {
-      task.dateEnd = (task.dateEnd) ? new Date(task.dateEnd) : null;
+        task.dateEnd = (task.dateEnd) ? new Date(task.dateEnd) : null;
     });
     $scope.myThreads = myThreads;
-    $scope.myFiles = myFiles;
     $scope.currentList = 'tasks';
     $scope.currentThread = {};
+
+    $scope.goToTaskDetail = function(task) {
+        switch (task.package.type) {
+            case "people":
+                $state.go('people', {id: task.package.project});
+                break;
+            case "board":
+                $state.go('board', {id: task.package.project});
+                break;
+        }
+    };
 
 
     $scope.activeHover = function($event){
