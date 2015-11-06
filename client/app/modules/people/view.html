@@ -122,7 +122,11 @@
 
     <div class="col s7" style="border-left: 1px solid #eee; border-right: 1px solid #eee;">
         <div ng-if="selectedUser._id" style="height: 69vh; overflow-y: scroll; position: relative;" id="peopleChatContent" scroll-to-bottom="selectedChatPeople.messages">
-            <div class="row chat-paragraph valign-wrapper" style="border-bottom: 1px solid #eee;" ng-repeat="message in selectedChatPeople.messages" >
+            <div class="row chat-paragraph valign-wrapper" style="border-bottom: 1px solid #eee;" ng-repeat="message in selectedChatPeople.messages" ng-style="message.latestMessage ? {'position':'relative'} : {}">
+                <span ng-if="message.latestMessage" style="position: absolute; top: -20px; left: 0px; right: 0px; border-top: 1px solid red;">
+                    <small style="position: absolute; top: -15px; right: 20px; background-color: #FFF; padding: 5px;">New messages</small>
+                    <a href=""></a>
+                </span>
                 <div class="col">
                     <i ng-if="!message.isFocus" class="tiny material-icons valign" style="color: #64B5F6;" ng-style="message.unread ? {'color': '#64B5F6'} : {'color': 'white'}">brightness_1</i>
                     <i ng-if="message.isFocus" class="tiny material-icons valign" style="color: red;" style="color: red">brightness_1</i>

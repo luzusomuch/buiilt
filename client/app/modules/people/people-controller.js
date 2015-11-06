@@ -678,9 +678,6 @@ angular.module('buiiltApp')
                     });
                 });
                 selectedChatPeople.messages[i].peopleHasSeen = _.uniq(selectedChatPeople.messages[i].peopleHasSeen);
-                if (selectedChatPeople.messages[i].mentions.length > 0) {
-                    // selectedChatPeople.messages[i].text = selectedChatPeople.messages[i].text.substring(0, selectedChatPeople.messages[i].text.indexOf(selectedChatPeople.messages[i].mentions[0].name));
-                }
             };
 
             if ($rootScope.inComingSelectThread) {
@@ -949,6 +946,7 @@ angular.module('buiiltApp')
                 if (message.element._id == $scope.selectedChatPeople._id && message.referenceTo == "people-chat") {
                     $scope.selectedChatPeople.hasUnreadMessage = true;
                     for (var i = $scope.selectedChatPeople.messages.length - 1; i >= 0; i--) {
+                        $scope.selectedChatPeople.messages[i].latestMessage = false;
                         if ($scope.selectedChatPeople.messages[i].user._id != $scope.currentUser._id) {
                             $scope.selectedChatPeople.messages[i].unread = true;
                             temp += 1;
@@ -956,6 +954,7 @@ angular.module('buiiltApp')
                             $scope.selectedChatPeople.messages[i].unread = false;
                         }
                         if (temp == unreadMessagesNumber) {
+                            $scope.selectedChatPeople.messages[i].latestMessage = true;
                             return false;
                         }
                     };

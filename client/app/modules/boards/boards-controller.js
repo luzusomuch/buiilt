@@ -259,13 +259,6 @@ angular.module('buiiltApp')
                     });
                 });
                 board.messages[i].peopleHasSeen = _.uniq(board.messages[i].peopleHasSeen);
-                if (board.messages[i].mentions.length > 0) {
-                    _.each(board.messages[i].mentions, function(mention) {
-                        // if (board.messages[i].text.indexOf(mention.name) != -1) {
-                        //     board.messages[i].text = board.messages[i].text.substring(0, board.messages[i].text.indexOf(mention.name));
-                        // }
-                    });
-                }
             };
         });
     };

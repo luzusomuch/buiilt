@@ -116,7 +116,9 @@ angular.module('buiiltApp')
 .filter('mention', function($sce) {
   return function(message, mentions) {
     var text = '';
-    if (mentions.length == 1) {
+    if (!mentions || mentions.length == 0) {
+      text = message;
+    } else if (mentions.length == 1) {
       var mentionIndex = message.indexOf(mentions[0].name);
       var mentionNameLenght = mentions[0].name.length;
       if (mentionIndex == -1) {
@@ -160,8 +162,6 @@ angular.module('buiiltApp')
           text += message.substr(tempTextLength, message.length - tempTextLength);
         }
       }
-    } else {
-      text = message;
     }
     return $sce.trustAsHtml("<p>"+text+"</p>");
   };
