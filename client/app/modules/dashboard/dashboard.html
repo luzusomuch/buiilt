@@ -11,14 +11,23 @@
 <div class="col s9">
     <div class="collection">
         <div style="height: {{contentHeight + 85}}px; overflow-x:hidden; overflow-y: auto; background-color: white;">
-            <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-if="currentList == 'tasks' && !showDetailOfTask" class="collection-item row" ng-repeat="task in myTasks | orderBy : ['dateEnd']" ng-click="goToTaskDetail(task)" style="cursor:pointer">
+            <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-if="currentList == 'tasks' && !showDetailOfTask" class="collection-item row" ng-repeat="task in myTasks | orderBy : ['dateEnd']" style="cursor:pointer">
+              <div class="col s2">
+                <input ng-if="!task.completed" type="checkbox" id="complete" ng-click="complete(task)"/>
+                <label for="complete"></label>
+
+                <input ng-if="task.completed" checked="true" type="checkbox" id="completed" ng-click="complete(task)"/>
+                <label for="completed"></label>
+              </div>
+              <div class="col s10" ng-click="goToTaskDetail(task)">
                 <div class="col s12">
-                    {{task.name}}
+                  {{task.name}}
                 </div>
                 <div class="col s12">
-                    <span>Due date: {{task.dateEnd | date: longDate}}</span> - Assignees: <span ng-repeat="assignee in task.assignees">
-                    {{(assignee.lastName) ? assignee.firstName +" "+ assignee.lastName : assignee.email}},</span>
+                  <span>Due date: {{task.dateEnd | date: longDate}}</span> - Assignees: <span ng-repeat="assignee in task.assignees">
+                  {{(assignee.lastName) ? assignee.firstName +" "+ assignee.lastName : assignee.email}},</span>
                 </div>
+              </div>
             </div>
             <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-if="currentList == 'chats' && !showDetailOfTask" class="collection-item row" ng-repeat="thread in myThreads | orderBy : ['dateEnd']" ng-click="goToThreadNewVersionDetail(thread)" style="cursor:pointer">
                 <div class="col s12">

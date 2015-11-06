@@ -520,7 +520,7 @@ angular.module('buiiltApp')
                 $scope.mentionString = newValue.substring(newValue.indexOf("@") + 1);
                 $scope.mentionPeople = [];
                 _.each($scope.available, function(item) {
-                    if (item.name.indexOf($scope.mentionString) != -1) {
+                    if (item.name.toLowerCase().indexOf($scope.mentionString) != -1 || item.name.indexOf($scope.mentionString) != -1) {
                         $scope.mentionPeople.push(item);
                     }
                 });
