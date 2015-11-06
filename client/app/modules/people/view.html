@@ -128,17 +128,16 @@
                     <i ng-if="message.isFocus" class="tiny material-icons valign" style="color: red;" style="color: red">brightness_1</i>
                 </div>
                 <div class="col">
-                    <p class="row chat-name" style="font-size: 13px; color: #757575; margin-bottom: 0px"><strong>{{message.user.name}}</strong><span style="font-size: 12px"> - {{message.sendAt | date : 'MMM d, y h:mm:ss a'}}.</span></p>
+                    <p class="row chat-name" style="font-size: 13px; color: #757575; margin-bottom: 0px">
+                        <strong>{{message.user.name}}</strong>
+                        <span style="font-size: 12px"> - {{message.sendAt | date : 'MMM d, y h:mm:ss a'}}.</span>
+                        <span style="font-size: 10px" ng-if="message.peopleHasSeen.length > 0">Seen by:<span ng-repeat="seenUser in message.peopleHasSeen" style="background-color: #E0E0E0; border-radius: 2px; margin-right: 3px; padding: 3px"> {{seenUser}}</span></span>
+                    </p>
+
                     <p class="row chat-text" style="font-size: 13px; margin-top:3px">
-                        <span ng-repeat="mention in message.mentions" style="background-color:#D6DADC; padding: 5px;">{{mention.name}}</span>
+                        <span ng-repeat="mention in message.mentions" style="background-color:#E0E0E0; padding: 5px; border-radius: 3px; margin-right: 6px">@{{mention.name}}</span>
                         {{message.text}}
                     </p>
-                    <small ng-if="message.peopleHasSeen.length > 0">
-                        <span ng-repeat="seenUser in message.peopleHasSeen">
-                            {{seenUser}},
-                        </span>
-                        has seen
-                    </small>
                 </div>
             </div>
         </div>
