@@ -22,7 +22,7 @@
                 <div class="col">
                     <p class="row chat-name" style="font-size: 10px; color: #757575; margin-bottom: 0px">
                         <strong>{{message.user.name}}</strong><span style="font-size: 10px"> - {{message.sendAt | date : 'MMM d, y h:mm:ss a'}}.</span>
-                        <span style="font-size: 10px" ng-if="message.peopleHasSeen.length > 0">Seen by:<span ng-repeat="seenUser in message.peopleHasSeen" style="background-color: #E0E0E0; border-radius: 2px; margin-right: 3px;"> {{seenUser}}</span></span>
+                        <span style="font-size: 10px" ng-if="message.peopleHasSeen.length > 0">Seen by:<span ng-repeat="seenUser in message.peopleHasSeen" style="background-color: #E0E0E0; border-radius: 2px; margin-right: 3px; padding: 3px"> {{seenUser}}</span></span>
                     </p>
                     <p class="row chat-text" style="font-size: 13px; margin-top: 8px">
                         <span ng-repeat="mention in message.mentions" style="background-color:#E0E0E0; padding: 5px; border-radius: 3px; margin-right: 6px">@{{mention.name}}</span>
@@ -255,7 +255,7 @@
 <div class="modal modal-fixed-bottom" id="modal-attachment-detail-{{file._id}}" ng-repeat="file in files">
     <h5>View attachment {{file.title}} detail</h5>
     <div class="modal-content">
-        <div file-picker-previewer type="filepicker-preview" url="{{file.path}}" style="height:500px;"> </div>
+        <div file-picker-previewer type="filepicker-preview" url="{{file.path}}" style="height:70vh;"> </div>
     </div>
     <div class="modal-footer">
         <button type="button" class="modal-action modal-close btn-flat">Close</button>
