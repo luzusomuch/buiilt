@@ -124,7 +124,8 @@
         <div ng-if="selectedUser._id" style="height: 69vh; overflow-y: scroll; position: relative;" id="peopleChatContent" scroll-to-bottom="selectedChatPeople.messages">
             <div class="row chat-paragraph valign-wrapper" style="border-bottom: 1px solid #eee;" ng-repeat="message in selectedChatPeople.messages" >
                 <div class="col">
-                    <i class="tiny material-icons valign" style="color: #64B5F6;" ng-style="message.unread ? {'color': '#64B5F6'} : {'color': 'white'}">brightness_1</i>
+                    <i ng-if="!message.isFocus" class="tiny material-icons valign" style="color: #64B5F6;" ng-style="message.unread ? {'color': '#64B5F6'} : {'color': 'white'}">brightness_1</i>
+                    <i ng-if="message.isFocus" class="tiny material-icons valign" style="color: red;" style="color: red">brightness_1</i>
                 </div>
                 <div class="col">
                     <p class="row chat-name" style="font-size: 13px; color: #757575; margin-bottom: 0px"><strong>{{message.user.name}}</strong><span style="font-size: 12px"> - {{message.sendAt | date : 'MMM d, y h:mm:ss a'}}.</span></p>
@@ -199,7 +200,12 @@
                     <p class="feature-btn-wrapper"><a class="modal-trigger feature-btn" href="#new_task">ADD A TASK</a></p>
                 </div>
                 <div class="task-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-repeat="task in tasks" ng-if="task.isOwner">
-                    <p class="margin-10-0"><a href="#modal-task-detail-{{task._id}}" class="modal-trigger">{{task.name}}</a></p>
+                    <div class="col s2">
+                        <i ng-if="task.isFocus" class="tiny material-icons valign" style="color: red;" style="color: red">brightness_1</i>
+                    </div>
+                    <div class="col s10">
+                        <p class="margin-10-0"><a href="#modal-task-detail-{{task._id}}" class="modal-trigger">{{task.name}}</a></p>
+                    </div>
                 </div>
             </div>
         </div>

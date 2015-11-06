@@ -302,6 +302,28 @@ angular.module('buiiltApp')
                 return false;
             }
         });
+
+        if ($rootScope.inComingSelectThread) {
+            console.log($rootScope.inComingSelectThread);
+            _.each($scope.boards, function(board) {
+                if (board._id == $rootScope.inComingSelectThread._id) {
+                    $scope.currentBoard = board;
+                }
+            });
+            _.each($scope.currentBoard.messages, function(message) {
+                message.isFocus = false;
+                if (message._id == $rootScope.inComingSelectThread.messageId) {
+                    message.isFocus = true;
+                }
+            });
+        }
+
+        $timeout(function(){
+            _.each($scope.currentBoard.messages, function(message) {
+                message.isFocus = false;
+            });
+        }, 3000);
+
         if ($scope.currentBoard._id) {
             getUnreadMessage($scope.currentBoard);
             getAvailable($scope.currentBoard);

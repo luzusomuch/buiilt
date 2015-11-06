@@ -92,8 +92,8 @@ exports.myTask = function(req,res) {
   Task.find({$or : [{'user' : user._id}, {assignees : user._id}],project : project._id,completed : false})
     .sort('hasDateEnd')
     .sort({'dateEnd': 1})
-    .populate('assignees')
-    .populate('user')
+    .populate('assignees', '-hashedPassword -salt')
+    .populate('user', '-hashedPassword -salt')
 
     .exec(function(err,tasks) {
       if (err) {
@@ -104,8 +104,8 @@ exports.myTask = function(req,res) {
           Task.populate(task,{path : 'package',model : 'BuilderPackage'},function(err,task) {
             Task.populate(task,[{path : 'package.owner',model : 'Team'},{path : 'package.to.team',model : 'Team'}],function(err,task) {
               Task.populate(task,[
-                {path : 'package.owner.leader',model : 'User'},{path : 'package.owner.member._id',model : 'User'},
-                {path : 'package.to.team.leader',model : 'User'},{path : 'package.to.team.member._id',model : 'User'}
+                {path : 'package.owner.leader',model : 'User', select: '-hashedPassword -salt'},{path : 'package.owner.member._id',model : 'User', select: '-hashedPassword -salt'},
+                {path : 'package.to.team.leader',model : 'User', select: '-hashedPassword -salt'},{path : 'package.to.team.member._id',model : 'User', select: '-hashedPassword -salt'}
               ],function(err,task) {
                 result.push(task);
                 callback(null)
@@ -116,8 +116,8 @@ exports.myTask = function(req,res) {
           Task.populate(task,{path : 'package',model : 'ContractorPackage'},function(err,task) {
             Task.populate(task,[{path : 'package.owner',model : 'Team'},{path : 'package.winnerTeam._id',model : 'Team'}],function(err,task) {
               Task.populate(task,[
-                {path : 'package.owner.leader',model : 'User'},{path : 'package.owner.member._id',model : 'User'},
-                {path : 'package.winnerTeam._id.leader',model : 'User'},{path : 'package.winnerTeam._id.member._id',model : 'User'}
+                {path : 'package.owner.leader',model : 'User', select: '-hashedPassword -salt'},{path : 'package.owner.member._id',model : 'User', select: '-hashedPassword -salt'},
+                {path : 'package.winnerTeam._id.leader',model : 'User', select: '-hashedPassword -salt'},{path : 'package.winnerTeam._id.member._id',model : 'User', select: '-hashedPassword -salt'}
               ],function(err,task) {
                 result.push(task);
                 callback(null)
@@ -128,8 +128,8 @@ exports.myTask = function(req,res) {
           Task.populate(task,{path : 'package',model : 'MaterialPackage'},function(err,task) {
             Task.populate(task,[{path : 'package.owner',model : 'Team'},{path : 'package.winnerTeam._id',model : 'Team'}],function(err,task) {
               Task.populate(task,[
-                {path : 'package.owner.leader',model : 'User'},{path : 'package.owner.member._id',model : 'User'},
-                {path : 'package.winnerTeam._id.leader',model : 'User'},{path : 'package.winnerTeam._id.member._id',model : 'User'}
+                {path : 'package.owner.leader',model : 'User', select: '-hashedPassword -salt'},{path : 'package.owner.member._id',model : 'User', select: '-hashedPassword -salt'},
+                {path : 'package.winnerTeam._id.leader',model : 'User', select: '-hashedPassword -salt'},{path : 'package.winnerTeam._id.member._id',model : 'User', select: '-hashedPassword -salt'}
               ],function(err,task) {
                 result.push(task);
                 callback(null)
@@ -143,11 +143,10 @@ exports.myTask = function(req,res) {
               model: 'Team'
             }], function (err, task) {
               Task.populate(task, [
-                {path: 'package.owner.leader', model: 'User'}, {path: 'package.owner.member._id', model: 'User'},
-                {path: 'package.winnerTeam._id.leader', model: 'User'}, {
-                  path: 'package.winnerTeam._id.member._id',
-                  model: 'User'
-                }
+                {path: 'package.owner.leader', model: 'User', select: '-hashedPassword -salt'}, 
+                {path: 'package.owner.member._id', model: 'User', select: '-hashedPassword -salt'},
+                {path: 'package.winnerTeam._id.leader', model: 'User', select: '-hashedPassword -salt'}, 
+                {path: 'package.winnerTeam._id.member._id', model: 'User', select: '-hashedPassword -salt'}
               ], function (err, task) {
                 result.push(task);
                 callback(null)
@@ -156,7 +155,7 @@ exports.myTask = function(req,res) {
           });
         } else if (task.type == 'staff') {
           Task.populate(task,{path : 'package',model : 'StaffPackage'},function(err,task) {
-            User.populate(task,{path : 'package.staffs'},function(err,task) {
+            User.populate(task,{path : 'package.staffs', select: '-hashedPassword -salt'},function(err,task) {
               result.push(task);
               callback(null)
             })

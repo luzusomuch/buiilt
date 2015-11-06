@@ -8,15 +8,16 @@ angular.module('buiiltApp')
         $scope.myThreads = [];
         _.each(myThreads, function(thread) {
             _.each(thread.messages, function(message, key) {
-                if (key == thread.messages.length -1 && _.indexOf(message.mentions, res._id) != -1) {
+                if (_.indexOf(message.mentions, res._id) != -1) {
                     if (thread.people) {
-                        $scope.myThreads.push({project: thread.project, user: message.user.name, type: 'people', message: message.text});                
+                        $scope.myThreads.push({_id: thread._id,project: thread.project, user: message.user.name, type: 'people', message: message.text, messageId: message._id, owner: thread.from});                
                     } else if (thread.type == 'board') {
-                        $scope.myThreads.push({project: thread.project, user: message.user.name, type: 'board', message: message.text});                
+                        $scope.myThreads.push({_id: thread._id,project: thread.project, user: message.user.name, type: 'board', message: message.text, messageId: message._id});                
                     }
                 }
             });
         });
+        $scope.myThreads = _.uniq($scope.myThreads, 'message');
     });
     // $scope.currentUser = $rootScope.currentUser;
     _.forEach($scope.myTasks,function(task) {
@@ -27,6 +28,7 @@ angular.module('buiiltApp')
     $scope.currentThread = {};
 
     $scope.goToTaskDetail = function(task) {
+        $rootScope.inComingSelectTask = task;
         switch (task.package.type) {
             case "people":
                 $state.go('people', {id: task.package.project});
@@ -38,12 +40,13 @@ angular.module('buiiltApp')
     };
 
     $scope.goToThreadNewVersionDetail = function(thread) {
-        console.log(thread)
         switch (thread.type) {
             case "people":
+                $rootScope.inComingSelectThread = thread;
                 $state.go('people', {id: thread.project});
                 break;
             case "board":
+                $rootScope.inComingSelectThread = thread;
                 $state.go('board', {id: thread.project});
                 break;
         }
@@ -57,106 +60,105 @@ angular.module('buiiltApp')
     };
 
     $scope.backToDocumentsList = function(){
-      $scope.document = {};
-      $("div.ui-effects-wrapper").hide();
-      $("div.documentDetail").hide();
-      $("div.documentsList").show("slide", { direction: "left" }, 500);
+        $scope.document = {};
+        $("div.ui-effects-wrapper").hide();
+        $("div.documentDetail").hide();
+        $("div.documentsList").show("slide", { direction: "left" }, 500);
     };
     $scope.goToDocumentDetail = function(document) {
-      $scope.document = document;
-      $("div.documentsList").hide();
-      $("div.documentDetail").show("slide", { direction: "right" }, 500);
+        $scope.document = document;
+        $("div.documentsList").hide();
+        $("div.documentDetail").show("slide", { direction: "right" }, 500);
     };
 
     $scope.backToThreadsList = function(){
-      $scope.currentThread = {};
-      $("div.ui-effects-wrapper").hide();
-      $("div#threadDetail").hide();
-      $("div#threadsList").show("slide", { direction: "left" }, 500);
+        $scope.currentThread = {};
+        $("div.ui-effects-wrapper").hide();
+        $("div#threadDetail").hide();
+        $("div#threadsList").show("slide", { direction: "left" }, 500);
     };
     $scope.goToThreadDetail = function(thread) {
-      $scope.currentThread = thread;
-      _.each(thread.messages, function(message){
-        if (message.user._id != $scope.currentUser._id) {
-          message.owner = false;
-        }
-        else {
-          message.owner = true;
-        }
-      });
-      $("div#threadsList").hide();
-      $("div#threadDetail").show("slide", { direction: "right" }, 500);
+        $scope.currentThread = thread;
+        _.each(thread.messages, function(message){
+            if (message.user._id != $scope.currentUser._id) {
+                message.owner = false;
+            }
+            else {
+                message.owner = true;   
+            }
+        });
+        $("div#threadsList").hide();
+        $("div#threadDetail").show("slide", { direction: "right" }, 500);
     };
 
     var getAvailableAssignee = function($package,type) {
-      switch(type) {
-        case 'builder' :
-          $scope.available = [];
-          $scope.available = _.union($scope.available,$scope.currentTeam.leader);
-          if ($scope.currentTeam._id == $package.owner._id && $scope.isLeader) {
-            if ($package.to.team) {
-              _.forEach($package.to.team.leader, function (leader) {
-                $scope.available.push(leader);
-              });
-            }
-          }
-          if ($package.to.team && $scope.currentTeam._id == $package.to.team._id && $scope.isLeader) {
-            _.forEach($package.owner.leader, function (leader) {
-              $scope.available.push(leader);
-            });
-          }
-          _.forEach($scope.currentTeam.member,function(member) {
-            if (member.status == 'Active') {
-              $scope.available.push(member._id);
-            }
-          });
-          break;
-        case 'staff' :
-          $scope.available =  angular.copy($package.staffs);
-          console.log($package);
-          $scope.available = _.union($scope.available,$scope.currentTeam.leader);
-          break;
-        case 'contractor' :
-          $scope.available = [];
-          $scope.available = _.union($scope.available,$scope.currentTeam.leader);
-          if ($scope.currentTeam._id == $package.winnerTeam._id._id && $scope.isLeader) {
-            _.forEach($package.owner.leader,function(leader) {
-              $scope.available.push(leader);
-            });
-          }
-          if ($scope.currentTeam._id == $package.owner._id && $scope.isLeader) {
-            _.forEach($package.winnerTeam._id.leader,function(leader) {
-              $scope.available.push(leader);
-            });
-          }
-          _.forEach($scope.currentTeam.member,function(member) {
-            if (member.status == 'Active') {
-              $scope.available.push(member._id);
-            }
-          });
-          break;
-        case 'material' :
-          $scope.available = [];
-          $scope.available = _.union($scope.available,$scope.currentTeam.leader);
-          if ($scope.currentTeam._id == $package.winnerTeam._id._id && $scope.isLeader) {
-            _.forEach($package.owner.leader,function(leader) {
-              $scope.available.push(leader);
-            });
-          }
-          if ($scope.currentTeam._id == $package.owner._id  && $scope.isLeader) {
-            _.forEach($package.winnerTeam._id.leader,function(leader) {
-              $scope.available.push(leader);
-            });
-          }
-          _.forEach($scope.currentTeam.member,function(member) {
-            if (member.status == 'Active') {
-              $scope.available.push(member._id);
-            }
-          });
-          break;
-        default :
-          break
-      }
+        switch(type) {
+            case 'builder' :
+                $scope.available = [];
+                $scope.available = _.union($scope.available,$scope.currentTeam.leader);
+                if ($scope.currentTeam._id == $package.owner._id && $scope.isLeader) {
+                    if ($package.to.team) {
+                        _.forEach($package.to.team.leader, function (leader) {
+                            $scope.available.push(leader);
+                        });
+                    }
+                }
+                if ($package.to.team && $scope.currentTeam._id == $package.to.team._id && $scope.isLeader) {
+                    _.forEach($package.owner.leader, function (leader) {
+                        $scope.available.push(leader);
+                    });
+                }
+                _.forEach($scope.currentTeam.member,function(member) {
+                    if (member.status == 'Active') {
+                        $scope.available.push(member._id);
+                    }
+                });
+                break;
+            case 'staff' :
+                $scope.available =  angular.copy($package.staffs);
+                $scope.available = _.union($scope.available,$scope.currentTeam.leader);
+                break;
+            case 'contractor' :
+                $scope.available = [];
+                $scope.available = _.union($scope.available,$scope.currentTeam.leader);
+                if ($scope.currentTeam._id == $package.winnerTeam._id._id && $scope.isLeader) {
+                    _.forEach($package.owner.leader,function(leader) {
+                        $scope.available.push(leader);
+                    });
+                }
+                if ($scope.currentTeam._id == $package.owner._id && $scope.isLeader) {
+                    _.forEach($package.winnerTeam._id.leader,function(leader) {
+                        $scope.available.push(leader);
+                    });
+                }
+                _.forEach($scope.currentTeam.member,function(member) {
+                    if (member.status == 'Active') {
+                        $scope.available.push(member._id);
+                    }
+                });
+                break;
+            case 'material' :
+                $scope.available = [];
+                $scope.available = _.union($scope.available,$scope.currentTeam.leader);
+                if ($scope.currentTeam._id == $package.winnerTeam._id._id && $scope.isLeader) {
+                    _.forEach($package.owner.leader,function(leader) {
+                        $scope.available.push(leader);
+                    });
+                }
+                if ($scope.currentTeam._id == $package.owner._id  && $scope.isLeader) {
+                    _.forEach($package.winnerTeam._id.leader,function(leader) {
+                        $scope.available.push(leader);
+                    });
+                }
+                _.forEach($scope.currentTeam.member,function(member) {
+                    if (member.status == 'Active') {
+                        $scope.available.push(member._id);
+                    }
+                });
+                break;
+            default :
+                break
+        }
     };
 
     $scope.showTasks = function() {

@@ -96,6 +96,7 @@ exports.myThread = function(req,res) {
       if (thread.referenceTo == 'people-chat') {
         PeopleChat.findById(thread.element._id)
         .populate('messages.user', '-hashedPassword -salt')
+        .populate('from', '-hashedPassword -salt')
         .exec(function(err, thread){
           if (err || !thread) {return callback();}
           else {

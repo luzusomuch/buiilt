@@ -323,7 +323,6 @@ angular.module('buiiltApp')
                     }
                 });
             }
-
             switch ($scope.currentUser.type) {
                 case 'builder':
                     var builders = [];
@@ -345,6 +344,7 @@ angular.module('buiiltApp')
                     });
                     $scope.invitePeople.builders = builders;
                     $scope.currentTeamMembers = builders;
+                    $scope.currentTeamMembers = _.uniq($scope.currentTeamMembers, '_id');
                     _.remove($scope.currentTeamMembers, {_id: $scope.currentUser._id});
 
                     var subcontractors = [];
@@ -368,6 +368,18 @@ angular.module('buiiltApp')
                         }
                     });
                     $scope.invitePeople.consultants = consultants;
+
+                    if ($rootScope.inComingSelectThread) {
+                        $scope.selectUser($rootScope.inComingSelectThread.owner,'');
+                    } else {
+                        if ($scope.currentTeamMembers.length > 0) {
+                            $scope.selectUser($scope.currentTeamMembers[0]);
+                        } else if ($scope.invitePeople.subcontractors.length > 0) {
+                            $scope.selectUser($scope.invitePeople.subcontractors[0]);
+                        } else if ($scope.invitePeople.consultants.length > 0) {
+                            $scope.selectedUser($scope.invitePeople.consultants[0]);
+                        }
+                    }
                     break;
 
                 case 'architect':
@@ -390,6 +402,7 @@ angular.module('buiiltApp')
                     });
                     $scope.invitePeople.architects = architects;
                     $scope.currentTeamMembers = architects;
+                    $scope.currentTeamMembers = _.uniq($scope.currentTeamMembers, '_id');
                     _.remove($scope.currentTeamMembers, {_id: $scope.currentUser._id});
 
                     var consultants = [];
@@ -403,6 +416,16 @@ angular.module('buiiltApp')
                         }
                     });
                     $scope.invitePeople.consultants = consultants;
+
+                    if ($rootScope.inComingSelectThread) {
+                        $scope.selectUser($rootScope.inComingSelectThread.owner,'');
+                    } else {
+                        if ($scope.currentTeamMembers.length > 0) {
+                            $scope.selectUser($scope.currentTeamMembers[0]);
+                        } else if ($scope.invitePeople.consultants.length > 0) {
+                            $scope.selectedUser($scope.invitePeople.consultants[0]);
+                        }
+                    }
                     break;
 
                 case 'client':
@@ -425,6 +448,7 @@ angular.module('buiiltApp')
                     });
                     $scope.invitePeople.clients = clients;
                     $scope.currentTeamMembers = clients;
+                    $scope.currentTeamMembers = _.uniq($scope.currentTeamMembers, '_id');
                     _.remove($scope.currentTeamMembers, {_id: $scope.currentUser._id});
 
                     var consultants = [];
@@ -438,6 +462,18 @@ angular.module('buiiltApp')
                         }
                     });
                     $scope.invitePeople.consultants = consultants;
+                    if ($rootScope.inComingSelectThread) {
+                        $scope.selectUser($rootScope.inComingSelectThread.owner,'');
+                    } else if ($rootScope.inComingSelectTask) {
+                        $scope.selectUser($rootScope.inComingSelectTask.user, '');
+                    } else {
+                        if ($scope.currentTeamMembers.length > 0) {
+                            $scope.selectUser($scope.currentTeamMembers[0]);
+                        } else if ($scope.invitePeople.consultants.length > 0) {
+                            $scope.selectedUser($scope.invitePeople.consultants[0]);
+                        }
+                    }
+                    
                     break;
 
                 case 'subcontractor':
@@ -461,7 +497,16 @@ angular.module('buiiltApp')
                     });
                     $scope.invitePeople.subcontractors = subcontractors;
                     $scope.currentTeamMembers = subcontractors;
+                    $scope.currentTeamMembers = _.uniq($scope.currentTeamMembers, '_id');
                     _.remove($scope.currentTeamMembers, {_id: $scope.currentUser._id});
+
+                    if ($rootScope.inComingSelectThread) {
+                        $scope.selectUser($rootScope.inComingSelectThread.owner,'');
+                    } else {
+                        if ($scope.currentTeamMembers.length > 0) {
+                            $scope.selectUser($scope.currentTeamMembers[0]);
+                        }
+                    }
                     break;
                 case 'consultant':
                     $scope.inviterTypeText = 'INVITER';
@@ -496,7 +541,16 @@ angular.module('buiiltApp')
                     });
                     // $scope.invitePeople.consultants = consultants;
                     $scope.currentTeamMembers = consultants;
+                    $scope.currentTeamMembers = _.uniq($scope.currentTeamMembers, '_id');
                     _.remove($scope.currentTeamMembers, {_id: $scope.currentUser._id});
+
+                    if ($rootScope.inComingSelectThread) {
+                        $scope.selectUser($rootScope.inComingSelectThread.owner,'');
+                    } else {
+                        if ($scope.currentTeamMembers.length > 0) {
+                            $scope.selectUser($scope.currentTeamMembers[0]);
+                        }
+                    }
                     break;
                 default:
                     break;
@@ -539,6 +593,14 @@ angular.module('buiiltApp')
                     }
                 });
             });
+            if ($rootScope.inComingSelectTask) {
+                _.each($scope.tasks, function(task) {
+                    task.isFocus = false;
+                    if (task._id == $rootScope.inComingSelectTask._id) {
+                        task.isFocus = true;
+                    }
+                });
+            }
         });
         fileService.getFileInPeople({id: $stateParams.id}).$promise.then(function(res){
             $scope.files = res;
@@ -569,6 +631,20 @@ angular.module('buiiltApp')
                     // selectedChatPeople.messages[i].text = selectedChatPeople.messages[i].text.substring(0, selectedChatPeople.messages[i].text.indexOf(selectedChatPeople.messages[i].mentions[0].name));
                 }
             };
+
+            if ($rootScope.inComingSelectThread) {
+                _.each(selectedChatPeople.messages, function(message) {
+                    message.isFocus = false;
+                    if (message._id == $rootScope.inComingSelectThread.messageId) {
+                        message.isFocus = true;
+                    }
+                });
+            }
+            $timeout(function(){
+                _.each(selectedChatPeople.messages, function(message){
+                    message.isFocus = false;
+                });
+            },3000);
         });
     };
 
