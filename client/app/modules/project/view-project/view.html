@@ -1,7 +1,7 @@
 <div class="col s10 offset-s1">
    <div class="collection with-header">
        <div class="row collection-header" style="margin-bottom:0px">
-            
+
             <div class="col right" style="margin-top: 10px">
               <!-- THIS IS THE OLD VERSION -->
                <!-- <a ng-show="isLeader && (currentTeam.type == 'builder'|| currentTeam.type == 'architect')" class="modal-trigger" data-target="upload" href="#modal_attachDocument" id="uploadNewDoc" style="margin-left:30px; padding: 5px; font-size: 12px; color: black" ng-click="startUploadDocWizard()">UPLOAD NEW DOCUMENT</a> -->
@@ -12,7 +12,7 @@
                     <a class="downloadFile" href='{{file.fileUrl}}' download="file.name">{{file.title}}</a>
                 </span>
             </div>
-            
+
        </div>
        <div class="row collection-header notShowFileDetail" style="margin-bottom:0px;">
            <div class="col s12">
@@ -209,10 +209,10 @@
 
 <div class="modal modal-fixed-bottom" id="view-file-detail-{{file._id}}" ng-repeat="file in files">
   <div class="modal-content">
-    <div file-picker-previewer type="filepicker-preview" url="{{file.path}}" style="height:500px;"> </div>
+    <div file-picker-previewer type="filepicker-preview" url="{{file.path}}" style="height:75vh;"> </div>
   </div>
   <div class="modal-footer">
-    <a href="#" class="btn-flat modal-action modal-close" ng-click="downloadFile(file)">Download</a>
+    <a href="#" class="btn-flat modal-action" ng-click="downloadFile(file)">Download</a>
     <a href="#" class="btn-flat modal-action modal-close">Close</a>
   </div>
 </div>
