@@ -158,6 +158,20 @@ angular.module('buiiltApp')
                             {value: 'addBuilder', text: 'Builder'}, 
                             {value: 'addConsultant', text: 'Consultant'}
                         ];
+                        if ($scope.invitePeople.clients.length > 0) {
+                            if ($scope.invitePeople.clients[0].hasSelect) {
+                                _.remove($scope.availableUserType, function(item) {
+                                    return item.value == 'addClient';
+                                });
+                            }
+                        }
+                        if ($scope.invitePeople.builders.length > 0) {
+                            if ($scope.invitePeople.builders[0].hasSelect) {
+                                _.remove($scope.availableUserType, function(item) {
+                                    return item.value == 'addBuilder';
+                                });
+                            }
+                        }
                         break;
                     case 'subcontractor':
                         $scope.availableUserType = [
@@ -188,6 +202,20 @@ angular.module('buiiltApp')
                             {value: 'addSubcontractor', text: 'Subcontractor'}, 
                             {value: 'addConsultant', text: 'Consultant'}
                         ];
+                        if ($scope.invitePeople.clients.length > 0) {
+                            if ($scope.invitePeople.clients[0].hasSelect) {
+                                _.remove($scope.availableUserType, function(item) {
+                                    return item.value == 'addClient';
+                                });
+                            }
+                        }
+                        if ($scope.invitePeople.architects.length > 0) {
+                            if ($scope.invitePeople.architects[0].hasSelect) {
+                                _.remove($scope.availableUserType, function(item) {
+                                    return item.value == 'addArchitect';
+                                });
+                            }
+                        }
                         break;
                     case 'architect':
                         $scope.availableUserType = [
@@ -217,6 +245,20 @@ angular.module('buiiltApp')
                             {value: 'addArchitect', text: 'Architect'}, 
                             {value: 'addConsultant', text: 'Consultant'}
                         ];
+                        if ($scope.invitePeople.builders.length > 0) {
+                            if ($scope.invitePeople.builders[0].hasSelect) {
+                                _.remove($scope.availableUserType, function(item) {
+                                    return item.value == 'addBuilder';
+                                });
+                            }
+                        }
+                        if ($scope.invitePeople.architects.length > 0) {
+                            if ($scope.invitePeople.architects[0].hasSelect) {
+                                _.remove($scope.availableUserType, function(item) {
+                                    return item.value == 'addArchitect';
+                                });
+                            }
+                        }
                         break;
                     case 'builder':
                         $scope.availableUserType = [
@@ -427,7 +469,7 @@ angular.module('buiiltApp')
                         if ($scope.currentTeamMembers.length > 0) {
                             $scope.selectUser($scope.currentTeamMembers[0]);
                         } else if ($scope.invitePeople.consultants.length > 0) {
-                            $scope.selectedUser($scope.invitePeople.consultants[0]);
+                            $scope.selectUser($scope.invitePeople.consultants[0]);
                         }
                     }
                     break;
