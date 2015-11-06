@@ -69,7 +69,7 @@
                         <li class="tab col s3"><a href="#test2">
                             <i class="material-icons">attachment</i>
                         </a></li>
-                        <li class="tab col s3"><a href="#test3">
+                        <li id="taskTab" class="tab col s3"><a href="#test3">
                             <i class="material-icons">done_all</i>
                         </a></li>
                     </ul>
@@ -99,6 +99,9 @@
                 </div>
                 <div class="task-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-repeat="task in tasks" ng-if="task.isOwner">
                     <div class="col s2">
+                        <i ng-if="task.isFocus" class="tiny material-icons valign" style="color: red;" style="color: red">brightness_1</i>
+                    </div>
+                    <div class="col s2">
                         <p>
                             <input ng-if="!task.completed" type="checkbox" id="complete" ng-click="complete(task)" ng-disabled="!task.isOwner"/>
                             <label for="complete"></label>
@@ -108,7 +111,7 @@
                             <label for="completed"></label>
                         </p>
                     </div>
-                    <div class="col s10">
+                    <div class="col s8">
                         <a href="#modal-task-detail-{{task._id}}" class="modal-trigger">
                             <p class="margin-10-0">
                                 <strong>{{task.name}}</strong>

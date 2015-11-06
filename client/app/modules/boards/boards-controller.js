@@ -184,6 +184,15 @@ angular.module('buiiltApp')
                     }
                 });
             });
+            if ($rootScope.inComingSelectTask) {
+                _.each($scope.tasks, function(task) {
+                    task.isFocus = false;
+                    if (task._id == $rootScope.inComingSelectTask._id) {
+                        task.isFocus = true;
+                    }
+                });
+                $timeout(function(){$("#taskTab > a").trigger('click')},1000);
+            }
         });
     };
 
@@ -304,7 +313,6 @@ angular.module('buiiltApp')
         });
 
         if ($rootScope.inComingSelectThread) {
-            console.log($rootScope.inComingSelectThread);
             _.each($scope.boards, function(board) {
                 if (board._id == $rootScope.inComingSelectThread._id) {
                     $scope.currentBoard = board;
@@ -314,6 +322,15 @@ angular.module('buiiltApp')
                 message.isFocus = false;
                 if (message._id == $rootScope.inComingSelectThread.messageId) {
                     message.isFocus = true;
+                }
+            });
+        }
+
+        if ($rootScope.inComingSelectTask) {
+            console.log($rootScope.inComingSelectTask);
+            _.each($scope.boards, function(board) {
+                if (board._id == $rootScope.inComingSelectTask.package._id) {
+                    $scope.currentBoard = board;
                 }
             });
         }

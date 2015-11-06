@@ -371,6 +371,8 @@ angular.module('buiiltApp')
 
                     if ($rootScope.inComingSelectThread) {
                         $scope.selectUser($rootScope.inComingSelectThread.owner,'');
+                    } else if ($rootScope.inComingSelectTask) {
+                        $scope.selectUser($rootScope.inComingSelectTask.user, '');
                     } else {
                         if ($scope.currentTeamMembers.length > 0) {
                             $scope.selectUser($scope.currentTeamMembers[0]);
@@ -419,6 +421,8 @@ angular.module('buiiltApp')
 
                     if ($rootScope.inComingSelectThread) {
                         $scope.selectUser($rootScope.inComingSelectThread.owner,'');
+                    } else if ($rootScope.inComingSelectTask) {
+                        $scope.selectUser($rootScope.inComingSelectTask.user, '');
                     } else {
                         if ($scope.currentTeamMembers.length > 0) {
                             $scope.selectUser($scope.currentTeamMembers[0]);
@@ -502,6 +506,8 @@ angular.module('buiiltApp')
 
                     if ($rootScope.inComingSelectThread) {
                         $scope.selectUser($rootScope.inComingSelectThread.owner,'');
+                    } else if ($rootScope.inComingSelectTask) {
+                        $scope.selectUser($rootScope.inComingSelectTask.user, '');
                     } else {
                         if ($scope.currentTeamMembers.length > 0) {
                             $scope.selectUser($scope.currentTeamMembers[0]);
@@ -546,6 +552,8 @@ angular.module('buiiltApp')
 
                     if ($rootScope.inComingSelectThread) {
                         $scope.selectUser($rootScope.inComingSelectThread.owner,'');
+                    } else if ($rootScope.inComingSelectTask) {
+                        $scope.selectUser($rootScope.inComingSelectTask.user, '');
                     } else {
                         if ($scope.currentTeamMembers.length > 0) {
                             $scope.selectUser($scope.currentTeamMembers[0]);
@@ -600,6 +608,7 @@ angular.module('buiiltApp')
                         task.isFocus = true;
                     }
                 });
+                $timeout(function(){$("#taskTab > a").trigger('click')},1000);
             }
         });
         fileService.getFileInPeople({id: $stateParams.id}).$promise.then(function(res){
