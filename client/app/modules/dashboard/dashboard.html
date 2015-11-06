@@ -22,7 +22,7 @@
             </div>
             <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-if="currentList == 'chats' && !showDetailOfTask" class="collection-item row" ng-repeat="thread in myThreads | orderBy : ['dateEnd']" ng-click="goToThreadNewVersionDetail(thread)" style="cursor:pointer">
                 <div class="col s12">
-                    {{thread.user}} has mention you in {{thread.type}}.
+                    {{thread.user}} has mention you in {{thread.type}} with message {{thread.message}}.
                 </div>
             </div>
         </div>

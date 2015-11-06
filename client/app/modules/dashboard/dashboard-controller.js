@@ -7,18 +7,16 @@ angular.module('buiiltApp')
         $scope.currentUser = res;
         $scope.myThreads = [];
         _.each(myThreads, function(thread) {
-            console.log(thread);
             _.each(thread.messages, function(message, key) {
                 if (key == thread.messages.length -1 && _.indexOf(message.mentions, res._id) != -1) {
                     if (thread.people) {
-                        $scope.myThreads.push({project: thread.project, user: message.user.name, type: 'people'});                
+                        $scope.myThreads.push({project: thread.project, user: message.user.name, type: 'people', message: message.text});                
                     } else if (thread.type == 'board') {
-                        $scope.myThreads.push({project: thread.project, user: message.user.name, type: 'board'});                
+                        $scope.myThreads.push({project: thread.project, user: message.user.name, type: 'board', message: message.text});                
                     }
                 }
             });
         });
-    console.log($scope.myThreads);
     });
     // $scope.currentUser = $rootScope.currentUser;
     _.forEach($scope.myTasks,function(task) {

@@ -888,6 +888,9 @@ angular.module('buiiltApp')
         $scope.message.text += mention.name;  
         $scope.message.mentions.push(mention._id);
         $scope.showPopup = false;
+        $timeout(function(){ 
+            document.getElementById("textarea1-people-chat").focus();
+        },500);
     };
 
     $scope.$watch('message.text', function(newValue, oldValue) {
