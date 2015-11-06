@@ -147,7 +147,7 @@ angular.module('buiiltApp')
         if (message.length > tempTextLength) {
           text += message.substr(tempTextLength, message.length - tempTextLength);
         }
-        
+
       } else {
         text = message.substr(0, message.indexOf(mentions[0].name))+ "<span style='background-color:#D6DADC; padding: 5px'>"+mentions[0].name+"</span>";
         var tempTextLength = message.substr(0, message.indexOf(mentions[0].name)).length + mentions[0].name.length;
@@ -160,6 +160,8 @@ angular.module('buiiltApp')
           text += message.substr(tempTextLength, message.length - tempTextLength);
         }
       }
+    } else {
+      text = message;
     }
     return $sce.trustAsHtml("<p>"+text+"</p>");
   };

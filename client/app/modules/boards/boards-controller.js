@@ -210,6 +210,7 @@ angular.module('buiiltApp')
             if (message.element._id == board._id && message.referenceTo == "board-chat") {
                 board.hasUnreadMessage = true;
                 for (var i = board.messages.length - 1; i >= 0; i--) {
+                    board.messages[i].latestMessage = false;
                     if (board.messages[i].user._id != $scope.currentUser._id) {
                         board.messages[i].unread = true;
                         temp += 1;
@@ -217,6 +218,7 @@ angular.module('buiiltApp')
                         board.messages[i].unread = false;
                     }
                     if (temp == unreadMessagesNumber) {
+                        board.messages[i].latestMessage = true;
                         return false;
                     }
                 };
