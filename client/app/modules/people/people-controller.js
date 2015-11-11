@@ -524,6 +524,7 @@ angular.module('buiiltApp')
 
                 case 'subcontractor':
                     var subcontractors = [];
+                    $scope.inviterTypeText = 'BUILDER';
                     _.each($scope.invitePeople.subcontractors, function(subcontractor) {
                         if (subcontractor._id) {
                             if (subcontractor._id._id == $scope.currentUser._id || _.findIndex(subcontractor.teamMember, function(item){ return item._id == $scope.currentUser._id;}) != -1) {
@@ -605,6 +606,7 @@ angular.module('buiiltApp')
                 default:
                     break;
             }
+            console.log($scope.currentUser);
         });
     };
 

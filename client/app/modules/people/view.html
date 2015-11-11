@@ -33,7 +33,7 @@
             {{consultant.name}}
         </p>
 
-        <p ng-show="(currentUser.type == 'subcontractor' || currentUser.type == 'consultant') && currentUser.isLeader">INVITER</p>
+        <p ng-show="(currentUser.type == 'subcontractor' || currentUser.type == 'consultant') && currentUser.isLeader">{{inviterTypeText}}</p>
         <p ng-show="(currentUser.type == 'subcontractor' || currentUser.type == 'consultant') && currentUser.isLeader" class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px" ng-click="selectUser(invitePeople.inviter)" ng-style="invitePeople.inviter._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             <i class="tiny material-icons valign" style="color: #64B5F6; margin-right: 5px; font-size: 8px" ng-style="invitePeople.inviter.isOnline ? {'color': '#81C784'} : {'color': '#E0E0E0'}">brightness_1</i>
             {{invitePeople.inviter.name}}
@@ -113,7 +113,7 @@
             {{consultant.name}}
         </p>
 
-        <p ng-show="(currentUser.type == 'subcontractor' || currentUser.type == 'consultant') && currentUser.isLeader">INVITER</p>
+        <p ng-show="(currentUser.type == 'subcontractor' || currentUser.type == 'consultant') && currentUser.isLeader">{{inviterTypeText}}</p>
         <p ng-show="(currentUser.type == 'subcontractor' || currentUser.type == 'consultant') && currentUser.isLeader" class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px" ng-click="selectUser(invitePeople.inviter)" ng-style="invitePeople.inviter._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
             <i class="tiny material-icons valign" style="color: #64B5F6; margin-right: 5px; font-size: 8px" ng-style="invitePeople.inviter.isOnline ? {'color': '#81C784'} : {'color': '#E0E0E0'}">brightness_1</i>
             {{invitePeople.inviter.name}}
