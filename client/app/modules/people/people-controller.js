@@ -606,11 +606,68 @@ angular.module('buiiltApp')
                 default:
                     break;
             }
-            console.log($scope.currentUser);
         });
     };
 
     getAvailableUser();
+
+    function getUnreadMessage(selectedChatPeople) {
+        socket.emit('join',selectedChatPeople._id);
+        notificationService.get().$promise.then(function(res){
+            $scope.unreadMessages = res;
+            var unreadMessagesNumber = 0;
+            var temp = 0;
+            _.each($scope.unreadMessages, function(message){
+                if (message.element._id == $scope.selectedChatPeople._id && message.referenceTo == "people-chat") {
+                    unreadMessagesNumber++;
+                }
+            });
+            _.each($scope.unreadMessages, function(message){
+                if (message.element._id == $scope.selectedChatPeople._id && message.referenceTo == "people-chat") {
+                    $scope.selectedChatPeople.hasUnreadMessage = true;
+                    for (var i = $scope.selectedChatPeople.messages.length - 1; i >= 0; i--) {
+                        $scope.selectedChatPeople.messages[i].latestMessage = false;
+                        if ($scope.selectedChatPeople.messages[i].user._id != $scope.currentUser._id) {
+                            $scope.selectedChatPeople.messages[i].unread = true;
+                            temp += 1;
+                        } else {
+                            $scope.selectedChatPeople.messages[i].unread = false;
+                        }
+                        if (temp == unreadMessagesNumber) {
+                            $scope.selectedChatPeople.messages[i].latestMessage = true;
+                            return false;
+                        }
+                    };
+                } else {
+                    $scope.selectedChatPeople.hasUnreadMessage = false;
+                }
+            });
+            if ($scope.selectedChatPeople.hasUnreadMessage) {
+                $("div#peopleChatContent").scroll(function() {
+                    if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
+                        _.each($scope.unreadMessages, function(message){
+                            if (message.element._id == $scope.selectedChatPeople._id) {
+                                $timeout(function(){
+                                    notificationService.markAsRead({_id: message._id}).$promise.then(function(res){
+                                        $rootScope.$broadcast("notification:read", res);
+                                    });
+                                    $scope.selectedChatPeople.hasUnreadMessage = false;
+                                    _.each($scope.selectedChatPeople.messages, function(message){
+                                        message.unread = false;
+                                    });
+                                }, 2000);
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    };
+
+    socket.on('peopleChat:new', function (peopleChat) {
+        $scope.selectedChatPeople = peopleChat;
+        getUnreadMessage($scope.selectedChatPeople);
+    });
 
     socket.on('onlineUser', function(users) {
         var onlineUsersList = [];
@@ -934,64 +991,13 @@ angular.module('buiiltApp')
             {id: $scope.invitePeople._id},
             {project: $stateParams.id, user: user._id}
         ).$promise.then(function(res){
-            socket.emit('join',res._id);
             $scope.selectedChatPeople = res;
-            $scope.unreadMessages = $rootScope.unreadMessages;
-            var unreadMessagesNumber = 0;
-            var temp = 0;
-            _.each($scope.unreadMessages, function(message){
-                if (message.element._id == $scope.selectedChatPeople._id && message.referenceTo == "people-chat") {
-                    unreadMessagesNumber++;
-                }
-            });
-            _.each($scope.unreadMessages, function(message){
-                if (message.element._id == $scope.selectedChatPeople._id && message.referenceTo == "people-chat") {
-                    $scope.selectedChatPeople.hasUnreadMessage = true;
-                    for (var i = $scope.selectedChatPeople.messages.length - 1; i >= 0; i--) {
-                        $scope.selectedChatPeople.messages[i].latestMessage = false;
-                        if ($scope.selectedChatPeople.messages[i].user._id != $scope.currentUser._id) {
-                            $scope.selectedChatPeople.messages[i].unread = true;
-                            temp += 1;
-                        } else {
-                            $scope.selectedChatPeople.messages[i].unread = false;
-                        }
-                        if (temp == unreadMessagesNumber) {
-                            $scope.selectedChatPeople.messages[i].latestMessage = true;
-                            return false;
-                        }
-                    };
-                } else {
-                    $scope.selectedChatPeople.hasUnreadMessage = false;
-                }
-            });
-            if ($scope.selectedChatPeople.hasUnreadMessage) {
-                $("div#peopleChatContent").scroll(function() {
-                    if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
-                        _.each($scope.unreadMessages, function(message){
-                            if (message.element._id == $scope.selectedChatPeople._id) {
-                                $timeout(function(){
-                                    notificationService.markAsRead({_id: message._id}).$promise.then(function(res){
-                                        $rootScope.$broadcast("notification:read", res);
-                                    });
-                                    $scope.selectedChatPeople.hasUnreadMessage = false;
-                                    _.each($scope.selectedChatPeople.messages, function(message){
-                                        message.unread = false;
-                                    });
-                                }, 2000);
-                            }
-                        });
-                    }
-                });
-            }
+            getUnreadMessage($scope.selectedChatPeople);
             getAllChatMessageNotificationByUserInPeople($scope.selectedChatPeople);
         }, function(err){
             console.log(err);
         });
     };
-
-    socket.on('peopleChat:new', function (peopleChat) {
-        $scope.selectedChatPeople = peopleChat;
-    });
 
     $scope.enterMessage = function ($event) {
         if ($event.keyCode === 13) {
