@@ -312,7 +312,8 @@ ul.pagination {
 
 .feature-btn-wrapper {
     text-align: center;
-    margin: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
     font-size: 12px
 }
 
