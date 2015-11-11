@@ -475,51 +475,60 @@ angular.module('buiiltApp')
                     break;
 
                 case 'client':
-                    var clients = [];
-                    _.each($scope.invitePeople.clients, function(client) {
-                        if (client._id) {
-                            if (client._id._id == $scope.currentUser._id || _.findIndex(client.teamMember, function(item){ return item._id == $scope.currentUser._id;}) != -1) {
-                                clients.push(client._id);
-                                _.each(client.teamMember, function(member) {
-                                    clients.push(member);
-                                });
-                            }
+                    notificationService.get().$promise.then(function(res){
+                        var clients = [];
+                        _.each($scope.invitePeople.clients, function(client) {
+                            if (client._id) {
+                                if (client._id._id == $scope.currentUser._id || _.findIndex(client.teamMember, function(item){ return item._id == $scope.currentUser._id;}) != -1) {
+                                    clients.push(client._id);
+                                    _.each(client.teamMember, function(member) {
+                                        clients.push(member);
+                                    });
+                                }
 
-                            if (client._id._id == $scope.currentUser._id) {
-                                $scope.currentUser.isLeader = true;
-                            } else {
-                                $scope.currentUser.isLeader = false;
+                                if (client._id._id == $scope.currentUser._id) {
+                                    $scope.currentUser.isLeader = true;
+                                } else {
+                                    $scope.currentUser.isLeader = false;
+                                }
+                            }
+                        });
+                        _.each(clients, function(client) {
+                            client.unreadMessagesNumber = 0;
+                            _.each(res, function(item) {
+                                if (item.fromUser._id.toString() == client._id.toString()) {
+                                    client.unreadMessagesNumber++;
+                                }
+                            })
+                        });
+                        $scope.invitePeople.clients = clients;
+                        $scope.currentTeamMembers = clients;
+                        $scope.currentTeamMembers = _.uniq($scope.currentTeamMembers, '_id');
+                        _.remove($scope.currentTeamMembers, {_id: $scope.currentUser._id});
+
+                        var consultants = [];
+                        _.each($scope.invitePeople.consultants, function(consultant) {
+                            if (consultant._id) {
+                                consultant._id.inviter = consultant.inviter._id;
+                                consultant._id.hasSelect = consultant.hasSelect;
+                                if (consultant._id && consultant._id.inviter == $scope.currentUser._id) {
+                                    consultants.push(consultant._id);
+                                }
+                            }
+                        });
+                        $scope.invitePeople.consultants = consultants;
+                        if ($rootScope.inComingSelectThread) {
+                            $scope.selectUser($rootScope.inComingSelectThread.owner,'');
+                        } else if ($rootScope.inComingSelectTask) {
+                            $scope.selectUser($rootScope.inComingSelectTask.user, '');
+                        } else {
+                            if ($scope.currentTeamMembers.length > 0) {
+                                $scope.selectUser($scope.currentTeamMembers[0]);
+                            } else if ($scope.invitePeople.consultants.length > 0) {
+                                $scope.selectedUser($scope.invitePeople.consultants[0]);
                             }
                         }
                     });
-                    $scope.invitePeople.clients = clients;
-                    $scope.currentTeamMembers = clients;
-                    $scope.currentTeamMembers = _.uniq($scope.currentTeamMembers, '_id');
-                    _.remove($scope.currentTeamMembers, {_id: $scope.currentUser._id});
-
-                    var consultants = [];
-                    _.each($scope.invitePeople.consultants, function(consultant) {
-                        if (consultant._id) {
-                            consultant._id.inviter = consultant.inviter._id;
-                            consultant._id.hasSelect = consultant.hasSelect;
-                            if (consultant._id && consultant._id.inviter == $scope.currentUser._id) {
-                                consultants.push(consultant._id);
-                            }
-                        }
-                    });
-                    $scope.invitePeople.consultants = consultants;
-                    if ($rootScope.inComingSelectThread) {
-                        $scope.selectUser($rootScope.inComingSelectThread.owner,'');
-                    } else if ($rootScope.inComingSelectTask) {
-                        $scope.selectUser($rootScope.inComingSelectTask.user, '');
-                    } else {
-                        if ($scope.currentTeamMembers.length > 0) {
-                            $scope.selectUser($scope.currentTeamMembers[0]);
-                        } else if ($scope.invitePeople.consultants.length > 0) {
-                            $scope.selectedUser($scope.invitePeople.consultants[0]);
-                        }
-                    }
-                    
                     break;
 
                 case 'subcontractor':
@@ -617,9 +626,11 @@ angular.module('buiiltApp')
             $scope.unreadMessages = res;
             var unreadMessagesNumber = 0;
             var temp = 0;
+            selectedChatPeople.unreadMessagesNumber = 0;
             _.each($scope.unreadMessages, function(message){
                 if (message.element._id == $scope.selectedChatPeople._id && message.referenceTo == "people-chat") {
                     unreadMessagesNumber++;
+                    selectedChatPeople.unreadMessagesNumber++;
                 }
             });
             _.each($scope.unreadMessages, function(message){
@@ -650,6 +661,7 @@ angular.module('buiiltApp')
                                 $timeout(function(){
                                     notificationService.markAsRead({_id: message._id}).$promise.then(function(res){
                                         $rootScope.$broadcast("notification:read", res);
+                                        selectedChatPeople.unreadMessagesNumber -= 1;
                                     });
                                     $scope.selectedChatPeople.hasUnreadMessage = false;
                                     _.each($scope.selectedChatPeople.messages, function(message){
@@ -661,6 +673,7 @@ angular.module('buiiltApp')
                     }
                 });
             }
+            console.log(selectedChatPeople);
         });
     };
 

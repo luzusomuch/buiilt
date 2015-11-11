@@ -249,6 +249,7 @@ angular.module('buiiltApp')
                     board.hasUnreadMessage = false;
                 }
             });
+            console.log(board);
             if (board.hasUnreadMessage) {
                 $("div#boardChatContent").scroll(function() {
                     if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {

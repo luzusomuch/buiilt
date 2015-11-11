@@ -122,7 +122,7 @@ function run(){
                                     // team: result.team.toJSON(),
                                     user: result.user.toJSON(),
                                     registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + data._id,
-                                    subject: result.team.name + ' would like a quote'
+                                    subject: result.user.name + ' would like a quote'
                                 }, function(){});
                             }
                         });
