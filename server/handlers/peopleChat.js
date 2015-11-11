@@ -13,16 +13,21 @@ var mongoose = require('mongoose');
 
 EventBus.onSeries('PeopleChat.Updated', function(req, next) {
     _.remove(req.members, req.editUser._id);
-    var params = {
-        owners: req.members,
-        fromUser: req.editUser._id,
-        element: req,
-        referenceTo: 'people-chat',
-        type: 'chat'
-    };
-    NotificationHelper.create(params, function() {
-        next();
-    });
-    var data = _.last(req.messages);
-    PushNotificationHelper.getData(req.project,req._id,'People package', data.text, data.mentions, 'people');
+    var newestMessage = _.last(req.messages);
+    if (newestMessage.mentions.length > 0) {
+        var params = {
+            owners: newestMessage.mentions,
+            fromUser: req.editUser._id,
+            element: req,
+            referenceTo: 'people-chat',
+            type: 'chat'
+        };
+        NotificationHelper.create(params, function() {
+            next();
+        });
+        var data = _.last(req.messages);
+        PushNotificationHelper.getData(req.project,req._id,'People package', data.text, data.mentions, 'people');
+    } else {
+        return next();
+    }
 });

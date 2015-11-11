@@ -50,22 +50,28 @@ EventBus.onSeries('Board.Updated', function(board, next) {
         }
     } else if (board._modifiedPaths.indexOf('sendMessage') != -1) {
         var owners = [];
-        _.each(board.invitees, function(invitee) {
-            owners.push(invitee._id);
-        });
-        owners.push(board.owner);
-        var params = {
-            owners: owners,
-            fromUser: board.editUser._id,
-            element: board,
-            referenceTo: 'board-chat',
-            type: 'chat'
-        };
-        NotificationHelper.create(params, function() {
-            next();
-        });
-        var data = _.last(board.messages);
-        PushNotificationHelper.getData(board.project, board._id, board.name, data.text, data.mentions, 'board');
+        // _.each(board.invitees, function(invitee) {
+        //     owners.push(invitee._id);
+        // });
+        var newestMessage = _.last(board.messages);
+        if (newestMessage.mentions.length > 0) {
+            owners = newestMessage.mentions;
+            // owners.push(board.owner);
+            var params = {
+                owners: owners,
+                fromUser: board.editUser._id,
+                element: board,
+                referenceTo: 'board-chat',
+                type: 'chat'
+            };
+            NotificationHelper.create(params, function() {
+                next();
+            });
+            var data = _.last(board.messages);
+            PushNotificationHelper.getData(board.project, board._id, board.name, data.text, data.mentions, 'board');
+        } else {
+            return next();
+        }
     } else {
         return next();
     }

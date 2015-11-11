@@ -214,6 +214,7 @@ exports.create = function(req,res) {
       });
     } else {
       task.assignees = _.union(task.assignees, architectTeamLeader);
+      task._editUser = req.user;
       task.save(function(err) {
         if (err) {
           return res.send(500,err)
