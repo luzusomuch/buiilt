@@ -249,7 +249,6 @@ angular.module('buiiltApp')
                     board.hasUnreadMessage = false;
                 }
             });
-            console.log(board);
             if (board.hasUnreadMessage) {
                 $("div#boardChatContent").scroll(function() {
                     if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
@@ -258,6 +257,10 @@ angular.module('buiiltApp')
                                 if (message.element._id == board._id) {
                                     notificationService.markAsRead({_id: message._id}).$promise.then(function(res){
                                         $rootScope.$broadcast("notification:read", res);
+                                        board.unreadMessagesNumber--;
+                                        if (board.unreadMessagesNumber < 0) {
+                                            board.unreadMessagesNumber = 0;
+                                        }
                                     });
                                     board.hasUnreadMessage = false;
                                     _.each(board.messages, function(message){
@@ -313,59 +316,69 @@ angular.module('buiiltApp')
 
     $scope.boards = [];
     $scope.currentBoard = {};
-    boardService.getBoards({id: $stateParams.id}).$promise.then(function(res){
-        $scope.boards = res;
-        _.each($scope.boards, function(board) {
-            board.isOwner = false;
-            _.each(board.invitees, function(invitee){
-                if (invitee._id) {
-                    if (invitee._id._id == $scope.currentUser._id) {
-                        board.isOwner = true;
+    notificationService.get().$promise.then(function(totalMessages){
+        boardService.getBoards({id: $stateParams.id}).$promise.then(function(res){
+            $scope.boards = res;
+            _.each($scope.boards, function(board) {
+                board.isOwner = false;
+                _.each(board.invitees, function(invitee){
+                    if (invitee._id) {
+                        if (invitee._id._id == $scope.currentUser._id) {
+                            board.isOwner = true;
+                        }
                     }
+                });
+                board.unreadMessagesNumber = 0;
+                _.each(totalMessages, function(item) {
+                    console.log(item);
+                    console.log(board);
+                    if (item.element._id == board._id && item.owner._id == $scope.currentUser._id && item.referenceTo == 'board-chat') {
+                        board.unreadMessagesNumber++;
+                    }
+                });
+            });
+            _.each($scope.boards, function(board) {
+                if (board.isOwner || board.owner._id == $scope.currentUser._id) {
+                    $scope.currentBoard = board;
+                    return false;
                 }
             });
-        });
-        _.each($scope.boards, function(board) {
-            if (board.isOwner || board.owner._id == $scope.currentUser._id) {
-                $scope.currentBoard = board;
-                return false;
+
+            if ($rootScope.inComingSelectThread) {
+                _.each($scope.boards, function(board) {
+                    if (board._id == $rootScope.inComingSelectThread._id) {
+                        $scope.currentBoard = board;
+                    }
+                });
+                _.each($scope.currentBoard.messages, function(message) {
+                    message.isFocus = false;
+                    if (message._id == $rootScope.inComingSelectThread.messageId) {
+                        message.isFocus = true;
+                    }
+                });
+            }
+
+            if ($rootScope.inComingSelectTask) {
+                _.each($scope.boards, function(board) {
+                    if (board._id == $rootScope.inComingSelectTask.package._id) {
+                        $scope.currentBoard = board;
+                    }
+                });
+            }
+
+            $timeout(function(){
+                _.each($scope.currentBoard.messages, function(message) {
+                    message.isFocus = false;
+                });
+            }, 3000);
+
+            if ($scope.currentBoard._id) {
+                getUnreadMessage($scope.currentBoard);
+                getAvailable($scope.currentBoard);
+                getTasksAndFilesByBoard($scope.currentBoard);
+                getAllChatMessageNotificationByBoard($scope.currentBoard);
             }
         });
-
-        if ($rootScope.inComingSelectThread) {
-            _.each($scope.boards, function(board) {
-                if (board._id == $rootScope.inComingSelectThread._id) {
-                    $scope.currentBoard = board;
-                }
-            });
-            _.each($scope.currentBoard.messages, function(message) {
-                message.isFocus = false;
-                if (message._id == $rootScope.inComingSelectThread.messageId) {
-                    message.isFocus = true;
-                }
-            });
-        }
-
-        if ($rootScope.inComingSelectTask) {
-            _.each($scope.boards, function(board) {
-                if (board._id == $rootScope.inComingSelectTask.package._id) {
-                    $scope.currentBoard = board;
-                }
-            });
-        }
-
-        $timeout(function(){
-            _.each($scope.currentBoard.messages, function(message) {
-                message.isFocus = false;
-            });
-        }, 3000);
-
-        if ($scope.currentBoard._id) {
-            getUnreadMessage($scope.currentBoard);
-            getAvailable($scope.currentBoard);
-            getTasksAndFilesByBoard($scope.currentBoard);
-            getAllChatMessageNotificationByBoard($scope.currentBoard);
-        }
     });
 
     getAvailableAddedToNewBoard();

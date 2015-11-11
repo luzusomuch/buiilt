@@ -4,7 +4,8 @@
         <p ng-click="setNewBoard()" style="margin-left: 10px; color: black" class="modal-trigger margin-10-0 feature-btn-wrapper" href="#new_board"><a class="feature-btn">ADD A BOARD</a></p>
         <p class="margin-10-0">BOARDS</p>
         <p class="margin-10-0 font-weight-600" style="margin-left: 10px;" ng-repeat="board in boards" ng-click="selectBoard(board)" ng-style="board._id == currentBoard._id ? {'color': '#64B5F6'} : {'color': 'black'}" ng-if="board.isOwner || board.owner._id == currentUser._id">
-            {{board.name}}
+            {{board.name}} 
+            <span style="background-color: #eee; padding: 5px; margin-left: 5px;">{{board.unreadMessagesNumber}}</span>
         </p>
         <!-- <p style="margin-left: 10px; color: #42A5F5"><strong>Board 3</strong></p> -->
 
