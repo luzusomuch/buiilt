@@ -74,6 +74,24 @@ angular.module('buiiltApp')
                             $scope.newBoardPeople.push(consultant._id);
                         }
                     });
+                } else if ($scope.currentUser.type == 'subcontractor') {
+                    _.each(board.subcontractors, function(item) {
+                        if (item._id && item.hasSelect) {
+                            if (item._id._id == $scope.currentUser._id) {
+                                $scope.availableInvite.push(item.inviter);
+                                $scope.newBoardPeople.push(item.inviter);
+                            }
+                        }
+                    });
+                } else if ($scope.currentUser.type == 'consultant') {
+                    _.each(board.consultants, function(item) {
+                        if (item._id && item.hasSelect) {
+                            if (item._id._id == $scope.currentUser._id) {
+                                $scope.availableInvite.push(item.inviter);
+                                $scope.newBoardPeople.push(item.inviter);
+                            }
+                        }
+                    });
                 }
             } else if ($scope.builderPackage.projectManager.type == 'builder') {
                 if ($scope.currentUser.type == 'builder') {
@@ -114,7 +132,25 @@ angular.module('buiiltApp')
                             $scope.newBoardPeople.push(consultant._id);
                         }
                     });
-                } 
+                } else if ($scope.currentUser.type == 'subcontractor') {
+                    _.each(board.subcontractors, function(item) {
+                        if (item._id && item.hasSelect) {
+                            if (item._id._id == $scope.currentUser._id) {
+                                $scope.availableInvite.push(item.inviter);
+                                $scope.newBoardPeople.push(item.inviter);
+                            }
+                        }
+                    });
+                } else if ($scope.currentUser.type == 'consultant') {
+                    _.each(board.consultants, function(item) {
+                        if (item._id && item.hasSelect) {
+                            if (item._id._id == $scope.currentUser._id) {
+                                $scope.availableInvite.push(item.inviter);
+                                $scope.newBoardPeople.push(item.inviter);
+                            }
+                        }
+                    });
+                }
             } else {
                 if ($scope.currentUser.type == 'client') {
                     _.each(board.builders, function(builder) {
@@ -150,6 +186,24 @@ angular.module('buiiltApp')
                             }
                         });
                     }
+                } else if ($scope.currentUser.type == 'subcontractor') {
+                    _.each(board.subcontractors, function(item) {
+                        if (item._id && item.hasSelect) {
+                            if (item._id._id == $scope.currentUser._id) {
+                                $scope.availableInvite.push(item.inviter);
+                                $scope.newBoardPeople.push(item.inviter);
+                            }
+                        }
+                    });
+                } else if ($scope.currentUser.type == 'consultant') {
+                    _.each(board.consultants, function(item) {
+                        if (item._id && item.hasSelect) {
+                            if (item._id._id == $scope.currentUser._id) {
+                                $scope.availableInvite.push(item.inviter);
+                                $scope.newBoardPeople.push(item.inviter);
+                            }
+                        }
+                    });
                 }
             }
             if ($scope.team._id) {
