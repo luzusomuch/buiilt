@@ -130,13 +130,21 @@ exports.countTotal = function(req,res) {
     if (err) {
       return res.send(500,err);
     }
+    var notificationsWithoutMention = [];
     _.each(notifications, function(item) {
-      if (item.referenceTo == "people-chat-without-mention") {
-        _.remove(notifications, {_id: item._id});
+      if (item) {
+        if (item.referenceTo == "people-chat-without-mention" || item.referenceTo == "board-chat-without-mention") {
+          notificationsWithoutMention.push(item);
+        }
       }
     });
+    _.each(notificationsWithoutMention, function(item) {
+      _.remove(notifications, {_id: item._id});
+    });
     var count = notifications.length;
+    console.log(count);
     return res.json({count : count});
+    
   })
 };
 

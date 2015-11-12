@@ -282,9 +282,12 @@ angular.module('buiiltApp')
                 if (message.element._id == board._id && message.referenceTo == "board-chat") {
                     unreadMessagesNumber++;
                 }
+                if (message.element._id == board._id && message.referenceTo == "board-chat-without-mention") {
+                    unreadMessagesNumber++;
+                }
             });
             _.each($scope.unreadMessages, function(message){
-                if (message.element._id == board._id && message.referenceTo == "board-chat") {
+                if (message.element._id == board._id && (message.referenceTo == "board-chat" || message.referenceTo == "board-chat-without-mention")) {
                     board.hasUnreadMessage = true;
                     for (var i = board.messages.length - 1; i >= 0; i--) {
                         board.messages[i].latestMessage = false;

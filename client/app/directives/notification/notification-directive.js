@@ -341,15 +341,24 @@ angular.module('buiiltApp')
             .then(function(res) {
               $scope.total = res.count;
             });
+
           var getNotifications = function(limit) {
             if ($scope.readMore) {
               notificationService.get({limit : limit}).$promise
                 .then(function(res) {
                   $scope.notifications = res;
-                  _.each($scope.notifications, function(item) {
-                    if (item.referenceTo == "people-chat-without-mention") {
-                      _.remove($scope.notifications, {_id: item._id});
+                  var notificationsWithoutMention = [];
+                  _.each(res, function(item) {
+                    if (item) {
+                      if (item.referenceTo == "people-chat-without-mention") {
+                        notificationsWithoutMention.push(item);
+                      } else if (item.referenceTo == "board-chat-without-mention") {
+                        notificationsWithoutMention.push(item);
+                      }
                     }
+                  });
+                  _.each(notificationsWithoutMention, function(item) {
+                    _.remove($scope.notifications, {_id: item._id});
                   });
                   if (limit > res.length) {
                     $scope.readMore = false;
@@ -394,11 +403,13 @@ angular.module('buiiltApp')
 
           getNotifications(limit);
           socket.on('notification:new', function (notification) {
-            if (notification && notification.referenceTo !== 'people-chat-without-mention') {
+            console.log(notification);
+            if (notification && notification.referenceTo !== 'people-chat-without-mention' && notification.referenceTo !== 'board-chat-without-mention') {
+              console.log('aaaaaaaaaaaaaa');
               $scope.notifications.unshift(notification);
               $scope.total++;
               $scope.$apply();
-            }
+            } else if (true) {};
           });
 
           socket.on('notification:read',function(notifications) {
