@@ -569,6 +569,20 @@ exports.invitePeople = function(req, res) {
                             }
                         });
                         setTimeout(function() {
+                            _.each(subcontractors, function(item) {
+                                if (item.inviter == req.user._id && !item.hasSelect) {
+                                    if (item._id) {
+                                        User.findById(item._id, function(err, user) {
+                                            if (err) {return res.send(500,err);}
+                                            if (!user) {return res.send(404);}
+                                            var index = user.projects.indexOf(people.project);
+                                            user.projects.splice(index,1);
+                                            user.markModified('projects');
+                                            user.save();
+                                        });
+                                    }
+                                }
+                            });
                             people.subcontractors = subcontractors;
                             people._newInviteeNotSignUp = newInviteeNotSignUp;
                             people._newInviteeSignUpAlready = newInviteeSignUpAlready;
@@ -694,7 +708,7 @@ exports.invitePeople = function(req, res) {
                             }
                         });
                     } else {
-                        var consultants = [];
+                        var consultants = people.consultants;
                         User.findOne({email: invite.email}, function(err, consultant) {
                             if (err) {return res.send(500,err);}
                             if (!consultant) {
@@ -719,6 +733,20 @@ exports.invitePeople = function(req, res) {
                             }
                         });
                         setTimeout(function() {
+                            _.each(consultants, function(item) {
+                                if (item.inviter == req.user._id && !item.hasSelect) {
+                                    if (item._id) {
+                                        User.findById(item._id, function(err, user) {
+                                            if (err) {return res.send(500,err);}
+                                            if (!user) {return res.send(404);}
+                                            var index = user.projects.indexOf(people.project);
+                                            user.projects.splice(index,1);
+                                            user.markModified('projects');
+                                            user.save();
+                                        });
+                                    }
+                                }
+                            });
                             people.consultants = consultants;
                             people._newInviteeNotSignUp = newInviteeNotSignUp;
                             people._newInviteeSignUpAlready = newInviteeSignUpAlready;
