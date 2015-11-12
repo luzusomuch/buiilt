@@ -126,10 +126,16 @@ exports.allRead = function(req,res) {
 
 exports.countTotal = function(req,res) {
   var user = req.user;
-  Notification.find({owner : user._id, unread : true}).count(function(err,count) {
+  Notification.find({owner : user._id, unread : true}).exec(function(err,notifications) {
     if (err) {
       return res.send(500,err);
     }
+    _.each(notifications, function(item) {
+      if (item.referenceTo == "people-chat-without-mention") {
+        _.remove(notifications, {_id: item._id});
+      }
+    });
+    var count = notifications.length;
     return res.json({count : count});
   })
 };

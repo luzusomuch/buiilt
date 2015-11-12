@@ -780,8 +780,8 @@ angular.module('buiiltApp')
 
     function getUnreadMessage(selectedChatPeople) {
         socket.emit('join',selectedChatPeople._id);
-        console.log(selectedChatPeople);
         notificationService.get().$promise.then(function(res){
+            console.log(res);
             $scope.unreadMessages = res;
             var unreadMessagesNumber = 0;
             var temp = 0;
@@ -791,9 +791,13 @@ angular.module('buiiltApp')
                     unreadMessagesNumber++;
                     selectedChatPeople.unreadMessagesNumber++;
                 }
+                if (message.element._id == $scope.selectedChatPeople._id && message.referenceTo == "people-chat-without-mention") {
+                    unreadMessagesNumber++;
+                }
             });
+            console.log(unreadMessagesNumber);
             _.each($scope.unreadMessages, function(message){
-                if (message.element._id == $scope.selectedChatPeople._id && message.referenceTo == "people-chat") {
+                if (message.element._id == $scope.selectedChatPeople._id && (message.referenceTo == "people-chat" || message.referenceTo == "people-chat-without-mention")) {
                     $scope.selectedChatPeople.hasUnreadMessage = true;
                     for (var i = $scope.selectedChatPeople.messages.length - 1; i >= 0; i--) {
                         $scope.selectedChatPeople.messages[i].latestMessage = false;

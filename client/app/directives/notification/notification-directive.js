@@ -339,7 +339,6 @@ angular.module('buiiltApp')
 
           notificationService.getTotal().$promise
             .then(function(res) {
-              console.log(res);
               $scope.total = res.count;
             });
           var getNotifications = function(limit) {
@@ -347,6 +346,11 @@ angular.module('buiiltApp')
               notificationService.get({limit : limit}).$promise
                 .then(function(res) {
                   $scope.notifications = res;
+                  _.each($scope.notifications, function(item) {
+                    if (item.referenceTo == "people-chat-without-mention") {
+                      _.remove($scope.notifications, {_id: item._id});
+                    }
+                  });
                   if (limit > res.length) {
                     $scope.readMore = false;
                   }
@@ -390,7 +394,7 @@ angular.module('buiiltApp')
 
           getNotifications(limit);
           socket.on('notification:new', function (notification) {
-            if (notification) {
+            if (notification && notification.referenceTo !== 'people-chat-without-mention') {
               $scope.notifications.unshift(notification);
               $scope.total++;
               $scope.$apply();

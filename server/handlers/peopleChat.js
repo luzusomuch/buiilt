@@ -32,6 +32,15 @@ EventBus.onSeries('PeopleChat.Updated', function(req, next) {
             return next();
         }
     } else {
-        return next();
+        var params = {
+            owners: req.members,
+            fromUser: req.editUser._id,
+            element: req,
+            referenceTo: 'people-chat-without-mention',
+            type: 'chat'
+        };
+        NotificationHelper.create(params, function() {
+            next();
+        });
     }
 });
