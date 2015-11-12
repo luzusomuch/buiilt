@@ -403,9 +403,7 @@ angular.module('buiiltApp')
 
           getNotifications(limit);
           socket.on('notification:new', function (notification) {
-            console.log(notification);
             if (notification && notification.referenceTo !== 'people-chat-without-mention' && notification.referenceTo !== 'board-chat-without-mention') {
-              console.log('aaaaaaaaaaaaaa');
               $scope.notifications.unshift(notification);
               $scope.total++;
               $scope.$apply();

@@ -741,13 +741,15 @@ angular.module('buiiltApp')
             $scope.unreadMessages = res;
             var unreadMessagesNumber = 0;
             var temp = 0;
-            selectedChatPeople.unreadMessagesNumber = 0;
+            if (!selectedChatPeople.unreadMessagesNumber) {
+                selectedChatPeople.unreadMessagesNumber = 0;
+            }
             _.each($scope.unreadMessages, function(message){
-                if (message.element._id == $scope.selectedChatPeople._id && message.referenceTo == "people-chat") {
+                if (message.element._id == selectedChatPeople._id && message.referenceTo == "people-chat") {
                     unreadMessagesNumber++;
                     selectedChatPeople.unreadMessagesNumber++;
                 }
-                if (message.element._id == $scope.selectedChatPeople._id && message.referenceTo == "people-chat-without-mention") {
+                if (message.element._id == selectedChatPeople._id && message.referenceTo == "people-chat-without-mention") {
                     unreadMessagesNumber++;
                     selectedChatPeople.unreadMessagesNumber++;
                 }
@@ -815,6 +817,9 @@ angular.module('buiiltApp')
                                                 consultant.unreadMessagesNumber = selectedChatPeople.unreadMessagesNumber;
                                             }
                                         });
+                                        if ($scope.currentUser.type == "subcontractor" || $scope.currentUser.type == "consultant") {
+                                            $scope.invitePeople.inviter.unreadMessagesNumber = selectedChatPeople.unreadMessagesNumber;
+                                        }
                                     });
                                     $scope.selectedChatPeople.hasUnreadMessage = false;
                                     _.each($scope.selectedChatPeople.messages, function(message){
@@ -830,9 +835,15 @@ angular.module('buiiltApp')
     };
 
     socket.on('peopleChat:new', function (peopleChat) {
-        if (peopleChat._id == $scope.selectedChatPeople) {
+        if (peopleChat._id == $scope.selectedChatPeople._id) {
+            var latestMessage = _.last(peopleChat.messages);
+            if ($scope.currentUser.type == "consultant" || $scope.currentUser.type == "subcontractor") {
+                if (latestMessage.user._id == $scope.invitePeople.inviter._id) {
+                    $scope.invitePeople.inviter.unreadMessagesNumber++;
+                }
+            }
             $scope.selectedChatPeople = peopleChat;
-            getUnreadMessage($scope.selectedChatPeople);
+            getUnreadMessage(peopleChat);
         } else {
             _.each($scope.currentTeamMembers, function(member) {
                 if (member._id == peopleChat.owner) {
