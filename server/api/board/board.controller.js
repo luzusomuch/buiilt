@@ -128,3 +128,30 @@ exports.getBoardIOS = function(req, res) {
         return res.send(200,board);
     });
 };
+
+exports.replyMessageFromEmail = function(req, res) {
+    console.log('aaaaaaaaaaaaaaaaa');
+    console.log(req.params.id);
+    console.log(req.params.replier);
+    console.log(req.body);
+    Board.findById(req.params.id, function(err, board) {
+        if (err) {return res.send(500,err);}
+        if (!board) {console.log("no board found");return res.send(404);}
+        console.log(board);
+        board.messages.push({
+            user: req.params.replier,
+            text: req.body.message,
+            mentions: [],
+            sendAt: new Date()
+        });
+        User.findById(req.params.replier, function(err, user) {
+            if (err) {return res.send(500,err);}
+            if (!user) {console.log("no email found");return res.send(404);}
+            board._editUser = user;
+            board.save(function(err) {
+                if (err) {return res.send(500,err);}
+                return res.send(200,"Your message has been send.");
+            });
+        });
+    });
+};

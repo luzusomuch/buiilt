@@ -59,7 +59,6 @@ function onConnect(socket) {
     socket.userId = id;
     socket.join(id);
     listOnlineUser.push(socket.userId);
-    console.log(listOnlineUser);
     uniqueUserList = _.uniq(listOnlineUser);
     _.each(uniqueUserList, function(user){
       EventBus.emit('socket:emit', {
@@ -108,7 +107,6 @@ module.exports = function (socketio) {
     socket.on('disconnect', function () {
       onDisconnect(socket);
       console.info('[%s] DISCONNECTED', socket.address);
-      console.log(socket.userId);
       if (socket.userId) {
         var abc = _.remove(uniqueUserList, function(item){
           return item == socket.userId.toString();

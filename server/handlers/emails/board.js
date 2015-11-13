@@ -88,6 +88,41 @@ EventBus.onSeries('Board.Updated', function(board, next){
         } else {
             return next();
         }
+    } else if (board._modifiedPaths.indexOf('sendMessage') != -1) {
+        console.log('aaaaaaaaaaaaaaaa');
+        console.log(board);
+        var from = board.editUser.firstName + " " + board.editUser.lastName + "<"+board.editUser.email+">";
+        var newestMessage = _.last(board.messages);
+        if (newestMessage.mentions.length > 0) {
+            async.parallel({
+                project: function(cb) {
+                    Project.findById(board.project, cb);
+                }
+            }, function(err,result) {
+                async.each(newestMessage.mentions, function(mention, cb) {
+                    User.findById(mention, function(err, user) {
+                        if (err || !user) {return cb();}
+                        else {
+                            Mailer.sendMail('new-message.html', from, user.email, {
+                                newestMessage: newestMessage,
+                                sendBy: board.editUser,
+                                user: user.toJSON(),
+                                project: result.project.toJSON(),
+                                board: board,
+                                replyMessageLink : config.baseUrl + "api/boards/" + board._id + "/" + user._id.toString() + "/reply-message-from-email",
+                                subject: 'Join ' + result.project.name + ' on buiilt'
+                            },function(){
+                                return next();
+                            });
+                        }
+                    });
+                }, function() {
+                    return next();
+                });
+            });
+        } else {
+            return next();
+        }
     } else {
         return next();
     }
