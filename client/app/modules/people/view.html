@@ -257,7 +257,7 @@
                     <p class="feature-btn-wrapper"><a class="modal-trigger feature-btn" href="#new_attachment">ADD AN ATTACHMENT</a></p>
                 </div>
                 <div class="attachment-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-repeat="file in files" ng-if="file.isOwner">
-                    <p class="margin-10-0"><a href="#modal-attachment-detail-{{file._id}}" class="modal-trigger">{{file.title}}</a></p>
+                    <p class="margin-10-0"><a href="#modal-attachment-detail-{{file._id}}" class="modal-trigger">{{file.title}}(Version: {{file.version + 1}})</a></p>
                 </div>
             </div>
             <div id="test3" class="col s12" style="height: 65vh; overflow-y: scroll">
@@ -284,7 +284,7 @@
             <div class="row">
                 <input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/>
             </div>
-            <div class="row">
+            <!-- <div class="row">
                 <label>Title</label>
                 <textarea id="docAttachTitle" class="materialize-textarea" ng-model="uploadFile.title" id="textarea1" name="title" required></textarea>
                 <p class="validate-message" ng-if="uploadForm.title.$error.required || uploadFile.title == ' '">Document title is required</p>
@@ -293,7 +293,7 @@
                 <label>Description</label>
                 <textarea id="docAttachDesc" name="description" class="materialize-textarea" ng-model="uploadFile.desc" id="textarea1" required></textarea>
                 <p class="validate-message" ng-if="uploadForm.description.$error.required || uploadFile.description == ' '">Document description is required</p>
-            </div>
+            </div> -->
             <!-- <div class="row">
                 <p>Assignees</p>
                 <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="assignee in uploadFile.assignees">

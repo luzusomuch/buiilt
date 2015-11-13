@@ -96,7 +96,7 @@
                     <p class="feature-btn-wrapper"><a class="modal-trigger feature-btn" href="#new_attachment">ADD AN ATTACHMENT</a></p>
                 </div>
                 <div class="attachment-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-repeat="file in files">
-                    <p class="margin-10-0"><a href="#modal-attachment-detail-{{file._id}}" class="modal-trigger">{{file.title}}</a></p>
+                    <p class="margin-10-0"><a href="#modal-attachment-detail-{{file._id}}" class="modal-trigger">{{file.title}}(Version: {{file.version + 1}})</a></p>
                 </div>
             </div>
 
@@ -138,16 +138,6 @@
             <h5>New Attachment</h5>
             <div class="row">
                 <input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/>
-            </div>
-            <div class="row">
-                <label>Title</label>
-                <textarea id="docAttachTitle" class="materialize-textarea" ng-model="uploadFile.title" id="textarea1" name="title" required></textarea>
-                <p class="validate-message" ng-if="uploadForm.title.$error.required || uploadFile.title == ' '">Document title is required</p>
-            </div>
-            <div class="row">
-                <label>Description</label>
-                <textarea id="docAttachDesc" name="description" class="materialize-textarea" ng-model="uploadFile.desc" id="textarea1" required></textarea>
-                <p class="validate-message" ng-if="uploadForm.description.$error.required || uploadFile.description == ' '">Document description is required</p>
             </div>
         </div>
         <div class="modal-footer">

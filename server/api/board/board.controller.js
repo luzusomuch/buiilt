@@ -73,6 +73,7 @@ exports.invitePeople = function(req, res) {
 };
 
 exports.getBoards = function(req, res) {
+    console.log(req.params.id);
     Board.find({project: req.params.id})
     .populate('owner', '_id email name')
     .populate('invitees._id', '_id email name')
@@ -112,5 +113,18 @@ exports.sendMessage = function(req, res) {
                 return res.send(200, board);
             });
         });
+    });
+};
+
+exports.getBoardIOS = function(req, res) {
+    Board.findById(req.params.id)
+    .populate('owner', '_id email name')
+    .populate('invitees._id', '_id email name')
+    .populate('messages.user', '_id email name')
+    .populate('messages.mentions', '_id email name')
+    .exec(function(err, board) {
+        if (err) {return res.send(500,err);}
+        if (!board) {return res.send(404);}
+        return res.send(200,board);
     });
 };

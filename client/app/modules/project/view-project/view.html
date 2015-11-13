@@ -3,9 +3,6 @@
        <div class="row collection-header" style="margin-bottom:0px">
 
             <div class="col right" style="margin-top: 10px">
-              <!-- THIS IS THE OLD VERSION -->
-               <!-- <a ng-show="isLeader && (currentTeam.type == 'builder'|| currentTeam.type == 'architect')" class="modal-trigger" data-target="upload" href="#modal_attachDocument" id="uploadNewDoc" style="margin-left:30px; padding: 5px; font-size: 12px; color: black" ng-click="startUploadDocWizard()">UPLOAD NEW DOCUMENT</a> -->
-               <!-- THIS IS THE NEW VERSION -->
                <a ng-show="currentUser._id == builderPackage.projectManager._id._id" class="modal-trigger" data-target="upload" href="#modal_attachDocument" id="uploadNewDoc" style="margin-left:30px; padding: 5px; font-size: 12px; color: black" ng-click="startUploadDocWizard()">UPLOAD NEW DOCUMENT</a>
                <a id="downloadAll" style="margin-left:30px; padding: 5px; font-size: 12px; color: black; cursor:pointer;">DOWNLOAD ALL DOCUMENTS</a>
                <span ng-repeat="file in files" style="display:none">
@@ -28,24 +25,24 @@
        <div class="notShowFileDetail" style="height: {{contentHeight -15}}px; overflow-y: auto; background-color: white; overflow-x: hidden">
             <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-if="!hasFilter" class="collection-item row" ng-repeat="file in files" style="cursor:pointer">
                 <a href="#view-file-detail-{{file._id}}" class="modal-trigger">
-                  <div class="col s10"> {{file.title}}</div>
-                  <div class="col s12">
+                  <div class="col s12"> {{file.title}}(Version: {{file.version + 1}})</div>
+                  <!-- <div class="col s12">
                       <div style="font-size:12px;">
                         {{file.description}} - Version {{file.version +1}} - {{file.createdAt | date: longDate}}
                       </div>
-                  </div>
+                  </div> -->
                 </a>
             </div>
 
             <div ng-mouseover="activeHover($event)" ng-mouseleave="removeHover($event)" ng-if="hasFilter" class="collection-item row" ng-repeat="file in files | filter: filterValue" style="cursor:pointer">
                 <a href="#view-file-detail-{{file._id}}" class="modal-trigger">
-                  <div class="col s10"> {{file.title}}
+                  <div class="col s12"> {{file.title}}(Version: {{file.version + 1}})
                   </div>
-                  <div class="col s12">
+                  <!-- <div class="col s12">
                       <div style="font-size:12px;">
                         {{file.description}} - Version {{file.version +1}} - {{file.createdAt | date: longDate}}
                       </div>
-                  </div>
+                  </div> -->
                 </a>
             </div>
        </div>
@@ -62,41 +59,6 @@
            </div>
          </div>
        </div>
-       <div style="height: {{contentHeight -15}}px; overflow-y: auto; background-color: white; display: none; overflow-x: hidden" class="valign-wrapper showFileDetail">
-          <!-- if there is a document uploaded in project -->
-          <!-- <div data-current="true" class="col s8 offset-s2 center valign" ng-if="!file.isSendToDocumentation">
-            <p>{{file.title}}</p>
-            <p>{{file.description}}</p>
-            <div file-picker-previewer type="filepicker-preview" url="{{file.path}}" style="height:500px;"> </div>
-            <span style="cursor:pointer;" ng-click="likeDocument(file);">
-              <div class="col s4" style="display:inline-block">{{(file.isInterested) ? 'Dislike' : 'Like'}}</div>
-              <div class="col s4" style="display:inline-block">{{file.totalLike}} Like</div>
-              <div class="col s4" style="display:inline-block">
-                <p style="cursor:pointer;">
-                  <a href="#" ng-click="downloadFile(file)">Download</a>
-                </p>
-              </div>
-            </span>
-            <p>{{file.title}} <span><em>Revision {{file.version +1 }} of {{file.version +1 }}</em></span></p>
-          </div> -->
-
-          <!-- if there is a document send by design package -->
-          <!-- <div data-current="true" class="col s8 offset-s2 center valign" ng-switch="file.mimeType" ng-if="file.isSendToDocumentation">
-            <p>{{file.title}}</p>
-            <p>{{file.description}}</p>
-            <div file-picker-previewer type="filepicker-preview" url="{{file.path}}" style="height:500px;"> </div>
-            <span style="cursor:pointer;" ng-click="likeDocument(file);">
-              <div class="col s4" style="display:inline-block">{{(file.isInterested) ? 'Dislike' : 'Like'}}</div>
-              <div class="col s4" style="display:inline-block">{{file.totalLike}} Like</div>
-              <div class="col s4" style="display:inline-block">
-                <p style="cursor:pointer;">
-                  <a href="#" ng-click="downloadFile(file)">Download</a>
-                </p>
-              </div>
-            </span>
-            <p>{{file.title}} <span><em>Revision {{file.version +1 }} of {{file.version +1 }}</em></span></p>
-          </div> -->
-       </div>
    </div>
 </div>
 
@@ -107,79 +69,25 @@
 <div id="uploadReversion" class="modal modal-fixed-footer">
   <form ng-submit="uploadReversionDocument()" name="uploadForm">
   <div class="modal-content">
-  <!-- <div class="row" style="margin-top: 50px">
-    <div class="col s8 offset-s2">
-      <div class="file-field input-field">
-        <div class="btn tooltipped" data-position="top" data-delay="1" data-tooltip="Attach a File">
-          <i class="mdi-editor-attach-file"></i>
-          <input type="file" nv-file-select="" uploader="uploader"/>
-        </div>
-      </div>
-      <div class="row">
-        <div class="input-field col s8 offset-s2">
-          <textarea class="materialize-textarea" ng-model="file.title" id="textarea1"></textarea>
-          <label for="">Title</label>
-        </div>
-      </div>
-      <div ng-show="uploader.queue.length" class="form-group">
-        <div ng-repeat="item in uploader.queue" ng-if="$last">
-          <div class="row">
-            <div class="input-field col s8 offset-s2">
-              <input type="text" ng-model="item.file.name" disabled>
-              <label for="">File name</label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="input-field col s8 offset-s2">
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="input-field col s8 offset-s2">
-          <textarea class="materialize-textarea" ng-model="file.description" id="textarea1"></textarea>
-          <label for="">Description</label>
-        </div>
-      </div>
-      <div class="row">
-        <div class="input-field col s8 offset-s2">
-          <p>Current tags: </p>
-          <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="tag in selectedTags">
-            {{tag}}<span><a href="#!" ng-click="deselect(tag,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="input-field col s8 offset-s2">
-          <p>Avaiable tags: </p>
-          <a href="#!" ng-click="selectTag(tag, $index)" ng-repeat="tag in tags">
-            <div class="card col" style="padding: 5px; margin-left: 10px">
-              {{tag}}
-            </div>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div> -->
-  <div class="row">
+  <!-- <div class="row">
     <div class="input-field col s8 offset-s2">
       <textarea id="docAttachTitle" class="materialize-textarea" ng-model="uploadReversionFile.title" id="textarea1" name="title" required></textarea>
       <label for="">Title</label>
       <p class="validate-message" ng-if="uploadForm.title.$error.required || uploadFile.title == ' '">Document name is required</p>
     </div>
-  </div>
+  </div> -->
   <div class="row">
     <div class="input-field col s8 offset-s2">
       <input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/>
     </div>
   </div>
-  <div class="row">
+  <!-- <div class="row">
     <div class="input-field col s8 offset-s2">
       <textarea id="docAttachDesc" name="description" class="materialize-textarea" ng-model="uploadReversionFile.description" id="textarea1" required></textarea>
       <label for="">Description</label>
       <p class="validate-message" ng-if="uploadForm.description.$error.required || uploadFile.description == ' '">Document description is required</p>
     </div>
-  </div>
+  </div> -->
   <div class="row">
       <div class="input-field col s8 offset-s2">
         <p>Current tags: </p>
