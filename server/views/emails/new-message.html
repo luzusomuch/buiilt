@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<p>You have a new message in <%= board.name %> from <%= sendBy.name %></p>
+<p>You have a new message in <%= place %> from <%= sendBy.name %></p>
 <p>--------------------------</p>
 <p>
     <%= newestMessage.text %>
@@ -10,8 +10,8 @@
 <p>--------------------------</p>
 
 <form action="<%= replyMessageLink %>" method="POST">
-    <label for="message">Add your reply message below</label>
-    <input type="text" id="message" name="message">
+    <label for="message">Add your reply message below</label> <br>
+    <input type="text" id="message" name="message"> <br>
     <button type="submit">Send Message</button>
 </form>
 

@@ -130,14 +130,9 @@ exports.getBoardIOS = function(req, res) {
 };
 
 exports.replyMessageFromEmail = function(req, res) {
-    console.log('aaaaaaaaaaaaaaaaa');
-    console.log(req.params.id);
-    console.log(req.params.replier);
-    console.log(req.body);
     Board.findById(req.params.id, function(err, board) {
         if (err) {return res.send(500,err);}
         if (!board) {console.log("no board found");return res.send(404);}
-        console.log(board);
         board.messages.push({
             user: req.params.replier,
             text: req.body.message,
@@ -150,7 +145,19 @@ exports.replyMessageFromEmail = function(req, res) {
             board._editUser = user;
             board.save(function(err) {
                 if (err) {return res.send(500,err);}
-                return res.send(200,"Your message has been send.");
+                Board.populate(board, [
+                {path: 'invitees._id', select: '_id email name'},
+                {path: 'owner', select: '_id email name'},
+                {path: 'messages.user', select: '_id email name'},
+                {path: 'messages.mentions', select: '_id email name'}
+                ], function(err, board) {
+                    EventBus.emit('socket:emit', {
+                        event: 'boardChat:new',
+                        room: board._id.toString(),
+                        data: board
+                    });
+                    return res.send(200, "Message has been sent");
+                });
             });
         });
     });

@@ -10,7 +10,6 @@ var EventBus = require('../../components/EventBus');
 exports.selectPeople = function(req, res) {
     PeopleChat.findOne({project: req.body.project, people: req.params.id, $or:[{owner: req.body.user, from: req.user._id},{owner: req.user._id, from: req.body.user}]}, function(err, chat) {
         if (err) {return res.send(500,err);}
-        console.log(chat);
         if (!chat) {
             var peopleChat = new PeopleChat({
                 project: req.body.project,
@@ -34,7 +33,6 @@ exports.selectPeople = function(req, res) {
 };
 
 exports.sendMessage = function(req, res) {
-    console.log(req.body);
     PeopleChat.findById(req.params.id, function(err, chat){
         if (err) {return res.send(500,err);}
         if (!chat) {return res.send(404);}
@@ -60,5 +58,38 @@ exports.sendMessage = function(req, res) {
                 });
             });
         }
+    });
+};
+
+exports.replyMessageFromEmail = function(req, res) {
+    console.log(req.params);
+    console.log(req.body);
+    PeopleChat.findById(req.params.id, function(err, chat) {
+        if (err) {return res.send(500,err);}
+        if (!chat) {return res.send(404);}
+        chat.messages.push({
+            user: req.params.replier,
+            text: req.body.message,
+            mentions: [],
+            sendAt: new Date()
+        });
+        User.findById(req.params.replier, function(err, user) {
+            if (err) {return res.send(500,err);}
+            if (!user) {return res.send(404);}
+            chat._editUser = user;
+            chat.save(function(err) {
+                if (err) {return res.send(500,err);}
+                PeopleChat.populate(chat, 
+                [{path: "messages.user", select: "_id email name"},
+                {path: "messages.mentions", select: "_id email name"}], function(err, chat) {
+                    EventBus.emit('socket:emit', {
+                        event: 'peopleChat:new',
+                        room: chat._id.toString(),
+                        data: chat
+                    });
+                    return res.json(200, "Message has been sent!");
+                });
+            });
+        });
     });
 };

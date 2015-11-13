@@ -89,8 +89,6 @@ EventBus.onSeries('Board.Updated', function(board, next){
             return next();
         }
     } else if (board._modifiedPaths.indexOf('sendMessage') != -1) {
-        console.log('aaaaaaaaaaaaaaaa');
-        console.log(board);
         var from = board.editUser.firstName + " " + board.editUser.lastName + "<"+board.editUser.email+">";
         var newestMessage = _.last(board.messages);
         if (newestMessage.mentions.length > 0) {
@@ -108,11 +106,11 @@ EventBus.onSeries('Board.Updated', function(board, next){
                                 sendBy: board.editUser,
                                 user: user.toJSON(),
                                 project: result.project.toJSON(),
-                                board: board,
+                                place: board.name,
                                 replyMessageLink : config.baseUrl + "api/boards/" + board._id + "/" + user._id.toString() + "/reply-message-from-email",
-                                subject: 'Join ' + result.project.name + ' on buiilt'
+                                subject: 'New message on ' + board.name
                             },function(){
-                                return next();
+                                return cb();
                             });
                         }
                     });
