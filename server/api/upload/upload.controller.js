@@ -37,177 +37,207 @@ var validationError = function (res, err) {
  * @returns {undefined}
  */
 exports.upload = function(req, res){
-    var request = req.body.file;
-    if (request._id != '') {
-        File.findById(request._id, function(err, file) {
-            if (err) {console.log(err);return res.send(500,err);}
-            file.title = request.file.filename;
-            file.name = request.file.filename;
-            file.path = request.file.url;
-            file.server = 's3';
-            file.mimeType = request.file.mimetype;
-            file.description = request.desc;
-            file.size = request.file.size;
-            file.version = file.version + 1;
-            file.belongTo = req.params.id;
-            file.belongToType = 'project';
-            file.tags = request.tags;
-            file.save(function(err, saved) {
-                if (err) {console.log(err);return res.send(500,err);}
-                var owners = [];
-                BuilderPackageNew.findOne({project: saved.belongTo})
-                .populate('owner')
-                .populate("project")
-                .populate('to.team')
-                .populate('member').exec(function(err,builderPackage){
-                    if (err) {return res.send(500,err);}
-                    owners.push(builderPackage.owner._id);
-                    if (builderPackage.to.team) {
-                        owners = _.union(owners, builderPackage.to.team.leader);
-                        _.each(builderPackage.to.team.member, function(member){
-                            if (member._id) {
-                                owners.push(member._id);
-                            }
-                        });
-                    } else if (builderPackage.winner) {
-                        owners = _.union(owners, builderPackage.winner.leader);
-                        _.each(builderPackage.winner.member, function(member){
-                            if (member._id) {
-                                owners.push(member._id);
+    var files = req.body.files;
+    var filesAfterInsert = [];
+    async.each(files, function(item, cb) {
+        if (item._id != '') {
+            File.findById(item._id, function(err, file) {
+                if (err || !file) {console.log(err);return cb(err);}
+                file.title = item.filename;
+                file.name = item.filename;
+                file.path = item.url;
+                file.server = 's3';
+                file.mimeType = item.mimetype;
+                file.description = item.desc;
+                file.size = item.size;
+                file.version = file.version + 1;
+                file.belongTo = req.params.id;
+                file.belongToType = 'project';
+                file.tags = item.tags;
+                file.save(function(err, saved) {
+                    if (err) {console.log(err);return cb(err);}
+                    else {
+                        var owners = [];
+                        BuilderPackageNew.findOne({project: saved.belongTo})
+                        .populate('owner')
+                        .populate("project")
+                        .populate('to.team')
+                        .populate('member').exec(function(err,builderPackage){
+                            if (err || !builderPackage) {
+                                return cb(err);
+                            } else {
+                                owners.push(builderPackage.owner._id);
+                                if (builderPackage.to.team) {
+                                    owners = _.union(owners, builderPackage.to.team.leader);
+                                    _.each(builderPackage.to.team.member, function(member){
+                                        if (member._id) {
+                                            owners.push(member._id);
+                                        }
+                                    });
+                                } else if (builderPackage.winner) {
+                                    owners = _.union(owners, builderPackage.winner.leader);
+                                    _.each(builderPackage.winner.member, function(member){
+                                        if (member._id) {
+                                            owners.push(member._id);
+                                        }
+                                    });
+                                }
+                                if (builderPackage.projectManager._id) {
+                                    owners.push(builderPackage.projectManager._id);
+                                }
+                                _.remove(owners, req.user._id);
+                                var params = {
+                                    owners: owners,
+                                    fromUser: req.user._id,
+                                    element: {
+                                        file: saved.toJSON(), 
+                                        uploadIn: builderPackage,
+                                        projectId: builderPackage.project},
+                                    referenceTo: "DocumentInProject",
+                                    type: 'uploadNewDocumentVersion'
+                                };
+                                NotificationHelper.create(params, function() {
+                                    filesAfterInsert.push(saved);
+                                    cb();
+                                });
                             }
                         });
                     }
-                    if (builderPackage.projectManager._id) {
-                        owners.push(builderPackage.projectManager._id);
-                    }
-                    _.remove(owners, req.user._id);
-                    var params = {
-                        owners: owners,
-                        fromUser: req.user._id,
-                        element: {
-                            file: saved.toJSON(), 
-                            uploadIn: builderPackage,
-                            projectId: builderPackage.project},
-                        referenceTo: "DocumentInProject",
-                        type: 'uploadNewDocumentVersion'
-                    };
-                    NotificationHelper.create(params, function() {
-                        return res.send(file.toJSON());
-                    });
                 });
             });
-        });
-    } else {
-        var file = new File({
-            title: request.file.filename,
-            name: request.file.filename,
-            path: request.file.url,
-            key: request.file.key,
-            server: 's3',
-            mimeType: request.file.mimeType,
-            description: request.desc,
-            size: request.file.size,
-            user: req.user._id,
-            belongTo: req.params.id,
-            belongToType : 'project',
-            tags: request.tags
-        });
-        file.save(function(err){
-            if (err) {console.log(err);return res.send(500,err);}
-            var owners = [];
-            BuilderPackageNew.findOne({project: file.belongTo})
-            .populate('owner')
-            .populate("project")
-            .populate('to.team')
-            .populate('winner').exec(function(err,builderPackage){
-                if (err) {return res.send(500,err);}
-                if (!builderPackage) {return res.send(404);}
+        } else {
+            var file = new File({
+                title: item.filename,
+                name: item.filename,
+                path: item.url,
+                key: item.key,
+                server: 's3',
+                mimeType: item.mimeType,
+                description: item.desc,
+                size: item.size,
+                user: req.user._id,
+                belongTo: req.params.id,
+                belongToType : 'project',
+                tags: item.tags
+            });
+            file.save(function(err){
+                if (err) {console.log(err);return cb(err);}
                 else {
-                    owners.push(builderPackage.owner._id);
-                    if (builderPackage.to.team) {
-                        owners = _.union(builderPackage.owner.leader, builderPackage.to.team.leader);
-                        _.each(builderPackage.to.team.member, function(member){
-                            if (member._id) {
-                                owners.push(member._id);
+                    var owners = [];
+                    BuilderPackageNew.findOne({project: file.belongTo})
+                    .populate('owner')
+                    .populate("project")
+                    .populate('to.team')
+                    .populate('winner').exec(function(err,builderPackage){
+                        if (err || !builderPackage) {return cb(err);}
+                        else {
+                            owners.push(builderPackage.owner._id);
+                            if (builderPackage.to.team) {
+                                owners = _.union(builderPackage.owner.leader, builderPackage.to.team.leader);
+                                _.each(builderPackage.to.team.member, function(member){
+                                    if (member._id) {
+                                        owners.push(member._id);
+                                    }
+                                });
+                            } else if (builderPackage.winner) {
+                                owners = _.union(owners, builderPackage.winner.leader);
+                                _.each(builderPackage.winner.member, function(member){
+                                    if (member._id) {
+                                        owners.push(member._id);
+                                    }
+                                });
                             }
-                        });
-                    } else if (builderPackage.winner) {
-                        owners = _.union(owners, builderPackage.winner.leader);
-                        _.each(builderPackage.winner.member, function(member){
-                            if (member._id) {
-                                owners.push(member._id);
+                            if (builderPackage.projectManager._id) {
+                                owners.push(builderPackage.projectManager._id);
                             }
-                        });
-                    }
-                    if (builderPackage.projectManager._id) {
-                        owners.push(builderPackage.projectManager._id);
-                    }
-                    _.remove(owners, req.user._id);
-                    var params = {
-                        owners: owners,
-                        fromUser: req.user._id,
-                        element: {
-                            file: file.toJSON(),
-                            uploadIn: builderPackage,
-                            projectId: builderPackage.project
-                        },
-                        referenceTo: "DocumentInProject",
-                        type: 'uploadNewDocumentVersion'
-                    };
-                    NotificationHelper.create(params, function(){
-                        return res.send(file.toJSON());
+                            _.remove(owners, req.user._id);
+                            var params = {
+                                owners: owners,
+                                fromUser: req.user._id,
+                                element: {
+                                    file: file.toJSON(),
+                                    uploadIn: builderPackage,
+                                    projectId: builderPackage.project
+                                },
+                                referenceTo: "DocumentInProject",
+                                type: 'uploadNewDocumentVersion'
+                            };
+                            NotificationHelper.create(params, function(){
+                                filesAfterInsert.push(file);
+                                cb();
+                            });
+                        }
                     });
                 }
             });
-        });
-    }
+        }
+    }, function() {
+        return res.send(200,filesAfterInsert);
+    });
 };
 
 exports.uploadInPeople = function(req, res) {
-    var request = req.body.file;
-    var file = new File({
-        title: request.file.filename,
-        name: request.file.filename,
-        path: request.file.url,
-        key: request.file.key,
-        server: 's3',
-        mimeType: request.file.mimeType,
-        description: request.desc,
-        size: request.file.size,
-        user: req.user._id,
-        belongTo: req.params.id,
-        belongToType: request.belongToType,
-        tags: request.tags
-    });
-    _.each(request.assignees, function(assignee) {
-        file.usersRelatedTo.push(assignee);
-    });
-    file.save(function(err) {
-        if (err) {return res.send(500,err);}
-        return res.json(200,file);
+    var files = req.body.files;
+    var filesAfterInsert = [];
+    async.each(files, function(item, cb) {
+        var file = new File({
+            title: item.filename,
+            name: item.filename,
+            path: item.url,
+            key: item.key,
+            server: 's3',
+            mimeType: item.mimeType,
+            description: item.desc,
+            size: item.size,
+            user: req.user._id,
+            belongTo: req.params.id,
+            belongToType: item.belongToType,
+            tags: item.tags
+        });
+        _.each(item.assignees, function(assignee) {
+            file.usersRelatedTo.push(assignee);
+        });
+        file.save(function(err) {
+            if (err) {return cb(err);}
+            else {
+                filesAfterInsert.push(file);
+                cb();
+            }
+        });
+    }, function() {
+        return res.send(200, filesAfterInsert);
     });
 };
 
 exports.uploadInBoard = function(req, res) {
-    var request = req.body.file;
-    var file = new File({
-        title: request.file.filename,
-        name: request.file.filename,
-        path: request.file.url,
-        key: request.file.key,
-        server: 's3',
-        mimeType: request.file.mimeType,
-        description: request.desc,
-        size: request.file.size,
-        user: req.user._id,
-        belongTo: req.params.id,
-        belongToType: request.belongToType,
-        tags: request.tags
+    var files = req.body.file;
+    var filesAfterInsert = [];
+    async.each(files, function(item, cb) {
+        var file = new File({
+            title: item.filename,
+            name: item.filename,
+            path: item.url,
+            key: item.key,
+            server: 's3',
+            mimeType: item.mimeType,
+            description: item.desc,
+            size: item.size,
+            user: req.user._id,
+            belongTo: req.params.id,
+            belongToType: item.belongToType,
+            tags: item.tags
+        });
+        file.save(function(err) {
+            if (err) {return cb(err);}
+            else {
+                filesAfterInsert.push(file);
+                cb();
+            }
+        });
+    }, function() {
+        return res.send(200,filesAfterInsert);
     });
-    file.save(function(err) {
-        if (err) {return res.send(500,err);}
-        return res.json(200,file);
-    });
+    
 };
 
 exports.uploadInPackge = function(req, res){ 

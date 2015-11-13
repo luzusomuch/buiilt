@@ -1,24 +1,10 @@
 <form ng-submit="uploadNewDocument()" name="uploadForm">
   <div class="modal-content">
-    <!-- <div class="row">
-      <div class="input-field col s8 offset-s2">
-        <textarea id="docAttachTitle" class="materialize-textarea" ng-model="uploadFile.title" id="textarea1" name="title" required></textarea>
-        <label for="">Title</label>
-        <p class="validate-message" ng-if="uploadForm.title.$error.required || uploadFile.title == ' '">Document name is required</p>
-      </div>
-    </div> -->
     <div class="row">
       <div class="input-field col s8 offset-s2">
-        <input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/>
+        <input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfiles)" data-fp-multiple="true"/>
       </div>
     </div>
-    <!-- <div class="row">
-      <div class="input-field col s8 offset-s2">
-        <textarea id="docAttachDesc" name="description" class="materialize-textarea" ng-model="uploadFile.desc" id="textarea1" required></textarea>
-        <label for="">Description</label>
-        <p class="validate-message" ng-if="uploadForm.description.$error.required || uploadFile.description == ' '">Document description is required</p>
-      </div>
-    </div> -->
     <div class="row">
       <div class="input-field col s8 offset-s2">
         <p>Current tags: </p>

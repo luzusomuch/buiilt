@@ -922,7 +922,7 @@ angular.module('buiiltApp')
                 $timeout(function(){$("#taskTab > a").trigger('click')},1000);
             }
         });
-        fileService.getFileInPeople({id: $stateParams.id}).$promise.then(function(res){
+        fileService.getFileInPeople({id: $scope.invitePeople._id}).$promise.then(function(res){
             $scope.files = res;
             _.each($scope.files, function(file) {
                 file.isOwner = false;
@@ -1124,35 +1124,37 @@ angular.module('buiiltApp')
         }
     };
 
-    $scope.uploadFile = {
-        assignees : []
+    $scope.setUpload = function() {
+        $scope.uploadFiles = [];
     };
+
     $scope.selectedTags = [];
     $scope.pickFile = pickFile;
 
     $scope.onSuccess = onSuccess;
 
     function pickFile(){
-        filepickerService.pick(
-            {mimetype: 'image/*'},
+        filepickerService.pickMultiple(
+            {
+                maxFiles: 5
+            },
             onSuccess
         );
     };
 
-    function onSuccess(file){
-        $scope.uploadFile = {
-            file: file,
-            _id: ($scope.fileId) ? $scope.fileId : '',
-            belongToType: 'people',
-            tags: $scope.selectedTags,
-            isQuote: $scope.isQuote,
-            assignees : []
-        };
-        $scope.uploadFile.assignees = [$scope.selectedUser._id, $scope.currentUser._id];
+    function onSuccess(files){
+        _.each(files, function(file) {
+            file.belongToType = 'people';
+            file.assignees = [$scope.selectedUser._id, $scope.currentUser._id];
+            file.tags = $scope.selectedTags;
+            file.isQuote = $scope.isQuote;
+            file._id = ($scope.fileId) ? $scope.fileId : ''
+        });
+        $scope.uploadFiles = files;
     };
 
     $scope.uploadNewAttachment = function() {
-        uploadService.uploadInPeople({id: $stateParams.id, file: $scope.uploadFile}).$promise.then(function(res){
+        uploadService.uploadInPeople({id: $scope.invitePeople._id, files: $scope.uploadFiles}).$promise.then(function(res){
             $('#new_attachment').closeModal();
             $state.reload();
         });

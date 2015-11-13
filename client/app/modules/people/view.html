@@ -222,7 +222,7 @@
                 </div>
             </form>
             <div class="col s1 valign">
-                <a><i class="material-icons modal-trigger" href="#new_attachment" style="color: #64B5F6">attach_file</i></a>
+                <a ng-click="setUpload()"><i class="material-icons modal-trigger" href="#new_attachment" style="color: #64B5F6">attach_file</i></a>
                 <a><i class="material-icons valign modal-trigger" href="#new_task" style="color: #64B5F6">done</i></a>
 
             </div>
@@ -254,7 +254,7 @@
             </div>
             <div id="test2" class="col s12" style="height: 65vh; overflow-y: scroll">
                 <div class="attachment-row" style="font-size: 12px; border-bottom: 1px solid #eee">
-                    <p class="feature-btn-wrapper"><a class="modal-trigger feature-btn" href="#new_attachment">ADD AN ATTACHMENT</a></p>
+                    <p class="feature-btn-wrapper"><a class="modal-trigger feature-btn" href="#new_attachment" ng-click="setUpload()">ADD AN ATTACHMENT</a></p>
                 </div>
                 <div class="attachment-row" style="font-size: 12px; border-bottom: 1px solid #eee" ng-repeat="file in files" ng-if="file.isOwner">
                     <p class="margin-10-0"><a href="#modal-attachment-detail-{{file._id}}" class="modal-trigger">{{file.title}}(Version: {{file.version + 1}})</a></p>
@@ -282,7 +282,7 @@
         <div class="modal-content">
             <h5>New Attachment</h5>
             <div class="row">
-                <input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/>
+                <input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfiles)" data-fp-multiple="true"/>
             </div>
             <!-- <div class="row">
                 <label>Title</label>

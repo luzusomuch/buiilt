@@ -38,6 +38,7 @@ EventBus.onSeries('File.Inserted', function(request, next) {
         _package.findById(request.belongTo, function(err, _package) {
             if (err) {console.log(err);return next();}
             if (!_package) {console.log('no package found!');return next();}
+            _.remove(request.usersRelatedTo, request.user);
             var referenceTo = "documentIn" + request.belongToType;
             var params = {
                 owners : request.usersRelatedTo,

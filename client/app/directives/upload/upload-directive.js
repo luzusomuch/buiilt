@@ -13,47 +13,46 @@ angular.module('buiiltApp').directive('upload', function(){
             isQuote: '@'
         },
         controller: function($scope, $state, $cookieStore, $stateParams, $rootScope, $location, fileService, packageService, userService, projectService, FileUploader, documentService, filepickerService,uploadService) {
-            $scope.uploadFile = {};
+            $scope.uploadFiles = [];
             $scope.pickFile = pickFile;
 
             $scope.onSuccess = onSuccess;
 
             function pickFile(){
                 filepickerService.pick(
-                    {mimetype: 'image/*'},
+                    {maxFiles: 5},
                     onSuccess
                 );
             };
 
-            function onSuccess(file){
-                $scope.uploadFile = {
-                    file: file,
-                    _id: ($scope.fileId) ? $scope.fileId : '',
-                    belongToType: ($scope.package) ? $scope.package.type : 'project',
-                    tags: $scope.selectedTags,
-                    isQuote: $scope.isQuote
-                };
+            function onSuccess(files){
+                _.each(files, function(file) {
+                    file._id = ($scope.fileId) ? $scope.fileId : '';
+                    file.belongToType = ($scope.package) ? $scope.package.type : 'project';
+                    file.tags = $scope.selectedTags;
+                    file.isQuote = $scope.isQuote;
+                });
+                $scope.uploadFiles = files;
             };
 
             $scope.uploadNewDocument = function() {
                 if ($stateParams.packageId) {
-                    uploadService.uploadInPackage({id: $stateParams.packageId, file: $scope.uploadFile}).$promise.then(function(res){
+                    uploadService.uploadInPackage({id: $stateParams.packageId, files: $scope.uploadFiles}).$promise.then(function(res){
                         $('#modal_attachDocument').closeModal();
                         $rootScope.newestDocument = res;
                         $state.reload();
                     });
                 }
                 else if($scope.package && $scope.package != '') {
-                    uploadService.uploadInPackage({id: $scope.package._id, file: $scope.uploadFile}).$promise.then(function(res){
+                    uploadService.uploadInPackage({id: $scope.package._id, files: $scope.uploadFiles}).$promise.then(function(res){
                         $('#modal_attachDocument').closeModal();
                         $rootScope.newestDocument = res;
                         $state.reload();
                     });
                 }
                 else {
-                    uploadService.upload({id: $stateParams.id, file: $scope.uploadFile}).$promise.then(function(res){
+                    uploadService.upload({id: $stateParams.id, files: $scope.uploadFiles}).$promise.then(function(res){
                         $('#modal_attachDocument').closeModal();
-                        $rootScope.newestDocument = res;
                         $state.reload();
                     });
                 }

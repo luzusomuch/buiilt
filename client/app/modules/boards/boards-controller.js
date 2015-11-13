@@ -520,34 +520,37 @@ angular.module('buiiltApp')
         }
     };
 
-    $scope.uploadFile = {
-        assignees : []
+    $scope.setUpload = function() {
+        $scope.uploadFiles = [];
     };
+
     $scope.selectedTags = [];
     $scope.pickFile = pickFile;
 
     $scope.onSuccess = onSuccess;
 
     function pickFile(){
-        filepickerService.pick(
-            {mimetype: 'image/*'},
+        filepickerService.pickMultiple(
+            {
+                maxFiles: 5
+            },
             onSuccess
         );
     };
 
-    function onSuccess(file){
-        $scope.uploadFile = {
-            file: file,
-            _id: ($scope.fileId) ? $scope.fileId : '',
-            belongToType: 'board',
-            tags: $scope.selectedTags,
-            isQuote: $scope.isQuote,
-            assignees : []
-        };
+    function onSuccess(files){
+        _.each(files, function(file) {
+            file.belongToType = 'board';
+            file.assignees = [];
+            file.tags = $scope.selectedTags;
+            file.isQuote = $scope.isQuote;
+            file._id = ($scope.fileId) ? $scope.fileId : ''
+        });
+        $scope.uploadFiles = files;
     };
 
     $scope.uploadNewAttachment = function() {
-        uploadService.uploadInBoard({id: $scope.currentBoard._id, file: $scope.uploadFile}).$promise.then(function(res){
+        uploadService.uploadInBoard({id: $scope.currentBoard._id, files: $scope.uploadFiles}).$promise.then(function(res){
             $('#new_attachment').closeModal();
             $state.reload();
         });

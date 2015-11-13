@@ -9,7 +9,8 @@ angular.module('buiiltApp')
             params: {
                 id: '@id',
                 action: 'file'
-            }
+            },
+            isArray: true
         },
         uploadInPackage: {
             method: 'POST', 
@@ -23,14 +24,16 @@ angular.module('buiiltApp')
             params: {
                 id: '@id',
                 action: 'file-in-people'
-            }
+            },
+            isArray: true
         },
         uploadInBoard: {
             method: 'POST', 
             params: {
                 id: '@id',
                 action: 'file-in-board'
-            }
+            },
+            isArray: true
         }
     }
 );
