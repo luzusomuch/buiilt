@@ -60,24 +60,18 @@
           <!-- NEW VERSION -->
             <div class="row">
               <div class="input-field col s6">
-                <input type="text" name="firstName" ng-model="user.firstName" required>
+                <input type="text" name="firstName" id="firstNameField" ng-model="user.firstName" required>
                 <label for="firstName">First name</label>
               </div>
               <div class="input-field col s6">
-                <input type="text" name="lastName" ng-model="user.lastName" required>
+                <input type="text" name="lastName" id="lastNameField" ng-model="user.lastName" required>
                 <label for="lastName">Last name</label>
-              </div>
-            </div>
-            <div class="row">
-              <div class="input-field col s12">
-                <label>Email</label>
-                <input ng-model="packageInvite.to" required type="text" disabled>
               </div>
             </div>
             <div class="row">
               <div input-field class="col s12">
                 <label>Password</label>
-                <input ng-model="user.password" name="password" required type="password" ng-minlength="6" required>
+                <input ng-model="user.password" id="pwfield" name="password" required type="password" ng-minlength="6" required>
                 <p class="validate-message" ng-show="signupForm.password.$error.minlength && submitted">Password need at least 6 character</p>
               </div>
             </div>
@@ -89,7 +83,7 @@
               </div>
             </div>
             <div class="row">
-              <button type="submit" class="waves-effect waves-light btn">Sign up</button>
+              <button type="submit" id="SUBtn" class="waves-effect waves-light btn">Sign Up Now</button>
             </div>
             <!-- END NEW VERSION -->
           </form>
