@@ -10,7 +10,9 @@ var PeopleChatSchema = new Schema({
     project: {type: Schema.Types.ObjectId, ref: 'Project'},
     people: {type: Schema.Types.ObjectId, ref: 'People'},
     owner: {type: Schema.Types.ObjectId, ref: 'User'},
+    ownerEmail: {type: String},
     from: {type: Schema.Types.ObjectId, ref: 'User'},
+    fromEmail: {type: String},
     members: [{
         type: Schema.Types.ObjectId, ref: 'User'
     }],

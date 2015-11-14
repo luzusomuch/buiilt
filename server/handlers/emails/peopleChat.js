@@ -26,6 +26,7 @@ EventBus.onSeries('PeopleChat.Updated', function(req, next){
                         if (err || !user) {return cb();}
                         else {
                             Mailer.sendMail('new-message.html', from, user.email, {
+                                id: req._id,
                                 newestMessage: newestMessage,
                                 sendBy: req.editUser,
                                 user: user.toJSON(),

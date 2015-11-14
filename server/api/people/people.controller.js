@@ -123,7 +123,7 @@ exports.invitePeople = function(req, res) {
                             } else {
                                 builders.push({
                                     inviter: req.user._id,
-                                    _id: architect._id,
+                                    _id: builder._id,
                                     hasSelect: true
                                 });
                                 newInviteeSignUpAlready.push(builder._id);
@@ -790,11 +790,11 @@ exports.selectWinnerTender = function(req, res) {
             var loserTender = [];
             if (req.body.type == 'subcontractor') {
                 var winnerTender = _.remove(people.subcontractors, function(item) {
-                    return item.inviter == req.body.tender.inviter && item._id == req.body.tender._id;
+                    return item.inviter == req.body.tender.inviter._id && item._id == req.body.tender._id._id;
                 });
                 console.log(winnerTender);
                 winnerTender[0].hasSelect = true;
-                winnerTenderNotification.push(req.body.tender._id);
+                winnerTenderNotification.push(req.body.tender._id._id);
                 _.each(people.subcontractors, function(subcontractor) {
                     if (subcontractor.hasSelect) {
                         winnerTender.push(subcontractor);
@@ -835,7 +835,7 @@ exports.selectWinnerTender = function(req, res) {
                 });
             } else if (req.body.type == 'builder') {
                 var winnerTender = _.remove(people.builders, function(item) {
-                    return item.inviter == req.body.tender.inviter && item._id == req.body.tender._id._id;
+                    return item.inviter == req.body.tender.inviter._id && item._id == req.body.tender._id._id;
                 });
                 winnerTender[0].hasSelect = true;
                 winnerTenderNotification.push(req.body.tender._id._id);
@@ -876,10 +876,10 @@ exports.selectWinnerTender = function(req, res) {
                 });
             } else if (req.body.type == 'consultant') {
                 var winnerTender = _.remove(people.consultants, function(item) {
-                    return item.inviter == req.body.tender.inviter && item._id == req.body.tender._id;
+                    return item.inviter == req.body.tender.inviter._id && item._id == req.body.tender._id._id;
                 });
                 winnerTender[0].hasSelect = true;
-                winnerTenderNotification.push(req.body.tender._id);
+                winnerTenderNotification.push(req.body.tender._id._id);
                 _.each(people.consultants, function(consultant) {
                     if (consultant.hasSelect) {
                         winnerTender.push(consultant);
@@ -920,7 +920,7 @@ exports.selectWinnerTender = function(req, res) {
                 });
             } else if (req.body.type == 'client') {
                 var winnerTender = _.remove(people.clients, function(item) {
-                    return item.inviter == req.body.tender.inviter && item._id == req.body.tender._id._id;
+                    return item.inviter == req.body.tender.inviter._id && item._id == req.body.tender._id._id;
                 });
                 winnerTender[0].hasSelect = true;
                 winnerTenderNotification.push(req.body.tender._id._id);
@@ -961,7 +961,7 @@ exports.selectWinnerTender = function(req, res) {
                 });
             } else if (req.body.type == 'architect') {
                 var winnerTender = _.remove(people.architects, function(item) {
-                    return item.inviter == req.body.tender.inviter && item._id == req.body.tender._id._id;
+                    return item.inviter == req.body.tender.inviter._id && item._id == req.body.tender._id._id;
                 });
                 winnerTender[0].hasSelect = true;
                 winnerTenderNotification.push(req.body.tender._id._id);

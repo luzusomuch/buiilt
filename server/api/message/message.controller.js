@@ -355,4 +355,5 @@ exports.getAllByProject = function(req, res) {
 
 exports.replyMessage = function(req, res) {
   console.log('aaaaaaaaaaaaaa');
+  console.log(req.body);
 };
