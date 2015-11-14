@@ -7,6 +7,7 @@ var auth = require('../../auth/auth.service');
 
 var router = express.Router();
 router.delete('/:id', auth.hasRole('admin'), controller.destroy);
+router.post('/reply-message', controller.replyMessage);
 router.post('/:id/:type', auth.isAuthenticated(), controller.package, controller.create);
 router.post('/:id/:type/message', auth.isAuthenticated(), controller.thread, controller.saveMessage);
 router.put('/:id/:type', auth.isAuthenticated(), controller.thread, controller.update);

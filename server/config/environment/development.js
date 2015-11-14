@@ -24,7 +24,7 @@ module.exports = {
   },
   //sendgrid api key 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
 
-  emailFrom: 'Buiilt <no-reply@buiilt.com>', // sender address like ABC <abc@example.com>
+  emailFrom: 'Buiilt <no-reply@buiilt.com.au>', // sender address like ABC <abc@example.com>
   mailer: {
    //  service: 'mailgun',
    //  auth: {

@@ -71,9 +71,9 @@
                 <span style="background-color:#eee; padding: 5px; margin-left: 5px;">{{currentTeamMember.unreadMessagesNumber}}</span>
             </p>
         </div>
-        <div ng-mouseover="getTenderListByType('builder')">
-            <p ng-show="currentUser.type == 'architect' && currentUser.isLeader">BUILDER</p>
-            <p ng-show="currentUser.type == 'architect' && currentUser.isLeader" class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px;" ng-repeat="builder in invitePeople.builders" ng-if="builder._id" ng-click="selectUser(builder._id, 'builder')" ng-style="builder._id._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
+        <div ng-show="currentUser.type == 'architect' && currentUser.isLeader" ng-mouseover="getTenderListByType('builder')">
+            <p>BUILDER</p>
+            <p class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px;" ng-repeat="builder in invitePeople.builders" ng-if="builder._id" ng-click="selectUser(builder._id, 'builder')" ng-style="builder._id._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
                 <i class="tiny material-icons valign" style="color: #64B5F6; margin-right: 5px; font-size: 8px" ng-style="builder._id.isOnline ? {'color': '#81C784'} : {'color': '#E0E0E0'}">brightness_1</i>
                 {{builder._id.name}}
                 <span style="background-color:#eee; padding: 5px; margin-left: 5px;">{{builder.unreadMessagesNumber}}</span>
