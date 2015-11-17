@@ -37,7 +37,7 @@
                 </div>
             </div>
 
-            <div>
+            <div id="determinePM">
                 <div class="row">
                     <div id="roleProject" class="col input-field">
                         <p><strong>What is your role in this Project?</strong></p>
@@ -73,33 +73,35 @@
                             <input type="email" ng-model="project.architectEmail" name="architectEmail" ng-class="{'invalid' : form.architectEmail.$invalid && submitted}">
                         </div>
 
+                        <div class="row">
+                            <div class="input-field col" style="margin-top:40px; margin-left: -12px" ng-if="project.homeOwnerHireArchitect == 'false'" id="isHomeOwnerPM">
+                                <p><strong>Will the Builder be overseeing the design?</strong></p>
+                                <div class="col">
+                                    <input id="homeOwnerAssignBuilder-yes" type="radio" ng-model="project.homeOwnerAssignBuilder" name="homeOwnerAssignBuilder" value="true" checked="true"/>
+                                    <label for="homeOwnerAssignBuilder-yes">Yes, they will be responsible for the design.</label>
+                                </div>
+                                <div class="col">
+                                    <input id="homeOwnerAssignBuilder-no" type="radio" name="homeOwnerAssignBuilder" ng-model="project.homeOwnerAssignBuilder" value="false"/>
+                                    <label for="homeOwnerAssignBuilder-no">No, I am managing the design myself.</label>
+                                </div>
+
+                                <div class="input-field col s12"  style="margin-top: 40px; margin-left: -12px" ng-if="project.homeOwnerAssignBuilder == 'true'" id="homeOwnerCollectBuilderEmail">
+                                    <p><strong>What is your Builder's Email address?</strong></p>
+                                    <input type="email" ng-model="project.builderEmail" name="builderEmail" ng-class="{'invalid' : form.builderEmail.$invalid && submitted}">
+                                </div>
+
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
 
-                <div class="row">
-                    <div class="input-field col" ng-if="project.homeOwnerHireArchitect == 'false'" id="isHomeOwnerPM">
-                        <p><strong>Will the Builder be overseeing the design?</strong></p>
-                        <div class="col">
-                            <input id="homeOwnerAssignBuilder-yes" type="radio" ng-model="project.homeOwnerAssignBuilder" name="homeOwnerAssignBuilder" value="true" checked="true"/>
-                            <label for="homeOwnerAssignBuilder-yes">Yes, they will be responsible for the design.</label>
-                        </div>
-                        <div class="col">
-                            <input id="homeOwnerAssignBuilder-no" type="radio" name="homeOwnerAssignBuilder" ng-model="project.homeOwnerAssignBuilder" value="false"/>
-                            <label for="homeOwnerAssignBuilder-no">No, I am managing the design myself.</label>
-                        </div>
 
-                        <div class="input-field col s12"  style="margin-top: 40px; margin-left: -12px" ng-if="project.homeOwnerAssignBuilder == 'true'" id="homeOwnerCollectBuilderEmail">
-                            <p><strong>What is your Builder's Email address?</strong></p>
-                            <input type="email" ng-model="project.builderEmail" name="builderEmail" ng-class="{'invalid' : form.builderEmail.$invalid && submitted}">
-                        </div>
-
-                    </div>
-                </div>
 
                 <!-- architect selected -->
                 <div class="row">
-                    <div class="input-field col" style="margin-top:-20px" ng-show="project.selectedOwnerUserType == 'architect'" id="roleArchitect">
+                    <div class="input-field col" style="margin-top:-5px" ng-show="project.selectedOwnerUserType == 'architect'" id="roleArchitect">
                         <p><strong>Will you be managing this project during construction?</strong></p>
                         <div class="col">
                             <input id="architectManagerHisProject-yes" type="radio" ng-model="project.architectManagerHisProject" name="architectManagerHisProject" value="true" checked="true"/>
@@ -138,7 +140,7 @@
 
                 <!-- builder selected -->
                 <div class="row">
-                    <div class="input-field col" style="margin-top: -40px;" ng-show="project.selectedOwnerUserType == 'builder'" id="roleBuilder">
+                    <div class="input-field col" style="margin-top: -25px;" ng-show="project.selectedOwnerUserType == 'builder'" id="roleBuilder">
                         <p><strong>Is an architect managing this project during construction?</strong></p>
                         <div class="col">
                             <input id="builderHireArchitect-yes" type="radio" ng-model="project.builderHireArchitect" name="builderHireArchitect" value="true" checked="true"/>
