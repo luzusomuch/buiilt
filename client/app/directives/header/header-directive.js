@@ -8,20 +8,11 @@ angular.module('buiiltApp')
       $scope.submitted = false;
 
 	  //inline manual functions
-	  /* $rootScope.startSignupWizard = function() {
-	  	inline_manual_player.activateTopic('4881', '1');
+	  $rootScope.startSignupWizard = function() {
+	  	inline_manual_player.activateTopic('7055', '1');
 	  };
 	  $rootScope.startNewProjectWizard = function() {
 	  	inline_manual_player.activateTopic('4877', '1');
-	  };
-	  $rootScope.startNewSubcontractorWizard = function() {
-	  	inline_manual_player.activateTopic('4878', '1');
-	  };
-	  $rootScope.startNewMaterialWizard = function() {
-	  	inline_manual_player.activateTopic('4887', '1');
-	  };
-	  $rootScope.startWorkOrderWizard = function() {
-	  	inline_manual_player.activateTopic('4892', '1');
 	  };
 	  $rootScope.startUploadDocWizard = function() {
 	  	inline_manual_player.activateTopic('4893', '1');
@@ -29,12 +20,6 @@ angular.module('buiiltApp')
 	  $rootScope.startAddTeamMemberWizard = function() {
 	  	inline_manual_player.activateTopic('4872', '1');
 	  };
-	  $rootScope.startProjectOverviewWizard = function() {
-	  	inline_manual_player.activateTopic('4936', '1');
-	  };
-	  $rootScope.startNewVariationWizard = function() {
-	  	inline_manual_player.activateTopic('4969', '1');
-	  }; */
 
 
       //get header height

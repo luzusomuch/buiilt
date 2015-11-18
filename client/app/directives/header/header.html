@@ -15,12 +15,8 @@
                             <a ui-sref="dashboard({id: project._id})">{{project.name}}</a>
                         </li>
                         <li class="divider"></li>
-                        <!-- old version  -->
-                        <!-- <li ng-if="(currentTeam.type == 'architect' || currentTeam.type == 'homeOwner' || currentTeam.type == 'builder') && isLeader"> -->
-
-                        <!-- new version -->
                         <li>
-                            <a href="#createProject" id="createProjBtn" class="modal-trigger" ng-click="startNewProjectWizard()">Create project</a>
+                            <a href="#createProject" id="createProjBtn" class="modal-trigger">Create Project</a>
                         </li>
                     </ul>
                 </li>
