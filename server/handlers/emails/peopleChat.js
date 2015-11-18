@@ -47,6 +47,29 @@ EventBus.onSeries('PeopleChat.Updated', function(req, next){
             return next();
         }
     } else { 
-        return next();
+        if (req.ownerEmail || fromEmail) {
+            var receiveEmail = (req.ownerEmail) ? req.ownerEmail : req.fromEmail;
+            async.parallel({
+                project: function(cb) {
+                    Project.findById(req.project, cb);
+                } 
+            }, function(err, result) {
+                Mailer.sendMail('new-message.html', from, receiveEmail, {
+                    id: req._id,
+                    newestMessage: newestMessage,
+                    sendBy: req.editUser,
+                    // user: user.toJSON(),
+                    project: result.project.toJSON(),
+                    place: result.project.name,
+                    replyMessageLink : config.baseUrl + "api/peopleChats/" + req._id + "/reply-message-from-email",
+                    subject: 'New message on ' + result.project.name
+                },function(err){
+                    console.log(err)
+                    return next();
+                });
+            });
+        } else {
+            return next();    
+        }
     }
 });
