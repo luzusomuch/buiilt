@@ -102,7 +102,7 @@ EventBus.onSeries('Board.Updated', function(board, next){
                         User.findById(mention, function(err, user) {
                             if (err || !user) {return cb();}
                             else {
-                                Mailer.sendMail('new-message.html', board._id+"-board@mg.buiilt.com.au", user.email, {
+                                Mailer.sendMail('new-message.html', board.editUser.firstName + " " + board.editUser.lastName + "<" + board._id+"-board@mg.buiilt.com.au" + ">", user.email, {
                                     newestMessage: newestMessage,
                                     sendBy: board.editUser,
                                     user: user.toJSON(),

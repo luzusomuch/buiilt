@@ -13,8 +13,6 @@ var mongoose = require('mongoose');
 
 EventBus.onSeries('PeopleChat.Updated', function(req, next){
     if (req.messageType != "replyMessage") {
-
-        // var from = req.editUser.firstName + " " + req.editUser.lastName + "<"+req.editUser.email+">";
         var newestMessage = _.last(req.messages);
         if (newestMessage.mentions) {
             if (newestMessage.mentions.length > 0) {
@@ -27,7 +25,7 @@ EventBus.onSeries('PeopleChat.Updated', function(req, next){
                         User.findById(mention, function(err, user) {
                             if (err || !user) {return cb();}
                             else {
-                                Mailer.sendMail('new-message.html', req._id+"-people@mg.buiilt.com.au", user.email, {
+                                Mailer.sendMail('new-message.html', req.editUser.firstName + " " + req.editUser.lastName + "<" + req._id+"-people@mg.buiilt.com.au" + ">", user.email, {
                                     id: req._id,
                                     newestMessage: newestMessage,
                                     sendBy: (req.editUser._id) ? req.editUser : {name: req.editUser.email},
@@ -56,7 +54,7 @@ EventBus.onSeries('PeopleChat.Updated', function(req, next){
                         Project.findById(req.project, cb);
                     } 
                 }, function(err, result) {
-                    Mailer.sendMail('new-message.html', req._id+"-people@mg.buiilt.com.au", receiveEmail, {
+                    Mailer.sendMail('new-message.html', req.editUser.firstName + " " + req.editUser.lastName + "<" + req._id+"-people@mg.buiilt.com.au" + ">", receiveEmail, {
                         id: req._id,
                         newestMessage: newestMessage,
                         sendBy: (req.editUser._id) ? req.editUser : {name: req.editUser.email},
