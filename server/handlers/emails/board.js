@@ -89,35 +89,40 @@ EventBus.onSeries('Board.Updated', function(board, next){
             return next();
         }
     } else if (board._modifiedPaths.indexOf('sendMessage') != -1) {
-        var from = board.editUser.firstName + " " + board.editUser.lastName + "<"+board.editUser.email+">";
-        var newestMessage = _.last(board.messages);
-        if (newestMessage.mentions.length > 0) {
-            async.parallel({
-                project: function(cb) {
-                    Project.findById(board.project, cb);
-                }
-            }, function(err,result) {
-                async.each(newestMessage.mentions, function(mention, cb) {
-                    User.findById(mention, function(err, user) {
-                        if (err || !user) {return cb();}
-                        else {
-                            Mailer.sendMail('new-message.html', from, user.email, {
-                                newestMessage: newestMessage,
-                                sendBy: board.editUser,
-                                user: user.toJSON(),
-                                project: result.project.toJSON(),
-                                place: board.name,
-                                replyMessageLink : config.baseUrl + "api/boards/" + board._id + "/" + user._id.toString() + "/reply-message-from-email",
-                                subject: 'New message on ' + board.name
-                            },function(){
-                                return cb();
-                            });
-                        }
+        if (board.messageType != "replyMessage") {
+            var from = board.editUser.firstName + " " + board.editUser.lastName + "<"+board.editUser.email+">";
+            var newestMessage = _.last(board.messages);
+            if (newestMessage.mentions.length > 0) {
+                async.parallel({
+                    project: function(cb) {
+                        Project.findById(board.project, cb);
+                    }
+                }, function(err,result) {
+                    async.each(newestMessage.mentions, function(mention, cb) {
+                        User.findById(mention, function(err, user) {
+                            if (err || !user) {return cb();}
+                            else {
+                                Mailer.sendMail('new-message.html', board._id+"-board@mg.buiilt.com.au", user.email, {
+                                    newestMessage: newestMessage,
+                                    sendBy: board.editUser,
+                                    user: user.toJSON(),
+                                    project: result.project.toJSON(),
+                                    place: board.name,
+                                    replyMessageLink : config.baseUrl + "api/boards/" + board._id + "/" + user._id.toString() + "/reply-message-from-email",
+                                    subject: 'New message on ' + board.name
+                                },function(err){
+                                    console.log(err);
+                                    return cb();
+                                });
+                            }
+                        });
+                    }, function() {
+                        return next();
                     });
-                }, function() {
-                    return next();
                 });
-            });
+            } else {
+                return next();
+            }
         } else {
             return next();
         }

@@ -398,5 +398,42 @@ exports.replyMessage = function(req, res) {
         });
       }, 2000);
     });
+  } else {
+    Board.findById(splited[0], function(err,board){
+      if (err) {return res.send(500,err);}
+      if (!board) {return res.send(404);}
+      else {
+        User.findOne({email: req.body.sender}, function(err, user){ 
+          if (err) {return res.send(500,err);}
+          else {
+            board.messages.push({
+              user: user._id,
+              text: req.body['stripped-text'],
+              mentions: [],
+              sendAt: new Date()
+            });
+            board._editUser = user;
+            board.markModified('sendMessage');
+            board.messageType = "replyMessage";
+            board.save(function(err){
+              if (err) {return res.send(500,err);}
+                Board.populate(board, [
+                {path: 'invitees._id', select: '_id email name'},
+                {path: 'owner', select: '_id email name'},
+                {path: 'messages.user', select: '_id email name'},
+                {path: 'messages.mentions', select: '_id email name'}
+                ], function(err, board) {
+                  EventBus.emit('socket:emit', {
+                    event: 'boardChat:new',
+                    room: board._id.toString(),
+                    data: board
+                  });
+                  return res.send(200, board);
+                });
+              });
+            }
+        });
+      }
+    });
   }
 };

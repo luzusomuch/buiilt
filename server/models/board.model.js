@@ -29,6 +29,7 @@ BoardSchema
     this.editUser = this._editUser;
     this.inviteEmail = this._inviteEmail;
     this.inviteUser = this._inviteUser;
+    this.messageType = this._messageType;
     this._modifiedPaths = this.modifiedPaths();
     if (!this.isNew){
         this.updatedAt = new Date();
@@ -45,6 +46,7 @@ BoardSchema.post('save', function (doc) {
     doc.editUser = this._editUser;
     doc.inviteEmail = this._inviteEmail;
     doc.inviteUser = this._inviteUser;
+    doc.messageType = this._messageType;
     EventBus.emit(evtName, doc);
 });
 
