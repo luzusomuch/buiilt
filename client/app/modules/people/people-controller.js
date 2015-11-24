@@ -359,15 +359,14 @@ angular.module('buiiltApp')
                             }
                         });
 
-                        var subcontractors = [];
+                        // _.each($scope.invitePeople.subcontractors, function(subcontractor) {
+                        //     if (subcontractor._id) {
+                        //         subcontractor._id.inviter = subcontractor.inviter._id;
+                        //         subcontractor._id.hasSelect = subcontractor.hasSelect;
+                        //         subcontractors.push(subcontractor._id);
+                        //     }
+                        // });
                         _.each($scope.invitePeople.subcontractors, function(subcontractor) {
-                            if (subcontractor._id) {
-                                subcontractor._id.inviter = subcontractor.inviter._id;
-                                subcontractor._id.hasSelect = subcontractor.hasSelect;
-                                subcontractors.push(subcontractor._id);
-                            }
-                        });
-                        _.each(subcontractors, function(subcontractor) {
                             subcontractor.unreadMessagesNumber = 0;
                             _.each(res, function(item) {
                                 if (subcontractor._id.toString() == item.fromUser._id.toString() && item.referenceTo == 'people-chat') {
@@ -981,12 +980,11 @@ angular.module('buiiltApp')
     };
 
     $scope.getTenderListByType = function(type) {
-        console.log($scope.invitePeople);
         $scope.selectedTeamType = type;
         $scope.tendersList = [];
         if (type == 'subcontractor') {
             _.each($scope.invitePeople.subcontractors, function(subcontractor) {
-                if (subcontractor._id && subcontractor.inviter == $scope.currentUser._id) {
+                if (subcontractor._id && subcontractor.inviter._id == $scope.currentUser._id) {
                     $scope.tendersList.push({tender: subcontractor, type: 'subcontractor'});
                     if (subcontractor.hasSelect) {
                         $scope.tendersList = [];

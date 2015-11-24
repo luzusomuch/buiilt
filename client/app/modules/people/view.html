@@ -20,7 +20,7 @@
         </div>
         <div ng-show="currentUser.type == 'builder' && isLeader" ng-mouseover="getTenderListByType('architect')">
             <p>ARCHITECT</p>
-            <p class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px;" ng-repeat="architect in invitePeople.architects" ng-click="selectUser(architect., 'architect')" ng-style="architect.email == selectedUser.email ? {'color': '#64B5F6'} : {'color': 'black'}">
+            <p class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px;" ng-repeat="architect in invitePeople.architects" ng-click="selectUser(architect, 'architect')" ng-style="architect.email == selectedUser.email ? {'color': '#64B5F6'} : {'color': 'black'}">
                 <i class="tiny material-icons valign" style="color: #64B5F6; margin-right: 5px; font-size: 8px" ng-style="architect._id.isOnline ? {'color': '#81C784'} : {'color': '#E0E0E0'}">brightness_1</i>
                 {{(architect._id) ? architect._id.name : architect.email}}
                 <span style="background-color:#eee; padding: 5px; margin-left: 5px;">{{architect.unreadMessagesNumber}}</span>
