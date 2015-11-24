@@ -47,10 +47,7 @@ EventBus.onSeries('PeopleChat.Updated', function(req, next){
             return next();
         }
     } else { 
-		return next();
-    }
-});
-        /*if (req.ownerEmail || fromEmail) {
+        if (req.ownerEmail || req.fromEmail) {
             var receiveEmail = (req.ownerEmail) ? req.ownerEmail : req.fromEmail;
             async.parallel({
                 project: function(cb) {
@@ -73,5 +70,6 @@ EventBus.onSeries('PeopleChat.Updated', function(req, next){
             });
         } else {
             return next();    
-        } */
-   
+        } 
+    }
+});
