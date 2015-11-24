@@ -354,6 +354,49 @@ exports.getAllByProject = function(req, res) {
 
 
 exports.replyMessage = function(req, res) {
-  console.log('aaaaaaaaaaaaaa');
-  console.log(req.body);
+  var splited = req.body.recipient.split("-");
+  var messageType = splited[1].substr(0,splited[1].lastIndexOf("@"));
+
+  if (messageType =="people") {
+    PeopleChat.findById(splited[0], function(err, peopleChat) {
+      if (err) {return res.send(500,err);}
+      if (!peopleChat) {return res.send(404);}
+      User.findOne({email: req.body.sender}, function(err, user){
+        if (err) {return res.send(500,err);}
+        if (!user) {
+          peopleChat.messages.push({
+            email: req.body.sender,
+            text: req.body['stripped-text'],
+            mentions: [],
+            sendAt: new Date()
+          });
+          peopleChat._editUser = {email: req.body.sender};
+        } else {
+          peopleChat.messages.push({
+            email: user._id,
+            text: req.body['stripped-text'],
+            mentions: [],
+            sendAt: new Date()
+          });
+          peopleChat._editUser = user;
+        }
+      });
+      setTimeout(function() {
+        peopleChat.messageType = "replyMessage";
+        peopleChat.save(function(err){
+          if (err) {return res.send(500,err);}
+          PeopleChat.populate(peopleChat, 
+          [{path: "messages.user", select: "_id email name"},
+          {path: "messages.mentions", select: "_id email name"}], function(err, peopleChat) {
+              EventBus.emit('socket:emit', {
+                  event: 'peopleChat:new',
+                  room: peopleChat._id.toString(),
+                  data: peopleChat
+              });
+              return res.json(peopleChat);
+          });
+        });
+      }, 2000);
+    });
+  }
 };

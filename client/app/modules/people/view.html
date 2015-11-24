@@ -196,7 +196,7 @@
                 </div>
                 <div class="col">
                     <p class="row chat-name" style="font-size: 13px; color: #757575; margin-bottom: 0px">
-                        <strong>{{message.user.name}}</strong>
+                        <strong>{{(message.user.name) ? message.user.name : message.email}}</strong>
                         <span style="font-size: 12px"> - {{message.sendAt | date : 'MMM d, y h:mm:ss a'}}.</span>
                         <span style="font-size: 10px" ng-if="message.peopleHasSeen.length > 0">Seen by:<span ng-repeat="seenUser in message.peopleHasSeen" style="background-color: #E0E0E0; border-radius: 2px; margin-right: 3px; padding: 3px"> {{seenUser}}</span></span>
                     </p>

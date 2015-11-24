@@ -12,13 +12,15 @@ var _ = require('lodash');
 var mongoose = require('mongoose');
 
 EventBus.onSeries('PeopleChat.Updated', function(req, next) {
-    _.remove(req.members, req.editUser._id);
+    if (req.editUser._id) {
+        _.remove(req.members, req.editUser._id);
+    }
     var newestMessage = _.last(req.messages);
     if (newestMessage.mentions) {
         if (newestMessage.mentions.length > 0) {
             var params = {
                 owners: newestMessage.mentions,
-                fromUser: req.editUser._id,
+                fromUser: (req.editUser._id) ? req.editUser._id : '',
                 element: req,
                 referenceTo: 'people-chat',
                 type: 'chat'
@@ -34,7 +36,7 @@ EventBus.onSeries('PeopleChat.Updated', function(req, next) {
     } else {
         var params = {
             owners: req.members,
-            fromUser: req.editUser._id,
+            fromUser: (req.editUser._id) ? req.editUser._id : '',
             element: req,
             referenceTo: 'people-chat-without-mention',
             type: 'chat'

@@ -18,6 +18,7 @@ var PeopleChatSchema = new Schema({
     }],
     messages: [{
         user: {type: Schema.Types.ObjectId, ref: 'User'},
+        email: {type : String},
         mentions: [{type: Schema.Types.ObjectId, ref: 'User'}],
         text: {type: String},
         sendAt: {type: Date}
@@ -28,6 +29,7 @@ PeopleChatSchema
 .pre('save', function(next) {
     this.wasNew = this.isNew;
     this.editUser = this._editUser;
+    this.messasgeType = this._messageType;
     if (!this.isNew){
         this.updatedAt = new Date();
     }
@@ -38,6 +40,7 @@ PeopleChatSchema
 PeopleChatSchema.post('save', function (doc) {
     var evtName = this.wasNew ? 'PeopleChat.Inserted' : 'PeopleChat.Updated';
     doc.editUser = this._editUser;
+    doc.messasgeType = this._messageType;
     EventBus.emit(evtName, doc);
 });
 
