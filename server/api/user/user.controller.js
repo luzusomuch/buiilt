@@ -9,6 +9,7 @@ var BuilderPackage = require('./../../models/builderPackage.model');
 var BuilderPackageNew = require('./../../models/builderPackageNew.model');
 var MaterialPackage = require('./../../models/materialPackage.model');
 var People = require('./../../models/people.model');
+var PeopleChat = require('./../../models/peopleChat.model');
 var Board = require('./../../models/board.model');
 var Team = require('./../../models/team.model');
 var InviteToken = require('./../../models/inviteToken.model');
@@ -346,9 +347,35 @@ exports.createUserWithInviteToken = function(req, res, next) {
                   emailVerified: true,
                   package: people
                 };
-                packageInvite.remove(function(err){
-                  if (err) {return res.send(500);}
-                  return res.json(200,data);
+                PeopleChat.findOne({project: packageInvite.project, people: people._id, $or:[{ownerEmail: packageInvite.to},{fromEmail: packageInvite.to}]}, function(err, peopleChat){
+                  if (err) {return res.send(500,err);}
+                  else {
+                    console.log(peopleChat);
+                    if (peopleChat.ownerEmail) {
+                      peopleChat.owner = user._id;
+                      peopleChat.ownerEmail = null;
+                    } else if (peopleChat.fromEmail) {
+                      peopleChat.from = user._id;
+                      peopleChat.fromEmail = null;
+                    }
+                    if (peopleChat.messages.length > 0) {
+                      _.each(peopleChat.messages, function(message){
+                        if (message.email) {
+                          if (message.email == packageInvite.to) {
+                            message.email = null;
+                            message.user = user._id;
+                          }
+                        }
+                      });
+                    }
+                    peopleChat.messageType = "newRegistry";
+                    peopleChat.save(function(err){
+                      packageInvite.remove(function(err){
+                        if (err) {return res.send(500);}
+                        return res.json(200,data);
+                      });
+                    });
+                  }
                 });
               });
             }
@@ -388,10 +415,36 @@ exports.createUserWithInviteToken = function(req, res, next) {
                         });
                       });
                     } else {
+                      PeopleChat.findOne({project: packageInvite.project, people: people._id, $or:[{ownerEmail: packageInvite.to},{fromEmail: packageInvite.to}]}, function(err, peopleChat){
+                  if (err) {return res.send(500,err);}
+                  else {
+                    console.log(peopleChat);
+                    if (peopleChat.ownerEmail) {
+                      peopleChat.owner = user._id;
+                      peopleChat.ownerEmail = null;
+                    } else if (peopleChat.fromEmail) {
+                      peopleChat.from = user._id;
+                      peopleChat.fromEmail = null;
+                    }
+                    if (peopleChat.messages.length > 0) {
+                      _.each(peopleChat.messages, function(message){
+                        if (message.email) {
+                          if (message.email == packageInvite.to) {
+                            message.email = null;
+                            message.user = user._id;
+                          }
+                        }
+                      });
+                    }
+                    peopleChat.messageType = "newRegistry";
+                    peopleChat.save(function(err){
                       packageInvite.remove(function(err){
                         if (err) {return res.send(500);}
                         return res.json(200,data);
                       });
+                    });
+                  }
+                });
                     }
                   }
                 });
@@ -416,9 +469,35 @@ exports.createUserWithInviteToken = function(req, res, next) {
                   emailVerified: true,
                   package: people
                 };
-                packageInvite.remove(function(err){
-                  if (err) {return res.send(500);}
-                  return res.json(200,data);
+                PeopleChat.findOne({project: packageInvite.project, people: people._id, $or:[{ownerEmail: packageInvite.to},{fromEmail: packageInvite.to}]}, function(err, peopleChat){
+                  if (err) {return res.send(500,err);}
+                  else {
+                    console.log(peopleChat);
+                    if (peopleChat.ownerEmail) {
+                      peopleChat.owner = user._id;
+                      peopleChat.ownerEmail = null;
+                    } else if (peopleChat.fromEmail) {
+                      peopleChat.from = user._id;
+                      peopleChat.fromEmail = null;
+                    }
+                    if (peopleChat.messages.length > 0) {
+                      _.each(peopleChat.messages, function(message){
+                        if (message.email) {
+                          if (message.email == packageInvite.to) {
+                            message.email = null;
+                            message.user = user._id;
+                          }
+                        }
+                      });
+                    }
+                    peopleChat.messageType = "newRegistry";
+                    peopleChat.save(function(err){
+                      packageInvite.remove(function(err){
+                        if (err) {return res.send(500);}
+                        return res.json(200,data);
+                      });
+                    });
+                  }
                 });
               });
             }
@@ -441,9 +520,35 @@ exports.createUserWithInviteToken = function(req, res, next) {
                   emailVerified: true,
                   package: people
                 };
-                packageInvite.remove(function(err){
-                  if (err) {return res.send(500);}
-                  return res.json(200,data);
+                PeopleChat.findOne({project: packageInvite.project, people: people._id, $or:[{ownerEmail: packageInvite.to},{fromEmail: packageInvite.to}]}, function(err, peopleChat){
+                  if (err) {return res.send(500,err);}
+                  else {
+                    console.log(peopleChat);
+                    if (peopleChat.ownerEmail) {
+                      peopleChat.owner = user._id;
+                      peopleChat.ownerEmail = null;
+                    } else if (peopleChat.fromEmail) {
+                      peopleChat.from = user._id;
+                      peopleChat.fromEmail = null;
+                    }
+                    if (peopleChat.messages.length > 0) {
+                      _.each(peopleChat.messages, function(message){
+                        if (message.email) {
+                          if (message.email == packageInvite.to) {
+                            message.email = null;
+                            message.user = user._id;
+                          }
+                        }
+                      });
+                    }
+                    peopleChat.messageType = "newRegistry";
+                    peopleChat.save(function(err){
+                      packageInvite.remove(function(err){
+                        if (err) {return res.send(500);}
+                        return res.json(200,data);
+                      });
+                    });
+                  }
                 });
               });
             }
@@ -466,9 +571,35 @@ exports.createUserWithInviteToken = function(req, res, next) {
                   emailVerified: true,
                   package: people
                 };
-                packageInvite.remove(function(err){
-                  if (err) {return res.send(500);}
-                  return res.json(200,data);
+                PeopleChat.findOne({project: packageInvite.project, people: people._id, $or:[{ownerEmail: packageInvite.to},{fromEmail: packageInvite.to}]}, function(err, peopleChat){
+                  if (err) {return res.send(500,err);}
+                  else {
+                    console.log(peopleChat);
+                    if (peopleChat.ownerEmail) {
+                      peopleChat.owner = user._id;
+                      peopleChat.ownerEmail = null;
+                    } else if (peopleChat.fromEmail) {
+                      peopleChat.from = user._id;
+                      peopleChat.fromEmail = null;
+                    }
+                    if (peopleChat.messages.length > 0) {
+                      _.each(peopleChat.messages, function(message){
+                        if (message.email) {
+                          if (message.email == packageInvite.to) {
+                            message.email = null;
+                            message.user = user._id;
+                          }
+                        }
+                      });
+                    }
+                    peopleChat.messageType = "newRegistry";
+                    peopleChat.save(function(err){
+                      packageInvite.remove(function(err){
+                        if (err) {return res.send(500);}
+                        return res.json(200,data);
+                      });
+                    });
+                  }
                 });
               });
             }
@@ -490,10 +621,36 @@ exports.createUserWithInviteToken = function(req, res, next) {
                 emailVerified: true,
                 package: board
               };
-              packageInvite.remove(function(err){
-                if (err) {return res.send(500);}
-                return res.json(200,data);
-              });
+              PeopleChat.findOne({project: packageInvite.project, people: people._id, $or:[{ownerEmail: packageInvite.to},{fromEmail: packageInvite.to}]}, function(err, peopleChat){
+                  if (err) {return res.send(500,err);}
+                  else {
+                    console.log(peopleChat);
+                    if (peopleChat.ownerEmail) {
+                      peopleChat.owner = user._id;
+                      peopleChat.ownerEmail = null;
+                    } else if (peopleChat.fromEmail) {
+                      peopleChat.from = user._id;
+                      peopleChat.fromEmail = null;
+                    }
+                    if (peopleChat.messages.length > 0) {
+                      _.each(peopleChat.messages, function(message){
+                        if (message.email) {
+                          if (message.email == packageInvite.to) {
+                            message.email = null;
+                            message.user = user._id;
+                          }
+                        }
+                      });
+                    }
+                    peopleChat.messageType = "newRegistry";
+                    peopleChat.save(function(err){
+                      packageInvite.remove(function(err){
+                        if (err) {return res.send(500);}
+                        return res.json(200,data);
+                      });
+                    });
+                  }
+                });
             });
           });
         } else {
