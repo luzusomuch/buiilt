@@ -63,6 +63,7 @@ EventBus.onSeries('PeopleChat.Updated', function(req, next){
                         project: result.project.toJSON(),
                         place: result.project.name,
                         replyMessageLink : config.baseUrl + "api/peopleChats/" + req._id + "/reply-message-from-email",
+                        registryLink: config.baseUrl + "signup",
                         subject: 'New message on ' + result.project.name
                     },function(err){
                         console.log(err)
