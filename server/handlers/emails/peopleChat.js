@@ -57,7 +57,7 @@ EventBus.onSeries('PeopleChat.Updated', function(req, next){
                         Project.findById(req.project, cb);
                     } 
                 }, function(err, result) {
-                    PackageInvite.findOne({project: req.project, package: req._id, to: receiveEmail}, function(err, packageInvite){
+                    PackageInvite.findOne({project: req.project, package: req.people, to: receiveEmail}, function(err, packageInvite){
                         if (err || !packageInvite) {console.log('it goes here'); return next();}
                         else {
                             Mailer.sendMail('new-message-unregistry.html', req.editUser.firstName + " " + req.editUser.lastName + "<" + req._id+"-people@mg.buiilt.com.au" + ">", receiveEmail, {
