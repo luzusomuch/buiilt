@@ -349,6 +349,12 @@ exports.createUserWithInviteToken = function(req, res, next) {
                 };
                 PeopleChat.findOne({project: packageInvite.project, people: people._id, $or:[{ownerEmail: packageInvite.to},{fromEmail: packageInvite.to}]}, function(err, peopleChat){
                   if (err) {return res.send(500,err);}
+                  if (!peopleChat) {
+                    packageInvite.remove(function(err){
+                      if (err) {return res.send(500);}
+                      return res.json(200,data);
+                    });
+                  }
                   else {
                     console.log(peopleChat);
                     if (peopleChat.ownerEmail) {
@@ -417,6 +423,12 @@ exports.createUserWithInviteToken = function(req, res, next) {
                     } else {
                       PeopleChat.findOne({project: packageInvite.project, people: people._id, $or:[{ownerEmail: packageInvite.to},{fromEmail: packageInvite.to}]}, function(err, peopleChat){
                   if (err) {return res.send(500,err);}
+                  if (!peopleChat) {
+                    packageInvite.remove(function(err){
+                      if (err) {return res.send(500);}
+                      return res.json(200,data);
+                    });
+                  }
                   else {
                     console.log(peopleChat);
                     if (peopleChat.ownerEmail) {
@@ -471,6 +483,12 @@ exports.createUserWithInviteToken = function(req, res, next) {
                 };
                 PeopleChat.findOne({project: packageInvite.project, people: people._id, $or:[{ownerEmail: packageInvite.to},{fromEmail: packageInvite.to}]}, function(err, peopleChat){
                   if (err) {return res.send(500,err);}
+                  if (!peopleChat) {
+                    packageInvite.remove(function(err){
+                      if (err) {return res.send(500);}
+                      return res.json(200,data);
+                    });
+                  }
                   else {
                     console.log(peopleChat);
                     if (peopleChat.ownerEmail) {
@@ -522,6 +540,12 @@ exports.createUserWithInviteToken = function(req, res, next) {
                 };
                 PeopleChat.findOne({project: packageInvite.project, people: people._id, $or:[{ownerEmail: packageInvite.to},{fromEmail: packageInvite.to}]}, function(err, peopleChat){
                   if (err) {return res.send(500,err);}
+                  if (!peopleChat) {
+                    packageInvite.remove(function(err){
+                      if (err) {return res.send(500);}
+                      return res.json(200,data);
+                    });
+                  }
                   else {
                     console.log(peopleChat);
                     if (peopleChat.ownerEmail) {
@@ -573,6 +597,12 @@ exports.createUserWithInviteToken = function(req, res, next) {
                 };
                 PeopleChat.findOne({project: packageInvite.project, people: people._id, $or:[{ownerEmail: packageInvite.to},{fromEmail: packageInvite.to}]}, function(err, peopleChat){
                   if (err) {return res.send(500,err);}
+                  if (!peopleChat) {
+                    packageInvite.remove(function(err){
+                      if (err) {return res.send(500);}
+                      return res.json(200,data);
+                    });
+                  }
                   else {
                     console.log(peopleChat);
                     if (peopleChat.ownerEmail) {

@@ -500,8 +500,8 @@ exports.invitePeople = function(req, res) {
                         });
                     });
                 } else {
+                    var subcontractors = people.subcontractors;
                     if (invite.isInviteTeamMember) {
-                        var subcontractors = people.subcontractors;
                         _.each(subcontractors, function(subcontractor){
                             if (subcontractor._id) {
                                 if (subcontractor._id.toString() == req.user._id.toString()) {
@@ -546,7 +546,6 @@ exports.invitePeople = function(req, res) {
                             }
                         });
                     } else {
-                        var subcontractors = [];
                         User.findOne({email: invite.email}, function(err, subcontractor) {
                             if (err) {return res.send(500,err);}
                             if (!subcontractor) {

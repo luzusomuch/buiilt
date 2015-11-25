@@ -73,9 +73,6 @@ angular.module('buiiltApp')
                 }
             });
             $scope.available = _.uniq($scope.available, '_id');
-            if ($scope.available.length > 1) {
-                $scope.selectUser($scope.available[1], '');
-            }
 
             if (_.findIndex($scope.invitePeople.builders, function(item) {
                 if (item._id) {
@@ -327,7 +324,6 @@ angular.module('buiiltApp')
                                 }
                             })
                         });
-
                         $scope.invitePeople.builders = builders;
                         $scope.currentTeamMembers = builders;
                         $scope.currentTeamMembers = _.uniq($scope.currentTeamMembers, '_id');
@@ -359,48 +355,31 @@ angular.module('buiiltApp')
                             }
                         });
 
-                        // _.each($scope.invitePeople.subcontractors, function(subcontractor) {
-                        //     if (subcontractor._id) {
-                        //         subcontractor._id.inviter = subcontractor.inviter._id;
-                        //         subcontractor._id.hasSelect = subcontractor.hasSelect;
-                        //         subcontractors.push(subcontractor._id);
-                        //     }
-                        // });
                         _.each($scope.invitePeople.subcontractors, function(subcontractor) {
                             subcontractor.unreadMessagesNumber = 0;
                             _.each(res, function(item) {
-                                if (subcontractor._id.toString() == item.fromUser._id.toString() && item.referenceTo == 'people-chat') {
-                                    subcontractor.unreadMessagesNumber++;
-                                } else if (item.fromUser._id.toString() == subcontractor._id.toString() && item.referenceTo == 'people-chat-without-mention') {
-                                    subcontractor.unreadMessagesNumber++;
+                                if (subcontractor._id) {
+                                    if (subcontractor._id.toString() == item.fromUser._id.toString() && item.referenceTo == 'people-chat') {
+                                        subcontractor.unreadMessagesNumber++;
+                                    } else if (item.fromUser._id.toString() == subcontractor._id.toString() && item.referenceTo == 'people-chat-without-mention') {
+                                        subcontractor.unreadMessagesNumber++;
+                                    }
                                 }
                             });
                         });
 
-                        $scope.invitePeople.subcontractors = subcontractors;
-
-                        var consultants = [];
                         _.each($scope.invitePeople.consultants, function(consultant) {
-                            if (consultant._id) {
-                                consultant._id.inviter = consultant.inviter._id;
-                                consultant._id.hasSelect = consultant.hasSelect;
-                                if (consultant._id && consultant._id.inviter == $scope.currentUser._id) {
-                                    consultants.push(consultant._id);
-                                }
-                            }
-                        });
-                        _.each(consultants, function(consultant) {
                             consultant.unreadMessagesNumber = 0;
                             _.each(res, function(item) {
-                                if (consultant._id.toString() == item.fromUser._id.toString() && item.referenceTo == 'people-chat') {
-                                    consultant.unreadMessagesNumber++;
-                                } else if (item.fromUser._id.toString() == consultant._id.toString() && item.referenceTo == 'people-chat-without-mention') {
-                                    consultant.unreadMessagesNumber++;
+                                if (consultant._id) {
+                                    if (consultant._id.toString() == item.fromUser._id.toString() && item.referenceTo == 'people-chat') {
+                                        consultant.unreadMessagesNumber++;
+                                    } else if (item.fromUser._id.toString() == consultant._id.toString() && item.referenceTo == 'people-chat-without-mention') {
+                                        consultant.unreadMessagesNumber++;
+                                    }
                                 }
                             });
                         });
-
-                        $scope.invitePeople.consultants = consultants;
 
                         if ($rootScope.inComingSelectThread) {
                             $scope.selectUser($rootScope.inComingSelectThread.owner,'');
@@ -408,11 +387,11 @@ angular.module('buiiltApp')
                             $scope.selectUser($rootScope.inComingSelectTask.user, '');
                         } else {
                             if ($scope.currentTeamMembers.length > 0) {
-                                $scope.selectUser($scope.currentTeamMembers[0]);
+                                $scope.selectUser($scope.currentTeamMembers[0], 'team');
                             } else if ($scope.invitePeople.subcontractors.length > 0) {
-                                $scope.selectUser($scope.invitePeople.subcontractors[0]);
+                                $scope.selectUser($scope.invitePeople.subcontractors[0], 'subcontractor');
                             } else if ($scope.invitePeople.consultants.length > 0) {
-                                $scope.selectedUser($scope.invitePeople.consultants[0]);
+                                $scope.selectedUser($scope.invitePeople.consultants[0], 'consultant');
                             }
                         }
                     });
@@ -479,17 +458,6 @@ angular.module('buiiltApp')
                             }
                         });
 
-                        var consultants = [];
-                        // _.each($scope.invitePeople.consultants, function(consultant) {
-
-                        //     if (consultant._id) {
-                        //         consultant._id.inviter = consultant.inviter._id;
-                        //         consultant._id.hasSelect = consultant.hasSelect;
-                        //         if (consultant._id && consultant._id.inviter == $scope.currentUser._id) {
-                        //             consultants.push(consultant._id);
-                        //         }
-                        //     }
-                        // });
                         _.each($scope.invitePeople.consultants, function(consultant) {
                             consultant.unreadMessagesNumber = 0;
                             _.each(res, function(item) {
@@ -503,18 +471,15 @@ angular.module('buiiltApp')
                             });
                         });
 
-                        // $scope.invitePeople.consultants = consultants;
-                        console.log($scope.invitePeople);
-
                         if ($rootScope.inComingSelectThread) {
                             $scope.selectUser($rootScope.inComingSelectThread.owner,'');
                         } else if ($rootScope.inComingSelectTask) {
                             $scope.selectUser($rootScope.inComingSelectTask.user, '');
                         } else {
                             if ($scope.currentTeamMembers.length > 0) {
-                                $scope.selectUser($scope.currentTeamMembers[0]);
+                                $scope.selectUser($scope.currentTeamMembers[0], 'team');
                             } else if ($scope.invitePeople.consultants.length > 0) {
-                                $scope.selectUser($scope.invitePeople.consultants[0]);
+                                $scope.selectUser($scope.invitePeople.consultants[0], 'consultant');
                             }
                         }
                     });
@@ -580,17 +545,7 @@ angular.module('buiiltApp')
                             }
                         });
 
-                        var consultants = [];
                         _.each($scope.invitePeople.consultants, function(consultant) {
-                            if (consultant._id) {
-                                consultant._id.inviter = consultant.inviter._id;
-                                consultant._id.hasSelect = consultant.hasSelect;
-                                if (consultant._id && consultant._id.inviter == $scope.currentUser._id) {
-                                    consultants.push(consultant._id);
-                                }
-                            }
-                        });
-                        _.each(consultants, function(consultant) {
                             consultant.unreadMessagesNumber = 0;
                             _.each(res, function(item) {
                                 if (consultant._id.toString() == item.fromUser._id.toString() && item.referenceTo == 'people-chat') {
@@ -601,16 +556,15 @@ angular.module('buiiltApp')
                             });
                         });
 
-                        $scope.invitePeople.consultants = consultants;
                         if ($rootScope.inComingSelectThread) {
                             $scope.selectUser($rootScope.inComingSelectThread.owner,'');
                         } else if ($rootScope.inComingSelectTask) {
                             $scope.selectUser($rootScope.inComingSelectTask.user, '');
                         } else {
                             if ($scope.currentTeamMembers.length > 0) {
-                                $scope.selectUser($scope.currentTeamMembers[0]);
+                                $scope.selectUser($scope.currentTeamMembers[0], 'team');
                             } else if ($scope.invitePeople.consultants.length > 0) {
-                                $scope.selectedUser($scope.invitePeople.consultants[0]);
+                                $scope.selectedUser($scope.invitePeople.consultants[0], 'consultant');
                             }
                         }
                     });
@@ -629,12 +583,14 @@ angular.module('buiiltApp')
                                     });
                                 }
 
+                                $scope.invitePeople.inviter = subcontractor.inviter;
+
                                 if (subcontractor._id._id == $scope.currentUser._id) {
                                     $scope.currentUser.isLeader = true;
+                                    return false;
                                 } else {
                                     $scope.currentUser.isLeader = false;
                                 }
-                                $scope.invitePeople.inviter = subcontractor.inviter;
                             }
                         });
                         _.each(subcontractors, function(subcontractor) {
@@ -667,7 +623,7 @@ angular.module('buiiltApp')
                             $scope.selectUser($rootScope.inComingSelectTask.user, '');
                         } else {
                             if ($scope.currentTeamMembers.length > 0) {
-                                $scope.selectUser($scope.currentTeamMembers[0]);
+                                $scope.selectUser($scope.currentTeamMembers[0], 'team');
                             }
                         }
                     });
@@ -734,7 +690,7 @@ angular.module('buiiltApp')
                             $scope.selectUser($rootScope.inComingSelectTask.user, '');
                         } else {
                             if ($scope.currentTeamMembers.length > 0) {
-                                $scope.selectUser($scope.currentTeamMembers[0]);
+                                $scope.selectUser($scope.currentTeamMembers[0], 'team');
                             }
                         }
                     });
@@ -742,7 +698,6 @@ angular.module('buiiltApp')
                 default:
                     break;
             }
-            console.log($scope.currentUser);
         });
     };
 
@@ -844,7 +799,6 @@ angular.module('buiiltApp')
                     }
                 });
             }
-            console.log($scope.selectedChatPeople);
         });
     };
 
@@ -1243,10 +1197,15 @@ angular.module('buiiltApp')
     $scope.showPopup = false;
 
     $scope.getMentionValue = function(mention) {
+        console.log(mention);
         $scope.message.mentions = [];
         $scope.message.text = $scope.message.text.substring(0, $scope.message.text.length -1);
-        $scope.message.text += mention.name;  
-        $scope.message.mentions.push(mention._id);
+        $scope.message.text += (mention.type == 'team') ? mention.name : mention._id.name;  
+        if (mention.type == 'team') {
+            $scope.message.mentions.push(mention._id);
+        } else {
+            $scope.message.mentions.push(mention._id._id);
+        }
         $scope.showPopup = false;
         $timeout(function(){ 
             document.getElementById("textarea1-people-chat").focus();

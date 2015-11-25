@@ -12,7 +12,7 @@
         </div>
         <div ng-show="(currentUser.type == 'client' || currentUser.type == 'architect') && currentUser.isLeader" ng-mouseover="getTenderListByType('builder')">
             <p >BUILDER</p>
-            <p class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px;" ng-repeat="builder in invitePeople.builders" ng-click="selectUser(builder, 'builder')" ng-style="builder.email == selectedUser.email ? {'color': '#64B5F6'} : {'color': 'black'}">
+            <p class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px;" ng-repeat="builder in invitePeople.builders" ng-click="selectUser(builder, 'builder')" ng-style="builder._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
                 <i class="tiny material-icons valign" style="color: #64B5F6; margin-right: 5px; font-size: 8px" ng-style="builder._id.isOnline ? {'color': '#81C784'} : {'color': '#E0E0E0'}">brightness_1</i>
                 {{(builder._id) ? builder._id.name : builder.email}}
                 <span style="background-color:#eee; padding: 5px; margin-left: 5px;">{{builder.unreadMessagesNumber}}</span>
@@ -20,7 +20,7 @@
         </div>
         <div ng-show="currentUser.type == 'builder' && isLeader" ng-mouseover="getTenderListByType('architect')">
             <p>ARCHITECT</p>
-            <p class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px;" ng-repeat="architect in invitePeople.architects" ng-click="selectUser(architect, 'architect')" ng-style="architect.email == selectedUser.email ? {'color': '#64B5F6'} : {'color': 'black'}">
+            <p class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px;" ng-repeat="architect in invitePeople.architects" ng-click="selectUser(architect, 'architect')" ng-style="architect._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
                 <i class="tiny material-icons valign" style="color: #64B5F6; margin-right: 5px; font-size: 8px" ng-style="architect._id.isOnline ? {'color': '#81C784'} : {'color': '#E0E0E0'}">brightness_1</i>
                 {{(architect._id) ? architect._id.name : architect.email}}
                 <span style="background-color:#eee; padding: 5px; margin-left: 5px;">{{architect.unreadMessagesNumber}}</span>
@@ -28,7 +28,7 @@
         </div>
         <div ng-show="currentUser.type == 'builder' && isLeader" ng-mouseover="getTenderListByType('client')">
             <p>CLIENT</p>
-            <p class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px;" ng-repeat="client in invitePeople.clients" ng-click="selectUser(client, 'client')" ng-style="client.email == selectedUser.email ? {'color': '#64B5F6'} : {'color': 'black'}">
+            <p class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px;" ng-repeat="client in invitePeople.clients" ng-click="selectUser(client, 'client')" ng-style="client._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
                 <i class="tiny material-icons valign" style="color: #64B5F6; margin-right: 5px; font-size: 8px" ng-style="client._id.isOnline ? {'color': '#81C784'} : {'color': '#E0E0E0'}">brightness_1</i>
                 {{(client._id) ? client._id.name : client.email}}
                 <span style="background-color:#eee; padding: 5px; margin-left: 5px;">{{client.unreadMessagesNumber}}</span>
@@ -36,7 +36,7 @@
         </div>
         <div ng-show="currentUser.type == 'builder' && isLeader" ng-mouseover="getTenderListByType('subcontractor')">
             <p >SUBCONTRACTORS</p>
-            <p class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px;" ng-repeat="subcontractor in invitePeople.subcontractors" ng-click="selectUser(subcontractor, 'subcontractor')" ng-style="subcontractor.email == selectedUser.email ? {'color': '#64B5F6'} : {'color': 'black'}">
+            <p class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px;" ng-repeat="subcontractor in invitePeople.subcontractors" ng-click="selectUser(subcontractor, 'subcontractor')" ng-style="subcontractor._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
                 <i class="tiny material-icons valign" style="color: #64B5F6; margin-right: 5px; font-size: 8px" ng-style="subcontractor.isOnline ? {'color': '#81C784'} : {'color': '#E0E0E0'}">brightness_1</i>
                 {{(subcontractor._id) ? subcontractor._id.name : subcontractor.email}}
                 <span style="background-color:#eee; padding: 5px; margin-left: 5px;">{{subcontractor.unreadMessagesNumber}}</span>
@@ -44,7 +44,7 @@
         </div>
         <div ng-show="(currentUser.type == 'client' || currentUser.type == 'builder' || currentUser.type == 'architect') && currentUser.isLeader" ng-mouseover="getTenderListByType('consultant')">
             <p >CONSULTANTS</p>
-            <p class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px" ng-repeat="consultant in invitePeople.consultants" ng-click="selectUser(consultant, 'consultant')" ng-style="consultant.email == selectedUser.email ? {'color': '#64B5F6'} : {'color': 'black'}">
+            <p class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px" ng-repeat="consultant in invitePeople.consultants" ng-click="selectUser(consultant, 'consultant')" ng-style="consultant._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
                 <i class="tiny material-icons valign" style="color: #64B5F6; margin-right: 5px; font-size: 8px" ng-style="consultant.isOnline ? {'color': '#81C784'} : {'color': '#E0E0E0'}">brightness_1</i>
                 {{(consultant._id) ? consultant._id.name : consultant.email}}
                 <span style="background-color:#eee; padding: 5px; margin-left: 5px;">{{consultant.unreadMessagesNumber}}</span>
@@ -73,7 +73,7 @@
         </div>
         <div ng-show="currentUser.type == 'architect' && currentUser.isLeader" ng-mouseover="getTenderListByType('builder')">
             <p>BUILDER</p>
-            <p class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px;" ng-repeat="builder in invitePeople.builders" ng-click="selectUser(builder, 'builder')" ng-style="(builder.email == selectedUser.email) ? {'color': '#64B5F6'} : {'color': 'black'}">
+            <p class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px;" ng-repeat="builder in invitePeople.builders" ng-click="selectUser(builder, 'builder')" ng-style="(builder._id == selectedUser._id) ? {'color': '#64B5F6'} : {'color': 'black'}">
                 <i class="tiny material-icons valign" style="color: #64B5F6; margin-right: 5px; font-size: 8px" ng-style="builder._id.isOnline ? {'color': '#81C784'} : {'color': '#E0E0E0'}">brightness_1</i>
                 {{(builder._id) ? builder._id.name : builder.email}}
                 <span style="background-color:#eee; padding: 5px; margin-left: 5px;">{{builder.unreadMessagesNumber}}</span>
@@ -81,7 +81,7 @@
         </div>
         <div ng-mouseover="getTenderListByType('architect')">
             <p ng-show="(currentUser.type == 'client' || currentUser.type == 'builder') && currentUser.isLeader">ARCHITECT</p>
-            <p ng-show="(currentUser.type == 'client' || currentUser.type == 'builder') && currentUser.isLeader" class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px;" ng-repeat="architect in invitePeople.architects" ng-click="selectUser(architect, 'architect')" ng-style="architect.email == selectedUser.email ? {'color': '#64B5F6'} : {'color': 'black'}">
+            <p ng-show="(currentUser.type == 'client' || currentUser.type == 'builder') && currentUser.isLeader" class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px;" ng-repeat="architect in invitePeople.architects" ng-click="selectUser(architect, 'architect')" ng-style="architect._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
                 <i class="tiny material-icons valign" style="color: #64B5F6; margin-right: 5px; font-size: 8px" ng-style="architect._id.isOnline ? {'color': '#81C784'} : {'color': '#E0E0E0'}">brightness_1</i>
                 {{(architect._id) ? architect._id.name : architect.email}}
                 <span style="background-color:#eee; padding: 5px; margin-left: 5px;">{{architect.unreadMessagesNumber}}</span>
@@ -89,7 +89,7 @@
         </div>
         <div ng-mouseover="getTenderListByType('client')">
             <p ng-show="currentUser.type == 'architect' && currentUser.isLeader">CLIENT</p>
-            <p ng-show="currentUser.type == 'architect' && currentUser.isLeader" class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px;" ng-repeat="client in invitePeople.clients" ng-click="selectUser(client, 'client')" ng-style="client.email == selectedUser.email ? {'color': '#64B5F6'} : {'color': 'black'}">
+            <p ng-show="currentUser.type == 'architect' && currentUser.isLeader" class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px;" ng-repeat="client in invitePeople.clients" ng-click="selectUser(client, 'client')" ng-style="client._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
                 <i class="tiny material-icons valign" style="color: #64B5F6; margin-right: 5px; font-size: 8px" ng-style="client._id.isOnline ? {'color': '#81C784'} : {'color': '#E0E0E0'}">brightness_1</i>
                 {{(client._id) ? client._id.name : client.email}}
                 <span style="background-color:#eee; padding: 5px; margin-left: 5px;">{{client.unreadMessagesNumber}}</span>
@@ -97,7 +97,7 @@
         </div>
         <div ng-mouseover="getTenderListByType('subcontractor')">
             <p ng-show="currentUser.type == 'builder' && currentUser.isLeader">SUBCONTRACTORS</p>
-            <p ng-show="currentUser.type == 'builder' && currentUser.isLeader" class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px;" ng-repeat="subcontractor in invitePeople.subcontractors" ng-click="selectUser(subcontractor, 'subcontractor')" ng-style="subcontractor.email == selectedUser.email ? {'color': '#64B5F6'} : {'color': 'black'}">
+            <p ng-show="currentUser.type == 'builder' && currentUser.isLeader" class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px;" ng-repeat="subcontractor in invitePeople.subcontractors" ng-click="selectUser(subcontractor, 'subcontractor')" ng-style="subcontractor._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
                 <i class="tiny material-icons valign" style="color: #64B5F6; margin-right: 5px; font-size: 8px" ng-style="subcontractor.isOnline ? {'color': '#81C784'} : {'color': '#E0E0E0'}">brightness_1</i>
                 {{(subcontractor._id) ? subcontractor._id.name : subcontractor.email}}
                 <span style="background-color:#eee; padding: 5px; margin-left: 5px;">{{subcontractor.unreadMessagesNumber}}</span>
@@ -105,7 +105,7 @@
         </div>
         <div ng-mouseover="getTenderListByType('consultant')">
             <p ng-show="(currentUser.type == 'client' || currentUser.type == 'builder' || currentUser.type == 'architect') && currentUser.isLeader">CONSULTANTS</p>
-            <p ng-show="(currentUser.type == 'client' || currentUser.type == 'builder' || currentUser.type == 'architect') && currentUser.isLeader" class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px" ng-repeat="consultant in invitePeople.consultants" ng-if="consultant.inviter._id == currentUser._id" ng-click="selectUser(consultant, 'consultant')" ng-style="consultant.email == selectedUser.email ? {'color': '#64B5F6'} : {'color': 'black'}">
+            <p ng-show="(currentUser.type == 'client' || currentUser.type == 'builder' || currentUser.type == 'architect') && currentUser.isLeader" class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px" ng-repeat="consultant in invitePeople.consultants" ng-if="consultant.inviter._id == currentUser._id" ng-click="selectUser(consultant, 'consultant')" ng-style="consultant._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
                 <i class="tiny material-icons valign" style="color: #64B5F6; margin-right: 5px; font-size: 8px" ng-style="consultant._id.isOnline ? {'color': '#81C784'} : {'color': '#E0E0E0'}">brightness_1</i>
 
                 {{(consultant._id) ? consultant._id.name : consultant.email}}
@@ -135,7 +135,7 @@
         </div>
         <div ng-show="currentUser.type == 'client' && currentUser.isLeader" ng-mouseover="getTenderListByType('builder')">
             <p >BUILDER</p>
-            <p class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px;" ng-repeat="builder in invitePeople.builders" ng-click="selectUser(builder, 'builder')" ng-style="builder.email == selectedUser.email ? {'color': '#64B5F6'} : {'color': 'black'}">
+            <p class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px;" ng-repeat="builder in invitePeople.builders" ng-click="selectUser(builder, 'builder')" ng-style="builder._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
                 <i class="tiny material-icons valign" style="color: #64B5F6; margin-right: 5px; font-size: 8px" ng-style="builder._id.isOnline ? {'color': '#81C784'} : {'color': '#E0E0E0'}">brightness_1</i>
                 {{(builder._id) ? builder._id.name : builder.email}}
                 <span style="background-color:#eee; padding: 5px; margin-left: 5px;">{{builder.unreadMessagesNumber}}</span>
@@ -143,7 +143,7 @@
         </div>
         <div ng-show="currentUser.type == 'client' && currentUser.isLeader" ng-mouseover="getTenderListByType('architect')">
             <p >ARCHITECT</p>
-            <p class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px;" ng-repeat="architect in invitePeople.architects" ng-click="selectUser(architect, 'architect')" ng-style="architect.email == selectedUser.email ? {'color': '#64B5F6'} : {'color': 'black'}">
+            <p class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px;" ng-repeat="architect in invitePeople.architects" ng-click="selectUser(architect, 'architect')" ng-style="architect._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
                 <i class="tiny material-icons valign" style="color: #64B5F6; margin-right: 5px; font-size: 8px" ng-style="architect._id.isOnline ? {'color': '#81C784'} : {'color': '#E0E0E0'}">brightness_1</i>
                 {{(architect._id) ? architect._id.name : architect.email}}
                 <span style="background-color:#eee; padding: 5px; margin-left: 5px;">{{architect.unreadMessagesNumber}}</span>
@@ -151,7 +151,7 @@
         </div>
         <div ng-show="(currentUser.type == 'builder' || currentUser.type == 'architect') && currentUser.isLeader" ng-mouseover="getTenderListByType('client')">
             <p >CLIENT</p>
-            <p class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px;" ng-repeat="client in invitePeople.clients" ng-click="selectUser(client, 'client')" ng-style="client.email == selectedUser.email ? {'color': '#64B5F6'} : {'color': 'black'}">
+            <p class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px;" ng-repeat="client in invitePeople.clients" ng-click="selectUser(client, 'client')" ng-style="client._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
                 <i class="tiny material-icons valign" style="color: #64B5F6; margin-right: 5px; font-size: 8px" ng-style="client._id.isOnline ? {'color': '#81C784'} : {'color': '#E0E0E0'}">brightness_1</i>
                 {{(client._id) ? client._id.name : client.email}}
                 <span style="background-color:#eee; padding: 5px; margin-left: 5px;">{{client.unreadMessagesNumber}}</span>
@@ -159,7 +159,7 @@
         </div>
         <div ng-show="currentUser.type == 'builder' && currentUser.isLeader" ng-mouseover="getTenderListByType('subcontractor')">
             <p >SUBCONTRACTORS</p>
-            <p class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px;" ng-repeat="subcontractor in invitePeople.subcontractors" ng-click="selectUser(subcontractor, 'subcontractor')" ng-style="subcontractor.email == selectedUser.email ? {'color': '#64B5F6'} : {'color': 'black'}">
+            <p class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px;" ng-repeat="subcontractor in invitePeople.subcontractors" ng-click="selectUser(subcontractor, 'subcontractor')" ng-style="subcontractor._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
                 <i class="tiny material-icons valign" style="color: #64B5F6; margin-right: 5px; font-size: 8px" ng-style="subcontractor.isOnline ? {'color': '#81C784'} : {'color': '#E0E0E0'}">brightness_1</i>
                 {{(subcontractor._id) ? subcontractor._id.name : subcontractor.email}}
                 <span style="background-color:#eee; padding: 5px; margin-left: 5px;">{{subcontractor.unreadMessagesNumber}}</span>
@@ -167,7 +167,7 @@
         </div>
         <div ng-show="(currentUser.type == 'client' || currentUser.type == 'builder' || currentUser.type == 'architect') && currentUser.isLeader" ng-mouseover="getTenderListByType('consultant')">
             <p >CONSULTANTS</p>
-            <p class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px" ng-repeat="consultant in invitePeople.consultants" ng-click="selectUser(consultant, 'consultant')" ng-style="consultant.email == selectedUser.email ? {'color': '#64B5F6'} : {'color': 'black'}">
+            <p class="margin-10-0 font-weight-600 valign-wrapper" style="margin-left: 10px" ng-repeat="consultant in invitePeople.consultants" ng-click="selectUser(consultant, 'consultant')" ng-style="consultant._id == selectedUser._id ? {'color': '#64B5F6'} : {'color': 'black'}">
                 <i class="tiny material-icons valign" style="color: #64B5F6; margin-right: 5px; font-size: 8px" ng-style="consultant.isOnline ? {'color': '#81C784'} : {'color': '#E0E0E0'}">brightness_1</i>
                 {{(consultant._id) ? consultant._id.name : consultant.email}}
                 <span style="background-color:#eee; padding: 5px; margin-left: 5px;">{{consultant.unreadMessagesNumber}}</span>
@@ -213,7 +213,7 @@
                 <div class="row" style="margin-bottom: -5px; margin-top: -18px">
                     <div id="mentionPeople" class="col s12" ng-if="showPopup" style="position: fixed; bottom: 150px; height: 100px; width:200px; background-color:#64B5F6; overflow-y: auto">
                         <ul>
-                            <li ng-click="getMentionValue(selectedUser)">{{selectedUser.name}}</li>
+                            <li ng-click="getMentionValue(selectedUser)">{{(selectedUser.type == 'team') ? selectedUser.name : selectedUser._id.name}}</li>
                         </ul>
                     </div>
                     <div class="input-field col s12">
