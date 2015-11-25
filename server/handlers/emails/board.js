@@ -108,7 +108,6 @@ EventBus.onSeries('Board.Updated', function(board, next){
                                     user: user.toJSON(),
                                     project: result.project.toJSON(),
                                     place: board.name,
-                                    registryLink: config.baseUrl + "signup",
                                     replyMessageLink : config.baseUrl + "api/boards/" + board._id + "/" + user._id.toString() + "/reply-message-from-email",
                                     subject: 'New message on ' + board.name
                                 },function(err){
