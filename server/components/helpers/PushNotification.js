@@ -108,7 +108,11 @@ exports.getData = function(projectId,id,threadName, message, users, type){
           else if (device.platform == 'android') {
             var path = '';
             if (type == 'task') {
-              path = "#/"+projectId+"/task/"+id;
+              path = "#/task/"+id;
+            } else if (type == "board") {
+              path = "#/board/" + id;
+            } else if (type == "people") {
+              path = "#/"+projectid+"/people-chat/" + id;
             }
             else if (type == 'message') {
               path = "#/"+projectId+"/thread/"+id;
