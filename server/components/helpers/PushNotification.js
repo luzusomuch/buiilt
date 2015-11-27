@@ -112,7 +112,7 @@ exports.getData = function(projectId,id,threadName, message, users, type){
             } else if (type == "board") {
               path = "#/board/" + id;
             } else if (type == "people") {
-              path = "#/"+projectid+"/people-chat/" + id;
+              path = "#/"+projectId+"/people-chat/" + id;
             }
             else if (type == 'message') {
               path = "#/"+projectId+"/thread/"+id;
