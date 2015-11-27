@@ -146,6 +146,7 @@ exports.replyMessageFromEmail = function(req, res) {
 };
 
 exports.get = function(req, res) {
+    console.log(req.params.id);
     PeopleChat.findById(req.params.id)
     .populate('messages.user', '_id email name')
     .populate('messages.mentions', '_id email name')
@@ -153,6 +154,7 @@ exports.get = function(req, res) {
     .populate('project')
     .exec(function(err, chat){
         if (err) {return res.send(500,err);}
+        if (!chat) {console.log("not found data");return res,send(404);}
         else {
             return res.send(200, chat);
         }
