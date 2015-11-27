@@ -144,3 +144,17 @@ exports.replyMessageFromEmail = function(req, res) {
         });
     });
 };
+
+exports.get = function(req, res) {
+    PeopleChat.findById(req.params.id)
+    .populate('messages.user', '_id email name')
+    .populate('messages.mentions', '_id email name')
+    .populate('members', '_id email name')
+    .populate('project')
+    .exec(function(err, chat){
+        if (err) {return res.send(500,err);}
+        else {
+            return res.send(200, chat);
+        }
+    });
+};

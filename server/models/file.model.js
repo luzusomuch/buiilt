@@ -13,6 +13,10 @@ var FileSchema = new Schema({
     type: String, // filename
     required: true
   },
+  peopleChat: {
+    type: Schema.Types.ObjectId,
+    ref: 'PeopleChat'
+  },
   comments: [{
     user: {
       type: Schema.Types.ObjectId,
@@ -159,7 +163,8 @@ FileSchema.methods.toJSON = function() {
     isNewNotification: this.isNewNotification,
     isSendToDocumentation: this.isSendToDocumentation,
     documentDesignId: this.documentDesignId,
-    user: this.user
+    user: this.user,
+    peopleChat: this.peopleChat
   };
 };
 

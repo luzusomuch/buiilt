@@ -1113,10 +1113,11 @@ angular.module('buiiltApp')
     function onSuccess(files){
         _.each(files, function(file) {
             file.belongToType = 'people';
-            file.assignees = [$scope.selectedUser._id, $scope.currentUser._id];
+            file.assignees = $scope.selectedChatPeople.members;
             file.tags = $scope.selectedTags;
             file.isQuote = $scope.isQuote;
-            file._id = ($scope.fileId) ? $scope.fileId : ''
+            file._id = ($scope.fileId) ? $scope.fileId : '';
+            file.peopleChat = $scope.selectedChatPeople._id;
         });
         $scope.uploadFiles = files;
     };

@@ -25,6 +25,10 @@ var TaskSchema = new Schema({
     ref : 'Project',
     required : true
   },
+  peopleChat: {
+    type: Schema.Types.ObjectId,
+    ref: 'PeopleChat'
+  },
   type : {
     type : String,
     enum : ['staff','contractor','builder','material','variation','design','people','board']

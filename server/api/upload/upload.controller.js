@@ -192,7 +192,8 @@ exports.uploadInPeople = function(req, res) {
             user: req.user._id,
             belongTo: req.params.id,
             belongToType: item.belongToType,
-            tags: item.tags
+            tags: item.tags,
+            peopleChat: item.peopleChat
         });
         _.each(item.assignees, function(assignee) {
             file.usersRelatedTo.push(assignee);

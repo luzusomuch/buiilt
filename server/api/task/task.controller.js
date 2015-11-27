@@ -194,6 +194,7 @@ exports.create = function(req,res) {
     task.user = user;
     task.type = req.params.type;
     task.dateStart = new Date();
+    task.peopleChat = req.body.peopleChat;
     var architectTeamLeader = [];
     if (aPackage.type == 'BuilderPackage' && aPackage.hasArchitectManager && aPackage.architect.team) {
       Team.findById(mongoose.Types.ObjectId(aPackage.architect.team), function(err, team){

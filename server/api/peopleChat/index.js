@@ -6,6 +6,7 @@ var auth = require('../../auth/auth.service');
 
 var router = express.Router();
 
+router.get('/:id/get', auth.isAuthenticated(), controller.get);
 router.post('/:id/select-people', auth.isAuthenticated(), controller.selectPeople);
 router.post('/:id/send-message', auth.isAuthenticated(), controller.sendMessage);
 router.post('/:id/:replier/reply-message-from-email', controller.replyMessageFromEmail);
