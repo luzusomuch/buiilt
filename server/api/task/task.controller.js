@@ -181,6 +181,7 @@ exports.myTask = function(req,res) {
 };
 
 exports.create = function(req,res) {
+  console.log(req.body);
   var aPackage = req.aPackage;
   var user = req.user;
   TaskValidator.validateCreate(req,function(err,data) {
@@ -218,10 +219,11 @@ exports.create = function(req,res) {
       task._editUser = req.user;
       task.save(function(err) {
         if (err) {
+          console.log(err);
           return res.send(500,err)
         }
         Task.populate(task, {path:'assignees', select: '-hashedPassword -salt'}, function(err, task){
-          if (err) {return res.send(500,err);}
+          if (err) {console.log(err);return res.send(500,err);}
           return res.json(task);
         });
       });

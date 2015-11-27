@@ -869,16 +869,14 @@ angular.module('buiiltApp')
         }
     });
 
-    function getTaskAndDocumentBySelectedUser(user) {
+    function getTaskAndDocumentBySelectedUser() {
         taskService.getByPackage({id: $scope.invitePeople._id, type: 'people'}).$promise.then(function(res){
             $scope.tasks = res;
             _.each($scope.tasks, function(task){
                 task.isOwner = false;
-                _.each(task.assignees, function(assignee){
-                    if (assignee._id == user._id) {
-                        task.isOwner = true;
-                    }
-                });
+                if (task.peopleChat == $scope.selectedChatPeople._id) {
+                    task.isOwner = true;
+                }
             });
             if ($rootScope.inComingSelectTask) {
                 _.each($scope.tasks, function(task) {
@@ -894,11 +892,9 @@ angular.module('buiiltApp')
             $scope.files = res;
             _.each($scope.files, function(file) {
                 file.isOwner = false;
-                _.each(file.usersRelatedTo, function(userRelated) {
-                    if (userRelated == user._id) {
-                        file.isOwner = true;
-                    }
-                });
+                if (file.peopleChat == $scope.selectedChatPeople._id) {
+                    file.isOwner = true;
+                }
             });
         });
     };
@@ -1139,7 +1135,15 @@ angular.module('buiiltApp')
             var currentUser = {
                 _id: $scope.currentUser._id
             };
-            $scope.task.assignees = [$scope.selectedUser, currentUser];
+            $scope.task.assignees = [currentUser];
+            if ($scope.selectedUser._id) {
+                if ($scope.selectedUser._id._id) {
+                    $scope.task.assignees.push($scope.selectedUser._id);
+                } else if ($scope.selectedUser._id) {
+                    $scope.task.assignees.push($scope.selectedUser);
+                }
+            }
+            $scope.task.peopleChat = $scope.selectedChatPeople._id;
             // $scope.task.assignees.push($scope.selectedUser);
             $timeout(function(){
                 taskService.create({id: $scope.invitePeople._id, type: 'people'},$scope.task).$promise.then(function(res){
@@ -1159,20 +1163,20 @@ angular.module('buiiltApp')
                 }, function(res){
                     console.log(res);
                 });
-            },500);
+            },1000);
         }
     };
 
     $scope.selectUser = function(user, type) {
         $scope.selectedUser = user;
         $scope.selectedUser.type = type;
-        getTaskAndDocumentBySelectedUser(user);
 
         peopleChatService.selectPeople(
             {id: $scope.invitePeople._id},
             {project: $stateParams.id, user: user}
         ).$promise.then(function(res){
             $scope.selectedChatPeople = res;
+            getTaskAndDocumentBySelectedUser();
             getUnreadMessage($scope.selectedChatPeople);
             getAllChatMessageNotificationByUserInPeople($scope.selectedChatPeople);
         }, function(err){
