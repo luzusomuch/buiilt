@@ -360,7 +360,7 @@
                     </div>
                     <div class="row">
                         <p>Available Assignee's:</p>
-                        <a href="#!" ng-click="inviteTeamMember(member,$index)" ng-repeat="member in availableTeamMember track by $index">
+                        <a href="#!" ng-click="inviteTeamMember(member,$index)" ng-repeat="member in teamMembersCanInvite track by $index">
                             <div class="card col" style="padding: 5px; margin-left: 10px">
                                 {{member.name}}
                             </div>

@@ -329,6 +329,13 @@ angular.module('buiiltApp')
                         $scope.currentTeamMembers = _.uniq($scope.currentTeamMembers, '_id');
                         _.remove($scope.currentTeamMembers, {_id: $scope.currentUser._id});
 
+                        $scope.teamMembersCanInvite = [];
+                        _.each($scope.availableTeamMember, function(member, index) {
+                            if (_.findIndex($scope.currentTeamMembers, {_id: member._id}) == -1) {
+                                $scope.teamMembersCanInvite.push(member);
+                            }
+                        });
+
                         _.each($scope.invitePeople.clients, function(client) {
                             if (client._id) {
                                 client.unreadMessagesNumber = 0;
@@ -432,6 +439,13 @@ angular.module('buiiltApp')
                         $scope.currentTeamMembers = _.uniq($scope.currentTeamMembers, '_id');
                         _.remove($scope.currentTeamMembers, {_id: $scope.currentUser._id});
 
+                        $scope.teamMembersCanInvite = [];
+                        _.each($scope.availableTeamMember, function(member, index) {
+                            if (_.findIndex($scope.currentTeamMembers, {_id: member._id}) == -1) {
+                                $scope.teamMembersCanInvite.push(member);
+                            }
+                        });
+
                         _.each($scope.invitePeople.builders, function(builder) {
                             if (builder._id) {
                                 builder.unreadMessagesNumber = 0;
@@ -518,6 +532,13 @@ angular.module('buiiltApp')
                         $scope.currentTeamMembers = clients;
                         $scope.currentTeamMembers = _.uniq($scope.currentTeamMembers, '_id');
                         _.remove($scope.currentTeamMembers, {_id: $scope.currentUser._id});
+
+                        $scope.teamMembersCanInvite = [];
+                        _.each($scope.availableTeamMember, function(member, index) {
+                            if (_.findIndex($scope.currentTeamMembers, {_id: member._id}) == -1) {
+                                $scope.teamMembersCanInvite.push(member);
+                            }
+                        });
 
                         _.each($scope.invitePeople.architects, function(architect) {
                             if (architect._id) {
@@ -617,6 +638,13 @@ angular.module('buiiltApp')
                         $scope.currentTeamMembers = _.uniq($scope.currentTeamMembers, '_id');
                         _.remove($scope.currentTeamMembers, {_id: $scope.currentUser._id});
 
+                        $scope.teamMembersCanInvite = [];
+                        _.each($scope.availableTeamMember, function(member, index) {
+                            if (_.findIndex($scope.currentTeamMembers, {_id: member._id}) == -1) {
+                                $scope.teamMembersCanInvite.push(member);
+                            }
+                        });
+
                         if ($rootScope.inComingSelectThread) {
                             $scope.selectUser($rootScope.inComingSelectThread.owner,'');
                         } else if ($rootScope.inComingSelectTask) {
@@ -683,6 +711,13 @@ angular.module('buiiltApp')
                         $scope.currentTeamMembers = consultants;
                         $scope.currentTeamMembers = _.uniq($scope.currentTeamMembers, '_id');
                         _.remove($scope.currentTeamMembers, {_id: $scope.currentUser._id});
+
+                        $scope.teamMembersCanInvite = [];
+                        _.each($scope.availableTeamMember, function(member, index) {
+                            if (_.findIndex($scope.currentTeamMembers, {_id: member._id}) == -1) {
+                                $scope.teamMembersCanInvite.push(member);
+                            }
+                        });
 
                         if ($rootScope.inComingSelectThread) {
                             $scope.selectUser($rootScope.inComingSelectThread.owner,'');
