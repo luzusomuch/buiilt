@@ -1071,11 +1071,11 @@ angular.module('buiiltApp')
 
     $scope.inviteTeamMember = function(member, index) {
         $scope.invite.teamMember.push(member);
-        $scope.availableTeamMember.splice(index,1);
+        $scope.teamMembersCanInvite.splice(index,1);
         member.canRevoke = true;
     };
     $scope.revokeTeamMember = function(member, index) {
-        $scope.availableTeamMember.push(member);
+        $scope.teamMembersCanInvite.push(member);
         $scope.invite.teamMember.splice(index, 1);
         member.canRevoke = false;
     };
