@@ -317,9 +317,9 @@ angular.module('buiiltApp')
                         _.each(builders, function(builder) {
                             builder.unreadMessagesNumber = 0;
                             _.each(res, function(item) {
-                                if (item.fromUser._id.toString() == builder._id.toString() && item.referenceTo == 'people-chat') {
+                                if (item.fromUser._id.toString() == builder._id.toString() && item.referenceTo == 'people-chat' && item.element.people == $scope.invitePeople._id) {
                                     builder.unreadMessagesNumber++;
-                                } else if (item.fromUser._id.toString() == builder._id.toString() && item.referenceTo == 'people-chat-without-mention') {
+                                } else if (item.fromUser._id.toString() == builder._id.toString() && item.referenceTo == 'people-chat-without-mention' && item.element.people == $scope.invitePeople._id) {
                                     builder.unreadMessagesNumber++;
                                 }
                             })
@@ -340,9 +340,9 @@ angular.module('buiiltApp')
                             if (client._id) {
                                 client.unreadMessagesNumber = 0;
                                 _.each(res, function(item) {
-                                    if (item.fromUser._id.toString() == client._id._id.toString() && item.referenceTo == 'people-chat') {
+                                    if (item.fromUser._id.toString() == client._id._id.toString() && item.referenceTo == 'people-chat' && item.element.people == $scope.invitePeople._id) {
                                         client.unreadMessagesNumber++;
-                                    } else if (item.fromUser._id.toString() == client._id._id.toString() && item.referenceTo == 'people-chat-without-mention') {
+                                    } else if (item.fromUser._id.toString() == client._id._id.toString() && item.referenceTo == 'people-chat-without-mention' && item.element.people == $scope.invitePeople._id) {
                                         client.unreadMessagesNumber++;
                                     }
                                 });
@@ -353,9 +353,9 @@ angular.module('buiiltApp')
                             if (architect._id) {
                                 architect.unreadMessagesNumber = 0;
                                 _.each(res, function(item) {
-                                    if (item.fromUser._id.toString() == architect._id._id.toString() && item.referenceTo == 'people-chat') {
+                                    if (item.fromUser._id.toString() == architect._id._id.toString() && item.referenceTo == 'people-chat' && item.element.people == $scope.invitePeople._id) {
                                         architect.unreadMessagesNumber++;
-                                    } else if (item.fromUser._id.toString() == architect._id._id.toString() && item.referenceTo == 'people-chat-without-mention') {
+                                    } else if (item.fromUser._id.toString() == architect._id._id.toString() && item.referenceTo == 'people-chat-without-mention' && item.element.people == $scope.invitePeople._id) {
                                         architect.unreadMessagesNumber++;
                                     }
                                 });
@@ -366,9 +366,9 @@ angular.module('buiiltApp')
                             subcontractor.unreadMessagesNumber = 0;
                             _.each(res, function(item) {
                                 if (subcontractor._id) {
-                                    if (subcontractor._id.toString() == item.fromUser._id.toString() && item.referenceTo == 'people-chat') {
+                                    if (subcontractor._id.toString() == item.fromUser._id.toString() && item.referenceTo == 'people-chat' && item.element.people == $scope.invitePeople._id) {
                                         subcontractor.unreadMessagesNumber++;
-                                    } else if (item.fromUser._id.toString() == subcontractor._id.toString() && item.referenceTo == 'people-chat-without-mention') {
+                                    } else if (item.fromUser._id.toString() == subcontractor._id.toString() && item.referenceTo == 'people-chat-without-mention' && item.element.people == $scope.invitePeople._id) {
                                         subcontractor.unreadMessagesNumber++;
                                     }
                                 }
@@ -379,9 +379,9 @@ angular.module('buiiltApp')
                             consultant.unreadMessagesNumber = 0;
                             _.each(res, function(item) {
                                 if (consultant._id) {
-                                    if (consultant._id.toString() == item.fromUser._id.toString() && item.referenceTo == 'people-chat') {
+                                    if (consultant._id.toString() == item.fromUser._id.toString() && item.referenceTo == 'people-chat' && item.element.people == $scope.invitePeople._id) {
                                         consultant.unreadMessagesNumber++;
-                                    } else if (item.fromUser._id.toString() == consultant._id.toString() && item.referenceTo == 'people-chat-without-mention') {
+                                    } else if (item.fromUser._id.toString() == consultant._id.toString() && item.referenceTo == 'people-chat-without-mention' && item.element.people == $scope.invitePeople._id) {
                                         consultant.unreadMessagesNumber++;
                                     }
                                 }
@@ -426,9 +426,9 @@ angular.module('buiiltApp')
                         _.each(architects, function(architect) {
                             architect.unreadMessagesNumber = 0;
                             _.each(res, function(item) {
-                                if (item.fromUser._id.toString() == architect._id.toString() && item.referenceTo == 'people-chat') {
+                                if (item.fromUser._id.toString() == architect._id.toString() && item.referenceTo == 'people-chat' && item.element.people == $scope.invitePeople._id) {
                                     architect.unreadMessagesNumber++;
-                                }  else if (item.fromUser._id.toString() == architect._id.toString() && item.referenceTo == 'people-chat-without-mention') {
+                                }  else if (item.fromUser._id.toString() == architect._id.toString() && item.referenceTo == 'people-chat-without-mention' && item.element.people == $scope.invitePeople._id) {
                                     architect.unreadMessagesNumber++;
                                 }
                             });
@@ -450,9 +450,9 @@ angular.module('buiiltApp')
                             if (builder._id) {
                                 builder.unreadMessagesNumber = 0;
                                 _.each(res, function(item) {
-                                    if (item.fromUser._id.toString() == builder._id._id.toString() && item.referenceTo == 'people-chat') {
+                                    if (item.fromUser._id.toString() == builder._id._id.toString() && item.referenceTo == 'people-chat' && item.element.people == $scope.invitePeople._id) {
                                         builder.unreadMessagesNumber++;
-                                    } else if (item.fromUser._id.toString() == builder._id._id.toString() && item.referenceTo == 'people-chat-without-mention') {
+                                    } else if (item.fromUser._id.toString() == builder._id._id.toString() && item.referenceTo == 'people-chat-without-mention' && item.element.people == $scope.invitePeople._id) {
                                         builder.unreadMessagesNumber++;
                                     }
                                 });
@@ -463,9 +463,9 @@ angular.module('buiiltApp')
                             if (client._id) {
                                 client.unreadMessagesNumber = 0;
                                 _.each(res, function(item) {
-                                    if (item.fromUser._id.toString() == client._id._id.toString() && item.referenceTo == 'people-chat') {
+                                    if (item.fromUser._id.toString() == client._id._id.toString() && item.referenceTo == 'people-chat' && item.element.people == $scope.invitePeople._id) {
                                         client.unreadMessagesNumber++;
-                                    } else if (item.fromUser._id.toString() == client._id._id.toString() && item.referenceTo == 'people-chat-without-mention') {
+                                    } else if (item.fromUser._id.toString() == client._id._id.toString() && item.referenceTo == 'people-chat-without-mention' && item.element.people == $scope.invitePeople._id) {
                                         client.unreadMessagesNumber++;
                                     }
                                 });
@@ -476,9 +476,9 @@ angular.module('buiiltApp')
                             consultant.unreadMessagesNumber = 0;
                             _.each(res, function(item) {
                                 if (consultant._id) {
-                                    if (consultant._id.toString() == item.fromUser._id.toString() && item.referenceTo == 'people-chat') {
+                                    if (consultant._id.toString() == item.fromUser._id.toString() && item.referenceTo == 'people-chat' && item.element.people == $scope.invitePeople._id) {
                                         consultant.unreadMessagesNumber++;
-                                    } else if (item.fromUser._id.toString() == consultant._id.toString() && item.referenceTo == 'people-chat-without-mention') {
+                                    } else if (item.fromUser._id.toString() == consultant._id.toString() && item.referenceTo == 'people-chat-without-mention' && item.element.people == $scope.invitePeople._id) {
                                         consultant.unreadMessagesNumber++;
                                     }
                                 }
@@ -521,9 +521,9 @@ angular.module('buiiltApp')
                         _.each(clients, function(client) {
                             client.unreadMessagesNumber = 0;
                             _.each(res, function(item) {
-                                if (item.fromUser._id.toString() == client._id.toString() && item.referenceTo == 'people-chat') {
+                                if (item.fromUser._id.toString() == client._id.toString() && item.referenceTo == 'people-chat' && item.element.people == $scope.invitePeople._id) {
                                     client.unreadMessagesNumber++;
-                                } else if (item.fromUser._id.toString() == client._id.toString() && item.referenceTo == 'people-chat-without-mention') {
+                                } else if (item.fromUser._id.toString() == client._id.toString() && item.referenceTo == 'people-chat-without-mention' && item.element.people == $scope.invitePeople._id) {
                                     client.unreadMessagesNumber++;
                                 }
                             });
@@ -544,9 +544,9 @@ angular.module('buiiltApp')
                             if (architect._id) {
                                 architect.unreadMessagesNumber = 0;
                                 _.each(res, function(item) {
-                                    if (item.fromUser._id.toString() == architect._id._id.toString() && item.referenceTo == 'people-chat') {
+                                    if (item.fromUser._id.toString() == architect._id._id.toString() && item.referenceTo == 'people-chat' && item.element.people == $scope.invitePeople._id) {
                                         architect.unreadMessagesNumber++;
-                                    } else if (item.fromUser._id.toString() == architect._id._id.toString() && item.referenceTo == 'people-chat-without-mention') {
+                                    } else if (item.fromUser._id.toString() == architect._id._id.toString() && item.referenceTo == 'people-chat-without-mention' && item.element.people == $scope.invitePeople._id) {
                                         architect.unreadMessagesNumber++;
                                     }
                                 });
@@ -557,9 +557,9 @@ angular.module('buiiltApp')
                             if (builder._id) {
                                 builder.unreadMessagesNumber = 0;
                                 _.each(res, function(item) {
-                                    if (item.fromUser._id.toString() == builder._id._id.toString() && item.referenceTo == 'people-chat') {
+                                    if (item.fromUser._id.toString() == builder._id._id.toString() && item.referenceTo == 'people-chat' && item.element.people == $scope.invitePeople._id) {
                                         builder.unreadMessagesNumber++;
-                                    } else if (item.fromUser._id.toString() == builder._id._id.toString() && item.referenceTo == 'people-chat-without-mention') {
+                                    } else if (item.fromUser._id.toString() == builder._id._id.toString() && item.referenceTo == 'people-chat-without-mention' && item.element.people == $scope.invitePeople._id) {
                                         builder.unreadMessagesNumber++;
                                     }
                                 });
@@ -569,9 +569,9 @@ angular.module('buiiltApp')
                         _.each($scope.invitePeople.consultants, function(consultant) {
                             consultant.unreadMessagesNumber = 0;
                             _.each(res, function(item) {
-                                if (consultant._id.toString() == item.fromUser._id.toString() && item.referenceTo == 'people-chat') {
+                                if (consultant._id.toString() == item.fromUser._id.toString() && item.referenceTo == 'people-chat' && item.element.people == $scope.invitePeople._id) {
                                     consultant.unreadMessagesNumber++;
-                                } else if (item.fromUser._id.toString() == consultant._id.toString() && item.referenceTo == 'people-chat-without-mention') {
+                                } else if (item.fromUser._id.toString() == consultant._id.toString() && item.referenceTo == 'people-chat-without-mention' && item.element.people == $scope.invitePeople._id) {
                                     consultant.unreadMessagesNumber++;
                                 }
                             });
@@ -617,9 +617,9 @@ angular.module('buiiltApp')
                         _.each(subcontractors, function(subcontractor) {
                             subcontractor.unreadMessagesNumber = 0;
                             _.each(res, function(item) {
-                                if (subcontractor._id.toString() == item.fromUser._id.toString() && item.referenceTo == 'people-chat') {
+                                if (subcontractor._id.toString() == item.fromUser._id.toString() && item.referenceTo == 'people-chat' && item.element.people == $scope.invitePeople._id) {
                                     subcontractor.unreadMessagesNumber++;
-                                } else if (item.fromUser._id.toString() == subcontractor._id.toString() && item.referenceTo == 'people-chat-without-mention') {
+                                } else if (item.fromUser._id.toString() == subcontractor._id.toString() && item.referenceTo == 'people-chat-without-mention' && item.element.people == $scope.invitePeople._id) {
                                     subcontractor.unreadMessagesNumber++;
                                 }
                             });
@@ -628,9 +628,9 @@ angular.module('buiiltApp')
                         $scope.invitePeople.subcontractors = subcontractors;
                         $scope.invitePeople.inviter.unreadMessagesNumber = 0;
                         _.each(res, function(item) {
-                            if ($scope.invitePeople.inviter._id.toString() == item.fromUser._id.toString() && item.referenceTo == 'people-chat') {
+                            if ($scope.invitePeople.inviter._id.toString() == item.fromUser._id.toString() && item.referenceTo == 'people-chat' && item.element.people == $scope.invitePeople._id) {
                                 $scope.invitePeople.inviter.unreadMessagesNumber++;
-                            } else if (item.fromUser._id.toString() == $scope.invitePeople.inviter._id.toString() && item.referenceTo == 'people-chat-without-mention') {
+                            } else if (item.fromUser._id.toString() == $scope.invitePeople.inviter._id.toString() && item.referenceTo == 'people-chat-without-mention' && item.element.people == $scope.invitePeople._id) {
                                 $scope.invitePeople.inviter.unreadMessagesNumber++;
                             }
                         });
@@ -678,9 +678,9 @@ angular.module('buiiltApp')
                                 $scope.invitePeople.inviter = consultant.inviter;
                                 $scope.invitePeople.inviter.unreadMessagesNumber = 0;
                                 _.each(res, function(item) {
-                                    if ($scope.invitePeople.inviter._id.toString() == item.fromUser._id.toString() && item.referenceTo == 'people-chat') {
+                                    if ($scope.invitePeople.inviter._id.toString() == item.fromUser._id.toString() && item.referenceTo == 'people-chat' && item.element.people == $scope.invitePeople._id) {
                                         $scope.invitePeople.inviter.unreadMessagesNumber++;
-                                    } else if (item.fromUser._id.toString() == $scope.invitePeople.inviter._id.toString() && item.referenceTo == 'people-chat-without-mention') {
+                                    } else if (item.fromUser._id.toString() == $scope.invitePeople.inviter._id.toString() && item.referenceTo == 'people-chat-without-mention' && item.element.people == $scope.invitePeople._id) {
                                         $scope.invitePeople.inviter.unreadMessagesNumber++;
                                     }
                                 });
@@ -699,9 +699,9 @@ angular.module('buiiltApp')
                         _.each(consultants, function(consultant) {
                             consultant.unreadMessagesNumber = 0;
                             _.each(res, function(item) {
-                                if (consultant._id.toString() == item.fromUser._id.toString() && item.referenceTo == 'people-chat') {
+                                if (consultant._id.toString() == item.fromUser._id.toString() && item.referenceTo == 'people-chat' && item.element.people == $scope.invitePeople._id) {
                                     consultant.unreadMessagesNumber++;
-                                }  else if (item.fromUser._id.toString() == consultant._id.toString() && item.referenceTo == 'people-chat-without-mention') {
+                                }  else if (item.fromUser._id.toString() == consultant._id.toString() && item.referenceTo == 'people-chat-without-mention' && item.element.people == $scope.invitePeople._id) {
                                     consultant.unreadMessagesNumber++;
                                 }
                             });
