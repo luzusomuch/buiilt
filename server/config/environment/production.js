@@ -22,19 +22,16 @@ module.exports = {
   },
   emailFrom: 'Buiilt <no-reply@buiilt.com.au>', 
   mailer: {
-   //  service: 'mailgun',
-   //  auth: {
-   //    api_key: 'key-0245b8bd3122b95cef10c8a5df83079b',
-    // domain: 'mg.buiilt.com.au'
-   //  }
-   service: 'sendgrid',
-   auth: {
-    api_user: 'leenguyenhvs',
-    api_key: 'buiilt2015'
-    // name: 'buiilt',
-    // api_key_id: 'uTWiQOpeQraCFHTTo6-KVw',
-    // api_key: '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',
-   }
+    service: 'mailgun',
+    auth: {
+      api_key: 'key-0245b8bd3122b95cef10c8a5df83079b',
+    domain: 'mg.buiilt.com.au'
+    }
+   // service: 'sendgrid',
+   // auth: {
+   //  api_user: 'leenguyenhvs',
+   //  api_key: 'buiilt2015'
+   // }
   },
   logentries : {
     token : process.env.LOGENTRIES_TOKEN
