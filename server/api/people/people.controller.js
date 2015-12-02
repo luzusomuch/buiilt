@@ -834,7 +834,7 @@ exports.selectWinnerTender = function(req, res) {
                 });
             } else if (req.body.type == 'builder') {
                 var winnerTender = _.remove(people.builders, function(item) {
-                    return item.inviter == req.body.tender.inviter._id && item._id == req.body.tender._id._id;
+                    return item.inviter == req.body.tender.inviter && item._id == req.body.tender._id._id;
                 });
                 winnerTender[0].hasSelect = true;
                 winnerTenderNotification.push(req.body.tender._id._id);
@@ -960,7 +960,7 @@ exports.selectWinnerTender = function(req, res) {
                 });
             } else if (req.body.type == 'architect') {
                 var winnerTender = _.remove(people.architects, function(item) {
-                    return item.inviter == req.body.tender.inviter._id && item._id == req.body.tender._id._id;
+                    return item.inviter == req.body.tender.inviter && item._id == req.body.tender._id._id;
                 });
                 winnerTender[0].hasSelect = true;
                 winnerTenderNotification.push(req.body.tender._id._id);

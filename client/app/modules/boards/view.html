@@ -110,12 +110,12 @@
                     </div>
                     <div class="col s2">
                         <p>
-                            <input ng-if="!task.completed" type="checkbox" id="complete" ng-click="complete(task)" ng-disabled="!task.isOwner"/>
-                            <label for="complete"></label>
+                            <input ng-if="!task.completed" type="checkbox" id="complete{{$index}}" ng-click="complete($index)" ng-disabled="!task.isOwner"/>
+                            <label for="complete{{$index}}"></label>
                         </p>
                         <p>
-                            <input ng-if="task.completed" checked="true" type="checkbox" id="completed" ng-click="complete(task)" ng-disabled="!task.isOwner"/>
-                            <label for="completed"></label>
+                            <input ng-if="task.completed" checked="true" type="checkbox" id="completed{{$index}}" ng-click="complete($index)" ng-disabled="!task.isOwner"/>
+                            <label for="completed{{$index}}"></label>
                         </p>
                     </div>
                     <div class="col s8">

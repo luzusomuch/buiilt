@@ -567,14 +567,16 @@ angular.module('buiiltApp')
                         });
 
                         _.each($scope.invitePeople.consultants, function(consultant) {
-                            consultant.unreadMessagesNumber = 0;
-                            _.each(res, function(item) {
-                                if (consultant._id.toString() == item.fromUser._id.toString() && item.referenceTo == 'people-chat' && item.element.people == $scope.invitePeople._id) {
-                                    consultant.unreadMessagesNumber++;
-                                } else if (item.fromUser._id.toString() == consultant._id.toString() && item.referenceTo == 'people-chat-without-mention' && item.element.people == $scope.invitePeople._id) {
-                                    consultant.unreadMessagesNumber++;
-                                }
-                            });
+                            if (consultant._id) {
+                                consultant.unreadMessagesNumber = 0;
+                                _.each(res, function(item) {
+                                    if (consultant._id.toString() == item.fromUser._id.toString() && item.referenceTo == 'people-chat' && item.element.people == $scope.invitePeople._id) {
+                                        consultant.unreadMessagesNumber++;
+                                    } else if (item.fromUser._id.toString() == consultant._id.toString() && item.referenceTo == 'people-chat-without-mention' && item.element.people == $scope.invitePeople._id) {
+                                        consultant.unreadMessagesNumber++;
+                                    }
+                                });
+                            }
                         });
 
                         if ($rootScope.inComingSelectThread) {

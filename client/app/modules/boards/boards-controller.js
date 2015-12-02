@@ -54,6 +54,15 @@ angular.module('buiiltApp')
                                 $scope.newBoardPeople.push(subcontractor._id);
                             }
                         });
+                        _.each(board.builders[0].teamMember, function(member) {
+                            $scope.availableInvite.push(member);
+                            $scope.newBoardPeople.push(member);
+                        });
+                    } else {
+                        _.each(board.clients[0].teamMember, function(member) {
+                            $scope.availableInvite.push(member);
+                            $scope.newBoardPeople.push(member);
+                        });
                     }
                 } else if ($scope.currentUser.type == 'architect') {
                     _.each(board.builders, function(builder) {
@@ -74,12 +83,20 @@ angular.module('buiiltApp')
                             $scope.newBoardPeople.push(consultant._id);
                         }
                     });
+                    _.each(board.architects[0].teamMember, function(member) {
+                        $scope.availableInvite.push(member);
+                        $scope.newBoardPeople.push(member);
+                    });
                 } else if ($scope.currentUser.type == 'subcontractor') {
                     _.each(board.subcontractors, function(item) {
                         if (item._id && item.hasSelect) {
                             if (item._id._id == $scope.currentUser._id) {
                                 $scope.availableInvite.push(item.inviter);
                                 $scope.newBoardPeople.push(item.inviter);
+                                _.each(item.teamMember, function(member) {
+                                    $scope.availableInvite.push(member);
+                                    $scope.newBoardPeople.push(member);
+                                });
                             }
                         }
                     });
@@ -89,12 +106,20 @@ angular.module('buiiltApp')
                             if (item._id._id == $scope.currentUser._id) {
                                 $scope.availableInvite.push(item.inviter);
                                 $scope.newBoardPeople.push(item.inviter);
+                                _.each(item.teamMember, function(member) {
+                                    $scope.availableInvite.push(member);
+                                    $scope.newBoardPeople.push(member);
+                                });
                             }
                         }
                     });
                 }
             } else if ($scope.builderPackage.projectManager.type == 'builder') {
                 if ($scope.currentUser.type == 'builder') {
+                    _.each(board.builders[0].teamMember, function(member) {
+                        $scope.availableInvite.push(member);
+                        $scope.newBoardPeople.push(member);
+                    });
                     _.each(board.architects, function(architect) {
                         if (architect._id && architect.hasSelect) {
                             $scope.availableInvite.push(architect._id);
@@ -132,12 +157,27 @@ angular.module('buiiltApp')
                             $scope.newBoardPeople.push(consultant._id);
                         }
                     });
+                    if ($scope.currentUser.type == "client") {
+                        _.each(board.clients[0].teamMember, function(member) {
+                            $scope.availableInvite.push(member);
+                            $scope.newBoardPeople.push(member);
+                        });
+                    } else {
+                        _.each(board.architects[0].teamMember, function(member) {
+                            $scope.availableInvite.push(member);
+                            $scope.newBoardPeople.push(member);
+                        });
+                    }
                 } else if ($scope.currentUser.type == 'subcontractor') {
                     _.each(board.subcontractors, function(item) {
                         if (item._id && item.hasSelect) {
                             if (item._id._id == $scope.currentUser._id) {
                                 $scope.availableInvite.push(item.inviter);
                                 $scope.newBoardPeople.push(item.inviter);
+                                _.each(item.teamMember, function(member) {
+                                    $scope.availableInvite.push(member);
+                                    $scope.newBoardPeople.push(member);
+                                });
                             }
                         }
                     });
@@ -147,12 +187,20 @@ angular.module('buiiltApp')
                             if (item._id._id == $scope.currentUser._id) {
                                 $scope.availableInvite.push(item.inviter);
                                 $scope.newBoardPeople.push(item.inviter);
+                                _.each(item.teamMember, function(member) {
+                                    $scope.availableInvite.push(member);
+                                    $scope.newBoardPeople.push(member);
+                                });
                             }
                         }
                     });
                 }
             } else {
                 if ($scope.currentUser.type == 'client') {
+                    _.each(board.clients[0].teamMember, function(member) {
+                        $scope.availableInvite.push(member);
+                        $scope.newBoardPeople.push(member);
+                    });
                     _.each(board.builders, function(builder) {
                         if (builder._id && builder.hasSelect) {
                             $scope.availableInvite.push(builder._id);
@@ -185,6 +233,15 @@ angular.module('buiiltApp')
                                 $scope.newBoardPeople.push(subcontractor._id);
                             }
                         });
+                        _.each(board.builders[0].teamMember, function(member) {
+                            $scope.availableInvite.push(member);
+                            $scope.newBoardPeople.push(member);
+                        });
+                    } else {
+                        _.each(board.architects[0].teamMember, function(member) {
+                            $scope.availableInvite.push(member);
+                            $scope.newBoardPeople.push(member);
+                        });
                     }
                 } else if ($scope.currentUser.type == 'subcontractor') {
                     _.each(board.subcontractors, function(item) {
@@ -192,6 +249,10 @@ angular.module('buiiltApp')
                             if (item._id._id == $scope.currentUser._id) {
                                 $scope.availableInvite.push(item.inviter);
                                 $scope.newBoardPeople.push(item.inviter);
+                                _.each(item.teamMember, function(member) {
+                                    $scope.availableInvite.push(member);
+                                    $scope.newBoardPeople.push(member);
+                                });
                             }
                         }
                     });
@@ -201,22 +262,14 @@ angular.module('buiiltApp')
                             if (item._id._id == $scope.currentUser._id) {
                                 $scope.availableInvite.push(item.inviter);
                                 $scope.newBoardPeople.push(item.inviter);
+                                _.each(item.teamMember, function(member) {
+                                    $scope.availableInvite.push(member);
+                                    $scope.newBoardPeople.push(member);
+                                });
                             }
                         }
                     });
                 }
-            }
-            if ($scope.team._id) {
-                _.each(team.leader, function(leader) {
-                    $scope.availableInvite.push(leader);
-                    $scope.newBoardPeople.push(leader);
-                });
-                _.each(team.member, function(member){
-                    if (member._id && member.status == 'Active') {
-                        $scope.availableInvite.push(member._id);
-                        $scope.newBoardPeople.push(member._id);
-                    }
-                });
             }
             if ($scope.currentBoard._id) {
                 _.each($scope.currentBoard.invitees, function(invitee) {
@@ -252,7 +305,8 @@ angular.module('buiiltApp')
         });
         taskService.getByPackage({id: board._id, type: 'board'}).$promise.then(function(res){
             $scope.tasks = res;
-            _.each($scope.tasks, function(task){
+            _.each($scope.tasks, function(task, index){
+                task.index = index;
                 task.isOwner = false;
                 _.each(task.assignees, function(user) {
                     if (user._id == $scope.currentUser._id) {
@@ -387,8 +441,6 @@ angular.module('buiiltApp')
                 });
                 board.unreadMessagesNumber = 0;
                 _.each(totalMessages, function(item) {
-                    console.log(item);
-                    console.log(board);
                     if (item.element._id == board._id && item.owner._id == $scope.currentUser._id && item.referenceTo == 'board-chat') {
                         board.unreadMessagesNumber++;
                     }
@@ -587,6 +639,7 @@ angular.module('buiiltApp')
                     assignees : []
                 };
                 getAvailable($scope.currentBoard);
+                getTasksAndFilesByBoard($scope.currentBoard);
                 $scope.submitted = false;
             }, function(res){
                 console.log(res);
@@ -594,7 +647,8 @@ angular.module('buiiltApp')
         }
     };
 
-    $scope.complete = function(task) {
+    $scope.complete = function(index) {
+        var task = $scope.tasks[index];
         task.completed = !task.completed;
         if (task.completed) {
             task.completedBy = $scope.currentUser._id;
