@@ -27,7 +27,12 @@ var exec = require('child_process').exec;
 var config = require('./../../config/environment');
 
 var validationError = function (res, err) {
-  return res.json(422, err);
+    return res.json(422, err);
+};
+
+exports.uploadMobile = function(req, res) {
+    console.log(req.params.id);
+    console.log(req);
 };
 
 /**

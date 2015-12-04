@@ -260,9 +260,30 @@
 </div>
 
 <div class="modal modal-fixed-bottom" id="modal-task-detail-{{task._id}}" ng-repeat="task in tasks" style="width: 60%">
-    <h5>View task {{task.name}} detail</h5>
     <div class="modal-content">
-        <p>{{task.description}}</p>
+        <h5>Task detail:</h5>
+        <div>
+            <div class="row">
+                <div class="col s2">
+                    <p>
+                        <input ng-if="!task.completed" type="checkbox" id="complete{{$index}}" ng-click="complete($index)" ng-disabled="!task.isOwner"/>
+                        <label for="complete{{$index}}"></label>
+                    </p>
+                    <p>
+                        <input ng-if="task.completed" checked="true" type="checkbox" id="completed{{$index}}" ng-click="complete($index)" ng-disabled="!task.isOwner"/>
+                        <label for="completed{{$index}}"></label>
+                    </p>
+                </div>
+                <div class="col s10">
+                    <p>{{task.description}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">Due date: {{task.dateEnd | date: longDate}}</div>
+            </div>
+        </div>
+
+        <div></div>
     </div>
     <div class="modal-footer">
         <button type="button" class="modal-action modal-close btn-flat">Close</button>

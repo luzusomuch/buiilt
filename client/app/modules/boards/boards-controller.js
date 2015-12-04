@@ -660,7 +660,7 @@ angular.module('buiiltApp')
 
         taskService.update({id : task._id, type : task.type},task).$promise
         .then(function(res) {
-            getTasksAndFilesByBoard($scope.currentBoard);
+            // getTasksAndFilesByBoard($scope.currentBoard);
         });
     };
 
