@@ -36,6 +36,8 @@ EventBus.onSeries('Task.Updated', function(task, next){
     if (task.assignees.indexOf(task.user) == -1) {
       owners.push(task.user);
     }
+    
+    _.remove(owners, task.editUser._id);
 
     var params = {
       owners : owners,

@@ -165,4 +165,13 @@ angular.module('buiiltApp')
     }
     return $sce.trustAsHtml("<p>"+text+"</p>");
   };
+})
+.filter('limitText', function() {
+  return function(item) {
+    if (item.length > 25) {
+      return item.substr(0,25) + "...";
+    } else {
+      return item;
+    }
+  };
 });

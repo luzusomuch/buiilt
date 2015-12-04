@@ -45,7 +45,7 @@ var TaskSchema = new Schema({
   name: {
     type: String,
     default: '',
-    required: 'Title is required'
+    // required: 'Title is required'
   },
   description: {
     type: String,

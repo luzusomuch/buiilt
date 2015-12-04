@@ -121,9 +121,8 @@
                     <div class="col s8">
                         <a href="#modal-task-detail-{{task._id}}" class="modal-trigger">
                             <p class="margin-10-0">
-                                <strong>{{task.name}}</strong>
+                                {{task.description | limitText}}
                             </p>
-                            <small>{{task.description}}</small>
                         </a>
                     </div>
                 </div>
@@ -151,11 +150,11 @@
     <form name="newTaskForm" ng-submit="addNewTask(newTaskForm)">
         <div class="modal-content">
             <h5>New Task</h5>
-            <div class="row">
+            <!-- <div class="row">
                 <label>Title</label>
                 <input type="text" name="name" ng-model="task.name" ng-class="{'invalid' : newTaskForm.name.$invalid && submitted}" required>
                 <p class="validate-message" ng-show="newTaskForm.name.$error.required && submitted">Task title is required</p>
-            </div>
+            </div> -->
             <div class="row">
                 <label>Task Description</label>
                 <textarea name="description" id="description" ng-model="task.description" ng-class="{'invalid' : newTaskForm.description.$invalid && submitted}" required></textarea>
