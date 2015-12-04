@@ -48,7 +48,7 @@ module.exports = function(app) {
     .get(function(req, res) {
       res.sendfile(app.get('appPath') + '/backend.html')
     });
-    app.route('/a')
+    app.route('/')
     .get(function(req, res) {
       res.sendfile(app.get('appPath') + '/home.html')
     });
