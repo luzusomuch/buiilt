@@ -16,10 +16,11 @@ angular.module('buiiltApp', [
   'angucomplete-alt',
   'btford.socket-io',
   'ngTable',
-  'angular-filepicker'
+  'angular-filepicker',
+  'analytics.mixpanel'
 ]);
 
-angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider, $locationProvider, $urlRouterProvider, $httpProvider, $sceDelegateProvider, cfpLoadingBarProvider, filepickerProvider) {
+angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider, $locationProvider, $urlRouterProvider, $httpProvider, $sceDelegateProvider, cfpLoadingBarProvider, filepickerProvider, $mixpanelProvider) {
   $sceDelegateProvider.resourceUrlWhitelist(['^(?:http(?:s)?:\/\/)?(?:[^\.]+\.)?\(vimeo|youtube)\.com(/.*)?$', 'self']);
   /* Add New States Above */
   $urlRouterProvider.otherwise('/');
@@ -30,6 +31,12 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
   //angular loading bar
   cfpLoadingBarProvider.includeSpinner = true;
   filepickerProvider.setKey('AM6Wn3DzwRimryydBnsj7z');
+  $mixpanelProvider.apiKey('e6d853e9a8af11b4aa36ea63291ead38'); // your token is different than your API key
+
+  $mixpanelProvider.superProperties({
+    someProp: true,
+    anotherOne: [1,2,3]
+  });
 })
   .factory('authInterceptor', function ($q, $cookieStore, $location) {
     return {

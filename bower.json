@@ -34,7 +34,8 @@
     "jquery-ui": "#1.10.4",
     "ng-table": "~v0.8.0",
     "colorbox": "~1.6.3",
-    "angular-filepicker": "master"
+    "angular-filepicker": "master",
+    "angular-mixpanel": "1.1.2"
   },
   "resolutions": {
     "angular": "~1.3"
