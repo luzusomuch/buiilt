@@ -17,20 +17,23 @@ EventBus.onSeries('PeopleChat.Updated', function(req, next) {
             _.remove(req.members, req.editUser._id);
         }
         var newestMessage = _.last(req.messages);
+        req.__v = req.messages.length;
         if (newestMessage.mentions) {
             if (newestMessage.mentions.length > 0) {
-                var params = {
-                    owners: newestMessage.mentions,
-                    fromUser: (req.editUser._id) ? req.editUser._id : '',
-                    element: req,
-                    referenceTo: 'people-chat',
-                    type: 'chat'
-                };
-                NotificationHelper.create(params, function() {
-                    next();
-                });
-                var data = _.last(req.messages);
-                PushNotificationHelper.getData(req.project,req.people,'People package', data.text, data.mentions, 'people');
+                setTimeout(function(){
+                    var params = {
+                        owners: newestMessage.mentions,
+                        fromUser: (req.editUser._id) ? req.editUser._id : '',
+                        element: req,
+                        referenceTo: 'people-chat',
+                        type: 'chat'
+                    };
+                    NotificationHelper.create(params, function() {
+                        next();
+                    });
+                    var data = _.last(req.messages);
+                    PushNotificationHelper.getData(req.project,req.people,'People package', data.text, data.mentions, 'people');
+                },500);
             } else {
                 return next();
             }

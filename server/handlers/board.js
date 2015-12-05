@@ -53,18 +53,22 @@ EventBus.onSeries('Board.Updated', function(board, next) {
         var newestMessage = _.last(board.messages);
         if (newestMessage.mentions.length > 0) {
             var owners = newestMessage.mentions;
-            var params = {
-                owners: owners,
-                fromUser: board.editUser._id,
-                element: board,
-                referenceTo: 'board-chat',
-                type: 'chat'
-            };
-            NotificationHelper.create(params, function() {
-                next();
-            });
             var data = _.last(board.messages);
-            PushNotificationHelper.getData(board.project, board._id, board.name, data.text, data.mentions, 'board');
+            board.__v = board.messages.length;
+            setTimeout(function() {
+                
+                var params = {
+                    owners: owners,
+                    fromUser: board.editUser._id,
+                    element: board,
+                    referenceTo: 'board-chat',
+                    type: 'chat'
+                };
+                NotificationHelper.create(params, function() {
+                    next();
+                });
+                PushNotificationHelper.getData(board.project, board._id, board.name, data.text, data.mentions, 'board');
+            },500);
         } else {
             var owners = [];
             _.each(board.invitees, function(invitee) {

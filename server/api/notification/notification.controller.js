@@ -161,10 +161,23 @@ exports.getMyFile = function(req, res) {
 
 exports.countTotalForIOS = function(req, res) {
   var user = req.user;
-  Notification.find({owner: user._id, unread:true, $or:[{referenceTo: 'task'},{referenceTo: 'thread'}, {referenceTo: 'people-chat'}, {referenceTo: 'board-chat'}]}, function(err, notifications){
+  Notification.find({owner: user._id, unread:true, $or:[{referenceTo: 'task'},{referenceTo: 'thread'}, {referenceTo: 'people-chat'}, {referenceTo: 'board-chat'}, {type: 'invite-people'}, {type: "NewBoard"}]})
+  .populate('fromUser','-hashedPassword -salt')
+  .exec(function(err, notifications){
     if (err) {return res.send(500,err);}
     if (!notifications) {return res.send(404);}
-    return res.send(200, notifications);
+    async.each(notifications, function(notification, cb) {
+      Project.findById(notification.element.project, function(err,project) {
+        if (err) {console.log(err);cb();}
+        if (!project) {console.log("no project"); cb();}
+        else {
+          notification.element.project = project;
+          cb();
+        }
+      });
+    }, function() {
+      return res.send(200, notifications);
+    });
   })
 };
 

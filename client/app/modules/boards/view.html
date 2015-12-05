@@ -261,38 +261,38 @@
 
 <div class="modal modal-fixed-bottom" id="modal-task-detail" style="width: 60%">
     <div class="modal-content">
-        <div ng-show="!task.isEdit">
+        <div ng-show="!selectedTask.isEdit">
             <h5>Task detail:</h5>
             <div class="row">
                 <div class="col s2">
                     <p>
-                        <input ng-if="!task.completed" type="checkbox" id="complete{{$index}}" ng-click="complete($index)" ng-disabled="!task.isOwner"/>
+                        <input ng-if="!selectedTask.completed" type="checkbox" id="complete{{$index}}" ng-click="complete($index)" ng-disabled="!selectedTask.isOwner"/>
                         <label for="complete{{$index}}"></label>
                     </p>
                     <p>
-                        <input ng-if="task.completed" checked="true" type="checkbox" id="completed{{$index}}" ng-click="complete($index)" ng-disabled="!task.isOwner"/>
+                        <input ng-if="selectedTask.completed" checked="true" type="checkbox" id="completed{{$index}}" ng-click="complete($index)" ng-disabled="!selectedTask.isOwner"/>
                         <label for="completed{{$index}}"></label>
                     </p>
                 </div>
                 <div class="col s10">
-                    <p>{{task.description}}</p>
+                    <p>{{selectedTask.description}}</p>
                 </div>
             </div>
             <div class="row">
-                <div class="col s12">Due date: {{task.dateEnd | date: longDate}}</div>
+                <div class="col s12">Due date: {{selectedTask.dateEnd | date: longDate}}</div>
             </div>
 
-            <div class="row" ng-show="task.user == currentUser._id">
-                <button class="btn-flat" type="button" ng-click="task.isEdit = true">Edit this task</button>
+            <div class="row" ng-show="selectedTask.user == currentUser._id">
+                <button class="btn-flat" type="button" ng-click="selectedTask.isEdit = true">Edit this task</button>
             </div>
         </div>
 
-        <div ng-show="task.isEdit">
+        <div ng-show="selectedTask.isEdit">
             <h5>Edit task</h5>
             <form ng-submit="editTask()" >
                 <div class="row">
                     <label>Task Description</label>
-                    <textarea name="description" id="description" ng-model="task.description" ng-class="{'invalid' : newTaskForm.description.$invalid && submitted}" required></textarea>
+                    <textarea name="description" id="description" ng-model="selectedTask.description" ng-class="{'invalid' : newTaskForm.description.$invalid && submitted}" required></textarea>
                     <p class="validate-message" ng-show="newTaskForm.description.$error.required && submitted">Task description is required</p>
                 </div>
                 <div class="row">
@@ -300,14 +300,14 @@
                     <input type="text"
                         name="created"
                         id="dueDate"
-                        ng-model="task.dateEnd"
+                        ng-model="selectedTask.dateEnd"
                         format="mm/dd/yyyy"
                         datepicker
                     />
                 </div>
                 <div class="row">
                     <p>Assignees</p>
-                    <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="assignee in task.assignees">
+                    <div class="card col" style="padding: 5px; margin-left: 10px" ng-repeat="assignee in selectedTask.assignees">
                         {{assignee.name}} <span ng-if="assignee.canRevoke"><a href="#!" ng-click="revoke(assignee,$index)"><i class="mdi-navigation-cancel" style="margin-left: 5px"></i></a></span>
                     </div>
                 </div>
@@ -321,7 +321,7 @@
                 </div>
                 <div class="row">
                     <button id="btn-edit-task" class="btn-flat modal-action" type="submit">Edit</button>
-                    <button class="btn-flat" type="button" ng-click="task.isEdit = false">Cancel</button>
+                    <button class="btn-flat" type="button" ng-click="selectedTask.isEdit = false">Cancel</button>
                 </div>
             </form>
         </div>
