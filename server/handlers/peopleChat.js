@@ -30,7 +30,7 @@ EventBus.onSeries('PeopleChat.Updated', function(req, next) {
                     next();
                 });
                 var data = _.last(req.messages);
-                PushNotificationHelper.getData(req.project,req._id,'People package', data.text, data.mentions, 'people');
+                PushNotificationHelper.getData(req.project,req.people,'People package', data.text, data.mentions, 'people');
             } else {
                 return next();
             }
