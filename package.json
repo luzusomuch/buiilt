@@ -51,7 +51,8 @@
     "apnagent": "*",
     "node-gcm": "*",
     "nodemailer-sendgrid-transport": "~v0.2.0",
-    "cron": "~v1.0.9"
+    "cron": "~v1.0.9",
+    "node-filepicker": "0.1.2"
   },
   "devDependencies": {
     "connect-livereload": "~0.4.0",

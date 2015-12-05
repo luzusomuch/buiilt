@@ -31,8 +31,29 @@ var validationError = function (res, err) {
 };
 
 exports.uploadMobile = function(req, res) {
-    console.log(req.params.id);
-    console.log(req);
+    var filesAfterInsert = [];
+    var item = req.body;
+    var file = new File({
+        title: item.filename,
+        name: item.filename,
+        path: item.url,
+        key: item.key,
+        server: 's3',
+        mimeType: item.mimeType,
+        description: item.desc,
+        size: item.size,
+        user: req.user._id,
+        belongTo: req.params.id,
+        belongToType: item.belongToType,
+        peopleChat: item.peopleChat,
+        tags: item.tags
+    });
+    file.save(function(err) {
+        if (err) {return res.send(500,err);}
+        else {
+            return res.send(200,file);
+        }
+    });
 };
 
 /**
