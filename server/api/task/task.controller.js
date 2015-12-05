@@ -238,8 +238,10 @@ exports.update = function(req,res) {
     if (err) {
       return errorsHelper.validationErrors(res,err)
     }
-
+console.log(req.body);
     task = _.merge(task,data);
+    task.description = req.body.description;
+    task.dateEnd = req.body.dateEnd;
     task.assignees = data.assignees;
     task.markModified('assignees');
     task._editUser = req.user;

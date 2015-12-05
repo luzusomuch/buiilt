@@ -738,4 +738,19 @@ angular.module('buiiltApp')
             }
         );
     };
+
+    $scope.getTaskDetail = function(task) {
+        task.isEdit = false;
+        $scope.task = task;
+    };
+
+    $scope.editTask = function() {
+        console.log($scope.task);
+        taskService.update({id: $scope.task._id, type: $scope.task.type}, $scope.task).$promise.then(function(res) {
+            console.log(res);
+            $scope.task.isEdit = false;
+        }, function(err) {
+            console.log(err);
+        });
+    };
 });

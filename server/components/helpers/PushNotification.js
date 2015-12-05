@@ -113,8 +113,9 @@ exports.getData = function(projectId,id,threadName, message, users, type){
               path = "#/board/" + id;
             } else if (type == "people") {
               path = "#/"+projectId+"/people-chat/" + id;
-            }
-            else if (type == 'message') {
+            } else if (type == 'invite-people') {
+              path = "#/dashboard";
+            } else if (type == 'message') {
               path = "#/"+projectId+"/thread/"+id;
             }
             var sender = new gcm.Sender("AIzaSyABcNG7VNgSzOhXIxapNGxmQWLElWHgHDU");//api id
