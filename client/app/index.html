@@ -1,219 +1,240 @@
 <!DOCTYPE html>
 <html ng-app="buiiltApp">
-  <head>
-    <title></title>
-    <base href="/">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta charset="utf-8">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="/bower_components/jquery-ui/themes/base/jquery-ui.css" />
-    <link rel="stylesheet" href="/bower_components/angular-notify/angular-notify.css" />
-    <link rel="stylesheet" href="/bower_components/angular-loading-bar/build/loading-bar.css" />
-    <link rel="stylesheet" href="/dist/app.full.css" data-concat="false" />
-    <link rel="stylesheet" href="/bower_components/lumx/dist/lumx.css">
-    <link rel="stylesheet" href="/bower_components/materialize/bin/materialize.css">
-    <link rel="stylesheet" href="/bower_components/prism/themes/prism.css">
-    <link rel="stylesheet" href="/bower_components/angular-tooltips/dist/angular-tooltips.min.css">
-    <link rel="stylesheet" href="/media/css/main.css">
-    <link rel="stylesheet" href="/media/css/normalize.css">
-    <link rel="stylesheet" href="/media/css/style.css">
-    <link rel="stylesheet" href="/media/css/materialize.css">
-    <link rel="stylesheet" href="/bower_components/colorbox/example2/colorbox.css">
+<head>
+	<title></title>
+	<base href="/">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="utf-8">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link rel="stylesheet" href="/bower_components/jquery-ui/themes/base/jquery-ui.css" />
+	<link rel="stylesheet" href="/bower_components/angular-notify/angular-notify.css" />
+	<link rel="stylesheet" href="/bower_components/angular-loading-bar/build/loading-bar.css" />
+	<link rel="stylesheet" href="/dist/app.full.css" data-concat="false" />
+	<link rel="stylesheet" href="/bower_components/lumx/dist/lumx.css">
+	<link rel="stylesheet" href="/bower_components/materialize/bin/materialize.css">
+	<link rel="stylesheet" href="/bower_components/prism/themes/prism.css">
+	<link rel="stylesheet" href="/bower_components/angular-tooltips/dist/angular-tooltips.min.css">
+	<link rel="stylesheet" href="/media/css/main.css">
+	<link rel="stylesheet" href="/media/css/normalize.css">
+	<link rel="stylesheet" href="/media/css/style.css">
+	<link rel="stylesheet" href="/media/css/materialize.css">
+	<link rel="stylesheet" href="/bower_components/colorbox/example2/colorbox.css">
+	<link rel="stylesheet" href="/bower_components/angular-material/angular-material.css">
 
-  </head>
-  <!-- remove the overflow-y:hidden -->
-  <body style="max-height: {{maximunHeight}}px; overflow-y:hidden">
-    <!-- JS from Bower Components -->
-    <div class="overlay-bg" ng-class="{'hidden' : !overlay}">
-      <i class="fa fa-spinner fa-pulse"></i>
-    </div>
-    <script src="/bower_components/jquery/dist/jquery.js"></script>
-    <script src="/bower_components/jquery-ui/ui/jquery-ui.js"></script>
-    <script src="/bower_components/prism/prism.js"></script>
-    <script src="/bower_components/lodash/dist/lodash.js"></script>
-    <script src="/bower_components/moment/min/moment.min.js"></script>
-    <script src="/bower_components/angular/angular.js"></script>
-    <script src="/bower_components/angucomplete-alt/dist/angucomplete-alt.min.js"></script>
-    <script src="/bower_components/angular-cookies/angular-cookies.js"></script>
-    <script src="/bower_components/angular-sanitize/angular-sanitize.js"></script>
-    <script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-    <script src="/bower_components/angular-animate/angular-animate.js"></script>
-    <script src="/bower_components/angular-resource/angular-resource.js"></script>
-    <script src="/bower_components/angular-ui-utils/ui-utils.js"></script>
-    <script src="/bower_components/angular-tooltips/dist/angular-tooltips.min.js"></script>
-    <script src="/bower_components/angular-socket-io/socket.min.js"></script>
-    <script src="/bower_components/es5-shim/es5-shim.min.js"></script>
-    <script src="/bower_components/angular-file-upload/angular-file-upload.min.js"></script>
-    <script src="/bower_components/angular-notify/angular-notify.js"></script>
-    <script src="/bower_components/angular-loading-bar/build/loading-bar.js"></script>
-    <script src="/bower_components/velocity/velocity.js"></script>
-    <script src="/bower_components/moment/min/moment-with-langs.js"></script>
-    <script src="/bower_components/lumx/dist/lumx.js"></script>
-    <script src="/bower_components/restangular/src/restangular.js"></script>
-    <script src="/bower_components/ng-table/dist/ng-table.js"></script>
-    <script src="/bower_components/colorbox/jquery.colorbox-min.js"></script>
-    <script src="/bower_components/angular-filepicker/dist/angular_filepicker.js"></script>
-    <script src="/bower_components/mixpanel/mixpanel-jslib-snippet.min.js"></script>
-    <script src="/bower_components/angular-mixpanel/src/angular-mixpanel.js"></script>
+</head>
+<!-- remove the overflow-y:hidden -->
+<body layout="column">
+	<!-- JS from Bower Components -->
+	<div class="overlay-bg" ng-class="{'hidden' : !overlay}">
+		<i class="fa fa-spinner fa-pulse"></i>
+	</div>
+	<script src="/bower_components/jquery/dist/jquery.js"></script>
+	<script src="/bower_components/jquery-ui/ui/jquery-ui.js"></script>
+	<script src="/bower_components/prism/prism.js"></script>
+	<script src="/bower_components/lodash/dist/lodash.js"></script>
+	<script src="/bower_components/moment/min/moment.min.js"></script>
+	<script src="/bower_components/angular/angular.js"></script>
+	<script src="/bower_components/angucomplete-alt/dist/angucomplete-alt.min.js"></script>
+	<script src="/bower_components/angular-cookies/angular-cookies.js"></script>
+	<script src="/bower_components/angular-sanitize/angular-sanitize.js"></script>
+	<script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+	<script src="/bower_components/angular-animate/angular-animate.js"></script>
+	<script src="/bower_components/angular-resource/angular-resource.js"></script>
+	<script src="/bower_components/angular-ui-utils/ui-utils.js"></script>
+	<script src="/bower_components/angular-tooltips/dist/angular-tooltips.min.js"></script>
+	<script src="/bower_components/angular-socket-io/socket.min.js"></script>
+	<script src="/bower_components/es5-shim/es5-shim.min.js"></script>
+	<script src="/bower_components/angular-file-upload/angular-file-upload.min.js"></script>
+	<script src="/bower_components/angular-notify/angular-notify.js"></script>
+	<script src="/bower_components/angular-loading-bar/build/loading-bar.js"></script>
+	<script src="/bower_components/velocity/velocity.js"></script>
+	<script src="/bower_components/moment/min/moment-with-langs.js"></script>
+	<script src="/bower_components/lumx/dist/lumx.js"></script>
+	<script src="/bower_components/restangular/src/restangular.js"></script>
+	<script src="/bower_components/ng-table/dist/ng-table.js"></script>
+	<script src="/bower_components/colorbox/jquery.colorbox-min.js"></script>
+	<script src="/bower_components/angular-filepicker/dist/angular_filepicker.js"></script>
+	<script src="/bower_components/mixpanel/mixpanel-jslib-snippet.min.js"></script>
+	<script src="/bower_components/angular-mixpanel/src/angular-mixpanel.js"></script>
+	<script src="/bower_components/angular-animate/angular-animate.js" type="text/javascript" ></script>
+    <script src="/bower_components/angular-aria/angular-aria.js" type="text/javascript" ></script>
+    <script src="/bower_components/angular-material/angular-material.js" type="text/javascript" ></script>
 
-    <!-- Add New Bower Component JS Above -->
+	<!-- Add New Bower Component JS Above -->
 
-    <!-- Main App JS -->
-    <script src="/app/app.js"></script>
+	<!-- Main App JS -->
+	<script src="/app/app.js"></script>
+	
+	<header>
 
+		<buiilt-header></buiilt-header>
 
-    <!-- Add New Component JS Above -->
+	</header>
 
-  <built-header ng-if="hasHeader"></built-header>
+	<main>
+		
+		<md-content flex id="content">
+			<div ui-view></div>
+		</md-content>
+		
+	</main>
 
-  <main class="row container">
+	<div ng-include="'app/components/modal/modal.html'"></div>
+	
+	<div ng-if="authService.isLoggedIn()" sp-socket></div>
 
-    <div ui-view></div>
-    <div ng-include="'app/components/modal/modal.html'"></div>
-  </main>
-  <div ng-if="authService.isLoggedIn()" sp-socket></div>
+	<script src="/app/components/angular-materialize/src/materialize.min.js"></script>
+	<script src="/app/components/angular-materialize/src/angular-materialize.js"></script>
+	<script src="/app/components/filters.js"></script>
+	<script src="/app/components/directive.js"></script>
+	<script src="/app/components/angular-slimscroll/angular-slimscroll.js"></script>
+	<script src="/app/components/socket/socket.service.js"></script>
+	<script src="/app/components/modal/modal.service.js"></script>
 
-  <!-- <built-footer  ng-if="hasFooter"></built-footer> -->
+	<script src="socket.io-client/socket.io.js"></script>
+	<script src="/app/directives/footer/footer-directive.js"></script>
+	<script src="/app/directives/header/header-directive.js"></script>
+	<script src="/app/directives/quote/quote-directive.js"></script>
+	<script src="/app/directives/upload/upload-directive.js"></script>
+	<script src="/app/directives/file/file-directive.js"></script>
+	<script src="/app/directives/task/task-directive.js"></script>
+	<script src="/app/directives/message/message-directive.js"></script>
+	<script src="/app/directives/notification/notification-directive.js"></script>
+	<script src="/app/directives/addOn/add-on-directive.js"></script>
+	<script src="/app/directives/addendum/addendum-directive.js"></script>
+	<script src="/app/directives/contenteditable/contenteditable-directive.js"></script>
+	<script src="/app/directives/create-package/create-package-directive.js"></script>
+	<script src="/app/directives/datepicker/datepicker-directive.js"></script>
+	<script src="/app/directives/colorbox/colorbox-directive.js"></script>
+	<script src="/app/directives/file-picker-previewer/file-picker-previewer-directive.js"></script>
+	
+	<script src="/app/directives/projectSidenav/projectSidenav-directive.js"></script>
+	<script src="/app/directives/projectsSidenav/projectsSidenav-directive.js"></script>
+	<script src="/app/directives/settingsSidenav/settingsSidenav-directive.js"></script>
+	<script src="/app/directives/dashboardSidenav/dashboardSidenav-directive.js"></script>
+	<script src="/app/directives/relatedItems/relatedItems-directive.js"></script>
 
-    <script src="/app/components/angular-materialize/src/materialize.min.js"></script>
-    <script src="/app/components/angular-materialize/src/angular-materialize.js"></script>
-    <script src="/app/components/filters.js"></script>
-    <script src="/app/components/directive.js"></script>
-    <script src="/app/components/angular-slimscroll/angular-slimscroll.js"></script>
-    <script src="/app/components/socket/socket.service.js"></script>
-    <script src="/app/components/modal/modal.service.js"></script>
+	<script src="/app/modules/auth/main.js"></script>
+	<script src="/app/modules/auth/signin/signin-controller.js"></script>
+	<script src="/app/modules/auth/signup/signup-controller.js"></script>
+	<script src="/app/modules/auth/signup-with-invite/signup-with-invite-controller.js"></script>
+	<script src="/app/modules/auth/forgot-password/forgot-password-controller.js"></script>
+	<script src="/app/modules/auth/reset-password/reset-password-controller.js"></script>
+	<script src="/app/modules/auth/signout/signout-controller.js"></script>
+	<script src="/app/modules/home/main.js"></script>
+	<script src="/app/modules/home/home-controller.js"></script>
+	<script src="/app/modules/user/main.js"></script>
+	<script src="/app/modules/user/user-controller.js"></script>
 
-    <script src="socket.io-client/socket.io.js"></script>
-    <script src="/app/directives/footer/footer-directive.js"></script>
-    <script src="/app/directives/header/header-directive.js"></script>
-    <script src="/app/directives/quote/quote-directive.js"></script>
-    <script src="/app/directives/upload/upload-directive.js"></script>
-    <script src="/app/directives/file/file-directive.js"></script>
-    <script src="/app/directives/task/task-directive.js"></script>
-    <script src="/app/directives/message/message-directive.js"></script>
-    <script src="/app/directives/notification/notification-directive.js"></script>
-    <script src="/app/directives/addOn/add-on-directive.js"></script>
-    <script src="/app/directives/addendum/addendum-directive.js"></script>
-    <script src="/app/directives/contenteditable/contenteditable-directive.js"></script>
-    <script src="/app/directives/create-package/create-package-directive.js"></script>
-    <script src="/app/directives/datepicker/datepicker-directive.js"></script>
-    <script src="/app/directives/colorbox/colorbox-directive.js"></script>
-    <script src="/app/directives/file-picker-previewer/file-picker-previewer-directive.js"></script>
+	<script src="/app/modules/contractors/main.js"></script>
+	<script src="/app/modules/contractors/contractors-controller.js"></script>
+	<script src="/app/modules/materials/main.js"></script>
+	<script src="/app/modules/materials/materials-controller.js"></script>
+	
+	<script src="/app/modules/dashboard/main.js"></script>
+	<script src="/app/modules/dashboard/dashboard-controller.js"></script>
+	
+	<script src="/app/modules/projects/main.js"></script>
+	<script src="/app/modules/projects/projects-controller.js"></script>
 
-    <script src="/app/modules/auth/main.js"></script>
-    <script src="/app/modules/auth/signin/signin-controller.js"></script>
-    <script src="/app/modules/auth/signup/signup-controller.js"></script>
-    <script src="/app/modules/auth/signup-with-invite/signup-with-invite-controller.js"></script>
-    <script src="/app/modules/auth/forgot-password/forgot-password-controller.js"></script>
-    <script src="/app/modules/auth/reset-password/reset-password-controller.js"></script>
-    <script src="/app/modules/auth/signout/signout-controller.js"></script>
-    <script src="/app/modules/home/main.js"></script>
-    <script src="/app/modules/home/home-controller.js"></script>
-    <script src="/app/modules/user/main.js"></script>
-    <script src="/app/modules/user/user-controller.js"></script>
+	<script src="/app/modules/settings/main.js"></script>
+	<script src="/app/modules/settings/settings-controller.js"></script>
+	
+	<script src="/app/modules/project/main.js"></script>
+	<script src="/app/modules/project/project-controller.js"></script>
+	<script src="/app/modules/project/project-overview/project-overview-controller.js"></script>
+	<script src="/app/modules/project/project-team/project-team-controller.js"></script>
+	<script src="/app/modules/project/project-team/detail/project-team-detail-controller.js"></script>
+	<script src="/app/modules/project/project-documentation/project-documentation-controller.js"></script>
+	<script src="/app/modules/project/project-documentation/detail/project-documentation-detail-controller.js"></script>
+	<script src="/app/modules/project/project-messages/project-messages-controller.js"></script>
+	<script src="/app/modules/project/project-messages/detail/project-messages-detail-controller.js"></script>
+	
+	<script src="/app/modules/project/project-tasks/project-tasks-controller.js"></script>
+	<script src="/app/modules/project/project-tasks/detail/project-tasks-detail-controller.js"></script>
+	
+	<script src="/app/modules/project/project-files/project-files-controller.js"></script>
+	<script src="/app/modules/project/project-files/detail/project-files-detail-controller.js"></script>
+	
+	<script src="/app/modules/project/view-project/view-project-controller.js"></script>
+	
+	<script src="/app/modules/quote-request/main.js"></script>
+	<script src="/app/modules/quote-request/view-request/view-request-controller.js"></script>
+	<script src="/app/modules/quote/main.js"></script>
+	<script src="/app/modules/quote/quote-controller.js"></script>
+	<script src="/app/modules/staff/main.js"></script>
+	<script src="/app/modules/staff/staff-controller.js"></script>
+	<script src="/app/modules/client/main.js"></script>
+	<script src="/app/modules/client/client-controller.js"></script>
+	<script src="/app/modules/tender/main.js"></script>
+	<script src="/app/modules/tender/tender-controller.js"></script>
+	<script src="/app/modules/document/main.js"></script>
+	<script src="/app/modules/document/document-controller.js"></script>
+	<script src="/app/modules/team/main.js"></script>
+	<script src="/app/modules/team/manager-team/manager-team-controller.js"></script>
+	<script src="/app/modules/contractor-request/main.js"></script>
+	<script src="/app/modules/contractor-request/send-quote/send-quote-controller.js"></script>
+	<script src="/app/modules/contractor-request/view-contractor-request/view-contractor-request-controller.js"></script>
+	<script src="/app/modules/contractor-request/contractor-package-in-process/contractor-package-in-process-controller.js"></script>
+	<script src="/app/modules/material-request/main.js"></script>
+	<script src="/app/modules/material-request/send-quote/send-quote-controller.js"></script>
+	<script src="/app/modules/material-request/view-material-request/view-material-request-controller.js"></script>
+	<script src="/app/modules/material-request/material-package-in-process/material-package-in-process-controller.js"></script>
+	<script src="/app/modules/notification/main.js"></script>
+	<script src="/app/modules/notification/view-notification/view-notification-controller.js"></script>
+	<script src="/app/modules/variation-request/main.js"></script>
+	<script src="/app/modules/variation-request/send-quote/send-quote-controller.js"></script>
+	<script src="/app/modules/variation-request/view-variation-request/view-variation-request-controller.js"></script>
+	<script src="/app/modules/variation-request/variation-in-process/variation-in-process-controller.js"></script>
+	<script src="/app/modules/error/error-controller.js"></script>
+	<script src="/app/modules/error/main.js"></script>
+	<script src="/app/modules/design/main.js"></script>
+	<script src="/app/modules/design/index/design-controller.js"></script>
+	<script src="/app/modules/design/detail/design-detail-controller.js"></script>
+	<script src="/app/modules/builder/main.js"></script>
+	<script src="/app/modules/builder/in-progress/in-progress-controller.js"></script>
+	<script src="/app/modules/builder/send-quote/send-quote-controller.js"></script>
+	<script src="/app/modules/builder/view-request/view-request-controller.js"></script>
+	<script src="/app/modules/builder/list/architect-list-page-controller.js"></script>
+	<script src="/app/modules/people/main.js"></script>
+	<script src="/app/modules/people/people-controller.js"></script>
+	<script src="/app/modules/boards/main.js"></script>
+	<script src="/app/modules/boards/boards-controller.js"></script>
 
-    <script src="/app/modules/dashboard/main.js"></script>
-    <script src="/app/modules/dashboard/dashboard-controller.js"></script>
-    <script src="/app/modules/contractors/main.js"></script>
-    <script src="/app/modules/contractors/contractors-controller.js"></script>
-    <script src="/app/modules/materials/main.js"></script>
-    <script src="/app/modules/materials/materials-controller.js"></script>
-    <script src="/app/modules/project/main.js"></script>
-    <script src="/app/modules/project/create-project/create-project-controller.js"></script>
-    <script src="/app/modules/project/list-projects/list-projects-controller.js"></script>
-    <script src="/app/modules/project/view-project/view-project-controller.js"></script>
-    <script src="/app/modules/quote-request/main.js"></script>
-    <script src="/app/modules/quote-request/view-request/view-request-controller.js"></script>
-    <script src="/app/modules/quote/main.js"></script>
-    <script src="/app/modules/quote/quote-controller.js"></script>
-    <script src="/app/modules/staff/main.js"></script>
-    <script src="/app/modules/staff/staff-controller.js"></script>
-    <script src="/app/modules/client/main.js"></script>
-    <script src="/app/modules/client/client-controller.js"></script>
-    <script src="/app/modules/tender/main.js"></script>
-    <script src="/app/modules/tender/tender-controller.js"></script>
-    <script src="/app/modules/document/main.js"></script>
-    <script src="/app/modules/document/document-controller.js"></script>
-    <script src="/app/modules/team/main.js"></script>
-    <script src="/app/modules/team/manager-team/manager-team-controller.js"></script>
-    <script src="/app/modules/contractor-request/main.js"></script>
-    <script src="/app/modules/contractor-request/send-quote/send-quote-controller.js"></script>
-    <script src="/app/modules/contractor-request/view-contractor-request/view-contractor-request-controller.js"></script>
-    <script src="/app/modules/contractor-request/contractor-package-in-process/contractor-package-in-process-controller.js"></script>
-    <script src="/app/modules/material-request/main.js"></script>
-    <script src="/app/modules/material-request/send-quote/send-quote-controller.js"></script>
-    <script src="/app/modules/material-request/view-material-request/view-material-request-controller.js"></script>
-    <script src="/app/modules/material-request/material-package-in-process/material-package-in-process-controller.js"></script>
-    <script src="/app/modules/notification/main.js"></script>
-    <script src="/app/modules/notification/view-notification/view-notification-controller.js"></script>
-    <script src="/app/modules/variation-request/main.js"></script>
-    <script src="/app/modules/variation-request/send-quote/send-quote-controller.js"></script>
-    <script src="/app/modules/variation-request/view-variation-request/view-variation-request-controller.js"></script>
-    <script src="/app/modules/variation-request/variation-in-process/variation-in-process-controller.js"></script>
-    <script src="/app/modules/error/error-controller.js"></script>
-    <script src="/app/modules/error/main.js"></script>
-    <script src="/app/modules/design/main.js"></script>
-    <script src="/app/modules/design/index/design-controller.js"></script>
-    <script src="/app/modules/design/detail/design-detail-controller.js"></script>
-    <script src="/app/modules/builder/main.js"></script>
-    <script src="/app/modules/builder/in-progress/in-progress-controller.js"></script>
-    <script src="/app/modules/builder/send-quote/send-quote-controller.js"></script>
-    <script src="/app/modules/builder/view-request/view-request-controller.js"></script>
-    <script src="/app/modules/builder/list/architect-list-page-controller.js"></script>
-    <script src="/app/modules/people/main.js"></script>
-    <script src="/app/modules/people/people-controller.js"></script>
-    <script src="/app/modules/boards/main.js"></script>
-    <script src="/app/modules/boards/boards-controller.js"></script>
+	<script src="/app/services/auth-service.js"></script>
+	<script src="/app/services/user-service.js"></script>
+	<script src="/app/services/contractors-services.js"></script>
+	<script src="/app/services/material-package-service.js"></script>
+	<script src="/app/services/project-service.js"></script>
+	<script src="/app/services/quote-service.js"></script>
+	<script src="/app/services/document-service.js"></script>
+	<script src="/app/services/upload-service.js"></script>
+	<script src="/app/services/team-service.js"></script>
+	<script src="/app/services/inviteToken-service.js"></script>
+	<script src="/app/services/package-invite-service.js"></script>
+	<script src="/app/services/package-service.js"></script>
+	<script src="/app/services/staff-package.js"></script>
+	<script src="/app/services/task-service.js"></script>
+	<script src="/app/services/file-service.js"></script>
+	<script src="/app/services/builder-package.js"></script>
+	<script src="/app/services/quote-request-service.js"></script>
+	<script src="/app/services/registry-for-contractor-service.js"></script>
+	<script src="/app/services/contractor-request-service.js"></script>
+	<script src="/app/services/material-request-service.js"></script>
+	<script src="/app/services/validate-invite-service.js"></script>
+	<script src="/app/services/notification-service.js"></script>
+	<script src="/app/services/message-service.js"></script>
+	<script src="/app/services/add-on-package-service.js"></script>
+	<script src="/app/services/variation-request-service.js"></script>
+	<script src="/app/services/design-service.js"></script>
+	<script src="/app/services/people-service.js"></script>
+	<script src="/app/services/people-chat-service.js"></script>
+	<script src="/app/services/board-service.js"></script>
+	<script src="/app/services/dialog-service.js"></script>
+	
 
-    <script src="/app/services/auth-service.js"></script>
-    <script src="/app/services/user-service.js"></script>
-    <script src="/app/services/contractors-services.js"></script>
-    <script src="/app/services/material-package-service.js"></script>
-    <script src="/app/services/project-service.js"></script>
-    <script src="/app/services/quote-service.js"></script>
-    <script src="/app/services/document-service.js"></script>
-    <script src="/app/services/upload-service.js"></script>
-    <script src="/app/services/team-service.js"></script>
-    <script src="/app/services/inviteToken-service.js"></script>
-    <script src="/app/services/package-invite-service.js"></script>
-    <script src="/app/services/package-service.js"></script>
-    <script src="/app/services/staff-package.js"></script>
-    <script src="/app/services/task-service.js"></script>
-    <script src="/app/services/file-service.js"></script>
-    <script src="/app/services/builder-package.js"></script>
-    <script src="/app/services/quote-request-service.js"></script>
-    <script src="/app/services/registry-for-contractor-service.js"></script>
-    <script src="/app/services/contractor-request-service.js"></script>
-    <script src="/app/services/material-request-service.js"></script>
-    <script src="/app/services/validate-invite-service.js"></script>
-    <script src="/app/services/notification-service.js"></script>
-    <script src="/app/services/message-service.js"></script>
-    <script src="/app/services/add-on-package-service.js"></script>
-    <script src="/app/services/variation-request-service.js"></script>
-    <script src="/app/services/design-service.js"></script>
-    <script src="/app/services/people-service.js"></script>
-    <script src="/app/services/people-chat-service.js"></script>
-    <script src="/app/services/board-service.js"></script>
-
-    <script src="/assets/js/jquery.slimscroll.js"></script>
-
-  <!--Start of Tawk.to Script-->
-  <script type="text/javascript">
-  var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-  (function(){
-  var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-  s1.async=true;
-  s1.src='https://embed.tawk.to/55ed5d71a93a7c7a7e2c582f/default';
-  s1.charset='UTF-8';
-  s1.setAttribute('crossorigin','*');
-  s0.parentNode.insertBefore(s1,s0);
-  })();
-  </script>
-  <!--End of Tawk.to Script-->
-  <script type="text/javascript" src="//api.filepicker.io/v2/filepicker.js"></script>
-  <!-- <input type="filepicker" data-fp-apikey="AM6Wn3DzwRimryydBnsj7z"
-onchange="alert(event.fpfile.url)"> -->
-    <script src="https://inlinemanual.com/embed/player.5aff7ac0939b170ff68618a7789a2a80.js"></script>
-
+	<script src="/assets/js/jquery.slimscroll.js"></script>
+	
 </body>
+
 </html>

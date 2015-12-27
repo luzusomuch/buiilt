@@ -1,0 +1,20 @@
+<div flex class="md-whiteframe-1dp" style="height: 92vh; overflow: scroll">
+		
+		<div layout="row" layout-padding layout-margin>
+			<p layout-padding class="page-title">Projects</p>
+		</div>
+
+		<md-list ng-cloak flex>
+			<div ui-sref="projects.all" ng-class="{activemenu: $state.includes('projects.all')}">
+				<md-list-item md-ink-ripple>
+				    <p layout-padding>All Projects</p>
+				</md-list-item>
+			</div>
+			<div ui-sref="projects.invitations" ng-class="{activemenu: $state.includes('projects.invitations')}">
+				<md-list-item md-ink-ripple>
+				    <p layout-padding>Invitations</p>
+				</md-list-item>
+			</div>
+		</md-list>
+
+</div>

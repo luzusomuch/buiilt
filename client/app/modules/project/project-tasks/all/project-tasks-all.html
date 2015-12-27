@@ -1,0 +1,27 @@
+<md-toolbar class="md-warn md-hue-1">
+	<div class="md-toolbar-tools">
+		
+		<md-chips class="" ng-model="messageNames" placeholder="Search Tasks..." secondary-placeholder="Search Tasks..." flex>
+			<md-chip-template class="md-accent">
+		        <strong>{{$chip}}</strong>
+		    </md-chip-template>
+		</md-chips>
+		
+		<md-button ng-click="showNewMessageModal($event)">Add a New Task</md-button>
+		
+    </div>
+</md-toolbar>
+
+<md-list ng-cloak class="main-page-content">
+
+	<div ng-repeat="message in messages" ui-sref="project.tasks.detail">
+		<md-list-item class="md-2-line" md-ink-ripple>
+			<div class="md-list-item-text" layout="column">
+		          <h3>{{ message.name }}</h3>
+		          <p>{{ message.members }}</p>
+	        </div>
+		</md-list-item>
+		<md-divider></md-divider>
+	</div>
+
+</md-list>

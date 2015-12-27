@@ -1,0 +1,30 @@
+<md-toolbar class="md-warn md-hue-1">
+	<div class="md-toolbar-tools">
+		
+		<md-chips class="" ng-model="projectsFilter" placeholder="Search Projects..." secondary-placeholder="Search Projects..." flex>
+			<md-chip-template>
+		        <strong>{{$chip}}</strong>
+		    </md-chip-template>
+		</md-chips>
+		
+	    <md-button ng-click="showCreateProjectModal($event)">Create a New Project</md-button>
+		
+    </div>
+	
+	
+	
+</md-toolbar>
+
+<md-list ng-cloak class="main-page-content">
+
+	<div ng-repeat="project in projects" ui-sref="project.overview({projectId: project._id})">
+		<md-list-item class="md-2-line" md-ink-ripple>
+			<div class="md-list-item-text" layout="column">
+		          <h3 class="md-primary">{{ project.name }}</h3>
+		          <p>{{ project._id }} - {{ project.description }}</p>
+	        </div>
+		</md-list-item>
+		<md-divider></md-divider>
+	</div>
+	
+</md-list>

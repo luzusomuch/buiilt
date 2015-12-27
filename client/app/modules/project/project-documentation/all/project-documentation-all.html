@@ -1,0 +1,28 @@
+<md-toolbar class="md-warn md-hue-1">
+	<div class="md-toolbar-tools">
+			
+		<md-chips class="" ng-model="docTypes" placeholder="Search Documentation..." secondary-placeholder="Seach Documentation..." flex>
+			<md-chip-template class="md-accent">
+		        <strong>{{$chip}}</strong>
+		    </md-chip-template>
+		</md-chips>
+		
+	    <md-button ng-click="showNewDocumentModal($event)">Add a New Document</md-button>
+		
+    </div>
+</md-toolbar>
+
+<md-list ng-cloak class="main-page-content">
+
+	<div ng-repeat="document in documentation" ui-sref="project.documentation.detail">
+		<md-list-item class="md-2-line" md-ink-ripple>
+			<div class="md-list-item-text" layout="column">
+		          <h3>{{ document.name }}</h3>
+		          <p>{{ document.revision }}</p>
+	        </div>
+		</md-list-item>
+		<md-divider></md-divider>
+	</div>
+	
+</md-list>
+	

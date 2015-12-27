@@ -11,13 +11,13 @@ angular.module('buiiltApp', [
   'restangular',
   'lumx',
   'ui.materialize',
-  // 'contenteditable',
   '720kb.tooltips',
   'angucomplete-alt',
   'btford.socket-io',
   'ngTable',
   'angular-filepicker',
-  'analytics.mixpanel'
+  'analytics.mixpanel',
+  'ngMaterial'
 ]);
 
 angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider, $locationProvider, $urlRouterProvider, $httpProvider, $sceDelegateProvider, cfpLoadingBarProvider, filepickerProvider, $mixpanelProvider) {
@@ -37,7 +37,14 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
     someProp: true,
     anotherOne: [1,2,3]
   });
-})
+  })
+  .config(function($mdThemingProvider) {
+    $mdThemingProvider.theme('default')
+      .primaryPalette('blue')
+      .accentPalette('amber', {'default': '500', 'hue-1': '300', 'hue-2': '800', 'hue-3': 'A400'})
+	  .warnPalette('grey', {'hue-1': '100'})
+	  .backgroundPalette('grey')
+  })
   .factory('authInterceptor', function ($q, $cookieStore, $location) {
     return {
       // Add authorization token to headers

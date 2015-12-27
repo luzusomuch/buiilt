@@ -1,0 +1,27 @@
+<md-toolbar class="md-warn md-hue-1">
+	<div class="md-toolbar-tools">
+		
+		<md-chips class="" ng-model="messageNames" placeholder="Search Messages..." secondary-placeholder="Search Messages..." flex>
+			<md-chip-template class="md-accent">
+		        <strong>{{$chip}}</strong>
+		    </md-chip-template>
+		</md-chips>
+		
+		<md-button ng-click="showNewMessageModal($event)">Add a New Message</md-button>
+		
+    </div>
+</md-toolbar>
+
+<md-list ng-cloak class="main-page-content">
+
+	<div ng-repeat="message in messages" ui-sref="project.messages.detail">
+		<md-list-item class="md-2-line" md-ink-ripple>
+			<div class="md-list-item-text" layout="column">
+		          <h3>{{ message.name }}</h3>
+		          <p>{{ message.members }}</p>
+	        </div>
+		</md-list-item>
+		<md-divider></md-divider>
+	</div>
+
+</md-list>

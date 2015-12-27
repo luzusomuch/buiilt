@@ -1,0 +1,52 @@
+<md-dialog aria-label="Create a New Message" flex="70">
+	<form>
+		<md-toolbar>
+			<div class="md-toolbar-tools">
+				<h2>Create a New Message</h2>
+			</div>
+		</md-toolbar>
+		
+		<md-dialog-content>
+			<div class="md-dialog-content" layout="column">
+				
+				<div layout="row">
+					<md-input-container flex class="modal-instructions">
+						<p>Please provide the following details to attach a new message to your project...</p>
+					</md-input-container>
+				</div>
+				
+				<div layout="row">
+					<md-input-container flex>
+				        <label>Project Name</label>
+				        <input ng-model="project.name" md-autofocus>
+					</md-input-container>
+				</div>
+				
+				<div layout="row">
+					<md-input-container flex>
+				        <label>Street Address</label>
+				        <input ng-model="project.package.location.address">
+				    </md-input-container>
+				</div>
+				
+				<div layout="row">
+					<md-input-container flex="60">
+				        <label>Suburb</label>
+				        <input ng-model="project.package.location.suburb">
+				    </md-input-container>
+
+					<md-input-container flex="40">
+				        <label>Postcode</label>
+				        <input ng-model="project.package.location.postcode">
+				    </md-input-container>
+				</div>
+				
+			</div>
+		</md-dialog-content>
+		
+		<md-dialog-actions>
+			<md-button ng-click="cancelNewMessageModal()">Cancel</md-button>
+			<md-button ng-click="createNewMessage()" class="md-raised md-accent md-hue-1">Add Message!</md-button>
+		</md-dialog-actions>
+	</form>
+</md-dialog>

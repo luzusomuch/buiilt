@@ -1,0 +1,30 @@
+<div flex class="md-whiteframe-1dp" style="height: 92vh; overflow: scroll">
+	
+		<div layout="row" layout-padding layout-margin>
+			<p layout-padding class="page-title">Dashboard</p>
+		</div>
+
+		<md-list ng-cloak flex>
+			<div ui-sref="dashboard.tasks" ng-class="{activemenu: $state.includes('dashboard.tasks')}">
+				<md-list-item md-ink-ripple>
+				    <p layout-padding>Tasks</p>
+				</md-list-item>
+			</div>
+			<div ui-sref="dashboard.messages" ng-class="{activemenu: $state.includes('dashboard.messages')}">
+				<md-list-item md-ink-ripple>
+				    <p layout-padding>Messages</p>
+				</md-list-item>
+			</div>
+			<div ui-sref="dashboard.files" ng-class="{activemenu: $state.includes('dashboard.files')}">
+				<md-list-item md-ink-ripple>
+				    <p layout-padding>Files</p>
+				</md-list-item>
+			</div>
+			<div ui-sref="dashboard.documentation" ng-class="{activemenu: $state.includes('dashboard.documentation')}">
+				<md-list-item md-ink-ripple>
+				    <p layout-padding>Documentation</p>
+				</md-list-item>
+			</div>
+		</md-list>
+
+</div>

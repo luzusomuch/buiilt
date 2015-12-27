@@ -1,90 +1,34 @@
 angular.module('buiiltApp')
-.directive('builtHeader', function($rootScope) {
+.directive('buiiltHeader', function($rootScope) {
   return {
     restrict: 'E',
     templateUrl: 'app/directives/header/header.html',
-    controller: function($scope,$state, $stateParams, $rootScope,materialPackageService, authService, projectService, contractorService,teamService,filterFilter, builderPackageService, socket) {
+    controller: function($scope,$state, $stateParams, $rootScope,materialPackageService, authService, projectService, contractorService,teamService,filterFilter, builderPackageService, socket, $mdDialog, $mdMedia) {
       $scope.projects = [];
       $scope.submitted = false;
-
-	  //inline manual functions
-	  $rootScope.startSignupWizard = function() {
-	  	inline_manual_player.activateTopic('7055', '1');
-	  };
-	  $rootScope.startNewProjectWizard = function() {
-	  	inline_manual_player.activateTopic('4877', '1');
-	  };
-	  $rootScope.startUploadDocWizard = function() {
-	  	inline_manual_player.activateTopic('4893', '1');
-	  };
-	  $rootScope.startAddTeamMemberWizard = function() {
-	  	inline_manual_player.activateTopic('4872', '1');
-	  };
-
-
-      //get header height
-      $rootScope.headerHeight = $('nav').outerHeight() + 48;
-
-      $scope.menuTypesHasArchitectManager = {
-        homeOwner: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
-          {sref: 'builderRequest.list({id :  currentProject._id})', label: 'architect'},
-          {sref: 'projects.view({id :  currentProject._id})', label: 'documentation'}],
-        contractor: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
-          {sref: 'contractors({id :  currentProject._id})', label: 'contracts'},
-          {sref: 'projects.view({id :  currentProject._id})', label: 'documentation'}],
-        builder: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
-          // {sref: 'client.list({id :  currentProject._id})', label: 'client'},
-          {sref: 'builderRequest.list({id :  currentProject._id})', label: 'architect'},
-          {sref: 'contractors({id :  currentProject._id})', label: 'subcontractors'},
-          {sref: 'materials({id :  currentProject._id})', label: 'suppliers'},
-          {sref: 'staff.index({id :  currentProject._id})', label: 'employees'},
-          {sref: 'projects.view({id :  currentProject._id})', label: 'documentation'}],
-        supplier: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
-          {sref: 'materials({id :  currentProject._id})', label: 'materials'},
-          {sref: 'projects.view({id :  currentProject._id})', label: 'documentation'}],
-        architect: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
-          {sref: 'design.index({id :  currentProject._id})', label: 'design'},
-          {sref: 'client.view({id :  currentProject._id})', label: 'client'},
-          {sref: 'builderRequest.viewRequest({id :  currentProject._id})', label: 'builder'},
-          {sref: 'projects.view({id :  currentProject._id})', label: 'documentation'}],
-        other : [{sref: 'team.manager', label: 'team manager'},
-          {sref: 'user', label: 'User profile'}]
+	  
+	  
+	  var originatorEv;
+	  
+      $scope.goto = function(newstate) {
+		  $state.go(newstate, {}, {reload: true});
       };
-
-      $scope.menuTypesHasNoArchitectManager = {
-        homeOwner: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
-          {sref: 'client.list({id :  currentProject._id})', label: 'builder'},
-          {sref: 'projects.view({id :  currentProject._id})', label: 'documentation'}],
-        contractor: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
-          {sref: 'contractors({id :  currentProject._id})', label: 'contracts'},
-          {sref: 'projects.view({id :  currentProject._id})', label: 'documentation'}],
-        builder: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
-          {sref: 'client.list({id :  currentProject._id})', label: 'client'},
-          // {sref: 'builderRequest.sendQuote({id :  currentProject._id})', label: 'architect'},
-          {sref: 'contractors({id :  currentProject._id})', label: 'subcontractors'},
-          {sref: 'materials({id :  currentProject._id})', label: 'suppliers'},
-          {sref: 'staff.index({id :  currentProject._id})', label: 'employees'},
-          {sref: 'projects.view({id :  currentProject._id})', label: 'documentation'}],
-        supplier: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
-          {sref: 'materials({id :  currentProject._id})', label: 'materials'},
-          {sref: 'projects.view({id :  currentProject._id})', label: 'documentation'}],
-        architect: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
-          {sref: 'design.index({id :  currentProject._id})', label: 'design'},
-          {sref: 'client.view({id :  currentProject._id})', label: 'client'},
-          {sref: 'builderRequest.viewRequest({id :  currentProject._id})', label: 'builder'},
-          {sref: 'projects.view({id :  currentProject._id})', label: 'documentation'}],
-        other : [{sref: 'team.manager', label: 'team manager'},
-          {sref: 'user', label: 'User profile'}]
-      };
-
-      $scope.menuTypesNewVersion = {
-        hasProject: [{sref: 'dashboard({id :  currentProject._id})', label: 'dashboard'},
-          {sref: 'people({id :  currentProject._id})', label: 'people'},
-          {sref: 'board({id :  currentProject._id})', label: 'boards'},
-          {sref: 'projects.view({id :  currentProject._id})', label: 'documentation'}],
-        other : [{sref: 'team.manager', label: 'team manager'},
-          {sref: 'user', label: 'User profile'}]
-      };
+	   
+      $scope.createProject = function(form) {
+         $scope.submitted = true;
+         if (form.$valid) {
+		
+           projectService.createProjectNewVersion($scope.project).$promise.then(function(data){
+             console.log(data);
+             $scope.projects.push(data);
+             $state.go('dashboard', {id: data._id},{reload: true});
+             $scope.submitted = false;
+             $("#createProject").closeModal();
+           }, function(res) {
+             $scope.errors = res.data.msg;
+           });
+         }
+       };
 
       function queryProjects(callback){
         var cb = callback || angular.noop;
@@ -119,53 +63,17 @@ angular.module('buiiltApp')
                 authService.getCurrentTeam().$promise
                   .then(function(res) {
                     $scope.currentTeam = res;
-                    // old version
-                    // $scope.projects = $scope.currentTeam.project;
-
-                    // new version
+					
                     $scope.projects = $scope.user.projects;
                     if ($stateParams.id) {
                       builderPackageService.findDefaultByProject({id: $stateParams.id}).$promise.then(function(res){
-                        // if (res.hasArchitectManager) {
-                        //   if ($scope.currentTeam.type === 'homeOwner') {
-                        //     $scope.tabs = $scope.menuTypesHasArchitectManager['homeOwner'];
-                        //     $scope.project.hasArchitect = true;
-                        //   }
-                        //   else if ($scope.currentTeam.type === 'builder') {
-                        //     $scope.tabs = $scope.menuTypesHasArchitectManager['builder'];
-                        //     $scope.project.hasArchitect = true;
-                        //   }
-                        //   else if ($scope.currentTeam.type === 'contractor') {
-                        //     $scope.tabs = $scope.menuTypesHasArchitectManager['contractor'];
-                        //   }
-                        //   else if ($scope.currentTeam.type === 'supplier') {
-                        //     $scope.tabs = $scope.menuTypesHasArchitectManager['supplier'];
-                        //   }
-                        //   else if ($scope.currentTeam.type == 'architect') {
-                        //     $scope.tabs = $scope.menuTypesHasArchitectManager['architect'];
-                        //   }
-                        // } else {
-                        //   if ($scope.currentTeam.type === 'homeOwner') {
-                        //     $scope.tabs = $scope.menuTypesHasNoArchitectManager['homeOwner'];
-                        //     $scope.project.hasArchitect = true;
-                        //   }
-                        //   else if ($scope.currentTeam.type === 'builder') {
-                        //     $scope.tabs = $scope.menuTypesHasNoArchitectManager['builder'];
-                        //     $scope.project.hasArchitect = true;
-                        //   }
-                        //   else if ($scope.currentTeam.type === 'contractor') {
-                        //     $scope.tabs = $scope.menuTypesHasNoArchitectManager['contractor'];
-                        //   }
-                        //   else if ($scope.currentTeam.type === 'supplier') {
-                        //     $scope.tabs = $scope.menuTypesHasNoArchitectManager['supplier'];
-                        //   }
-                        // }
+						  
                         $scope.tabs = $scope.menuTypesNewVersion['hasProject'];
                       });
 
                     } else {
-                      // $scope.tabs = $scope.menuTypesHasNoArchitectManager['other'];
-                      $scope.tabs = $scope.menuTypesNewVersion['other'];
+					
+                      //$scope.tabs = $scope.menuTypesNewVersion['other'];
                     }
                     return cb();
                   });
@@ -177,7 +85,6 @@ angular.module('buiiltApp')
           }
         });
       };
-
 
       //first load
       queryProjects();
@@ -228,38 +135,6 @@ angular.module('buiiltApp')
 
       $scope.selectedOwnerUserType = function(type) {
         $scope.project.selectedOwnerUserType = type;
-      };
-
-      $scope.create = function(form) {
-        $scope.submitted = true;
-        if (form.$valid) {
-          // projectService.create($scope.project).$promise.then(function(data) {
-          //   $scope.projects.push(data);
-          //   $state.go('dashboard',{id : data._id},{reload : true});
-          //   $scope.project = {
-          //     package : {
-          //       location: {},
-          //       to : ''
-          //     }
-          //   };
-          //   $scope.submitted = false;
-          //   $scope.project.hasArchitect = false;
-          //   $('#createProject').closeModal();
-          // }, function(res) {
-          //   $scope.errors = res.data;
-          // });
-
-          // new version
-          projectService.createProjectNewVersion($scope.project).$promise.then(function(data){
-            console.log(data);
-            $scope.projects.push(data);
-            $state.go('dashboard', {id: data._id},{reload: true});
-            $scope.submitted = false;
-            $("#createProject").closeModal();
-          }, function(res) {
-            $scope.errors = res.data.msg;
-          });
-        }
       };
 
       $scope.inputChanged = function(str) {

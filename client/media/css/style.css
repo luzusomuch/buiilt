@@ -323,7 +323,50 @@ ul.pagination {
     padding: 7px
 }
 
-/*body{
-  background-image: url("../old-and-new.png");
-  background-size: 100%;
-}*/
+.activemenu {
+	font-weight: 600;
+	color: #42A5F5;
+}
+
+.activemenu md-list-item {
+	border-right: 5px solid #42A5F5;
+}
+
+
+.main-content {
+	background-color: white;
+}
+
+.page-title {
+	font-size: 18px;
+	font-weight: 500;
+	text-transform: uppercase;
+	color: #424242;
+	margin-top: 12px;
+}
+
+.logo-main {
+	font-size: 24px;
+	font-weight: 400;
+}
+
+.fab-main{
+	margin-bottom: 20px; 
+	margin-right:20px
+}
+
+md-input-container > label {
+	font-size: 15px;
+}
+
+.modal-instructions {
+	margin-bottom: 30px;
+	font-weight: 500
+}
+
+.main-page-content{
+	height: 76vh; 
+	overflow: scroll
+}
+
+

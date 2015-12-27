@@ -1,0 +1,23 @@
+<div layout="row">
+	<div layout="column" flex="65">
+		<md-toolbar class="md-warn md-hue-1">
+			<div class="md-toolbar-tools">
+
+				<md-chips class="" ng-model="teamNames" placeholder="Seach Thread..." secondary-placeholder="Seach Thread...">
+					<md-chip-template class="md-accent">
+				        <strong>{{$chip}}</strong>
+				    </md-chip-template>
+				</md-chips>
+
+		    </div>
+		</md-toolbar>
+
+		<div flex="65" class="main-page-content md-whiteframe-1dp">
+			<p>Test from main content - Hello</p>
+		</div>
+	</div>
+	
+	<related-items layout="column" flex="35">
+	</related-items>
+	
+</div>
