@@ -16,9 +16,8 @@ angular.module('buiiltApp')
       $scope.submitted = true;
       if (form.$valid) {
         authService.login($scope.user).then(function (res) {
-          //show alert
           socket.emit('join', res.id);
-          $state.go('team.manager');
+          $state.go('dashboard.tasks');
         }, function (res) {
           $scope.error = true;
           $scope.errorMsg = res.message;

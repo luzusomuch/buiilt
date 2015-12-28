@@ -186,7 +186,7 @@ exports.upload = function(req, res){
                                     projectId: builderPackage.project
                                 },
                                 referenceTo: "DocumentInProject",
-                                type: 'uploadNewDocumentVersion'
+                                type: 'uploadDocument'
                             };
                             NotificationHelper.create(params, function(){
                                 filesAfterInsert.push(file);

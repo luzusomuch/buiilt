@@ -24,6 +24,9 @@ var NotificationSchema = new Schema({
   element : {
 
   },
+  project: {
+
+  },
   referenceTo : String, // reference of element
   type:{
     type:String,

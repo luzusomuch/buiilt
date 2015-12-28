@@ -1,6 +1,9 @@
 'use strict';
 var User = require('./../../models/user.model');
 var File = require('./../../models/file.model');
+var People = require('./../../models/people.model');
+var Board = require('./../../models/board.model');
+var Project = require('./../../models/project.model');
 var Notification = require('./../../models/notification.model');
 var errorsHelper = require('../../components/helpers/errors');
 var ProjectValidator = require('./../../validators/project');
@@ -221,5 +224,31 @@ exports.getInProject = function(req, res) {
     File.find({belongTo: req.params.id, belongToType: 'project'}, function(err, files){
         if (err) {return res.send(500,err);}
         return res.send(200,files);
+    });
+};
+
+exports.myFiles = function(req, res) {
+    Notification.find({owner: req.user._id, unread: true, $or:[{type: 'uploadDocument'}, {type: 'uploadNewDocumentVersion'}]}, function(err, files) {
+        if (err) {return res.send(500,err);}
+        var results = [];
+        async.each(files, function(file, cb) {
+            if (file.referenceTo === "documentInpeople" || file.referenceTo === "documentInboard") {
+                Project.findById(file.element.package.project, function(err, project) {
+                    if (err || !project) {console.log('error');cb();}
+                    file.project = project;
+                    results.push(file);
+                    cb();
+                });
+            } else if (file.referenceTo === "uploadDocument" || file.referenceTo === "uploadNewDocumentVersion") {
+                Project.findById(file.element.projectId, function(err, project) {
+                    if (err || !project) {console.log('err'); cb();}
+                    file.project = project;
+                    results.push(file);
+                    cb();
+                });
+            }
+        }, function() {
+            return res.send(200, results);
+        });
     });
 };

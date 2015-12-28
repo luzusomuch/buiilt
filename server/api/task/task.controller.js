@@ -87,13 +87,13 @@ exports.task = function(req,res,next) {
 
 exports.myTask = function(req,res) {
   var user = req.user;
-  var project = req.project;
   var result = [];
-  Task.find({$or : [{'user' : user._id}, {assignees : user._id}],project : project._id,completed : false})
+  Task.find({$or : [{'user' : user._id}, {assignees : user._id}],completed : false})
     .sort('hasDateEnd')
     .sort({'dateEnd': 1})
     .populate('assignees', '-hashedPassword -salt')
     .populate('user', '-hashedPassword -salt')
+    .populate('project')
 
     .exec(function(err,tasks) {
       if (err) {

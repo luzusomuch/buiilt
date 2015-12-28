@@ -10,6 +10,7 @@ var router = express.Router();
 // router.post('/', auth.isAuthenticated(), controller.create);
 router.get('/get-all', auth.isAuthenticated(), controller.getAll);
 router.get('/get-all-by-user', auth.isAuthenticated(), controller.getAllByUser);
+router.get('/my-files', auth.isAuthenticated(), controller.myFiles);
 router.get('/:id/document', auth.isAuthenticated(), controller.getByDocument);
 router.get('/:id', auth.isAuthenticated(), controller.show);
 // router.put('/:id', auth.isAuthenticated(), controller.update);

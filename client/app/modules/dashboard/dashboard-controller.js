@@ -1,48 +1,101 @@
-angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $scope, $timeout, $q, $state, projectService, packageService) {
+angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $scope, $timeout, $q, $state, projectService, myTasks, myMessages, myFiles) {
 	$rootScope.title = "Dashboard";
 	$scope.errors = {};
 	$scope.success = {};
 	$scope.user = {};
-
-    projectService.get({'id': $state.params.projectId}).$promise.then(function(data) {
-        $scope.project = data;
-    });
-	
-    $scope.errors = {};
+	$scope.myTasks = myTasks;
+	$scope.myMessages = myMessages;
+	$scope.myFiles = myFiles;
+	$scope.search = false;
+	// type can be a task, message, file or document
+	var type = $state.current.name.split(".")[1];
 	
 	//Placeholder Set of Filters to use for layout demo
-	$scope.dashboardFilters = ['Project 1', 'Task description 1', 'Project 2'];
-	
-	//Placeholder Array of tasks to use for layout demo
-	$scope.tasks = [
-		{'name': 'Task 1','description': 'Description for Task 1'},
-		{'name': 'Task 2','description': 'Description for Task 2'},
-		{'name': 'Task 3','description': 'Description for Task 3'},
-		{'name': 'Task 4','description': 'Description for Task 4'}
-	];
-	
-	//Placeholder Array of messages to use for layout demo
-	$scope.messages = [
-		{'body': 'This is the body text of message 1','from': 'Bob Doe'},
-		{'body': 'This is the body text of message 2','from': 'Jane Doe'},
-		{'body': 'This is the body text of message 3','from': 'Bob Doe'},
-		{'body': 'This is the body text of message 4','from': 'Jane Doe'}
-	];
-	
-	//Placeholder Array of attachments to use for layout demo
-	$scope.files = [
-		{'name': 'File Name 1','revision': 'x of x'},
-		{'name': 'File Name 2','revision': 'x of x'},
-		{'name': 'File Name 3','revision': 'x of x'},
-		{'name': 'File Name 4','revision': 'x of x'}
-	];
-	
-	//Placeholder Array of documentation to use for layout demo
-	$scope.documentation = [
-		{'name': 'Document Name 1','revision': 'x of x'},
-		{'name': 'Document Name 2','revision': 'x of x'},
-		{'name': 'Document Name 3','revision': 'x of x'},
-		{'name': 'Document Name 4','revision': 'x of x'}
-	];
-	
+	$scope.dashboardFilters = [];
+	$scope.querySearch = function(value) {
+		if (type === 'tasks') {
+			var tasks = angular.copy($scope.myTasks);
+        	var results = value ? tasks.filter(createFilter(value)) : [];
+		} else if (type === 'messages') {
+			var messages = angular.copy($scope.myMessages);
+        	var results = value ? messages.filter(createFilter(value)) : [];
+		} else if (type === 'files') {
+			var files = angular.copy($scope.myFiles);
+        	var results = value ? files.filter(createFilter(value)) : [];
+		} else if (type === 'documentation') {
+			var files = angular.copy($scope.myFiles);
+        	var results = value ? files.filter(createFilter(value)) : [];
+		}
+        $rootScope.filterResults = results;
+        filterByProject(results);
+        return results;
+    };
+
+    if ($rootScope.filterResults && $rootScope.filterResults.length > 0) {
+    	filterByProject($rootScope.filterResults);
+    }
+
+    if ($rootScope.dashboardFilters && $rootScope.dashboardFilters.length > 0) {
+    	$scope.search = true;
+    	$scope.dashboardFilters = $rootScope.dashboardFilters;
+    	_.each($scope.dashboardFilters, function(item) {
+    		if (item) {
+    			$scope.querySearch(item.project.name)
+    		}
+    	});
+    }
+
+    function createFilter(query) {
+        return function filterFn(item) {
+        	return item.project.name.toLowerCase().indexOf(query) > -1;
+        };
+    };
+
+    function filterByProject(results) {
+    	$scope.results = []
+    	if (type === 'tasks') {
+    		_.each($scope.myTasks, function(task) {
+    			if (_.last(results)) {
+		        	if (task.project._id.toString() === _.last(results).project._id.toString()) {
+		        		$scope.results.push(task);
+		        	}
+    			}
+	        });
+    	} else if (type === 'messages') {
+    		_.each($scope.myMessages, function(message) {
+    			if (_.last(results)) {
+		        	if (message.project._id.toString() === _.last(results).project._id.toString()) {
+		        		$scope.results.push(message);
+		        	}
+    			}
+	        });
+    	} else if (type === 'files') {
+    		_.each($scope.myFiles, function(file) {
+    			if (_.last(results)) {
+		        	if (file.project._id.toString() === _.last(results).project._id.toString()) {
+		        		$scope.results.push(file);
+		        	}
+    			}
+	        });
+    	} else if (type === 'documentation') {
+    		_.each($scope.myFiles, function(file) {
+    			if (_.last(results)) {
+		        	if (file.project._id.toString() === _.last(results).project._id.toString()) {
+		        		$scope.results.push(file);
+		        	}
+    			}
+	        });
+    	}
+    };
+
+    $scope.addChip = function() {
+        $scope.search = true;
+        $rootScope.dashboardFilters = $scope.dashboardFilters;
+    };
+
+    $scope.removeChip = function() {
+        if ($rootScope.dashboardFilters.length === 0) {
+            $scope.search = false;
+        }
+    };
 });

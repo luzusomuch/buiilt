@@ -11,10 +11,6 @@ angular.module('buiiltApp').directive('dashboardSidenav', function(){
             $scope.success = {};
             $scope.user = {};
 
-		    projectService.get({'id': $state.params.projectId}).$promise.then(function(data) {
-		        $scope.project = data;
-		    });
-			
 			$scope.$state = $state;
 
 		    $scope.errors = {};

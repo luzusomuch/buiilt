@@ -2,7 +2,7 @@
 
 	<div flex-offset="35" flex="30" class="md-whiteframe-1dp">
 		
-		<form>
+		<form name="form" ng-submit="signin(form)">
 			<div layout="column" layout-margin>
 				
 				<div layout="row" layout-align="center center">
@@ -11,17 +11,21 @@
 				
 				<md-input-container>
 			        <label>Email Address</label>
-			        <input ng-model="user.name" name="userName" type="text" ng-required="true" md-autofocus>
+			        <input ng-model="user.email" name="email" type="email" ng-required="true" md-autofocus>
 				</md-input-container>
 			
 				<md-input-container>
 			        <label>Password</label>
 			        <input ng-model="user.password" type="password" ng-required="true" name="userPassword">
 				</md-input-container>
+
+        <div layout="row" ng-show="error">
+          <strong>Error! </strong>{{errorMsg}}
+        </div>
 				
 				<div layout="row">
 					<span flex></span>
-					<md-button class="md-accent md-raised md-hue-1">Login</md-button>
+					<md-button type="submit" class="md-accent md-raised md-hue-1">Login</md-button>
 				</div>
 				
 			</div>

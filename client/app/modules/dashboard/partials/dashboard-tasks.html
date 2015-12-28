@@ -1,9 +1,18 @@
 <md-toolbar class="md-warn md-hue-1">
 	<div class="md-toolbar-tools">
 		
-		<md-chips class="" ng-model="dashboardFilters" placeholder="Search Tasks..." secondary-placeholder="Seach Tasks..." flex>
+		<md-chips class="" ng-model="dashboardFilters" placeholder="Search Tasks..." secondary-placeholder="Seach Tasks..." flex flex md-autocomplete-snap="" md-require-math="autoCompleteRequireMath" md-on-add="addChip()" md-on-remove="removeChip()">
+			<md-autocomplete 
+				md-selected-item="selectedItem" 
+				md-search-text="searchText"
+				md-items="item in querySearch(searchText)" 
+				md-item-text="item" 
+				placeholder="Search for a task"
+				>
+				<span md-highlight-text="searchText">{{item.project.name}}</span>
+			</md-autocomplete>
 			<md-chip-template class="md-accent">
-		        <strong>{{$chip}}</strong>
+		        <strong>{{$chip.project.name}}</strong>
 		    </md-chip-template>
 		</md-chips>
 		
@@ -12,7 +21,17 @@
 
 <md-list ng-cloak class="main-page-content">
 
-	<div ng-repeat="task in tasks" ui-sref="project.tasks.detail">
+	<div ng-show="!search" ng-repeat="task in myTasks track by $index" ui-sref="project.tasks.detail">
+		<md-list-item class="md-2-line" md-ink-ripple>
+			<div class="md-list-item-text" layout="column">
+		          <h3>{{ task.name }}</h3>
+		          <p>{{ task.description }}</p>
+	        </div>
+		</md-list-item>
+		<md-divider></md-divider>
+	</div>
+
+	<div ng-show="search" ng-repeat="task in results track by $index" ui-sref="project.tasks.detail">
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
 		          <h3>{{ task.name }}</h3>

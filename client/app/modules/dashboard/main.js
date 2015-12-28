@@ -6,7 +6,18 @@ angular.module('buiiltApp').config(function($stateProvider) {
     	abstract:true,
       	templateUrl: '/app/modules/dashboard/dashboard.html',
       	controller: 'dashboardCtrl',
-      	authenticate : true
+      	authenticate : true,
+        resolve: {
+            myTasks: function(taskService) {
+                return taskService.myTask().$promise;
+            },
+            myMessages: function(messageService) {
+                return messageService.myMessages().$promise;
+            },
+            myFiles: function(fileService) {
+                return fileService.myFiles().$promise;
+            }
+        }
     })
 	
     .state('dashboard.tasks', {

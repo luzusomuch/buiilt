@@ -94,5 +94,12 @@ id: '@_id'},{
       },
       isArray: true
     },
+    myFiles: {
+      method: 'GET',
+      params: {
+        action: 'my-files'
+      },
+      isArray: true
+    }
   });
 });

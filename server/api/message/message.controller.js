@@ -85,10 +85,9 @@ exports.getOne = function(req,res) {
 exports.myThread = function(req,res) {
 
   var user = req.user;
-  var project = req.project;
   var result = [];
   var query = Notification.find(
-    {owner : user._id,unread : true, $or:[{referenceTo : 'thread'},{type: 'chat'}] ,'element.project' : project._id }
+    {owner : user._id,unread : true, $or:[{referenceTo : 'thread'},{type: 'chat'}]}
   );
   query.exec(function(err, threads) {
     if (err) {return res.send(500,err);}
@@ -97,6 +96,7 @@ exports.myThread = function(req,res) {
         PeopleChat.findById(thread.element._id)
         .populate('messages.user', '-hashedPassword -salt')
         .populate('from', '-hashedPassword -salt')
+        .populate('project')
         .exec(function(err, thread){
           if (err || !thread) {return callback();}
           else {
@@ -110,6 +110,7 @@ exports.myThread = function(req,res) {
       } else if (thread.referenceTo == 'board-chat') {
         Board.findById(thread.element._id)
         .populate('messages.user', '-hashedPassword -salt')
+        .populate('project')
         .exec(function(err, thread){
           if (err || !thread) {return callback();}
           else {

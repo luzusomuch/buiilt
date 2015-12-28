@@ -124,7 +124,7 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
         if (toState.authenticate && !loggedIn) {
           $location.path('/');
         } else if (!toState.authenticate && loggedIn) {
-          $state.go('team.manager');
+          $state.go('dashboard.tasks');
         }
       });
       if (toState.noHeader) {
@@ -133,21 +133,6 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
 
       if (toState.noFooter) {
         $rootScope.hasFooter = false;
-      }
-
-      if (toState.canAccess) {
-        authService.getCurrentTeam().$promise
-          .then(function(res) {
-            if (toState.canAccess.indexOf(res.type) == -1) {
-              if (toState.hasCurrentProject) {
-                $state.go('dashboard',{id : toParams.id });
-              } else {
-                $state.go('team.manager');
-              }
-            } else {
-              // console.log('false')
-            }
-          });
       }
 
       if (toState.isAdmin) {
