@@ -11,25 +11,25 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
 	
 		$mdDialog.show({
 		  targetEvent: $event,
-	      controller: 'projectMessagesCtrl',
-	      templateUrl: 'app/modules/project/project-messages/new/project-messages-new.html',
+	      controller: 'projectFilesCtrl',
+	      templateUrl: 'app/modules/project/project-files/new/project-files-new.html',
 	      parent: angular.element(document.body),
 	      clickOutsideToClose: false
 	    });
 		
 	};
 	
-	$scope.cancelNewMessageModal = function() {
+	$scope.cancelNewFileModal = function() {
 		$mdDialog.cancel();
 	};
 	
 	//Placeholder set of filters to use for layout demo
-	$scope.messageNames = ['Room1', 'Room2'];
+	$scope.filesFilters = ['Room1', 'Room2'];
 	
 	//Placeholder Array of Workrooms to use for layout demo
-	$scope.messages = [
-		{'name': 'Contract signing', 'members': 'John, Ken, Brett'},
-		{'name': 'Variation', 'members': 'John, Ken'},
-		{'name': 'Mobilise on site', 'members': 'John, Andy'}
+	$scope.files = [
+		{'name': 'Contract', 'version': 'x of x'},
+		{'name': 'Variation', 'version': 'x of x'},
+		{'name': 'Invoice', 'version': 'x of x'}
 	];
 });
