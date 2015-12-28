@@ -6,7 +6,7 @@ angular.module('buiiltApp').directive('relatedItems', function(){
         scope:{
             project:'='
         },
-        controller: function($scope, $rootScope, $location, quoteService, userService, projectService, $state) {
+        controller: function($scope, $rootScope, $location, quoteService, userService, projectService, $state, $mdDialog) {
             $scope.errors = {};
             $scope.success = {};
             $scope.user = {};
@@ -14,6 +14,8 @@ angular.module('buiiltApp').directive('relatedItems', function(){
 			$scope.$state = $state;
 
 		    $scope.errors = {};
+			
+			
 			
         }
     };

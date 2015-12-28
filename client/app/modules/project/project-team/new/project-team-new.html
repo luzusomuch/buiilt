@@ -44,21 +44,29 @@
 				
 				<div layout="row">
 					<md-input-container flex>
-				        <label>Street Address</label>
-				        <input ng-model="project.package.location.address">
-				    </md-input-container>
+						<p>Will you require a tender to be submitted?</p>
+					</md-input-container>
 				</div>
 				
 				<div layout="row">
-					<md-input-container flex="60">
-				        <label>Suburb</label>
-				        <input ng-model="project.package.location.suburb">
-				    </md-input-container>
-
-					<md-input-container flex="40">
-				        <label>Postcode</label>
-				        <input ng-model="project.package.location.postcode">
-				    </md-input-container>
+					<md-input-container flex>
+						
+						<md-radio-group ng-model="type" layout="row">
+							<md-radio-button value="tender" aria-label="">
+								Yes
+							</md-radio-button>
+							<md-radio-button value="noTender" aria-label="">
+								No
+							</md-radio-button>
+						</md-radio-group>
+						
+					</md-input-container>
+				</div>
+				
+				<div layout="row">
+					<md-input-container flex>
+						<p>Continue as per previous version of application...</p>
+					</md-input-container>
 				</div>
 				
 			</div>
