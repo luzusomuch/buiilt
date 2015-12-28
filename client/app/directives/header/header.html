@@ -1,25 +1,20 @@
 <md-toolbar layout="row" class="md-whiteframe-1dp">
-	  <div class="md-toolbar-tools">
-		  <div flex="15" layout="row" layout-align="start center">
-			  <p class="logo-main">buiilt</p>
-		  </div>
-		  <div layout="row" layout-align="start center">
+  	<div class="md-toolbar-tools">
+	  	<div flex="15" layout="row" layout-align="start center">
+		  	<p class="logo-main">buiilt</p>
+	  	</div>
+	  	<div layout="row" layout-align="start center" ng-show="isLoggedIn">
+	  		<md-button ui-sref='dashboard.tasks'>Dashboard</md-button>
+		  	<md-button ui-sref='projects.all'>Projects</md-button>
+	  	</div>
 		  
-			  <md-button ui-sref='dashboard.tasks'>Dashboard</md-button>
-			  <md-button ui-sref='projects.all'>Projects</md-button>
-			  
-		  </div>
+	  	<span flex></span>
 		  
-		  <span flex></span>
-		  
-		  <div layout="row" layout-align="end center">
-			  
-			  <md-button ui-sref='settings.user'>Settings</md-button>
-			  <md-button ui-sref='help'>Help</md-button>
-			  
-		  </div>
-	      
-	   </div>
+	  	<div layout="row" layout-align="end center" ng-show="isLoggedIn">
+		  	<md-button ui-sref='settings.user'>Settings</md-button>
+		  	<md-button ui-sref='help'>Help</md-button>
+	  	</div>
+   </div>
 </md-toolbar>
 
 

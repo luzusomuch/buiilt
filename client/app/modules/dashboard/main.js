@@ -1,40 +1,40 @@
 angular.module('buiiltApp').config(function($stateProvider) {
-  $stateProvider
+    $stateProvider
 	
     .state('dashboard', {
-  	url: '/dashboard',
-	abstract:true,
-  	templateUrl: '/app/modules/dashboard/dashboard.html',
-  	controller: 'dashboardCtrl',
-  	authenticate : true
+      	url: '/dashboard',
+    	abstract:true,
+      	templateUrl: '/app/modules/dashboard/dashboard.html',
+      	controller: 'dashboardCtrl',
+      	authenticate : true
     })
 	
     .state('dashboard.tasks', {
-  	url: '/tasks',
-  	templateUrl: '/app/modules/dashboard/partials/dashboard-tasks.html',
-  	controller: 'dashboardCtrl',
-  	authenticate : true
+      	url: '/tasks',
+      	templateUrl: '/app/modules/dashboard/partials/dashboard-tasks.html',
+      	controller: 'dashboardCtrl',
+      	authenticate : true
     })
 	
     .state('dashboard.messages', {
-  	url: '/messages',
-  	templateUrl: '/app/modules/dashboard/partials/dashboard-messages.html',
-  	controller: 'dashboardCtrl',
-  	authenticate : true
+      	url: '/messages',
+      	templateUrl: '/app/modules/dashboard/partials/dashboard-messages.html',
+      	controller: 'dashboardCtrl',
+      	authenticate : true
     })
 	
     .state('dashboard.files', {
-  	url: '/files',
-  	templateUrl: '/app/modules/dashboard/partials/dashboard-files.html',
-  	controller: 'dashboardCtrl',
-  	authenticate : true
+      	url: '/files',
+      	templateUrl: '/app/modules/dashboard/partials/dashboard-files.html',
+      	controller: 'dashboardCtrl',
+      	authenticate : true
     })
 	
     .state('dashboard.documentation', {
-  	url: '/documentation',
-  	templateUrl: '/app/modules/dashboard/partials/dashboard-documentation.html',
-  	controller: 'dashboardCtrl',
-  	authenticate : true
+      	url: '/documentation',
+      	templateUrl: '/app/modules/dashboard/partials/dashboard-documentation.html',
+      	controller: 'dashboardCtrl',
+      	authenticate : true
     });
 	
 	

@@ -2,7 +2,7 @@ var nodemailer = require('nodemailer'),
   htmlToText = require('nodemailer-html-to-text').htmlToText,
   smtpTransport = require('nodemailer-smtp-transport'),
   mailgunTransport = require('nodemailer-mailgun-transport'),
-  sgTransport = require('nodemailer-sendgrid-transport');
+  // sgTransport = require('nodemailer-sendgrid-transport');
   config = require('./../config/environment'),
   okay = require('okay'),
   path = require('path'),
@@ -72,7 +72,7 @@ if(config.mailer.service === 'smtp'){
 } else if(config.mailer.service === 'mailgun'){
   mailer = new Mailer(mailgunTransport({auth: config.mailer.auth}));
 } else if (config.mailer.service == 'sendgrid') {
-  mailer = new Mailer(sgTransport(options));
+  // mailer = new Mailer(sgTransport(options));
 } else{
   mailer = new Mailer(config.mailer);
 }

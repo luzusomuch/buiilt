@@ -1,8 +1,9 @@
 angular.module('buiiltApp')
-  .controller('SigninCtrl', function ($scope, authService, $window,$stateParams,$state, socket) {
+  .controller('SigninCtrl', function ($rootScope, $scope, authService, $window,$stateParams,$state, socket) {
     $scope.user = {};
     $scope.errors = {};
     $scope.submitted = false;
+    $rootScope.title = "Sign In";
     if ($stateParams.action) {
       if (!$stateParams.error) {
         $scope.success = true;

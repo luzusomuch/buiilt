@@ -1,5 +1,5 @@
-angular.module('buiiltApp').controller('dashboardCtrl', function($scope, $timeout, $q, $state, projectService, packageService) {
-	
+angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $scope, $timeout, $q, $state, projectService, packageService) {
+	$rootScope.title = "Dashboard";
 	$scope.errors = {};
 	$scope.success = {};
 	$scope.user = {};
