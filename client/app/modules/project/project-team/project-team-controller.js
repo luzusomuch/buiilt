@@ -17,7 +17,79 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
 			$scope.people = res;
 			if ($scope.people.projectManager._id === $rootScope.currentUser._id) {
 				$rootScope.currentUser.type = "projectManager";
-			}
+			} else if (_.findIndex($scope.people.builders, function(item) {
+                if (item._id) {
+                    return item._id._id == $rootScope.currentUser._id;
+                }}) != -1) {
+                $rootScope.currentUser.type = 'builder';
+            } else if (_.findIndex($scope.people.architects, function(item) {
+                if (item._id) {return item._id._id == $rootScope.currentUser._id;}
+                }) != -1) {
+                $rootScope.currentUser.type = 'architect';
+            } else if (_.findIndex($scope.people.clients, function(item){
+                if (item._id) {return item._id._id == $rootScope.currentUser._id;}
+                }) != -1) {
+                $rootScope.currentUser.type = 'client';
+            } else if (_.findIndex($scope.people.subcontractors, function(item){
+                if (item._id) {return item._id._id == $rootScope.currentUser._id;}
+                }) != -1) {
+                $rootScope.currentUser.type = 'subcontractor';
+            } else if (_.findIndex($scope.people.consultants, function(item){
+                if (item._id) {return item._id._id == $rootScope.currentUser._id;}
+                }) != -1) {
+                $rootScope.currentUser.type = 'consultant';
+            } else {
+            	if (_.findIndex($scope.people.projectManager.teamMember, function(member) {
+            		return member._id == $rootScope.currentUser._id;
+            	}) != -1) {
+            		$rootScope.currentUser.type = 'projectManager';
+            	}
+
+                _.each($scope.people.builders, function(item) {
+                    if (_.findIndex(item.teamMember, function(member) {
+                        return member._id == $rootScope.currentUser._id;
+                    }) != -1) {
+                        $rootScope.currentUser.type = 'builder';
+                        return false;
+                    }
+                });
+
+                _.each($scope.people.clients, function(item) {
+                    if (_.findIndex(item.teamMember, function(member) {
+                        return member._id == $rootScope.currentUser._id;
+                    }) != -1) {
+                        $rootScope.currentUser.type = 'client';
+                        return false;
+                    }
+                });
+
+                _.each($scope.people.architects, function(item) {
+                    if (_.findIndex(item.teamMember, function(member) {
+                        return member._id == $rootScope.currentUser._id;
+                    }) != -1) {
+                        $rootScope.currentUser.type = 'architect';
+                        return false;
+                    }
+                });
+
+                _.each($scope.people.subcontractors, function(item) {
+                    if (_.findIndex(item.teamMember, function(member) {
+                        return member._id == $rootScope.currentUser._id;
+                    }) != -1) {
+                        $rootScope.currentUser.type = 'subcontractor';
+                        return false;
+                    }
+                });
+
+                _.each($scope.people.consultants, function(item) {
+                    if (_.findIndex(item.teamMember, function(member) {
+                        return member._id == $rootScope.currentUser._id;
+                    }) != -1) {
+                        $rootScope.currentUser.type = 'consultant';
+                        return false;
+                    }
+                });
+            }
 
 			switch($rootScope.currentUser.type) {
 				case "projectManager":
@@ -37,7 +109,6 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
 	};
 
 	$scope.getChangeTypeValue = function(type) {
-		console.log($scope.invite);
 		if (type === 'addClient' || type === "addEmployee") {
 			$scope.invite.isTender = false;
 			if (type == 'addEmployee') {
