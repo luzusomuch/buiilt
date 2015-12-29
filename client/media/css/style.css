@@ -369,4 +369,10 @@ md-input-container > label {
 	overflow: scroll
 }
 
+.detailview-detail {
+	font-size: 14px;
+	font-weight: 500;
+	color: #616161;
+}
+
 
