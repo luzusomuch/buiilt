@@ -1,18 +1,49 @@
-<div layout="row">
-	<div layout="column" flex="70">
-		<md-toolbar class="md-warn md-hue-1">
-			<div class="md-toolbar-tools">
-				<p>Task Description<span class="detailview-detail"> - Assignee 1, Assignee 2... Assignee n</span></p>
-				<span flex></span>
-		    </div>
-		</md-toolbar>
-
-		<div flex="65" class="main-page-content md-whiteframe-1dp" layout-padding>
+<div layout="column">
+	
+	<md-toolbar layout="row" class="md-warn md-hue-1" flex>
+		<div class="md-toolbar-tools">
+			<p>Task Description<span class="detailview-detail"> - Assignee 1, Assignee 2... Assignee n</span></p>
+			<span flex></span>
+	    </div>
+	</md-toolbar>
+	
+	<div layout="row">
+		
+		<div flex="70" class="main-page-content md-whiteframe-1dp" layout-padding>
 			<p>Project Task Detail</p>
+			
+			<div>
+  		  	  <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-main">
+  				  <md-fab-trigger>
+  			  	      <md-button aria-label="Add an Item to this Project" class="md-fab md-primary">
+  						  <md-tooltip md-direction="left">Add...</md-tooltip>
+  					      <md-icon class="material-icons" >add</md-icon>
+  			  	      </md-button>
+  		  	      </md-fab-trigger>
+  				  <md-fab-actions>
+			  	      <md-button aria-label="Add a Task" class="md-fab md-raised md-mini">
+	  					  <md-tooltip md-direction="left">Add a Task</md-tooltip>
+	  				      <md-icon class="material-icons">done_all</md-icon>
+			  	      </md-button>
+  			  	      <md-button aria-label="Add a Team Member" class="md-fab md-raised md-mini">
+  	  					  <md-tooltip md-direction="left">Add a Team Member</md-tooltip>
+  	  				      <md-icon class="material-icons">person_outline</md-icon>
+  			  	      </md-button>
+  			  	      <md-button aria-label="Add a Message" class="md-fab md-raised md-mini">
+  	  					  <md-tooltip md-direction="left">Add a Message</md-tooltip>
+  	  				      <md-icon class="material-icons">chat_bubble_outline</md-icon>
+  			  	      </md-button>
+  			  	      <md-button aria-label="Add a File" class="md-fab md-raised md-mini">
+  	  					  <md-tooltip md-direction="left">Add a File</md-tooltip>
+  	  				      <md-icon class="material-icons">attach_file</md-icon>
+  			  	      </md-button>
+  			  	  </md-fab-actions>
+  		  	  </md-fab-speed-dial>
+		    </div>
+			
 		</div>
+		
+		<related-items flex="30"></related-items>
+		
 	</div>
-	
-	<related-items layout="column" flex="30">
-	</related-items>
-	
 </div>
