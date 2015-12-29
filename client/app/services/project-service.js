@@ -23,29 +23,6 @@ angular.module('buiiltApp')
             action : 'team'
           }
         },
-        selectWinner: {
-          method: 'PUT',
-          params: {
-            id: 'id',
-            action: 'winner'
-          }
-        },
-        getProjectsByUser: {
-          method: 'GET',
-          params: {
-            id: 'id',
-            action: 'user'
-          },
-          isArray: true
-        },
-        getProjectsByBuilder: {
-          method: 'GET',
-          params: {
-            id: 'id',
-            action: 'builder'
-          },
-          isArray: true
-        },
         getAllProjects: {
           method: 'GET',
           isArray: true,
@@ -58,14 +35,6 @@ angular.module('buiiltApp')
           method: 'put',
           params: {
             id: '@id'
-          }
-        },
-
-        // new version
-        createProjectNewVersion: {
-          method: 'post',
-          params: {
-            action: 'create-project-new-version'
           }
         }
     }

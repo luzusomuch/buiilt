@@ -7,11 +7,10 @@
 </md-toolbar>
 
 <md-list ng-cloak style="height: 76vh; overflow: scroll">
-	<div ng-repeat="" ui-sref="">
+	<div ng-repeat="project in projects" ui-sref="project.overview({id: project._id})" ng-show="project.status == 'waiting' && project.owner != currentUser._id">
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
-		          <h5></h5>
-		          <p></p>
+		        <h3 class="md-primary">{{ project.name }}</h3>
 	        </div>
 		</md-list-item>
 		<md-divider></md-divider>

@@ -9,8 +9,11 @@ var _ = require('lodash');
 exports.validateCreate = function(req, cb) {
   req.checkBody('name', 'Project name is required').notEmpty();
 
-  return cb(req.validationErrors(), _.assign(_.omit(req.body, 'createdAt','package', 'updatedAt', 'quote', 'homeBuilers'), {
-    user: req.user._id
+  return cb(req.validationErrors(), _.assign(_.omit(req.body, 'createdAt', 'updatedAt'), {
+    owner: req.user._id,
+    address: req.body.address,
+    suburb: req.body.suburb,
+    postcode: req.body.postcode,
   }));
 };
 

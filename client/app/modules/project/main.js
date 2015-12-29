@@ -3,13 +3,15 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
 	
 	//Parents State for Singular Project
   .state('project', {
-	url: '/project',
-	params: {
-		projectId: null
-	},
-	templateUrl: '/app/modules/project/project.html',
-	controller: 'projectCtrl',
-	authenticate : true
+  	url: '/project/:id',
+  	templateUrl: '/app/modules/project/project.html',
+  	controller: 'projectCtrl',
+  	authenticate : true,
+    resolve: {
+      project: function($stateParams, projectService) {
+        return projectService.get({id: $stateParams.id}).$promise;
+      }
+    }
   })
   
   	//Overview of Single Project

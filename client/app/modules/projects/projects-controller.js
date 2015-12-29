@@ -4,12 +4,14 @@ angular.module('buiiltApp').controller('projectsCtrl', function ($rootScope, $sc
     $scope.selectedItem = null;
     $scope.search = false;
 	$scope.projectsFilter = [];
+    $scope.projects = $rootScope.projects;
 
     $scope.createProject = function(form) {
         $scope.submitted = true;
             if (form.$valid) {
-                projectService.createProjectNewVersion($scope.project).$promise.then(function(data){
+                projectService.create($scope.project).$promise.then(function(data){
                     $scope.projects.push(data);
+                    $scope.saveProject();
                     $state.go('project.overview', {id: data._id},{reload: true});
                     $scope.submitted = false;
                 }, function(res) {
@@ -19,7 +21,6 @@ angular.module('buiiltApp').controller('projectsCtrl', function ($rootScope, $sc
     };
     
     $scope.saveProject = function (){
-        console.log('project has been saved.');
         $mdDialog.hide();
     };
     

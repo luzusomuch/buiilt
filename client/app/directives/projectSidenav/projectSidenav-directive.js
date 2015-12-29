@@ -6,19 +6,11 @@ angular.module('buiiltApp').directive('projectSidenav', function(){
         scope:{
             project:'='
         },
-        controller: function($scope, $rootScope, $location, quoteService, userService, projectService, $state) {
+        controller: function($scope, $rootScope, userService, projectService, $state, $timeout) {
             $scope.errors = {};
             $scope.success = {};
-            $scope.user = {};
-
-		    projectService.get({'id': $state.params.projectId}).$promise.then(function(data) {
-		        $scope.project = data;
-		    });
-			
-			$scope.$state = $state;
-
-		    $scope.errors = {};
-			
+            
+                     
         }
     };
 });

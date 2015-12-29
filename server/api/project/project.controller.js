@@ -43,112 +43,17 @@ exports.create = function(req, res){
     }
     var project = new Project(data);
     project.status = 'waiting';
-    project.owner = user.team._id;
     project.save(function(err) {
       if (err) {
         res.send(422,err);
-      }
-      var to = {};
-      var currentTeam = {};
-      Team.findById(user.team._id,function(err,team) {
-        currentTeam = team;
-        team.project.push(project._id);
-        team.markModified('project');
-        team._user = user;
-        team.save();
-        if (team.type == 'builder' || team.type == 'architect') {
-          to.type = 'homeOwner';
-        } else {
-          if (req.body.hasArchitect) {
-            to.type = '';
-          } else {
-            to.type = 'builder';
-          }
-        }
-      });
-      User.findOne({email : req.body.package.to},function(err,_user) {
-        if (!_user) {
-          to.email = req.body.package.to;
-        } else {
-          to.team = _user.team._id;
-          Team.findById(to.team, function(err,team){
-            if (err) {return res.send(500,err);}
-            team.project.push(project._id);
-            team.markModified('project');
-            team._user = user;
-            team.save();
+      } else {
+        User.findById(req.user._id, function(err, user) {
+          user.projects.push(project._id);
+          user.save(function(err) {
+            return res.send(200, project);
           });
-        }
-        var descriptions = [];
-        descriptions.push(project.description);
-        var builderPackage = new BuilderPackage({
-          type: 'BuilderPackage',
-          location : req.body.package.location,
-          owner : user.team._id,
-          project : project._id,
-          name : project.name,
-          descriptions : descriptions,
-
         });
-        if (to.type == '') {
-          to = {};
-        } else {
-          builderPackage.to = to;
-          if (to.type == 'builder') {
-            builderPackage.hasWinner = true;
-            builderPackage.winner = to.team;
-          } else {
-            builderPackage.hasTempWinner = true;
-            builderPackage.hasWinner = true;
-            builderPackage.winner = to.team;
-          }
-        }
-        if (currentTeam.type == 'architect') {
-          builderPackage.hasArchitectManager = true;
-          var architect = {team: currentTeam._id};
-        } else {
-          var architect = {};
-        }
-        if (currentTeam.type == 'builder') {
-          builderPackage.hasWinner = true;
-          builderPackage.hasTempWinner = false;
-          builderPackage.winner = currentTeam._id;
-        }
-        if (req.body.architectEmail != '' && req.body.architectEmail) {
-          User.findOne({'email': req.body.architectEmail}, function(err,_architect){
-            if (err) {return res.send(500,err);}
-            if (!_architect) {architect.email = req.body.architectEmail;}
-            else {
-              architect.team = _architect.team._id;
-              Team.findById(_architect.team._id, function(err, team){
-                if (err) {return res.send(500,err);}
-                team.project.push(project._id);
-                team.markModified('project');
-                team._user = user;
-                team.save();
-              });
-            }
-            builderPackage.hasArchitectManager = true;
-            builderPackage.architect = architect;
-            builderPackage._editUser = req.user;
-            builderPackage.save(function(err) {
-              if (err) {
-                return res.send(500,err)
-              }
-              return res.json(project);
-            });
-          });
-        } else {
-          builderPackage.architect = architect;
-          builderPackage._editUser = req.user;
-          builderPackage.save(function(err) {
-            if (err) {
-              return res.send(500,err)
-            }
-            return res.json(project);
-          });
-        }
-      });
+      }
     });
   });
 };
@@ -159,19 +64,11 @@ exports.create = function(req, res){
 exports.show = function(req, res){
   //TODO - validate rol
   Project.findById(req.params.id)
-  .populate('owner')
+  .populate('owner', '_id email name')
   .exec(function(err, project){
     if(err){ return res.send(500, err); }
     else {
-      User.populate(project, [
-        {path : 'owner.member._id'},
-        {path : 'owner.leader'}
-      ],function(err,_project) {
-        if (err) {
-          return res.send(500, err);
-        }
-        return res.json(_project);
-      })
+      return res.send(200, project);
     }
   });
 };
@@ -307,7 +204,13 @@ exports.destroy = function (req, res) {
 
 exports.updateProject = function(req, res) {
   Project.update({_id: req.params.id},
-  {name: req.body.project.name, description: req.body.project.description}, function(err, saved){
+  {
+    name: req.body.name, 
+    description: req.body.description, 
+    address: req.body.address, 
+    suburb: req.body.suburb, 
+    postcode: req.body.postcode
+  }, function(err, saved){
     if (err) {return res.send(500,err);}
     return res.send(200,saved);
   });

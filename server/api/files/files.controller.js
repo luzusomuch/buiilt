@@ -235,16 +235,20 @@ exports.myFiles = function(req, res) {
             if (file.referenceTo === "documentInpeople" || file.referenceTo === "documentInboard") {
                 Project.findById(file.element.package.project, function(err, project) {
                     if (err || !project) {console.log('error');cb();}
-                    file.project = project;
-                    results.push(file);
-                    cb();
+                    else {
+                        file.project = project;
+                        results.push(file);
+                        cb();
+                    }
                 });
             } else if (file.referenceTo === "uploadDocument" || file.referenceTo === "uploadNewDocumentVersion") {
                 Project.findById(file.element.projectId, function(err, project) {
                     if (err || !project) {console.log('err'); cb();}
-                    file.project = project;
-                    results.push(file);
-                    cb();
+                    else {
+                        file.project = project;
+                        results.push(file);
+                        cb();
+                    }
                 });
             }
         }, function() {

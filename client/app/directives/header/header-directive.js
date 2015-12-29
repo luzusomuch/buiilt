@@ -4,7 +4,7 @@ angular.module('buiiltApp')
         restrict: 'E',
         templateUrl: 'app/directives/header/header.html',
         controller: function($scope,$state, $stateParams, $rootScope,materialPackageService, authService, projectService, contractorService,teamService,filterFilter, builderPackageService, socket, $mdDialog, $mdMedia) {
-            $scope.projects = [];
+            $rootScope.projects = [];
             $scope.submitted = false;
     	  
     	    var originatorEv;
@@ -12,40 +12,12 @@ angular.module('buiiltApp')
             $scope.goto = function(newstate) {
     		      $state.go(newstate, {}, {reload: true});
             };
-    	   
-            $scope.createProject = function(form) {
-                $scope.submitted = true;
-                if (form.$valid) {
-                    projectService.createProjectNewVersion($scope.project).$promise.then(function(data){
-                        $scope.projects.push(data);
-                        $state.go('dashboard', {id: data._id},{reload: true});
-                        $scope.submitted = false;
-                        $("#createProject").closeModal();
-                    }, function(res) {
-                        $scope.errors = res.data.msg;
-                    });
-                }
-            };
 
             function queryProjects(callback){
                 var cb = callback || angular.noop;
                 authService.isLoggedInAsync(function(isLoggedIn){
                     if(isLoggedIn){
                         $scope.isLoggedIn = true;
-                        $scope.project = {
-                            hasArchitect: false,
-                            selectedOwnerUserType: '',
-                            homeOwnerHireArchitect: 'true',
-                            homeOwnerAssignBuilder: 'true',
-                            architectManagerHisProject: 'true',
-                            haveContracted: 'true',
-                            builderHireArchitect: 'true',
-                            builderAssignHomeOwner: 'true',
-                            package : {
-                                location: {},
-                                to : ''
-                            }
-                        };
                         $scope.duration = 10000;
                         authService.getCurrentUser().$promise
                         .then(function(res) {
@@ -60,13 +32,7 @@ angular.module('buiiltApp')
                             authService.getCurrentTeam().$promise
                             .then(function(res) {
                                 $scope.currentTeam = res;
-                                $scope.projects = $scope.currentUser.projects;
-                                if ($stateParams.id) {
-                                    builderPackageService.findDefaultByProject({id: $stateParams.id}).$promise.then(function(res){
-                                        $scope.tabs = $scope.menuTypesNewVersion['hasProject'];
-                                    });
-                                } else {
-                                }
+                                $rootScope.projects = $scope.currentUser.projects;
                                 return cb();
                             });
                         });
@@ -81,23 +47,13 @@ angular.module('buiiltApp')
             queryProjects();
 
             //check menu when state changes
-            $rootScope.$on('$stateChangeSuccess', function (event, next) {
-                queryProjects(function() {
-                    $scope.currentProject = $rootScope.currentProject;
-                    $rootScope.currentUser = $scope.currentUser;
-                    $rootScope.currentTeam = $scope.currentTeam;
-                    if ($scope.currentUser && $scope.currentProject && $scope.currentTeam && !_.find($scope.currentTeam.project,{_id : $scope.currentProject._id}))
-                    {
-                    // $state.go('team.manager');
-                    }
+            // $rootScope.$on('$stateChangeSuccess', function (event, next) {
+            //     queryProjects(function() {
+            //         $rootScope.currentUser = $scope.currentUser;
+            //         $rootScope.currentTeam = $scope.currentTeam;
 
-                    if ($state.current.name == 'team.manager' || $state.current.name == 'dashboard'){
-                        setTimeout(function () {
-                            $('#tabsMenu').tabs();
-                        }, 500);
-                    }
-                });
-            });
+            //     });
+            // });
 
             $rootScope.$on('TeamUpdate',function(event,team) {
                 queryProjects();
@@ -120,14 +76,6 @@ angular.module('buiiltApp')
 
             $rootScope.sendVerification = function() {
                 $scope.duration = 0;
-            };
-
-            $scope.selectedOwnerUserType = function(type) {
-                $scope.project.selectedOwnerUserType = type;
-            };
-
-            $scope.inputChanged = function(str) {
-                $scope.textString = str;
             };
         }
     };

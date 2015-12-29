@@ -8,7 +8,7 @@ var EventBus = require('./../components/EventBus');
 
 var ProjectSchema = new Schema({
   //owner of project
-  owner: {type: Schema.Types.ObjectId, ref: 'Team'},
+  owner: {type: Schema.Types.ObjectId, ref: 'User', required: true},
   name: {
     type: String,
     default: '',
@@ -23,6 +23,15 @@ var ProjectSchema = new Schema({
     enum: ['open', 'close', 'waiting'],
     default: 'open'
   },
+  winner: {
+    type: Schema.Types.ObjectId, ref: 'User'
+  },
+  address: {
+    type: String,
+    default: ''
+  },
+  suburb: {type: String, default: ''},
+  postcode: {type: String, default: ''},
   //TODO - store subscription data
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }

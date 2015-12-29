@@ -7,4 +7,57 @@
     </div>
 </md-toolbar>
 
-<div class="main-page-content"></div>
+<div class="main-page-content">
+    <md-content>
+        <md-tabs md-dynamic-height md-border-bottom>
+            <md-tab label="Project Location">
+                <md-content class="md-padding">
+                    <p><strong>Address: </strong>{{project.address}}</p>
+                    <p><strong>Suburb: </strong>{{project.suburb}}</p>
+                    <p><strong>Postcode: </strong>{{project.postcode}}</p>
+                </md-content>
+            </md-tab>
+            <md-tab label="Project Manager">
+                <md-content class="md-padding">
+                    <p><strong>Name: </strong>{{project.owner.name}}</p>
+                    <p><strong>Email: </strong>{{project.owner.email}}</p>
+                </md-content>
+            </md-tab>
+            <md-tab label="Edit Project" ng-show="currentUser._id == project.owner._id">
+                <md-content>
+                    <form ng-submit="editProject(form)" name="form">
+                        <div layout="row">
+                            <md-input-container flex>
+                                <label>Project Name</label>
+                                <input ng-model="project.name" md-autofocus ng-required>
+                            </md-input-container>
+                        </div>
+                        
+                        <div layout="row">
+                            <md-input-container flex>
+                                <label>Street Address</label>
+                                <input ng-model="project.address">
+                            </md-input-container>
+                        </div>
+                        
+                        <div layout="row">
+                            <md-input-container flex="60">
+                                <label>Suburb</label>
+                                <input ng-model="project.suburb">
+                            </md-input-container>
+
+                            <md-input-container flex="40">
+                                <label>Postcode</label>
+                                <input ng-model="project.postcode">
+                            </md-input-container>
+                        </div>
+
+                        <div layout="row">
+                            <md-button type="submit" class="md-accent md-hue-1 md-raised">Edit Project!</md-button>
+                        </div>
+                    </form>
+                </md-content>
+            </md-tab>
+        </md-tabs>
+    </md-content>
+</div>
