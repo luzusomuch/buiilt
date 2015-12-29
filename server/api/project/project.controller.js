@@ -47,6 +47,11 @@ exports.create = function(req, res){
       if (err) {
         res.send(422,err);
       } else {
+        var people = new People({
+          project: project._id,
+          'projectManager._id': req.user._id
+        });
+        people.save();
         User.findById(req.user._id, function(err, user) {
           user.projects.push(project._id);
           user.save(function(err) {

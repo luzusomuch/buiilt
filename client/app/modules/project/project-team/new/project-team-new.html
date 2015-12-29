@@ -1,5 +1,5 @@
 <md-dialog aria-label="Invite a New Team Member" flex="70">
-	<form>
+	<form ng-submit="inviteNewTeamMember(form)" name="form">
 		<md-toolbar>
 			<div class="md-toolbar-tools">
 				<h2>Invite a New Team Member</h2>
@@ -17,56 +17,81 @@
 				
 				<div layout="row">
 					<md-input-container flex>
-						
-						<md-radio-group ng-model="type" layout="row">
-							<md-radio-button value="builder" aria-label="">
-								Builder
-							</md-radio-button>
-							<md-radio-button value="architect" aria-label="">
-								Architect
-							</md-radio-button>
-							<md-radio-button value="homeowner" aria-label="">
-								Home Owner
-							</md-radio-button>
-							<md-radio-button value="consultant" aria-label="">
-								Consultant
-							</md-radio-button>
-							<md-radio-button value="employee" aria-label="">
-								Employee
-							</md-radio-button>
-							<md-radio-button value="subcontractor" aria-label="">
-								Subcontractor
+						<md-radio-group ng-change="getChangeTypeValue(invite.type)" ng-model="invite.type" layout="row">
+							<md-radio-button ng-repeat="type in availableUserType" ng-value="type.value" aria-label="{{type.text}}">
+								{{type.text}}
 							</md-radio-button>
 						</md-radio-group>
-						
 					</md-input-container>
 				</div>
-				
-				<div layout="row">
+
+				<div layout="row" ng-hide="invite.type == 'addClient' || invite.type == 'addEmployee'">
 					<md-input-container flex>
 						<p>Will you require a tender to be submitted?</p>
 					</md-input-container>
 				</div>
 				
-				<div layout="row">
+				<div layout="row" ng-hide="invite.type == 'addClient' || invite.type == 'addEmployee'">
 					<md-input-container flex>
-						
-						<md-radio-group ng-model="type" layout="row">
-							<md-radio-button value="tender" aria-label="">
+						<md-radio-group ng-model="invite.isTender" layout="row">
+							<md-radio-button ng-value="true" aria-label="" checked="true">
 								Yes
 							</md-radio-button>
-							<md-radio-button value="noTender" aria-label="">
+							<md-radio-button ng-value="false" aria-label="">
 								No
 							</md-radio-button>
 						</md-radio-group>
-						
 					</md-input-container>
 				</div>
+
+				<div layout="column" ng-show="invite.isInviteTeamMember">
+					<div layout="column" flex="100">
+						<md-input-container flex>
+							<p>Assignees</p>
+						</md-input-container>
+						<div layout="row">
+	                        <div class="card" style="padding: 5px; margin-left: 10px" ng-repeat="member in invite.teamMember" ng-click="revokeTeamMember(member,$index)">
+	                            {{member.name}} <span ng-if="member.canRevoke"><i class="material-icons">clear</i></span>
+	                        </div>
+	                    </div>
+					</div>
+                    <div layout="column" flex="100">
+                    	<md-input-container>
+							<p>Available Assignee's</p>
+						</md-input-container>
+                    	<div layout="row">
+                    	    <div ng-click="inviteTeamMember(member,$index)" ng-repeat="member in teamMembersCanInvite track by $index">
+                    	        <div class="card col" style="padding: 5px; margin-left: 10px">
+                    	            {{member.name}}
+                    	        </div>
+                    	    </div>
+                    	</div>
+                    </div>
+				</div>
 				
-				<div layout="row">
-					<md-input-container flex>
-						<p>Continue as per previous version of application...</p>
+				<div layout="row" ng-show="!invite.isInviteTeamMember">
+					<md-input-container flex ng-show="!invite.isTender">
+						<label for="">Email</label>
+						<input type="email" ng-model="invite.email">
 					</md-input-container>
+					<md-input-container layout="row" flex ng-show="invite.isTender">
+						<div flex="80">
+							<label for="">Email</label>
+							<input type="email" ng-model="email">
+						</div>
+						<div flex="20">
+							<i style="cursor: pointer" ng-click="addInvitee(email)" class="material-icons">add</i>
+						</div>
+					</md-input-container>
+				</div>
+
+				<div layout="row" ng-show="invite.invitees.length > 0">
+					<md-list flex="80" ng-cloak>
+						<md-list-item ng-repeat="invitee in invite.invitees">
+							<p>{{invitee.email}}</p>
+							<i style="cursor: pointer" ng-click="removeInvitee($index)" class="material-icons md-secondary">clear</i>
+						</md-list-item>
+					</md-list>
 				</div>
 				
 			</div>
@@ -74,7 +99,7 @@
 		
 		<md-dialog-actions>
 			<md-button ng-click="cancelInviteTeamModal()">Cancel</md-button>
-			<md-button ng-click="inviteNewTeamMember()" class="md-raised md-accent md-hue-1">Send Invitations!</md-button>
+			<md-button type="submit" class="md-raised md-accent md-hue-1">Send Invitations!</md-button>
 		</md-dialog-actions>
 	</form>
 </md-dialog>
