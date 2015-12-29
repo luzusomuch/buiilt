@@ -1,28 +1,44 @@
-<md-toolbar class="md-warn md-hue-1">
-	<div class="md-toolbar-tools">
-	
-		<div layout="row" layout-align="space-around center" flex>
-			<md-button class="md-icon-button md-primary" aria-label="">
-				<md-tooltip md-direction="bottom">Related Team Members</md-tooltip>
-			    <md-icon class="material-icons">person_outline</md-icon>
-		    </md-button>
-			<md-button class="md-icon-button md-primary" aria-label="">
-				<md-tooltip md-direction="bottom">Related Messages</md-tooltip>
-			    <md-icon class="material-icons">chat_bubble_outline</md-icon>
-		    </md-button>
-			<md-button class="md-icon-button md-primary" aria-label="">
-				<md-tooltip md-direction="bottom">Related Tasks</md-tooltip>
-			    <md-icon class="material-icons">done_all</md-icon>
-		    </md-button>
-			<md-button class="md-icon-button md-primary" aria-label="">
-				<md-tooltip md-direction="bottom">Related Files</md-tooltip>
-			    <md-icon class="material-icons">attach_file</md-icon>
-		    </md-button>
-		</div>
-	
-	</div>
-</md-toolbar>
+<md-tabs md-dynamic-height md-center-tabs md-no-ink-bar md-no-ink md-border-bottom flex layout-padding>
 
-<div flex="35" class="main-page-content" layout-padding>
-	<p>Side Nav</p>
-</div>
+    <md-tab>
+		<md-tab-label>
+			<md-tooltip md-direction="bottom">Related Team Members</md-tooltip>
+		    <md-icon class="material-icons">person_outline</md-icon>
+		</md-tab-label>
+        <md-tab-body>
+		
+            <p>Related Team Members</p>
+        </md-tab-body>
+    </md-tab>
+	
+	<md-tab>
+		<md-tab-label>
+			<md-tooltip md-direction="bottom">Related Messages</md-tooltip>
+		    <md-icon class="material-icons">chat_bubble_outline</md-icon>
+		</md-tab-label>
+        <md-tab-body>
+            <p>Related Messages</p>
+        </md-tab-body>
+    </md-tab>
+	
+    <md-tab>
+		<md-tab-label>
+			<md-tooltip md-direction="bottom">Related Tasks</md-tooltip>
+		    <md-icon class="material-icons">done_all</md-icon>
+		</md-tab-label>
+        <md-tab-body>
+            <p>Related Tasks</p>
+        </md-tab-body>
+    </md-tab>
+	
+    <md-tab>
+		<md-tab-label>
+			<md-tooltip md-direction="bottom">Related Files</md-tooltip>
+		    <md-icon class="material-icons">attach_file</md-icon>
+		</md-tab-label>
+        <md-tab-body>
+            <p>Related Files</p>
+        </md-tab-body>
+    </md-tab>
+	
+</md-tabs>
