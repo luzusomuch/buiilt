@@ -1,27 +1,41 @@
 <md-toolbar class="md-warn md-hue-1">
 	<div class="md-toolbar-tools">
-		
-		<md-chips class="" ng-model="teamNames" placeholder="Seach Team..." secondary-placeholder="Seach Team..." flex>
-			<md-chip-template class="md-accent">
-		        <strong>{{$chip}}</strong>
+		<md-chips class="" ng-model="teamNames" placeholder="Search Team..." secondary-placeholder="Search Team..." flex md-autocomplete-snap="" md-require-math="autoCompleteRequireMath" md-on-add="addChip()" md-on-remove="removeChip()">
+			<md-autocomplete 
+				md-selected-item="selectedItem" 
+				md-search-text="searchText"
+				md-items="item in querySearch(searchText)" 
+				md-item-text="item" 
+				placeholder="Search for a Team">
+				<span md-highlight-text="searchText">{{(item._id) ? item.name : item.email}}</span>
+			</md-autocomplete>
+			<md-chip-template>
+		        <strong>{{($chip._id) ? $chip.name : $chip.email}}</strong>
 		    </md-chip-template>
 		</md-chips>
 		
 	    <md-button ng-click="showInviteTeamModal($event)">Add a New Team Member</md-button>
-		
     </div>
 </md-toolbar>
 
 <md-list ng-cloak class="main-page-content">
-
-	<div ng-repeat="member in teamMembers" ui-sref="project.team.detail">
+	<div ng-show="!search" ng-repeat="member in membersList track by $index" ui-sref="project.team.detail">
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
-		          <h3>{{ member.name }}</h3>
-		          <p>{{ member.role }}</p>
+		          <h3>{{(member._id) ? member.name : member.email}}</h3>
+		          <p>{{ member.type }}</p>
 	        </div>
 		</md-list-item>
 		<md-divider></md-divider>
 	</div>
-	
+
+	<div ng-show="search" ng-repeat="member in teamNames track by $index" ui-sref="project.team.detail">
+		<md-list-item class="md-2-line" md-ink-ripple>
+			<div class="md-list-item-text" layout="column">
+		          <h3>{{(member._id) ? member.name : member.email}}</h3>
+		          <p>{{ member.type }}</p>
+	        </div>
+		</md-list-item>
+		<md-divider></md-divider>
+	</div>
 </md-list>

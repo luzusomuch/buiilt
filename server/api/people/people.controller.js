@@ -1181,6 +1181,7 @@ exports.getInvitePeople = function(req, res) {
     .populate("consultants._id", "_id email name")
     .populate("consultants.teamMember", "_id email name")
     .populate("consultants.inviter", "_id email name")
+    .populate("projectManager.teamMember", "_id email name")
     .exec(function(err, people){
         if (err) {return res.send(500,err);}
         if (!people) {return res.send(404);}

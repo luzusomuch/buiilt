@@ -17,7 +17,7 @@ angular.module('buiiltApp')
       if (form.$valid) {
         authService.login($scope.user).then(function (res) {
           socket.emit('join', res.id);
-          $state.go('dashboard.tasks');
+          window.location.href = "/dashboard/tasks";
         }, function (res) {
           $scope.error = true;
           $scope.errorMsg = res.message;

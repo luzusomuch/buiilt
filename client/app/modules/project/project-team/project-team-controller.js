@@ -91,9 +91,55 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
                 });
             }
 
-			switch($rootScope.currentUser.type) {
-				case "projectManager":
-					$scope.availableUserType = [
+            $scope.membersList = [];
+            // get builders clist
+            _.each($scope.people.builders, function(user) {
+                if (user._id) {
+                    $scope.membersList.push({_id: user._id._id, name: user._id.name, type: 'Builder'});
+                } else {
+                    $scope.membersList.push({email: user.email, type: 'Builder'});
+                }
+            });
+            // get clients list
+            _.each($scope.people.clients, function(user) {
+                if (user._id) {
+                    $scope.membersList.push({_id: user._id._id, name: user._id.name, type: 'Builder'});
+                } else {
+                    $scope.membersList.push({email: user.email, type: 'Client'});
+                }
+            });
+            // get architects list
+            _.each($scope.people.architects, function(user) {
+                if (user._id) {
+                    $scope.membersList.push({_id: user._id._id, name: user._id.name, type: 'Builder'});
+                } else {
+                    $scope.membersList.push({email: user.email, type: 'Architect'});
+                }
+            });
+            // get subcontractors list
+            _.each($scope.people.subcontractors, function(user) {
+                if (user._id) {
+                    $scope.membersList.push({_id: user._id._id, name: user._id.name, type: 'Builder'});
+                } else {
+                    $scope.membersList.push({email: user.email, type: 'Subcontractor'});
+                }
+            });
+            // get consultants list
+            _.each($scope.people.consultants, function(user) {
+                if (user._id) {
+                    $scope.membersList.push({_id: user._id._id, name: user._id.name, type: 'Builder'});
+                } else {
+                    $scope.membersList.push({email: user.email, type: 'Consultant'});
+                }
+            });
+            // get employees list
+            _.each($scope.people[$rootScope.currentUser.type].teamMember, function(member) {
+                $scope.membersList.push({_id: member._id, name: member.name, type: "Employee"})
+            });
+
+            switch($rootScope.currentUser.type) {
+                case "projectManager":
+                    $scope.availableUserType = [
                         {value: 'addBuilder', text: 'Builder'},
                         {value: 'addClient', text: 'Client'},
                         {value: 'addArchitect', text: 'Architect'},
@@ -103,8 +149,8 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
                     ];
                     break;
                 default:
-                	break;
-			}
+                    break;
+            }
 		});
 	};
 
@@ -179,19 +225,37 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
 	$scope.cancelInviteTeamModal = function () {
 		$mdDialog.cancel();
 	};
+
+    $scope.querySearch = function(value) {
+        var results = value ? $scope.membersList.filter(createFilter(value)) : [];
+        results = _.uniq(results, '_id');
+        return results;
+    };
+
+    function createFilter(query) {
+        return function filterFn(member) {
+            console.log(member);
+            if (member._id) {
+                return member.name.toLowerCase().indexOf(query) > -1;
+            } else {
+                console.log(member.email.indexOf(query));
+                return member.email.indexOf(query) > -1;
+            }
+        };
+    };
+
+    $scope.addChip = function() {
+        $scope.search = true;
+    };
+
+    $scope.removeChip = function() {
+        if ($scope.teamNames.length === 0) {
+            $scope.search = false;
+        }
+    };
 	
 	//Placeholder Set of Filters to use for layout demo
-	$scope.teamNames = ['Bob', 'Jane', 'Tmart'];
-	
-	//Placeholder Array of Team Members to use for layout demo
-	$scope.teamMembers = [
-		{'name': 'John Condon', 'role': 'Builder'},
-		{'name': 'Myles Condon', 'role': 'Employee'},
-		{'name': 'Ken Van Bran', 'role': 'Architect'},
-		{'name': 'Brett Church', 'role': 'Architect'},
-		{'name': 'Jack Lock', 'role': 'Home Owner'},
-		{'name': 'Andy Romee', 'role': 'Consultant'}
-	];
+	$scope.teamNames = [];
 
 	loadProjectMembers($stateParams.id);
 	
