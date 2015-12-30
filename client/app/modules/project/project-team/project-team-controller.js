@@ -162,7 +162,7 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
 	};
 
 	$scope.showToast = function(value) {
-        $mdToast.show($mdToast.simple().textContent(value).position('top','right').hideDelay(3000));
+        $mdToast.show($mdToast.simple().textContent(value).position('bottom','right').hideDelay(3000));
     };
 
 	//Functions to handle Invite Team Dialog.
