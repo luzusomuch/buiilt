@@ -83,11 +83,12 @@ exports.invitePeople = function(req, res) {
                         if (!invite.isTender) {
                             User.findOne({email: invite.email}, function(err, user) {
                                 if (err) {cb(err);}
-                                if (!user) {
+                                else if (!user) {
                                     team.push({
                                         inviter: req.user._id,
                                         email: invite.email,
-                                        hasSelect: true
+                                        hasSelect: true,
+                                        inviterType: (type == "consultants") ? invite.inviterType : null
                                     });
                                     newInviteeNotSignUp.push(invite.email);
                                     cb();
@@ -95,7 +96,8 @@ exports.invitePeople = function(req, res) {
                                     team.push({
                                         inviter: req.user._id,
                                         _id: user._id,
-                                        hasSelect: true
+                                        hasSelect: true,
+                                        inviterType: (type == "consultants") ? invite.inviterType : null
                                     });
                                     newInviteeSignUpAlready.push(user._id);
                                     user.projects.push(people.project);
@@ -110,10 +112,11 @@ exports.invitePeople = function(req, res) {
                                 async.each(invite.invitees, function(invitee, callback) {
                                     User.findOne({email: invitee.email}, function(err, user) {
                                         if (err) {callback();}
-                                        if (!user) {
+                                        else if (!user) {
                                             team.push({
                                                 inviter: req.user._id,
-                                                email: invitee.email
+                                                email: invitee.email,
+                                                inviterType: (type == "consultants") ? invite.inviterType : null
                                             });
                                             newInviteeNotSignUp.push(invitee.email);
                                             callback();
@@ -121,7 +124,8 @@ exports.invitePeople = function(req, res) {
                                         else {
                                             team.push({
                                                 inviter: req.user._id,
-                                                _id: user._id
+                                                _id: user._id,
+                                                inviterType: (type == "consultants") ? invite.inviterType : null
                                             });
                                             newInviteeSignUpAlready.push(user._id);
                                             user.projects.push(people.project);
@@ -156,10 +160,13 @@ exports.invitePeople = function(req, res) {
                             {path:"subcontractors._id", select: "_id email name"},
                             {path:"subcontractors.teamMember", select: "_id email name"},
                             {path: "consultants._id", select: "_id email name"},
-                            {path: "consultants.teamMember", select: "_id email name"}
+                            {path: "consultants.teamMember", select: "_id email name"},
+                            {path: "projectManager.teamMember", select: "_id email name"}
                             ], function(err, people) {
                                 if (people.projectManager._id.toString() === req.user._id.toString()) {
                                     return res.send(200,people);
+                                } else {
+                                    responseWithEachType(people, req, res);
                                 }
                             });
                         });
@@ -1188,6 +1195,37 @@ exports.getInvitePeople = function(req, res) {
         else {
             if (people.projectManager._id.toString() === req.user._id.toString()) {
                 return res.send(200, people);
+            } else {
+                responseWithEachType(people, req, res);
+            }
+        }
+    });
+};
+
+function responseWithEachType(people, req, res){
+    var roles = ["builders", "clients", "architects", "subcontractors", "consultants"];
+    _.each(roles, function(role) {
+        var index = _.findIndex(people[role], function(user) {
+            if (user._id) {
+                return user._id._id.toString() === req.user._id.toString();
+            }
+        });
+        if (index != -1) {
+            console.log(role);
+            switch (role) {
+                case 'builders':
+                    break;
+                case 'clients':
+                    people.builders.teamMember = [];
+                    people.architects.teamMember = [];
+                    people.subcontractors.teamMember = [];
+                    people.consultants.teamMember = [];
+                    people.projectManager.teamMember = [];
+                    people.subcontractors = [];
+                    return res.send(200, people);
+                    break;
+                default:
+                    break;
             }
         }
     });

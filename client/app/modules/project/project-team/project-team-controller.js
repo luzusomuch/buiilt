@@ -13,129 +13,47 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
 
 	function loadProjectMembers(id) {
 		// get all project team member
-		peopleService.getInvitePeople({id: $stateParams.id}).$promise.then(function(res) {
+        $scope.membersList = [];
+        var roles = ["builders", "clients", "architects", "subcontractors", "consultants", "projectManager"];
+		peopleService.getInvitePeople({id: id}).$promise.then(function(res) {
 			$scope.people = res;
-			if ($scope.people.projectManager._id === $rootScope.currentUser._id) {
-				$rootScope.currentUser.type = "projectManager";
-			} else if (_.findIndex($scope.people.builders, function(item) {
-                if (item._id) {
-                    return item._id._id == $rootScope.currentUser._id;
-                }}) != -1) {
-                $rootScope.currentUser.type = 'builder';
-            } else if (_.findIndex($scope.people.architects, function(item) {
-                if (item._id) {return item._id._id == $rootScope.currentUser._id;}
-                }) != -1) {
-                $rootScope.currentUser.type = 'architect';
-            } else if (_.findIndex($scope.people.clients, function(item){
-                if (item._id) {return item._id._id == $rootScope.currentUser._id;}
-                }) != -1) {
-                $rootScope.currentUser.type = 'client';
-            } else if (_.findIndex($scope.people.subcontractors, function(item){
-                if (item._id) {return item._id._id == $rootScope.currentUser._id;}
-                }) != -1) {
-                $rootScope.currentUser.type = 'subcontractor';
-            } else if (_.findIndex($scope.people.consultants, function(item){
-                if (item._id) {return item._id._id == $rootScope.currentUser._id;}
-                }) != -1) {
-                $rootScope.currentUser.type = 'consultant';
-            } else {
-            	if (_.findIndex($scope.people.projectManager.teamMember, function(member) {
-            		return member._id == $rootScope.currentUser._id;
-            	}) != -1) {
-            		$rootScope.currentUser.type = 'projectManager';
-            	}
-
-                _.each($scope.people.builders, function(item) {
-                    if (_.findIndex(item.teamMember, function(member) {
-                        return member._id == $rootScope.currentUser._id;
+            _.each(roles, function(role) {
+                if (role === "projectManager") {
+                    if ($scope.people.projectManager._id === $rootScope.currentUser._id) {
+                        $rootScope.currentUser.type = role;
+                    }
+                } else {
+                    if (_.findIndex($scope.people[role], function(user) {
+                        if (user._id) {
+                            return user._id._id == $rootScope.currentUser._id;
+                        }
                     }) != -1) {
-                        $rootScope.currentUser.type = 'builder';
-                        return false;
+                        $rootScope.currentUser.type = role;
+                    }
+                }
+                if ($scope.people[role].teamMember && $scope.people[role].teamMember.length > 0) {
+                    if (_.findIndex($scope.people[role].teamMember, function(member) {
+                        return member._id == $scope.currentUser._id;
+                    }) != -1) {
+                        $rootScope.currentUser.type = role;
+                    }
+                }
+
+                // Get team list
+                _.each($scope.people[role], function(user) {
+                    if (user._id) {
+                        $scope.membersList.push({_id: user._id._id, name: user._id.name, type: role});
+                    } else if (user.email) {
+                        $scope.membersList.push({email: user.email, type: role});
                     }
                 });
-
-                _.each($scope.people.clients, function(item) {
-                    if (_.findIndex(item.teamMember, function(member) {
-                        return member._id == $rootScope.currentUser._id;
-                    }) != -1) {
-                        $rootScope.currentUser.type = 'client';
-                        return false;
-                    }
-                });
-
-                _.each($scope.people.architects, function(item) {
-                    if (_.findIndex(item.teamMember, function(member) {
-                        return member._id == $rootScope.currentUser._id;
-                    }) != -1) {
-                        $rootScope.currentUser.type = 'architect';
-                        return false;
-                    }
-                });
-
-                _.each($scope.people.subcontractors, function(item) {
-                    if (_.findIndex(item.teamMember, function(member) {
-                        return member._id == $rootScope.currentUser._id;
-                    }) != -1) {
-                        $rootScope.currentUser.type = 'subcontractor';
-                        return false;
-                    }
-                });
-
-                _.each($scope.people.consultants, function(item) {
-                    if (_.findIndex(item.teamMember, function(member) {
-                        return member._id == $rootScope.currentUser._id;
-                    }) != -1) {
-                        $rootScope.currentUser.type = 'consultant';
-                        return false;
-                    }
-                });
-            }
-
-            $scope.membersList = [];
-            // get builders clist
-            _.each($scope.people.builders, function(user) {
-                if (user._id) {
-                    $scope.membersList.push({_id: user._id._id, name: user._id.name, type: 'Builder'});
-                } else {
-                    $scope.membersList.push({email: user.email, type: 'Builder'});
-                }
             });
-            // get clients list
-            _.each($scope.people.clients, function(user) {
-                if (user._id) {
-                    $scope.membersList.push({_id: user._id._id, name: user._id.name, type: 'Builder'});
-                } else {
-                    $scope.membersList.push({email: user.email, type: 'Client'});
-                }
-            });
-            // get architects list
-            _.each($scope.people.architects, function(user) {
-                if (user._id) {
-                    $scope.membersList.push({_id: user._id._id, name: user._id.name, type: 'Builder'});
-                } else {
-                    $scope.membersList.push({email: user.email, type: 'Architect'});
-                }
-            });
-            // get subcontractors list
-            _.each($scope.people.subcontractors, function(user) {
-                if (user._id) {
-                    $scope.membersList.push({_id: user._id._id, name: user._id.name, type: 'Builder'});
-                } else {
-                    $scope.membersList.push({email: user.email, type: 'Subcontractor'});
-                }
-            });
-            // get consultants list
-            _.each($scope.people.consultants, function(user) {
-                if (user._id) {
-                    $scope.membersList.push({_id: user._id._id, name: user._id.name, type: 'Builder'});
-                } else {
-                    $scope.membersList.push({email: user.email, type: 'Consultant'});
-                }
-            });
+
             // get employees list
             _.each($scope.people[$rootScope.currentUser.type].teamMember, function(member) {
-                $scope.membersList.push({_id: member._id, name: member.name, type: "Employee"})
+                $scope.membersList.push({_id: member._id, name: member.name, type: $rootScope.currentUser.type});
             });
+            console.log($rootScope.currentUser);
 
             switch($rootScope.currentUser.type) {
                 case "projectManager":
@@ -144,6 +62,12 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
                         {value: 'addClient', text: 'Client'},
                         {value: 'addArchitect', text: 'Architect'},
                         {value: 'addSubcontractor', text: 'Subcontractor'},
+                        {value: 'addConsultant', text: 'Consultant'},
+                        {value: 'addEmployee', text: 'Employee'}
+                    ];
+                    break;
+                case "clients": 
+                    $scope.availableUserType = [
                         {value: 'addConsultant', text: 'Consultant'},
                         {value: 'addEmployee', text: 'Employee'}
                     ];
