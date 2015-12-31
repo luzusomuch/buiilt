@@ -1,6 +1,7 @@
 'use strict';
 
 var People = require('./../../models/people.model');
+var InviteToken = require('./../../models/inviteToken.model');
 var User = require('./../../models/user.model');
 var _ = require('lodash');
 var async = require('async');
@@ -91,7 +92,14 @@ exports.invitePeople = function(req, res) {
                                         inviterType: (type == "consultants") ? invite.inviterType : null
                                     });
                                     newInviteeNotSignUp.push(invite.email);
-                                    cb();
+                                    var inviteToken = new InviteToken({
+                                        type: 'project-invite',
+                                        email: invite.email,
+                                        element: {
+                                            project: people.project
+                                        }
+                                    });
+                                    inviteToken.save(cb());
                                 } else {
                                     team.push({
                                         inviter: req.user._id,
@@ -100,9 +108,14 @@ exports.invitePeople = function(req, res) {
                                         inviterType: (type == "consultants") ? invite.inviterType : null
                                     });
                                     newInviteeSignUpAlready.push(user._id);
-                                    user.projects.push(people.project);
-                                    user.markModified('projects');
-                                    user.save(cb());
+                                    var inviteToken = new InviteToken({
+                                        type: 'project-invite',
+                                        user: user._id,
+                                        element: {
+                                            project: people.project
+                                        }
+                                    });
+                                    inviteToken.save(cb());
                                 }
                             });
                         } else {
@@ -119,7 +132,14 @@ exports.invitePeople = function(req, res) {
                                                 inviterType: (type == "consultants") ? invite.inviterType : null
                                             });
                                             newInviteeNotSignUp.push(invitee.email);
-                                            callback();
+                                            var inviteToken = new InviteToken({
+                                                type: 'project-invite',
+                                                email: invitee.email,
+                                                element: {
+                                                    project: people.project
+                                                }
+                                            });
+                                            inviteToken.save(callback());
                                         }
                                         else {
                                             team.push({
@@ -128,9 +148,14 @@ exports.invitePeople = function(req, res) {
                                                 inviterType: (type == "consultants") ? invite.inviterType : null
                                             });
                                             newInviteeSignUpAlready.push(user._id);
-                                            user.projects.push(people.project);
-                                            user.markModified('projects');
-                                            user.save(callback());
+                                            var inviteToken = new InviteToken({
+                                                type: 'project-invite',
+                                                user: user._id,
+                                                element: {
+                                                    project: people.project
+                                                }
+                                            });
+                                            inviteToken.save(callback());
                                         }
                                     });
                                 }, function() {

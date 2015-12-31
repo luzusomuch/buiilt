@@ -49,7 +49,8 @@ exports.create = function(req, res){
       } else {
         var people = new People({
           project: project._id,
-          'projectManager._id': req.user._id
+          'projectManager._id': req.user._id,
+          'projectManager.type': req.body.teamType
         });
         people.save();
         User.findById(req.user._id, function(err, user) {

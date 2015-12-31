@@ -1,14 +1,24 @@
-angular.module('buiiltApp').controller('projectsCtrl', function ($rootScope, $scope, $timeout, $q, $state, $mdDialog, projectService) {
+angular.module('buiiltApp').controller('projectsCtrl', function ($rootScope, $scope, $timeout, $state, $mdDialog, projectService, inviteTokenService) {
 	$rootScope.title = "Projects List";
     $scope.autoCompleteRequireMath = true;
     $scope.selectedItem = null;
     $scope.search = false;
 	$scope.projectsFilter = [];
     $scope.projects = $rootScope.projects;
+    $scope.allowCreateProject = false;
+    $scope.currentTeam = $rootScope.currentTeam;
+    if ($scope.currentTeam._id && ($scope.currentTeam.type !== "consultant" || $scope.currentTeam.type !== "contractor")) {
+        $scope.allowCreateProject = true;
+    }
+
+    inviteTokenService.getProjectsInvitation().$promise.then(function(res) {
+        $scope.projectsInvitation = res;
+    });
 
     $scope.createProject = function(form) {
         $scope.submitted = true;
             if (form.$valid) {
+                $scope.project.teamType = $scope.currentTeam.type;
                 projectService.create($scope.project).$promise.then(function(data){
                     $scope.projects.push(data);
                     $scope.saveProject();

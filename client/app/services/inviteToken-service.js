@@ -5,6 +5,13 @@ angular.module('buiiltApp')
       {
         get : {
           method : 'GET'
+        },
+        getProjectsInvitation : {
+          method : 'GET',
+          params: {
+            action: 'projects-invitation'
+          },
+          isArray: true
         }
       }
     );

@@ -19,7 +19,7 @@ exports.get = function(req,res) {
 };
 
 exports.getProjectInvitation = function(req, res) {
-    InviteToken.find({type: 'invite-project', user: req.user._id})
+    InviteToken.find({type: 'project-invite', user: req.user._id})
     .exec(function(err, invites) {
         if (err) {return res.send(500,err);}
         var result = [];

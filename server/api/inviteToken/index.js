@@ -7,7 +7,7 @@ var auth = require('../../auth/auth.service');
 
 var router = express.Router();
 
-router.get('/project-invitation', auth.isAuthenticated(), controller.getProjectInvitation);
+router.get('/projects-invitation', auth.isAuthenticated(), controller.getProjectInvitation);
 router.get('/:token', controller.get);
 
 module.exports = router;
