@@ -385,12 +385,12 @@ exports.show = function (req, res) {
 
 exports.update = function (req, res) {
   var team = req.team;
-
   TeamValidator.validateUpdate(req,function(err,data) {
     if (err) {
       return errorsHelper.validationErrors(res, err, 'Validation');
     }
     team = _.merge(team,data);
+    team._user = req.user;
     team.save(function() {
       Team.populate(team, [{path:"leader"},{path:"member._id"}], function(err, team ) {
         return res.json(team);

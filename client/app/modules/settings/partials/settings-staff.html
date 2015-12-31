@@ -6,14 +6,99 @@
     </div>
 </md-toolbar>
 
-<md-list ng-cloak style="height: 78vh; overflow: scroll">
-	<div ng-repeat="" ui-sref="">
-		<md-list-item class="md-2-line" md-ink-ripple>
-			<div class="md-list-item-text" layout="column">
-		          <h5></h5>
-		          <p></p>
-	        </div>
-		</md-list-item>
-		<md-divider></md-divider>
-	</div>
-</div>
+<md-content ng-cloak style="height: 78vh; overflow: scroll" layout-padding>
+    <md-tabs md-dynamic-height md-border-bottom>
+        <md-tab label="Members list">
+            <md-content ng-show="currentTeam._id">
+                <div layout="row">
+                    <h5>List of team members</h5>
+                </div>
+                <table>
+                    <thead>
+                        <th>Member email</th>
+                        <th>Member name</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="leader in currentTeam.leader">
+                            <td>{{leader.email}}</td>
+                            <td>{{leader.name}}</td>
+                            <td>Admin</td>
+                            <td>Active</td>
+                            <td></td>
+                        </tr>
+                        <tr ng-repeat="member in currentTeam.member">
+                            <td>{{(member.email) ? member.email : member._id.email}}</td>
+                            <td>{{(member._id) ? member._id.name : " "}}</td>
+                            <td>Member</td>
+                            <td>{{member.status}}</td>
+                            <td>
+                                <i ng-click="assignLeader(member)" ng-if="isLeader &&  member._id && member.status == 'Active'" class="material-icons pointer">supervisor_account</i>
+                                <i ng-click="removeMember(member)" ng-if="isLeader" class="material-icons pointer">delete</i>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </md-content>
+
+            <md-content layout-padding ng-show="!currentTeam._id && invitations.length > 0">
+                <div layout="row">
+                    <h5>List of invitations</h5>
+                </div>
+                <table>
+                    <thead>
+                        <th>#</th>
+                        <th>Team Name</th>
+                        <th>Team Type</th>
+                        <th>Total Members</th>
+                        <th>Action</th>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="invitation in invitations">
+                            <td>{{$index + 1}}</td>
+                            <td>{{invitation.name}}</td>
+                            <td>{{invitation.type}}</td>
+                            <td>{{invitation.member.length}}</td>
+                            <td>
+                                <i ng-click="accept(invitation,$index)" class="material-icons pointer">done</i>
+                                <i ng-click="reject(invitation,$index)" class="material-icons pointer">delete</i>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </md-content>            
+        </md-tab>
+        <md-tab label="Add New Member" ng-if="currentUser.isLeader">
+            <form ng-submit="addNewMember(form)" name="form">
+                <div layout="row">
+                    <md-input-container layout="row" flex>
+                        <div flex="80">
+                            <label for="">Email</label>
+                            <input type="email" ng-model="email">
+                        </div>
+                        <div flex="20">
+                            <i ng-click="addUser(email)" class="material-icons pointer">add</i>
+                        </div>
+                    </md-input-container>
+                </div>
+                <div layout="row">
+                    <md-list flex="80" ng-cloak>
+                        <md-list-item ng-repeat="email in member.emails">
+                            <div layout="column" flex="80">
+                                {{email.email}}
+                            </div>
+                            <div layout="column" flex="20">
+                                <i ng-click="removeUser($index)" class="material-icons pointer">delete</i>
+                            </div>
+                        </md-list-item>
+                    </md-list>
+                </div>
+                <div layout="row">
+                    <md-button type="submit" class="md-raised md-accent md-hue-1">Save!</md-button>
+                </div>
+            </form>
+        </md-tab>
+    </md-tabs>
+</md-content>

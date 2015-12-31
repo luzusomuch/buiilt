@@ -376,3 +376,7 @@ md-input-container > label {
 }
 
 
+.pointer {
+  cursor: pointer;
+}
+

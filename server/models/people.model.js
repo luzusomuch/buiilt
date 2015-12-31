@@ -11,6 +11,7 @@ var PeopleSchema = new Schema({
     project: {type: Schema.Types.ObjectId, ref: 'Project'},
     projectManager: {
         _id: {type: Schema.Types.ObjectId, ref: 'User'},
+        type: {type: String},
         teamMember: [
             {type: Schema.Types.ObjectId, ref: 'User'}
         ]

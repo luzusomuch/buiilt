@@ -6,14 +6,57 @@
     </div>
 </md-toolbar>
 
-<md-list ng-cloak style="height: 78vh; overflow: scroll">
-	<div ng-repeat="" ui-sref="">
-		<md-list-item class="md-2-line" md-ink-ripple>
-			<div class="md-list-item-text" layout="column">
-		          <h5></h5>
-		          <p></p>
-	        </div>
-		</md-list-item>
-		<md-divider></md-divider>
-	</div>
-</div>
+<md-content ng-cloak style="height: 78vh; overflow: scroll" layout-padding>
+    <md-tabs md-dynamic-height md-border-bottom>
+        <md-tab label="Company Detail">
+            <div layout="row">
+                <p><i class="material-icons">account_box</i>{{currentTeam.detail.companyName}}</p>
+            </div>
+            <div layout="row">
+                <p><i class="material-icons">home</i>{{currentTeam.detail.companyAddress}}</p>
+            </div>
+            <div layout="row">
+                <p><i class="material-icons">phone</i>{{currentTeam.detail.contactNumber}}</p>
+            </div>
+            <div layout="row">
+                <p><i class="material-icons">card_membership</i>{{currentTeam.detail.licenseNumber}}</p>
+            </div>
+            <div layout="row">
+                <p><i class="material-icons">account_balance</i>{{currentTeam.detail.billingAddress}}</p>
+            </div>
+        </md-tab>
+        <md-tab label="Edit Company" ng-if="currentUser.isLeader">
+            <form ng-submit="saveDetail(form)" name="form">
+                <div layout="row">
+                    <md-input-container flex>
+                        <label for="">Company name</label>
+                        <input type="text" ng-model="currentTeam.detail.companyName" required>
+                    </md-input-container>
+                </div>
+                <div layout="row">
+                    <md-input-container flex>
+                        <label for="">Company address</label>
+                        <input type="text" ng-model="currentTeam.detail.companyAddress" required>
+                    </md-input-container>
+                </div>
+                <div layout="row">
+                    <md-input-container flex="33">
+                        <label for="">Company contact number</label>
+                        <input type="text" ng-model="currentTeam.detail.contactNumber" required>
+                    </md-input-container>
+                    <md-input-container flex="33">
+                        <label for="">Company license number</label>
+                        <input type="text" ng-model="currentTeam.detail.licenseNumber" required>
+                    </md-input-container>
+                    <md-input-container flex="33">
+                        <label for="">Company billing address</label>
+                        <input type="text" ng-model="currentTeam.detail.billingAddress" required>
+                    </md-input-container>
+                </div>
+                <div layout="row">
+                    <md-button type="submit" class="md-raised md-accent md-hue-1">Edit!</md-button>
+                </div>
+            </form>
+        </md-tab>
+    </md-tabs>
+</md-content>
