@@ -1,0 +1,45 @@
+<md-dialog aria-label="Create New Team" flex="70">
+    <form ng-submit="createTeam(form)" name="form">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Create New Team</h2>
+            </div>
+        </md-toolbar>
+        
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column">
+                <div layout="row">
+                    <md-input-container flex class="modal-instructions">
+                        <p>Please provide the following details to create new team...</p>
+                    </md-input-container>
+                </div>
+
+                <div layout="row">
+                    <md-input-container flex>
+                        <label for="">Team name</label>
+                        <input type="text" ng-model="team.name" name="name" required>
+                    </md-input-container>
+                </div>
+
+                <div layout="row">
+                    <md-input-container flex>
+                        <label for="">Select team type</label>
+                        <md-select ng-model="team.type">
+                            <md-option value="builder">Builder</md-option>
+                            <md-option value="homeOwner">Home Owner</md-option>
+                            <md-option value="architect">Architect</md-option>
+                            <md-option value="contractor">Contractor</md-option>
+                            <md-option value="consultant">Consultant</md-option>
+                        </md-select>
+                    </md-input-container>
+                </div>
+                
+            </div>
+        </md-dialog-content>
+        
+        <md-dialog-actions>
+            <md-button ng-click="cancelCreateTeam()">Cancel</md-button>
+            <md-button type="submit" class="md-raised md-accent md-hue-1">Creat Team!</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

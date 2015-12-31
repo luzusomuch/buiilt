@@ -41,6 +41,7 @@
                         </tr>
                     </tbody>
                 </table>
+                <md-button class="md-primary" ng-if="!isLeader || currentTeam.leader.length > 1" ng-click="leaveTeam()">Leave this team</md-button>
             </md-content>
 
             <md-content layout-padding ng-show="!currentTeam._id && invitations.length > 0">
@@ -68,7 +69,8 @@
                         </tr>
                     </tbody>
                 </table>
-            </md-content>            
+            </md-content>
+            <md-button ng-show="!currentTeam._id" class="md-primary" ng-click="showModalCreateTeam(event)">Create new team</md-button>            
         </md-tab>
         <md-tab label="Add New Member" ng-if="currentUser.isLeader">
             <form ng-submit="addNewMember(form)" name="form">

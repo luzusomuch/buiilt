@@ -6,12 +6,7 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
 	abstract: true,
 	templateUrl: '/app/modules/settings/settings.html',
 	controller: 'settingsCtrl',
-	authenticate : true,
-    resolve: {
-        invitations: function(authService) {
-            return authService.getCurrentInvitation().$promise;
-        }
-    }
+	authenticate : true
   })
   
   .state('settings.user', {

@@ -1,10 +1,16 @@
-angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $scope, $timeout, $state, teamService, $mdToast, invitations, $mdDialog) {
+angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $scope, $timeout, $state, teamService, $mdToast, $mdDialog, authService) {
     $rootScope.title = "Settings"
     $scope.currentTeam = $rootScope.currentTeam;
     $scope.currentUser = $rootScope.currentUser;
-    $scope.invitations = invitations;
+
+    authService.getCurrentInvitation().$promise.then(function(res) {
+        $scope.invitations = res;
+    });
     $scope.member = {
       emails : []
+    };
+    $scope.team = {
+        emails: []
     };
     
     function getTeamLeader(team) {
@@ -13,6 +19,37 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             return user._id == $scope.currentUser._id;
         }) != -1) {
             $scope.currentUser.isLeader = true;
+        }
+    };
+
+    $scope.showModalCreateTeam = function($event) {
+        $mdDialog.show({
+            targetEvent: $event,
+            controller: 'settingsCtrl',
+            templateUrl: 'app/modules/settings/partials/create-team.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: false
+        });
+    };
+
+    $scope.cancelCreateTeam = function() {
+        $mdDialog.cancel();
+    };
+
+    $scope.createTeam = function(form) {
+        if (form.$valid) {
+            teamService.create($scope.team, function (team) {
+                $rootScope.currentTeam = $scope.currentTeam = team;
+                getTeamLeader($scope.currentTeam);
+                $rootScope.$emit('TeamUpdate',team);
+                $scope.cancelCreateTeam();
+                $scope.showToast("Create new team successfully!");
+                $state.go('settings.staff', {},{reload: true}).then(function(data){
+                });
+            }, function (err) {
+                $scope.cancelCreateTeam();
+                $scope.showToast(err);
+            });
         }
     };
 
@@ -89,7 +126,8 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
         $mdDialog.show(confirm).then(function() {
             teamService.leaveTeam({_id: $scope.currentTeam._id}).$promise
             .then(function (team) {
-              $state.go($state.current, {}, {reload: true});
+                $rootScope.currentTeam = {};
+                $state.go($state.current, {}, {reload: true});
             }, function(err) {
                 $scope.showToast(err);
             });
