@@ -7,8 +7,6 @@
 		    </md-chip-template>
 		</md-chips>
 		
-		<md-button ng-click="showNewMessageModal($event)">Add a New File</md-button>
-		
     </div>
 </md-toolbar>
 
@@ -21,7 +19,18 @@
 		          <p>{{ file.version }}</p>
 	        </div>
 		</md-list-item>
-		<md-divider></md-divider>
+		<md-divider></md-dividers>
 	</div>
 
 </md-list>
+
+<div>
+  <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-list">
+	  <md-fab-trigger>
+  	      <md-button aria-label="Add a New File to this Projecs" class="md-fab md-primary" ng-click="showNewFileModal($event)">
+			  <md-tooltip md-direction="left">Add a New File</md-tooltip>
+		      <md-icon class="material-icons" >add</md-icon>
+  	      </md-button>
+      </md-fab-trigger>
+  </md-fab-speed-dial>
+</div>

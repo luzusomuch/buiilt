@@ -43,6 +43,27 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
     authenticate : true
   })
   
+	//Tenders for Single Project
+  .state('project.tenders', {
+    url: '/tenders',
+	  abstract: true,
+    templateUrl: '/app/modules/project/project-tenders/project-tenders.html',
+    controller: 'projectTendersCtrl',
+    authenticate : true
+  })
+  .state('project.tenders.all', {
+    url: '',
+    templateUrl: '/app/modules/project/project-tenders/all/project-tenders-all.html',
+    controller: 'projectTendersCtrl',
+    authenticate : true
+  })
+  .state('project.tenders.detail', {
+    url: '/detail',
+    templateUrl: '/app/modules/project/project-tenders/detail/project-tenders-detail.html',
+    controller: 'projectTendersCtrl',
+    authenticate : true
+  })
+  
   	//Messages for Single Project
   .state('project.messages', {
     url: '/messages',

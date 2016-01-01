@@ -177,9 +177,6 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
             $scope.search = false;
         }
     };
-	
-	//Placeholder Set of Filters to use for layout demo
-	$scope.teamNames = [];
 
 	loadProjectMembers($stateParams.id);
 	

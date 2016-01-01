@@ -15,7 +15,7 @@
 		    </md-chip-template>
 		</md-chips>
 		
-	    <md-button ng-show="allowCreateProject" ng-click="showCreateProjectModal($event)">Create a New Project</md-button>
+	    
 		
     </div>
 	
@@ -24,6 +24,7 @@
 </md-toolbar>
 
 <md-list ng-cloak class="main-page-content">
+	
 	<div ng-show="!search" ng-repeat="project in projects track by $index" ui-sref="project.overview({id: project._id})">
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
@@ -43,4 +44,17 @@
 		</md-list-item>
 		<md-divider></md-divider>
 	</div>
+	
 </md-list>
+
+<div>
+  <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-list">
+	  <md-fab-trigger>
+  	      <md-button aria-label="Create a New Project" class="md-fab md-primary" ng-show="allowCreateProject" ng-click="showCreateProjectModal($event)">
+			  <md-tooltip md-direction="left">Create a New Project</md-tooltip>
+		      <md-icon class="material-icons" >add</md-icon>
+  	      </md-button>
+      </md-fab-trigger>
+  </md-fab-speed-dial>
+</div>
+

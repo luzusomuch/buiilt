@@ -7,7 +7,7 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
 	};
 	
 	//Functions to handle New Work Room Dialog.
-	$scope.showNewMessageModal = function($event) {
+	$scope.showNewFileModal = function($event) {
 	
 		$mdDialog.show({
 		  targetEvent: $event,

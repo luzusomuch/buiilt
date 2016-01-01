@@ -15,6 +15,11 @@
 				    <p layout-padding>Team</p>
 				</md-list-item>
 			</div>
+			<div ui-sref="project.tenders.all" ng-class="{activemenu: $state.includes('project.tenders')}">
+				<md-list-item md-ink-ripple>
+				    <p layout-padding>Tenders</p>
+				</md-list-item>
+			</div>
 			<div ui-sref="project.messages.all" ng-class="{activemenu: $state.includes('project.messages')}">
 				<md-list-item md-ink-ripple>
 				    <p layout-padding>Messages</p>

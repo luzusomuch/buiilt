@@ -342,7 +342,6 @@ ul.pagination {
 	font-weight: 500;
 	text-transform: uppercase;
 	color: #424242;
-	margin-top: 12px;
 }
 
 .logo-main {
@@ -351,8 +350,13 @@ ul.pagination {
 }
 
 .fab-main{
-	margin-bottom: 4vh; 
+	margin-bottom: 4.5vh; 
 	margin-right: 27vw
+}
+
+.fab-list {
+	margin-bottom: 4.5vh;
+	margin-right: 3vw;
 }
 
 md-input-container > label {
@@ -375,8 +379,6 @@ md-input-container > label {
 	color: #616161;
 }
 
-
 .pointer {
   cursor: pointer;
 }
-

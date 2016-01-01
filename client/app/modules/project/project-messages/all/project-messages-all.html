@@ -7,8 +7,6 @@
 		    </md-chip-template>
 		</md-chips>
 		
-		<md-button ng-click="showNewMessageModal($event)">Add a New Message</md-button>
-		
     </div>
 </md-toolbar>
 
@@ -25,3 +23,14 @@
 	</div>
 
 </md-list>
+
+<div>
+  <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-list">
+	  <md-fab-trigger>
+  	      <md-button aria-label="Add a New Message to this Project" class="md-fab md-primary" ng-click="showNewMessageModal($event)">
+			  <md-tooltip md-direction="left">Add a New Message</md-tooltip>
+		      <md-icon class="material-icons" >add</md-icon>
+  	      </md-button>
+      </md-fab-trigger>
+  </md-fab-speed-dial>
+</div>
