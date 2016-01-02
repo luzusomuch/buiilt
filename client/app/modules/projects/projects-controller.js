@@ -40,7 +40,7 @@ angular.module('buiiltApp').controller('projectsCtrl', function ($rootScope, $sc
         $mdDialog.show({
           targetEvent: $event,
           controller: 'projectsCtrl',
-          templateUrl: 'app/modules/projects/partials/projects-create.html',
+          templateUrl: 'app/modules/projects/projects-create/projects-create.html',
           parent: angular.element(document.body),
           clickOutsideToClose:false
         });
