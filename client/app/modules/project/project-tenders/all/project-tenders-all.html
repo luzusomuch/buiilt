@@ -1,10 +1,56 @@
-<md-toolbar class="md-warn md-hue-1">
-	<div class="md-toolbar-tools">
-		<p>Tenders</p>
-    </div>
-</md-toolbar>
+<div layout-padding>
+	<md-toolbar class="md-warn md-hue-1 md-whiteframe-1dp">
+		<div class="md-toolbar-tools">
+		
+			<md-chips class="" ng-model="tendersFilters" placeholder="Search..." secondary-placeholder="Search..." flex="45">
+				<md-chip-template class="md-accent">
+			        <strong>{{$chip}}</strong>
+			    </md-chip-template>
+			</md-chips>
+		
+			<span flex></span>
+		
+			<md-chips class="set-filters">
+				<md-chip>Open</md-chip>
+				<md-chip>Won</md-chip>
+				<md-chip>Due Today</md-chip>
+				<md-chip>Due Tomorrow</md-chip>
+				<md-chip>Due This Week</md-chip>
+			</md-chips>
+		
+	    </div>
+	</md-toolbar>
+</div>
 
 <md-list ng-cloak class="main-page-content">
+
+	<div ui-sref="project.tenders.detail">
+		<md-list-item class="md-2-line" md-ink-ripple>
+			<div class="md-list-item-text" layout="column">
+		          <h3>Tender Name 1</h3>
+		          <p>Invitee 1, Invitee 2, Invitee 3... Invitee n</p>
+	        </div>
+		</md-list-item>
+		<md-divider></md-divider>
+	</div>
+	<div ui-sref="project.tenders.detail">
+		<md-list-item class="md-2-line" md-ink-ripple>
+			<div class="md-list-item-text" layout="column">
+		          <h3>Tender Name 2</h3>
+		          <p>Invitee 1, Invitee 2, Invitee 3... Invitee n</p>
+	        </div>
+		</md-list-item>
+		<md-divider></md-divider>
+	</div>
+	<div ui-sref="project.tenders.detail">
+		<md-list-item class="md-2-line" md-ink-ripple>
+			<div class="md-list-item-text" layout="column">
+		          <h3>Tender Name 3</h3>
+		          <p>Invitee 1, Invitee 2, Invitee 3... Invitee n</p>
+	        </div>
+		</md-list-item>
+		<md-divider></md-divider>
+	</div>
 	
 </md-list>
 

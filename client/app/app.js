@@ -42,7 +42,7 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
     $mdThemingProvider.theme('default')
       .primaryPalette('blue')
       .accentPalette('amber', {'default': '500', 'hue-1': '300', 'hue-2': '800', 'hue-3': 'A400'})
-	  .warnPalette('grey', {'hue-1': '100'})
+	  .warnPalette('grey', {'hue-1': '50'})
 	  .backgroundPalette('grey')
   })
   .factory('authInterceptor', function ($q, $cookieStore, $location) {

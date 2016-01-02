@@ -1,14 +1,26 @@
-<md-toolbar class="md-warn md-hue-1">
-	<div class="md-toolbar-tools">
+<div layout-padding>
+	<md-toolbar class="md-warn md-hue-1 md-whiteframe-1dp">
+		<div class="md-toolbar-tools">
 		
-		<md-chips class="" ng-model="taskFilters" placeholder="Search Tasks..." secondary-placeholder="Search Tasks..." flex>
-			<md-chip-template class="md-accent">
-		        <strong>{{$chip}}</strong>
-		    </md-chip-template>
-		</md-chips>
+			<md-chips class="" ng-model="taskFilters" placeholder="Search..." secondary-placeholder="Search..." flex="45">
+				<md-chip-template class="md-accent">
+			        <strong>{{$chip}}</strong>
+			    </md-chip-template>
+			</md-chips>
 		
-    </div>
-</md-toolbar>
+			<span flex></span>
+		
+			<md-chips class="set-filters">
+				<md-chip>Assigned to Me</md-chip>
+				<md-chip>Assigned by Me</md-chip>
+				<md-chip>Due Today</md-chip>
+				<md-chip>Due Tomorrow</md-chip>
+				<md-chip>Due This Week</md-chip>
+			</md-chips>
+		
+	    </div>
+	</md-toolbar>
+</div>
 
 <md-list ng-cloak class="main-page-content">
 

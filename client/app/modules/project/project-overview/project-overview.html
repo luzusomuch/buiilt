@@ -1,64 +1,32 @@
-<md-toolbar class="md-warn md-hue-1">
-	<div class="md-toolbar-tools">
-	    <span>Project Overview</span>
-    </div>
-</md-toolbar>
+<div layout-padding>
+	<md-toolbar class="md-warn md-hue-1 md-whiteframe-1dp">
+		<div class="md-toolbar-tools">
+		    <span>Project Overview</span>
+	    </div>
+	</md-toolbar>
+</div>
 
-<div class="main-page-content">
+<div class="main-page-content" layout-padding>
+	
     <md-content>
-        <md-tabs md-dynamic-height md-border-bottom md-center-tabs md-no-ink md-no-ink-bar md-stretch-tabs="always">
-            <md-tab>
-				<md-tab-label>
-				    Project Location
-			    </md-tab-label>
-			    <md-tab-body>
-                    <p><strong>Address: </strong>{{project.address}}</p>
-                    <p><strong>Suburb: </strong>{{project.suburb}}</p>
-                    <p><strong>Postcode: </strong>{{project.postcode}}</p>
-			    </md-tab-body>
-            </md-tab>
-            <md-tab label="Project Manager">
-                <md-content class="md-padding">
-                    <p><strong>Name: </strong>{{project.owner.name}}</p>
-                    <p><strong>Email: </strong>{{project.owner.email}}</p>
-                </md-content>
-            </md-tab>
-            <md-tab label="Edit Project" ng-if="currentUser._id.toString() == project.owner._id.toString()">
-                <md-content>
-                    <form ng-submit="editProject(form)" name="form">
-                        <div layout="row">
-                            <md-input-container flex>
-                                <label>Project Name</label>
-                                <input ng-model="project.name" md-autofocus ng-required>
-                            </md-input-container>
-                        </div>
-                        
-                        <div layout="row">
-                            <md-input-container flex>
-                                <label>Street Address</label>
-                                <input ng-model="project.address">
-                            </md-input-container>
-                        </div>
-                        
-                        <div layout="row">
-                            <md-input-container flex="60">
-                                <label>Suburb</label>
-                                <input ng-model="project.suburb">
-                            </md-input-container>
-
-                            <md-input-container flex="40">
-                                <label>Postcode</label>
-                                <input ng-model="project.postcode">
-                            </md-input-container>
-                        </div>
-
-                        <div layout="row">
-                            <md-button type="submit" class="md-accent md-hue-1 md-raised">Edit Project!</md-button>
-                        </div>
-                    </form>
-                </md-content>
-            </md-tab>
-        </md-tabs>
+		
+		<div layout="column">
+			<div layout-margin>
+				<p><strong>Project Name:</strong></p>
+				<p>{{ project.name }}</p>
+			</div>
+			<div layout-margin>
+				<p><strong>Project Address:</strong></p>
+				<p>{{ project.address }}, {{ project.suburb }} {{ project.postcode }}</p>
+			</div>
+			<div layout-margin>
+				<p><strong>Project Description:</strong></p>
+				<p ng-hide="!project.description">{{ project.description }}</p>
+				<p ng-show="!project.description && currentUser.type === projectManagers">There is no description for this project yet.</p>
+				<p ng-show="!project.description && currentUser.type === projectManagers">You can add one by clicking the blue action button below, and then clicking "Edit"</p>
+			</div>
+		</div>
+		
     </md-content>
 	
 	<div>
@@ -70,7 +38,7 @@
 	  	      </md-button>
   	      </md-fab-trigger>
 		  <md-fab-actions>
-	  	      <md-button aria-label="Edit Project Details" class="md-fab md-raised md-mini">
+	  	      <md-button aria-label="Edit Project Details" class="md-fab md-raised md-mini" ng-click="showEditProjectModal($event)">
 				  <md-tooltip md-direction="left">Edit Project Details</md-tooltip>
 			      <md-icon class="material-icons">edit</md-icon>
 	  	      </md-button>

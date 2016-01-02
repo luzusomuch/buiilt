@@ -1,16 +1,19 @@
-<div layout="column">
+<div layout="row" class="detail-view-content">
 	
-	<md-toolbar layout="row" class="md-warn md-hue-1" flex>
-		<div class="md-toolbar-tools">
-			<p>Team Member Name</p>
-			<span flex></span>
-	    </div>
-	</md-toolbar>
-	
-	<div layout="row">
+	<div layout="column" flex="70" class="md-whiteframe-1dp">
 		
-		<div flex="70" class="main-page-content md-whiteframe-1dp" layout-padding>
-			<p>Project Team Member Detail</p>
+		<div layout-padding>
+			<md-toolbar layout="row" class="md-warn md-hue-1 md-whiteframe-1dp" flex>
+				<div class="md-toolbar-tools">
+					<p>Tender Name</p>
+					<span flex></span>
+			    </div>
+			</md-toolbar>
+		</div>
+		
+		<div class="main-page-content" layout-padding>
+			
+			<p>Project Tender Detail</p>
 			
 			<div>
   		  	  <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-main">
@@ -22,24 +25,28 @@
   		  	      </md-fab-trigger>
   				  <md-fab-actions>
   			  	      <md-button aria-label="Open a New Message" class="md-fab md-raised md-mini">
-  	  					  <md-tooltip md-direction="left">Start A New Message</md-tooltip>
-  	  				      <md-icon class="material-icons">chat_bubble_outline</md-icon>
-  			  	      </md-button>
-  			  	      <md-button aria-label="Assign a New Task" class="md-fab md-raised md-mini">
-  	  					  <md-tooltip md-direction="left">Assign A New Task</md-tooltip>
-  	  				      <md-icon class="material-icons">done_all</md-icon>
+  	  					  <md-tooltip md-direction="left">Attach an Addendum</md-tooltip>
+  	  				      <md-icon class="material-icons">reply_all</md-icon>
   			  	      </md-button>
   			  	      <md-button aria-label="Send a File" class="md-fab md-raised md-mini">
-  	  					  <md-tooltip md-direction="left">Send a File</md-tooltip>
-  	  				      <md-icon class="material-icons">attach_file</md-icon>
+  	  					  <md-tooltip md-direction="left">Edit Tender Details</md-tooltip>
+  	  				      <md-icon class="material-icons">edit</md-icon>
+  			  	      </md-button>
+  			  	      <md-button aria-label="Assign a New Task" class="md-fab md-raised md-mini">
+  	  					  <md-tooltip md-direction="left">Invite More Tenderers</md-tooltip>
+  	  				      <md-icon class="material-icons">person_add</md-icon>
+  			  	      </md-button>
+  			  	      <md-button aria-label="Send a File" class="md-fab md-raised md-mini">
+  	  					  <md-tooltip md-direction="left">Select a Winning Tender</md-tooltip>
+  	  				      <md-icon class="material-icons">format_list_bulleted</md-icon>
   			  	      </md-button>
   			  	  </md-fab-actions>
   		  	  </md-fab-speed-dial>
 		    </div>
 			
 		</div>
-		
-		<related-items flex="30"></related-items>
-		
 	</div>
+		
+	<related-items flex="30"></related-items>
+		
 </div>

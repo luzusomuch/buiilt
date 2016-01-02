@@ -1,15 +1,18 @@
-<div layout="column">
+<div layout="row" class="detail-view-content">
 	
-	<md-toolbar layout="row" class="md-warn md-hue-1" flex>
-		<div class="md-toolbar-tools">
-			<p>Task Description</p>
-			<span flex></span>
-	    </div>
-	</md-toolbar>
-	
-	<div layout="row">
+	<div layout="column" flex="70" class="md-whiteframe-1dp">
 		
-		<div flex="70" class="main-page-content md-whiteframe-1dp" layout-padding>
+		<div layout-padding>
+			<md-toolbar layout="row" class="md-warn md-hue-1 md-whiteframe-1dp" flex>
+				<div class="md-toolbar-tools">
+					<p>Task Description</p>
+					<span flex></span>
+			    </div>
+			</md-toolbar>
+		</div>
+		
+		<div class="main-page-content" layout-padding>
+			
 			<p>Project Task Detail</p>
 			
 			<div>
@@ -46,8 +49,8 @@
 		    </div>
 			
 		</div>
-		
-		<related-items flex="30"></related-items>
-		
 	</div>
+		
+	<related-items flex="30"></related-items>
+		
 </div>

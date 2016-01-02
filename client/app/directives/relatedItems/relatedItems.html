@@ -1,4 +1,4 @@
-<md-tabs md-center-tabs md-no-ink-bar md-no-ink flex layout-padding class="main-page-content">
+<md-tabs md-dynamic-height md-center-tabs md-no-ink-bar md-no-ink flex layout-padding>
 
     <md-tab>
 		<md-tab-label>
@@ -6,7 +6,7 @@
 		    <md-icon class="material-icons">person_outline</md-icon>
 		</md-tab-label>
         <md-tab-body>
-			<md-list>
+			<md-list ng-cloak class="main-page-content">
 				<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event)">
 				    <div class="md-list-item-text">
 					    <h3>Member 1</h3>
@@ -27,6 +27,77 @@
 				        <p>Secondary text line 2</p>
 				    </div>
 				</md-list-item>
+				<md-divider></md-divider>
+				<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event)">
+				    <div class="md-list-item-text">
+					    <h3>Member 2</h3>
+				        <p>Secondary text line 2</p>
+				    </div>
+				</md-list-item>
+				<md-divider></md-divider>
+				<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event)">
+				    <div class="md-list-item-text">
+					    <h3>Member 3</h3>
+				        <p>Secondary text line 2</p>
+				    </div>
+				</md-list-item>
+				<md-divider></md-divider>
+				<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event)">
+				    <div class="md-list-item-text">
+					    <h3>Member 2</h3>
+				        <p>Secondary text line 2</p>
+				    </div>
+				</md-list-item>
+				<md-divider></md-divider>
+				<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event)">
+				    <div class="md-list-item-text">
+					    <h3>Member 3</h3>
+				        <p>Secondary text line 2</p>
+				    </div>
+				</md-list-item>
+				<md-divider></md-divider>
+				<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event)">
+				    <div class="md-list-item-text">
+					    <h3>Member 2</h3>
+				        <p>Secondary text line 2</p>
+				    </div>
+				</md-list-item>
+				<md-divider></md-divider>
+				<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event)">
+				    <div class="md-list-item-text">
+					    <h3>Member 3</h3>
+				        <p>Secondary text line 2</p>
+				    </div>
+				</md-list-item>
+				<md-divider></md-divider>
+				<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event)">
+				    <div class="md-list-item-text">
+					    <h3>Member 2</h3>
+				        <p>Secondary text line 2</p>
+				    </div>
+				</md-list-item>
+				<md-divider></md-divider>
+				<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event)">
+				    <div class="md-list-item-text">
+					    <h3>Member 3</h3>
+				        <p>Secondary text line 2</p>
+				    </div>
+				</md-list-item>
+				<md-divider></md-divider>
+				<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event)">
+				    <div class="md-list-item-text">
+					    <h3>Member 2</h3>
+				        <p>Secondary text line 2</p>
+				    </div>
+				</md-list-item>
+				<md-divider></md-divider>
+				<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event)">
+				    <div class="md-list-item-text">
+					    <h3>Member 3</h3>
+				        <p>Secondary text line 2</p>
+				    </div>
+				</md-list-item>
+				
 			</md-list>
         </md-tab-body>
     </md-tab>
@@ -37,7 +108,7 @@
 		    <md-icon class="material-icons">chat_bubble_outline</md-icon>
 		</md-tab-label>
         <md-tab-body>
-			<md-list ng-cloak>
+			<md-list ng-cloak class="main-page-content">
 				<md-list-item class="md-2-line" ng-click="showRelatedMessageModal($event)">
 				    <div class="md-list-item-text">
 					    <h3>Thread 1</h3>
@@ -68,7 +139,7 @@
 		    <md-icon class="material-icons">done_all</md-icon>
 		</md-tab-label>
         <md-tab-body>
-			<md-list>
+			<md-list class="main-page-content" ng-cloak>
 				<md-list-item class="md-2-line" ng-click="showRelatedTasksModal($event)">
 				    <div class="md-list-item-text">
 					    <h3>Task 1</h3>
@@ -99,7 +170,7 @@
 		    <md-icon class="material-icons">attach_file</md-icon>
 		</md-tab-label>
         <md-tab-body>
-			<md-list>
+			<md-list class="main-page-content" ng-cloak>
 				<md-list-item class="md-2-line" ng-click="showRelatedFilesModal($event)">
 				    <div class="md-list-item-text">
 					    <h3>File 1</h3>

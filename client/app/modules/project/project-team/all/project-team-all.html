@@ -1,51 +1,67 @@
-<md-toolbar class="md-warn md-hue-1">
-	<div class="md-toolbar-tools">
-		<md-chips class="" ng-model="teamNames" placeholder="Search Team..." secondary-placeholder="Search Team..." flex md-autocomplete-snap="" md-require-math="autoCompleteRequireMath" md-on-add="addChip()" md-on-remove="removeChip()">
-			<md-autocomplete 
-				md-selected-item="selectedItem" 
-				md-search-text="searchText"
-				md-items="item in querySearch(searchText)" 
-				md-item-text="item" 
-				placeholder="Search for a Team">
-				<span md-highlight-text="searchText">{{(item._id) ? item.name : item.email}}</span>
-			</md-autocomplete>
-			<md-chip-template>
-		        <strong>{{($chip._id) ? $chip.name : $chip.email}}</strong>
-		    </md-chip-template>
-		</md-chips>
+<div layout-padding>
+	<md-toolbar class="md-warn md-hue-1 md-whiteframe-1dp">
+		<div class="md-toolbar-tools">
 		
-    </div>
-</md-toolbar>
+			<md-chips ng-model="teamNames" placeholder="Search Team..." secondary-placeholder="Search Team..." flex="45" md-autocomplete-snap="" md-require-math="autoCompleteRequireMath" md-on-add="addChip()" md-on-remove="removeChip()">
+				<md-autocomplete 
+					md-selected-item="selectedItem" 
+					md-search-text="searchText"
+					md-items="item in querySearch(searchText)" 
+					md-item-text="item" 
+					placeholder="Search...">
+					<span md-highlight-text="searchText">{{(item._id) ? item.name : item.email}}</span>
+				</md-autocomplete>
+				<md-chip-template>
+			        <strong>{{($chip._id) ? $chip.name : $chip.email}}</strong>
+			    </md-chip-template>
+			</md-chips>
+		
+			<span flex></span>
+		
+			<md-chips class="set-filters">
+				<md-chip>My Team</md-chip>
+				<md-chip>Builder</md-chip>
+				<md-chip>Architect</md-chip>
+				<md-chip>Home Owner</md-chip>
+				<md-chip>Consultants</md-chip>
+				<md-chip>Sub Contractors</md-chip>
+			</md-chips>
+		
+		</div>
+	</md-toolbar>
+</div>
 
-<md-list ng-cloak class="main-page-content">
-	<div ng-show="!search" ng-repeat="member in membersList track by $index" ui-sref="project.team.detail">
-		<md-list-item class="md-2-line" md-ink-ripple>
-			<div class="md-list-item-text" layout="column">
-		          <h3>{{(member._id) ? member.name : member.email}}</h3>
-		          <p>{{ member.type }}</p>
-	        </div>
-		</md-list-item>
-		<md-divider></md-divider>
+<div class="main-page-content">
+	<md-list ng-cloak>
+		<div ng-show="!search" ng-repeat="member in membersList track by $index" ui-sref="project.team.detail">
+			<md-list-item class="md-2-line" md-ink-ripple>
+				<div class="md-list-item-text" layout="column">
+			          <h3>{{(member._id) ? member.name : member.email}}</h3>
+			          <p>{{ member.type }}</p>
+		        </div>
+			</md-list-item>
+			<md-divider></md-divider>
+		</div>
+
+		<div ng-show="search" ng-repeat="member in teamNames track by $index" ui-sref="project.team.detail">
+			<md-list-item class="md-2-line" md-ink-ripple>
+				<div class="md-list-item-text" layout="column">
+			          <h3>{{(member._id) ? member.name : member.email}}</h3>
+			          <p>{{ member.type }}</p>
+		        </div>
+			</md-list-item>
+			<md-divider></md-divider>
+		</div>
+	</md-list>
+
+	<div>
+	  <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-list">
+		  <md-fab-trigger>
+	  	      <md-button aria-label="Add a New Team Member to this Project" class="md-fab md-primary" ng-click="showInviteTeamModal($event)">
+				  <md-tooltip md-direction="left">Add a New Team Member</md-tooltip>
+			      <md-icon class="material-icons">add</md-icon>
+	  	      </md-button>
+	      </md-fab-trigger>
+	  </md-fab-speed-dial>
 	</div>
-
-	<div ng-show="search" ng-repeat="member in teamNames track by $index" ui-sref="project.team.detail">
-		<md-list-item class="md-2-line" md-ink-ripple>
-			<div class="md-list-item-text" layout="column">
-		          <h3>{{(member._id) ? member.name : member.email}}</h3>
-		          <p>{{ member.type }}</p>
-	        </div>
-		</md-list-item>
-		<md-divider></md-divider>
-	</div>
-</md-list>
-
-<div>
-  <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-list">
-	  <md-fab-trigger>
-  	      <md-button aria-label="Add a New Team Member to this Project" class="md-fab md-primary" ng-click="showInviteTeamModal($event)">
-			  <md-tooltip md-direction="left">Add a New Team Member</md-tooltip>
-		      <md-icon class="material-icons" >add</md-icon>
-  	      </md-button>
-      </md-fab-trigger>
-  </md-fab-speed-dial>
 </div>

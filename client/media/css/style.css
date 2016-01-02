@@ -350,12 +350,12 @@ ul.pagination {
 }
 
 .fab-main{
-	margin-bottom: 4.5vh; 
-	margin-right: 27vw
+	margin-bottom: 3.5vh; 
+	margin-right: 28vw
 }
 
 .fab-list {
-	margin-bottom: 4.5vh;
+	margin-bottom: 3.5vh;
 	margin-right: 3vw;
 }
 
@@ -369,7 +369,7 @@ md-input-container > label {
 }
 
 .main-page-content{
-	height: 76vh; 
+	height: 80vh; 
 	overflow: scroll
 }
 
@@ -382,3 +382,16 @@ md-input-container > label {
 .pointer {
   cursor: pointer;
 }
+
+.set-filters md-chip {
+	font-size: 10px;
+	font-weight: 600;
+	padding: 3px;
+	text-transform: uppercase;
+}
+
+.detail-view-content {
+	height: 92vh; 
+	overflow: scroll
+}
+

@@ -1,14 +1,22 @@
-<md-toolbar class="md-warn md-hue-1">
-	<div class="md-toolbar-tools">
+<div layout-padding>
+	<md-toolbar class="md-warn md-hue-1 md-whiteframe-1dp">
+		<div class="md-toolbar-tools">
 		
-		<md-chips class="" ng-model="messageNames" placeholder="Search Messages..." secondary-placeholder="Search Messages..." flex>
-			<md-chip-template class="md-accent">
-		        <strong>{{$chip}}</strong>
-		    </md-chip-template>
-		</md-chips>
+			<md-chips class="" ng-model="messageNames" placeholder="Search..." secondary-placeholder="Search..." flex="45">
+				<md-chip-template class="md-accent">
+			        <strong>{{$chip}}</strong>
+			    </md-chip-template>
+			</md-chips>
 		
-    </div>
-</md-toolbar>
+			<span flex></span>
+		
+			<md-chips class="set-filters">
+				<md-chip>Mine</md-chip>
+			</md-chips>
+		
+	    </div>
+	</md-toolbar>
+</div>
 
 <md-list ng-cloak class="main-page-content">
 

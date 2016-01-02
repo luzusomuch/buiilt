@@ -15,4 +15,6 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
 		$mdDialog.cancel();
 	};
 	
+	$scope.tendersFilters = ['Tender 1', 'Tender 2'];
+	
 });
