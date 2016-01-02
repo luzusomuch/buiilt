@@ -4,31 +4,33 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
 	//Parents State for All Projects
     .state('projects', {
     	url: '/projects',
+		abstract: true,
     	templateUrl: '/app/modules/projects/projects.html',
     	controller: 'projectsCtrl',
     	authenticate : true
     })
   
-  //State for all projects
-    .state('projects.all', {
-    	url: '/all',
-    	templateUrl: '/app/modules/projects/partials/projects-all.html',
+  //State for Open projects
+    .state('projects.open', {
+    	url: '/open',
+    	templateUrl: '/app/modules/projects/projects-open/projects-open.html',
     	controller: 'projectsCtrl',
     	authenticate : true
     })
-  
-  //State to create a new project
-      .state('projects.create', {
-    	url: '/new',
-    	templateUrl: '/app/modules/projects/partials/projects-create.html',
-    	controller: 'projectsCtrl',
-    	authenticate : true
-      })
-  
-    .state('projects.invitations', {
-	   url: '/invitations',
-	   templateUrl: '/app/modules/projects/partials/projects-invitations.html',
+
+  //States for Project Archived
+    .state('projects.archived', {
+	   url: '/archived',
+	   templateUrl: '/app/modules/projects/projects-archived/projects-archived.html',
 	   controller: 'projectsCtrl',
 	   authenticate : true
-    });
+    })
+	
+  //States for Project Invitations
+    .state('projects.invitations', {
+	   url: '/invitations',
+	   templateUrl: '/app/modules/projects/projects-invitations/projects-invitations.html',
+	   controller: 'projectsCtrl',
+	   authenticate : true
+    })
 });

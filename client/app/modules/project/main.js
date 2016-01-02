@@ -25,7 +25,7 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
 	//Team for Single Project
   .state('project.team', {
     url: '/team',
-	  abstract: true,
+	abstract: true,
     templateUrl: '/app/modules/project/project-team/project-team.html',
     controller: 'projectTeamCtrl',
     authenticate : true
