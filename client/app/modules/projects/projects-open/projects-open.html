@@ -1,23 +1,19 @@
-<div layout-padding>
-	<md-toolbar class="md-warn md-hue-1 md-whiteframe-1dp">
-		<div class="md-toolbar-tools">
+<div class="detail-header" layout-padding layout="row">
 		
-			<md-chips class="" ng-model="projectsFilter" placeholder="Search Projects..." secondary-placeholder="Search Projects..." flex md-autocomplete-snap="" md-require-math="autoCompleteRequireMath" md-on-add="addChip()" md-on-remove="removeChip()">
-				<md-autocomplete 
-					md-selected-item="selectedItem" 
-					md-search-text="searchText"
-					md-items="item in querySearch(searchText)" 
-					md-item-text="item" 
-					placeholder="Search for a project">
-					<span md-highlight-text="searchText">{{item.name}}</span>
-				</md-autocomplete>
-				<md-chip-template>
-			        <strong>{{$chip.name}}</strong>
-			    </md-chip-template>
-			</md-chips>
-		
-	    </div>
-	</md-toolbar>
+	<md-chips class="" ng-model="projectsFilter" placeholder="Search Projects..." secondary-placeholder="Search Projects..." flex md-autocomplete-snap="" md-require-math="autoCompleteRequireMath" md-on-add="addChip()" md-on-remove="removeChip()">
+		<md-autocomplete 
+			md-selected-item="selectedItem" 
+			md-search-text="searchText"
+			md-items="item in querySearch(searchText)" 
+			md-item-text="item" 
+			placeholder="Search for a project">
+			<span md-highlight-text="searchText">{{item.name}}</span>
+		</md-autocomplete>
+		<md-chip-template>
+	        <strong>{{$chip.name}}</strong>
+	    </md-chip-template>
+	</md-chips>
+
 </div>
 
 <md-list ng-cloak class="main-page-content">

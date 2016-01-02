@@ -395,3 +395,7 @@ md-input-container > label {
 	overflow: scroll
 }
 
+.detail-header {
+	border-bottom: 1px solid #E0E0E0
+}
+

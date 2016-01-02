@@ -1,15 +1,11 @@
-<div layout-padding>
-	<md-toolbar class="md-warn md-hue-1 md-whiteframe-1dp">
-		<div class="md-toolbar-tools">
+<div class="detail-header" layout-padding layout="row">
 			
-			<md-chips class="" ng-model="docTypes" placeholder="Search Documentation..." secondary-placeholder="Seach Documentation..." flex>
-				<md-chip-template class="md-accent">
-			        <strong>{{$chip}}</strong>
-			    </md-chip-template>
-			</md-chips>
-		
-	    </div>
-	</md-toolbar>
+	<md-chips class="" ng-model="docTypes" placeholder="Search Documentation..." secondary-placeholder="Seach Documentation..." flex>
+		<md-chip-template class="md-accent">
+	        <strong>{{$chip}}</strong>
+	    </md-chip-template>
+	</md-chips>
+	
 </div>
 
 <md-list ng-cloak class="main-page-content">

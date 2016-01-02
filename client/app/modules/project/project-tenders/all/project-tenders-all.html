@@ -1,24 +1,20 @@
-<div layout-padding>
-	<md-toolbar class="md-warn md-hue-1 md-whiteframe-1dp">
-		<div class="md-toolbar-tools">
+<div class="detail-header" layout-padding layout="row">
 		
-			<md-chips class="" ng-model="tendersFilters" placeholder="Search..." secondary-placeholder="Search..." flex="45">
-				<md-chip-template class="md-accent">
-			        <strong>{{$chip}}</strong>
-			    </md-chip-template>
-			</md-chips>
-		
-			<span flex></span>
-		
-			<md-chips class="set-filters">
-				<md-chip>Open</md-chip>
-				<md-chip>Won</md-chip>
-				<md-chip>Due This Week</md-chip>
-				<md-chip>Due Next Week</md-chip>
-			</md-chips>
-		
-	    </div>
-	</md-toolbar>
+	<md-chips class="" ng-model="tendersFilters" placeholder="Search..." secondary-placeholder="Search..." flex="45">
+		<md-chip-template class="md-accent">
+	        <strong>{{$chip}}</strong>
+	    </md-chip-template>
+	</md-chips>
+
+	<span flex></span>
+
+	<md-chips class="set-filters">
+		<md-chip>Open</md-chip>
+		<md-chip>Won</md-chip>
+		<md-chip>Due This Week</md-chip>
+		<md-chip>Due Next Week</md-chip>
+	</md-chips>
+	
 </div>
 
 <md-list ng-cloak class="main-page-content">
