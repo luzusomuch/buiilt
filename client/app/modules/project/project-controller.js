@@ -33,7 +33,7 @@ angular.module('buiiltApp').controller('projectCtrl', function($rootScope, $scop
 		
 	};
 	
-	$scope.cancelEditProjectModal = function(){
+	$scope.closeDialog = function(){
 		$mdDialog.cancel();
 	};
 

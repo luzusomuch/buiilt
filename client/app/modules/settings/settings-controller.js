@@ -23,6 +23,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
     };
 
     $scope.showModalCreateTeam = function($event) {
+		
         $mdDialog.show({
             targetEvent: $event,
             controller: 'settingsCtrl',
@@ -30,9 +31,22 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             parent: angular.element(document.body),
             clickOutsideToClose: false
         });
+		
     };
-
-    $scope.cancelCreateTeam = function() {
+	
+    $scope.showAddNewStaffMemberModal = function($event) {
+		
+        $mdDialog.show({
+            targetEvent: $event,
+            controller: 'settingsCtrl',
+            templateUrl: 'app/modules/settings/partials/settings-staff-addNew.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: false
+        });
+		
+    };
+	
+    $scope.cancelDialog = function() {
         $mdDialog.cancel();
     };
 
@@ -52,15 +66,26 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             });
         }
     };
+	
+    $scope.showEditCompanyModal = function($event) {
+        $mdDialog.show({
+            targetEvent: $event,
+            controller: 'settingsCtrl',
+            templateUrl: 'app/modules/settings/partials/settings-company-edit.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: false
+        });
+    };
 
     $scope.saveDetail = function(form) {
         if (form.$valid) {
             teamService.update({_id : $scope.currentTeam._id},$scope.currentTeam).$promise
             .then(function(team) {
-                $scope.showToast("Update company detail successfully!");
+                $scope.showToast("Company details have updated successfully!");
                 $scope.currentTeam = team;
                 getTeamLeader($scope.currentTeam);
                 $rootScope.$emit('TeamUpdate',team);
+				$mdDialog.hide();
             }, function(err) {
                 $scope.showToast(err);
             });
@@ -84,6 +109,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             $scope.currentTeam = team;
             $rootScope.$emit('TeamUpdate',team);
             $scope.member.emails = [];
+			$mdDialog.hide();
         }, function(err){
             $scope.showToast(err);
         });

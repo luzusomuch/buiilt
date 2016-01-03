@@ -400,3 +400,31 @@ md-input-container > label {
 	height: 10vh;
 }
 
+.detail-header p {
+	font-size: 15px;
+	font-weight: 500;
+	color: #424242;
+	text-transform: capitalize;
+	margin-top: 2vh;
+}
+
+.activity-stream .icon-type {
+	padding: 8px; 
+	border: 1px solid #E0E0E0; 
+	border-radius: 100px; 
+	background-color: #F5F5F5
+}
+
+.activity-stream .meta-data {
+	font-size: 10px;
+	font-weight: 500;
+	text-transform: uppercase;
+	font-color: #616161;
+}
+
+
+
+
+
+
+

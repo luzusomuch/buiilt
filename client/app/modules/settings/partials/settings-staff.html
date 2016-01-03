@@ -1,12 +1,55 @@
-<md-toolbar class="md-warn md-hue-1">
-	<div class="md-toolbar-tools">
-	    <span>Staff</span>
-      	<span flex></span>
-      	<!-- <md-button ui-sref=''></md-button> -->
-    </div>
-</md-toolbar>
+<div class="detail-header" layout-padding layout="row">
+    <p>Staff</p>
+</div>
 
-<md-content ng-cloak style="height: 78vh; overflow: scroll" layout-padding>
+<div>
+	
+	<md-list ng-cloak class="main-page-content">
+
+		<div ng-repeat="leader in currentTeam.leader">
+			<md-list-item class="md-2-line" md-ink-ripple>
+				<div class="md-list-item-text" layout="column">
+			          <h3>{{ leader.name }}</h3>
+			          <p>{{ leader.email }}</p>
+		        </div>
+			</md-list-item>
+			<md-divider></md-divider>
+		</div>
+		
+		<div ng-repeat="member in currentTeam.member">
+			<md-list-item class="md-3-line" md-ink-ripple>
+				<div class="md-list-item-text" layout="column">
+			          <h3>{{ (member._id) ? member._id.name : " "}} </h3>
+			          <p>{{ (member.email) ? member.email : member._id.email }}</p>
+					  <p>{{ member.status }}</p>
+		        </div>
+			</md-list-item>
+			<md-divider></md-divider>
+		</div>
+
+	</md-list>
+	
+	<div>
+  	  <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-list">
+		  <md-fab-trigger>
+	  	      <md-button aria-label="Actions" class="md-fab md-primary">
+				  <md-tooltip md-direction="left">Actions...</md-tooltip>
+			      <md-icon class="material-icons" >add</md-icon>
+	  	      </md-button>
+  	      </md-fab-trigger>
+		  <md-fab-actions>
+	  	      <md-button aria-label="Add a New Team Member" class="md-fab md-raised md-mini" ng-click="showAddNewStaffMemberModal($event)">
+				  <md-tooltip md-direction="left">Add a New Team Member</md-tooltip>
+			      <md-icon class="material-icons">person_outline</md-icon>
+	  	      </md-button>
+	  	  </md-fab-actions>
+  	  </md-fab-speed-dial>
+    </div>
+    
+</div>
+
+
+<!-- <md-content ng-cloak class="main-page-content" layout-padding>
     <md-tabs md-dynamic-height md-border-bottom>
         <md-tab label="Members list">
             <md-content ng-show="currentTeam._id">
@@ -31,9 +74,9 @@
                         </tr>
                         <tr ng-repeat="member in currentTeam.member">
                             <td>{{(member.email) ? member.email : member._id.email}}</td>
-                            <td>{{(member._id) ? member._id.name : " "}}</td>
+                            <td></td>
                             <td>Member</td>
-                            <td>{{member.status}}</td>
+                            <td></td>
                             <td>
                                 <i ng-click="assignLeader(member)" ng-if="isLeader &&  member._id && member.status == 'Active'" class="material-icons pointer">supervisor_account</i>
                                 <i ng-click="removeMember(member)" ng-if="isLeader" class="material-icons pointer">delete</i>
@@ -70,7 +113,7 @@
                     </tbody>
                 </table>
             </md-content>
-            <md-button ng-show="!currentTeam._id" class="md-primary" ng-click="showModalCreateTeam(event)">Create new team</md-button>            
+            <md-button ng-show="!currentTeam._id" class="md-primary" ng-click="showModalCreateTeam(event)">Create new team</md-button>
         </md-tab>
         <md-tab label="Add New Member" ng-if="currentUser.isLeader">
             <form ng-submit="addNewMember(form)" name="form">
@@ -103,4 +146,4 @@
             </form>
         </md-tab>
     </md-tabs>
-</md-content>
+</md-content> -->

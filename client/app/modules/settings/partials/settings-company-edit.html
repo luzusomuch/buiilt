@@ -1,0 +1,54 @@
+<md-dialog aria-label="Edit Your Company Details" flex="70">
+	<form ng-submit="saveDetail(form)" name="form">
+		<md-toolbar>
+			<div class="md-toolbar-tools">
+				<h2>Edit Your Company Details</h2>
+			</div>
+		</md-toolbar>
+		
+		<md-dialog-content>
+			<div class="md-dialog-content" layout="column">
+		
+	            <div layout="row">
+	                <md-input-container flex>
+	                    <label for="">Company name</label>
+	                    <input type="text" ng-model="currentTeam.detail.companyName" required>
+	                </md-input-container>
+	            </div>
+			
+	            <div layout="row">
+	                <md-input-container flex>
+	                    <label for="">Company address</label>
+	                    <input type="text" ng-model="currentTeam.detail.companyAddress" required>
+	                </md-input-container>
+	            </div>
+			
+	            <div layout="row">
+	                <md-input-container flex="50">
+	                    <label for="">Company contact number</label>
+	                    <input type="text" ng-model="currentTeam.detail.contactNumber" required>
+	                </md-input-container>
+	                <md-input-container flex="50">
+	                    <label for="">Company license number</label>
+	                    <input type="text" ng-model="currentTeam.detail.licenseNumber" required>
+	                </md-input-container>
+				</div>
+				
+				<div layout="row">
+	                <md-input-container flex>
+	                    <label for="">Company billing address</label>
+	                    <input type="text" ng-model="currentTeam.detail.billingAddress" required>
+	                </md-input-container>
+	            </div>
+				
+			</div>
+			
+			<md-dialog-actions>
+				<md-button ng-click="cancelDialog()">Cancel</md-button>
+                <md-button type="submit" class="md-raised md-accent md-hue-1">Save Changes!</md-button>
+			</md-dialog-actions>
+			
+		</md-dialog-content>
+		
+	</form>
+</md-dialog>

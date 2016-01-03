@@ -1,62 +1,47 @@
-<md-toolbar class="md-warn md-hue-1">
-	<div class="md-toolbar-tools">
-	    <span>Company</span>
-      	<span flex></span>
-      	<!-- <md-button ui-sref=''></md-button> -->
-    </div>
-</md-toolbar>
+<div class="detail-header" layout-padding layout="row">
+    <p>Company</p>
+</div>
 
-<md-content ng-cloak style="height: 78vh; overflow: scroll" layout-padding>
-    <md-tabs md-dynamic-height md-border-bottom>
-        <md-tab label="Company Detail">
-            <div layout="row">
-                <p><i class="material-icons">account_box</i>{{currentTeam.detail.companyName}}</p>
-            </div>
-            <div layout="row">
-                <p><i class="material-icons">home</i>{{currentTeam.detail.companyAddress}}</p>
-            </div>
-            <div layout="row">
-                <p><i class="material-icons">phone</i>{{currentTeam.detail.contactNumber}}</p>
-            </div>
-            <div layout="row">
-                <p><i class="material-icons">card_membership</i>{{currentTeam.detail.licenseNumber}}</p>
-            </div>
-            <div layout="row">
-                <p><i class="material-icons">account_balance</i>{{currentTeam.detail.billingAddress}}</p>
-            </div>
-        </md-tab>
-        <md-tab label="Edit Company" ng-if="currentUser.isLeader">
-            <form ng-submit="saveDetail(form)" name="form">
-                <div layout="row">
-                    <md-input-container flex>
-                        <label for="">Company name</label>
-                        <input type="text" ng-model="currentTeam.detail.companyName" required>
-                    </md-input-container>
-                </div>
-                <div layout="row">
-                    <md-input-container flex>
-                        <label for="">Company address</label>
-                        <input type="text" ng-model="currentTeam.detail.companyAddress" required>
-                    </md-input-container>
-                </div>
-                <div layout="row">
-                    <md-input-container flex="33">
-                        <label for="">Company contact number</label>
-                        <input type="text" ng-model="currentTeam.detail.contactNumber" required>
-                    </md-input-container>
-                    <md-input-container flex="33">
-                        <label for="">Company license number</label>
-                        <input type="text" ng-model="currentTeam.detail.licenseNumber" required>
-                    </md-input-container>
-                    <md-input-container flex="33">
-                        <label for="">Company billing address</label>
-                        <input type="text" ng-model="currentTeam.detail.billingAddress" required>
-                    </md-input-container>
-                </div>
-                <div layout="row">
-                    <md-button type="submit" class="md-raised md-accent md-hue-1">Edit!</md-button>
-                </div>
-            </form>
-        </md-tab>
-    </md-tabs>
-</md-content>
+<div class="main-page-content" layout-padding>
+	
+	<div layout="column">
+		<div layout-margin>
+			<p><strong>Company Name:</strong></p>
+			<p>{{ currentTeam.detail.companyName }}</p>
+		</div>
+		<div layout-margin>
+			<p><strong>Company Address:</strong></p>
+			<p>{{ currentTeam.detail.companyAddress }}</p>
+		</div>
+		<div layout-margin>
+			<p><strong>Mailing Address:</strong></p>
+			<p>{{ currentTeam.detail.billingAddress }}</p>
+		</div>
+		<div layout-margin>
+			<p><strong>Office Number:</strong></p>
+			<p>{{ currentTeam.detail.contactNumber }}</p>
+		</div>
+		<div layout-margin>
+			<p><strong>License Number:</strong></p>
+			<p>{{ currentTeam.detail.licenseNumber }}</p>
+		</div>
+	</div>
+		
+	<div>
+  	  <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-list">
+		  <md-fab-trigger>
+	  	      <md-button aria-label="Actions" class="md-fab md-primary">
+				  <md-tooltip md-direction="left">Actions...</md-tooltip>
+			      <md-icon class="material-icons" >add</md-icon>
+	  	      </md-button>
+  	      </md-fab-trigger>
+		  <md-fab-actions>
+	  	      <md-button aria-label="Edit Company Details" class="md-fab md-raised md-mini" ng-click="showEditCompanyModal($event)">
+				  <md-tooltip md-direction="left">Edit Company Details</md-tooltip>
+			      <md-icon class="material-icons">edit</md-icon>
+	  	      </md-button>
+	  	  </md-fab-actions>
+  	  </md-fab-speed-dial>
+    </div>
+    
+</div>

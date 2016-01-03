@@ -4,6 +4,13 @@
 		
 		<div class="detail-header" layout="row" layout-padding>
 			<p>Message Thread Name</p>
+			<span flex></span>
+			<div>
+				<md-button>Send a Reply</md-button>
+			</div>
+			<md-chips class="set-filters">
+				<md-chip>Show Related Activities</md-chip>
+			</md-chips>
 	    </div>
 		
 		<div class="main-page-content" layout-padding>
@@ -20,22 +27,26 @@
   		  	      </md-fab-trigger>
 				  
   				  <md-fab-actions>
-			  	      <md-button aria-label="Send a Reply" class="md-fab md-raised md-mini">
+			  	      <md-button aria-label="Send a Reply" class="md-fab md-raised md-mini md-primary">
 						  <md-tooltip md-direction="left">Send a Reply</md-tooltip>
 					      <md-icon class="material-icons">reply</md-icon>
 			  	      </md-button>
-			  	      <md-button aria-label="Edit the Message Details" class="md-fab md-raised md-mini">
+			  	      <md-button aria-label="Edit the Message Details" class="md-fab md-raised md-mini md-primary">
 	  					  <md-tooltip md-direction="left">Edit Message Details</md-tooltip>
 	  				      <md-icon class="material-icons">edit</md-icon>
 			  	      </md-button>
-			  	      <md-button aria-label="Attach a Related Message" class="md-fab md-raised md-mini">
-						  <md-tooltip md-direction="left">Attach a Related Message</md-tooltip>
-					      <md-icon class="material-icons">chat_bubble_outline</md-icon>
+			  	      <md-button aria-label="Copy Message Address" class="md-fab md-raised md-mini md-primary">
+	  					  <md-tooltip md-direction="left">Copy Message Address</md-tooltip>
+	  				      <md-icon class="material-icons">content_paste</md-icon>
 			  	      </md-button>
   			  	      <md-button aria-label="Assign a Team Member" class="md-fab md-raised md-mini">
   	  					  <md-tooltip md-direction="left">Assign to a Team Member</md-tooltip>
   	  				      <md-icon class="material-icons">person_outline</md-icon>
   			  	      </md-button>
+			  	      <md-button aria-label="Attach a Related Message" class="md-fab md-raised md-mini">
+						  <md-tooltip md-direction="left">Attach a Related Message</md-tooltip>
+					      <md-icon class="material-icons">chat_bubble_outline</md-icon>
+			  	      </md-button>
   			  	      <md-button aria-label="Add a Related Task" class="md-fab md-raised md-mini">
   	  					  <md-tooltip md-direction="left">Attach a Related Task</md-tooltip>
   	  				      <md-icon class="material-icons">done_all</md-icon>
