@@ -1,14 +1,12 @@
 angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $scope, $timeout, $q, $state, projectService, myTasks, myMessages, myFiles) {
 	$rootScope.title = "Dashboard";
-	$scope.errors = {};
-	$scope.success = {};
-	$scope.user = {};
 	$scope.myTasks = myTasks;
 	$scope.myMessages = myMessages;
 	$scope.myFiles = myFiles;
 	$scope.search = false;
 	// type can be a task, message, file or document
 	var type = $state.current.name.split(".")[1];
+    
 	
 	//Placeholder Set of Filters to use for layout demo
 	$scope.dashboardFilters = [];
@@ -52,7 +50,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     };
 
     function filterByProject(results) {
-    	$scope.results = []
+    	$scope.results = [];
     	if (type === 'tasks') {
     		_.each($scope.myTasks, function(task) {
     			if (_.last(results)) {
@@ -96,6 +94,60 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     $scope.removeChip = function() {
         if ($rootScope.dashboardFilters.length === 0) {
             $scope.search = false;
+        }
+    };
+
+    $scope.chipFilter = function(place, value) {
+        $scope.results = [];
+        $scope.search = true;
+        var user = $rootScope.currentUser;
+        if (place === "task") {
+            switch (value) {
+                case "assignedToMe":
+                    _.each($scope.myTasks, function(task) {
+                        if (_.findIndex(task.assignees, function(assignee) {
+                            return assignee._id == user._id;
+                        }) !== -1) {
+                            $scope.results.push(task);
+                        }
+                    });
+                break;
+
+                case "assignedByMe":
+                    _.each($scope.myTasks, function(task) {
+                        if (task.user && task.user._id == user._id) {
+                            $scope.results.push(task);
+                        }
+                    });
+                break;
+
+                case "dueToDay":
+                    _.each($scope.myTasks, function(task) {
+                        if (moment(moment(task.dateEnd).format("YYYY-MM-DD")).isSame(moment(new Date()).format("YYYY-MM-DD"))) {
+                            $scope.results.push(task);
+                        }
+                    });
+                break;
+
+                case "dueTomorrow":
+                    var tomorrow = moment(new Date()).add(1, "days").format("YYYY-MM-DD");
+                    console.log(tomorrow);
+                    _.each($scope.myTasks, function(task) {
+                        var dateEnd = moment(task.dateEnd).format("YYYY-MM-DD");
+                        console.log(dateEnd);
+                        if (moment(dateEnd).isSame(tomorrow)) {
+                            $scope.results.push(task);
+                            console.log(task);
+                        }
+                    });
+                break;
+
+                case "dueThisWeek":
+                break;
+
+                default:
+                break;
+            }
         }
     };
 });

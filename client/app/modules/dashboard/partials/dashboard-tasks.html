@@ -18,11 +18,11 @@
 	<span flex></span>
 
 	<md-chips class="set-filters">
-		<md-chip>Assigned to Me</md-chip>
-		<md-chip>Assigned by Me</md-chip>
-		<md-chip>Due Today</md-chip>
-		<md-chip>Due Tomorrow</md-chip>
-		<md-chip>Due This Week</md-chip>
+		<md-chip ng-click="chipFilter('task','assignedToMe')">Assigned to Me</md-chip>
+		<md-chip ng-click="chipFilter('task','assignedByMe')">Assigned by Me</md-chip>
+		<md-chip ng-click="chipFilter('task','dueToDay')">Due Today</md-chip>
+		<md-chip ng-click="chipFilter('task','dueTomorrow')">Due Tomorrow</md-chip>
+		<md-chip ng-click="chipFilter('task','dueThisWeek')">Due This Week</md-chip>
 	</md-chips>
 
 </div>
