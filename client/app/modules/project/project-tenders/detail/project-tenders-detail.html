@@ -3,10 +3,10 @@
 	<div layout="column" flex="70" class="md-whiteframe-1dp">
 		
 		<div class="detail-header" layout="row" layout-padding>
-			<p>Tender Name</p>
+			<p>{{tender.name}}</p>
 			<span flex></span>
 			<div>
-				<md-button>Select a Winner</md-button>
+				<md-button ng-click="selectWinner()">Select a Winner</md-button>
 			</div>
 			<md-chips class="set-filters">
 				<md-chip>Show Related Activities</md-chip>

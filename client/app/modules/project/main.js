@@ -6,12 +6,7 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
   	url: '/project/:id',
   	templateUrl: '/app/modules/project/project.html',
   	controller: 'projectCtrl',
-  	authenticate : true,
-    resolve: {
-      project: function($stateParams, projectService) {
-        return projectService.get({id: $stateParams.id}).$promise;
-      }
-    }
+  	authenticate : true
   })
   
   	//Overview of Single Project
@@ -58,9 +53,9 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
     authenticate : true
   })
   .state('project.tenders.detail', {
-    url: '/detail',
+    url: '/detail/:tenderId',
     templateUrl: '/app/modules/project/project-tenders/detail/project-tenders-detail.html',
-    controller: 'projectTendersCtrl',
+    controller: 'projectTendersDetailCtrl',
     authenticate : true
   })
   

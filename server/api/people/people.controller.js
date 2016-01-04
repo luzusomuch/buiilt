@@ -965,10 +965,13 @@ exports.invitePeople = function(req, res) {
 
 exports.selectWinnerTender = function(req, res) {
     console.log(req.body);
+    console.log(req.params);
     People.findOne({project: req.params.id}, function(err, people) {
         if (err) {return res.send(500,err);}
         if (!people) {return res.send(404);}
         else {
+            console.log(people);
+            return;
             var winnerTenderNotification = [];
             var loserTender = [];
             if (req.body.type == 'subcontractor') {

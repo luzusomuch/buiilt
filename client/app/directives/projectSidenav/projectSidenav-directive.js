@@ -10,7 +10,7 @@ angular.module('buiiltApp').directive('projectSidenav', function(){
             $scope.errors = {};
             $scope.success = {};
             $scope.$state = $state;
-                     
+            $scope.showTeamMenu = false;
         }
     };
 });

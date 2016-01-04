@@ -161,26 +161,36 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
         $rootScope.currentProjectBackend = {};
       }
 
-      if (toState.hasCurrentProject) {
-
-        if (!$rootScope.currentProject || toParams.id !== $rootScope.currentProject._id) {
-          projectService.get({id: toParams.id}).$promise
-            .then(function (data) {
-              if (data._id) {
-                $rootScope.currentProject = data;
-
-              } else {
-                $rootScope.currentProject = null;
-                $location.path('/team/manager');
-              }
-            });
-        }
-
-      } else {
-        $rootScope.currentProject = { };
-
+      if (toParams.id) {
+        projectService.get({id: toParams.id}).$promise.then(function(project) {
+          if (project._id) {
+            $rootScope.project = project;
+          } else {
+            $rootScope.project = {};
+          }
+        });
       }
-      $rootScope.hasCurrentProject=toState.hasCurrentProject;
+
+      // if (toState.hasCurrentProject) {
+
+      //   if (!$rootScope.currentProject || toParams.id !== $rootScope.currentProject._id) {
+      //     projectService.get({id: toParams.id}).$promise
+      //       .then(function (data) {
+      //         if (data._id) {
+      //           $rootScope.currentProject = data;
+
+      //         } else {
+      //           $rootScope.currentProject = null;
+      //           $location.path('/team/manager');
+      //         }
+      //       });
+      //   }
+
+      // } else {
+      //   $rootScope.currentProject = { };
+
+      // }
+      // $rootScope.hasCurrentProject=toState.hasCurrentProject;
     });
 
     $rootScope.overlay = false;

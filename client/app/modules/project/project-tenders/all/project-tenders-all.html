@@ -18,39 +18,19 @@
 </div>
 
 <md-list ng-cloak class="main-page-content">
-
-	<div ui-sref="project.tenders.detail">
+	<div ui-sref="project.tenders.detail({tenderId: member._id})" ng-repeat="member in membersList">
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
-		          <h3>Tender Name 1</h3>
-		          <p>Invitee 1, Invitee 2, Invitee 3... Invitee n</p>
+		          <h3>{{(member._id) ? member.name : member.email}}</h3>
+		          <p>{{member.type}}</p>
 	        </div>
 		</md-list-item>
 		<md-divider></md-divider>
 	</div>
-	<div ui-sref="project.tenders.detail">
-		<md-list-item class="md-2-line" md-ink-ripple>
-			<div class="md-list-item-text" layout="column">
-		          <h3>Tender Name 2</h3>
-		          <p>Invitee 1, Invitee 2, Invitee 3... Invitee n</p>
-	        </div>
-		</md-list-item>
-		<md-divider></md-divider>
-	</div>
-	<div ui-sref="project.tenders.detail">
-		<md-list-item class="md-2-line" md-ink-ripple>
-			<div class="md-list-item-text" layout="column">
-		          <h3>Tender Name 3</h3>
-		          <p>Invitee 1, Invitee 2, Invitee 3... Invitee n</p>
-	        </div>
-		</md-list-item>
-		<md-divider></md-divider>
-	</div>
-	
 </md-list>
 
 <div>
-  <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-list">
+  <md-fab-speed-dial ng-show="project.projectManager._id == currentUser._id || currentUser.type == 'builders'" ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-list">
 	  <md-fab-trigger>
   	      <md-button aria-label="Add a New Tender to this Project" class="md-fab md-primary" ng-click="showNewTenderModal($event)">
 			  <md-tooltip md-direction="left">Add a New Tender</md-tooltip>

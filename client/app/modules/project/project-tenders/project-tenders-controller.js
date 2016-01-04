@@ -1,4 +1,6 @@
 angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope, $scope, $timeout, $mdDialog, $mdToast, $stateParams, peopleService) {
+	$scope.project = $rootScope.project;
+	$rootScope.title = "Tenders list";
 	function getCurrentTeamMember() {
 		//get current user logged in team member
 		$scope.teamMembersCanInvite = $rootScope.currentTeam.leader;
@@ -11,7 +13,7 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
 		_.remove($scope.teamMembersCanInvite, {_id: $rootScope.currentUser._id});
 	};
 
-	function loadProjectMembers(id) {
+	var loadProjectMembers = function(id) {
 		// get all project team member
         $scope.membersList = [];
         var roles = ["builders", "clients", "architects", "subcontractors", "consultants"];
@@ -36,11 +38,13 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
 
                 // Get team list
                 _.each($scope.people[role], function(user) {
-                    if (user._id) {
-                        $scope.membersList.push({_id: user._id._id, name: user._id.name, type: role});
-                    } else if (user.email) {
-                        $scope.membersList.push({email: user.email, type: role});
-                    }
+                	if (!user.hasSelect) {
+	                    if (user._id) {
+	                        $scope.membersList.push({_id: user._id._id, name: user._id.name, type: role});
+	                    } else if (user.email) {
+	                        $scope.membersList.push({email: user.email, type: role});
+	                    }
+                	}
                 });
             });
 
@@ -57,8 +61,7 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
                             {value: 'addClient', text: 'Client'},
                             {value: 'addArchitect', text: 'Architect'},
                             {value: 'addSubcontractor', text: 'Subcontractor'},
-                            {value: 'addConsultant', text: 'Consultant'},
-                            {value: 'addEmployee', text: 'Employee'}
+                            {value: 'addConsultant', text: 'Consultant'}
                         ];
                         break;
                     case "clients": 
@@ -83,9 +86,7 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
                 switch($rootScope.currentUser.type) {
                     case "builders":
                         $scope.availableUserType = [
-                            {value: 'addSubcontractor', text: 'Subcontractor'},
-                            {value: 'addConsultant', text: 'Consultant'},
-                            {value: 'addEmployee', text: 'Employee'}
+                            {value: 'addSubcontractor', text: 'Subcontractor'}
                         ];
                         break;
                     case "clients": 
@@ -112,9 +113,7 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
                 switch($rootScope.currentUser.type) {
                     case "builders":
                         $scope.availableUserType = [
-                            {value: 'addSubcontractor', text: 'Subcontractor'},
-                            {value: 'addConsultant', text: 'Consultant'},
-                            {value: 'addEmployee', text: 'Employee'}
+                            {value: 'addSubcontractor', text: 'Subcontractor'}
                         ];
                         break;
                     case "clients": 
@@ -140,6 +139,8 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
             }
 		});
 	};
+
+	loadProjectMembers($stateParams.id);
 
 	$scope.getChangeTypeValue = function(type) {
 		if (type === 'addClient' || type === "addEmployee") {
@@ -215,7 +216,4 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
 	};
 	
 	$scope.tendersFilters = ['Tender 1', 'Tender 2'];
-
-	loadProjectMembers($stateParams.id);
-	
 });

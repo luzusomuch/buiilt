@@ -36,10 +36,12 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
 
                 // Get team list
                 _.each($scope.people[role], function(user) {
-                    if (user._id) {
-                        $scope.membersList.push({_id: user._id._id, name: user._id.name, type: role});
-                    } else if (user.email) {
-                        $scope.membersList.push({email: user.email, type: role});
+                    if (user.hasSelect) {
+                        if (user._id) {
+                            $scope.membersList.push({_id: user._id._id, name: user._id.name, type: role});
+                        } else if (user.email) {
+                            $scope.membersList.push({email: user.email, type: role});
+                        }
                     }
                 });
             });
