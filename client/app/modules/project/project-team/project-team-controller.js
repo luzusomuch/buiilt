@@ -14,23 +14,18 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
 	function loadProjectMembers(id) {
 		// get all project team member
         $scope.membersList = [];
-        var roles = ["builders", "clients", "architects", "subcontractors", "consultants", "projectManager"];
+        var roles = ["builders", "clients", "architects", "subcontractors", "consultants"];
 		peopleService.getInvitePeople({id: id}).$promise.then(function(res) {
 			$scope.people = res;
             _.each(roles, function(role) {
-                if (role === "projectManager") {
-                    if ($scope.people.projectManager._id === $rootScope.currentUser._id) {
-                        $rootScope.currentUser.type = role;
+                if (_.findIndex($scope.people[role], function(user) {
+                    if (user._id) {
+                        return user._id._id == $rootScope.currentUser._id;
                     }
-                } else {
-                    if (_.findIndex($scope.people[role], function(user) {
-                        if (user._id) {
-                            return user._id._id == $rootScope.currentUser._id;
-                        }
-                    }) != -1) {
-                        $rootScope.currentUser.type = role;
-                    }
+                }) != -1) {
+                    $rootScope.currentUser.type = role;
                 }
+                
                 if ($scope.people[role].teamMember && $scope.people[role].teamMember.length > 0) {
                     if (_.findIndex($scope.people[role].teamMember, function(member) {
                         return member._id == $scope.currentUser._id;
@@ -55,25 +50,93 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
             });
             console.log($rootScope.currentUser);
 
-            switch($rootScope.currentUser.type) {
-                case "projectManager":
-                    $scope.availableUserType = [
-                        {value: 'addBuilder', text: 'Builder'},
-                        {value: 'addClient', text: 'Client'},
-                        {value: 'addArchitect', text: 'Architect'},
-                        {value: 'addSubcontractor', text: 'Subcontractor'},
-                        {value: 'addConsultant', text: 'Consultant'},
-                        {value: 'addEmployee', text: 'Employee'}
-                    ];
-                    break;
-                case "clients": 
-                    $scope.availableUserType = [
-                        {value: 'addConsultant', text: 'Consultant'},
-                        {value: 'addEmployee', text: 'Employee'}
-                    ];
-                    break;
-                default:
-                    break;
+            if ($scope.people.project.projectManager.type === "builder") {
+                switch($rootScope.currentUser.type) {
+                    case "builders":
+                        $scope.availableUserType = [
+                            {value: 'addClient', text: 'Client'},
+                            {value: 'addArchitect', text: 'Architect'},
+                            {value: 'addSubcontractor', text: 'Subcontractor'},
+                            {value: 'addConsultant', text: 'Consultant'},
+                            {value: 'addEmployee', text: 'Employee'}
+                        ];
+                        break;
+                    case "clients": 
+                        $scope.availableUserType = [
+                            {value: 'addConsultant', text: 'Consultant'},
+                            {value: 'addEmployee', text: 'Employee'}
+                        ];
+                        break;
+                    case "architects": 
+                        $scope.availableUserType = [
+                            {value: 'addConsultant', text: 'Consultant'},
+                            {value: 'addEmployee', text: 'Employee'}
+                        ];
+                        break;
+                    default:
+                        $scope.availableUserType = [
+                            {value: 'addEmployee', text: 'Employee'}
+                        ];
+                        break;
+                }
+            } else if ($scope.people.project.projectManager.type === "homeOwner") {
+                switch($rootScope.currentUser.type) {
+                    case "builders":
+                        $scope.availableUserType = [
+                            {value: 'addSubcontractor', text: 'Subcontractor'},
+                            {value: 'addConsultant', text: 'Consultant'},
+                            {value: 'addEmployee', text: 'Employee'}
+                        ];
+                        break;
+                    case "clients": 
+                        $scope.availableUserType = [
+                            {value: 'addBuilder', text: 'Builder'},
+                            {value: 'addArchitect', text: 'Architect'},
+                            {value: 'addConsultant', text: 'Consultant'},
+                            {value: 'addEmployee', text: 'Employee'}
+                        ];
+                        break;
+                    case "architects": 
+                        $scope.availableUserType = [
+                            {value: 'addConsultant', text: 'Consultant'},
+                            {value: 'addEmployee', text: 'Employee'}
+                        ];
+                        break;
+                    default:
+                        $scope.availableUserType = [
+                            {value: 'addEmployee', text: 'Employee'}
+                        ];
+                        break;
+                }
+            } else {
+                switch($rootScope.currentUser.type) {
+                    case "builders":
+                        $scope.availableUserType = [
+                            {value: 'addSubcontractor', text: 'Subcontractor'},
+                            {value: 'addConsultant', text: 'Consultant'},
+                            {value: 'addEmployee', text: 'Employee'}
+                        ];
+                        break;
+                    case "clients": 
+                        $scope.availableUserType = [
+                            {value: 'addConsultant', text: 'Consultant'},
+                            {value: 'addEmployee', text: 'Employee'}
+                        ];
+                        break;
+                    case "architects": 
+                        $scope.availableUserType = [
+                            {value: 'addBuilder', text: 'Builder'},
+                            {value: 'addClient', text: 'Client'},
+                            {value: 'addConsultant', text: 'Consultant'},
+                            {value: 'addEmployee', text: 'Employee'}
+                        ];
+                        break;
+                    default:
+                        $scope.availableUserType = [
+                            {value: 'addEmployee', text: 'Employee'}
+                        ];
+                        break;
+                }
             }
 		});
 	};

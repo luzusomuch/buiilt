@@ -9,13 +9,6 @@ var EventBus = require('./../components/EventBus');
 var PeopleSchema = new Schema({
     type: {type: String, default: 'people'},
     project: {type: Schema.Types.ObjectId, ref: 'Project'},
-    projectManager: {
-        _id: {type: Schema.Types.ObjectId, ref: 'User'},
-        type: {type: String},
-        teamMember: [
-            {type: Schema.Types.ObjectId, ref: 'User'}
-        ]
-    },
     builders: [{
         inviter: {type: Schema.Types.ObjectId, ref: 'User'},
         _id: {type: Schema.Types.ObjectId, ref: 'User'},

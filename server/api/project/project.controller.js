@@ -43,15 +43,22 @@ exports.create = function(req, res){
     }
     var project = new Project(data);
     project.status = 'waiting';
+    project.projectManager._id = req.user._id,
+    project.projectManager.type = req.body.teamType,
     project.save(function(err) {
       if (err) {
         res.send(422,err);
       } else {
         var people = new People({
-          project: project._id,
-          'projectManager._id': req.user._id,
-          'projectManager.type': req.body.teamType
+          project: project._id
         });
+        if (req.body.teamType === "builder") {
+          people.builders.push({_id: req.user._id, hasSelect: true, inviter: req.user._id});
+        } else if (req.body.teamType === "homeOwner") {
+          people.clients.push({_id: req.user._id, hasSelect: true, inviter: req.user._id});
+        } else if (req.body.teamType === "architect") {
+          people.architects.push({_id: req.user._id, hasSelect: true, inviter: req.user._id});
+        }
         people.save();
         User.findById(req.user._id, function(err, user) {
           user.projects.push(project._id);

@@ -23,8 +23,9 @@ var ProjectSchema = new Schema({
     enum: ['open', 'close', 'waiting'],
     default: 'open'
   },
-  winner: {
-    type: Schema.Types.ObjectId, ref: 'User'
+  projectManager: {
+    _id: {type: Schema.Types.ObjectId, ref: 'User', required: true},
+    type: {type: String}
   },
   address: {
     type: String,

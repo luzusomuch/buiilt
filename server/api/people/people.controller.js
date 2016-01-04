@@ -1214,11 +1214,12 @@ exports.getInvitePeople = function(req, res) {
     .populate("consultants.teamMember", "_id email name")
     .populate("consultants.inviter", "_id email name")
     .populate("projectManager.teamMember", "_id email name")
+    .populate("project")
     .exec(function(err, people){
         if (err) {return res.send(500,err);}
         if (!people) {return res.send(404);}
         else {
-            if (people.projectManager._id.toString() === req.user._id.toString()) {
+            if (people.project.projectManager._id.toString() === req.user._id.toString()) {
                 return res.send(200, people);
             } else {
                 responseWithEachType(people, req, res);
