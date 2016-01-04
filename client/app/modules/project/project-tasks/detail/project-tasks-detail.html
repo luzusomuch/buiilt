@@ -15,7 +15,85 @@
 		
 		<div class="main-page-content" layout-padding>
 			
-			<p>Project Task Detail</p>
+			<div class="item-activity">
+			
+				<div layout="row" flex class="activity-stream-head">
+					<p>This message was created by <strong>{ username }</strong> on { date and time }. <span>This message is related to the { file OR task } { name and link}.</span></p>
+				</div>
+				
+				<div layout="row" layout-align="center center" flex class="activity-stream">
+					<span flex="5"></span>
+					<div class="icon-type">
+						<md-icon class="material-icons md-primary">done</md-icon>
+					</div>
+					<span flex="5"></span>
+					<div flex class="activity-detail">
+						<p><strong>{ username }</strong> has marked this task { complete/uncomplete }.</p>
+						<p class="meta-data"><span class="time">2:11 pm</span> <span class="date">03/01/2016</span><p>
+					</div>
+				</div>
+				
+				<div layout="row" layout-align="center center" flex class="activity-stream">
+					<span flex="5"></span>
+					<div class="icon-type">
+						<md-icon class="material-icons md-primary">edit</md-icon>
+					</div>
+					<span flex="5"></span>
+					<div flex class="activity-detail">
+						<p><strong>{ username }</strong> has edited the details of this task { summary of edit descripiton, due date etc. }.</p>
+						<p class="meta-data"><span class="time">2:11 pm</span> <span class="date">03/01/2016</span><p>
+					</div>
+				</div>
+				
+				<div layout="row" layout-align="center center" flex class="activity-stream">
+					<span flex="5"></span>
+					<div class="icon-type">
+						<md-icon class="material-icons md-primary">person_outline</md-icon>
+					</div>
+					<span flex="5"></span>
+					<div flex class="activity-detail">
+						<p><strong>{ username }</strong> has assigned this task to { new team member name }.</p>
+						<p class="meta-data"><span class="time">2:11 pm</span> <span class="date">03/01/2016</span><p>
+					</div>
+				</div>
+				
+				<div layout="row" layout-align="center center" flex class="activity-stream related">
+					<span flex="5"></span>
+					<div class="icon-type">
+						<md-icon class="material-icons md-primary">chat_bubble_outline</md-icon>
+					</div>
+					<span flex="5"></span>
+					<div flex class="activity-detail">
+						<p><strong>{ username }</strong> has attached the related message thread, "{ name and link to message thread }".</p>
+						<p class="meta-data"><span class="time">2:11 pm</span> <span class="date">03/01/2016</span><p>
+					</div>
+				</div>
+				
+				<div layout="row" layout-align="center center" flex class="activity-stream related">
+					<span flex="5"></span>
+					<div class="icon-type">
+						<md-icon class="material-icons md-primary">done_all</md-icon>
+					</div>
+					<span flex="5"></span>
+					<div flex class="activity-detail">
+						<p><strong>{ username }</strong> has attached the related task, "{ description and link to message thread }".</p>
+						<p class="meta-data"><span class="time">2:11 pm</span> <span class="date">03/01/2016</span><p>
+					</div>
+				</div>
+				
+				<div layout="row" layout-align="center center" flex class="activity-stream related">
+					<span flex="5"></span>
+					<div class="icon-type">
+						<md-icon class="material-icons md-primary">attach_file</md-icon>
+					</div>
+					<span flex="5"></span>
+					<div flex class="activity-detail">
+						<p><strong>{ username }</strong> has attached the related file, "{ name and link to file }".</p>
+						<p class="meta-data"><span class="time">2:11 pm</span> <span class="date">03/01/2016</span><p>
+					</div>
+				</div>
+				
+			</div>
 			
 			<div>
   		  	  <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-main">
@@ -34,7 +112,7 @@
 	  					  <md-tooltip md-direction="left">Edit Task Details</md-tooltip>
 	  				      <md-icon class="material-icons">edit</md-icon>
 			  	      </md-button>
-  			  	      <md-button aria-label="Add a Team Member" class="md-fab md-raised md-mini">
+  			  	      <md-button aria-label="Add a Team Member" class="md-fab md-raised md-mini md-primary">
   	  					  <md-tooltip md-direction="left">Assign to a Team Member</md-tooltip>
   	  				      <md-icon class="material-icons">person_outline</md-icon>
   			  	      </md-button>

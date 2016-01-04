@@ -420,8 +420,31 @@ md-input-container > label {
 	font-weight: 500;
 	text-transform: uppercase;
 	font-color: #616161;
+	margin-top: 1vh;
 }
 
+.activity-stream {
+	border: 1px solid #eee;
+	border-radius: 2px;
+	margin-bottom: 2vh;
+	padding: 12px;
+}
+
+.activity-stream.related {
+	background-color: #FAFAFA;
+	border: 1px solid #F5F5F5;
+	border-radius: 2px;
+}
+
+.activity-stream-head {
+	border: 1px solid #F5F5F5;
+	border-radius: 2px;
+	margin-bottom: 2vh;
+	font-size: 12px;
+	font-weight: 500;
+	text-transform: uppercase;
+	padding: 12px;
+}
 
 
 
