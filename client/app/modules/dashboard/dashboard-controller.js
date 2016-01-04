@@ -153,6 +153,34 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                 default:
                 break;
             }
+        } else if (place === "message") {
+            switch (value) {
+                case "createdByMe":
+                    _.each($scope.myMessages, function(item) {
+                        if (item.owner == user._id) {
+                            $scope.results.push(item);
+                        }
+                    });
+                break;
+
+                case "mentionsMe":
+                    _.each($scope.myMessages, function(item) {
+                        if (item.messages.length > 0) {
+                            _.each(item.messages, function(message) {
+                                if (message.mentions && message.mentions.length > 0) {
+                                    if (_.indexOf(message.mentions, user._id) !== -1) {
+                                        $scope.results.push(item);
+                                        return false;
+                                    }
+                                }
+                            });
+                        }
+                    });
+                break;
+
+                default:
+                break;
+            }
         }
     };
 
