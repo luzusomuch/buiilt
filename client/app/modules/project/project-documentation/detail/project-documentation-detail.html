@@ -1,0 +1,33 @@
+<div layout="row" class="detail-view-content">
+	
+	<div layout="column" flex="70" class="md-whiteframe-1dp">
+		
+		<div class="detail-header" layout="row" layout-padding>
+			<p>Document Name</p>
+	    </div>
+		
+		<div class="main-page-content" layout-padding>
+			
+			<div>
+  		  	  <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-main">
+  				  <md-fab-trigger>
+  			  	      <md-button aria-label="Add an Item to this Project" class="md-fab md-primary">
+  						  <md-tooltip md-direction="left">Actions...</md-tooltip>
+  					      <md-icon class="material-icons" >add</md-icon>
+  			  	      </md-button>
+  		  	      </md-fab-trigger>
+  				  <md-fab-actions>
+  			  	      <md-button aria-label="Upload a Document Revision" class="md-fab md-raised md-mini md-primary">
+  	  					  <md-tooltip md-direction="left">Upload a Document Revision</md-tooltip>
+  	  				      <md-icon class="material-icons">attach_file</md-icon>
+  			  	      </md-button>
+  			  	  </md-fab-actions>
+  		  	  </md-fab-speed-dial>
+		    </div>
+			
+		</div>
+	</div>
+		
+	<doc-history flex="30"></doc-history>
+		
+</div>
