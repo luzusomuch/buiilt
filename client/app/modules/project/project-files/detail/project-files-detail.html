@@ -15,26 +15,82 @@
 		
 		<div class="main-page-content" layout-padding>
 			
-			<div layout="row" layout-align="center center" flex class="activity-stream">
-				
-				<span flex="5"></span>
-				
-				<div class="icon-type">
-					<md-icon class="material-icons md-primary">person_outline</md-icon>
+			<div class="item-activity">
+			
+				<div layout="row" flex class="activity-stream-head">
+					<p>This file was created by <strong>{ username }</strong> on { date and time }. <span>This file is related to the { message thread OR task } { name and link}.</span></p>
+				</div>
+			
+				<div layout="row" layout-align="center center" flex class="activity-stream">
+					<span flex="5"></span>
+					<div class="icon-type">
+						<md-icon class="material-icons md-primary">edit</md-icon>
+					</div>
+					<span flex="5"></span>
+					<div flex class="activity-detail">
+						<p><strong>{ username }</strong> has edited the details of this file { summary of the edit - for example name: ... description: ... etc}.</p>
+						<p class="meta-data"><span class="time">2:11 pm</span> <span class="date">03/01/2016</span><p>
+					</div>
 				</div>
 				
-				<span flex="5"></span>
-				
-				<div class="meta-data">
-					<p class="date">03/01/2016</p>
-					<p class="time">2:11 pm</p>
-					<p class="user">Myles Condon</p>
+				<div layout="row" layout-align="center center" flex class="activity-stream">
+					<span flex="5"></span>
+					<div class="icon-type">
+						<md-icon class="material-icons md-primary">attach_file</md-icon>
+					</div>
+					<span flex="5"></span>
+					<div flex class="activity-detail">
+						<p><strong>{ username }</strong> has uploaded a revision to this file.</p>
+						<p class="meta-data"><span class="time">2:11 pm</span> <span class="date">03/01/2016</span><p>
+					</div>
 				</div>
 				
-				<span flex="5"></span>
+				<div layout="row" layout-align="center center" flex class="activity-stream">
+					<span flex="5"></span>
+					<div class="icon-type">
+						<md-icon class="material-icons md-primary">person_outline</md-icon>
+					</div>
+					<span flex="5"></span>
+					<div flex class="activity-detail">
+						<p><strong>{ username }</strong> has assigned this file to { new team member name }.</p>
+						<p class="meta-data"><span class="time">2:11 pm</span> <span class="date">03/01/2016</span><p>
+					</div>
+				</div>
 				
-				<div flex class="activity-detail">
-					<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+				<div layout="row" layout-align="center center" flex class="activity-stream related">
+					<span flex="5"></span>
+					<div class="icon-type">
+						<md-icon class="material-icons md-primary">chat_bubble_outline</md-icon>
+					</div>
+					<span flex="5"></span>
+					<div flex class="activity-detail">
+						<p><strong>{ username }</strong> has attached the related message thread, "{ name and link to message thread }".</p>
+						<p class="meta-data"><span class="time">2:11 pm</span> <span class="date">03/01/2016</span><p>
+					</div>
+				</div>
+				
+				<div layout="row" layout-align="center center" flex class="activity-stream related">
+					<span flex="5"></span>
+					<div class="icon-type">
+						<md-icon class="material-icons md-primary">done_all</md-icon>
+					</div>
+					<span flex="5"></span>
+					<div flex class="activity-detail">
+						<p><strong>{ username }</strong> has attached related task, "{ description and link to message thread }".</p>
+						<p class="meta-data"><span class="time">2:11 pm</span> <span class="date">03/01/2016</span><p>
+					</div>
+				</div>
+				
+				<div layout="row" layout-align="center center" flex class="activity-stream related">
+					<span flex="5"></span>
+					<div class="icon-type">
+						<md-icon class="material-icons md-primary">attach_file</md-icon>
+					</div>
+					<span flex="5"></span>
+					<div flex class="activity-detail">
+						<p><strong>{ username }</strong> has attached the related file, "{ name and link to file }".</p>
+						<p class="meta-data"><span class="time">2:11 pm</span> <span class="date">03/01/2016</span><p>
+					</div>
 				</div>
 				
 			</div>
@@ -67,6 +123,10 @@
   			  	      <md-button aria-label="Add a Task" class="md-fab md-raised md-mini">
   	  					  <md-tooltip md-direction="left">Attach a Related Task</md-tooltip>
   	  				      <md-icon class="material-icons">done_all</md-icon>
+  			  	      </md-button>
+  			  	      <md-button aria-label="Add a Related File" class="md-fab md-raised md-mini">
+  	  					  <md-tooltip md-direction="left">Attach a Related File</md-tooltip>
+  	  				      <md-icon class="material-icons">attach_file</md-icon>
   			  	      </md-button>
   			  	  </md-fab-actions>
   		  	  </md-fab-speed-dial>
