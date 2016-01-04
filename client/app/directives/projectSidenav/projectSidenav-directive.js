@@ -9,7 +9,7 @@ angular.module('buiiltApp').directive('projectSidenav', function(){
         controller: function($scope, $rootScope, userService, projectService, $state, $timeout) {
             $scope.errors = {};
             $scope.success = {};
-            
+            $scope.$state = $state;
                      
         }
     };
