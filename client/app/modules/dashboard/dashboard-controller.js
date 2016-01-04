@@ -131,18 +131,23 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
 
                 case "dueTomorrow":
                     var tomorrow = moment(new Date()).add(1, "days").format("YYYY-MM-DD");
-                    console.log(tomorrow);
                     _.each($scope.myTasks, function(task) {
                         var dateEnd = moment(task.dateEnd).format("YYYY-MM-DD");
-                        console.log(dateEnd);
                         if (moment(dateEnd).isSame(tomorrow)) {
                             $scope.results.push(task);
-                            console.log(task);
                         }
                     });
                 break;
 
                 case "dueThisWeek":
+                    _.each($scope.myTasks, function(task) {
+                        var currentWeek = getWeek(new Date());
+                        _.each(currentWeek, function(day) {
+                            if (moment(moment(new Date(day)).format("YYYY-MM-DD")).isSame(moment(new Date(task.dateEnd)).format("YYYY-MM-DD"))) {
+                                $scope.results.push(task);
+                            }
+                        });
+                    });
                 break;
 
                 default:
@@ -150,4 +155,13 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             }
         }
     };
+
+    function getWeek(fromDate){
+        var sunday = new Date(fromDate.setDate(fromDate.getDate()-fromDate.getDay()))
+            ,result = [new Date(sunday)];
+        while (sunday.setDate(sunday.getDate()+1) && sunday.getDay()!==0) {
+            result.push(new Date(sunday));
+        }
+        return result;
+    }
 });
