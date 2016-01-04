@@ -49,9 +49,10 @@ exports.invitePeople = function(req, res) {
                         {path:"subcontractors._id", select: "_id email name"},
                         {path:"subcontractors.teamMember", select: "_id email name"},
                         {path: "consultants._id", select: "_id email name"},
-                        {path: "consultants.teamMember", select: "_id email name"}
+                        {path: "consultants.teamMember", select: "_id email name"},
+                        {path: "project"}
                         ], function(err, people) {
-                            if (people.projectManager._id.toString() === req.user._id.toString()) {
+                            if (people.project.projectManager._id.toString() === req.user._id.toString()) {
                                 return res.send(200,people);
                             }
                         });
@@ -92,14 +93,7 @@ exports.invitePeople = function(req, res) {
                                         inviterType: (type == "consultants") ? invite.inviterType : null
                                     });
                                     newInviteeNotSignUp.push(invite.email);
-                                    var inviteToken = new InviteToken({
-                                        type: 'project-invite',
-                                        email: invite.email,
-                                        element: {
-                                            project: people.project
-                                        }
-                                    });
-                                    inviteToken.save(cb());
+                                    cb();
                                 } else {
                                     team.push({
                                         inviter: req.user._id,
@@ -108,14 +102,9 @@ exports.invitePeople = function(req, res) {
                                         inviterType: (type == "consultants") ? invite.inviterType : null
                                     });
                                     newInviteeSignUpAlready.push(user._id);
-                                    var inviteToken = new InviteToken({
-                                        type: 'project-invite',
-                                        user: user._id,
-                                        element: {
-                                            project: people.project
-                                        }
-                                    });
-                                    inviteToken.save(cb());
+                                    user.projects.push(people.project);
+                                    user.markModified("projects");
+                                    user.save(cb());
                                 }
                             });
                         } else {
@@ -136,12 +125,12 @@ exports.invitePeople = function(req, res) {
                                                 type: 'project-invite',
                                                 email: invitee.email,
                                                 element: {
-                                                    project: people.project
+                                                    project: people.project,
+                                                    type: type
                                                 }
                                             });
                                             inviteToken.save(callback());
-                                        }
-                                        else {
+                                        } else {
                                             team.push({
                                                 inviter: req.user._id,
                                                 _id: user._id,
@@ -152,7 +141,8 @@ exports.invitePeople = function(req, res) {
                                                 type: 'project-invite',
                                                 user: user._id,
                                                 element: {
-                                                    project: people.project
+                                                    project: people.project,
+                                                    type: type
                                                 }
                                             });
                                             inviteToken.save(callback());
@@ -186,9 +176,10 @@ exports.invitePeople = function(req, res) {
                             {path:"subcontractors.teamMember", select: "_id email name"},
                             {path: "consultants._id", select: "_id email name"},
                             {path: "consultants.teamMember", select: "_id email name"},
-                            {path: "projectManager.teamMember", select: "_id email name"}
+                            {path: "projectManager.teamMember", select: "_id email name"},
+                            {path: "project"}
                             ], function(err, people) {
-                                if (people.projectManager._id.toString() === req.user._id.toString()) {
+                                if (people.project.projectManager._id.toString() === req.user._id.toString()) {
                                     return res.send(200,people);
                                 } else {
                                     responseWithEachType(people, req, res);

@@ -91,7 +91,7 @@ angular.module('buiiltApp')
           } else if (data.package.type === 'BuilderPackage') {
             $state.go('dashboard', {id: data.package.project});
           } else if (data.package.type == 'people') {
-            $state.go('people', {id: data.package.project});
+            window.location.href = "/projects/open";
           } else if (data.package.type == 'board') {
             $state.go('board', {id: data.package.project});
           }
