@@ -27,8 +27,42 @@
 	
 </div>
 
-<div class="main-page-content">
-	<md-list ng-cloak>
+<div class="main-page-content" layout="row">
+	
+	<div ng-show="!search" ng-repeat="member in membersList track by $index" flex="25">
+	
+		<md-card class="team-card">
+			<md-card-header>
+				<p class="name">{{(member._id) ? member.name : member.email}}</p>
+			</md-card-header>
+		
+			<md-card-content>
+				<p class="email">{{(member.email) ? member.email : 'Email Address'}}</p>
+				<p class="phone">{{(member.phoneNumber)? member.phoneNumber : 'Phone Number'}}</p>
+			</md-card-content>
+		
+			<md-card-actions layout-margin>
+				<md-card-icon-actions layout="row" layout-align="space-around center">
+				    <md-button class="material-icons md-icon-button">
+	  					<md-tooltip md-direction="down">Start A New Message</md-tooltip>
+	  				    <md-icon class="material-icons">chat_bubble_outline</md-icon>
+			        </md-button>
+				    <md-button class="material-icons md-icon-button">
+	  					<md-tooltip md-direction="down">Assign A New Task</md-tooltip>
+	  				    <md-icon class="material-icons">done_all</md-icon>
+			        </md-button>
+				    <md-button class="material-icons md-icon-button">
+	  					<md-tooltip md-direction="down">Send a File</md-tooltip>
+	  				    <md-icon class="material-icons">attach_file</md-icon>
+			        </md-button>
+				</md-card-icon-actions>
+			</md-card-actions>
+		
+		</md-card>
+	
+	</div>
+	
+	<!-- <md-list ng-cloak>
 		<div ng-show="!search" ng-repeat="member in membersList track by $index" ui-sref="project.team.detail">
 			<md-list-item class="md-2-line" md-ink-ripple>
 				<div class="md-list-item-text" layout="column">
@@ -48,7 +82,7 @@
 			</md-list-item>
 			<md-divider></md-divider>
 		</div>
-	</md-list>
+	</md-list> -->
 
 	<div>
 	  <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-list">

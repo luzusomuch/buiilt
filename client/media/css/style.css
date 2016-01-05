@@ -446,6 +446,30 @@ md-input-container > label {
 	padding: 12px;
 }
 
+.team-card {
+	background-color: #FAFAFA;
+}
+
+.team-card .name {
+	color: #424242;
+	font-size: 16px;
+	font-weight: 400;
+	text-transform: capitalize;
+}
+
+.team-card .email {
+	color: #616161;
+	font-size: 14px;
+	font-weight: 500;
+}
+
+.team-card .phone {
+	color: #616161;
+	font-size: 14px;
+	font-weight: 500;
+}
+
+
 
 
 
