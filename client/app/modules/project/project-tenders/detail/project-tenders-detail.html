@@ -3,7 +3,7 @@
 	<div layout="column" flex="70" class="md-whiteframe-1dp">
 		
 		<div class="detail-header" layout="row" layout-padding>
-			<p>{{tender.name}}</p>
+			<p>{{ tender.name }}</p>
 			<span flex></span>
 			<div>
 				<md-button ng-click="selectWinner()">Select a Winner</md-button>
@@ -15,7 +15,62 @@
 		
 		<div class="main-page-content" layout-padding>
 			
-			<p>Project Tender Detail</p>
+			<div class="item-activity">
+			
+				<div layout="row" flex class="activity-stream-head">
+					<p>This tender was created by <strong>{ username }</strong> on { date and time }.</p>
+				</div>
+				
+				<div layout="row" layout-align="center center" flex class="activity-stream">
+					<span flex="5"></span>
+					<div class="icon-type">
+						<md-icon class="material-icons md-primary">reply_all</md-icon>
+					</div>
+					<span flex="5"></span>
+					<div flex class="activity-detail">
+						<p><strong>{ username }</strong> has attached an addendum to this tender:</p>
+						<p>{ addendum content, including formatting }</p>
+						<p class="meta-data"><span class="time">2:11 pm</span> <span class="date">03/01/2016</span><p>
+					</div>
+				</div>
+				
+				<div layout="row" layout-align="center center" flex class="activity-stream">
+					<span flex="5"></span>
+					<div class="icon-type">
+						<md-icon class="material-icons md-primary">edit</md-icon>
+					</div>
+					<span flex="5"></span>
+					<div flex class="activity-detail">
+						<p><strong>{ username }</strong> has edited the details of this tender: { summary of the edit - for example name: ... description: ... etc}.</p>
+						<p class="meta-data"><span class="time">2:11 pm</span> <span class="date">03/01/2016</span><p>
+					</div>
+				</div>
+				
+				<div layout="row" layout-align="center center" flex class="activity-stream">
+					<span flex="5"></span>
+					<div class="icon-type">
+						<md-icon class="material-icons md-primary">person_outline</md-icon>
+					</div>
+					<span flex="5"></span>
+					<div flex class="activity-detail">
+						<p><strong>{ username }</strong> has invited new tenderer, { new tenderer name }.</p>
+						<p class="meta-data"><span class="time">2:11 pm</span> <span class="date">03/01/2016</span><p>
+					</div>
+				</div>
+				
+				<div layout="row" layout-align="center center" flex class="activity-stream">
+					<span flex="5"></span>
+					<div class="icon-type">
+						<md-icon class="material-icons md-primary">format_list_bulleted</md-icon>
+					</div>
+					<span flex="5"></span>
+					<div flex class="activity-detail">
+						<p><strong>{ username }</strong> has selected the winner, "{ winner name }" for this tender.</p>
+						<p class="meta-data"><span class="time">2:11 pm</span> <span class="date">03/01/2016</span><p>
+					</div>
+				</div>
+				
+			</div>
 			
 			<div>
   		  	  <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-main">

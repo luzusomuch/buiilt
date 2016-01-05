@@ -186,12 +186,13 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
 		if (form.$valid) {
 			$scope.invite.inviterType = $rootScope.currentUser.type;
 			peopleService.update({id: $stateParams.id},$scope.invite).$promise.then(function(res){
-				$scope.showToast("Invited successfully");
+				$scope.showToast("Invitations sent successfully!");
 	            $scope.cancelInviteTeamModal();
 	            loadProjectMembers($stateParams.id);
 	        }, function(res){
 	        	$scope.showToast("Error. Something went wrong.")
 	        });
+			$mdDialog.hide();
 		}
 	};
 

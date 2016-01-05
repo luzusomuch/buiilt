@@ -329,7 +329,7 @@ ul.pagination {
 }
 
 .activemenu md-list-item {
-	border-left: 5px solid #42A5F5;
+	border-right: 5px solid #42A5F5;
 }
 
 
