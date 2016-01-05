@@ -5,10 +5,10 @@
 		<div class="detail-header" layout="row" layout-padding>
 			<p>{{ tender.tenderName }}</p>
 			<span flex></span>
-			<div>
-				<md-button ng-click="selectWinner()">Select a Winner</md-button>
+			<div ng-show="tender.inviter._id == currentUser._id">
+				<md-button ng-click="openSelectWinnerModal()">Select a Winner</md-button>
 			</div>
-			<md-chips class="set-filters">
+			<md-chips class="set-filters" ng-show="tender.inviter._id == currentUser._id">
 				<md-chip>Show Related Activities</md-chip>
 			</md-chips>
 	    </div>

@@ -6,6 +6,12 @@ var crypto = require('crypto');
 var okay = require('okay');
 var EventBus = require('./../components/EventBus');
 
+var activities = {
+    type: String,
+    createdAt: {type: Date},
+    reference: {}
+};
+
 var tender = {
     tenderName: String,
     tenderers: [{
@@ -14,8 +20,10 @@ var tender = {
             {type: Schema.Types.ObjectId, ref: 'User'}
         ],
         email: {type: String},
+        activities: [activities]
     }],
     inviter: {type: Schema.Types.ObjectId, ref: 'User'},
+    inviterActivities: [activities],
     inviterType: String,
     hasSelect: {type: Boolean, default: false},
     createdAt: {type: Date}
@@ -29,44 +37,6 @@ var PeopleSchema = new Schema({
     clients: [tender],
     subcontractors: [tender],
     consultants: [tender]
-    // old version
-    // architects: [{
-    //     inviter: {type: Schema.Types.ObjectId, ref: 'User'},
-    //     _id: {type: Schema.Types.ObjectId, ref: 'User'},
-    //     teamMember: [
-    //         {type: Schema.Types.ObjectId, ref: 'User'}
-    //     ],
-    //     email: {type: String},
-    //     hasSelect: {type: Boolean, default: false}
-    // }],
-    // clients: [{
-    //     inviter: {type: Schema.Types.ObjectId, ref: 'User'},
-    //     _id: {type: Schema.Types.ObjectId, ref: 'User'},
-    //     teamMember: [
-    //         {type: Schema.Types.ObjectId, ref: 'User'}
-    //     ],
-    //     email: {type: String},
-    //     hasSelect: {type: Boolean, default: false}
-    // }],
-    // subcontractors: [{
-    //     inviter: {type: Schema.Types.ObjectId, ref: 'User'},
-    //     _id: {type: Schema.Types.ObjectId, ref: 'User'},
-    //     teamMember: [
-    //         {type: Schema.Types.ObjectId, ref: 'User'}
-    //     ],
-    //     email: {type: String},
-    //     hasSelect: {type: Boolean, default: false}
-    // }],
-    // consultants: [{
-    //     inviter: {type: Schema.Types.ObjectId, ref: 'User'},
-    //     inviterType: {type: String},
-    //     _id: {type: Schema.Types.ObjectId, ref: 'User'},
-    //     teamMember: [
-    //         {type: Schema.Types.ObjectId, ref: 'User'}
-    //     ],
-    //     email: {type: String},
-    //     hasSelect: {type: Boolean, default: false}
-    // }]
 });
 
 PeopleSchema

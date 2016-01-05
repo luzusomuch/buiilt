@@ -1,0 +1,26 @@
+<md-dialog aria-label="Select Winner Tenderer" flex="70">
+    <form ng-submit="selectWinner(form)" name="form">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Select Winner Tenderer</h2>
+            </div>
+        </md-toolbar>
+        
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column">
+                <div layout="row">
+                    <md-list ng-cloak>
+                        <md-list-item ng-repeat="tenderer in tender.tenderers" ng-click="selectWinner(tenderer)">
+                            {{(tenderer._id) ? tenderer._id.name : tenderer.email}}
+                        </md-list-item>
+                    </md-list>
+                </div>
+            </div>
+        </md-dialog-content>
+        
+        <md-dialog-actions>
+            <md-button ng-click="cancelNewTenderModal()">Cancel</md-button>
+            <md-button type="submit" class="md-raised md-accent md-hue-1">Select winner!</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

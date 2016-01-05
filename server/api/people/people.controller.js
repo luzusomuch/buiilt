@@ -211,10 +211,30 @@ exports.selectWinnerTender = function(req, res) {
         if (err) {return res.send(500,err);}
         if (!people) {return res.send(404);}
         else {
-            console.log(people);
-            return;
             var winnerTenderNotification = [];
             var loserTender = [];
+            var roles = ["builders", "clients", "architects", "subcontractors", "consultants"];
+            console.log(people);
+            _.each(roles, function(role) {
+                _.each(people[role], function(tender) {
+                    var index = _.findIndex(tender.tenderers, function(tenderer) {
+                        if (tenderer._id) {
+                            return tenderer._id.toString() == req.body._id._id;
+                        }
+                    });
+                    console.log(index);
+                    if (index != -1) {
+                        tender.hasSelect = true;
+                        winnerTenderNotification.push(req.body._id._id);
+                        var winner = tender;
+                        _.remove(tender.tenderers, function(tenderer) {
+                            return tenderer._id.toString() == winner._id;
+                        });
+                        console.log(tender.tenderers);
+                    }
+                });
+            });
+            return;
             if (req.body.type == 'subcontractor') {
                 var winnerTender = _.remove(people.subcontractors, function(item) {
                     return item.inviter == req.body.tender.inviter._id && item._id == req.body.tender._id._id;
@@ -507,7 +527,6 @@ exports.getTender = function(req, res) {
                             });
                         }
                     });
-                    console.log(result);
                     return res.send(200,result);
                 }
             });

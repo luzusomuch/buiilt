@@ -11,6 +11,7 @@ angular.module('buiiltApp').directive('relatedItems', function(){
             $scope.success = {};
 			
 			$scope.$state = $state;
+            $scope.currentUser = $rootScope.currentUser;
 
 			$scope.showRelatedMessageModal = function ($event) {
 				$mdDialog.show({

@@ -52,7 +52,6 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
             // _.each($scope.people[$rootScope.currentUser.type].tenderers.teamMember, function(member) {
             //     $scope.membersList.push({_id: member._id, name: member.name, type: $rootScope.currentUser.type});
             // });
-console.log($scope.membersList)
             switch($rootScope.currentUser.type) {
                 case "builders":
                     $scope.availableUserType = [
