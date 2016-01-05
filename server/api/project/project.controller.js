@@ -38,7 +38,8 @@ exports.create = function(req, res){
                             teamMember: []
                         }],
                         hasSelect: true, 
-                        inviter: req.user._id
+                        inviter: req.user._id,
+                        createAt: new Date()
                     });
                 } else if (req.body.teamType === "homeOwner") {
                     people.builders.push({
@@ -48,7 +49,8 @@ exports.create = function(req, res){
                             teamMember: []
                         }],
                         hasSelect: true, 
-                        inviter: req.user._id
+                        inviter: req.user._id,
+                        createAt: new Date()
                     });
                 } else if (req.body.teamType === "architect") {
                     people.builders.push({
@@ -58,7 +60,8 @@ exports.create = function(req, res){
                             teamMember: []
                         }],
                         hasSelect: true, 
-                        inviter: req.user._id
+                        inviter: req.user._id,
+                        createAt: new Date()
                     });
                 }
                 people.save();

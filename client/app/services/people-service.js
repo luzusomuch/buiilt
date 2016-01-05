@@ -1,6 +1,6 @@
 angular.module('buiiltApp')
 .factory('peopleService', function($rootScope, $q, $resource) {
-    return $resource('/api/peoples/:id/:action',{id: '@_id'},
+    return $resource('/api/peoples/:id/:tenderId/:action',{id: '@_id', tenderId: '@_tenderId'},
         {
             update: {
                 method: 'PUT',
@@ -18,6 +18,12 @@ angular.module('buiiltApp')
                 method: 'get',
                 params: {
                     action: 'get-invite-people'
+                }
+            },
+            getTender: {
+                method: 'GET',
+                params: {
+                    action: 'get-tender'
                 }
             }
         });

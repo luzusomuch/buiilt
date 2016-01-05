@@ -17,7 +17,8 @@ var tender = {
     }],
     inviter: {type: Schema.Types.ObjectId, ref: 'User'},
     inviterType: String,
-    hasSelect: {type: Boolean, default: false}
+    hasSelect: {type: Boolean, default: false},
+    createdAt: {type: Date}
 };
 
 var PeopleSchema = new Schema({

@@ -4,17 +4,14 @@ angular.module('buiiltApp').directive('relatedItems', function(){
         restrict: 'EA',
         templateUrl: 'app/directives/relatedItems/relatedItems.html',
         scope:{
-            project:'='
+            tender:'='
         },
-        controller: function($scope, $rootScope, $location, quoteService, userService, projectService, $state, $mdDialog) {
+        controller: function($scope, $rootScope, $location, userService, projectService, $state, $mdDialog) {
             $scope.errors = {};
             $scope.success = {};
-            $scope.user = {};
 			
 			$scope.$state = $state;
 
-		    $scope.errors = {};
-			
 			$scope.showRelatedMessageModal = function ($event) {
 				$mdDialog.show({
 				  targetEvent: $event,

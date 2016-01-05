@@ -50,7 +50,12 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
     url: '/detail/:tenderId',
     templateUrl: '/app/modules/project/project-tenders/detail/project-tenders-detail.html',
     controller: 'projectTendersDetailCtrl',
-    authenticate : true
+    authenticate : true,
+    resolve: {
+      tender: function($stateParams, peopleService) {
+        return peopleService.getTender({id: $stateParams.id, tenderId: $stateParams.tenderId}).$promise;
+      }
+    }
   })
   
   	//Messages for Single Project

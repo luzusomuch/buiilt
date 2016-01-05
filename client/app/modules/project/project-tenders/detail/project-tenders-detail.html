@@ -3,7 +3,7 @@
 	<div layout="column" flex="70" class="md-whiteframe-1dp">
 		
 		<div class="detail-header" layout="row" layout-padding>
-			<p>{{ tender.name }}</p>
+			<p>{{ tender.tenderName }}</p>
 			<span flex></span>
 			<div>
 				<md-button ng-click="selectWinner()">Select a Winner</md-button>
@@ -18,7 +18,7 @@
 			<div class="item-activity">
 			
 				<div layout="row" flex class="activity-stream-head">
-					<p>This tender was created by <strong>{ username }</strong> on { date and time }.</p>
+					<p>This tender was created by <strong>{{tender.inviter.name}}</strong> on {{tender.createAt | date: 'DD-MM-YYYY'}}.</p>
 				</div>
 				
 				<div layout="row" layout-align="center center" flex class="activity-stream">
@@ -104,6 +104,6 @@
 		</div>
 	</div>
 		
-	<related-items flex="30"></related-items>
+	<related-items flex="30" tender="tender"></related-items>
 		
 </div>

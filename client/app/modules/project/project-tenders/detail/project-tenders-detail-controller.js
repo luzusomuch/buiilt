@@ -1,7 +1,5 @@
-angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($rootScope, $scope, $timeout, $stateParams, userService, peopleService, $mdToast) {
-    userService.get({id: $stateParams.tenderId}).$promise.then(function(user) {
-        $scope.tender = user;
-    });
+angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($rootScope, $scope, $timeout, $stateParams, peopleService, $mdToast, tender) {
+    $scope.tender = tender;
 
     $scope.selectWinner = function() {
         peopleService.selectWinnerTender({id: $stateParams.id},{}).$promise.then(function(res) {

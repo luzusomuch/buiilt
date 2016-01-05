@@ -7,97 +7,13 @@
 		</md-tab-label>
         <md-tab-body>
 			<md-list ng-cloak class="main-page-content">
-				<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event)">
+				<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event)" ng-repeat="tenderer in tender.tenderers">
 				    <div class="md-list-item-text">
-					    <h3>Member 1</h3>
-				        <p>Secondary text line 2</p>
+					    <h3>{{(tenderer._id) ? tenderer._id.name : tenderer.email}}</h3>
+				        <!-- <p>Secondary text line 2</p> -->
 				    </div>
 				</md-list-item>
 				<md-divider></md-divider>
-				<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event)">
-				    <div class="md-list-item-text">
-					    <h3>Member 2</h3>
-				        <p>Secondary text line 2</p>
-				    </div>
-				</md-list-item>
-				<md-divider></md-divider>
-				<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event)">
-				    <div class="md-list-item-text">
-					    <h3>Member 3</h3>
-				        <p>Secondary text line 2</p>
-				    </div>
-				</md-list-item>
-				<md-divider></md-divider>
-				<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event)">
-				    <div class="md-list-item-text">
-					    <h3>Member 2</h3>
-				        <p>Secondary text line 2</p>
-				    </div>
-				</md-list-item>
-				<md-divider></md-divider>
-				<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event)">
-				    <div class="md-list-item-text">
-					    <h3>Member 3</h3>
-				        <p>Secondary text line 2</p>
-				    </div>
-				</md-list-item>
-				<md-divider></md-divider>
-				<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event)">
-				    <div class="md-list-item-text">
-					    <h3>Member 2</h3>
-				        <p>Secondary text line 2</p>
-				    </div>
-				</md-list-item>
-				<md-divider></md-divider>
-				<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event)">
-				    <div class="md-list-item-text">
-					    <h3>Member 3</h3>
-				        <p>Secondary text line 2</p>
-				    </div>
-				</md-list-item>
-				<md-divider></md-divider>
-				<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event)">
-				    <div class="md-list-item-text">
-					    <h3>Member 2</h3>
-				        <p>Secondary text line 2</p>
-				    </div>
-				</md-list-item>
-				<md-divider></md-divider>
-				<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event)">
-				    <div class="md-list-item-text">
-					    <h3>Member 3</h3>
-				        <p>Secondary text line 2</p>
-				    </div>
-				</md-list-item>
-				<md-divider></md-divider>
-				<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event)">
-				    <div class="md-list-item-text">
-					    <h3>Member 2</h3>
-				        <p>Secondary text line 2</p>
-				    </div>
-				</md-list-item>
-				<md-divider></md-divider>
-				<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event)">
-				    <div class="md-list-item-text">
-					    <h3>Member 3</h3>
-				        <p>Secondary text line 2</p>
-				    </div>
-				</md-list-item>
-				<md-divider></md-divider>
-				<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event)">
-				    <div class="md-list-item-text">
-					    <h3>Member 2</h3>
-				        <p>Secondary text line 2</p>
-				    </div>
-				</md-list-item>
-				<md-divider></md-divider>
-				<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event)">
-				    <div class="md-list-item-text">
-					    <h3>Member 3</h3>
-				        <p>Secondary text line 2</p>
-				    </div>
-				</md-list-item>
-				
 			</md-list>
         </md-tab-body>
     </md-tab>
