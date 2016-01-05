@@ -46,6 +46,30 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
 		
     };
 	
+    $scope.showAddCCModal = function($event) {
+		
+        $mdDialog.show({
+            targetEvent: $event,
+            controller: 'settingsCtrl',
+            templateUrl: 'app/modules/settings/partials/settings-billing-newCC.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: false
+        });
+		
+    };
+	
+    $scope.showEditBillingModal = function($event) {
+		
+        $mdDialog.show({
+            targetEvent: $event,
+            controller: 'settingsCtrl',
+            templateUrl: 'app/modules/settings/partials/settings-billing-editBilling.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: false
+        });
+		
+    };
+	
     $scope.cancelDialog = function() {
         $mdDialog.cancel();
     };

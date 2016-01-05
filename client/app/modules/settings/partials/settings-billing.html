@@ -3,11 +3,118 @@
 </div>
 
 <md-list ng-cloak class="main-page-content" layout-padding>
-	<md-list-item class="md-2-line" md-ink-ripple>
-		<div class="md-list-item-text" layout="column">
-	          <h5></h5>
-	          <p></p>
-        </div>
-	</md-list-item>
-	<md-divider></md-divider>
+
+	<div layout="column">
+		
+		<div layout-margin>
+			<p><strong>Current Credit Card:</strong></p>
+			<p>Ends In { { lastFourDigits } }</p>
+		</div>
+		
+		<md-divider></md-divider>
+		
+		<div layout-margin>
+			<div>
+				<p><strong>Billing Address:</strong></p>
+				<p>{{ currentTeam.detail.companyAddress }}</p>
+			</div>
+			
+			<div layout="row">
+				<div flex="40">
+					<p>currentTeam.detail.billingSuburb</p>
+				</div>
+			
+				<div flex="30">
+					<p>currentTeam.detail.billingPostcode</p>
+				</div>
+			</div>
+		</div>
+		
+		<md-divider></md-divider>
+		
+		<div layout="column">
+			
+			<div layout-margin layout="row">
+				<p><strong>Plans:</strong></p>
+			</div>
+			
+			<div layout-margin layout="row">
+			
+				<md-card flex="20">
+					<md-card-header>
+						<h5>Free</h5>
+					</md-card-header>
+				
+					<md-card-content>
+						<p><strong>$0/Month</strong></p>
+						<p><strong>1 Open Project</strong></p>
+					</md-card-content>
+				
+					<md-card-actions>
+						<md-button class="md-primary md-raised">
+							Current
+						</md-button>
+					</md-card-actions>
+				</md-card>
+			
+				<md-card flex="20">
+					<md-card-header>
+						<h5>Standard</h5>
+					</md-card-header>
+				
+					<md-card-content>
+						<p><strong>$50/Month</strong></p>
+						<p><strong>10 Open Projects</strong></p>
+					</md-card-content>
+				
+					<md-card-actions>
+						<md-button class="md-primary md-raised">
+							Switch
+						</md-button>
+					</md-card-actions>
+				</md-card>
+			
+				<md-card flex="20">
+					<md-card-header>
+						<h5>Pro</h5>
+					</md-card-header>
+				
+					<md-card-content>
+						<p><strong>$100/Month</strong></p>
+						<p><strong>Unlimited Open Projects</strong></p>
+					</md-card-content>
+				
+					<md-card-actions>
+						<md-button class="md-primary md-raised">
+							Switch
+						</md-button>
+					</md-card-actions>
+				</md-card>
+			</div>
+		</div>
+		
+	</div>
+	
+	<div>
+  	  <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-list">
+		  <md-fab-trigger>
+	  	      <md-button aria-label="Actions" class="md-fab md-primary">
+				  <md-tooltip md-direction="left">Actions...</md-tooltip>
+			      <md-icon class="material-icons" >add</md-icon>
+	  	      </md-button>
+  	      </md-fab-trigger>
+		  <md-fab-actions>
+	  	      <md-button aria-label="Edit Company Details" class="md-fab md-raised md-mini md-primary" ng-click="showAddCCModal($event)">
+				  <md-tooltip md-direction="left">Add a Credit Card</md-tooltip>
+			      <md-icon class="material-icons">credit_card</md-icon>
+	  	      </md-button>
+	  	      <md-button aria-label="Edit Billing Details" class="md-fab md-raised md-mini md-primary" ng-click="showEditBillingModal($event)">
+				  <md-tooltip md-direction="left">Edit Billing Details</md-tooltip>
+			      <md-icon class="material-icons">edit_location</md-icon>
+	  	      </md-button>
+	  	  </md-fab-actions>
+  	  </md-fab-speed-dial>
+    </div>
+	
 </div>
+

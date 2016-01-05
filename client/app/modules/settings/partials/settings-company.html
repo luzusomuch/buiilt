@@ -4,27 +4,55 @@
 
 <div class="main-page-content" layout-padding>
 	
-	<div layout="column">
+	<div layout="column" layout-padding>
+		
 		<div layout-margin>
 			<p><strong>Company Name:</strong></p>
 			<p>{{ currentTeam.detail.companyName }}</p>
 		</div>
+		
+		<md-divider></md-divider>
+		
 		<div layout-margin>
-			<p><strong>Company Address:</strong></p>
-			<p>{{ currentTeam.detail.companyAddress }}</p>
+			<div>
+				<p><strong>Office Address:</strong></p>
+				<p>{{ currentTeam.detail.companyAddress }}</p>
+			</div>
+			
+			<div layout="row">
+				<div flex="40">
+					<p>currentTeam.detail.companySuburb</p>
+				</div>
+			
+				<div flex="30">
+					<p>currentTeam.detail.companyPostcode</p>
+				</div>
+			</div>
 		</div>
-		<div layout-margin>
-			<p><strong>Mailing Address:</strong></p>
-			<p>{{ currentTeam.detail.billingAddress }}</p>
-		</div>
+		
+		<md-divider></md-divider>
+		
 		<div layout-margin>
 			<p><strong>Office Number:</strong></p>
-			<p>{{ currentTeam.detail.contactNumber }}</p>
+			<p>currentTeam.detail.companyPhoneNumber</p>
 		</div>
+		
+		<md-divider></md-divider>
+		
 		<div layout-margin>
-			<p><strong>License Number:</strong></p>
-			<p>{{ currentTeam.detail.licenseNumber }}</p>
+			<div layout="row">
+				<div flex="40">
+					<p><strong>License Number:</strong></p>
+					<p>currentTeam.detail.companyLicenseNumber</p>
+				</div>
+		
+				<div flex="30">
+					<p><strong>ABN:</strong></p>
+					<p>currentTeam.detail.companyABN</p>
+				</div>
+			</div>
 		</div>
+		
 	</div>
 		
 	<div>
