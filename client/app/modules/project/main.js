@@ -31,12 +31,6 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
     controller: 'projectTeamCtrl',
     authenticate : true
   })
-  .state('project.team.detail', {
-    url: '/detail',
-    templateUrl: '/app/modules/project/project-team/detail/project-team-detail.html',
-    controller: 'projectTeamCtrl',
-    authenticate : true
-  })
   
 	//Tenders for Single Project
   .state('project.tenders', {
