@@ -6,55 +6,66 @@ var crypto = require('crypto');
 var okay = require('okay');
 var EventBus = require('./../components/EventBus');
 
+var tender = {
+    tenderName: String,
+    tenderers: [{
+        _id: {type: Schema.Types.ObjectId, ref: 'User'},
+        teamMember: [
+            {type: Schema.Types.ObjectId, ref: 'User'}
+        ],
+        email: {type: String},
+    }],
+    inviter: {type: Schema.Types.ObjectId, ref: 'User'},
+    inviterType: String,
+    hasSelect: {type: Boolean, default: false}
+};
+
 var PeopleSchema = new Schema({
     type: {type: String, default: 'people'},
     project: {type: Schema.Types.ObjectId, ref: 'Project'},
-    builders: [{
-        inviter: {type: Schema.Types.ObjectId, ref: 'User'},
-        _id: {type: Schema.Types.ObjectId, ref: 'User'},
-        teamMember: [
-            {type: Schema.Types.ObjectId, ref: 'User'}
-        ],
-        email: {type: String},
-        hasSelect: {type: Boolean, default: false}
-    }],
-    architects: [{
-        inviter: {type: Schema.Types.ObjectId, ref: 'User'},
-        _id: {type: Schema.Types.ObjectId, ref: 'User'},
-        teamMember: [
-            {type: Schema.Types.ObjectId, ref: 'User'}
-        ],
-        email: {type: String},
-        hasSelect: {type: Boolean, default: false}
-    }],
-    clients: [{
-        inviter: {type: Schema.Types.ObjectId, ref: 'User'},
-        _id: {type: Schema.Types.ObjectId, ref: 'User'},
-        teamMember: [
-            {type: Schema.Types.ObjectId, ref: 'User'}
-        ],
-        email: {type: String},
-        hasSelect: {type: Boolean, default: false}
-    }],
-    subcontractors: [{
-        inviter: {type: Schema.Types.ObjectId, ref: 'User'},
-        _id: {type: Schema.Types.ObjectId, ref: 'User'},
-        teamMember: [
-            {type: Schema.Types.ObjectId, ref: 'User'}
-        ],
-        email: {type: String},
-        hasSelect: {type: Boolean, default: false}
-    }],
-    consultants: [{
-        inviter: {type: Schema.Types.ObjectId, ref: 'User'},
-        inviterType: {type: String},
-        _id: {type: Schema.Types.ObjectId, ref: 'User'},
-        teamMember: [
-            {type: Schema.Types.ObjectId, ref: 'User'}
-        ],
-        email: {type: String},
-        hasSelect: {type: Boolean, default: false}
-    }]
+    builders: [tender],
+    architects: [tender],
+    clients: [tender],
+    subcontractors: [tender],
+    consultants: [tender]
+    // old version
+    // architects: [{
+    //     inviter: {type: Schema.Types.ObjectId, ref: 'User'},
+    //     _id: {type: Schema.Types.ObjectId, ref: 'User'},
+    //     teamMember: [
+    //         {type: Schema.Types.ObjectId, ref: 'User'}
+    //     ],
+    //     email: {type: String},
+    //     hasSelect: {type: Boolean, default: false}
+    // }],
+    // clients: [{
+    //     inviter: {type: Schema.Types.ObjectId, ref: 'User'},
+    //     _id: {type: Schema.Types.ObjectId, ref: 'User'},
+    //     teamMember: [
+    //         {type: Schema.Types.ObjectId, ref: 'User'}
+    //     ],
+    //     email: {type: String},
+    //     hasSelect: {type: Boolean, default: false}
+    // }],
+    // subcontractors: [{
+    //     inviter: {type: Schema.Types.ObjectId, ref: 'User'},
+    //     _id: {type: Schema.Types.ObjectId, ref: 'User'},
+    //     teamMember: [
+    //         {type: Schema.Types.ObjectId, ref: 'User'}
+    //     ],
+    //     email: {type: String},
+    //     hasSelect: {type: Boolean, default: false}
+    // }],
+    // consultants: [{
+    //     inviter: {type: Schema.Types.ObjectId, ref: 'User'},
+    //     inviterType: {type: String},
+    //     _id: {type: Schema.Types.ObjectId, ref: 'User'},
+    //     teamMember: [
+    //         {type: Schema.Types.ObjectId, ref: 'User'}
+    //     ],
+    //     email: {type: String},
+    //     hasSelect: {type: Boolean, default: false}
+    // }]
 });
 
 PeopleSchema

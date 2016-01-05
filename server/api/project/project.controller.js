@@ -13,6 +13,65 @@ var People = require('./../../models/people.model');
 var _ = require('lodash');
 var async = require('async');
 
+exports.create = function(req, res){
+    var user = req.user;
+    ProjectValidator.validateCreate(req,function(err,data) {
+        if (err) {
+            res.send(422,err);
+        }
+        var project = new Project(data);
+        project.status = 'waiting';
+        project.projectManager._id = req.user._id,
+        project.projectManager.type = req.body.teamType,
+        project.save(function(err) {
+            if (err) {
+                res.send(422,err);
+            } else {
+                var people = new People({
+                    project: project._id
+                });
+                if (req.body.teamType === "builder") {
+                    people.builders.push({
+                        tenderName: "Builder",
+                        tenderers: [{
+                            _id: req.user._id,
+                            teamMember: []
+                        }],
+                        hasSelect: true, 
+                        inviter: req.user._id
+                    });
+                } else if (req.body.teamType === "homeOwner") {
+                    people.builders.push({
+                        tenderName: "Client",
+                        tenderers: [{
+                            _id: req.user._id,
+                            teamMember: []
+                        }],
+                        hasSelect: true, 
+                        inviter: req.user._id
+                    });
+                } else if (req.body.teamType === "architect") {
+                    people.builders.push({
+                        tenderName: "Architect",
+                        tenderers: [{
+                            _id: req.user._id,
+                            teamMember: []
+                        }],
+                        hasSelect: true, 
+                        inviter: req.user._id
+                    });
+                }
+                people.save();
+                User.findById(req.user._id, function(err, user) {
+                    user.projects.push(project._id);
+                    user.save(function(err) {
+                        return res.send(200, project);
+                    });
+                });
+            }
+        });
+    });
+};
 
 
 exports.index = function(req, res) {
@@ -35,41 +94,6 @@ exports.team = function(req,res,next) {
 
 
 
-exports.create = function(req, res){
-  var user = req.user;
-  ProjectValidator.validateCreate(req,function(err,data) {
-    if (err) {
-      res.send(422,err);
-    }
-    var project = new Project(data);
-    project.status = 'waiting';
-    project.projectManager._id = req.user._id,
-    project.projectManager.type = req.body.teamType,
-    project.save(function(err) {
-      if (err) {
-        res.send(422,err);
-      } else {
-        var people = new People({
-          project: project._id
-        });
-        if (req.body.teamType === "builder") {
-          people.builders.push({_id: req.user._id, hasSelect: true, inviter: req.user._id});
-        } else if (req.body.teamType === "homeOwner") {
-          people.clients.push({_id: req.user._id, hasSelect: true, inviter: req.user._id});
-        } else if (req.body.teamType === "architect") {
-          people.architects.push({_id: req.user._id, hasSelect: true, inviter: req.user._id});
-        }
-        people.save();
-        User.findById(req.user._id, function(err, user) {
-          user.projects.push(project._id);
-          user.save(function(err) {
-            return res.send(200, project);
-          });
-        });
-      }
-    });
-  });
-};
 
 /**
  * show project detail

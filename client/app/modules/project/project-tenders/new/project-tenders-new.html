@@ -14,6 +14,13 @@
 						<p>Please provide the following details to begin a tender for your project...</p>
 					</md-input-container>
 				</div>
+
+				<div layout="row" ng-hide="invite.type == 'addEmployee'">
+					<md-input-container flex>
+						<label for="">Tender name</label>
+						<input type="text" name="name" ng-model="invite.tenderName">
+					</md-input-container>
+				</div>
 				
 				<div layout="row">
 					<md-input-container flex>

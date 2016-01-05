@@ -21,8 +21,10 @@
 	<div ui-sref="project.tenders.detail({tenderId: member._id})" ng-repeat="member in membersList">
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
-		          <h3>{{(member._id) ? member.name : member.email}}</h3>
-		          <p>{{member.type}}</p>
+		          	<h3>{{member.tenderName}}</h3>
+		          	<p ng-repeat="tender in member.tenderers">
+		          		<span>{{(tender._id) ? tender._id.name : tender.email}} </span>
+		          	</p>
 	        </div>
 		</md-list-item>
 		<md-divider></md-divider>
@@ -30,7 +32,7 @@
 </md-list>
 
 <div>
-  <md-fab-speed-dial ng-show="project.projectManager._id == currentUser._id || currentUser.type == 'builders'" ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-list">
+  <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-list">
 	  <md-fab-trigger>
   	      <md-button aria-label="Add a New Tender to this Project" class="md-fab md-primary" ng-click="showNewTenderModal($event)">
 			  <md-tooltip md-direction="left">Add a New Tender</md-tooltip>
