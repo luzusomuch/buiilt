@@ -448,6 +448,7 @@ md-input-container > label {
 
 .team-card {
 	background-color: #FAFAFA;
+	min-width: 25vw;
 }
 
 .team-card .name {
