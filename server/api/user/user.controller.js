@@ -158,26 +158,31 @@ exports.createUserWithInviteToken = function(req, res, next) {
                                 default :
                                     break;
                             }
-                            _.each(people[type], function(member) {
-                                if (member.email == packageInvite.to) {
-                                    member._id = user._id;
-                                    member.email = null;
-                                    if (member.hasSelect) {
-                                        user.projects.push(packageInvite.project);
-                                        user.markModified("projects");
-                                        user.save();
-                                    } else {
-                                        var inviteToken = new InviteToken({
-                                            type: 'project-invite',
-                                            user: user._id,
-                                            element: {
-                                                project: people.project,
-                                                type: type
-                                            }
-                                        });
-                                        inviteToken.save();
+                            _.each(people[type], function(tender) {
+                                _.each(tender.tenderers, function(tenderer) {
+                                    console.log(tenderer);
+                                    if (tenderer.email == packageInvite.to) {
+                                        tenderer._id = user._id;
+                                        tenderer.email = null;
+                                        if (tenderer.hasSelect) {
+                                            user.projects.push(packageInvite.project);
+                                            user.markModified("projects");
+                                            user.save();
+                                        } else {
+                                            var inviteToken = new InviteToken({
+                                                type: 'project-invite',
+                                                user: user._id,
+                                                element: {
+                                                    project: people.project,
+                                                    type: type
+                                                }
+                                            });
+                                            inviteToken.save(function() {
+                                                return false;
+                                            });
+                                        }
                                     }
-                                }
+                                });
                             });
                             people.save(function(err) {
                                 if (err) {return res.send(500,err);}
@@ -224,7 +229,9 @@ exports.createUserWithInviteToken = function(req, res, next) {
                         }
                     });
                 } else {
-                    return res.send(500);
+                    user.remove(function() {
+                        return res.send(500);
+                    });
                 }
             }
         });

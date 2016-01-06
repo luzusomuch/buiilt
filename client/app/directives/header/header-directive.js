@@ -63,6 +63,13 @@ angular.module('buiiltApp')
                 $scope.currentUser.name = data.name;
             });
 
+            $rootScope.$on("Project.Archive", function(event, project) {
+                var index = _.findIndex($rootScope.projects, function(item) {
+                    return item._id == project._id;
+                });
+                $rootScope.projects[index].status = "archive";
+            });
+
             document.addEventListener('click',function(e) {
                 if (e.target.id == 'sendVerification') {
                     authService.sendVerification().$promise

@@ -79,6 +79,7 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
     $rootScope.currentUser = {};
     $rootScope.hasHeader = true;
     $rootScope.hasFooter = true;
+    $rootScope.isArchive = false;
     // $rootScope.isLeader = false;
     $rootScope.safeApply = function (fn) {
       var phase = $rootScope.$$phase;
@@ -165,6 +166,9 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
         projectService.get({id: toParams.id}).$promise.then(function(project) {
           if (project._id) {
             $rootScope.project = project;
+            if (project.status == "archive") {
+              $rootScope.isArchive = true;
+            }
           } else {
             $rootScope.project = {};
           }

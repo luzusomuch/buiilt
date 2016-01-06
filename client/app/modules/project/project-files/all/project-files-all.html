@@ -30,7 +30,7 @@
 </md-list>
 
 <div>
-  <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-list">
+  <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-list" ng-show="!isArchive">
 	  <md-fab-trigger>
   	      <md-button aria-label="Add a New File to this Projecs" class="md-fab md-primary" ng-click="showNewFileModal($event)">
 			  <md-tooltip md-direction="left">Add a New File</md-tooltip>

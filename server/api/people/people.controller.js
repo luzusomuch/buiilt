@@ -206,7 +206,6 @@ exports.invitePeople = function(req, res) {
 
 exports.selectWinnerTender = function(req, res) {
     console.log(req.body);
-    console.log(req.params);
     People.findOne({project: req.params.id}, function(err, people) {
         if (err) {return res.send(500,err);}
         if (!people) {return res.send(404);}
@@ -214,7 +213,6 @@ exports.selectWinnerTender = function(req, res) {
             var winnerTenderNotification = [];
             var loserTender = [];
             var roles = ["builders", "clients", "architects", "subcontractors", "consultants"];
-            console.log(people);
             _.each(roles, function(role) {
                 _.each(people[role], function(tender) {
                     var index = _.findIndex(tender.tenderers, function(tenderer) {

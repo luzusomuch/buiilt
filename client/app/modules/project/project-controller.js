@@ -66,6 +66,23 @@ angular.module('buiiltApp').controller('projectCtrl', function($rootScope, $scop
         $scope.uploadFiles = files;
     };
 
+    $scope.archiveProject = function() {
+        var confirm = $mdDialog.confirm().title("Do you want to archive this project?").ok("Yes").cancel("No");
+        $mdDialog.show(confirm).then(function() {
+            $scope.project.archive = true;
+            projectService.updateProject({id: $stateParams.id}, $scope.project).$promise.then(function(res) {
+                $scope.showToast("Archive project successfully!");
+                $scope.closeDialog();
+                $state.go("projects.archived");
+                $rootScope.$broadcast("Project.Archive", res);
+            }, function(err) {
+                $scope.showToast("Something went wrong!");
+            });
+        }, function() {
+            
+        });
+    };
+
     $scope.uploadNewDocument = function() {
         console.log($scope.uploadFiles);
     };

@@ -1,5 +1,6 @@
-angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($rootScope, $scope, $timeout, $stateParams, peopleService, $mdToast, tender, $mdDialog) {
+angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($rootScope, $scope, $timeout, $stateParams, peopleService, $mdToast, tender, $mdDialog, $state) {
     $scope.tender = tender;
+    $rootScope.title = $scope.tender.tenderName + " detail";
 
     $scope.openSelectWinnerModal = function($event) {
         $mdDialog.show({
@@ -24,8 +25,8 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($roo
         var confirm = $mdDialog.confirm().title("Do you want to select this tenderer as winner?").ok("Yes").cancel("No");
         $mdDialog.show(confirm).then(function() {
             peopleService.selectWinnerTender({id: $stateParams.id},tenderer).$promise.then(function(res) {
-                console.log(res);
                 $scope.showToast("Select winner successfully!");
+                $state.go("project.team", {id: $stateParams.id});
             }, function(err) {
                 $scope.showToast("Something went wrong!");
             });

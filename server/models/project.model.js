@@ -20,7 +20,7 @@ var ProjectSchema = new Schema({
   },
   status: {
     type: String,
-    enum: ['open', 'close', 'waiting'],
+    enum: ['open', 'close', 'waiting', 'archive'],
     default: 'open'
   },
   projectManager: {

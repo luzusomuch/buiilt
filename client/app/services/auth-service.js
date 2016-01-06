@@ -76,27 +76,11 @@ angular.module('buiiltApp')
         if (data.emailVerified == true) {
           $cookieStore.put('token', data.token);
           currentUser = userService.get();
-          if (data.package.type === 'contractor') {
-            if (!data.package.isAccept) {
-              $state.go('contractorRequest.sendQuote', {id:data.package.project, packageId: data.package._id});  
-            } else {
-              $state.go('contractorRequest.contractorPackageInProcess', {id:data.package.project, packageId: data.package._id});  
-            }
-          } else if (data.package.type === 'material') {
-            if (!data.package.isSelect) {
-              $state.go('materialRequest.sendQuote', {id: data.package.project, packageId: data.package._id});
-            } else {
-              $state.go('materialRequest.materialPackageInProcess', {id: data.package.project, packageId: data.package._id});
-            }
-          } else if (data.package.type === 'BuilderPackage') {
-            $state.go('dashboard', {id: data.package.project});
-          } else if (data.package.type == 'people') {
+          if (data.package.type == 'people') {
             window.location.href = "/projects/open";
           } else if (data.package.type == 'board') {
             $state.go('board', {id: data.package.project});
           }
-          // $state.go('team.manager')
-
         }
         return cb(user);
       },
