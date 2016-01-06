@@ -2,12 +2,57 @@
     <p>User</p>
 </div>
 
-<md-list ng-cloak class="main-page-content" layout-padding>
-	<md-list-item class="md-2-line" md-ink-ripple>
-		<div class="md-list-item-text" layout="column">
-	          <h5></h5>
-	          <p></p>
-        </div>
-	</md-list-item>
-	<md-divider></md-divider>
+<div class="main-page-content" layout-padding>
+	
+	<div layout="column" layout-padding>
+		
+		<div layout-margin>
+			<div layout="row">
+				<div flex="50">
+					<p><strong>Email Address:</strong></p>
+					<p>email address</p>
+				</div>
+		
+				<div flex="50">
+					<p><strong>Password:</strong></p>
+					<p>*********</p>
+				</div>
+			</div>
+		</div>
+		
+		<md-divider></md-divider>
+		
+		<div layout-margin>
+			<p><strong>Phone Number:</strong></p>
+			<p>phone number<p>
+		</div>
+		
+		
+	</div>
+		
+	<div>
+  	  <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-list">
+		  <md-fab-trigger>
+	  	      <md-button aria-label="Actions" class="md-fab md-primary">
+				  <md-tooltip md-direction="left">Actions...</md-tooltip>
+			      <md-icon class="material-icons" >add</md-icon>
+	  	      </md-button>
+  	      </md-fab-trigger>
+		  <md-fab-actions>
+	  	      <md-button aria-label="Edit Company Details" class="md-fab md-raised md-mini md-primary" ng-click="">
+				  <md-tooltip md-direction="left">Edit Email</md-tooltip>
+			      <md-icon class="material-icons">email</md-icon>
+	  	      </md-button>
+	  	      <md-button aria-label="Edit Company Details" class="md-fab md-raised md-mini md-primary" ng-click="">
+				  <md-tooltip md-direction="left">Edit Password</md-tooltip>
+			      <md-icon class="material-icons">lock</md-icon>
+	  	      </md-button>
+	  	      <md-button aria-label="Edit Company Details" class="md-fab md-raised md-mini md-primary" ng-click="">
+				  <md-tooltip md-direction="left">Edit Phone Number</md-tooltip>
+			      <md-icon class="material-icons">phone</md-icon>
+	  	      </md-button>
+	  	  </md-fab-actions>
+  	  </md-fab-speed-dial>
+    </div>
+    
 </div>

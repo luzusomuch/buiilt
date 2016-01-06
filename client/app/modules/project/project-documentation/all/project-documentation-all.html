@@ -1,9 +1,19 @@
 <div class="detail-header" layout-padding layout="row">
 			
-	<md-chips class="" ng-model="docTypes" placeholder="Search Documentation..." secondary-placeholder="Seach Documentation..." flex>
+	<md-chips class="" ng-model="docTypes" placeholder="Search..." secondary-placeholder="Search..." flex="45">
 		<md-chip-template class="md-accent">
 	        <strong>{{$chip}}</strong>
 	    </md-chip-template>
+	</md-chips>
+	
+	<span flex></span>
+	
+	<md-chips class="set-filters">
+		<md-chip>Architectural</md-chip>
+		<md-chip>Engineering</md-chip>
+		<md-chip>Council</md-chip>
+		<md-chip>Certification</md-chip>
+		<md-chip>Others</md-chip>
 	</md-chips>
 	
 </div>
