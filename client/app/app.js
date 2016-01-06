@@ -72,14 +72,14 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
   .run(function ($rootScope, $cookieStore, cfpLoadingBar, authService, $location,projectService,$state) {
     cfpLoadingBar.start();
     $rootScope.maximunHeight = $(window).height();
-    $rootScope.currentProject = {};
+    $rootScope.project = {};
     $rootScope.currentProjectBackend = {};
-    $rootScope.authService = authService;
+    // $rootScope.authService = authService;
     $rootScope.currentTeam = {};
     $rootScope.currentUser = {};
     $rootScope.hasHeader = true;
     $rootScope.hasFooter = true;
-    $rootScope.isLeader = false;
+    // $rootScope.isLeader = false;
     $rootScope.safeApply = function (fn) {
       var phase = $rootScope.$$phase;
       if (phase === '$apply' || phase === '$digest') {
