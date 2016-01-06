@@ -17,9 +17,10 @@
 	
 	<span flex></span>
 
-	<md-chips class="set-filters">
-		<md-chip ng-click="chipFilter('file','mine')">Mine</md-chip>
-		<md-chip ng-click="chipFilter('file','myTeam')">My Teams</md-chip>
+	<md-chips class="set-filters" ng-model="fileChips" readonly="true">
+		<md-chip-template ng-click="selectedChip($chip)">
+	        <strong>{{$chip.text}}</strong>
+      	</md-chip-template>
 	</md-chips>
 		
 </div>

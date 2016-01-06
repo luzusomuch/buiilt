@@ -17,9 +17,10 @@
 	
 	<span flex></span>
 
-	<md-chips class="set-filters">
-		<md-chip ng-click="chipFilter('message','createdByMe')">Created by Me</md-chip>
-		<md-chip ng-click="chipFilter('message','mentionsMe')">Mentions Me</md-chip>
+	<md-chips class="set-filters" ng-model="messageChips" readonly="true">
+		<md-chip-template ng-click="selectedChip($chip)">
+	        <strong>{{$chip.text}}</strong>
+      	</md-chip-template>
 	</md-chips>
 	
 </div>

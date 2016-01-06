@@ -97,12 +97,12 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         }
     };
 
-    $scope.chipFilter = function(place, value) {
+    $scope.selectedChip = function(chip) {
         $scope.results = [];
         $scope.search = true;
         var user = $rootScope.currentUser;
-        if (place === "task") {
-            switch (value) {
+        if (chip.place === "task") {
+            switch (chip.value) {
                 case "assignedToMe":
                     _.each($scope.myTasks, function(task) {
                         if (_.findIndex(task.assignees, function(assignee) {
@@ -153,8 +153,8 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                 default:
                 break;
             }
-        } else if (place === "message") {
-            switch (value) {
+        } else if (chip.place === "message") {
+            switch (chip.value) {
                 case "createdByMe":
                     _.each($scope.myMessages, function(item) {
                         if (item.owner == user._id) {
@@ -183,6 +183,22 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             }
         }
     };
+
+    $scope.messageChips = [
+        {place: "message", value: "createdByMe", text: "CREATED BY ME"},
+        {place: "message", value: "mentionsMe", text: "MENTIONS ME"}
+    ];
+    $scope.taskChips = [
+        {place: "task", value: "assignedToMe", text: "Assigned to Me"},
+        {place: "task", value: "assignedByMe", text: "Assigned by Me"},
+        {place: "task", value: "dueToDay", text: "Due Today"},
+        {place: "task", value: "dueTomorrow", text: "Due Tomorrow"},
+        {place: "task", value: "dueThisWeek", text: "Due This Week"}
+    ];
+    $scope.fileChips = [
+        {place: "file", value: "mine", text: "Mine"},
+        {place: "file", value: "myTeam", text: "My Teams"}
+    ];
 
     function getWeek(fromDate){
         var sunday = new Date(fromDate.setDate(fromDate.getDate()-fromDate.getDay()))
