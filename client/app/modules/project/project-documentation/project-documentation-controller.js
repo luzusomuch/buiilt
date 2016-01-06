@@ -25,7 +25,7 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($sco
 	};
 	
 	//Placeholder set of filters to use for layout demo
-	$scope.docTypes = ['Engineering', 'Architectural'];
+	$scope.docTypes = [];
 	
 	//Placeholder Array of Documents to use for layout demo
 	$scope.documentation = [
