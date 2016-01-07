@@ -1,70 +1,69 @@
 angular.module('buiiltApp')
-  .factory('messageService', function($rootScope, $q, $resource) {
+.factory('messageService', function($rootScope, $q, $resource) {
     return $resource('/api/messages/:id/:type/:action',{
         id : '@_id',
         type : '@_type'},
-      {
+    {
         create: {
-          method: 'POST'
+            method: 'POST'
         },
         update : {
-          method : 'PUT'
+            method : 'PUT'
         },
         getProjectThread: {
-          method: "GET",
-          params:{
-            action: "project-thread"
-          },
-          isArray: true
-        },
-        myMessages : {
-          method : 'GET',
-          isArray : true,
-          params : {
-            type : 'dashboard',
-            action : 'me'
-          }
-        },
-        getOne : {
-          method : 'GET',
-          params : {
-            action : 'one'
-          }
+            method: "GET",
+            params:{
+                action: "project-thread"
+            },
+            isArray: true
         },
         get : {
-          method : 'GET',
-          isArray : true,
-          params: {
-          }
+            method : 'GET',
         },
         sendMessage : {
-          method : 'POST',
-          //isArray : true,
-          params : {
-            action : 'message'
-          }
+            method : 'POST',
+            params : {
+                action : 'message'
+            }
         },
-        getAll: {
-          method: 'get',
-          params: {
-            action: 'list'
-          },
-          isArray: true
+
+      myMessages : {
+        method : 'GET',
+        isArray : true,
+        params : {
+          type : 'dashboard',
+          action : 'me'
+        }
+      },
+      getOne : {
+        method : 'GET',
+        params : {
+          action : 'one'
+        }
+      },
+      
+      
+      getAll: {
+        method: 'get',
+        params: {
+          action: 'list'
         },
-        delete: {method:'DELETE', params: {id: 'id', action: ''}, isArray: true},
-        getByPackage: {
-          method: 'get',
-          params: {
-            action: 'get-by-package'
-          },
-          isArray: true
+        isArray: true
+      },
+      delete: {method:'DELETE', params: {id: 'id', action: ''}, isArray: true},
+      getByPackage: {
+        method: 'get',
+        params: {
+          action: 'get-by-package'
         },
-        getThread:{
-          method: 'get',
-          params: {
-            action: 'get-thread'
-          }
+        isArray: true
+      },
+      getThread:{
+        method: 'get',
+        params: {
+          action: 'get-thread'
         }
       }
-    );
-  });
+    }
+  );
+});

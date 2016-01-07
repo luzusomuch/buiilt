@@ -86,7 +86,7 @@ ThreadSchema.pre('save', function(next) {
 
 ThreadSchema.post('save', function (doc) {
     if (this._original) {
-        doc.oldUsers = this._original.users.slice();
+        doc.oldUsers = this._original.members.slice();
     }
     doc.editUser = this.editUser;
     doc.message = this.message;

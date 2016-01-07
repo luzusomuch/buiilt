@@ -20,77 +20,91 @@ var async = require('async');
 var EventBus = require('../../components/EventBus');
 
 var getPackage = function(type) {
-  var _package = {};
-  switch (type) {
-    case 'staff' :
-      _package = StaffPackage;
-      break;
-    case 'builder' :
-      _package = BuilderPackage;
-      break;
-    case 'contractor' :
-      _package = ContractorPackage;
-      break;
-    case 'material' :
-      _package = MaterialPackage;
-      break;
-    case 'variation' :
-      _package = Variation;
-    case 'design':
-      _package = Design;
-    default :
-      break;
-  }
-  return _package;
+    var _package = {};
+    switch (type) {
+        case 'staff' :
+            _package = StaffPackage;
+            break;
+        case 'builder' :
+            _package = BuilderPackage;
+            break;
+        case 'contractor' :
+            _package = ContractorPackage;
+            break;
+        case 'material' :
+            _package = MaterialPackage;
+            break;
+        case 'variation' :
+            _package = Variation;
+        case 'design':
+            _package = Design;
+        default :
+            break;
+    }
+    return _package;
 };
 
 exports.project = function(req,res,next) {
-  Project.findById(req.params.id,function(err,project) {
-    if (err || !project) {
-      return res.send(500,err);
-    }
-    req.project = project;
-    next();
-  })
+    Project.findById(req.params.id,function(err,project) {
+        if (err || !project) {
+            return res.send(500,err);
+        }
+        req.project = project;
+        next();
+    });
 };
 
 exports.package = function(req,res,next) {
-  var _package = getPackage(req.params.type);
-  _package.findById(req.params.id,function(err,aPackage) {
-    if (err || !aPackage) {
-      return res.send(500,err);
-    }
-    req.aPackage = aPackage;
-    next();
-  })
+    var _package = getPackage(req.params.type);
+    _package.findById(req.params.id,function(err,aPackage) {
+        if (err || !aPackage) {
+            return res.send(500,err);
+        }
+        req.aPackage = aPackage;
+        next();
+    })
 };
 
 exports.create = function(req,res) {
-  var user = req.user;
-  console.log(req.body);
-  ThreadValidator.validateCreate(req,function(err,data) {
-    if (err) {
-      return errorsHelper.validationErrors(res,err)
-    }
-    var thread = new Thread(data);
-    thread.project = req.params.id;
-    thread.owner = user._id;
-    thread.element = {type: req.body.type};
-    thread.save(function(err){
-      if (err) {return res.send(500,err);}
-      return res.json(thread);
+    var user = req.user;
+    ThreadValidator.validateCreate(req,function(err,data) {
+        if (err) {
+            return errorsHelper.validationErrors(res,err)
+        }
+        var thread = new Thread(data);
+        thread.project = req.params.id;
+        thread.owner = user._id;
+        thread.element = {type: req.body.type};
+        thread.save(function(err){
+            if (err) {return res.send(500,err);}
+            return res.json(thread);
+        });
     });
-  });
 };
 
 exports.getProjectThread = function(req, res) {
-  Thread.find({project: req.params.id, 'element.type': 'project-message', $or:[{owner: req.user._id},{members: req.user._id}]})
-  .populate('members', '_id name email')
-  .populate('owner', '_id name email')
-  .exec(function(err, threads) {
-    if (err) {return res.send(500,err);}
-    return res.send(200, threads);
-  });
+    Thread.find({project: req.params.id, 'element.type': 'project-message', $or:[{owner: req.user._id},{members: req.user._id}]})
+    .populate('members', '_id name email')
+    .populate('owner', '_id name email')
+    .exec(function(err, threads) {
+        if (err) {return res.send(500,err);}
+        return res.send(200, threads);
+    });
+};
+
+exports.getById = function(req, res){
+    Thread.findById(req.params.id)
+    .populate('messages.user','_id name email')
+    .populate('messages.mentions','_id name email')
+    .populate('members','_id name email')
+    .populate('owner','_id name email')
+    .exec(function(err, thread){
+        if (err) {return res.send(500,err);}
+        else if (!thread) {return res.send(404);}
+        else {
+            return res.json(thread);
+        }
+    });
 };
 
 exports.thread = function(req,res,next) {
@@ -171,30 +185,36 @@ exports.myThread = function(req,res) {
 
 
 exports.update = function(req,res) {
-  var thread = req.thread;
-  var user = req.user;
-  ThreadValidator.validateUpdate(req,function(err,data) {
-    if (err) {
-      return errorsHelper.validationErrors(res,err)
-    }
-
-    thread = _.merge(thread,data);
-    thread.users = data.users;
-    thread.markModified('users');
-    thread._editUser = req.user;
-    thread.save(function(err) {
-      if (err) {
-        return res.send(500,err)
-      }
-      return res.json(true);
+    var user = req.user;
+    Thread.findById(req.params.id, function(err, thread) {
+        if (err) {return res.send(500,err);}
+        else if (!thread) {return res.send(404, "The specific message is not existed");}
+        else {
+            ThreadValidator.validateUpdate(req,function(err,data) {
+                if (err) {
+                    return errorsHelper.validationErrors(res,err)
+                } else {
+                    thread = _.merge(thread,data);
+                    thread.users = data.users;
+                    thread.markModified('users');
+                    thread._editUser = req.user;
+                    thread.save(function(err) {
+                      if (err) {
+                        return res.send(500,err)
+                      }
+                      return res.json(thread);
+                    });
+                }
+            });
+        }
     })
-  })
 };
 
-exports.saveMessage = function(req,res) {
-  var thread = req.thread;
-  var user = req.user;
-  ThreadValidator.validateMessage(req,function(err,data) {
+exports.sendMessage = function(req,res) {
+    console.log(req.body);
+    return;
+    var user = req.user;
+    ThreadValidator.validateMessage(req,function(err,data) {
     var message = {
       text : data.text,
       user : user,
@@ -281,14 +301,6 @@ exports.getMessagesIos = function(req,res) {
         return res.json(result);
       });
     });
-};
-
-exports.getById = function(req, res){
-  Thread.findById(req.params.id).populate('messages.user').exec(function(err, thread){
-    if (err) {return res.send(500,err);}
-    if (!thread) {return res.send(404);}
-    return res.send(200,thread);
-  });
 };
 
 exports.getThreadById = function(req, res){

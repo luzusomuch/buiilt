@@ -26,18 +26,18 @@ EventBus.onSeries('Thread.Inserted', function(thread, next) {
 });
 
 EventBus.onSeries('Thread.Updated', function(thread, next) {
-  if (thread.users.length > 0 || thread.oldUsers.length > 0) {
+  if (thread.members.length > 0 || thread.oldUsers.length > 0) {
     async.waterfall([
       function(callback) {
         var toUsers = [];
-        thread.users.forEach(function(user) {
+        thread.members.forEach(function(user) {
           if (_.findIndex(thread.oldUsers,user) == -1)  {
             toUsers.push(user)
           }
         });
         async.each(toUsers,function(toUser,callback) {
           var params = {
-            owners : thread.users,
+            owners : thread.members,
             fromUser : thread.editUser,
             element : thread,
             toUser : toUser,
@@ -53,9 +53,9 @@ EventBus.onSeries('Thread.Updated', function(thread, next) {
       },
       function (callback) {
         var toUsers = [];
-        var owners = thread.users;
+        var owners = thread.members;
         thread.oldUsers.forEach(function(user) {
-          if (_.findIndex(thread.users, user) == -1) {
+          if (_.findIndex(thread.members, user) == -1) {
             toUsers.push(user)
           }
         });
@@ -86,7 +86,7 @@ EventBus.onSeries('Thread.Updated', function(thread, next) {
 });
 
 EventBus.onSeries('Thread.NewMessage', function(thread, next) {
-  var owners = thread.users;
+  var owners = thread.members;
   owners.push(thread.owner);
   var index = _.findIndex(owners,thread.message.user._id);
   owners.splice(index,1);

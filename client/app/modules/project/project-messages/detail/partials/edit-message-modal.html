@@ -1,0 +1,33 @@
+<md-dialog aria-label="Edit {{thread.name}}" flex="70">
+    <form ng-submit="editMessage(form)" name="form">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Edit {{thread.name}}</h2>
+            </div>
+        </md-toolbar>
+        
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column">
+                <div layout="row">
+                    <md-input-container flex>
+                        <label>Name</label>
+                        <input type="text" name="name" ng-model="thread.name" required>
+                    </md-input-container>
+                </div>
+
+                <div layout="row">
+                    <md-input-container flex>
+                        <label>Description</label>
+                        <textarea ng-model="thread.description" columns="1" md-maxlength="250" rows="5" required></textarea>
+                    </md-input-container>
+                </div>
+                
+            </div>
+        </md-dialog-content>
+        
+        <md-dialog-actions>
+            <md-button ng-click="closeModal()">Cancel</md-button>
+            <md-button type="submit" class="md-raised md-accent md-hue-1">Edit Message!</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

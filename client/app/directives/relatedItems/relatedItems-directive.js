@@ -4,12 +4,11 @@ angular.module('buiiltApp').directive('relatedItems', function(){
         restrict: 'EA',
         templateUrl: 'app/directives/relatedItems/relatedItems.html',
         scope:{
-            tender:'='
+            data:'='
         },
         controller: function($scope, $rootScope, $location, userService, projectService, $state, $mdDialog) {
             $scope.errors = {};
             $scope.success = {};
-			
 			$scope.$state = $state;
             $scope.currentUser = $rootScope.currentUser;
 
@@ -17,7 +16,7 @@ angular.module('buiiltApp').directive('relatedItems', function(){
 				$mdDialog.show({
 				  targetEvent: $event,
 			      controller: 'projectMessagesCtrl',
-			      templateUrl: 'app/modules/project/project-messages/detail/project-messages-riWindow.html',
+			      templateUrl: 'app/modules/project/project-messages/detail/partials/project-messages-riWindow.html',
 			      parent: angular.element(document.body),
 			      clickOutsideToClose: false
 			    });
