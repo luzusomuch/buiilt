@@ -211,44 +211,46 @@ exports.update = function(req,res) {
 };
 
 exports.sendMessage = function(req,res) {
-    console.log(req.body);
-    return;
     var user = req.user;
-    ThreadValidator.validateMessage(req,function(err,data) {
-    var message = {
-      text : data.text,
-      user : user,
-      sendAt: new Date()
-    };
-    thread.messages.push(message);
-    thread._evtName = 'Thread.NewMessage';
-    thread._message = message;
-    thread.save(function(err) {
-      if (err) {
-        return res.send(422,err);
-      }
-      Thread.populate(thread,[
-        {path : 'users'},
-        {path : 'messages.user'}
-      ],function(err,thread) {
-        if (err) {
-          return res.send(422,err);
+    Thread.findById(req.params.id, function(err, thread) {
+        if (err) {return res.send(500,err);}
+        else if (!thread) {return res.send(404, "The specific thread is not existed");}
+        else {
+            ThreadValidator.validateMessage(req,function(err,data) {
+                var message = {
+                    text : data.text,
+                    user : user,
+                    sendAt: new Date()
+                };
+                thread.messages.push(message);
+                thread._evtName = 'Thread.NewMessage';
+                thread._message = message;
+                thread.save(function(err) {
+                    if (err) {
+                        return res.send(422,err);
+                    } else {
+                        Thread.populate(thread,[
+                            {path : 'members', select: '_id email name'},
+                            {path : 'messages.user', select: '_id email name'},
+                            {path : 'messages.mentions', select: '_id email name'},
+                            {path : 'owner', select: '_id email name'}
+                        ],function(err,thread) {
+                            if (err) {
+                                return res.send(422,err);
+                            } else {
+                                EventBus.emit('socket:emit', {
+                                  event: 'message:new',
+                                  room: thread._id.toString(),
+                                  data: thread
+                                });
+                                return res.json(thread)
+                            }
+                        });
+                    }
+                });
+            });
         }
-        EventBus.emit('socket:emit', {
-          event: 'message:new',
-          room: thread._id.toString(),
-          data: thread
-        });
-        //EventBus.emit('socket:emit', {
-        //  event: 'message:new',
-        //  room: thread.owner.toString(),
-        //  data: thread
-        //});
-        return res.json(thread)
-      })
-
-    })
-  })
+    });
 };
 
 exports.getMessages = function(req,res) {
