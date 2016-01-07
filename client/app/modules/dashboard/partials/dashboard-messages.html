@@ -19,7 +19,7 @@
 
 	<md-chips class="set-filters" ng-model="messageChips" readonly="true">
 		<md-chip-template ng-click="selectedChip($chip)">
-	        <strong>{{$chip.text}}</strong>
+	        <strong>{{$chip.text}}<i ng-show="$chip.select" style="font-size: 15px" class="material-icons">clear</i></strong>
       	</md-chip-template>
 	</md-chips>
 	
