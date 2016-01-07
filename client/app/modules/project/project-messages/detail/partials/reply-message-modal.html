@@ -1,0 +1,27 @@
+<md-dialog aria-label="Reply message" flex="70">
+    <form ng-submit="sendMessage()">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Reply to {{thread.name}}</h2>
+            </div>
+        </md-toolbar>
+        
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column">
+                
+                <div layout="row">
+                    <md-input-container flex>
+                        <label>Enter your message</label>
+                        <textarea ng-model="message.text" columns="1" md-maxlength="250" rows="5" required></textarea>
+                    </md-input-container>
+                </div>
+                
+            </div>
+        </md-dialog-content>
+        
+        <md-dialog-actions>
+            <md-button ng-click="closeModal()">Cancel</md-button>
+            <md-button type="submit" class="md-raised md-accent md-hue-1">Send Message!</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

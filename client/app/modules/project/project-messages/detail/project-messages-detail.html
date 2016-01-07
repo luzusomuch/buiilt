@@ -3,10 +3,10 @@
 	<div layout="column" flex="70" class="md-whiteframe-1dp">
 		
 		<div class="detail-header" layout="row" layout-padding>
-			<p>Message Thread Name</p>
+			<p>{{thread.name}}</p>
 			<span flex></span>
 			<div>
-				<md-button>Send a Reply</md-button>
+				<md-button ng-click="showReplyModal($event)">Send a Reply</md-button>
 			</div>
 			<md-chips class="set-filters">
 				<md-chip>Show Related Activities</md-chip>
@@ -18,7 +18,7 @@
 			<div class="item-activity">
 			
 				<div layout="row" flex class="activity-stream-head">
-					<p>This message was created by <strong>{ username }</strong> on { date and time }. <span>This message is related to the { file OR task } { name and link}.</span></p>
+					<p>This message was created by <strong>{{thread.owner.name}}</strong> on {{thread.createdAt | date: longDate}}. <span></p>
 				</div>
 				
 				<div layout="row" layout-align="center center" flex class="activity-stream">
@@ -106,11 +106,11 @@
   		  	      </md-fab-trigger>
 				  
   				  <md-fab-actions>
-			  	      <md-button aria-label="Send a Reply" class="md-fab md-raised md-mini md-primary">
+			  	      <md-button aria-label="Send a Reply" class="md-fab md-raised md-mini md-primary" ng-click="showReplyModal($event)">
 						  <md-tooltip md-direction="left">Send a Reply</md-tooltip>
 					      <md-icon class="material-icons">reply</md-icon>
 			  	      </md-button>
-			  	      <md-button aria-label="Edit the Message Details" class="md-fab md-raised md-mini md-primary">
+			  	      <md-button aria-label="Edit the Message Details" class="md-fab md-raised md-mini md-primary" ng-click="showEditMessageModal($event)">
 	  					  <md-tooltip md-direction="left">Edit Message Details</md-tooltip>
 	  				      <md-icon class="material-icons">edit</md-icon>
 			  	      </md-button>
@@ -141,6 +141,6 @@
 		</div>
 	</div>
 		
-	<related-items flex="30"></related-items>
+	<related-items data="thread" flex="30"></related-items>
 		
 </div>

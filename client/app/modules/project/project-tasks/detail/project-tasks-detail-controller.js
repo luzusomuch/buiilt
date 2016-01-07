@@ -1,3 +1,3 @@
-angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($scope, $timeout, $q) {
+angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($scope, $timeout, $q) {
 	
 });

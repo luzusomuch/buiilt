@@ -1,11 +1,11 @@
 <div class="detail-header" layout-padding layout="row">
 		
-	<md-chips class="" ng-model="projectsFilter" placeholder="Search..." secondary-placeholder="Search ..." flex md-autocomplete-snap="" md-require-math="true">
+	<md-chips class="" ng-model="messageFilter" placeholder="Search Projects..." secondary-placeholder="Search Projects..." flex md-autocomplete-snap="" md-require-math="autoCompleteRequireMath" md-on-add="addChip()">
 		<md-autocomplete 
 			md-selected-item="selectedItem" 
 			md-search-text="searchText"
 			md-items="item in querySearch(searchText)" 
-			md-item-text="item.name" 
+			md-item-text="item" 
 			placeholder="Search...">
 			<span md-highlight-text="searchText">{{item.name}}</span>
 		</md-autocomplete>

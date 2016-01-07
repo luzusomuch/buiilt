@@ -80,8 +80,13 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
   .state('project.messages.detail', {
     url: '/detail/:messageId',
     templateUrl: '/app/modules/project/project-messages/detail/project-messages-detail.html',
-    controller: 'projectMessagesCtrl',
-    authenticate : true
+    controller: 'projectMessagesDetailCtrl',
+    authenticate : true,
+    resolve: {
+      thread: function($stateParams, messageService) {
+        return messageService.get({id: $stateParams.messageId}).$promise;
+      }
+    }
   })
   
   	//Tasks for Single Project
