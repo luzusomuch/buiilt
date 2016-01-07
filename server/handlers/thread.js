@@ -11,9 +11,9 @@ var async = require('async');
 var _ = require('lodash');
 
 EventBus.onSeries('Thread.Inserted', function(thread, next) {
-  if (thread.users.length > 0) {
+  if (thread.members.length > 0) {
     var params = {
-      owners: thread.users,
+      owners: thread.members,
       fromUser: thread.owner,
       element: thread,
       referenceTo: 'thread',

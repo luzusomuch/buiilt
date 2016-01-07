@@ -1,27 +1,46 @@
 <div class="detail-header" layout-padding layout="row">
 		
-	<md-chips class="" ng-model="messageNames" placeholder="Search..." secondary-placeholder="Search..." flex="45">
-		<md-chip-template class="md-accent">
-	        <strong>{{$chip}}</strong>
+	<md-chips class="" ng-model="projectsFilter" placeholder="Search..." secondary-placeholder="Search ..." flex md-autocomplete-snap="" md-require-math="true">
+		<md-autocomplete 
+			md-selected-item="selectedItem" 
+			md-search-text="searchText"
+			md-items="item in querySearch(searchText)" 
+			md-item-text="item.name" 
+			placeholder="Search...">
+			<span md-highlight-text="searchText">{{item.name}}</span>
+		</md-autocomplete>
+		<md-chip-template>
+	        <strong>{{$chip.name}}</strong>
 	    </md-chip-template>
 	</md-chips>
 
 	<span flex></span>
 
-	<md-chips class="set-filters">
-		<md-chip>Created by Me</md-chip>
-		<md-chip>Mentions Me</md-chip>
+	<md-chips class="set-filters" ng-model="messageChips" readonly="true">
+		<md-chip-template ng-click="selectedChip($chip)">
+	        <strong>{{$chip.text}}<i ng-show="$chip.select" style="font-size: 15px" class="material-icons">clear</i></strong>
+      	</md-chip-template>
 	</md-chips>
 	
 </div>
 
 <md-list ng-cloak class="main-page-content">
 
-	<div ng-repeat="message in messages" ui-sref="project.messages.detail">
+	<div ng-show="!search" ng-repeat="thread in threads" ui-sref="project.messages.detail({id: thread.project, messageId: thread._id})">
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
-		          <h3>{{ message.name }}</h3>
-		          <p>{{ message.members }}</p>
+	        	<h3>{{ thread.name }}</h3>
+	       		<p><span ng-repeat="member in thread.members">{{member.name}}, </span></p>
+	        </div>
+		</md-list-item>
+		<md-divider></md-divider>
+	</div>
+
+	<div ng-show="search" ng-repeat="thread in searchResults" ui-sref="project.messages.detail({id: thread.project, messageId: thread._id})">
+		<md-list-item class="md-2-line" md-ink-ripple>
+			<div class="md-list-item-text" layout="column">
+	        	<h3>{{ thread.name }}</h3>
+	       		<p><span ng-repeat="member in thread.members">{{member.name}}, </span></p>
 	        </div>
 		</md-list-item>
 		<md-divider></md-divider>

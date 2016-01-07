@@ -65,6 +65,34 @@ exports.package = function(req,res,next) {
   })
 };
 
+exports.create = function(req,res) {
+  var user = req.user;
+  console.log(req.body);
+  ThreadValidator.validateCreate(req,function(err,data) {
+    if (err) {
+      return errorsHelper.validationErrors(res,err)
+    }
+    var thread = new Thread(data);
+    thread.project = req.params.id;
+    thread.owner = user._id;
+    thread.element = {type: req.body.type};
+    thread.save(function(err){
+      if (err) {return res.send(500,err);}
+      return res.json(thread);
+    });
+  });
+};
+
+exports.getProjectThread = function(req, res) {
+  Thread.find({project: req.params.id, 'element.type': 'project-message', $or:[{owner: req.user._id},{members: req.user._id}]})
+  .populate('members', '_id name email')
+  .populate('owner', '_id name email')
+  .exec(function(err, threads) {
+    if (err) {return res.send(500,err);}
+    return res.send(200, threads);
+  });
+};
+
 exports.thread = function(req,res,next) {
   Thread.findById(req.params.id,function(err,thread) {
     if (err || !thread) {
@@ -140,40 +168,7 @@ exports.myThread = function(req,res) {
   })
 };
 
-exports.create = function(req,res) {
-  var aPackage = req.aPackage;
-  var user = req.user;
-  ThreadValidator.validateCreate(req,function(err,data) {
-    if (err) {
-      return errorsHelper.validationErrors(res,err)
-    }
-    var thread = new Thread(data);
-    thread.package = aPackage;
-    thread.project = aPackage.project;
-    thread.owner = user;
-    thread.type = req.params.type;
-    var architectTeamLeader = [];
-    if (aPackage.type == 'BuilderPackage' && aPackage.hasArchitectManager && aPackage.architect.team) {
-      Team.findById(aPackage.architect.team, function(err, team){
-        if (err) {return res.send(500,err);}
-        _.each(team.leader, function(leader){
-          architectTeamLeader.push(leader);
-        });
-        thread.users = _.union(thread.users, architectTeamLeader);
-        thread.save(function(err){
-          if (err) {return res.send(500,err);}
-          return res.json(thread);
-        });
-      });
-    } else {
-      thread.users = _.union(thread.users, architectTeamLeader);
-      thread.save(function(err){
-        if (err) {return res.send(500,err);}
-        return res.json(thread);
-      });
-    }
-  });
-};
+
 
 exports.update = function(req,res) {
   var thread = req.thread;

@@ -4,6 +4,19 @@ angular.module('buiiltApp')
         id : '@_id',
         type : '@_type'},
       {
+        create: {
+          method: 'POST'
+        },
+        update : {
+          method : 'PUT'
+        },
+        getProjectThread: {
+          method: "GET",
+          params:{
+            action: "project-thread"
+          },
+          isArray: true
+        },
         myMessages : {
           method : 'GET',
           isArray : true,
@@ -23,12 +36,6 @@ angular.module('buiiltApp')
           isArray : true,
           params: {
           }
-        },
-        create: {
-          method: 'POST'
-        },
-        update : {
-          method : 'PUT'
         },
         sendMessage : {
           method : 'POST',

@@ -35,22 +35,32 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
                 }
 
                 // Get team list
-                _.each($scope.people[role], function(user) {
-                    if (user.hasSelect) {
-                        if (user._id) {
-                            $scope.membersList.push({_id: user._id._id, name: user._id.name, type: role});
-                        } else if (user.email) {
-                            $scope.membersList.push({email: user.email, type: role});
+                _.each($scope.people[role], function(tender) {
+                    if (tender.hasSelect) {
+                        var winnerTenderer = tender.tenderers[0];
+                        if (winnerTenderer._id) {
+                            $scope.membersList.push({_id: winnerTenderer._id._id, name: winnerTenderer._id.name, type: role});
+                        } else if (winnerTenderer.email) {
+                            $scope.membersList.push({email: winnerTenderer.email, type: role});
                         }
                     }
                 });
             });
 
             // get employees list
-            _.each($scope.people[$rootScope.currentUser.type].teamMember, function(member) {
-                $scope.membersList.push({_id: member._id, name: member.name, type: $rootScope.currentUser.type});
+            _.each($scope.people[$rootScope.currentUser.type], function(tender) {
+                var currentTendererIndex = _.findIndex(tender.tenderers, function(tenderer) {
+                    if (tenderer._id) {
+                        return tenderer._id._id == $rootScope.currentUser._id;
+                    }
+                });
+                if (currentTendererIndex !== -1) {
+                    var currentTenderer = tender.tenderer[currentTendererIndex];
+                    _.each(currentTenderer.teamMember, function(member) {
+                        $scope.membersList.push({_id: member._id, name: member.name, type: $rootScope.currentUser.type});
+                    });
+                }
             });
-            console.log($rootScope.currentUser);
 
             if ($scope.people.project.projectManager.type === "builder") {
                 switch($rootScope.currentUser.type) {

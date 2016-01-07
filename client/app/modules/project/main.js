@@ -61,10 +61,15 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
   	//Messages for Single Project
   .state('project.messages', {
     url: '/messages',
-	abstract: true,
+	  abstract: true,
     templateUrl: '/app/modules/project/project-messages/project-messages.html',
     controller: 'projectMessagesCtrl',
-    authenticate : true
+    authenticate : true,
+    resolve: {
+      threads: function($stateParams, messageService) {
+        return messageService.getProjectThread({id: $stateParams.id}).$promise;
+      }
+    }
   })
   .state('project.messages.all', {
     url: '',
@@ -73,7 +78,7 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
     authenticate : true
   })
   .state('project.messages.detail', {
-    url: '/detail',
+    url: '/detail/:messageId',
     templateUrl: '/app/modules/project/project-messages/detail/project-messages-detail.html',
     controller: 'projectMessagesCtrl',
     authenticate : true

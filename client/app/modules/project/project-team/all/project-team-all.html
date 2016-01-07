@@ -5,7 +5,7 @@
 			md-selected-item="selectedItem" 
 			md-search-text="searchText"
 			md-items="item in querySearch(searchText)" 
-			md-item-text="item" 
+			md-item-text="item.name" 
 			placeholder="Search...">
 			<span md-highlight-text="searchText">{{(item._id) ? item.name : item.email}}</span>
 		</md-autocomplete>
