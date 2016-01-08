@@ -1,8 +1,8 @@
-<md-dialog aria-label="Create a New Related Thread" flex="70">
-    <form ng-submit="createRelatedThread(form)" name="form">
+<md-dialog aria-label="Create a New Related Task" flex="70">
+    <form ng-submit="createRelatedTask(form)" name="form">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2>Create a New Related Thread</h2>
+                <h2>Create a New Related Task</h2>
             </div>
         </md-toolbar>
         
@@ -10,13 +10,19 @@
             <div class="md-dialog-content" layout="column">
                 <div layout="row">
                     <md-input-container flex class="modal-instructions">
-                        <p>Please provide the following details to attach a new related thread to your project...</p>
+                        <p>Please provide the following details to attach a new related task to your project...</p>
                     </md-input-container>
                 </div>
                 <div layout="row">
                     <md-input-container flex>
-                        <label>Related Thread Name</label>
-                        <input md-autofocus type="text" ng-model="relatedThread.name" name="name" required/>
+                        <label>Related Task Name</label>
+                        <input md-autofocus type="text" ng-model="relatedTask.name" name="name" required/>
+                    </md-input-container>
+                </div>
+                <div layout="row">
+                    <md-input-container flex>
+                        <label>Related Task Description</label>
+                        <textarea name="description" ng-model="relatedTask" md-maxlength="300" required rows="3" columns="1"></textarea>
                     </md-input-container>
                 </div>
                 <div ng-cloak>

@@ -1,0 +1,29 @@
+<md-dialog aria-label="Create a New Related Task" flex="70">
+    <form ng-submit="createRelatedFile(form)" name="form">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Create a New Related File</h2>
+            </div>
+        </md-toolbar>
+        
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column">
+                <div layout="row">
+                    <md-input-container flex class="modal-instructions">
+                        <p>Please provide the following details to attach a new related file to your project...</p>
+                    </md-input-container>
+                </div>
+                <div layout="row">
+                    <md-input-container flex>
+                        <label>Related Task Name</label>
+                        <input md-autofocus type="text" ng-model="relatedTask.name" name="name" required/>
+                    </md-input-container>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions>
+            <md-button ng-click="closeModal()">Cancel</md-button>
+            <md-button type="submit" class="md-raised md-accent md-hue-1">Create Related File!</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

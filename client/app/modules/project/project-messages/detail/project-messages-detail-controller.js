@@ -1,10 +1,30 @@
-angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($rootScope, $scope, $timeout, $stateParams, messageService, $mdToast, $mdDialog, $state, thread, peopleService) {
+angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($rootScope, $scope, $timeout, $stateParams, messageService, $mdToast, $mdDialog, $state, thread, peopleService, taskService) {
     $scope.error = {};
     $scope.thread = thread;
     $scope.thread.members.push(thread.owner);
+    $scope.orginalActivities = angular.copy($scope.thread.activities);
     _.remove($scope.thread.members, {_id: $rootScope.currentUser._id});
     $rootScope.title = thread.name;
     $rootScope.currentUser.isLeader = (_.findIndex($rootScope.currentTeam.leader, function(leader){return leader._id == $rootScope.currentUser._id}) !== -1) ? true: false;
+    $scope.showRelatedAction = true;
+
+    $scope.chipsFilter = function(){
+        $scope.showRelatedAction = !$scope.showRelatedAction;
+    };
+
+    $scope.$watch("showRelatedAction", function(value) {
+        var activities = [];
+        if (!value) {
+            _.each($scope.orginalActivities, function(activity) {
+                if (activity.type === "chat" || activity.type === "edit-thread" || activity.type === "assign") {
+                    activities.push(activity);
+                }
+            });
+            $scope.thread.activities = activities;
+        } else {
+            $scope.thread.activities = $scope.orginalActivities;
+        }
+    });
 
     function getProjectMembers(id) {
         $scope.membersList = [];
@@ -178,6 +198,36 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($ro
         } else {
             $scope.showToast("Please check your input again!");
         }
+    };
+
+    $scope.showCreateRelatedTask = function($event) {
+        $scope.relatedTask = {};
+        $scope.showModal("create-related-task.html", $event);
+    };
+
+    $scope.createRelatedTask = function(form) {
+        if (form.$valid) {
+            $scope.relatedTask.members = _.filter($scope.invitees, {select: true});
+            $scope.relatedTask.belongTo = $scope.thread._id;
+            if ($scope.relatedTask.members.length > 0) {
+                taskService.create({id: $stateParams.id}, $scope.relatedTask).$promise.then(function(relatedTask) {
+                    console.log(relatedTask);
+                    $scope.closeModal();
+                    $scope.showToast("Create new related task successfully!");
+                }, function(err){$scope.showToast("Error");});
+            } else {
+                $scope.showToast("Please select at least 1 invitee");
+                delete $scope.relatedTask.members;
+                delete $scope.relatedTask.belongTo;
+                return false;
+            }
+        } else {
+            $scope.showToast("Please check your input again!");
+        }
+    };
+
+    $scope.showCreateRelatedFile = function($event) {
+        $scope.showModal("create-related-file.html", $event);
     };
 
     getProjectMembers($stateParams.id);
