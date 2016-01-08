@@ -9,6 +9,13 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
 		});
 		$scope.teamMembersCanInvite = _.uniq($scope.teamMembersCanInvite, '_id');
 		_.remove($scope.teamMembersCanInvite, {_id: $rootScope.currentUser._id});
+        if ($scope.membersList && $scope.membersList.length > 0) {
+            _.each($scope.membersList, function(member) {
+                if (member._id) {
+                    _.remove($scope.teamMembersCanInvite, {_id: member._id});
+                }
+            });
+        }
 	};
 
 	function loadProjectMembers(id) {
@@ -18,21 +25,23 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
 		peopleService.getInvitePeople({id: id}).$promise.then(function(res) {
 			$scope.people = res;
             _.each(roles, function(role) {
-                if (_.findIndex($scope.people[role], function(user) {
-                    if (user._id) {
-                        return user._id._id == $rootScope.currentUser._id;
-                    }
-                }) != -1) {
-                    $rootScope.currentUser.type = role;
-                }
-                
-                if ($scope.people[role].teamMember && $scope.people[role].teamMember.length > 0) {
-                    if (_.findIndex($scope.people[role].teamMember, function(member) {
-                        return member._id == $scope.currentUser._id;
+                _.each($scope.people[role], function(tender) {
+                    if (_.findIndex(tender.tenderers, function(tenderer) {
+                        if (tenderer._id) {
+                            return tenderer._id._id == $rootScope.currentUser._id;
+                        }
                     }) != -1) {
                         $rootScope.currentUser.type = role;
+                    } else {
+                        _.each(tender.tenderers, function(tenderer) {
+                            if (_.findIndex(tenderer.teamMember, function(member) {
+                                return member._id == $scope.currentUser._id;
+                            }) != -1) {
+                                $rootScope.currentUser.type = role;
+                            }
+                        });
                     }
-                }
+                });
 
                 // Get team list
                 _.each($scope.people[role], function(tender) {
@@ -55,7 +64,7 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
                     }
                 });
                 if (currentTendererIndex !== -1) {
-                    var currentTenderer = tender.tenderer[currentTendererIndex];
+                    var currentTenderer = tender.tenderers[currentTendererIndex];
                     _.each(currentTenderer.teamMember, function(member) {
                         $scope.membersList.push({_id: member._id, name: member.name, type: $rootScope.currentUser.type});
                     });
