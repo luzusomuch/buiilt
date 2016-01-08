@@ -48,11 +48,11 @@
 							<!-- assign new people -->
 							<span ng-switch-when="assign">has assigned {{activity.element.invitee}} to this thread</span>
 							<!-- related thread -->
-							<span ng-switch-when="related-thread">has attached the related message thread, "<a ng-sref="">{{activity.element.name}}</a>".</span>
+							<span ng-switch-when="related-thread">has attached the related message thread, "<a ui-sref="project.messages.detail({id: thread.project, messageId: activity.element.item})">{{activity.element.name}}</a>".</span>
 							<!-- related task -->
-							<span ng-switch-when="related-task">has attached the related task, "<a ng-sref="">{{activity.element.name}}</a>".</span>
+							<span ng-switch-when="related-task">has attached the related task, "<a ui-sref="">{{activity.element.name}}</a>".</span>
 							<!-- related file -->
-							<span ng-switch-when="related-task">has attached the related file, "<a ng-sref="">{{activity.element.name}}</a>".</span>
+							<span ng-switch-when="related-task">has attached the related file, "<a ui-sref="">{{activity.element.name}}</a>".</span>
 
 						</p>
 						<p class="meta-data"><span class="time">{{activity.createdAt | date: 'H:mm a'}}</span> <span class="date">{{activity.createdAt | date: 'dd/MM/YYYY'}}</span><p>
@@ -147,7 +147,7 @@
   	  					  <md-tooltip md-direction="left">Assign to a Team Member</md-tooltip>
   	  				      <md-icon class="material-icons">person_outline</md-icon>
   			  	      </md-button>
-			  	      <md-button aria-label="Attach a Related Message" class="md-fab md-raised md-mini">
+			  	      <md-button aria-label="Attach a Related Message" class="md-fab md-raised md-mini" ng-click="showCreateRelatedThread($event)">
 						  <md-tooltip md-direction="left">Attach a Related Message</md-tooltip>
 					      <md-icon class="material-icons">chat_bubble_outline</md-icon>
 			  	      </md-button>

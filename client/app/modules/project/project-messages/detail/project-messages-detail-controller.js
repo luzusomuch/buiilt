@@ -52,8 +52,12 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($ro
 
             // remove current user from the members list
             _.remove($scope.membersList, {_id: $rootScope.currentUser._id});
-            console.log($scope.membersList);
         });
+
+        // get invitees for related item
+        $scope.invitees = $scope.thread.members;
+        $scope.invitees.push($scope.thread.owner);
+        _.remove($scope.invitees, {_id: $rootScope.currentUser._id});
     };
 
     $scope.showToast = function(value) {
@@ -122,20 +126,58 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($ro
         $scope.showModal("assign-team-member.html", $event)
     };
 
-    $scope.selectMember = function(index) {
-        $scope.membersList[index].select = !$scope.membersList[index].select;
+    $scope.selectMember = function(index, type) {
+        if (type === "member") {
+            $scope.membersList[index].select = !$scope.membersList[index].select;
+        } else {
+            $scope.invitees[index].select = !$scope.invitees[index].select;
+        }
     };
 
     $scope.assignMember = function() {
         $scope.thread.newMembers = _.filter($scope.membersList, {select: true});
         $scope.thread.elementType = "assign";
-        if ($scope.thread.newMembers) {};
-        messageService.update({id: $scope.thread._id}, $scope.thread).$promise.then(function(res) {
-            $scope.closeModal();
-            $scope.showToast("Assign user to " +res.name+ " successfully!");
-            getProjectMembers($stateParams.id);
-            $scope.thread = res;
-        }, function(err){$scope.showToast("Something went wrong");});
+        if ($scope.thread.newMembers.length > 0) {
+            messageService.update({id: $scope.thread._id}, $scope.thread).$promise.then(function(res) {
+                $scope.closeModal();
+                $scope.showToast("Assign user to " +res.name+ " successfully!");
+                getProjectMembers($stateParams.id);
+                $scope.thread = res;
+            }, function(err){$scope.showToast("Something went wrong");});
+        } else {
+            $scope.showToast("Please select at least 1 member");
+            delete $scope.thread.newMembers;
+            delete $scope.thread.elementType;
+            return false;
+        }
+    };
+
+    $scope.showCreateRelatedThread = function($event) {
+        $scope.relatedThread = {};
+        $scope.showModal("create-related-thread.html", $event);
+    };
+
+    $scope.createRelatedThread = function(form) {
+        if (form.$valid) {
+            $scope.relatedThread.members = _.filter($scope.invitees, {select: true});
+            $scope.relatedThread.belongTo = $scope.thread._id;
+            $scope.relatedThread.type = "project-messages";
+            if ($scope.relatedThread.members.length > 0) {    
+                messageService.create({id: $stateParams.id}, $scope.relatedThread).$promise.then(function(relatedThread) {
+                    $scope.closeModal();
+                    $scope.showToast("Create Related Thread Successfully!");
+                    $state.go("project.messages.detail", {id: $stateParams.id, messageId: relatedThread._id});
+                }, function(err) {$scope.showToast("Error");});
+            } else {
+                $scope.showToast("Please select at least 1 invitee");
+                delete $scope.relatedThread.member;
+                delete $scope.relatedThread.belongTo;
+                delete $scope.relatedThread.type;
+                return false;
+            }
+        } else {
+            $scope.showToast("Please check your input again!");
+        }
     };
 
     getProjectMembers($stateParams.id);

@@ -77,7 +77,32 @@ exports.create = function(req,res) {
         thread.element = {type: req.body.type};
         thread.save(function(err){
             if (err) {return res.send(500,err);}
-            return res.json(thread);
+            if (req.body.belongTo) {
+                Thread.findById(req.body.belongTo, function(err, mainThread) {
+                    if (err || !mainThread) {cb();}
+                    else {
+                        mainThread.activities.push({
+                            user: req.user._id,
+                            type: "related-thread",
+                            createdAt: new Date(),
+                            element: {
+                                item: thread._id,
+                                name: thread.name
+                            }
+                        });
+                        mainThread.relatedItem.push({
+                            type: "thread",
+                            item: thread._id
+                        });
+                        mainThread.save(function(err) {
+                            if (err) {return res.send(500,err);}
+                            populateThread(mainThread, res);
+                        });
+                    }
+                });
+            } else {
+                return res.json(thread);
+            }
         });
     });
 };
