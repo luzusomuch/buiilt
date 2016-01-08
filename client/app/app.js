@@ -81,6 +81,7 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
     $rootScope.hasHeader = true;
     $rootScope.hasFooter = true;
     $rootScope.isArchive = false;
+    $rootScope.roles = ["builders", "clients", "architects", "subcontractors", "consultants"];
     // $rootScope.isLeader = false;
     $rootScope.safeApply = function (fn) {
       var phase = $rootScope.$$phase;

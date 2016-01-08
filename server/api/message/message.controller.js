@@ -191,6 +191,7 @@ exports.update = function(req,res) {
         if (err) {return res.send(500,err);}
         else if (!thread) {return res.send(404, "The specific message is not existed");}
         else {
+            req.thread = thread;
             ThreadValidator.validateUpdate(req,function(err,data) {
                 if (err) {
                     return errorsHelper.validationErrors(res,err)
@@ -202,11 +203,20 @@ exports.update = function(req,res) {
                             createdAt: new Date()
                         });
                     } else {
-
+                        if (req.body.elementType === "assign") {
+                            _.each(req.body.newMembers, function(member) {
+                                thread.activities.push({
+                                    user: req.user._id,
+                                    type: req.body.elementType,
+                                    createdAt: new Date(),
+                                    element: {invitee: member.name}
+                                });
+                            });
+                        }
                     }
                     thread = _.merge(thread,data);
-                    thread.users = data.users;
-                    thread.markModified('users');
+                    thread.members = data.members;
+                    thread.markModified('members');
                     thread._editUser = req.user;
                     thread.save(function(err) {
                         if (err) {

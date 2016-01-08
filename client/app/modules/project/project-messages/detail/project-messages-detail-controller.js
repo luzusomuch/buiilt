@@ -1,8 +1,60 @@
-angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($rootScope, $scope, $timeout, $stateParams, messageService, $mdToast, $mdDialog, $state, thread) {
+angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($rootScope, $scope, $timeout, $stateParams, messageService, $mdToast, $mdDialog, $state, thread, peopleService) {
+    $scope.error = {};
     $scope.thread = thread;
     $scope.thread.members.push(thread.owner);
     _.remove($scope.thread.members, {_id: $rootScope.currentUser._id});
     $rootScope.title = thread.name;
+    $rootScope.currentUser.isLeader = (_.findIndex($rootScope.currentTeam.leader, function(leader){return leader._id == $rootScope.currentUser._id}) !== -1) ? true: false;
+
+    function getProjectMembers(id) {
+        $scope.membersList = [];
+        peopleService.getInvitePeople({id: id}).$promise.then(function(people) { 
+            if ($rootScope.currentUser.isLeader) {
+                _.each($rootScope.roles, function(role) {
+                    _.each(people[role], function(tender) {
+                        if (tender.hasSelect) {
+                            var winnerTenderer = tender.tenderers[0];
+                            if (winnerTenderer._id) {
+                                winnerTenderer._id.select = false;
+                                $scope.membersList.push(winnerTenderer._id);
+                            } else if (winnerTenderer.email) {
+                                $scope.membersList.push({email: winnerTenderer.email, type: role, select: false});
+                            }
+                        }
+                        // get employees list
+                        var currentTendererIndex = _.findIndex(tender.tenderers, function(tenderer) {
+                            if (tenderer._id) {
+                                return tenderer._id._id == $rootScope.currentUser._id;
+                            }
+                        });
+                        if (currentTendererIndex !== -1) {
+                            var currentTenderer = tender.tenderers[currentTendererIndex];
+                            _.each(currentTenderer.teamMember, function(member) {
+                                member.select = false;
+                                $scope.membersList.push(member);
+                            });
+                        }
+                    });
+                });
+            } else {
+                $scope.membersList = $rootScope.currentTeam.leader;
+                _.each($rootScope.currentTeam.member, function(member) {
+                    $scope.membersList.push(member);
+                });
+            }
+            // get unique member 
+            $scope.membersList = _.uniq($scope.membersList, "_id");
+
+            // filter members list again
+            _.each(thread.members, function(member) {
+                _.remove($scope.membersList, {_id: member._id});
+            });
+
+            // remove current user from the members list
+            _.remove($scope.membersList, {_id: $rootScope.currentUser._id});
+            console.log($scope.membersList);
+        });
+    };
 
     $scope.showToast = function(value) {
         $mdToast.show($mdToast.simple().textContent(value).position('bottom','right').hideDelay(3000));
@@ -65,4 +117,26 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($ro
     $scope.copyError = function() {
         $scope.showToast("Copy message error");
     };
+
+    $scope.showAssignTeamMemberModal = function($event) {
+        $scope.showModal("assign-team-member.html", $event)
+    };
+
+    $scope.selectMember = function(index) {
+        $scope.membersList[index].select = !$scope.membersList[index].select;
+    };
+
+    $scope.assignMember = function() {
+        $scope.thread.newMembers = _.filter($scope.membersList, {select: true});
+        $scope.thread.elementType = "assign";
+        if ($scope.thread.newMembers) {};
+        messageService.update({id: $scope.thread._id}, $scope.thread).$promise.then(function(res) {
+            $scope.closeModal();
+            $scope.showToast("Assign user to " +res.name+ " successfully!");
+            getProjectMembers($stateParams.id);
+            $scope.thread = res;
+        }, function(err){$scope.showToast("Something went wrong");});
+    };
+
+    getProjectMembers($stateParams.id);
 });

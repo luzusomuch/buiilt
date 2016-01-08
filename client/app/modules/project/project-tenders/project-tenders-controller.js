@@ -16,10 +16,9 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
 	var loadProjectMembers = function(id) {
 		// get all project team member
         $scope.membersList = [];
-        var roles = ["builders", "clients", "architects", "subcontractors", "consultants"];
 		peopleService.getInvitePeople({id: id}).$promise.then(function(res) {
 			$scope.people = res;
-            _.each(roles, function(role) {
+            _.each($rootScope.roles, function(role) {
                 _.each($scope.people[role], function(tender) {
                     if (_.findIndex(tender.tenderers, function(user) {
                         if (user._id) {

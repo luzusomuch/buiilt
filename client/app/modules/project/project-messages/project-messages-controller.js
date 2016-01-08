@@ -18,8 +18,8 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
 						$scope.projectMembers.push(tender.tenderers[0]._id);
 						if (tender.tenderers[0].teamMember.length > 0 && tender.tenderers[0]._id._id == $rootScope.currentUser._id) {
 							_.each(tender.tenderers[0].teamMember, function(member) {
-								member._id.select = false;
-								$scope.projectMembers.push(member._id);
+								member.select = false;
+								$scope.projectMembers.push(member);
 							});
 						}
 					}
