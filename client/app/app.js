@@ -17,7 +17,8 @@ angular.module('buiiltApp', [
   'ngTable',
   'angular-filepicker',
   'analytics.mixpanel',
-  'ngMaterial'
+  'ngMaterial',
+  'angular-clipboard'
 ]);
 
 angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider, $locationProvider, $urlRouterProvider, $httpProvider, $sceDelegateProvider, cfpLoadingBarProvider, filepickerProvider, $mixpanelProvider) {

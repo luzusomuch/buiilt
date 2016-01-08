@@ -21,20 +21,45 @@
 					<p>This message was created by <strong>{{thread.owner.name}}</strong> on {{thread.createdAt | date: longDate}}. <span></p>
 				</div>
 				
-				<div layout="row" layout-align="center center" flex class="activity-stream">
+				<div layout="row" layout-align="center center" flex class="activity-stream" ng-repeat="activity in thread.activities">
 					<span flex="5"></span>
-					<div class="icon-type">
-						<md-icon class="material-icons md-primary">reply</md-icon>
+					<div class="icon-type" ng-switch="activity.type">
+						<!-- send message -->
+						<md-icon ng-switch-when="chat" class="material-icons md-primary">reply</md-icon>
+						<!-- edit thread -->
+						<md-icon ng-switch-when="edit-thread" class="material-icons md-primary">edit</md-icon>
+						<!-- assign new people -->
+						<md-icon ng-switch-when="assign" class="material-icons md-primary">person_outline</md-icon>
+						<!-- add related thread -->
+						<md-icon ng-switch-when="related-thread" class="material-icons md-primary">chat_bubble_outline</md-icon>
+						<!-- add related task -->
+						<md-icon ng-switch-when="related-task" class="material-icons md-primary">done_all</md-icon>
+						<!-- add related file -->
+						<md-icon ng-switch-when="related-file" class="material-icons md-primary">attach_file</md-icon>
 					</div>
 					<span flex="5"></span>
 					<div flex class="activity-detail">
-						<p><strong>{ username }</strong> has replied to this message:</p>
-						<p>{ reply content including formatting }</p>
-						<p class="meta-data"><span class="time">2:11 pm</span> <span class="date">03/01/2016</span><p>
+						<p ng-switch="activity.type">
+							<strong>{{activity.user.name}}</strong> 
+							<!-- send message -->
+							<span ng-switch-when="chat">has replied to this message: {{activity.element.message}}</span>
+							<!-- edit message thread -->
+							<span ng-switch-when="edit-thread">has edited the details of this message (name: {{thread.name}})</span>
+							<!-- assign new people -->
+							<span ng-switch-when="assign">has assigned {{activity.element.invitee}} to this thread</span>
+							<!-- related thread -->
+							<span ng-switch-when="related-thread">has attached the related message thread, "<a ng-sref="">{{activity.element.name}}</a>".</span>
+							<!-- related task -->
+							<span ng-switch-when="related-task">has attached the related task, "<a ng-sref="">{{activity.element.name}}</a>".</span>
+							<!-- related file -->
+							<span ng-switch-when="related-task">has attached the related file, "<a ng-sref="">{{activity.element.name}}</a>".</span>
+
+						</p>
+						<p class="meta-data"><span class="time">{{activity.createdAt | date: 'H:mm a'}}</span> <span class="date">{{activity.createdAt | date: 'dd/MM/YYYY'}}</span><p>
 					</div>
 				</div>
 				
-				<div layout="row" layout-align="center center" flex class="activity-stream">
+				<!-- <div layout="row" layout-align="center center" flex class="activity-stream">
 					<span flex="5"></span>
 					<div class="icon-type">
 						<md-icon class="material-icons md-primary">edit</md-icon>
@@ -92,7 +117,7 @@
 						<p><strong>{ username }</strong> has attached the related file, "{ name and link to file }".</p>
 						<p class="meta-data"><span class="time">2:11 pm</span> <span class="date">03/01/2016</span><p>
 					</div>
-				</div>
+				</div> -->
 				
 			</div>
 			
@@ -110,11 +135,11 @@
 						  <md-tooltip md-direction="left">Send a Reply</md-tooltip>
 					      <md-icon class="material-icons">reply</md-icon>
 			  	      </md-button>
-			  	      <md-button aria-label="Edit the Message Details" class="md-fab md-raised md-mini md-primary" ng-click="showEditMessageModal($event)">
+			  	      <md-button aria-label="Edit the Message Details" class="md-fab md-raised md-mini md-primary" ng-click="showEditMessageModal($event)" ng-show="thread.owner._id == currentUser._id">
 	  					  <md-tooltip md-direction="left">Edit Message Details</md-tooltip>
 	  				      <md-icon class="material-icons">edit</md-icon>
 			  	      </md-button>
-			  	      <md-button aria-label="Copy Message Address" class="md-fab md-raised md-mini md-primary">
+			  	      <md-button aria-label="Copy Message Address" class="md-fab md-raised md-mini md-primary" clipboard text="thread._id" on-copied="copySuccess()" on-error="copyError(err)">
 	  					  <md-tooltip md-direction="left">Copy Message Address</md-tooltip>
 	  				      <md-icon class="material-icons">content_paste</md-icon>
 			  	      </md-button>

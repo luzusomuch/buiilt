@@ -4,15 +4,15 @@ var User = require('./../../models/user.model');
 var Team = require('./../../models/team.model');
 var Thread = require('./../../models/thread.model');
 var StaffPackage = require('./../../models/staffPackage.model'),
-  BuilderPackage = require('./../../models/builderPackage.model'),
-  ContractorPackage = require('./../../models/contractorPackage.model'),
-  MaterialPackage = require('./../../models/materialPackage.model'),
-  Variation = require('./../../models/variation.model'),
-  Notification = require('./../../models/notification.model'),
-  Project = require('./../../models/project.model'),
-  PeopleChat = require('./../../models/peopleChat.model'),
-  Board = require('./../../models/board.model'),
-  Design = require('./../../models/design.model');
+    BuilderPackage = require('./../../models/builderPackage.model'),
+    ContractorPackage = require('./../../models/contractorPackage.model'),
+    MaterialPackage = require('./../../models/materialPackage.model'),
+    Variation = require('./../../models/variation.model'),
+    Notification = require('./../../models/notification.model'),
+    Project = require('./../../models/project.model'),
+    PeopleChat = require('./../../models/peopleChat.model'),
+    Board = require('./../../models/board.model'),
+    Design = require('./../../models/design.model');
 var ThreadValidator = require('./../../validators/thread');
 var errorsHelper = require('../../components/helpers/errors');
 var _ = require('lodash');
@@ -98,6 +98,7 @@ exports.getById = function(req, res){
     .populate('messages.mentions','_id name email')
     .populate('members','_id name email')
     .populate('owner','_id name email')
+    .populate('activities.user','_id name email')
     .exec(function(err, thread){
         if (err) {return res.send(500,err);}
         else if (!thread) {return res.send(404);}
@@ -194,20 +195,29 @@ exports.update = function(req,res) {
                 if (err) {
                     return errorsHelper.validationErrors(res,err)
                 } else {
+                    if (req.body.updateInfo) {
+                        thread.activities.push({
+                            user: req.user._id,
+                            type: "edit-thread",
+                            createdAt: new Date()
+                        });
+                    } else {
+
+                    }
                     thread = _.merge(thread,data);
                     thread.users = data.users;
                     thread.markModified('users');
                     thread._editUser = req.user;
                     thread.save(function(err) {
-                      if (err) {
-                        return res.send(500,err)
-                      }
-                      return res.json(thread);
+                        if (err) {
+                            return res.send(500,err)
+                        }
+                        populateThread(thread, res);
                     });
                 }
             });
         }
-    })
+    });
 };
 
 exports.sendMessage = function(req,res) {
@@ -222,6 +232,14 @@ exports.sendMessage = function(req,res) {
                     user : user,
                     sendAt: new Date()
                 };
+                thread.activities.push({
+                    user: req.user._id,
+                    type: 'chat',
+                    createdAt: new Date(),
+                    element: {
+                        message: data.text
+                    }
+                });
                 thread.messages.push(message);
                 thread._evtName = 'Thread.NewMessage';
                 thread._message = message;
@@ -250,6 +268,18 @@ exports.sendMessage = function(req,res) {
                 });
             });
         }
+    });
+};
+
+function populateThread(thread, res){
+    Thread.populate(thread, [
+        {path: "owner", select: "_id email name"},
+        {path: "messages.user", select: "_id email name"},
+        {path: "messages.mentions", select: "_id email name"},
+        {path: "members", select: "_id email name"},
+        {path: "activities.user", select: "_id email name"}
+    ], function(err, thread) {
+        return res.send(200, thread);
     });
 };
 

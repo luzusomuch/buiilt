@@ -29,6 +29,9 @@ var ThreadSchema = new Schema({
         type: String,
         required: true
     },
+    description: {
+        type: String
+    },
     owner : {
         type : Schema.Types.ObjectId,
         ref : 'User',
@@ -43,6 +46,16 @@ var ThreadSchema = new Schema({
     members : [{
         type : Schema.Types.ObjectId,
         ref : 'User'
+    }],
+    activities: [{
+        user: {type: Schema.Types.ObjectId, ref: "User", required: true},
+        type: {type: String}, 
+        createdAt: Date, 
+        element: {}
+    }],
+    relatedItem: [{
+        type: {type: String},
+        item: {type: Schema.Types.ObjectId, required: true}
     }],
     messages : [MessageSchema],
     createdAt: {

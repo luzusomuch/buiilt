@@ -49,11 +49,20 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($ro
 
     $scope.editMessage = function(form) {
         if (form.$valid) {
+            $scope.thread.updateInfo = true;
             messageService.update({id: $scope.thread._id}, $scope.thread).$promise.then(function(res) {
                 $scope.closeModal();
                 $scope.showToast("Update message successfully!");
                 $scope.thread.name = res.name;
             }, function(err){$scope.showToast("Error");});
         }
+    };
+
+    $scope.copySuccess = function() {
+        $scope.showToast("Copy message thread successfully!");
+    };
+
+    $scope.copyError = function() {
+        $scope.showToast("Copy message error");
     };
 });
