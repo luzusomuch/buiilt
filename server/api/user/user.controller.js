@@ -23,9 +23,20 @@ var async = require('async');
 var _ = require('lodash');
 var Mailer = require('./../../components/Mailer');
 var crypto = require('crypto');
+var mongoose = require("mongoose");
 
 var validationError = function (res, err) {
-  return res.json(422, err);
+    return res.json(422, err);
+};
+
+exports.getUserProfile = function(req, res) {
+    User.findOne({_id: req.params.id}).populate("team._id").exec(function(err, user) {
+        if (err) {return res.send(500,err);}
+        else if (!user) {return res.send(404, "The specific user is not existed!");}
+        else {
+            return res.send(200, {email: user.email, name: user.name, phoneNumber: user.phoneNumber, teamName: (user.team._id)?user.team._id.name:"This user hasn\'t got team"});
+        }
+    });
 };
 
 /**

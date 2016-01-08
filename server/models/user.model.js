@@ -23,7 +23,7 @@ var UserSchema = new Schema({
     default: 'user'
   },
   team: {
-    _id: Schema.Types.ObjectId,
+    _id: {type: Schema.Types.ObjectId, ref: "Team"},
     role: {type:String, enum: ['member', 'admin']}
   },
   hashedPassword: String,

@@ -1,8 +1,8 @@
-<md-dialog aria-label="Create a New Message" flex="70">
+<md-dialog aria-label="View Profile Modal" flex="70">
 	<form>
 		<md-toolbar>
 			<div class="md-toolbar-tools">
-				<h2>Team Member View Window</h2>
+				<h2>View User Profile Modal</h2>
 			</div>
 		</md-toolbar>
 		
@@ -11,21 +11,25 @@
 				
 				<div layout="row">
 					<md-input-container flex class="modal-instructions">
-						<p>Here is the Detail you want...</p>
+						<p>Here is the Detail Of {{userInfo.name}}</p>
 					</md-input-container>
 				</div>
 				
 				<div layout="row">
 					<md-input-container flex>
-				        <label>Message Thread Name</label>
-				        <input md-autofocus />
+						<p><i class="material-icons">email</i> {{userInfo.email}}</p>
 					</md-input-container>
 				</div>
 				
 				<div layout="row">
 					<md-input-container flex>
-				        <label>Add Team Members to the Thread</label>
-				        <input />
+				        <p><i class="material-icons">phone</i> {{userInfo.phoneNumber}}</p>
+				    </md-input-container>
+				</div>
+
+				<div layout="row">
+					<md-input-container flex>
+				        <p><i class="material-icons">group</i> {{userInfo.teamName}}</p>
 				    </md-input-container>
 				</div>
 				
@@ -33,8 +37,7 @@
 		</md-dialog-content>
 		
 		<md-dialog-actions>
-			<md-button ng-click="cancelInviteTeamModal()">Cancel</md-button>
-			<md-button ng-click="createNewTeamMember()" class="md-raised md-accent md-hue-1">Add Team Member!</md-button>
+			<md-button ng-click="closeModal()">Close</md-button>
 		</md-dialog-actions>
 	</form>
 </md-dialog>

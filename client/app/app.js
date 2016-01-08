@@ -1,52 +1,52 @@
 angular.module('buiiltApp', [
-  'ui.utils',
-  'ui.router',
-  'ngAnimate',
-  'angularFileUpload',
-  'ngCookies',
-  'ngSanitize',
-  'ngResource',
-  'angular-loading-bar',
-  'cgNotify',
-  'restangular',
-  'lumx',
-  'ui.materialize',
-  '720kb.tooltips',
-  'angucomplete-alt',
-  'btford.socket-io',
-  'ngTable',
-  'angular-filepicker',
-  'analytics.mixpanel',
-  'ngMaterial',
-  'angular-clipboard'
+    'ui.utils',
+    'ui.router',
+    'ngAnimate',
+    'angularFileUpload',
+    'ngCookies',
+    'ngSanitize',
+    'ngResource',
+    'angular-loading-bar',
+    'cgNotify',
+    'restangular',
+    'lumx',
+    'ui.materialize',
+    '720kb.tooltips',
+    'angucomplete-alt',
+    'btford.socket-io',
+    'ngTable',
+    'angular-filepicker',
+    'analytics.mixpanel',
+    'ngMaterial',
+    'angular-clipboard'
 ]);
 
-angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider, $locationProvider, $urlRouterProvider, $httpProvider, $sceDelegateProvider, cfpLoadingBarProvider, filepickerProvider, $mixpanelProvider) {
-  $sceDelegateProvider.resourceUrlWhitelist(['^(?:http(?:s)?:\/\/)?(?:[^\.]+\.)?\(vimeo|youtube)\.com(/.*)?$', 'self']);
-  /* Add New States Above */
-  $urlRouterProvider.otherwise('/');
+angular
+.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider, $locationProvider, $urlRouterProvider, $httpProvider, $sceDelegateProvider, cfpLoadingBarProvider, filepickerProvider, $mixpanelProvider) {
+    $sceDelegateProvider.resourceUrlWhitelist(['^(?:http(?:s)?:\/\/)?(?:[^\.]+\.)?\(vimeo|youtube)\.com(/.*)?$', 'self']);
+    $urlRouterProvider.otherwise('/');
 
-  $locationProvider.html5Mode(true);
-  $httpProvider.interceptors.push('authInterceptor');
+    $locationProvider.html5Mode(true);
+    $httpProvider.interceptors.push('authInterceptor');
 
-  //angular loading bar
-  cfpLoadingBarProvider.includeSpinner = true;
-  filepickerProvider.setKey('AM6Wn3DzwRimryydBnsj7z');
-  $mixpanelProvider.apiKey('e6d853e9a8af11b4aa36ea63291ead38'); // your token is different than your API key
+    //angular loading bar
+    cfpLoadingBarProvider.includeSpinner = true;
+    filepickerProvider.setKey('AM6Wn3DzwRimryydBnsj7z');
+    $mixpanelProvider.apiKey('e6d853e9a8af11b4aa36ea63291ead38'); // your token is different than your API key
 
-  $mixpanelProvider.superProperties({
-    someProp: true,
-    anotherOne: [1,2,3]
-  });
-  })
-  .config(function($mdThemingProvider) {
+    $mixpanelProvider.superProperties({
+        someProp: true,
+        anotherOne: [1,2,3]
+    });
+})
+.config(function($mdThemingProvider) {
     $mdThemingProvider.theme('default')
-      .primaryPalette('blue')
-      .accentPalette('amber', {'default': '500', 'hue-1': '300', 'hue-2': '800', 'hue-3': 'A400'})
-	  .warnPalette('grey', {'hue-1': '50'})
-	  .backgroundPalette('grey')
-  })
-  .factory('authInterceptor', function ($q, $cookieStore, $location) {
+    .primaryPalette('blue')
+    .accentPalette('amber', {'default': '500', 'hue-1': '300', 'hue-2': '800', 'hue-3': 'A400'})
+    .warnPalette('grey', {'hue-1': '50'})
+    .backgroundPalette('grey')
+})
+.factory('authInterceptor', function ($q, $cookieStore, $location) {
     return {
       // Add authorization token to headers
       request: function (config) {
@@ -69,8 +69,8 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
         }
       }
     };
-  })
-  .run(function ($rootScope, $cookieStore, cfpLoadingBar, authService, $location,projectService,$state) {
+})
+.run(function ($rootScope, $cookieStore, cfpLoadingBar, authService, $location,projectService,$state) {
     cfpLoadingBar.start();
     $rootScope.maximunHeight = $(window).height();
     $rootScope.project = {};
@@ -201,5 +201,5 @@ angular.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider,
 
     $rootScope.overlay = false;
 
-  })
-  .value('$', $);
+})
+.value('$', $);

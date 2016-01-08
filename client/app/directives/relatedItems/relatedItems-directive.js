@@ -22,13 +22,20 @@ angular.module('buiiltApp').directive('relatedItems', function(){
 			    });
 			};
 			
-			$scope.showRelatedTeamMemberModal = function ($event) {
+			$scope.showRelatedTeamMemberModal = function ($event, userId) {
 				$mdDialog.show({
-				  targetEvent: $event,
-			      controller: 'projectTeamCtrl',
-			      templateUrl: 'app/modules/project/project-team/detail/project-teamMember-riWindow.html',
-			      parent: angular.element(document.body),
-			      clickOutsideToClose: false
+				    targetEvent: $event,
+                    controller: function($mdDialog, $scope, userService) {
+                        userService.getUserProfile({id: userId}).$promise.then(function(user) {
+                            $scope.userInfo = user;
+                        });
+                        $scope.closeModal = function() {
+                            $mdDialog.cancel();
+                        };
+                    },
+		            templateUrl: 'app/modules/project/project-team/detail/project-teamMember-riWindow.html',
+		            parent: angular.element(document.body),
+			        clickOutsideToClose: false
 			    });
 			};
 			
@@ -51,8 +58,6 @@ angular.module('buiiltApp').directive('relatedItems', function(){
 			      clickOutsideToClose: false
 			    });
 			};
-			
-			
         }
     };
 });

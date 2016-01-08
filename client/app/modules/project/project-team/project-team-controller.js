@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $scope, $timeout, $mdDialog, peopleService, $mdToast, $stateParams) {
+angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $scope, $timeout, $mdDialog, peopleService, $mdToast, $stateParams, userService) {
 	function getCurrentTeamMember() {
 		//get current user logged in team member
 		$scope.teamMembersCanInvite = $rootScope.currentTeam.leader;
