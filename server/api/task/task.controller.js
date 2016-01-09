@@ -3,6 +3,7 @@
 var User = require('./../../models/user.model');
 var Team = require('./../../models/team.model');
 var Task = require('./../../models/task.model');
+var Thread = require('./../../models/thread.model');
 var StaffPackage = require('./../../models/staffPackage.model'),
     BuilderPackage = require('./../../models/builderPackage.model'),
     BuilderPackageNew = require('./../../models/builderPackageNew.model'),
@@ -16,6 +17,7 @@ var StaffPackage = require('./../../models/staffPackage.model'),
     People = require('./../../models/people.model');
 var TaskValidator = require('./../../validators/task');
 var errorsHelper = require('../../components/helpers/errors');
+var RelatedItem = require('../../components/helpers/related-item');
 var _ = require('lodash');
 var async = require('async');
 var mongoose = require('mongoose');
@@ -181,53 +183,59 @@ exports.myTask = function(req,res) {
 };
 
 exports.create = function(req,res) {
-    console.log(req.body);
-    // var aPackage = req.aPackage;
     var user = req.user;
     TaskValidator.validateCreate(req,function(err,data) {
         if (err) {
           return errorsHelper.validationErrors(res,err)
         }
         var task = new Task(data);
-        task.description = req.body.description;
-        task.package = aPackage;
-        task.project = aPackage.project;
-        task.user = user;
-        task.type = req.params.type;
+        task.project = req.params.id;
+        task.owner = user._id;
         task.dateStart = new Date();
-        task.peopleChat = req.body.peopleChat;
-        var architectTeamLeader = [];
-        if (aPackage.type == 'BuilderPackage' && aPackage.hasArchitectManager && aPackage.architect.team) {
-          Team.findById(mongoose.Types.ObjectId(aPackage.architect.team), function(err, team){
-            if (err) {return res.send(500,err);}
-            _.each(team.leader, function(leader){
-              architectTeamLeader.push(leader);
-            });
-            task.assignees = _.union(task.assignees, architectTeamLeader);
-            task.save(function(err) {
-              if (err) {
-                return res.send(500,err)
-              }
-              Task.populate(task, {path:'assignees', select: '-hashedPassword -salt'}, function(err, task){
-                if (err) {return res.send(500,err);}
-                return res.json(task);
-              });
-            });
-          });
-        } else {
-          task.assignees = _.union(task.assignees, architectTeamLeader);
-          task._editUser = req.user;
-          task.save(function(err) {
-            if (err) {
-              console.log(err);
-              return res.send(500,err)
-            }
-            Task.populate(task, {path:'assignees', select: '-hashedPassword -salt'}, function(err, task){
-              if (err) {console.log(err);return res.send(500,err);}
-              return res.json(task);
-            });
-          });
+        if (req.body.dateEnd) {
+            task.hasDateEnd = true;
+            task.dateEnd = req.body.dateEnd;
         }
+        task.activities.push({
+            user: user._id,
+            type: "create-task",
+            createdAt: new Date()
+        });
+        task._editUser = user;
+        task.save(function(err) {
+            if (err) {return res.send(500,err);}
+            else if (req.body.belongTo) {
+                Thread.findById(req.body.belongTo, function(err, thread) {
+                    if (err || !thread) {
+                        task.remove(function() {
+                            return res.send(500);
+                        });
+                    } else {
+                        thread.activities.push({
+                            user: req.user._id,
+                            type: "related-task",
+                            createdAt: new Date(),
+                            element: {
+                                item: task._id,
+                                name: task.name
+                            }
+                        });
+                        data.members.push(req.user._id);
+                        thread.relatedItem.push({
+                            type: "task",
+                            item: {_id: task._id},
+                            members: data.members
+                        });
+                        thread.save(function(err) {
+                            if (err) {return res.send(500,err);}
+                            RelatedItem.responseWithRelated(thread, user, res);
+                        });
+                    }
+                });
+            } else {
+                return res.send(200, task);
+            }
+        });
     });
 };
 

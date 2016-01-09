@@ -15,6 +15,7 @@ var StaffPackage = require('./../../models/staffPackage.model'),
     Design = require('./../../models/design.model');
 var ThreadValidator = require('./../../validators/thread');
 var errorsHelper = require('../../components/helpers/errors');
+var RelatedItem = require('../../components/helpers/related-item');
 var _ = require('lodash');
 var async = require('async');
 var EventBus = require('../../components/EventBus');
@@ -27,34 +28,6 @@ function populateThread(thread, res){
         {path: "members", select: "_id email name"},
         {path: "activities.user", select: "_id email name"}
     ], function(err, thread) {
-        return res.send(200, thread);
-    });
-};
-
-function responseWithRelated(thread, user, res) {
-    var relatedItem = [];
-    async.each(thread.relatedItem, function(item, cb) {
-        if (_.findIndex(item.members, function(member){return member.toString() === user._id.toString();}) !== -1) {
-            if (item.type === "thread") {
-                Thread.findById(item.item._id, '_id name messages')
-                .populate("messages.user", '_id name email')
-                .populate("messages.mentions", '_id name email')
-                .exec(function(err, _thread) {
-                    if (err || !_thread) {cb();}
-                    else {
-                        item.item = _thread;
-                        relatedItem.push(item);
-                        cb();
-                    }
-                });
-            } else {
-                cb();
-            }
-        } else {
-            cb();
-        }
-    }, function() {
-        thread.relatedItem = relatedItem;
         return res.send(200, thread);
     });
 };
@@ -119,7 +92,11 @@ exports.create = function(req,res) {
             if (err) {return res.send(500,err);}
             if (req.body.belongTo) {
                 Thread.findById(req.body.belongTo, function(err, mainThread) {
-                    if (err || !mainThread) {cb();}
+                    if (err || !mainThread) {
+                        thread.remove(function() {
+                            return res.send(500);
+                        });
+                    }
                     else {
                         mainThread.activities.push({
                             user: req.user._id,
@@ -170,7 +147,7 @@ exports.getById = function(req, res){
         if (err) {return res.send(500,err);}
         else if (!thread) {return res.send(404);}
         else {
-            responseWithRelated(thread, req.user, res);
+            RelatedItem.responseWithRelated(thread, req.user, res);
         }
     });
 };

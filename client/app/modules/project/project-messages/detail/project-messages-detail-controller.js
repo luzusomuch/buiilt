@@ -188,7 +188,7 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($ro
         if (form.$valid) {
             $scope.relatedThread.members = _.filter($scope.invitees, {select: true});
             $scope.relatedThread.belongTo = $scope.thread._id;
-            $scope.relatedThread.type = "project-messages";
+            $scope.relatedThread.type = "project-message";
             if ($scope.relatedThread.members.length > 0) {    
                 messageService.create({id: $stateParams.id}, $scope.relatedThread).$promise.then(function(relatedThread) {
                     $scope.closeModal();
@@ -208,7 +208,10 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($ro
     };
 
     $scope.showCreateRelatedTask = function($event) {
-        $scope.relatedTask = {};
+        $scope.relatedTask = {
+            dateEnd: new Date()
+        };
+        $scope.minDate = new Date();
         $scope.showModal("create-related-task.html", $event);
     };
 

@@ -10,12 +10,12 @@ var _ = require('lodash');
 var PushNotificationHelper = require('./../components/helpers/PushNotification');
 
 EventBus.onSeries('Task.Inserted', function(task, next){
-  if (task.assignees.length > 0) {
-    _.remove(task.assignees, function(item) {
+  if (task.members.length > 0) {
+    _.remove(task.members, function(item) {
       return item == task.editUser._id.toString();
     });
     var params = {
-      owners : task.assignees,
+      owners : task.members,
       fromUser : task.user,
       element : task,
       referenceTo : 'task',

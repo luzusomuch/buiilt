@@ -10,7 +10,6 @@ angular.module('buiiltApp', [
     'cgNotify',
     'restangular',
     'lumx',
-    'ui.materialize',
     '720kb.tooltips',
     'angucomplete-alt',
     'btford.socket-io',

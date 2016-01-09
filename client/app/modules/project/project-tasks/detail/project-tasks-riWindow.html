@@ -1,8 +1,8 @@
-<md-dialog aria-label="Create a New Message" flex="70">
+<md-dialog aria-label="View task {{task.name}}" flex="70">
 	<form>
 		<md-toolbar>
 			<div class="md-toolbar-tools">
-				<h2>Task View Window</h2>
+				<h2>View task {{task.name}}</h2>
 			</div>
 		</md-toolbar>
 		
@@ -11,30 +11,45 @@
 				
 				<div layout="row">
 					<md-input-container flex class="modal-instructions">
-						<p>Here is the Detail you want...</p>
+						<p>Name: {{task.item.name}}</p>
+					</md-input-container>
+				</div>
+
+				<div layout="row">
+					<md-input-container flex class="modal-instructions">
+						<p>Description: {{task.item.description}}</p>
+					</md-input-container>
+				</div>
+
+				<div layout="row">
+					<md-input-container flex class="modal-instructions">
+						<p>Recently activities:</p>
 					</md-input-container>
 				</div>
 				
 				<div layout="row">
-					<md-input-container flex>
-				        <label>Message Thread Name</label>
-				        <input md-autofocus />
-					</md-input-container>
-				</div>
-				
-				<div layout="row">
-					<md-input-container flex>
-				        <label>Add Team Members to the Thread</label>
-				        <input />
-				    </md-input-container>
+					<md-list ng-repeat="activity in task.item.activities">
+						<md-list-item class="md-2-line">
+							<div class="md-list-item-text">
+								<h4 ng-switch="activity.type">
+									<strong>{{activity.user.name}} </strong>
+									<span ng-switch-when="create-task">
+										has created this task
+									</span>
+								</h4>
+								<p class="meta-data"><span class="time">{{activity.createdAt | date: 'H:mm a'}}</span> <span class="date">{{activity.createdAt | date: 'dd/MM/yyyy'}}</span><p>
+							</div>
+						</md-list-item>
+						<md-divider></md-divider>
+					</md-list>
 				</div>
 				
 			</div>
 		</md-dialog-content>
 		
 		<md-dialog-actions>
-			<md-button ng-click="cancelNewTaskModal()">Cancel</md-button>
-			<md-button ng-click="createNewTask()" class="md-raised md-accent md-hue-1">Add Task!</md-button>
+			<md-button ng-click="closeModal()">Cancel</md-button>
+			<md-button ng-click="goToThisThread(task.project, task._id)" class="md-raised md-accent md-hue-1">Go To Task!</md-button>
 		</md-dialog-actions>
 	</form>
 </md-dialog>

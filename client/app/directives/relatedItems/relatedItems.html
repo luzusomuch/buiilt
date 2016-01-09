@@ -41,8 +41,8 @@
 		    <md-icon class="material-icons">chat_bubble_outline</md-icon>
 		</md-tab-label>
         <md-tab-body>
-			<md-list ng-cloak class="main-page-content">
-				<md-list-item class="md-2-line" ng-click="showRelatedMessageModal($event, thread.item)" ng-repeat="thread in data.relatedItem">
+			<md-list ng-cloak class="main-page-content" ng-repeat="thread in data.relatedItem" ng-show="thread.type == 'thread'">
+				<md-list-item class="md-2-line" ng-click="showRelatedMessageModal($event, thread.item)">
 				    <div class="md-list-item-text">
 					    <h3>{{thread.item.name}}</h3>
 				    </div>
@@ -71,15 +71,15 @@
 		    <md-icon class="material-icons">done_all</md-icon>
 		</md-tab-label>
         <md-tab-body>
-			<md-list class="main-page-content" ng-cloak>
-				<md-list-item class="md-2-line" ng-click="showRelatedTasksModal($event)">
+			<md-list class="main-page-content" ng-cloak ng-repeat="task in data.relatedItem" ng-show="task.type == 'task'">
+				<md-list-item class="md-2-line" ng-click="showRelatedTasksModal($event, task)">
 				    <div class="md-list-item-text">
-					    <h3>Task 1</h3>
-				        <p>Secondary text line 2</p>
+					    <h3>{{task.item.name}}</h3>
+				        <p>{{task.item.description}}</p>
 				    </div>
 				</md-list-item>
 				<md-divider></md-divider>
-				<md-list-item class="md-2-line" ng-click="showRelatedTasksModal($event)">
+				<!-- <md-list-item class="md-2-line" ng-click="showRelatedTasksModal($event)">
 				    <div class="md-list-item-text">
 					    <h3>Task 2</h3>
 				        <p>Secondary text line 2</p>
@@ -91,7 +91,7 @@
 					    <h3>Task 3</h3>
 				        <p>Secondary text line 2</p>
 				    </div>
-				</md-list-item>
+				</md-list-item> -->
 			</md-list>
         </md-tab-body>
     </md-tab>

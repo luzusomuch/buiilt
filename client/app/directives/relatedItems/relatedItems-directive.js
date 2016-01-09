@@ -55,21 +55,34 @@ angular.module('buiiltApp').directive('relatedItems', function(){
 			
 			$scope.showRelatedFilesModal = function ($event) {
 				$mdDialog.show({
-				  targetEvent: $event,
-			      controller: 'projectFilesCtrl',
-			      templateUrl: 'app/modules/project/project-files/detail/project-files-riWindow.html',
-			      parent: angular.element(document.body),
-			      clickOutsideToClose: false
+				    targetEvent: $event,
+			        controller: 'projectFilesCtrl',
+			        templateUrl: 'app/modules/project/project-files/detail/project-files-riWindow.html',
+			        parent: angular.element(document.body),
+			        clickOutsideToClose: false
 			    });
 			};
 			
-			$scope.showRelatedTasksModal = function ($event) {
+			$scope.showRelatedTasksModal = function ($event, task) {
 				$mdDialog.show({
-				  targetEvent: $event,
-			      controller: 'projectTasksCtrl',
-			      templateUrl: 'app/modules/project/project-tasks/detail/project-tasks-riWindow.html',
-			      parent: angular.element(document.body),
-			      clickOutsideToClose: false
+				    targetEvent: $event,
+			        controller: function($scope, $state, $stateParams){
+                        console.log(task);
+                        $scope.task = task;
+                        $scope.task.project = $stateParams.id;
+
+                        $scope.goToThisThread = function(project, task) {
+                            $scope.closeModal();
+                            $state.go("project.tasks.detail", {id: project, taskId: task});
+                        };
+
+                        $scope.closeModal = function() {
+                            $mdDialog.cancel();
+                        };
+                    },
+			        templateUrl: 'app/modules/project/project-tasks/detail/project-tasks-riWindow.html',
+			        parent: angular.element(document.body),
+			        clickOutsideToClose: false
 			    });
 			};
         }

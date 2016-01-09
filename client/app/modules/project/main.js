@@ -104,7 +104,7 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
     authenticate : true
   })
   .state('project.tasks.detail', {
-    url: '/detail',
+    url: '/detail/taskId',
     templateUrl: '/app/modules/project/project-tasks/detail/project-tasks-detail.html',
     controller: 'projectTasksCtrl',
     authenticate : true

@@ -36,7 +36,7 @@
     "colorbox": "~1.6.3",
     "angular-filepicker": "master",
     "angular-mixpanel": "1.1.2",
-    "angular-material": "1.0.1",
+    "angular-material": "master",
     "angular-clipboard": "1.2.1"
   },
   "resolutions": {

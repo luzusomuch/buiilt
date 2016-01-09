@@ -50,9 +50,9 @@
 							<!-- related thread -->
 							<span ng-switch-when="related-thread">has attached the related message thread, "<a ui-sref="project.messages.detail({id: thread.project, messageId: activity.element.item})">{{activity.element.name}}</a>".</span>
 							<!-- related task -->
-							<span ng-switch-when="related-task">has attached the related task, "<a ui-sref="">{{activity.element.name}}</a>".</span>
+							<span ng-switch-when="related-task">has attached the related task, "<a ui-sref="project.tasks.detail({id: thread.project, taskId: activity.element.item})">{{activity.element.name}}</a>".{{activity.element}}</span>
 							<!-- related file -->
-							<span ng-switch-when="related-task">has attached the related file, "<a ui-sref="">{{activity.element.name}}</a>".</span>
+							<span ng-switch-when="related-file">has attached the related file, "<a ui-sref="project.files.detail({id: thread.project})">{{activity.element.name}}</a>".</span>
 
 						</p>
 						<p class="meta-data"><span class="time">{{activity.createdAt | date: 'H:mm a'}}</span> <span class="date">{{activity.createdAt | date: 'dd/MM/yyyy'}}</span><p>
