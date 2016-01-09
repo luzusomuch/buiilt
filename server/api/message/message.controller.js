@@ -88,6 +88,10 @@ exports.create = function(req,res) {
         thread.project = req.params.id;
         thread.owner = user._id;
         thread.element = {type: req.body.type};
+        if (req.body.belongTo) {
+            thread.belongTo.item = {_id: req.body.belongTo};
+            thread.belongTo.type = req.body.belongToType;
+        }
         thread.save(function(err){
             if (err) {return res.send(500,err);}
             if (req.body.belongTo) {
@@ -104,7 +108,8 @@ exports.create = function(req,res) {
                             createdAt: new Date(),
                             element: {
                                 item: thread._id,
-                                name: thread.name
+                                name: thread.name,
+                                related: true
                             }
                         });
                         data.members.push(req.user._id);
@@ -125,109 +130,6 @@ exports.create = function(req,res) {
         });
     });
 };
-
-exports.getProjectThread = function(req, res) {
-    Thread.find({project: req.params.id, 'element.type': 'project-message', $or:[{owner: req.user._id},{members: req.user._id}]})
-    .populate('members', '_id name email')
-    .populate('owner', '_id name email')
-    .exec(function(err, threads) {
-        if (err) {return res.send(500,err);}
-        return res.send(200, threads);
-    });
-};
-
-exports.getById = function(req, res){
-    Thread.findById(req.params.id)
-    .populate('messages.user','_id name email')
-    .populate('messages.mentions','_id name email')
-    .populate('members','_id name email')
-    .populate('owner','_id name email')
-    .populate('activities.user','_id name email')
-    .exec(function(err, thread){
-        if (err) {return res.send(500,err);}
-        else if (!thread) {return res.send(404);}
-        else {
-            RelatedItem.responseWithRelated(thread, req.user, res);
-        }
-    });
-};
-
-exports.thread = function(req,res,next) {
-  Thread.findById(req.params.id,function(err,thread) {
-    if (err || !thread) {
-      return res.send(500,err)
-    }
-    req.thread = thread;
-    next();
-  })
-};
-
-exports.getOne = function(req,res) {
-  var thread = req.thread;
-  Thread.populate(thread,{path : 'messages.user'},function(err,thread) {
-    return res.json(thread);
-  })
-};
-
-exports.myThread = function(req,res) {
-
-  var user = req.user;
-  var result = [];
-  var query = Notification.find(
-    {owner : user._id,unread : true, $or:[{referenceTo : 'thread'},{type: 'chat'}]}
-  );
-  query.exec(function(err, threads) {
-    if (err) {return res.send(500,err);}
-    async.each(threads,function(thread,callback) {
-      if (thread.referenceTo == 'people-chat') {
-        PeopleChat.findById(thread.element._id)
-        .populate('messages.user', '-hashedPassword -salt')
-        .populate('from', '-hashedPassword -salt')
-        .populate('project')
-        .exec(function(err, thread){
-          if (err || !thread) {return callback();}
-          else {
-            Notification.where({owner : user._id,'element._id' : thread._id,referenceTo : 'people-chat',unread : true}).count(function(err,count) {
-              thread.__v = count;
-              result.push(thread);
-              callback();
-            });
-          }
-        });
-      } else if (thread.referenceTo == 'board-chat') {
-        Board.findById(thread.element._id)
-        .populate('messages.user', '-hashedPassword -salt')
-        .populate('project')
-        .exec(function(err, thread){
-          if (err || !thread) {return callback();}
-          else {
-            Notification.where({owner : user._id,'element._id' : thread._id,referenceTo : 'board-chat',unread : true}).count(function(err,count) {
-              thread.__v = count;
-              result.push(thread);
-              callback();
-            });
-          }
-        });
-      } else {
-        Thread.findById(thread)
-        .populate('messages.user','-hashedPassword -salt')
-        .populate('users','-hashedPassword -salt')
-        .exec(function(err,thread) {
-          if (err || !thread) {return callback(err);}
-          Notification.where({owner : user._id,'element._id' : thread._id,referenceTo : 'thread',unread : true}).count(function(err,count) {
-            thread.__v = count;
-            result.push(thread);
-            callback();
-          });
-        });
-      }
-    },function() {
-        return res.json(result);
-    })
-  })
-};
-
-
 
 exports.update = function(req,res) {
     var user = req.user;
@@ -324,6 +226,111 @@ exports.sendMessage = function(req,res) {
         }
     });
 };
+
+exports.getProjectThread = function(req, res) {
+    Thread.find({project: req.params.id, 'element.type': 'project-message', $or:[{owner: req.user._id},{members: req.user._id}]})
+    .populate('members', '_id name email')
+    .populate('owner', '_id name email')
+    .exec(function(err, threads) {
+        if (err) {return res.send(500,err);}
+        return res.send(200, threads);
+    });
+};
+
+exports.getById = function(req, res){
+    Thread.findById(req.params.id)
+    .populate('messages.user','_id name email')
+    .populate('messages.mentions','_id name email')
+    .populate('members','_id name email')
+    .populate('owner','_id name email')
+    .populate('activities.user','_id name email')
+    .exec(function(err, thread){
+        if (err) {return res.send(500,err);}
+        else if (!thread) {return res.send(404);}
+        else {
+            RelatedItem.responseWithRelated("thread", thread, req.user, res);
+        }
+    });
+};
+
+exports.thread = function(req,res,next) {
+  Thread.findById(req.params.id,function(err,thread) {
+    if (err || !thread) {
+      return res.send(500,err)
+    }
+    req.thread = thread;
+    next();
+  })
+};
+
+exports.getOne = function(req,res) {
+  var thread = req.thread;
+  Thread.populate(thread,{path : 'messages.user'},function(err,thread) {
+    return res.json(thread);
+  })
+};
+
+exports.myThread = function(req,res) {
+
+  var user = req.user;
+  var result = [];
+  var query = Notification.find(
+    {owner : user._id,unread : true, $or:[{referenceTo : 'thread'},{type: 'chat'}]}
+  );
+  query.exec(function(err, threads) {
+    if (err) {return res.send(500,err);}
+    async.each(threads,function(thread,callback) {
+      if (thread.referenceTo == 'people-chat') {
+        PeopleChat.findById(thread.element._id)
+        .populate('messages.user', '-hashedPassword -salt')
+        .populate('from', '-hashedPassword -salt')
+        .populate('project')
+        .exec(function(err, thread){
+          if (err || !thread) {return callback();}
+          else {
+            Notification.where({owner : user._id,'element._id' : thread._id,referenceTo : 'people-chat',unread : true}).count(function(err,count) {
+              thread.__v = count;
+              result.push(thread);
+              callback();
+            });
+          }
+        });
+      } else if (thread.referenceTo == 'board-chat') {
+        Board.findById(thread.element._id)
+        .populate('messages.user', '-hashedPassword -salt')
+        .populate('project')
+        .exec(function(err, thread){
+          if (err || !thread) {return callback();}
+          else {
+            Notification.where({owner : user._id,'element._id' : thread._id,referenceTo : 'board-chat',unread : true}).count(function(err,count) {
+              thread.__v = count;
+              result.push(thread);
+              callback();
+            });
+          }
+        });
+      } else {
+        Thread.findById(thread)
+        .populate('messages.user','-hashedPassword -salt')
+        .populate('users','-hashedPassword -salt')
+        .exec(function(err,thread) {
+          if (err || !thread) {return callback(err);}
+          Notification.where({owner : user._id,'element._id' : thread._id,referenceTo : 'thread',unread : true}).count(function(err,count) {
+            thread.__v = count;
+            result.push(thread);
+            callback();
+          });
+        });
+      }
+    },function() {
+        return res.json(result);
+    })
+  })
+};
+
+
+
+
 
 
 

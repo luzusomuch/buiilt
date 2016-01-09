@@ -104,10 +104,15 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
     authenticate : true
   })
   .state('project.tasks.detail', {
-    url: '/detail/taskId',
+    url: '/detail/:taskId',
     templateUrl: '/app/modules/project/project-tasks/detail/project-tasks-detail.html',
-    controller: 'projectTasksCtrl',
-    authenticate : true
+    controller: 'projectTaskDetailCtrl',
+    authenticate : true,
+    resolve: {
+      task: function($stateParams, taskService) {
+        return taskService.get({id: $stateParams.taskId}).$promise;
+      }
+    }
   })
   
   	//Files for Single Project

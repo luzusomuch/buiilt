@@ -21,7 +21,7 @@
 					<p>This message was created by <strong>{{thread.owner.name}}</strong> on {{thread.createdAt | date: longDate}}. <span></p>
 				</div>
 				
-				<div layout="row" layout-align="center center" flex class="activity-stream" ng-repeat="activity in thread.activities">
+				<div layout="row" layout-align="center center" flex class="activity-stream" ng-repeat="activity in thread.activities" ng-class="{related: activity.element.related}">
 					<span flex="5"></span>
 					<div class="icon-type" ng-switch="activity.type">
 						<!-- send message -->
@@ -50,7 +50,7 @@
 							<!-- related thread -->
 							<span ng-switch-when="related-thread">has attached the related message thread, "<a ui-sref="project.messages.detail({id: thread.project, messageId: activity.element.item})">{{activity.element.name}}</a>".</span>
 							<!-- related task -->
-							<span ng-switch-when="related-task">has attached the related task, "<a ui-sref="project.tasks.detail({id: thread.project, taskId: activity.element.item})">{{activity.element.name}}</a>".{{activity.element}}</span>
+							<span ng-switch-when="related-task">has attached the related task, "<a ui-sref="project.tasks.detail({id: thread.project, taskId: activity.element.item})">{{activity.element.name}}</a>".</span>
 							<!-- related file -->
 							<span ng-switch-when="related-file">has attached the related file, "<a ui-sref="project.files.detail({id: thread.project})">{{activity.element.name}}</a>".</span>
 

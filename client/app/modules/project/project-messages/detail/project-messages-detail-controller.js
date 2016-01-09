@@ -188,6 +188,7 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($ro
         if (form.$valid) {
             $scope.relatedThread.members = _.filter($scope.invitees, {select: true});
             $scope.relatedThread.belongTo = $scope.thread._id;
+            $scope.relatedThread.belongToType = "thread";
             $scope.relatedThread.type = "project-message";
             if ($scope.relatedThread.members.length > 0) {    
                 messageService.create({id: $stateParams.id}, $scope.relatedThread).$promise.then(function(relatedThread) {
@@ -200,6 +201,7 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($ro
                 delete $scope.relatedThread.member;
                 delete $scope.relatedThread.belongTo;
                 delete $scope.relatedThread.type;
+                delete $scope.relatedTask.belongToType;
                 return false;
             }
         } else {
@@ -219,6 +221,8 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($ro
         if (form.$valid) {
             $scope.relatedTask.members = _.filter($scope.invitees, {select: true});
             $scope.relatedTask.belongTo = $scope.thread._id;
+            $scope.relatedTask.belongToType = "thread";
+            $scope.relatedTask.type = "task-project";
             if ($scope.relatedTask.members.length > 0) {
                 taskService.create({id: $stateParams.id}, $scope.relatedTask).$promise.then(function(relatedTask) {
                     console.log(relatedTask);
@@ -229,6 +233,9 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($ro
                 $scope.showToast("Please select at least 1 invitee");
                 delete $scope.relatedTask.members;
                 delete $scope.relatedTask.belongTo;
+                delete $scope.relatedTask.type;
+                delete $scope.relatedTask.belongToType;
+
                 return false;
             }
         } else {

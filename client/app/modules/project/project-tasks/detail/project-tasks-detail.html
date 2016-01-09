@@ -3,13 +3,13 @@
 	<div layout="column" flex="70" class="md-whiteframe-1dp">
 		
 		<div class="detail-header" layout="row" layout-padding>
-			<p>Task Detail. Due Date</p>
+			<p>Task {{task.name}}. {{task.dateEnd | date: 'dd/MM/yyyy'}}</p>
 			<span flex></span>
 			<div>
-				<md-button>Mark (Un)Completed</md-button>
+				<md-button ng-click="markComplete(task)">Mark {{(task.completed)?"Uncompleted":"Completed"}}</md-button>
 			</div>
 			<md-chips class="set-filters">
-				<md-chip>Show Related Activities</md-chip>
+				<md-chip ng-click="showRelatedActivities()">Show Related Activities</md-chip>
 			</md-chips>
 	    </div>
 		
@@ -17,8 +17,8 @@
 			
 			<div class="item-activity">
 			
-				<div layout="row" flex class="activity-stream-head">
-					<p>This message was created by <strong>{ username }</strong> on { date and time }. <span>This message is related to the { file OR task } { name and link}.</span></p>
+				<div layout="row" flex class="activity-stream-head" ng-show="task.belongTo">
+					<p>This task was created by <strong>{{task.owner.name}}</strong> on {{task.createdAt | date: 'hh:mm a dd/MM/yyyy'}}. <span>This message is related to the {{task.belongTo.type}} <a ui-sref="{{task.belongTo.link}}">{{task.belongTo.item.name}}</a>.</span></p>
 				</div>
 				
 				<div layout="row" layout-align="center center" flex class="activity-stream">
@@ -131,6 +131,6 @@
 		</div>
 	</div>
 		
-	<related-items flex="30"></related-items>
+	<related-items data="task" flex="30"></related-items>
 		
 </div>

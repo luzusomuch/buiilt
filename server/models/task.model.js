@@ -41,6 +41,16 @@ var TaskSchema = new Schema({
         createdAt: Date, 
         element: {}
     }],
+    relatedItem: [{
+        type: {type: String},
+        item: {},
+        members: [{type: Schema.Types.ObjectId, required: true, ref: "User"}],
+        _id: false
+    }],
+    belongTo: {
+        item: {},
+        type: {type: String}
+    },
     completed: { type: Boolean, default: false },
     completedBy: {
         type: Schema.Types.ObjectId,
@@ -95,7 +105,7 @@ TaskSchema.post('save', function (doc) {
         doc._modifiedPaths = this._modifiedPaths
     }
     if (this._original) {
-        doc._oldAssignees = this._original.assignees.slice(0);
+        doc._oldAssignees = this._original.members.slice(0);
     }
     doc.editUser = this._editUser;
     EventBus.emit(evtName, doc);

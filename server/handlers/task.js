@@ -31,12 +31,12 @@ EventBus.onSeries('Task.Inserted', function(task, next){
 });
 
 EventBus.onSeries('Task.Updated', function(task, next){
+
   if (task._modifiedPaths.indexOf('completed') != -1) {
-    var owners = task.assignees.slice();
-    if (task.assignees.indexOf(task.user) == -1) {
-      owners.push(task.user);
+    var owners = task.members.slice();
+    if (task.members.indexOf(task.owner) == -1) {
+      owners.push(task.owner);
     }
-    
     _.remove(owners, task.editUser._id);
 
     var params = {
@@ -53,9 +53,9 @@ EventBus.onSeries('Task.Updated', function(task, next){
     async.parallel([
       function(callback) {
         if (task._oldAssignees.length > 0) {
-          var owners = task.assignees.slice();
+          var owners = task.members.slice();
           async.each(task._oldAssignees, function (assignee, cb) {
-            if (task.assignees.indexOf(assignee) == -1) {
+            if (task.members.indexOf(assignee) == -1) {
               owners.push(assignee);
               var params = {
                 owners: owners,
@@ -73,8 +73,8 @@ EventBus.onSeries('Task.Updated', function(task, next){
 
         } else {
           var params = {
-            owners : task.assignees,
-            fromUser : task.user,
+            owners : task.members,
+            fromUser : task.owner,
             element : task,
             referenceTo : 'task',
             type : 'task-assign'
@@ -85,13 +85,13 @@ EventBus.onSeries('Task.Updated', function(task, next){
       function(callback) {
         if (task._oldAssignees.length > 0) {
           task._oldAssignees = task._oldAssignees.map(function (e) { return e.toString(); });
-          async.each(task.assignees, function(assignee, cb) {
+          async.each(task.members, function(assignee, cb) {
             if (task._oldAssignees.indexOf(assignee.toString()) != -1) {
               return cb();
             }
             
             var params = {
-              owners : task.assignees,
+              owners : task.members,
               fromUser : task.editUser,
               toUser: assignee,
               element : task,

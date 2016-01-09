@@ -59,6 +59,10 @@ var ThreadSchema = new Schema({
         members: [{type: Schema.Types.ObjectId, required: true, ref: "User"}],
         _id: false
     }],
+    belongTo: {
+        item: {},
+        type: {type: String}
+    },
     messages : [MessageSchema],
     createdAt: {
         type: Date,

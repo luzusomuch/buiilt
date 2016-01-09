@@ -1,22 +1,25 @@
 angular.module('buiiltApp')
-  .factory('taskService', function($rootScope, $q, $resource) {
+.factory('taskService', function($rootScope, $q, $resource) {
     return $resource('/api/tasks/:id/:type/:action',{
         id : '@_id',
-        type : '@_type'},
-      {
-        getAll: {
-          method: 'GET',
-          params: {
-            action : 'list'
-          },
-          isArray: true
-        },
+        type : '@_type'
+    },
+    {
         get : {
-          method : 'GET',
-          // isArray : true,
-          params: {
-          },
-          isArray: true
+            method : 'GET',
+        },
+        create: {
+            method: 'POST'
+        },
+        update : {
+            method : 'PUT'
+        },
+        getAll: {
+            method: 'GET',
+            params: {
+                action : 'list'
+            },
+            isArray: true
         },
         myTask : {
           method : 'GET',
@@ -25,12 +28,6 @@ angular.module('buiiltApp')
             type : 'dashboard',
             action : 'me'
           }
-        },
-        create: {
-          method: 'POST'
-        },
-        update : {
-          method : 'PUT'
         },
         delete: {method:'DELETE', params: {id: 'id', action: ''}, isArray: true},
         getOne: {

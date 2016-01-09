@@ -22,6 +22,143 @@ var _ = require('lodash');
 var async = require('async');
 var mongoose = require('mongoose');
 
+function populateTask(task, userId, res) {
+    Task.populate(task, [
+        {path: "owner", select: "_id email name"},
+        {path: "members", select: "_id email name"},
+        {path: "activities.user", select: "_id email name"}
+    ], function(err, task) {
+        RelatedItem.responseWithRelated("task", task, userId, res);
+    });
+};
+
+exports.get = function(req, res) {
+    Task.findById(req.params.id)
+    .populate('members', '_id name email')
+    .populate('owner', '_id name email')
+    .populate('activities.user','_id name email')
+    .exec(function(err, task){
+        if (err) {return res.send(500,err);}
+        if (!task) {return res.send(404);}
+        RelatedItem.responseWithRelated("task", task, req.user._id, res);
+    });
+};
+
+exports.create = function(req,res) {
+    var user = req.user;
+    TaskValidator.validateCreate(req,function(err,data) {
+        if (err) {
+          return errorsHelper.validationErrors(res,err)
+        }
+        var task = new Task(data);
+        task.project = req.params.id;
+        task.owner = user._id;
+        task.dateStart = new Date();
+        task.element = {type: req.body.type};
+        if (req.body.dateEnd) {
+            task.hasDateEnd = true;
+            task.dateEnd = req.body.dateEnd;
+        }
+        task.activities.push({
+            user: user._id,
+            type: "create-task",
+            createdAt: new Date(),
+        });
+        if (req.body.belongTo) {
+            task.belongTo.item = {_id: req.body.belongTo};
+            task.belongTo.type = req.body.belongToType;
+        }
+        task._editUser = user;
+        task.save(function(err) {
+            if (err) {return res.send(500,err);}
+            else if (req.body.belongTo) {
+                Thread.findById(req.body.belongTo, function(err, thread) {
+                    if (err || !thread) {
+                        task.remove(function() {
+                            return res.send(500);
+                        });
+                    } else {
+                        thread.activities.push({
+                            user: req.user._id,
+                            type: "related-task",
+                            createdAt: new Date(),
+                            element: {
+                                item: task._id,
+                                name: task.name,
+                                related: true
+                            }
+                        });
+                        data.members.push(req.user._id);
+                        thread.relatedItem.push({
+                            type: "task",
+                            item: {_id: task._id},
+                            members: data.members
+                        });
+                        thread.save(function(err) {
+                            if (err) {return res.send(500,err);}
+                            RelatedItem.responseWithRelated("thread", thread, user, res);
+                        });
+                    }
+                });
+            } else {
+                return res.send(200, task);
+            }
+        });
+    });
+};
+
+exports.update = function(req,res) {
+    var user = req.user;
+    Task.findById(req.params.id, function(err, task) {
+        if (err) {return res.send(500,err);}
+        else if (!task) {return res.send(404, "This specific task not existed!");}
+        else {
+            var orginalTask = task;
+            req.task = task;
+            TaskValidator.validateUpdate(req,function(err,data) {
+                if (err) {
+                    return errorsHelper.validationErrors(res,err)
+                }
+                task = _.merge(task,data);
+                task.members = data.members;
+                var activity = {
+                    user: user._id,
+                    type: req.body.editType,
+                    createdAt: new Date()
+                };
+                if (req.body.editType === "edit-task") {
+                    if (orginalTask.name.length !== req.body.name.length) {
+                        activity.element.name = orginalTask.name;
+                    } else if (orginalTask.description.length !== req.body.description.length) {
+                        activity.element.name = orginalTask.description;
+                    } else {
+                        activity.element.dateEnd = orginalTask.dateEnd;
+                    }
+                } else if (req.body.editType === "assign") {
+                    if (orginalTask.members.length > data.members.length) {
+                        var members = [];
+                        _.each(req.body.newMembers, function(member) {
+                            members.push(member.name);
+                        });
+                        activity.element.members = members;
+                    }
+                    task.markModified('assignees');
+                } else if (req.body.editType === "complete-task") {
+                    task.markModified('completed');
+                }
+                task.activities.push(activity);
+                task._editUser = user;
+                task.save(function(err) {
+                    if (err) {
+                        return res.send(500,err)
+                    }
+                    populateTask(task, user._id, res);
+                });
+            });
+        }
+    });
+};
+
 var getPackage = function(type) {
   var _package = {};
   switch (type) {
@@ -182,88 +319,9 @@ exports.myTask = function(req,res) {
     })
 };
 
-exports.create = function(req,res) {
-    var user = req.user;
-    TaskValidator.validateCreate(req,function(err,data) {
-        if (err) {
-          return errorsHelper.validationErrors(res,err)
-        }
-        var task = new Task(data);
-        task.project = req.params.id;
-        task.owner = user._id;
-        task.dateStart = new Date();
-        if (req.body.dateEnd) {
-            task.hasDateEnd = true;
-            task.dateEnd = req.body.dateEnd;
-        }
-        task.activities.push({
-            user: user._id,
-            type: "create-task",
-            createdAt: new Date()
-        });
-        task._editUser = user;
-        task.save(function(err) {
-            if (err) {return res.send(500,err);}
-            else if (req.body.belongTo) {
-                Thread.findById(req.body.belongTo, function(err, thread) {
-                    if (err || !thread) {
-                        task.remove(function() {
-                            return res.send(500);
-                        });
-                    } else {
-                        thread.activities.push({
-                            user: req.user._id,
-                            type: "related-task",
-                            createdAt: new Date(),
-                            element: {
-                                item: task._id,
-                                name: task.name
-                            }
-                        });
-                        data.members.push(req.user._id);
-                        thread.relatedItem.push({
-                            type: "task",
-                            item: {_id: task._id},
-                            members: data.members
-                        });
-                        thread.save(function(err) {
-                            if (err) {return res.send(500,err);}
-                            RelatedItem.responseWithRelated(thread, user, res);
-                        });
-                    }
-                });
-            } else {
-                return res.send(200, task);
-            }
-        });
-    });
-};
 
-exports.update = function(req,res) {
-  var task = req.task;
-  var user = req.user;
-  TaskValidator.validateUpdate(req,function(err,data) {
-    if (err) {
-      return errorsHelper.validationErrors(res,err)
-    }
-console.log(req.body);
-    task = _.merge(task,data);
-    task.description = req.body.description;
-    task.dateEnd = req.body.dateEnd;
-    task.assignees = data.assignees;
-    task.markModified('assignees');
-    task._editUser = req.user;
-    task.save(function(err) {
-      if (err) {
-        return res.send(500,err)
-      }
-      Task.populate(task, {path:'assignees', select: '-hashedPassword -salt'}, function(err, task){
-        if (err) {return res.send(500,err);}
-        return res.json(task);
-      });
-    });
-  });
-};
+
+
 
 exports.getTask = function(req,res) {
   var aPackage = req.aPackage;
@@ -296,13 +354,7 @@ exports.getAll = function(req, res) {
   });
 };
 
-exports.getOne = function(req, res) {
-  Task.findById(req.params.id).populate('assignees', '-hashedPassword -salt').exec(function(err, task){
-    if (err) {return res.send(500,err);}
-    if (!task) {return res.send(404);}
-    return res.send(200,task);
-  });
-};
+
 
 exports.destroy = function (req, res) {
   Task.findByIdAndRemove(req.params.id, function (err, task) {
