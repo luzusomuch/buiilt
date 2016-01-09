@@ -11,14 +11,28 @@ angular.module('buiiltApp').directive('relatedItems', function(){
             $scope.success = {};
 			$scope.$state = $state;
             $scope.currentUser = $rootScope.currentUser;
+            console.log($scope.data);
+            $scope.data.members = _.uniq($scope.data.members, "_id");
 
-			$scope.showRelatedMessageModal = function ($event) {
+			$scope.showRelatedMessageModal = function ($event, relatedItem) {
 				$mdDialog.show({
-				  targetEvent: $event,
-			      controller: 'projectMessagesCtrl',
-			      templateUrl: 'app/modules/project/project-messages/detail/partials/project-messages-riWindow.html',
-			      parent: angular.element(document.body),
-			      clickOutsideToClose: false
+				    targetEvent: $event,
+			        controller: function($scope, $stateParams, $state){
+                        $scope.relatedItem = relatedItem;
+                        $scope.relatedItem.project = $stateParams.id;
+
+                        $scope.goToThisThread = function(project, thread) {
+                            $scope.closeModal();
+                            $state.go("project.messages.detail", {id: project, messageId: thread});
+                        };
+
+                        $scope.closeModal = function() {
+                            $mdDialog.cancel();
+                        };
+                    },
+			        templateUrl: 'app/modules/project/project-messages/detail/partials/project-messages-riWindow.html',
+			        parent: angular.element(document.body),
+			        clickOutsideToClose: false
 			    });
 			};
 			

@@ -55,7 +55,9 @@ var ThreadSchema = new Schema({
     }],
     relatedItem: [{
         type: {type: String},
-        item: {type: Schema.Types.ObjectId, required: true}
+        item: {},
+        members: [{type: Schema.Types.ObjectId, required: true, ref: "User"}],
+        _id: false
     }],
     messages : [MessageSchema],
     createdAt: {

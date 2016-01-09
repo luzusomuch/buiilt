@@ -2,6 +2,7 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($ro
     $scope.error = {};
     $scope.thread = thread;
     $scope.thread.members.push(thread.owner);
+    restriction($scope.thread.members);
     $scope.orginalActivities = angular.copy($scope.thread.activities);
     _.remove($scope.thread.members, {_id: $rootScope.currentUser._id});
     $rootScope.title = thread.name;
@@ -25,6 +26,12 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($ro
             $scope.thread.activities = $scope.orginalActivities;
         }
     });
+
+    function restriction(members) {
+        if (_.findIndex(members, function(member){return member._id.toString() === $rootScope.currentUser._id.toString();}) === -1) {
+            $state.go("project.messages.all", {id: $scope.thread.project});
+        }
+    };
 
     function getProjectMembers(id) {
         $scope.membersList = [];

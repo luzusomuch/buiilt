@@ -23,7 +23,7 @@
 				</md-list-item>
 				<md-divider></md-divider>
 
-				<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event, member._id)" ng-show="data.element" ng-repeat="member in data.members">
+				<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event, member._id)" ng-show="data.element" ng-repeat="member in data.members track by $index">
 				    <div class="md-list-item-text">
 					    <h3>{{member.name}}</h3>
 				        <!-- <p>Secondary text line 2</p> -->
@@ -42,14 +42,13 @@
 		</md-tab-label>
         <md-tab-body>
 			<md-list ng-cloak class="main-page-content">
-				<md-list-item class="md-2-line" ng-click="showRelatedMessageModal($event)">
+				<md-list-item class="md-2-line" ng-click="showRelatedMessageModal($event, thread.item)" ng-repeat="thread in data.relatedItem">
 				    <div class="md-list-item-text">
-					    <h3>Thread 1</h3>
-				        <p>Secondary text line 2</p>
+					    <h3>{{thread.item.name}}</h3>
 				    </div>
 				</md-list-item>
 				<md-divider></md-divider>
-				<md-list-item class="md-2-line" ng-click="showRelatedMessageModal($event)">
+				<!-- <md-list-item class="md-2-line" ng-click="showRelatedMessageModal($event)">
 				    <div class="md-list-item-text">
 					    <h3>Thread 2</h3>
 				        <p>Secondary text line 2</p>
@@ -61,7 +60,7 @@
 					    <h3>Thread 3</h3>
 				        <p>Secondary text line 2</p>
 				    </div>
-				</md-list-item>
+				</md-list-item> -->
 			</md-list>
         </md-tab-body>
     </md-tab>

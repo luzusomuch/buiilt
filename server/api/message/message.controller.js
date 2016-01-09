@@ -19,6 +19,46 @@ var _ = require('lodash');
 var async = require('async');
 var EventBus = require('../../components/EventBus');
 
+function populateThread(thread, res){
+    Thread.populate(thread, [
+        {path: "owner", select: "_id email name"},
+        {path: "messages.user", select: "_id email name"},
+        {path: "messages.mentions", select: "_id email name"},
+        {path: "members", select: "_id email name"},
+        {path: "activities.user", select: "_id email name"}
+    ], function(err, thread) {
+        return res.send(200, thread);
+    });
+};
+
+function responseWithRelated(thread, user, res) {
+    var relatedItem = [];
+    async.each(thread.relatedItem, function(item, cb) {
+        if (_.findIndex(item.members, function(member){return member.toString() === user._id.toString();}) !== -1) {
+            if (item.type === "thread") {
+                Thread.findById(item.item._id, '_id name messages')
+                .populate("messages.user", '_id name email')
+                .populate("messages.mentions", '_id name email')
+                .exec(function(err, _thread) {
+                    if (err || !_thread) {cb();}
+                    else {
+                        item.item = _thread;
+                        relatedItem.push(item);
+                        cb();
+                    }
+                });
+            } else {
+                cb();
+            }
+        } else {
+            cb();
+        }
+    }, function() {
+        thread.relatedItem = relatedItem;
+        return res.send(200, thread);
+    });
+};
+
 var getPackage = function(type) {
     var _package = {};
     switch (type) {
@@ -90,9 +130,11 @@ exports.create = function(req,res) {
                                 name: thread.name
                             }
                         });
+                        data.members.push(req.user._id);
                         mainThread.relatedItem.push({
                             type: "thread",
-                            item: thread._id
+                            item: {_id: thread._id},
+                            members: data.members
                         });
                         mainThread.save(function(err) {
                             if (err) {return res.send(500,err);}
@@ -128,7 +170,7 @@ exports.getById = function(req, res){
         if (err) {return res.send(500,err);}
         else if (!thread) {return res.send(404);}
         else {
-            return res.json(thread);
+            responseWithRelated(thread, req.user, res);
         }
     });
 };
@@ -306,17 +348,7 @@ exports.sendMessage = function(req,res) {
     });
 };
 
-function populateThread(thread, res){
-    Thread.populate(thread, [
-        {path: "owner", select: "_id email name"},
-        {path: "messages.user", select: "_id email name"},
-        {path: "messages.mentions", select: "_id email name"},
-        {path: "members", select: "_id email name"},
-        {path: "activities.user", select: "_id email name"}
-    ], function(err, thread) {
-        return res.send(200, thread);
-    });
-};
+
 
 exports.getMessages = function(req,res) {
   var aPackage = req.aPackage;
