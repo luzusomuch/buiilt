@@ -22,13 +22,13 @@ var _ = require('lodash');
 var async = require('async');
 var mongoose = require('mongoose');
 
-function populateTask(task, userId, res) {
+function populateTask(task, user, res) {
     Task.populate(task, [
         {path: "owner", select: "_id email name"},
         {path: "members", select: "_id email name"},
         {path: "activities.user", select: "_id email name"}
     ], function(err, task) {
-        RelatedItem.responseWithRelated("task", task, userId, res);
+        RelatedItem.responseWithRelated("task", task, user, res);
     });
 };
 
@@ -40,7 +40,7 @@ exports.get = function(req, res) {
     .exec(function(err, task){
         if (err) {return res.send(500,err);}
         if (!task) {return res.send(404);}
-        RelatedItem.responseWithRelated("task", task, req.user._id, res);
+        RelatedItem.responseWithRelated("task", task, req.user, res);
     });
 };
 
@@ -153,7 +153,7 @@ exports.update = function(req,res) {
                     if (err) {
                         return res.send(500,err)
                     }
-                    populateTask(task, user._id, res);
+                    populateTask(task, user, res);
                 });
             });
         }

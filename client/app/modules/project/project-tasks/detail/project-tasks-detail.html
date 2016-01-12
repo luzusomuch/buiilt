@@ -35,7 +35,7 @@
 						<!-- assign -->
 						<md-icon ng-switch-when="assign" class="material-icons md-primary">person_outline</md-icon>
 						<!-- related-message -->
-						<md-icon ng-switch-when="related-message" class="material-icons md-primary">chat_bubble_outline</md-icon>
+						<md-icon ng-switch-when="related-thread" class="material-icons md-primary">chat_bubble_outline</md-icon>
 						<!-- related-task -->
 						<md-icon ng-switch-when="related-task" class="material-icons md-primary">done_all</md-icon>
 						<!-- related-file -->
@@ -148,11 +148,11 @@
   	  					  <md-tooltip md-direction="left">Assign to a Team Member</md-tooltip>
   	  				      <md-icon class="material-icons">person_outline</md-icon>
   			  	      </md-button>
-  			  	      <md-button aria-label="Add a Message" class="md-fab md-raised md-mini">
+  			  	      <md-button aria-label="Add a Message" class="md-fab md-raised md-mini" ng-click="showModal($event, 'add-related-thread.html')">
   	  					  <md-tooltip md-direction="left">Attach a Related Message</md-tooltip>
   	  				      <md-icon class="material-icons">chat_bubble_outline</md-icon>
   			  	      </md-button>
-  			  	      <md-button aria-label="Add a File" class="md-fab md-raised md-mini">
+  			  	      <md-button aria-label="Add a File" class="md-fab md-raised md-mini" ng-click="showModal($event, 'add-related-file.html')">
   	  					  <md-tooltip md-direction="left">Attach a Related File</md-tooltip>
   	  				      <md-icon class="material-icons">attach_file</md-icon>
   			  	      </md-button>

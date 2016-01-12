@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootScope, $scope, $timeout, task, taskService, $mdToast, $mdDialog, peopleService, $stateParams) {
+angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootScope, $scope, $timeout, task, taskService, $mdToast, $mdDialog, peopleService, $stateParams, messageService, $state) {
 	$scope.task = task;
     $scope.task.dateEnd = new Date($scope.task.dateEnd);
     $scope.minDate = new Date();
@@ -105,6 +105,9 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
     };
 
     $scope.showModal = function($event, modalName){
+        if (modalName === "add-related-thread.html") {
+            $scope.relatedThread = {};
+        }
         $mdDialog.show({
             targetEvent: $event,
             controller: 'projectTaskDetailCtrl',
@@ -164,6 +167,28 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
             $scope.showToast("Error");
             delete task.editType;
         });
+    };
+
+    $scope.createRelatedThread = function(form) {
+        if (form.$valid) {
+            $scope.relatedThread.members = _.filter($scope.invitees, {select: true});
+            $scope.relatedThread.type = "task-project";
+            $scope.relatedThread.belongTo = $scope.task._id;
+            $scope.relatedThread.belongToType = "task";
+            if ($scope.relatedThread.members.length > 0) {
+                messageService.create({id: $stateParams.id}, $scope.relatedThread).$promise.then(function(res) {
+                    $scope.closeModal();
+                    $scope.showToast("Create new related thread successfully");
+                    $state.go("project.messages.detail", {id: $stateParams.id, messageId: res._id});
+                }, function(err){$scope.showToast("error");})
+            } else {
+                $scope.showToast("Please select at least 1 invitee");
+                return false;
+            }
+        } else {
+            $scope.showToast("Please check your input again.");
+            return;
+        }
     };
 
     $scope.showToast = function(value) {

@@ -3,16 +3,7 @@
 var User = require('./../../models/user.model');
 var Team = require('./../../models/team.model');
 var Thread = require('./../../models/thread.model');
-var StaffPackage = require('./../../models/staffPackage.model'),
-    BuilderPackage = require('./../../models/builderPackage.model'),
-    ContractorPackage = require('./../../models/contractorPackage.model'),
-    MaterialPackage = require('./../../models/materialPackage.model'),
-    Variation = require('./../../models/variation.model'),
-    Notification = require('./../../models/notification.model'),
-    Project = require('./../../models/project.model'),
-    PeopleChat = require('./../../models/peopleChat.model'),
-    Board = require('./../../models/board.model'),
-    Design = require('./../../models/design.model');
+var Task = require('./../../models/task.model');
 var ThreadValidator = require('./../../validators/thread');
 var errorsHelper = require('../../components/helpers/errors');
 var RelatedItem = require('../../components/helpers/related-item');
@@ -32,29 +23,29 @@ function populateThread(thread, res){
     });
 };
 
-var getPackage = function(type) {
-    var _package = {};
+function populateTask(task, res){
+    Task.populate(task, [
+        {path: "owner", select: "_id email name"},
+        {path: "members", select: "_id email name"},
+        {path: "activities.user", select: "_id email name"}
+    ], function(err, task) {
+        return res.send(200, task);
+    });
+};
+
+var getMainItem = function(type) {
+    var _item = {};
     switch (type) {
-        case 'staff' :
-            _package = StaffPackage;
+        case 'thread' :
+            _item = Thread;
             break;
-        case 'builder' :
-            _package = BuilderPackage;
+        case 'task' :
+            _item = Task;
             break;
-        case 'contractor' :
-            _package = ContractorPackage;
-            break;
-        case 'material' :
-            _package = MaterialPackage;
-            break;
-        case 'variation' :
-            _package = Variation;
-        case 'design':
-            _package = Design;
         default :
             break;
     }
-    return _package;
+    return _item;
 };
 
 exports.project = function(req,res,next) {
@@ -92,17 +83,18 @@ exports.create = function(req,res) {
             thread.belongTo.item = {_id: req.body.belongTo};
             thread.belongTo.type = req.body.belongToType;
         }
+        var mainItem = getMainItem(req.body.belongToType);
         thread.save(function(err){
             if (err) {return res.send(500,err);}
             if (req.body.belongTo) {
-                Thread.findById(req.body.belongTo, function(err, mainThread) {
-                    if (err || !mainThread) {
+                mainItem.findById(req.body.belongTo, function(err, main) {
+                    if (err || !main) {
                         thread.remove(function() {
                             return res.send(500);
                         });
                     }
                     else {
-                        mainThread.activities.push({
+                        main.activities.push({
                             user: req.user._id,
                             type: "related-thread",
                             createdAt: new Date(),
@@ -113,14 +105,18 @@ exports.create = function(req,res) {
                             }
                         });
                         data.members.push(req.user._id);
-                        mainThread.relatedItem.push({
+                        main.relatedItem.push({
                             type: "thread",
                             item: {_id: thread._id},
                             members: data.members
                         });
-                        mainThread.save(function(err) {
+                        main.save(function(err) {
                             if (err) {return res.send(500,err);}
-                            populateThread(mainThread, res);
+                            if (req.body.belongToType === "thread") 
+                                populateThread(main, res);
+                            else if (req.body.belongToType === "task") {
+                                populateTask(main, res);
+                            }
                         });
                     }
                 });
