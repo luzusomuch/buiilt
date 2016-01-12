@@ -15,7 +15,7 @@ router.get('/list', auth.isAuthenticated(), controller.getAll);
 router.get('/list-by-user', auth.isAuthenticated(), controller.getAllByUser);
 router.get('/dashboard/me', auth.isAuthenticated(), controller.myTask);
 router.get('/:id', auth.isAuthenticated(), controller.get);
-router.get('/:id/list-by-project', auth.isAuthenticated(), controller.getAllByProject);
+router.get('/:id/project-tasks', auth.isAuthenticated(), controller.getTasksByProject);
 router.get('/:id/:type', auth.isAuthenticated(), controller.package, controller.getTask);
 router.get('/:id/:type/get-by-package', auth.isAuthenticated(), controller.getByPackage);
 router.get('/:id/:type/get-one', auth.isAuthenticated(), controller.show);

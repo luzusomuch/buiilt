@@ -92,10 +92,15 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
   	//Tasks for Single Project
   .state('project.tasks', {
     url: '/tasks',
-	abstract: true,
+	  abstract: true,
     templateUrl: '/app/modules/project/project-tasks/project-tasks.html',
     controller: 'projectTasksCtrl',
-    authenticate : true
+    authenticate : true,
+    resolve: {
+      tasks: function(taskService, $stateParams) {
+        return taskService.getProjectTask({id: $stateParams.id}).$promise;
+      }
+    }
   })
   .state('project.tasks.all', {
     url: '',

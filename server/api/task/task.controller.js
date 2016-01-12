@@ -160,6 +160,19 @@ exports.update = function(req,res) {
     });
 };
 
+exports.getTasksByProject = function(req, res) {
+    var user  = req.user;
+    Task.find({project: req.params.id, $or:[{owner: user._id}, {members: user._id}]})
+    .populate("owner", "_id name email")
+    .populate("members", "_id name email")
+    .exec(function(err, tasks) {
+        if (err) {return res.send(500,err);}
+        else {
+            return res.send(200, tasks);
+        }
+    });
+};
+
 var getPackage = function(type) {
   var _package = {};
   switch (type) {

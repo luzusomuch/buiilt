@@ -20,11 +20,11 @@
 
 <md-list ng-cloak class="main-page-content">
 
-	<div ng-repeat="task in tasks" ui-sref="project.tasks.detail">
+	<div ng-show="!search" ng-repeat="task in tasks" ui-sref="project.tasks.detail({id: task.project, taskId: task._id})">
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
-		          <h3>{{ task.description }}</h3>
-		          <p>{{ task.assignee }}</p>
+		          <h3>{{task.description}}</h3>
+		          <p><span ng-repeat="member in task.members">{{member.name}}, </span></p>
 	        </div>
 		</md-list-item>
 		<md-divider></md-divider>

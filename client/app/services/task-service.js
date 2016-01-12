@@ -14,6 +14,11 @@ angular.module('buiiltApp')
         update : {
             method : 'PUT'
         },
+        getProjectTask: {
+            method: "GET",
+            params: {action: "project-tasks"},
+            isArray: true
+        },
         getAll: {
             method: 'GET',
             params: {

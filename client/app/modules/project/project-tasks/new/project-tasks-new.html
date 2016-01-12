@@ -1,5 +1,5 @@
 <md-dialog aria-label="Create a New Task" flex="70">
-	<form>
+	<form ng-submit="createNewMessage(form)" name="form">
 		<md-toolbar>
 			<div class="md-toolbar-tools">
 				<h2>Create a New Task</h2>
@@ -14,34 +14,64 @@
 						<p>Please provide the following details to attach a new task to your project...</p>
 					</md-input-container>
 				</div>
-				
+
 				<div layout="row">
 					<md-input-container flex>
-				        <label>Task Description</label>
-				        <input md-autofocus />
+				        <label>Task Name</label>
+				        <input type="text" name="name" ng-model="task.name" required>
 					</md-input-container>
 				</div>
 				
 				<div layout="row">
 					<md-input-container flex>
-				        <label>Due Date</label>
-				        <input />
-				    </md-input-container>
+				        <label>Task Description</label>
+				        <textarea ng-model="task.description" name="description" md-maxlength="300" required rows="3" columns="1"></textarea>
+					</md-input-container>
 				</div>
 				
 				<div layout="row">
-					<md-input-container flex>
-				        <label>Assign to a Team Member</label>
-				        <input />
-				    </md-input-container>
-				</div>
+                    <md-input-container>
+                        <p>Task End Date</p>
+                    </md-input-container>
+                </div>
+                <div layout="row">
+                    <md-datepicker ng-model="relatedTask.dateEnd" md-min-date="minDate" md-placeholder="Enter End Date">
+                    </md-datepicker>
+                </div>
+				
+				<div ng-cloak>
+                    <p>Available's asssignees: </p>
+                    <md-content layout="row" layout-wrap layout-xs="column">
+                        <div flex="33" flex-sm="50" flex-xs="100" layout="row" ng-repeat="member in membersList">
+                            <md-card ng-click="selectMember($index)" layout-margin>
+                                <md-card-header>
+                                    <p class="name">{{member.name}}</p>
+                                </md-card-header>
+                        
+                                <md-card-content>
+                                    <p class="email">{{(member.email) ? member.email : 'Email Address'}}</p>
+                                    <p class="phone">{{(member.phoneNumber)? member.phoneNumber : 'Phone Number'}}</p>
+                                </md-card-content>
+                        
+                                <md-card-actions layout-margin>
+                                    <md-card-icon-actions layout="row" layout-align="space-around center">
+                                        <md-button class="material-icons md-icon-button">
+                                            <md-tooltip md-direction="down">Invite To This Task</md-tooltip>
+                                            <md-icon ng-show="member.select" class="material-icons">done</md-icon>
+                                        </md-button>
+                                    </md-card-icon-actions>
+                                </md-card-actions>
+                            </md-card>
+                        </div>
+                    </md-content>
+                </div>
 				
 			</div>
 		</md-dialog-content>
 		
 		<md-dialog-actions>
 			<md-button ng-click="cancelNewTaskModal()">Cancel</md-button>
-			<md-button ng-click="createNewTask()" class="md-raised md-accent md-hue-1">Add Task!</md-button>
+			<md-button type="submit" class="md-raised md-accent md-hue-1">Create Task!</md-button>
 		</md-dialog-actions>
 	</form>
 </md-dialog>
