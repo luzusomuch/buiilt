@@ -113,7 +113,7 @@ exports.update = function(req,res) {
         if (err) {return res.send(500,err);}
         else if (!task) {return res.send(404, "This specific task not existed!");}
         else {
-            var orginalTask = task;
+            var orginalTask = _.clone(task)._original;
             req.task = task;
             TaskValidator.validateUpdate(req,function(err,data) {
                 if (err) {
@@ -124,16 +124,16 @@ exports.update = function(req,res) {
                 var activity = {
                     user: user._id,
                     type: req.body.editType,
-                    createdAt: new Date()
+                    createdAt: new Date(),
+                    element: {}
                 };
                 if (req.body.editType === "edit-task") {
-                    if (orginalTask.name.length !== req.body.name.length) {
-                        activity.element.name = orginalTask.name;
-                    } else if (orginalTask.description.length !== req.body.description.length) {
-                        activity.element.name = orginalTask.description;
-                    } else {
-                        activity.element.dateEnd = orginalTask.dateEnd;
-                    }
+                    task.name = data.name;
+                    task.description = data.description;
+                    task.dateEnd = data.dateEnd;
+                    activity.element.name = (orginalTask.name.length !== req.body.name.length) ? orginalTask.name : null;
+                    activity.element.description = (orginalTask.description.length !== req.body.description.length) ? orginalTask.description : null;
+                    activity.element.dateEnd = (orginalTask.dateEnd !== req.body.dateEnd) ? orginalTask.dateEnd : null;
                 } else if (req.body.editType === "assign") {
                     if (orginalTask.members.length > data.members.length) {
                         var members = [];

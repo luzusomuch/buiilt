@@ -25,12 +25,13 @@ exports.validateUpdate = function (req, cb) {
     if (req.body.editType === "edit-task") {
         req.checkBody('name', 'Task title is required').notEmpty();
         req.checkBody('description', 'Task description is required').notEmpty();
+        req.checkBody('dateEnd', 'Task end date is required').notEmpty();
     } else if (req.body.editType === "assign") {
         _.forEach(req.body.newMembers,function(item) {
             members.push(item._id)
         });
     }
-    return cb(req.validationErrors(), _.assign(_.pick(req.body,'completed','completedBy','completedAt','dateEnd'),{
+    return cb(req.validationErrors(), _.assign(_.pick(req.body, 'name', 'description','completed','completedBy','completedAt','dateEnd'),{
         members : members
     }));
 };

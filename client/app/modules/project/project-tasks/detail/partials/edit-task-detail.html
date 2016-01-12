@@ -1,0 +1,43 @@
+<md-dialog aria-label="Edit {{task.name}}" flex="70">
+    <form ng-submit="editTaskDetail(form)" name="form">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Edit {{task.name}}</h2>
+            </div>
+        </md-toolbar>
+        
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column">
+                <div layout="row">
+                    <md-input-container flex>
+                        <label>Name</label>
+                        <input type="text" name="name" ng-model="task.name" required>
+                    </md-input-container>
+                </div>
+
+                <div layout="row">
+                    <md-input-container flex>
+                        <label>Description</label>
+                        <textarea ng-model="task.description" columns="1" md-maxlength="250" rows="5" required></textarea>
+                    </md-input-container>
+                </div>
+
+                <div layout="row">
+                    <md-input-container>
+                        <p>Task End Date</p>
+                    </md-input-container>
+                </div>
+                <div layout="row">
+                    <md-datepicker ng-model="task.dateEnd" md-min-date="minDate" md-placeholder="Enter End Date">
+                    </md-datepicker>
+                </div>
+                
+            </div>
+        </md-dialog-content>
+        
+        <md-dialog-actions>
+            <md-button ng-click="closeModal()">Cancel</md-button>
+            <md-button type="submit" class="md-raised md-accent md-hue-1">Edit Task!</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

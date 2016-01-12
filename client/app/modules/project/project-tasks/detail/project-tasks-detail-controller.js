@@ -1,13 +1,15 @@
-angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootScope, $scope, $timeout, task, taskService, $mdToast) {
+angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootScope, $scope, $timeout, task, taskService, $mdToast, $mdDialog) {
 	$scope.task = task;
+    $scope.task.dateEnd = new Date($scope.task.dateEnd);
+    $scope.minDate = new Date();
     if ($scope.task.belongTo) {
         switch ($scope.task.belongTo.type) {
             case "thread":
-                $scope.task.belongTo.link = "project.messages.detail(id: "+$scope.task.project+", messageId: "+$scope.task.belongTo.item._id+")";
+                $scope.task.belongTo.link = "/project/"+$scope.task.project+"/messages/detail/"+$scope.task.belongTo.item._id;
             break;
 
             case "task":
-                $scope.task.belongTo.link = "project.tasks.detail(id: "+$scope.task.project+", taskId: "+$scope.task.belongTo.item._id+")";
+                $scope.task.belongTo.link = "/project/"+$scope.task.project+"/tasks/detail/"+$scope.task.belongTo.item._id;
             break;
 
             default:
@@ -34,22 +36,60 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
         }
     });
 
-    $scope.markComplete = function(task) {
-        task.completed = !task.completed;
-        if (task.completed) {
-            task.completedBy = $rootScope.currentUser._id;
-            task.editType = "complete-task";
-            task.completedAt = new Date();
+    $scope.markComplete = function() {
+        $scope.task.completed = !$scope.task.completed;
+        if ($scope.task.completed) {
+            $scope.task.completedBy = $rootScope.currentUser._id;
+            $scope.task.editType = "complete-task";
+            $scope.task.completedAt = new Date();
         } else {
-            task.completedBy = null;
-            task.editType = "uncomplete-task";
-            task.completedAt = null;
+            $scope.task.completedBy = null;
+            $scope.task.editType = "uncomplete-task";
+            $scope.task.completedAt = null;
         }
+        $scope.updateTask($scope.task, $scope.task.editType);
+    };
+
+    $scope.showModal = function($event, modalName){
+        $mdDialog.show({
+            targetEvent: $event,
+            controller: 'projectTaskDetailCtrl',
+            resolve: {
+                task: function($stateParams, taskService) {
+                    return taskService.get({id: $stateParams.taskId}).$promise;
+                }
+            },
+            templateUrl: 'app/modules/project/project-tasks/detail/partials/' + modalName,
+            parent: angular.element(document.body),
+            clickOutsideToClose: false
+        });
+    };
+
+    $scope.editTaskDetail = function(form) {
+        if (form.$valid) {
+            $scope.task.editType = "edit-task";
+            $scope.updateTask($scope.task, $scope.task.editType);
+        } else {
+            $scope.showToast("Please check your input again");
+            return;
+        }
+    };
+
+    $scope.updateTask = function(task, updateType) {
         taskService.update({id: task._id}, task).$promise.then(function(res) {
-            $scope.showToast((res.complete)?"Completed task successfully!":"Uncompleted task successfully!");
+            if (updateType == "complete-task" || updateType == "uncomplete-task") {
+                $scope.showToast((res.complete)?"Completed task successfully!":"Uncompleted task successfully!");
+            } else if (updateType == "edit-task") {
+                $scope.showToast("Updated task successfully!");
+            } else if (updateTask == "assign") {
+                $scope.showToast("Assign more people successfully!");
+            }
             delete task.editType;
+            $scope.task = res;
+            $scope.closeModal();
         }, function(err) {
             $scope.showToast("Error");
+            delete task.editType;
         });
     };
 
