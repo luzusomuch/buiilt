@@ -163,18 +163,18 @@ angular
         $rootScope.currentProjectBackend = {};
       }
 
-      if (toParams.id) {
-        projectService.get({id: toParams.id}).$promise.then(function(project) {
-          if (project._id) {
-            $rootScope.project = project;
-            if (project.status == "archive") {
-              $rootScope.isArchive = true;
-            }
-          } else {
-            $rootScope.project = {};
-          }
-        });
-      }
+        if (toParams.id) {
+            projectService.get({id: toParams.id}).$promise.then(function(project) {
+                if (project._id) {
+                    $rootScope.project = project;
+                    if (project.status == "archive") {
+                        $rootScope.isArchive = true;
+                    }
+                } else {
+                    $rootScope.project = {};
+                }
+            });
+        }
 
       // if (toState.hasCurrentProject) {
 

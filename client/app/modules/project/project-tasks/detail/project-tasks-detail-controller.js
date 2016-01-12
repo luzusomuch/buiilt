@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootScope, $scope, $timeout, task, taskService, $mdToast, $mdDialog) {
+angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootScope, $scope, $timeout, task, taskService, $mdToast, $mdDialog, peopleService, $stateParams) {
 	$scope.task = task;
     $scope.task.dateEnd = new Date($scope.task.dateEnd);
     $scope.minDate = new Date();
@@ -35,6 +35,60 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
             $scope.task.activities = $scope.orginalActivities;
         }
     });
+
+    function getProjectMembers(id) {
+        $scope.membersList = [];
+        peopleService.getInvitePeople({id: id}).$promise.then(function(people) { 
+            if ($rootScope.currentUser.isLeader) {
+                _.each($rootScope.roles, function(role) {
+                    _.each(people[role], function(tender) {
+                        if (tender.hasSelect) {
+                            var winnerTenderer = tender.tenderers[0];
+                            if (winnerTenderer._id) {
+                                winnerTenderer._id.select = false;
+                                $scope.membersList.push(winnerTenderer._id);
+                            } else if (winnerTenderer.email) {
+                                $scope.membersList.push({email: winnerTenderer.email, type: role, select: false});
+                            }
+                        }
+                        // get employees list
+                        var currentTendererIndex = _.findIndex(tender.tenderers, function(tenderer) {
+                            if (tenderer._id) {
+                                return tenderer._id._id == $rootScope.currentUser._id;
+                            }
+                        });
+                        if (currentTendererIndex !== -1) {
+                            var currentTenderer = tender.tenderers[currentTendererIndex];
+                            _.each(currentTenderer.teamMember, function(member) {
+                                member.select = false;
+                                $scope.membersList.push(member);
+                            });
+                        }
+                    });
+                });
+            } else {
+                $scope.membersList = $rootScope.currentTeam.leader;
+                _.each($rootScope.currentTeam.member, function(member) {
+                    $scope.membersList.push(member);
+                });
+            }
+            // get unique member 
+            $scope.membersList = _.uniq($scope.membersList, "_id");
+
+            // filter members list again
+            _.each(task.members, function(member) {
+                _.remove($scope.membersList, {_id: member._id});
+            });
+
+            // remove current user from the members list
+            _.remove($scope.membersList, {_id: $rootScope.currentUser._id});
+        });
+
+        // get invitees for related item
+        $scope.invitees = $scope.task.members;
+        $scope.invitees.push($scope.task.owner);
+        _.remove($scope.invitees, {_id: $rootScope.currentUser._id});
+    };
 
     $scope.markComplete = function() {
         $scope.task.completed = !$scope.task.completed;
@@ -75,13 +129,32 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
         }
     };
 
+    $scope.selectMember = function(index, type) {
+        if (type === "member") {
+            $scope.membersList[index].select = !$scope.membersList[index].select;
+        } else {
+            $scope.invitees[index].select = !$scope.invitees[index].select;
+        }
+    };
+
+    $scope.assignMember = function() {
+        $scope.task.newMembers = _.filter($scope.membersList, {select: true});
+        if ($scope.task.newMembers.length > 0) {
+            $scope.task.editType = "assign";
+            $scope.updateTask($scope.task, $scope.task.editType);
+        } else {
+            $scope.showToast("Please select at least 1 member");
+            return false;
+        }
+    };
+
     $scope.updateTask = function(task, updateType) {
         taskService.update({id: task._id}, task).$promise.then(function(res) {
             if (updateType == "complete-task" || updateType == "uncomplete-task") {
                 $scope.showToast((res.complete)?"Completed task successfully!":"Uncompleted task successfully!");
             } else if (updateType == "edit-task") {
                 $scope.showToast("Updated task successfully!");
-            } else if (updateTask == "assign") {
+            } else if (updateType == "assign") {
                 $scope.showToast("Assign more people successfully!");
             }
             delete task.editType;
@@ -100,4 +173,6 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
     $scope.closeModal = function() {
         $mdDialog.cancel();
     };
+
+    getProjectMembers($stateParams.id);
 });

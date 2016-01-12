@@ -26,7 +26,7 @@ angular.module('buiiltApp')
                                 Materialize.toast('<span>You must confirm your email to hide this message!</span><a class="btn-flat yellow-text" id="sendVerification">Send Verification Email Again<a>', $scope.duration,'rounded');
                             }
                             if (typeof $rootScope.isLeader == 'undefined' || !$rootScope.isLeader) {
-                                $rootScope.isLeader = ($scope.currentUser.team.role == 'admin');
+                                $rootScope.currentUser.isLeader = ($scope.currentUser.team.role == 'admin');
                             }
                             $scope.isLeader = $rootScope.isLeader;
                             authService.getCurrentTeam().$promise

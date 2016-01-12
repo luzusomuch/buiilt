@@ -135,11 +135,12 @@ exports.update = function(req,res) {
                     activity.element.description = (orginalTask.description.length !== req.body.description.length) ? orginalTask.description : null;
                     activity.element.dateEnd = (orginalTask.dateEnd !== req.body.dateEnd) ? orginalTask.dateEnd : null;
                 } else if (req.body.editType === "assign") {
-                    if (orginalTask.members.length > data.members.length) {
+                    if (orginalTask.members.length < data.members.length) {
                         var members = [];
                         _.each(req.body.newMembers, function(member) {
                             members.push(member.name);
                         });
+                        console.log(members);
                         activity.element.members = members;
                     }
                     task.markModified('assignees');
