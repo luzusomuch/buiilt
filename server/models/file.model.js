@@ -50,6 +50,7 @@ var FileSchema = new Schema({
         ref: 'User',
         required: true
     },
+    project: {type: Schema.Types.ObjectId, ref: 'Project', required: true},
     archive: {
         type: Boolean,
         default: true

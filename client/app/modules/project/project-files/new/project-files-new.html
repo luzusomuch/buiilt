@@ -24,20 +24,21 @@
 				<div layout="row">
 					<md-input-container flex>
 				        <label>Description</label>
-						<textarea ng-model="file.description" required md-maxlength="200" columns="1" rows="5"></textarea>
+						<textarea ng-model="uploadFile.description" required md-maxlength="200" columns="1" rows="5"></textarea>
 				    </md-input-container>
 				</div>
 				
 				<div layout="row">
-					<md-chips ng-model="tags">
-				      	<md-chip-template>
-					        <strong>{{$chip}}</strong>
-				      	</md-chip-template>
-				    </md-chips>
+					<md-chips
+			        ng-model="uploadFile.tags"
+			        placeholder="Enter a tag"
+			        delete-button-label="Remove Tag"
+			        delete-hint="Press delete to remove tag"
+			        secondary-placeholder="+Tag"></md-chips>
 				</div>
 				
 				<div layout="row">
-					<md-chips ng-model="members" md-autocomplete-snap
+					<md-chips ng-model="uploadFile.members" md-autocomplete-snap
 	              		md-require-match="true">
 				      	<md-autocomplete
 				          	md-selected-item="selectedItem"

@@ -1,14 +1,15 @@
 angular.module('buiiltApp')
-.factory('uploadService', function($rootScope, $q, $resource) {
+.factory('uploadService', function($resource) {
 
-  return $resource('/api/uploads/:id/:action',{
-    id : '@_id'},
+  return $resource('/api/uploads/:id/:action',
+    {
+        id : '@_id'
+    },
     {
         upload: {
             method: 'POST',
             params: {
                 id: '@id',
-                action: 'file'
             },
             isArray: true
         },

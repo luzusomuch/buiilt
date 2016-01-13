@@ -1,10 +1,11 @@
-angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $timeout, $mdDialog, uploadService, files, peopleService, $stateParams, $rootScope) {
-	$scope.files = files;
+angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $timeout, $mdDialog, uploadService, files, peopleService, $stateParams, $rootScope, $mdToast) {
+	$scope.files = files;console.log(files);
 	$scope.search = false;
-	$scope.showFileInput = false;
-	$scope.uploadFiles = [];
-	$scope.tags = [];
-	$scope.members = [];
+	$scope.uploadFile = {
+		files:[],
+		tags:[],
+		members:[]
+	};
     $scope.pickFile = pickFile;
 
     $scope.onSuccess = onSuccess;
@@ -18,11 +19,8 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
     };
 
     function onSuccess(file){
-    	$scope.showFileInput = true;
-    	file.tags = $scope.tags;
-    	file.members = $scope.members;
-    	$scope.file = file;
-    	$scope.uploadFiles.push(file);
+    	file.type = "file";
+    	$scope.uploadFile.files.push(file);
     };
 
     function getProjectMembers(id) {
@@ -69,7 +67,7 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
     };
 
     $scope.searchMember = function(query) {
-    	var results = value ? $scope.membersList.filter(filterMember(value)) : [];
+    	var results = query ? $scope.membersList.filter(filterMember(query)) : [];
         results = _.uniq(results, '_id');
         return results;
     };
@@ -80,10 +78,22 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
         };
     };
 
-	//Add a New Work Room to the Project
-	$scope.createNewMessage = function() {
-		console.log($scope.uploadFiles);
-		$mdDialog.hide();
+	$scope.createNewFile = function() {
+		console.log($scope.uploadFile);
+		if ($scope.uploadFile.files.length == 0) {
+			$scope.showToast("Please choose at least 1 file");
+		} else if ($scope.uploadFile.tags.length == 0) {
+			$scope.showToast("Please enter at least 1 tags");
+		} else if ($scope.uploadFile.members.length == 0) {
+			$scope.showToast("Please choose at least 1 member");
+		} else {
+			uploadService.upload({id: $stateParams.id}, $scope.uploadFile).$promise.then(function(res) {
+				$mdDialog.hide();
+				$scope.showToast("Upload new file successfully");
+			}, function(err) {
+				$scope.showToast("Upload error");
+			});
+		}
 	};
 	
 	//Functions to handle New Work Room Dialog.
@@ -108,6 +118,10 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
 	
 	//Placeholder set of filters to use for layout demo
 	$scope.filesFilters = ['Room1', 'Room2'];
+
+	$scope.showToast = function(value) {
+        $mdToast.show($mdToast.simple().textContent(value).position('bottom','right').hideDelay(3000));
+    };
 
 	getProjectMembers($stateParams.id);
 });
