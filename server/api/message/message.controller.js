@@ -4,6 +4,7 @@ var User = require('./../../models/user.model');
 var Team = require('./../../models/team.model');
 var Thread = require('./../../models/thread.model');
 var Task = require('./../../models/task.model');
+var Notification = require('./../../models/notification.model');
 var ThreadValidator = require('./../../validators/thread');
 var errorsHelper = require('../../components/helpers/errors');
 var RelatedItem = require('../../components/helpers/related-item');
@@ -267,61 +268,29 @@ exports.getOne = function(req,res) {
 };
 
 exports.myThread = function(req,res) {
-
-  var user = req.user;
-  var result = [];
-  var query = Notification.find(
-    {owner : user._id,unread : true, $or:[{referenceTo : 'thread'},{type: 'chat'}]}
-  );
-  query.exec(function(err, threads) {
-    if (err) {return res.send(500,err);}
-    async.each(threads,function(thread,callback) {
-      if (thread.referenceTo == 'people-chat') {
-        PeopleChat.findById(thread.element._id)
-        .populate('messages.user', '-hashedPassword -salt')
-        .populate('from', '-hashedPassword -salt')
-        .populate('project')
-        .exec(function(err, thread){
-          if (err || !thread) {return callback();}
-          else {
-            Notification.where({owner : user._id,'element._id' : thread._id,referenceTo : 'people-chat',unread : true}).count(function(err,count) {
-              thread.__v = count;
-              result.push(thread);
-              callback();
+    var user = req.user;
+    var result = [];
+    var query = Notification.find(
+        {owner : user._id,unread : true, $or:[{referenceTo : 'thread'},{type: 'chat'}]}
+    );
+    query.exec(function(err, threads) {
+        if (err) {return res.send(500,err);}
+        async.each(threads,function(thread,callback) {
+            Thread.findById(thread)
+            .populate('messages.user','-hashedPassword -salt')
+            .populate('users','-hashedPassword -salt')
+            .exec(function(err,thread) {
+                if (err || !thread) {return callback(err);}
+                Notification.where({owner : user._id,'element._id' : thread._id,referenceTo : 'thread',unread : true}).count(function(err,count) {
+                    thread.__v = count;
+                    result.push(thread);
+                    callback();
+                });
             });
-          }
-        });
-      } else if (thread.referenceTo == 'board-chat') {
-        Board.findById(thread.element._id)
-        .populate('messages.user', '-hashedPassword -salt')
-        .populate('project')
-        .exec(function(err, thread){
-          if (err || !thread) {return callback();}
-          else {
-            Notification.where({owner : user._id,'element._id' : thread._id,referenceTo : 'board-chat',unread : true}).count(function(err,count) {
-              thread.__v = count;
-              result.push(thread);
-              callback();
-            });
-          }
-        });
-      } else {
-        Thread.findById(thread)
-        .populate('messages.user','-hashedPassword -salt')
-        .populate('users','-hashedPassword -salt')
-        .exec(function(err,thread) {
-          if (err || !thread) {return callback(err);}
-          Notification.where({owner : user._id,'element._id' : thread._id,referenceTo : 'thread',unread : true}).count(function(err,count) {
-            thread.__v = count;
-            result.push(thread);
-            callback();
-          });
-        });
-      }
-    },function() {
+        },function() {
         return res.json(result);
-    })
-  })
+        });
+    });
 };
 
 

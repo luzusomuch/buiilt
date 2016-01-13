@@ -97,7 +97,6 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
 
 	        // remove current user from the members list
 	        _.remove($scope.membersList, {_id: $rootScope.currentUser._id});
-	        console.log($scope.membersList);
 	    });
 	};
 
