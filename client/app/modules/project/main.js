@@ -123,10 +123,15 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
   	//Files for Single Project
   .state('project.files', {
     url: '/files',
-	abstract: true,
+	  abstract: true,
     templateUrl: '/app/modules/project/project-files/project-files.html',
     controller: 'projectFilesCtrl',
-    authenticate : true
+    authenticate : true,
+    resolve: {
+      files: function($stateParams, fileService) {
+        return fileService.getProjectFiles({id: $stateParams.id, type: "file"}).$promise;
+      }
+    }
   })
   .state('project.files.all', {
     url: '',
@@ -135,10 +140,15 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
     authenticate : true
   })
   .state('project.files.detail', {
-    url: '/detail',
+    url: '/detail/:fileId',
     templateUrl: '/app/modules/project/project-files/detail/project-files-detail.html',
     controller: 'projectFilesCtrl',
-    authenticate : true
+    authenticate : true,
+    resolve: {
+      file: function($stateParams, fileService) {
+        return fileService.get({id: $stateParams.fileId}).$promise;
+      }
+    }
   })
   
   	//Documentation for Single Project

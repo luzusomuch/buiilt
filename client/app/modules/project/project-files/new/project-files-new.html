@@ -17,23 +17,42 @@
 				
 				<div layout="row">
 					<md-input-container flex>
-				        <label>Filepicker Upload Container</label>
-						<input md-autofocus />
+						<input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/>
 					</md-input-container>
 				</div>
-				
+
 				<div layout="row">
 					<md-input-container flex>
-				        <label>Tags</label>
-						<input />
+				        <label>Description</label>
+						<textarea ng-model="file.description" required md-maxlength="200" columns="1" rows="5"></textarea>
 				    </md-input-container>
 				</div>
 				
 				<div layout="row">
-					<md-input-container flex>
-				        <label>Add Team Members to the File</label>
-				        <input />
-				    </md-input-container>
+					<md-chips ng-model="tags">
+				      	<md-chip-template>
+					        <strong>{{$chip}}</strong>
+				      	</md-chip-template>
+				    </md-chips>
+				</div>
+				
+				<div layout="row">
+					<md-chips ng-model="members" md-autocomplete-snap
+	              		md-require-match="true">
+				      	<md-autocomplete
+				          	md-selected-item="selectedItem"
+				          	md-search-text="searchText"
+				          	md-items="item in searchMember(searchText)"
+				          	md-item-text="item.name"
+				          	placeholder="Search for a member">
+				        <span md-highlight-text="searchText">{{item.name}}</span>
+				      	</md-autocomplete>
+				      	<md-chip-template>
+					        <span>
+					          	<strong>{{$chip.name}}</strong>
+					        </span>
+				      	</md-chip-template>
+				    </md-chips>
 				</div>
 				
 			</div>

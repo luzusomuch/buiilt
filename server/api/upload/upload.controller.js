@@ -34,7 +34,6 @@ exports.uploadMobile = function(req, res) {
     var filesAfterInsert = [];
     var item = req.body;
     var file = new File({
-        title: item.filename,
         name: item.filename,
         path: item.url,
         key: item.key,
@@ -69,7 +68,6 @@ exports.upload = function(req, res){
         if (item._id != '') {
             File.findById(item._id, function(err, file) {
                 if (err || !file) {console.log(err);return cb(err);}
-                file.title = item.filename;
                 file.name = item.filename;
                 file.path = item.url;
                 file.server = 's3';

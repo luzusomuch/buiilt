@@ -12,6 +12,19 @@ var async = require('async');
 var s3 = require('../../components/S3');
 var mongoose = require('mongoose');
 
+exports.getFilesByProject = function(req, res) {
+    var query;
+    if (req.params.type === "file") {
+        query = {id: req.params.id, 'element.type': 'file', $or: [{owner: req.user._id}, {members: req.user._id}]};
+    } else if (req.params.type === "document") {
+        query = {id: req.params.id, "element.type": "document"};
+    }
+    File.find(query, function(err, files) {
+        if (err) {return res.send(500,err);}
+        return res.send(200,files);
+    });
+};  
+
 exports.getByDocument = function(req, res) {
     File.find({package: req.params.id}, function(err, files) {
         if (err) 

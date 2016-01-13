@@ -1,19 +1,15 @@
-angular.module('buiiltApp').factory('fileService', function($rootScope, $q, $resource) {
-  return $resource('/api/files/:id/:type/:action', {
-id: '@_id'},{
-    getByDocument: {
-      method: 'GET',
-      params: {
-        id: 'id',
-        action: 'document'
-      },
-      isArray: true
-    },
+angular.module('buiiltApp').factory('fileService', function($resource) {
+return $resource('/api/files/:id/:type/:action', {
+    id: '@_id'},{
     get: {
         method: 'GET',
+    },
+    getProjectFiles: {
+        method: "GET",
         params: {
-            id: 'id'
-        }
+            action: "project-files"
+        },
+        isArray: true
     },
     interested: {
       method: 'PUT',
