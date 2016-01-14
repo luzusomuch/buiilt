@@ -1,0 +1,77 @@
+<md-dialog aria-label="Create a Related File" flex="70">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Create a Related File</h2>
+            </div>
+        </md-toolbar>
+        
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column">
+                
+                <div layout="row">
+                    <md-input-container flex class="modal-instructions">
+                        <p>Please provide the following details to attach a new file to your project...</p>
+                    </md-input-container>
+                </div>
+                
+                <div layout="row">
+                    <md-input-container flex>
+                        <input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/>
+                    </md-input-container>
+                </div>
+
+                <div layout="row">
+                    <md-input-container flex>
+                        <label>Description</label>
+                        <textarea ng-model="relatedFile.description" required md-maxlength="200" columns="1" rows="5"></textarea>
+                    </md-input-container>
+                </div>
+                
+                <div layout="row">
+                    <md-input-container flex>
+                        <md-chips
+                        ng-model="tags"
+                        placeholder="Enter a tag"
+                        delete-button-label="Remove Tag"
+                        delete-hint="Press delete to remove tag"
+                        secondary-placeholder="+Tag"></md-chips>
+                    </md-input-container>
+                </div>
+                
+                <div ng-cloak>
+                    <p>Available's asssignees: </p>
+                    <md-content layout="row" layout-wrap layout-xs="column">
+                        <div flex="33" flex-sm="50" flex-xs="100" layout="row" ng-repeat="member in invitees">
+                            <md-card ng-click="selectMember($index, 'invitee')" layout-margin>
+                                <md-card-header>
+                                    <p class="name">{{member.name}}</p>
+                                </md-card-header>
+                        
+                                <md-card-content>
+                                    <p class="email">{{(member.email) ? member.email : 'Email Address'}}</p>
+                                    <p class="phone">{{(member.phoneNumber)? member.phoneNumber : 'Phone Number'}}</p>
+                                </md-card-content>
+                        
+                                <md-card-actions layout-margin>
+                                    <md-card-icon-actions layout="row" layout-align="space-around center">
+                                        <md-button class="material-icons md-icon-button">
+                                            <md-tooltip md-direction="down">Invite To This File</md-tooltip>
+                                            <md-icon ng-show="member.select" class="material-icons">done</md-icon>
+                                        </md-button>
+                                    </md-card-icon-actions>
+                                </md-card-actions>
+                            </md-card>
+                        </div>
+                    </md-content>
+                </div>
+                
+            </div>
+        </md-dialog-content>
+        
+        <md-dialog-actions>
+            <md-button ng-click="closeModal()">Cancel</md-button>
+            <md-button ng-click="createRelatedFile()" class="md-raised md-accent md-hue-1">Add Related File!</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

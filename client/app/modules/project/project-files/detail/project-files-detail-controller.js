@@ -1,13 +1,26 @@
 angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope, $rootScope, file, $mdDialog, uploadService, fileService, $mdToast, peopleService, $stateParams, messageService, taskService, $state) {
 	$scope.file = file;
+    $scope.orginalActivities = angular.copy($scope.file.activities);
     $scope.isShowRelatedItem = true;
+    $scope.tags = [];
 
-    $scope.showRelatedItem = function() {
+    $scope.chipsFilter = function() {
         $scope.isShowRelatedItem = !$scope.isShowRelatedItem;
     };
 
     $scope.$watch("isShowRelatedItem", function(value) {
-
+        if (!value) {
+            var activities = [];
+            var relatedActivities = ["related-task","related-thread","related-file"];
+            _.each($scope.orginalActivities, function(activity) {
+                if (_.indexOf(relatedActivities, activity.type) === -1) {
+                    activities.push(activity);
+                }
+            });
+            $scope.file.activities = activities;
+        } else {
+            $scope.file.activities = $scope.orginalActivities;
+        }
     });
 
     function getProjectMembers(id) {
@@ -69,8 +82,6 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
         } else if (modalName === "add-related-task.html") {
             $scope.minDate = new Date();
             $scope.relatedTask = {};
-        } else if (modalName === "add-related-file.html") {
-            $scope.relatedFile = {};
         }
         $mdDialog.show({
             targetEvent: $event,
@@ -187,6 +198,48 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
         }
     };
 
+    // create related file
+    $scope.relatedFile = {
+        files:[],
+        tags:[],
+        belongTo: $scope.file._id,
+        belongToType: "file"
+    };
+
+    $scope.pickFile = pickFile;
+
+    $scope.onSuccess = onSuccess;
+
+    function pickFile(){
+        filepickerService.pick(
+            // add max files for multiple pick
+            // {maxFiles: 5},
+            onSuccess
+        );
+    };
+
+    function onSuccess(file){
+        file.type = "file";
+        $scope.relatedFile.files.push(file);
+    };
+
+    $scope.createRelatedFile = function() {
+        $scope.relatedFile.tags = $scope.tags;
+        $scope.relatedFile.members = _.filter($scope.invitees, {select: true});
+        if ($scope.relatedFile.files.length == 0) {
+            $scope.showToast("Please choose at least 1 file");
+        } else if ($scope.relatedFile.tags.length == 0) {
+            $scope.showToast("Please enter at least 1 tags");
+        } else if ($scope.relatedFile.members.length == 0) {
+            $scope.showToast("Please choose at least 1 member");
+        } else { 
+            uploadService.upload({id: $stateParams.id}, $scope.relatedFile).$promise.then(function(res) {
+                $scope.closeModal();
+                $scope.showToast("Upload new related file successfully");
+                $state.go("project.files.detail", {id: res[0].project, fileId: res[0]._id});
+            }, function(err) {$scope.showToast("Error");});
+        }
+    };
 
     getProjectMembers($stateParams.id);
 });

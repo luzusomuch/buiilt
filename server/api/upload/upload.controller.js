@@ -45,6 +45,38 @@ var getMainItem = function(type) {
     return _item;
 };
 
+function populateThread(thread, res){
+    Thread.populate(thread, [
+        {path: "owner", select: "_id email name"},
+        {path: "messages.user", select: "_id email name"},
+        {path: "messages.mentions", select: "_id email name"},
+        {path: "members", select: "_id email name"},
+        {path: "activities.user", select: "_id email name"}
+    ], function(err, thread) {
+        return res.send(200, thread);
+    });
+};
+
+function populateTask(task, res){
+    Task.populate(task, [
+        {path: "owner", select: "_id email name"},
+        {path: "members", select: "_id email name"},
+        {path: "activities.user", select: "_id email name"}
+    ], function(err, task) {
+        return res.send(200, task);
+    });
+};
+
+function populateFile(file, res){
+    File.populate(file, [
+        {path: "owner", select: "_id email name"},
+        {path: "members", select: "_id email name"},
+        {path: "activities.user", select: "_id email name"}
+    ], function(err, file) {
+        return res.send(200, [file]);
+    });
+};
+
 var validationError = function (res, err) {
     return res.json(422, err);
 };
@@ -158,7 +190,7 @@ exports.upload = function(req, res){
                     else if (data.belongToType === "task") {
                         populateTask(main, res);
                     } else if (data.belongToType === "file") {
-                        RelatedItem.responseWithRelated("file", main, user, res);
+                        populateFile(main, res);
                     }
                 });
             });
