@@ -4,6 +4,7 @@ var User = require('./../../models/user.model');
 var Team = require('./../../models/team.model');
 var Thread = require('./../../models/thread.model');
 var Task = require('./../../models/task.model');
+var File = require('./../../models/file.model');
 var Notification = require('./../../models/notification.model');
 var ThreadValidator = require('./../../validators/thread');
 var errorsHelper = require('../../components/helpers/errors');
@@ -34,6 +35,16 @@ function populateTask(task, res){
     });
 };
 
+function populateFile(file, res){
+    File.populate(file, [
+        {path: "owner", select: "_id email name"},
+        {path: "members", select: "_id email name"},
+        {path: "activities.user", select: "_id email name"}
+    ], function(err, file) {
+        return res.send(200, file);
+    });
+};
+
 var getMainItem = function(type) {
     var _item = {};
     switch (type) {
@@ -42,6 +53,9 @@ var getMainItem = function(type) {
             break;
         case 'task' :
             _item = Task;
+            break;
+        case "file":
+            _item = File
             break;
         default :
             break;
@@ -117,6 +131,8 @@ exports.create = function(req,res) {
                                 populateThread(main, res);
                             else if (req.body.belongToType === "task") {
                                 populateTask(main, res);
+                            } else if (req.body.belongToType === "file") {
+                                populateFile(main, res);
                             }
                         });
                     }

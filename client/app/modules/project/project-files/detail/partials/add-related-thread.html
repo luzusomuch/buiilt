@@ -1,32 +1,28 @@
-<md-dialog aria-label="Assign members to {{file.name}}" flex="70">
-    <form ng-submit="assignMember()" name="form">
+<md-dialog aria-label="Create a New Related Thread" flex="70">
+    <form ng-submit="createRelatedThread(form)" name="form">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2>Assign members to {{file.name}}</h2>
+                <h2>Create a New Related Thread</h2>
             </div>
         </md-toolbar>
         
         <md-dialog-content>
             <div class="md-dialog-content" layout="column">
                 <div layout="row">
-                    <md-input-container flex>
-                        <label>File Name</label>
-                        <input input="text" ng-model="file.name" name="name" disabled/>
+                    <md-input-container flex class="modal-instructions">
+                        <p>Please provide the following details to attach a new related thread to your project...</p>
                     </md-input-container>
                 </div>
-
                 <div layout="row">
                     <md-input-container flex>
-                        <label for="">Description</label>
-                        <textarea ng-model="file.description" name="description" md-maxlength="200" columns="5" rows="1" disabled></textarea>
+                        <label>Related Thread Name</label>
+                        <input md-autofocus type="text" ng-model="relatedThread.name" name="name" required/>
                     </md-input-container>
                 </div>
-                
-                <div layout="row"><p>Please click on card to select member</p></div>
                 <div ng-cloak>
                     <md-content layout="row" layout-wrap layout-xs="column">
-                        <div flex="33" flex-sm="50" flex-xs="100" layout="row" ng-repeat="member in membersList">
-                            <md-card ng-click="selectMember($index, 'member')" layout-margin>
+                        <div flex="33" flex-sm="50" flex-xs="100" layout="row">
+                            <md-card ng-click="selectMember($index, 'invitee')" ng-repeat="member in invitees" layout-margin>
                                 <md-card-header>
                                     <p class="name">{{member.name}}</p>
                                 </md-card-header>
@@ -39,7 +35,7 @@
                                 <md-card-actions layout-margin>
                                     <md-card-icon-actions layout="row" layout-align="space-around center">
                                         <md-button class="material-icons md-icon-button">
-                                            <md-tooltip md-direction="down">Invite To This Task</md-tooltip>
+                                            <md-tooltip md-direction="down">Invite To This Thread</md-tooltip>
                                             <md-icon ng-show="member.select" class="material-icons">done</md-icon>
                                         </md-button>
                                     </md-card-icon-actions>
@@ -48,13 +44,11 @@
                         </div>
                     </md-content>
                 </div>
-                
             </div>
         </md-dialog-content>
-        
         <md-dialog-actions>
             <md-button ng-click="closeModal()">Cancel</md-button>
-            <md-button type="submit" class="md-raised md-accent md-hue-1">Edit File Detail!</md-button>
+            <md-button type="submit" class="md-raised md-accent md-hue-1">Create Related Thread!</md-button>
         </md-dialog-actions>
     </form>
 </md-dialog>

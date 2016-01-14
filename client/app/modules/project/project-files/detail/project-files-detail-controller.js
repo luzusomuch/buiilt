@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope, $rootScope, file, $mdDialog, uploadService, fileService, $mdToast, peopleService, $stateParams) {
+angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope, $rootScope, file, $mdDialog, uploadService, fileService, $mdToast, peopleService, $stateParams, messageService, taskService, $state) {
 	$scope.file = file;
     $scope.isShowRelatedItem = true;
 
@@ -57,6 +57,10 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
             // remove current user from the members list
             _.remove($scope.membersList, {_id: $rootScope.currentUser._id});
         });
+        // get invitees for related item
+        $scope.invitees = $scope.file.members;
+        $scope.invitees.push($scope.file.owner);
+        _.remove($scope.invitees, {_id: $rootScope.currentUser._id});
     };
 
     $scope.showModal = function($event, modalName) {
@@ -98,8 +102,12 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
         }
     };
 
-    $scope.selectMember = function(index) {
-        $scope.membersList[index].select = !$scope.membersList[index].select;
+    $scope.selectMember = function(index, type) {
+        if (type === "member") {
+            $scope.membersList[index].select = !$scope.membersList[index].select;
+        } else {
+            $scope.invitees[index].select = !$scope.invitees[index].select;
+        }
     };
 
     $scope.assignMember = function() {
@@ -132,6 +140,28 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
                 break
             }
         }, function(err) {$scope.showToast("Error");});
+    };
+
+    $scope.createRelatedThread = function(form) {
+        if (form.$valid) {
+            $scope.relatedThread.members = _.filter($scope.invitees, {select: true});
+            if ($scope.relatedThread.members.length > 0) {
+                $scope.relatedThread.belongTo = $scope.file._id;
+                $scope.relatedThread.belongToType = "file";
+                $scope.relatedThread.type = "project-message";
+                messageService.create({id: $stateParams.id}, $scope.relatedThread).$promise.then(function(relatedThread) {
+                    $scope.closeModal();
+                    $scope.showToast("Create Related Thread Successfully!");
+                    $state.go("project.messages.detail", {id: $stateParams.id, messageId: relatedThread._id});
+                }, function(err) {$scope.showToast("Error");});
+            } else {
+                $scope.showToast("Please select at least 1 invitee");
+                return;
+            }
+        } else {
+            $scope.showToast("Please check your input again");
+            return;
+        }
     };
 
 
