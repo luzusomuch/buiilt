@@ -17,11 +17,11 @@
 
 <md-list ng-cloak class="main-page-content">
 
-	<div ng-show="!search" ng-repeat="file in files" ui-sref="project.files.detail">
+	<div ng-show="!search" ng-repeat="file in files" ui-sref="project.files.detail({id: file.project, fileId: file._id})">
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
 		          <h3>{{file.name}}</h3>
-		          <p>{{file.version}}</p>
+		          <p>File version {{file.version}}</p>
 	        </div>
 		</md-list-item>
 		<md-divider></md-dividers>

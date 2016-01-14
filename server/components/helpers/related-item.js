@@ -32,6 +32,15 @@ exports.responseWithRelated = function(type, data, user, res){
                         });
                     break;
 
+                    case "file":
+                        File.findById(data.belongTo.item._id, '_id name', function(err, file) {
+                            if (err || !file) {cb();}
+                            else {
+                                data.belongTo.item = file;
+                                cb();
+                            }
+                        });
+
                     default:
                         cb();
                     break;
@@ -62,6 +71,17 @@ exports.responseWithRelated = function(type, data, user, res){
                             if (err || !_task) {callback();}
                             else {
                                 item.item = _task;
+                                relatedItem.push(item);
+                                callback();
+                            }
+                        });
+                    } else if (item.type === "file") {
+                        File.findById(item.item._id, '_id name description activities')
+                        .populate("activities.user")
+                        .exec(function(err, _file) {
+                            if (err || !_file) {callback();}
+                            else {
+                                item.item = _file;
                                 relatedItem.push(item);
                                 callback();
                             }

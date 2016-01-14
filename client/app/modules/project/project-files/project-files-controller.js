@@ -1,5 +1,5 @@
 angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $timeout, $mdDialog, uploadService, files, peopleService, $stateParams, $rootScope, $mdToast) {
-	$scope.files = files;console.log(files);
+	$scope.files = files;
 	$scope.search = false;
 	$scope.uploadFile = {
 		files:[],
@@ -79,7 +79,6 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
     };
 
 	$scope.createNewFile = function() {
-		console.log($scope.uploadFile);
 		if ($scope.uploadFile.files.length == 0) {
 			$scope.showToast("Please choose at least 1 file");
 		} else if ($scope.uploadFile.tags.length == 0) {
@@ -90,6 +89,7 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
 			uploadService.upload({id: $stateParams.id}, $scope.uploadFile).$promise.then(function(res) {
 				$mdDialog.hide();
 				$scope.showToast("Upload new file successfully");
+                $scope.files = res[0];
 			}, function(err) {
 				$scope.showToast("Upload error");
 			});

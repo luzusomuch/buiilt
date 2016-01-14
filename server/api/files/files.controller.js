@@ -5,8 +5,7 @@ var People = require('./../../models/people.model');
 var Board = require('./../../models/board.model');
 var Project = require('./../../models/project.model');
 var Notification = require('./../../models/notification.model');
-var errorsHelper = require('../../components/helpers/errors');
-var ProjectValidator = require('./../../validators/project');
+var RelatedItem = require('../../components/helpers/related-item');
 var _ = require('lodash');
 var async = require('async');
 var s3 = require('../../components/S3');
@@ -25,19 +24,58 @@ exports.getFilesByProject = function(req, res) {
     });
 };  
 
-exports.getByDocument = function(req, res) {
-    File.find({package: req.params.id}, function(err, files) {
+exports.show = function(req, res) {
+    File.findById(req.params.id)
+    .populate("owner", "_id name email")
+    .populate("members", "_id name email")
+    .populate("activities.user", "_id name email")
+    .exec(function(err, file) {
         if (err) 
             return res.send(500, err);
-        res.json(200, files);
+        RelatedItem.responseWithRelated("file", file, req.user, res);
     });
 };
 
-exports.show = function(req, res) {
+exports.update = function(req, res) {
+    var data = req.body;
     File.findById(req.params.id, function(err, file) {
-        if (err) 
-            return res.send(500, err);
-        return res.json(file);
+        if (err) {return res.send(500,err);}
+        else if (!file) {return res.send(404, "The specific file is not existed");}
+        else {
+            var orginalFile = _.clone(file)._doc;
+            var activity = {
+                user: req.user._id,
+                type: req.body.editType,
+                createdAt: new Date(),
+                element: {}
+            };
+            if (data.editType === "edit") {
+                activity.element.name = (orginalFile.name.length !== data.name.length) ? orginalFile.name : null;
+                activity.element.description = (orginalFile.description.length !== data.description.length) ? orginalFile.description : null;
+                activity.element.tags = (orginalFile.tags.length !== data.tags.length) ? orginalFile.tags : null;
+                file.name = data.name;
+                file.description = data.description;
+                file.tags = data.tags;
+            } else if (data.editType === "assign") {
+                var members = [];
+                _.each(data.newMembers, function(member) {
+                    file.members.push(member._id);
+                    members.push(member.name);
+                });
+                activity.element.members = members;
+            }
+            file.activities.push(activity);
+            file.save(function(err) {
+                if (err) {return res.send(500,err);}
+                File.populate(file, [
+                {path:"owner", select:"_id name email"},
+                {path:"members", select:"_id name email"},
+                {path:"activities.user", select:"_id name email"},
+                ], function(err, file) {
+                    RelatedItem.responseWithRelated("file", file, req.user, res);
+                });
+            });
+        }
     });
 };
 

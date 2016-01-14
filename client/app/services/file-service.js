@@ -11,6 +11,9 @@ return $resource('/api/files/:id/:type/:action', {
         },
         isArray: true
     },
+    update: {
+        method: "PUT"
+    },
     interested: {
       method: 'PUT',
       params: {

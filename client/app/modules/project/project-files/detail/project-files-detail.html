@@ -3,7 +3,7 @@
 	<div layout="column" flex="70" class="md-whiteframe-1dp">
 		
 		<div class="detail-header" layout="row" layout-padding>
-			<p>File Name</p>
+			<p>{{file.name}}</p>
 			<span flex></span>
 			<div>
 				<md-button>View Current Version</md-button>
@@ -14,85 +14,38 @@
 	    </div>
 		
 		<div class="main-page-content" layout-padding>
-			
 			<div class="item-activity">
-			
 				<div layout="row" flex class="activity-stream-head">
-					<p>This file was created by <strong>{ username }</strong> on { date and time }. <span>This file is related to the { message thread OR task } { name and link}.</span></p>
+					<p>This file was created by <strong>{{file.owner.name}}</strong> on {{file.createdAt | date: 'dd/MM/yyyy hh:mm a'}}. <span ng-show="file.belongTo.item">This file is related to the {{file.belongTo.type}} <a href="{{file.belongTo.link}}">{{file.belongTo.item.name}}</a>.</span></p>
 				</div>
-			
-				<div layout="row" layout-align="center center" flex class="activity-stream">
+				<div layout="row" layout-align="center center" flex class="activity-stream" ng-repeat="activity in file.activities" ng-class="{related: activity.element.related}">
 					<span flex="5"></span>
-					<div class="icon-type">
-						<md-icon class="material-icons md-primary">edit</md-icon>
+					<div class="icon-type" ng-switch="activity.type">
+						<!-- edit file -->
+						<md-icon ng-switch-when="edit" class="material-icons md-primary">edit</md-icon>
+						<!-- assign -->
+						<md-icon ng-switch-when="assign" class="material-icons md-primary">person_outline</md-icon>
+						<!-- related-message -->
+						<md-icon ng-switch-when="related-thread" class="material-icons md-primary">chat_bubble_outline</md-icon>
+						<!-- related-task -->
+						<md-icon ng-switch-when="related-task" class="material-icons md-primary">done_all</md-icon>
 					</div>
 					<span flex="5"></span>
 					<div flex class="activity-detail">
-						<p><strong>{ username }</strong> has edited the details of this file { summary of the edit - for example name: ... description: ... etc}.</p>
-						<p class="meta-data"><span class="time">2:11 pm</span> <span class="date">03/01/2016</span><p>
+						<p ng-switch="activity.type">
+							<strong>{{activity.user.name}}</strong> 
+							<!-- edit file -->
+							<span ng-switch-when="edit">has edited the details of this file ({{(activity.element.name) ? "Name: "+activity.element.name+", " : ""}} {{(activity.element.description) ? "Description: "+activity.element.description+", " : ""}} {{(activity.element.tags) ? "Tags : " : ""}}<span ng-repeat="tag in activity.element.tags">{{tag}}, </span>)</span>
+							<!-- assign new people -->
+							<span ng-switch-when="assign">has assigned <span ng-repeat="member in activity.element.members">{{member}}, </span> to this thread</span>
+							<!-- related thread -->
+							<span ng-switch-when="related-thread">has attached the related message thread, "<a ui-sref="project.messages.detail({id: task.project, messageId: activity.element.item})">{{activity.element.name}}</a>".</span>
+							<!-- related task -->
+							<span ng-switch-when="related-task">has attached the related task, "<a ui-sref="project.tasks.detail({id: task.project, taskId: activity.element.item})">{{activity.element.name}}</a>".</span>
+						</p>
+						<p class="meta-data"><span class="time">{{activity.createdAt | date: 'H:mm a'}}</span> <span class="date">{{activity.createdAt | date: 'dd/MM/yyyy'}}</span><p>
 					</div>
 				</div>
-				
-				<div layout="row" layout-align="center center" flex class="activity-stream">
-					<span flex="5"></span>
-					<div class="icon-type">
-						<md-icon class="material-icons md-primary">attach_file</md-icon>
-					</div>
-					<span flex="5"></span>
-					<div flex class="activity-detail">
-						<p><strong>{ username }</strong> has uploaded a revision to this file.</p>
-						<p class="meta-data"><span class="time">2:11 pm</span> <span class="date">03/01/2016</span><p>
-					</div>
-				</div>
-				
-				<div layout="row" layout-align="center center" flex class="activity-stream">
-					<span flex="5"></span>
-					<div class="icon-type">
-						<md-icon class="material-icons md-primary">person_outline</md-icon>
-					</div>
-					<span flex="5"></span>
-					<div flex class="activity-detail">
-						<p><strong>{ username }</strong> has assigned this file to { new team member name }.</p>
-						<p class="meta-data"><span class="time">2:11 pm</span> <span class="date">03/01/2016</span><p>
-					</div>
-				</div>
-				
-				<div layout="row" layout-align="center center" flex class="activity-stream related">
-					<span flex="5"></span>
-					<div class="icon-type">
-						<md-icon class="material-icons md-primary">chat_bubble_outline</md-icon>
-					</div>
-					<span flex="5"></span>
-					<div flex class="activity-detail">
-						<p><strong>{ username }</strong> has attached the related message thread, "{ name and link to message thread }".</p>
-						<p class="meta-data"><span class="time">2:11 pm</span> <span class="date">03/01/2016</span><p>
-					</div>
-				</div>
-				
-				<div layout="row" layout-align="center center" flex class="activity-stream related">
-					<span flex="5"></span>
-					<div class="icon-type">
-						<md-icon class="material-icons md-primary">done_all</md-icon>
-					</div>
-					<span flex="5"></span>
-					<div flex class="activity-detail">
-						<p><strong>{ username }</strong> has attached related task, "{ description and link to message thread }".</p>
-						<p class="meta-data"><span class="time">2:11 pm</span> <span class="date">03/01/2016</span><p>
-					</div>
-				</div>
-				
-				<div layout="row" layout-align="center center" flex class="activity-stream related">
-					<span flex="5"></span>
-					<div class="icon-type">
-						<md-icon class="material-icons md-primary">attach_file</md-icon>
-					</div>
-					<span flex="5"></span>
-					<div flex class="activity-detail">
-						<p><strong>{ username }</strong> has attached the related file, "{ name and link to file }".</p>
-						<p class="meta-data"><span class="time">2:11 pm</span> <span class="date">03/01/2016</span><p>
-					</div>
-				</div>
-				
 			</div>
 			
 			<div>
@@ -104,7 +57,7 @@
   			  	      </md-button>
   		  	      </md-fab-trigger>
   				  <md-fab-actions>
-			  	      <md-button aria-label="Edit the File Details" class="md-fab md-raised md-mini md-primary">
+			  	      <md-button aria-label="Edit the File Details" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'edit-file.html')">
 	  					  <md-tooltip md-direction="left">Edit File Details</md-tooltip>
 	  				      <md-icon class="material-icons">edit</md-icon>
 			  	      </md-button>
@@ -112,7 +65,7 @@
 	  					  <md-tooltip md-direction="left">Upload a Reivsion</md-tooltip>
 	  				      <md-icon class="material-icons">attach_file</md-icon>
 			  	      </md-button>
-  			  	      <md-button aria-label="Add a Team Member" class="md-fab md-raised md-mini md-primary">
+  			  	      <md-button aria-label="Add a Team Member" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'assign.html')">
   	  					  <md-tooltip md-direction="left">Assign to a Team Member</md-tooltip>
   	  				      <md-icon class="material-icons">person_outline</md-icon>
   			  	      </md-button>
@@ -135,7 +88,7 @@
 		</div>
 	</div>
 		
-	<related-items flex="30"></related-items>
+	<related-items data="file" flex="30"></related-items>
 		
 </div>
 			

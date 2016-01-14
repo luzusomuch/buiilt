@@ -142,7 +142,7 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
   .state('project.files.detail', {
     url: '/detail/:fileId',
     templateUrl: '/app/modules/project/project-files/detail/project-files-detail.html',
-    controller: 'projectFilesCtrl',
+    controller: 'projectFileDetailCtrl',
     authenticate : true,
     resolve: {
       file: function($stateParams, fileService) {

@@ -25,6 +25,7 @@ var gm = require('gm');
 var fs = require('fs');
 var exec = require('child_process').exec;
 var config = require('./../../config/environment');
+var RelatedItem = require('../../components/helpers/related-item');
 
 var getMainItem = function(type) {
     var _item = {};
@@ -119,8 +120,14 @@ exports.upload = function(req, res){
                     type: 'uploadNew'
                 };
                 NotificationHelper.create(params, function() {
-                    filesAfterInsert.push(file);
-                    cb();
+                    File.populate(file,[
+                        {path:"owner", select: "_id name email"},
+                        {path:"member", select: "_id name email"},
+                        {path: "activities.user", select: "_id email name"}
+                        ], function(err, file) {
+                            filesAfterInsert.push(file);
+                            cb();
+                    });
                 });
             }
         });
@@ -151,7 +158,7 @@ exports.upload = function(req, res){
                     else if (data.belongToType === "task") {
                         populateTask(main, res);
                     } else if (data.belongToType === "file") {
-                        return res.send(200, filesAfterInsert);
+                        RelatedItem.responseWithRelated("file", main, user, res);
                     }
                 });
             });

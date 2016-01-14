@@ -1,0 +1,44 @@
+<md-dialog aria-label="Edit File Detail" flex="70">
+    <form ng-submit="editFile(form)" name="form">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Edit File</h2>
+            </div>
+        </md-toolbar>
+        
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column">
+                <div layout="row">
+                    <md-input-container flex>
+                        <label>File Name</label>
+                        <input input="text" ng-model="file.name" name="name" required/>
+                    </md-input-container>
+                </div>
+
+                <div layout="row">
+                    <md-input-container flex>
+                        <label for="">Description</label>
+                        <textarea ng-model="file.description" name="description" md-maxlength="200" columns="5" rows="1" required></textarea>
+                    </md-input-container>
+                </div>
+                
+                <div layout="row">
+                    <md-input-container flex>
+                        <md-chips
+                        ng-model="file.tags"
+                        placeholder="Enter a tag"
+                        delete-button-label="Remove Tag"
+                        delete-hint="Press delete to remove tag"
+                        secondary-placeholder="+Tag"></md-chips>
+                    </md-input-container>
+                </div>
+                
+            </div>
+        </md-dialog-content>
+        
+        <md-dialog-actions>
+            <md-button ng-click="closeModal()">Cancel</md-button>
+            <md-button type="submit" class="md-raised md-accent md-hue-1">Edit File Detail!</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>
