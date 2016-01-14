@@ -225,9 +225,9 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($ro
             $scope.relatedTask.type = "task-project";
             if ($scope.relatedTask.members.length > 0) {
                 taskService.create({id: $stateParams.id}, $scope.relatedTask).$promise.then(function(relatedTask) {
-                    console.log(relatedTask);
                     $scope.closeModal();
                     $scope.showToast("Create new related task successfully!");
+                    $state.go("project.tasks.detail", {id: $stateParams.id, taskId: relatedTask._id});
                 }, function(err){$scope.showToast("Error");});
             } else {
                 $scope.showToast("Please select at least 1 invitee");

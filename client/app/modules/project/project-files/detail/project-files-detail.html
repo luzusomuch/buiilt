@@ -29,6 +29,8 @@
 						<md-icon ng-switch-when="related-thread" class="material-icons md-primary">chat_bubble_outline</md-icon>
 						<!-- related-task -->
 						<md-icon ng-switch-when="related-task" class="material-icons md-primary">done_all</md-icon>
+						<!-- related-file -->
+						<md-icon ng-switch-when="related-file" class="material-icons md-primary">attach_file</md-icon>
 					</div>
 					<span flex="5"></span>
 					<div flex class="activity-detail">
@@ -39,9 +41,11 @@
 							<!-- assign new people -->
 							<span ng-switch-when="assign">has assigned <span ng-repeat="member in activity.element.members">{{member}}, </span> to this thread</span>
 							<!-- related thread -->
-							<span ng-switch-when="related-thread">has attached the related message thread, "<a ui-sref="project.messages.detail({id: task.project, messageId: activity.element.item})">{{activity.element.name}}</a>".</span>
+							<span ng-switch-when="related-thread">has attached the related message thread, "<a ui-sref="project.messages.detail({id: file.project, messageId: activity.element.item})">{{activity.element.name}}</a>".</span>
 							<!-- related task -->
-							<span ng-switch-when="related-task">has attached the related task, "<a ui-sref="project.tasks.detail({id: task.project, taskId: activity.element.item})">{{activity.element.name}}</a>".</span>
+							<span ng-switch-when="related-task">has attached the related task, "<a ui-sref="project.tasks.detail({id: file.project, taskId: activity.element.item})">{{activity.element.name}}</a>".</span>
+							<!-- related task -->
+							<span ng-switch-when="related-file">has attached the related file, "<a ui-sref="project.files.detail({id: file.project, fileId: activity.element.item})">{{activity.element.name}}</a>".</span>
 						</p>
 						<p class="meta-data"><span class="time">{{activity.createdAt | date: 'H:mm a'}}</span> <span class="date">{{activity.createdAt | date: 'dd/MM/yyyy'}}</span><p>
 					</div>
@@ -73,7 +77,7 @@
   	  					  <md-tooltip md-direction="left">Attach a Related Message</md-tooltip>
   	  				      <md-icon class="material-icons">chat_bubble_outline</md-icon>
   			  	      </md-button>
-  			  	      <md-button aria-label="Add a Task" class="md-fab md-raised md-mini">
+  			  	      <md-button aria-label="Add a Task" class="md-fab md-raised md-mini" ng-click="showModal($event, 'add-related-task.html')">
   	  					  <md-tooltip md-direction="left">Attach a Related Task</md-tooltip>
   	  				      <md-icon class="material-icons">done_all</md-icon>
   			  	      </md-button>

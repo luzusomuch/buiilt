@@ -22,14 +22,54 @@ var _ = require('lodash');
 var async = require('async');
 var mongoose = require('mongoose');
 
-function populateTask(task, user, res) {
+function populateThread(thread, res){
+    Thread.populate(thread, [
+        {path: "owner", select: "_id email name"},
+        {path: "messages.user", select: "_id email name"},
+        {path: "messages.mentions", select: "_id email name"},
+        {path: "members", select: "_id email name"},
+        {path: "activities.user", select: "_id email name"}
+    ], function(err, thread) {
+        return res.send(200, thread);
+    });
+};
+
+function populateTask(task, res){
     Task.populate(task, [
         {path: "owner", select: "_id email name"},
         {path: "members", select: "_id email name"},
         {path: "activities.user", select: "_id email name"}
     ], function(err, task) {
-        RelatedItem.responseWithRelated("task", task, user, res);
+        return res.send(200, task);
     });
+};
+
+function populateFile(file, res){
+    File.populate(file, [
+        {path: "owner", select: "_id email name"},
+        {path: "members", select: "_id email name"},
+        {path: "activities.user", select: "_id email name"}
+    ], function(err, file) {
+        return res.send(200, file);
+    });
+};
+
+var getMainItem = function(type) {
+    var _item = {};
+    switch (type) {
+        case 'thread' :
+            _item = Thread;
+            break;
+        case 'task' :
+            _item = Task;
+            break;
+        case "file":
+            _item = File
+            break;
+        default :
+            break;
+    }
+    return _item;
 };
 
 exports.get = function(req, res) {
@@ -69,16 +109,17 @@ exports.create = function(req,res) {
             task.belongTo.type = req.body.belongToType;
         }
         task._editUser = user;
+        var mainItem = getMainItem(req.body.belongToType);
         task.save(function(err) {
             if (err) {return res.send(500,err);}
             else if (req.body.belongTo) {
-                Thread.findById(req.body.belongTo, function(err, thread) {
-                    if (err || !thread) {
+                mainItem.findById(req.body.belongTo, function(err, main) {
+                    if (err || !main) {
                         task.remove(function() {
                             return res.send(500);
                         });
                     } else {
-                        thread.activities.push({
+                        main.activities.push({
                             user: req.user._id,
                             type: "related-task",
                             createdAt: new Date(),
@@ -89,14 +130,20 @@ exports.create = function(req,res) {
                             }
                         });
                         data.members.push(req.user._id);
-                        thread.relatedItem.push({
+                        main.relatedItem.push({
                             type: "task",
                             item: {_id: task._id},
                             members: data.members
                         });
-                        thread.save(function(err) {
+                        main.save(function(err) {
                             if (err) {return res.send(500,err);}
-                            RelatedItem.responseWithRelated("thread", thread, user, res);
+                            if (req.body.belongToType === "thread") 
+                                populateThread(main, res);
+                            else if (req.body.belongToType === "task") {
+                                populateTask(main, res);
+                            } else if (req.body.belongToType === "file") {
+                                populateFile(main, res);
+                            }
                         });
                     }
                 });

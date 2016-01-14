@@ -67,6 +67,7 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
         if (modalName === "add-related-thread.html") {
             $scope.relatedThread = {};
         } else if (modalName === "add-related-task.html") {
+            $scope.minDate = new Date();
             $scope.relatedTask = {};
         } else if (modalName === "add-related-file.html") {
             $scope.relatedFile = {};
@@ -153,6 +154,28 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
                     $scope.closeModal();
                     $scope.showToast("Create Related Thread Successfully!");
                     $state.go("project.messages.detail", {id: $stateParams.id, messageId: relatedThread._id});
+                }, function(err) {$scope.showToast("Error");});
+            } else {
+                $scope.showToast("Please select at least 1 invitee");
+                return;
+            }
+        } else {
+            $scope.showToast("Please check your input again");
+            return;
+        }
+    };
+
+    $scope.createRelatedTask = function(form) {
+        if (form.$valid) {
+            $scope.relatedTask.members = _.filter($scope.invitees, {select: true});
+            if ($scope.relatedTask.members.length > 0) {
+                $scope.relatedTask.belongTo = $scope.file._id;
+                $scope.relatedTask.belongToType = "file";
+                $scope.relatedTask.type = "project-message";
+                taskService.create({id: $stateParams.id}, $scope.relatedTask).$promise.then(function(relatedTask) {
+                    $scope.closeModal();
+                    $scope.showToast("Create Related Task Successfully!");
+                    $state.go("project.tasks.detail", {id: $stateParams.id, taskId: relatedTask._id});
                 }, function(err) {$scope.showToast("Error");});
             } else {
                 $scope.showToast("Please select at least 1 invitee");

@@ -40,7 +40,7 @@ exports.responseWithRelated = function(type, data, user, res){
                                 cb();
                             }
                         });
-
+                        break;
                     default:
                         cb();
                     break;
