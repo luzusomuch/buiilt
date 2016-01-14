@@ -28,19 +28,33 @@
 				</div>
 				
 				<div layout="row">
-					<md-list ng-repeat="activity in task.item.activities">
-						<md-list-item class="md-2-line">
+					<md-list>
+						<md-list-item ng-repeat="activity in task.item.activities" class="md-2-line">
 							<div class="md-list-item-text">
 								<h4 ng-switch="activity.type">
 									<strong>{{activity.user.name}} </strong>
 									<span ng-switch-when="create-task">
 										has created this task
 									</span>
+									<!-- complete task -->
+									<span ng-switch-when="complete-task">has marked this task complete</span>
+									<!-- uncomplete task -->
+									<span ng-switch-when="uncomplete-task">has marked this task uncomplete</span>
+									<!-- edit task -->
+									<span ng-switch-when="edit-task">has edited the details of this task ({{(activity.element.name) ? "Name: "+activity.element.name+", " : ""}} {{(activity.element.description) ? "Description: "+activity.element.description+", " : ""}} {{(activity.element.dateEnd) ? "End Date: " : ""}}{{activity.element.dateEnd | date: 'dd/MM/yyyy'}})</span>
+									<!-- assign new people -->
+									<span ng-switch-when="assign">has assigned <span ng-repeat="member in activity.element.members">{{member}}, </span> to this thread</span>
+									<!-- related thread -->
+									<span ng-switch-when="related-thread">has attached the related message thread, "<a ui-sref="project.messages.detail({id: task.project, messageId: activity.element.item})">{{activity.element.name}}</a>".</span>
+									<!-- related task -->
+									<span ng-switch-when="related-task">has attached the related task, "<a ui-sref="project.tasks.detail({id: task.project, taskId: activity.element.item})">{{activity.element.name}}</a>".</span>
+									<!-- related file -->
+									<span ng-switch-when="related-file">has attached the related file, "<a ui-sref="project.files.detail({id: task.project})">{{activity.element.name}}</a>".</span>
 								</h4>
 								<p class="meta-data"><span class="time">{{activity.createdAt | date: 'H:mm a'}}</span> <span class="date">{{activity.createdAt | date: 'dd/MM/yyyy'}}</span><p>
 							</div>
+							<md-divider></md-divider>
 						</md-list-item>
-						<md-divider></md-divider>
 					</md-list>
 				</div>
 				

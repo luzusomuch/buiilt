@@ -76,7 +76,7 @@ exports.responseWithRelated = function(type, data, user, res){
                             }
                         });
                     } else if (item.type === "file") {
-                        File.findById(item.item._id, '_id name description activities')
+                        File.findById(item.item._id, '_id name description activities fileHistory')
                         .populate("activities.user")
                         .exec(function(err, _file) {
                             if (err || !_file) {callback();}

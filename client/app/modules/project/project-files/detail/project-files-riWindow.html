@@ -1,4 +1,4 @@
-<md-dialog aria-label="Create a New Message" flex="70">
+<md-dialog aria-label="View file" flex="70">
 	<form>
 		<md-toolbar>
 			<div class="md-toolbar-tools">
@@ -8,33 +8,25 @@
 		
 		<md-dialog-content>
 			<div class="md-dialog-content" layout="column">
-				
 				<div layout="row">
-					<md-input-container flex class="modal-instructions">
-						<p>Here is the Detail you want...</p>
-					</md-input-container>
+					<p>File histories list</p>
 				</div>
-				
+
 				<div layout="row">
-					<md-input-container flex>
-				        <label>Message Thread Name</label>
-				        <input md-autofocus />
-					</md-input-container>
+					<p ng-show="file.item.fileHistory.length == 0">This item has no history file</p>
+					<md-list ng-cloak>
+						<md-list-item ng-repeat="history in file.item.fileHistory">
+							<h4>{{history.name}}</h4>
+							<p>Version {{history.version}}</p>
+						</md-list-item>
+					</md-list>
 				</div>
-				
-				<div layout="row">
-					<md-input-container flex>
-				        <label>Add Team Members to the Thread</label>
-				        <input />
-				    </md-input-container>
-				</div>
-				
 			</div>
 		</md-dialog-content>
 		
 		<md-dialog-actions>
-			<md-button ng-click="cancelNewFileModal()">Cancel</md-button>
-			<md-button ng-click="createNewFile()" class="md-raised md-accent md-hue-1">Add File!</md-button>
+			<md-button ng-click="closeModal()">Cancel</md-button>
+			<md-button ng-click="goToThisFile()" class="md-raised md-accent md-hue-1">Go To This File Location!</md-button>
 		</md-dialog-actions>
 	</form>
 </md-dialog>

@@ -78,7 +78,7 @@ var FileSchema = new Schema({
         item: {},
         type: {type: String}
     },
-    fileHistory: [{link: String, version: String, description: String}]
+    fileHistory: [{name: String, link: String, version: String, description: String}]
 });
 
 /**

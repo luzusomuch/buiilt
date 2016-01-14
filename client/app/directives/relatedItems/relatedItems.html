@@ -10,7 +10,6 @@
 				<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event, tenderer._id)" ng-repeat="tenderer in data.tenderers" ng-show="data.inviter._id == currentUser._id && !data.element">
 				    <div class="md-list-item-text">
 					    <h3>{{(tenderer._id) ? tenderer._id.name : tenderer.email}}</h3>
-				        <!-- <p>Secondary text line 2</p> -->
 				    </div>
 					<md-divider></md-divider>
 				</md-list-item>
@@ -18,7 +17,6 @@
 				<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event, data.inviter._id)" ng-show="data.inviter._id != currentUser._id && !data.element">
 				    <div class="md-list-item-text">
 					    <h3>{{data.inviter.name}}</h3>
-				        <!-- <p>Secondary text line 2</p> -->
 				    </div>
 					<md-divider></md-divider>
 				</md-list-item>
@@ -26,7 +24,6 @@
 				<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event, member._id)" ng-show="data.element" ng-repeat="member in data.members track by $index">
 				    <div class="md-list-item-text">
 					    <h3>{{member.name}}</h3>
-				        <!-- <p>Secondary text line 2</p> -->
 				    </div>
 					<md-divider></md-divider>
 				</md-list-item>
@@ -48,19 +45,6 @@
 				    </div>
 					<md-divider></md-divider>
 				</md-list-item>
-				<!-- <md-list-item class="md-2-line" ng-click="showRelatedMessageModal($event)">
-				    <div class="md-list-item-text">
-					    <h3>Thread 2</h3>
-				        <p>Secondary text line 2</p>
-				    </div>
-				</md-list-item>
-				<md-divider></md-divider>
-				<md-list-item class="md-2-line" ng-click="showRelatedMessageModal($event)">
-				    <div class="md-list-item-text">
-					    <h3>Thread 3</h3>
-				        <p>Secondary text line 2</p>
-				    </div>
-				</md-list-item> -->
 			</md-list>
         </md-tab-body>
     </md-tab>
@@ -79,19 +63,6 @@
 				    </div>
 					<md-divider></md-divider>
 				</md-list-item>
-				<!-- <md-list-item class="md-2-line" ng-click="showRelatedTasksModal($event)">
-				    <div class="md-list-item-text">
-					    <h3>Task 2</h3>
-				        <p>Secondary text line 2</p>
-				    </div>
-				</md-list-item>
-				<md-divider></md-divider>
-				<md-list-item class="md-2-line" ng-click="showRelatedTasksModal($event)">
-				    <div class="md-list-item-text">
-					    <h3>Task 3</h3>
-				        <p>Secondary text line 2</p>
-				    </div>
-				</md-list-item> -->
 			</md-list>
         </md-tab-body>
     </md-tab>
@@ -103,28 +74,14 @@
 		</md-tab-label>
         <md-tab-body>
 			<md-list class="main-page-content" ng-cloak>
-				<md-list-item class="md-2-line" ng-click="showRelatedFilesModal($event)">
+				<md-list-item class="md-2-line" ng-click="showRelatedFilesModal($event, file)" ng-repeat="file in data.relatedItem" ng-show="file.type == 'file'">
 				    <div class="md-list-item-text">
-					    <h3>File 1</h3>
-				        <p>Secondary text line 2</p>
+					    <h3>{{file.item.name}}</h3>
+					    <p>{{file.item.description}}</p>
 				    </div>
-				</md-list-item>
-				<md-divider></md-divider>
-				<md-list-item class="md-2-line" ng-click="showRelatedFilesModal($event)">
-				    <div class="md-list-item-text">
-					    <h3>File 2</h3>
-				        <p>Secondary text line 2</p>
-				    </div>
-				</md-list-item>
-				<md-divider></md-divider>
-				<md-list-item class="md-2-line" ng-click="showRelatedFilesModal($event)">
-				    <div class="md-list-item-text">
-					    <h3>File 3</h3>
-				        <p>Secondary text line 2</p>
-				    </div>
+					<md-divider></md-divider>
 				</md-list-item>
 			</md-list>
         </md-tab-body>
     </md-tab>
-	
 </md-tabs>

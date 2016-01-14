@@ -53,10 +53,20 @@ angular.module('buiiltApp').directive('relatedItems', function(){
 			    });
 			};
 			
-			$scope.showRelatedFilesModal = function ($event) {
-				$mdDialog.show({
-				    targetEvent: $event,
-			        controller: 'projectFilesCtrl',
+			$scope.showRelatedFilesModal = function ($event, file) {
+                $mdDialog.show({
+                    targetEvent: $event,
+                    controller: function($scope, $state, $stateParams) {
+                        $scope.file = file;
+                        console.log($scope.file);
+                        $scope.goToThisFile = function() {
+                            $state.go("project.files.detail", {id: $stateParams.id, fileId: file.item._id});
+                        };
+
+                        $scope.closeModal = function() {
+                            $mdDialog.cancel();
+                        };
+                    },
 			        templateUrl: 'app/modules/project/project-files/detail/project-files-riWindow.html',
 			        parent: angular.element(document.body),
 			        clickOutsideToClose: false
@@ -67,7 +77,6 @@ angular.module('buiiltApp').directive('relatedItems', function(){
 				$mdDialog.show({
 				    targetEvent: $event,
 			        controller: function($scope, $state, $stateParams){
-                        console.log(task);
                         $scope.task = task;
                         $scope.task.project = $stateParams.id;
 
