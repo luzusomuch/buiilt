@@ -3,6 +3,10 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
     $scope.orginalActivities = angular.copy($scope.file.activities);
     $scope.isShowRelatedItem = true;
     $scope.tags = [];
+    $scope.$on("File.UploadReversion", function(event, data) {
+        $scope.file = data;
+        $scope.isShowRelatedItem = true;
+    });
 
     $scope.chipsFilter = function() {
         $scope.isShowRelatedItem = !$scope.isShowRelatedItem;
@@ -218,9 +222,12 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
         );
     };
 
-    function onSuccess(file){
+    function onSuccess(file, type){
         file.type = "file";
-        $scope.relatedFile.files.push(file);
+        if (type === "related") 
+            $scope.relatedFile.files.push(file);
+        else
+            $scope.fileReversion.files.push(file);
     };
 
     $scope.createRelatedFile = function() {
@@ -240,6 +247,44 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
             }, function(err) {$scope.showToast("Error");});
         }
     };
+
+    // upload reversion
+    $scope.fileReversion = {
+        files: []
+    };
+
+    $scope.uploadReversionFile = function() {
+        if ($scope.fileReversion.files.length === 0) {
+            $scope.showToast("Please check your input again");
+            return;
+        } else {
+            uploadService.uploadReversion({id: $scope.file._id}, $scope.fileReversion).$promise.then(function(res) {
+                $scope.closeModal();
+                $scope.showToast("Upload file reversion successfully");
+                $scope.$broadcast("File.UploadReversion", res);
+            }, function(err) {$scope.showToast("Error");});
+        }
+    };
+
+    // show file history
+    $scope.isShowHistory = false;
+    $scope.getFileHistory = function(history) {
+        $scope.history = history;
+        $scope.isShowHistory = true;
+    };
+
+    $scope.downloadFile = function() {
+        if ($scope.history) {
+            filepicker.exportFile(
+                {url: $scope.history.link, filename: $scope.history.name},
+                function(Blob){
+                    console.log(Blob.url);
+                }
+            );
+        } else {
+            $scope.showToast("Error");
+        }
+    }
 
     getProjectMembers($stateParams.id);
 });

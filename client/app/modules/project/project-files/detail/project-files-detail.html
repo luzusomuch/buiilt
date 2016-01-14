@@ -6,7 +6,7 @@
 			<p>{{file.name}}</p>
 			<span flex></span>
 			<div>
-				<md-button>View Current Version</md-button>
+				<md-button ng-click="showModal($event, 'file-history.html')">View Current Version</md-button>
 			</div>
 			<md-chips class="set-filters">
 				<md-chip ng-click="chipsFilter()">Show Related Activities</md-chip>
@@ -21,6 +21,8 @@
 				<div layout="row" layout-align="center center" flex class="activity-stream" ng-repeat="activity in file.activities" ng-class="{related: activity.element.related}">
 					<span flex="5"></span>
 					<div class="icon-type" ng-switch="activity.type">
+                        <!-- upload file reversion -->
+                        <md-icon ng-switch-when="upload-reversion" class="material-icons md-primary">attach_file</md-icon>
 						<!-- edit file -->
 						<md-icon ng-switch-when="edit" class="material-icons md-primary">edit</md-icon>
 						<!-- assign -->
@@ -36,6 +38,8 @@
 					<div flex class="activity-detail">
 						<p ng-switch="activity.type">
 							<strong>{{activity.user.name}}</strong> 
+                            <!-- upload reversion -->
+                            <span ng-switch-when="upload-reversion">has uploaded new reversion {{activity.element.name}} of this file</span>
 							<!-- edit file -->
 							<span ng-switch-when="edit">has edited the details of this file ({{(activity.element.name) ? "Name: "+activity.element.name+", " : ""}} {{(activity.element.description) ? "Description: "+activity.element.description+", " : ""}} {{(activity.element.tags) ? "Tags : " : ""}}<span ng-repeat="tag in activity.element.tags">{{tag}}, </span>)</span>
 							<!-- assign new people -->
@@ -65,7 +69,7 @@
 	  					  <md-tooltip md-direction="left">Edit File Details</md-tooltip>
 	  				      <md-icon class="material-icons">edit</md-icon>
 			  	      </md-button>
-			  	      <md-button aria-label="Upload a Revision" class="md-fab md-raised md-mini md-primary">
+			  	      <md-button aria-label="Upload a Revision" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'upload-reversion.html')">
 	  					  <md-tooltip md-direction="left">Upload a Reivsion</md-tooltip>
 	  				      <md-icon class="material-icons">attach_file</md-icon>
 			  	      </md-button>

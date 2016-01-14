@@ -106,6 +106,50 @@ exports.uploadMobile = function(req, res) {
     });
 };
 
+exports.uploadReversion = function(req, res) {
+    var newFile = req.body.files[0];
+    File.findById(req.params.id, function(err, file) {
+        if (err) {return res.send(500,err);}
+        else if (!file) {return res.send(404, "The specific file is not existed");}
+        else {
+            var history = {
+                name: file.name,
+                description: file.description,
+                link: file.path,
+                version: file.version
+            };  
+            file.name = newFile.filename,
+            file.path = newFile.url,
+            file.key = newFile.key,
+            file.server = 's3',
+            file.mimeType = newFile.mimeType,
+            file.description = req.body.description,
+            file.size = req.body.size,
+            file.version = file.version + 1;
+            file.fileHistory.push(history);
+            var activity = {
+                type: "upload-reversion",
+                user: req.user._id,
+                createdAt: new Date(),
+                element: {
+                    name: file.name
+                }
+            };
+            file.activities.push(activity);
+            file.save(function(err) {
+                if (err) {return res.send(500,err);}
+                File.populate(file, [
+                    {path: "owner", select: "_id email name"},
+                    {path: "members", select: "_id email name"},
+                    {path: "activities.user", select: "_id email name"}
+                ], function(err, file) {
+                    return res.send(200, file);
+                });
+            });
+        }
+    });
+};
+
 /**
  * upload
  * @param {type} req

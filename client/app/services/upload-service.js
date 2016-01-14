@@ -13,6 +13,13 @@ angular.module('buiiltApp')
             },
             isArray: true
         },
+        uploadReversion: {
+            method: "POST",
+            params: {
+                id: '@id',
+                action: 'upload-reversion'
+            }
+        },
         uploadInPackage: {
             method: 'POST', 
             params: {

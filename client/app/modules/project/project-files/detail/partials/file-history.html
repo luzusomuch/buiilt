@@ -1,0 +1,43 @@
+<md-dialog aria-label="Show File History" flex="70">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Show File History</h2>
+        </div>
+    </md-toolbar>
+    
+    <md-dialog-content>
+        <div class="md-dialog-content" layout="column">
+            
+            <div layout="row" ng-show="!isShowHistory">
+                <p>List of file versions</p>
+            </div>
+
+            <div layout="row" ng-show="!isShowHistory">
+                <p ng-show="file.fileHistory.length == 0">This file has no previous version</p>
+                <md-list ng-show="file.fileHistory.length > 0">
+                    <md-list-item class="md-2-line" md-ink-ripple ng-repeat="history in file.fileHistory" ng-click="getFileHistory(history)">
+                        <div class="md-list-item-text" layout="column">
+                            <h3>{{history.name}}</h3>
+                            <p>File version {{history.version}}</p>
+                        </div>
+                        <md-divider></md-dividers>
+                    </md-list-item>
+                </md-list>
+            </div>
+
+            <div layout="column" ng-show="isShowHistory">
+                <div>
+                    <md-button ng-click="isShowHistory=true">Back to history list</md-button>
+                    <md-button ng-click="downloadFile()">Down load this file</md-button>
+                </div>
+            </div>
+            <div layout="row" ng-show="isShowHistory">
+                <div flex file-picker-previewer type="filepicker-preview" url="{{history.link}}" style="height:75vh;"> </div>
+            </div>
+        </div>
+    </md-dialog-content>
+    
+    <md-dialog-actions>
+        <md-button ng-click="closeModal()">Close</md-button>
+    </md-dialog-actions>
+</md-dialog>
