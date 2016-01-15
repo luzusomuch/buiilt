@@ -18,8 +18,15 @@ EventBus.onSeries('People.Updated', function(req, next){
     if (req._modifiedPaths.indexOf('invitePeople') != -1) {
         if (req.newInviteeNotSignUp && req.newInviteeNotSignUp.length > 0) {
             var from = req.editUser.name + "<"+req.editUser.email+">";
-            Project.findById(req.project, function(err, project) {
-                if (err || !project) {return next();}
+            async.parallel({
+                project: function (cb) {
+                    Project.findById(req.project, cb);
+                },
+                team: function (cb) {
+                    Team.findOne({$or:[{leader: req.editUser._id}, {member: req.editUser._id}]}, cb);
+                }
+            }, function(err, result) {
+                if (err) {return next();}
                 async.each(req.newInviteeNotSignUp, function(invitee, cb){
                     var packageInvite = new PackageInvite({
                         owner: req.editUser._id,
@@ -31,12 +38,14 @@ EventBus.onSeries('People.Updated', function(req, next){
                     });
                     packageInvite.save(function(err,saved){
                         if (err) {return cb(err);}
-                        Mailer.sendMail('invite-people-has-no-account.html', from, saved.to, {
-                            user: req.editUser.toJSON(),
-                            project: project.toJSON(),
-                            registryLink : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
-                            subject: 'Join ' + project.name + ' on buiilt'
-                        },function(){
+                        Mailer.sendMail('invite-non-user-to-project.html', from, saved.to, {
+                            team: result.team.toJSON(),
+                            inviter: req.editUser.toJSON(),
+                            invitee: saved.to,
+                            project: result.project.toJSON(),
+                            link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
+                            subject: req.editUser.name + ' has invited you to project ' + result.project.name
+                        },function(err){console.log(err);
                             return cb();
                         });
                     });
