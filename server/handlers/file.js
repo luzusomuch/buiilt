@@ -5,8 +5,8 @@ var User = require('./../models/user.model');
 var Project = require('./../models/project.model');
 var Team = require('./../models/team.model');
 var Mailer = require('./../components/Mailer');
-var PackageInvite = require('./../../models/packageInvite.model');
-var People = require('./../../models/people.model');
+var PackageInvite = require('./../models/packageInvite.model');
+var People = require('./../models/people.model');
 var _ = require('lodash');
 var async = require('async');
 
