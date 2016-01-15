@@ -137,6 +137,7 @@ exports.uploadReversion = function(req, res) {
                 }
             };
             file.activities.push(activity);
+            file.markModified("uploadReversion");
             file.save(function(err) {
                 if (err) {return res.send(500,err);}
                 File.populate(file, [
