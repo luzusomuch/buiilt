@@ -1,13 +1,23 @@
-angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($rootScope, $scope, $timeout, $stateParams, messageService, $mdToast, $mdDialog, $state, thread, peopleService, taskService) {
+angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($rootScope, $scope, $timeout, $stateParams, messageService, $mdToast, $mdDialog, $state, thread, peopleService, taskService, uploadService) {
     $scope.error = {};
     $scope.thread = thread;
-    $scope.thread.members.push(thread.owner);
-    restriction($scope.thread.members);
-    $scope.orginalActivities = angular.copy($scope.thread.activities);
-    _.remove($scope.thread.members, {_id: $rootScope.currentUser._id});
-    $rootScope.title = thread.name;
-    $rootScope.currentUser.isLeader = (_.findIndex($rootScope.currentTeam.leader, function(leader){return leader._id == $rootScope.currentUser._id}) !== -1) ? true: false;
-    $scope.showRelatedAction = true;
+    function threadInitial() {
+        $scope.thread.members.push(thread.owner);
+        restriction($scope.thread.members);
+        $scope.orginalActivities = angular.copy($scope.thread.activities);
+        _.remove($scope.thread.members, {_id: $rootScope.currentUser._id});
+        $rootScope.title = thread.name;
+        $rootScope.currentUser.isLeader = (_.findIndex($rootScope.currentTeam.leader, function(leader){return leader._id == $rootScope.currentUser._id}) !== -1) ? true: false;
+        $scope.showRelatedAction = true;
+        getProjectMembers($stateParams.id);
+    }
+
+    threadInitial();
+
+    $rootScope.$on("Thread.Update", function(event, data) {
+        $scope.thread = data;
+        threadInitial();
+    });
 
     $scope.chipsFilter = function(){
         $scope.showRelatedAction = !$scope.showRelatedAction;
@@ -168,8 +178,7 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($ro
             messageService.update({id: $scope.thread._id}, $scope.thread).$promise.then(function(res) {
                 $scope.closeModal();
                 $scope.showToast("Assign user to " +res.name+ " successfully!");
-                getProjectMembers($stateParams.id);
-                $scope.thread = res;
+                $rootScope.$broadcast("Thread.Update", res);
             }, function(err){$scope.showToast("Something went wrong");});
         } else {
             $scope.showToast("Please select at least 1 member");
@@ -245,6 +254,51 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($ro
 
     $scope.showCreateRelatedFile = function($event) {
         $scope.showModal("create-related-file.html", $event);
+    };
+
+    $scope.setRelatedFile = function() {
+        $scope.relatedFile = {
+            files:[],
+            tags:[],
+            belongTo: $scope.thread._id,
+            belongToType: "thread"
+        };
+    }
+    $scope.setRelatedFile();
+
+    $scope.pickFile = pickFile;
+
+    $scope.onSuccess = onSuccess;
+
+    function pickFile(){
+        filepickerService.pick(
+            // add max files for multiple pick
+            // {maxFiles: 5},
+            onSuccess
+        );
+    };
+
+    function onSuccess(file){
+        file.type = "file";
+        $scope.relatedFile.files.push(file);
+    };
+
+    $scope.createRelatedFile = function() {
+        $scope.relatedFile.members = _.filter($scope.invitees, {select: true});
+        if ($scope.relatedFile.files.length == 0) {
+            $scope.showToast("Please choose at least 1 file");
+        } else if ($scope.relatedFile.tags.length == 0) {
+            $scope.showToast("Please enter at least 1 tags");
+        } else if ($scope.relatedFile.members.length == 0) {
+            $scope.showToast("Please choose at least 1 member");
+        } else { 
+            uploadService.upload({id: $stateParams.id}, $scope.relatedFile).$promise.then(function(res) {
+                $scope.closeModal();
+                $scope.showToast("Upload new related file successfully");
+                $scope.setRelatedFile();
+                $state.go("project.files.detail", {id: res[0].project, fileId: res[0]._id});
+            }, function(err) {$scope.showToast("Error");});
+        }
     };
 
     getProjectMembers($stateParams.id);

@@ -212,6 +212,7 @@ exports.sendMessage = function(req,res) {
                 thread.messages.push(message);
                 thread._evtName = 'Thread.NewMessage';
                 thread._message = message;
+                thread.messageType = "sendMessage";
                 thread.save(function(err) {
                     if (err) {
                         return res.send(422,err);

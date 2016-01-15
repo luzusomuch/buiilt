@@ -231,13 +231,14 @@ exports.upload = function(req, res){
                 });
                 main.save(function(err) {
                     if (err) {return res.send(500,err);}
-                    if (data.belongToType === "thread") 
-                        populateThread(main, res);
-                    else if (data.belongToType === "task") {
-                        populateTask(main, res);
-                    } else if (data.belongToType === "file") {
-                        populateFile(main, res);
-                    }
+                    // if (data.belongToType === "thread") 
+                    //     populateThread(main, res);
+                    // else if (data.belongToType === "task") {
+                    //     populateTask(main, res);
+                    // } else if (data.belongToType === "file") {
+                        // populateFile(main, res);
+                    // }
+                    populateFile(file, res);
                 });
             });
         } else {
