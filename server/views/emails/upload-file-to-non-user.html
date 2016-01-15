@@ -5,13 +5,12 @@
 <body itemscope itemtype="http://schema.org/EmailMessage" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; -webkit-font-smoothing: antialiased; -webkit-text-size-adjust: none; width: 100% !important; height: 100%; line-height: 1.6em; background-color: #f6f6f6; margin: 0;" bgcolor="#f6f6f6">
     <p>Hi <%=invitee%>,</p>
     <p>
-        I have assigned the following task to you on <%=request.name%>
+        I have sent you a file on <%=request.name%>. You can download it below
     </p>
     <p>
-        <%=request.description%>
-        <%=request.dateEnd%>
+        <a href="<%=request.path%>"><%=request.path%></a>
     </p>
-    <p>This email has been sent you from buiilt.com.au on behalf of <%=inviter.name%>. View all your tasks by following the link below and creating your account <a href="<%=link%>"><%=link%></a>
+    <p>This email has been sent you from buiilt.com.au on behalf of <%=inviter.name%>. View all your files by following the link below and creating your account <a href="<%=link%>"><%=link%></a>
     </p>
     <p>Regards,</p>
     <p><%=inviter.name%></p>
