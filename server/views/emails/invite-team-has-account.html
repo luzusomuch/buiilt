@@ -1,12 +1,22 @@
 {% extends 'layouts/default.html' %}
 
 {% block content %}
-<p>
-  <%= request.user.firstName %> has invited you to join their team on buiilt.
-</p>
+<body itemscope itemtype="http://schema.org/EmailMessage" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; -webkit-font-smoothing: antialiased; -webkit-text-size-adjust: none; width: 100% !important; height: 100%; line-height: 1.6em; background-color: #f6f6f6; margin: 0;" bgcolor="#f6f6f6">
+    <p>
+        Hi <%= invitee.name %>,
+    </p>
+    <p>
+        Please join the <%= request.name %> team on buiilt. buiilt is a platform we will be adopting for our project communications and admin.
+    </p>
+    <p>
+        So that you do not miss vital information, follow the link below to create your account and join our team: <a href="<%=link%>"><%=link%></a>
+    </p>
 
-<p>
-  Simply login <a href="http://www.buiilt.com.au/signin">here</a>, using your existing account, to accept their invitation.
-</p>
+    <p>Regards,</p>
+    <p><%=inviter.name%></p>
+    <p><%=request.name%></p>
+    <p><%=inviter.email%> | <%=inviter.phoneNumber%></p>
+    <p>This email has been sent you from buiilt.com.au on behalf of <%=inviter.email%></p>
+</body>
 
 {% endblock %}

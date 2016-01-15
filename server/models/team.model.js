@@ -103,6 +103,9 @@ TeamSchema.post('save', function (doc) {
   if (this._original) {
     doc.oldMember = this._original.member.slice();  
   }
+  if (this._modifiedPaths) {
+    doc._modifiedPaths = this._modifiedPaths
+  }
   doc.user = this.user;
   doc.toUser = this.toUser;
   if (this.evtName) {

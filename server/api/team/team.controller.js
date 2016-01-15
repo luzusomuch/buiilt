@@ -148,10 +148,10 @@ exports.addMember = function(req,res) {
       callback();
     });
   },function(err,result) {
-    team.markModified('member');
     team._user = user;
+    team.markModified('member');
+    team._modifiedPaths = "member";
     team.save(function(err) {
-
       if (err) {
         return errorsHelper.validationErrors(res, err);
       }
