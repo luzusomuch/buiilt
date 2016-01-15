@@ -154,10 +154,15 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
   	//Documentation for Single Project
   .state('project.documentation', {
     url: '/documentation',
-	abstract: true,
+	  abstract: true,
     templateUrl: '/app/modules/project/project-documentation/project-documentation.html',
     controller: 'projectDocumentationCtrl',
-    authenticate : true
+    authenticate : true,
+    resolve: {
+      documents: function($stateParams, fileService) {
+        return fileService.getProjectFiles({id: $stateParams.id, type: "document"}).$promise;
+      }
+    }
   })
   .state('project.documentation.all', {
     url: '',
@@ -166,10 +171,15 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
     authenticate : true
   })
   .state('project.documentation.detail', {
-    url: '/detail',
+    url: '/detail/:documentId',
     templateUrl: '/app/modules/project/project-documentation/detail/project-documentation-detail.html',
-    controller: 'projectDocumentationCtrl',
-    authenticate : true
+    controller: 'projectDocumentationDetailCtrl',
+    authenticate : true,
+    resolve: {
+      document: function($stateParams, fileService) {
+        return fileService.get({id: $stateParams.documentId}).$promise;
+      }
+    }
   })
   
   //Old Code

@@ -17,25 +17,22 @@
 	</md-chips>
 	
 </div>
-
 <md-list ng-cloak class="main-page-content">
-
-	<div ng-repeat="document in documentation" ui-sref="project.documentation.detail">
+	<div ng-repeat="document in documents" ui-sref="project.documentation.detail({id:document.project, documentId: document._id})">
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
-		          <h3>{{ document.name }}</h3>
-		          <p>{{ document.revision }}</p>
+		          <h3>{{document.name}}</h3>
+		          <p>{{document.revision}}</p>
 	        </div>
 		</md-list-item>
 		<md-divider></md-divider>
 	</div>
-	
 </md-list>
 
 <div>
   <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-list" ng-show="!isArchive">
 	  <md-fab-trigger>
-  	      <md-button aria-label="Add a New Document to this Project" class="md-fab md-primary" ng-click="showNewDocumentModal($event)">
+  	      <md-button aria-label="Add a New Document to this Project" class="md-fab md-primary" ng-click="showNewDocumentModal($event)" ng-show="allowUploadDocument">
 			  <md-tooltip md-direction="left">Add a New Document</md-tooltip>
 		      <md-icon class="material-icons" >add</md-icon>
   	      </md-button>

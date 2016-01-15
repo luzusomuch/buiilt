@@ -3,11 +3,19 @@
 	<div layout="column" flex="70" class="md-whiteframe-1dp">
 		
 		<div class="detail-header" layout="row" layout-padding>
-			<p>Document Name</p>
+			<p>{{document.name}}</p>
 	    </div>
 		
 		<div class="main-page-content" layout-padding>
-			
+			<div layout="row">
+                <h5>{{document.description}}</h5>         
+            </div>
+            <div layout="row">
+                <md-button ng-click="download(document.name, document.path)">Download</md-button>
+            </div>
+            <div layout="row">
+                <div flex file-picker-previewer type="filepicker-preview" url="{{document.path}}" style="height:75vh;"> </div>
+            </div>
 			<div>
   		  	  <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-main" ng-show="!isArchive">
   				  <md-fab-trigger>
@@ -17,7 +25,7 @@
   			  	      </md-button>
   		  	      </md-fab-trigger>
   				  <md-fab-actions>
-  			  	      <md-button aria-label="Upload a Document Revision" class="md-fab md-raised md-mini md-primary">
+  			  	      <md-button aria-label="Upload a Document Revision" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'upload-document-reversion.html')" ng-show="allowUploadReversion">
   	  					  <md-tooltip md-direction="left">Upload a Document Revision</md-tooltip>
   	  				      <md-icon class="material-icons">file_upload</md-icon>
   			  	      </md-button>
@@ -28,6 +36,6 @@
 		</div>
 	</div>
 		
-	<doc-history flex="30"></doc-history>
+	<doc-history data="document" flex="30"></doc-history>
 		
 </div>

@@ -2,38 +2,11 @@
 	<p>Previous Versions:</p>
 </div>
 <md-list ng-cloak class="main-page-content">
-	<md-list-item class="md-2-line">
+	<md-list-item class="md-2-line" ng-repeat="history in data.fileHistory" ng-click="showDocumentHistoryDetail($event, history)">
 	    <div class="md-list-item-text">
-		    <h3>Version 5</h3>
-	        <p>Date Released</p>
+		    <h3>Version: {{history.version}}</h3>
+	        <p>Release Date: {{history.createdAt | date: 'dd/MM/yyyy'}}</p>
 	    </div>
-	</md-list-item>
-	<md-divider></md-divider>
-	<md-list-item class="md-2-line">
-	    <div class="md-list-item-text">
-		    <h3>Version 4</h3>
-	        <p>Date Released</p>
-	    </div>
-	</md-list-item>
-	<md-divider></md-divider>
-	<md-list-item class="md-2-line">
-	    <div class="md-list-item-text">
-		    <h3>Version 3</h3>
-	        <p>Date Released</p>
-	    </div>
-	</md-list-item>
-	<md-divider></md-divider>
-	<md-list-item class="md-2-line">
-	    <div class="md-list-item-text">
-		    <h3>Version 2</h3>
-	        <p>Date Released</p>
-	    </div>
-	</md-list-item>
-	<md-divider></md-divider>
-	<md-list-item class="md-2-line">
-	    <div class="md-list-item-text">
-		    <h3>Version 1</h3>
-	        <p>Date Released</p>
-	    </div>
+		<md-divider></md-divider>
 	</md-list-item>
 </md-list>

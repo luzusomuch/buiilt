@@ -17,23 +17,34 @@
 				
 				<div layout="row">
 					<md-input-container flex>
-				        <label>Filepicker Upload Container</label>
-						<input md-autofocus />
+						<input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfiles)" data-fp-multiple="true"/>
 					</md-input-container>
 				</div>
 				
 				<div layout="row">
-					<md-input-container flex>
-				        <label>Tags</label>
-						<input />
-				    </md-input-container>
+					<md-chips ng-model="uploadFile.tags" md-autocomplete-snap
+	              		md-require-match="true">
+				      	<md-autocomplete
+				          	md-selected-item="selectedItem"
+				          	md-search-text="searchText"
+				          	md-items="item in searchTag(searchText)"
+				          	md-item-text="item"
+				          	placeholder="Search for a member">
+				        <span md-highlight-text="searchText">{{item}}</span>
+				      	</md-autocomplete>
+				      	<md-chip-template>
+					        <span>
+					          	<strong>{{$chip}}</strong>
+					        </span>
+				      	</md-chip-template>
+				    </md-chips>
 				</div>
 				
 			</div>
 		</md-dialog-content>
 		
 		<md-dialog-actions>
-			<md-button ng-click="cancelNewDocumentModal()">Cancel</md-button>
+			<md-button ng-click="closeModal()">Cancel</md-button>
 			<md-button ng-click="addNewDocument()" class="md-accent md-hue-1 md-raised">Add Document!</md-button>
 		</md-dialog-actions>
 	</form>

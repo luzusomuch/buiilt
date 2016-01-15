@@ -4,18 +4,35 @@ angular.module('buiiltApp').directive('docHistory', function(){
         restrict: 'EA',
         templateUrl: 'app/directives/docHistory/docHistory.html',
         scope:{
-            project:'='
+            data:'='
         },
-        controller: function($scope, $rootScope, $location, quoteService, userService, projectService, $state, $mdDialog) {
-            $scope.errors = {};
-            $scope.success = {};
-            $scope.user = {};
-			
+        controller: function($scope, $rootScope, $state, $mdDialog) {
 			$scope.$state = $state;
 
-		    $scope.errors = {};
-			
-			
+            $scope.showDocumentHistoryDetail = function($event, history) {
+                $mdDialog.show({
+                    targetEvent: $event,
+                    controller: function($scope) {
+                        $scope.history =  history;
+                        
+                        $scope.closeModal = function() {
+                            $mdDialog.hide();
+                        };
+
+                        $scope.download = function(name, link) {
+                            filepicker.exportFile(
+                                {url: link, filename: name},
+                                function(Blob){
+                                    console.log(Blob.url);
+                                }
+                            );
+                        };
+                    },
+                    templateUrl: 'app/directives/docHistory/document-history-detail.html',
+                    parent: angular.element(document.body),
+                    clickOutsideToClose: false
+                });
+            };
         }
     };
 });

@@ -3,10 +3,6 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
     $scope.orginalActivities = angular.copy($scope.file.activities);
     $scope.isShowRelatedItem = true;
     $scope.tags = [];
-    $scope.$on("File.UploadReversion", function(event, data) {
-        $scope.file = data;
-        $scope.isShowRelatedItem = true;
-    });
 
     $scope.chipsFilter = function() {
         $scope.isShowRelatedItem = !$scope.isShowRelatedItem;
@@ -261,7 +257,7 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
             uploadService.uploadReversion({id: $scope.file._id}, $scope.fileReversion).$promise.then(function(res) {
                 $scope.closeModal();
                 $scope.showToast("Upload file reversion successfully");
-                $scope.$broadcast("File.UploadReversion", res);
+                $scope.file = res;
             }, function(err) {$scope.showToast("Error");});
         }
     };

@@ -1,0 +1,32 @@
+<md-dialog aria-label="Upload document reversion" flex="70">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Upload document reversion</h2>
+            </div>
+        </md-toolbar>
+        
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column">
+                
+                <div layout="row">
+                    <md-input-container flex>
+                        <input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/>
+                    </md-input-container>
+                </div>
+
+                <div layout="row">
+                    <md-input-container flex>
+                        <label>Description</label>
+                        <textarea ng-model="uploadReversion.description" required md-maxlength="200" columns="1" rows="5"></textarea>
+                    </md-input-container>
+                </div>
+            </div>
+        </md-dialog-content>
+        
+        <md-dialog-actions>
+            <md-button ng-click="closeModal()">Cancel</md-button>
+            <md-button ng-click="uploadReversionDocument()" class="md-raised md-accent md-hue-1">Upload Document Reversion!</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

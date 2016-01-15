@@ -116,7 +116,8 @@ exports.uploadReversion = function(req, res) {
                 name: file.name,
                 description: file.description,
                 link: file.path,
-                version: file.version
+                version: file.version,
+                createdAt: new Date()
             };  
             file.name = newFile.filename,
             file.path = newFile.url,
