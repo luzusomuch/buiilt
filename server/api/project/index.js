@@ -12,6 +12,7 @@ router.delete('/:id', auth.hasRole('admin'), controller.destroy);
 router.get('/', auth.isAuthenticated(), controller.index);
 router.get('/list', auth.isAuthenticated(), controller.getAll);
 router.get('/:id', auth.isAuthenticated(), controller.show);
+router.get('/:id/backup', auth.isAuthenticated(), controller.backup);
 router.put('/:id', auth.isAuthenticated(), controller.updateProject);
 
 module.exports = router;

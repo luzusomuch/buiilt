@@ -11,10 +11,16 @@ angular.module('buiiltApp')
             isArray: true
         },
         get: {
-          method: 'GET',
-          params: {
-            id: 'id'
-          }
+            method: 'GET',
+            params: {
+                id: 'id'
+            }
+        },
+        downloadBackUp: {
+            method: "GET",
+            params: {
+                action: "backup"
+            }
         },
         getByTeam : {
           method : 'get',

@@ -4,11 +4,15 @@ var User = require('./../../models/user.model');
 var Project = require('./../../models/project.model');
 var ProjectValidator = require('./../../validators/project');
 var People = require('./../../models/people.model');
+var Task = require('./../../models/task.model');
+var Thread = require('./../../models/thread.model');
+var File = require('./../../models/file.model');
 var _ = require('lodash');
 var async = require('async');
 var json2csv = require('json2csv');
 var Mailer = require('./../../components/Mailer');
 var fs = require('fs');
+var moment = require("moment");
 
 exports.create = function(req, res){
     var user = req.user;
@@ -187,5 +191,120 @@ function sendInfoToUser(req, res) {
             //     console.log('file saved');
             // });
         });
+    });
+};
+
+exports.backup = function(req, res) {
+    var user = req.user;
+    var roles = ["builders", "clients", "architects", "subcontractors", "consultants"];
+    async.parallel({
+        project: function(cb) {
+            Project.findById(req.params.id, cb);
+        },
+        people: function(cb) {
+            People.findOne({project: req.params.id})
+            .populate("builders.tenderers._id", "_id email name")
+            .populate("architects.tenderers._id", "_id email name")
+            .populate("clients.tenderers._id", "_id email name")
+            .populate("subcontractors.tenderers._id", "_id email name")
+            .populate("consultants.tenderers._id", "_id email name")
+            .exec(cb);
+        }
+    }, function(err, result) {
+        if (err) {return res.send(err);}
+        else {
+            var project = result.project;
+            var people = result.people;
+            var data = [];
+            var isAvailableUser = false;
+            _.each(roles, function(role) {
+                _.each(people[role], function(tender) {
+                    var currentUserIndex = _.findIndex(tender.tenderers, function(tenderer) {
+                        if (tenderer._id) {
+                            return tenderer._id._id.toString() === user._id.toString();
+                        }
+                    });
+                    if (currentUserIndex !== -1) {
+                        isAvailableUser = true;
+                        return false;
+                    } 
+                });
+            });
+            if (isAvailableUser) {
+                async.parallel([
+                    function(cb) {
+                        Task.find({project: req.params.id, $or:[{owner: user._id}, {members: user._id}]}, function(err, tasks) {
+                            if (err || tasks.length === 0) {cb();}
+                            _.each(tasks, function(task) {
+                                data.push({
+                                    type: "Task",
+                                    createdAt: moment(task.createdAt).format("MM-DD-YYYY"),
+                                    name: task.name,
+                                    description: task.description,
+                                });
+                            });
+                            cb();
+                        });
+                    },
+                    function(cb) {
+                        File.find({
+                        project: req.params.id, 
+                        $or:[{"element.type":"file", $or:[{members: user._id}, {owner: user._id}]}, 
+                            {"element.type":"document"}]}, function(err, files) {
+                            if (err || files.length === 0) {cb();}
+                            _.each(files, function(file) {
+                                data.push({
+                                    type: (file.element.type === "file") ? "File" : "Document",
+                                    createdAt: moment(file.createdAt).format("MM-DD-YYYY"),
+                                    name: file.name,
+                                    description: file.description,
+                                    url: file.path,
+                                    version: file.version
+                                });
+                                if (file.fileHistory.length > 0) {
+                                    _.each(file.fileHistory, function(history) {
+                                        data.push({
+                                            type: (file.element.type === "file") ? "File Reversion" : "Document Reversion",
+                                            createdAt: moment(history.createdAt).format("MM-DD-YYYY"),
+                                            name: history.name,
+                                            description: history.description,
+                                            url: history.link,
+                                            version: history.version
+                                        });
+                                    });
+                                }
+                            });
+                        });
+                    }, 
+                    function(cb) {
+                        Thread.find({project: req.params.id, $or:[{owner: user._id}, {members: user._id}]})
+                        .populate("messages.user"), function(err, threads) {
+                            if (err || threads.length === 0) {cb();}
+                            _.each(threads, function(thread) {
+                                data.push({
+                                    type: "Thread",
+                                    createdAt: moment(thread.createdAt).format("MM-DD-YYYY"),
+                                    name: thread.name
+                                });
+                                if (thread.messages.length > 0) {
+                                    _.each(thread.messages, function(message) {
+                                        data.push({
+                                            type: "Thread Message Detail",
+                                            createdAt: moment(message.sendAt).format("MM-DD-YYYY"),
+                                            content: message.user.name + "said: " + message.text
+                                        });
+                                    });
+                                }
+                            });
+                        });
+                    }
+                ], function(err) {
+                    if (err) {return res.send(500,err);}
+                    console.log(data);
+                });
+            } else {
+                return res.send(500, {message: "You have no privilege to download project backup"})
+            }
+        }
     });
 };

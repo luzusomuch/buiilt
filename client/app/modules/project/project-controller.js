@@ -83,6 +83,12 @@ angular.module('buiiltApp').controller('projectCtrl', function($rootScope, $scop
         });
     };
 
+    $scope.downloadBackUp = function() {
+        projectService.downloadBackUp({id: $stateParams.id}).$promise.then(function(res) {
+            $scope.showToast("The backup file has sent to your mailbox");
+        }, function(err) {$scope.showToast(err.message);});
+    };
+
     $scope.uploadNewDocument = function() {
         console.log($scope.uploadFiles);
     };
