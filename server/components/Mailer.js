@@ -37,7 +37,6 @@ Mailer.prototype.send = function(options, callback) {
     if(err){
       console.log('mailer error', err);
     }
-
     return callback && callback(null, data);
   });
 };
@@ -46,7 +45,6 @@ Mailer.prototype.sendMail = function(template, from, emails, options, callback) 
   var self = this;
   self.render(template, options, okay(callback, function(output) {
     self.send({
-      placeId: options.id,
       from: from,
       to : emails,
       subject : options.subject,

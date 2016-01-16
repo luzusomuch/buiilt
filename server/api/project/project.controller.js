@@ -11,8 +11,10 @@ var _ = require('lodash');
 var async = require('async');
 var json2csv = require('json2csv');
 var Mailer = require('./../../components/Mailer');
+var S3 = require('./../../components/S3');
 var fs = require('fs');
 var moment = require("moment");
+var config = require('./../../config/environment');
 
 exports.create = function(req, res){
     var user = req.user;
@@ -241,9 +243,12 @@ exports.backup = function(req, res) {
                                     createdAt: moment(task.createdAt).format("MM-DD-YYYY"),
                                     name: task.name,
                                     description: task.description,
+                                    url: '',
+                                    version: '',
+                                    content: ''
                                 });
                             });
-                            cb();
+                            cb(null,data);
                         });
                     },
                     function(cb) {
@@ -259,7 +264,8 @@ exports.backup = function(req, res) {
                                     name: file.name,
                                     description: file.description,
                                     url: file.path,
-                                    version: file.version
+                                    version: file.version,
+                                    content: ''
                                 });
                                 if (file.fileHistory.length > 0) {
                                     _.each(file.fileHistory, function(history) {
@@ -269,38 +275,70 @@ exports.backup = function(req, res) {
                                             name: history.name,
                                             description: history.description,
                                             url: history.link,
-                                            version: history.version
+                                            version: history.version,
+                                            content: ''
                                         });
                                     });
                                 }
                             });
+                            cb(null, data);
                         });
                     }, 
                     function(cb) {
                         Thread.find({project: req.params.id, $or:[{owner: user._id}, {members: user._id}]})
-                        .populate("messages.user"), function(err, threads) {
+                        .populate("messages.user")
+                        .exec(function(err, threads) {
                             if (err || threads.length === 0) {cb();}
                             _.each(threads, function(thread) {
                                 data.push({
                                     type: "Thread",
                                     createdAt: moment(thread.createdAt).format("MM-DD-YYYY"),
-                                    name: thread.name
+                                    name: thread.name,
+                                    description: thread.description,
+                                    url: '',
+                                    version: '',
+                                    content: ''
                                 });
                                 if (thread.messages.length > 0) {
                                     _.each(thread.messages, function(message) {
                                         data.push({
                                             type: "Thread Message Detail",
                                             createdAt: moment(message.sendAt).format("MM-DD-YYYY"),
+                                            name: thread.name,
+                                            description: thread.description,
+                                            url: '',
+                                            version: '',
                                             content: message.user.name + "said: " + message.text
                                         });
                                     });
                                 }
                             });
+                            cb(null, data);
                         });
                     }
-                ], function(err) {
-                    if (err) {return res.send(500,err);}
-                    console.log(data);
+                ], function(err, result) {
+                    if (err) {console.log(err);return res.send(500,err);}
+                    var filename = user._id+"-"+project.name+".csv";
+                    json2csv({data: data}, function(err, csv) {
+                        if (err) {console.log(err);}
+                        fs.writeFile(filename, csv, function(err) {
+                            if (err) 
+                                throw err;
+                            S3.uploadFile({path: config.newRoot+filename, name: filename}, function(err, data) {
+                                if (err) {console.log(err);return res.send(err);}
+                                var link = S3.getPublicUrl(filename);
+                                Mailer.sendMail('download-project-data.html', config.emailFrom, user.email, {
+                                    user: user.toJSON(),
+                                    link: link,
+                                    subject: 'Requested a backup for ' + project.name
+                                },function(err){
+                                    console.log(err);
+                                    fs.unlinkSync(config.newRoot+filename);
+                                    return res.send(200);
+                                });
+                            });
+                        });
+                    });
                 });
             } else {
                 return res.send(500, {message: "You have no privilege to download project backup"})

@@ -1,0 +1,14 @@
+{% extends 'layouts/default.html' %}
+
+{% block content %}
+
+<body itemscope itemtype="http://schema.org/EmailMessage" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; -webkit-font-smoothing: antialiased; -webkit-text-size-adjust: none; width: 100% !important; height: 100%; line-height: 1.6em; background-color: #f6f6f6; margin: 0;" bgcolor="#f6f6f6">
+    <p>Hi <%=user.name%>,</p>
+    <p>
+        You can download your backup data by click on that <a href="<%=link%>">link</a>
+    </p>
+    <p>Regards,</p>
+    <p><a href="http://buiilt.com.au"></a>Buiilt</p>
+</body>
+
+{% endblock %}
