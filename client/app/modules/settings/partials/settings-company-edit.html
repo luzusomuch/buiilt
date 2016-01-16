@@ -17,27 +17,31 @@
 	            </div>
 			
 	            <div layout="row">
-	                <md-input-container flex>
-	                    <label for="">Company address</label>
-	                    <input type="text" ng-model="currentTeam.detail.companyAddress" required>
+	                <md-input-container flex="50">
+	                    <label for="">Company address suburb</label>
+	                    <input type="text" ng-model="currentTeam.detail.companyAddress.suburb" required>
+	                </md-input-container>
+	                <md-input-container flex="50">
+	                    <label for="">Company postcode</label>
+	                    <input type="text" ng-model="currentTeam.detail.companyAddress.postCode" required>
 	                </md-input-container>
 	            </div>
 			
 	            <div layout="row">
 	                <md-input-container flex="50">
 	                    <label for="">Company contact number</label>
-	                    <input type="text" ng-model="currentTeam.detail.contactNumber" required>
+	                    <input type="text" ng-model="currentTeam.detail.companyPhoneNumber" required>
 	                </md-input-container>
 	                <md-input-container flex="50">
 	                    <label for="">Company license number</label>
 	                    <input type="text" ng-model="currentTeam.detail.licenseNumber" required>
 	                </md-input-container>
 				</div>
-				
+
 				<div layout="row">
 	                <md-input-container flex>
-	                    <label for="">Company billing address</label>
-	                    <input type="text" ng-model="currentTeam.detail.billingAddress" required>
+	                    <label for="">Company ABN</label>
+	                    <input type="text" ng-model="currentTeam.detail.companyABN" required>
 	                </md-input-container>
 	            </div>
 				

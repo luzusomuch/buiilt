@@ -110,13 +110,12 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
 
     $scope.saveDetail = function(form) {
         if (form.$valid) {
+            $scope.currentTeam.editType = "editCompanyDetail";
             teamService.update({_id : $scope.currentTeam._id},$scope.currentTeam).$promise
             .then(function(team) {
-                $scope.showToast("Company details have updated successfully!");
-                $scope.currentTeam = team;
-                getTeamLeader($scope.currentTeam);
-                $rootScope.$emit('TeamUpdate',team);
 				$mdDialog.hide();
+                $scope.showToast("Company details have updated successfully!");
+                $rootScope.$emit('Team.Update',team);
             }, function(err) {
                 $scope.showToast(err);
             });

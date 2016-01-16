@@ -393,6 +393,13 @@ exports.update = function (req, res) {
         if (req.body.editType === "editBillingAddress") {
             team.detail.billingAddress.suburb = req.body.detail.billingAddress.suburb;
             team.detail.billingAddress.postCode = req.body.detail.billingAddress.postCode;
+        } else if (req.body.editType === "editCompanyDetail") {
+            team.detail.companyName = req.body.detail.companyName;
+            team.detail.companyAddress.suburb = req.body.detail.companyAddress.suburb;
+            team.detail.companyAddress.postCode = req.body.detail.companyAddress.postCode;
+            team.detail.companyPhoneNumber = req.body.detail.companyPhoneNumber;
+            team.detail.licenseNumber = req.body.detail.licenseNumber;
+            team.detail.companyABN = req.body.detail.companyABN;
         }
         team._user = req.user;
         team.save(function() {

@@ -26,9 +26,13 @@ var TeamSchema = new Schema({
     },
     detail : {
         companyName : String,
-        companyAddress : String,
-        contactNumber : String,
+        companyAddress : {
+            suburb: String,
+            postCode: String
+        },
+        companyPhoneNumber : String,
         licenseNumber : String,
+        companyABN: String,
         billingAddress : {
             suburb: String,
             postCode: String

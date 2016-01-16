@@ -8,7 +8,7 @@
 		
 		<div layout-margin>
 			<p><strong>Company Name:</strong></p>
-			<p>{{ currentTeam.detail.companyName }}</p>
+			<p>{{currentTeam.detail.companyName}}</p>
 		</div>
 		
 		<md-divider></md-divider>
@@ -16,16 +16,17 @@
 		<div layout-margin>
 			<div>
 				<p><strong>Office Address:</strong></p>
-				<p>{{ currentTeam.detail.companyAddress }}</p>
 			</div>
 			
 			<div layout="row">
 				<div flex="40">
-					<p>currentTeam.detail.companySuburb</p>
+					<p>Suburb</p>
+					<p>{{currentTeam.detail.companyAddress.suburb}}</p>
 				</div>
 			
 				<div flex="30">
-					<p>currentTeam.detail.companyPostcode</p>
+					<p>Postcode</p>
+					<p>{{currentTeam.detail.companyAddress.postCode}}</p>
 				</div>
 			</div>
 		</div>
@@ -34,7 +35,7 @@
 		
 		<div layout-margin>
 			<p><strong>Office Number:</strong></p>
-			<p>currentTeam.detail.companyPhoneNumber</p>
+			<p>{{currentTeam.detail.companyPhoneNumber}}</p>
 		</div>
 		
 		<md-divider></md-divider>
@@ -43,12 +44,12 @@
 			<div layout="row">
 				<div flex="40">
 					<p><strong>License Number:</strong></p>
-					<p>currentTeam.detail.companyLicenseNumber</p>
+					<p>{{currentTeam.detail.licenseNumber}}</p>
 				</div>
 		
 				<div flex="30">
 					<p><strong>ABN:</strong></p>
-					<p>currentTeam.detail.companyABN</p>
+					<p>{{currentTeam.detail.companyABN}}</p>
 				</div>
 			</div>
 		</div>

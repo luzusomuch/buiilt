@@ -37,7 +37,8 @@
     "angular-filepicker": "master",
     "angular-mixpanel": "1.1.2",
     "angular-material": "master",
-    "angular-clipboard": "1.2.1"
+    "angular-clipboard": "1.2.1",
+    "angular-stripe": "~4.2.8"
   },
   "resolutions": {
     "angular": "~1.3",
