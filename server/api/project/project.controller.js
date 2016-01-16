@@ -17,6 +17,7 @@ var moment = require("moment");
 var config = require('./../../config/environment');
 
 exports.create = function(req, res){
+    
     var user = req.user;
     ProjectValidator.validateCreate(req,function(err,data) {
         if (err) {

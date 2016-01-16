@@ -8,7 +8,7 @@
 		
 		<div layout-margin>
 			<p><strong>Current Credit Card:</strong></p>
-			<p>Ends In { { lastFourDigits } }</p>
+			<p>Number: {{currentUser.creditCard}} - Ends In { { lastFourDigits } }</p>
 		</div>
 		
 		<md-divider></md-divider>
@@ -16,16 +16,16 @@
 		<div layout-margin>
 			<div>
 				<p><strong>Billing Address:</strong></p>
-				<p>{{ currentTeam.detail.companyAddress }}</p>
+				<p>{{currentTeam.detail.companyAddress}}</p>
 			</div>
 			
 			<div layout="row">
 				<div flex="40">
-					<p>currentTeam.detail.billingSuburb</p>
+					<p>Address: {{currentTeam.detail.billingAddress.suburb}}</p>
 				</div>
 			
 				<div flex="30">
-					<p>currentTeam.detail.billingPostcode</p>
+					<p>Postcode: {{currentTeam.detail.billingAddress.postCode}}</p>
 				</div>
 			</div>
 		</div>

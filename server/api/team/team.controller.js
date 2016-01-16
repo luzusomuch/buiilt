@@ -384,19 +384,23 @@ exports.show = function (req, res) {
 };
 
 exports.update = function (req, res) {
-  var team = req.team;
-  TeamValidator.validateUpdate(req,function(err,data) {
-    if (err) {
-      return errorsHelper.validationErrors(res, err, 'Validation');
-    }
-    team = _.merge(team,data);
-    team._user = req.user;
-    team.save(function() {
-      Team.populate(team, [{path:"leader"},{path:"member._id"}], function(err, team ) {
-        return res.json(team);
-      });
-    });
-  })
+    var team = req.team;
+    TeamValidator.validateUpdate(req,function(err,data) {
+        if (err) {
+            return errorsHelper.validationErrors(res, err, 'Validation');
+        }
+        team = _.merge(team,data);
+        if (req.body.editType === "editBillingAddress") {
+            team.detail.billingAddress.suburb = req.body.detail.billingAddress.suburb;
+            team.detail.billingAddress.postCode = req.body.detail.billingAddress.postCode;
+        }
+        team._user = req.user;
+        team.save(function() {
+            Team.populate(team, [{path:"leader"},{path:"member._id"}], function(err, team ) {
+                return res.json(team);
+            });
+        });
+    })
 };
 
 exports.getTeamByUser = function(req, res) {
@@ -404,44 +408,6 @@ exports.getTeamByUser = function(req, res) {
     if (err) {return res.send(500, err);}
     else {
       return res.json(team);
-    }
-  });
-};
-
-exports.getHomeOwnerTeam = function(req, res) {
-  Team.find({'type': 'homeOwner'}).exec(function(err, teams) {
-    if (err) {return res.send(500,err);}
-    else {
-      Team.populate(teams, [{path: 'leader'}, {path: 'member._id'}], function(err, team) {
-        return res.json(200,team);  
-      });
-    }
-  });
-};
-
-exports.getHomeBuilderTeam = function(req, res) {
-  Team.find({'type': 'buider'}).populate('leader').populate('member._id').exec(function(err, teams) {
-    if (err) {return res.send(500,err);}
-    else {
-      return res.json(200,teams);
-    }
-  });
-};
-
-exports.getContractorTeam = function(req, res) {
-  Team.find({'type': 'contractor'}).populate('leader').populate('member._id').exec(function(err, teams) {
-    if (err) {return res.send(500,err);}
-    else {
-      return res.json(200,teams);
-    }
-  });
-};
-
-exports.getSupplierTeam = function(req, res) {
-  Team.find({'type': 'supplier'}).populate('leader').populate('member._id').exec(function(err, teams) {
-    if (err) {return res.send(500,err);}
-    else {
-      return res.json(200,teams);
     }
   });
 };

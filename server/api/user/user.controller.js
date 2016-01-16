@@ -337,33 +337,25 @@ exports.changeEmail = function(req,res) {
   })
 };
 
-// exports.changePhoneNum = function(req, res, next) {
-//   var userId = req.user._id;
-//   var phoneNumber = req.body.phoneNumber;
-//   User.findById(userId, function(err, user) {
-//     user.phoneNumber = phoneNumber;
-//     user.save(function(err) {
-//       if (err) {return validationError(res, err);}
-//       res.send(200);
-//     });
-//   });
-// };
-
 exports.changeProfile = function(req, res) {
-  User.findById(req.user._id, function(err, user){
-    if (err) {return res.send(500,err);}
-    if (!user) {return res.send(404,err);}
-    else {
-      user.firstName = req.body.firstName;
-      user.lastName = req.body.lastName;
-      user.phoneNumber = req.body.phoneNumber;
-      user.name = req.body.firstName +' '+req.body.lastName;
-      user.save(function(err,saved){
+    User.findById(req.user._id, function(err, user){
         if (err) {return res.send(500,err);}
-        return res.json(200,saved);
-      })
-    }
-  })
+        if (!user) {return res.send(404,{message: "The specific user is not existed"});}
+        else {
+            if (req.body.editType === "enterCreditCard") {
+                user.creditCard = req.body.creditCard;
+            } else {
+                user.firstName = req.body.firstName;
+                user.lastName = req.body.lastName;
+                user.phoneNumber = req.body.phoneNumber;
+                user.name = req.body.firstName +' '+req.body.lastName;
+            }
+            user.save(function(err,saved){
+                if (err) {return res.send(500,err);}
+                return res.json(200,saved);
+            });
+        }
+    });
 };
 
 /**
@@ -462,7 +454,7 @@ exports.getResetPasswordToken = function(req,res) {
     }
     return res.json(resetPassword);
   })
-}
+};
 
 /**
  * Authentication callback

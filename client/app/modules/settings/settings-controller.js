@@ -1,7 +1,14 @@
-angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $scope, $timeout, $state, teamService, $mdToast, $mdDialog, authService) {
+angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $scope, $timeout, $state, teamService, $mdToast, $mdDialog, authService, userService) {
     $rootScope.title = "Settings"
     $scope.currentTeam = $rootScope.currentTeam;
     $scope.currentUser = $rootScope.currentUser;
+    $rootScope.$on("User.Update", function(event, data) {
+        $scope.currentUser = $rootScope.currentUser = data;
+    });
+
+    $rootScope.$on("Team.Update", function(event, data) {
+        $scope.currentTeam = $rootScope.currentTeam = data;
+    });
 
     authService.getCurrentInvitation().$promise.then(function(res) {
         $scope.invitations = res;
@@ -219,6 +226,31 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
 
     $scope.showToast = function(value) {
         $mdToast.show($mdToast.simple().textContent(value).position('bottom','right').hideDelay(3000));
+    };
+
+    $scope.submitCreditCard = function(form) {
+        if (form.$valid) {
+            $scope.currentUser.editType = "enterCreditCard";
+            userService.changeProfile({id: $scope.currentUser._id}, $scope.currentUser).$promise.then(function(res) {
+                $mdDialog.hide();
+                $scope.showToast("Submit credit card successfully");
+                $rootScope.$broadcast("User.Update", res);
+            }, function(err) {$scope.showToast(err.message);});
+        } else {
+            $scope.showToast("Please check your input again");
+        }
+    };
+
+    $scope.editBillingAddress = function(form) {
+        if (form.$valid) {
+            teamService.update({id: $scope.currentTeam._id}, $scope.currentTeam).$promise.then(function(res) {
+                $mdDialog.hide();
+                $scope.showToast("Update billing address successfully");
+                $rootScope.$broadcast("Team.Update", res);
+            }, function(err) {$scope.showToast(err.message);});
+        } else {
+            $scope.showToast("Please check your input again");
+        }
     };
 
     getTeamLeader($scope.currentTeam);

@@ -14,7 +14,6 @@ router.get('/me', auth.isAuthenticated(), controller.me);
 router.get("/:id/profile", controller.getUserProfile);
 router.put('/:id/password', auth.isAuthenticated(), controller.changePassword);
 router.put('/:id/email', auth.isAuthenticated(), controller.changeEmail);
-// router.put('/:id/phone', auth.isAuthenticated(), controller.changePhoneNum);
 router.put('/:id/change-profile', auth.isAuthenticated(), controller.changeProfile);
 router.get('/:id', auth.isAuthenticated(), controller.show);
 router.post('/', controller.create);
