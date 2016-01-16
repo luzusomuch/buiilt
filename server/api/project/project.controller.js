@@ -151,48 +151,45 @@ exports.updateProject = function(req, res) {
 };
 
 function sendInfoToUser(req, res) {
-    //get people package
-    People.findOne({project: req.project._id})
-    .populate("builders.tenderers._id", "_id email name")
-    .populate("builders.tenderers.teamMember", "_id email name")
-    .populate("builders.inviter", "_id email name")
-    .populate("architects.tenderers._id", "_id email name")
-    .populate("architects.tenderers.teamMember", "_id email name")
-    .populate("architects.inviter", "_id email name")
-    .populate("clients.tenderers._id", "_id email name")
-    .populate("clients.tenderers.teamMember", "_id email name")
-    .populate("clients.inviter", "_id email name")
-    .populate("subcontractors.tenderers._id", "_id email name")
-    .populate("subcontractors.tenderers.teamMember", "_id email name")
-    .populate("subcontractors.inviter", "_id email name")
-    .populate("consultants.tenderers._id", "_id email name")
-    .populate("consultants.tenderers.teamMember", "_id email name")
-    .populate("consultants.inviter", "_id email name")
-    .exec(function(err, people) {
-        if (err || !people) {return res.send(200, req.project);}
+    async.parallel({
+        people: function(cb) {
+            People.findOne({project: req.project._id})
+            .populate("builders.tenderers._id", "_id email name")
+            .populate("builders.tenderers.teamMember", "_id email name")
+            .populate("builders.inviter", "_id email name")
+            .populate("architects.tenderers._id", "_id email name")
+            .populate("architects.tenderers.teamMember", "_id email name")
+            .populate("architects.inviter", "_id email name")
+            .populate("clients.tenderers._id", "_id email name")
+            .populate("clients.tenderers.teamMember", "_id email name")
+            .populate("clients.inviter", "_id email name")
+            .populate("subcontractors.tenderers._id", "_id email name")
+            .populate("subcontractors.tenderers.teamMember", "_id email name")
+            .populate("subcontractors.inviter", "_id email name")
+            .populate("consultants.tenderers._id", "_id email name")
+            .populate("consultants.tenderers.teamMember", "_id email name")
+            .populate("consultants.inviter", "_id email name")
+            .exec(cb);
+        },
+        users: function(cb) {
+            User.find({projects: req.project._id}, cb);
+        }
+    }, function(err, result) {
+        if (err) {return res.send(500,err);}
+        var users = result.users;
+        var people = result.people;
         var roles = ["builders", "clients", "architects", "subcontractors", "consultants"];
-        var usersList = [];
         var data = [];
-        _.each(roles, function(role) {
-            _.each(people[role], function(tender) {
-                _.each(tender.tenderers, function(tenderer) {
-                    if (tenderer._id) {
-                        usersList.push(tenderer._id.email);
-                        data.push({user: tenderer._id.email, title: 'Tender For '+tender.tenderName, inviter: 'Invited by '+tender.inviter.name});
+        async.each(users, function(user, cb) {
+            _.each(roles, function(role) {
+                _.each(people[role], function(tender) {
+                    if (tender.inviter._id.toString()===user._id.toString()) {
+                        
                     }
                 });
             });
-        });
-        _.each(data, function(d) {
-            var user = d.user;
+        }, function() {
 
-        }); 
-        json2csv({data: data}, function(err, csv) {
-            if (err) {console.log(err);}
-            // fs.writeFile('file.csv', csv, function(err) {
-            //     if (err) throw err;
-            //     console.log('file saved');
-            // });
         });
     });
 };
