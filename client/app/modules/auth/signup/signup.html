@@ -1,7 +1,97 @@
+<div style="height: 92vh; background-color: #FAFAFA" layout-padding>
+	<div flex-offset="30" flex="40" class="md-whiteframe-1dp" style="background-color: white; margin-top: 10vh" layout-padding>
+		
+			<!-- <form name="form" ng-submit="signin(form)">
+				<div layout="column" layout-margin>
 
-<div class="row" style="height:{{contentHeight + 130}}px; overflow: auto;">
+					<div layout="row" layout-align="center center">
+						<p style="font-size: 20px; font-weight: 500; margin-bottom: 3vh">Sign in to your account</p>
+					</div>
+
+					<md-input-container>
+				        <label>Email Address</label>
+				        <input ng-model="user.email" name="email" type="email" ng-required="true" md-autofocus>
+					</md-input-container>
+
+					<md-input-container>
+				        <label>Password</label>
+				        <input ng-model="user.password" type="password" ng-required="true" name="userPassword">
+					</md-input-container>
+
+			        <div layout="row" ng-show="error">
+			          <strong>Error! </strong>{{errorMsg}}
+			        </div>
+
+					<div layout="row" layout-align="center center">
+						<md-button type="submit" class="">Login</md-button>
+					</div>
+
+				</div>
+			</form> -->
+			
+			<form method="post" ng-submit="signup(form)" name="form" novalidate>
+				
+				<div layout="column" layout-margin>
+				
+					<div layout="row" layout-align="center center">
+						<p style="font-size: 20px; font-weight: 500; margin-bottom: 3vh" ng-if="!hasInviteToken" id="createAcctHead">Try buiilt for free for 14 days</p>
+					</div>
+					
+					<div layout="row" layout-align="center center">
+						<p class="validate-message" ng-repeat="(key, msg) in errors" type="danger" close="closeAlert(key)">{{msg.email.message}}</p>
+					</div>
+				
+					<div ng-if="hasInviteToken && user.invite.type == 'team-invite'" layout="row" layout-align="center center">
+						<p style="font-size: 20px; font-weight: 500; margin-bottom: 3vh">Join {{user.invite.element.name}} on buiilt.</p>
+						<p style="font-size: 20px; font-weight: 500; margin-bottom: 3vh">Fill out your details below to accept their invitation.</p>
+					</div>
+				
+					<md-input-container ng-if="!hasInviteToken">
+						<label for="email">Your Email Address</label>
+						<input id="email" type="email" name="email" ng-model="user.email" required ng-class="{'invalid' : form.email.$invalid && submitted}" md-autofocus>
+						<p class="validate-message" ng-show="form.email.$error.required && submitted">An email address is required...</p>
+						<p class="validate-message" ng-show="form.email.$error.email && submitted">Wrong email format...</p>
+					</md-input-container>
+					
+					<div layout="row">
+						<md-input-container flex>
+							<label for="firstName">Your First Name</label>
+							<input id="firstName" type="text" name="firstName" ng-model="user.firstName" required ng-class="{'invalid' : form.firstName.$invalid && submitted}">
+							<p class="validate-message" ng-show="form.firstName.$error.required && submitted">Your first name is required...</p>
+						</md-input-container>
+						<md-input-container flex>
+							<label for="lastName">Your Last Name</label>
+							<input id="lastName" type="text" name="lastName" ng-model="user.lastName" required ng-class="{'invalid' : form.lastName.$invalid && submitted}">
+							<p class="validate-message" ng-show="form.lastName.$error.required && submitted">Your surname is required...</p>
+						</md-input-container>
+					</div>
+					
+					<md-input-container>
+						<label for="password">Set Your Password</label>
+						<input id="password" name="password" ng-model="user.password" required type="password" ng-class="{'invalid' : form.password.$invalid && submitted}" ng-minlength="6">
+						<p class="validate-message" ng-show="form.password.$error.required && submitted">Please provide a password...</p>
+						<p class="validate-message" ng-show="form.password.$error.minlength && submitted">Password should be a minimum of 6 characters...</p>
+					</md-input-container>
+					
+					<md-input-container>
+						<label for="repassword">Confirm Your Password</label>
+						<input id="repassword" name="repassword" ng-model="user.repassword" compare-to="user.password" type="password" ng-class="{'invalid' : form.repassword.$invalid && submitted}">
+						<p class="validate-message" ng-show="form.repassword.$error.compareTo && submitted">The passwords you have entered do not match...</p>
+					</md-input-container>
+					
+					<div layout="row" layout-align="center center">
+						<md-button type="submit" class="">Sign Up Now</md-button>
+					</div>
+					
+				</div>
+			</form>
+		
+	</div>
+	
+</div>
+
+<!-- <div class="row" style="height:{{contentHeight + 130}}px; overflow: auto;">
 	<div class="col-sm-12">
-		<!-- sign-up form -->
 		<div class="add-comment contact-form boxed">
 			<alert type="success" close="closeSuccess()" ng-show="success">Thank you for your submit, you can login now and enjoy yourself.</alert>
 			<alert ng-repeat="(key, msg) in errors" type="danger" close="closeAlert(key)">
@@ -61,4 +151,4 @@
 			</div>
 		</div>
 	</div>
-</div>
+</div> -->
