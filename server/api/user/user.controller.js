@@ -126,7 +126,8 @@ exports.create = function (req, res, next) {
 
 //create user with invite token
 exports.createUserWithInviteToken = function(req, res, next) {
-    PackageInvite.findById(req.body.packageInviteToken, function(err, packageInvite) {
+    PackageInvite.findById(req.body.packageInviteToken)
+    .populate("owner").exec(function(err, packageInvite) {
         if (err) {return res.send(500,err);}
         if (!packageInvite) {return res.send(404);}
         var newUser = new User();
@@ -171,7 +172,8 @@ exports.createUserWithInviteToken = function(req, res, next) {
                             }
                             _.each(people[type], function(tender) {
                                 _.each(tender.tenderers, function(tenderer) {
-                                    console.log(tenderer);
+                                    console.log(packageInvite.to);
+                                    console.log(tenderer.email);
                                     if (tenderer.email == packageInvite.to) {
                                         tenderer._id = user._id;
                                         tenderer.email = null;
@@ -188,6 +190,7 @@ exports.createUserWithInviteToken = function(req, res, next) {
                                                     type: type
                                                 }
                                             });
+                                            inviteToken._editUser = packageInvite.owner;
                                             inviteToken.save(function() {
                                                 return false;
                                             });

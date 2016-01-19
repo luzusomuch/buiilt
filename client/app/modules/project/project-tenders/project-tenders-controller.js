@@ -11,6 +11,22 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
 		});
 		$scope.teamMembersCanInvite = _.uniq($scope.teamMembersCanInvite, '_id');
 		_.remove($scope.teamMembersCanInvite, {_id: $rootScope.currentUser._id});
+
+        if ($scope.people[$rootScope.currentUser.type]) {
+            _.each($scope.people[$rootScope.currentUser.type], function(tender) {
+                var currentTendererIndex = _.findIndex(tender.tenderers, function(tenderer) {
+                    if (tenderer._id) {
+                        return tenderer._id._id == $rootScope.currentUser._id;
+                    }
+                });
+                if (currentTendererIndex !== -1) {
+                    var currentTenderer = tender.tenderers[currentTendererIndex];
+                    _.each(currentTenderer.teamMember, function(member) {
+                        _.remove($scope.teamMembersCanInvite, {_id: member._id});
+                    });
+                }
+            });
+        }
 	};
 
 	var loadProjectMembers = function(id) {
