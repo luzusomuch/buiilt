@@ -18,6 +18,7 @@ EventBus.onSeries('Team.Inserted', function(request, next){
           type : 'team-invite',
           user: request.user._id
         });
+        inviteToken._editUser = request.user;
         inviteToken.save(function(err) {
           if (err) { return callback(err);}
           Mailer.sendMail('invite-team-has-no-account.html', from, user.email, {
@@ -54,6 +55,7 @@ EventBus.onSeries('Team.Updated', function(request, next){
                     type : 'team-invite',
                     user: request.user._id
                 });
+                inviteToken._editUser = request.user;
                 inviteToken.save(function(err) {
                     if (err) {
                         return cb(err);
