@@ -3,77 +3,13 @@
 </div>
 
 <div class="main-page-content">
-	
-	<md-grid-list md-cols="3" md-row-height="3:2">
-	
-		<md-grid-tile md-colspan="1" ng-repeat="leader in currentTeam.leader">
-		
-			<md-card class="team-card" layout-margin>
-					
-				<md-card-header>
-					<p class="name">{{ leader.name }}</p>
-				</md-card-header>
-	
-				<md-card-content>
-					<p class="email">{{ leader.email }}</p>
-				</md-card-content>
-				
-				<md-card-actions layout-margin>
-					<md-card-icon-actions layout="row" layout-align="space-around center">
-					    <md-button class="material-icons md-icon-button" ng-click="assignLeader(member)" ng-if="isLeader &&  member._id && member.status == 'Active'">
-		  					<md-tooltip md-direction="down">Make this User a Team Admin</md-tooltip>
-		  				    <md-icon class="material-icons">supervisor_account</md-icon>
-				        </md-button>
-					    <md-button class="material-icons md-icon-button" ng-click="removeMember(member)" ng-if="isLeader">
-		  					<md-tooltip md-direction="down">Remove this User from Team</md-tooltip>
-		  				    <md-icon class="material-icons">delete</md-icon>
-				        </md-button>
-					</md-card-icon-actions>
-				</md-card-actions>
-		
-			</md-card>
-			
-	  	</md-grid-tile>
-		
-		<md-grid-tile md-colspan="1" ng-repeat="member in currentTeam.member">
-		
-			<md-card class="team-card" layout-margin>
-					
-				<md-card-header>
-					<p class="name">{{ (member._id) ? member._id.name : "Pending Sign Up"}}</p>
-				</md-card-header>
-	
-				<md-card-content>
-					<p class="email">{{ (member.email) ? member.email : member._id.email }}</p>
-				</md-card-content>
-				
-				<md-card-actions layout-margin>
-					<md-card-icon-actions layout="row" layout-align="space-around center">
-					    <md-button class="material-icons md-icon-button" ng-click="assignLeader(member)" ng-if="isLeader &&  member._id && member.status == 'Active'">
-		  					<md-tooltip md-direction="down">Make this User a Team Admin</md-tooltip>
-		  				    <md-icon class="material-icons">supervisor_account</md-icon>
-				        </md-button>
-					    <md-button class="material-icons md-icon-button" ng-click="removeMember(member)" ng-if="isLeader">
-		  					<md-tooltip md-direction="down">Remove this User from Team</md-tooltip>
-		  				    <md-icon class="material-icons">delete</md-icon>
-				        </md-button>
-					</md-card-icon-actions>
-				</md-card-actions>
-		
-			</md-card>
-			
-	  	</md-grid-tile>
-		
-	</md-grid-list>
-	
-	
-	
-	<!-- <md-list ng-cloak>
+
+	<md-list ng-cloak>
 
 		<div ng-repeat="leader in currentTeam.leader">
 
 
-			<md-list-item class="md-2-line" md-ink-ripple>
+			<md-list-item class="md-2-line">
 				<div class="md-list-item-text" layout="column">
 			          <h3>{{ leader.name }}</h3>
 			          <p>{{ leader.email }}</p>
@@ -85,133 +21,34 @@
 		</div>
 
 		<div ng-repeat="member in currentTeam.member">
-			<md-list-item class="md-3-line" md-ink-ripple>
+			
+			<md-list-item class="md-2-line secondary-button-padding">
 				<div class="md-list-item-text" layout="column">
-			          <h3>{{ (member._id) ? member._id.name : " "}} </h3>
+			          <h3>{{ (member._id) ? member._id.name : " "}} {{ (member._id) ? member._id.name : "Pending Sign Up"}}</h3>
 			          <p>{{ (member.email) ? member.email : member._id.email }}</p>
-					  <p>{{ member.status }}</p>
 		        </div>
+				<md-button class="md-secondary md-icon-button" ng-click="assignLeader(member)" ng-if="isLeader &&  member._id && member.status == 'Active'">
+					<md-icon class="material-icons">supervisor_account</md-icon>
+				</md-button>
+				<md-button class="md-secondary md-icon-button" ng-click="removeMember(member)" ng-if="isLeader" style="margin-right: 60px">
+					<md-icon class="material-icons">delete</md-icon>
+				</md-button>
 			</md-list-item>
 			<md-divider></md-divider>
+			
 		</div>
 
-	</md-list> -->
+	</md-list>
 	
 	<div>
   	    <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-list">
 		    <md-fab-trigger>
-	  	        <md-button aria-label="Actions" class="md-fab md-primary">
-				    <md-tooltip md-direction="left">Actions...</md-tooltip>
+	  	        <md-button aria-label="Actions" class="md-fab md-primary" ng-click="showAddNewStaffMemberModal($event)">
+				    <md-tooltip md-direction="left">Add a New Team Member</md-tooltip>
 			        <md-icon class="material-icons" >add</md-icon>
 	  	        </md-button>
   	        </md-fab-trigger>
-		    <md-fab-actions>
-	  	        <md-button aria-label="Add a New Team Member" class="md-fab md-raised md-mini md-primary" ng-click="showAddNewStaffMemberModal($event)">
-				    <md-tooltip md-direction="left">Add a New Team Member</md-tooltip>
-			        <md-icon class="material-icons">person_outline</md-icon>
-	  	        </md-button>
-	  	    </md-fab-actions>
   	    </md-fab-speed-dial>
     </div>
     
 </div>
-
-
-<!-- <md-content ng-cloak class="main-page-content" layout-padding>
-    <md-tabs md-dynamic-height md-border-bottom>
-        <md-tab label="Members list">
-            <md-content ng-show="currentTeam._id">
-                <div layout="row">
-                    <h5>List of team members</h5>
-                </div>
-                <table>
-                    <thead>
-                        <th>Member email</th>
-                        <th>Member name</th>
-                        <th>Type</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="leader in currentTeam.leader">
-                            <td>{{leader.email}}</td>
-                            <td>{{leader.name}}</td>
-                            <td>Admin</td>
-                            <td>Active</td>
-                            <td></td>
-                        </tr>
-                        <tr ng-repeat="member in currentTeam.member">
-                            <td>{{(member.email) ? member.email : member._id.email}}</td>
-                            <td></td>
-                            <td>Member</td>
-                            <td></td>
-                            <td>
-                                <i ng-click="assignLeader(member)" ng-if="isLeader &&  member._id && member.status == 'Active'" class="material-icons pointer">supervisor_account</i>
-                                <i ng-click="removeMember(member)" ng-if="isLeader" class="material-icons pointer">delete</i>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <md-button class="md-primary" ng-if="!isLeader || currentTeam.leader.length > 1" ng-click="leaveTeam()">Leave this team</md-button>
-            </md-content>
-
-            <md-content layout-padding ng-show="!currentTeam._id && invitations.length > 0">
-                <div layout="row">
-                    <h5>List of invitations</h5>
-                </div>
-                <table>
-                    <thead>
-                        <th>#</th>
-                        <th>Team Name</th>
-                        <th>Team Type</th>
-                        <th>Total Members</th>
-                        <th>Action</th>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="invitation in invitations">
-                            <td>{{$index + 1}}</td>
-                            <td>{{invitation.name}}</td>
-                            <td>{{invitation.type}}</td>
-                            <td>{{invitation.member.length}}</td>
-                            <td>
-                                <i ng-click="accept(invitation,$index)" class="material-icons pointer">done</i>
-                                <i ng-click="reject(invitation,$index)" class="material-icons pointer">delete</i>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </md-content>
-            <md-button ng-show="!currentTeam._id" class="md-primary" ng-click="showModalCreateTeam(event)">Create new team</md-button>
-        </md-tab>
-        <md-tab label="Add New Member" ng-if="currentUser.isLeader">
-            <form ng-submit="addNewMember(form)" name="form">
-                <div layout="row">
-                    <md-input-container layout="row" flex>
-                        <div flex="80">
-                            <label for="">Email</label>
-                            <input type="email" ng-model="email">
-                        </div>
-                        <div flex="20">
-                            <i ng-click="addUser(email)" class="material-icons pointer">add</i>
-                        </div>
-                    </md-input-container>
-                </div>
-                <div layout="row">
-                    <md-list flex="80" ng-cloak>
-                        <md-list-item ng-repeat="email in member.emails">
-                            <div layout="column" flex="80">
-                                {{email.email}}
-                            </div>
-                            <div layout="column" flex="20">
-                                <i ng-click="removeUser($index)" class="material-icons pointer">delete</i>
-                            </div>
-                        </md-list-item>
-                    </md-list>
-                </div>
-                <div layout="row">
-                    <md-button type="submit" class="md-raised md-accent md-hue-1">Save!</md-button>
-                </div>
-            </form>
-        </md-tab>
-    </md-tabs>
-</md-content> -->
