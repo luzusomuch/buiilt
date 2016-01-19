@@ -109,7 +109,7 @@ exports.invitePeople = function(req, res) {
                                         tenderName: invite.tenderName,
                                         inviter: req.user._id,
                                         tenderers: [{
-                                            email: invitee.email,
+                                            email: invite.email,
                                             teamMember: []
                                         }],
                                         hasSelect: true,
@@ -340,7 +340,7 @@ exports.getTender = function(req, res) {
                             result = tender;
                         } else {
                             _.each(tender.tenderers, function(tenderer) {
-                                if (tenderer._id._id.toString() == req.user._id) {
+                                if (tenderer._id && tenderer._id._id.toString() == req.user._id) {
                                     result = tender;
                                     result.tenderers = [];
                                     result.tenderers.push(tenderer);
@@ -359,21 +359,29 @@ function responseWithEachType(people, req, res){
     var roles = ["builders", "clients", "architects", "subcontractors", "consultants"];
     _.each(roles, function(role) {
         _.each(people[role], function(tender) {
-            var index = _.findIndex(tender.tenderers, function(tender) {
-                if (tender._id) {
-                    return tender._id._id.toString() === req.user._id.toString();
-                } else {
-                    _.each(tender.teamMember, function(member) {
-                        return member._id.toString() == req.user._id;
-                    });
+            var index = _.findIndex(tender.tenderers, function(tenderer) {
+                if (tenderer._id) {
+                    return tenderer._id._id.toString() === req.user._id.toString();
                 }
             });
-
-            if (index != -1) {
+            if (index !== -1) {
                 switch (role) {
                     case 'builders':
+                        people.clients.teamMember = [];
+                        people.architects.teamMember = [];
+                        people.subcontractors.teamMember = [];
+                        people.consultants.teamMember = [];
+                        return res.send(200, people)
                         break;
                     case 'clients':
+                        people.builders.teamMember = [];
+                        people.architects.teamMember = [];
+                        people.subcontractors.teamMember = [];
+                        people.consultants.teamMember = [];
+                        people.subcontractors = [];
+                        return res.send(200, people);
+                        break;
+                    case 'architects':
                         people.builders.teamMember = [];
                         people.architects.teamMember = [];
                         people.subcontractors.teamMember = [];
@@ -407,6 +415,21 @@ function responseWithEachType(people, req, res){
                     default:
                         break;
                 }
+            } else {
+                _.each(tender.tenderers, function(tenderer) {
+                    if (_.findIndex(tenderer.teamMember, function(member) {
+                        return member._id.toString() === req.user._id.toString();
+                    }) !== -1) {
+                        if (roles.indexOf(role) !== -1) {
+                            var newRoles = roles;
+                            newRoles.splice(roles.indexOf(role),1);
+                            _.each(newRoles, function(newRole) {
+                                people[newRole] = [];
+                            });
+                            return res.send(200, people);
+                        }
+                    }
+                });
             }
         });
     });

@@ -69,7 +69,6 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
                     });
                 }
             });
-
             if ($scope.people.project.projectManager.type === "builder") {
                 switch($rootScope.currentUser.type) {
                     case "builders":
@@ -207,7 +206,7 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
 			peopleService.update({id: $stateParams.id},$scope.invite).$promise.then(function(res){
 				$scope.showToast("Invited successfully");
 	            $scope.cancelInviteTeamModal();
-	            loadProjectMembers($stateParams.id);
+                $rootScope.$broadcast("Project.Team.Invite", res);
 	        }, function(res){
 	        	$scope.showToast("Error. Something went wrong.")
 	        });
@@ -262,5 +261,7 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
     };
 
 	loadProjectMembers($stateParams.id);
-	
+	$rootScope.$on("Project.Team.Invite", function(event, data) {
+        loadProjectMembers($stateParams.id);
+    });
 });

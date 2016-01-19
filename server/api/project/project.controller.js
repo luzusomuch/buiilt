@@ -46,7 +46,7 @@ exports.create = function(req, res){
                         createAt: new Date()
                     });
                 } else if (req.body.teamType === "homeOwner") {
-                    people.builders.push({
+                    people.clients.push({
                         tenderName: "Client",
                         tenderers: [{
                             _id: req.user._id,
@@ -57,7 +57,7 @@ exports.create = function(req, res){
                         createAt: new Date()
                     });
                 } else if (req.body.teamType === "architect") {
-                    people.builders.push({
+                    people.architects.push({
                         tenderName: "Architect",
                         tenderers: [{
                             _id: req.user._id,

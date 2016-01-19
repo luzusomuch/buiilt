@@ -63,8 +63,9 @@ angular.module('buiiltApp')
                         $mixpanel.track("SignUp", {
                             "email": res.email,
                             "name": res.name
+                        }, function() {
+                            window.location.href = "/settings/user";
                         });
-                        window.location.href = "/settings/user";
                     });
                 }
                 return cb(user);
@@ -84,15 +85,17 @@ angular.module('buiiltApp')
                     $cookieStore.put('token', data.token);
                     userService.get().$promise.then(function(res) {
                         currentUser = res;
+                        $mixpanel.identify(res._id);
                         $mixpanel.track("SignUp", {
                             "email": res.email,
                             "name": res.name
+                        }, function() {
+                            if (data.package.type == 'people') {
+                                window.location.href = "/projects/open";
+                            } else {
+                                window.location.href = "/settings/user";
+                            }
                         });
-                        if (data.package.type == 'people') {
-                            window.location.href = "/projects/open";
-                        } else {
-                            window.location.href = "/settings/user";
-                        }
                     });
                 }
                 return cb(user);
