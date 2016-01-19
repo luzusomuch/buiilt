@@ -109,7 +109,10 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
     };
 
     $scope.saveDetail = function(form) {
-        if (form.$valid) {
+        if (!$scope.currentTeam._id) {
+            $scope.showToast("You haven\'t created or joined any team");
+            return;
+        } else if (form.$valid) {
             $scope.currentTeam.editType = "editCompanyDetail";
             teamService.update({_id : $scope.currentTeam._id},$scope.currentTeam).$promise
             .then(function(team) {
