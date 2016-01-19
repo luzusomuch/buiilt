@@ -15,30 +15,49 @@
                 </div>
 
                 <div layout="row">
-                    <md-input-container flex>
-                        <label for="">Team name</label>
-                        <input type="text" ng-model="team.name" name="name" required>
-                    </md-input-container>
+                    <p>Please select team type: </p>
+                    <md-radio-group ng-model="team.type" ng-change="getTeamType(team.type)">
+                        <md-radio-button value="builder">Builder</md-radio-button>
+                        <md-radio-button value="homeOwner">Home Owner</md-radio-button>
+                        <md-radio-button value="architect">Architect</md-radio-button>
+                        <md-radio-button value="contractor">Contractor</md-radio-button>
+                        <md-radio-button value="consultant">Consultant</md-radio-button>
+                    </md-radio-group>
                 </div>
 
                 <div layout="row">
                     <md-input-container flex>
-                        <label for="">Select team type</label>
-                        <md-select ng-model="team.type">
-                            <md-option value="builder">Builder</md-option>
-                            <md-option value="homeOwner">Home Owner</md-option>
-                            <md-option value="architect">Architect</md-option>
-                            <md-option value="contractor">Contractor</md-option>
-                            <md-option value="consultant">Consultant</md-option>
-                        </md-select>
+                        <label for="">Company name</label>
+                        <input type="text" ng-model="team.name" ng-disabled="team.type=='homeOwner'" required>
                     </md-input-container>
                 </div>
-                
+
+                <div layout="row">
+                    <md-input-container flex="70">
+                        <label for="">Company address</label>
+                        <input type="text" ng-model="team.detail.companyAddress.address" required>
+                    </md-input-container>
+                    <md-input-container flex="30">
+                        <label for="">Company address suburb</label>
+                        <input type="text" ng-model="team.detail.companyAddress.suburb" required>
+                    </md-input-container>
+                </div>
+
+                <div layout="row">
+                    <md-input-container flex="50">
+                        <label for="">Company postcode</label>
+                        <input type="text" ng-model="team.detail.companyAddress.postCode" required>
+                    </md-input-container>
+                    <md-input-container flex="50">
+                        <label for="">Company contact number</label>
+                        <input type="text" ng-model="team.detail.companyPhoneNumber" required>
+                    </md-input-container>
+                </div>
             </div>
         </md-dialog-content>
         
         <md-dialog-actions>
-            <md-button ng-click="cancelCreateTeam()">Cancel</md-button>
+            <md-button ng-click="cancelDialog()">Cancel</md-button>
             <md-button type="submit" class="md-raised md-accent md-hue-1">Creat Team!</md-button>
         </md-dialog-actions>
     </form>

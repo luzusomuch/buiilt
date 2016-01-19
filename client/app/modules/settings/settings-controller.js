@@ -81,18 +81,26 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
         $mdDialog.cancel();
     };
 
+    $scope.getTeamType = function(type) {
+        if (type == "homeOwner") {
+            $scope.team.name = $scope.currentUser.lastName;
+        } else {
+            $scope.team.name = '';
+        }
+    };
+
     $scope.createTeam = function(form) {
         if (form.$valid) {
             teamService.create($scope.team, function (team) {
                 $rootScope.currentTeam = $scope.currentTeam = team;
                 getTeamLeader($scope.currentTeam);
                 $rootScope.$emit('TeamUpdate',team);
-                $scope.cancelCreateTeam();
+                $scope.cancelDialog();
                 $scope.showToast("Create new team successfully!");
                 $state.go('settings.staff', {},{reload: true}).then(function(data){
                 });
             }, function (err) {
-                $scope.cancelCreateTeam();
+                $scope.cancelDialog();
                 $scope.showToast(err);
             });
         }

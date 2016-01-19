@@ -25,8 +25,8 @@ var TeamSchema = new Schema({
         required: 'Team type is required'
     },
     detail : {
-        companyName : String,
         companyAddress : {
+            address: String,
             suburb: String,
             postCode: String
         },
