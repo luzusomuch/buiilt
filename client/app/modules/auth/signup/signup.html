@@ -41,8 +41,8 @@
 						<p class="validate-message" ng-repeat="(key, msg) in errors" type="danger" close="closeAlert(key)">{{msg.email.message}}</p>
 					</div>
 				
-					<div ng-if="hasInviteToken && user.invite.type == 'team-invite'" layout="row" layout-align="center center">
-						<p style="font-size: 20px; font-weight: 500; margin-bottom: 3vh">Join {{user.invite.element.name}} on buiilt.</p>
+					<div ng-if="hasInviteToken && user.invite.type == 'team-invite'" layout="column" layout-align="center center">
+						<p style="font-size: 20px; font-weight: 500">Join {{user.invite.element.name}} on buiilt.</p>
 						<p style="font-size: 20px; font-weight: 500; margin-bottom: 3vh">Fill out your details below to accept their invitation.</p>
 					</div>
 				
