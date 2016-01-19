@@ -1,6 +1,7 @@
 'use strict';
 
 var User = require('./../../models/user.model');
+var People = require('./../../models/people.model');
 var Team = require('./../../models/team.model');
 var Project = require('./../../models/project.model');
 var BuilderPackage = require('./../../models/builderPackage.model');
@@ -103,6 +104,57 @@ exports.uploadMobile = function(req, res) {
         else {
             return res.send(200,file);
         }
+    });
+};
+
+exports.submitTender = function(req, res) {
+    var item = req.body;
+    console.log(file);
+    var file = new File({
+        project: req.params.id,
+        name: item.filename,
+        path: item.url,
+        key: item.key,
+        server: 's3',
+        mimeType: item.mimeType,
+        size: item.size,
+        owner: req.user._id,
+        element: {type: "tender-file"}
+    });
+    file.save(function(err) {
+        if (err)
+            return res.send(500,err);
+        People.findOne({project: req.params.id}, function(err, people) {
+            if (err) {
+                file.remove(function() {
+                    return res.send(500,err);
+                });
+            } else if (!people) {
+                file.remove(function() {
+                    return res.send(404);
+                });
+            } else {
+                _.each(people[req.body.userType], function(tender) {
+                    var index = _.findIndex(tender.tenderers, function(tenderer) {
+                        if (tenderer._id) {
+                            return tenderer._id.toString() === req.user._id.toString();
+                        }
+                    });
+                    if (index !== -1) {
+                        tender.tenderers[index].tenderFile.push({name: file.name, link: file.path});
+                    }
+                });
+                people.save(function(err) {
+                    if (err) {
+                        file.remove(function() {
+                            return res.send(500,err);
+                        });
+                    } else {
+                        return res.send(200);
+                    }
+                });
+            }
+        });
     });
 };
 

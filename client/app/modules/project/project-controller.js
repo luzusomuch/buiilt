@@ -4,6 +4,7 @@ angular.module('buiiltApp').controller('projectCtrl', function($rootScope, $scop
         $rootScope.title = $scope.project.name + " Overview";
     });
 
+    var userType;
     peopleService.getInvitePeople({id: $stateParams.id}).$promise.then(function(res) {
         _.each($rootScope.roles, function(role) {
             _.each(res[role], function(tender) {
@@ -13,6 +14,7 @@ angular.module('buiiltApp').controller('projectCtrl', function($rootScope, $scop
                     }
                 }) !== -1) {
                     $scope.showSubmitTender = true;
+                    userType = role;
                 }
             });
         });
@@ -61,24 +63,20 @@ angular.module('buiiltApp').controller('projectCtrl', function($rootScope, $scop
         });
     };
 
-    $scope.uploadFiles = [];
+    $scope.uploadFile = {};
     $scope.pickFile = pickFile;
 
     $scope.onSuccess = onSuccess;
 
     function pickFile(){
         filepickerService.pick(
-            {maxFiles: 5},
             onSuccess
         );
     };
 
-    function onSuccess(files){
-        _.each(files, function(file) {
-            file.belongToType = ($scope.package) ? $scope.package.type : 'project';
-            file.tags = [];
-        });
-        $scope.uploadFiles = files;
+    function onSuccess(file){
+        file.userType = userType;
+        $scope.uploadFile = file;
     };
 
     $scope.archiveProject = function() {
@@ -105,7 +103,10 @@ angular.module('buiiltApp').controller('projectCtrl', function($rootScope, $scop
     };
 
     $scope.uploadNewDocument = function() {
-        console.log($scope.uploadFiles);
+        uploadService.submitTender({id: $stateParams.id}, $scope.uploadFile).$promise.then(function(res) {
+            $scope.closeDialog();
+            $scope.showToast("Submit a tender successfully");
+        }, function(err) {$scope.showToast("Error");});
     };
 
 });

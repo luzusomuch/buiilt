@@ -20,6 +20,13 @@ angular.module('buiiltApp')
                 action: 'upload-reversion'
             }
         },
+        submitTender: {
+            method: "POST",
+            params: {
+                id: '@id',
+                action: "submit-tender"
+            }
+        },
         uploadInPackage: {
             method: 'POST', 
             params: {

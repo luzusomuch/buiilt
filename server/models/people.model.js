@@ -20,6 +20,10 @@ var tender = {
             {type: Schema.Types.ObjectId, ref: 'User'}
         ],
         email: {type: String},
+        tenderFile: [{
+            name: String,
+            link: String
+        }],
         activities: [activities]
     }],
     inviter: {type: Schema.Types.ObjectId, ref: 'User'},
