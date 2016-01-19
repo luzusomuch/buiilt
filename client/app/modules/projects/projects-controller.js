@@ -37,11 +37,19 @@ angular.module('buiiltApp').controller('projectsCtrl', function ($rootScope, $sc
     $scope.showCreateProjectModal = function($event) {
     
         $mdDialog.show({
-          targetEvent: $event,
-          controller: 'projectsCtrl',
-          templateUrl: 'app/modules/projects/projects-create/projects-create.html',
-          parent: angular.element(document.body),
-          clickOutsideToClose:false
+            targetEvent: $event,
+            controller: 'projectsCtrl',
+            resolve: {
+                teamInvitations: function(authService){
+                    return authService.getCurrentInvitation().$promise;
+                },
+                projectsInvitation: function(inviteTokenService) {
+                    return inviteTokenService.getProjectsInvitation().$promise;
+                }
+            },
+            templateUrl: 'app/modules/projects/projects-create/projects-create.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose:false
         });
         
     };

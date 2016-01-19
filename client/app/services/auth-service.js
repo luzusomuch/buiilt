@@ -59,6 +59,7 @@ angular.module('buiiltApp')
                     $cookieStore.put('token', data.token);
                     userService.get().$promise.then(function(res) {
                         currentUser = res;
+                        $mixpanel.identify(res._id);
                         $mixpanel.track("SignUp", {
                             "email": res.email,
                             "name": res.name
