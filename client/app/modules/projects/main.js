@@ -7,7 +7,15 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
 		abstract: true,
     	templateUrl: '/app/modules/projects/projects.html',
     	controller: 'projectsCtrl',
-    	authenticate : true
+    	authenticate : true,
+        resolve: {
+            teamInvitations: function(authService){
+                return authService.getCurrentInvitation().$promise;
+            },
+            projectsInvitation: function(inviteTokenService) {
+                return inviteTokenService.getProjectsInvitation().$promise;
+            }
+        }
     })
   
   //State for Open projects
@@ -28,9 +36,9 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
 	
   //States for Project Invitations
     .state('projects.invitations', {
-	   url: '/invitations',
-	   templateUrl: '/app/modules/projects/projects-invitations/projects-invitations.html',
-	   controller: 'projectsCtrl',
-	   authenticate : true
+	    url: '/invitations',
+	    templateUrl: '/app/modules/projects/projects-invitations/projects-invitations.html',
+	    controller: 'projectsCtrl',
+	    authenticate : true
     })
 });

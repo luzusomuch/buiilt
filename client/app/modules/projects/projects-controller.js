@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('projectsCtrl', function ($rootScope, $scope, $timeout, $state, $mdDialog, projectService, inviteTokenService) {
+angular.module('buiiltApp').controller('projectsCtrl', function ($rootScope, $scope, $timeout, $state, $mdDialog, projectService, inviteTokenService, projectsInvitation, teamInvitations, teamService, $mdToast) {
 	$rootScope.title = "Projects List";
     $scope.autoCompleteRequireMath = true;
     $scope.selectedItem = null;
@@ -11,9 +11,8 @@ angular.module('buiiltApp').controller('projectsCtrl', function ($rootScope, $sc
         $scope.allowCreateProject = true;
     }
 
-    inviteTokenService.getProjectsInvitation().$promise.then(function(res) {
-        $scope.projectsInvitation = res;
-    });
+    $scope.projectsInvitation = projectsInvitation;
+    $scope.teamInvitations = teamInvitations;
 
     $scope.createProject = function(form) {
         $scope.submitted = true;
@@ -72,5 +71,41 @@ angular.module('buiiltApp').controller('projectsCtrl', function ($rootScope, $sc
         if ($scope.projectsFilter.length === 0) {
             $scope.search = false;
         }
+    };
+
+    $scope.selectInvitation = function(invitation, index) {
+        var confirm = $mdDialog.confirm()
+        .title("Do you want to join or reject " + invitation.name + " team?")
+        .ok("Join this team")
+        .cancel("Reject this team");
+        $mdDialog.show(confirm).then(function() {
+            $scope.accept(invitation);
+        }, function() {
+            $scope.reject(invitation,index);
+        });
+    };
+
+    $scope.accept = function(invitation, index) {
+        teamService.acceptTeam({_id: invitation._id}).$promise.then(function (res) {
+            $scope.currentTeam = res;
+            $rootScope.$emit('TeamUpdate',res);
+            $scope.showToast("Join team " + invitation.name + " successfully!");
+            $scope.teamInvitations.splice(index, 1);
+        }, function (err) {
+            $scope.showToast(err);
+        });
+    };
+
+    $scope.reject = function(invitation, index) {
+        teamService.rejectTeam({_id: invitation._id}).$promise.then(function () {
+            $scope.teamInvitations.splice(index, 1);
+            $scope.showToast("Reject " +invitation.name+ "successfully!");
+        }, function (err) {
+            $scope.showToast(err);
+        });
+    };
+
+    $scope.showToast = function(value) {
+        $mdToast.show($mdToast.simple().textContent(value).position('bottom','right').hideDelay(3000));
     };
 });

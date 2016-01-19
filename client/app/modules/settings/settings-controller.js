@@ -10,9 +10,6 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
         $scope.currentTeam = $rootScope.currentTeam = data;
     });
 
-    authService.getCurrentInvitation().$promise.then(function(res) {
-        $scope.invitations = res;
-    });
     $scope.member = {
       emails : []
     };
@@ -203,36 +200,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
         });
     };
 
-    $scope.accept = function(invitation) {
-        var confirm = $mdDialog.confirm().title("Do you want to join " + invitation.name + " team?").ok("Yes").cancel("No");
-        $mdDialog.show(confirm).then(function() {
-            teamService.acceptTeam({_id: invitation._id}).$promise
-            .then(function (res) {
-                $scope.currentTeam = res;
-                $rootScope.$emit('TeamUpdate',res);
-                $scope.showToast("Join team " + invitation.name + " successfully!");
-            }, function (err) {
-                $scope.showToast(err);
-            });
-        }, function() {
-            
-        });
-    };
-
-    $scope.reject = function(invitation) {
-        var confirm = $mdDialog.confirm().title("Do you want to reject " + invitation.name + " member?").ok("Yes").cancel("No");
-        $mdDialog.show(confirm).then(function() {
-            teamService.rejectTeam({_id: invitation._id}).$promise
-            .then(function () {
-                $scope.invitations.splice(index, 1);
-                $scope.showToast("Reject " +invitation.name+ "successfully!");
-            }, function (err) {
-                $scope.showToast(err);
-            });
-        }, function() {
-            
-        });
-    };
+    
 
     $scope.showToast = function(value) {
         $mdToast.show($mdToast.simple().textContent(value).position('bottom','right').hideDelay(3000));

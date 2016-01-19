@@ -5,7 +5,15 @@
 </div>
 
 <md-list ng-cloak class="main-page-content">
-
+	<div ng-repeat="invitation in teamInvitations">
+		<md-list-item class="md-2-line" md-ink-ripple ng-click="selectInvitation(invitation, index)">
+			<div class="md-list-item-text" layout="column">
+		        <h3 class="md-primary">{{invitation.name}}</h3>
+		        <p>Please click here to accept or reject this invitation</p>
+	        </div>
+		</md-list-item>
+		<md-divider></md-divider>
+	</div>
 	<div ng-repeat="project in projectsInvitation" ui-sref="project.overview({id: project.element.project._id})">
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
@@ -14,5 +22,5 @@
 		</md-list-item>
 		<md-divider></md-divider>
 	</div>
-	
+
 </div>
