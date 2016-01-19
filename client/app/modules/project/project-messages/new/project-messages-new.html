@@ -8,30 +8,45 @@
 		
 		<md-dialog-content>
 			<div class="md-dialog-content" layout="column">
-				<div layout="row">
-					<md-input-container flex class="modal-instructions">
-						<p>Please provide the following details to attach a new message to your project...</p>
-					</md-input-container>
-				</div>
+				
 				<div layout="row">
 					<md-input-container flex>
 				        <label>Message Thread Name</label>
 				        <input md-autofocus type="text" ng-model="thread.name" name="name" required/>
 					</md-input-container>
 				</div>
-				<div ng-cloak>
+				
+				<div layout="row" layout-align="center center" class="assignees" layout-wrap>
+					
+					<span class="available-assignee">Assignee 1</span>
+					<span class="available-assignee">Assignee 2</span>
+					<span class="available-assignee">Assignee 3</span>
+					<span class="selected-assignee">Assignee 4</span>
+					<span class="available-assignee">Assignee 5</span>
+					<span class="selected-assignee">Assignee 6</span>
+					<span class="selected-assignee">Assignee 7</span>
+					<span class="selected-assignee">Assignee 8</span>
+					<span class="available-assignee">Assignee 9</span>
+					<span class="available-assignee">Assignee 10</span>
+					<span class="available-assignee">Assignee 11</span>
+					<span class="available-assignee">Assignee 12</span>
+					
+				</div>
+				
+				
+				<!-- <div ng-cloak>
 					<md-content layout="row" layout-wrap layout-xs="column">
 						<div flex="33" flex-sm="50" flex-xs="100" layout="row">
 							<md-card ng-click="selectMember($index)" ng-repeat="member in projectMembers" layout-margin>
 								<md-card-header>
 									<p class="name">{{member.name}}</p>
 								</md-card-header>
-						
+
 								<md-card-content>
 									<p class="email">{{(member.email) ? member.email : 'Email Address'}}</p>
 									<p class="phone">{{(member.phoneNumber)? member.phoneNumber : 'Phone Number'}}</p>
 								</md-card-content>
-						
+
 								<md-card-actions layout-margin>
 									<md-card-icon-actions layout="row" layout-align="space-around center">
 									    <md-button class="material-icons md-icon-button">
@@ -43,7 +58,8 @@
 							</md-card>
 						</div>
 					</md-content>
-				</div>
+				</div> -->
+				
 			</div>
 		</md-dialog-content>
 		<md-dialog-actions>

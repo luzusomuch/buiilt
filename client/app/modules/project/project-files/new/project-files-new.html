@@ -9,16 +9,10 @@
 		<md-dialog-content>
 			<div class="md-dialog-content" layout="column">
 				
-				<div layout="row">
-					<md-input-container flex class="modal-instructions">
-						<p>Please provide the following details to attach a new file to your project...</p>
-					</md-input-container>
-				</div>
-				
-				<div layout="row">
-					<md-input-container flex>
+				<div layout="row" layout="center center">
+					<div style="padding: 20px">
 						<input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/>
-					</md-input-container>
+					</div>
 				</div>
 
 				<div layout="row">
@@ -37,7 +31,7 @@
 			        secondary-placeholder="+Tag"></md-chips>
 				</div>
 				
-				<div layout="row">
+				<!-- <div layout="row">
 					<md-chips ng-model="uploadFile.members" md-autocomplete-snap
 	              		md-require-match="true">
 				      	<md-autocomplete
@@ -54,6 +48,23 @@
 					        </span>
 				      	</md-chip-template>
 				    </md-chips>
+				</div> -->
+				
+				<div layout="row" layout-align="center center" class="assignees" layout-wrap>
+					
+					<span class="available-assignee">Assignee 1</span>
+					<span class="available-assignee">Assignee 2</span>
+					<span class="available-assignee">Assignee 3</span>
+					<span class="selected-assignee">Assignee 4</span>
+					<span class="available-assignee">Assignee 5</span>
+					<span class="selected-assignee">Assignee 6</span>
+					<span class="selected-assignee">Assignee 7</span>
+					<span class="selected-assignee">Assignee 8</span>
+					<span class="available-assignee">Assignee 9</span>
+					<span class="available-assignee">Assignee 10</span>
+					<span class="available-assignee">Assignee 11</span>
+					<span class="available-assignee">Assignee 12</span>
+					
 				</div>
 				
 			</div>

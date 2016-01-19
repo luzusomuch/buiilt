@@ -470,8 +470,36 @@ md-input-container > label {
 	font-weight: 500;
 }
 
+.assignees {
+	margin-top: 6vh;
+}
 
+.available-assignee {
+	font-size: 11px;
+	font-weight: 600;
+	color: #424242;
+	background-color: #EEEEEE;
+	border-radius: 100px;
+	padding: 8px;
+	margin: 3px;
+	text-transform: uppercase;
+	padding-left: 15px;
+	padding-right: 15px
+	
+}
 
+.selected-assignee {
+	font-size: 11px;
+	font-weight: 600;
+	color: white;
+	background-color: #2196F3;
+	border-radius: 100px;
+	padding: 8px;
+	margin: 3px;
+	text-transform: uppercase;
+	padding-left: 15px;
+	padding-right: 15px
+}
 
 
 
