@@ -141,8 +141,8 @@ exports.updateProject = function(req, res) {
             if (err) {return res.send(500,err);}
             if (project.status == "archive") {
                 req.project = project;
-                return res.send(200,project);
-                // ongoing this sendInfoToUser()
+                // return res.send(200,project);
+                sendInfoToUser(req, res);
             } else {
                 return res.send(200,project);
             }
@@ -169,6 +169,7 @@ function sendInfoToUser(req, res) {
             .populate("consultants.tenderers._id", "_id email name")
             .populate("consultants.tenderers.teamMember", "_id email name")
             .populate("consultants.inviter", "_id email name")
+            .populate("project")
             .exec(cb);
         },
         users: function(cb) {
@@ -179,17 +180,172 @@ function sendInfoToUser(req, res) {
         var users = result.users;
         var people = result.people;
         var roles = ["builders", "clients", "architects", "subcontractors", "consultants"];
-        var data = [];
-        async.each(users, function(user, cb) {
-            _.each(roles, function(role) {
-                _.each(people[role], function(tender) {
-                    if (tender.inviter._id.toString()===user._id.toString()) {
-                        
-                    }
+        async.each(users, function(user, callback) {
+            var data = [];
+            async.parallel([
+                function(cb) {
+                    _.each(roles, function(role) {
+                        _.each(people[role], function(tender) {
+                            // if the current loop user is the inviter
+                            if (tender.inviter._id.toString()===user._id.toString()) {
+                                _.each(tender.tenderers, function(tenderer) {
+                                    if (tenderer._id) {
+                                        data.push({
+                                            type: "Tender invited",
+                                            createdAt: '',
+                                            name: "You have invited " + tenderer._id.name + " for tender " + tender.tenderName,
+                                            description: '',
+                                            url: '',
+                                            version: '',
+                                            content: ''
+                                        });
+                                    }
+                                });
+                            }
+                            // if the current loop user is tenderer
+                            if (_.findIndex(tender.tenderers, function(tenderer) {
+                                if (tenderer._id) {
+                                    return tenderer._id._id.toString() === user._id.toString();
+                                }
+                            }) !== -1) {
+                                data.push({
+                                    type: "Tenderer",
+                                    createdAt: '',
+                                    name: "You have been invited by " + tender.inviter.name + " for tender " + tender.tenderName,
+                                    description: '',
+                                    url: '',
+                                    version: '',
+                                    content: ''
+                                });
+                            } else {
+                                _.each(tender.tenderers, function(tenderer) {
+                                    _.each(tenderer.teamMember, function(member) {
+                                        if (member._id.toString() === user._id.toString()) {
+                                            data.push({
+                                                type: "Tenderer Team Member",
+                                                createdAt: '',
+                                                name: "You have been invited as a team member for tender " + tender.tenderName,
+                                                description: '',
+                                                url: '',
+                                                version: '',
+                                                content: ''
+                                            });
+                                        }
+                                    });
+                                });
+                            }
+                        });
+                    });
+                    cb();
+                },
+                function(cb) {
+                    Task.find({project: req.params.id, $or:[{owner: user._id}, {members: user._id}]}, function(err, tasks) {
+                        if (err || tasks.length === 0) {cb();}
+                        _.each(tasks, function(task) {
+                            data.push({
+                                type: "Task",
+                                createdAt: moment(task.createdAt).format("MM-DD-YYYY"),
+                                name: task.name,
+                                description: task.description,
+                                url: '',
+                                version: '',
+                                content: ''
+                            });
+                        });
+                        cb(null,data);
+                    });
+                },
+                function(cb) {
+                    File.find({
+                    project: req.params.id, 
+                    $or:[{"element.type":"file", $or:[{members: user._id}, {owner: user._id}]}, 
+                        {"element.type":"document"}]}, function(err, files) {
+                        if (err || files.length === 0) {cb();}
+                        _.each(files, function(file) {
+                            data.push({
+                                type: (file.element.type === "file") ? "File" : "Document",
+                                createdAt: moment(file.createdAt).format("MM-DD-YYYY"),
+                                name: file.name,
+                                description: file.description,
+                                url: file.path,
+                                version: file.version,
+                                content: ''
+                            });
+                            if (file.fileHistory.length > 0) {
+                                _.each(file.fileHistory, function(history) {
+                                    data.push({
+                                        type: (file.element.type === "file") ? "File Reversion" : "Document Reversion",
+                                        createdAt: moment(history.createdAt).format("MM-DD-YYYY"),
+                                        name: history.name,
+                                        description: history.description,
+                                        url: history.link,
+                                        version: history.version,
+                                        content: ''
+                                    });
+                                });
+                            }
+                        });
+                        cb(null, data);
+                    });
+                }, 
+                function(cb) {
+                    Thread.find({project: req.params.id, $or:[{owner: user._id}, {members: user._id}]})
+                    .populate("messages.user")
+                    .exec(function(err, threads) {
+                        if (err || threads.length === 0) {cb();}
+                        _.each(threads, function(thread) {
+                            data.push({
+                                type: "Thread",
+                                createdAt: moment(thread.createdAt).format("MM-DD-YYYY"),
+                                name: thread.name,
+                                description: thread.description,
+                                url: '',
+                                version: '',
+                                content: ''
+                            });
+                            if (thread.messages.length > 0) {
+                                _.each(thread.messages, function(message) {
+                                    data.push({
+                                        type: "Thread Message Detail",
+                                        createdAt: moment(message.sendAt).format("MM-DD-YYYY"),
+                                        name: thread.name,
+                                        description: thread.description,
+                                        url: '',
+                                        version: '',
+                                        content: message.user.name + " said: " + message.text
+                                    });
+                                });
+                            }
+                        });
+                        cb(null, data);
+                    });
+                }
+            ], function(err, result) {
+                if (err) {return res.send(500,err);}
+                var filename = user._id+"-archive-"+people.project.name+".csv"
+                json2csv({data: data}, function(err, csv) {
+                    if (err) {console.log(err);}
+                    fs.writeFile(filename, csv, function(err) {
+                        if (err) 
+                            throw err;
+                        S3.uploadFile({path: config.newRoot+filename, name: filename}, function(err, data) {
+                            if (err) {console.log(err);return res.send(err);}
+                            var link = S3.getPublicUrl(filename);
+                            Mailer.sendMail('download-project-data.html', config.emailFrom, user.email, {
+                                user: user.toJSON(),
+                                link: link,
+                                subject: 'Archived data for ' + people.project.name
+                            },function(err){
+                                console.log(err);
+                                fs.unlinkSync(config.newRoot+filename);
+                                callback();
+                            });
+                        });
+                    });
                 });
             });
         }, function() {
-
+            return res.send(200, people.project);
         });
     });
 };

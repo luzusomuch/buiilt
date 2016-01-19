@@ -66,7 +66,7 @@
 		      	</md-button>
 		  	</md-fab-trigger>
 			<md-fab-actions>
-			    <md-button aria-label="Add a New Team Member" class="md-fab md-raised md-mini md-primary" ng-click="showModalCreateTeam($event)">
+			    <md-button aria-label="Add a New Team Member" class="md-fab md-raised md-mini md-primary" ng-click="showModalCreateTeam($event)" ng-show="!currentTeam._id">
 			        <md-tooltip md-direction="left">Create new Team</md-tooltip>
 			        <md-icon class="material-icons">person_outline</md-icon>
 			    </md-button>
