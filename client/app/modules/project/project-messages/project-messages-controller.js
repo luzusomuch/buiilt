@@ -13,14 +13,35 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
 		_.each($rootScope.roles, function(role) {
 			_.each($scope.people[role], function(tender){
 				if (tender.hasSelect) {
-					tender.tenderers[0]._id.select = false;
-					$scope.projectMembers.push(tender.tenderers[0]._id);
-					if (tender.tenderers[0].teamMember.length > 0 && tender.tenderers[0]._id._id == $rootScope.currentUser._id) {
-						_.each(tender.tenderers[0].teamMember, function(member) {
-							member.select = false;
-							$scope.projectMembers.push(member);
-						});
-					}
+                    var isLeader = (_.findIndex(tender.tenderers, function(tenderer) {
+                        if (tenderer._id) {
+                            return tenderer._id._id.toString() === $rootScope.currentUser._id.toString();
+                        }
+                    }) !== -1) ? true : false;
+                    if (!isLeader) {
+                        _.each(tender.tenderers, function(tenderer) {
+                            var memberIndex = _.findIndex(tenderer.teamMember, function(member) {
+                                return member._id.toString() === $rootScope.currentUser._id.toString();
+                            });
+                            if (memberIndex !== -1) {
+                                _.each(tenderer.teamMember, function(member) {
+                                    member.select = false;
+                                    $scope.projectMembers.push(member);
+                                });
+                            }
+                        });
+				        tender.tenderers[0]._id.select = false;
+    					$scope.projectMembers.push(tender.tenderers[0]._id);
+                    } else {
+                        _.each(tender.tenderers, function(tenderer) {
+                            if (tenderer._id._id.toString() === $rootScope.currentUser._id.toString()) {
+                                _.each(tenderer.teamMember, function(member) {
+                                    member.select = false;
+                                    $scope.projectMembers.push(member);
+                                });
+                            }
+                        });
+                    }
 				}
 			});
 		});

@@ -298,7 +298,38 @@ exports.getInvitePeople = function(req, res) {
         if (!people) {return res.send(404);}
         else {
             if (people.project.projectManager._id.toString() === req.user._id.toString()) {
-                return res.send(200, people);
+                var roles = ["builders", "clients", "architects", "subcontractors", "consultants"];
+                if (people.project.projectManager.type === "builder") {
+                    roles.splice(_.indexOf(roles, "builders"), 1);
+                    _.each(roles, function(role) {
+                        _.each(people[role], function(tender) {
+                            _.each(tender.tenderers, function(tenderer) {
+                                tenderer.teamMember = [];
+                            })
+                        });
+                    });
+                    return res.send(200, people);
+                } else if (people.project.projectManager.type === "architect") {
+                    roles.splice(_.indexOf(roles, "architects"), 1);
+                    _.each(roles, function(role) {
+                        _.each(people[role], function(tender) {
+                            _.each(tender.tenderers, function(tenderer) {
+                                tenderer.teamMember = [];
+                            })
+                        });
+                    });
+                    return res.send(200, people);
+                } else if (people.project.projectManager.type === "homeOwner") {
+                    roles.splice(_.indexOf(roles, "clients"), 1);
+                    _.each(roles, function(role) {
+                        _.each(people[role], function(tender) {
+                            _.each(tender.tenderers, function(tenderer) {
+                                tenderer.teamMember = [];
+                            })
+                        });
+                    });
+                    return res.send(200, people);
+                }
             } else {
                 responseWithEachType(people, req, res);
             }
@@ -383,7 +414,7 @@ function responseWithEachType(people, req, res){
                         break;
                     case 'architects':
                         people.builders.teamMember = [];
-                        people.architects.teamMember = [];
+                        people.clients.teamMember = [];
                         people.subcontractors.teamMember = [];
                         people.consultants.teamMember = [];
                         people.subcontractors = [];
