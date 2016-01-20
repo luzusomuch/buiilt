@@ -36,6 +36,13 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
 	templateUrl: '/app/modules/settings/partials/settings-billing.html',
 	controller: 'settingsCtrl',
 	authenticate : true
+  })
+  
+  .state('settings.tags', {
+	url: '/tags',
+	templateUrl: '/app/modules/settings/partials/settings-customTags.html',
+	controller: 'settingsCtrl',
+	authenticate : true
   });
   
 });
