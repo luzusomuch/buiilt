@@ -371,6 +371,7 @@ function responseWithEachType(people, req, res){
                     })
                 });
             });
+            people.subcontractors = [];
             return res.send(200, people);
         } else if (people.project.projectManager.type === "homeOwner") {
             roles.splice(_.indexOf(roles, "clients"), 1);
@@ -381,6 +382,7 @@ function responseWithEachType(people, req, res){
                     })
                 });
             });
+            people.subcontractors = [];
             return res.send(200, people);
         }
     } else {
@@ -406,7 +408,6 @@ function responseWithEachType(people, req, res){
                                 people.architects = [];
                                 people.subcontractors = [];
                                 people.consultants.teamMember = [];
-                                people.subcontractors = [];
                                 return res.send(200, people);
                                 break;
                             case 'architects':
@@ -414,86 +415,138 @@ function responseWithEachType(people, req, res){
                                 people.clients = [];
                                 people.subcontractors = [];
                                 people.consultants.teamMember = [];
-                                people.subcontractors = [];
                                 return res.send(200, people);
                                 break;
-                            case 'subcontractors':
-                                people.architects = [];
-                                people.consultants = [];
-                                people.clients = [];
-                                var result = [];
-                                var currentInviterTeam = [];
-                                var builders = []
-                                _.each(people.builders, function(item) {
-                                    var inviterIndex = _.findIndex(item.tenderers, function(itemTenderer) {
-                                        if (itemTenderer._id) {
-                                            return itemTenderer._id._id.toString() === tender.inviter._id.toString();
-                                        }
-                                    });
-                                    if (inviterIndex !== -1) {
-                                        var currentInviterTeam = [item];
-                                        currentInviterTeam[0].tenderers = [item.tenderers[inviterIndex]];
-                                        builders = currentInviterTeam;
-                                        return false;
-                                    }
-                                });
-                                _.each(people.subcontractors, function(tender) {
-                                    var tendererIndex = _.findIndex(tender.tenderers, function(tenderer) {
-                                        if (tenderer._id) {
-                                            return tenderer._id._id.toString() == req.user._id;
-                                        }
-                                    });
-                                    if (tendererIndex !== -1) {
-                                        var currentTenderer = tender.tenderers[tendererIndex];
-                                        result = [tender];
-                                        result[0].tenderers = [];
-                                        result[0].tenderers.push(currentTenderer);
-                                        return false;
-                                    }
-                                });
-                                people.subcontractors = result;
-                                people.builders = builders;
-                                return res.send(200, people);
-                                break;
-                            case 'consultants':
-                                people.subcontractors = [];
-                                var currentTender = tender;
-                                currentTender.tenderers = [tender.tenderers[index]];
-                                people.consultants = currentTender;
-                                var currentInviterTeam = [];
-                                var result = [];
-                                _.each(people[currentTender.inviterType], function(item) {
-                                    var inviterIndex = _.findIndex(item.tenderers, function(itemTenderer) {
-                                        if (itemTenderer._id) {
-                                            return itemTenderer._id._id.toString() === tender.inviter._id.toString();
-                                        }
-                                    });
-                                    if (inviterIndex !== -1) {
-                                        var currentInviterTeam = [item];
-                                        currentInviterTeam[0].tenderers = [item.tenderers[inviterIndex]];
-                                        result = currentInviterTeam;
-                                        return false;
-                                    }
-                                });
-                                if (currentTender.inviterType === "builders") {
-                                    people.builders = result;
-                                    people.clients = [];
-                                    people.architects = [];
-                                } else if (currentTender.inviterType === "clients") {
-                                    people.clients = result;
-                                    people.builders = [];
-                                    people.architects = [];
-                                } else if (currentTender.inviterType === "architects") {
-                                    people.architects = result;
-                                    people.clients = [];
-                                    people.builders = [];
-                                }
-                                return res.send(200, people);
-                            break;
+                            
                             default:
                                 break;
                         }
-                        
+                    } else if (people.project.projectManager.type === "homeOwner") {
+                        switch (role) {
+                            case 'builders':
+                                people.clients.teamMember = [];
+                                people.architects = [];
+                                people.subcontractors.teamMember = [];
+                                people.consultants.teamMember = [];
+                                return res.send(200, people)
+                                break;
+                            case 'clients':
+                                people.builders.teamMember = [];
+                                people.architects.teamMember = [];
+                                people.consultants.teamMember = [];
+                                people.subcontractors = [];
+                                return res.send(200, people);
+                                break;
+                            case 'architects':
+                                people.builders = [];
+                                people.clients.teamMember = [];
+                                people.consultants.teamMember = [];
+                                people.subcontractors = [];
+                                return res.send(200, people);
+                                break;
+                            
+                            default:
+                                break;
+                        }
+                    } else if (people.project.projectManager.type === "architect") {
+                        switch (role) {
+                            case 'builders':
+                                people.clients = [];
+                                people.architects.teamMember = [];
+                                people.subcontractors.teamMember = [];
+                                people.consultants.teamMember = [];
+                                return res.send(200, people)
+                                break;
+                            case 'clients':
+                                people.builders = [];
+                                people.architects.teamMember = [];
+                                people.consultants.teamMember = [];
+                                people.subcontractors = [];
+                                return res.send(200, people);
+                                break;
+                            case 'architects':
+                                people.builders.teamMember = [];
+                                people.clients.teamMember = [];
+                                people.consultants.teamMember = [];
+                                people.subcontractors = [];
+                                return res.send(200, people);
+                                break;
+                            
+                            default:
+                                break;
+                        }
+                    }
+                    if (role === "subcontractors") {
+                        people.architects = [];
+                        people.consultants = [];
+                        people.clients = [];
+                        var result = [];
+                        var currentInviterTeam = [];
+                        var builders = []
+                        _.each(people.builders, function(item) {
+                            var inviterIndex = _.findIndex(item.tenderers, function(itemTenderer) {
+                                if (itemTenderer._id) {
+                                    return itemTenderer._id._id.toString() === tender.inviter._id.toString();
+                                }
+                            });
+                            if (inviterIndex !== -1) {
+                                var currentInviterTeam = [item];
+                                currentInviterTeam[0].tenderers = [item.tenderers[inviterIndex]];
+                                builders = currentInviterTeam;
+                                return false;
+                            }
+                        });
+                        _.each(people.subcontractors, function(tender) {
+                            var tendererIndex = _.findIndex(tender.tenderers, function(tenderer) {
+                                if (tenderer._id) {
+                                    return tenderer._id._id.toString() == req.user._id;
+                                }
+                            });
+                            if (tendererIndex !== -1) {
+                                var currentTenderer = tender.tenderers[tendererIndex];
+                                result = [tender];
+                                result[0].tenderers = [];
+                                result[0].tenderers.push(currentTenderer);
+                                return false;
+                            }
+                        });
+                        people.subcontractors = result;
+                        people.builders = builders;
+                        return res.send(200, people);
+                    } else if (role === "consultants") {
+                        people.subcontractors = [];
+                        var currentTender = tender;
+                        currentTender.tenderers = [tender.tenderers[index]];
+                        people.consultants = currentTender;
+                        var currentInviterTeam = [];
+                        var result = [];
+                        _.each(people[currentTender.inviterType], function(item) {
+                            var inviterIndex = _.findIndex(item.tenderers, function(itemTenderer) {
+                                if (itemTenderer._id) {
+                                    return itemTenderer._id._id.toString() === tender.inviter._id.toString();
+                                }
+                            });
+                            if (inviterIndex !== -1) {
+                                var currentInviterTeam = [item];
+                                currentInviterTeam[0].tenderers = [item.tenderers[inviterIndex]];
+                                result = currentInviterTeam;
+                                return false;
+                            }
+                        });
+                        if (currentTender.inviterType === "builders") {
+                            people.builders = result;
+                            people.clients = [];
+                            people.architects = [];
+                        } else if (currentTender.inviterType === "clients") {
+                            people.clients = result;
+                            people.builders = [];
+                            people.architects = [];
+                        } else if (currentTender.inviterType === "architects") {
+                            people.architects = result;
+                            people.clients = [];
+                            people.builders = [];
+                        }
+                        return res.send(200, people);
                     }
                 } else {
                     _.each(tender.tenderers, function(tenderer) {

@@ -61,8 +61,10 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
                                 });
                             }
                         });
-                        tender.tenderers[0]._id.type = role;
-                        $scope.membersList.push(tender.tenderers[0]._id);
+                        if (tender.tenderers[0]._id) {
+                            tender.tenderers[0]._id.type = role;
+                            $scope.membersList.push(tender.tenderers[0]._id);
+                        }
                     } else {
                         _.each(tender.tenderers, function(tenderer) {
                             if (tenderer._id._id.toString() === $rootScope.currentUser._id.toString()) {
