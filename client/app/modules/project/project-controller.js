@@ -1,7 +1,7 @@
-angular.module('buiiltApp').controller('projectCtrl', function($rootScope, $scope, $timeout, $state, projectService, $mdDialog, $stateParams, $mdToast, filepickerService, uploadService, peopleService) {
+angular.module('buiiltApp').controller('projectCtrl', function($rootScope, $scope, $timeout, $state, projectService, $mdDialog, $stateParams, $mdToast, filepickerService, uploadService, peopleService, people) {
 	$scope.project = $rootScope.project;
     $rootScope.title = $scope.project.name + " Overview";
-    $scope.people = $rootScope.people;
+    $scope.people = people;
     var userType;
     _.each($rootScope.roles, function(role) {
         _.each($scope.people[role], function(tender) {

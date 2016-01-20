@@ -6,7 +6,12 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
   	url: '/project/:id',
   	templateUrl: '/app/modules/project/project.html',
   	controller: 'projectCtrl',
-  	authenticate : true
+  	authenticate : true,
+    resolve: {
+      people: function(peopleService, $stateParams) {
+        return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
+      }
+    }
   })
   
   	//Overview of Single Project

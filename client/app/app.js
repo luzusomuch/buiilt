@@ -169,13 +169,6 @@ angular
                     $rootScope.project = {};
                 }
             });
-            peopleService.getInvitePeople({id: toParams.id}).$promise.then(function(res) {
-                if (res._id) {
-                    $rootScope.people = res;
-                } else {
-                    $rootScope.people = {};
-                }
-            });
         }
     });
 

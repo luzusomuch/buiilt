@@ -1,5 +1,6 @@
-angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScope, $scope, $timeout, $mdDialog, peopleService, $stateParams, $state, $mdToast, messageService, threads) {
+angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScope, $scope, $timeout, $mdDialog, peopleService, $stateParams, $state, $mdToast, messageService, threads, people) {
 	$rootScope.title = $rootScope.project.name +" messages list";
+    $scope.people = people;
 	$scope.threads = threads;
 	$scope.searchResults = [];
 	$scope.autoCompleteRequireMath = true;
@@ -9,24 +10,22 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
 
 	function getPeopleList(id) {
 		$scope.projectMembers = [];
-		peopleService.getInvitePeople({id: id}).$promise.then(function(people){
-			var roles = ["builders", "clients", "architects", "subcontractors", "consultants"];
-			_.each(roles, function(role) {
-				_.each(people[role], function(tender){
-					if (tender.hasSelect) {
-						tender.tenderers[0]._id.select = false;
-						$scope.projectMembers.push(tender.tenderers[0]._id);
-						if (tender.tenderers[0].teamMember.length > 0 && tender.tenderers[0]._id._id == $rootScope.currentUser._id) {
-							_.each(tender.tenderers[0].teamMember, function(member) {
-								member.select = false;
-								$scope.projectMembers.push(member);
-							});
-						}
+		_.each($rootScope.roles, function(role) {
+			_.each($scope.people[role], function(tender){
+				if (tender.hasSelect) {
+					tender.tenderers[0]._id.select = false;
+					$scope.projectMembers.push(tender.tenderers[0]._id);
+					if (tender.tenderers[0].teamMember.length > 0 && tender.tenderers[0]._id._id == $rootScope.currentUser._id) {
+						_.each(tender.tenderers[0].teamMember, function(member) {
+							member.select = false;
+							$scope.projectMembers.push(member);
+						});
 					}
-				});
+				}
 			});
-			_.remove($scope.projectMembers, {_id: $rootScope.currentUser._id});
 		});
+        console.log($scope.projectMembers);
+		_.remove($scope.projectMembers, {_id: $rootScope.currentUser._id});
 	};
 	
 	//Functions to handle New Work Room Dialog.
@@ -43,7 +42,10 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
 		    resolve: {
 		      	threads: function($stateParams, messageService) {
 		        	return messageService.getProjectThread({id: $stateParams.id}).$promise;
-		      	}
+		      	},
+                people: function(peopleService, $stateParams) {
+                    return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
+                }
 		    }
 	    });
 	};

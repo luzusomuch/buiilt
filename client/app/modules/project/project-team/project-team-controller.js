@@ -1,4 +1,5 @@
-angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $scope, $timeout, $mdDialog, peopleService, $mdToast, $stateParams, userService) {
+angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $scope, $timeout, $mdDialog, peopleService, $mdToast, $stateParams, userService, people) {
+    $scope.people = people;
 	function getCurrentTeamMember() {
 		//get current user logged in team member
 		$scope.teamMembersCanInvite = $rootScope.currentTeam.leader;
@@ -21,167 +22,164 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
 	function loadProjectMembers(id) {
 		// get all project team member
         $scope.membersList = [];
-		peopleService.getInvitePeople({id: id}).$promise.then(function(res) {
-			$scope.people = res;
-            _.each($rootScope.roles, function(role) {
-                _.each($scope.people[role], function(tender) {
-                    if (_.findIndex(tender.tenderers, function(tenderer) {
-                        if (tenderer._id) {
-                            return tenderer._id._id == $rootScope.currentUser._id;
-                        }
-                    }) != -1) {
-                        $rootScope.currentUser.type = role;
-                    } else {
-                        _.each(tender.tenderers, function(tenderer) {
-                            if (_.findIndex(tenderer.teamMember, function(member) {
-                                return member._id == $scope.currentUser._id;
-                            }) != -1) {
-                                $rootScope.currentUser.type = role;
-                            }
-                        });
-                    }
-                });
-
-                // Get team list
-                _.each($scope.people[role], function(tender) {
-                    if (tender.hasSelect) {
-                        var winnerTenderer = tender.tenderers[0];
-                        if (winnerTenderer._id) {
-                            $scope.membersList.push({_id: winnerTenderer._id._id, name: winnerTenderer._id.name, type: role});
-                        } else if (winnerTenderer.email) {
-                            $scope.membersList.push({email: winnerTenderer.email, type: role});
-                        }
-                    }
-                });
-            });
-
-            // get employees list
-            _.each($scope.people[$rootScope.currentUser.type], function(tender) {
-                var currentTendererIndex = _.findIndex(tender.tenderers, function(tenderer) {
+        _.each($rootScope.roles, function(role) {
+            _.each($scope.people[role], function(tender) {
+                if (_.findIndex(tender.tenderers, function(tenderer) {
                     if (tenderer._id) {
                         return tenderer._id._id == $rootScope.currentUser._id;
                     }
-                });
-                if (currentTendererIndex !== -1) {
-                    var currentTenderer = tender.tenderers[currentTendererIndex];
-                    _.each(currentTenderer.teamMember, function(member) {
-                        $scope.membersList.push({_id: member._id, name: member.name, type: $rootScope.currentUser.type});
+                }) != -1) {
+                    $rootScope.currentUser.type = role;
+                } else {
+                    _.each(tender.tenderers, function(tenderer) {
+                        if (_.findIndex(tenderer.teamMember, function(member) {
+                            return member._id == $rootScope.currentUser._id;
+                        }) != -1) {
+                            $rootScope.currentUser.type = role;
+                        }
                     });
                 }
             });
-            if ($scope.people.project.projectManager.type === "builder") {
-                switch($rootScope.currentUser.type) {
-                    case "builders":
-                        $scope.availableUserType = [
-                            {value: 'addClient', text: 'Client'},
-                            {value: 'addArchitect', text: 'Architect'},
-                            {value: 'addSubcontractor', text: 'Subcontractor'},
-                            {value: 'addConsultant', text: 'Consultant'},
-                            {value: 'addEmployee', text: 'Employee'}
-                        ];
-                        break;
-                    case "clients": 
-                        $scope.availableUserType = [
-                            {value: 'addConsultant', text: 'Consultant'},
-                            {value: 'addEmployee', text: 'Employee'}
-                        ];
-                        break;
-                    case "architects": 
-                        $scope.availableUserType = [
-                            {value: 'addConsultant', text: 'Consultant'},
-                            {value: 'addEmployee', text: 'Employee'}
-                        ];
-                        break;
-                    default:
-                        $scope.availableUserType = [
-                            {value: 'addEmployee', text: 'Employee'}
-                        ];
-                        break;
-                }
-            } else if ($scope.people.project.projectManager.type === "homeOwner") {
-                switch($rootScope.currentUser.type) {
-                    case "builders":
-                        $scope.availableUserType = [
-                            {value: 'addSubcontractor', text: 'Subcontractor'},
-                            {value: 'addConsultant', text: 'Consultant'},
-                            {value: 'addEmployee', text: 'Employee'}
-                        ];
-                        break;
-                    case "clients": 
-                        $scope.availableUserType = [
-                            {value: 'addBuilder', text: 'Builder'},
-                            {value: 'addArchitect', text: 'Architect'},
-                            {value: 'addConsultant', text: 'Consultant'},
-                            {value: 'addEmployee', text: 'Employee'}
-                        ];
-                        break;
-                    case "architects": 
-                        $scope.availableUserType = [
-                            {value: 'addConsultant', text: 'Consultant'},
-                            {value: 'addEmployee', text: 'Employee'}
-                        ];
-                        break;
-                    default:
-                        $scope.availableUserType = [
-                            {value: 'addEmployee', text: 'Employee'}
-                        ];
-                        break;
-                }
-            } else {
-                switch($rootScope.currentUser.type) {
-                    case "builders":
-                        $scope.availableUserType = [
-                            {value: 'addSubcontractor', text: 'Subcontractor'},
-                            {value: 'addConsultant', text: 'Consultant'},
-                            {value: 'addEmployee', text: 'Employee'}
-                        ];
-                        break;
-                    case "clients": 
-                        $scope.availableUserType = [
-                            {value: 'addConsultant', text: 'Consultant'},
-                            {value: 'addEmployee', text: 'Employee'}
-                        ];
-                        break;
-                    case "architects": 
-                        $scope.availableUserType = [
-                            {value: 'addBuilder', text: 'Builder'},
-                            {value: 'addClient', text: 'Client'},
-                            {value: 'addConsultant', text: 'Consultant'},
-                            {value: 'addEmployee', text: 'Employee'}
-                        ];
-                        break;
-                    default:
-                        $scope.availableUserType = [
-                            {value: 'addEmployee', text: 'Employee'}
-                        ];
-                        break;
-                }
-            }
 
-            // filter for availableUserType
-            var onceTimeInviteeRoles = ["builders", "clients", "architects"];
-            _.each(onceTimeInviteeRoles, function(role) {
-                var removeType;
-                switch (role) {
-                    case "builders": 
-                        removeType = "addBuilder";
-                    break;
-                    case "clients":
-                        removeType = "addClient";
-                    break;
-                    case "architects":
-                        removeType = "addArchitect";
-                    break;
-                    default:
-                    break;
-                };
-                _.each($scope.people[role], function(tender) {
-                    if (tender.hasSelect) {
-                        _.remove($scope.availableUserType, {value: removeType});
+            // Get team list
+            _.each($scope.people[role], function(tender) {
+                if (tender.hasSelect) {
+                    var winnerTenderer = tender.tenderers[0];
+                    if (winnerTenderer._id) {
+                        $scope.membersList.push({_id: winnerTenderer._id._id, name: winnerTenderer._id.name, type: role});
+                    } else if (winnerTenderer.email) {
+                        $scope.membersList.push({email: winnerTenderer.email, type: role});
                     }
-                });
+                }
             });
-		});
+        });
+
+        // get employees list
+        _.each($scope.people[$rootScope.currentUser.type], function(tender) {
+            var currentTendererIndex = _.findIndex(tender.tenderers, function(tenderer) {
+                if (tenderer._id) {
+                    return tenderer._id._id == $rootScope.currentUser._id;
+                }
+            });
+            if (currentTendererIndex !== -1) {
+                var currentTenderer = tender.tenderers[currentTendererIndex];
+                _.each(currentTenderer.teamMember, function(member) {
+                    $scope.membersList.push({_id: member._id, name: member.name, type: $rootScope.currentUser.type});
+                });
+            }
+        });
+        if ($scope.people.project.projectManager.type === "builder") {
+            switch($rootScope.currentUser.type) {
+                case "builders":
+                    $scope.availableUserType = [
+                        {value: 'addClient', text: 'Client'},
+                        {value: 'addArchitect', text: 'Architect'},
+                        {value: 'addSubcontractor', text: 'Subcontractor'},
+                        {value: 'addConsultant', text: 'Consultant'},
+                        {value: 'addEmployee', text: 'Employee'}
+                    ];
+                    break;
+                case "clients": 
+                    $scope.availableUserType = [
+                        {value: 'addConsultant', text: 'Consultant'},
+                        {value: 'addEmployee', text: 'Employee'}
+                    ];
+                    break;
+                case "architects": 
+                    $scope.availableUserType = [
+                        {value: 'addConsultant', text: 'Consultant'},
+                        {value: 'addEmployee', text: 'Employee'}
+                    ];
+                    break;
+                default:
+                    $scope.availableUserType = [
+                        {value: 'addEmployee', text: 'Employee'}
+                    ];
+                    break;
+            }
+        } else if ($scope.people.project.projectManager.type === "homeOwner") {
+            switch($rootScope.currentUser.type) {
+                case "builders":
+                    $scope.availableUserType = [
+                        {value: 'addSubcontractor', text: 'Subcontractor'},
+                        {value: 'addConsultant', text: 'Consultant'},
+                        {value: 'addEmployee', text: 'Employee'}
+                    ];
+                    break;
+                case "clients": 
+                    $scope.availableUserType = [
+                        {value: 'addBuilder', text: 'Builder'},
+                        {value: 'addArchitect', text: 'Architect'},
+                        {value: 'addConsultant', text: 'Consultant'},
+                        {value: 'addEmployee', text: 'Employee'}
+                    ];
+                    break;
+                case "architects": 
+                    $scope.availableUserType = [
+                        {value: 'addConsultant', text: 'Consultant'},
+                        {value: 'addEmployee', text: 'Employee'}
+                    ];
+                    break;
+                default:
+                    $scope.availableUserType = [
+                        {value: 'addEmployee', text: 'Employee'}
+                    ];
+                    break;
+            }
+        } else {
+            switch($rootScope.currentUser.type) {
+                case "builders":
+                    $scope.availableUserType = [
+                        {value: 'addSubcontractor', text: 'Subcontractor'},
+                        {value: 'addConsultant', text: 'Consultant'},
+                        {value: 'addEmployee', text: 'Employee'}
+                    ];
+                    break;
+                case "clients": 
+                    $scope.availableUserType = [
+                        {value: 'addConsultant', text: 'Consultant'},
+                        {value: 'addEmployee', text: 'Employee'}
+                    ];
+                    break;
+                case "architects": 
+                    $scope.availableUserType = [
+                        {value: 'addBuilder', text: 'Builder'},
+                        {value: 'addClient', text: 'Client'},
+                        {value: 'addConsultant', text: 'Consultant'},
+                        {value: 'addEmployee', text: 'Employee'}
+                    ];
+                    break;
+                default:
+                    $scope.availableUserType = [
+                        {value: 'addEmployee', text: 'Employee'}
+                    ];
+                    break;
+            }
+        }
+
+        // filter for availableUserType
+        var onceTimeInviteeRoles = ["builders", "clients", "architects"];
+        _.each(onceTimeInviteeRoles, function(role) {
+            var removeType;
+            switch (role) {
+                case "builders": 
+                    removeType = "addBuilder";
+                break;
+                case "clients":
+                    removeType = "addClient";
+                break;
+                case "architects":
+                    removeType = "addArchitect";
+                break;
+                default:
+                break;
+            };
+            _.each($scope.people[role], function(tender) {
+                if (tender.hasSelect) {
+                    _.remove($scope.availableUserType, {value: removeType});
+                }
+            });
+        });
 	};
 
 	$scope.getChangeTypeValue = function(type) {
@@ -246,6 +244,11 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
 		$mdDialog.show({
 		  	targetEvent: $event,
 	      	controller: 'projectTeamCtrl',
+            resolve: {
+                people: function(peopleService, $stateParams) {
+                    return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
+                }
+            },
 	      	templateUrl: 'app/modules/project/project-team/new/project-team-new.html',
 	      	parent: angular.element(document.body),
 	      	clickOutsideToClose: false

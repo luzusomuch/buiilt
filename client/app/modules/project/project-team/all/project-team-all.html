@@ -73,7 +73,7 @@
 	</md-list>
 
 	<div>
-	  <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-list" ng-show="!isArchive">
+	  <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-list" ng-show="!isArchive && currentUser.isLeader">
 		  <md-fab-trigger>
 	  	      <md-button aria-label="Add a New Team Member to this Project" class="md-fab md-primary" ng-click="showInviteTeamModal($event)">
 				  <md-tooltip md-direction="left">Add a New Team Member</md-tooltip>
