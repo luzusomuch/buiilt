@@ -484,8 +484,9 @@ md-input-container > label {
 	margin: 3px;
 	text-transform: uppercase;
 	padding-left: 15px;
-	padding-right: 15px
-	
+	padding-right: 15px;
+	outline: none;
+	cursor: pointer;
 }
 
 .selected-tag {
@@ -498,7 +499,9 @@ md-input-container > label {
 	margin: 3px;
 	text-transform: uppercase;
 	padding-left: 15px;
-	padding-right: 15px
+	padding-right: 15px;
+	outline: none;
+	cursor: pointer;
 }
 
 
