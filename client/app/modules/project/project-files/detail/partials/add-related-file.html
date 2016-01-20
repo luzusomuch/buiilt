@@ -8,14 +8,66 @@
         
         <md-dialog-content>
             <div class="md-dialog-content" layout="column">
-                
+				
+                <div layout="row" layout="center center">
+					<div layout-padding>
+	                    <input filepicker class="filepicker-button" type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/>
+					</div>
+                </div>
+
                 <div layout="row">
-                    <md-input-container flex class="modal-instructions">
-                        <p>Please provide the following details to attach a new file to your project...</p>
+                    <md-input-container flex>
+                        <label>Description</label>
+                        <textarea ng-model="relatedFile.description" required md-maxlength="200" columns="1" rows="5"></textarea>
                     </md-input-container>
                 </div>
                 
-                <div layout="row">
+                <!-- <div layout="row">
+                    <md-input-container flex>
+                        <md-chips
+                        ng-model="relatedFile.tags"
+                        placeholder="Enter a tag"
+                        delete-button-label="Remove Tag"
+                        delete-hint="Press delete to remove tag"
+                        secondary-placeholder="+Tag"></md-chips>
+                    </md-input-container>
+                </div> -->
+					
+				<div layout="row" layout-align="center center" class="tagcloud" layout-wrap>
+					
+					<span class="available-tag">File Tag 1</span>
+					<span class="available-tag">File Tag 2</span>
+					<span class="available-tag">File Tag 3</span>
+					<span class="selected-tag">File Tag 4</span>
+					<span class="available-tag">File Tag 5</span>
+					<span class="selected-tag">File Tag 6</span>
+					<span class="selected-tag">File Tag 7</span>
+					<span class="selected-tag">File Tag 8</span>
+					<span class="available-tag">File Tag 9</span>
+					<span class="available-tag">File Tag 10</span>
+					<span class="available-tag">File Tag 11</span>
+					<span class="available-tag">File Tag 12</span>
+					
+				</div>
+                
+				<div layout="row" layout-align="center center" class="tagcloud" layout-wrap>
+			
+					<span class="available-tag">Assignee 1</span>
+					<span class="available-tag">Assignee 2</span>
+					<span class="available-tag">Assignee 3</span>
+					<span class="selected-tag">Assignee 4</span>
+					<span class="available-tag">Assignee 5</span>
+					<span class="selected-tag">Assignee 6</span>
+					<span class="selected-tag">Assignee 7</span>
+					<span class="selected-tag">Assignee 8</span>
+					<span class="available-tag">Assignee 9</span>
+					<span class="available-tag">Assignee 10</span>
+					<span class="available-tag">Assignee 11</span>
+					<span class="available-tag">Assignee 12</span>
+			
+				</div>
+                
+                <!-- <div layout="row">
                     <md-input-container flex>
                         <input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile, 'related')" data-fp-multiple="false"/>
                     </md-input-container>
@@ -27,7 +79,7 @@
                         <textarea ng-model="relatedFile.description" required md-maxlength="200" columns="1" rows="5"></textarea>
                     </md-input-container>
                 </div>
-                
+
                 <div layout="row">
                     <md-input-container flex>
                         <md-chips
@@ -38,7 +90,7 @@
                         secondary-placeholder="+Tag"></md-chips>
                     </md-input-container>
                 </div>
-                
+
                 <div ng-cloak>
                     <p>Available's asssignees: </p>
                     <md-content layout="row" layout-wrap layout-xs="column">
@@ -47,12 +99,12 @@
                                 <md-card-header>
                                     <p class="name">{{member.name}}</p>
                                 </md-card-header>
-                        
+
                                 <md-card-content>
                                     <p class="email">{{(member.email) ? member.email : 'Email Address'}}</p>
                                     <p class="phone">{{(member.phoneNumber)? member.phoneNumber : 'Phone Number'}}</p>
                                 </md-card-content>
-                        
+
                                 <md-card-actions layout-margin>
                                     <md-card-icon-actions layout="row" layout-align="space-around center">
                                         <md-button class="material-icons md-icon-button">
@@ -64,7 +116,7 @@
                             </md-card>
                         </div>
                     </md-content>
-                </div>
+                </div> -->
                 
             </div>
         </md-dialog-content>
