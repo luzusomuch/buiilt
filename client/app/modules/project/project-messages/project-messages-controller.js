@@ -45,7 +45,6 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
 				}
 			});
 		});
-        console.log($scope.projectMembers);
 		_.remove($scope.projectMembers, {_id: $rootScope.currentUser._id});
 	};
 	

@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, $scope, $mdDialog, tasks, taskService, $mdToast, $stateParams, $state, peopleService) {
+angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, $scope, $mdDialog, tasks, taskService, $mdToast, $stateParams, $state, peopleService, people) {
 	_.each(tasks, function(task) {
 		task.members.push(task.owner);
 		_.remove(task.members, {_id: $rootScope.currentUser._id});
@@ -6,7 +6,7 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
 	$scope.tasks = tasks;
 	$scope.search = false;
 	$scope.results = [];
-	
+	$scope.people = people;
 	$scope.showNewTaskModal = function($event) {
 		$mdDialog.show({
 		  	targetEvent: $event,
@@ -14,7 +14,10 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
 	      	resolve: {
 		      	tasks: function(taskService, $stateParams) {
 		        	return taskService.getProjectTask({id: $stateParams.id}).$promise;
-		      	}
+		      	},
+		      	people: function(peopleService, $stateParams) {
+                    return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
+                }
 		    },
 	      	templateUrl: 'app/modules/project/project-tasks/new/project-tasks-new.html',
 	      	parent: angular.element(document.body),
@@ -26,7 +29,7 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
 	$scope.minDate = new Date();
 	$scope.createNewMessage = function(form) {
 		if (form.$valid) {
-			$scope.task.members = _.filter($scope.membersList, {select: true});
+			$scope.task.members = _.filter($scope.projectMembers, {select: true});
 			$scope.task.type = "task-project";
 			if ($scope.task.members.length > 0) {
 				taskService.create({id: $stateParams.id}, $scope.task).$promise.then(function(res) {
@@ -49,7 +52,7 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
 	};
 
 	$scope.selectMember = function(index) {
-		$scope.membersList[index].select = !$scope.membersList[index].select;
+		$scope.projectMembers[index].select = !$scope.projectMembers[index].select;
 	};
 
 	$scope.showToast = function(value) {
@@ -57,47 +60,43 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
 	};
 
 	function getProjectMembers(id) {
-	    $scope.membersList = [];
-	    peopleService.getInvitePeople({id: id}).$promise.then(function(people) { 
-	        if ($rootScope.currentUser.isLeader) {
-	            _.each($rootScope.roles, function(role) {
-	                _.each(people[role], function(tender) {
-	                    if (tender.hasSelect) {
-	                        var winnerTenderer = tender.tenderers[0];
-	                        if (winnerTenderer._id) {
-	                            winnerTenderer._id.select = false;
-	                            $scope.membersList.push(winnerTenderer._id);
-	                        } else if (winnerTenderer.email) {
-	                            $scope.membersList.push({email: winnerTenderer.email, type: role, select: false});
-	                        }
-	                    }
-	                    // get employees list
-	                    var currentTendererIndex = _.findIndex(tender.tenderers, function(tenderer) {
-	                        if (tenderer._id) {
-	                            return tenderer._id._id == $rootScope.currentUser._id;
-	                        }
-	                    });
-	                    if (currentTendererIndex !== -1) {
-	                        var currentTenderer = tender.tenderers[currentTendererIndex];
-	                        _.each(currentTenderer.teamMember, function(member) {
-	                            member.select = false;
-	                            $scope.membersList.push(member);
-	                        });
-	                    }
-	                });
-	            });
-	        } else {
-	            $scope.membersList = $rootScope.currentTeam.leader;
-	            _.each($rootScope.currentTeam.member, function(member) {
-	                $scope.membersList.push(member);
-	            });
-	        }
-	        // get unique member 
-	        $scope.membersList = _.uniq($scope.membersList, "_id");
-
-	        // remove current user from the members list
-	        _.remove($scope.membersList, {_id: $rootScope.currentUser._id});
-	    });
+	    $scope.projectMembers = [];
+		_.each($rootScope.roles, function(role) {
+			_.each($scope.people[role], function(tender){
+				if (tender.hasSelect) {
+                    var isLeader = (_.findIndex(tender.tenderers, function(tenderer) {
+                        if (tenderer._id) {
+                            return tenderer._id._id.toString() === $rootScope.currentUser._id.toString();
+                        }
+                    }) !== -1) ? true : false;
+                    if (!isLeader) {
+                        _.each(tender.tenderers, function(tenderer) {
+                            var memberIndex = _.findIndex(tenderer.teamMember, function(member) {
+                                return member._id.toString() === $rootScope.currentUser._id.toString();
+                            });
+                            if (memberIndex !== -1) {
+                                _.each(tenderer.teamMember, function(member) {
+                                    member.select = false;
+                                    $scope.projectMembers.push(member);
+                                });
+                            }
+                        });
+				        tender.tenderers[0]._id.select = false;
+    					$scope.projectMembers.push(tender.tenderers[0]._id);
+                    } else {
+                        _.each(tender.tenderers, function(tenderer) {
+                            if (tenderer._id._id.toString() === $rootScope.currentUser._id.toString()) {
+                                _.each(tenderer.teamMember, function(member) {
+                                    member.select = false;
+                                    $scope.projectMembers.push(member);
+                                });
+                            }
+                        });
+                    }
+				}
+			});
+		});
+		_.remove($scope.projectMembers, {_id: $rootScope.currentUser._id});
 	};
 
 	getProjectMembers($stateParams.id);
