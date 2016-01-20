@@ -30,13 +30,13 @@
 <div class="main-page-content">
 	
 	<md-list ng-cloak>
-		<div ng-show="!search" ng-repeat="member in membersList track by $index" ui-sref="project.team.detail">
+		<div ng-show="!search" ng-repeat="member in membersList track by $index">
 			<md-list-item class="md-2-line secondary-button-padding">
 				<div class="md-list-item-text" layout="column">
 			          <h3>{{(member._id) ? member.name : member.email}}</h3>
 			          <p><span style="text-transform: capitalize">{{ member.type }}</span>, {{(member.email) ? member.email : 'No Email Address on File'}}, {{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</p>
 		        </div>
-				<md-button class="md-secondary md-icon-button" ng-click="assignLeader(member)">
+				<!-- <md-button class="md-secondary md-icon-button" ng-click="assignLeader(member)">
 					<md-icon class="material-icons">chat_bubble_outline</md-icon>
 				</md-button>
 				<md-button class="md-secondary md-icon-button" ng-click="removeMember(member)" style="margin-right: 60px">
@@ -44,7 +44,7 @@
 				</md-button>
 				<md-button class="md-secondary md-icon-button" ng-click="removeMember(member)" style="margin-right: 120px">
 					<md-icon class="material-icons">attach_file</md-icon>
-				</md-button>
+				</md-button> -->
 				
 			</md-list-item>
 			<md-divider></md-divider>
