@@ -46,8 +46,10 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
                                 });
                             }
                         });
-                        tender.tenderers[0]._id.select = false;
-                        $scope.projectMembers.push(tender.tenderers[0]._id);
+                        if (tender.tenderers[0]._id) {
+                            tender.tenderers[0]._id.select = false;
+                            $scope.projectMembers.push(tender.tenderers[0]._id);
+                        }
                     } else {
                         _.each(tender.tenderers, function(tenderer) {
                             if (tenderer._id._id.toString() === $rootScope.currentUser._id.toString()) {

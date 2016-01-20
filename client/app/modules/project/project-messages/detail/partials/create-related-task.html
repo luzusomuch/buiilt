@@ -19,7 +19,7 @@
 				<div layout="row" layout-align="center center">
 					<md-input-container flex>
 				        <label>Task Description</label>
-				        <textarea ng-model="task.description" name="description" md-maxlength="300" required rows="3" columns="1"></textarea>
+				        <textarea ng-model="relatedTask.description" name="description" md-maxlength="300" required rows="3" columns="1"></textarea>
 					</md-input-container>
 				</div>
 			
@@ -30,8 +30,8 @@
 				</div>
 			
 				<div layout="row" layout-align="center center" class="tagcloud" layout-wrap>
-				
-					<span class="available-tag">Assignee 1</span>
+					<span ng-click="selectMember($index, 'invitee')" ng-class="{'available-tag':!member.select, 'selected-tag': member.select}" ng-repeat="member in invitees">{{member.name}}</span>
+					<!-- <span class="available-tag">Assignee 1</span>
 					<span class="available-tag">Assignee 2</span>
 					<span class="available-tag">Assignee 3</span>
 					<span class="selected-tag">Assignee 4</span>
@@ -42,7 +42,7 @@
 					<span class="available-tag">Assignee 9</span>
 					<span class="available-tag">Assignee 10</span>
 					<span class="available-tag">Assignee 11</span>
-					<span class="available-tag">Assignee 12</span>
+					<span class="available-tag">Assignee 12</span> -->
 				
 				</div>
 			
