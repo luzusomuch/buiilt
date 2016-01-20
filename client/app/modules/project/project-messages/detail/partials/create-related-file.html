@@ -8,16 +8,11 @@
         
         <md-dialog-content>
             <div class="md-dialog-content" layout="column">
-                <div layout="row">
-                    <md-input-container flex class="modal-instructions">
-                        <p>Please provide the following details to attach a new file to your project...</p>
-                    </md-input-container>
-                </div>
                 
-                <div layout="row">
-                    <md-input-container flex>
-                        <input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/>
-                    </md-input-container>
+                <div layout="row" layout="center center">
+					<div layout-padding>
+	                    <input filepicker class="filepicker-button" type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/>
+					</div>
                 </div>
 
                 <div layout="row">
@@ -38,7 +33,24 @@
                     </md-input-container>
                 </div>
                 
-                <div ng-cloak>
+				<div layout="row" layout-align="center center" class="tagcloud" layout-wrap>
+			
+					<span class="available-tag">Assignee 1</span>
+					<span class="available-tag">Assignee 2</span>
+					<span class="available-tag">Assignee 3</span>
+					<span class="selected-tag">Assignee 4</span>
+					<span class="available-tag">Assignee 5</span>
+					<span class="selected-tag">Assignee 6</span>
+					<span class="selected-tag">Assignee 7</span>
+					<span class="selected-tag">Assignee 8</span>
+					<span class="available-tag">Assignee 9</span>
+					<span class="available-tag">Assignee 10</span>
+					<span class="available-tag">Assignee 11</span>
+					<span class="available-tag">Assignee 12</span>
+			
+				</div>
+				
+                <!-- <div ng-cloak>
                     <p>Available's asssignees: </p>
                     <md-content layout="row" layout-wrap layout-xs="column">
                         <div flex="33" flex-sm="50" flex-xs="100" layout="row" ng-repeat="member in invitees">
@@ -46,12 +58,12 @@
                                 <md-card-header>
                                     <p class="name">{{member.name}}</p>
                                 </md-card-header>
-                        
+
                                 <md-card-content>
                                     <p class="email">{{(member.email) ? member.email : 'Email Address'}}</p>
                                     <p class="phone">{{(member.phoneNumber)? member.phoneNumber : 'Phone Number'}}</p>
                                 </md-card-content>
-                        
+
                                 <md-card-actions layout-margin>
                                     <md-card-icon-actions layout="row" layout-align="space-around center">
                                         <md-button class="material-icons md-icon-button">
@@ -63,7 +75,7 @@
                             </md-card>
                         </div>
                     </md-content>
-                </div>
+                </div> -->
             </div>
         </md-dialog-content>
         <md-dialog-actions>

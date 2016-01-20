@@ -7,28 +7,47 @@
 		</md-toolbar>
 		
 		<md-dialog-content>
-			<div class="md-dialog-content" layout="column">
+			<div class="md-dialog-content" layout="column" layout-padding>
 				
-				<div layout="row" layout="center center">
-					<div style="padding: 20px">
-						<input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/>
+				<div layout="row" layout="center center" layout-margin>
+					<div flex>
+						<input filepicker class="filepicker-button" type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/>
 					</div>
+					
 				</div>
 
-				<div layout="row">
+				<div layout="row" layout-margin>
 					<md-input-container flex>
 				        <label>Description</label>
 						<textarea ng-model="uploadFile.description" required md-maxlength="200" columns="1" rows="5"></textarea>
 				    </md-input-container>
 				</div>
 				
-				<div layout="row">
-					<md-chips
+				<!-- <div layout="row" layout-margin>
+					<md-chips flex
 			        ng-model="uploadFile.tags"
 			        placeholder="Enter a tag"
 			        delete-button-label="Remove Tag"
 			        delete-hint="Press delete to remove tag"
-			        secondary-placeholder="+Tag"></md-chips>
+					secondary-placeholder="Enter a Tag">
+					</md-chips>
+				</div> -->
+				
+				<div layout="row" layout-align="center center" class="tagcloud" layout-wrap>
+					
+					<span class="available-tag">File Tag 1</span>
+					<span class="available-tag">File Tag 2</span>
+					<span class="available-tag">File Tag 3</span>
+					<span class="selected-tag">File Tag 4</span>
+					<span class="available-tag">File Tag 5</span>
+					<span class="selected-tag">File Tag 6</span>
+					<span class="selected-tag">File Tag 7</span>
+					<span class="selected-tag">File Tag 8</span>
+					<span class="available-tag">File Tag 9</span>
+					<span class="available-tag">File Tag 10</span>
+					<span class="available-tag">File Tag 11</span>
+					<span class="available-tag">File Tag 12</span>
+					
 				</div>
 				
 				<!-- <div layout="row">
@@ -50,20 +69,20 @@
 				    </md-chips>
 				</div> -->
 				
-				<div layout="row" layout-align="center center" class="assignees" layout-wrap>
+				<div layout="row" layout-align="center center" class="tagcloud" layout-wrap>
 					
-					<span class="available-assignee">Assignee 1</span>
-					<span class="available-assignee">Assignee 2</span>
-					<span class="available-assignee">Assignee 3</span>
-					<span class="selected-assignee">Assignee 4</span>
-					<span class="available-assignee">Assignee 5</span>
-					<span class="selected-assignee">Assignee 6</span>
-					<span class="selected-assignee">Assignee 7</span>
-					<span class="selected-assignee">Assignee 8</span>
-					<span class="available-assignee">Assignee 9</span>
-					<span class="available-assignee">Assignee 10</span>
-					<span class="available-assignee">Assignee 11</span>
-					<span class="available-assignee">Assignee 12</span>
+					<span class="available-tag">Assignee 1</span>
+					<span class="available-tag">Assignee 2</span>
+					<span class="available-tag">Assignee 3</span>
+					<span class="selected-tag">Assignee 4</span>
+					<span class="available-tag">Assignee 5</span>
+					<span class="selected-tag">Assignee 6</span>
+					<span class="selected-tag">Assignee 7</span>
+					<span class="selected-tag">Assignee 8</span>
+					<span class="available-tag">Assignee 9</span>
+					<span class="available-tag">Assignee 10</span>
+					<span class="available-tag">Assignee 11</span>
+					<span class="available-tag">Assignee 12</span>
 					
 				</div>
 				

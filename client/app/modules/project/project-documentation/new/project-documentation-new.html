@@ -9,19 +9,13 @@
 		<md-dialog-content>
 			<div class="md-dialog-content" layout="column">
 				
-				<div layout="row">
-					<md-input-container flex class="modal-instructions">
-						<p>Please provide the following details to add a new document to your project...</p>
-					</md-input-container>
-				</div>
-				
-				<div layout="row">
-					<md-input-container flex>
+				<div layout="row" layout="center center" layout-margin>
+					<div flex>
 						<input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfiles)" data-fp-multiple="true"/>
-					</md-input-container>
+					</div>
 				</div>
 				
-				<div layout="row">
+				<!-- <div layout="row">
 					<md-chips ng-model="uploadFile.tags" md-autocomplete-snap
 	              		md-require-match="true">
 				      	<md-autocomplete
@@ -38,6 +32,23 @@
 					        </span>
 				      	</md-chip-template>
 				    </md-chips>
+				</div> -->
+					
+				<div layout="row" layout-align="center center" class="tagcloud" layout-wrap>
+					
+					<span class="available-tag">Documentation Tag 1</span>
+					<span class="available-tag">Documentation Tag 2</span>
+					<span class="available-tag">Documentation Tag 3</span>
+					<span class="selected-tag">Documentation Tag 4</span>
+					<span class="available-tag">Documentation Tag 5</span>
+					<span class="selected-tag">Documentation Tag 6</span>
+					<span class="selected-tag">Documentation Tag 7</span>
+					<span class="selected-tag">Documentation Tag 8</span>
+					<span class="available-tag">Documentation Tag 9</span>
+					<span class="available-tag">Documentation Tag 10</span>
+					<span class="available-tag">Documentation Tag 11</span>
+					<span class="available-tag">Documentation Tag 12</span>
+					
 				</div>
 				
 			</div>

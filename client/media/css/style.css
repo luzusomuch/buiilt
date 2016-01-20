@@ -470,11 +470,11 @@ md-input-container > label {
 	font-weight: 500;
 }
 
-.assignees {
+.tagcloud {
 	margin-top: 6vh;
 }
 
-.available-assignee {
+.available-tag {
 	font-size: 11px;
 	font-weight: 600;
 	color: #424242;
@@ -488,7 +488,7 @@ md-input-container > label {
 	
 }
 
-.selected-assignee {
+.selected-tag {
 	font-size: 11px;
 	font-weight: 600;
 	color: white;
@@ -500,6 +500,7 @@ md-input-container > label {
 	padding-left: 15px;
 	padding-right: 15px
 }
+
 
 
 
