@@ -38,7 +38,7 @@
 	  	      </md-button>
   	      </md-fab-trigger>
 		  <md-fab-actions>
-	  	      <md-button aria-label="Edit Project Details" class="md-fab md-raised md-mini" ng-click="showEditProjectModal($event)">
+	  	      <md-button aria-label="Edit Project Details" class="md-fab md-raised md-mini" ng-click="showEditProjectModal($event)" ng-show="project.projectManager._id == currentUser._id">
 				  <md-tooltip md-direction="left">Edit Project Details</md-tooltip>
 			      <md-icon class="material-icons">edit</md-icon>
 	  	      </md-button>

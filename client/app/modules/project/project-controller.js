@@ -1,13 +1,11 @@
 angular.module('buiiltApp').controller('projectCtrl', function($rootScope, $scope, $timeout, $state, projectService, $mdDialog, $stateParams, $mdToast, filepickerService, uploadService, peopleService) {
-    projectService.get({id: $stateParams.id}).$promise.then(function(res) {
-    	$rootScope.project = $scope.project = res;
-        $rootScope.title = $scope.project.name + " Overview";
-    });
-
+	$scope.project = $rootScope.project;
+    $rootScope.title = $scope.project.name + " Overview";
+    $scope.people = $rootScope.people;
     var userType;
-    peopleService.getInvitePeople({id: $stateParams.id}).$promise.then(function(res) {
-        _.each($rootScope.roles, function(role) {
-            _.each(res[role], function(tender) {
+    _.each($rootScope.roles, function(role) {
+        _.each($scope.people[role], function(tender) {
+            if (!tender.hasSelect) {
                 if (_.findIndex(tender.tenderers, function(tenderer) {
                     if (tenderer._id) {
                         return tenderer._id._id.toString() === $rootScope.currentUser._id.toString();
@@ -16,7 +14,7 @@ angular.module('buiiltApp').controller('projectCtrl', function($rootScope, $scop
                     $scope.showSubmitTender = true;
                     userType = role;
                 }
-            });
+            }
         });
     });
 

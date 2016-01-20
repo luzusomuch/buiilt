@@ -412,6 +412,41 @@ function responseWithEachType(people, req, res){
                         people.subcontractors = result;
                         return res.send(200, people);
                         break;
+                    case 'consultants':
+                        people.subcontractors = [];
+                        var currentTender = tender;
+                        currentTender.tenderers = [tender.tenderers[index]];
+                        people.consultants = currentTender;
+                        var currentInviterTeam = [];
+                        var result = [];
+                        _.each(people[currentTender.inviterType], function(item) {
+                            var inviterIndex = _.findIndex(item.tenderers, function(itemTenderer) {
+                                if (itemTenderer._id) {
+                                    return itemTenderer._id._id.toString() === tender.inviter._id.toString();
+                                }
+                            });
+                            if (inviterIndex !== -1) {
+                                var currentInviterTeam = [item];
+                                currentInviterTeam[0].tenderers = [item.tenderers[inviterIndex]];
+                                result = currentInviterTeam;
+                                return false;
+                            }
+                        });
+                        if (currentTender.inviterType === "builders") {
+                            people.builders = result;
+                            people.clients = [];
+                            people.architects = [];
+                        } else if (currentTender.inviterType === "clients") {
+                            people.clients = result;
+                            people.builders = [];
+                            people.architects = [];
+                        } else if (currentTender.inviterType === "architects") {
+                            people.architects = result;
+                            people.clients = [];
+                            people.builders = [];
+                        }
+                        return res.send(200, people);
+                    break;
                     default:
                         break;
                 }

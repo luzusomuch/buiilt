@@ -157,6 +157,30 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
                         break;
                 }
             }
+
+            // filter for availableUserType
+            var onceTimeInviteeRoles = ["builders", "clients", "architects"];
+            _.each(onceTimeInviteeRoles, function(role) {
+                var removeType;
+                switch (role) {
+                    case "builders": 
+                        removeType = "addBuilder";
+                    break;
+                    case "clients":
+                        removeType = "addClient";
+                    break;
+                    case "architects":
+                        removeType = "addArchitect";
+                    break;
+                    default:
+                    break;
+                };
+                _.each($scope.people[role], function(tender) {
+                    if (tender.hasSelect) {
+                        _.remove($scope.availableUserType, {value: removeType});
+                    }
+                });
+            });
 		});
 	};
 

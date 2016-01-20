@@ -65,7 +65,7 @@ angular
         }
     };
 })
-.run(function ($rootScope, $cookieStore, cfpLoadingBar, authService, $location,projectService,$state) {
+.run(function ($rootScope, $cookieStore, cfpLoadingBar, authService, $location,projectService,$state, peopleService) {
     cfpLoadingBar.start();
     $rootScope.maximunHeight = $(window).height();
     $rootScope.project = {};
@@ -167,6 +167,13 @@ angular
                     }
                 } else {
                     $rootScope.project = {};
+                }
+            });
+            peopleService.getInvitePeople({id: toParams.id}).$promise.then(function(res) {
+                if (res._id) {
+                    $rootScope.people = res;
+                } else {
+                    $rootScope.people = {};
                 }
             });
         }

@@ -91,7 +91,7 @@ angular.module('buiiltApp')
                             "name": res.name
                         }, function() {
                             if (data.package.type == 'people') {
-                                window.location.href = "/projects/open";
+                                window.location.href = "/projects/invitations";
                             } else {
                                 window.location.href = "/settings/user";
                             }
