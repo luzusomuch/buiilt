@@ -70,6 +70,9 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
 	      	resolve: {
                 documents: function($stateParams, fileService) {
                     return fileService.getProjectFiles({id: $stateParams.id, type: "document"}).$promise;
+                },
+                people: function(peopleService, $stateParams) {
+                    return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
                 }
             },
 	      	templateUrl: 'app/modules/project/project-documentation/new/project-documentation-new.html',
