@@ -694,3 +694,96 @@ exports.attachAddendum = function(req, res) {
         }
     });
 };
+
+exports.updateTender = function(req, res) {
+    var data = req.body;
+    var user = req.user;
+    People.findOne({project: req.params.id})
+    .populate("builders.tenderers._id", "_id email name")
+    .populate("builders.inviter", "_id email name")
+    .populate("consultants.tenderers._id", "_id email name")
+    .populate("consultants.inviter", "_id email name")
+    .populate("subcontractors.tenderers._id", "_id email name")
+    .populate("subcontractors.inviter", "_id email name")
+    .exec(function(err, people) {
+        if (err) {return res.send(500,err);}
+        else if (!people) {
+            return res.send(404, {message: "The specific people is not existed"});
+        } else {
+            var roles = ["builders","subcontractors", "consultants"];
+            var currentRole, index;
+            _.each(roles, function(role) {
+                index = _.findIndex(people[role], function(tender) {
+                    return tender._id.toString()===req.params.tenderId.toString();
+                });
+                if (index !== -1) {
+                    currentRole = role;
+                    return false;
+                }
+            });
+            var originalTender = people[currentRole][index];
+            var activity = {
+                user: user._id,
+                type: req.body.editType,
+                createdAt: new Date(),
+                element: {}
+            };
+            if (data.editType === "edit-tender") {
+                activity.element.description = (originalTender.tenderDescription.length !== data.tenderDescription.length) ? originalTender.tenderDescription : null;
+                activity.element.name = (originalTender.tenderName.length !== data.tenderName.length) ? originalTender.tenderName : null;
+
+                people[currentRole][index].tenderName = data.tenderName;
+                people[currentRole][index].tenderDescription = data.tenderDescription;
+            } else if (data.editType === "invite-tender") {
+                var members = [];
+                var tenderers = people[currentRole][index].tenderers;
+                async.each(data.newMembers, function(member, cb) {
+                    members.push({name:member.name, email: member.email});
+                    User.findOne({email: member.email}, function(err, user) {
+                        if (err) {cb(err);}
+                        else if (!user) {
+                            tenderers.push({
+                                email: member.email,
+                                teamMember: []
+                            });
+                            newInviteeNotSignUp.push(member.email);
+                            var inviteToken = new InviteToken({
+                                type: 'project-invite',
+                                email: member.email,
+                                element: {
+                                    project: people.project,
+                                    type: type
+                                }
+                            });
+                            inviteToken._editUser = req.user;
+                            inviteToken.save(callback());
+                        } else {
+                            tenderers.push({
+                                _id: user._id,
+                                teamMember: []
+                            });
+                            newInviteeSignUpAlready.push(user._id);
+                            var inviteToken = new InviteToken({
+                                type: 'project-invite',
+                                user: user._id,
+                                element: {
+                                    project: people.project,
+                                    type: type
+                                }
+                            });
+                            inviteToken._editUser = req.user;
+                            inviteToken.save(callback());
+                        }
+                    });
+                }, function() {
+                    activity.element.members = members;
+                });
+            }
+            people[currentRole][index].inviterActivities.push(activity);
+            people.save(function(err) {
+                if (err) {return res.send(500,err);}
+                return res.send(200,people[currentRole][index]);
+            });
+        }
+    });
+};

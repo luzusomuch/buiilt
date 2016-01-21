@@ -93,12 +93,26 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($roo
         }
     };
 
+    $scope.editTender = function(form) {
+        if (form.$valid) {
+            $scope.tender.editType = "edit-tender";
+            peopleService.updateTender({id: $stateParams.id, tenderId: $stateParams.tenderId}, $scope.tender).$promise.then(function(res) {
+                $scope.cancelNewTenderModal();
+                $scope.showToast("Edit tender successfully");
+                $rootScope.$broadcast("Tender.Updated", res);
+            }, function(err) {$scope.showToast("Error");});
+        } else {
+            $scope.showToast("Please check your input again");
+            return;
+        }
+    };
+
     $scope.showToast = function(value) {
         $mdToast.show($mdToast.simple().textContent(value).position('bottom','right').hideDelay(3000));
     };
 
     getTenderers();
     $rootScope.$on("Tender.Updated", function(event, data) {
-        $scope.tenderer = data;
+        $scope.tender = data;
     });
 });

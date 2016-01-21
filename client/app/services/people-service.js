@@ -37,6 +37,12 @@ angular.module('buiiltApp')
                 params: {
                     action: "attach-addendum"
                 }
+            },
+            updateTender: {
+                method: "PUT",
+                params: {
+                    action: "update-tender"
+                }
             }
         });
 });

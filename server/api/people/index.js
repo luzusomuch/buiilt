@@ -8,6 +8,7 @@ var router = express.Router();
 
 router.put('/:id/invite', auth.isAuthenticated(), controller.invitePeople);
 router.put('/:id/select-winner-tender', auth.isAuthenticated(), controller.selectWinnerTender);
+router.put('/:id/:tenderId/update-tender', auth.isAuthenticated(), controller.updateTender);
 router.get('/:id/get-invite-people', auth.isAuthenticated(), controller.getInvitePeople);
 router.get('/:id/:tenderId/get-tender', auth.isAuthenticated(), controller.getTender);
 router.get('/:id/:tenderId/update-distribute-status', auth.isAuthenticated(), controller.updateDistributeStatus);
