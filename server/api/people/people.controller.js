@@ -3,6 +3,7 @@
 var People = require('./../../models/people.model');
 var InviteToken = require('./../../models/inviteToken.model');
 var User = require('./../../models/user.model');
+var File = require('./../../models/file.model');
 var _ = require('lodash');
 var async = require('async');
 
@@ -308,20 +309,25 @@ exports.getInvitePeople = function(req, res) {
 exports.getTender = function(req, res) {
     People.findOne({project: req.params.id})
     .populate("builders.tenderers._id", "_id email name")
+    .populate("builders.inviterActivities.user", "_id email name")
     .populate("builders.tenderers.teamMember", "_id email name")
     .populate("builders.inviter", "_id email name")
     .populate("architects.tenderers._id", "_id email name")
     .populate("architects.tenderers.teamMember", "_id email name")
     .populate("architects.inviter", "_id email name")
+    .populate("architects.inviterActivities.user", "_id email name")
     .populate("clients.tenderers._id", "_id email name")
     .populate("clients.tenderers.teamMember", "_id email name")
     .populate("clients.inviter", "_id email name")
+    .populate("clients.inviterActivities.user", "_id email name")
     .populate("subcontractors.tenderers._id", "_id email name")
     .populate("subcontractors.tenderers.teamMember", "_id email name")
     .populate("subcontractors.inviter", "_id email name")
+    .populate("subcontractors.inviterActivities.user", "_id email name")
     .populate("consultants.tenderers._id", "_id email name")
     .populate("consultants.tenderers.teamMember", "_id email name")
     .populate("consultants.inviter", "_id email name")
+    .populate("consultants.inviterActivities.user", "_id email name")
     .populate("project")
     .exec(function(err, people){
         if (err) {return res.send(500,err);}
@@ -572,4 +578,123 @@ function responseWithEachType(people, req, res){
             });
         });
     }
+};
+
+exports.updateDistributeStatus = function(req, res) {
+    People.findOne({project: req.params.id}, function(err, people) {
+        if (err) {return res.send(500,err);}
+        else if (!people) {
+            return res.send(404, {message: "The specific people is not existed"});
+        } else {
+            var roles = ["builders","subcontractors", "consultants"];
+            var currentRole, index;
+            _.each(roles, function(role) {
+                index = _.findIndex(people[role], function(tender) {
+                    return tender._id.toString()===req.params.tenderId.toString();
+                });
+                if (index !== -1) {
+                    currentRole = role;
+                    return false;
+                }
+            });
+            people[currentRole][index].isDistribute = !people[currentRole][index].isDistribute;
+            people.save(function(err) {
+                if (err) {return res.send(500,err);}
+                return res.send(200);
+            });
+        }
+    });
+};
+
+exports.attachAddendum = function(req, res) {
+    var data = req.body;
+    People.findOne({project: req.params.id})
+    .populate("builders.tenderers._id", "_id email name")
+    .populate("builders.inviter", "_id email name")
+    .populate("consultants.tenderers._id", "_id email name")
+    .populate("consultants.inviter", "_id email name")
+    .populate("subcontractors.tenderers._id", "_id email name")
+    .populate("subcontractors.inviter", "_id email name")
+    .exec(function(err, people) {
+        if (err) {return res.send(500,err);}
+        else if (!people) {
+            return res.send(404, {message: "The specific people is not existed"});
+        } else {
+            async.series({
+                file: function(cb) {
+                    if (req.body.file) {
+                        var file = new File({
+                            project: req.params.id,
+                            name: data.file.filename,
+                            description: data.description,
+                            path: data.file.url,
+                            key: data.file.key,
+                            server: 's3',
+                            mimeType: data.file.mimeType,
+                            size: data.file.size,
+                            owner: req.user._id,
+                            element: {type: data.file.type}
+                        });
+                        file.save(function(err) {
+                            if (err) {cb(err);}
+                            else {cb(null, file);}
+                        });
+                    } else {
+                        cb(null);
+                    }
+                }
+            }, function(err, result) {
+                if (err) {return res.send(500,err);}
+                var roles = ["builders","subcontractors", "consultants"];
+                var currentRole, index;
+                _.each(roles, function(role) {
+                    index = _.findIndex(people[role], function(tender) {
+                        return tender._id.toString()===req.params.tenderId.toString();
+                    });
+                    if (index !== -1) {
+                        currentRole = role;
+                        return false;
+                    }
+                });
+                var activity = {
+                    user: req.user._id,
+                    type: "attach-addendum",
+                    createdAt: new Date(),
+                    element: {
+                        members: [],
+                        name: data.name,
+                        content: data.description
+                    }
+                };
+                _.each(people[currentRole][index].tenderers, function(tenderer) {
+                    _.each(data.members, function(member) {
+                        activity.element.members.push(member.email);
+                        if ((member._id && member._id.toString()===tenderer._id._id.toString()) || member.email && member.email === tenderer.email) {
+                            if (result.file) {
+                                tenderer.relatedItem.push({
+                                    type: "file",
+                                    item: {
+                                        _id: result.file._id,
+                                        name: result.file.name,
+                                        description: result.file.description,
+                                        link: result.file.path,
+                                    },
+                                    members: [people[currentRole][index].inviter.email, member.email]
+                                });
+                            }
+                        }
+                    });
+                });
+                activity.element.members = _.uniq(activity.element.members);
+                people[currentRole][index].inviterActivities.push(activity);
+                _.each(people[currentRole][index].tenderers, function(tenderer) {
+                    tenderer.relatedItem = _.uniq(tenderer.relatedItem, 'item._id');
+                });
+                people.save(function(err) {
+                    if (err) {return res.send(500,err);}
+                    return res.send(200,people);
+                });
+            });
+        }
+    });
 };

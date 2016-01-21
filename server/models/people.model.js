@@ -7,9 +7,10 @@ var okay = require('okay');
 var EventBus = require('./../components/EventBus');
 
 var activities = {
-    type: String,
-    createdAt: {type: Date},
-    reference: {}
+    user: {type: Schema.Types.ObjectId, ref: "User", required: true},
+    type: {type: String}, 
+    createdAt: Date, 
+    element: {}
 };
 
 var tender = {

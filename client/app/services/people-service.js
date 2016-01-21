@@ -25,6 +25,18 @@ angular.module('buiiltApp')
                 params: {
                     action: 'get-tender'
                 }
+            },
+            updateDistributeStatus: {
+                method: "get",
+                params: {
+                    action: "update-distribute-status"
+                }
+            },
+            attachAddendum: {
+                method: "POST",
+                params: {
+                    action: "attach-addendum"
+                }
             }
         });
 });
