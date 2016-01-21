@@ -19,13 +19,20 @@ var tender = {
         teamMember: [
             {type: Schema.Types.ObjectId, ref: 'User'}
         ],
+        name: String,
         email: {type: String},
         tenderFile: [{
             name: String,
             link: String
         }],
+        relatedItem: [{
+            type: {type: String},
+            item: {},
+            _id: false
+        }],
         activities: [activities]
     }],
+    isDistribute: {type: Boolean, default: false},
     inviter: {type: Schema.Types.ObjectId, ref: 'User'},
     inviterActivities: [activities],
     inviterType: String,

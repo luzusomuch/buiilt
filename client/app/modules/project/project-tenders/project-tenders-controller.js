@@ -2,6 +2,13 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
 	$scope.project = $rootScope.project;
     $scope.people = people;
     $rootScope.title = "Tenders list";
+    if ($rootScope.currentInviteData) {
+        $scope.invite = $rootScope.currentInviteData;
+        $scope.showNewTenderModal();
+        $rootScope.currentInviteData = null;
+    }
+
+
     function getCurrentTeamMember() {
         //get current user logged in team member
         $scope.teamMembersCanInvite = $rootScope.currentTeam.leader;

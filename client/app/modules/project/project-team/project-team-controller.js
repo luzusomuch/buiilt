@@ -246,10 +246,11 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
         member.canRevoke = false;
     };
 
-	$scope.addInvitee = function(email) {
-		if (email && email != '') {
-            $scope.invite.invitees.push({email: email});
+	$scope.addInvitee = function(email, name) {
+		if (email && email != '' && name && name != '') {
+            $scope.invite.invitees.push({email: email, name: name});
             $scope.email = null;
+            $scope.name = null;
         }
 	};	
 
@@ -260,13 +261,18 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
 	$scope.inviteNewTeamMember = function(form) {
 		if (form.$valid) {
 			$scope.invite.inviterType = $rootScope.currentUser.type;
-			peopleService.update({id: $stateParams.id},$scope.invite).$promise.then(function(res){
-				$scope.showToast("Invited successfully");
-	            $scope.cancelInviteTeamModal();
-                $rootScope.$broadcast("Project.Team.Invite", res);
-	        }, function(res){
-	        	$scope.showToast("Error. Something went wrong.")
-	        });
+            if (!$scope.invite.isTender) {
+    			peopleService.update({id: $stateParams.id},$scope.invite).$promise.then(function(res){
+    				$scope.showToast("Invited successfully");
+    	            $scope.cancelInviteTeamModal();
+                    $rootScope.$broadcast("Project.Team.Invite", res);
+    	        }, function(res){
+    	        	$scope.showToast("Error. Something went wrong.")
+    	        });
+            } else {
+                $rootScope.currentInviteData = $scope.invite;
+                $state.go("project.tenders", {id: $stateParams.id});
+            }
 		}
 	};
 
