@@ -504,6 +504,10 @@ md-input-container > label {
 	cursor: pointer;
 }
 
+md-list-item{
+	cursor: pointer;
+}
+
 
 
 

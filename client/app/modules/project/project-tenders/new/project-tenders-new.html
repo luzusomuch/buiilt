@@ -9,7 +9,71 @@
 		<md-dialog-content>
 			<div class="md-dialog-content" layout="column">
 				
-				<div layout="row">
+				<div layout="column" layout-margin>
+					<md-input-container flex>
+						<label for="">Tender Name</label>
+						<input type="text" name="name" ng-model="invite.tenderName" required md-autofocus>
+					</md-input-container>
+					<md-input-container flex>
+						<label for="">Tender Description</label>
+						<textarea ng-model="invite.tenderDescription" md-maxlength="250" rows="5" required></textarea>
+					</md-input-container>
+				</div>
+				
+				<div layout="column" layout-margin>
+					<p class="md-body-2">Who would you like to invite?</p>
+					<md-input-container>
+						<md-radio-group ng-change="getChangeTypeValue(invite.type)" ng-model="invite.type" layout="row">
+							<md-radio-button ng-repeat="type in availableUserType" ng-value="type.value" aria-label="{{type.text}}">
+								{{type.text}}
+							</md-radio-button>
+						</md-radio-group>
+					</md-input-container>
+				</div>
+				
+				<!-- <div layout="column" ng-show="invite.type == 'addBuilder' || invite.type == 'addConsultant' || invite.type == 'addSubcontractor'" layout-margin>
+					<p class="md-body-2">Will you require a tender to be submitted?</p>
+					<md-input-container flex>
+						<md-radio-group ng-model="invite.isTender" layout="row">
+							<md-radio-button ng-value="true" aria-label="" checked="true">
+								Yes
+							</md-radio-button>
+							<md-radio-button ng-value="false" aria-label="">
+								No
+							</md-radio-button>
+						</md-radio-group>
+					</md-input-container>
+				</div> -->
+				
+				<div layout="column" layout-margin ng-show="invite.isInviteTeamMember">
+					<p class="md-body-2">Please select the employee's you would like to add to this project:</p>
+					<div layout="row" layout-align="center center" class="tagcloud" layout-wrap layout-padding>
+						<span ng-click="selectMember($index)" ng-class="{'available-tag':!member.select, 'selected-tag': member.select}" ng-repeat="member in teamMembersCanInvite track by $index">{{member.name}}</span>
+					</div>
+				</div>
+				
+				<div layout="column" ng-show="invite.type == 'addBuilder' || invite.type == 'addConsultant' || invite.type == 'addSubcontractor'" layout-margin>
+					<p class="md-body-2">Please provide the first name and email for <span ng-show="invite.isTender">each</span><span ng-show="!invite.isTender">the</span> <span ng-show="invite.type == 'addBuilder'">Builder</span><span ng-show="invite.type == 'addConsultant'">Consultant</span><span ng-show="invite.type == 'addSubcontractor'">Subcontractor</span> you would like to invite:</p>
+					
+					<div layout="row">
+						<md-input-container flex="5">
+							<p class="md-body-2" style="margin-top: 0.5vh">1.</p>
+						</md-input-container>
+						<md-input-container flex="25">
+							<label for="">First Name</label>
+							<input type="name" ng-model="invite.name">
+						</md-input-container>
+						<md-input-container flex="55">
+							<label for="">Email Address</label>
+							<input type="email" ng-model="invite.email">
+						</md-input-container>
+						<div flex="15">
+							<md-button ng-click="addInvitee(email)" class="material-icons" style="margin-top:2vh;">Add Another</md-button>
+						</div>
+					</div>
+				</div>
+				
+				<!-- <div layout="row">
 					<md-input-container flex class="modal-instructions">
 						<p>Please provide the following details to begin a tender for your project...</p>
 					</md-input-container>
@@ -21,7 +85,7 @@
 						<input type="text" name="name" ng-model="invite.tenderName" required>
 					</md-input-container>
 				</div>
-				
+
 				<div layout="row">
 					<md-input-container flex>
 						<md-radio-group ng-change="getChangeTypeValue(invite.type)" ng-model="invite.type" layout="row">
@@ -37,7 +101,7 @@
 						<p>Will you require a tender to be submitted?</p>
 					</md-input-container>
 				</div>
-				
+
 				<div layout="row" ng-hide="invite.type == 'addClient' || invite.type == 'addEmployee'">
 					<md-input-container flex>
 						<md-radio-group ng-model="invite.isTender" layout="row">
@@ -75,7 +139,7 @@
                     	</div>
                     </div>
 				</div>
-				
+
 				<div layout="row" ng-show="!invite.isInviteTeamMember">
 					<md-input-container flex ng-show="!invite.isTender">
 						<label for="">Email</label>
@@ -99,14 +163,14 @@
 							<i style="cursor: pointer" ng-click="removeInvitee($index)" class="material-icons md-secondary">clear</i>
 						</md-list-item>
 					</md-list>
-				</div>
+				</div> -->
 				
 			</div>
 		</md-dialog-content>
 		
 		<md-dialog-actions>
 			<md-button ng-click="cancelNewTenderModal()">Cancel</md-button>
-			<md-button type="submit" class="md-raised md-accent md-hue-1">Send Invitations!</md-button>
+			<md-button type="submit">Create Tender</md-button>
 		</md-dialog-actions>
 	</form>
 </md-dialog>

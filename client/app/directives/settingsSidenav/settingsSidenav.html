@@ -1,4 +1,4 @@
-<div flex class="md-whiteframe-1dp" style="height: 92vh; overflow: scroll">
+<div flex class="md-whiteframe-1dp" style="height: 92vh; overflow: scroll" layout="column">
 		
 		<div layout="row" layout-padding layout-margin>
 			<p layout-padding class="page-title">Settings</p>
@@ -28,6 +28,18 @@
 			<div ui-sref="settings.billing" ng-class="{activemenu: $state.includes('settings.billing')}">
 				<md-list-item md-ink-ripple>
 				    <p layout-padding>Billing</p>
+				</md-list-item>
+			</div>
+			
+		</md-list>
+		
+		<span flex></span>
+		
+		<md-list ng-cloak>
+			<md-divider></md-divider>
+			<div ui-sref="signout" style="cursor: pointer">
+				<md-list-item md-ink-ripple>
+				    <p layout-padding><strong>Sign Out</strong></p>
 				</md-list-item>
 			</div>
 		</md-list>
