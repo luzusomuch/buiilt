@@ -746,33 +746,31 @@ exports.updateTender = function(req, res) {
                                 email: member.email,
                                 teamMember: []
                             });
-                            newInviteeNotSignUp.push(member.email);
                             var inviteToken = new InviteToken({
                                 type: 'project-invite',
                                 email: member.email,
                                 element: {
                                     project: people.project,
-                                    type: type
+                                    type: currentRole
                                 }
                             });
                             inviteToken._editUser = req.user;
-                            inviteToken.save(callback());
+                            inviteToken.save(cb());
                         } else {
                             tenderers.push({
                                 _id: user._id,
                                 teamMember: []
                             });
-                            newInviteeSignUpAlready.push(user._id);
                             var inviteToken = new InviteToken({
                                 type: 'project-invite',
                                 user: user._id,
                                 element: {
                                     project: people.project,
-                                    type: type
+                                    type: currentRole
                                 }
                             });
                             inviteToken._editUser = req.user;
-                            inviteToken.save(callback());
+                            inviteToken.save(cb());
                         }
                     });
                 }, function() {

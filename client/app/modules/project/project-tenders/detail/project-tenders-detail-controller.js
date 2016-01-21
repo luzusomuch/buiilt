@@ -111,8 +111,46 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($roo
         $mdToast.show($mdToast.simple().textContent(value).position('bottom','right').hideDelay(3000));
     };
 
+    $scope.setInviteMembers = function() {
+        $scope.tender.newMembers = [];
+    };
+    $scope.setInviteMembers();
+
+    $scope.addInvitee = function(email, name) {
+        if (email && email != '' && name && name != '') {
+            if (_.findIndex($scope.tender.newMembers, {email: email}) === -1) {
+                $scope.tender.newMembers.push({email: email, name: name});
+                $scope.email = null;
+                $scope.name = null;
+            } else {
+                $scope.showToast("This email has already added");
+            }
+        }
+    };  
+
+    $scope.removeInvitee = function(index) {
+        $scope.tender.newMembers.splice(index, 1);
+    };
+
+    $scope.inviteTenderer = function() {
+        if ($scope.tender.newMembers.length === 0) {
+            $scope.showToast("Please enter at least 1 tenderer");
+            return;
+        } else {
+            $scope.tender.editType = "invite-tender";
+            console.log($stateParams.id);
+            console.log($stateParams.tenderId);
+            peopleService.updateTender({id: $stateParams.id, tenderId: $stateParams.tenderId}, $scope.tender).$promise.then(function(res) {
+                $scope.cancelNewTenderModal();
+                $scope.showToast("Invite tenderer successfully");
+                $rootScope.$broadcast("Tender.Updated", res);
+            }, function(err) {$scope.showToast("Error");});
+        }
+    };
+
     getTenderers();
     $rootScope.$on("Tender.Updated", function(event, data) {
         $scope.tender = data;
+        $scope.setInviteMembers();
     });
 });
