@@ -86,9 +86,9 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($roo
             return;
         } else {
             peopleService.attachAddendum({id: $stateParams.id, tenderId: $stateParams.tenderId}, $scope.addendum).$promise.then(function(res) {
-                console.log(res);
                 $scope.cancelNewTenderModal();
                 $scope.showToast("Attach addendum successfully");
+                $rootScope.$broadcast("Tender.Updated", res);
             }, function(err){$scope.showToast("Error");});
         }
     };
@@ -98,4 +98,7 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($roo
     };
 
     getTenderers();
+    $rootScope.$on("Tender.Updated", function(event, data) {
+        $scope.tenderer = data;
+    });
 });

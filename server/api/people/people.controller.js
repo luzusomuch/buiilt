@@ -334,7 +334,7 @@ exports.getTender = function(req, res) {
         if (!people) {return res.send(404);}
         else {
             var result = [];
-            var roles = ["builders", "clients", "architects", "subcontractors", "consultants"];
+            var roles = ["builders", "architects", "subcontractors", "consultants"];
             _.each(roles, function(role) {
                 var index = _.findIndex(people[role], function(tender) {
                     return tender._id == req.params.tenderId;
@@ -666,33 +666,29 @@ exports.attachAddendum = function(req, res) {
                         content: data.description
                     }
                 };
-                _.each(people[currentRole][index].tenderers, function(tenderer) {
-                    _.each(data.members, function(member) {
-                        activity.element.members.push(member.email);
-                        if ((member._id && member._id.toString()===tenderer._id._id.toString()) || member.email && member.email === tenderer.email) {
-                            if (result.file) {
-                                tenderer.relatedItem.push({
-                                    type: "file",
-                                    item: {
-                                        _id: result.file._id,
-                                        name: result.file.name,
-                                        description: result.file.description,
-                                        link: result.file.path,
-                                    },
-                                    members: [people[currentRole][index].inviter.email, member.email]
-                                });
-                            }
-                        }
-                    });
+                if (result.file) {
+                    var relatedItem = {
+                        type: "file",
+                        item: {
+                            _id: result.file._id,
+                            name: result.file.name,
+                            description: result.file.description,
+                            link: result.file.path,
+                        },
+                        members: [people[currentRole][index].inviter.email]
+                    };
+                }
+                _.each(data.members, function(member) {
+                    activity.element.members.push(member.email);
+                    relatedItem.members.push(member.email)
                 });
                 activity.element.members = _.uniq(activity.element.members);
                 people[currentRole][index].inviterActivities.push(activity);
-                _.each(people[currentRole][index].tenderers, function(tenderer) {
-                    tenderer.relatedItem = _.uniq(tenderer.relatedItem, 'item._id');
-                });
+                if (result.file)
+                    people[currentRole][index].relatedItem.push(relatedItem);
                 people.save(function(err) {
                     if (err) {return res.send(500,err);}
-                    return res.send(200,people);
+                    return res.send(200,people[currentRole][index]);
                 });
             });
         }

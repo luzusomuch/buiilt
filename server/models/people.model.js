@@ -27,16 +27,17 @@ var tender = {
             name: String,
             link: String
         }],
-        relatedItem: [{
-            type: {type: String},
-            item: {},
-            _id: false
-        }],
         activities: [activities]
     }],
     isDistribute: {type: Boolean, default: false},
     inviter: {type: Schema.Types.ObjectId, ref: 'User'},
     inviterActivities: [activities],
+    relatedItem: [{
+        type: {type: String},
+        item: {},
+        member: [String],
+        _id: false
+    }],
     inviterType: String,
     hasSelect: {type: Boolean, default: false},
     createdAt: {type: Date}
