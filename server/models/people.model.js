@@ -14,6 +14,7 @@ var activities = {
 
 var tender = {
     tenderName: String,
+    tenderDescription: String,
     tenderers: [{
         _id: {type: Schema.Types.ObjectId, ref: 'User'},
         teamMember: [

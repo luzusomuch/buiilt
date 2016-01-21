@@ -3,6 +3,40 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
     $scope.people = people;
     $rootScope.title = "Tenders list";
 
+    function getTenderersList(people) {
+        $scope.membersList = [];
+        _.each($rootScope.roles, function(role) {
+            _.each(people[role], function(tender) {
+                if (_.findIndex(tender.tenderers, function(user) {
+                    if (user._id) {
+                        return user._id._id == $rootScope.currentUser._id;
+                    }
+                }) != -1) {
+                    $rootScope.currentUser.type = role;
+                }
+
+                if (tender.tenderers.teamMember && tender.tenderers.teamMember.length > 0) {
+                    if (_.findIndex(tender.tenderers.teamMember, function(member) {
+                        return member._id == $scope.currentUser._id;
+                    }) != -1) {
+                        $rootScope.currentUser.type = role;
+                    }
+                }
+
+                // Get team list
+                if (!tender.hasSelect) {
+                    $scope.membersList.push({
+                        _id: tender._id,
+                        tenderName: tender.tenderName,
+                        tenderers: tender.tenderers
+                    });
+                }
+            });
+        });
+    }
+
+    getTenderersList($scope.people);
+
 	$scope.inviteTeamMember = function(member, index) {
         $scope.invite.teamMember.push(member);
         $scope.teamMembersCanInvite.splice(index,1);
@@ -14,15 +48,6 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
         $scope.invite.teamMember.splice(index, 1);
         member.canRevoke = false;
     };
-
-	$scope.removeInvitee = function(index) {
-        $scope.invite.invitees.splice(index, 1);
-    };
-
-	
-
-	
-
 
 	//Functions to handle New Tender Dialog.
 	$scope.showNewTenderModal = function() {
@@ -148,13 +173,17 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
                     }
                 };  
 
+                $scope.removeInvitee = function(index) {
+                    $scope.invite.invitees.splice(index, 1);
+                };
+
                 $scope.inviteNewTeamMember = function(form) {
                     if (form.$valid) {
                         $scope.invite.inviterType = $rootScope.currentUser.type;
                         peopleService.update({id: $stateParams.id},$scope.invite).$promise.then(function(res){
                             $scope.showToast("Invitations sent successfully!");
-                            $scope.cancelInviteTeamModal();
-                            loadProjectMembers($stateParams.id);
+                            $scope.cancelNewTenderModal();
+                            $rootScope.$broadcast("Tender.Inserted", res);
                         }, function(res){
                             $scope.showToast("Error. Something went wrong.")
                         });
@@ -180,4 +209,7 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
             $rootScope.currentInviteData = null;
         },300);
     }
+    $rootScope.$on("Tender.Inserted", function(event, data) {
+        getTenderersList(data);
+    });
 });

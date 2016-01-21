@@ -105,12 +105,14 @@ exports.invitePeople = function(req, res) {
                                 else if (!user) {
                                     team.push({
                                         tenderName: invite.tenderName,
+                                        tenderDescription: invite.tenderDescription,
                                         inviter: req.user._id,
                                         tenderers: [{
                                             email: invite.email,
                                             teamMember: []
                                         }],
                                         hasSelect: true,
+                                        isDistribute: true,
                                         createAt: new Date(),
                                         inviterType: (type == "consultants") ? invite.inviterType : null
                                     });
@@ -119,12 +121,14 @@ exports.invitePeople = function(req, res) {
                                 } else {
                                     team.push({
                                         tenderName: invite.tenderName,
+                                        tenderDescription: invite.tenderDescription,
                                         inviter: req.user._id,
                                         tenderers: [{
                                             _id: user._id,
                                             teamMember: []
                                         }],
                                         hasSelect: true,
+                                        isDistribute: true,
                                         createAt: new Date(),
                                         inviterType: (type == "consultants") ? invite.inviterType : null
                                     });
@@ -179,6 +183,7 @@ exports.invitePeople = function(req, res) {
                                 }, function() {
                                     team.push({
                                         tenderName: invite.tenderName,
+                                        tenderDescription: invite.tenderDescription,
                                         inviter: req.user._id,
                                         tenderers: tenderers,
                                         createAt: new Date(),

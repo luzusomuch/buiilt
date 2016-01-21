@@ -121,16 +121,19 @@
 						</div>
 					</div>
 					
-					<div layout="row" ng-show="invite.invitees.length > 0" layout-margin>
-						<md-list flex="80" ng-cloak>
-							<md-list-item ng-repeat="invitee in invite.invitees">
-								<p>
-									<span><strong>Name: </strong>{{invitee.name}}</span>
-									<span><strong>Email: </strong>{{invitee.email}}</span>
-								</p>
-								<i style="cursor: pointer" ng-click="removeInvitee($index)" class="material-icons md-secondary">clear</i>
-							</md-list-item>
-						</md-list>
+					<div layout="row" ng-show="invite.invitees.length > 0" layout-margin ng-repeat="invitee in invite.invitees">
+						<div flex="5">
+							<p class="md-body-2" style="margin-top: 0.5vh">{{$index+1}}.</p>
+						</div>
+						<div flex="25">
+							<p>{{invitee.name}}</p>
+						</div>
+						<div flex="55">
+							<p>{{invitee.email}}</p>
+						</div>
+						<div flex="15">
+							<i style="cursor: pointer" ng-click="removeInvitee($index)" class="material-icons md-secondary">clear</i>
+						</div>
 					</div>
 				</div>
 			</div>
