@@ -1,5 +1,6 @@
-angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $scope, $timeout, $mdDialog, peopleService, $mdToast, $stateParams, userService, people) {
+angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $scope, $timeout, $mdDialog, peopleService, $mdToast, $stateParams, userService, people, $state) {
     $scope.people = people;
+    $scope.invite = {};
 	function getCurrentTeamMember() {
 		//get current user logged in team member
 		$scope.teamMembersCanInvite = $rootScope.currentTeam.leader;
@@ -248,9 +249,13 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
 
 	$scope.addInvitee = function(email, name) {
 		if (email && email != '' && name && name != '') {
-            $scope.invite.invitees.push({email: email, name: name});
-            $scope.email = null;
-            $scope.name = null;
+            if (_.findIndex($scope.invite.invitees, {email: email}) === -1) {
+                $scope.invite.invitees.push({email: email, name: name});
+                $scope.email = null;
+                $scope.name = null;
+            } else {
+                $scope.showToast("This email has already added");
+            }
         }
 	};	
 
@@ -262,6 +267,7 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
 		if (form.$valid) {
 			$scope.invite.inviterType = $rootScope.currentUser.type;
             if (!$scope.invite.isTender) {
+                delete $scope.invite.event;
     			peopleService.update({id: $stateParams.id},$scope.invite).$promise.then(function(res){
     				$scope.showToast("Invited successfully");
     	            $scope.cancelInviteTeamModal();
@@ -271,7 +277,8 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
     	        });
             } else {
                 $rootScope.currentInviteData = $scope.invite;
-                $state.go("project.tenders", {id: $stateParams.id});
+                $state.go("project.tenders.all", {id: $stateParams.id});
+                $scope.cancelInviteTeamModal();
             }
 		}
 	};
@@ -282,6 +289,7 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
 
 	//Functions to handle Invite Team Dialog.
 	$scope.showInviteTeamModal = function($event) {
+        $scope.invite.event = $event;
 		$mdDialog.show({
 		  	targetEvent: $event,
 	      	controller: 'projectTeamCtrl',

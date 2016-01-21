@@ -125,7 +125,7 @@
 						<md-list flex="80" ng-cloak>
 							<md-list-item ng-repeat="invitee in invite.invitees">
 								<p>
-									<span><strong>Name: </strong>{{invite.name}}</span>
+									<span><strong>Name: </strong>{{invitee.name}}</span>
 									<span><strong>Email: </strong>{{invitee.email}}</span>
 								</p>
 								<i style="cursor: pointer" ng-click="removeInvitee($index)" class="material-icons md-secondary">clear</i>
