@@ -233,66 +233,86 @@ exports.selectWinnerTender = function(req, res) {
         else {
             var winnerTenderNotification = [];
             var loserTender = [];
-            var roles = ["builders", "clients", "architects", "subcontractors", "consultants"];
+            var roles = ["builders", "subcontractors", "consultants"];
             _.each(roles, function(role) {
-                _.each(people[role], function(tender) {
-                    var index = _.findIndex(tender.tenderers, function(tenderer) {
-                        if (tenderer._id) {
-                            return tenderer._id.toString() == req.body._id._id;
+                var allow = false;
+                if (role === "subcontractors") {
+                    _.each(people.builders, function(tender) {
+                        var builderTenderIndex = _.findIndex(tender.tenderers, function(tenderer){
+                            if (tenderer._id) {
+                                return tenderer._id.toString()===req.user._id.toString();
+                            }
+                        });
+                        if (builderTenderIndex !== -1) {
+                            allow = tender.hasSelect;
+                            return false;
                         }
                     });
-                    if (index != -1) {
-                        var winner = tender.tenderers[index];
-
-                        tender.hasSelect = true;
-                        winnerTenderNotification.push(winner._id);
-                        _.remove(tender.tenderers, function(tenderer) {
-                            if (tenderer._id)
-                                return tenderer._id.toString() == winner._id;
-                        });
-                        async.each(tender.tenderers, function(loserTenderer, cb) {
-                            if (loserTenderer._id) {
-                                InviteToken.findOne({type: "project-invite", user: loserTenderer._id, 'element.project': people.project}).remove(function(err) {
-                                    if (err) {cb();}
-                                    else {loserTender.push(loserTenderer._id);cb()}
-                                });
-                            } else {
-                                InviteToken.findOne({type: "project-invite", email: loserTenderer.email, 'element.project': people.project}).remove(cb());
+                } else {
+                    allow = true;
+                }
+                if (allow) {
+                    _.each(people[role], function(tender) {
+                        var index = _.findIndex(tender.tenderers, function(tenderer) {
+                            if (tenderer._id) {
+                                return tenderer._id.toString() == req.body._id._id;
                             }
-                        }, function() {
-                            tender.tenderers = [winner];
-                            User.findById(winner._id, function(err, user) {
-                                var activity = {
-                                    user: req.user._id,
-                                    createdAt: new Date(),
-                                    type: "select-winner",
-                                    element: {
-                                        name: user.name
-                                    }
-                                };
-                                tender.inviterActivities.push(activity);
-                                user.projects.push(people.project);
-                                user.markModified("projects");
-                                user.save(function(err) {
-                                    if (err) {return res.send(500,err);}
-                                    InviteToken.findOne({type: "project-invite", user: user._id, 'element.project': people.project}).remove(function() {
-                                        people._winnerTender = winnerTenderNotification;
-                                        people._loserTender = loserTender;
-                                        people.markModified('selectWinnerTender');
-                                        people._editUser = req.user;
-                                        people.save(function(err){
-                                            if (err) {return res.send(500,err);}
-                                            People.populate(people, 
-                                            [populatePaths], function(err, people) {
-                                                return res.json(people);
+                        });
+                        if (index != -1) {
+                            var winner = tender.tenderers[index];
+
+                            tender.hasSelect = true;
+                            winnerTenderNotification.push(winner._id);
+                            _.remove(tender.tenderers, function(tenderer) {
+                                if (tenderer._id)
+                                    return tenderer._id.toString() == winner._id;
+                            });
+                            async.each(tender.tenderers, function(loserTenderer, cb) {
+                                if (loserTenderer._id) {
+                                    InviteToken.findOne({type: "project-invite", user: loserTenderer._id, 'element.project': people.project}).remove(function(err) {
+                                        if (err) {cb();}
+                                        else {loserTender.push(loserTenderer._id);cb()}
+                                    });
+                                } else {
+                                    InviteToken.findOne({type: "project-invite", email: loserTenderer.email, 'element.project': people.project}).remove(cb());
+                                }
+                            }, function() {
+                                tender.tenderers = [winner];
+                                User.findById(winner._id, function(err, user) {
+                                    var activity = {
+                                        user: req.user._id,
+                                        createdAt: new Date(),
+                                        type: "select-winner",
+                                        element: {
+                                            name: user.name
+                                        }
+                                    };
+                                    tender.inviterActivities.push(activity);
+                                    user.projects.push(people.project);
+                                    user.markModified("projects");
+                                    user.save(function(err) {
+                                        if (err) {return res.send(500,err);}
+                                        InviteToken.findOne({type: "project-invite", user: user._id, 'element.project': people.project}).remove(function() {
+                                            people._winnerTender = winnerTenderNotification;
+                                            people._loserTender = loserTender;
+                                            people.markModified('selectWinnerTender');
+                                            people._editUser = req.user;
+                                            people.save(function(err){
+                                                if (err) {return res.send(500,err);}
+                                                People.populate(people, 
+                                                [populatePaths], function(err, people) {
+                                                    return res.json(people);
+                                                });
                                             });
                                         });
                                     });
                                 });
                             });
-                        });
-                    }
-                });
+                        }
+                    });
+                } else {
+                    return res.send(500, {msg: "You haven\'t got privilege to do this action"});
+                }
             });
         }
     });

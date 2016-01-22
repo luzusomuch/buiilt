@@ -40,7 +40,7 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($roo
                 $scope.showToast("Select winner successfully!");
                 $state.go("project.team.all", {id: $stateParams.id});
             }, function(err) {
-                $scope.showToast("Something went wrong!");
+                $scope.showToast(err.data.msg);
             });
         }, function() {
             
