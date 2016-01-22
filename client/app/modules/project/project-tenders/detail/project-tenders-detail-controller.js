@@ -87,6 +87,7 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($roo
         } else {
             peopleService.attachAddendum({id: $stateParams.id, tenderId: $stateParams.tenderId}, $scope.addendum).$promise.then(function(res) {
                 $scope.cancelNewTenderModal();
+                setAddendum();
                 $scope.showToast("Attach addendum successfully");
                 $rootScope.$broadcast("Tender.Updated", res);
             }, function(err){$scope.showToast("Error");});

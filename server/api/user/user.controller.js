@@ -143,33 +143,14 @@ exports.createUserWithInviteToken = function(req, res, next) {
             if (err) {return validationError(res, err);}
             else {
                 var token = jwt.sign({_id: user._id}, config.secrets.session, {expiresInMinutes: 60 * 5});
-                var invitesList = ["addClient", "addBuilder", "addArchitect", "addSubcontractor", "addConsultant"];
+                var invitesList = ["clients", "builders", "architects", "subcontractors", "consultants"];
                 var inviteIndex = _.indexOf(invitesList, packageInvite.inviteType);
                 if (inviteIndex !== -1) {
                     People.findById(packageInvite.package, function(err, people) {
                         if (err) {return res.send(500,err);}
                         else if (!people) {return res.send(404);}
                         else {
-                            var type;
-                            switch (invitesList[inviteIndex]) {
-                                case "addClient":
-                                    type = "clients";
-                                    break;
-                                case "addBuilder":
-                                    type = "builders" ;
-                                    break;
-                                case "addArchitect":
-                                    type = "architects" ;
-                                    break;
-                                case "addSubcontractor":
-                                    type = "subcontractors" ;
-                                    break;
-                                case "addConsultant":
-                                    type = "consultants" ;
-                                    break;
-                                default :
-                                    break;
-                            }
+                            var type = invitesList[inviteIndex];
                             _.each(people[type], function(tender) {
                                 _.each(tender.tenderers, function(tenderer) {
                                     console.log(packageInvite.to);

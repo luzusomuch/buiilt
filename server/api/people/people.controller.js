@@ -202,7 +202,7 @@ exports.invitePeople = function(req, res) {
                         people[type] = team;
                         // people._newInviteeNotSignUp = newInviteeNotSignUp;
                         people._newInviteeSignUpAlready = newInviteeSignUpAlready;
-                        people._newInviteType = invite.type;
+                        people._newInviteType = type;
                         people.markModified('invitePeople');
                         people._editUser = req.user;
                         people.save(function(err){
@@ -313,14 +313,6 @@ exports.getTender = function(req, res) {
     .populate("builders.inviterActivities.user", "_id email name")
     .populate("builders.tenderers.teamMember", "_id email name")
     .populate("builders.inviter", "_id email name")
-    .populate("architects.tenderers._id", "_id email name")
-    .populate("architects.tenderers.teamMember", "_id email name")
-    .populate("architects.inviter", "_id email name")
-    .populate("architects.inviterActivities.user", "_id email name")
-    .populate("clients.tenderers._id", "_id email name")
-    .populate("clients.tenderers.teamMember", "_id email name")
-    .populate("clients.inviter", "_id email name")
-    .populate("clients.inviterActivities.user", "_id email name")
     .populate("subcontractors.tenderers._id", "_id email name")
     .populate("subcontractors.tenderers.teamMember", "_id email name")
     .populate("subcontractors.inviter", "_id email name")
@@ -335,19 +327,37 @@ exports.getTender = function(req, res) {
         if (!people) {return res.send(404);}
         else {
             var result = [];
-            var roles = ["builders", "architects", "subcontractors", "consultants"];
+            var roles = ["builders", "subcontractors", "consultants"];
             _.each(roles, function(role) {
                 var index = _.findIndex(people[role], function(tender) {
                     return tender._id == req.params.tenderId;
                 });
                 if (index != -1) {
+                    var currentTendererActivities = [];
+                    var inviterActivities = []
                     _.each(people[role], function(tender) {
+                        _.each(tender.relatedItem, function(item) {
+                            if (_.indexOf(item.members, req.user.email) !== -1 || tender.inviter._id.toString()===req.user._id.toString()) {
+                                currentTendererActivities.push(item);
+                            }
+                        });
+                        _.each(tender.inviterActivities, function(activity) {
+                            if (activity.type !== "attach-addendum") {
+                                inviterActivities.push(activity);
+                            } else {
+                                if (_.indexOf(activity.element.members, req.user.email) !== -1 || tender.inviter._id.toString()===req.user._id.toString()) {
+                                    inviterActivities.push(activity);
+                                }
+                            }
+                        });
                         if (tender._id.toString() == req.params.tenderId && tender.inviter._id.toString() == req.user._id) {
                             result = tender;
                         } else {
                             _.each(tender.tenderers, function(tenderer) {
                                 if (tenderer._id && tenderer._id._id.toString() == req.user._id) {
                                     result = tender;
+                                    result.relatedItem = currentTendererActivities;
+                                    result.inviterActivities = inviterActivities;
                                     result.tenderers = [];
                                     result.tenderers.push(tenderer);
                                 }
@@ -685,12 +695,14 @@ exports.attachAddendum = function(req, res) {
                 }
                 _.each(data.members, function(member) {
                     activity.element.members.push(member.email);
-                    relatedItem.members.push(member.email)
+                    if (result.file) 
+                        relatedItem.members.push(member.email)
                 });
                 activity.element.members = _.uniq(activity.element.members);
                 people[currentRole][index].inviterActivities.push(activity);
                 if (result.file)
                     people[currentRole][index].relatedItem.push(relatedItem);
+                people.markModified(currentRole);
                 people.save(function(err) {
                     if (err) {return res.send(500,err);}
                     return res.send(200,people[currentRole][index]);

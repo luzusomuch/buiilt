@@ -35,7 +35,7 @@ var tender = {
     relatedItem: [{
         type: {type: String},
         item: {},
-        member: [String],
+        members: [String],
         _id: false
     }],
     inviterType: String,
