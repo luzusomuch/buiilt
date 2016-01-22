@@ -242,6 +242,7 @@ exports.selectWinnerTender = function(req, res) {
                     });
                     if (index != -1) {
                         var winner = tender.tenderers[index];
+
                         tender.hasSelect = true;
                         winnerTenderNotification.push(winner._id);
                         _.remove(tender.tenderers, function(tenderer) {
@@ -260,6 +261,15 @@ exports.selectWinnerTender = function(req, res) {
                         }, function() {
                             tender.tenderers = [winner];
                             User.findById(winner._id, function(err, user) {
+                                var activity = {
+                                    user: req.user._id,
+                                    createdAt: new Date(),
+                                    type: "select-winner",
+                                    element: {
+                                        name: user.name
+                                    }
+                                };
+                                tender.inviterActivities.push(activity);
                                 user.projects.push(people.project);
                                 user.markModified("projects");
                                 user.save(function(err) {

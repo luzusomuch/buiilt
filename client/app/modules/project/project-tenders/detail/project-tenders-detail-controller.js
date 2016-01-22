@@ -38,7 +38,7 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($roo
         $mdDialog.show(confirm).then(function() {
             peopleService.selectWinnerTender({id: $stateParams.id},tenderer).$promise.then(function(res) {
                 $scope.showToast("Select winner successfully!");
-                $state.go("project.team", {id: $stateParams.id});
+                $state.go("project.team.all", {id: $stateParams.id});
             }, function(err) {
                 $scope.showToast("Something went wrong!");
             });

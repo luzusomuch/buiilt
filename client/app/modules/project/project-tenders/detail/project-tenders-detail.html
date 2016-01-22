@@ -7,7 +7,7 @@
 			<span flex></span>
 			<div ng-show="tender.inviter._id == currentUser._id">
 				<md-button ng-click="distributeTender()" ng-show="!tender.isDistribute">Distribute Tender</md-button>
-				<md-button ng-click="showModal($event, 'select-winner-tender-modal.html')" ng-show="tender.isDistribute">Select a Winner</md-button>
+				<md-button ng-click="showModal($event, 'select-winner-tender-modal.html')" ng-show="tender.isDistribute && !tender.hasSelect">Select a Winner</md-button>
 			</div>
 			<md-chips class="set-filters" ng-show="tender.inviter._id == currentUser._id">
 				<md-chip>Show Related Activities</md-chip>
@@ -30,7 +30,8 @@
                         <md-icon ng-switch-when="invite-tender" class="material-icons md-primary">person_outline</md-icon>
                         <md-icon ng-switch-when="related-file" class="material-icons md-primary">attach_file</md-icon>
                         <md-icon ng-switch-when="related-thread" class="material-icons md-primary">chat_bubble_outline</md-icon>
-						<md-icon ng-switch-when="related-task" class="material-icons md-primary">done_all</md-icon>
+                        <md-icon ng-switch-when="related-task" class="material-icons md-primary">done_all</md-icon>
+						<md-icon ng-switch-when="select-winner" class="material-icons md-primary">format_list_bulleted</md-icon>
 					</div>
 					<span flex="5"></span>
 					<div flex class="activity-detail">
@@ -42,6 +43,7 @@
                             <span ng-switch-when="related-thread">has created new related thread {{activity.element.content}}</span>
                             <span ng-switch-when="related-file">has created new related file {{activity.element.content}}</span>
                             <span ng-switch-when="related-task">has created new related task {{activity.element.content}}</span>
+                            <span ng-switch-when="select-winner">has selected {{activity.element.name}} as winner of this tender</span>
                         </p>
 						<p class="meta-data"><span class="time">{{activity.createdAt | date:'hh:mm a'}}</span> <span class="date">{{activity.createdAt |date:'dd-MM-yyyy'}}</span><p>
 					</div>
@@ -106,7 +108,7 @@
   	  					  <md-tooltip md-direction="left">Invite a Tenderer</md-tooltip>
   	  				      <md-icon class="material-icons">person_add</md-icon>
   			  	      </md-button>
-  			  	      <md-button aria-label="Send a File" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'select-winner-tender-modal.html')" ng-show="tender.isDistribute && tender.inviter._id == currentUser._id">
+  			  	      <md-button aria-label="Send a File" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'select-winner-tender-modal.html')" ng-show="tender.isDistribute && tender.inviter._id == currentUser._id && !tender.hasSelect">
   	  					  <md-tooltip md-direction="left">Select a Winning Tender</md-tooltip>
   	  				      <md-icon class="material-icons">format_list_bulleted</md-icon>
   			  	      </md-button>
