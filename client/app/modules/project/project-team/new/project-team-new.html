@@ -93,7 +93,7 @@
 				<div layout="column" ng-show="invite.type == 'addBuilder' || invite.type == 'addConsultant' || invite.type == 'addSubcontractor'" layout-margin>
 					<p class="md-body-2">Please provide the first name and email for the <span ng-show="invite.type == 'addBuilder'">Builder</span><span ng-show="invite.type == 'addConsultant'">Consultant</span><span ng-show="invite.type == 'addSubcontractor'">Subcontractor</span> you would like to invite:</p>
 					
-					<div layout="row" ng-show="!invite.isTender">
+					<div layout="row">
 						<md-input-container flex="5">
 						</md-input-container>
 						<md-input-container flex="25">
@@ -108,7 +108,7 @@
 						</div>
 					</div>
 
-					<div layout="row" ng-show="invite.isTender">
+					<!-- <div layout="row" ng-show="invite.isTender">
 						<md-input-container flex="5">
 						</md-input-container>
 						<md-input-container flex="25">
@@ -137,7 +137,7 @@
 						<div flex="15">
 							<i style="cursor: pointer" ng-click="removeInvitee($index)" class="material-icons md-secondary">clear</i>
 						</div>
-					</div>
+					</div> -->
 				</div>
 			</div>
 		</md-dialog-content>

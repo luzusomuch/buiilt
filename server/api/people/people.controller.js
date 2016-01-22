@@ -169,6 +169,7 @@ exports.invitePeople = function(req, res) {
                                         } else {
                                             tenderers.push({
                                                 _id: user._id,
+                                                name: invitee.name,
                                                 teamMember: []
                                             });
                                             newInviteeSignUpAlready.push(user._id);
@@ -388,43 +389,80 @@ function responseTender(people, req, res) {
     });
 };
 
+function filterConsultants(consultants, user) {
+    var filtered = [];
+    _.each(consultants, function(tender) {
+        if (tender.inviter._id.toString()===user._id.toString()) {
+            tender.teamMember = [];
+            filtered.push(tender);
+        }
+    });
+    return filtered;
+};
+
+function filterCurrentTender(tenders, user) {
+    var currentTender = [];
+    _.each(tenders, function(tender) {
+        var index = _.findIndex(tender.tenderers, function(tenderer) {
+            if (tenderer._id) {
+                return tenderer._id._id.toString()===user._id.toString();
+            } 
+        });
+        if (index !== -1) {
+            currentTender = tender;
+            currentTender.tenderers = [tender.tenderers[index]];
+        } else {
+            _.each(tender.tenderers, function(tenderer) {
+                var currentMemberIndex = _.findIndex(tenderer.teamMember, function(member) {
+                    return member._id.toString()===user._id.toString();
+                });
+                if (currentMemberIndex !== -1) {
+                    currentTender = tender;
+                    currentTenderer.tenderers = [tenderer];
+                }
+            });
+        }
+    });
+    return currentTender;
+};
+
 function responseWithEachType(people, req, res){
     var roles = ["builders", "clients", "architects", "subcontractors", "consultants"];
-    if (people.project.projectManager._id.toString() === req.user._id.toString()) {
-        if (people.project.projectManager.type === "builder") {
-            roles.splice(_.indexOf(roles, "builders"), 1);
-            _.each(roles, function(role) {
-                _.each(people[role], function(tender) {
-                    _.each(tender.tenderers, function(tenderer) {
-                        tenderer.teamMember = [];
-                    })
-                });
-            });
-            return res.send(200, people);
-        } else if (people.project.projectManager.type === "architect") {
-            roles.splice(_.indexOf(roles, "architects"), 1);
-            _.each(roles, function(role) {
-                _.each(people[role], function(tender) {
-                    _.each(tender.tenderers, function(tenderer) {
-                        tenderer.teamMember = [];
-                    })
-                });
-            });
-            people.subcontractors = [];
-            return res.send(200, people);
-        } else if (people.project.projectManager.type === "homeOwner") {
-            roles.splice(_.indexOf(roles, "clients"), 1);
-            _.each(roles, function(role) {
-                _.each(people[role], function(tender) {
-                    _.each(tender.tenderers, function(tenderer) {
-                        tenderer.teamMember = [];
-                    })
-                });
-            });
-            people.subcontractors = [];
-            return res.send(200, people);
-        }
-    } else {
+    // if (people.project.projectManager._id.toString() === req.user._id.toString()) {
+    //     if (people.project.projectManager.type === "builder") {
+    //         roles.splice(_.indexOf(roles, "builders"), 1);
+    //         _.each(roles, function(role) {
+    //             _.each(people[role], function(tender) {
+    //                 _.each(tender.tenderers, function(tenderer) {
+    //                     tenderer.teamMember = [];
+    //                 })
+    //             });
+    //         });
+    //         return res.send(200, people);
+    //     } else if (people.project.projectManager.type === "architect") {
+    //         roles.splice(_.indexOf(roles, "architects"), 1);
+    //         _.each(roles, function(role) {
+    //             _.each(people[role], function(tender) {
+    //                 _.each(tender.tenderers, function(tenderer) {
+    //                     tenderer.teamMember = [];
+    //                 })
+    //             });
+    //         });
+    //         people.subcontractors = [];
+    //         return res.send(200, people);
+    //     } else if (people.project.projectManager.type === "homeOwner") {
+    //         roles.splice(_.indexOf(roles, "clients"), 1);
+    //         _.each(roles, function(role) {
+    //             _.each(people[role], function(tender) {
+    //                 _.each(tender.tenderers, function(tenderer) {
+    //                     tenderer.teamMember = [];
+    //                 })
+    //             });
+    //         });
+    //         people.subcontractors = [];
+    //         return res.send(200, people);
+    //     }
+    // } else {
         _.each(roles, function(role) {
             _.each(people[role], function(tender) {
                 var index = _.findIndex(tender.tenderers, function(tenderer) {
@@ -439,21 +477,23 @@ function responseWithEachType(people, req, res){
                                 people.clients.teamMember = [];
                                 people.architects.teamMember = [];
                                 people.subcontractors.teamMember = [];
-                                people.consultants.teamMember = [];
+                                people.consultants = filterConsultants(people.consultants, req.user);
                                 return res.send(200, people)
                                 break;
                             case 'clients':
                                 people.builders.teamMember = [];
                                 people.architects = [];
                                 people.subcontractors = [];
-                                people.consultants.teamMember = [];
+                                people.consultants = filterConsultants(people.consultants, req.user);
+                                people[role] = filterCurrentTender(people[role], req.user);
                                 return res.send(200, people);
                                 break;
                             case 'architects':
                                 people.builders.teamMember = [];
                                 people.clients = [];
                                 people.subcontractors = [];
-                                people.consultants.teamMember = [];
+                                people.consultants = filterConsultants(people.consultants, req.user);
+                                people[role] = filterCurrentTender(people[role], req.user);
                                 return res.send(200, people);
                                 break;
                             
@@ -466,20 +506,22 @@ function responseWithEachType(people, req, res){
                                 people.clients.teamMember = [];
                                 people.architects = [];
                                 people.subcontractors.teamMember = [];
-                                people.consultants.teamMember = [];
+                                people.consultants = filterConsultants(people.consultants, req.user);
+                                people[role] = filterCurrentTender(people[role], req.user);
                                 return res.send(200, people)
                                 break;
                             case 'clients':
                                 people.builders.teamMember = [];
                                 people.architects.teamMember = [];
-                                people.consultants.teamMember = [];
+                                people.consultants = filterConsultants(people.consultants, req.user);
                                 people.subcontractors = [];
                                 return res.send(200, people);
                                 break;
                             case 'architects':
                                 people.builders = [];
                                 people.clients.teamMember = [];
-                                people.consultants.teamMember = [];
+                                people[role] = filterCurrentTender(people[role], req.user);
+                                people.consultants = filterConsultants(people.consultants, req.user);
                                 people.subcontractors = [];
                                 return res.send(200, people);
                                 break;
@@ -494,19 +536,22 @@ function responseWithEachType(people, req, res){
                                 people.architects.teamMember = [];
                                 people.subcontractors.teamMember = [];
                                 people.consultants.teamMember = [];
+                                people.consultants = filterConsultants(people.consultants, req.user);
+                                people[role] = filterCurrentTender(people[role], req.user);
                                 return res.send(200, people)
                                 break;
                             case 'clients':
                                 people.builders = [];
                                 people.architects.teamMember = [];
-                                people.consultants.teamMember = [];
+                                people.consultants = filterConsultants(people.consultants, req.user);
+                                people[role] = filterCurrentTender(people[role], req.user);
                                 people.subcontractors = [];
                                 return res.send(200, people);
                                 break;
                             case 'architects':
                                 people.builders.teamMember = [];
                                 people.clients.teamMember = [];
-                                people.consultants.teamMember = [];
+                                people.consultants = filterConsultants(people.consultants, req.user);
                                 people.subcontractors = [];
                                 return res.send(200, people);
                                 break;
@@ -605,7 +650,7 @@ function responseWithEachType(people, req, res){
                 }
             });
         });
-    }
+    // }
 };
 
 exports.updateDistributeStatus = function(req, res) {

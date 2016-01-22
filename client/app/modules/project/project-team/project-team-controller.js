@@ -65,6 +65,9 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
                         if (tender.tenderers[0]._id) {
                             tender.tenderers[0]._id.type = role;
                             $scope.membersList.push(tender.tenderers[0]._id);
+                        } else {
+                            tender.tenderers[0].type = role;
+                            $scope.membersList.push(tender.tenderers[0]);
                         }
                     } else {
                         _.each(tender.tenderers, function(tenderer) {
@@ -219,8 +222,8 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
 	};
 
 	$scope.getChangeTypeValue = function(type) {
-		if (type === 'addClient' || type === "addEmployee") {
-			$scope.invite.isTender = false;
+		$scope.invite.isTender = false;
+        if (type === 'addClient' || type === "addEmployee") {
 			if (type == 'addEmployee') {
 				getCurrentTeamMember();
                 $scope.invite.isInviteTeamMember = true;
@@ -228,7 +231,6 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
                 $scope.invite.isInviteTeamMember = false;
             }
 		} else {
-			$scope.invite.isTender = true;
             $scope.invite.isInviteTeamMember = false;
 		}
 		$scope.invite.teamMember = [];
@@ -247,6 +249,10 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
         member.canRevoke = false;
     };
 
+    $scope.selectMember = function(index) {
+        $scope.teamMembersCanInvite[index].select = !$scope.teamMembersCanInvite[index].select;
+    };
+
 	$scope.addInvitee = function(email, name) {
 		if (email && email != '' && name && name != '') {
             if (_.findIndex($scope.invite.invitees, {email: email}) === -1) {
@@ -255,7 +261,7 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
                 $scope.name = null;
             } else {
                 $scope.showToast("This email has already added");
-            }
+            }   
         }
 	};	
 
@@ -277,6 +283,13 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
 			$scope.invite.inviterType = $rootScope.currentUser.type;
             if (!$scope.invite.isTender) {
                 delete $scope.invite.event;
+                if ($scope.invite.isInviteTeamMember) {
+                    $scope.invite.teamMember = _.filter($scope.teamMembersCanInvite, {select: true});
+                    if ($scope.invite.teamMember.length === 0) {
+                        $scope.showToast("Please select at least 1 member");
+                        return;
+                    }
+                }
     			peopleService.update({id: $stateParams.id},$scope.invite).$promise.then(function(res){
     				$scope.showToast("Invited successfully");
     	            $scope.cancelInviteTeamModal();
