@@ -9,7 +9,7 @@
 			<md-list ng-cloak class="main-page-content">
 				<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event, tenderer._id)" ng-repeat="tenderer in data.tenderers" ng-show="data.inviter._id == currentUser._id && !data.element">
 				    <div class="md-list-item-text">
-					    <h3>{{(tenderer._id) ? tenderer._id.name : tenderer.email}}</h3>
+					    <h3>{{tenderer.name}}</h3>
 				    </div>
 					<md-divider></md-divider>
 				</md-list-item>

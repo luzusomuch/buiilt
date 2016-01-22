@@ -62,6 +62,7 @@ PeopleSchema
     this.winnerTender = this._winnerTender;
     this.loserTender = this._loserTender;
     this.newInviteType = this._newInviteType;
+    this.updatedTender = this._updatedTender;
     this._modifiedPaths = this.modifiedPaths();
     if (!this.isNew){
         this.updatedAt = new Date();
@@ -81,6 +82,7 @@ PeopleSchema.post('save', function (doc) {
     doc.winnerTender = this._winnerTender;
     doc.loserTender = this._loserTender;
     doc.newInviteType = this._newInviteType;
+    doc.updatedTender = this._updatedTender;
     EventBus.emit(evtName, doc);
 });
 

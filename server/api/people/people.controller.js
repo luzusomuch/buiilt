@@ -117,7 +117,7 @@ exports.invitePeople = function(req, res) {
                                         createAt: new Date(),
                                         inviterType: (type == "consultants") ? invite.inviterType : null
                                     });
-                                    newInviteeNotSignUp.push(invite.email);
+                                    // newInviteeNotSignUp.push(invite.email);
                                     cb();
                                 } else {
                                     team.push({
@@ -150,9 +150,10 @@ exports.invitePeople = function(req, res) {
                                         else if (!user) {
                                             tenderers.push({
                                                 email: invitee.email,
+                                                name: invitee.name,
                                                 teamMember: []
                                             });
-                                            newInviteeNotSignUp.push(invitee.email);
+                                            // newInviteeNotSignUp.push(invitee.email);
                                             var inviteToken = new InviteToken({
                                                 type: 'project-invite',
                                                 email: invitee.email,
@@ -199,7 +200,7 @@ exports.invitePeople = function(req, res) {
                     if (err) {return res.send(500,err);}
                     else {
                         people[type] = team;
-                        people._newInviteeNotSignUp = newInviteeNotSignUp;
+                        // people._newInviteeNotSignUp = newInviteeNotSignUp;
                         people._newInviteeSignUpAlready = newInviteeSignUpAlready;
                         people._newInviteType = invite.type;
                         people.markModified('invitePeople');
@@ -598,6 +599,10 @@ exports.updateDistributeStatus = function(req, res) {
                 }
             });
             people[currentRole][index].isDistribute = !people[currentRole][index].isDistribute;
+            people.markModified("updateDistributeStatus");
+            people._updatedTender = people[currentRole][index];
+            people._editUser = req.user;
+            people._newInviteType = currentRole;
             people.save(function(err) {
                 if (err) {return res.send(500,err);}
                 return res.send(200);
@@ -721,6 +726,7 @@ exports.updateTender = function(req, res) {
                     return false;
                 }
             });
+
             var originalTender = people[currentRole][index];
             var activity = {
                 user: user._id,
@@ -728,59 +734,70 @@ exports.updateTender = function(req, res) {
                 createdAt: new Date(),
                 element: {}
             };
-            if (data.editType === "edit-tender") {
-                activity.element.description = (originalTender.tenderDescription.length !== data.tenderDescription.length) ? originalTender.tenderDescription : null;
-                activity.element.name = (originalTender.tenderName.length !== data.tenderName.length) ? originalTender.tenderName : null;
 
-                people[currentRole][index].tenderName = data.tenderName;
-                people[currentRole][index].tenderDescription = data.tenderDescription;
-            } else if (data.editType === "invite-tender") {
-                var members = [];
-                var tenderers = people[currentRole][index].tenderers;
-                async.each(data.newMembers, function(member, cb) {
-                    members.push({name:member.name, email: member.email});
-                    User.findOne({email: member.email}, function(err, user) {
-                        if (err) {cb(err);}
-                        else if (!user) {
-                            tenderers.push({
-                                email: member.email,
-                                teamMember: []
-                            });
-                            var inviteToken = new InviteToken({
-                                type: 'project-invite',
-                                email: member.email,
-                                element: {
-                                    project: people.project,
-                                    type: currentRole
+            async.parallel([
+                function(cb) {
+                    if (data.editType === "edit-tender") {
+                        activity.element.description = (originalTender.tenderDescription.length !== data.tenderDescription.length) ? originalTender.tenderDescription : null;
+                        activity.element.name = (originalTender.tenderName.length !== data.tenderName.length) ? originalTender.tenderName : null;
+
+                        people[currentRole][index].tenderName = data.tenderName;
+                        people[currentRole][index].tenderDescription = data.tenderDescription;
+                        cb();
+                    } else if (data.editType === "invite-tender") {
+                        var members = [];
+                        var tenderers = people[currentRole][index].tenderers;
+                        async.each(data.newMembers, function(member, cb) {
+                            members.push({name:member.name, email: member.email});
+                            User.findOne({email: member.email}, function(err, user) {
+                                if (err) {cb(err);}
+                                else if (!user) {
+                                    tenderers.push({
+                                        email: member.email,
+                                        name: member.name,
+                                        teamMember: []
+                                    });
+                                    var inviteToken = new InviteToken({
+                                        type: 'project-invite',
+                                        email: member.email,
+                                        element: {
+                                            project: people.project,
+                                            type: currentRole
+                                        }
+                                    });
+                                    inviteToken._editUser = req.user;
+                                    inviteToken.save(cb());
+                                } else {
+                                    tenderers.push({
+                                        _id: user._id,
+                                        name: member.name,
+                                        teamMember: []
+                                    });
+                                    var inviteToken = new InviteToken({
+                                        type: 'project-invite',
+                                        user: user._id,
+                                        element: {
+                                            project: people.project,
+                                            type: currentRole
+                                        }
+                                    });
+                                    inviteToken._editUser = req.user;
+                                    inviteToken.save(cb());
                                 }
                             });
-                            inviteToken._editUser = req.user;
-                            inviteToken.save(cb());
-                        } else {
-                            tenderers.push({
-                                _id: user._id,
-                                teamMember: []
-                            });
-                            var inviteToken = new InviteToken({
-                                type: 'project-invite',
-                                user: user._id,
-                                element: {
-                                    project: people.project,
-                                    type: currentRole
-                                }
-                            });
-                            inviteToken._editUser = req.user;
-                            inviteToken.save(cb());
-                        }
-                    });
-                }, function() {
-                    activity.element.members = members;
+                        }, function() {
+                            activity.element.members = members;
+                            cb();
+                        });
+                    }
+                }
+            ], function(err, result) {
+                people[currentRole][index].inviterActivities.push(activity);
+                people.markModified(currentRole);
+                people.save(function(err) {
+                    if (err) {return res.send(500,err);}
+                    return res.send(200,people[currentRole][index]);
                 });
-            }
-            people[currentRole][index].inviterActivities.push(activity);
-            people.save(function(err) {
-                if (err) {return res.send(500,err);}
-                return res.send(200,people[currentRole][index]);
             });
         }
     });

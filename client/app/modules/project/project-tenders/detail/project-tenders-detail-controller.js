@@ -138,8 +138,6 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($roo
             return;
         } else {
             $scope.tender.editType = "invite-tender";
-            console.log($stateParams.id);
-            console.log($stateParams.tenderId);
             peopleService.updateTender({id: $stateParams.id, tenderId: $stateParams.tenderId}, $scope.tender).$promise.then(function(res) {
                 $scope.cancelNewTenderModal();
                 $scope.showToast("Invite tenderer successfully");

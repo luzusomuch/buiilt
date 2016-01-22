@@ -6,7 +6,7 @@
 			<p>{{ tender.tenderName }}</p>
 			<span flex></span>
 			<div ng-show="tender.inviter._id == currentUser._id">
-				<md-button ng-click="distributeTender()">Distribute Tender</md-button>
+				<md-button ng-click="distributeTender()" ng-show="!tender.isDistribute">Distribute Tender</md-button>
 				<md-button ng-click="showModal($event, 'select-winner-tender-modal.html')" ng-show="tender.isDistribute">Select a Winner</md-button>
 			</div>
 			<md-chips class="set-filters" ng-show="tender.inviter._id == currentUser._id">
