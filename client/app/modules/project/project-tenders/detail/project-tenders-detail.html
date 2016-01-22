@@ -27,7 +27,10 @@
 					<div class="icon-type" ng-switch="activity.type">
                         <md-icon ng-switch-when="attach-addendum" class="material-icons md-primary">reply_all</md-icon>
                         <md-icon ng-switch-when="edit-tender" class="material-icons md-primary">edit</md-icon>
-						<md-icon ng-switch-when="invite-tender" class="material-icons md-primary">person_outline</md-icon>
+                        <md-icon ng-switch-when="invite-tender" class="material-icons md-primary">person_outline</md-icon>
+                        <md-icon ng-switch-when="related-file" class="material-icons md-primary">attach_file</md-icon>
+                        <md-icon ng-switch-when="related-thread" class="material-icons md-primary">chat_bubble_outline</md-icon>
+						<md-icon ng-switch-when="related-task" class="material-icons md-primary">done_all</md-icon>
 					</div>
 					<span flex="5"></span>
 					<div flex class="activity-detail">
@@ -36,6 +39,9 @@
                             <span ng-switch-when="attach-addendum">has attached an addendum to this tender:{{activity.element.name}}</span>
                             <span ng-switch-when="edit-tender">has edited the details of this tender: {{(activity.element.name) ? "Name: "+activity.element.name+", " : ""}} {{(activity.element.description) ? "Description: "+activity.element.description+", " : ""}}.</span>
                             <span ng-switch-when="invite-tender">has invited new tenderer <span ng-repeat="member in activity.element.members">{{member.name}}, </span> </span>
+                            <span ng-switch-when="related-thread">has created new related thread {{activity.element.content}}</span>
+                            <span ng-switch-when="related-file">has created new related file {{activity.element.content}}</span>
+                            <span ng-switch-when="related-task">has created new related task {{activity.element.content}}</span>
                         </p>
 						<p class="meta-data"><span class="time">{{activity.createdAt | date:'hh:mm a'}}</span> <span class="date">{{activity.createdAt |date:'dd-MM-yyyy'}}</span><p>
 					</div>
@@ -88,7 +94,7 @@
   			  	      </md-button>
   		  	      </md-fab-trigger>
   				  <md-fab-actions>
-			  	      <md-button aria-label="Open a New Message" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'attach-an-addendum.html')">
+			  	      <md-button aria-label="Open a New Message" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'attach-an-addendum.html')" ng-show="tender.inviter._id == currentUser._id">
 	  					  <md-tooltip md-direction="left">Attach an Addendum</md-tooltip>
 	  				      <md-icon class="material-icons">reply_all</md-icon>
 			  	      </md-button>
@@ -100,19 +106,19 @@
   	  					  <md-tooltip md-direction="left">Invite a Tenderer</md-tooltip>
   	  				      <md-icon class="material-icons">person_add</md-icon>
   			  	      </md-button>
-  			  	      <md-button aria-label="Send a File" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'select-winner-tender-modal.html')" ng-show="tender.isDistribute">
+  			  	      <md-button aria-label="Send a File" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'select-winner-tender-modal.html')" ng-show="tender.isDistribute && tender.inviter._id == currentUser._id">
   	  					  <md-tooltip md-direction="left">Select a Winning Tender</md-tooltip>
   	  				      <md-icon class="material-icons">format_list_bulleted</md-icon>
   			  	      </md-button>
-			  	      <md-button aria-label="Attach a Related Message" class="md-fab md-raised md-mini" ng-click="">
+			  	      <md-button aria-label="Attach a Related Message" class="md-fab md-raised md-mini" ng-click="showModal($event, 'attach-related-message.html')">
 						  <md-tooltip md-direction="left">Attach a Related Message</md-tooltip>
 					      <md-icon class="material-icons">chat_bubble_outline</md-icon>
 			  	      </md-button>
-  			  	      <md-button aria-label="Add a Related Task" class="md-fab md-raised md-mini" ng-click="">
+  			  	      <md-button aria-label="Add a Related Task" class="md-fab md-raised md-mini" ng-click="showModal($event, 'attach-related-task.html')">
   	  					  <md-tooltip md-direction="left">Attach a Related Task</md-tooltip>
   	  				      <md-icon class="material-icons">done_all</md-icon>
   			  	      </md-button>
-  			  	      <md-button aria-label="Add a Related File" class="md-fab md-raised md-mini" ng-click="">
+  			  	      <md-button aria-label="Add a Related File" class="md-fab md-raised md-mini" ng-click="showModal($event, 'attach-related-file.html')">
   	  					  <md-tooltip md-direction="left">Attach a Related File</md-tooltip>
   	  				      <md-icon class="material-icons">attach_file</md-icon>
   			  	      </md-button>

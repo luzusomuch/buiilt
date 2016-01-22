@@ -43,6 +43,12 @@ angular.module('buiiltApp')
                 params: {
                     action: "update-tender"
                 }
+            },
+            createRelatedItem: {
+                method: "PUT",
+                params: {
+                    action: "create-related-item"
+                }
             }
         });
 });

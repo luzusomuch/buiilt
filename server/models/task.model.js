@@ -26,10 +26,6 @@ var TaskSchema = new Schema({
         ref: 'User',
         default: []
     }],
-    name: {
-        type: String,
-        required: true
-    },
     description: {
         type: String,
         required: true

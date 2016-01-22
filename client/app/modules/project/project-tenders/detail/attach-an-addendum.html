@@ -21,7 +21,7 @@
                     </md-input-container>
                 </div>
                 <div layout="row">
-                    <input filepicker class="filepicker-button" type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/>
+                    <input filepicker class="filepicker-button" type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile, 'addendum')" data-fp-multiple="false"/>
                 </div>
                 <div layout="row" layout-align="center center" class="tagcloud" layout-wrap layout-padding>
                     <span ng-click="selectMember($index)" ng-class="{'available-tag':!tenderer.select, 'selected-tag': tenderer.select}" ng-repeat="tenderer in tenderers track by $index">{{(tenderer._id) ? tenderer.name : tenderer.email}}</span>

@@ -31,7 +31,7 @@ EventBus.onSeries('Task.Inserted', function(req, next){
                             project: result.project.toJSON(),
                             request: req.toJSON(),
                             link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
-                            subject: req.editUser.name + ' has assigned you a task ' + req.name
+                            subject: req.editUser.name + ' has assigned you a task ' + req.description
                         },function(err){console.log(err);
                             return cb();
                         });
@@ -70,7 +70,7 @@ EventBus.onSeries('Task.Updated', function(req, next){
                                 request: req.toJSON(),
                                 project: result.project.toJSON(),
                                 link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
-                                subject: req.editUser.name + ' has assigned you a task ' + req.name
+                                subject: req.editUser.name + ' has assigned you a task ' + req.description
                             },function(err){console.log(err);
                                 return cb();
                             });
