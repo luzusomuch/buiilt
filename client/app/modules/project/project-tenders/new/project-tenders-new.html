@@ -53,6 +53,23 @@
 				
 				<div layout="column" ng-show="invite.type == 'addBuilder' || invite.type == 'addConsultant' || invite.type == 'addSubcontractor'" layout-margin>
 					<p class="md-body-2">Please provide the first name and email for <span ng-show="invite.isTender">each</span><span ng-show="!invite.isTender">the</span> <span ng-show="invite.type == 'addBuilder'">Builder</span><span ng-show="invite.type == 'addConsultant'">Consultant</span><span ng-show="invite.type == 'addSubcontractor'">Subcontractor</span> you would like to invite:</p>
+
+					<div layout="row" ng-repeat="invitee in invite.invitees">
+						<md-input-container flex="5">
+							<p class="md-body-2" style="margin-top: 0.5vh">{{$index+1}}</p>
+						</md-input-container>
+						<md-input-container flex="25">
+							<label for="">First Name</label>
+							<input type="name" ng-model="invitee.name">
+						</md-input-container>
+						<md-input-container flex="55">
+							<label for="">Email Address</label>
+							<input type="email" ng-model="invitee.email">
+						</md-input-container>
+						<div flex="15">
+							<i ng-click="removeInvitee($index)" class="material-icons">clear</i></span>
+						</div>
+					</div>
 					
 					<div layout="row">
 						<md-input-container flex="5">
@@ -68,21 +85,6 @@
 						</md-input-container>
 						<div flex="15">
 							<md-button ng-click="addInvitee(email, name)" class="material-icons" style="margin-top:2vh;">Add Another</md-button>
-						</div>
-					</div>
-
-					<div layout="row" ng-repeat="invitee in invite.invitees">
-						<div flex="5">
-							<p class="md-body-2" style="margin-top: 0.5vh">{{$index+1}}.</p>
-						</div>
-						<div flex="25">
-							<p>{{invitee.name}}</p>
-						</div>
-						<div flex="55">
-							<p>{{invitee.email}}</p>
-						</div>
-						<div flex="15">
-							<i style="cursor: pointer" ng-click="removeInvitee($index)" class="material-icons md-secondary">clear</i>
 						</div>
 					</div>
 				</div>

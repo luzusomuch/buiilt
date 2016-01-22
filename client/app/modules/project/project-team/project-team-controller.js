@@ -263,6 +263,15 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
         $scope.invite.invitees.splice(index, 1);
     };
 
+    $scope.setInviteTender = function(value) {
+        $scope.invite.isTender = value;
+        if (value) {
+            $rootScope.currentInviteData = $scope.invite;
+            $state.go("project.tenders.all", {id: $stateParams.id});
+            $scope.cancelInviteTeamModal();
+        }
+    };
+
 	$scope.inviteNewTeamMember = function(form) {
 		if (form.$valid) {
 			$scope.invite.inviterType = $rootScope.currentUser.type;

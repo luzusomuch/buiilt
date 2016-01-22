@@ -97,21 +97,16 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
                         case "builders":
                             $scope.availableUserType = [
                                 {value: 'addSubcontractor', text: 'Subcontractor'},
-                                {value: 'addConsultant', text: 'Consultant'},
-                                {value: 'addEmployee', text: 'Employee'}
+                                {value: 'addConsultant', text: 'Consultant'}
                             ];
                             break;
                         case "architects": 
                             $scope.availableUserType = [
                                 {value: 'addBuilder', text: 'Builder'},
-                                {value: 'addConsultant', text: 'Consultant'},
-                                {value: 'addEmployee', text: 'Employee'}
+                                {value: 'addConsultant', text: 'Consultant'}
                             ];
                             break;
                         default:
-                            $scope.availableUserType = [
-                                {value: 'addEmployee', text: 'Employee'}
-                            ];
                             break;
                     }
                 });
@@ -188,6 +183,9 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
                             $scope.showToast("Error. Something went wrong.")
                         });
                         $mdDialog.hide();
+                    } else {
+                        $scope.showToast("Please check input again");
+                        return;
                     }
                 };
 

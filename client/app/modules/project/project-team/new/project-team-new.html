@@ -41,8 +41,8 @@
 				<div layout="column" ng-show="invite.type == 'addBuilder' || invite.type == 'addConsultant' || invite.type == 'addSubcontractor'" layout-margin>
 					<p class="md-body-2">Will you require a tender to be submitted?</p>
 					<div layout="row">
-						<md-button ng-click="invite.isTender = true">Yes</md-button>
-						<md-button ng-click="invite.isTender = false">No</md-button>
+						<md-button ng-click="setInviteTender(true)">Yes</md-button>
+						<md-button ng-click="setInviteTender(false)">No</md-button>
 					</div>
 					
 					<!-- <md-input-container flex>
