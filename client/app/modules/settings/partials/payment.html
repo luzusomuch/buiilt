@@ -1,0 +1,44 @@
+<md-dialog aria-label="Purchase" flex="50">
+    <form ng-submit="buyPlan(form)" name="form">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Purchase</h2>
+            </div>
+        </md-toolbar>
+        
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column">
+                <div layout="row">
+                    <p ng-show="purchaseType === 'small'">You've choose <strong>small</strong> type and it cost <strong>$45/month with 5 Open Projects</strong>(Equiv. $9/project/month)</p>
+                    <p ng-show="purchaseType === 'medium'">You've choose <strong>medium</strong> type and it cost <strong>$80/month with 10 Open Projects</strong>(Equiv. $8/project/month)</p>
+                    <p ng-show="purchaseType === 'large'">You've choose <strong>large</strong> type and it cost <strong>$105/month with 15 Open Projects</strong>(Equiv. $7/project/month)</p>
+                </div>
+                <div layout="row">
+                    <md-input-container flex>
+                        <label for="">Card number</label>
+                        <input type="number" name="card" ng-model="purchase.number" required>
+                    </md-input-container>
+                </div>
+                <div layout="row">
+                    <md-input-container flex="20">
+                        <label for="">MM</label>
+                        <input type="number" name="month" ng-model="purchase.exp_month" required>
+                    </md-input-container>
+                    <md-input-container flex="30">
+                        <label for="">YYYY</label>
+                        <input type="number" name="year" ng-model="purchase.exp_year" required>
+                    </md-input-container>
+                    <md-input-container flex="50">
+                        <label for="">CVC</label>
+                        <input type="number" name="cvc" ng-model="purchase.cvc" required>
+                    </md-input-container>
+                </div>
+            </div>
+        </md-dialog-content>
+        
+        <md-dialog-actions>
+            <md-button ng-click="cancelDialog()">Cancel</md-button>
+            <md-button type="submit" class="md-raised md-accent md-hue-1">Purchase!</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

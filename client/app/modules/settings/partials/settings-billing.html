@@ -52,8 +52,9 @@
 					</md-card-content>
 				
 					<md-card-actions>
-						<md-button class="md-primary md-raised">
-							Current
+						<md-button ng-click="showModalPayment($event, 'small')" class="md-primary md-raised">
+							<span ng-show="!currentUser.noPlan">{{(currentUser.smallPlan) ? 'Current' : 'Switch'}}</span>
+							<span ng-show="currentUser.noPlan">Purchase</span>
 						</md-button>
 					</md-card-actions>
 				</md-card>
@@ -71,8 +72,9 @@
 					</md-card-content>
 				
 					<md-card-actions>
-						<md-button class="md-primary md-raised">
-							Switch
+						<md-button ng-click="showModalPayment($event, 'medium')" class="md-primary md-raised">
+							<span ng-show="!currentUser.noPlan">{{(currentUser.mediumPlan) ? 'Current' : 'Switch'}}</span>
+							<span ng-show="currentUser.noPlan">Purchase</span>
 						</md-button>
 					</md-card-actions>
 				</md-card>
@@ -90,8 +92,9 @@
 					</md-card-content>
 				
 					<md-card-actions>
-						<md-button class="md-primary md-raised">
-							Switch
+						<md-button ng-click="showModalPayment($event, 'large')" class="md-primary md-raised">
+							<span ng-show="!currentUser.noPlan">{{(currentUser.largePlan) ? 'Current' : 'Switch'}}</span>
+							<span ng-show="currentUser.noPlan">Purchase</span>
 						</md-button>
 					</md-card-actions>
 				</md-card>

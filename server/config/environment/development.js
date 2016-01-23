@@ -37,6 +37,7 @@ module.exports = {
    //  api_key: 'buiilt2015'
    // }
   },
+  stripe: "sk_test_eZgUkcwEZlB7HcHKeMpoy7JQ",
   logentries : {
     token : process.env.LOGENTRIES_TOKEN
   }

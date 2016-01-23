@@ -1,14 +1,82 @@
-angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $scope, $timeout, $state, teamService, $mdToast, $mdDialog, authService, userService) {
+angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $scope, $timeout, $state, teamService, $mdToast, $mdDialog, authService, userService, stripe) {
     $rootScope.title = "Settings"
     $scope.currentTeam = $rootScope.currentTeam;
     $scope.currentUser = $rootScope.currentUser;
+    function getCurrentUserPlan() {
+        if ($scope.currentUser.plan) {
+            $scope.currentUser.noPlan = false;
+            switch($scope.currentUser.plan) {
+                case "small":
+                    $scope.currentUser.smallPlan = true;
+                break;
+                case "medium":
+                    $scope.currentUser.mediumPlan = true;
+                break;
+                case "large":
+                    $scope.currentUser.largePlan = true;
+                break;
+                default:
+                break;
+            }
+        } else {
+            $scope.currentUser.noPlan = true;
+        }
+    };
+    getCurrentUserPlan();
     $rootScope.$on("User.Update", function(event, data) {
         $scope.currentUser = $rootScope.currentUser = data;
+        getCurrentUserPlan();
     });
 
     $rootScope.$on("Team.Update", function(event, data) {
         $scope.currentTeam = $rootScope.currentTeam = data;
     });
+
+    function setPurchase(){
+        $scope.purchase = {};
+    };
+    setPurchase();
+
+    $scope.showModalPayment = function($event, type) {
+        $rootScope.purchaseType = type;
+        $mdDialog.show({
+            targetEvent: $event,
+            controller: 'settingsCtrl',
+            templateUrl: 'app/modules/settings/partials/payment.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: false
+        });
+    };
+    if ($rootScope.purchaseType) {
+        $scope.purchaseType = $rootScope.purchaseType;
+    }
+
+    $scope.buyPlan = function(form) {
+        var currentDate = new Date();
+        if (form.$valid) {
+            if ($scope.purchase.exp_month.length > 2 && ($scope.purchase.exp_month < 1 || $scope.purchase.exp_month > 12)) {
+                $scope.showToast("Please check your expiration month");
+                return false;
+            } else if ($scope.purchase.exp_year.length > 4) {
+                $scope.showToast("Please check your expiration year");
+                return false;
+            }
+            console.log($scope.purchase);
+            stripe.card.createToken($scope.purchase).then(function(res) {
+                $scope.purchase.purchaseType = $rootScope.purchaseType;
+                $scope.purchase.token = res.id;
+                $scope.purchase.cardLast4 = res.card.last4;
+                userService.buyPlan({id:$scope.currentUser._id}, $scope.purchase).$promise.then(function(res) {
+                    $scope.cancelDialog();
+                    $scope.showToast("Purchase successfully");
+                    $rootScope.$broadcast("User.Update", res);
+                }, function(err) {$scope.showToast(err.data);});
+            });
+        } else {
+            $scope.showToast("Please check your input");
+            return;
+        }
+    };
 
     $scope.member = {
       emails : []

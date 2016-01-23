@@ -15,6 +15,7 @@ router.get("/:id/profile", controller.getUserProfile);
 router.put('/:id/password', auth.isAuthenticated(), controller.changePassword);
 router.put('/:id/email', auth.isAuthenticated(), controller.changeEmail);
 router.put('/:id/change-profile', auth.isAuthenticated(), controller.changeProfile);
+router.put('/:id/buy-plan', auth.isAuthenticated(), controller.buyPlan);
 router.get('/:id', auth.isAuthenticated(), controller.show);
 router.post('/', controller.create);
 router.post('/invite-token', controller.createUserWithInviteToken);

@@ -40,7 +40,9 @@ var UserSchema = new Schema({
     projects: [{type: Schema.Types.ObjectId, ref: 'Project'}],
     createdAt: {type: Date, default: Date.now},
     updatedAt: {type: Date, default: Date.now},
-    plant: {type: String, enum:["small", "medium", "large"]},
+    plan: {type: String, enum:["small", "medium", "large"]},
+    planStartDate: {type: Date},
+    planEndDate: {type: Date},
     creditCard: String
 }, {
     strict: true,

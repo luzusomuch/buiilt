@@ -24,6 +24,7 @@ var _ = require('lodash');
 var Mailer = require('./../../components/Mailer');
 var crypto = require('crypto');
 var mongoose = require("mongoose");
+var stripe = require("stripe")(config.stripe);
 
 var validationError = function (res, err) {
     return res.json(422, err);
@@ -438,6 +439,39 @@ exports.getResetPasswordToken = function(req,res) {
     }
     return res.json(resetPassword);
   })
+};
+
+exports.buyPlan = function(req, res) {
+  var data = req.body;
+  console.log(data);
+  User.findById(req.params.id, '-hashedPassword -salt', function(err, user) {
+    if (err) {return res.send(500,err);}
+    else if (!user) {return res.send(404, {msg: "The specific user is not existed"});}
+    else {
+      var chargeAmount;
+      if (data.purchaseType === "small") {
+        chargeAmount = 45;
+      } else if (data.purchaseType === "medium") {
+        chargeAmount = 80;
+      } else {
+        chargeAmount = 105;
+      }
+      stripe.charges.create({
+        amount: chargeAmount,
+        currency: "aud",
+        source: data.token,
+        description: user.name + "has purchased for " + data.purchaseType
+      }, function(err, charge) {
+        if (err) {return res.send(500,err);}
+        user.creditCard = data.cardLast4;
+        user.plan = data.purchaseType;
+        user.save(function(err) {
+          if (err) {return res.send(500,err);}
+          return res.send(200, user);
+        })
+      });
+    }
+  });
 };
 
 /**
