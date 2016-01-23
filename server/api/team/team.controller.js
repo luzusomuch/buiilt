@@ -67,6 +67,7 @@ exports.create = function (req, res) {
     }
     var team = new Team(data);
     team.leader.push(user);
+    team.documentTags = ["architectural", "structural engineering", "hydraulic engineering", "coucil", "certifier"];
     var listEmail = [];
     async.each(data.emails, function(email, callback) {
       User.findOne({'email': email.email}, function (err, user) {
@@ -401,6 +402,9 @@ exports.update = function (req, res) {
             team.detail.companyPhoneNumber = req.body.detail.companyPhoneNumber;
             team.detail.licenseNumber = req.body.detail.licenseNumber;
             team.detail.companyABN = req.body.detail.companyABN;
+        } else if (req.body.editType === "change-tags") {
+            team.fileTags = req.body.fileTags;
+            team.documentTags = req.body.documentTags;
         }
         team._user = req.user;
         team.save(function() {

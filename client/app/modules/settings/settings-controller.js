@@ -16,6 +16,39 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
     $scope.team = {
         emails: []
     };
+
+    $scope.addNewTagFileText = "+ Add Another";
+    $scope.addNewTagDocumentText = "+ Add Another";
+
+    $scope.newTag = {};
+    $scope.isEditTags = false;
+    $scope.addNewTag = function(newTag, type) {
+        if (type === "file") {
+            if (newTag.file !== "{{addNewTagFileText}}") {
+                $scope.currentTeam.fileTags.push(newTag);
+                $scope.newTag.file = null;
+                $scope.isEditTags = true;
+            } else {
+                $scope.showToast("Please check your tag again");
+            }
+        } else if (type === "document") {
+            if (newTag.document !== "{{addNewTagDocumentText}}") {
+                $scope.currentTeam.documentTags.push(newTag);
+                $scope.newTag.document = null;
+                $scope.isEditTags = true;
+            } else {
+                $scope.showToast("Please check your tag again");
+            }
+        }
+    };
+
+    $scope.removeTag = function(index, type) {
+        if (type === "file") {
+            $scope.currentTeam.fileTags.splice(index);
+        } else if (type === "document") {
+            $scope.currentTeam.documentTags.splice(index);
+        }
+    };
     
     function getTeamLeader(team) {
         $scope.currentUser.isleader = false;
@@ -24,6 +57,16 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
         }) != -1) {
             $scope.currentUser.isLeader = true;
         }
+    };
+
+    $scope.saveChangedTags = function() {
+        $scope.currentTeam.editType = "change-tags";
+        teamService.update({id: $scope.currentTeam._id}, $scope.currentTeam).$promise.then(function(res) {
+            $scope.isEditTags = false;
+            $scope.cancelDialog();
+            $scope.showToast("Changed tags successfully");
+            $rootScope.$broadcast("Team.Update", res);
+        }, function(err){$scope.showToast(err.data);});
     };
 
     $scope.showModalCreateTeam = function($event) {

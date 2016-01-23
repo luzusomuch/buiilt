@@ -58,6 +58,8 @@ var TeamSchema = new Schema({
         },
         status: {type:String, enum: ['Pending','Active','Reject']}
     }],
+    fileTags: [String],
+    documentTags: [String],
     createdAt: {
         type: Date,
         default: Date.now
