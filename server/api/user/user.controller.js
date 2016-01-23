@@ -25,6 +25,7 @@ var Mailer = require('./../../components/Mailer');
 var crypto = require('crypto');
 var mongoose = require("mongoose");
 var stripe = require("stripe")(config.stripe);
+var moment = require("moment");
 
 var validationError = function (res, err) {
     return res.json(422, err);
@@ -448,27 +449,29 @@ exports.buyPlan = function(req, res) {
     if (err) {return res.send(500,err);}
     else if (!user) {return res.send(404, {msg: "The specific user is not existed"});}
     else {
-      var chargeAmount;
-      if (data.purchaseType === "small") {
-        chargeAmount = 45;
-      } else if (data.purchaseType === "medium") {
-        chargeAmount = 80;
-      } else {
-        chargeAmount = 105;
-      }
-      stripe.charges.create({
-        amount: chargeAmount,
-        currency: "aud",
-        source: data.token,
-        description: user.name + "has purchased for " + data.purchaseType
-      }, function(err, charge) {
+      stripe.plans.list({limit: 3}, function(err, plan) {
         if (err) {return res.send(500,err);}
-        user.creditCard = data.cardLast4;
-        user.plan = data.purchaseType;
-        user.save(function(err) {
-          if (err) {return res.send(500,err);}
-          return res.send(200, user);
-        })
+        else if (plan.data.length === 0) {return res.send(404, {msg: "There are no plan to purchase"});}
+        else {
+          var currentPlan = _.find(plan.data, function(item) {return item.id === data.purchaseType});
+          console.log(currentPlan);
+          stripe.charges.create({
+            amount: currentPlan.amount,
+            currency: currentPlan.currency,
+            source: data.token,
+            description: user.name + "has purchased for " + data.purchaseType
+          }, function(err, charge) {
+            if (err) {return res.send(500,err);}
+            user.creditCard = data.cardLast4;
+            user.plan = data.purchaseType;
+            user.planStartDate = new Date();
+            user.planEndDate = moment(user.planStartDate).add(1, "months");
+            user.save(function(err) {
+              if (err) {return res.send(500,err);}
+              return res.send(200, user);
+            })
+          });
+        }
       });
     }
   });
