@@ -17,66 +17,105 @@ var moment = require("moment");
 var config = require('./../../config/environment');
 
 exports.create = function(req, res){
-    
     var user = req.user;
-    ProjectValidator.validateCreate(req,function(err,data) {
-        if (err) {
-            res.send(422,err);
-        }
-        var project = new Project(data);
-        project.status = 'waiting';
-        project.projectManager._id = req.user._id,
-        project.projectManager.type = req.body.teamType,
-        project.save(function(err) {
-            if (err) {
-                res.send(422,err);
-            } else {
-                var people = new People({
-                    project: project._id
-                });
-                if (req.body.teamType === "builder") {
-                    people.builders.push({
-                        tenderName: "Builder",
-                        tenderers: [{
-                            _id: req.user._id,
-                            teamMember: []
-                        }],
-                        hasSelect: true, 
-                        inviter: req.user._id,
-                        createAt: new Date()
-                    });
-                } else if (req.body.teamType === "homeOwner") {
-                    people.clients.push({
-                        tenderName: "Client",
-                        tenderers: [{
-                            _id: req.user._id,
-                            teamMember: []
-                        }],
-                        hasSelect: true, 
-                        inviter: req.user._id,
-                        createAt: new Date()
-                    });
-                } else if (req.body.teamType === "architect") {
-                    people.architects.push({
-                        tenderName: "Architect",
-                        tenderers: [{
-                            _id: req.user._id,
-                            teamMember: []
-                        }],
-                        hasSelect: true, 
-                        inviter: req.user._id,
-                        createAt: new Date()
-                    });
-                }
-                people.save();
-                User.findById(req.user._id, function(err, user) {
-                    user.projects.push(project._id);
-                    user.save(function(err) {
-                        return res.send(200, project);
-                    });
-                });
+    Project.find({}, function(err, projects) {
+        if (err) {return res.send(err);}
+        var userTotalCreatedProjects = 0;
+        _.each(projects, function(item) {
+            if (item.owner.toString()===req.user._id.toString()) {
+                userTotalCreatedProjects += 1;
             }
         });
+        var today = new Date();
+        var allowCreate = false;
+        // filter out user is not purchase for plan and in 14 days trial
+        if (!user.plan && (moment(moment(user.createdAt).add(14, "days").format("YYYY-MM-DD")).isAfter(moment(today).format("YYYY-MM-DD")))) {
+            allowCreate = true;
+        } else {
+            switch (user.plan) {
+                case "small":
+                    if (userTotalCreatedProjects < 5)
+                        allowCreate = true;
+                break;
+                case "medium":
+                    if (userTotalCreatedProjects < 10)
+                        allowCreate = true;
+                break;
+                case "large":
+                    if (userTotalCreatedProjects < 15)
+                        allowCreate = true;
+                break;
+                default:
+                break;
+            }
+        }
+        if (allowCreate) {
+            ProjectValidator.validateCreate(req,function(err,data) {
+                if (err) {
+                    res.send(422,err);
+                }
+                var project = new Project(data);
+                project.status = 'waiting';
+                project.projectManager._id = req.user._id,
+                project.projectManager.type = req.body.teamType,
+                project.save(function(err) {
+                    if (err) {
+                        res.send(422,err);
+                    } else {
+                        var people = new People({
+                            project: project._id
+                        });
+                        if (req.body.teamType === "builder") {
+                            people.builders.push({
+                                tenderName: "Builder",
+                                tenderers: [{
+                                    _id: req.user._id,
+                                    teamMember: []
+                                }],
+                                hasSelect: true, 
+                                inviter: req.user._id,
+                                createAt: new Date()
+                            });
+                        } else if (req.body.teamType === "homeOwner") {
+                            people.clients.push({
+                                tenderName: "Client",
+                                tenderers: [{
+                                    _id: req.user._id,
+                                    teamMember: []
+                                }],
+                                hasSelect: true, 
+                                inviter: req.user._id,
+                                createAt: new Date()
+                            });
+                        } else if (req.body.teamType === "architect") {
+                            people.architects.push({
+                                tenderName: "Architect",
+                                tenderers: [{
+                                    _id: req.user._id,
+                                    teamMember: []
+                                }],
+                                hasSelect: true, 
+                                inviter: req.user._id,
+                                createAt: new Date()
+                            });
+                        }
+                        people.save();
+                        User.findById(req.user._id, function(err, user) {
+                            user.projects.push(project._id);
+                            user.save(function(err) {
+                                return res.send(200, project);
+                            });
+                        });
+                    }
+                });
+            });
+        } else {
+            if (!user.plan && !(moment(moment(user.createdAt).add(14, "days").format("YYYY-MM-DD")).isAfter(moment(today).format("YYYY-MM-DD")))) {
+                return res.send(500, {msg: "You have out of 14 days trial. Please purchase a plan to countinue"});
+            } else {
+                return res.send(500, {msg: "You have reached maximun projects with your plan. Please upgrade your plan to countinue"});
+            }
+        }
     });
 };
 

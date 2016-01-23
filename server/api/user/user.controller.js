@@ -444,7 +444,6 @@ exports.getResetPasswordToken = function(req,res) {
 
 exports.buyPlan = function(req, res) {
   var data = req.body;
-  console.log(data);
   User.findById(req.params.id, '-hashedPassword -salt', function(err, user) {
     if (err) {return res.send(500,err);}
     else if (!user) {return res.send(404, {msg: "The specific user is not existed"});}
@@ -454,7 +453,6 @@ exports.buyPlan = function(req, res) {
         else if (plan.data.length === 0) {return res.send(404, {msg: "There are no plan to purchase"});}
         else {
           var currentPlan = _.find(plan.data, function(item) {return item.id === data.purchaseType});
-          console.log(currentPlan);
           stripe.charges.create({
             amount: currentPlan.amount,
             currency: currentPlan.currency,

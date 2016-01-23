@@ -25,6 +25,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
     getCurrentUserPlan();
     $rootScope.$on("User.Update", function(event, data) {
         $scope.currentUser = $rootScope.currentUser = data;
+        $rootScope.currentUser.isLeader = ($scope.currentUser.team.role == 'admin');
         getCurrentUserPlan();
     });
 
@@ -61,7 +62,6 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                 $scope.showToast("Please check your expiration year");
                 return false;
             }
-            console.log($scope.purchase);
             stripe.card.createToken($scope.purchase).then(function(res) {
                 $scope.purchase.purchaseType = $rootScope.purchaseType;
                 $scope.purchase.token = res.id;

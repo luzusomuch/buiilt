@@ -24,7 +24,7 @@ angular.module('buiiltApp').controller('projectsCtrl', function ($rootScope, $sc
                     $state.go('project.overview', {id: data._id},{reload: true});
                     $scope.submitted = false;
                 }, function(res) {
-                $scope.errors = res.data.msg;
+                $scope.showToast(res.data.msg);
             });
         }
     };
