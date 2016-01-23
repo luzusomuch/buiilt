@@ -22,7 +22,7 @@ exports.create = function(req, res){
         if (err) {return res.send(err);}
         var userTotalCreatedProjects = 0;
         _.each(projects, function(item) {
-            if (item.owner.toString()===req.user._id.toString()) {
+            if (item.owner.toString()===req.user._id.toString() && item.status === "waiting") {
                 userTotalCreatedProjects += 1;
             }
         });

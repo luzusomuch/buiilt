@@ -453,22 +453,28 @@ exports.buyPlan = function(req, res) {
         else if (plan.data.length === 0) {return res.send(404, {msg: "There are no plan to purchase"});}
         else {
           var currentPlan = _.find(plan.data, function(item) {return item.id === data.purchaseType});
-          stripe.charges.create({
-            amount: currentPlan.amount,
-            currency: currentPlan.currency,
-            source: data.token,
-            description: user.name + "has purchased for " + data.purchaseType
-          }, function(err, charge) {
-            if (err) {return res.send(500,err);}
-            user.creditCard = data.cardLast4;
-            user.plan = data.purchaseType;
-            user.planStartDate = new Date();
-            user.planEndDate = moment(user.planStartDate).add(1, "months");
-            user.save(function(err) {
+          stripe.customers.create({email: user.email, plan: currentPlan.id}, function(err, customer) {
+            if (err) {return res.send(err);}
+            stripe.customers.createSubscription(customer.id, {plan: currentPlan.id}, function(err, subscription) {
               if (err) {return res.send(500,err);}
-              return res.send(200, user);
-            })
-          });
+              stripe.charges.create({
+                amount: currentPlan.amount,
+                currency: currentPlan.currency,
+                source: data.token,
+                description: user.name + " has purchased for " + data.purchaseType
+              },function(err, charge) {
+                if (err) {return res.send(500,err);}
+                user.creditCard = data.cardLast4;
+                user.plan = data.purchaseType;
+                user.planStartDate = new Date();
+                user.planEndDate = moment(user.planStartDate).add(1, "months");
+                user.save(function(err) {
+                  if (err) {return res.send(500,err);}
+                  return res.send(200, user);
+                });
+              });
+            });
+          }); 
         }
       });
     }
