@@ -15,7 +15,6 @@ router.get("/:id/profile", controller.getUserProfile);
 router.put('/:id/password', auth.isAuthenticated(), controller.changePassword);
 router.put('/:id/email', auth.isAuthenticated(), controller.changeEmail);
 router.put('/:id/change-profile', auth.isAuthenticated(), controller.changeProfile);
-router.put('/:id/buy-plan', auth.isAuthenticated(), controller.buyPlan);
 router.get('/:id', auth.isAuthenticated(), controller.show);
 router.post('/', controller.create);
 router.post('/invite-token', controller.createUserWithInviteToken);
@@ -23,5 +22,6 @@ router.post('/send-verification', auth.isAuthenticated(), controller.sendVerific
 router.post('/forgot-password', controller.forgotPassword);
 router.post('/reset-password', controller.resetPassword);
 router.get('/:id/reset-password', controller.getResetPasswordToken);
+router.post('/:id/buy-plan', auth.isAuthenticated(), controller.buyPlan);
 
 module.exports = router;
