@@ -15,6 +15,13 @@
                         <input md-autofocus type="text" ng-model="relatedItem.name" name="name" required/>
                     </md-input-container>
                 </div>
+				
+                <div layout="row">
+                    <md-input-container flex>
+                        <label>Your Message</label>
+                        <textarea ng-model="" columns="1" md-maxlength="250" rows="5" required></textarea>
+                    </md-input-container>
+                </div>
             
                 <div layout="row" layout-align="center center" class="tagcloud" layout-wrap>
                     <span ng-click="selectMember($index)" ng-class="{'available-tag':!tenderer.select, 'selected-tag': tenderer.select}" ng-repeat="tenderer in tenderers track by $index">{{(tenderer._id) ? tenderer.name : tenderer.email}}</span>
@@ -57,7 +64,7 @@
         </md-dialog-content>
         <md-dialog-actions>
             <md-button ng-click="closeModal()">Cancel</md-button>
-            <md-button type="submit" class="md-raised md-accent md-hue-1">Create Related Thread!</md-button>
+            <md-button type="submit">Send Brodcast Message</md-button>
         </md-dialog-actions>
     </form>
 </md-dialog>
