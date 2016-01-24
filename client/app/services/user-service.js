@@ -48,7 +48,7 @@ angular.module('buiiltApp')
             }
         },
         buyPlan: {
-            method: "POST",
+            method: "PUT",
             params: {
                 action: 'buy-plan'
             }
