@@ -444,6 +444,7 @@ exports.getResetPasswordToken = function(req,res) {
 
 exports.buyPlan = function(req, res) {
   var data = req.body;
+  console.log(data);
   User.findById(req.params.id, '-hashedPassword -salt', function(err, user) {
     if (err) {return res.send(500,err);}
     else if (!user) {return res.send(404, {msg: "The specific user is not existed"});}
