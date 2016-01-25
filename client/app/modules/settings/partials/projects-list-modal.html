@@ -1,0 +1,24 @@
+<md-dialog aria-label="Projects list" flex="70">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Projects list</h2>
+        </div>
+    </md-toolbar>
+    
+    <md-dialog-content>
+        <div class="md-dialog-content" layout="column">
+            <md-list>
+                <md-list-item class="md-2-line" ng-repeat="project in projects" ng-show="status='waiting'">
+                    <p>{{project.name}}</p>
+                    <button ng-click="archiveProject(project)">Archive this project</button>
+                    <md-divider></md-divider>
+                </md-list-item>
+            </md-list>
+        </div>
+    </md-dialog-content>
+    
+    <md-dialog-actions>
+        <md-button ng-click="cancelDialog()">Cancel</md-button>
+        <md-button ng-click="" class="md-raised md-accent md-hue-1">Change!</md-button>
+    </md-dialog-actions>
+</md-dialog>

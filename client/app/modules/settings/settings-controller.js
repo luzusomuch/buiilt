@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $scope, $timeout, $state, teamService, $mdToast, $mdDialog, authService, userService, stripe) {
+angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $scope, $timeout, $state, teamService, $mdToast, $mdDialog, authService, userService, stripe, projectService, $state) {
     $rootScope.title = "Settings"
     $scope.currentTeam = $rootScope.currentTeam;
     $scope.currentUser = $rootScope.currentUser;
@@ -38,15 +38,84 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
     };
     setPurchase();
 
+    function getUserProjects() {
+        $scope.projects = _.filter($rootScope.projects, {owner: $scope.currentUser._id});
+        $scope.totalProject = 0;
+        _.each($scope.projects, function(project) {
+            if (project.owner == $scope.currentUser._id && project.status !== "archive") {
+                $scope.totalProject += 1;
+            }
+        });
+    };
+    getUserProjects();
+
+    $scope.archiveProject = function(project) {
+        project.archive = true;
+        projectService.updateProject({id: project._id}, project).$promise.then(function(res) {
+            $scope.showToast("Archive project successfully!");
+            $rootScope.$broadcast("Project.Archive", res);
+            var index = _.findIndex($scope.projects, function(item) {
+                return item._id == project._id;
+            });
+            $scope.projects.splice(index, 1);
+            $scope.totalProject -= 1;
+            var maximumCreatedProject;
+            switch ($rootScope.purchaseType) {
+                case "small":
+                    maximumCreatedProject = 5;
+                break;
+                case "medium":
+                    maximumCreatedProject = 10;
+                break;
+                case "large":
+                    maximumCreatedProject = 15;
+                break;
+                default:
+                    console.log("error");
+                break;
+            }
+            if ($scope.totalProject === maximumCreatedProject) {
+                $mdDialog.cancel();
+                $mdDialog.show({
+                    // targetEvent: $event,
+                    controller: 'settingsCtrl',
+                    templateUrl: 'app/modules/settings/partials/payment.html',
+                    parent: angular.element(document.body),
+                    clickOutsideToClose: false
+                });
+            }
+        }, function(err) {
+            $scope.showToast("Something went wrong!");
+        });
+    };
+
     $scope.showModalPayment = function($event, type) {
         $rootScope.purchaseType = type;
-        $mdDialog.show({
-            targetEvent: $event,
-            controller: 'settingsCtrl',
-            templateUrl: 'app/modules/settings/partials/payment.html',
-            parent: angular.element(document.body),
-            clickOutsideToClose: false
-        });
+        if (type === "small" && $scope.totalProject > 5) {
+            $mdDialog.show({
+                targetEvent: $event,
+                controller: 'settingsCtrl',
+                templateUrl: 'app/modules/settings/partials/projects-list-modal.html',
+                parent: angular.element(document.body),
+                clickOutsideToClose: false
+            });
+        } else if (type === "medium" && $scope.totalProject > 10) {
+            $mdDialog.show({
+                targetEvent: $event,
+                controller: 'settingsCtrl',
+                templateUrl: 'app/modules/settings/partials/projects-list-modal.html',
+                parent: angular.element(document.body),
+                clickOutsideToClose: false
+            });
+        } else {
+            $mdDialog.show({
+                targetEvent: $event,
+                controller: 'settingsCtrl',
+                templateUrl: 'app/modules/settings/partials/payment.html',
+                parent: angular.element(document.body),
+                clickOutsideToClose: false
+            });
+        }
     };
     if ($rootScope.purchaseType) {
         $scope.purchaseType = $rootScope.purchaseType;

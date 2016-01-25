@@ -168,24 +168,28 @@ exports.updateProject = function(req, res) {
     Project.findById(req.params.id, function(err, project) {
         if (err) {return res.send(500,err);}
         else if (!project) {return res.send(404, "The specific project is not existed");}
-        project.name = data.name;
-        project.description = data.description;
-        project.address = data.address;
-        project.suburb = data.suburb;
-        project.postcode = data.postcode;
-        if (data.archive) {
-            project.status = "archive";
-        }
-        project.save(function(err) {
-            if (err) {return res.send(500,err);}
-            if (project.status == "archive") {
-                req.project = project;
-                // return res.send(200,project);
-                sendInfoToUser(req, res);
-            } else {
-                return res.send(200,project);
+        if (project.owner.toString()===req.user._id.toString()) {
+            project.name = data.name;
+            project.description = data.description;
+            project.address = data.address;
+            project.suburb = data.suburb;
+            project.postcode = data.postcode;
+            if (data.archive) {
+                project.status = "archive";
             }
-        });
+            project.save(function(err) {
+                if (err) {return res.send(500,err);}
+                if (project.status == "archive") {
+                    req.project = project;
+                    // return res.send(200,project);
+                    sendInfoToUser(req, res);
+                } else {
+                    return res.send(200,project);
+                }
+            });
+        } else {
+            return res.send(403, {mgs:"You have not authorized"});
+        }
     });
 };
 
@@ -280,6 +284,7 @@ function sendInfoToUser(req, res) {
                 function(cb) {
                     Task.find({project: req.params.id, $or:[{owner: user._id}, {members: user._id}]}, function(err, tasks) {
                         if (err || tasks.length === 0) {cb();}
+                        else {
                         _.each(tasks, function(task) {
                             data.push({
                                 type: "Task",
@@ -292,6 +297,7 @@ function sendInfoToUser(req, res) {
                             });
                         });
                         cb(null,data);
+                        }
                     });
                 },
                 function(cb) {
@@ -300,31 +306,33 @@ function sendInfoToUser(req, res) {
                     $or:[{"element.type":"file", $or:[{members: user._id}, {owner: user._id}]}, 
                         {"element.type":"document"}]}, function(err, files) {
                         if (err || files.length === 0) {cb();}
-                        _.each(files, function(file) {
-                            data.push({
-                                type: (file.element.type === "file") ? "File" : "Document",
-                                createdAt: moment(file.createdAt).format("MM-DD-YYYY"),
-                                name: file.name,
-                                description: file.description,
-                                url: file.path,
-                                version: file.version,
-                                content: ''
-                            });
-                            if (file.fileHistory.length > 0) {
-                                _.each(file.fileHistory, function(history) {
-                                    data.push({
-                                        type: (file.element.type === "file") ? "File Reversion" : "Document Reversion",
-                                        createdAt: moment(history.createdAt).format("MM-DD-YYYY"),
-                                        name: history.name,
-                                        description: history.description,
-                                        url: history.link,
-                                        version: history.version,
-                                        content: ''
-                                    });
+                        else {
+                            _.each(files, function(file) {
+                                data.push({
+                                    type: (file.element.type === "file") ? "File" : "Document",
+                                    createdAt: moment(file.createdAt).format("MM-DD-YYYY"),
+                                    name: file.name,
+                                    description: file.description,
+                                    url: file.path,
+                                    version: file.version,
+                                    content: ''
                                 });
-                            }
-                        });
-                        cb(null, data);
+                                if (file.fileHistory.length > 0) {
+                                    _.each(file.fileHistory, function(history) {
+                                        data.push({
+                                            type: (file.element.type === "file") ? "File Reversion" : "Document Reversion",
+                                            createdAt: moment(history.createdAt).format("MM-DD-YYYY"),
+                                            name: history.name,
+                                            description: history.description,
+                                            url: history.link,
+                                            version: history.version,
+                                            content: ''
+                                        });
+                                    });
+                                }
+                            });
+                            cb(null, data);
+                        }
                     });
                 }, 
                 function(cb) {
@@ -332,31 +340,33 @@ function sendInfoToUser(req, res) {
                     .populate("messages.user")
                     .exec(function(err, threads) {
                         if (err || threads.length === 0) {cb();}
-                        _.each(threads, function(thread) {
-                            data.push({
-                                type: "Thread",
-                                createdAt: moment(thread.createdAt).format("MM-DD-YYYY"),
-                                name: thread.name,
-                                description: thread.description,
-                                url: '',
-                                version: '',
-                                content: ''
-                            });
-                            if (thread.messages.length > 0) {
-                                _.each(thread.messages, function(message) {
-                                    data.push({
-                                        type: "Thread Message Detail",
-                                        createdAt: moment(message.sendAt).format("MM-DD-YYYY"),
-                                        name: thread.name,
-                                        description: thread.description,
-                                        url: '',
-                                        version: '',
-                                        content: message.user.name + " said: " + message.text
-                                    });
+                        else {
+                            _.each(threads, function(thread) {
+                                data.push({
+                                    type: "Thread",
+                                    createdAt: moment(thread.createdAt).format("MM-DD-YYYY"),
+                                    name: thread.name,
+                                    description: thread.description,
+                                    url: '',
+                                    version: '',
+                                    content: ''
                                 });
-                            }
-                        });
-                        cb(null, data);
+                                if (thread.messages.length > 0) {
+                                    _.each(thread.messages, function(message) {
+                                        data.push({
+                                            type: "Thread Message Detail",
+                                            createdAt: moment(message.sendAt).format("MM-DD-YYYY"),
+                                            name: thread.name,
+                                            description: thread.description,
+                                            url: '',
+                                            version: '',
+                                            content: message.user.name + " said: " + message.text
+                                        });
+                                    });
+                                }
+                            });
+                            cb(null, data);
+                        }
                     });
                 }
             ], function(err, result) {
