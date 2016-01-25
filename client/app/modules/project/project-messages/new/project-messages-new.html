@@ -16,15 +16,28 @@
 					</md-input-container>
 				</div>
 				
+                <div layout="row">
+                    <md-input-container flex>
+                        <label>Your Message</label>
+                        <textarea ng-model="" columns="1" md-maxlength="250" rows="5"></textarea>
+                    </md-input-container>
+                </div>
+				
 				<div layout="row" layout-align="center center" class="tagcloud" layout-wrap>
 					<span ng-click="selectMember($index)" ng-class="{'available-tag':!member.select, 'selected-tag': member.select}" ng-repeat="member in projectMembers">{{member.name}}</span>
+				</div>
+				
+				<div layout="row" layout-align="center center" class="tagcloud" layout-wrap>
+					<span class="available-tag">Tender Invitee A</span>
+					<span class="available-tag">Tender Invitee B</span>
+					<span class="available-tag">Tender Invitee C</span>
 				</div>
 				
 			</div>
 		</md-dialog-content>
 		<md-dialog-actions>
 			<md-button ng-click="cancelNewMessageModal()">Cancel</md-button>
-			<md-button type="submit" class="md-raised md-accent md-hue-1">Add Message!</md-button>
+			<md-button type="submit">Add Message Thread</md-button>
 		</md-dialog-actions>
 	</form>
 </md-dialog>

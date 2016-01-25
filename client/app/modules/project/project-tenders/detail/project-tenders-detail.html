@@ -113,15 +113,15 @@
   	  				      <md-icon class="material-icons">format_list_bulleted</md-icon>
   			  	      </md-button>
 			  	      <md-button aria-label="Attach a Related Message" class="md-fab md-raised md-mini" ng-click="showModal($event, 'attach-related-message.html')">
-						  <md-tooltip md-direction="left">Attach a Related Message</md-tooltip>
+						  <md-tooltip md-direction="left">Broadcast a Message</md-tooltip>
 					      <md-icon class="material-icons">chat_bubble_outline</md-icon>
 			  	      </md-button>
   			  	      <md-button aria-label="Add a Related Task" class="md-fab md-raised md-mini" ng-click="showModal($event, 'attach-related-task.html')">
-  	  					  <md-tooltip md-direction="left">Attach a Related Task</md-tooltip>
+  	  					  <md-tooltip md-direction="left">Broadcast a Task</md-tooltip>
   	  				      <md-icon class="material-icons">done_all</md-icon>
   			  	      </md-button>
   			  	      <md-button aria-label="Add a Related File" class="md-fab md-raised md-mini" ng-click="showModal($event, 'attach-related-file.html')">
-  	  					  <md-tooltip md-direction="left">Attach a Related File</md-tooltip>
+  	  					  <md-tooltip md-direction="left">Broadcast a File</md-tooltip>
   	  				      <md-icon class="material-icons">attach_file</md-icon>
   			  	      </md-button>
   			  	  </md-fab-actions>
@@ -131,6 +131,6 @@
 		</div>
 	</div>
 		
-	<related-items flex="30" data="tender"></related-items>
+	<tender-items flex="30" data="tender"></tender-items>
 		
 </div>
