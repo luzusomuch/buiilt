@@ -8,7 +8,7 @@
 		
 		<div layout-margin>
 			<p><strong>Current Credit Card:</strong></p>
-			<p>Number: {{currentUser.creditCard}} - Ends In { { lastFourDigits } }</p>
+			<p>Number: {{currentUser.creditCard.number}} - Ends In {{currentUser.creditCard.exp_year}}</p>
 		</div>
 		
 		<md-divider></md-divider>

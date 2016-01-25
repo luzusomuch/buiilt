@@ -1,5 +1,5 @@
 <md-dialog aria-label="Purchase" flex="50">
-    <form ng-submit="buyPlan(form)" name="form">
+    <!-- <form ng-submit="buyPlan(form)" name="form">
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2>Purchase</h2>
@@ -40,8 +40,9 @@
             <md-button ng-click="cancelDialog()">Cancel</md-button>
             <md-button type="submit" class="md-raised md-accent md-hue-1">Purchase!</md-button>
         </md-dialog-actions>
-    </form>
-    <!-- <form action="" method="POST" ng-show="purchaseType=='small'">
+    </form> -->
+    <form action="/api/users/buy-plan" method="POST" ng-show="purchaseType=='small'">
+        <input type="text" name="plan" value="small" style="display:none">
         <script
         src="https://checkout.stripe.com/checkout.js" class="stripe-button"
         data-key="pk_test_WGKFaZu6dXITEIxoyVI8DrVa"
@@ -52,7 +53,8 @@
         data-locale="auto">
         </script>
     </form>
-    <form action="" method="POST" ng-show="purchaseType=='medium'">
+    <form action="/api/users/buy-plan" method="POST" ng-show="purchaseType=='medium'">
+        <input type="text" name="plan" value="medium" style="display:none">
         <script
         src="https://checkout.stripe.com/checkout.js" class="stripe-button"
         data-key="pk_test_WGKFaZu6dXITEIxoyVI8DrVa"
@@ -63,7 +65,8 @@
         data-locale="auto">
         </script>
     </form>
-    <form action="" method="POST" ng-show="purchaseType=='large'">
+    <form action="/api/users/buy-plan" method="POST" ng-show="purchaseType=='large'">
+        <input type="text" name="plan" value="large" style="display:none">
         <script
         src="https://checkout.stripe.com/checkout.js" class="stripe-button"
         data-key="pk_test_WGKFaZu6dXITEIxoyVI8DrVa"
@@ -73,5 +76,5 @@
         data-image="/128x128.png"
         data-locale="auto">
         </script>
-    </form> -->
+    </form>
 </md-dialog>

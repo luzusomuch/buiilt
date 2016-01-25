@@ -41,9 +41,12 @@ var UserSchema = new Schema({
     createdAt: {type: Date, default: Date.now},
     updatedAt: {type: Date, default: Date.now},
     plan: {type: String, enum:["small", "medium", "large"]},
-    planStartDate: {type: Date},
-    planEndDate: {type: Date},
-    creditCard: String
+    creditCard: {
+        number: String,
+        exp_month: String,
+        exp_year: String,
+        cvc: String
+    }
 }, {
     strict: true,
     minimize: false

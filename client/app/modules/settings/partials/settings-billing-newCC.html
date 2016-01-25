@@ -10,8 +10,22 @@
             <div class="md-dialog-content" layout="column">
                 <div layout="row">
                     <md-input-container flex>
-                        <label for="">Enter your credit card</label>
-                        <input type="text" ng-model="currentUser.creditCard" required>
+                        <label for="">Card number</label>
+                        <input type="number" name="card" ng-model="currentUser.creditCard.number" required>
+                    </md-input-container>
+                </div>
+                <div layout="row">
+                    <md-input-container flex="20">
+                        <label for="">MM</label>
+                        <input type="number" name="month" ng-model="currentUser.creditCard.exp_month" required>
+                    </md-input-container>
+                    <md-input-container flex="30">
+                        <label for="">YYYY</label>
+                        <input type="number" name="year" ng-model="currentUser.creditCard.exp_year" required>
+                    </md-input-container>
+                    <md-input-container flex="50">
+                        <label for="">CVC</label>
+                        <input type="number" name="cvc" ng-model="currentUser.creditCard.cvc" required>
                     </md-input-container>
                 </div>
             </div>
