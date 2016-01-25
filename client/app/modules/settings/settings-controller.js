@@ -2,6 +2,28 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
     $rootScope.title = "Settings"
     $scope.currentTeam = $rootScope.currentTeam;
     $scope.currentUser = $rootScope.currentUser;
+
+    var handler = StripeCheckout.configure({
+        key: 'pk_test_WGKFaZu6dXITEIxoyVI8DrVa',
+        image: '/128x128.png',
+        locale: 'auto',
+        token: function(token) {
+          // Use the token to create the charge with a server-side script.
+          // You can access the token ID with `token.id`
+            var data = {stripeEmail: token.email, stripeToken: token.id, stripeType: token.type, plan: $rootScope.purchaseType};
+            userService.buyPlan({}, data).$promise.then(function(res) {
+                handler.close();
+                $rootScope.$broadcast("User.Update", res);
+            }, function(err) {$scope.showToast(err.data);})
+        }
+    });
+
+    $scope.plans = {
+        small : {name: "Small plan", description: "Purchase for small plan ($45.00)", amount: 4500, currency: "aud"},
+        medium : {name: "Medium plan", description: "Purchase for medium plan ($80.00)", amount: 8000, currency: "aud"},
+        large : {name: "Large plan", description: "Purchase for large plan ($105.00)", amount: 10500, currency: "aud"},
+    };
+
     function getCurrentUserPlan() {
         if ($scope.currentUser.plan) {
             $scope.currentUser.noPlan = false;
@@ -25,7 +47,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
     getCurrentUserPlan();
     $rootScope.$on("User.Update", function(event, data) {
         $scope.currentUser = $rootScope.currentUser = data;
-        $rootScope.currentUser.isLeader = ($scope.currentUser.team.role == 'admin');
+        $rootScope.currentUser.isLeader = ($scope.currentUser.team && $scope.currentUser.team.role == 'admin');
         getCurrentUserPlan();
     });
 
@@ -39,11 +61,12 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
     setPurchase();
 
     function getUserProjects() {
-        $scope.projects = _.filter($rootScope.projects, {owner: $scope.currentUser._id});
+        $scope.projects = [];
         $scope.totalProject = 0;
-        _.each($scope.projects, function(project) {
+        _.each($rootScope.projects, function(project) {
             if (project.owner == $scope.currentUser._id && project.status !== "archive") {
                 $scope.totalProject += 1;
+                $scope.projects.push(project);
             }
         });
     };
@@ -76,13 +99,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             }
             if ($scope.totalProject === maximumCreatedProject) {
                 $mdDialog.cancel();
-                $mdDialog.show({
-                    // targetEvent: $event,
-                    controller: 'settingsCtrl',
-                    templateUrl: 'app/modules/settings/partials/payment.html',
-                    parent: angular.element(document.body),
-                    clickOutsideToClose: false
-                });
+                handler.open($scope.plans[$rootScope.purchaseType]);
             }
         }, function(err) {
             $scope.showToast("Something went wrong!");
@@ -108,13 +125,14 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                 clickOutsideToClose: false
             });
         } else {
-            $mdDialog.show({
-                targetEvent: $event,
-                controller: 'settingsCtrl',
-                templateUrl: 'app/modules/settings/partials/payment.html',
-                parent: angular.element(document.body),
-                clickOutsideToClose: false
-            });
+            // $mdDialog.show({
+            //     targetEvent: $event,
+            //     controller: 'settingsCtrl',
+            //     templateUrl: 'app/modules/settings/partials/payment.html',
+            //     parent: angular.element(document.body),
+            //     clickOutsideToClose: false
+            // });
+            handler.open($scope.plans[type]);
         }
     };
     if ($rootScope.purchaseType) {

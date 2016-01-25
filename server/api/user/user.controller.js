@@ -478,7 +478,7 @@ exports.buyPlan = function(req, res) {
                   user.plan = data.plan;
                   user.save(function(err) {
                     if (err) {return res.send(500,err);}
-                    return res.redirect(config.baseUrl+"settings/billing");
+                    return res.send(200, user);
                   });
                 });
               } else {
@@ -494,7 +494,7 @@ exports.buyPlan = function(req, res) {
                     user.plan = data.plan;
                     user.save(function(err) {
                       if (err) {return res.send(500,err);}
-                      return res.redirect(config.baseUrl+"settings/billing");
+                      return res.send(200, user);
                     });
                   });
                 });
