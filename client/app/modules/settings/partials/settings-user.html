@@ -10,7 +10,7 @@
 			<div layout="row">
 				<div flex="50">
 					<p><strong>Email Address:</strong></p>
-					<p>email address</p>
+					<p>{{currentUser.email}}</p>
 				</div>
 		
 				<div flex="50">
@@ -24,7 +24,7 @@
 		
 		<div layout-margin>
 			<p><strong>Phone Number:</strong></p>
-			<p>phone number<p>
+			<p>{{(currentUser.phoneNumber) ? currentUser.phoneNumber : "Add Your Phone Number from the Action button below"}}<p>
 		</div>
 		
 		
@@ -39,15 +39,15 @@
 	  	      </md-button>
   	      </md-fab-trigger>
 		  <md-fab-actions>
-	  	      <md-button aria-label="Edit Company Details" class="md-fab md-raised md-mini md-primary" ng-click="">
+	  	      <md-button aria-label="Edit Company Details" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'edit-user-info.html', 'email')">
 				  <md-tooltip md-direction="left">Edit Email</md-tooltip>
 			      <md-icon class="material-icons">email</md-icon>
 	  	      </md-button>
-	  	      <md-button aria-label="Edit Company Details" class="md-fab md-raised md-mini md-primary" ng-click="">
+	  	      <md-button aria-label="Edit Company Details" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'edit-user-info.html', 'password')">
 				  <md-tooltip md-direction="left">Edit Password</md-tooltip>
 			      <md-icon class="material-icons">lock</md-icon>
 	  	      </md-button>
-	  	      <md-button aria-label="Edit Company Details" class="md-fab md-raised md-mini md-primary" ng-click="">
+	  	      <md-button aria-label="Edit Company Details" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'edit-user-info.html', 'phoneNumber')">
 				  <md-tooltip md-direction="left">Edit Phone Number</md-tooltip>
 			      <md-icon class="material-icons">phone</md-icon>
 	  	      </md-button>

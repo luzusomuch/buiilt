@@ -293,7 +293,7 @@ exports.changePassword = function (req, res, next) {
   var newPass = String(req.body.newPassword);
   User.findById(user._id, function (err, user) {
     if (!user.authenticate(oldPass)) {
-      return res.send(422,{oldPassword : 'This password is not correct.'});
+      return res.send(422,{msg : 'This password is not correct.'});
     }
     user.password = newPass;
     user.save(function(err) {

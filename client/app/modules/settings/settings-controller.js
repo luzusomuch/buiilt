@@ -102,7 +102,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                 handler.open($scope.plans[$rootScope.purchaseType]);
             }
         }, function(err) {
-            $scope.showToast("Something went wrong!");
+            $scope.showToast("Error");
         });
     };
 
@@ -157,7 +157,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                     $scope.cancelDialog();
                     $scope.showToast("Purchase successfully");
                     $rootScope.$broadcast("User.Update", res);
-                }, function(err) {$scope.showToast(err.data);});
+                }, function(err) {$scope.showToast("Error");});
             });
         } else {
             $scope.showToast("Please check your input");
@@ -296,7 +296,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                 });
             }, function (err) {
                 $scope.cancelDialog();
-                $scope.showToast(err);
+                $scope.showToast("Error");
             });
         }
     };
@@ -323,7 +323,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                 $scope.showToast("Company details have updated successfully!");
                 $rootScope.$emit('Team.Update',team);
             }, function(err) {
-                $scope.showToast(err);
+                $scope.showToast("Error");
             });
         }
     };
@@ -347,7 +347,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             $scope.member.emails = [];
 			$mdDialog.hide();
         }, function(err){
-            $scope.showToast(err);
+            $scope.showToast("Error");
         });
     };
 
@@ -360,7 +360,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                 $scope.currentTeam = team;
                 $rootScope.$emit('TeamUpdate',team);
             }, function (err) {
-                $scope.showToast(err);
+                $scope.showToast("Error");
             });
         }, function() {
             
@@ -376,7 +376,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                 $scope.showToast("Assign leader for " + member._id.name + " successfully!");
                 $rootScope.$emit('TeamUpdate',team);
             }, function(err) {
-                $scope.showToast(err);
+                $scope.showToast("Error");
             });
         }, function() {
             
@@ -391,7 +391,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                 $rootScope.currentTeam = {};
                 $state.go($state.current, {}, {reload: true});
             }, function(err) {
-                $scope.showToast(err);
+                $scope.showToast("Error");
             });
         }, function() {
             
@@ -411,7 +411,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                 $mdDialog.hide();
                 $scope.showToast("Submit credit card successfully");
                 $rootScope.$broadcast("User.Update", res);
-            }, function(err) {$scope.showToast(err.message);});
+            }, function(err) {$scope.showToast("Error");});
         } else {
             $scope.showToast("Please check your input again");
         }
@@ -423,9 +423,60 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                 $mdDialog.hide();
                 $scope.showToast("Update billing address successfully");
                 $rootScope.$broadcast("Team.Update", res);
-            }, function(err) {$scope.showToast(err.message);});
+            }, function(err) {$scope.showToast("Error");});
         } else {
             $scope.showToast("Please check your input again");
+        }
+    };
+
+    $scope.showModal = function($event, name, type) {
+        $rootScope.editUserType = type;
+        $mdDialog.show({
+            targetEvent: $event,
+            controller: 'settingsCtrl',
+            templateUrl: 'app/modules/settings/partials/'+name,
+            parent: angular.element(document.body),
+            clickOutsideToClose: false
+        });
+    };
+    $scope.editUserType = ($rootScope.editUserType) ? $rootScope.editUserType : null;
+    $scope.editUserInfo = function(form) {
+        if (form.$valid) {
+            if ($scope.editUserType === "phoneNumber") {
+                authService.changeProfile($scope.currentUser.firstName, $scope.currentUser.lastName, $scope.currentUser.phoneNumber)
+                .then(function(data){
+                    $scope.cancelDialog();
+                    $scope.showToast("Change phone number successfully");
+                    $rootScope.$emit('Profile.change',data);
+                }, function(err){$scope.showToast("Error");});
+            } else if ($scope.editUserType === "password") {
+                if ($scope.currentUser.newPassword.length < 6) {
+                    $scope.showToast("Please enter password at least 6 characters");
+                    return;
+                }
+                if ($scope.currentUser.newPassword !== $scope.currentUser.retypePassword) {
+                    $scope.showToast("New password and re-type password not match");
+                    return;
+                }
+                authService.changePassword($scope.currentUser.oldPassword,$scope.currentUser.newPassword).then(function(res) {
+                    $scope.cancelDialog();
+                    $scope.showToast("Your password has been changed");
+                    }, function(err) {$scope.showToast("Error");});
+            } else {
+                if ($scope.email !== $scope.currentUser.email) {
+                    authService.changeEmail($scope.email).then(function() {
+                        $scope.cancelDialog();
+                        $scope.showToast("An email has been sent to your email to confirm your change");
+                    }, function(err) {
+                        $scope.showToast("Error");
+                    });
+                } else {
+                    $scope.showToast("Please check your input again");
+                    return;
+                }
+            }   
+        } else {
+            $scope.showToast("Please check your input");
         }
     };
 
