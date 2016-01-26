@@ -54,6 +54,7 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
         $mdDialog.show({
             // targetEvent: $event,
             controller: function($scope, $rootScope, peopleService) {
+                $scope.minDate = new Date();
                 $scope.cancelNewTenderModal = function () {
                     $mdDialog.cancel();
                     $mdDialog.cancel();
@@ -63,7 +64,6 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
                 }
                 peopleService.getInvitePeople({id: $stateParams.id}).$promise.then(function(res) {
                     $scope.people = res;
-                    $scope.membersList = [];
                     _.each($rootScope.roles, function(role) {
                         _.each($scope.people[role], function(tender) {
                             if (_.findIndex(tender.tenderers, function(user) {
@@ -81,108 +81,98 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
                                     $rootScope.currentUser.type = role;
                                 }
                             }
-
-                            // Get team list
-                            if (!tender.hasSelect) {
-                                $scope.membersList.push({
-                                    _id: tender._id,
-                                    tenderName: tender.tenderName,
-                                    tenderers: tender.tenderers
-                                });
-                            }
                         });
                     });
-
-                    switch($rootScope.currentUser.type) {
-                        case "builders":
-                            $scope.availableUserType = [
-                                {value: 'addSubcontractor', text: 'Subcontractor'},
-                                {value: 'addConsultant', text: 'Consultant'}
-                            ];
-                            break;
-                        case "architects": 
-                            $scope.availableUserType = [
-                                {value: 'addBuilder', text: 'Builder'},
-                                {value: 'addConsultant', text: 'Consultant'}
-                            ];
-                            break;
-                        default:
-                            break;
-                    }
                 });
 
-                function getCurrentTeamMember() {
-                    //get current user logged in team member
-                    $scope.teamMembersCanInvite = $rootScope.currentTeam.leader;
-                    _.each($rootScope.currentTeam.member, function(member) {
-                        if (member._id && member.status === "Active") {
-                            $scope.teamMembersCanInvite.push(member._id);
-                        }
-                    });
-                    $scope.teamMembersCanInvite = _.uniq($scope.teamMembersCanInvite, '_id');
-                    _.remove($scope.teamMembersCanInvite, {_id: $rootScope.currentUser._id});
+                // function getCurrentTeamMember() {
+                //     //get current user logged in team member
+                //     $scope.teamMembersCanInvite = $rootScope.currentTeam.leader;
+                //     _.each($rootScope.currentTeam.member, function(member) {
+                //         if (member._id && member.status === "Active") {
+                //             $scope.teamMembersCanInvite.push(member._id);
+                //         }
+                //     });
+                //     $scope.teamMembersCanInvite = _.uniq($scope.teamMembersCanInvite, '_id');
+                //     _.remove($scope.teamMembersCanInvite, {_id: $rootScope.currentUser._id});
 
-                    if ($scope.people[$rootScope.currentUser.type]) {
-                        _.each($scope.people[$rootScope.currentUser.type], function(tender) {
-                            var currentTendererIndex = _.findIndex(tender.tenderers, function(tenderer) {
-                                if (tenderer._id) {
-                                    return tenderer._id._id == $rootScope.currentUser._id;
-                                }
-                            });
-                            if (currentTendererIndex !== -1) {
-                                var currentTenderer = tender.tenderers[currentTendererIndex];
-                                _.each(currentTenderer.teamMember, function(member) {
-                                    _.remove($scope.teamMembersCanInvite, {_id: member._id});
-                                });
-                            }
-                        });
-                    }
+                //     if ($scope.people[$rootScope.currentUser.type]) {
+                //         _.each($scope.people[$rootScope.currentUser.type], function(tender) {
+                //             var currentTendererIndex = _.findIndex(tender.tenderers, function(tenderer) {
+                //                 if (tenderer._id) {
+                //                     return tenderer._id._id == $rootScope.currentUser._id;
+                //                 }
+                //             });
+                //             if (currentTendererIndex !== -1) {
+                //                 var currentTenderer = tender.tenderers[currentTendererIndex];
+                //                 _.each(currentTenderer.teamMember, function(member) {
+                //                     _.remove($scope.teamMembersCanInvite, {_id: member._id});
+                //                 });
+                //             }
+                //         });
+                //     }
+                // };
+
+                // $scope.getChangeTypeValue = function(type) {
+                //     if (type === 'addClient' || type === "addEmployee") {
+                //         $scope.invite.isTender = false;
+                //         if (type == 'addEmployee') {
+                //             getCurrentTeamMember();
+                //             $scope.invite.isInviteTeamMember = true;
+                //         } else {
+                //             $scope.invite.isInviteTeamMember = false;
+                //         }
+                //     } else {
+                //         $scope.invite.isTender = true;
+                //         $scope.invite.isInviteTeamMember = false;
+                //     }
+                //     $scope.invite.teamMember = [];
+                //     $scope.invite.invitees = [];
+                // };
+
+                // $scope.addInvitee = function(email, name) {
+                //     if (email && email != '' && name && name != '') {
+                //         if (_.findIndex($scope.invite.invitees, {email: email}) === -1) {
+                //             $scope.invite.invitees.push({email: email, name: name});
+                //             $scope.email = null;
+                //             $scope.name = null;
+                //         } else {
+                //             $scope.showToast("This email has already added");
+                //         }
+                //     }
+                // };  
+
+                // $scope.removeInvitee = function(index) {
+                //     $scope.invite.invitees.splice(index, 1);
+                // };
+
+                $scope.pickFile = pickFile;
+
+                $scope.onSuccess = onSuccess;
+
+                function pickFile(){
+                    filepickerService.pick(
+                        onSuccess
+                    );
                 };
 
-                $scope.getChangeTypeValue = function(type) {
-                    if (type === 'addClient' || type === "addEmployee") {
-                        $scope.invite.isTender = false;
-                        if (type == 'addEmployee') {
-                            getCurrentTeamMember();
-                            $scope.invite.isInviteTeamMember = true;
-                        } else {
-                            $scope.invite.isInviteTeamMember = false;
-                        }
-                    } else {
-                        $scope.invite.isTender = true;
-                        $scope.invite.isInviteTeamMember = false;
-                    }
-                    $scope.invite.teamMember = [];
-                    $scope.invite.invitees = [];
-                };
-
-                $scope.addInvitee = function(email, name) {
-                    if (email && email != '' && name && name != '') {
-                        if (_.findIndex($scope.invite.invitees, {email: email}) === -1) {
-                            $scope.invite.invitees.push({email: email, name: name});
-                            $scope.email = null;
-                            $scope.name = null;
-                        } else {
-                            $scope.showToast("This email has already added");
-                        }
-                    }
-                };  
-
-                $scope.removeInvitee = function(index) {
-                    $scope.invite.invitees.splice(index, 1);
+                function onSuccess(file, type){
+                    file.type = "file";
+                    $scope.invite.file = file;
                 };
 
                 $scope.inviteNewTeamMember = function(form) {
                     if (form.$valid) {
                         $scope.invite.inviterType = $rootScope.currentUser.type;
+                        $scope.invite.isTender = true;
+                        $scope.invite.invitees = [];
                         peopleService.update({id: $stateParams.id},$scope.invite).$promise.then(function(res){
-                            $scope.showToast("Invitations sent successfully!");
+                            $scope.showToast("Create tender successfully!");
                             $scope.cancelNewTenderModal();
                             $rootScope.$broadcast("Tender.Inserted", res);
                         }, function(res){
                             $scope.showToast("Error. Something went wrong.")
                         });
-                        $mdDialog.hide();
                     } else {
                         $scope.showToast("Please check input again");
                         return;

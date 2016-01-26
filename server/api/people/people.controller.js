@@ -142,61 +142,102 @@ exports.invitePeople = function(req, res) {
                                 }
                             });
                         } else {
-                            if (invite.invitees.length == 0) {
-                                return res.send(500);
-                            } else {
-                                var tenderers = [];
-                                async.each(invite.invitees, function(invitee, callback) {
-                                    User.findOne({email: invitee.email}, function(err, user) {
-                                        if (err) {callback();}
-                                        else if (!user) {
-                                            tenderers.push({
-                                                email: invitee.email,
-                                                name: invitee.name,
-                                                teamMember: []
-                                            });
-                                            // newInviteeNotSignUp.push(invitee.email);
-                                            var inviteToken = new InviteToken({
-                                                type: 'project-invite',
-                                                email: invitee.email,
+                            var tenderers = [];
+                            async.each(invite.invitees, function(invitee, callback) {
+                                User.findOne({email: invitee.email}, function(err, user) {
+                                    if (err) {callback();}
+                                    else if (!user) {
+                                        tenderers.push({
+                                            email: invitee.email,
+                                            name: invitee.name,
+                                            teamMember: []
+                                        });
+                                        // newInviteeNotSignUp.push(invitee.email);
+                                        var inviteToken = new InviteToken({
+                                            type: 'project-invite',
+                                            email: invitee.email,
+                                            element: {
+                                                project: people.project,
+                                                type: type
+                                            }
+                                        });
+                                        inviteToken._editUser = req.user;
+                                        inviteToken.save(callback());
+                                    } else {
+                                        tenderers.push({
+                                            _id: user._id,
+                                            name: invitee.name,
+                                            teamMember: []
+                                        });
+                                        newInviteeSignUpAlready.push(user._id);
+                                        var inviteToken = new InviteToken({
+                                            type: 'project-invite',
+                                            user: user._id,
+                                            element: {
+                                                project: people.project,
+                                                type: type
+                                            }
+                                        });
+                                        inviteToken._editUser = req.user;
+                                        inviteToken.save(callback());
+                                    }
+                                });
+                            }, function() {
+                                var tender = {
+                                    tenderName: invite.tenderName,
+                                    tenderDescription: invite.tenderDescription,
+                                    dateEnd: invite.dateEnd,
+                                    inviter: req.user._id,
+                                    tenderers: tenderers,
+                                    createAt: new Date(),
+                                    inviterType: (type == "consultants") ? invite.inviterType : null,
+                                    inviterActivities: [],
+                                    relatedItem: []
+                                };
+                                if (invite.file) {
+                                    var file = new File({
+                                        project: req.params.id,
+                                        name: invite.file.filename,
+                                        description: invite.tenderDescription,
+                                        path: invite.file.url,
+                                        key: invite.file.key,
+                                        server: 's3',
+                                        mimeType: invite.file.mimeType,
+                                        size: invite.file.size,
+                                        owner: req.user._id,
+                                        element: {type: invite.file.type}
+                                    });
+                                    file.save(function(err) {
+                                        if (err) {cb(err);}
+                                        else {
+                                            tender.inviterActivities.push({
+                                                user: req.user._id,
+                                                type: "attach-scope",
+                                                createdAt: new Date(),
                                                 element: {
-                                                    project: people.project,
-                                                    type: type
+                                                    members: [],
+                                                    name: file.name,
                                                 }
                                             });
-                                            inviteToken._editUser = req.user;
-                                            inviteToken.save(callback());
-                                        } else {
-                                            tenderers.push({
-                                                _id: user._id,
-                                                name: invitee.name,
-                                                teamMember: []
+                                            tender.relatedItem.push({
+                                                type: "file",
+                                                item: {
+                                                    _id: file._id,
+                                                    name: file.name,
+                                                    description: file.description,
+                                                    link: file.path,
+                                                },
+                                                members: []
                                             });
-                                            newInviteeSignUpAlready.push(user._id);
-                                            var inviteToken = new InviteToken({
-                                                type: 'project-invite',
-                                                user: user._id,
-                                                element: {
-                                                    project: people.project,
-                                                    type: type
-                                                }
-                                            });
-                                            inviteToken._editUser = req.user;
-                                            inviteToken.save(callback());
+                                            team.push(tender);
+                                            cb();
                                         }
                                     });
-                                }, function() {
-                                    team.push({
-                                        tenderName: invite.tenderName,
-                                        tenderDescription: invite.tenderDescription,
-                                        inviter: req.user._id,
-                                        tenderers: tenderers,
-                                        createAt: new Date(),
-                                        inviterType: (type == "consultants") ? invite.inviterType : null
-                                    });
+                                } else {
+                                    team.push(tender);
                                     cb();
-                                });
-                            }
+                                }
+                            });
                         }
                     }
                 ], function(err, result) {
@@ -377,7 +418,7 @@ function responseTender(people, req, res) {
             var inviterActivities = [];
             _.each(people[role], function(tender) {
                 _.each(tender.relatedItem, function(item) {
-                    if (_.indexOf(item.members, req.user.email) !== -1 || tender.inviter._id.toString()===req.user._id.toString()) {
+                    if (item.members.length === 0 || _.indexOf(item.members, req.user.email) !== -1 || tender.inviter._id.toString()===req.user._id.toString()) {
                         currentTendererActivities.push(item);
                     }
                 });
