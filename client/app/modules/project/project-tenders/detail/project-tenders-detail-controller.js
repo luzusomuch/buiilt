@@ -53,6 +53,7 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($roo
             peopleService.updateDistributeStatus({id: $stateParams.id, tenderId: $stateParams.tenderId}).$promise.then(function(res) {
                 $scope.showToast("Edit distribute status successfully");
                 $scope.tender.isDistribute = !$scope.tender.isDistribute;
+                $rootScope.$broadcast("Tender.Updated", res);
             }, function(err) {$scope.showToast("Error");});
         }, function() {
             

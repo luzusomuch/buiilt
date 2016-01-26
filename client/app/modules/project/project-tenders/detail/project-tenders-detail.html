@@ -32,13 +32,15 @@
                         <md-icon ng-switch-when="related-file" class="material-icons md-primary">attach_file</md-icon>
                         <md-icon ng-switch-when="related-thread" class="material-icons md-primary">chat_bubble_outline</md-icon>
                         <md-icon ng-switch-when="related-task" class="material-icons md-primary">done_all</md-icon>
-						<md-icon ng-switch-when="select-winner" class="material-icons md-primary">format_list_bulleted</md-icon>
+                        <md-icon ng-switch-when="select-winner" class="material-icons md-primary">format_list_bulleted</md-icon>
+						<md-icon ng-switch-when="distribute-status" class="material-icons md-primary"></md-icon>
 					</div>
 					<span flex="5"></span>
 					<div flex class="activity-detail">
 						<p ng-switch="activity.type">
                             <strong>{{activity.user.name}}</strong> 
                             <span ng-switch-when="attach-addendum">has attached an addendum to this tender:{{activity.element.name}}</span>
+                            <span ng-switch-when="distribute-status">has updated this tender to distributed</span>
                             <span ng-switch-when="attach-scope">has attached an scope to this tender:{{activity.element.content}}. You can find it <a target="_blank" href="{{activity.element.link}}">here</a>. Due date of this tender is {{activity.element.dateEnd | date: 'dd-MM-yyyy'}}</span>
                             <span ng-switch-when="edit-tender">has edited the details of this tender: {{(activity.element.name) ? "Name: "+activity.element.name+", " : ""}} {{(activity.element.description) ? "Description: "+activity.element.description+", " : ""}}.</span>
                             <span ng-switch-when="invite-tender">has invited new tenderer <span ng-repeat="member in activity.element.members">{{member.name}}, </span> </span>

@@ -398,7 +398,7 @@ function responseTender(people, req, res) {
                     }
                 });
                 _.each(tender.inviterActivities, function(activity) {
-                    if (activity.type === "edit-tender" || activity.type === "invite-tender" || activity.type === "attach-scope" || activity.type === "attach-addendum") {
+                    if (activity.type === "edit-tender" || activity.type === "attach-scope" || activity.type === "attach-addendum") {
                         inviterActivities.push(activity);
                     } else {
                         if (_.indexOf(activity.element.members, req.user.email) !== -1 || tender.inviter._id.toString()===req.user._id.toString() || activity.user._id.toString()===req.user._id.toString()) {
@@ -690,7 +690,17 @@ function responseWithEachType(people, req, res){
 };
 
 exports.updateDistributeStatus = function(req, res) {
-    People.findOne({project: req.params.id}, function(err, people) {
+    People.findOne({project: req.params.id})
+    .populate("builders.tenderers._id", "_id email name")
+    .populate("builders.inviter", "_id email name")
+    .populate("builders.inviterActivities.user", "_id email name")
+    .populate("subcontractors.tenderers._id", "_id email name")
+    .populate("subcontractors.inviter", "_id email name")
+    .populate("subcontractors.inviterActivities.user", "_id email name")
+    .populate("consultants.tenderers._id", "_id email name")
+    .populate("consultants.inviter", "_id email name")
+    .populate("consultants.inviterActivities.user", "_id email name")
+    .exec(function(err, people) {
         if (err) {return res.send(500,err);}
         else if (!people) {
             return res.send(404, {message: "The specific people is not existed"});
@@ -706,6 +716,12 @@ exports.updateDistributeStatus = function(req, res) {
                     return false;
                 }
             });
+            people[currentRole][index].inviterActivities.push({
+                user: req.user._id,
+                createdAt: new Date(),
+                type: "distribute-status",
+                element: {}
+            });
             people[currentRole][index].isDistribute = !people[currentRole][index].isDistribute;
             people.markModified("updateDistributeStatus");
             people._updatedTender = people[currentRole][index];
@@ -713,7 +729,7 @@ exports.updateDistributeStatus = function(req, res) {
             people._newInviteType = currentRole;
             people.save(function(err) {
                 if (err) {return res.send(500,err);}
-                return res.send(200);
+                responseTender(people, req, res);
             });
         }
     });
