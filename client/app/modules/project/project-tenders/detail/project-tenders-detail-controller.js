@@ -84,32 +84,12 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($roo
     };
     setAddendum();
     $scope.sendAddendum = function() {
-        $scope.addendum.members = _.filter($scope.tenderers, {select: true});
-        if ($scope.addendum.members.length === 0) {
-            $scope.showToast("Please select at least 1 tenderer");
-            return;
-        } else {
-            peopleService.attachAddendum({id: $stateParams.id, tenderId: $stateParams.tenderId}, $scope.addendum).$promise.then(function(res) {
-                $scope.cancelNewTenderModal();
-                setAddendum();
-                $scope.showToast("Attach addendum successfully");
-                $rootScope.$broadcast("Tender.Updated", res);
-            }, function(err){$scope.showToast("Error");});
-        }
-    };
-
-    $scope.editTender = function(form) {
-        if (form.$valid) {
-            $scope.tender.editType = "edit-tender";
-            peopleService.updateTender({id: $stateParams.id, tenderId: $stateParams.tenderId}, $scope.tender).$promise.then(function(res) {
-                $scope.cancelNewTenderModal();
-                $scope.showToast("Edit tender successfully");
-                $rootScope.$broadcast("Tender.Updated", res);
-            }, function(err) {$scope.showToast("Error");});
-        } else {
-            $scope.showToast("Please check your input again");
-            return;
-        }
+        peopleService.attachAddendum({id: $stateParams.id, tenderId: $stateParams.tenderId}, $scope.addendum).$promise.then(function(res) {
+            $scope.cancelNewTenderModal();
+            setAddendum();
+            $scope.showToast("Attach addendum successfully");
+            $rootScope.$broadcast("Tender.Updated", res);
+        }, function(err){$scope.showToast("Error");});
     };
 
     $scope.showToast = function(value) {

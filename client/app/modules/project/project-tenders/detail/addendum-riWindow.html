@@ -1,0 +1,29 @@
+<md-dialog aria-label="View {{addendum.element.name}} detail" flex="70">
+    <form name="form">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>View {{addendum.element.name}} detail</h2>
+            </div>
+        </md-toolbar>
+        
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column">
+                <div layout="row">
+                    <md-input-container flex>
+                        <p>{{addendum.element.description}}</p>
+                    </md-input-container>
+                </div>
+                <div layout="row" ng-show="addendum.element._id">
+                    <md-button ng-click="download()">Download</md-button>
+                </div>
+                <div layout="row" ng-show="addendum.element._id">
+                    <div flex file-picker-previewer type="filepicker-preview" url="{{addendum.element.link}}" style="height:75vh;"> </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        
+        <md-dialog-actions>
+            <md-button ng-click="closeModal()">Close</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

@@ -12,6 +12,11 @@ var activities = {
     createdAt: Date, 
     element: {}
 };
+var addendum = {
+    user: {type: Schema.Types.ObjectId, ref: "User", required: true},
+    createdAt: Date,
+    element: {}
+};
 
 var tender = {
     tenderName: String,
@@ -39,6 +44,7 @@ var tender = {
         members: [String],
         _id: false
     }],
+    addendums: [addendum],
     inviterType: String,
     hasSelect: {type: Boolean, default: false},
     createdAt: {type: Date}

@@ -195,35 +195,19 @@ exports.invitePeople = function(req, res) {
                                     relatedItem: []
                                 };
                                 if (invite.file) {
-                                    var file = new File({
-                                        project: req.params.id,
-                                        name: invite.file.filename,
-                                        description: invite.tenderDescription,
-                                        path: invite.file.url,
-                                        key: invite.file.key,
-                                        server: 's3',
-                                        mimeType: invite.file.mimeType,
-                                        size: invite.file.size,
-                                        owner: req.user._id,
-                                        element: {type: invite.file.type}
-                                    });
-                                    file.save(function(err) {
-                                        if (err) {cb(err);}
-                                        else {
-                                            tender.inviterActivities.push({
-                                                user: req.user._id,
-                                                type: "attach-scope",
-                                                createdAt: new Date(),
-                                                element: {
-                                                    members: [],
-                                                    name: file.name,
-                                                    link: file.path
-                                                }
-                                            });
-                                            team.push(tender);
-                                            cb();
+                                    tender.inviterActivities.push({
+                                        user: req.user._id,
+                                        type: "attach-scope",
+                                        createdAt: new Date(),
+                                        element: {
+                                            members: [],
+                                            content: invite.tenderDescription,
+                                            link: invite.file.url,
+                                            dateEnd: invite.dateEnd
                                         }
                                     });
+                                    team.push(tender);
+                                    cb();
                                 } else {
                                     team.push(tender);
                                     cb();
@@ -409,12 +393,12 @@ function responseTender(people, req, res) {
             var inviterActivities = [];
             _.each(people[role], function(tender) {
                 _.each(tender.relatedItem, function(item) {
-                    if (item.members.length === 0 || _.indexOf(item.members, req.user.email) !== -1 || tender.inviter._id.toString()===req.user._id.toString()) {
+                    if (_.indexOf(item.members, req.user.email) !== -1 || tender.inviter._id.toString()===req.user._id.toString()) {
                         currentTendererActivities.push(item);
                     }
                 });
                 _.each(tender.inviterActivities, function(activity) {
-                    if (activity.type === "edit-tender" || activity.type === "invite-tender") {
+                    if (activity.type === "edit-tender" || activity.type === "invite-tender" || activity.type === "attach-scope" || activity.type === "attach-addendum") {
                         inviterActivities.push(activity);
                     } else {
                         if (_.indexOf(activity.element.members, req.user.email) !== -1 || tender.inviter._id.toString()===req.user._id.toString() || activity.user._id.toString()===req.user._id.toString()) {
@@ -795,27 +779,21 @@ exports.attachAddendum = function(req, res) {
                         content: data.description
                     }
                 };
+                var addendum = {
+                    user: req.user._id,
+                    createdAt: new Date(),
+                    element: {
+                        name: data.name,
+                        description: data.description
+                    }
+                };
                 if (result.file) {
-                    var relatedItem = {
-                        type: "file",
-                        item: {
-                            _id: result.file._id,
-                            name: result.file.name,
-                            description: result.file.description,
-                            link: result.file.path,
-                        },
-                        members: [req.user.email]
-                    };
+                    addendum.element._id = result.file._id;
+                    addendum.element.link = result.file.path;
                 }
-                _.each(data.members, function(member) {
-                    activity.element.members.push(member.email);
-                    if (result.file) 
-                        relatedItem.members.push(member.email)
-                });
-                activity.element.members = _.uniq(activity.element.members);
                 people[currentRole][index].inviterActivities.push(activity);
-                if (result.file)
-                    people[currentRole][index].relatedItem.push(relatedItem);
+                people[currentRole][index].addendums.push(addendum);
+
                 people.markModified(currentRole);
                 people.save(function(err) {
                     if (err) {return res.send(500,err);}

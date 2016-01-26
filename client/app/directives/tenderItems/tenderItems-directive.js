@@ -14,23 +14,26 @@ angular.module('buiiltApp').directive('tenderItems', function(){
             console.log($scope.data);
             $scope.data.members = _.uniq($scope.data.members, "_id");
 
-			$scope.showRelatedMessageModal = function ($event, relatedItem) {
+			$scope.showAddendumDetailModal = function ($event, addendum) {
 				$mdDialog.show({
 				    targetEvent: $event,
 			        controller: function($scope, $stateParams, $state){
-                        $scope.relatedItem = relatedItem;
-                        $scope.relatedItem.project = $stateParams.id;
-
-                        $scope.goToThisThread = function(project, thread) {
-                            $scope.closeModal();
-                            $state.go("project.messages.detail", {id: project, messageId: thread});
-                        };
+                        $scope.addendum = addendum;
 
                         $scope.closeModal = function() {
                             $mdDialog.cancel();
                         };
+
+                        $scope.download = function() {
+                            filepicker.exportFile(
+                                {url: addendum.element.link, filename: addendum.element.name},
+                                function(Blob){
+                                    console.log(Blob.url);
+                                }
+                            );
+                        };
                     },
-			        templateUrl: 'app/modules/project/project-messages/detail/partials/project-messages-riWindow.html',
+			        templateUrl: 'app/modules/project/project-tenders/detail/addendum-riWindow.html',
 			        parent: angular.element(document.body),
 			        clickOutsideToClose: false
 			    });
