@@ -48,10 +48,15 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($roo
     };
 
     $scope.distributeTender = function() {
-        peopleService.updateDistributeStatus({id: $stateParams.id, tenderId: $stateParams.tenderId}).$promise.then(function(res) {
-            $scope.showToast("Edit distribute status successfully");
-            $scope.tender.isDistribute = !$scope.tender.isDistribute;
-        }, function(err) {$scope.showToast("Error");});
+        var confirm = $mdDialog.confirm().title("Do you want to distribute this tenderer?").ok("Yes").cancel("No");
+        $mdDialog.show(confirm).then(function() {
+            peopleService.updateDistributeStatus({id: $stateParams.id, tenderId: $stateParams.tenderId}).$promise.then(function(res) {
+                $scope.showToast("Edit distribute status successfully");
+                $scope.tender.isDistribute = !$scope.tender.isDistribute;
+            }, function(err) {$scope.showToast("Error");});
+        }, function() {
+            
+        });
     };
 
     $scope.selectMember = function(index) {
