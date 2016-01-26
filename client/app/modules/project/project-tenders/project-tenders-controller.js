@@ -83,6 +83,22 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
                             }
                         });
                     });
+                    switch($rootScope.currentUser.type) {
+                        case "builders":
+                            $scope.availableUserType = [
+                                {value: 'addSubcontractor', text: 'Subcontractor'},
+                                {value: 'addConsultant', text: 'Consultant'}
+                            ];
+                            break;
+                        case "architects": 
+                            $scope.availableUserType = [
+                                {value: 'addBuilder', text: 'Builder'},
+                                {value: 'addConsultant', text: 'Consultant'}
+                            ];
+                            break;
+                        default:
+                            break;
+                    }
                 });
 
                 // function getCurrentTeamMember() {

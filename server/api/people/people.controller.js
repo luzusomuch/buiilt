@@ -217,17 +217,8 @@ exports.invitePeople = function(req, res) {
                                                 element: {
                                                     members: [],
                                                     name: file.name,
+                                                    link: file.path
                                                 }
-                                            });
-                                            tender.relatedItem.push({
-                                                type: "file",
-                                                item: {
-                                                    _id: file._id,
-                                                    name: file.name,
-                                                    description: file.description,
-                                                    link: file.path,
-                                                },
-                                                members: []
                                             });
                                             team.push(tender);
                                             cb();
