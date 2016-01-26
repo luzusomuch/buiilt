@@ -61,6 +61,9 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($roo
     };
 
     $scope.selectMember = function(index) {
+        _.each($scope.tenderers, function(tenderer) {
+            tenderer.select = false;
+        });
         $scope.tenderers[index].select = !$scope.tenderers[index].select;
     };
 

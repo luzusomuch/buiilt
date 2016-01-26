@@ -112,15 +112,15 @@
   	  					  <md-tooltip md-direction="left">Select a Winning Tender</md-tooltip>
   	  				      <md-icon class="material-icons">format_list_bulleted</md-icon>
   			  	      </md-button>
-			  	      <md-button aria-label="Attach a Related Message" class="md-fab md-raised md-mini" ng-click="showModal($event, 'attach-related-message.html')" ng-show="tender.isDistribute">
+			  	      <md-button aria-label="Attach a Related Message" class="md-fab md-raised md-mini" ng-click="showModal($event, 'attach-related-message.html')" ng-show="tender.isDistribute && tender.inviter._id == currentUser._id">
 						  <md-tooltip md-direction="left">Broadcast a Message</md-tooltip>
 					      <md-icon class="material-icons">chat_bubble_outline</md-icon>
 			  	      </md-button>
-  			  	      <md-button aria-label="Add a Related Task" class="md-fab md-raised md-mini" ng-click="showModal($event, 'attach-related-task.html')" ng-show="tender.isDistribute">
+  			  	      <md-button aria-label="Add a Related Task" class="md-fab md-raised md-mini" ng-click="showModal($event, 'attach-related-task.html')" ng-show="tender.isDistribute && tender.inviter._id == currentUser._id">
   	  					  <md-tooltip md-direction="left">Broadcast a Task</md-tooltip>
   	  				      <md-icon class="material-icons">done_all</md-icon>
   			  	      </md-button>
-  			  	      <md-button aria-label="Add a Related File" class="md-fab md-raised md-mini" ng-click="showModal($event, 'attach-related-file.html')" ng-show="tender.isDistribute">
+  			  	      <md-button aria-label="Add a Related File" class="md-fab md-raised md-mini" ng-click="showModal($event, 'attach-related-file.html')" ng-show="tender.isDistribute && tender.inviter._id == currentUser._id">
   	  					  <md-tooltip md-direction="left">Broadcast a File</md-tooltip>
   	  				      <md-icon class="material-icons">attach_file</md-icon>
   			  	      </md-button>

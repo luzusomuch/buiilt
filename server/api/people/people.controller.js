@@ -398,7 +398,7 @@ function responseTender(people, req, res) {
                     }
                 });
                 _.each(tender.inviterActivities, function(activity) {
-                    if (activity.type === "edit-tender" || activity.type === "attach-scope" || activity.type === "attach-addendum") {
+                    if (activity.type === "edit-tender" || activity.type === "attach-scope" || activity.type === "attach-addendum" || activity.type === "distribute-status") {
                         inviterActivities.push(activity);
                     } else {
                         if (_.indexOf(activity.element.members, req.user.email) !== -1 || tender.inviter._id.toString()===req.user._id.toString() || activity.user._id.toString()===req.user._id.toString()) {
@@ -971,6 +971,12 @@ exports.createRelatedItem = function(req, res) {
                     project: req.params.id,
                     element: {type: "project-message"},
                     owner: req.user._id
+                });
+                thread.messages.push({
+                    text : data.message,
+                    user : req.user._id,
+                    mentions: [],
+                    sendAt: new Date()
                 });
                 thread.save(function(err) {
                     if (err) {cb(err);}
