@@ -189,7 +189,7 @@ exports.uploadReversion = function(req, res) {
                 }
             };
             file.activities.push(activity);
-            file.markModified("uploadReversion");
+            file._editType = "uploadReversion";
             file.save(function(err) {
                 if (err) {return res.send(500,err);}
                 File.populate(file, [
@@ -250,25 +250,8 @@ exports.upload = function(req, res){
             file.save(function(err) {
                 if (err) {return cb(err);}
                 else {
-                    var params = {
-                        owners: file.members,
-                        fromUser: req.user._id,
-                        element: {
-                            file: file.toJSON(), 
-                            projectId: file.project},
-                        referenceTo: "uploadFile",
-                        type: 'uploadNew'
-                    };
-                    NotificationHelper.create(params, function() {
-                        File.populate(file,[
-                            {path:"owner", select: "_id name email"},
-                            {path:"member", select: "_id name email"},
-                            {path: "activities.user", select: "_id email name"}
-                            ], function(err, file) {
-                                filesAfterInsert.push(file);
-                                cb();
-                        });
-                    });
+                    filesAfterInsert.push(file);
+                    cb();
                 }
             });
         }, function() {

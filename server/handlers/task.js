@@ -3,7 +3,6 @@
 var EventBus = require('./../components/EventBus');
 var User = require('./../models/user.model');
 var NotificationHelper = require('./../components/helpers/notification');
-var Notification = require('./../models/notification.model');
 var config = require('./../config/environment');
 var async = require('async');
 var _ = require('lodash');
