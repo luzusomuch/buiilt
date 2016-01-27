@@ -18,12 +18,16 @@
 				
 					
 				<div layout="row" layout-align="center center">
-                    <md-datepicker ng-model="relatedTask.dateEnd" md-min-date="minDate" md-placeholder="Enter Due Date">
+                    <md-datepicker ng-model="task.dateEnd" md-min-date="minDate" md-placeholder="Enter Due Date">
                     </md-datepicker>
 				</div>
 				
 				<div layout="row" layout-align="center center" class="tagcloud" layout-wrap>
-					<span ng-click="selectMember($index)" ng-class="{'available-tag':!member.select, 'selected-tag': member.select}" ng-repeat="member in projectMembers">{{member.name}}</span>
+					<span ng-click="selectMember($index, 'member')" ng-class="{'available-tag':!member.select, 'selected-tag': member.select}" ng-repeat="member in projectMembers">{{member.name}}</span>
+				</div>
+
+				<div layout="row" layout-align="center center" class="tagcloud" layout-wrap>
+					<span ng-click="selectMember($index, 'tenderer')" ng-class="{'available-tag':!tenderer.select, 'selected-tag': tenderer.select}" ng-repeat="tenderer in tenderers">{{(tenderer._id) ? tenderer.name : tenderer.email}}</span>
 				</div>
 				
 			</div>
