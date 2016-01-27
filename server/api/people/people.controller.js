@@ -13,18 +13,23 @@ var populatePaths = [
     {path:"builders.tenderers._id", select: "_id email name"},
     {path:"builders.inviter", select: "_id email name"},
     {path:"builders.tenderers.teamMember", select: "_id email name"},
+    {path:"builders.inviterActivities.user", select: "_id email name"},
     {path:"architects.tenderers._id", select: "_id email name"},
     {path:"architects.inviter", select: "_id email name"},
     {path:"architects.tenderers.teamMember", select: "_id email name"},
+    {path:"architects.inviterActivities.user", select: "_id email name"},
     {path:"clients.tenderers._id", select: "_id email name"},
     {path:"clients.inviter", select: "_id email name"},
     {path:"clients.tenderers.teamMember", select: "_id email name"},
+    {path:"clients.inviterActivities.user", select: "_id email name"},
     {path:"subcontractors.tenderers._id", select: "_id email name"},
     {path:"subcontractors.inviter", select: "_id email name"},
     {path:"subcontractors.tenderers.teamMember", select: "_id email name"},
+    {path:"subcontractors.inviterActivities.user", select: "_id email name"},
     {path: "consultants.tenderers._id", select: "_id email name"},
     {path:"consultants.inviter", select: "_id email name"},
     {path: "consultants.tenderers.teamMember", select: "_id email name"},
+    {path:"consultants.inviterActivities.user", select: "_id email name"},
     {path: "project"}
 ];
 
@@ -733,15 +738,6 @@ function responseWithEachType(people, req, res){
 
 exports.updateDistributeStatus = function(req, res) {
     People.findOne({project: req.params.id})
-    .populate("builders.tenderers._id", "_id email name")
-    .populate("builders.inviter", "_id email name")
-    .populate("builders.inviterActivities.user", "_id email name")
-    .populate("subcontractors.tenderers._id", "_id email name")
-    .populate("subcontractors.inviter", "_id email name")
-    .populate("subcontractors.inviterActivities.user", "_id email name")
-    .populate("consultants.tenderers._id", "_id email name")
-    .populate("consultants.inviter", "_id email name")
-    .populate("consultants.inviterActivities.user", "_id email name")
     .exec(function(err, people) {
         if (err) {return res.send(500,err);}
         else if (!people) {
@@ -771,7 +767,20 @@ exports.updateDistributeStatus = function(req, res) {
             people._newInviteType = currentRole;
             people.save(function(err) {
                 if (err) {return res.send(500,err);}
-                responseTender(people, req, res);
+                People.populate(people, [
+                    {path: "builders.tenderers._id", select: "_id name email"},
+                    {path: "builders.inviter", select: "_id name email"},
+                    {path: "builders.inviterActivities.user", select: "_id name email"},
+                    {path: "consultants.tenderers._id", select: "_id name email"},
+                    {path: "consultants.inviter", select: "_id name email"},
+                    {path: "consultants.inviterActivities.user", select: "_id name email"},
+                    {path: "subcontractors.tenderers._id", select: "_id name email"},
+                    {path: "subcontractors.inviter", select: "_id name email"},
+                    {path: "subcontractors.inviterActivities.user", select: "_id name email"}
+                ], function(err, people) {
+                    if (err) {return res.send(500,err);}
+                    responseTender(people, req, res);
+                });
             });
         }
     });
@@ -1004,7 +1013,20 @@ exports.updateTender = function(req, res) {
                 people.markModified(currentRole);
                 people.save(function(err) {
                     if (err) {return res.send(500,err);}
-                    return res.send(200,people[currentRole][index]);
+                    People.populate(people, [
+                        {path: "builders.tenderers._id", select: "_id name email"},
+                        {path: "builders.inviter", select: "_id name email"},
+                        {path: "builders.inviterActivities.user", select: "_id name email"},
+                        {path: "consultants.tenderers._id", select: "_id name email"},
+                        {path: "consultants.inviter", select: "_id name email"},
+                        {path: "consultants.inviterActivities.user", select: "_id name email"},
+                        {path: "subcontractors.tenderers._id", select: "_id name email"},
+                        {path: "subcontractors.inviter", select: "_id name email"},
+                        {path: "subcontractors.inviterActivities.user", select: "_id name email"}
+                    ], function(err, people) {
+                        if (err) {return res.send(500,err);}
+                        return res.send(200,people[currentRole][index]);    
+                    });
                 });
             });
         }
