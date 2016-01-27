@@ -290,95 +290,102 @@ exports.invitePeople = function(req, res) {
 
 exports.selectWinnerTender = function(req, res) {
     console.log(req.body);
-    People.findOne({project: req.params.id}, function(err, people) {
-        if (err) {return res.send(500,err);}
-        if (!people) {return res.send(404);}
-        else {
-            var winnerTenderNotification = [];
-            var loserTender = [];
-            var roles = ["builders", "subcontractors", "consultants"];
-            _.each(roles, function(role) {
-                var allow = false;
-                if (role === "subcontractors") {
-                    _.each(people.builders, function(tender) {
-                        var builderTenderIndex = _.findIndex(tender.tenderers, function(tenderer){
-                            if (tenderer._id) {
-                                return tenderer._id.toString()===req.user._id.toString();
-                            }
-                        });
-                        if (builderTenderIndex !== -1) {
-                            allow = tender.hasSelect;
-                            return false;
-                        }
-                    });
-                } else {
-                    allow = true;
-                }
-                if (allow) {
-                    _.each(people[role], function(tender) {
-                        var index = _.findIndex(tender.tenderers, function(tenderer) {
-                            if (tenderer._id) {
-                                return tenderer._id.toString() == req.body._id._id;
-                            }
-                        });
-                        if (index != -1) {
-                            var winner = tender.tenderers[index];
-
-                            tender.hasSelect = true;
-                            winnerTenderNotification.push(winner._id);
-                            _.remove(tender.tenderers, function(tenderer) {
-                                if (tenderer._id)
-                                    return tenderer._id.toString() == winner._id;
-                            });
-                            async.each(tender.tenderers, function(loserTenderer, cb) {
-                                if (loserTenderer._id) {
-                                    InviteToken.findOne({type: "project-invite", user: loserTenderer._id, 'element.project': people.project}).remove(function(err) {
-                                        if (err) {cb();}
-                                        else {loserTender.push(loserTenderer._id);cb()}
-                                    });
-                                } else {
-                                    InviteToken.findOne({type: "project-invite", email: loserTenderer.email, 'element.project': people.project}).remove(cb());
+    if (!req.body._id) {
+        return res.send(500, {msg: "This user is not registry"});
+    } else {
+        People.findOne({project: req.params.id}, function(err, people) {
+            if (err) {return res.send(500,err);}
+            if (!people) {return res.send(404);}
+            else {
+                var winnerTenderNotification = [];
+                var loserTender = [];
+                var roles = ["builders", "subcontractors", "consultants"];
+                var currentRole;
+                _.each(roles, function(role) {
+                    var allow = false;
+                    if (role === "subcontractors") {
+                        _.each(people.builders, function(tender) {
+                            var builderTenderIndex = _.findIndex(tender.tenderers, function(tenderer){
+                                if (tenderer._id) {
+                                    return tenderer._id.toString()===req.user._id.toString();
                                 }
-                            }, function() {
-                                tender.tenderers = [winner];
-                                User.findById(winner._id, function(err, user) {
-                                    var activity = {
-                                        user: req.user._id,
-                                        createdAt: new Date(),
-                                        type: "select-winner",
-                                        element: {
-                                            name: user.name
-                                        }
-                                    };
-                                    tender.inviterActivities.push(activity);
-                                    user.projects.push(people.project);
-                                    user.markModified("projects");
-                                    user.save(function(err) {
-                                        if (err) {return res.send(500,err);}
-                                        InviteToken.findOne({type: "project-invite", user: user._id, 'element.project': people.project}).remove(function() {
-                                            people._winnerTender = winnerTenderNotification;
-                                            people._loserTender = loserTender;
-                                            people.markModified('selectWinnerTender');
-                                            people._editUser = req.user;
-                                            people.save(function(err){
-                                                if (err) {return res.send(500,err);}
-                                                People.populate(people, 
-                                                [populatePaths], function(err, people) {
-                                                    return res.json(people);
+                            });
+                            if (builderTenderIndex !== -1) {
+                                allow = tender.hasSelect;
+                                return false;
+                            }
+                        });
+                    } else {
+                        allow = true;
+                    }
+                    if (allow) {
+                        _.each(people[role], function(tender) {
+                            var index = _.findIndex(tender.tenderers, function(tenderer) {
+                                if (tenderer._id && req.body._id) {
+                                    return tenderer._id.toString() == req.body._id._id;
+                                } else {
+                                    return tenderer.email === req.body.email;
+                                }
+                            });
+                            if (index != -1) {
+                                var winner = tender.tenderers[index];
+
+                                tender.hasSelect = true;
+                                winnerTenderNotification.push(winner._id);
+                                _.remove(tender.tenderers, function(tenderer) {
+                                    if (tenderer._id)
+                                        return tenderer._id.toString() == winner._id;
+                                });
+                                async.each(tender.tenderers, function(loserTenderer, cb) {
+                                    if (loserTenderer._id) {
+                                        InviteToken.findOne({type: "project-invite", user: loserTenderer._id, 'element.project': people.project}).remove(function(err) {
+                                            if (err) {cb();}
+                                            else {loserTender.push(loserTenderer._id);cb()}
+                                        });
+                                    } else {
+                                        InviteToken.findOne({type: "project-invite", email: loserTenderer.email, 'element.project': people.project}).remove(cb());
+                                    }
+                                }, function() {
+                                    tender.tenderers = [winner];
+                                    User.findById(winner._id, function(err, user) {
+                                        var activity = {
+                                            user: req.user._id,
+                                            createdAt: new Date(),
+                                            type: "select-winner",
+                                            element: {
+                                                name: user.name
+                                            }
+                                        };
+                                        tender.inviterActivities.push(activity);
+                                        user.projects.push(people.project);
+                                        user.markModified("projects");
+                                        user.save(function(err) {
+                                            if (err) {return res.send(500,err);}
+                                            InviteToken.findOne({type: "project-invite", user: user._id, 'element.project': people.project}).remove(function() {
+                                                people._winnerTender = winnerTenderNotification;
+                                                people._loserTender = loserTender;
+                                                people.markModified('selectWinnerTender');
+                                                people._editUser = req.user;
+                                                people.save(function(err){
+                                                    if (err) {return res.send(500,err);}
+                                                    People.populate(people, 
+                                                    [populatePaths], function(err, people) {
+                                                        return res.json(people);
+                                                    });
                                                 });
                                             });
                                         });
                                     });
                                 });
-                            });
-                        }
-                    });
-                } else {
-                    return res.send(500, {msg: "You haven\'t got privilege to do this action"});
-                }
-            });
-        }
-    });
+                            }
+                        });
+                    } else {
+                        return res.send(500, {msg: "You haven\'t got privilege to do this action"});
+                    }
+                });
+            }
+        });
+    }
 };
 
 exports.getInvitePeople = function(req, res) {
@@ -1037,6 +1044,7 @@ exports.updateTender = function(req, res) {
 exports.createRelatedItem = function(req, res) {
     var data = req.body;
     console.log(data);
+    var relatedItems = [];
     async.parallel({
         people: function(cb) {
             People.findOne({project: req.params.id})
@@ -1053,128 +1061,133 @@ exports.createRelatedItem = function(req, res) {
         },
         file: function(cb) {
             if (data.type === "file") {
-                var file = new File({
-                    project: req.params.id,
-                    name: data.file.filename,
-                    description: data.description,
-                    path: data.file.url,
-                    key: data.file.key,
-                    server: 's3',
-                    mimeType: data.file.mimeType,
-                    size: data.file.size,
-                    owner: req.user._id,
-                    element: {type: data.file.type}
-                });
-                var members = [];
-                var notMembers = [];
                 async.each(data.members, function(member, cb) {
+                    var file = new File({
+                        project: req.params.id,
+                        name: data.file.filename,
+                        description: data.description,
+                        path: data.file.url,
+                        key: data.file.key,
+                        server: 's3',
+                        mimeType: data.file.mimeType,
+                        size: data.file.size,
+                        owner: req.user._id,
+                        element: {type: data.file.type}
+                    });
                     User.findOne({email: member.email}, function(err,user) {
                         if (err) {cb(err);}
                         else if (!user) {
-                            notMembers.push(member.email);
-                            cb();
+                            file.notMembers = [member.email];
+                            file.save(function(err) {
+                                if (err) {cb(err);}
+                                else {
+                                    relatedItems.push({data: file, type: "file"});
+                                    cb();
+                                }
+                            });
                         } else {
-                            members.push({_id: member._id});
-                            cb();
+                            file.member = [user._id];
+                            file.save(function(err) {
+                                if (err) {cb(err);}
+                                else {
+                                    relatedItems.push({data: file, type: "file"});
+                                    cb();
+                                }
+                            });
                         }
                     });
-                }, function() {
-                    file.members = members;
-                    file.notMembers = notMembers;
-                    file.save(function(err) {
-                        if (err) {cb(err);}
-                        else {cb(null, file);}
-                    });
-                });
+                }, cb);
             } else {
                 cb(null);
             }
         },
         thread: function(cb) {
             if (data.type === "thread") {
-                var thread = new Thread({
-                    name: req.body.name,
-                    project: req.params.id,
-                    element: {type: "project-message"},
-                    owner: req.user._id
-                });
-                thread.messages.push({
-                    text : data.message,
-                    user : req.user._id,
-                    mentions: [],
-                    sendAt: new Date()
-                });
-                var members = [];
-                var notMembers = [];
                 async.each(data.members, function(member, cb) {
+                    var members = [];
+                    var notMembers = [];
+                    var thread = new Thread({
+                        name: req.body.name,
+                        project: req.params.id,
+                        element: {type: "project-message"},
+                        owner: req.user._id
+                    });
+                    thread.messages.push({
+                        text : data.message,
+                        user : req.user._id,
+                        mentions: [],
+                        sendAt: new Date()
+                    });
                     User.findOne({email: member.email}, function(err,user) {
                         if (err) {cb(err);}
                         else if (!user) {
                             notMembers.push(member.email);
-                            cb();
+                            thread.notMembers = notMembers;
+                            thread.save(function(err) {
+                                if (err) {cb(err);}
+                                else {
+                                    relatedItems.push({data: thread, type: "thread"});
+                                    cb();
+                                }
+                            });
                         } else {
                             members.push({_id: member._id});
-                            cb();
+                            thread.members = members;
+                            thread.save(function(err) {
+                                if (err) {cb(err);}
+                                else {
+                                    relatedItems.push({data: thread, type: "thread"});
+                                    cb();
+                                }
+                            });
                         }
                     });
-                }, function() {
-                    thread.members = members;
-                    thread.notMembers = notMembers;
-                    thread.save(function(err) {
-                        if (err) {cb(err);}
-                        else {cb(null, thread);}
-                    });
-                });
+                }, cb);
             } else {
                 cb(null);
             }
         },
         task: function(cb) {
             if (data.type === "task") {
-                var task = new Task({
-                    description: data.description,
-                    dateEnd: data.dateEnd,
-                    project: req.params.id,
-                    owner: req.user._id,
-                    element: {type: "task-project"},
-                    dateStart: new Date()
-                });
-                var members = [];
-                var notMembers = [];
-                async.each(data.members, function(member, cb) {
+                async.each(data.members, function(member) {
+                    var task = new Task({
+                        description: data.description,
+                        dateEnd: data.dateEnd,
+                        project: req.params.id,
+                        owner: req.user._id,
+                        element: {type: "task-project"},
+                        dateStart: new Date()
+                    });
+                    task._editUser = req.user;
                     User.findOne({email: member.email}, function(err,user) {
                         if (err) {cb(err);}
                         else if (!user) {
-                            notMembers.push(member.email);
-                            cb();
+                            task.notMembers = [member.email];
+                            task.save(function(err) {
+                                if (err) {cb(err);}
+                                else {
+                                    relatedItems.push({data: task, type: "task"});
+                                    cb();
+                                }
+                            });
                         } else {
-                            members.push({_id: member._id});
-                            cb();
+                            task.members = [user._id];
+                            task.save(function(err) {
+                                if (err) {cb(err);}
+                                else {
+                                    relatedItems.push({data: task, type: "task"});
+                                    cb();
+                                }
+                            });
                         }
                     });
-                }, function() {
-                    task.members = members;
-                    task.notMembers = notMembers;
-                    task._editUser = req.user;
-                    task.save(function(err) {
-                        if (err) {return cb(err);}
-                        else {cb(null, task);}
-                    });
-                });
+                }, cb);
             } else {
                 cb(null);
             }
         }
     }, function(err, result) {
         if (err) {console.log(err);return res.send(500,err);}
-        var relatedItem;
-        if (data.type === "file") {
-            relatedItem = result.file;
-        } else if (data.type === "task") {
-            relatedItem = result.task;
-        } else {
-            relatedItem = result.thread;
-        }
         var people = result.people;
         var roles = ["builders","subcontractors", "consultants"];
         var currentRole, index;
@@ -1187,34 +1200,34 @@ exports.createRelatedItem = function(req, res) {
                 return false;
             }
         });
-        var activity = {
-            user: req.user._id,
-            type: "related-"+data.type,
-            createdAt: new Date(),
-            element: {
-                members: [],
-                content: (relatedItem.name) ? relatedItem.name : relatedItem.description
+        var members = [req.user.email];
+
+        _.each(relatedItems, function(data) {
+            people[currentRole][index].inviterActivities.push({
+                user: req.user._id,
+                type: "related-"+data.type,
+                createdAt: new Date(),
+                element: {
+                    members: (data.data.members.length > 0) ? data.data.members : data.data.notMembers,
+                    content: (data.data.name) ? data.data.name : data.data.description
+                }
+            })
+            if (data.data.members.length > 0) {
+                var members = _.union(members, data.data.members);
+            } else if (data.data.notMembers.length > 0) {
+                var members = _.union(members, data.data.notMembers);
             }
-        };
-
-        var newRelatedItem = {
-            type: data.type,
-            item: {
-                _id: relatedItem._id,
-                name: relatedItem.name,
-                description: relatedItem.description,
-                link: (relatedItem.path) ? relatedItem.path : null,
-            },
-            members: [req.user.email]
-        };
-
-        _.each(data.members, function(member) {
-            activity.element.members.push(member.email);
-            newRelatedItem.members.push(member.email)
+            people[currentRole][index].relatedItem.push({
+                type: data.type,
+                item: {
+                    _id: data.data._id,
+                    name: data.data.name,
+                    description: data.data.description,
+                    link: (data.data.path) ? data.data.path : null,
+                },
+                members: members
+            });
         });
-        activity.element.members = _.uniq(activity.element.members);
-        people[currentRole][index].inviterActivities.push(activity);
-        people[currentRole][index].relatedItem.push(newRelatedItem);
         people.markModified(currentRole);
         people.save(function(err) {
             if (err) {return res.send(500,err);}
