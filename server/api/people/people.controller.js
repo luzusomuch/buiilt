@@ -957,9 +957,26 @@ exports.createRelatedItem = function(req, res) {
                     owner: req.user._id,
                     element: {type: data.file.type}
                 });
-                file.save(function(err) {
-                    if (err) {cb(err);}
-                    else {cb(null, file);}
+                var members = [];
+                var notMembers = [];
+                async.each(data.members, function(member, cb) {
+                    User.findOne({email: member.email}, function(err,user) {
+                        if (err) {cb(err);}
+                        else if (!user) {
+                            notMembers.push(member.email);
+                            cb();
+                        } else {
+                            members.push({_id: member._id});
+                            cb();
+                        }
+                    });
+                }, function() {
+                    file.members = members;
+                    file.notMembers = notMembers;
+                    file.save(function(err) {
+                        if (err) {cb(err);}
+                        else {cb(null, file);}
+                    });
                 });
             } else {
                 cb(null);
@@ -1014,10 +1031,27 @@ exports.createRelatedItem = function(req, res) {
                     element: {type: "task-project"},
                     dateStart: new Date()
                 });
-                task._editUser = req.user;
-                task.save(function(err) {
-                    if (err) {return cb(err);}
-                    else {cb(null, task);}
+                var members = [];
+                var notMembers = [];
+                async.each(data.members, function(member, cb) {
+                    User.findOne({email: member.email}, function(err,user) {
+                        if (err) {cb(err);}
+                        else if (!user) {
+                            notMembers.push(member.email);
+                            cb();
+                        } else {
+                            members.push({_id: member._id});
+                            cb();
+                        }
+                    });
+                }, function() {
+                    task.members = members;
+                    task.notMembers = notMembers;
+                    task._editUser = req.user;
+                    task.save(function(err) {
+                        if (err) {return cb(err);}
+                        else {cb(null, task);}
+                    });
                 });
             } else {
                 cb(null);

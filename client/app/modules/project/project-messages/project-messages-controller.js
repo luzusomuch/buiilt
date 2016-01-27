@@ -10,6 +10,7 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
 
 	function getPeopleList(id) {
 		$scope.projectMembers = [];
+        $scope.tenderers = [];
 		_.each($rootScope.roles, function(role) {
 			_.each($scope.people[role], function(tender){
 				if (tender.hasSelect) {
@@ -44,7 +45,17 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
                             }
                         });
                     }
-				}
+				} else {
+                    if (tender.inviter._id.toString()===$rootScope.currentUser._id.toString()) {
+                        _.each(tender.tenderers, function(tenderer) {
+                            if (tenderer._id) {
+                                $scope.tenderers.push(tenderer._id);
+                            } else {
+                                $scope.tenderers.push({email: tenderer.email});
+                            }
+                        });
+                    }
+                }
 			});
 		});
 		_.remove($scope.projectMembers, {_id: $rootScope.currentUser._id});
@@ -76,15 +87,31 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
 		$mdDialog.cancel();
 	};
 
-	$scope.selectMember = function(index) {
-		$scope.projectMembers[index].select = !$scope.projectMembers[index].select;
+	$scope.selectMember = function(index, type) {
+        if (type === "member") {
+            $scope.thread.isSelectTenderer = false;
+            _.each($scope.tenderers, function(tenderer) {
+                tenderer.select = false;
+            });
+		    $scope.projectMembers[index].select = !$scope.projectMembers[index].select;
+        } else {
+            $scope.thread.isSelectTenderer = true;
+            _.each($scope.projectMembers, function(member) {
+                member.select = false;
+            });
+            _.each($scope.tenderers, function(tenderer) {
+                tenderer.select = false;
+            });
+            $scope.tenderers[index].select = !$scope.tenderers[index].select;
+        }
 	};	
 
 	$scope.addNewThread = function(form) {
 		if (form.$valid) {
-			$scope.thread.members = _.filter($scope.projectMembers, function(member) {
-				return member.select == true;
-			});
+            if (!$scope.thread.isSelectTenderer)
+			    $scope.thread.members = _.filter($scope.projectMembers, {select: true});
+            else if ($scope.thread.isSelectTenderer)
+                $scope.thread.members = _.filter($scope.tenderers, {select: true});
 			$scope.thread.type = "project-message";
 			messageService.create({id: $stateParams.id},$scope.thread).$promise.then(function(res) {
 				$scope.cancelNewMessageModal();
