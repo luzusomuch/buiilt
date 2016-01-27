@@ -4,9 +4,14 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
     function setUploadFile(){
         $scope.uploadFile = {
             files:[],
-            tags:[]
+            tags:[],
+            members: []
         };
         $scope.allowUploadDocument = ($rootScope.project.projectManager._id == $rootScope.currentUser._id) ? true : false;
+        $scope.tags = [];
+        _.each($rootScope.currentTeam.documentTags, function(tag) {
+            $scope.tags.push({name: tag, select: false});
+        });
     };
     setUploadFile();
 
@@ -14,7 +19,6 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
         $scope.documents = _.union($scope.documents, data);
     });
 
-    $scope.validTags = ["Architectural", "Engineering", "Council", "Certification", "Others"];
     $scope.pickFile = pickFile;
     $scope.onSuccess = onSuccess;
 
@@ -33,8 +37,13 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
     	$scope.uploadFile.files = files;
     };
 
+    $scope.selectChip = function(index) {
+        $scope.tags[index].select = !$scope.tags[index].select;
+    };
+
 	//Add a New Document to the Project
 	$scope.addNewDocument = function(){
+        $scope.uploadFile.tags = _.filter($scope.tags, {select: true});
         if ($scope.uploadFile.tags.length === 0) {
             $scope.showToast("Please enter at least 1 tag");
             return;
@@ -49,18 +58,6 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
             }, function(err){$scope.showToast("Error");});
         }
 	};
-	
-	$scope.searchTag = function(value) {
-		var results = value ? $scope.validTags.filter(filterMember(value)) : [];
-        results = _.uniq(results);
-        return results;
-	};
-
-	function filterMember(query) {
-        return function filterFn(value) {
-            return value.toLowerCase().indexOf(query) > -1;
-        };
-    };
 	
 	//Functions to handle New Documentation Modal.
 	$scope.showNewDocumentModal = function($event) {
