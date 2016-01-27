@@ -5,16 +5,16 @@
 		<div class="detail-header" layout="row" layout-padding>
 			<p>{{document.name}}</p>
 			<span flex></span>
+			<md-button ng-click="download(document.name, document.path)">Download</md-button>
 			<md-button>Acknowledge Document Revision</md-button>
 	    </div>
 		
 		<div class="main-page-content" layout-padding>
-			<div layout="row">
-                <h5>{{document.description}}</h5>         
+			
+			<div layout="row" style="border-bottom: 1px solid black">
+                <h5>Hi {{document.description}}</h5>         
             </div>
-            <div layout="row">
-                <md-button ng-click="download(document.name, document.path)">Download</md-button>
-            </div>
+			
             <div layout="row">
                 <div flex file-picker-previewer type="filepicker-preview" url="{{document.path}}" style="height:75vh;"> </div>
             </div>

@@ -40,10 +40,6 @@
 				
 				<div layout="column" ng-show="invite.type == 'addBuilder' || invite.type == 'addConsultant' || invite.type == 'addSubcontractor'" layout-margin>
 					<a style="cursor: pointer" ng-click="setInviteTender(true)"><p class="md-body-2" style="color: #F44336; text-decoration: underline">If you require a Tender to be submitted from your <span ng-show="invite.type == 'addConsultant'">consultant</span><span ng-show="invite.type == 'addBuilder'">builder</span><span ng-show="invite.type == 'addSubcontractor'">subcontractor</span>, please click this link.</p></a>
-					<!-- <div layout="row">
-						<md-button ng-click="setInviteTender(true)">Yes</md-button>
-						<md-button ng-click="setInviteTender(false)">No</md-button>
-					</div> -->
 				</div>
 				
 				<div layout="column" layout-margin ng-show="invite.isInviteTeamMember">

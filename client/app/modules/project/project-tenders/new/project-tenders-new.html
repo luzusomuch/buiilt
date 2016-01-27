@@ -8,7 +8,20 @@
 		
 		<md-dialog-content>
 			<div class="md-dialog-content" layout="column">
+				
 				<div layout="column" layout-margin>
+					<p class="md-body-2">Who would you like to invite?</p>
+					<md-input-container>
+						<md-radio-group ng-model="invite.type" layout="row">
+							<md-radio-button ng-repeat="type in availableUserType" ng-value="type.value" aria-label="{{type.text}}">
+								{{type.text}}
+							</md-radio-button>
+						</md-radio-group>
+					</md-input-container>
+				</div>
+				
+				<div layout="column" layout-margin>
+					
 					<div layout="row">
 						<md-input-container flex>
 							<label for="">Tender Name</label>
@@ -31,54 +44,6 @@
 	                    <input filepicker class="filepicker-button" type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false" />
 	                </div>
 				</div>
-				<div layout="column" layout-margin>
-					<p class="md-body-2">Who would you like to invite?</p>
-					<md-input-container>
-						<md-radio-group ng-model="invite.type" layout="row">
-							<md-radio-button ng-repeat="type in availableUserType" ng-value="type.value" aria-label="{{type.text}}">
-								{{type.text}}
-							</md-radio-button>
-						</md-radio-group>
-					</md-input-container>
-				</div>
-				
-				<!-- <div layout="column" ng-show="invite.type == 'addBuilder' || invite.type == 'addConsultant' || invite.type == 'addSubcontractor'" layout-margin>
-					<p class="md-body-2">Please provide the first name and email for <span ng-show="invite.isTender">each</span><span ng-show="!invite.isTender">the</span> <span ng-show="invite.type == 'addBuilder'">Builder</span><span ng-show="invite.type == 'addConsultant'">Consultant</span><span ng-show="invite.type == 'addSubcontractor'">Subcontractor</span> you would like to invite:</p>
-
-					<div layout="row" ng-repeat="invitee in invite.invitees">
-						<md-input-container flex="5" style="margin:0px">
-							<p class="md-body-2" style="margin-top: 0.5vh">{{$index+1}}</p>
-						</md-input-container>
-						<md-input-container flex="25" style="margin:0px">
-							<label for="">First Name</label>
-							<input type="name" ng-model="invitee.name">
-						</md-input-container>
-						<md-input-container flex="55" style="margin:0px">
-							<label for="">Email Address</label>
-							<input type="email" ng-model="invitee.email">
-						</md-input-container>
-						<div flex="15" style="margin:0px">
-							<i ng-click="removeInvitee($index)" class="material-icons">clear</i></span>
-						</div>
-					</div>
-					
-					<div layout="row">
-						<md-input-container flex="5">
-							<p class="md-body-2" style="margin-top: 0.5vh"></p>
-						</md-input-container>
-						<md-input-container flex="25">
-							<label for="">First Name</label>
-							<input type="name" ng-model="name">
-						</md-input-container>
-						<md-input-container flex="55">
-							<label for="">Email Address</label>
-							<input type="email" ng-model="email">
-						</md-input-container>
-						<div flex="15">
-							<md-button ng-click="addInvitee(email, name)" class="material-icons" style="margin-top:2vh;">Add Another</md-button>
-						</div>
-					</div>
-				</div> -->
 				
 			</div>
 		</md-dialog-content>

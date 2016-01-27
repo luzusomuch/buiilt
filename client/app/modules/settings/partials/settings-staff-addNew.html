@@ -7,24 +7,23 @@
 		</md-toolbar>
 		
 		<md-dialog-content>
-			<div class="md-dialog-content" layout="column">
+			<div class="md-dialog-content" layout="column" layout-padding>
 				
 				<div layout="row">
 					
-					<md-input-container flex="90">
+					<md-input-container flex>
                         <label for="">Email</label>
                         <input type="email" ng-model="email">
 					</md-input-container>
 					
-					<span flex></span>
 					
-					<md-input-container flex>
-                        <md-icon ng-click="addUser(email)" class="material-icons pointer">add</md-icon>
+					<md-input-container>
+						<md-button ng-click="addUser(email)">Add to List</md-button>
 					</md-input-container>
 					
 				</div>
 					
-				<div ng-repeat="email in member.emails">
+				<div ng-repeat="email in member.emails" layout-row layout-wrap>
 					
 					<div layout="row">
 						<div flex="90">{{ email.email }}</div>
@@ -38,7 +37,7 @@
 			
 			<md-dialog-actions>
 				<md-button ng-click="cancelDialog()">Cancel</md-button>
-                <md-button type="submit" class="md-raised md-accent md-hue-1">Add New Staff Members!</md-button>
+                <md-button type="submit">Add New Team Members</md-button>
 			</md-dialog-actions>
 			
 		</md-dialog-content>

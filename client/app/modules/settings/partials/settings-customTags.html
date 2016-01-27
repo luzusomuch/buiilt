@@ -13,7 +13,7 @@
 		</div>
 		
 		<div layout="row" layout-align="center center" class="tagcloud" layout-wrap style="margin-bottom: 5vh">
-			<span class="available-tag" ng-repeat="tag in currentTeam.fileTags track by $index">{{tag}}<i style="margin-top: -10px" ng-click="removeTag($index, 'file')" class="material-icons">clear</i></span>
+			<span class="available-tag" ng-repeat="tag in currentTeam.fileTags track by $index">{{tag}}<md-icon style="font-size: 18px; margin-top: 0.5vh; margin-left: 2vh" ng-click="removeTag($index, 'file')" class="material-icons">delete</md-icon></span>
 			<span class="selected-tag" ng-model="newTag.file" ng-click="addNewTagFileText = null" contenteditable="true">{{addNewTagFileText}}</span><i style="cursor: pointer" ng-click="addNewTag(newTag.file, 'file')" class="material-icons" >add</i>
 		</div>
 		
@@ -24,7 +24,7 @@
 		</div>
 		
 		<div layout="row" layout-align="center center" class="tagcloud" layout-wrap style="margin-bottom: 5vh">
-			<span class="available-tag" ng-repeat="tag in currentTeam.documentTags track by $index">{{tag}}<i style="margin-top: -10px" ng-click="removeTag($index, 'document')" class="material-icons">clear</i></span>
+			<span class="available-tag" ng-repeat="tag in currentTeam.documentTags track by $index">{{tag}}<md-icon style="font-size: 18px; margin-top: 0.5vh; margin-left: 2vh" ng-click="removeTag($index, 'document')" class="material-icons">delete</md-icon></span>
 			<span class="selected-tag" ng-model="newTag.document" ng-click="addNewTagDocumentText = null" contenteditable="true">{{addNewTagDocumentText}}</span><i style="cursor: pointer" ng-click="addNewTag(newTag.document, 'document')" class="material-icons">add</i></span>
 		</div>
 		

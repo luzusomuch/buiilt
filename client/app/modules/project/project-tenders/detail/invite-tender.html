@@ -6,11 +6,30 @@
             </div>
         </md-toolbar>
         
-        <md-dialog-content>
+        <md-dialog-content layout="column" layout-padding>
+		
+            <div layout="row">
+                <md-input-container flex="5">
+                    <p class="md-body-2" style="margin-top: 0.5vh"></p>
+                </md-input-container>
+                <md-input-container flex="25">
+                    <label for="">First Name</label>
+                    <input type="name" ng-model="name">
+                </md-input-container>
+                <md-input-container flex="55">
+                    <label for="">Email Address</label>
+                    <input type="email" ng-model="email">
+                </md-input-container>
+				
+                <div flex="15">
+                    <md-button ng-click="addInvitee(email, name)" class="material-icons" style="margin-top:2vh;">Add to List</md-button>
+                </div>
+            </div>
+			
             <div class="md-dialog-content" layout="column">
                 <div layout="row" ng-repeat="invitee in tender.newMembers">
                     <md-input-container flex="5">
-                        <p class="md-body-2" style="margin-top: 0.5vh">{{$index+1}}</p>
+                        <p class="md-body-2">{{$index+1}}</p>
                     </md-input-container>
                     <md-input-container flex="25">
                         <label for="">First Name</label>
@@ -21,26 +40,10 @@
                         <input type="email" ng-model="invitee.email">
                     </md-input-container>
                     <div flex="15">
-                        <i ng-click="removeInvitee($index)" class="material-icons">clear</i></span>
+                        <i ng-click="removeInvitee($index)" class="material-icons pointer" style="margin-top: 3vh; margin-left: 3vh">delete</i></span>
                     </div>
                 </div>
-
-                <div layout="row">
-                    <md-input-container flex="5">
-                        <p class="md-body-2" style="margin-top: 0.5vh"></p>
-                    </md-input-container>
-                    <md-input-container flex="25">
-                        <label for="">First Name</label>
-                        <input type="name" ng-model="name">
-                    </md-input-container>
-                    <md-input-container flex="55">
-                        <label for="">Email Address</label>
-                        <input type="email" ng-model="email">
-                    </md-input-container>
-                    <div flex="15">
-                        <md-button ng-click="addInvitee(email, name)" class="material-icons" style="margin-top:2vh;">Add Another</md-button>
-                    </div>
-                </div>
+				
             </div>
         </md-dialog-content>
         

@@ -7,58 +7,59 @@
         </md-toolbar>
         
         <md-dialog-content>
-            <div class="md-dialog-content" layout="column">
-                <div layout="row">
-                    <md-input-container flex class="modal-instructions">
-                        <p>Please provide the following details to create new team...</p>
-                    </md-input-container>
-                </div>
+            <div class="md-dialog-content" layout="column" layout-padding>
 
-                <div layout="row">
-                    <p>Please select team type: </p>
-                    <md-radio-group ng-model="team.type" ng-change="getTeamType(team.type)">
-                        <md-radio-button value="builder">Builder</md-radio-button>
-                        <md-radio-button value="homeOwner">Home Owner</md-radio-button>
-                        <md-radio-button value="architect">Architect</md-radio-button>
-                        <md-radio-button value="contractor">Contractor</md-radio-button>
-                        <md-radio-button value="consultant">Consultant</md-radio-button>
-                    </md-radio-group>
+                <div layout="column">
+                    <p class="md-body-2">Please select your team type:</p>
+					<md-input-container>
+	                    <md-radio-group ng-model="team.type" ng-change="getTeamType(team.type)" layout="row">
+	                        <md-radio-button value="builder">Builder</md-radio-button>
+	                        <md-radio-button value="homeOwner">Home Owner</md-radio-button>
+	                        <md-radio-button value="architect">Architect</md-radio-button>
+	                        <md-radio-button value="contractor">Contractor</md-radio-button>
+	                        <md-radio-button value="consultant">Consultant</md-radio-button>
+	                    </md-radio-group>
+					</md-input-container>
                 </div>
 
                 <div layout="row">
                     <md-input-container flex>
-                        <label for="">Company name</label>
+                        <label for=""><span ng-show="team.type!=='homeOwner'">Company Name</span><span ng-show="team.type=='homeOwner'">Team Name</span></label>
                         <input type="text" ng-model="team.name" ng-disabled="team.type=='homeOwner'" required>
                     </md-input-container>
                 </div>
 
                 <div layout="row">
-                    <md-input-container flex="70">
-                        <label for="">Company address</label>
+                    <md-input-container flex>
+                        <label for="">Mailing Address</label>
                         <input type="text" ng-model="team.detail.companyAddress.address" required>
-                    </md-input-container>
-                    <md-input-container flex="30">
-                        <label for="">Company address suburb</label>
-                        <input type="text" ng-model="team.detail.companyAddress.suburb" required>
                     </md-input-container>
                 </div>
 
                 <div layout="row">
-                    <md-input-container flex="50">
-                        <label for="">Company postcode</label>
+                    <md-input-container flex="60">
+                        <label for="">Suburb</label>
+                        <input type="text" ng-model="team.detail.companyAddress.suburb" required>
+                    </md-input-container>
+                    <md-input-container flex="40">
+                        <label for="">Postcode</label>
                         <input type="text" ng-model="team.detail.companyAddress.postCode" required>
                     </md-input-container>
-                    <md-input-container flex="50">
-                        <label for="">Company contact number</label>
-                        <input type="text" ng-model="team.detail.companyPhoneNumber" required>
-                    </md-input-container>
                 </div>
+				
+				<div layout="row">
+	                <md-input-container flex=>
+	                    <label for="">Contact Number</label>
+	                    <input type="text" ng-model="team.detail.companyPhoneNumber" required>
+	                </md-input-container>
+				</div>
+				
             </div>
         </md-dialog-content>
         
         <md-dialog-actions>
             <md-button ng-click="cancelDialog()">Cancel</md-button>
-            <md-button type="submit" class="md-raised md-accent md-hue-1">Creat Team!</md-button>
+            <md-button type="submit">Create Team</md-button>
         </md-dialog-actions>
     </form>
 </md-dialog>
