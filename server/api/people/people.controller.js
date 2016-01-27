@@ -861,8 +861,9 @@ exports.attachAddendum = function(req, res) {
                 }
                 people[currentRole][index].inviterActivities.push(activity);
                 people[currentRole][index].addendums.push(addendum);
-
-                people.markModified(currentRole);
+                people._updatedTender = people[currentRole][index];
+                people._editUser = req.user;
+                people.markModified("attach-addendum");
                 people.save(function(err) {
                     if (err) {return res.send(500,err);}
                     var members = [];

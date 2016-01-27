@@ -1,0 +1,21 @@
+{% extends 'layouts/default.html' %}
+
+{% block content %}
+
+<body itemscope itemtype="http://schema.org/EmailMessage" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; -webkit-font-smoothing: antialiased; -webkit-text-size-adjust: none; width: 100% !important; height: 100%; line-height: 1.6em; background-color: #f6f6f6; margin: 0;" bgcolor="#f6f6f6">
+    <p>Hi <%=invitee%>,</p>
+    <p>
+        I have sent you an addendum on your tender <%=request.name%> in project <%=project.name%>
+    </p>
+    <p>
+        <%=request.tenderDescription%>
+    </p>
+    <p>This email has been sent you from buiilt.com.au on behalf of <%=inviter.name%>. View all your tasks by following the link below and creating your account <a href="<%=link%>"><%=link%></a>
+    </p>
+    <p>Regards,</p>
+    <p><%=inviter.name%></p>
+    <p><%=team.name%></p>
+    <p><%=inviter.email%> | <%=inviter.phoneNumber%></p>
+</body>
+
+{% endblock %}

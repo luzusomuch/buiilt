@@ -15,9 +15,9 @@ var async = require('async');
 var _ = require('lodash');
 
 EventBus.onSeries('People.Updated', function(req, next){
+    var from = req.editUser.name + "<"+req.editUser.email+">";
     if (req._modifiedPaths.indexOf('updateDistributeStatus') != -1) {
         var currentTender = req.updatedTender;
-        var from = req.editUser.name + "<"+req.editUser.email+">";
         async.parallel({
             project: function (cb) {
                 Project.findById(req.project, cb);
@@ -40,7 +40,7 @@ EventBus.onSeries('People.Updated', function(req, next){
                                 link : config.baseUrl + 'projects/open',
                                 subject: req.editUser.name + ' has invited you to project ' + result.project.name
                             },function(err){
-                               return cb();
+                               cb();
                             });
                         }
                     });
@@ -54,7 +54,7 @@ EventBus.onSeries('People.Updated', function(req, next){
                         user: req.editUser._id
                     });
                     packageInvite.save(function(err,saved){
-                        if (err) {return cb(err);}
+                        if (err) {cb(err);}
                         Mailer.sendMail('invite-non-user-to-project.html', from, saved.to, {
                             team: result.team.toJSON(),
                             inviter: req.editUser.toJSON(),
@@ -63,10 +63,45 @@ EventBus.onSeries('People.Updated', function(req, next){
                             link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
                             subject: req.editUser.name + ' has invited you to project ' + result.project.name
                         },function(err){
-                            return cb();
+                            cb();
                         });
                     });
                 }
+            }, function(){
+                return next();
+            });
+        });
+    } else if (req._modifiedPaths.indexOf("attach-addendum") !== -1) {
+        var currentTender = req.updatedTender;
+        async.parallel({
+            project: function (cb) {
+                Project.findById(req.project, cb);
+            },
+            team: function (cb) {
+                Team.findOne({$or:[{leader: req.editUser._id}, {member: req.editUser._id}]}, cb);
+            }
+        }, function(err, result) {
+            if (err) {return next();}
+            async.each(currentTender.tenderers, function(tenderer, cb) {
+                if (tenderer.email) {
+                    PackageInvite.findOne({to: tenderer.email}, function(err, packageInvite) {
+                        if (err || !packageInvite) {cb();}
+                        else {
+                            Mailer.sendMail('send-addendum-to-non-user.html', from, packageInvite.to, {
+                                team: result.team.toJSON(),
+                                inviter: req.editUser.toJSON(),
+                                invitee: packageInvite.to,
+                                project: result.project.toJSON(),
+                                request: currentTender,
+                                link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
+                                subject: req.editUser.name + ' has send you an addendum on ' + currentTender.tenderName
+                            },function(err){
+                                return cb();
+                            });
+                        }
+                    });
+                } else  
+                    cb();
             }, function(){
                 return next();
             });
