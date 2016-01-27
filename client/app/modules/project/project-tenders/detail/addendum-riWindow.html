@@ -13,11 +13,10 @@
                         <p>{{addendum.element.description}}</p>
                     </md-input-container>
                 </div>
-                <div layout="row" ng-show="addendum.element._id">
+                <div layout="layout" ng-show="addendum.element._id">
+                    <md-button ng-click="goToFileDetail()">Go to file location</md-button>
+                    <span style="margin-top:14px">OR</span>
                     <md-button ng-click="download()">Download</md-button>
-                </div>
-                <div layout="row" ng-show="addendum.element._id">
-                    <div flex file-picker-previewer type="filepicker-preview" url="{{addendum.element.link}}" style="height:75vh;"> </div>
                 </div>
             </div>
         </md-dialog-content>
