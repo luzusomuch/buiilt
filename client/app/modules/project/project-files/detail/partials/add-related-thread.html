@@ -12,13 +12,22 @@
 				<div layout="row">
 					<md-input-container flex>
 				        <label>Message Thread Name</label>
-				        <input md-autofocus type="text" ng-model="thread.name" name="name" required/>
+				        <input md-autofocus type="text" ng-model="relatedThread.name" name="name" required/>
 					</md-input-container>
 				</div>
+                
+                <div layout="row">
+                    <md-input-container flex>
+                        <label>Your Message</label>
+                        <textarea ng-model="relatedThread.message" columns="1" md-maxlength="250" rows="5"></textarea>
+                    </md-input-container>
+                </div>
 			
 				<div layout="row" layout-align="center center" class="tagcloud" layout-wrap>
-				
-					<span class="available-tag">Assignee 1</span>
+				    <div layout="row" layout-align="center center" class="tagcloud" layout-wrap>
+                    <span ng-click="selectMember($index, 'invitee')" ng-class="{'available-tag':!member.select, 'selected-tag': member.select}" ng-repeat="member in invitees">{{member.name}}</span>
+                </div>
+					<!-- <span class="available-tag">Assignee 1</span>
 					<span class="available-tag">Assignee 2</span>
 					<span class="available-tag">Assignee 3</span>
 					<span class="selected-tag">Assignee 4</span>
@@ -29,7 +38,7 @@
 					<span class="available-tag">Assignee 9</span>
 					<span class="available-tag">Assignee 10</span>
 					<span class="available-tag">Assignee 11</span>
-					<span class="available-tag">Assignee 12</span>
+					<span class="available-tag">Assignee 12</span> -->
 				
 				</div>
 				

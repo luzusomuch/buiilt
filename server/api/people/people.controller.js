@@ -928,6 +928,7 @@ exports.updateTender = function(req, res) {
 
 exports.createRelatedItem = function(req, res) {
     var data = req.body;
+    console.log(data);
     async.parallel({
         people: function(cb) {
             People.findOne({project: req.params.id})
@@ -978,9 +979,26 @@ exports.createRelatedItem = function(req, res) {
                     mentions: [],
                     sendAt: new Date()
                 });
-                thread.save(function(err) {
-                    if (err) {cb(err);}
-                    else {cb(null, thread);}
+                var members = [];
+                var notMembers = [];
+                async.each(data.members, function(member, cb) {
+                    User.findOne({email: member.email}, function(err,user) {
+                        if (err) {cb(err);}
+                        else if (!user) {
+                            notMembers.push(member.email);
+                            cb();
+                        } else {
+                            members.push({_id: member._id});
+                            cb();
+                        }
+                    });
+                }, function() {
+                    thread.members = members;
+                    thread.notMembers = notMembers;
+                    thread.save(function(err) {
+                        if (err) {cb(err);}
+                        else {cb(null, thread);}
+                    });
                 });
             } else {
                 cb(null);

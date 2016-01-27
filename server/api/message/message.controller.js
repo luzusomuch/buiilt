@@ -98,6 +98,12 @@ exports.create = function(req,res) {
             thread.belongTo.item = {_id: req.body.belongTo};
             thread.belongTo.type = req.body.belongToType;
         }
+        thread.messages.push({
+            text : req.body.message,
+            user : req.user._id,
+            mentions: [],
+            sendAt: new Date()
+        });
         var mainItem = getMainItem(req.body.belongToType);
         thread.save(function(err){
             if (err) {return res.send(500,err);}
