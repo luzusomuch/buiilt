@@ -167,7 +167,7 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
                 $scope.showToast("Assign more people successfully!");
             }
             delete task.editType;
-            $scope.task = res;
+            $rootScope.$broadcast("Task.Updated", res);
             $scope.closeModal();
         }, function(err) {
             $scope.showToast("Error");
@@ -251,4 +251,8 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
     };
 
     getProjectMembers($stateParams.id);
+    $rootScope.$on("Task.Updated", function(event, data) {
+        $scope.task = data;
+        getProjectMembers($stateParams.id);
+    });
 });

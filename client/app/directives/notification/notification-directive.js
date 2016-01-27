@@ -403,11 +403,11 @@ angular.module('buiiltApp')
 
           getNotifications(limit);
           socket.on('notification:new', function (notification) {
-            if (notification && notification.referenceTo !== 'people-chat-without-mention' && notification.referenceTo !== 'board-chat-without-mention') {
+            if (notification) {
               $scope.notifications.unshift(notification);
               $scope.total++;
               $scope.$apply();
-            } else if (true) {};
+            } 
           });
 
           socket.on('notification:read',function(notifications) {

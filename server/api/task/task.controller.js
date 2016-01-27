@@ -198,7 +198,7 @@ exports.update = function(req,res) {
                     if (err) {
                         return res.send(500,err)
                     }
-                    populateTask(task, user, res);
+                    populateTask(task, res);
                 });
             });
         }

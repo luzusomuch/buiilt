@@ -63,9 +63,6 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
 	
 	//Functions to handle New Work Room Dialog.
 	$scope.showNewMessageModal = function($event) {
-		$scope.thread = {
-			members : []
-		};
 		$mdDialog.show({
 		  	targetEvent: $event,
 	      	controller: 'projectMessagesCtrl',
@@ -82,11 +79,18 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
 		    }
 	    });
 	};
-	
-	$scope.cancelNewMessageModal = function() {
-		$mdDialog.cancel();
-	};
 
+    
+    $scope.cancelNewMessageModal = function() {
+        $mdDialog.cancel();
+    };
+
+    function setThread() {
+        $scope.thread = {
+            members : []
+        };
+    };
+    setThread();
 	$scope.selectMember = function(index, type) {
         if (type === "member") {
             $scope.thread.isSelectTenderer = false;

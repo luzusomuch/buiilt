@@ -11,18 +11,18 @@ var async = require('async');
 var _ = require('lodash');
 
 EventBus.onSeries('Thread.Inserted', function(thread, next) {
-  if (thread.members.length > 0) {
-    var params = {
-      owners: thread.members,
-      fromUser: thread.owner,
-      element: thread,
-      referenceTo: 'thread',
-      type: 'thread-assign'
-    };
-    NotificationHelper.create(params, function () {
-      return next();
-    })
-  }
+    if (thread.members.length > 0) {
+        var params = {
+            owners: thread.members,
+            fromUser: thread.owner,
+            element: thread,
+            referenceTo: 'thread',
+            type: 'thread-assign'
+        };
+        NotificationHelper.create(params, function () {
+            return next();
+        });
+    }
 });
 
 EventBus.onSeries('Thread.Updated', function(thread, next) {
@@ -86,20 +86,18 @@ EventBus.onSeries('Thread.Updated', function(thread, next) {
 });
 
 EventBus.onSeries('Thread.NewMessage', function(thread, next) {
-  var owners = thread.members;
-  owners.push(thread.owner);
-  var index = _.findIndex(owners,thread.message.user._id);
-  owners.splice(index,1);
-  var params = {
-    owners : owners,
-    fromUser : thread.message.user,
-    element : thread,
-    referenceTo : 'thread',
-    type : 'thread-message'
-  };
-  NotificationHelper.create(params,function() {
-    return next();
-  });
-  // var data = _.last(thread.messages);
-  // PushNotificationHelper.getData(thread.project,thread._id,thread.name, data.text, thread.users, 'message');
+    var owners = thread.members;
+    owners.push(thread.owner);
+    var index = _.findIndex(owners,thread.message.user._id);
+    owners.splice(index,1);
+    var params = {
+        owners : owners,
+        fromUser : thread.message.user,
+        element : thread,
+        referenceTo : 'thread',
+        type : 'thread-message'
+    };
+    NotificationHelper.create(params,function() {
+        return next();
+    });
 });
