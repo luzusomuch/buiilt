@@ -39,7 +39,7 @@
 					<div flex class="activity-detail">
 						<p ng-switch="activity.type">
                             <strong>{{activity.user.name}}</strong> 
-                            <span ng-switch-when="attach-addendum">has attached an addendum to this tender:{{activity.element.name}}</span>
+                            <span ng-switch-when="attach-addendum">has attached an addendum to this tender:{{activity.element.name}}. <span ng-show="activity.element._id">You can check it <a ui-sref="project.files.detail({id: activity.element.project, fileId: activity.element._id})">here</a>.</span></span>
                             <span ng-switch-when="distribute-status">has updated this tender to distributed</span>
                             <span ng-switch-when="attach-scope">has attached an scope to this tender:{{activity.element.content}}. <span ng-show="activity.element._id">You can find it <a ui-sref="project.files.detail({id: activity.element.project, fileId: activity.element._id})">here</a>.</span> Due date of this tender is {{activity.element.dateEnd | date: 'dd-MM-yyyy'}}</span>
                             <span ng-switch-when="edit-tender">has edited the details of this tender: {{(activity.element.name) ? "Name: "+activity.element.name+", " : ""}} {{(activity.element.description) ? "Description: "+activity.element.description+", " : ""}}.</span>

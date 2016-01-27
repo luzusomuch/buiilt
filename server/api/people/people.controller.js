@@ -828,7 +828,10 @@ exports.attachAddendum = function(req, res) {
                     element: {
                         members: [],
                         name: data.name,
-                        content: data.description
+                        content: data.description,
+                        element: {
+
+                        }
                     }
                 };
                 var addendum = {
@@ -843,6 +846,9 @@ exports.attachAddendum = function(req, res) {
                     addendum.element._id = result.file._id;
                     addendum.element.link = result.file.path;
                     addendum.element.project = people.project;
+
+                    activity.element._id = result.file._id;
+                    activity.element.project = people.project;
                 }
                 people[currentRole][index].inviterActivities.push(activity);
                 people[currentRole][index].addendums.push(addendum);
