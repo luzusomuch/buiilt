@@ -104,6 +104,14 @@ exports.create = function(req,res) {
             mentions: [],
             sendAt: new Date()
         });
+        thread.activities.push({
+            user: user._id,
+            type: 'chat',
+            createdAt: new Date(),
+            element: {
+                message: req.body.message
+            } 
+        });
         var mainItem = getMainItem(req.body.belongToType);
         thread.save(function(err){
             if (err) {return res.send(500,err);}
@@ -227,6 +235,7 @@ exports.sendMessage = function(req,res) {
                             {path : 'members', select: '_id email name'},
                             {path : 'messages.user', select: '_id email name'},
                             {path : 'messages.mentions', select: '_id email name'},
+                            {path : 'activities.user', select: '_id email name'},
                             {path : 'owner', select: '_id email name'}
                         ],function(err,thread) {
                             if (err) {
@@ -433,86 +442,134 @@ exports.getAllByProject = function(req, res) {
 
 
 exports.replyMessage = function(req, res) {
-  var splited = req.body.recipient.split("-");
-  var messageType = splited[1].substr(0,splited[1].lastIndexOf("@"));
-
-  if (messageType =="people") {
-    PeopleChat.findById(splited[0], function(err, peopleChat) {
-      if (err) {return res.send(500,err);}
-      if (!peopleChat) {return res.send(404);}
-      User.findOne({email: req.body.sender}, function(err, user){
+    var splited = req.body.recipient.split("-");
+    var messageType = splited[1].substr(0,splited[1].lastIndexOf("@"));
+    Thread.findById(splited[0], function(err, thread) {
         if (err) {return res.send(500,err);}
-        if (!user) {
-          peopleChat.messages.push({
-            email: req.body.sender,
-            text: req.body['stripped-text'],
-            mentions: [],
-            sendAt: new Date()
-          });
-          peopleChat._editUser = {email: req.body.sender};
-        } else {
-          peopleChat.messages.push({
-            email: user._id,
-            text: req.body['stripped-text'],
-            mentions: [],
-            sendAt: new Date()
-          });
-          peopleChat._editUser = user;
-        }
-      });
-      setTimeout(function() {
-        peopleChat.messageType = "replyMessage";
-        peopleChat.save(function(err){
-          if (err) {return res.send(500,err);}
-          PeopleChat.populate(peopleChat, 
-          [{path: "messages.user", select: "_id email name"},
-          {path: "messages.mentions", select: "_id email name"}], function(err, peopleChat) {
-              EventBus.emit('socket:emit', {
-                  event: 'peopleChat:new',
-                  room: peopleChat._id.toString(),
-                  data: peopleChat
-              });
-              return res.json(peopleChat);
-          });
-        });
-      }, 2000);
-    });
-  } else {
-    Board.findById(splited[0], function(err,board){
-      if (err) {return res.send(500,err);}
-      if (!board) {return res.send(404);}
-      else {
-        User.findOne({email: req.body.sender}, function(err, user){ 
-          if (err) {return res.send(500,err);}
-          else {
-            board.messages.push({
-              user: user._id,
-              text: req.body['stripped-text'],
-              mentions: [],
-              sendAt: new Date()
-            });
-            board._editUser = user;
-            board.markModified('sendMessage');
-            board.messageType = "replyMessage";
-            board.save(function(err){
-              if (err) {return res.send(500,err);}
-                Board.populate(board, [
-                {path: 'invitees._id', select: '_id email name'},
-                {path: 'owner', select: '_id email name'},
-                {path: 'messages.user', select: '_id email name'},
-                {path: 'messages.mentions', select: '_id email name'}
-                ], function(err, board) {
-                  EventBus.emit('socket:emit', {
-                    event: 'boardChat:new',
-                    room: board._id.toString(),
-                    data: board
-                  });
-                  return res.send(200, board);
+        else if (!thread) {return res.send(404, {message: "The specific thread is not existed"});}
+        else {
+            User.findOne({email: req.body.sender}, function(err, user) {
+                if (err) 
+                    return res.send(500,err);
+                else if (!user) {
+                    thread.messages.push({
+                        email: req.body.sender,
+                        text: req.body["stripped-text"],
+                        mentions: [],
+                        sendAt: new Date()
+                    });
+                } else {
+                    thread.messages.push({
+                        user: user._id,
+                        text: req.body["stripped-text"],
+                        mentions: [],
+                        sendAt: new Date()
+                    });
+                }
+                thread._editUser = user;
+                thread.save(function(err) {
+                    if (err) 
+                        return res.send(500,err);
+                    Thread.populate(thread,[
+                        {path : 'members', select: '_id email name'},
+                        {path : 'messages.user', select: '_id email name'},
+                        {path : 'messages.mentions', select: '_id email name'},
+                        {path : 'owner', select: '_id email name'}
+                    ],function(err,thread) {
+                        if (err) {
+                            return res.send(422,err);
+                        } else {
+                            EventBus.emit('socket:emit', {
+                                event: 'message:new',
+                                room: thread._id.toString(),
+                                data: thread
+                            });
+                            return res.json(thread)
+                        }
+                    });
                 });
-              });
-            }
-        });
-      }
+            });
+        }
     });
-  }
+
+// old version
+  // if (messageType =="people") {
+  //   PeopleChat.findById(splited[0], function(err, peopleChat) {
+  //     if (err) {return res.send(500,err);}
+  //     if (!peopleChat) {return res.send(404);}
+  //     User.findOne({email: req.body.sender}, function(err, user){
+  //       if (err) {return res.send(500,err);}
+  //       if (!user) {
+  //         peopleChat.messages.push({
+  //           email: req.body.sender,
+  //           text: req.body['stripped-text'],
+  //           mentions: [],
+  //           sendAt: new Date()
+  //         });
+  //         peopleChat._editUser = {email: req.body.sender};
+  //       } else {
+  //         peopleChat.messages.push({
+  //           email: user._id,
+  //           text: req.body['stripped-text'],
+  //           mentions: [],
+  //           sendAt: new Date()
+  //         });
+  //         peopleChat._editUser = user;
+  //       }
+  //     });
+  //     setTimeout(function() {
+  //       peopleChat.messageType = "replyMessage";
+  //       peopleChat.save(function(err){
+  //         if (err) {return res.send(500,err);}
+  //         PeopleChat.populate(peopleChat, 
+  //         [{path: "messages.user", select: "_id email name"},
+  //         {path: "messages.mentions", select: "_id email name"}], function(err, peopleChat) {
+  //             EventBus.emit('socket:emit', {
+  //                 event: 'peopleChat:new',
+  //                 room: peopleChat._id.toString(),
+  //                 data: peopleChat
+  //             });
+  //             return res.json(peopleChat);
+  //         });
+  //       });
+  //     }, 2000);
+  //   });
+  // } else {
+  //   Board.findById(splited[0], function(err,board){
+  //     if (err) {return res.send(500,err);}
+  //     if (!board) {return res.send(404);}
+  //     else {
+  //       User.findOne({email: req.body.sender}, function(err, user){ 
+  //         if (err) {return res.send(500,err);}
+  //         else {
+  //           board.messages.push({
+  //             user: user._id,
+  //             text: req.body['stripped-text'],
+  //             mentions: [],
+  //             sendAt: new Date()
+  //           });
+  //           board._editUser = user;
+  //           board.markModified('sendMessage');
+  //           board.messageType = "replyMessage";
+  //           board.save(function(err){
+  //             if (err) {return res.send(500,err);}
+  //               Board.populate(board, [
+  //               {path: 'invitees._id', select: '_id email name'},
+  //               {path: 'owner', select: '_id email name'},
+  //               {path: 'messages.user', select: '_id email name'},
+  //               {path: 'messages.mentions', select: '_id email name'}
+  //               ], function(err, board) {
+  //                 EventBus.emit('socket:emit', {
+  //                   event: 'boardChat:new',
+  //                   room: board._id.toString(),
+  //                   data: board
+  //                 });
+  //                 return res.send(200, board);
+  //               });
+  //             });
+  //           }
+  //       });
+  //     }
+  //   });
+  // }
 };

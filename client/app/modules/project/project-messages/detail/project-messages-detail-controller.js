@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($rootScope, $scope, $timeout, $stateParams, messageService, $mdToast, $mdDialog, $state, thread, peopleService, taskService, uploadService, people) {
+angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($rootScope, $scope, $timeout, $stateParams, messageService, $mdToast, $mdDialog, $state, thread, peopleService, taskService, uploadService, people, clipboard) {
     $scope.error = {};
     $scope.thread = thread;
     $scope.people = people;
@@ -136,6 +136,7 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($ro
             messageService.sendMessage({id: $scope.thread._id}, $scope.message).$promise.then(function(res) {
                 $scope.closeModal();
                 $scope.showToast("Send message successfully!");
+                $rootScope.$broadcast("Thread.Update", res);
             }, function(err) {$scope.showToast("Error");});
         } else {
             $scope.showToast("Please check your message again!");
@@ -152,17 +153,14 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($ro
             messageService.update({id: $scope.thread._id}, $scope.thread).$promise.then(function(res) {
                 $scope.closeModal();
                 $scope.showToast("Update message successfully!");
-                $scope.thread.name = res.name;
+                $rootScope.$broadcast("Thread.Update", res);
             }, function(err){$scope.showToast("Error");});
         }
     };
 
-    $scope.copySuccess = function() {
+    $scope.copyMessageAddress = function(id) {
+        clipboard.copyText(id+"@mg.buiilt.com.au");
         $scope.showToast("Copy message thread successfully!");
-    };
-
-    $scope.copyError = function() {
-        $scope.showToast("Copy message error");
     };
 
     $scope.showAssignTeamMemberModal = function($event) {
