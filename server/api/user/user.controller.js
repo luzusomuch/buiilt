@@ -185,6 +185,7 @@ exports.createUserWithInviteToken = function(req, res, next) {
                             var data = {
                                 token: token,
                                 emailVerified: true,
+                                isSkipInTender: packageInvite.isSkipInTender,
                                 package: people
                             };
                             packageInvite.remove(function(err){

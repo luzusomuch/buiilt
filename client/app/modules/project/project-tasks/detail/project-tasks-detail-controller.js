@@ -39,6 +39,10 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
 
     function getProjectMembers(id) {
         $scope.membersList = [];
+        $scope.tags = [];
+        _.each($rootScope.currentTeam.fileTags, function(tag) {
+            $scope.tags.push({name: tag, select: false});
+        });
         _.each($rootScope.roles, function(role) {
             _.each($scope.people[role], function(tender){
                 if (tender.hasSelect) {
@@ -89,7 +93,11 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
 
         // get invitees for related item
         $scope.invitees = $scope.task.members;
+        _.each($scope.task.notMembers, function(member) {
+            $scope.invitees.push({email: member});
+        });
         $scope.invitees.push($scope.task.owner);
+        $scope.invitees = _.uniq($scope.invitees, "email");
         _.remove($scope.invitees, {_id: $rootScope.currentUser._id});
     };
 
@@ -141,6 +149,8 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
     $scope.selectMember = function(index, type) {
         if (type === "member") {
             $scope.membersList[index].select = !$scope.membersList[index].select;
+        } else if (type === "tag") {
+            $scope.tags[index].select = !$scope.tags[index].select;
         } else {
             $scope.invitees[index].select = !$scope.invitees[index].select;
         }
@@ -226,6 +236,7 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
 
     $scope.createRelatedFile = function() {
         $scope.relatedFile.members = _.filter($scope.invitees, {select: true});
+        $scope.relatedFile.tags = _.filter($scope.tags, {select: true});
         if ($scope.relatedFile.files.length == 0) {
             $scope.showToast("Please choose at least 1 file");
         } else if ($scope.relatedFile.tags.length == 0) {

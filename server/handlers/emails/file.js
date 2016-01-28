@@ -26,7 +26,7 @@ EventBus.onSeries('File.Inserted', function(request, next) {
         if (err) {return next();}
         if (request.element.type === "file") {
             async.each(request.notMembers, function(member, cb) {
-                packageInvite.findOne({to: member}, function(err, packageInvite) {
+                PackageInvite.findOne({to: member}, function(err, packageInvite) {
                     if (err || !packageInvite) {cb();}
                     else {
                         Mailer.sendMail('upload-file-to-non-user.html', from, member, {
@@ -142,7 +142,7 @@ EventBus.onSeries('File.Updated', function(request, next) {
             });
         } else if (request.element.type === "file") {
             async.each(request.notMembers, function(member, cb) {
-                packageInvite.findOne({to: member}, function(err, packageInvite) {
+                PackageInvite.findOne({to: member}, function(err, packageInvite) {
                     if (err || !packageInvite) {cb();}
                     else {
                         Mailer.sendMail('upload-file-to-non-user.html', from, member, {

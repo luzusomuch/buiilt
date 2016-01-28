@@ -274,6 +274,7 @@ exports.upload = function(req, res){
                         item: {_id: file._id},
                         members: members
                     });
+                    main._editUser = req.user;
                     main.save(function(err) {
                         if (err) {return res.send(500,err);}
                         populateFile(file, res);

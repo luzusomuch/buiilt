@@ -34,24 +34,13 @@
                 </div> -->
 					
 				<div layout="row" layout-align="center center" class="tagcloud" layout-wrap>
+					<span ng-click="selectMember($index, 'tag')" ng-class="{'available-tag':!tag.select, 'selected-tag': tag.select}" ng-repeat="tag in tags">{{tag.name}}</span>
 					
-					<span class="available-tag">File Tag 1</span>
-					<span class="available-tag">File Tag 2</span>
-					<span class="available-tag">File Tag 3</span>
-					<span class="selected-tag">File Tag 4</span>
-					<span class="available-tag">File Tag 5</span>
-					<span class="selected-tag">File Tag 6</span>
-					<span class="selected-tag">File Tag 7</span>
-					<span class="selected-tag">File Tag 8</span>
-					<span class="available-tag">File Tag 9</span>
-					<span class="available-tag">File Tag 10</span>
-					<span class="available-tag">File Tag 11</span>
-					<span class="available-tag">File Tag 12</span>
 					
 				</div>
                 
 				<div layout="row" layout-align="center center" class="tagcloud" layout-wrap>
-			        <span ng-click="selectMember($index, 'invitee')" ng-class="{'available-tag':!member.select, 'selected-tag': member.select}" ng-repeat="member in invitees">{{member.name}}</span>
+			        <span ng-click="selectMember($index, 'invitee')" ng-class="{'available-tag':!member.select, 'selected-tag': member.select}" ng-repeat="member in invitees">{{(member._id) ? member.name : member.email}}<i ng-show="!member._id" class="material-icons">mail_outline</i></span>
 					<!-- <span class="available-tag">Assignee 1</span>
 					<span class="available-tag">Assignee 2</span>
 					<span class="available-tag">Assignee 3</span>

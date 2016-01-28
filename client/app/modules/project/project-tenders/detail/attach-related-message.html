@@ -24,7 +24,7 @@
                 </div>
             
                 <div layout="row" layout-align="center center" class="tagcloud" layout-wrap>
-                    <span ng-click="selectMember($index)" ng-class="{'available-tag':!tenderer.select, 'selected-tag': tenderer.select}" ng-repeat="tenderer in tenderers track by $index">{{(tenderer._id) ? tenderer.name : tenderer.email}}</span>
+                    <span ng-click="selectMember($index)" ng-class="{'available-tag':!tenderer.select, 'selected-tag': tenderer.select}" ng-repeat="tenderer in tenderers track by $index">{{(tenderer._id) ? tenderer.name : tenderer.email}}<i ng-show="!tenderer._id" class="material-icons">mail_outline</i></span>
                 </div>
                 
                 <!-- <div layout="row">

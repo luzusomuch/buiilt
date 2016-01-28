@@ -90,8 +90,10 @@ angular.module('buiiltApp')
                             "email": res.email,
                             "name": res.name
                         }, function() {
-                            if (data.package.type == 'people') {
+                            if (!data.isSkipInTender) {
                                 window.location.href = "/projects/invitations";
+                            } else if (data.isSkipInTender) {
+                                window.location.href = "/projects/open";
                             } else {
                                 window.location.href = "/settings/user";
                             }
