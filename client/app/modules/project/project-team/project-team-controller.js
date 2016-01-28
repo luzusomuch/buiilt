@@ -16,42 +16,25 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
     ];
 
     $scope.selectTag = function(index) {
-        $scope.teamMemberTypeTags[index].select = !$scope.teamMemberTypeTags[index].select;
-    };
-
-    $scope.querySearch = function(value, searchType) {
         $scope.searchResults = [];
-        if (value.length === 0) {
-            $scope.search = false;
-            $scope.searchResults = [];
-        } else {
+        $scope.teamMemberTypeTags[index].select = !$scope.teamMemberTypeTags[index].select;
+        var availableSearchTypes = _.filter($scope.teamMemberTypeTags, {select: true});
+        if (availableSearchTypes.length > 0) {
             $scope.search = true;
-            var availableSearchTypes = _.filter($scope.teamMemberTypeTags, {select: true});
             _.each(availableSearchTypes, function(type) {
-                if (type.value !== "internal") {
+                if (type !== "internal") {
                     _.each($scope.membersList, function(member) {
-                        if (searchType === "name" && member.type === type.value && member.name.toLowerCase().indexOf(value) > -1) {
-                            $scope.searchResults.push(member);
-                        } else if (searchType === "email" && member.type === type.value && member.email.toLowerCase().indexOf(value) > -1) {
+                        if (member.type === type.value) {
                             $scope.searchResults.push(member);
                         }
                     });
                 } else {
-                    _.each($scope.internalTeam, function(member) {
-                        member.type = $rootScope.currentUser.type;
-                        if (searchType === "name" && member.name.toLowerCase().indexOf(value) > -1) {
-                            $scope.searchResults.push(member);
-                        } else if (searchType === "email" && member.email.toLowerCase().indexOf(value) > -1) {
-                            $scope.searchResults.push(member);
-                        }
-                    });
+                    $scope.searchResults = _.union($scope.searchResults, $scope.internalTeam);
                 }
             });
             $scope.searchResults = _.uniq($scope.searchResults, "_id");
-            console.log($scope.searchResults);
         }
     };
-
     // end filter section
 
 	function getCurrentTeamMember() {

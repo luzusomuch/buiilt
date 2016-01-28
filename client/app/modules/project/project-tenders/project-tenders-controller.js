@@ -3,6 +3,17 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
     $scope.people = people;
     $rootScope.title = "Tenders list";
 
+    // filter section
+    $scope.weekTags = [{text: "this week", value: "this"}, {text: "next week", value: "next"}];
+    $scope.statusTags = [{text: "to be distributed", value: "distribute"}, {text: "distributed", value: "distributed"}];
+
+    
+
+    $scope.selectDueDate = function(dueDate) {
+        console.log(dueDate);
+    };
+    // end filter section
+
     function getTenderersList(people) {
         $scope.membersList = [];
         _.each($rootScope.roles, function(role) {

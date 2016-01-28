@@ -5,12 +5,12 @@
 		<div layout="row">
 			<md-input-container flex="50">
 				<label for="">Tender Name</label>
-				<input type="text" name="tenderName" ng-model="" md-autofocus>
+				<input type="text" name="tenderName" ng-model="name" md-autofocus>
 			</md-input-container>
 			
 			<md-input-container flex="50">
 				<label for="">Includes Invitee</label>
-				<input type="text" name="tenderInvitee" ng-model="">
+				<input type="text" name="tenderInvitee" ng-model="invitee">
 			</md-input-container>
 			
 		</div>
@@ -19,11 +19,10 @@
 			<div flex="50" layout="row" layout-align="center center">
 				<span class="md-body-2" style="margin-top: -2vh">Due:</span>
 				<div class="tagcloud" style="margin-top: -2vh; margin-left: 2vh">
-					<span class="available-tag">This Week</span>
-					<span class="available-tag">Next Week</span>
+					<span ng-repeat="tag in weekTags" ng-class="{'available-tag': !tag.select, 'selected-tag: tag.select'}" ng-click="selectTag($index, 'week')">{{tag.text}}</span>
 				</div>
 				<div style="margin-top: -2.5vh">
-                    <md-datepicker  ng-model="" md-min-date="minDate" md-placeholder="">
+                    <md-datepicker ng-change="selectDueDate(dueDate)" ng-model="dueDate" md-min-date="minDate" md-placeholder="Select due date">
                     </md-datepicker>
 				</div>
 			</div>
@@ -31,8 +30,7 @@
 			<div flex="50" layout="row" layout-align="center center">
 				<span class="md-body-2" style="margin-top: -2vh">Status:</span>
 				<div class="tagcloud" style="margin-top: -2vh; margin-left: 2vh">
-					<span class="available-tag">To Be Distributed</span>
-					<span class="available-tag">Distributed</span>
+					<span ng-repeat="tag in statusTags" ng-class="{'available-tag': !tag.select, 'selected-tag: tag.select'}" ng-click="selectTag($index, 'status')">{{tag.text}}</span>
 				</div>
 			</div>
 			
