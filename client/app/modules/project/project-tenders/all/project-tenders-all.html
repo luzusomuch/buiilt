@@ -50,9 +50,7 @@
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
 		          	<h3>{{member.tenderName}}</h3>
-		          	<p ng-repeat="tender in member.tenderers">
-		          		<span>{{(tender._id) ? tender._id.name : tender.email}} </span>
-		          	</p>
+					<p><span ng-repeat="tender in member.tenderers">{{(tender._id) ? tender._id.name : tender.email}}, </span></p>
 	        </div>
 		</md-list-item>
 		<md-divider></md-divider>
