@@ -4,13 +4,35 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
     $rootScope.title = "Tenders list";
 
     // filter section
+    $scope.name = null;
+    $scope.invitee = null;
     $scope.weekTags = [{text: "this week", value: "this"}, {text: "next week", value: "next"}];
     $scope.statusTags = [{text: "to be distributed", value: "distribute"}, {text: "distributed", value: "distributed"}];
 
-    
-
     $scope.selectDueDate = function(dueDate) {
         console.log(dueDate);
+    };
+
+    $scope.search = function(tender) {
+        if ($scope.name && $scope.name.length > 0) {
+            var found = false;
+            if (tender.tenderName.toLowerCase().indexOf($scope.name) > -1) {
+                found = true;
+            }
+            return found;
+        } else if ($scope.invitee && $scope.invitee.length > 0) {
+            var found = false;
+            if (tender.tenderers.length > 0) {
+                _.each(tender.tenderers, function(tenderer) {
+                    if (tenderer.name.toLowerCase().indexOf($scope.invitee) > -1 || tenderer.email.toLowerCase().indexOf($scope.invitee) > -1) {
+                        found = true;
+                    }
+                });
+            }
+            return found;
+        } else {
+            return true;
+        }
     };
     // end filter section
 

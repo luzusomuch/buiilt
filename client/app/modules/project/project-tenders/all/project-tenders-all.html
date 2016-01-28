@@ -19,7 +19,7 @@
 			<div flex="50" layout="row" layout-align="center center">
 				<span class="md-body-2" style="margin-top: -2vh">Due:</span>
 				<div class="tagcloud" style="margin-top: -2vh; margin-left: 2vh">
-					<span ng-repeat="tag in weekTags" ng-class="{'available-tag': !tag.select, 'selected-tag: tag.select'}" ng-click="selectTag($index, 'week')">{{tag.text}}</span>
+					<span ng-repeat="tag in weekTags" ng-class="{'available-tag': !tag.select, 'selected-tag': tag.select}" ng-click="selectTag($index, 'week')">{{tag.text}}</span>
 				</div>
 				<div style="margin-top: -2.5vh">
                     <md-datepicker ng-change="selectDueDate(dueDate)" ng-model="dueDate" md-min-date="minDate" md-placeholder="Select due date">
@@ -30,7 +30,7 @@
 			<div flex="50" layout="row" layout-align="center center">
 				<span class="md-body-2" style="margin-top: -2vh">Status:</span>
 				<div class="tagcloud" style="margin-top: -2vh; margin-left: 2vh">
-					<span ng-repeat="tag in statusTags" ng-class="{'available-tag': !tag.select, 'selected-tag: tag.select'}" ng-click="selectTag($index, 'status')">{{tag.text}}</span>
+					<span ng-repeat="tag in statusTags" ng-class="{'available-tag': !tag.select, 'selected-tag': tag.select}" ng-click="selectTag($index, 'status')">{{tag.text}}</span>
 				</div>
 			</div>
 			
@@ -46,7 +46,7 @@
 </div>
 
 <md-list ng-cloak class="main-page-content" layout="column" flex>
-	<div ui-sref="project.tenders.detail({tenderId: member._id})" ng-repeat="member in membersList">
+	<div ui-sref="project.tenders.detail({tenderId: member._id})" ng-repeat="member in membersList | filter: search">
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
 		          	<h3>{{member.tenderName}}</h3>

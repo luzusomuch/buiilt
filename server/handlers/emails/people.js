@@ -106,6 +106,44 @@ EventBus.onSeries('People.Updated', function(req, next){
                 return next();
             });
         });
+    } else if (req._modifiedPaths.indexOf("invitePeople") !== -1) {
+        var currentTender = req.updatedTender;
+        async.parallel({
+            project: function (cb) {
+                Project.findById(req.project, cb);
+            },
+            team: function (cb) {
+                Team.findOne({$or:[{leader: req.editUser._id}, {member: req.editUser._id}]}, cb);
+            }
+        }, function(err, result) {
+            if (err) {return next();}
+            if (currentTender.hasSelect && !currentTender.tenderers[0]._id) {
+                var packageInvite = new PackageInvite({
+                    owner: req.editUser._id,
+                    project: req.project,
+                    package: req._id,
+                    inviteType: req.newInviteType,
+                    to: currentTender.tenderers[0].email,
+                    user: req.editUser._id,
+                    isSkipInTender: true
+                });
+                packageInvite.save(function(err) {
+                    if (err) {return next();}
+                    Mailer.sendMail('invite-non-user-to-project.html', from, packageInvite.to, {
+                        team: result.team.toJSON(),
+                        inviter: req.editUser.toJSON(),
+                        invitee: packageInvite.to,
+                        project: result.project.toJSON(),
+                        link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
+                        subject: req.editUser.name + ' has invited you to project ' + result.project.name
+                    },function(err){
+                        return next();
+                    });
+                }); 
+            } else {
+                return next();
+            }
+        });
     } else {
         return next();
     }

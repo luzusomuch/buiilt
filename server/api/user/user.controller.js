@@ -145,91 +145,55 @@ exports.createUserWithInviteToken = function(req, res, next) {
             if (err) {return validationError(res, err);}
             else {
                 var token = jwt.sign({_id: user._id}, config.secrets.session, {expiresInMinutes: 60 * 5});
-                var invitesList = ["clients", "builders", "architects", "subcontractors", "consultants"];
-                var inviteIndex = _.indexOf(invitesList, packageInvite.inviteType);
-                if (inviteIndex !== -1) {
-                    People.findById(packageInvite.package, function(err, people) {
-                        if (err) {return res.send(500,err);}
-                        else if (!people) {return res.send(404);}
-                        else {
-                            var type = invitesList[inviteIndex];
-                            _.each(people[type], function(tender) {
+                People.findById(packageInvite.package, function(err, people) {
+                    if (err) {return res.send(500,err);}
+                    else if (!people) {return res.send(404);}
+                    else {
+                        _.each(people[packageInvite.inviteType], function(tender) {
+                            if (tender.hasSelect && tender.tenderers[0].email === user.email) {
+                                tender.tenderers[0]._id = user._id;
+                                tender.tenderers[0].email = null;
+                                user.projects.push(packageInvite.project);
+                                user.markModified("projects");
+                                user.save(function(){
+                                    return false;
+                                });
+                            } else {
                                 _.each(tender.tenderers, function(tenderer) {
-                                    console.log(packageInvite.to);
-                                    console.log(tenderer.email);
-                                    if (tenderer.email == packageInvite.to) {
+                                    if (tenderer.email === user.email) {
                                         tenderer._id = user._id;
                                         tenderer.email = null;
-                                        if (tenderer.hasSelect) {
-                                            user.projects.push(packageInvite.project);
-                                            user.markModified("projects");
-                                            user.save();
-                                        } else {
-                                            var inviteToken = new InviteToken({
-                                                type: 'project-invite',
-                                                user: user._id,
-                                                element: {
-                                                    project: people.project,
-                                                    type: type
-                                                }
-                                            });
-                                            inviteToken._editUser = packageInvite.owner;
-                                            inviteToken.save(function() {
-                                                return false;
-                                            });
-                                        }
+                                        var inviteToken = new InviteToken({
+                                            type: 'project-invite',
+                                            user: user._id,
+                                            element: {
+                                                project: people.project,
+                                                type: type
+                                            }
+                                        });
+                                        inviteToken._editUser = packageInvite.owner;
+                                        inviteToken.save(function() {
+                                            return false;
+                                        });
                                     }
                                 });
+                            }
+                        });
+                        people._editUser = user;
+                        people.save(function(err) {
+                            if (err) {return res.send(500,err);}
+                            var data = {
+                                token: token,
+                                emailVerified: true,
+                                package: people
+                            };
+                            packageInvite.remove(function(err){
+                                if (err) {return res.send(500);}
+                                return res.json(200,data);
                             });
-                            people.save(function(err) {
-                                if (err) {return res.send(500,err);}
-                                var data = {
-                                    token: token,
-                                    emailVerified: true,
-                                    package: people
-                                };
-                                PeopleChat.findOne({project: packageInvite.project, people: people._id, $or:[{ownerEmail: packageInvite.to},{fromEmail: packageInvite.to}]}, function(err, peopleChat) {
-                                    if (err) {return res.send(500,err);}
-                                    else if (!peopleChat) {
-                                        packageInvite.remove(function(err){
-                                            if (err) {return res.send(500);}
-                                            return res.json(200,data);
-                                        });
-                                    } else {
-                                        if (peopleChat.ownerEmail) {
-                                            peopleChat.owner = user._id;
-                                            peopleChat.ownerEmail = null;
-                                        } else if (peopleChat.fromEmail) {
-                                            peopleChat.from = user._id;
-                                            peopleChat.fromEmail = null;
-                                        }
-                                        if (peopleChat.messages.length > 0) {
-                                            _.each(peopleChat.messages, function(message){
-                                                if (message.email) {
-                                                    if (message.email == packageInvite.to) {
-                                                        message.email = null;
-                                                        message.user = user._id;
-                                                    }
-                                                }
-                                            });
-                                        }
-                                        peopleChat.messageType = "newRegistry";
-                                        peopleChat.save(function(err){
-                                            packageInvite.remove(function(err){
-                                                if (err) {return res.send(500);}
-                                                return res.json(200,data);
-                                            });
-                                        });
-                                    }
-                                })
-                            });
-                        }
-                    });
-                } else {
-                    user.remove(function() {
-                        return res.send(500);
-                    });
-                }
+                        });
+                    }
+                });
             }
         });
     });

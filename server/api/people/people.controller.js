@@ -108,39 +108,33 @@ exports.invitePeople = function(req, res) {
                 async.parallel([
                     function(cb) {
                         if (!invite.isTender) {
+                            var tender = {
+                                tenderName: invite.tenderName,
+                                tenderDescription: invite.tenderDescription,
+                                inviter: req.user._id,
+                                tenderers: [],
+                                hasSelect: true,
+                                isDistribute: true,
+                                createAt: new Date(),
+                                inviterType: (type == "consultants") ? invite.inviterType : null
+                            };
                             User.findOne({email: invite.email}, function(err, user) {
                                 if (err) {cb(err);}
                                 else if (!user) {
-                                    team.push({
-                                        tenderName: invite.tenderName,
-                                        tenderDescription: invite.tenderDescription,
-                                        inviter: req.user._id,
-                                        tenderers: [{
-                                            email: invite.email,
-                                            teamMember: []
-                                        }],
-                                        hasSelect: true,
-                                        isDistribute: true,
-                                        createAt: new Date(),
-                                        inviterType: (type == "consultants") ? invite.inviterType : null
+                                    tender.tenderers.push({
+                                        email: invite.email,
+                                        teamMember: []
                                     });
-                                    // newInviteeNotSignUp.push(invite.email);
+                                    people._updatedTender = tender;
+                                    team.push(tender);
                                     cb();
                                 } else {
-                                    team.push({
-                                        tenderName: invite.tenderName,
-                                        tenderDescription: invite.tenderDescription,
-                                        inviter: req.user._id,
-                                        tenderers: [{
-                                            _id: user._id,
-                                            teamMember: []
-                                        }],
-                                        hasSelect: true,
-                                        isDistribute: true,
-                                        createAt: new Date(),
-                                        inviterType: (type == "consultants") ? invite.inviterType : null
+                                    tender.tenderers.push({
+                                        _id: user._id,
+                                        teamMember: []
                                     });
-                                    newInviteeSignUpAlready.push(user._id);
+                                    people._updatedTender = tender;
+                                    team.push(tender);
                                     user.projects.push(people.project);
                                     user.markModified("projects");
                                     user.save(cb());
@@ -267,7 +261,7 @@ exports.invitePeople = function(req, res) {
                     else {
                         people[type] = team;
                         // people._newInviteeNotSignUp = newInviteeNotSignUp;
-                        people._newInviteeSignUpAlready = newInviteeSignUpAlready;
+                        // people._newInviteeSignUpAlready = newInviteeSignUpAlready;
                         people._newInviteType = type;
                         people.markModified('invitePeople');
                         people._editUser = req.user;
@@ -1019,6 +1013,7 @@ exports.updateTender = function(req, res) {
             ], function(err, result) {
                 people[currentRole][index].inviterActivities.push(activity);
                 people.markModified(currentRole);
+                people._editUser = req.user;
                 people.save(function(err) {
                     if (err) {return res.send(500,err);}
                     People.populate(people, [
