@@ -1,23 +1,53 @@
-<div class="detail-header" layout-padding layout="row">
+<div class="detail-header" layout-padding layout="column" >
+	
+	<div layout="column" layout-padding>
 		
-	<md-chips class="" ng-model="tendersFilters" placeholder="Search..." secondary-placeholder="Search..." flex="45">
+		<div layout="row">
+			<md-input-container flex="50">
+				<label for="">Tender Name</label>
+				<input type="text" name="tenderName" ng-model="" md-autofocus>
+			</md-input-container>
+			
+			<md-input-container flex="50">
+				<label for="">Includes Invitee</label>
+				<input type="text" name="tenderInvitee" ng-model="">
+			</md-input-container>
+			
+		</div>
+		
+		<div layout="row">
+			<div flex="50" layout="row" layout-align="center center">
+				<span class="md-body-2" style="margin-top: -2vh">Due:</span>
+				<div class="tagcloud" style="margin-top: -2vh; margin-left: 2vh">
+					<span class="available-tag">This Week</span>
+					<span class="available-tag">Next Week</span>
+				</div>
+				<div style="margin-top: -2.5vh">
+                    <md-datepicker  ng-model="" md-min-date="minDate" md-placeholder="">
+                    </md-datepicker>
+				</div>
+			</div>
+			
+			<div flex="50" layout="row" layout-align="center center">
+				<span class="md-body-2" style="margin-top: -2vh">Status:</span>
+				<div class="tagcloud" style="margin-top: -2vh; margin-left: 2vh">
+					<span class="available-tag">To Be Distributed</span>
+					<span class="available-tag">Distributed</span>
+				</div>
+			</div>
+			
+		</div>
+		
+	</div>
+		
+	<!-- <md-chips class="" ng-model="tendersFilters" placeholder="Search..." secondary-placeholder="Search..." flex>
 		<md-chip-template class="md-accent">
-	        <strong>{{$chip}}</strong>
 	    </md-chip-template>
-	</md-chips>
-
-	<span flex></span>
-
-	<md-chips class="set-filters">
-		<md-chip>Open</md-chip>
-		<md-chip>Won</md-chip>
-		<md-chip>Due This Week</md-chip>
-		<md-chip>Due Next Week</md-chip>
-	</md-chips>
+	</md-chips> -->
 	
 </div>
 
-<md-list ng-cloak class="main-page-content">
+<md-list ng-cloak class="main-page-content" layout="column" flex>
 	<div ui-sref="project.tenders.detail({tenderId: member._id})" ng-repeat="member in membersList">
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">

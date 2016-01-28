@@ -1,6 +1,42 @@
-<div class="detail-header" layout-padding layout="row">
+<div class="detail-header" layout-padding layout="column">
+	
+	<div layout="column" layout-padding>
 		
-	<md-chips class="" ng-model="taskFilters" placeholder="Search..." secondary-placeholder="Search..." flex="45">
+		<div layout="row">
+			<md-input-container flex="50">
+				<label for="">Task Name</label>
+				<input type="text" name="taskName" ng-model="" md-autofocus>
+			</md-input-container>
+			
+			<div flex="50" layout="row" layout-align="center center">
+				<span class="md-body-2" style="margin-top: -2vh">Assigned:</span>
+				<div class="tagcloud" style="margin-top: -2vh; margin-left: 2vh">
+					<span class="available-tag">To Me</span>
+					<span class="available-tag">By Me</span>
+				</div>
+			</div>
+			
+		</div>
+		
+		<div layout="row">
+			<div flex layout="row" layout-align="center center">
+				<span class="md-body-2" style="margin-top: -2vh">Due:</span>
+				<div class="tagcloud" style="margin-top: -2vh; margin-left: 2vh">
+					<span class="available-tag">Today</span>
+					<span class="available-tag">Tomorrow</span>
+					<span class="available-tag">This Week</span>
+					<span class="available-tag">Next Week</span>
+				</div>
+				<div style="margin-top: -2.5vh">
+                    <md-datepicker  ng-model="" md-min-date="minDate" md-placeholder="">
+                    </md-datepicker>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+		
+	<!-- <md-chips class="" ng-model="taskFilters" placeholder="Search..." secondary-placeholder="Search..." flex="45">
 		<md-chip-template class="md-accent">
 	        <strong>{{$chip}}</strong>
 	    </md-chip-template>
@@ -14,11 +50,11 @@
 		<md-chip>Due Today</md-chip>
 		<md-chip>Due Tomorrow</md-chip>
 		<md-chip>Due This Week</md-chip>
-	</md-chips>
+	</md-chips> -->
 		
 </div>
 
-<md-list ng-cloak class="main-page-content">
+<md-list ng-cloak class="main-page-content" layout="column" flex>
 
 	<div ng-show="!search" ng-repeat="task in tasks" ui-sref="project.tasks.detail({id: task.project, taskId: task._id})">
 		<md-list-item class="md-2-line" md-ink-ripple>

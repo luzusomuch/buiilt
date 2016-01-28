@@ -369,7 +369,6 @@ md-input-container > label {
 }
 
 .main-page-content{
-	height: 80vh; 
 	overflow: scroll
 }
 
@@ -397,7 +396,7 @@ md-input-container > label {
 
 .detail-header {
 	border-bottom: 1px solid #E0E0E0;
-	height: 10vh;
+	min-height: 10vh;
 }
 
 .detail-header p {

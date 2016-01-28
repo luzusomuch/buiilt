@@ -1,11 +1,35 @@
-<div class="detail-header" layout-padding layout="row">
+<div class="detail-header" layout-padding layout="column" >
+	
+	<div layout="column" layout-padding>
 		
-	<md-chips class="" ng-model="messageFilter" placeholder="Search Projects..." secondary-placeholder="Search Projects..." flex md-autocomplete-snap="" md-require-math="autoCompleteRequireMath" md-on-add="addChip()">
-		<md-autocomplete 
-			md-selected-item="selectedItem" 
+		<div layout="row">
+			<md-input-container flex="50" style="margin-bottom: -2vh">
+				<label for="">Message Thread Name</label>
+				<input type="text" name="messageThreadName" ng-model="" md-autofocus>
+			</md-input-container>
+			
+			<md-input-container flex="50" style="margin-bottom: -2vh">
+				<label for="">Message Thread Recipients</label>
+				<input type="text" name="messageThreadRecipients" ng-model="">
+			</md-input-container>
+			
+		</div>
+		
+		<div layout="row" layout-align="center center">
+			<md-input-container flex="60" style="margin-bottom: -2vh">
+				<label for="">Message Replies</label>
+				<input type="text" name="messageReplies" ng-model="">
+			</md-input-container>
+		</div>
+		
+	</div>
+		
+	<!-- <md-chips class="" ng-model="messageFilter" placeholder="Search Projects..." secondary-placeholder="Search Projects..." flex md-autocomplete-snap="" md-require-math="autoCompleteRequireMath" md-on-add="addChip()">
+		<md-autocomplete
+			md-selected-item="selectedItem"
 			md-search-text="searchText"
-			md-items="item in querySearch(searchText)" 
-			md-item-text="item" 
+			md-items="item in querySearch(searchText)"
+			md-item-text="item"
 			placeholder="Search...">
 			<span md-highlight-text="searchText">{{item.name}}</span>
 		</md-autocomplete>
@@ -20,11 +44,11 @@
 		<md-chip-template ng-click="selectedChip($chip)">
 	        <strong>{{$chip.text}}<i ng-show="$chip.select" style="font-size: 15px" class="material-icons">clear</i></strong>
       	</md-chip-template>
-	</md-chips>
+	</md-chips> -->
 	
 </div>
 
-<md-list ng-cloak class="main-page-content">
+<md-list ng-cloak class="main-page-content"  layout="column" flex>
 
 	<div ng-show="!search" ng-repeat="thread in threads" ui-sref="project.messages.detail({id: thread.project, messageId: thread._id})">
 		<md-list-item class="md-2-line" md-ink-ripple>
