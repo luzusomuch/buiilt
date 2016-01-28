@@ -117,7 +117,7 @@ EventBus.onSeries('People.Updated', function(req, next){
             }
         }, function(err, result) {
             if (err) {return next();}
-            if (currentTender.hasSelect && !currentTender.tenderers[0]._id) {
+            if (currentTender && currentTender.hasSelect && !currentTender.tenderers[0]._id) {
                 var packageInvite = new PackageInvite({
                     owner: req.editUser._id,
                     project: req.project,
