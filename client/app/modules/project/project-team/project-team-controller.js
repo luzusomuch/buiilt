@@ -3,6 +3,57 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
     $scope.invite = {
         isTender: false
     };
+
+    // filter section
+    $scope.search = false;
+    $scope.teamMemberTypeTags = [
+        {text: "internal", value:"internal"},
+        {text: "architect", value: "architects"},
+        {text: "builder", value: "builders"},
+        {text: "consultant", value: "consultants"},
+        {text: "sub contractor", value: "subcontractors"},
+        {text: "home owner", value: "clients"}
+    ];
+
+    $scope.selectTag = function(index) {
+        $scope.teamMemberTypeTags[index].select = !$scope.teamMemberTypeTags[index].select;
+    };
+
+    $scope.querySearch = function(value, searchType) {
+        $scope.searchResults = [];
+        if (value.length === 0) {
+            $scope.search = false;
+            $scope.searchResults = [];
+        } else {
+            $scope.search = true;
+            var availableSearchTypes = _.filter($scope.teamMemberTypeTags, {select: true});
+            _.each(availableSearchTypes, function(type) {
+                if (type.value !== "internal") {
+                    _.each($scope.membersList, function(member) {
+                        if (searchType === "name" && member.type === type.value && member.name.toLowerCase().indexOf(value) > -1) {
+                            $scope.searchResults.push(member);
+                        } else if (searchType === "email" && member.type === type.value && member.email.toLowerCase().indexOf(value) > -1) {
+                            $scope.searchResults.push(member);
+                        }
+                    });
+                } else {
+                    _.each($scope.internalTeam, function(member) {
+                        member.type = $rootScope.currentUser.type;
+                        if (searchType === "name" && member.name.toLowerCase().indexOf(value) > -1) {
+                            $scope.searchResults.push(member);
+                        } else if (searchType === "email" && member.email.toLowerCase().indexOf(value) > -1) {
+                            $scope.searchResults.push(member);
+                        }
+                    });
+                }
+            });
+            $scope.searchResults = _.uniq($scope.searchResults, "_id");
+            console.log($scope.searchResults);
+        }
+    };
+
+    // end filter section
+
 	function getCurrentTeamMember() {
 		//get current user logged in team member
 		$scope.teamMembersCanInvite = $rootScope.currentTeam.leader;
@@ -12,7 +63,8 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
 			}
 		});
 		$scope.teamMembersCanInvite = _.uniq($scope.teamMembersCanInvite, '_id');
-		_.remove($scope.teamMembersCanInvite, {_id: $rootScope.currentUser._id});
+        _.remove($scope.teamMembersCanInvite, {_id: $rootScope.currentUser._id});
+        $scope.internalTeam = angular.copy($scope.teamMembersCanInvite);
         if ($scope.membersList && $scope.membersList.length > 0) {
             _.each($scope.membersList, function(member) {
                 if (member._id) {
@@ -83,32 +135,7 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
                     }
                 }
             });
-            // _.each($scope.people[role], function(tender) {
-            //     if (tender.hasSelect) {
-            //         var winnerTenderer = tender.tenderers[0];
-            //         if (winnerTenderer._id) {
-            //             $scope.membersList.push({_id: winnerTenderer._id._id, name: winnerTenderer._id.name, type: role});
-            //         } else if (winnerTenderer.email) {
-            //             $scope.membersList.push({email: winnerTenderer.email, type: role});
-            //         }
-            //     }
-            // });
         });
-
-        // get employees list
-        // _.each($scope.people[$rootScope.currentUser.type], function(tender) {
-        //     var currentTendererIndex = _.findIndex(tender.tenderers, function(tenderer) {
-        //         if (tenderer._id) {
-        //             return tenderer._id._id == $rootScope.currentUser._id;
-        //         }
-        //     });
-        //     if (currentTendererIndex !== -1) {
-        //         var currentTenderer = tender.tenderers[currentTendererIndex];
-        //         _.each(currentTenderer.teamMember, function(member) {
-        //             $scope.membersList.push({_id: member._id, name: member.name, type: $rootScope.currentUser.type});
-        //         });
-        //     }
-        // });
         if ($scope.people.project.projectManager.type === "builder") {
             switch($rootScope.currentUser.type) {
                 case "builders":
@@ -332,35 +359,8 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
 		$mdDialog.cancel();
 	};
 
-    $scope.querySearch = function(value) {
-        var results = value ? $scope.membersList.filter(createFilter(value)) : [];
-        results = _.uniq(results, '_id');
-        return results;
-    };
-
-    function createFilter(query) {
-        return function filterFn(member) {
-            console.log(member);
-            if (member._id) {
-                return member.name.toLowerCase().indexOf(query) > -1;
-            } else {
-                console.log(member.email.indexOf(query));
-                return member.email.indexOf(query) > -1;
-            }
-        };
-    };
-
-    $scope.addChip = function() {
-        $scope.search = true;
-    };
-
-    $scope.removeChip = function() {
-        if ($scope.teamNames.length === 0) {
-            $scope.search = false;
-        }
-    };
-
 	loadProjectMembers($stateParams.id);
+    getCurrentTeamMember();
 	$rootScope.$on("Project.Team.Invite", function(event, data) {
         $scope.people = data;
         loadProjectMembers($stateParams.id);
