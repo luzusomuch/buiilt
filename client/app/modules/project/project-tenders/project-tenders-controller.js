@@ -211,7 +211,7 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
                 };
 
                 $scope.inviteNewTeamMember = function(form) {
-                    if (form.$valid) {
+                    if (form.$valid && $scope.invite.type) {
                         $scope.invite.inviterType = $rootScope.currentUser.type;
                         $scope.invite.isTender = true;
                         $scope.invite.invitees = [];
