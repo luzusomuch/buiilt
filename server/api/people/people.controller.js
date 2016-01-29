@@ -999,7 +999,12 @@ exports.updateTender = function(req, res) {
                 }
             ], function(err, result) {
                 people[currentRole][index].inviterActivities.push(activity);
-                people.markModified(currentRole);
+                if (data.editType === "broadcast-message") 
+                    people.markModified("broadcast-message");
+                else 
+                    people.markModified(currentRole);
+
+                people._updatedTender = people[currentRole][index];
                 people._editUser = req.user;
                 people.save(function(err) {
                     if (err) {return res.send(500,err);}

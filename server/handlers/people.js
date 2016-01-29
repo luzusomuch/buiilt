@@ -28,6 +28,22 @@ EventBus.onSeries('People.Updated', function(req, next) {
         } else {
             return next();
         }
+    } else if (req._modifiedPaths.indexOf("broadcast-message") !== -1) {
+        var currentTender = req.updatedTender;
+        var latestActivities = _.last(currentTender.inviterActivities);
+        var params = {
+            owners: latestActivities.element.userMembers,
+            fromUser: req.editUser._id,
+            element: {
+                data: currentTender,
+                project: req.project
+            },
+            referenceTo: "tender",
+            type: "send-broadcast-message"
+        }
+        NotificationHelper.create(params, function(){
+            return next();
+        });
     } else if (req._modifiedPaths.indexOf("updateDistributeStatus") !== -1) {
         var currentTender = req.updatedTender;
         var owner = [];
@@ -40,13 +56,11 @@ EventBus.onSeries('People.Updated', function(req, next) {
             owners: owners,
             fromUser: req.editUser._id,
             element: req,
-            referenceTo: 'people',
-            type: 'invite-people'
+            referenceTo: 'tender',
+            type: 'update-distribute-status'
         }
         NotificationHelper.create(params, function(){
-            PushNotificationHelper.getData(req.project,req._id,'People package', req.editUser.name, owners, 'invite-people', function() {
-                return next();
-            });
+            return next();
         });
     } else if (req._modifiedPaths.indexOf('selectWinnerTender') != -1) {
         if (req.winnerTender.length > 0) {
