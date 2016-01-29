@@ -24,7 +24,7 @@
                 </div>
 				
 				<div layout="row" layout-align="center center" class="tagcloud" layout-wrap>
-					<span ng-click="selectMember($index, 'member')" ng-class="{'available-tag':!member.select, 'selected-tag': member.select}" ng-repeat="member in projectMembers">{{member.name}}</span>
+					<span ng-click="selectMember($index, 'member')" ng-class="{'available-tag':!member.select, 'selected-tag': member.select}" ng-repeat="member in projectMembers">{{(member._id) ? member.name : member.email}}<i ng-show="!member._id" class="material-icons">mail_outline</i></span>
 				</div>
 				
 				<div layout="row" layout-align="center center" class="tagcloud" layout-wrap>

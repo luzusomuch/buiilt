@@ -19,27 +19,23 @@ EventBus.onSeries('Task.Inserted', function(req, next){
         }
     }, function(err, result) {
         if (err) {return next();}
-        async.each(req.members, function(member, cb) {
-            if (member.email) {
-                packageInvite.findOne({to: member.email}, function(err, packageInvite) {
-                    if (err || !packageInvite) {cb();}
-                    else {
-                        Mailer.sendMail('assign-task-to-non-user.html', from, member.email, {
-                            team: result.team.toJSON(),
-                            inviter: req.editUser.toJSON(),
-                            invitee: member.email,
-                            project: result.project.toJSON(),
-                            request: req.toJSON(),
-                            link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
-                            subject: req.editUser.name + ' has assigned you a task ' + req.description
-                        },function(err){console.log(err);
-                            return cb();
-                        });
-                    }
-                });
-            } else {
-                cb();
-            }
+        async.each(req.notMembers, function(member, cb) {
+            PackageInvite.findOne({project: req.project, to: member}, function(err, packageInvite) {
+                if (err || !packageInvite) {cb();}
+                else {
+                    Mailer.sendMail('assign-task-to-non-user.html', from, member, {
+                        team: result.team.toJSON(),
+                        inviter: req.editUser.toJSON(),
+                        invitee: member,
+                        project: result.project.toJSON(),
+                        request: req.toJSON(),
+                        link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
+                        subject: req.editUser.name + ' has assigned you a task ' + req.description
+                    },function(err){console.log(err);
+                        return cb();
+                    });
+                }
+            });
         }, function() {
             return next();
         });
@@ -60,7 +56,7 @@ EventBus.onSeries('Task.Updated', function(req, next){
             if (err) {return next();}
             async.each(req.members, function(member, cb) {
                 if (member.email && !(_.find(req.oldAssignees,{ email : member.email}))) {
-                    packageInvite.findOne({to: member.email}, function(err, packageInvite) {
+                    PackageInvite.findOne({to: member.email}, function(err, packageInvite) {
                         if (err || !packageInvite) {cb();}
                         else {
                             Mailer.sendMail('assign-task-to-non-user.html', from, member.email, {

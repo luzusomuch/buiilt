@@ -100,7 +100,7 @@ exports.create = function(req,res) {
         }
         thread.messages.push({
             text : req.body.message,
-            user : req.user._id,
+            user : user._id,
             mentions: [],
             sendAt: new Date()
         });
@@ -113,6 +113,7 @@ exports.create = function(req,res) {
             } 
         });
         var mainItem = getMainItem(req.body.belongToType);
+        thread._editUser = user;
         thread.save(function(err){
             if (err) {return res.send(500,err);}
             if (req.body.belongTo) {
@@ -124,7 +125,7 @@ exports.create = function(req,res) {
                     }
                     else {
                         main.activities.push({
-                            user: req.user._id,
+                            user: user._id,
                             type: "related-thread",
                             createdAt: new Date(),
                             element: {
@@ -133,7 +134,7 @@ exports.create = function(req,res) {
                                 related: true
                             }
                         });
-                        data.members.push(req.user._id);
+                        data.members.push(user._id);
                         main.relatedItem.push({
                             type: "thread",
                             item: {_id: thread._id},

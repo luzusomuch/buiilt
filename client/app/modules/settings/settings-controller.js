@@ -179,7 +179,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
     $scope.isEditTags = false;
     $scope.addNewTag = function(newTag, type) {
         if (type === "file") {
-            if (newTag.file !== "{{addNewTagFileText}}") {
+            if (newTag !== "{{addNewTagFileText}}") {
                 $scope.currentTeam.fileTags.push(newTag);
                 $scope.newTag.file = null;
                 $scope.isEditTags = true;
@@ -187,7 +187,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                 $scope.showToast("Please check your tag again");
             }
         } else if (type === "document") {
-            if (newTag.document !== "{{addNewTagDocumentText}}") {
+            if (newTag !== "{{addNewTagDocumentText}}") {
                 $scope.currentTeam.documentTags.push(newTag);
                 $scope.newTag.document = null;
                 $scope.isEditTags = true;
@@ -215,6 +215,8 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
     };
 
     $scope.saveChangedTags = function() {
+        console.log($scope.currentTeam);
+        return;
         $scope.currentTeam.editType = "change-tags";
         teamService.update({id: $scope.currentTeam._id}, $scope.currentTeam).$promise.then(function(res) {
             $scope.isEditTags = false;

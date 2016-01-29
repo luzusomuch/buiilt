@@ -11,7 +11,7 @@ angular.module('buiiltApp').directive('contenteditable', function($window, $docu
 
       // model -> view
       ctrl.$render = function() {
-        element.html(ctrl.$viewValue);
+        element.html(ctrl.$viewValue || '');
       };
 
       // load init value from DOM

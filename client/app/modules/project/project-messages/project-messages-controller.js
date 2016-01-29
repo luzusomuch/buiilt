@@ -34,6 +34,8 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
                         if (tender.tenderers[0]._id) {
     				        tender.tenderers[0]._id.select = false;
         					$scope.projectMembers.push(tender.tenderers[0]._id);
+                        } else {
+                            $scope.projectMembers.push({email: tender.tenderers[0].email, select: false});
                         }
                     } else {
                         _.each(tender.tenderers, function(tenderer) {
@@ -58,7 +60,9 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
                 }
 			});
 		});
+        $scope.projectMembers = _.uniq($scope.projectMembers, "email");
 		_.remove($scope.projectMembers, {_id: $rootScope.currentUser._id});
+        console.log($scope.projectMembers);
 	};
 	
 	//Functions to handle New Work Room Dialog.
