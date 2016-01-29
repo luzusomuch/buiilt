@@ -41,6 +41,11 @@ angular.module('buiiltApp').controller('projectCtrl', function($rootScope, $scop
 		$mdDialog.show({
 		    targetEvent: $event,
 	        controller: 'projectCtrl',
+            resolve: {
+                people: function(peopleService, $stateParams) {
+                    return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
+                }
+            },
 	        templateUrl: 'app/modules/project/project-overview/partials/project-overview-edit.html',
 	        parent: angular.element(document.body),
 	        clickOutsideToClose: false
@@ -55,6 +60,11 @@ angular.module('buiiltApp').controller('projectCtrl', function($rootScope, $scop
         $mdDialog.show({
             targetEvent: $event,
             controller: 'projectCtrl',
+            resolve: {
+                people: function(peopleService, $stateParams) {
+                    return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
+                }
+            },
             templateUrl: 'app/modules/project/project-overview/partials/upload-modal.html',
             parent: angular.element(document.body),
             clickOutsideToClose: false
@@ -101,7 +111,11 @@ angular.module('buiiltApp').controller('projectCtrl', function($rootScope, $scop
     };
 
     $scope.uploadNewDocument = function() {
-        uploadService.submitTender({id: $stateParams.id}, $scope.uploadFile).$promise.then(function(res) {
+        if (!$scope.uploadFile.userType) {
+            $scope.showToast("Please check your input");
+            return
+        }
+        peopleService.submitATender({id: $stateParams.id}, $scope.uploadFile).$promise.then(function(res) {
             $scope.closeDialog();
             $scope.showToast("Submit a tender successfully");
         }, function(err) {$scope.showToast("Error");});

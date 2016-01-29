@@ -30,6 +30,7 @@ var tender = {
         name: String,
         email: {type: String},
         tenderFile: [{
+            _id: {type: Schema.Types.ObjectId, ref: "File"},
             name: String,
             link: String
         }],

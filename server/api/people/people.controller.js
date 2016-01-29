@@ -973,8 +973,6 @@ exports.updateTender = function(req, res) {
                             cb();
                         });
                     } else if (data.editType === "broadcast-message") {
-                        console.log("IT GOES HERE");
-                        console.log(data);
                         var members = [];
                         var userMembers = [];
                         async.each(data.members, function(member, callback) {
@@ -1018,6 +1016,98 @@ exports.updateTender = function(req, res) {
                         if (err) {return res.send(500,err);}
                         return res.send(200,people[currentRole][index]);    
                     });
+                });
+            });
+        }
+    });
+};
+
+exports.submitATender = function(req, res) {
+    var data = req.body;
+    People.findOne({project: req.params.id}, function(err, people) {
+        if (err)
+            return res.send(500,err);
+        else if (!people) 
+            return res.send(404);
+        else {
+            var members = [];
+            var index;
+            var tenderIndex;
+            var currentRole;
+            if (data.userType) {
+                currentRole = data.userType;
+            } else {
+                var roles = ["builders","subcontractors", "consultants"];
+                _.each(roles, function(role) {
+                    _.each(people[role], function(tender) {
+                        if (tender._id.toString() === data.tenderId.toString()) {
+                            currentRole = role;
+                            return;
+                        }
+                    });
+                });
+            }
+            _.each(people[currentRole], function(tender, key) {
+                index = _.findIndex(tender.tenderers, function(tenderer) {
+                    if (tenderer._id) {
+                        return tenderer._id.toString() === req.user._id.toString();
+                    }
+                });
+                if (index !== -1) {
+                    members = [tender.inviter, req.user._id];
+                    tenderIndex = key;
+                    return false;
+                }
+            });
+            var file = new File({
+                project: req.params.id,
+                name: data.filename,
+                path: data.url,
+                key: data.key,
+                server: 's3',
+                mimeType: data.mimeType,
+                size: data.size,
+                owner: req.user._id,
+                members: members,
+                element: {type: "tender-file"}
+            });
+            file.save(function(err) {
+                if (err)
+                    return res.send(500,err);
+                people[currentRole][tenderIndex].tenderers[index].tenderFile.push({_id: file._id, name: file.name, link: file.path});
+                people[currentRole][tenderIndex].inviterActivities.push({
+                    user: req.user._id,
+                    createdAt: new Date(),
+                    type: "tender-file",
+                    element: {
+                        userMembers: [people[currentRole][tenderIndex].inviter],
+                        name: file.name,
+                        project: people.project,
+                        _id: file._id
+                    }
+                });
+                people._editUser = req.user;
+                people.save(function(err) {
+                    if (err) {
+                        file.remove(function(){
+                            return res.send(500,err);
+                        });
+                    } else {
+                        People.populate(people, [
+                            {path: "builders.tenderers._id", select: "_id name email"},
+                            {path: "builders.inviter", select: "_id name email"},
+                            {path: "builders.inviterActivities.user", select: "_id name email"},
+                            {path: "consultants.tenderers._id", select: "_id name email"},
+                            {path: "consultants.inviter", select: "_id name email"},
+                            {path: "consultants.inviterActivities.user", select: "_id name email"},
+                            {path: "subcontractors.tenderers._id", select: "_id name email"},
+                            {path: "subcontractors.inviter", select: "_id name email"},
+                            {path: "subcontractors.inviterActivities.user", select: "_id name email"}
+                        ], function(err, people) {
+                            if (err) {return res.send(500,err);}
+                            return res.send(200,people[currentRole][tenderIndex]);    
+                        });
+                    }
                 });
             });
         }

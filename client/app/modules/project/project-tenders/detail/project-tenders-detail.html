@@ -31,6 +31,7 @@
                         <md-icon ng-switch-when="invite-tender" class="material-icons md-primary">person_outline</md-icon>
                         <md-icon ng-switch-when="related-file" class="material-icons md-primary">attach_file</md-icon>
                         <md-icon ng-switch-when="broadcast-message" class="material-icons md-primary">chat_bubble_outline</md-icon>
+                        <md-icon ng-switch-when="tender-file" class="material-icons md-primary">attach_file</md-icon>
 					</div>
 					<span flex="5"></span>
 					<div flex class="activity-detail">
@@ -43,6 +44,7 @@
                             <span ng-switch-when="invite-tender">has invited new tenderer <span ng-repeat="member in activity.element.members">{{member.name}}, </span> </span>
                             <span ng-switch-when="broadcast-message">has sent a message: {{activity.element.message}}</span>
                             <span ng-switch-when="select-winner">has selected {{activity.element.name}} as winner of this tender</span>
+                            <span ng-switch-when="tender-file">has submit a tender {{activity.element.name}}. You can check it out <a ui-sref="project.files.detail({id: activity.element.project, fileId: activity.element._id})">here</a></span>
                         </p>
 						<p class="meta-data"><span class="time">{{activity.createdAt | date:'hh:mm a'}}</span> <span class="date">{{activity.createdAt |date:'dd-MM-yyyy'}}</span><p>
 					</div>
@@ -115,8 +117,8 @@
   	  					  <md-tooltip md-direction="left">Broadcast a Task</md-tooltip>
   	  				      <md-icon class="material-icons">done_all</md-icon>
   			  	      </md-button>
-  			  	      <md-button aria-label="Add a Related File" class="md-fab md-raised md-mini" ng-click="showModal($event, 'attach-related-file.html')" style="display:none">
-  	  					  <md-tooltip md-direction="left">Broadcast a File</md-tooltip>
+  			  	      <md-button aria-label="Add a Related File" class="md-fab md-raised md-mini" ng-click="showModal($event, 'attach-related-file.html')" ng-show="teamLeader && currentUser._id != tender.inviter._id">
+  	  					  <md-tooltip md-direction="left">Submit Tender</md-tooltip>
   	  				      <md-icon class="material-icons">attach_file</md-icon>
   			  	      </md-button>
   			  	  </md-fab-actions>

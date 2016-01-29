@@ -14,5 +14,6 @@ router.get('/:id/get-invite-people', auth.isAuthenticated(), controller.getInvit
 router.get('/:id/:tenderId/get-tender', auth.isAuthenticated(), controller.getTender);
 router.get('/:id/:tenderId/update-distribute-status', auth.isAuthenticated(), controller.updateDistributeStatus);
 
+router.post("/:id/submit-a-tender", auth.isAuthenticated(), controller.submitATender);
 router.post("/:id/:tenderId/attach-addendum", auth.isAuthenticated(), controller.attachAddendum);
 module.exports = router;

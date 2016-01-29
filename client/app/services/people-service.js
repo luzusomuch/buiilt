@@ -44,6 +44,12 @@ angular.module('buiiltApp')
                     action: "update-tender"
                 }
             },
+            submitATender: {
+                method: "POST",
+                params: {
+                    action: "submit-a-tender"
+                }
+            },
             createRelatedItem: {
                 method: "PUT",
                 params: {

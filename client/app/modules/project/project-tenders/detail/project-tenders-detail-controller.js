@@ -3,9 +3,11 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($roo
     $rootScope.title = $scope.tender.tenderName + " detail";
 
     function getTenderers() {
+        $scope.teamLeader = false;
         $scope.tenderers = [$scope.tender.inviter];
         _.each($scope.tender.tenderers, function(tenderer) {
             if (tenderer._id) {
+                $scope.teamLeader = true;
                 $scope.tenderers.push(tenderer._id);
             } else {
                 $scope.tenderers.push({email:tenderer.email});
@@ -76,11 +78,12 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($roo
             onSuccess
         );
     };
-
+    $scope.uploadFile = {};
     function onSuccess(file, type){
         file.type = "file";
-        if (type === "related") {
-            $scope.relatedItem.file = file;
+        if (type === "tender") {
+            file.tenderId = $stateParams.tenderId;
+            $scope.uploadFile = file;
         } else if (type === "addendum") {
             $scope.addendum.file = file;
         }
@@ -162,6 +165,18 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($roo
             $scope.showToast("Please check your input again");
             return;
         }
+    };
+
+    $scope.submitTender = function() {
+        if (!$scope.uploadFile.tenderId) {
+            $scope.showToast("Please check your input");
+            return;
+        }
+        peopleService.submitATender({id: $stateParams.id}, $scope.uploadFile).$promise.then(function(res) {
+            $scope.cancelNewTenderModal();
+            $scope.showToast("Submit a tender successfully");
+            $rootScope.$broadcast("Tender.Updated", res);
+        }, function(err) {$scope.showToast("Error");});
     };
 
     getTenderers();
