@@ -29,10 +29,7 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
 	$scope.minDate = new Date();
 	$scope.createNewMessage = function(form) {
 		if (form.$valid) {
-            if (!$scope.task.isSelectTenderer) 
-			    $scope.task.members = _.filter($scope.projectMembers, {select: true});
-            else if ($scope.task.isSelectTenderer) 
-                $scope.task.members = _.filter($scope.tenderers, {select: true});
+		    $scope.task.members = _.filter($scope.projectMembers, {select: true});
 			$scope.task.type = "task-project";
 			if ($scope.task.members.length > 0) {
 				taskService.create({id: $stateParams.id}, $scope.task).$promise.then(function(res) {
@@ -56,20 +53,7 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
 
 	$scope.selectMember = function(index, type) {
 		if (type === "member") {
-            $scope.task.isSelectTenderer = false;
-            _.each($scope.tenderers, function(tenderer) {
-                tenderer.select = false;
-            });
             $scope.projectMembers[index].select = !$scope.projectMembers[index].select;
-        } else {
-            $scope.task.isSelectTenderer = true;
-            _.each($scope.projectMembers, function(member) {
-                member.select = false;
-            });
-            _.each($scope.tenderers, function(tenderer) {
-                tenderer.select = false;
-            });
-            $scope.tenderers[index].select = !$scope.tenderers[index].select;
         }
 	};
 
@@ -79,7 +63,6 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
 
 	function getProjectMembers(id) {
 	    $scope.projectMembers = [];
-        $scope.tenderers = [];
 		_.each($rootScope.roles, function(role) {
 			_.each($scope.people[role], function(tender){
 				if (tender.hasSelect) {
@@ -116,17 +99,7 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
                             }
                         });
                     }
-				} else {
-                    if (tender.inviter._id.toString()===$rootScope.currentUser._id.toString()) {
-                        _.each(tender.tenderers, function(tenderer) {
-                            if (tenderer._id) {
-                                $scope.tenderers.push(tenderer._id);
-                            } else {
-                                $scope.tenderers.push({email: tenderer.email});
-                            }
-                        });
-                    }
-                }
+				}
 			});
 		});
 		_.remove($scope.projectMembers, {_id: $rootScope.currentUser._id});

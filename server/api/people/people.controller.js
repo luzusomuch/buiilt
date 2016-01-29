@@ -446,10 +446,10 @@ function responseTender(people, req, res) {
                     }
                 });
                 _.each(tender.inviterActivities, function(activity) {
-                    if (activity.type === "edit-tender" || activity.type === "attach-scope" || activity.type === "attach-addendum" || activity.type === "distribute-status") {
+                    if (activity.type === "edit-tender" || activity.type === "attach-scope" || activity.type === "attach-addendum" || activity.type === "invite-tender") {
                         inviterActivities.push(activity);
                     } else {
-                        if (_.indexOf(activity.element.members, req.user.email) !== -1 || tender.inviter._id.toString()===req.user._id.toString() || activity.user._id.toString()===req.user._id.toString()) {
+                        if ((activity.element && _.indexOf(activity.element.members, req.user.email) !== -1) || tender.inviter._id.toString()===req.user._id.toString() || activity.user._id.toString()===req.user._id.toString()) {
                             inviterActivities.push(activity);
                         }
                     }
@@ -913,7 +913,7 @@ exports.updateTender = function(req, res) {
             var originalTender = people[currentRole][index];
             var activity = {
                 user: user._id,
-                type: req.body.editType,
+                type: data.editType,
                 createdAt: new Date(),
                 element: {}
             };
@@ -972,6 +972,30 @@ exports.updateTender = function(req, res) {
                             activity.element.members = members;
                             cb();
                         });
+                    } else if (data.editType === "broadcast-message") {
+                        console.log("IT GOES HERE");
+                        console.log(data);
+                        var members = [];
+                        var userMembers = [];
+                        async.each(data.members, function(member, callback) {
+                            User.findOne({email: member.email}, function(err, _user) {
+                                if (err) 
+                                    callback();
+                                else if (!_user) {
+                                    members.push(member.email);
+                                    callback();
+                                } else {
+                                    userMembers.push(_user._id);
+                                    members.push(_user.email);
+                                    callback();
+                                }
+                            });
+                        }, function() {
+                            activity.element.members = members;
+                            activity.element.userMembers = userMembers;
+                            activity.element.message = data.message;
+                            cb();
+                        });
                     }
                 }
             ], function(err, result) {
@@ -1018,48 +1042,6 @@ exports.createRelatedItem = function(req, res) {
             .populate("consultants.inviterActivities.user", "_id email name")
             .exec(cb);
         },
-        file: function(cb) {
-            if (data.type === "file") {
-                async.each(data.members, function(member, cb) {
-                    var file = new File({
-                        project: req.params.id,
-                        name: data.file.filename,
-                        description: data.description,
-                        path: data.file.url,
-                        key: data.file.key,
-                        server: 's3',
-                        mimeType: data.file.mimeType,
-                        size: data.file.size,
-                        owner: req.user._id,
-                        element: {type: data.file.type}
-                    });
-                    User.findOne({email: member.email}, function(err,user) {
-                        if (err) {cb(err);}
-                        else if (!user) {
-                            file.notMembers = [member.email];
-                            file.save(function(err) {
-                                if (err) {cb(err);}
-                                else {
-                                    relatedItems.push({data: file, type: "file"});
-                                    cb();
-                                }
-                            });
-                        } else {
-                            file.member = [user._id];
-                            file.save(function(err) {
-                                if (err) {cb(err);}
-                                else {
-                                    relatedItems.push({data: file, type: "file"});
-                                    cb();
-                                }
-                            });
-                        }
-                    });
-                }, cb);
-            } else {
-                cb(null);
-            }
-        },
         thread: function(cb) {
             if (data.type === "thread") {
                 async.each(data.members, function(member, cb) {
@@ -1096,45 +1078,6 @@ exports.createRelatedItem = function(req, res) {
                                 if (err) {cb(err);}
                                 else {
                                     relatedItems.push({data: thread, type: "thread"});
-                                    cb();
-                                }
-                            });
-                        }
-                    });
-                }, cb);
-            } else {
-                cb(null);
-            }
-        },
-        task: function(cb) {
-            if (data.type === "task") {
-                async.each(data.members, function(member) {
-                    var task = new Task({
-                        description: data.description,
-                        dateEnd: data.dateEnd,
-                        project: req.params.id,
-                        owner: req.user._id,
-                        element: {type: "task-project"},
-                        dateStart: new Date()
-                    });
-                    task._editUser = req.user;
-                    User.findOne({email: member.email}, function(err,user) {
-                        if (err) {cb(err);}
-                        else if (!user) {
-                            task.notMembers = [member.email];
-                            task.save(function(err) {
-                                if (err) {cb(err);}
-                                else {
-                                    relatedItems.push({data: task, type: "task"});
-                                    cb();
-                                }
-                            });
-                        } else {
-                            task.members = [user._id];
-                            task.save(function(err) {
-                                if (err) {cb(err);}
-                                else {
-                                    relatedItems.push({data: task, type: "task"});
                                     cb();
                                 }
                             });

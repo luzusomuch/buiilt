@@ -133,68 +133,6 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
                             break;
                     }
                 });
-
-                // function getCurrentTeamMember() {
-                //     //get current user logged in team member
-                //     $scope.teamMembersCanInvite = $rootScope.currentTeam.leader;
-                //     _.each($rootScope.currentTeam.member, function(member) {
-                //         if (member._id && member.status === "Active") {
-                //             $scope.teamMembersCanInvite.push(member._id);
-                //         }
-                //     });
-                //     $scope.teamMembersCanInvite = _.uniq($scope.teamMembersCanInvite, '_id');
-                //     _.remove($scope.teamMembersCanInvite, {_id: $rootScope.currentUser._id});
-
-                //     if ($scope.people[$rootScope.currentUser.type]) {
-                //         _.each($scope.people[$rootScope.currentUser.type], function(tender) {
-                //             var currentTendererIndex = _.findIndex(tender.tenderers, function(tenderer) {
-                //                 if (tenderer._id) {
-                //                     return tenderer._id._id == $rootScope.currentUser._id;
-                //                 }
-                //             });
-                //             if (currentTendererIndex !== -1) {
-                //                 var currentTenderer = tender.tenderers[currentTendererIndex];
-                //                 _.each(currentTenderer.teamMember, function(member) {
-                //                     _.remove($scope.teamMembersCanInvite, {_id: member._id});
-                //                 });
-                //             }
-                //         });
-                //     }
-                // };
-
-                // $scope.getChangeTypeValue = function(type) {
-                //     if (type === 'addClient' || type === "addEmployee") {
-                //         $scope.invite.isTender = false;
-                //         if (type == 'addEmployee') {
-                //             getCurrentTeamMember();
-                //             $scope.invite.isInviteTeamMember = true;
-                //         } else {
-                //             $scope.invite.isInviteTeamMember = false;
-                //         }
-                //     } else {
-                //         $scope.invite.isTender = true;
-                //         $scope.invite.isInviteTeamMember = false;
-                //     }
-                //     $scope.invite.teamMember = [];
-                //     $scope.invite.invitees = [];
-                // };
-
-                // $scope.addInvitee = function(email, name) {
-                //     if (email && email != '' && name && name != '') {
-                //         if (_.findIndex($scope.invite.invitees, {email: email}) === -1) {
-                //             $scope.invite.invitees.push({email: email, name: name});
-                //             $scope.email = null;
-                //             $scope.name = null;
-                //         } else {
-                //             $scope.showToast("This email has already added");
-                //         }
-                //     }
-                // };  
-
-                // $scope.removeInvitee = function(index) {
-                //     $scope.invite.invitees.splice(index, 1);
-                // };
-
                 $scope.pickFile = pickFile;
 
                 $scope.onSuccess = onSuccess;

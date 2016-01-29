@@ -140,29 +140,23 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($roo
         }
     };
 
-    function setRelatedItem() {
-        $scope.relatedItem = {
-            members: []
-        };
+    $scope.broadcastMessage = {
+        members: []
     };
-    setRelatedItem();
-    $scope.createRelatedItem = function(form, type) {
+
+    $scope.sendBroadcastMessage = function(form) {
         if (form.$valid) {
-            $scope.relatedItem.type = type;
-            $scope.relatedItem.members = _.filter($scope.tenderers, {select: true});
-            if (type === "task" && !$scope.relatedItem.dateEnd) {
-                $scope.showToast("Please enter date end of task");
-                return;
-            }
-            if ($scope.relatedItem.members.length === 0) {
+            $scope.broadcastMessage.editType = "broadcast-message";
+            $scope.broadcastMessage.members = _.filter($scope.tenderers, {select: true});
+            if ($scope.broadcastMessage.members.length === 0) {
                 $scope.showToast("Please select at least 1 tenderer");
                 return;
             } else {
-                peopleService.createRelatedItem({id: $stateParams.id, tenderId: $stateParams.tenderId}, $scope.relatedItem).$promise.then(function(res) {
+                peopleService.updateTender({id: $stateParams.id, tenderId: $stateParams.tenderId}, $scope.broadcastMessage).$promise.then(function(res) {
                     $scope.cancelNewTenderModal();
-                    $scope.showToast("Create related thread successfully");
+                    $scope.showToast("Send message successfully");
                     $rootScope.$broadcast("Tender.Updated", res);
-                }, function(err){$scope.showToast("Error");});
+                }, function(err) {$scope.showToast("Error");});
             }
         } else {
             $scope.showToast("Please check your input again");
@@ -174,6 +168,5 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($roo
     $rootScope.$on("Tender.Updated", function(event, data) {
         $scope.tender = data;
         $scope.setInviteMembers();
-        setRelatedItem();
     });
 });

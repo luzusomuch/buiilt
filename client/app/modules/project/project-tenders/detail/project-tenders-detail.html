@@ -30,10 +30,7 @@
                         <md-icon ng-switch-when="edit-tender" class="material-icons md-primary">edit</md-icon>
                         <md-icon ng-switch-when="invite-tender" class="material-icons md-primary">person_outline</md-icon>
                         <md-icon ng-switch-when="related-file" class="material-icons md-primary">attach_file</md-icon>
-                        <md-icon ng-switch-when="related-thread" class="material-icons md-primary">chat_bubble_outline</md-icon>
-                        <md-icon ng-switch-when="related-task" class="material-icons md-primary">done_all</md-icon>
-                        <md-icon ng-switch-when="select-winner" class="material-icons md-primary">format_list_bulleted</md-icon>
-						<md-icon ng-switch-when="distribute-status" class="material-icons md-primary"></md-icon>
+                        <md-icon ng-switch-when="broadcast-message" class="material-icons md-primary">chat_bubble_outline</md-icon>
 					</div>
 					<span flex="5"></span>
 					<div flex class="activity-detail">
@@ -44,9 +41,7 @@
                             <span ng-switch-when="attach-scope">has attached an scope to this tender:{{activity.element.content}}. <span ng-show="activity.element._id">You can find it <a ui-sref="project.files.detail({id: activity.element.project, fileId: activity.element._id})">here</a>.</span> Due date of this tender is {{activity.element.dateEnd | date: 'dd-MM-yyyy'}}</span>
                             <span ng-switch-when="edit-tender">has edited the details of this tender: {{(activity.element.name) ? "Name: "+activity.element.name+", " : ""}} {{(activity.element.description) ? "Description: "+activity.element.description+", " : ""}}.</span>
                             <span ng-switch-when="invite-tender">has invited new tenderer <span ng-repeat="member in activity.element.members">{{member.name}}, </span> </span>
-                            <span ng-switch-when="related-thread">has created new related thread {{activity.element.content}}</span>
-                            <span ng-switch-when="related-file">has created new related file {{activity.element.content}}</span>
-                            <span ng-switch-when="related-task">has created new related task {{activity.element.content}}</span>
+                            <span ng-switch-when="broadcast-message">has sent a message: {{activity.element.message}}</span>
                             <span ng-switch-when="select-winner">has selected {{activity.element.name}} as winner of this tender</span>
                         </p>
 						<p class="meta-data"><span class="time">{{activity.createdAt | date:'hh:mm a'}}</span> <span class="date">{{activity.createdAt |date:'dd-MM-yyyy'}}</span><p>
@@ -112,15 +107,15 @@
   	  					  <md-tooltip md-direction="left">Select a Winning Tender</md-tooltip>
   	  				      <md-icon class="material-icons">format_list_bulleted</md-icon>
   			  	      </md-button>
-			  	      <md-button aria-label="Attach a Related Message" class="md-fab md-raised md-mini" ng-click="showModal($event, 'attach-related-message.html')" ng-show="tender.isDistribute && tender.inviter._id == currentUser._id">
+			  	      <md-button aria-label="Broadcast a Message" class="md-fab md-raised md-mini" ng-click="showModal($event, 'attach-related-message.html')" ng-show="tender.isDistribute">
 						  <md-tooltip md-direction="left">Broadcast a Message</md-tooltip>
 					      <md-icon class="material-icons">chat_bubble_outline</md-icon>
 			  	      </md-button>
-  			  	      <md-button aria-label="Add a Related Task" class="md-fab md-raised md-mini" ng-click="showModal($event, 'attach-related-task.html')" ng-show="tender.isDistribute && tender.inviter._id == currentUser._id">
+  			  	      <md-button aria-label="Add a Related Task" class="md-fab md-raised md-mini" ng-click="showModal($event, 'attach-related-task.html')" style="display:none">
   	  					  <md-tooltip md-direction="left">Broadcast a Task</md-tooltip>
   	  				      <md-icon class="material-icons">done_all</md-icon>
   			  	      </md-button>
-  			  	      <md-button aria-label="Add a Related File" class="md-fab md-raised md-mini" ng-click="showModal($event, 'attach-related-file.html')" ng-show="tender.isDistribute && tender.inviter._id == currentUser._id">
+  			  	      <md-button aria-label="Add a Related File" class="md-fab md-raised md-mini" ng-click="showModal($event, 'attach-related-file.html')" style="display:none">
   	  					  <md-tooltip md-direction="left">Broadcast a File</md-tooltip>
   	  				      <md-icon class="material-icons">attach_file</md-icon>
   			  	      </md-button>

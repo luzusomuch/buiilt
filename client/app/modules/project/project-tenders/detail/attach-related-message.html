@@ -1,65 +1,24 @@
 <md-dialog aria-label="Create a New Related Thread" flex="70">
-    <form ng-submit="createRelatedItem(form, 'thread')" name="form">
+    <form ng-submit="sendBroadcastMessage(form)" name="form">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2>Create a New Related Thread</h2>
+                <h2>Create a Broadcast Message</h2>
             </div>
         </md-toolbar>
         
         <md-dialog-content>
             <div class="md-dialog-content" layout="column">
-                
-                <div layout="row">
-                    <md-input-container flex>
-                        <label>Message Thread Name</label>
-                        <input md-autofocus type="text" ng-model="relatedItem.name" name="name" required/>
-                    </md-input-container>
-                </div>
 				
                 <div layout="row">
                     <md-input-container flex>
                         <label>Your Message</label>
-                        <textarea ng-model="relatedItem.message" columns="1" md-maxlength="250" rows="5" required></textarea>
+                        <textarea ng-model="broadcastMessage.message" columns="1" md-maxlength="250" rows="5" required></textarea>
                     </md-input-container>
                 </div>
             
                 <div layout="row" layout-align="center center" class="tagcloud" layout-wrap>
                     <span ng-click="selectMember($index)" ng-class="{'available-tag':!tenderer.select, 'selected-tag': tenderer.select}" ng-repeat="tenderer in tenderers track by $index">{{(tenderer._id) ? tenderer.name : tenderer.email}}<i ng-show="!tenderer._id" class="material-icons">mail_outline</i></span>
                 </div>
-                
-                <!-- <div layout="row">
-                    <md-input-container flex>
-                        <label>Related Thread Name</label>
-                        <input md-autofocus type="text" ng-model="relatedThread.name" name="name" required/>
-                    </md-input-container>
-                </div>
-
-                <div ng-cloak>
-                    <md-content layout="row" layout-wrap layout-xs="column">
-                        <div flex="33" flex-sm="50" flex-xs="100" layout="row">
-                            <md-card ng-click="selectMember($index, 'invitee')" ng-repeat="member in invitees" layout-margin>
-                                <md-card-header>
-                                    <p class="name">{{member.name}}</p>
-                                </md-card-header>
-
-                                <md-card-content>
-                                    <p class="email">{{(member.email) ? member.email : 'Email Address'}}</p>
-                                    <p class="phone">{{(member.phoneNumber)? member.phoneNumber : 'Phone Number'}}</p>
-                                </md-card-content>
-
-                                <md-card-actions layout-margin>
-                                    <md-card-icon-actions layout="row" layout-align="space-around center">
-                                        <md-button class="material-icons md-icon-button">
-                                            <md-tooltip md-direction="down">Invite To This Thread</md-tooltip>
-                                            <md-icon ng-show="member.select" class="material-icons">done</md-icon>
-                                        </md-button>
-                                    </md-card-icon-actions>
-                                </md-card-actions>
-                            </md-card>
-                        </div>
-                    </md-content>
-                </div> -->
-                    
             </div>
         </md-dialog-content>
         <md-dialog-actions>

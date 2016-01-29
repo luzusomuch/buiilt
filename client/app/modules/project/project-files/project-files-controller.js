@@ -26,7 +26,6 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
 
     function getProjectMembers(id) {
         $scope.projectMembers = [];
-        $scope.tenderers = [];
         $scope.tags = [];
         _.each($rootScope.currentTeam.fileTags, function(tag) {
             $scope.tags.push({name: tag, select: false});
@@ -67,16 +66,6 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
                             }
                         });
                     }
-                } else {
-                    if (tender.inviter._id.toString()===$rootScope.currentUser._id.toString()) {
-                        _.each(tender.tenderers, function(tenderer) {
-                            if (tenderer._id) {
-                                $scope.tenderers.push(tenderer._id);
-                            } else {
-                                $scope.tenderers.push({email: tenderer.email});
-                            }
-                        });
-                    }
                 }
             });
         });
@@ -97,30 +86,14 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
 
     $scope.selectChip = function(index, type) {
         if (type === "member") {
-            $scope.uploadFile.isSelectTenderer = false;
-            _.each($scope.tenderers, function(tenderer) {
-                tenderer.select = false;
-            });
             $scope.projectMembers[index].select = !$scope.projectMembers[index].select;
         } else if (type === "tag") {
             $scope.tags[index].select = !$scope.tags[index].select;
-        } else {
-            $scope.uploadFile.isSelectTenderer = true;
-            _.each($scope.projectMembers, function(member) {
-                member.select = false;
-            });
-            _.each($scope.tenderers, function(tenderer) {
-                tenderer.select = false;
-            });
-            $scope.tenderers[index].select = !$scope.tenderers[index].select;
         }
     };
 
 	$scope.createNewFile = function() {
-        if (!$scope.uploadFile.isSelectTenderer)
-            $scope.uploadFile.members = _.filter($scope.projectMembers, {select: true});
-        else if ($scope.uploadFile.isSelectTenderer)
-            $scope.uploadFile.members = _.filter($scope.tenderers, {select: true});
+        $scope.uploadFile.members = _.filter($scope.projectMembers, {select: true});
         $scope.uploadFile.tags = _.filter($scope.tags, {select: true});
 		if ($scope.uploadFile.files.length == 0) {
 			$scope.showToast("Please choose at least 1 file");

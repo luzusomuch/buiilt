@@ -28,6 +28,26 @@ EventBus.onSeries('People.Updated', function(req, next) {
         } else {
             return next();
         }
+    } else if (req._modifiedPaths.indexOf("updateDistributeStatus") !== -1) {
+        var currentTender = req.updatedTender;
+        var owner = [];
+        _.each(currentTender.tenderers, function(tenderer) {
+            if (tenderer._id) {
+                owner.push(tenderer._id);
+            }
+        });
+        var params = {
+            owners: owners,
+            fromUser: req.editUser._id,
+            element: req,
+            referenceTo: 'people',
+            type: 'invite-people'
+        }
+        NotificationHelper.create(params, function(){
+            PushNotificationHelper.getData(req.project,req._id,'People package', req.editUser.name, owners, 'invite-people', function() {
+                return next();
+            });
+        });
     } else if (req._modifiedPaths.indexOf('selectWinnerTender') != -1) {
         if (req.winnerTender.length > 0) {
             var params = {
