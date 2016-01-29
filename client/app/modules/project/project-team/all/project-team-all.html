@@ -26,7 +26,7 @@
 <div class="main-page-content" layout="column" flex>
 	<md-list ng-cloak>
 		<div ng-show="!search" ng-repeat="member in membersList | filter :{name: name, email: email} track by $index">
-			<md-list-item class="md-2-line secondary-button-padding" style="cursor: default">
+			<md-list-item class="md-2-line" style="cursor: default">
 				<div class="md-list-item-text" layout="column">
 			          <h3>{{(member._id) ? member.name : member.email}}</h3>
 			          <p><span style="text-transform: capitalize">{{ member.type }}</span>, {{(member.email) ? member.email : 'No Email Address on File'}}, {{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</p>
@@ -36,20 +36,11 @@
 		</div>
 
 		<div ng-show="search" ng-repeat="member in searchResults | filter :{name: name, email: email} track by $index" ui-sref="project.team.detail">
-			<md-list-item class="md-2-line secondary-button-padding">
+			<md-list-item class="md-2-line" style="cursor: default">
 				<div class="md-list-item-text" layout="column">
 			          <h3>{{(member._id) ? member.name : member.email}}</h3>
 			          <p><span style="text-transform: capitalize">{{ member.type }}</span>, {{(member.email) ? member.email : 'No Email Address on File'}}, {{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</p>
 		        </div>
-				<md-button class="md-secondary md-icon-button" ng-click="assignLeader(member)">
-					<md-icon class="material-icons">chat_bubble_outline</md-icon>
-				</md-button>
-				<md-button class="md-secondary md-icon-button" ng-click="removeMember(member)" style="margin-right: 60px">
-					<md-icon class="material-icons">done_all</md-icon>
-				</md-button>
-				<md-button class="md-secondary md-icon-button" ng-click="removeMember(member)" style="margin-right: 120px">
-					<md-icon class="material-icons">attach_file</md-icon>
-				</md-button>
 			</md-list-item>
 			<md-divider></md-divider>
 		</div>
