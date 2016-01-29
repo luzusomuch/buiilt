@@ -1,6 +1,10 @@
 'use strict';
 
 var User = require('./../../models/user.model');
+var Task = require('./../../models/task.model');
+var Thread = require('./../../models/thread.model');
+var File = require('./../../models/file.model');
+
 var ResetPassword = require('./../../models/resetPassword.model');
 var Project = require('./../../models/project.model');
 var PackageInvite = require('./../../models/packageInvite.model');
@@ -182,15 +186,63 @@ exports.createUserWithInviteToken = function(req, res, next) {
                         people._editUser = user;
                         people.save(function(err) {
                             if (err) {return res.send(500,err);}
-                            var data = {
-                                token: token,
-                                emailVerified: true,
-                                isSkipInTender: packageInvite.isSkipInTender,
-                                package: people
-                            };
-                            packageInvite.remove(function(err){
-                                if (err) {return res.send(500);}
-                                return res.json(200,data);
+                            async.parallel([
+                                function (cb) {
+                                    Task.find({}, function(err, tasks) {
+                                        if (err) {cb();}
+                                        async.each(tasks, function(task, callback) {
+                                            var currentUserIndex = _.indexOf(task.notMembers, user.email);
+                                            if (currentUserIndex !== -1) {
+                                                task.members.push(user._id);
+                                                task.notMembers.splice(currentUserIndex, 1);
+                                            }
+                                            task._editUser = user;
+                                            task.save(callback());
+                                        },cb);
+                                    });
+                                },
+                                function (cb) {
+                                    File.find({}, function(err, files) {
+                                        if (err) {cb();}
+                                        async.each(files, function(file, callback) {
+                                            if (file.element.type === "document") {
+                                                callback();
+                                            } else {
+                                                var currentUserIndex = _.indexOf(file.notMembers, user.email);
+                                                if (currentUserIndex !== -1) {
+                                                    file.members.push(user._id);
+                                                    file.notMembers.splice(currentUserIndex, 1);
+                                                }
+                                                file.save(callback());
+                                            }
+                                        },cb);
+                                    });
+                                },
+                                function (cb) {
+                                    Thread.find({}, function(err, threads) {
+                                        if (err) {cb();}
+                                        async.each(threads, function(thread, callback) {
+                                            var currentUserIndex = _.indexOf(thread.notMembers, user.email);
+                                            if (currentUserIndex !== -1) {
+                                                thread.members.push(user._id);
+                                                thread.notMembers.splice(currentUserIndex, 1);
+                                            }
+                                            thread.save(callback());
+                                        },cb);
+                                    });
+                                },
+                            ], function(err) {
+                                if (err) {return res.send(500,err);}
+                                var data = {
+                                    token: token,
+                                    emailVerified: true,
+                                    isSkipInTender: packageInvite.isSkipInTender,
+                                    package: people
+                                };
+                                packageInvite.remove(function(err){
+                                    if (err) {return res.send(500);}
+                                    return res.json(200,data);
+                                });
                             });
                         });
                     }
