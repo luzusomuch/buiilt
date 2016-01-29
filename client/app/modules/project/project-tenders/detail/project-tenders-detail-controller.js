@@ -1,7 +1,15 @@
-angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($rootScope, $scope, $timeout, $stateParams, peopleService, $mdToast, tender, $mdDialog, $state) {
+angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($rootScope, $scope, $timeout, $stateParams, peopleService, $mdToast, tender, $mdDialog, $state, socket) {
     $scope.tender = tender;
     $scope.currentUser = $rootScope.currentUser;
     $rootScope.title = $scope.tender.tenderName + " detail";
+
+    socket.emit('join', tender._id);
+    socket.on("broadcast:message", function(data) {
+        var latestActivity = _.last(data.inviterActivities);
+        if (latestActivity.type === "broadcast-message" && _.indexOf(latestActivity.element.userMembers, $scope.currentUser._id) !== -1) {
+            $scope.tender.inviterActivities.push(latestActivity);
+        }
+    });
 
     function getTenderers() {
         $scope.teamLeader = false;

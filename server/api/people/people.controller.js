@@ -8,6 +8,7 @@ var Thread = require('./../../models/thread.model');
 var Task = require('./../../models/task.model');
 var _ = require('lodash');
 var async = require('async');
+var EventBus = require('../../components/EventBus');
 
 var populatePaths = [
     {path:"builders.tenderers._id", select: "_id email name"},
@@ -1014,6 +1015,14 @@ exports.updateTender = function(req, res) {
                         {path: "subcontractors.inviterActivities.user", select: "_id name email"}
                     ], function(err, people) {
                         if (err) {return res.send(500,err);}
+                        if (data.editType === "broadcast-message") {
+                            EventBus.emit('socket:emit', {
+                                event: 'broadcast:message',
+                                room: people[currentRole][index]._id.toString(),
+                                data: people[currentRole][index]
+                            });
+                            return res.send(200,people[currentRole][index]);    
+                        }
                         return res.send(200,people[currentRole][index]);    
                     });
                 });
