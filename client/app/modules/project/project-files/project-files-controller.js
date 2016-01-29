@@ -54,6 +54,8 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
                         if (tender.tenderers[0]._id) {
                             tender.tenderers[0]._id.select = false;
                             $scope.projectMembers.push(tender.tenderers[0]._id);
+                        } else {
+                            $scope.projectMembers.push({email: tender.tenderers[0].email, select: false});
                         }
                     } else {
                         _.each(tender.tenderers, function(tenderer) {

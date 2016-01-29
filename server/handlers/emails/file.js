@@ -8,6 +8,7 @@ var Mailer = require('./../../components/Mailer');
 var PackageInvite = require('./../../models/packageInvite.model');
 var People = require('./../../models/people.model');
 var _ = require('lodash');
+var config = require('./../../config/environment');
 var async = require('async');
 
 
@@ -24,9 +25,10 @@ EventBus.onSeries('File.Inserted', function(request, next) {
         }
     }, function(err, result) {
         if (err) {return next();}
-        if (request.element.type === "file") {
+        var from = result.editUser.name + "<"+result.editUser.email+">";
+        if (request.element.type === "file" && request.notMembers.length > 0) {
             async.each(request.notMembers, function(member, cb) {
-                PackageInvite.findOne({to: member}, function(err, packageInvite) {
+                PackageInvite.findOne({project: request.project, to: member}, function(err, packageInvite) {
                     if (err || !packageInvite) {cb();}
                     else {
                         Mailer.sendMail('upload-file-to-non-user.html', from, member, {
@@ -37,7 +39,7 @@ EventBus.onSeries('File.Inserted', function(request, next) {
                             request: request.toJSON(),
                             type: "file",
                             link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
-                            subject: req.editUser.name + ' has uploaded for you a file ' + request.name
+                            subject: result.editUser.name + ' has uploaded for you a file ' + request.name
                         },function(err){console.log(err);
                             return cb();
                         });
@@ -65,7 +67,7 @@ EventBus.onSeries('File.Inserted', function(request, next) {
                                             request: request.toJSON(),
                                             type: "document",
                                             link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
-                                            subject: req.editUser.name + ' has uploaded for you a document ' + request.name
+                                            subject: result.editUser.name + ' has uploaded for you a document ' + request.name
                                         },function(err){console.log(err);
                                             cb();
                                         });
@@ -104,6 +106,7 @@ EventBus.onSeries('File.Updated', function(request, next) {
                 }
             }, function(err, result) { 
                 if (err) {return next();}
+                var from = result.editUser.name + "<"+result.editUser.email+">";
                 var roles = ["builders", "clients", "architects", "subcontractors", "consultants"];
                 People.findOne({project: request.project}, function(err, people) {
                     if (err || !people) {return next();}
@@ -122,7 +125,7 @@ EventBus.onSeries('File.Updated', function(request, next) {
                                                 request: request.toJSON(),
                                                 type: "document reversion",
                                                 link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
-                                                subject: req.editUser.name + ' has uploaded for you a document ' + request.name
+                                                subject: result.editUser.name + ' has uploaded for you a document ' + request.name
                                             },function(err){console.log(err);
                                                 cb();
                                             });
@@ -153,7 +156,7 @@ EventBus.onSeries('File.Updated', function(request, next) {
                             request: request.toJSON(),
                             type: "file reversion",
                             link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
-                            subject: req.editUser.name + ' has uploaded for you a file ' + request.name
+                            subject: result.editUser.name + ' has uploaded for you a file ' + request.name
                         },function(err){console.log(err);
                             cb();
                         });
