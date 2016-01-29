@@ -1,5 +1,6 @@
 angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($rootScope, $scope, $timeout, $stateParams, peopleService, $mdToast, tender, $mdDialog, $state) {
     $scope.tender = tender;
+    $scope.currentUser = $rootScope.currentUser;
     $rootScope.title = $scope.tender.tenderName + " detail";
 
     function getTenderers() {
@@ -63,10 +64,15 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($roo
     };
 
     $scope.selectMember = function(index) {
-        // _.each($scope.tenderers, function(tenderer) {
-        //     tenderer.select = false;
-        // });
+        $scope.select = false;
         $scope.tenderers[index].select = !$scope.tenderers[index].select;
+    };
+
+    $scope.selectAllMember = function() {
+        $scope.select = !$scope.select;
+        _.each($scope.tenderers, function(tenderer) {
+            tenderer.select = $scope.select;
+        });
     };
 
     $scope.pickFile = pickFile;
