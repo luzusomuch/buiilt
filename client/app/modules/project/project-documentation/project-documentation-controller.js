@@ -15,6 +15,35 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
     };
     setUploadFile();
 
+    // filter document
+    $scope.filterTags = [];
+    $scope.selectFilterTag = function(tagName) {
+        var tagIndex = _.indexOf($scope.filterTags, tagName);
+        if (tagIndex !== -1) {
+            $scope.filterTags.splice(tagIndex, 1);
+        } else 
+            $scope.filterTags.push(tagName);
+    };
+
+    $scope.search = function(document) {
+        var found = false;
+        if ($scope.name && $scope.name.length > 0) {
+            if (document.name.toLowerCase().indexOf($scope.name) > -1) {
+                found = true;
+            }
+            return found;
+        } else if ($scope.filterTags.length > 0) {
+            _.each($scope.filterTags, function(tag) {
+                if (_.indexOf(document.tags, tag) !== -1) {
+                    found = true;
+                }
+            });
+            return found;
+        } else 
+            return true;
+    };
+    // end filter
+
     $rootScope.$on("Document.Uploaded", function(event, data) {
         $scope.documents = _.union($scope.documents, data);
     });
