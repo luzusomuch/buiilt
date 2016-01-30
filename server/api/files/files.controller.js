@@ -18,7 +18,7 @@ exports.getFilesByProject = function(req, res) {
     } else if (req.params.type === "document") {
         query = {project: req.params.id, "element.type": "document"};
     }
-    File.find(query, function(err, files) {
+    File.find(query).populate("members", "_id name email").exec(function(err, files) {
         if (err) {return res.send(500,err);}
         return res.send(200,files);
     });

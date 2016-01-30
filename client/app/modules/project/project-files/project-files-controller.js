@@ -1,7 +1,6 @@
 angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $timeout, $mdDialog, uploadService, files, peopleService, $stateParams, $rootScope, $mdToast, people, $state) {
     $scope.people = people;
 	$scope.files = files;
-	$scope.search = false;
 	$scope.uploadFile = {
 		files:[],
 		tags:[],
@@ -23,6 +22,47 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
     	file.type = "file";
     	$scope.uploadFile.files.push(file);
     };
+
+    // filter section
+    $scope.filterTags = [];
+    $scope.selectFilterTag = function(tagName) {
+        var tagIndex = _.indexOf($scope.filterTags, tagName);
+        if (tagIndex !== -1) {
+            $scope.filterTags.splice(tagIndex, 1);
+        } else 
+            $scope.filterTags.push(tagName);
+    };
+
+    $scope.search = function(file) {
+        var found = false;
+        if (($scope.name && $scope.name.length > 0) || ($scope.recipient && $scope.recipient.length > 0)) {
+            if ($scope.name) {
+                if (file.name.toLowerCase().indexOf($scope.name) > -1 || file.name.indexOf($scope.name) > -1) {
+                    found = true;
+                }
+            } else if ($scope.recipient) {
+                if (_.findIndex(file.members, function(member) {
+                    return ((member.name.toLowerCase().indexOf($scope.recipient) > -1 || member.name.indexOf($scope.recipient) > -1) || (member.email.toLowerCase().indexOf($scope.recipient) > -1 || member.email.indexOf($scope.recipient) > -1));
+                }) !== -1) {
+                    found = true;
+                } else if (_.findIndex(file.notMembers, function(member) {
+                    return member.indexOf($scope.recipient) > -1;
+                }) !== -1) {
+                    found = true;
+                }
+            } 
+            return found;
+        } else if ($scope.filterTags.length > 0) {
+            _.each($scope.filterTags, function(tag) {
+                if (_.indexOf(file.tags, tag) !== -1) {
+                    found = true;
+                }
+            })
+            return found;
+        } else
+            return true;
+    };
+    // end filter section
 
     function getProjectMembers(id) {
         $scope.projectMembers = [];
@@ -70,18 +110,6 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
             });
         });
         _.remove($scope.projectMembers, {_id: $rootScope.currentUser._id});
-    };
-
-    $scope.searchMember = function(query) {
-    	var results = query ? $scope.membersList.filter(filterMember(query)) : [];
-        results = _.uniq(results, '_id');
-        return results;
-    };
-
-    function filterMember(query) {
-        return function filterFn(member) {
-            return member.name.toLowerCase().indexOf(query) > -1;
-        };
     };
 
     $scope.selectChip = function(index, type) {
@@ -134,9 +162,6 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
 	$scope.cancelNewFileModal = function() {
 		$mdDialog.cancel();
 	};
-	
-	//Placeholder set of filters to use for layout demo
-	$scope.filesFilters = ['Room1', 'Room2'];
 
 	$scope.showToast = function(value) {
         $mdToast.show($mdToast.simple().textContent(value).position('bottom','right').hideDelay(3000));
