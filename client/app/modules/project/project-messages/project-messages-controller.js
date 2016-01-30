@@ -7,7 +7,7 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
     $scope.search = function(thread) {
         if ($scope.name && $scope.name.length > 0) {
             var found = false;
-            if (thread.name.toLowerCase().indexOf($scope.name) > -1) {
+            if (thread.name.toLowerCase().indexOf($scope.name) > -1 || thread.name.indexOf($scope.name) > -1) {
                 found = true
             }
             return found;
@@ -15,7 +15,7 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
             var found = false;
             if (thread.members && thread.members.length > 0) {
                 _.each(thread.members, function(member) {
-                    if (member.name.toLowerCase().indexOf($scope.recipient) > -1 || member.email.toLowerCase().indexOf($scope.recipient) > -1) {
+                    if ((member.name.toLowerCase().indexOf($scope.recipient) > -1 || member.name.indexOf($scope.recipient) > -1) || (member.email.toLowerCase().indexOf($scope.recipient) > -1 || member.email.indexOf($scope.recipient) > -1)) {
                         found = true;
                     }
                 });
@@ -31,7 +31,7 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
         } else if ($scope.reply && $scope.reply.length > 0) {
             var found = false;
             _.each(thread.messages, function(message) {
-                if (message.text.toLowerCase().indexOf($scope.reply) > -1) {
+                if (message.text.toLowerCase().indexOf($scope.reply) > -1 || message.text.indexOf($scope.reply) > -1) {
                     found = true;
                 }
             });

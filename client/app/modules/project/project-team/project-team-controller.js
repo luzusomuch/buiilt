@@ -41,7 +41,7 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
     $scope.searchMember = function(member) {
         if ($scope.name && $scope.name.length > 0) {
             var found = false;
-            if (member.name && member.name.toLowerCase().indexOf($scope.name) > -1) {
+            if (member.name && (member.name.toLowerCase().indexOf($scope.name) > -1 || member.name.indexOf($scope.name) > -1) ) {
                 found = true;
             }
             return found;

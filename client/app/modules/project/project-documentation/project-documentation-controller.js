@@ -28,7 +28,7 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
     $scope.search = function(document) {
         var found = false;
         if ($scope.name && $scope.name.length > 0) {
-            if (document.name.toLowerCase().indexOf($scope.name) > -1) {
+            if (document.name.toLowerCase().indexOf($scope.name) > -1 || document.name.indexOf($scope.name) > -1) {
                 found = true;
             }
             return found;

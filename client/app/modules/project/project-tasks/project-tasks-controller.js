@@ -34,7 +34,7 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
         var found = false
         var taskDueDate = moment(task.dateEnd).format("YYYY-MM-DD");
         if ($scope.description && $scope.description.length > 0) {
-            if (task.description.toLowerCase().indexOf($scope.description) > -1) {
+            if (task.description.toLowerCase().indexOf($scope.description) > -1 || task.description.indexOf($scope.description) > -1) {
                 found = true;
             }
             return found;
@@ -44,15 +44,11 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
             }
             return found;
         } else if ($scope.status && $scope.status.length > 0) {
-            console.log($scope.status);
             if ($scope.status === "toMe") {
-                console.log("[DEBUG TO ME]");
                 found = (_.findIndex(task.members, function(member) {
-                    console.log(member._id, $rootScope.currentUser._id);
                     return member._id.toString()===$rootScope.currentUser._id.toString();
                 }) !== -1) ? true : false;
             } else if ($scope.status === "byMe") {
-                console.log("[DEBUG BY ME]");
                 if (task.owner._id.toString()===$rootScope.currentUser._id.toString()) {
                     found = true
                 }
