@@ -92,6 +92,14 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
         $scope.membersList = [];
         _.each($rootScope.roles, function(role) {
             _.each(people[role], function(tender) {
+                if (tender.inviter._id == $rootScope.currentUser._id || _.findIndex(tender.tenderers, function(tenderer) {
+                    if (tenderer._id) {
+                        return tenderer._id == $rootScope.currentUser._id;
+                    }
+                }) !== -1) {
+                    $scope.allowInviteTender = true;
+                }
+                
                 if (_.findIndex(tender.tenderers, function(user) {
                     if (user._id) {
                         return user._id._id == $rootScope.currentUser._id;

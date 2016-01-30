@@ -4,7 +4,7 @@
 
 <div class="main-page-content" layout-padding>
 	
-	<div layout="column" layout-padding>
+	<div layout="column" layout-padding ng-show="currentTeam._id">
 		
 		<div layout-margin>
 			<p><strong>Company Name:</strong></p>
@@ -70,7 +70,7 @@
 			        <md-tooltip md-direction="left">Create new Team</md-tooltip>
 			        <md-icon class="material-icons">person_outline</md-icon>
 			    </md-button>
-		      	<md-button aria-label="Edit Company Details" class="md-fab md-raised md-mini" ng-click="showEditCompanyModal($event)">
+		      	<md-button aria-label="Edit Company Details" class="md-fab md-raised md-mini" ng-show="currentTeam._id && currentUser.isLeader" ng-click="showEditCompanyModal($event)">
 			  		<md-tooltip md-direction="left">Edit Company Details</md-tooltip>
 		      		<md-icon class="material-icons">edit</md-icon>
 		      	</md-button>
