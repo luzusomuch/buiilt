@@ -1,6 +1,6 @@
 <div class="detail-header" layout-padding layout="row">
-	<md-input-container>
-		<label for="">Search for project</label>
+	<md-input-container flex>
+		<label for="">Search for a Project</label>
 		<input type="text" ng-model="filter">
 	</md-input-container>
 </div>
@@ -16,16 +16,6 @@
 		</md-list-item>
 		<md-divider></md-divider>
 	</div>
-
-	<!-- <div ng-show="search && project.status=='waiting'" ng-repeat="project in projectsFilter" ui-sref="project.overview({id: project._id})">
-		<md-list-item class="md-2-line" md-ink-ripple>
-			<div class="md-list-item-text" layout="column">
-		          	<h3>{{ project.name }}</h3>
-					<p>{{ project.address }}, {{ project. suburb }} {{ project.postcode }}</p>
-	        </div>
-		</md-list-item>
-		<md-divider></md-divider>
-	</div> -->
 	
 </md-list>
 
