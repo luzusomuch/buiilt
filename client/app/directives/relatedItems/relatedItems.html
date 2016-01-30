@@ -23,16 +23,16 @@
 
 				<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event, member._id)" ng-show="data.element" ng-repeat="member in data.members track by $index">
 				    <div class="md-list-item-text">
-					    <h3>{{member.name}}</h3>
+					    <h3>{{(member._id) ? member.name : member.email}}</h3>
 				    </div>
 					<md-divider></md-divider>
 				</md-list-item>
-				<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event, member._id)" ng-show="data.element" ng-repeat="member in data.notMembers track by $index">
+				<!-- <md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event, member._id)" ng-show="data.element" ng-repeat="member in data.notMembers track by $index">
 				    <div class="md-list-item-text">
 					    <h3>{{member}}</h3>
 				    </div>
 					<md-divider></md-divider>
-				</md-list-item>
+				</md-list-item> -->
 
 			</md-list>
         </md-tab-body>

@@ -53,6 +53,8 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
                             member.select = false;
                             $scope.membersList.push(member);
                         });
+                    } else {
+                        $scope.member.push({email: tender.tenderer[0].email, select: false});
                     }
                 });
             });
@@ -118,6 +120,7 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
     $scope.editFile = function(form) {
         if (form.$valid) {
             $scope.file.editType = "edit";
+            $scope.file.tags = _.filter($scope.tags, {select: true});
             $scope.update($scope.file);
         } else {
             $scope.showToast("Error");

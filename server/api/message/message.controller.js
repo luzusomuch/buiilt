@@ -126,6 +126,7 @@ exports.create = function(req,res) {
                             item: {_id: thread._id},
                             members: data.members
                         });
+                        main._editUser = req.user;
                         main.save(function(err) {
                             if (err) {return res.send(500,err);}
                             if (req.body.belongToType === "thread") 
