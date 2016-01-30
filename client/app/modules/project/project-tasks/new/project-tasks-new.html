@@ -23,7 +23,7 @@
 				</div>
 				
 				<div layout="row" layout-align="center center" class="tagcloud" layout-wrap>
-					<span ng-click="selectMember($index, 'member')" ng-class="{'available-tag':!member.select, 'selected-tag': member.select}" ng-repeat="member in projectMembers">{{(member._id) ? member.name : member.email}}<i ng-show="!member._id" class="material-icons">mail_outline</i></span>
+					<span ng-click="selectMember($index, 'member')" ng-class="{'available-tag':!member.select, 'selected-tag': member.select}" ng-repeat="member in projectMembers">{{(member._id) ? member.name : member.email}}<md-icon ng-show="!member._id" class="material-icons non-user-chip cursor-help"><md-tooltip>Task will be sent via email to this Team Member</md-tooltip>mail_outline</md-icon></span>
 				</div>
 				
 			</div>
@@ -31,7 +31,7 @@
 		
 		<md-dialog-actions>
 			<md-button ng-click="cancelNewTaskModal()">Cancel</md-button>
-			<md-button type="submit" class="md-raised md-accent md-hue-1">Create Task!</md-button>
+			<md-button type="submit">Create Task</md-button>
 		</md-dialog-actions>
 	</form>
 </md-dialog>

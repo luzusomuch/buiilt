@@ -415,12 +415,17 @@ md-input-container > label {
 }
 
 .activity-stream .meta-data {
-	font-size: 10px;
+	font-size: 11px;
 	font-weight: 500;
 	text-transform: uppercase;
 	font-color: #616161;
 	margin-top: 1vh;
 }
+
+.date-time {
+	color: #757575;
+}
+
 
 .activity-stream {
 	border: 1px solid #eee;
@@ -443,6 +448,16 @@ md-input-container > label {
 	font-weight: 500;
 	text-transform: uppercase;
 	padding: 12px;
+}
+
+.activity-creator {
+	font-weight: 500;
+	text-transform: uppercase;
+	font-size:14px;
+}
+
+.activity-body {
+	margin-top: 0.5vh;
 }
 
 .team-card {
@@ -507,7 +522,14 @@ md-list-item{
 	cursor: pointer;
 }
 
+.non-user-chip{
+	font-size: 14px;
+	margin: 0 0 -1vh 1vh;
+}
 
+.cursor-help {
+	cursor: help;
+}
 
 
 

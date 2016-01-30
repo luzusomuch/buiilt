@@ -2,7 +2,7 @@
     <form ng-submit="sendBroadcastMessage(form)" name="form">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2>Create a Broadcast Message</h2>
+                <h2>Send a Message</h2>
             </div>
         </md-toolbar>
         
@@ -20,13 +20,13 @@
                 </div>
             
                 <div layout="row" layout-align="center center" class="tagcloud" layout-wrap>
-                    <span ng-click="selectMember($index)" ng-class="{'available-tag':!tenderer.select, 'selected-tag': tenderer.select}" ng-repeat="tenderer in tenderers track by $index">{{(tenderer._id) ? tenderer.name : tenderer.email}}<i ng-show="!tenderer._id" class="material-icons">mail_outline</i></span>
+                    <span ng-click="selectMember($index)" ng-class="{'available-tag':!tenderer.select, 'selected-tag': tenderer.select}" ng-repeat="tenderer in tenderers track by $index">{{(tenderer._id) ? tenderer.name : tenderer.email}}<md-icon ng-show="!tenderer._id" class="material-icons non-user-chip">mail_outline</md-icon></span>
                 </div>
             </div>
         </md-dialog-content>
         <md-dialog-actions>
             <md-button ng-click="cancelNewTenderModal()">Cancel</md-button>
-            <md-button type="submit">Send Brodcast Message</md-button>
+            <md-button type="submit">Send Message</md-button>
         </md-dialog-actions>
     </form>
 </md-dialog>
