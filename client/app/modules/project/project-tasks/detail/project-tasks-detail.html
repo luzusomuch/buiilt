@@ -22,108 +22,54 @@
 				</div>
 				
 				<div layout="row" layout-align="center center" flex class="activity-stream" ng-repeat="activity in task.activities" ng-class="{related: activity.element.related}">
+					
 					<span flex="5"></span>
+					
 					<div class="icon-type" ng-switch="activity.type">
-						<!-- create task -->
+						
 						<md-icon ng-switch-when="create-task" class="material-icons md-primary">add</md-icon>
-						<!-- complete task -->
 						<md-icon ng-switch-when="complete-task" class="material-icons md-primary">done</md-icon>
-						<!-- uncomplete task -->
 						<md-icon ng-switch-when="uncomplete-task" class="material-icons md-primary">done</md-icon>
-						<!-- edit task -->
 						<md-icon ng-switch-when="edit-task" class="material-icons md-primary">edit</md-icon>
-						<!-- assign -->
 						<md-icon ng-switch-when="assign" class="material-icons md-primary">person_outline</md-icon>
-						<!-- related-message -->
 						<md-icon ng-switch-when="related-thread" class="material-icons md-primary">chat_bubble_outline</md-icon>
-						<!-- related-task -->
 						<md-icon ng-switch-when="related-task" class="material-icons md-primary">done_all</md-icon>
-						<!-- related-file -->
 						<md-icon ng-switch-when="related-file" class="material-icons md-primary">attach_file</md-icon>
+						
 					</div>
+					
 					<span flex="5"></span>
+					
 					<div flex class="activity-detail">
-						<p ng-switch="activity.type">
-							<strong>{{activity.user.name}}</strong> 
-							<span ng-switch-when="create-task">has created this task at {{activity.createdAt | date: longDate}}</span>
-							<!-- complete task -->
-							<span ng-switch-when="complete-task">has marked this task complete</span>
-							<!-- uncomplete task -->
-							<span ng-switch-when="uncomplete-task">has marked this task uncomplete</span>
-							<!-- edit task -->
-							<span ng-switch-when="edit-task">has edited the details of this task ({{(activity.element.name) ? "Name: "+activity.element.name+", " : ""}} {{(activity.element.description) ? "Description: "+activity.element.description+", " : ""}} {{(activity.element.dateEnd) ? "End Date: " : ""}}{{activity.element.dateEnd | date: 'dd/MM/yyyy'}})</span>
-							<!-- assign new people -->
-							<span ng-switch-when="assign">has assigned <span ng-repeat="member in activity.element.members">{{member}}, </span> to this thread</span>
-							<!-- related thread -->
-							<span ng-switch-when="related-thread">has attached the related message thread, "<a ui-sref="project.messages.detail({id: task.project, messageId: activity.element.item})">{{activity.element.name}}</a>".</span>
-							<!-- related task -->
-							<span ng-switch-when="related-task">has attached the related task, "<a ui-sref="project.tasks.detail({id: task.project, taskId: activity.element.item})">{{activity.element.name}}</a>".</span>
-							<!-- related file -->
-							<span ng-switch-when="related-file">has attached the related file, "<a ui-sref="project.files.detail({id: task.project})">{{activity.element.name}}</a>".</span>
+						
+						<p ng-switch="activity.type" class="activity-header">
+							
+							<strong>{{activity.user.name}}</strong>
+							
+							<span ng-switch-when="create-task"> created this task at {{activity.createdAt | date: longDate}}</span>
+							<span ng-switch-when="complete-task"> marked this task complete at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>.</span>
+							<span ng-switch-when="uncomplete-task"> marked this task uncomplete at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>.</span>
+							<span ng-switch-when="edit-task"> edited the details of this task at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
+							<span ng-switch-when="assign"> assigned he following people to this task at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
+							<span ng-switch-when="related-thread"> attached the related message thread at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
+							<span ng-switch-when="related-task"> attached the related task at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
+							<span ng-switch-when="related-file"> attached the related file <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
+							
 						</p>
-						<p class="meta-data"><span class="time">{{activity.createdAt | date: 'H:mm a'}}</span> <span class="date">{{activity.createdAt | date: 'dd/MM/yyyy'}}</span><p>
+						
+						<p ng-switch="activity.type" class="activity-body md-body">
+							
+							<span ng-switch-when="edit-task"> ({{(activity.element.name) ? "Name: "+activity.element.name+", " : ""}} {{(activity.element.description) ? "Description: "+activity.element.description+", " : ""}} {{(activity.element.dateEnd) ? "End Date: " : ""}}{{activity.element.dateEnd | date: 'dd/MM/yyyy'}})</span>
+							<span ng-switch-when="assign"><span ng-repeat="member in activity.element.members">{{member}}, </span></span>
+							<span ng-switch-when="related-thread"> "<a ui-sref="project.messages.detail({id: task.project, messageId: activity.element.item})">{{activity.element.name}}</a>".</span>
+							<span ng-switch-when="related-task"> "<a ui-sref="project.tasks.detail({id: task.project, taskId: activity.element.item})">{{activity.element.name}}</a>".</span>
+							<span ng-switch-when="related-file"> "<a ui-sref="project.files.detail({id: task.project})">{{activity.element.name}}</a>".</span>
+							
+						</p>
+						
 					</div>
+					
 				</div>
-				
-				<!-- <div layout="row" layout-align="center center" flex class="activity-stream">
-					<span flex="5"></span>
-					<div class="icon-type">
-						<md-icon class="material-icons md-primary">edit</md-icon>
-					</div>
-					<span flex="5"></span>
-					<div flex class="activity-detail">
-						<p><strong>{ username }</strong> has edited the details of this task { summary of edit descripiton, due date etc. }.</p>
-						<p class="meta-data"><span class="time">2:11 pm</span> <span class="date">03/01/2016</span><p>
-					</div>
-				</div>
-				
-				<div layout="row" layout-align="center center" flex class="activity-stream">
-					<span flex="5"></span>
-					<div class="icon-type">
-						<md-icon class="material-icons md-primary">person_outline</md-icon>
-					</div>
-					<span flex="5"></span>
-					<div flex class="activity-detail">
-						<p><strong>{ username }</strong> has assigned this task to { new team member name }.</p>
-						<p class="meta-data"><span class="time">2:11 pm</span> <span class="date">03/01/2016</span><p>
-					</div>
-				</div>
-				
-				<div layout="row" layout-align="center center" flex class="activity-stream related">
-					<span flex="5"></span>
-					<div class="icon-type">
-						<md-icon class="material-icons md-primary">chat_bubble_outline</md-icon>
-					</div>
-					<span flex="5"></span>
-					<div flex class="activity-detail">
-						<p><strong>{ username }</strong> has attached the related message thread, "{ name and link to message thread }".</p>
-						<p class="meta-data"><span class="time">2:11 pm</span> <span class="date">03/01/2016</span><p>
-					</div>
-				</div>
-				
-				<div layout="row" layout-align="center center" flex class="activity-stream related">
-					<span flex="5"></span>
-					<div class="icon-type">
-						<md-icon class="material-icons md-primary">done_all</md-icon>
-					</div>
-					<span flex="5"></span>
-					<div flex class="activity-detail">
-						<p><strong>{ username }</strong> has attached the related task, "{ description and link to message thread }".</p>
-						<p class="meta-data"><span class="time">2:11 pm</span> <span class="date">03/01/2016</span><p>
-					</div>
-				</div>
-				
-				<div layout="row" layout-align="center center" flex class="activity-stream related">
-					<span flex="5"></span>
-					<div class="icon-type">
-						<md-icon class="material-icons md-primary">attach_file</md-icon>
-					</div>
-					<span flex="5"></span>
-					<div flex class="activity-detail">
-						<p><strong>{ username }</strong> has attached the related file, "{ name and link to file }".</p>
-						<p class="meta-data"><span class="time">2:11 pm</span> <span class="date">03/01/2016</span><p>
-					</div>
-				</div> -->
 				
 			</div>
 			

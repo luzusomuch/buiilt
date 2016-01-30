@@ -9,9 +9,6 @@
 				<md-button ng-click="distributeTender()" ng-show="!tender.isDistribute">Distribute Tender</md-button>
 				<md-button ng-click="showModal($event, 'select-winner-tender-modal.html')" ng-show="tender.isDistribute && !tender.hasSelect">Select a Winner</md-button>
 			</div>
-			<md-chips class="set-filters" ng-show="tender.inviter._id == currentUser._id">
-				<md-chip>Show Related Activities</md-chip>
-			</md-chips>
 	    </div>
 		
 		<div class="main-page-content" layout-padding>
@@ -35,7 +32,7 @@
 						
                         <md-icon ng-switch-when="edit-tender" class="material-icons md-primary">edit</md-icon>
                         <md-icon ng-switch-when="related-file" class="material-icons md-primary">attach_file</md-icon>
-                        <md-icon ng-switch-when="tender-file" class="material-icons md-primary">attach_file</md-icon>
+                        <md-icon ng-switch-when="tender-file" class="material-icons md-primary">move_to_inbox</md-icon>
 					</div>
 					
 					<span flex="5"></span>
@@ -52,18 +49,21 @@
 							<span class="meta-data" ng-switch-when="invite-tender"> added the following invitees at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
 							<span class="meta-data" ng-switch-when="broadcast-message"> sent the following message at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
 							<span class="meta-data" ng-switch-when="select-winner"> selected {{activity.element.name}} as the winner of this tender at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>.</span>
+							<span class="meta-data" ng-switch-when="tender-file"> has submitted their tender at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}:</span>
+							
 						</p>
 						
 						<p ng-switch="activity.type" class="activity-body md-body">
                             
                             <span ng-switch-when="attach-scope"> {{activity.element.content}} <br /><span ng-show="activity.element._id">The file attached <a ui-sref="project.files.detail({id: activity.element.project, fileId: activity.element._id})">here</a> is also part of this scope.</span> <br/> The due date for this tender is <strong>{{activity.element.dateEnd | date: 'dd-MM-yyyy'}}</strong>.</span>
-							<span ng-switch-when="attach-addendum"> {{activity.element.name}} <span ng-show="activity.element._id">You can check it <a ui-sref="project.files.detail({id: activity.element.project, fileId: activity.element._id})">here</a>.</span></span>
+							<span ng-switch-when="attach-addendum"> {{activity.element.name}} <br /><span ng-show="activity.element._id">The file attached <a ui-sref="project.files.detail({id: activity.element.project, fileId: activity.element._id})">here</a> is also part of this addendum.</span></span>
 							<span ng-switch-when="invite-tender"><span ng-repeat="member in activity.element.members">{{member.name}}, </span></span>
 							<span ng-switch-when="broadcast-message"> {{activity.element.message}}</span>
-                            <span ng-switch-when="select-winner">has selected {{activity.element.name}} as winner of this tender</span>
+                            <span ng-switch-when="select-winner">has selected {{activity.element.name}} as the winner of this tender.</span>
+							<span ng-switch-when="tender-file"> You can view the file <a ui-sref="project.files.detail({id: activity.element.project, fileId: activity.element._id})">here</a>.</span>
 							
                             <span ng-switch-when="edit-tender">has edited the details of this tender: {{(activity.element.name) ? "Name: "+activity.element.name+", " : ""}} {{(activity.element.description) ? "Description: "+activity.element.description+", " : ""}}.</span>
-                            <span ng-switch-when="tender-file">has submit a tender {{activity.element.name}}. You can check it out <a ui-sref="project.files.detail({id: activity.element.project, fileId: activity.element._id})">here</a></span>
+                            
                         </p>
 						
 					</div>
@@ -83,7 +83,7 @@
   				  <md-fab-actions>
 			  	      <md-button aria-label="Open a New Message" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'attach-an-addendum.html')" ng-show="tender.inviter._id == currentUser._id && !tender.isDistribute">
 	  					  <md-tooltip md-direction="left">Attach an Addendum</md-tooltip>
-	  				      <md-icon class="material-icons">reply_all</md-icon>
+	  				      <md-icon class="material-icons">adjust</md-icon>
 			  	      </md-button>
   			  	      <md-button aria-label="Assign a New Task" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'invite-tender.html')" ng-show="tender.inviter._id == currentUser._id">
   	  					  <md-tooltip md-direction="left">Invite a Tenderer</md-tooltip>
@@ -91,7 +91,7 @@
   			  	      </md-button>
   			  	      <md-button aria-label="Send a File" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'select-winner-tender-modal.html')" ng-show="tender.isDistribute && tender.inviter._id == currentUser._id && !tender.hasSelect">
   	  					  <md-tooltip md-direction="left">Select a Winning Tender</md-tooltip>
-  	  				      <md-icon class="material-icons">format_list_bulleted</md-icon>
+  	  				      <md-icon class="material-icons">playlist_add_check</md-icon>
   			  	      </md-button>
 			  	      <md-button aria-label="Broadcast a Message" class="md-fab md-raised md-mini" ng-click="showModal($event, 'attach-related-message.html')" ng-show="tender.isDistribute">
 						  <md-tooltip md-direction="left">Broadcast a Message</md-tooltip>
