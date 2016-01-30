@@ -18,8 +18,9 @@
                 <div layout="row" ng-if="editUserType === 'phoneNumber'">
                     <md-input-container flex>
                         <label for="">Phone number</label>
-                        <input type="number" name="phoneNumber" ng-model="currentUser.phoneNumber" required>
+                        <input type="text" name="phoneNumber" ng-model="currentUser.phoneNumber" required ng-pattern="/^[0-9]{1,15}$/">
                     </md-input-container>
+                    <p class="validate-message" ng-show="form.phoneNumber.$error.pattern">Not a valid number</p>
                 </div>
 
                 <div layout="row" ng-if="editUserType === 'password'">

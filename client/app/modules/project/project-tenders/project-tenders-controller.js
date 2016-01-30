@@ -46,7 +46,7 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
             var found = false;
             if (tender.tenderers.length > 0) {
                 _.each(tender.tenderers, function(tenderer) {
-                    if ((tenderer.name && (tenderer.name.toLowerCase().indexOf($scope.invitee) > -1 || tenderer.name.indexOf($scope.invitee) > -1) || (tenderer.email && tenderer.email.toLowerCase().indexOf($scope.invitee) > -1)) {
+                    if ((tenderer.name && (tenderer.name.toLowerCase().indexOf($scope.invitee) > -1 || tenderer.name.indexOf($scope.invitee) > -1)) || (tenderer.email && tenderer.email.toLowerCase().indexOf($scope.invitee) > -1)) {
                         found = true;
                     }
                 });
