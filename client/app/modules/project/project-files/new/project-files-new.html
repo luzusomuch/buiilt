@@ -10,10 +10,7 @@
 			<div class="md-dialog-content" layout="column" layout-padding>
 				
 				<div layout="row" layout="center center" layout-margin>
-					<div flex>
-						<input filepicker class="filepicker-button" type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/>
-					</div>
-					
+					<input filepicker class="filepicker-button" type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/>
 				</div>
 
 				<div layout="row" layout-margin>
@@ -23,16 +20,6 @@
 				    </md-input-container>
 				</div>
 				
-				<!-- <div layout="row" layout-margin>
-					<md-chips flex
-			        ng-model="uploadFile.tags"
-			        placeholder="Enter a tag"
-			        delete-button-label="Remove Tag"
-			        delete-hint="Press delete to remove tag"
-					secondary-placeholder="Enter a Tag">
-					</md-chips>
-				</div> -->
-				
 				<div layout="row" layout-align="center center" class="tagcloud" layout-wrap>
 					<span ng-click="selectChip($index, 'tag')" ng-class="{'available-tag':!tag.select, 'selected-tag': tag.select}" ng-repeat="tag in tags">{{tag.name}}</span>
 				</div>
@@ -40,19 +27,6 @@
 				
 				<div layout="row" layout-align="center center" class="tagcloud" layout-wrap>
 					<span ng-click="selectChip($index, 'member')" ng-class="{'available-tag':!member.select, 'selected-tag': member.select}" ng-repeat="member in projectMembers">{{(member._id) ? member.name : member.email}}<md-icon ng-show="!member._id" class="material-icons non-user-chip cursor-help"><md-tooltip>File will be sent via email to this Team Member</md-tooltip>mail_outline</md-icon></span>
-					<!-- <span class="available-tag">Assignee 1</span>
-					<span class="available-tag">Assignee 2</span>
-					<span class="available-tag">Assignee 3</span>
-					<span class="selected-tag">Assignee 4</span>
-					<span class="available-tag">Assignee 5</span>
-					<span class="selected-tag">Assignee 6</span>
-					<span class="selected-tag">Assignee 7</span>
-					<span class="selected-tag">Assignee 8</span>
-					<span class="available-tag">Assignee 9</span>
-					<span class="available-tag">Assignee 10</span>
-					<span class="available-tag">Assignee 11</span>
-					<span class="available-tag">Assignee 12</span> -->
-					
 				</div>
 
 				<div layout="row" layout-align="center center" class="tagcloud" layout-wrap>
@@ -64,7 +38,7 @@
 		
 		<md-dialog-actions>
 			<md-button ng-click="cancelNewFileModal()">Cancel</md-button>
-			<md-button ng-click="createNewFile()" class="md-raised md-accent md-hue-1">Add File!</md-button>
+			<md-button ng-click="createNewFile()">Add File</md-button>
 		</md-dialog-actions>
 	</form>
 </md-dialog>
