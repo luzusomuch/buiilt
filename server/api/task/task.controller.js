@@ -168,6 +168,7 @@ exports.update = function(req,res) {
                 }
                 task = _.merge(task,data);
                 task.members = data.members;
+                task.notMembers = data.notMembers;
                 var activity = {
                     user: user._id,
                     type: req.body.editType,

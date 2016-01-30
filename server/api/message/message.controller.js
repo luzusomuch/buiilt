@@ -98,20 +98,6 @@ exports.create = function(req,res) {
             thread.belongTo.item = {_id: req.body.belongTo};
             thread.belongTo.type = req.body.belongToType;
         }
-        thread.messages.push({
-            text : req.body.message,
-            user : user._id,
-            mentions: [],
-            sendAt: new Date()
-        });
-        thread.activities.push({
-            user: user._id,
-            type: 'chat',
-            createdAt: new Date(),
-            element: {
-                message: req.body.message
-            } 
-        });
         var mainItem = getMainItem(req.body.belongToType);
         thread._editUser = user;
         thread.save(function(err){
@@ -183,13 +169,14 @@ exports.update = function(req,res) {
                                     user: req.user._id,
                                     type: req.body.elementType,
                                     createdAt: new Date(),
-                                    element: {invitee: member.name}
+                                    element: {invitee: (member.name)?member.name: member.email}
                                 });
                             });
                         }
                     }
                     thread = _.merge(thread,data);
                     thread.members = data.members;
+                    thread.notMembers = data.notMembers;
                     thread.markModified('members');
                     thread._editUser = req.user;
                     thread.save(function(err) {

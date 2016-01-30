@@ -125,14 +125,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                 clickOutsideToClose: false
             });
         } else {
-            // $mdDialog.show({
-            //     targetEvent: $event,
-            //     controller: 'settingsCtrl',
-            //     templateUrl: 'app/modules/settings/partials/payment.html',
-            //     parent: angular.element(document.body),
-            //     clickOutsideToClose: false
-            // });
-            handler.open($scope.plans[type]);
+                handler.open($scope.plans[type]);
         }
     };
     if ($rootScope.purchaseType) {

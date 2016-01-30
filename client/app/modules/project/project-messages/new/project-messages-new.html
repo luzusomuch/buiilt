@@ -15,14 +15,6 @@
 				        <input md-autofocus type="text" ng-model="thread.name" name="name" required/>
 					</md-input-container>
 				</div>
-				
-                <div layout="row">
-                    <md-input-container flex>
-                        <label>Your Message</label>
-                        <textarea ng-model="thread.message" columns="1" md-maxlength="250" rows="5"></textarea>
-                    </md-input-container>
-                </div>
-				
 				<div layout="row" layout-align="center center" class="tagcloud" layout-wrap>
 					<span ng-click="selectMember($index, 'member')" ng-class="{'available-tag':!member.select, 'selected-tag': member.select}" ng-repeat="member in projectMembers">{{(member._id) ? member.name : member.email}}<md-icon ng-show="!member._id" class="material-icons non-user-chip cursor-help"><md-tooltip>Messages will be sent via email to this Team Member</md-tooltip>mail_outline</md-icons></span>
 				</div>

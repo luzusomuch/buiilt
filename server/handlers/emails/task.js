@@ -54,15 +54,15 @@ EventBus.onSeries('Task.Updated', function(req, next){
             }
         }, function(err, result) {
             if (err) {return next();}
-            async.each(req.members, function(member, cb) {
-                if (member.email && !(_.find(req.oldAssignees,{ email : member.email}))) {
-                    PackageInvite.findOne({to: member.email}, function(err, packageInvite) {
+            async.each(req.notMembers, function(member, cb) {
+                if (member && !(_.find(req.oldAssignees,{ email : member}))) {
+                    PackageInvite.findOne({to: member}, function(err, packageInvite) {
                         if (err || !packageInvite) {cb();}
                         else {
-                            Mailer.sendMail('assign-task-to-non-user.html', from, member.email, {
+                            Mailer.sendMail('assign-task-to-non-user.html', from, member, {
                                 team: result.team.toJSON(),
                                 inviter: req.editUser.toJSON(),
-                                invitee: member.email,
+                                invitee: member,
                                 request: req.toJSON(),
                                 project: result.project.toJSON(),
                                 link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
