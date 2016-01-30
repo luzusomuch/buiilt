@@ -2,11 +2,45 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
 	$rootScope.title = $rootScope.project.name +" messages list";
     $scope.people = people;
 	$scope.threads = threads;
-	$scope.searchResults = [];
-	$scope.autoCompleteRequireMath = true;
-    $scope.selectedItem = null;
-    $scope.search = false;
-	$scope.messageFilter = [];
+
+    // filter section
+    $scope.search = function(thread) {
+        if ($scope.name && $scope.name.length > 0) {
+            var found = false;
+            if (thread.name.toLowerCase().indexOf($scope.name) > -1) {
+                found = true
+            }
+            return found;
+        } else if ($scope.recipient && $scope.recipient.length > 0) {
+            var found = false;
+            if (thread.members && thread.members.length > 0) {
+                _.each(thread.members, function(member) {
+                    if (member.name.toLowerCase().indexOf($scope.recipient) > -1 || member.email.toLowerCase().indexOf($scope.recipient) > -1) {
+                        found = true;
+                    }
+                });
+            }
+            if (thread.notMembers && thread.notMembers.length > 0) {
+                _.each(thread.notMembers, function(email) {
+                    if (email.toLowerCase().indexOf($scope.recipient) > -1) {
+                        found = true;
+                    }
+                });
+            }
+            return found;
+        } else if ($scope.reply && $scope.reply.length > 0) {
+            var found = false;
+            _.each(thread.messages, function(message) {
+                if (message.text.toLowerCase().indexOf($scope.reply) > -1) {
+                    found = true;
+                }
+            });
+            return found;
+        } else {
+            return true;
+        }
+    };
+    // end filter section
 
 	function getPeopleList(id) {
 		$scope.projectMembers = [];
@@ -51,7 +85,6 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
 		});
         $scope.projectMembers = _.uniq($scope.projectMembers, "email");
 		_.remove($scope.projectMembers, {_id: $rootScope.currentUser._id});
-        console.log($scope.projectMembers);
 	};
 	
 	//Functions to handle New Work Room Dialog.
@@ -106,90 +139,6 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
 
 	$scope.showToast = function(value) {
         $mdToast.show($mdToast.simple().textContent(value).position('bottom','right').hideDelay(3000));
-    };
-	
-    $scope.messageChips = [
-        {place: "message", value: "createdByMe", text: "CREATED BY ME", select: false},
-        {place: "message", value: "mentionsMe", text: "MENTIONS ME", select: false}
-    ];
-
-    $scope.querySearch = function(value) {
-    	var results = value ? $scope.threads.filter(createFilter(value)) : [];
-        results = _.uniq(results, '_id');
-        $scope.searchResults = results;
-        return results;
-    };
-
-    function createFilter(query) {
-        return function filterFn(thread) {
-            return thread.name.toLowerCase().indexOf(query) > -1;
-        };
-    };
-
-    $scope.addChip = function() {
-        $scope.search = true;
-    };
-
-    var lastFilterResults = [];
-    $scope.selectedChip = function(chip) {
-    	chip.select = !chip.select;
-    	$scope.search = true;
-    	if (chip.select) {
-    		switch (chip.value) {
-    			case "createdByMe":
-    				_.each($scope.threads, function(thread) {
-    					if (thread.owner._id == $rootScope.currentUser._id) {
-    						lastFilterResults.push(thread);
-    						getHandleArr(thread);
-    					}
-    				});
-    			break;
-
-    			case "mentionsMe":
-    				_.each($scope.threads, function(thread) {
-    					_.each(thread.messages, function(message) {
-                            if (message.mentions && message.mentions.length > 0) {
-                                if (_.indexOf(message.mentions, $rootScope.currentUser._id) !== -1) {
-                                    getHandleArr(thread);
-                                    lastFilterResults.push(thread);
-                                    return false;
-                                }
-                            }
-                        });
-    				});
-    			break;
-
-    			default:
-    			break;
-    		}
-    	} else {
-    		if (lastFilterResults.length > 0 && $scope.searchResults.length > 0) {
-                _.each(lastFilterResults, function(index, result) {
-                    $scope.searchResults = _.remove($scope.searchResults, function(item) {
-                        return item._id == result._Id;
-                    });
-                    lastFilterResults.splice(index, 1);
-                    if ($scope.searchResults.length == 0) {
-                        $scope.search = false;
-                    }
-                });
-            } else if (lastFilterResults.length == 0) {
-            	$scope.search = false;
-            }
-    	}
-    };
-
-    $scope.$watch('searchResults', function(value) {
-    	if (value.length == 0) {
-    		$scope.search = false;
-    	} else {
-    		$scope.search = true;
-    	}
-    });
-
-    function getHandleArr(item) {
-        $scope.searchResults.push(item);
-        return $scope.searchResults = _.uniq($scope.searchResults, '_id');
     };
 	
 	getPeopleList($stateParams.id);
