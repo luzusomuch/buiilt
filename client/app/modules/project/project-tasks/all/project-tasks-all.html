@@ -4,15 +4,14 @@
 		
 		<div layout="row">
 			<md-input-container flex="50">
-				<label for="">Task Name</label>
-				<input type="text" name="taskName" ng-model="" md-autofocus>
+				<label for="">Task Description</label>
+				<input type="text" name="taskDescription" ng-model="description" md-autofocus>
 			</md-input-container>
 			
 			<div flex="50" layout="row" layout-align="center center">
 				<span class="md-body-2" style="margin-top: -2vh">Assigned:</span>
 				<div class="tagcloud" style="margin-top: -2vh; margin-left: 2vh">
-					<span class="available-tag">To Me</span>
-					<span class="available-tag">By Me</span>
+					<span ng-repeat="tag in assignStatus" ng-class="{'available-tag': !tag.select, 'selected-tag': tag.select}" ng-click="selectFilterTag($index, 'status')">{{tag.text}}</span>
 				</div>
 			</div>
 			
@@ -22,45 +21,25 @@
 			<div flex layout="row" layout-align="center center">
 				<span class="md-body-2" style="margin-top: -2vh">Due:</span>
 				<div class="tagcloud" style="margin-top: -2vh; margin-left: 2vh">
-					<span class="available-tag">Today</span>
-					<span class="available-tag">Tomorrow</span>
-					<span class="available-tag">This Week</span>
-					<span class="available-tag">Next Week</span>
+					<span ng-repeat="tag in dueDate" ng-class="{'available-tag': !tag.select, 'selected-tag': tag.select}" ng-click="selectFilterTag($index, 'dueDate')">{{tag.text}}</span>
 				</div>
 				<div style="margin-top: -2.5vh">
-                    <md-datepicker  ng-model="" md-min-date="minDate" md-placeholder="">
+                    <md-datepicker  ng-model="dateEnd" ng-change="selectDueDate(dateEnd)" md-placeholder="Select due date">
                     </md-datepicker>
 				</div>
 			</div>
 		</div>
 		
 	</div>
-		
-	<!-- <md-chips class="" ng-model="taskFilters" placeholder="Search..." secondary-placeholder="Search..." flex="45">
-		<md-chip-template class="md-accent">
-	        <strong>{{$chip}}</strong>
-	    </md-chip-template>
-	</md-chips>
-
-	<span flex></span>
-
-	<md-chips class="set-filters">
-		<md-chip>Assigned to Me</md-chip>
-		<md-chip>Assigned by Me</md-chip>
-		<md-chip>Due Today</md-chip>
-		<md-chip>Due Tomorrow</md-chip>
-		<md-chip>Due This Week</md-chip>
-	</md-chips> -->
-		
 </div>
 
 <md-list ng-cloak class="main-page-content" layout="column" flex>
 
-	<div ng-show="!search" ng-repeat="task in tasks" ui-sref="project.tasks.detail({id: task.project, taskId: task._id})">
+	<div ng-repeat="task in tasks | filter: search track by $index" ui-sref="project.tasks.detail({id: task.project, taskId: task._id})">
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
 		          <h3>{{task.description}}</h3>
-		          <p><span ng-repeat="member in task.members">{{member.name}}, </span></p>
+		          <p><span ng-repeat="member in task.members track by $index">{{member.name}}, </span><span ng-repeat="member in task.notMembers track by $index">{{member}}, </span></p>
 	        </div>
 		</md-list-item>
 		<md-divider></md-divider>
