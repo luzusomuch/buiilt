@@ -46,10 +46,10 @@ EventBus.onSeries('People.Updated', function(req, next) {
         });
     } else if (req._modifiedPaths.indexOf("updateDistributeStatus") !== -1) {
         var currentTender = req.updatedTender;
-        var owner = [];
+        var owners = [];
         _.each(currentTender.tenderers, function(tenderer) {
             if (tenderer._id) {
-                owner.push(tenderer._id);
+                owners.push(tenderer._id);
             }
         });
         var params = {

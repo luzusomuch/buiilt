@@ -7,16 +7,38 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
     $scope.name = null;
     $scope.invitee = null;
     $scope.weekTags = [{text: "this week", value: "this"}, {text: "next week", value: "next"}];
-    $scope.statusTags = [{text: "to be distributed", value: "distribute"}, {text: "distributed", value: "distributed"}];
+    $scope.statusTags = [{text: "to be distributed", value: false}, {text: "distributed", value: true}];
 
-    $scope.selectDueDate = function(dueDate) {
-        console.log(dueDate);
+    $scope.selectDueDate = function(dateEnd) {
+        $scope.dateEnd = dateEnd;
+        $scope.week = null;
+        $scope.status = null;
+    };
+
+    $scope.selectTag = function(index, type) {
+        _.each($scope.statusTags, function(status) {
+            status.select = false;
+        });
+        _.each($scope.weekTags, function(week) {
+            week.select = false;
+        });
+        if (type === "status") {
+            $scope.dateEnd = null;
+            $scope.week = null;
+            $scope.statusTags[index].select = !$scope.statusTags[index].select;
+            $scope.status = $scope.statusTags[index].value;
+        } else {
+            $scope.dateEnd = null;
+            $scope.status = null;
+            $scope.weekTags[index].select = !$scope.weekTags[index].select;
+            $scope.week = $scope.weekTags[index].value;
+        }
     };
 
     $scope.search = function(tender) {
         if ($scope.name && $scope.name.length > 0) {
             var found = false;
-            if (tender.tenderName.toLowerCase().indexOf($scope.name) > -1) {
+            if (tender.tenderName && tender.tenderName.toLowerCase().indexOf($scope.name) > -1) {
                 found = true;
             }
             return found;
@@ -24,10 +46,40 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
             var found = false;
             if (tender.tenderers.length > 0) {
                 _.each(tender.tenderers, function(tenderer) {
-                    if (tenderer.name.toLowerCase().indexOf($scope.invitee) > -1 || tenderer.email.toLowerCase().indexOf($scope.invitee) > -1) {
+                    if ((tenderer.name && tenderer.name.toLowerCase().indexOf($scope.invitee) > -1) || tenderer.email.toLowerCase().indexOf($scope.invitee) > -1) {
                         found = true;
                     }
                 });
+            }
+            return found;
+        } else if ($scope.status && $scope.status===true) {
+            var found = (tender.isDistribute) ? true : false;
+            return found;
+        } else if ($scope.status !== "undefined" && $scope.status===false) {
+            var found = (!tender.isDistribute) ? true : false;
+            return found;
+        } else if ($scope.dateEnd) {
+            var found = false;
+            if (moment(moment($scope.dateEnd).format("YYYY-MM-DD")).isSame(moment(tender.dateEnd).format("YYYY-MM-DD"))) {
+                found = true;
+            }
+            return found;
+        } else if ($scope.week) {
+            var found = false;
+            var thisWeekStartDate, thisWeekEndDate, nextWeekStartDate, nextWeekEndDay;
+            var tenderDateEnd = moment(tender.dateEnd).format("YYYY-MM-DD");
+            if ($scope.week === "this") {
+                thisWeekStartDate = moment().startOf('week').format("YYYY-MM-DD");
+                thisWeekEndDate = moment().endOf('week').format("YYYY-MM-DD");
+                if (moment(tenderDateEnd).isSameOrAfter(thisWeekStartDate) && moment(tenderDateEnd).isSameOrBefore(thisWeekEndDate)) {
+                    found = true;
+                }
+            } else {
+                nextWeekStartDate = moment().startOf("week").add(7, "days").format("YYYY-MM-DD");
+                nextWeekEndDay = moment().endOf("week").add(7, "days").format("YYYY-MM-DD");
+                if (moment(tenderDateEnd).isSameOrAfter(nextWeekStartDate) && moment(tenderDateEnd).isSameOrBefore(nextWeekEndDay)) {
+                    found = true;
+                }
             }
             return found;
         } else {
@@ -61,7 +113,9 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
                     $scope.membersList.push({
                         _id: tender._id,
                         tenderName: tender.tenderName,
-                        tenderers: tender.tenderers
+                        tenderers: tender.tenderers,
+                        isDistribute: tender.isDistribute,
+                        dateEnd: tender.dateEnd
                     });
                 }
             });
