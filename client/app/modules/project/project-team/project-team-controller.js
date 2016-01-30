@@ -33,6 +33,26 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
                 }
             });
             $scope.searchResults = _.uniq($scope.searchResults, "_id");
+        } else {
+            $scope.search = false;
+        }
+    };
+
+    $scope.searchMember = function(member) {
+        if ($scope.name && $scope.name.length > 0) {
+            var found = false;
+            if (member.name && member.name.toLowerCase().indexOf($scope.name) > -1) {
+                found = true;
+            }
+            return found;
+        } else if ($scope.email && $scope.email.length > 0) {
+            var found = false;
+            if (member.email && member.email.toLowerCase().indexOf($scope.email) > -1) {
+                found = true;
+            }
+            return found;
+        } else {
+            return true;
         }
     };
     // end filter section

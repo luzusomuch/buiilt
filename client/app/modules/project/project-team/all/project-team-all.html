@@ -25,7 +25,7 @@
 
 <div class="main-page-content" layout="column" flex>
 	<md-list ng-cloak>
-		<div ng-show="!search" ng-repeat="member in membersList | filter :{name: name, email: email} track by $index">
+		<div ng-show="!search" ng-repeat="member in membersList | filter :searchMember track by $index">
 			<md-list-item class="md-2-line" style="cursor: default">
 				<div class="md-list-item-text" layout="column">
 			          <h3>{{(member._id) ? member.name : member.email}}</h3>
@@ -35,7 +35,7 @@
 			<md-divider></md-divider>
 		</div>
 
-		<div ng-show="search" ng-repeat="member in searchResults | filter :{name: name, email: email} track by $index" ui-sref="project.team.detail">
+		<div ng-show="search" ng-repeat="member in searchResults | filter :searchMember track by $index" ui-sref="project.team.detail">
 			<md-list-item class="md-2-line" style="cursor: default">
 				<div class="md-list-item-text" layout="column">
 			          <h3>{{(member._id) ? member.name : member.email}}</h3>
