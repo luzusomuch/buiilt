@@ -9,20 +9,12 @@
         <md-dialog-content>
             <div class="md-dialog-content" layout="column">
 				
-                <!-- <div layout="row">
-                    <md-input-container flex>
-                        <label>Related Task Name</label>
-                        <input md-autofocus type="text" ng-model="relatedTask.name" name="name" required/>
-                    </md-input-container>
-                </div> -->
-					
 				<div layout="row" layout-align="center center">
 					<md-input-container flex>
 				        <label>Task Description</label>
 				        <textarea ng-model="relatedTask.description" name="description" md-maxlength="300" required rows="3" columns="1"></textarea>
 					</md-input-container>
 				</div>
-			
 				
 				<div layout="row" layout-align="center center">
 	                   <md-datepicker ng-model="relatedTask.dateEnd" md-min-date="minDate" md-placeholder="Enter Due Date">
@@ -30,57 +22,14 @@
 				</div>
 			
 				<div layout="row" layout-align="center center" class="tagcloud" layout-wrap>
-				    <span ng-click="selectMember($index, 'invitee')" ng-class="{'available-tag':!member.select, 'selected-tag': member.select}" ng-repeat="member in invitees">{{(member._id) ? member.name : member.email}}<i ng-show="!member._id" class="material-icons">mail_outline</i></span>
-				
+				    <span ng-click="selectMember($index, 'invitee')" ng-class="{'available-tag':!member.select, 'selected-tag': member.select}" ng-repeat="member in invitees">{{(member._id) ? member.name : member.email}}<md-icon ng-show="!member._id" class="material-icons non-user-chip cursor-help"><md-tooltip>Tasks will be sent via email to this Team Member</md-tooltip>mail_outline</md-icon></span>
 				</div>
-					
-                <!-- <div layout="row">
-                    <md-input-container flex>
-                        <label>Related Task Description</label>
-                        <textarea name="description" ng-model="relatedTask.description" md-maxlength="300" required rows="3" columns="1"></textarea>
-                    </md-input-container>
-                </div>
-                <div layout="row">
-                    <md-input-container>
-                        <p>Related Task End Date</p>
-                    </md-input-container>
-                </div>
-                <div layout="row">
-                    <md-datepicker ng-model="relatedTask.dateEnd" md-min-date="minDate" md-placeholder="Enter End Date">
-                    </md-datepicker>
-                </div>
-                <div ng-cloak>
-                    <p>Available's asssignees: </p>
-                    <md-content layout="row" layout-wrap layout-xs="column">
-                        <div flex="33" flex-sm="50" flex-xs="100" layout="row" ng-repeat="member in invitees">
-                            <md-card ng-click="selectMember($index, 'invitee')" layout-margin>
-                                <md-card-header>
-                                    <p class="name">{{member.name}}</p>
-                                </md-card-header>
-
-                                <md-card-content>
-                                    <p class="email">{{(member.email) ? member.email : 'Email Address'}}</p>
-                                    <p class="phone">{{(member.phoneNumber)? member.phoneNumber : 'Phone Number'}}</p>
-                                </md-card-content>
-
-                                <md-card-actions layout-margin>
-                                    <md-card-icon-actions layout="row" layout-align="space-around center">
-                                        <md-button class="material-icons md-icon-button">
-                                            <md-tooltip md-direction="down">Invite To This Thread</md-tooltip>
-                                            <md-icon ng-show="member.select" class="material-icons">done</md-icon>
-                                        </md-button>
-                                    </md-card-icon-actions>
-                                </md-card-actions>
-                            </md-card>
-                        </div>
-                    </md-content>
-                </div> -->
 					
             </div>
         </md-dialog-content>
         <md-dialog-actions>
             <md-button ng-click="closeModal()">Cancel</md-button>
-            <md-button type="submit" class="md-raised md-accent md-hue-1">Create Related Thread!</md-button>
+            <md-button type="submit">Attach Related Task</md-button>
         </md-dialog-actions>
     </form>
 </md-dialog>

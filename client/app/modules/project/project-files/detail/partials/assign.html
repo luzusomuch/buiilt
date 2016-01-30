@@ -26,53 +26,12 @@
 			
 				</div>
 				
-                <!-- <div layout="row">
-                    <md-input-container flex>
-                        <label>File Name</label>
-                        <input input="text" ng-model="file.name" name="name" disabled/>
-                    </md-input-container>
-                </div>
-
-                <div layout="row">
-                    <md-input-container flex>
-                        <label for="">Description</label>
-                        <textarea ng-model="file.description" name="description" md-maxlength="200" columns="5" rows="1" disabled></textarea>
-                    </md-input-container>
-                </div>
-
-                <div layout="row"><p>Please click on card to select member</p></div>
-                <div ng-cloak>
-                    <md-content layout="row" layout-wrap layout-xs="column">
-                        <div flex="33" flex-sm="50" flex-xs="100" layout="row" ng-repeat="member in membersList">
-                            <md-card ng-click="selectMember($index, 'member')" layout-margin>
-                                <md-card-header>
-                                    <p class="name">{{member.name}}</p>
-                                </md-card-header>
-
-                                <md-card-content>
-                                    <p class="email">{{(member.email) ? member.email : 'Email Address'}}</p>
-                                    <p class="phone">{{(member.phoneNumber)? member.phoneNumber : 'Phone Number'}}</p>
-                                </md-card-content>
-
-                                <md-card-actions layout-margin>
-                                    <md-card-icon-actions layout="row" layout-align="space-around center">
-                                        <md-button class="material-icons md-icon-button">
-                                            <md-tooltip md-direction="down">Invite To This Task</md-tooltip>
-                                            <md-icon ng-show="member.select" class="material-icons">done</md-icon>
-                                        </md-button>
-                                    </md-card-icon-actions>
-                                </md-card-actions>
-                            </md-card>
-                        </div>
-                    </md-content>
-                </div> -->
-                
             </div>
         </md-dialog-content>
         
         <md-dialog-actions>
             <md-button ng-click="closeModal()">Cancel</md-button>
-            <md-button type="submit" class="md-raised md-accent md-hue-1">Edit File Detail!</md-button>
+            <md-button type="submit">Assign These Team Members</md-button>
         </md-dialog-actions>
     </form>
 </md-dialog>
