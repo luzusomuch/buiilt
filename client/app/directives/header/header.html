@@ -13,51 +13,6 @@
 	  	<div layout="row" layout-align="end center" ng-show="isLoggedIn">
 		  	<md-button ui-sref='settings.user'>Settings</md-button>
 		  	<div sp-notification ng-if="currentUser._id"></div>
-		  	<md-button ui-sref='help'>Help</md-button>
 	  	</div>
    </div>
 </md-toolbar>
-
-
-<!-- <nav class="navbar">
-
-    <div class="row">
-	    <div class="col s12">
-
-			<div class="nav-wrapper">
-
-						<li ng-repeat="project in projects | unique:project">
-							<a ui-sref="dashboard({id: project._id})">{{project.name}}</a>
-						</li>
-
-			</div>
-
-		</div>
-	</div>
-
-	<div class="row z-depth-1" style="background-color: white; margin-top: -5px">
-		<div class="col s12 m9 l10 offset-m3 offset-l2">
-		    <div ng-if="tabs">
-		        <div>
-		            <ul class="tabs" tabs id="tabsMenu">
-		                <li class="tab col" ng-repeat="tab in tabs">
-		                    <a ui-sref="{{tab.sref}}" ui-sref-active="active" id="menuItem_{{tab.label}}">{{tab.label}}</a>
-		                </li>
-		            </ul>
-		        </div>
-		    </div>
-		</div>
-	</div>
-
-    <li ng-if="!user._id"><a ui-sref="signin">Login</a></li>
-    <li ng-if="!user._id"><a ui-sref="signup" ng-click="startSignupWizard()">Register</a></li>
-
-</nav> -->
-
-
-
-
-
-
-
-
