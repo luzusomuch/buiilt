@@ -208,8 +208,6 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
     };
 
     $scope.saveChangedTags = function() {
-        console.log($scope.currentTeam);
-        return;
         $scope.currentTeam.editType = "change-tags";
         teamService.update({id: $scope.currentTeam._id}, $scope.currentTeam).$promise.then(function(res) {
             $scope.isEditTags = false;
