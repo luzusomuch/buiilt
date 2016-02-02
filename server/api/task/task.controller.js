@@ -125,7 +125,7 @@ exports.create = function(req,res) {
                             createdAt: new Date(),
                             element: {
                                 item: task._id,
-                                name: task.name,
+                                name: task.description,
                                 related: true
                             }
                         });

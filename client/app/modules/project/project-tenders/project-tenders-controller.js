@@ -8,42 +8,56 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
     $scope.invitee = null;
     $scope.weekTags = [{text: "this week", value: "this"}, {text: "next week", value: "next"}];
     $scope.statusTags = [{text: "to be distributed", value: false}, {text: "distributed", value: true}];
+    $scope.selectedStatus = [];
+    $scope.selectedWeek = [];
 
-    $scope.selectDueDate = function(dateEnd) {
-        $scope.dateEnd = dateEnd;
-        $scope.week = null;
-        $scope.status = null;
-    };
-
-    $scope.selectTag = function(index, type) {
+    $scope.selectDueDate = function(dueDate) {
+        $scope.dueDate = dueDate;
+        $scope.selectedStatus = [];
+        $scope.selectedWeek = [];
         _.each($scope.statusTags, function(status) {
             status.select = false;
         });
         _.each($scope.weekTags, function(week) {
             week.select = false;
         });
+    };
+
+    $scope.selectTag = function(index, type) {
+        $scope.dueDate = null;
         if (type === "status") {
-            $scope.dateEnd = null;
-            $scope.week = null;
+            _.each($scope.weekTags, function(week) {
+                week.select = false;
+            });
+            $scope.selectedWeek = [];
             $scope.statusTags[index].select = !$scope.statusTags[index].select;
-            $scope.status = $scope.statusTags[index].value;
+            if ($scope.statusTags[index].select) {
+                $scope.selectedStatus.push($scope.statusTags[index].value);
+            } else {
+                $scope.selectedStatus.splice(_.indexOf($scope.selectedStatus, $scope.statusTags[index].value), 1);
+            }
         } else {
-            $scope.dateEnd = null;
-            $scope.status = null;
+            _.each($scope.statusTags, function(status) {
+                status.select = false;
+            });
+            $scope.selectedStatus = [];
             $scope.weekTags[index].select = !$scope.weekTags[index].select;
-            $scope.week = $scope.weekTags[index].value;
+            if ($scope.weekTags[index].select) {
+                $scope.selectedWeek.push($scope.weekTags[index].value);
+            } else {
+                $scope.selectedWeek.splice(_.indexOf($scope.selectedWeek, $scope.weekTags[index].value), 1);
+            }
         }
     };
 
     $scope.search = function(tender) {
+        var found = false;
         if ($scope.name && $scope.name.length > 0) {
-            var found = false;
             if (tender.tenderName && (tender.tenderName.toLowerCase().indexOf($scope.name) > -1 || tender.tenderName.indexOf($scope.name) > -1)) {
                 found = true;
             }
             return found;
         } else if ($scope.invitee && $scope.invitee.length > 0) {
-            var found = false;
             if (tender.tenderers.length > 0) {
                 _.each(tender.tenderers, function(tenderer) {
                     if ((tenderer.name && (tenderer.name.toLowerCase().indexOf($scope.invitee) > -1 || tenderer.name.indexOf($scope.invitee) > -1)) || (tenderer.email && tenderer.email.toLowerCase().indexOf($scope.invitee) > -1)) {
@@ -52,35 +66,36 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
                 });
             }
             return found;
-        } else if ($scope.status && $scope.status===true) {
-            var found = (tender.isDistribute) ? true : false;
-            return found;
-        } else if ($scope.status !== "undefined" && $scope.status===false) {
-            var found = (!tender.isDistribute) ? true : false;
+        } else if ($scope.selectedStatus && $scope.selectedStatus.length > 0) {
+            _.each($scope.selectedStatus, function(status) {
+                if (tender.isDistribute === status) {
+                    found = true;
+                }
+            });
             return found;
         } else if ($scope.dateEnd) {
-            var found = false;
             if (moment(moment($scope.dateEnd).format("YYYY-MM-DD")).isSame(moment(tender.dateEnd).format("YYYY-MM-DD"))) {
                 found = true;
             }
             return found;
-        } else if ($scope.week) {
-            var found = false;
+        } else if ($scope.selectedWeek && $scope.selectedWeek.length > 0) {
             var thisWeekStartDate, thisWeekEndDate, nextWeekStartDate, nextWeekEndDay;
             var tenderDateEnd = moment(tender.dateEnd).format("YYYY-MM-DD");
-            if ($scope.week === "this") {
-                thisWeekStartDate = moment().startOf('week').format("YYYY-MM-DD");
-                thisWeekEndDate = moment().endOf('week').format("YYYY-MM-DD");
-                if (moment(tenderDateEnd).isSameOrAfter(thisWeekStartDate) && moment(tenderDateEnd).isSameOrBefore(thisWeekEndDate)) {
-                    found = true;
+            _.each($scope.selectedWeek, function(week) {
+                if (week === "this") {
+                    thisWeekStartDate = moment().startOf('week').format("YYYY-MM-DD");
+                    thisWeekEndDate = moment().endOf('week').format("YYYY-MM-DD");
+                    if (moment(tenderDateEnd).isSameOrAfter(thisWeekStartDate) && moment(tenderDateEnd).isSameOrBefore(thisWeekEndDate)) {
+                        found = true;
+                    }
+                } else {
+                    nextWeekStartDate = moment().startOf("week").add(7, "days").format("YYYY-MM-DD");
+                    nextWeekEndDay = moment().endOf("week").add(7, "days").format("YYYY-MM-DD");
+                    if (moment(tenderDateEnd).isSameOrAfter(nextWeekStartDate) && moment(tenderDateEnd).isSameOrBefore(nextWeekEndDay)) {
+                        found = true;
+                    }
                 }
-            } else {
-                nextWeekStartDate = moment().startOf("week").add(7, "days").format("YYYY-MM-DD");
-                nextWeekEndDay = moment().endOf("week").add(7, "days").format("YYYY-MM-DD");
-                if (moment(tenderDateEnd).isSameOrAfter(nextWeekStartDate) && moment(tenderDateEnd).isSameOrBefore(nextWeekEndDay)) {
-                    found = true;
-                }
-            }
+            });
             return found;
         } else {
             return true;
