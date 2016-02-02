@@ -5,37 +5,45 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
     // filter section
     $scope.dueDate = [{text: "today", value: "today"}, {text: "tomorrow", value: "tomorrow"}, {text: "this week", value: "thisWeek"}, {text: "next week", value: "nextWeek"}];
     $scope.assignStatus = [{text: "to me", value: "toMe"}, {text: "byMe", value: "byMe"}];
+    $scope.dueDateFilter = [];
     $scope.selectDueDate = function(dateEnd) {
         $scope.dateEnd = dateEnd;
-        $scope.dueDateFilter = null;
+        $scope.dueDateFilter = [];
     };
 
     $scope.selectFilterTag = function(index, type) {
         if (type === "status") {
+            $scope.dueDateFilter = [];
+            $scope.dateEnd = null;
             _.each($scope.dueDate, function(date) {
                 date.select = false;
             });
             $scope.assignStatus[index].select = !$scope.assignStatus[index].select;
+            if (index === 0) {
+                $scope.assignStatus[1].select = false;
+            } else {
+                $scope.assignStatus[0].select = false;
+            }
             if ($scope.assignStatus[index].select) {
                 $scope.status = $scope.assignStatus[index].value;
             } else {
                 $scope.status = null;
             }
         } else {
+            $scope.status = null;
             _.each($scope.assignStatus, function(status) {
                 status.select = false;
             });
             $scope.dueDate[index].select = !$scope.dueDate[index].select;
             if ($scope.dueDate[index].select) {
-                $scope.dueDateFilter = $scope.dueDate[index].value;
+                $scope.dueDateFilter.push($scope.dueDate[index].value);
             } else {
-                $scope.dueDateFilter = null;
+                $scope.dueDateFilter.splice(_.indexOf($scope.dueDateFilter, $scope.dueDate[index].value), 1);
             }
         }
     };
 
     $scope.search = function(task) {
-        console.log($scope.status);
         var found = false
         var taskDueDate = moment(task.dateEnd).format("YYYY-MM-DD");
         if ($scope.description && $scope.description.length > 0) {
@@ -60,40 +68,42 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
             }
             return found;
         } else if ($scope.dueDateFilter && $scope.dueDateFilter.length > 0) {
-            switch ($scope.dueDateFilter) {
-                case "today":
-                    var today = moment(new Date()).format("YYYY-MM-DD");
-                    if (moment(taskDueDate).isSame(today)) {
-                        found = true;
-                    }
-                break;
+            _.each($scope.dueDateFilter, function(filter) {
+                switch (filter) {
+                    case "today":
+                        var today = moment(new Date()).format("YYYY-MM-DD");
+                        if (moment(taskDueDate).isSame(today)) {
+                            found = true;
+                        }
+                    break;
 
-                case "tomorrow":
-                    var tomorrow = moment(new Date()).add(1, "days").format("YYYY-MM-DD");
-                    if (moment(taskDueDate).isSame(tomorrow)) {
-                        found = true;
-                    }
-                break;
+                    case "tomorrow":
+                        var tomorrow = moment(new Date()).add(1, "days").format("YYYY-MM-DD");
+                        if (moment(taskDueDate).isSame(tomorrow)) {
+                            found = true;
+                        }
+                    break;
 
-                case "thisWeek":
-                    var thisWeekStartDate = moment().startOf('week').format("YYYY-MM-DD");
-                    var thisWeekEndDate = moment().endOf('week').format("YYYY-MM-DD");
-                    if (moment(taskDueDate).isSameOrAfter(thisWeekStartDate) && moment(taskDueDate).isSameOrBefore(thisWeekEndDate)) {
-                        found = true;
-                    }
-                break;
+                    case "thisWeek":
+                        var thisWeekStartDate = moment().startOf('week').format("YYYY-MM-DD");
+                        var thisWeekEndDate = moment().endOf('week').format("YYYY-MM-DD");
+                        if (moment(taskDueDate).isSameOrAfter(thisWeekStartDate) && moment(taskDueDate).isSameOrBefore(thisWeekEndDate)) {
+                            found = true;
+                        }
+                    break;
 
-                case "nextWeek":
-                    var nextWeekStartDate = moment().startOf("week").add(7, "days").format("YYYY-MM-DD");
-                    var nextWeekEndDay = moment().endOf("week").add(7, "days").format("YYYY-MM-DD");
-                    if (moment(taskDueDate).isSameOrAfter(nextWeekStartDate) && moment(taskDueDate).isSameOrBefore(nextWeekEndDay)) {
-                        found = true;
-                    }
-                break;
+                    case "nextWeek":
+                        var nextWeekStartDate = moment().startOf("week").add(7, "days").format("YYYY-MM-DD");
+                        var nextWeekEndDay = moment().endOf("week").add(7, "days").format("YYYY-MM-DD");
+                        if (moment(taskDueDate).isSameOrAfter(nextWeekStartDate) && moment(taskDueDate).isSameOrBefore(nextWeekEndDay)) {
+                            found = true;
+                        }
+                    break;
 
-                default:
-                break;
-            }
+                    default:
+                    break;
+                }
+            });
             return found;
         } else
             return true;
