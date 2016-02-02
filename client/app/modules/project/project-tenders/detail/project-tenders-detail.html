@@ -58,7 +58,7 @@
                             <span ng-switch-when="attach-scope"> {{activity.element.content}} <br /><span ng-show="activity.element._id">The file attached <a ui-sref="project.files.detail({id: activity.element.project, fileId: activity.element._id})">here</a> is also part of this scope.</span> <br/> The due date for this tender is <strong>{{activity.element.dateEnd | date: 'dd-MM-yyyy'}}</strong>.</span>
 							<span ng-switch-when="attach-addendum"> {{activity.element.name}} <br /><span ng-show="activity.element.link">The file attached <a href="#" ng-click="showReviewFileModal($event, activity)">here</a> is also part of this addendum.</span></span>
 							<span ng-switch-when="invite-tender"><span ng-repeat="member in activity.element.members">{{member.name}}, </span></span>
-							<span ng-switch-when="broadcast-message"> {{activity.element.message}}</span>
+							<span ng-switch-when="broadcast-message"> {{activity.element.message}} to <span ng-repeat="user in activity.element.sentTo"><strong>{{user}}</strong>, </span></span>
                             <span ng-switch-when="select-winner">has selected {{activity.element.name}} as the winner of this tender.</span>
 							<span ng-switch-when="tender-file"> You can view the file <a ui-sref="project.files.detail({id: activity.element.project, fileId: activity.element._id})">here</a>.</span>
 							
@@ -81,7 +81,7 @@
   			  	      </md-button>
   		  	      </md-fab-trigger>
   				  <md-fab-actions>
-			  	      <md-button aria-label="Open a New Message" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'attach-an-addendum.html')" ng-show="tender.inviter._id == currentUser._id && !tender.isDistribute">
+			  	      <md-button aria-label="Open a New Message" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'attach-an-addendum.html')" ng-show="tender.inviter._id == currentUser._id">
 	  					  <md-tooltip md-direction="left">Attach an Addendum</md-tooltip>
 	  				      <md-icon class="material-icons">gps_fixed</md-icon>
 			  	      </md-button>

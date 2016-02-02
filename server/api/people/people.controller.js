@@ -800,10 +800,10 @@ exports.updateTender = function(req, res) {
                         var members = [];
                         var tenderers = people[currentRole][index].tenderers;
                         async.each(data.newMembers, function(member, cb) {
-                            members.push({name:member.name, email: member.email});
                             User.findOne({email: member.email}, function(err, user) {
                                 if (err) {cb(err);}
                                 else if (!user) {
+                                    members.push({name:member.name, email: member.email});
                                     tenderers.push({
                                         email: member.email,
                                         name: member.name,
@@ -820,9 +820,10 @@ exports.updateTender = function(req, res) {
                                     inviteToken._editUser = req.user;
                                     inviteToken.save(cb());
                                 } else {
+                                    members.push({name:user.name, email: user.email});
                                     tenderers.push({
                                         _id: user._id,
-                                        name: member.name,
+                                        name: user.name,
                                         teamMember: []
                                     });
                                     var inviteToken = new InviteToken({
@@ -844,22 +845,26 @@ exports.updateTender = function(req, res) {
                     } else if (data.editType === "broadcast-message") {
                         var members = [];
                         var userMembers = [];
+                        var sentTo = [];
                         async.each(data.members, function(member, callback) {
                             User.findOne({email: member.email}, function(err, _user) {
                                 if (err) 
                                     callback();
                                 else if (!_user) {
                                     members.push(member.email);
+                                    sentTo.push(member.name);
                                     callback();
                                 } else {
                                     userMembers.push(_user._id);
                                     members.push(_user.email);
+                                    sentTo.push(user.name);
                                     callback();
                                 }
                             });
                         }, function() {
                             activity.element.members = members;
                             activity.element.userMembers = userMembers;
+                            activity.element.sentTo = sentTo;
                             activity.element.message = data.message;
                             cb();
                         });

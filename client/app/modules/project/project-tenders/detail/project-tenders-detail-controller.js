@@ -19,7 +19,7 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($roo
                 $scope.teamLeader = true;
                 $scope.tenderers.push(tenderer._id);
             } else {
-                $scope.tenderers.push({email:tenderer.email});
+                $scope.tenderers.push({email:tenderer.email, name: tenderer.name});
             }
         });
         _.remove($scope.tenderers, {_id: $rootScope.currentUser._id});
@@ -197,7 +197,6 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($roo
             targetEvent: $event,
             controller: function($scope, $stateParams, $state){
                 $scope.addendum = addendum;
-                console.log(addendum);
                 $scope.closeModal = function() {
                     $mdDialog.cancel();
                 };
