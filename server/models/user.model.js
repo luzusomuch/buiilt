@@ -33,7 +33,7 @@ var UserSchema = new Schema({
     twitter: {},
     google: {},
     github: {},
-    phoneNumber: {stype: String},
+    phoneNumber: String,
     country: String,
     packageToken: String,
     status: {type: String, default: 'offline'},

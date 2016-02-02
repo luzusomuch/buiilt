@@ -1,8 +1,4 @@
 angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, $scope, $mdDialog, tasks, taskService, $mdToast, $stateParams, $state, peopleService, people) {
-	_.each(tasks, function(task) {
-		task.members.push(task.owner);
-		_.remove(task.members, {_id: $rootScope.currentUser._id});
-	});
 	$scope.tasks = tasks;
 	$scope.people = people;
 
@@ -15,22 +11,31 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
     };
 
     $scope.selectFilterTag = function(index, type) {
-        _.each($scope.dueDate, function(date) {
-            date.select = false;
-        });
-        _.each($scope.assignStatus, function(status) {
-            status.select = false;
-        });
         if (type === "status") {
+            _.each($scope.dueDate, function(date) {
+                date.select = false;
+            });
             $scope.assignStatus[index].select = !$scope.assignStatus[index].select;
-            $scope.status = $scope.assignStatus[index].value;
+            if ($scope.assignStatus[index].select) {
+                $scope.status = $scope.assignStatus[index].value;
+            } else {
+                $scope.status = null;
+            }
         } else {
+            _.each($scope.assignStatus, function(status) {
+                status.select = false;
+            });
             $scope.dueDate[index].select = !$scope.dueDate[index].select;
-            $scope.dueDateFilter = $scope.dueDate[index].value;
+            if ($scope.dueDate[index].select) {
+                $scope.dueDateFilter = $scope.dueDate[index].value;
+            } else {
+                $scope.dueDateFilter = null;
+            }
         }
     };
 
     $scope.search = function(task) {
+        console.log($scope.status);
         var found = false
         var taskDueDate = moment(task.dateEnd).format("YYYY-MM-DD");
         if ($scope.description && $scope.description.length > 0) {

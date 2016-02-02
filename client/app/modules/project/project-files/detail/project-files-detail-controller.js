@@ -29,41 +29,45 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
         _.each($rootScope.currentTeam.fileTags, function(tag) {
             $scope.tags.push({name: tag, select: false});
         });
-        if ($rootScope.currentUser.isLeader) {
-            _.each($rootScope.roles, function(role) {
-                _.each(people[role], function(tender) {
-                    if (tender.hasSelect) {
-                        var winnerTenderer = tender.tenderers[0];
-                        if (winnerTenderer._id) {
-                            winnerTenderer._id.select = false;
-                            $scope.membersList.push(winnerTenderer._id);
-                        } else if (winnerTenderer.email) {
-                            $scope.membersList.push({email: winnerTenderer.email, type: role, select: false});
-                        }
-                    }
-                    // get employees list
-                    var currentTendererIndex = _.findIndex(tender.tenderers, function(tenderer) {
+        _.each($rootScope.roles, function(role) {
+            _.each($scope.people[role], function(tender){
+                if (tender.hasSelect) {
+                    var isLeader = (_.findIndex(tender.tenderers, function(tenderer) {
                         if (tenderer._id) {
-                            return tenderer._id._id == $rootScope.currentUser._id;
+                            return tenderer._id._id.toString() === $rootScope.currentUser._id.toString();
                         }
-                    });
-                    if (currentTendererIndex !== -1) {
-                        var currentTenderer = tender.tenderers[currentTendererIndex];
-                        _.each(currentTenderer.teamMember, function(member) {
-                            member.select = false;
-                            $scope.membersList.push(member);
+                    }) !== -1) ? true : false;
+                    if (!isLeader) {
+                        _.each(tender.tenderers, function(tenderer) {
+                            var memberIndex = _.findIndex(tenderer.teamMember, function(member) {
+                                return member._id.toString() === $rootScope.currentUser._id.toString();
+                            });
+                            if (memberIndex !== -1) {
+                                _.each(tenderer.teamMember, function(member) {
+                                    member.select = false;
+                                    $scope.membersList.push(member);
+                                });
+                            }
                         });
+                        if (tender.tenderers[0]._id) {
+                            tender.tenderers[0]._id.select = false;
+                            $scope.membersList.push(tender.tenderers[0]._id);
+                        } else {
+                            $scope.membersList.push({email: tender.tenderers[0].email, select: false});
+                        }
                     } else {
-                        $scope.member.push({email: tender.tenderer[0].email, select: false});
+                        _.each(tender.tenderers, function(tenderer) {
+                            if (tenderer._id._id.toString() === $rootScope.currentUser._id.toString()) {
+                                _.each(tenderer.teamMember, function(member) {
+                                    member.select = false;
+                                    $scope.membersList.push(member);
+                                });
+                            }
+                        });
                     }
-                });
+                }
             });
-        } else {
-            $scope.membersList = $rootScope.currentTeam.leader;
-            _.each($rootScope.currentTeam.member, function(member) {
-                $scope.membersList.push(member);
-            });
-        }
+        });
         // get unique member 
         $scope.membersList = _.uniq($scope.membersList, "_id");
 

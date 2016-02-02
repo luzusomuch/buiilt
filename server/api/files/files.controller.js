@@ -42,7 +42,6 @@ exports.update = function(req, res) {
         if (err) {return res.send(500,err);}
         else if (!file) {return res.send(404, "The specific file is not existed");}
         else {
-            var orginalFile = _.clone(file)._doc;
             var activity = {
                 user: req.user._id,
                 type: req.body.editType,
@@ -50,12 +49,16 @@ exports.update = function(req, res) {
                 element: {}
             };
             if (data.editType === "edit") {
-                activity.element.name = (orginalFile.name.length !== data.name.length) ? orginalFile.name : null;
-                activity.element.description = (orginalFile.description.length !== data.description.length) ? orginalFile.description : null;
-                activity.element.tags = (orginalFile.tags.length !== data.tags.length) ? orginalFile.tags : null;
+                var tags = [];
+                _.each(data.tags, function(tag) {
+                    tags.push(tag.name);
+                });
+                activity.element.name = (file.name.length !== data.name.length) ? file.name : null;
+                activity.element.description = (file.description && file.description.length !== data.description.length) ? file.description : null;
+                activity.element.tags = (file.tags.length !== data.tags.length) ? file.tags : null;
                 file.name = data.name;
                 file.description = data.description;
-                file.tags = data.tags;
+                file.tags = tags;
             } else if (data.editType === "assign") {
                 var members = [];
                 _.each(data.newMembers, function(member) {
