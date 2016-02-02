@@ -21,6 +21,7 @@ var RelatedItem = require('../../components/helpers/related-item');
 var _ = require('lodash');
 var async = require('async');
 var mongoose = require('mongoose');
+var EventBus = require('../../components/EventBus');
 
 function populateThread(thread, res){
     Thread.populate(thread, [
@@ -40,7 +41,16 @@ function populateTask(task, res){
         {path: "members", select: "_id email name"},
         {path: "activities.user", select: "_id email name"}
     ], function(err, task) {
-        return res.send(200, task);
+        async.each(task.members, function(member, cb) {
+            EventBus.emit('socket:emit', {
+                event: 'task:new',
+                room: member._id.toString(),
+                data: task
+            });
+            cb();
+        }, function() {
+            return res.send(200, task);
+        });
     });
 };
 
@@ -148,7 +158,7 @@ exports.create = function(req,res) {
                     }
                 });
             } else {
-                return res.send(200, task);
+                populateTask(task, res);
             }
         });
     });

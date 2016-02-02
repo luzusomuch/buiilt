@@ -1,6 +1,11 @@
-angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, $scope, $mdDialog, tasks, taskService, $mdToast, $stateParams, $state, peopleService, people) {
+angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, $scope, $mdDialog, tasks, taskService, $mdToast, $stateParams, $state, peopleService, people, socket) {
 	$scope.tasks = tasks;
 	$scope.people = people;
+
+    socket.on("task:new", function(data) {
+        $scope.tasks.push(data);
+        $scope.tasks = _.uniq($scope.tasks, "_id");
+    });
 
     // filter section
     $scope.dueDate = [{text: "today", value: "today"}, {text: "tomorrow", value: "tomorrow"}, {text: "this week", value: "thisWeek"}, {text: "next week", value: "nextWeek"}];
