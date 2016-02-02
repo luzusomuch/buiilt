@@ -177,6 +177,6 @@ angular.module('buiiltApp')
 })
 .filter("sanitize", function($sce) {
   return function(item) {
-    return $sce.trustAsHtml("<span>"+item+"</span>");
+    return $sce.trustAsHtml(item);
   }
 });

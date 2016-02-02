@@ -79,7 +79,7 @@
 	  					  <md-tooltip md-direction="left">Upload a Reivsion</md-tooltip>
 	  				      <md-icon class="material-icons">file_upload</md-icon>
 			  	      </md-button>
-  			  	      <md-button aria-label="Add a Team Member" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'assign.html')">
+  			  	      <md-button aria-label="Add a Team Member" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'assign.html')" ng-show="!file.belongTo">
   	  					  <md-tooltip md-direction="left">Assign to a Team Member</md-tooltip>
   	  				      <md-icon class="material-icons">person_outline</md-icon>
   			  	      </md-button>

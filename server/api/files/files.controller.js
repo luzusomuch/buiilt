@@ -48,34 +48,52 @@ exports.update = function(req, res) {
                 createdAt: new Date(),
                 element: {}
             };
-            if (data.editType === "edit") {
-                var tags = [];
-                _.each(data.tags, function(tag) {
-                    tags.push(tag.name);
-                });
-                activity.element.name = (file.name.length !== data.name.length) ? file.name : null;
-                activity.element.description = (file.description && file.description.length !== data.description.length) ? file.description : null;
-                activity.element.tags = (file.tags.length !== data.tags.length) ? file.tags : null;
-                file.name = data.name;
-                file.description = data.description;
-                file.tags = tags;
-            } else if (data.editType === "assign") {
-                var members = [];
-                _.each(data.newMembers, function(member) {
-                    file.members.push(member._id);
-                    members.push(member.name);
-                });
-                activity.element.members = members;
-            }
-            file.activities.push(activity);
-            file.save(function(err) {
+            async.parallel([
+                function(cb) {
+                    if (data.editType === "edit") {
+                        var tags = [];
+                        _.each(data.tags, function(tag) {
+                            tags.push(tag.name);
+                        });
+                        activity.element.name = (file.name.length !== data.name.length) ? file.name : null;
+                        activity.element.description = (file.description && file.description.length !== data.description.length) ? file.description : null;
+                        activity.element.tags = (file.tags.length !== data.tags.length) ? file.tags : null;
+                        file.name = data.name;
+                        file.description = data.description;
+                        file.tags = tags;
+                        cb();
+                    } else if (data.editType === "assign") {
+                        var members = [];
+                        async.each(data.newMembers, function(member, cb) {
+                            members.push(member.email);
+                            User.findOne({email: member.email}, function(err, user) {
+                                if (err) {cb();}
+                                else if (!user) {
+                                    file.notMembers.push(member.email);
+                                    cb();
+                                } else {
+                                    file.members.push(user._id);
+                                    cb();
+                                }
+                            });
+                        }, function() {
+                            activity.element.members = members;
+                            cb();
+                        });
+                    }
+                }
+            ], function(err, result) {
                 if (err) {return res.send(500,err);}
-                File.populate(file, [
-                {path:"owner", select:"_id name email"},
-                {path:"members", select:"_id name email"},
-                {path:"activities.user", select:"_id name email"},
-                ], function(err, file) {
-                    RelatedItem.responseWithRelated("file", file, req.user, res);
+                file.activities.push(activity);
+                file.save(function(err) {
+                    if (err) {return res.send(500,err);}
+                    File.populate(file, [
+                    {path:"owner", select:"_id name email"},
+                    {path:"members", select:"_id name email"},
+                    {path:"activities.user", select:"_id name email"},
+                    ], function(err, file) {
+                        RelatedItem.responseWithRelated("file", file, req.user, res);
+                    });
                 });
             });
         }
