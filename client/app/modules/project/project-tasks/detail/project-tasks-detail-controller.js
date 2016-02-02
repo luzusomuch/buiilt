@@ -172,7 +172,7 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
     $scope.updateTask = function(task, updateType) {
         taskService.update({id: task._id}, task).$promise.then(function(res) {
             if (updateType == "complete-task" || updateType == "uncomplete-task") {
-                $scope.showToast((res.complete)?"Completed task successfully!":"Uncompleted task successfully!");
+                $scope.showToast((res.completed)?"Completed task successfully!":"Uncompleted task successfully!");
             } else if (updateType == "edit-task") {
                 $scope.showToast("Updated task successfully!");
             } else if (updateType == "assign") {

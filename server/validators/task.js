@@ -31,14 +31,7 @@ exports.validateCreate = function (req, cb) {
 exports.validateUpdate = function (req, cb) {
     var members = req.task.members;
     var notMembers = req.task.notMembers;
-    if (req.body.editType === "edit-task") {
-        // req.checkBody('name', 'Task title is required').notEmpty();
-        req.checkBody('description', 'Task description is required').notEmpty();
-        req.checkBody('dateEnd', 'Task end date is required').notEmpty();
-        return cb(req.validationErrors(), _.assign(_.pick(req.body, 'description','completed','completedBy','completedAt','dateEnd'),{
-            members : members
-        }));
-    } else if (req.body.editType === "assign") {
+    if (req.body.editType === "assign") {
         async.each(req.body.newMembers, function(member, cb) {
             User.findOne({email: member.email}, function(err, user) {
                 if (err) {cb(err);}
@@ -51,5 +44,13 @@ exports.validateUpdate = function (req, cb) {
                 notMembers: notMembers
             }));
         });
+        
+    } else {
+        // req.checkBody('name', 'Task title is required').notEmpty();
+        req.checkBody('description', 'Task description is required').notEmpty();
+        req.checkBody('dateEnd', 'Task end date is required').notEmpty();
+        return cb(req.validationErrors(), _.assign(_.pick(req.body, 'description','completed','completedBy','completedAt','dateEnd'),{
+            members : members
+        }));
     }
 };
