@@ -112,7 +112,6 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($roo
     $scope.sendAddendum = function() {
         peopleService.attachAddendum({id: $stateParams.id, tenderId: $stateParams.tenderId}, $scope.addendum).$promise.then(function(res) {
             $scope.cancelNewTenderModal();
-            setAddendum();
             $scope.showToast("Attach addendum successfully");
             $rootScope.$broadcast("Tender.Updated", res);
         }, function(err){$scope.showToast("Error");});
@@ -191,6 +190,31 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($roo
             $scope.showToast("Submit a tender successfully");
             $rootScope.$broadcast("Tender.Updated", res);
         }, function(err) {$scope.showToast("Error");});
+    };
+
+    $scope.showReviewFileModal = function($event, addendum) {
+        $mdDialog.show({
+            targetEvent: $event,
+            controller: function($scope, $stateParams, $state){
+                $scope.addendum = addendum;
+                console.log(addendum);
+                $scope.closeModal = function() {
+                    $mdDialog.cancel();
+                };
+
+                $scope.download = function() {
+                    filepicker.exportFile(
+                        {url: addendum.element.link, filename: addendum.element.name},
+                        function(Blob){
+                            console.log(Blob.url);
+                        }
+                    );
+                };
+            },
+            templateUrl: 'app/modules/project/project-tenders/detail/addendum-riWindow.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: false
+        });
     };
 
     getTenderers();

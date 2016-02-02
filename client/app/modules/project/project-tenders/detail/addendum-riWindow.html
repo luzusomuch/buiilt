@@ -13,17 +13,15 @@
                         <p>{{addendum.element.description}}</p>
                     </md-input-container>
                 </div>
-                <div layout="layout" ng-show="addendum.element._id">
-                    <md-button ng-click="goToFileDetail()">Go to file location</md-button>
-                    <span style="margin-top:14px">OR</span>
-                    <md-button ng-click="download()">Download</md-button>
+                <div layout="row" ng-show="addendum.element.link">
+                    <div flex file-picker-previewer type="filepicker-preview" url="{{addendum.element.link}}" style="height:75vh;"> </div>
                 </div>
             </div>
         </md-dialog-content>
         
         <md-dialog-actions>
             <md-button ng-click="closeModal()">Close</md-button>
-            <md-button ng-show="addendum.element._id" ng-click="download()">Download</md-button>
+            <md-button ng-show="addendum.element.link" ng-click="download()">Download</md-button>
         </md-dialog-actions>
     </form>
 </md-dialog>

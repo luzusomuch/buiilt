@@ -142,127 +142,55 @@ exports.invitePeople = function(req, res) {
                                 }
                             });
                         } else {
-                            var tenderers = [];
-                            var members = [];
-                            var notMembers = [];
-                            async.each(invite.invitees, function(invitee, callback) {
-                                User.findOne({email: invitee.email}, function(err, user) {
-                                    if (err) {callback();}
-                                    else if (!user) {
-                                        tenderers.push({
-                                            email: invitee.email,
-                                            name: invitee.name,
-                                            teamMember: []
-                                        });
-                                        notMembers.push(invitee.email);
-                                        // newInviteeNotSignUp.push(invitee.email);
-                                        var inviteToken = new InviteToken({
-                                            type: 'project-invite',
-                                            email: invitee.email,
-                                            element: {
-                                                project: people.project,
-                                                type: type
-                                            }
-                                        });
-                                        inviteToken._editUser = req.user;
-                                        inviteToken.save(callback());
-                                    } else {
-                                        tenderers.push({
-                                            _id: user._id,
-                                            name: invitee.name,
-                                            teamMember: []
-                                        });
-                                        members.push(user._id);
-                                        newInviteeSignUpAlready.push(user._id);
-                                        var inviteToken = new InviteToken({
-                                            type: 'project-invite',
-                                            user: user._id,
-                                            element: {
-                                                project: people.project,
-                                                type: type
-                                            }
-                                        });
-                                        inviteToken._editUser = req.user;
-                                        inviteToken.save(callback());
-                                    }
-                                });
-                            }, function() {
-                                var tender = {
-                                    tenderName: invite.tenderName,
-                                    tenderDescription: invite.tenderDescription,
-                                    dateEnd: invite.dateEnd,
-                                    inviter: req.user._id,
-                                    tenderers: tenderers,
-                                    createAt: new Date(),
-                                    inviterType: (type == "consultants") ? invite.inviterType : null,
-                                    inviterActivities: [],
-                                    relatedItem: [],
-                                    addendums: []
-                                };
-                                var addendum = {
-                                    user: req.user._id,
-                                    createdAt: new Date(),
-                                    element: {
-                                        name: invite.tenderName,
-                                        description: invite.tenderDescription
-                                    }
-                                };
-                                var activity = {
-                                    user: req.user._id,
-                                    type: "attach-scope",
-                                    createdAt: new Date(),
-                                    element: {
-                                        members: [],
-                                        content: invite.tenderDescription,
-                                        dateEnd: invite.dateEnd
-                                    }
-                                };
-                                if (invite.file) {
-                                    var file = new File({
-                                        project: req.params.id,
-                                        name: invite.file.filename,
-                                        description: invite.tenderDescription,
-                                        path: invite.file.url,
-                                        key: invite.file.key,
-                                        server: 's3',
-                                        mimeType: invite.file.mimeType,
-                                        size: invite.file.size,
-                                        owner: req.user._id,
-                                        element: {type: invite.file.type},
-                                        members: members,
-                                        notMembers: notMembers
-                                    });
-                                    file.save(function(err) {
-                                        if (err) {cb(err);}
-                                        else {
-                                            activity.element._id = file._id;
-                                            activity.element.link = file.path;
-                                            activity.element.project = people.project;
-                                            tender.inviterActivities.push(activity);
-
-                                            addendum.element._id = file._id;
-                                            addendum.element.link = file.path;
-                                            addendum.project = people.project;
-                                            tender.addendums.push(addendum);
-                                            team.push(tender);
-                                            cb();
-                                        }
-                                    });
-                                } else {
-                                    tender.inviterActivities.push(activity);
-                                    tender.addendums.push(addendum);
-                                    team.push(tender);
-                                    cb();
+                            var tender = {
+                                tenderName: invite.tenderName,
+                                tenderDescription: invite.tenderDescription,
+                                dateEnd: invite.dateEnd,
+                                inviter: req.user._id,
+                                tenderers: [],
+                                createAt: new Date(),
+                                inviterType: (type == "consultants") ? invite.inviterType : null,
+                                inviterActivities: [],
+                                relatedItem: [],
+                                addendums: []
+                            };
+                            var addendum = {
+                                user: req.user._id,
+                                createdAt: new Date(),
+                                element: {
+                                    name: invite.tenderName,
+                                    description: invite.tenderDescription
                                 }
-                            });
+                            };
+                            var activity = {
+                                user: req.user._id,
+                                type: "attach-scope",
+                                createdAt: new Date(),
+                                element: {
+                                    members: [],
+                                    content: invite.tenderDescription,
+                                    dateEnd: invite.dateEnd
+                                }
+                            };
+                            if (invite.file) {
+                                addendum.element.link = activity.element.link = invite.file.url;
+                                addendum.element.name = activity.element.name = invite.file.filename;
+                                tender.inviterActivities.push(activity);
+                                tender.addendums.push(addendum);
+                                team.push(tender);
+                                cb();
+                            } else {
+                                tender.inviterActivities.push(activity);
+                                tender.addendums.push(addendum);
+                                team.push(tender);
+                                cb();
+                            }
                         }
                     }
                 ], function(err, result) {
                     if (err) {return res.send(500,err);}
                     else {
                         people[type] = team;
-                        // people._newInviteeNotSignUp = newInviteeNotSignUp;
-                        // people._newInviteeSignUpAlready = newInviteeSignUpAlready;
                         people._newInviteType = type;
                         people.markModified('invitePeople');
                         people._editUser = req.user;
@@ -760,121 +688,61 @@ exports.attachAddendum = function(req, res) {
         else if (!people) {
             return res.send(404, {message: "The specific people is not existed"});
         } else {
-            async.series({
-                file: function(cb) {
-                    if (req.body.file) {
-                        var file = new File({
-                            project: req.params.id,
-                            name: data.file.filename,
-                            description: data.description,
-                            path: data.file.url,
-                            key: data.file.key,
-                            server: 's3',
-                            mimeType: data.file.mimeType,
-                            size: data.file.size,
-                            owner: req.user._id,
-                            element: {type: data.file.type}
-                        });
-                        file.save(function(err) {
-                            if (err) {cb(err);}
-                            else {cb(null, file);}
-                        });
-                    } else {
-                        cb(null);
-                    }
-                }
-            }, function(err, result) {
-                if (err) {return res.send(500,err);}
-                var roles = ["builders","subcontractors", "consultants"];
-                var currentRole, index;
-                _.each(roles, function(role) {
-                    index = _.findIndex(people[role], function(tender) {
-                        return tender._id.toString()===req.params.tenderId.toString();
-                    });
-                    if (index !== -1) {
-                        currentRole = role;
-                        return false;
-                    }
+            var roles = ["builders","subcontractors", "consultants"];
+            var currentRole, index;
+            _.each(roles, function(role) {
+                index = _.findIndex(people[role], function(tender) {
+                    return tender._id.toString()===req.params.tenderId.toString();
                 });
-                var activity = {
-                    user: req.user._id,
-                    type: "attach-addendum",
-                    createdAt: new Date(),
-                    element: {
-                        members: [],
-                        name: data.name,
-                        content: data.description,
-                        element: {
-
-                        }
-                    }
-                };
-                var addendum = {
-                    user: req.user._id,
-                    createdAt: new Date(),
-                    element: {
-                        name: data.name,
-                        description: data.description
-                    }
-                };
-                if (result.file) {
-                    addendum.element._id = result.file._id;
-                    addendum.element.link = result.file.path;
-                    addendum.element.project = people.project;
-
-                    activity.element._id = result.file._id;
-                    activity.element.project = people.project;
+                if (index !== -1) {
+                    currentRole = role;
+                    return false;
                 }
-                people[currentRole][index].inviterActivities.push(activity);
-                people[currentRole][index].addendums.push(addendum);
-                people._updatedTender = people[currentRole][index];
-                people._editUser = req.user;
-                people.markModified("attach-addendum");
-                people.save(function(err) {
-                    if (err) {return res.send(500,err);}
-                    var members = [];
-                    var notMembers = [];
-                    _.each(people[currentRole][index].tenderers, function(tenderer) {
-                        if (tenderer._id) {
-                            members.push(tenderer._id);
-                        } else {
-                            notMembers.push(tenderer.email);
-                        }
-                    });
-                    if (result.file) {
-                        File.update({_id: result.file._id}, {members: members, notMembers: notMembers}, function(err) {
-                            if (err) {console.log(err);return res.send(500,err);}
-                            People.populate(people, [
-                                {path: "builders.tenderers._id", select: "_id name email"},
-                                {path: "builders.inviter", select: "_id name email"},
-                                {path: "builders.inviterActivities.user", select: "_id name email"},
-                                {path: "consultants.tenderers._id", select: "_id name email"},
-                                {path: "consultants.inviter", select: "_id name email"},
-                                {path: "consultants.inviterActivities.user", select: "_id name email"},
-                                {path: "subcontractors.tenderers._id", select: "_id name email"},
-                                {path: "subcontractors.inviter", select: "_id name email"},
-                                {path: "subcontractors.inviterActivities.user", select: "_id name email"}
-                            ], function(err, people) {
-                                if (err) {return res.send(500,err);}
-                                return res.send(200,people[currentRole][index]);    
-                            });
-                        });
-                    } else {
-                        People.populate(people, [
-                            {path: "builders.tenderers._id", select: "_id name email"},
-                            {path: "builders.inviter", select: "_id name email"},
-                            {path: "builders.inviterActivities.user", select: "_id name email"},
-                            {path: "consultants.tenderers._id", select: "_id name email"},
-                            {path: "consultants.inviter", select: "_id name email"},
-                            {path: "consultants.inviterActivities.user", select: "_id name email"},
-                            {path: "subcontractors.tenderers._id", select: "_id name email"},
-                            {path: "subcontractors.inviter", select: "_id name email"},
-                            {path: "subcontractors.inviterActivities.user", select: "_id name email"}
-                        ], function(err, people) {
-                            if (err) {return res.send(500,err);}
-                            return res.send(200,people[currentRole][index]);    
-                        });
+            });
+            var activity = {
+                user: req.user._id,
+                type: "attach-addendum",
+                createdAt: new Date(),
+                element: {
+                    members: [],
+                    name: data.name,
+                    description: data.description,
+                    element: {
+
                     }
+                }
+            };
+            var addendum = {
+                user: req.user._id,
+                createdAt: new Date(),
+                element: {
+                    name: data.name,
+                    description: data.description
+                }
+            };
+            if (data.file) {
+                activity.element.link = addendum.element.link = data.file.url;
+            }
+            people[currentRole][index].inviterActivities.push(activity);
+            people[currentRole][index].addendums.push(addendum);
+            people._updatedTender = people[currentRole][index];
+            people._editUser = req.user;
+            people.markModified("attach-addendum");
+            people.save(function(err) {
+                if (err) {return res.send(500,err);}
+                People.populate(people, [
+                    {path: "builders.tenderers._id", select: "_id name email"},
+                    {path: "builders.inviter", select: "_id name email"},
+                    {path: "builders.inviterActivities.user", select: "_id name email"},
+                    {path: "consultants.tenderers._id", select: "_id name email"},
+                    {path: "consultants.inviter", select: "_id name email"},
+                    {path: "consultants.inviterActivities.user", select: "_id name email"},
+                    {path: "subcontractors.tenderers._id", select: "_id name email"},
+                    {path: "subcontractors.inviter", select: "_id name email"},
+                    {path: "subcontractors.inviterActivities.user", select: "_id name email"}
+                ], function(err, people) {
+                    if (err) {return res.send(500,err);}
+                    return res.send(200,people[currentRole][index]);    
                 });
             });
         }

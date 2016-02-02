@@ -24,11 +24,6 @@ angular.module('buiiltApp').directive('tenderItems', function(){
                             $mdDialog.cancel();
                         };
 
-                        $scope.goToFileDetail = function() {
-                            $scope.closeModal();
-                            $state.go("project.files.detail", {id: $stateParams.id, fileId: addendum.element._id});
-                        };
-
                         $scope.download = function() {
                             filepicker.exportFile(
                                 {url: addendum.element.link, filename: addendum.element.name},
