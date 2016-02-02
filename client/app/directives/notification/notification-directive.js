@@ -8,7 +8,6 @@ angular.module('buiiltApp')
                 currentUser: '='
         },
         link : function(scope,element) {
-            console.log(scope.notification);
             var params = {
                 fromUser : function() {
                     if (scope.notification.fromUser.email == scope.currentUser.email) {
@@ -39,47 +38,18 @@ angular.module('buiiltApp')
             var taskArray = ["task-assign", "task-reopened", "task-completed", "task-revoke"];
 
             var getSref = function(notification) {
-                if (taskArray.indexOf(notification.type) !== -1) {
-                    return 'project.tasks.detail({id: notification.element.project, taskId: notification.element._id})';
+                if (notification.type === "invite-to-project") {
+                    return 'project.overview({id: notification.element.project})';
                 }
 
                 if (teamArray.indexOf(notification.type) !== -1)  {
                     return 'setting.staff';
                 }
-
-                if (threadArray.indexOf(notification.type) !== -1) {
-                    return 'project.messages.detail({id: notification.element.project, messageId: notification.element._id})';
-                }
-
-                if (fileArray.indexOf(notification.type) !== -1) {
-                    return 'project.files.detail({id: notification.element.project, fileId: notification.element._id})';
-                }
-                if (documentArray.indexOf(notification.type) !== -1) {
-                    return 'project.documents.detail({id: notification.element.project, documentId: notification.element._id})';
-                }
-                if (notification.referenceTo === "tender") {
-                    return 'project.tenders.detail({id: notification.element.project, tenderId: notification.element.data._id})'
-                }
             };
 
             var text;
-            if (scope.notification.type === 'task-assign') {
-                text = params.fromUser() + ' has assigned ' + params.toUser() + ' to the task ' + params.element + ' at ' + params.time;
-            }
-            if (scope.notification.type === 'task-revoke') {
-                text = params.fromUser() + ' has removed ' + params.toUser() + ' from the task ' + params.element + ' at ' + params.time;
-            }
-            if (scope.notification.type === 'task-reopened') {
-                text = params.fromUser() + ' has reopened the task ' + params.element + ' at ' + params.time;
-            }
-            if (scope.notification.type === 'task-completed') {
-                text = params.fromUser() + ' has completed the task ' + params.element + ' at ' + params.time;
-            }
-            if (scope.notification.type === 'thread-assign') {
-                text = params.fromUser() + ' has assigned ' + params.toUser() + ' to the thread ' + params.element + ' at ' + params.time;
-            }
-            if (scope.notification.type === 'thread-message') {
-                text = params.fromUser() + ' has posted a new message in the thread ' + params.element + ' at ' + params.time;
+            if (scope.notification.type === "invite-to-project") {
+                text = params.fromUser() + " has invited you to join their project at " + params.time;
             }
             if (scope.notification.type === 'team-invite') {
                 text = params.fromUser() + ' has invited you to the team ' + params.team() + ' at ' + params.time;
@@ -96,21 +66,6 @@ angular.module('buiiltApp')
             if (scope.notification.type === 'team-assign-leader') {
                 text = params.fromUser() + ' has assigned ' + params.toUser() + ' as an administrator in '+ params.team() + ' at ' + params.time;
             }
-            if (scope.notification.type === "document-upload-reversion") {
-                text = params.fromUser() + ' has upload new document reversion ' + params.element + ' at ' + params.time;   
-            }
-            if (scope.notification.type === "document-assign") {
-                text = params.fromUser() + ' has upload new document ' + params.element + ' at ' + params.time;      
-            }
-            if (scope.notification.type === "send-broadcast-message") {
-                var latestActivity = _.last(scope.notification.element.data.inviterActivities);
-                var message;
-                if (latestActivity.type === "broadcast-message") {
-                    message = latestActivity.element.message;
-                } 
-                text = params.fromUser() + ' has sent you new message ' + message + ' at ' + params.time;         
-            }
-
             scope.notification.sref = getSref(scope.notification);
 
             element.html('<a ui-sref="{{notification.sref}}" ui-sref-opts="{reload: true}" ng-click="click(notification)" style="padding: 0px"><div class="_notification"><p>' + text + '</p></div></a>').show();
@@ -148,19 +103,6 @@ angular.module('buiiltApp')
                     notificationService.get({limit : limit}).$promise
                     .then(function(res) {
                         $scope.notifications = res;
-                        var notificationsWithoutMention = [];
-                        _.each(res, function(item) {
-                            if (item) {
-                                if (item.referenceTo == "people-chat-without-mention") {
-                                    notificationsWithoutMention.push(item);
-                                } else if (item.referenceTo == "board-chat-without-mention") {
-                                    notificationsWithoutMention.push(item);
-                                }
-                            }
-                        });
-                    _.each(notificationsWithoutMention, function(item) {
-                            _.remove($scope.notifications, {_id: item._id});
-                        });
                         if (limit > res.length) {
                             $scope.readMore = false;
                         }

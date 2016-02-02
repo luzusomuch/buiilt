@@ -134,6 +134,7 @@ exports.invitePeople = function(req, res) {
                                         _id: user._id,
                                         teamMember: []
                                     });
+                                    people._newInviteeSignUpAlready = [user._id];
                                     people._updatedTender = tender;
                                     team.push(tender);
                                     user.projects.push(people.project);

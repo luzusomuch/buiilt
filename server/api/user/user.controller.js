@@ -4,6 +4,7 @@ var User = require('./../../models/user.model');
 var Task = require('./../../models/task.model');
 var Thread = require('./../../models/thread.model');
 var File = require('./../../models/file.model');
+var NotificationHelper = require('./../../components/helpers/notification');
 
 var ResetPassword = require('./../../models/resetPassword.model');
 var Project = require('./../../models/project.model');
@@ -60,74 +61,65 @@ exports.index = function (req, res) {
  * Creates a new user
  */
 exports.create = function (req, res, next) {
-  var invite = req.body.invite;
-  UserValidator.validateNewUser(req, function(err,data) {
-    if (err) {
-      return res.send(422,{errors: err})
-    }
-    var newUser = new User(data);
-    newUser.provider = 'local';
-    newUser.role = 'user';
-    newUser.name = data.firstName + ' ' + data.lastName;
-    newUser.save(function (err, user) {
-      if (err) {
-        return validationError(res, err);
-      }
-      //update project for user
-      var token = jwt.sign({_id: user._id}, config.secrets.session, {expiresInMinutes: 60 * 5});
-      Project.find({'user.email': req.body.email}, function (err, projects) {
+    var invite = req.body.invite;
+    UserValidator.validateNewUser(req, function(err,data) {
         if (err) {
+            return res.send(422,{errors: err})
         }
-        else {
-          _.each(projects, function (project) {
-            if (project.type === 'FromBuilderToHomeOwner') {
-              User.findOne({'email': project.user.email},function(err, user) {
-                if (err) {return res.send(500, err);}
-                if (!user) {return res.send(404,err);}
-                else {
-                  if (user.email === req.body.email && !project.user._id) {
-                    project.user._id = user._id;
-                    project.save();
-                  }
-                }
-              });
-            }
-          });
-        }
-      });
-      // If has invite token
-      if (invite) {
-        if (invite.type == 'team-invite') {
-          var update = {
-            "member.$._id" : newUser._id,
-            "member.$.status" : 'Active'
-          };
-          Team.update({_id : invite.element._id,'member.email' : req.body.email},{'$set' : update,'$unset' : {'member.$.email' : 1}},function(err) {
+        var newUser = new User(data);
+        newUser.provider = 'local';
+        newUser.role = 'user';
+        newUser.name = data.firstName + ' ' + data.lastName;
+        newUser.save(function (err, user) {
             if (err) {
-              return res.send(500, err);
+                return validationError(res, err);
             }
-            newUser.emailVerified = true;
-            newUser.team = {
-              _id : invite.element._id,
-              role : 'member'
-            };
-            newUser.save(function() {
-              InviteToken.remove({_id : invite._id},function(err) {
-                if (err) {
-                  return res.send(500,err);
+            //update project for user
+            var token = jwt.sign({_id: user._id}, config.secrets.session, {expiresInMinutes: 60 * 5});
+            // If has invite token
+            if (invite) {
+                if (invite.type == 'team-invite') {
+                    var update = {
+                        "member.$._id" : newUser._id,
+                        "member.$.status" : 'Active'
+                    };
+                    Team.update({_id : invite.element._id,'member.email' : req.body.email},{'$set' : update,'$unset' : {'member.$.email' : 1}},function(err) {
+                        if (err) {
+                            user.remove(function(error) {
+                                return res.send(500, err);
+                            });
+                        }
+                        newUser.emailVerified = true;
+                        newUser.team = {
+                            _id : invite.element._id,
+                            role : 'member'
+                        };
+                        newUser.save(function() {
+                            InviteToken.findById(invite._id, function(err, inviteToken) {
+                                if (err) {return res.send(500,err);}
+                                else if (!inviteToken) {return res.send(404);}
+                                var params = {
+                                    owners : [inviteToken.user],
+                                    fromUser : user._id,
+                                    element : invite.element,
+                                    referenceTo : 'team',
+                                    type : 'team-accept'
+                                };
+                                NotificationHelper.create(params,function() {
+                                    inviteToken.remove(function(err) {
+                                        if (err) {return res.send(500,err);}
+                                        return res.json({token: token,emailVerified : true});
+                                    });
+                                });
+                            });
+                        });
+                    });
                 }
+            } else {
                 return res.json({token: token,emailVerified : true});
-              });
-
-            });
-          })
-        }
-      }
-      else {
-        return res.json({token: token,emailVerified : true});
-      }
+            }
+        });
     });
-  });
 };
 
 //create user with invite token

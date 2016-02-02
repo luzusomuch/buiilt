@@ -18,13 +18,13 @@ var EventBus = require('../../components/EventBus');
  * @param next
  */
 exports.notification = function(req,res,next) {
-  Notification.findById(req.params.id,function(err,notification) {
-    if (err || !notification) {
-      return res.send(500,err)
-    }
-    req.notification = notification;
-    next();
-  })
+    Notification.findById(req.params.id,function(err,notification) {
+        if (err || !notification) {
+            return res.send(500,err)
+        }
+        req.notification = notification;
+        next();
+    })
 };
 
 /**
@@ -33,20 +33,32 @@ exports.notification = function(req,res,next) {
  * @param res
  */
 exports.get = function(req,res) {
-  var user = req.user;
-  var limit = (req.query.limit) ? req.query.limit : 10;
-  Notification.find({owner : user._id,unread : true})
+    var user = req.user;
+    var limit = (req.query.limit) ? req.query.limit : 10;
+    Notification.find({owner : user._id,unread : true, $or:[{type: "invite-to-project"}, {referenceTo: "team"}]})
     .sort('-createdAt')
     .limit(limit)
     .populate('owner', '-hashedPassword -salt')
     .populate('fromUser', '-hashedPassword -salt')
     .populate('toUser', '-hashedPassword -salt')
     .exec(function(err, notifications) {
-      if (err || !notifications) {
-        return res.send(500,err);
-      }
-      return res.json(notifications);
-  })
+        if (err || !notifications) {
+            return res.send(500,err);
+        }
+        return res.json(notifications);
+    })
+};
+
+exports.countTotal = function(req,res) {
+    var user = req.user;
+    Notification.find({owner : user._id, unread : true, $or:[{type: "invite-to-project"}, {referenceTo: "team"}]})
+    .exec(function(err,notifications) {
+        if (err) {
+          return res.send(500,err);
+        }
+        var count = notifications.length;
+        return res.json({count : count});
+    });
 };
 
 /**
@@ -124,29 +136,7 @@ exports.allRead = function(req,res) {
   })
 };
 
-exports.countTotal = function(req,res) {
-  var user = req.user;
-  Notification.find({owner : user._id, unread : true}).exec(function(err,notifications) {
-    if (err) {
-      return res.send(500,err);
-    }
-    var notificationsWithoutMention = [];
-    _.each(notifications, function(item) {
-      if (item) {
-        if (item.referenceTo == "people-chat-without-mention" || item.referenceTo == "board-chat-without-mention") {
-          notificationsWithoutMention.push(item);
-        }
-      }
-    });
-    _.each(notificationsWithoutMention, function(item) {
-      _.remove(notifications, {_id: item._id});
-    });
-    var count = notifications.length;
-    console.log(count);
-    return res.json({count : count});
-    
-  })
-};
+
 
 exports.getMyFile = function(req, res) {
   var user = req.user;

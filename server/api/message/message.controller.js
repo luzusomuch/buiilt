@@ -21,7 +21,16 @@ function populateThread(thread, res){
         {path: "members", select: "_id email name"},
         {path: "activities.user", select: "_id email name"}
     ], function(err, thread) {
-        return res.send(200, thread);
+        async.each(thread.members, function(member, cb) {
+            EventBus.emit('socket:emit', {
+                event: 'thread:new',
+                room: member._id.toString(),
+                data: thread
+            });
+            cb();
+        }, function(){
+            return res.send(200, thread);
+        });
     });
 };
 
@@ -140,7 +149,7 @@ exports.create = function(req,res) {
                     }
                 });
             } else {
-                return res.json(thread);
+                populateThread(thread, res);
             }
         });
     });

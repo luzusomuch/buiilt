@@ -1,7 +1,12 @@
-angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScope, $scope, $timeout, $mdDialog, peopleService, $stateParams, $state, $mdToast, messageService, threads, people) {
+angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScope, $scope, $timeout, $mdDialog, peopleService, $stateParams, $state, $mdToast, messageService, threads, people, socket) {
 	$rootScope.title = $rootScope.project.name +" messages list";
     $scope.people = people;
 	$scope.threads = threads;
+
+    socket.on("thread:new", function(data) {
+        $scope.threads.push(data);
+        $scope.threads = _.uniq($scope.threads, "_id");
+    });
 
     // filter section
     $scope.search = function(thread) {

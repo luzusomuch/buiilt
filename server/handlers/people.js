@@ -17,8 +17,8 @@ EventBus.onSeries('People.Updated', function(req, next) {
                 owners: req.newInviteeSignUpAlready,
                 fromUser: req.editUser._id,
                 element: req,
-                referenceTo: 'people',
-                type: 'invite-people'
+                referenceTo: 'tender',
+                type: 'invite-to-project'
             }
             NotificationHelper.create(params, function(){
                 PushNotificationHelper.getData(req.project,req._id,'People package', req.editUser.name, req.newInviteeSignUpAlready, 'invite-people', function() {
@@ -57,7 +57,7 @@ EventBus.onSeries('People.Updated', function(req, next) {
             fromUser: req.editUser._id,
             element: req,
             referenceTo: 'tender',
-            type: 'update-distribute-status'
+            type: 'invite-to-project'
         }
         NotificationHelper.create(params, function(){
             return next();

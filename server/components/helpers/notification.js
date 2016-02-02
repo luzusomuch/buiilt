@@ -18,19 +18,23 @@ exports.create = function(params,cb){
                 console.log("Error on insert Notification " + err);
                 return callback(err);
             }
-            Notification.populate(notification,[
-                {path : 'owner', select: '-hashedPassword -salt'},
-                {path : 'fromUser', select: '-hashedPassword -salt'},
-                {path : 'toUser', select: '-hashedPassword -salt'}
-            ],function(err, notification) {
-                EventBus.emit('socket:emit', {
-                    event: 'notification:new',
-                    room: notification.owner._id.toString(),
-                    data: notification
+            if (notification.type === "invite-to-project" || notification.referenceTo === "team") {
+                Notification.populate(notification,[
+                    {path : 'owner', select: '-hashedPassword -salt'},
+                    {path : 'fromUser', select: '-hashedPassword -salt'},
+                    {path : 'toUser', select: '-hashedPassword -salt'}
+                ],function(err, notification) {
+                    EventBus.emit('socket:emit', {
+                        event: 'notification:new',
+                        room: notification.owner._id.toString(),
+                        data: notification
+                    });
+                    callback(null);
                 });
+            } else {
                 callback(null);
-            });
-        })
+            }
+        });
     },function(err) {
         if (err) {
             return cb(err);
