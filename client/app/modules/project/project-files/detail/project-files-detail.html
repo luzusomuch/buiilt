@@ -8,9 +8,9 @@
 			<div>
 				<md-button ng-click="showModal($event, 'file-history.html')">View File</md-button>
 			</div>
-			<md-chips class="set-filters">
+<!--			<md-chips class="set-filters">
 				<md-chip ng-click="chipsFilter()">Show Related Activities</md-chip>
-			</md-chips>
+			</md-chips> -->
 	    </div>
 		
 		<div class="main-page-content" layout-padding>
@@ -49,7 +49,8 @@
 						
 						<p ng-switch="activity.type" class="activity-body md-body">
 							
-                            <span ng-switch-when="upload-reversion"> {{activity.element.name}} </span>
+                            <span ng-switch-when="upload-reversion" layout="column"> {{activity.element.name}}</span>
+							
 							<span ng-switch-when="edit"> ({{(activity.element.name) ? "Name: "+activity.element.name+", " : ""}} {{(activity.element.description) ? "Description: "+activity.element.description+", " : ""}} {{(activity.element.tags) ? "Tags : " : ""}}<span ng-repeat="tag in activity.element.tags">{{tag}}, </span>)</span>
 							<span ng-switch-when="assign"><span ng-repeat="member in activity.element.members">{{member}}, </span></span>
 							<span ng-switch-when="related-thread">"<a ui-sref="project.messages.detail({id: file.project, messageId: activity.element.item})">{{activity.element.name}}</a>"</span>
@@ -76,13 +77,13 @@
 			  	      </md-button>
 			  	      <md-button aria-label="Upload a Revision" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'upload-reversion.html')">
 	  					  <md-tooltip md-direction="left">Upload a Reivsion</md-tooltip>
-	  				      <md-icon class="material-icons">attach_file</md-icon>
+	  				      <md-icon class="material-icons">file_upload</md-icon>
 			  	      </md-button>
   			  	      <md-button aria-label="Add a Team Member" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'assign.html')">
   	  					  <md-tooltip md-direction="left">Assign to a Team Member</md-tooltip>
   	  				      <md-icon class="material-icons">person_outline</md-icon>
   			  	      </md-button>
-  			  	      <md-button aria-label="Add a Message" class="md-fab md-raised md-mini" ng-click="showModal($event, 'add-related-thread.html')">
+  			  	      <!-- <md-button aria-label="Add a Message" class="md-fab md-raised md-mini" ng-click="showModal($event, 'add-related-thread.html')">
   	  					  <md-tooltip md-direction="left">Attach a Related Message</md-tooltip>
   	  				      <md-icon class="material-icons">chat_bubble_outline</md-icon>
   			  	      </md-button>
@@ -93,7 +94,7 @@
   			  	      <md-button aria-label="Add a Related File" class="md-fab md-raised md-mini" ng-click="showModal($event, 'add-related-file.html')">
   	  					  <md-tooltip md-direction="left">Attach a Related File</md-tooltip>
   	  				      <md-icon class="material-icons">attach_file</md-icon>
-  			  	      </md-button>
+  			  	      </md-button> -->
   			  	  </md-fab-actions>
   		  	  </md-fab-speed-dial>
 		    </div>
