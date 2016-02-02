@@ -1,22 +1,128 @@
 {% extends 'layouts/default.html' %}
 
 {% block content %}
-<body itemscope itemtype="http://schema.org/EmailMessage" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; -webkit-font-smoothing: antialiased; -webkit-text-size-adjust: none; width: 100% !important; height: 100%; line-height: 1.6em; background-color: #f6f6f6; margin: 0;" bgcolor="#f6f6f6">
-    <p>
-        Hi <%= invitee.name %>,
-    </p>
-    <p>
-        Please join our project <%=project.name%> on buiilt.
-    </p>
-    <p>
-        So that you do not miss vital information, follow the link below to be attached to the project: <a href="<%=link%>"><%=link%></a>
-    </p>
 
-    <p>Regards,</p>
-    <p><%=inviter.name%></p>
-    <p><%=team.name%></p>
-    <p><%=inviter.email%> | <%=inviter.phoneNumber%></p>
-    <p>This email has been sent you from buiilt.com.au on behalf of <%=inviter.email%></p>
-</body>
+<body style="margin: 0; padding: 0;">
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+        <td bgcolor="#ffffff" align="center">
+            <div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: Roboto, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
+                <%= team.name %> | Please join our project <%=project.name%> on buiilt
+            </div>
+        </td>
+    </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+        <td bgcolor="#ffffff" align="center" style="padding: 15px 15px 15px 15px;" class="section-padding">
+            <table border="0" cellpadding="0" cellspacing="0" width="500" class="responsive-table">
+                <tr>
+                    <td>
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td align="center" style="font-size: 16px; font-family: Roboto, Arial, sans-serif; color: #666666; padding-top: 30px;" class="padding-copy">
+									Join Us on buiilt:
+								</td>
+                            </tr>
+			                <tr>
+			                    <td style="padding: 10px 0px 10px 0px; border-bottom: 1px solid #EEEEEE" class="logo" align="center">
+			                    </td>
+			                </tr>
+                            <tr>
+                                <td align="left" style="padding: 20px 0 0 0; font-size: 16px; line-height: 25px; font-family: Roboto, Arial, sans-serif; color: black;" class="padding-copy">
+									<p>Hi <%= invitee.name %>,</p>
+									<p><%= team.name %> will be using buiilt to help us manage our project, <%=project.name%>.</p>
+									<p>We see that you already have an account with buiilt, so could you please accept our invitation to join the project.</p>
+									<p>All you need to do is click the button below and sign in if required.</p>
+								</td>
+                            </tr>
+                            <tr>
+                                <td align="center">
+                                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="mobile-button-container">
+                                        <tr>
+                                            <td align="center" style="padding: 25px 0 0 0;" class="padding-copy">
+                                                <table border="0" cellspacing="0" cellpadding="0" class="responsive-table">
+                                                    <tr>
+                                                        <td align="center"><a href="<%=link%>" target="_blank" style="font-size: 16px; font-family: Roboto, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #2196F3; border-top: 15px solid #2196F3; border-bottom: 15px solid #2196F3; border-left: 25px solid #2196F3; border-right: 25px solid #2196F3; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; display: inline-block;" class="mobile-button">Accept Invitation</a></td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="left" style="padding: 20px 0 0 0; font-size: 16px; line-height: 25px; font-family: Roboto, Arial, sans-serif; color: black;" class="padding-copy">
+									<p>We look forward to seeing you on buiilt.</p>
+								</td>
+                            </tr>
+                            <tr>
+                                <td align="left" style="padding: 20px 0 0 0; font-size: 13px; line-height: 25px; font-family: Roboto, Arial, sans-serif; color: #666666;" class="padding-copy">
+									Regards,
+								</td>
+                            </tr>
+                            <tr>
+                                <td align="left" style="padding: 0px 0 0 0; font-size: 13px; line-height: 25px; font-family: Roboto, Arial, sans-serif; color: #666666;" class="padding-copy">
+								    <%=inviter.name%><br />
+								    <%=team.name%><br />
+								    <%=inviter.email%> | <%=inviter.phoneNumber%>
+								</td>
+                            </tr>
+			                <tr>
+			                    <td style="padding: 10px 0px 10px 0px; border-bottom: 1px solid #EEEEEE" class="logo" align="center">
+			                    </td>
+			                </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+        <td bgcolor="#ffffff" align="center" style="padding: 5px 15px 15px 15px;" class="section-padding">
+            <table border="0" cellpadding="0" cellspacing="0" width="500" class="responsive-table">
+                <tr>
+                    <td>
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td align="center" style="font-size: 32px; font-family: Roboto, Arial, sans-serif; color: #2196F3; padding-top: 0px; padding-bottom: 15px" class="padding-copy">buiilt</td>
+                            </tr>
+                            <tr>
+                                <td align="center" style="padding: 0 0 0 0; font-size: 14px; line-height: 18px; font-family: Roboto, Arial, sans-serif; color: #aaaaaa; font-style: italic;" class="padding-copy">
+									<%=team.name%> uses buiilt to help manage their projects.
+								</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+        <td bgcolor="#ffffff" align="center">
+            <table border="0" cellspacing="0" cellpadding="0" width="100%" align="center">
+                <tr>
+                    <td style="padding: 30px 0px 20px 0px;" align="center">
+                        <table width="500" border="0" cellspacing="0" cellpadding="0" align="center" class="responsive-table">
+                            <tr>
+                                <td align="center" style="font-size: 12px; line-height: 18px; font-family: Roboto, Arial, sans-serif; color:#666666;">
+                                    <span class="appleFooter" style="color:#666666;">PO Box 194, Gladesville 1675, NSW, Australia</span><br><span class="original-only" style="font-family: Roboto, sans-serif; font-size: 12px; color: #444444;">This email was sent to you from buiilt.com.au on behalf of <%=team.name%>.</span>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
 
 {% endblock %}
