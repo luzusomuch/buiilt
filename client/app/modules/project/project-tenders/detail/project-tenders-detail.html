@@ -24,8 +24,8 @@
 					<span flex="5"></span>
 					
 					<div class="icon-type" ng-switch="activity.type">
-						<md-icon ng-switch-when="attach-scope" class="material-icons md-primary">adjust</md-icon>
-                        <md-icon ng-switch-when="attach-addendum" class="material-icons md-primary">adjust</md-icon>
+						<md-icon ng-switch-when="attach-scope" class="material-icons md-primary">gps_fixed</md-icon>
+                        <md-icon ng-switch-when="attach-addendum" class="material-icons md-primary">gps_fixed</md-icon>
 						<md-icon ng-switch-when="distribute-status" class="material-icons md-primary">call_split</md-icon>
 						<md-icon ng-switch-when="invite-tender" class="material-icons md-primary">person_outline</md-icon>
 						<md-icon ng-switch-when="broadcast-message" class="material-icons md-primary">chat_bubble_outline</md-icon>
@@ -83,7 +83,7 @@
   				  <md-fab-actions>
 			  	      <md-button aria-label="Open a New Message" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'attach-an-addendum.html')" ng-show="tender.inviter._id == currentUser._id && !tender.isDistribute">
 	  					  <md-tooltip md-direction="left">Attach an Addendum</md-tooltip>
-	  				      <md-icon class="material-icons">adjust</md-icon>
+	  				      <md-icon class="material-icons">gps_fixed</md-icon>
 			  	      </md-button>
   			  	      <md-button aria-label="Assign a New Task" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'invite-tender.html')" ng-show="tender.inviter._id == currentUser._id">
   	  					  <md-tooltip md-direction="left">Invite a Tenderer</md-tooltip>

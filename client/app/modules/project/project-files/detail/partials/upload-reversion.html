@@ -7,12 +7,10 @@
         </md-toolbar>
         
         <md-dialog-content>
-            <div class="md-dialog-content" layout="column">
+            <div class="md-dialog-content" layout="column" md-padding>
                 
-                <div layout="row">
-                    <md-input-container flex>
-                        <input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile, 'reversion')" data-fp-multiple="false"/>
-                    </md-input-container>
+                <div layout="row" layout-align="center center">
+                    <input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile, 'reversion')" data-fp-multiple="false"/>
                 </div>
 
                 <div layout="row">
