@@ -231,20 +231,20 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
                         $scope.invite.isTender = true;
                         $scope.invite.invitees = [];
                         peopleService.update({id: $stateParams.id},$scope.invite).$promise.then(function(res){
-                            $scope.showToast("Create tender successfully!");
+                            $scope.showToast("Tender Has Been Created Successfully.");
                             $scope.cancelNewTenderModal();
                             $rootScope.$broadcast("Tender.Inserted", res);
                         }, function(res){
-                            $scope.showToast("Error. Something went wrong.")
+                            $scope.showToast("There Has Been An Error...")
                         });
                     } else {
-                        $scope.showToast("Please check input again");
+                        $scope.showToast("There Has Been An Error...");
                         return;
                     }
                 };
 
                 $scope.showToast = function(value) {
-                    $mdToast.show($mdToast.simple().textContent(value).position('bottom','right').hideDelay(3000));
+                    $mdToast.show($mdToast.simple().textContent(value).position('bottom','left').hideDelay(3000));
                 };
             },
             templateUrl: 'app/modules/project/project-tenders/new/project-tenders-new.html',

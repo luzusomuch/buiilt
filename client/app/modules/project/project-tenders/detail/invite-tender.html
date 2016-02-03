@@ -1,32 +1,35 @@
-<md-dialog aria-label="Invite more tenderer" flex="70">
+<md-dialog aria-label="Add Invitees to Tender" flex="70">
     <form name="form" ng-submit="inviteTenderer(form)">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2>Invite more tenderer</h2>
+                <h2>Add Invitees to Tender</h2>
             </div>
         </md-toolbar>
         
-        <md-dialog-content layout="column" layout-padding>
+        <md-dialog-content class="md-dialog-content" layout="column" layout-padding>
 		
-            <div layout="row">
-                <md-input-container flex="5">
-                    <p class="md-body-2" style="margin-top: 0.5vh"></p>
-                </md-input-container>
-                <md-input-container flex="25">
-                    <label for="">First Name</label>
-                    <input type="name" ng-model="name">
-                </md-input-container>
-                <md-input-container flex="55">
-                    <label for="">Email Address</label>
-                    <input type="email" ng-model="email">
-                </md-input-container>
+			<div layout="column">
+				<p class="md-body-2">Enter the Name and Email for each Invitee, then click "Add to List":</p>
+	            <div layout="row">
+	                <md-input-container flex="5">
+	                    <p class="md-body-2" style="margin-top: 0.5vh"></p>
+	                </md-input-container>
+	                <md-input-container flex="25">
+	                    <label for="">First Name</label>
+	                    <input type="name" ng-model="name">
+	                </md-input-container>
+	                <md-input-container flex="55">
+	                    <label for="">Email Address</label>
+	                    <input type="email" ng-model="email">
+	                </md-input-container>
 				
-                <div flex="15">
-                    <md-button ng-click="addInvitee(email, name)" class="material-icons" style="margin-top:2vh;">Add to List</md-button>
-                </div>
-            </div>
+	                <div flex="15">
+	                    <md-button ng-click="addInvitee(email, name)" class="material-icons" style="margin-top:2vh;">Add to List</md-button>
+	                </div>
+	            </div>
+			</div>
 			
-            <div class="md-dialog-content" layout="column">
+            <div layout="column">
                 <div layout="row" ng-repeat="invitee in tender.newMembers">
                     <md-input-container flex="5">
                         <p class="md-body-2">{{$index+1}}</p>
@@ -43,13 +46,13 @@
                         <i ng-click="removeInvitee($index)" class="material-icons pointer" style="margin-top: 3vh; margin-left: 3vh">delete</i></span>
                     </div>
                 </div>
-				
             </div>
+			
         </md-dialog-content>
         
         <md-dialog-actions>
             <md-button ng-click="cancelNewTenderModal()">Cancel</md-button>
-            <md-button type="submit">Invite tenderer</md-button>
+            <md-button type="submit" class="md-primary">Invite Tenderer</md-button>
         </md-dialog-actions>
     </form>
 </md-dialog>

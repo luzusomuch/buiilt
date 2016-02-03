@@ -1,5 +1,4 @@
-<div class="detail-header" layout-padding layout="column" >
-	
+<div class="detail-header" layout-padding layout="column">
 	<div layout="column" layout-padding>
 		
 		<div layout="row">
@@ -33,16 +32,9 @@
 					<span ng-repeat="tag in statusTags" ng-class="{'available-tag': !tag.select, 'selected-tag': tag.select}" ng-click="selectTag($index, 'status')">{{tag.text}}</span>
 				</div>
 			</div>
-			
 		</div>
 		
 	</div>
-		
-	<!-- <md-chips class="" ng-model="tendersFilters" placeholder="Search..." secondary-placeholder="Search..." flex>
-		<md-chip-template class="md-accent">
-	    </md-chip-template>
-	</md-chips> -->
-	
 </div>
 
 <md-list ng-cloak class="main-page-content" layout="column" flex>
