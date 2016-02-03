@@ -6,7 +6,7 @@
 			<p>{{document.name}}</p>
 			<span flex></span>
 			<md-button ng-click="download(document.name, document.path)">Download</md-button>
-			<md-button>Acknowledge Document Revision</md-button>
+			<md-button ng-click="acknowledgement()" ng-show="document.owner._id != currentUser._id">Acknowledge Document Revision</md-button>
 	    </div>
 		
 		<div class="main-page-content" layout-padding>

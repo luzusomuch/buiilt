@@ -169,25 +169,49 @@ exports.uploadReversion = function(req, res) {
  */
 exports.upload = function(req, res){
     var data = req.body;
+    console.log(data);
     var filesAfterInsert = [];
     var members = [];
     var notMembers = [];
     var acknowledgeUsers = [];
-    async.each(data.members, function(member, cb) {
-        User.findOne({email: member.email}, function(err, user) {
-            if (err) {cb();}
-            else if (!user) {
-                acknowledgeUsers.push({email: member.email, isAcknow: false});
-                notMembers.push(member.email);
-                cb();
+    async.parallel([
+        function(cb) {
+            if (data.members && data.members.length > 0) {
+                async.each(data.members, function(member, cb) {
+                    User.findOne({email: member.email}, function(err, user) {
+                        if (err) {cb();}
+                        else if (!user) {
+                            acknowledgeUsers.push({email: member.email, isAcknow: false});
+                            notMembers.push(member.email);
+                            cb();
+                        }
+                        else {
+                            acknowledgeUsers.push({_id: user._id, isAcknow: false});
+                            members.push(user._id);
+                            cb();
+                        }
+                    });
+                }, cb());
+            } else {
+                var roles = ["builders", "clients", "architects", "subcontractors", "consultants"];
+                People.findOne({project: req.params.id}, function(err, people) {
+                    if (err || !people) {cb();}
+                    else {
+                        _.each(roles, function(role) {
+                            _.each(people[role], function(tender){
+                                if (tender.hasSelect && tender.tenderers[0]._id) {
+                                    acknowledgeUsers.push({_id: tender.tenderers[0]._id});
+                                } else if (tender.hasSelect && tender.tenderers[0].email) {
+                                    acknowledgeUsers.push({email: tender.tenderers[0].email});
+                                }
+                            });
+                        });
+                        cb();
+                    }
+                })
             }
-            else {
-                acknowledgeUsers.push({_id: user._id, isAcknow: false});
-                members.push(user._id);
-                cb();
-            }
-        });
-    }, function() {
+        }
+    ], function(err) {
         var mainItem = getMainItem(data.belongToType);
         async.each(data.files, function(item, cb) {
             var file = new File({

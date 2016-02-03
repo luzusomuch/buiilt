@@ -1,9 +1,18 @@
-angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', function($rootScope, $scope, document, uploadService, $mdDialog, $mdToast, $stateParams) {
+angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', function($rootScope, $scope, document, uploadService, $mdDialog, $mdToast, $stateParams, fileService) {
     $scope.document = document;
-    $rootScope.$on("Document.Upload-Reversion", function(event, data) {
+    $rootScope.$on("Document.Updated", function(event, data) {
         setUploadReversion();
         $scope.document = data;
     });
+
+    $scope.acknowledgement = function() {
+        fileService.acknowledgement({id: $stateParams.documentId}).$promise.then(function(res) {
+            $scope.showToast("Sent acknowledgement to the owner successfully");
+            $rootScope.$broadcast("Document.Updated", res);
+        }, function(err) {
+            $scope.showToast("Error");
+        });
+    };
 
     function setUploadReversion() {
         $scope.uploadReversion = {
@@ -36,7 +45,7 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
             uploadService.uploadReversion({id: $scope.document._id}, $scope.uploadReversion).$promise.then(function(res) {
                 $scope.closeModal();
                 $scope.showToast("Document Revision Successfully Uploaded.");
-                $rootScope.$broadcast("Document.Upload-Reversion", res);
+                $rootScope.$broadcast("Document.Updated", res);
             }, function(err) {$scope.showToast("There Has Been An Error...");});
         }
     };

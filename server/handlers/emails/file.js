@@ -58,7 +58,7 @@ EventBus.onSeries('File.Inserted', function(request, next) {
                     async.each(people[role], function(tender, cb) {
                         if (tender.hasSelect) {
                             if (tender.tenderers[0].email) {
-                                packageInvite.findOne({to: tender.tenderers[0].email}, function(err, packageInvite) {
+                                PackageInvite.findOne({to: tender.tenderers[0].email}, function(err, packageInvite) {
                                     if (err || !packageInvite) {cb();}
                                     else {
                                         Mailer.sendMail('upload-file-to-non-user.html', from, packageInvite.to, {
@@ -68,7 +68,7 @@ EventBus.onSeries('File.Inserted', function(request, next) {
                                             project: result.project.toJSON(),
                                             request: request.toJSON(),
                                             type: "document",
-                                            downloadLink: config.baseUrl + "api/files/"+request._id+"/"+latestActivity._id+"/"+member+"/download-via-email",
+                                            downloadLink: config.baseUrl + "api/files/"+request._id+"/"+latestActivity._id+"/"+packageInvite.to+"/download-via-email",
                                             link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
                                             subject: result.editUser.name + ' has uploaded for you a document ' + request.name
                                         },function(err){console.log(err);
@@ -118,7 +118,7 @@ EventBus.onSeries('File.Updated', function(request, next) {
                         async.each(people[role], function(tender, cb) {
                             if (tender.hasSelect) {
                                 if (tender.tenderers[0].email) {
-                                    packageInvite.findOne({to: tender.tenderers[0].email}, function(err, packageInvite) {
+                                    PackageInvite.findOne({to: tender.tenderers[0].email}, function(err, packageInvite) {
                                         if (err || !packageInvite) {cb();}
                                         else {
                                             Mailer.sendMail('upload-file-to-non-user.html', from, packageInvite.to, {
@@ -128,7 +128,7 @@ EventBus.onSeries('File.Updated', function(request, next) {
                                                 project: result.project.toJSON(),
                                                 request: request.toJSON(),
                                                 type: "document reversion",
-                                                downloadLink: config.baseUrl + "api/files/"+request._id+"/"+latestActivity._id+"/"+member+"/download-via-email",
+                                                downloadLink: config.baseUrl + "api/files/"+request._id+"/"+latestActivity._id+"/"+packageInvite.to+"/download-via-email",
                                                 link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
                                                 subject: result.editUser.name + ' has uploaded for you a document ' + request.name
                                             },function(err){console.log(err);
