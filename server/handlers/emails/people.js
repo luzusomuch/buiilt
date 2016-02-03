@@ -32,7 +32,7 @@ EventBus.onSeries('People.Updated', function(req, next){
                     User.findById(tenderer._id, function(err, user) {
                         if (err || !user) {cb();}
                         else {
-                            Mailer.sendMail('invite-user-to-project.html', from, user.email, {
+                            Mailer.sendMail('invite-user-to-tender.html', from, user.email, {
                                 team: result.team.toJSON(),
                                 project: result.project.toJSON(),
                                 inviter: req.editUser.toJSON(),
@@ -55,7 +55,7 @@ EventBus.onSeries('People.Updated', function(req, next){
                     });
                     packageInvite.save(function(err,saved){
                         if (err) {cb(err);}
-                        Mailer.sendMail('invite-non-user-to-project.html', from, saved.to, {
+                        Mailer.sendMail('invite-non-user-to-tender.html', from, saved.to, {
                             team: result.team.toJSON(),
                             inviter: req.editUser.toJSON(),
                             invitee: saved.to,
@@ -191,6 +191,20 @@ EventBus.onSeries('People.Updated', function(req, next){
                         return next();
                     });
                 }); 
+            } else if (currentTender && currentTender.hasSelect && currentTender.tenderers[0]._id) {
+                User.findById(currentTender.tenderers[0]._id, function(err, user) {
+                    if (err || !user) {return next();}
+                    Mailer.sendMail('invite-user-to-project.html', from, user.email, {
+                        team: result.team.toJSON(),
+                        inviter: req.editUser.toJSON(),
+                        invitee: user.email,
+                        project: result.project.toJSON(),
+                        link : config.baseUrl + 'project/'+result.project._id+'/overview',
+                        subject: req.editUser.name + ' has invited you to project ' + result.project.name
+                    },function(err){
+                        return next();
+                    });
+                });
             } else {
                 return next();
             }
