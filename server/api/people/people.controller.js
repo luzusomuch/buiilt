@@ -369,35 +369,34 @@ function responseTender(people, req, res) {
         if (index != -1) {
             var currentTendererActivities = [];
             var inviterActivities = [];
-            _.each(people[role], function(tender) {
-                _.each(tender.relatedItem, function(item) {
-                    if (_.indexOf(item.members, req.user.email) !== -1 || tender.inviter._id.toString()===req.user._id.toString()) {
-                        currentTendererActivities.push(item);
-                    }
-                });
-                _.each(tender.inviterActivities, function(activity) {
-                    if (activity.type === "edit-tender" || activity.type === "attach-scope" || activity.type === "attach-addendum" || activity.type === "invite-tender") {
-                        inviterActivities.push(activity);
-                    } else {
-                        if ((activity.element && _.indexOf(activity.element.members, req.user.email) !== -1) || tender.inviter._id.toString()===req.user._id.toString() || activity.user._id.toString()===req.user._id.toString()) {
-                            inviterActivities.push(activity);
-                        }
-                    }
-                });
-                if (tender._id.toString() == req.params.tenderId && tender.inviter._id.toString() == req.user._id) {
-                    result = tender;
-                } else {
-                    _.each(tender.tenderers, function(tenderer) {
-                        if (tenderer._id && tenderer._id._id.toString() == req.user._id) {
-                            result = tender;
-                            result.relatedItem = currentTendererActivities;
-                            result.inviterActivities = inviterActivities;
-                            result.tenderers = [];
-                            result.tenderers.push(tenderer);
-                        }
-                    });
+            var currentTender = people[role][index];
+            _.each(currentTender.relatedItem, function(item) {
+                if (_.indexOf(item.members, req.user.email) !== -1 || currentTender.inviter._id.toString()===req.user._id.toString()) {
+                    currentTendererActivities.push(item);
                 }
             });
+            _.each(currentTender.inviterActivities, function(activity) {
+                if (activity.type === "edit-tender" || activity.type === "attach-scope" || activity.type === "attach-addendum") {
+                    inviterActivities.push(activity);
+                } else {
+                    if ((activity.element && _.indexOf(activity.element.members, req.user.email) !== -1) || currentTender.inviter._id.toString()===req.user._id.toString() || activity.user._id.toString()===req.user._id.toString()) {
+                        inviterActivities.push(activity);
+                    }
+                }
+            });
+            if (currentTender._id.toString() == req.params.tenderId && currentTender.inviter._id.toString() == req.user._id) {
+                result = currentTender;
+            } else {
+                _.each(currentTender.tenderers, function(tenderer) {
+                    if (tenderer._id && tenderer._id._id.toString() == req.user._id) {
+                        result = currentTender;
+                        result.relatedItem = currentTendererActivities;
+                        result.inviterActivities = inviterActivities;
+                        result.tenderers = [];
+                        result.tenderers.push(tenderer);
+                    }
+                });
+            }
             return res.send(200,result);
         }
     });

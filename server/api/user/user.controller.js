@@ -164,7 +164,7 @@ exports.createUserWithInviteToken = function(req, res, next) {
                                             user: user._id,
                                             element: {
                                                 project: people.project,
-                                                type: type
+                                                type: packageInvite.inviteType
                                             }
                                         });
                                         inviteToken._editUser = packageInvite.owner;
