@@ -22,7 +22,7 @@ router.get('/:id/get-in-project', auth.isAuthenticated(), controller.getInProjec
 router.get('/:id/:type/project-files', auth.isAuthenticated(), controller.getFilesByProject);
 router.get('/:id/:type/get-by-package', auth.isAuthenticated(), controller.getFileByPackage);
 
-router.get("/:id/:type/download-via-email", controller.acknowledgementViaEmail);
+router.get("/:id/:activityId/:email/download-via-email", controller.acknowledgementViaEmail);
 
 router.put("/:id", auth.isAuthenticated(), controller.update);
 router.put('/:id/interested', auth.isAuthenticated(), controller.interested);

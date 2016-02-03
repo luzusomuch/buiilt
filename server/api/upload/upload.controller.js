@@ -134,10 +134,17 @@ exports.uploadReversion = function(req, res) {
                 type: "upload-reversion",
                 user: req.user._id,
                 createdAt: new Date(),
+                acknowledgeUsers: [],
                 element: {
                     name: file.name
                 }
             };
+            _.each(file.members, function(member) {
+                activity.acknowledgeUsers.push({_id: member, isAcknow: false});
+            });
+            _.each(file.notMembers, function(member) {
+                activity.acknowledgeUsers.push({email: member, isAcknow: false});
+            });
             file.activities.push(activity);
             file._editType = "uploadReversion";
             file.save(function(err) {
@@ -165,11 +172,20 @@ exports.upload = function(req, res){
     var filesAfterInsert = [];
     var members = [];
     var notMembers = [];
+    var acknowledgeUsers = [];
     async.each(data.members, function(member, cb) {
         User.findOne({email: member.email}, function(err, user) {
             if (err) {cb();}
-            else if (!user) {notMembers.push(member.email);cb();}
-            else {members.push(user._id);cb();}
+            else if (!user) {
+                acknowledgeUsers.push({email: member.email, isAcknow: false});
+                notMembers.push(member.email);
+                cb();
+            }
+            else {
+                acknowledgeUsers.push({_id: user._id, isAcknow: false});
+                members.push(user._id);
+                cb();
+            }
         });
     }, function() {
         var mainItem = getMainItem(data.belongToType);
@@ -197,6 +213,7 @@ exports.upload = function(req, res){
                 type: "upload-file",
                 user: req.user._id,
                 createdAt: new Date(),
+                acknowledgeUsers: acknowledgeUsers,
                 element: {
                     name: file.name
                 }

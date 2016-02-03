@@ -67,6 +67,11 @@ var FileSchema = new Schema({
         user: {type: Schema.Types.ObjectId, ref: "User", required: true},
         type: {type: String}, 
         createdAt: Date, 
+        acknowledgeUsers: [{
+            _id: {type: Schema.Types.ObjectId, ref: "User"},
+            email: String,
+            isAcknow: Boolean,
+        }],
         element: {}
     }],
     relatedItem: [{
@@ -86,10 +91,6 @@ var FileSchema = new Schema({
         version: String, 
         description: String,
         createdAt: {type: Date}
-    }],
-    acknowledgeUser: [{
-        _id: {type: Schema.Types.ObjectId, ref: "User"},
-        email: String
     }]
 });
 

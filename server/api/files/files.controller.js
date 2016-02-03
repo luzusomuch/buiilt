@@ -16,7 +16,7 @@ function populateFile(file, res){
         {path: "owner", select: "_id email name"},
         {path: "members", select: "_id email name"},
         {path: "activities.user", select: "_id email name"},
-        {path: "acknowledgeUser._id", select: "_id email name"}
+        {path: "activities.acknowledgeUsers._id", select: "_id email name"}
     ], function(err, file) {
         return res.send(200, file);
     });
@@ -40,7 +40,7 @@ exports.show = function(req, res) {
     .populate("owner", "_id name email")
     .populate("members", "_id name email")
     .populate("activities.user", "_id name email")
-    .populate("acknowledgeUser._id", "_id name email")
+    .populate("activities.acknowledgeUsers._id", "_id name email")
     .exec(function(err, file) {
         if (err) 
             return res.send(500, err);
@@ -119,7 +119,16 @@ exports.acknowledgement = function(req, res) {
         if (_.findIndex(file.members, function(id) {
             return id.toString()===req.user._id.toString();
         }) !== -1) {
-            file.acknowledgeUser.push({_id: req.user._id});
+            _.each(file.activities, function(activity) {
+                if (activity.type === "upload-file" || activity.type === "upload-reversion") {
+                    var index = _.findIndex(activity.acknowledgeUsers, function(user) {
+                        return user._id.toString()===req.user._id.toString();
+                    });
+                    if (index !== -1) {
+                        activity.acknowledgeUsers[index].isAcknow = true;
+                    }
+                }
+            });
             file.save(function(err) {
                 if (err) {return res.send(500,err);}
                 populateFile(file, res);
@@ -134,9 +143,17 @@ exports.acknowledgementViaEmail = function(req, res) {
     File.findById(req.params.id, function(err, file) {
         if (err) {return res.send(500,err);}
         else if (!file) {return res.send(404);}
-        if (_.indexOf(file.notMembers, req.params.type) !== -1) {
-            console.log(file.notMembers);
-            file.acknowledgeUser.push({email: req.params.type});
+        if (_.indexOf(file.notMembers, req.params.email) !== -1) {
+            var index = _.findIndex(file.activities, function(activity) {
+                return activity._id.toString()===req.params.activityId.toString();
+            });
+            if (index !== -1) {
+                _.each(file.activities[index].acknowledgeUsers, function(user){
+                    if (user.email===req.params.email) {
+                        user.isAcknow = true;
+                    }
+                });
+            }
             file.save(function(err) {
                 if (err) {return res.send(500,err);}
                 return res.redirect(file.path);

@@ -50,10 +50,11 @@
 						</p>
 						
 						<p ng-switch="activity.type" class="activity-body md-body">
-							
-                            <span ng-switch-when="upload-reversion" layout="column"> {{activity.element.name}}</span>
+                            <span ng-switch-when="upload-reversion" layout="column">{{activity.element.name}}<span ng-show="file.owner._id==currentUser._id" ng-repeat="user in activity.acknowledgeUsers" ng-class="{'available-tag':!user.isAcknow, 'selected-tag':user.isAcknow}" class="tagcloud-selection">{{(user._id) ? user._id.name : user.email}}</span>
+                            </span>
 
-                            <span ng-switch-when="upload-file" layout="column"> {{activity.element.name}} <span ng-show="currentUser._id == file.owner._id" ng-repeat="user in acknowledgeUsers" ng-class="{'available-tag':!user.isAcknow, 'selected-tag':user.isAcknow}">{{(user._id) ? user.name : user.email}}</span> </span>
+                            <span ng-switch-when="upload-file" layout="column">{{activity.element.name}}<span ng-show="file.owner._id==currentUser._id" ng-repeat="user in activity.acknowledgeUsers" ng-class="{'available-tag':!user.isAcknow, 'selected-tag':user.isAcknow}" class="tagcloud-selection">{{(user._id) ? user._id.name : user.email}}</span>
+                            </span>
 							
 							<span ng-switch-when="edit"> ({{(activity.element.name) ? "Name: "+activity.element.name+", " : ""}} {{(activity.element.description) ? "Description: "+activity.element.description+", " : ""}} {{(activity.element.tags) ? "Tags : " : ""}}<span ng-repeat="tag in activity.element.tags">{{tag}}, </span>)</span>
 							<span ng-switch-when="assign"><span ng-repeat="member in activity.element.members">{{member}}, </span></span>
