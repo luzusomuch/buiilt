@@ -134,16 +134,16 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
 			$scope.thread.type = "project-message";
 			messageService.create({id: $stateParams.id},$scope.thread).$promise.then(function(res) {
 				$scope.cancelNewMessageModal();
-				$scope.showToast("Create new thread successfully!");
+				$scope.showToast("New Message Thread Created Successfully.");
 				$state.go("project.messages.detail", {id: $stateParams.id, messageId: res._id});
 			}, function(err) {
-				$scope.showToast("Something went wrong!.")
+				$scope.showToast("There Has Been An Error...")
 			});
 		}
 	};
 
 	$scope.showToast = function(value) {
-        $mdToast.show($mdToast.simple().textContent(value).position('bottom','right').hideDelay(3000));
+        $mdToast.show($mdToast.simple().textContent(value).position('bottom','left').hideDelay(3000));
     };
 	
 	getPeopleList($stateParams.id);

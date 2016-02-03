@@ -111,7 +111,7 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($ro
     };
 
     $scope.showToast = function(value) {
-        $mdToast.show($mdToast.simple().textContent(value).position('bottom','right').hideDelay(3000));
+        $mdToast.show($mdToast.simple().textContent(value).position('bottom','left').hideDelay(3000));
     };
 
     $scope.closeModal = function() {
@@ -145,11 +145,11 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($ro
         if ($scope.message.text && $scope.message.text != ' ' && $scope.message.text.length > 0) {
             messageService.sendMessage({id: $scope.thread._id}, $scope.message).$promise.then(function(res) {
                 $scope.closeModal();
-                $scope.showToast("Send message successfully!");
+                $scope.showToast("Your Message Has Been Sent Successfully.");
                 $rootScope.$broadcast("Thread.Update", res);
-            }, function(err) {$scope.showToast("Error");});
+            }, function(err) {$scope.showToast("There Has Been An Error...");});
         } else {
-            $scope.showToast("Please check your message again!");
+            $scope.showToast("There Has Been An Error...");
         }
     };
 
@@ -162,15 +162,15 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($ro
             $scope.thread.updateInfo = true;
             messageService.update({id: $scope.thread._id}, $scope.thread).$promise.then(function(res) {
                 $scope.closeModal();
-                $scope.showToast("Update message successfully!");
+                $scope.showToast("Message Thread Has Been Updated.");
                 $rootScope.$broadcast("Thread.Update", res);
-            }, function(err){$scope.showToast("Error");});
+            }, function(err){$scope.showToast("There Has Been An Error...");});
         }
     };
 
     $scope.copyMessageAddress = function(id) {
         clipboard.copyText(id+"@mg.buiilt.com.au");
-        $scope.showToast("Copy message thread successfully!");
+        $scope.showToast("Email Address Copied To Your Clipboard...");
     };
 
     $scope.showAssignTeamMemberModal = function($event) {
@@ -193,11 +193,11 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($ro
         if ($scope.thread.newMembers.length > 0) {
             messageService.update({id: $scope.thread._id}, $scope.thread).$promise.then(function(res) {
                 $scope.closeModal();
-                $scope.showToast("Assign user to " +res.name+ " successfully!");
+                $scope.showToast("Message Thread Has Been Assigned To " +res.name+ " Successfully.");
                 $rootScope.$broadcast("Thread.Update", res);
-            }, function(err){$scope.showToast("Something went wrong");});
+            }, function(err){$scope.showToast("There Has Been An Error...");});
         } else {
-            $scope.showToast("Please select at least 1 member");
+            $scope.showToast("Please Select At Least 1 Team Member...");
             delete $scope.thread.newMembers;
             delete $scope.thread.elementType;
             return false;
@@ -251,11 +251,11 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($ro
             if ($scope.relatedTask.members.length > 0) {
                 taskService.create({id: $stateParams.id}, $scope.relatedTask).$promise.then(function(relatedTask) {
                     $scope.closeModal();
-                    $scope.showToast("Create new related task successfully!");
+                    $scope.showToast("Related Task Has Been Created Successfully.");
                     $state.go("project.tasks.detail", {id: $stateParams.id, taskId: relatedTask._id});
-                }, function(err){$scope.showToast("Error");});
+                }, function(err){$scope.showToast("There Has Been An Error...");});
             } else {
-                $scope.showToast("Please select at least 1 invitee");
+                $scope.showToast("Please Select At Least 1 Assignee...");
                 delete $scope.relatedTask.members;
                 delete $scope.relatedTask.belongTo;
                 delete $scope.relatedTask.type;
@@ -264,7 +264,7 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($ro
                 return false;
             }
         } else {
-            $scope.showToast("Please check your input again!");
+            $scope.showToast("There Has Been An Error...");
         }
     };
 
@@ -303,15 +303,15 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($ro
         $scope.relatedFile.members = _.filter($scope.invitees, {select: true});
         $scope.relatedFile.tags = _.filter($scope.tags, {select: true});
         if ($scope.relatedFile.files.length == 0) {
-            $scope.showToast("Please choose at least 1 file");
+            $scope.showToast("Please Select a File...");
         } else if ($scope.relatedFile.tags.length == 0) {
-            $scope.showToast("Please enter at least 1 tags");
+            $scope.showToast("Please Select At Least 1 Tag...");
         } else if ($scope.relatedFile.members.length == 0) {
-            $scope.showToast("Please choose at least 1 member");
+            $scope.showToast("Please Select At Least 1 Recipient...");
         } else { 
             uploadService.upload({id: $stateParams.id}, $scope.relatedFile).$promise.then(function(res) {
                 $scope.closeModal();
-                $scope.showToast("Upload new related file successfully");
+                $scope.showToast("Related File Has Been Uploaded Successfully.");
                 $scope.setRelatedFile();
                 $state.go("project.files.detail", {id: res[0].project, fileId: res[0]._id});
             }, function(err) {$scope.showToast("Error");});

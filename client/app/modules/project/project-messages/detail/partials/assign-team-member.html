@@ -1,16 +1,19 @@
-<md-dialog aria-label="Assign to team members" flex="70">
+<md-dialog aria-label="Assign Additional Members to Message Thread" flex="70">
     <form ng-submit="assignMember()">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2>Assign members to {{thread.name}}</h2>
+                <h2>Assign Additional Team Members to {{thread.name}}</h2>
             </div>
         </md-toolbar>
         
         <md-dialog-content>
-            <div class="md-dialog-content" layout="column">
-                
-				<div layout="row" layout-align="center center" class="tagcloud" layout-wrap>
-			        <span ng-click="selectMember($index, 'member')" ng-class="{'available-tag':!member.select, 'selected-tag': member.select}" ng-repeat="member in membersList">{{(member._id) ? member.name : member.email}}<md-icon ng-show="!member._id" class="material-icons non-user-chip cursor-help"><md-tooltip>Messages will be sent via email to this Team Member</md-tooltip>mail_outline</md-icons></span>
+            <div class="md-dialog-content" layout="column" layout-padding>
+				
+				<div layout="column">
+					<p class="md-body-2">Select who you would like to assign to this message thread:</p>
+					<div layout="row" layout-align="center center" class="tagcloud-selection" layout-wrap>
+				        <span ng-click="selectMember($index, 'member')" ng-class="{'available-tag':!member.select, 'selected-tag': member.select}" ng-repeat="member in membersList">{{(member._id) ? member.name : member.email}}<md-icon ng-show="!member._id" class="material-icons non-user-chip cursor-help"><md-tooltip>Messages will be sent via email to this Team Member</md-tooltip>mail_outline</md-icons></span>
+					</div>
 				</div>
 				
             </div>
@@ -18,7 +21,7 @@
         
         <md-dialog-actions>
             <md-button ng-click="closeModal()">Cancel</md-button>
-            <md-button type="submit">Assign Members to Thread</md-button>
+            <md-button type="submit" class="md-primary">Update Message Thread</md-button>
         </md-dialog-actions>
     </form>
 </md-dialog>

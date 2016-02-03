@@ -142,15 +142,15 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
 			if ($scope.task.members.length > 0) {
 				taskService.create({id: $stateParams.id}, $scope.task).$promise.then(function(res) {
 					$scope.cancelNewTaskModal();
-					$scope.showToast("Add new task successfully.");
+					$scope.showToast("New Task Has Been Created Successfully.");
 					$state.go("project.tasks.detail", {id: res.project, taskId: res._id});
-				}, function(err) {$scope.showToast("Error");});
+				}, function(err) {$scope.showToast("There Has Been An Error...");});
 			} else {
-				$scope.showToast("Please select at least 1 invitee");
+				$scope.showToast("Please Select At Least 1 Assignee...");
 				return false;
 			}
 		} else {
-			$scope.showToast("Please check your input again");
+			$scope.showToast("There Has Been An Error...");
 			return false;
 		}
 	};
@@ -166,7 +166,7 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
 	};
 
 	$scope.showToast = function(value) {
-	    $mdToast.show($mdToast.simple().textContent(value).position('bottom','right').hideDelay(3000));
+	    $mdToast.show($mdToast.simple().textContent(value).position('bottom','left').hideDelay(3000));
 	};
 
 	function getProjectMembers(id) {
