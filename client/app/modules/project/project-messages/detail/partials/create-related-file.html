@@ -1,38 +1,50 @@
-<md-dialog aria-label="Create a New Related File" flex="70">
+<md-dialog aria-label="Attach a Related File" flex="70">
     <form >
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2>Create a New Related File</h2>
+                <h2>Attach a Related File</h2>
             </div>
         </md-toolbar>
         
         <md-dialog-content>
             <div class="md-dialog-content" layout="column" layout-padding>
                 
-                <div layout="row" layout-align="center center">
-                    <input filepicker class="filepicker-button" type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/>
-                </div>
+				<div layout="column">
+					<p class="md-body-2">Select the file you would like to upload:</p>
+					<div layout="row" layout-align="center center" layout-margin class="tagcloud-selection">
+	                    <input filepicker class="filepicker-button tagcloud-selection" type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/>
+	                </div>
+				</div>
 
-                <div layout="row">
-                    <md-input-container flex>
-                        <label>Description</label>
-                        <textarea ng-model="relatedFile.description" required md-maxlength="200" columns="1" rows="5"></textarea>
-                    </md-input-container>
+				<div layout="column">
+					<p class="md-body-2">Provide a description for this file:</p>
+	                <div layout="row">
+	                    <md-input-container flex="66" flex-offset="15">
+	                        <label>Description</label>
+	                        <textarea ng-model="relatedFile.description" required md-maxlength="500" columns="1" rows="5"></textarea>
+	                    </md-input-container>
+					</div>
                 </div>
 					
-				<div layout="row" layout-align="center center" class="tagcloud" layout-wrap>
-					<span ng-click="selectMember($index, 'tag')" ng-class="{'available-tag':!tag.select, 'selected-tag': tag.select}" ng-repeat="tag in tags">{{tag.name}}</span>
+				<div layout="column">
+					<p class="md-body-2">Select at least one tag that is relevant to this file:</p>
+					<div layout="row" layout-align="center center" class="tagcloud-selection" layout-wrap>
+						<span ng-click="selectMember($index, 'tag')" ng-class="{'available-tag':!tag.select, 'selected-tag': tag.select}" ng-repeat="tag in tags">{{tag.name}}</span>
+					</div>
 				</div>
                 
-				<div layout="row" layout-align="center center" class="tagcloud" layout-wrap>
-			        <span ng-click="selectMember($index, 'invitee')" ng-class="{'available-tag':!member.select, 'selected-tag': member.select}" ng-repeat="member in invitees">{{(member._id) ? member.name : member.email}}<md-icon ng-show="!member._id" class="material-icons non-user-chip cursor-help"><md-tooltip>Files will be sent via email to this Team Member</md-tooltip>mail_outline</md-icon></span>
+				<div layout="column">
+					<p class="md-body-2">Select the team members who are able to view this file:</p>
+					<div layout="row" layout-align="center center" class="tagcloud-selection" layout-wrap>
+				        <span ng-click="selectMember($index, 'invitee')" ng-class="{'available-tag':!member.select, 'selected-tag': member.select}" ng-repeat="member in invitees">{{(member._id) ? member.name : member.email}}<md-icon ng-show="!member._id" class="material-icons non-user-chip cursor-help"><md-tooltip>Files will be sent via email to this Team Member</md-tooltip>mail_outline</md-icon></span>
+					</div>
 				</div>
 				
             </div>
         </md-dialog-content>
         <md-dialog-actions>
             <md-button ng-click="closeModal()">Cancel</md-button>
-            <md-button ng-click="createRelatedFile()">Attach Related File</md-button>
+            <md-button ng-click="createRelatedFile()" class="md-primary">Create Related File</md-button>
         </md-dialog-actions>
     </form>
 </md-dialog>

@@ -1,36 +1,44 @@
-<md-dialog aria-label="Create a New Related Task" flex="70" ng-cloak>
+<md-dialog aria-label="Attach a Related Task" flex="70" ng-cloak>
     <form ng-submit="createRelatedTask(form)" name="form">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2>Create a New Related Task</h2>
+                <h2>Attach a Related Task</h2>
             </div>
         </md-toolbar>
         
         <md-dialog-content>
             <div class="md-dialog-content" layout="column" layout-padding>
 				
-				<div layout="row" layout-align="center center">
-					<md-input-container flex>
-				        <label>Task Description</label>
-				        <textarea ng-model="relatedTask.description" name="description" md-maxlength="300" required rows="3" columns="1"></textarea>
-					</md-input-container>
+				<div layout="column">
+					<p class="md-body-2">Provide a description for this task:</p>
+	                <div layout="row">
+	                    <md-input-container flex="66" flex-offset="15">
+					        <label>Task Description</label>
+					        <textarea ng-model="relatedTask.description" name="description" md-maxlength="300" required rows="3" columns="1"></textarea>
+						</md-input-container>
+					</div>
 				</div>
 			
-				
-				<div layout="row" layout-align="center center">
+				<div layout="column">
+					<p class="md-body-2">Specify a due date:</p>
+					<div layout="row" layout-align="center center" class="tagcloud-selection">
 	                   <md-datepicker ng-model="relatedTask.dateEnd" md-min-date="minDate" md-placeholder="Enter Due Date">
 	                   </md-datepicker>
+					</div>
 				</div>
 			
-				<div layout="row" layout-align="center center" class="tagcloud" layout-wrap>
-					<span ng-click="selectMember($index, 'invitee')" ng-class="{'available-tag':!member.select, 'selected-tag': member.select}" ng-repeat="member in invitees">{{(member._id) ? member.name : member.email}}<md-icon ng-show="!member._id" class="material-icons non-user-chip cursor-help"><md-tooltip>Tasks will be sent via email to this Team Member</md-tooltip>mail_outline</md-icon></span>
+				<div layout="column">
+					<p class="md-body-2">Assign at least one team member:</p>
+					<div layout="row" layout-align="center center" class="tagcloud-selection" layout-wrap>
+						<span ng-click="selectMember($index, 'invitee')" ng-class="{'available-tag':!member.select, 'selected-tag': member.select}" ng-repeat="member in invitees">{{(member._id) ? member.name : member.email}}<md-icon ng-show="!member._id" class="material-icons non-user-chip cursor-help"><md-tooltip>Tasks will be sent via email to this Team Member</md-tooltip>mail_outline</md-icon></span>
+					</div>
 				</div>
 				
             </div>
         </md-dialog-content>
         <md-dialog-actions>
             <md-button ng-click="closeModal()">Cancel</md-button>
-            <md-button type="submit">Attach Related Task</md-button>
+            <md-button type="submit" class="md-primary">Attach Related Task</md-button>
         </md-dialog-actions>
     </form>
 </md-dialog>

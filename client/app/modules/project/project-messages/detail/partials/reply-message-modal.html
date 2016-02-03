@@ -1,4 +1,4 @@
-<md-dialog aria-label="Reply message" flex="50">
+<md-dialog aria-label="Reply message" flex="70">
     <form ng-submit="sendMessage()">
         <md-toolbar>
             <div class="md-toolbar-tools">
@@ -7,14 +7,17 @@
         </md-toolbar>
         
         <md-dialog-content>
-            <div class="md-dialog-content" layout="column">
+            <div class="md-dialog-content" layout="column" layout-padding>
                 
-                <div layout="row">
-                    <md-input-container flex>
-                        <label>Enter Your Message</label>
-                        <textarea ng-model="message.text" columns="1" rows="5" required md-autofocus></textarea>
-                    </md-input-container>
-                </div>
+				<div layout="column">
+					<p class="md-body-2">Enter your message:</p>
+	                <div layout="row">
+	                    <md-input-container flex="66" flex-offset="15">
+	                        <label>Message</label>
+	                        <textarea ng-model="message.text" columns="1" rows="5" required md-autofocus></textarea>
+	                    </md-input-container>
+	                </div>
+				</div>
                 
             </div>
         </md-dialog-content>
