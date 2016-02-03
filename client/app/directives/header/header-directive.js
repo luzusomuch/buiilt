@@ -12,6 +12,10 @@ angular.module('buiiltApp')
             $scope.goto = function(newstate) {
     		      $state.go(newstate, {}, {reload: true});
             };
+			
+			$scope.inlineHelp = function() {
+				inline_manual_player.showPanel();
+			};
 
             function queryProjects(callback){
                 var cb = callback || angular.noop;
