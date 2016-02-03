@@ -55,6 +55,12 @@ angular.module('buiiltApp')
                 params: {
                     action: "create-related-item"
                 }
+            },
+            acknowledgement: {
+                method: "GET",
+                params: {
+                    action: "acknowledgement"
+                }
             }
         });
 });

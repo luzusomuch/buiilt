@@ -11,6 +11,13 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($roo
         }
     });
 
+    $scope.acknowledgement = function() {
+        peopleService.acknowledgement({id: $stateParams.id, tenderId: $stateParams.tenderId}).$promise.then(function(res) {
+            $scope.showToast("Sent acknowledgement to the owner successfully");
+            $rootScope.$broadcast("Tender.Updated", res);
+        }, function(err){$scope.showToast("Error");});
+    };
+
     function getTenderers() {
         $scope.teamLeader = false;
         $scope.tenderers = [$scope.tender.inviter];

@@ -344,12 +344,15 @@ exports.getTender = function(req, res) {
     .populate("builders.tenderers._id", "_id email name")
     .populate("builders.inviter", "_id email name")
     .populate("builders.inviterActivities.user", "_id email name")
+    .populate("builders.inviterActivities.acknowledgeUsers._id", "_id email name")
     .populate("subcontractors.tenderers._id", "_id email name")
     .populate("subcontractors.inviter", "_id email name")
     .populate("subcontractors.inviterActivities.user", "_id email name")
+    .populate("subcontractors.inviterActivities.acknowledgeUsers._id", "_id email name")
     .populate("consultants.tenderers._id", "_id email name")
     .populate("consultants.inviter", "_id email name")
     .populate("consultants.inviterActivities.user", "_id email name")
+    .populate("consultants.inviterActivities.acknowledgeUsers._id", "_id email name")
     .exec(function(err, people){
         if (err) {return res.send(500,err);}
         if (!people) {return res.send(404);}
@@ -376,7 +379,11 @@ function responseTender(people, req, res) {
                 }
             });
             _.each(currentTender.inviterActivities, function(activity) {
+
                 if (activity.type === "edit-tender" || activity.type === "attach-scope" || activity.type === "attach-addendum") {
+                    if (activity.user._id.toString()!==req.user._id.toString()) {
+                        activity.acknowledgeUsers = [];
+                    }
                     inviterActivities.push(activity);
                 } else {
                     if ((activity.element && _.indexOf(activity.element.members, req.user.email) !== -1) || currentTender.inviter._id.toString()===req.user._id.toString() || activity.user._id.toString()===req.user._id.toString()) {
@@ -665,12 +672,15 @@ exports.updateDistributeStatus = function(req, res) {
                     {path: "builders.tenderers._id", select: "_id name email"},
                     {path: "builders.inviter", select: "_id name email"},
                     {path: "builders.inviterActivities.user", select: "_id name email"},
+                    {path: "builders.inviterActivities.acknowledgeUsers._id", select: "_id name email"},
                     {path: "consultants.tenderers._id", select: "_id name email"},
                     {path: "consultants.inviter", select: "_id name email"},
                     {path: "consultants.inviterActivities.user", select: "_id name email"},
+                    {path: "consultants.inviterActivities.acknowledgeUsers._id", select: "_id name email"},
                     {path: "subcontractors.tenderers._id", select: "_id name email"},
                     {path: "subcontractors.inviter", select: "_id name email"},
-                    {path: "subcontractors.inviterActivities.user", select: "_id name email"}
+                    {path: "subcontractors.inviterActivities.user", select: "_id name email"},
+                    {path: "subcontractors.inviterActivities.acknowledgeUsers._id", select: "_id name email"}
                 ], function(err, people) {
                     if (err) {return res.send(500,err);}
                     responseTender(people, req, res);
@@ -702,6 +712,7 @@ exports.attachAddendum = function(req, res) {
             var activity = {
                 user: req.user._id,
                 type: "attach-addendum",
+                acknowledgeUsers: [],
                 createdAt: new Date(),
                 element: {
                     members: [],
@@ -723,6 +734,13 @@ exports.attachAddendum = function(req, res) {
             if (data.file) {
                 activity.element.link = addendum.element.link = data.file.url;
             }
+            _.each(people[currentRole][index].tenderers, function(tenderer) {
+                if (tenderer._id) {
+                    activity.acknowledgeUsers.push({_id:tenderer._id, isAcknow: false});
+                } else {
+                    activity.acknowledgeUsers.push({email: tenderer.email, isAcknow: false});
+                }
+            });
             people[currentRole][index].inviterActivities.push(activity);
             people[currentRole][index].addendums.push(addendum);
             people._updatedTender = people[currentRole][index];
@@ -734,12 +752,15 @@ exports.attachAddendum = function(req, res) {
                     {path: "builders.tenderers._id", select: "_id name email"},
                     {path: "builders.inviter", select: "_id name email"},
                     {path: "builders.inviterActivities.user", select: "_id name email"},
+                    {path: "builders.inviterActivities.acknowledgeUsers._id", select: "_id name email"},
                     {path: "consultants.tenderers._id", select: "_id name email"},
                     {path: "consultants.inviter", select: "_id name email"},
                     {path: "consultants.inviterActivities.user", select: "_id name email"},
+                    {path: "consultants.inviterActivities.acknowledgeUsers._id", select: "_id name email"},
                     {path: "subcontractors.tenderers._id", select: "_id name email"},
                     {path: "subcontractors.inviter", select: "_id name email"},
-                    {path: "subcontractors.inviterActivities.user", select: "_id name email"}
+                    {path: "subcontractors.inviterActivities.user", select: "_id name email"},
+                    {path: "subcontractors.inviterActivities.acknowledgeUsers._id", select: "_id name email"}
                 ], function(err, people) {
                     if (err) {return res.send(500,err);}
                     return res.send(200,people[currentRole][index]);    
@@ -756,12 +777,15 @@ exports.updateTender = function(req, res) {
     .populate("builders.tenderers._id", "_id email name")
     .populate("builders.inviter", "_id email name")
     .populate("builders.inviterActivities.user", "_id email name")
+    .populate("builders.inviterActivities.acknowledgeUsers._id", "_id email name")
     .populate("subcontractors.tenderers._id", "_id email name")
     .populate("subcontractors.inviter", "_id email name")
     .populate("subcontractors.inviterActivities.user", "_id email name")
+    .populate("subcontractors.inviterActivities.acknowledgeUsers._id", "_id email name")
     .populate("consultants.tenderers._id", "_id email name")
     .populate("consultants.inviter", "_id email name")
     .populate("consultants.inviterActivities.user", "_id email name")
+    .populate("consultants.inviterActivities.acknowledgeUsers._id", "_id email name")
     .exec(function(err, people) {
         if (err) {return res.send(500,err);}
         else if (!people) {
@@ -885,12 +909,15 @@ exports.updateTender = function(req, res) {
                         {path: "builders.tenderers._id", select: "_id name email"},
                         {path: "builders.inviter", select: "_id name email"},
                         {path: "builders.inviterActivities.user", select: "_id name email"},
+                        {path: "builders.inviterActivities.acknowledgeUsers._id", select: "_id name email"},
                         {path: "consultants.tenderers._id", select: "_id name email"},
                         {path: "consultants.inviter", select: "_id name email"},
                         {path: "consultants.inviterActivities.user", select: "_id name email"},
+                        {path: "consultants.inviterActivities.acknowledgeUsers._id", select: "_id name email"},
                         {path: "subcontractors.tenderers._id", select: "_id name email"},
                         {path: "subcontractors.inviter", select: "_id name email"},
-                        {path: "subcontractors.inviterActivities.user", select: "_id name email"}
+                        {path: "subcontractors.inviterActivities.user", select: "_id name email"},
+                        {path: "subcontractors.inviterActivities.acknowledgeUsers._id", select: "_id name email"}
                     ], function(err, people) {
                         if (err) {return res.send(500,err);}
                         if (data.editType === "broadcast-message") {
@@ -984,12 +1011,15 @@ exports.submitATender = function(req, res) {
                             {path: "builders.tenderers._id", select: "_id name email"},
                             {path: "builders.inviter", select: "_id name email"},
                             {path: "builders.inviterActivities.user", select: "_id name email"},
+                            {path: "builders.inviterActivities.acknowledgeUsers._id", select: "_id name email"},
                             {path: "consultants.tenderers._id", select: "_id name email"},
                             {path: "consultants.inviter", select: "_id name email"},
                             {path: "consultants.inviterActivities.user", select: "_id name email"},
+                            {path: "consultants.inviterActivities.acknowledgeUsers._id", select: "_id name email"},
                             {path: "subcontractors.tenderers._id", select: "_id name email"},
                             {path: "subcontractors.inviter", select: "_id name email"},
-                            {path: "subcontractors.inviterActivities.user", select: "_id name email"}
+                            {path: "subcontractors.inviterActivities.user", select: "_id name email"},
+                            {path: "subcontractors.inviterActivities.acknowledgeUsers._id", select: "_id name email"},
                         ], function(err, people) {
                             if (err) {return res.send(500,err);}
                             return res.send(200,people[currentRole][tenderIndex]);    
@@ -1111,6 +1141,89 @@ exports.createRelatedItem = function(req, res) {
         people.save(function(err) {
             if (err) {return res.send(500,err);}
             responseTender(people, req, res);
+        });
+    });
+};
+
+exports.acknowledgementViaEmail = function(req, res) {
+    console.log(req.params);
+    var data = req.params;
+    People.findById(data.id, function(err, people) {
+        if (err) {return res.send(500,err);}
+        else if (!people) {return res.send(404);}
+        var responseUrl;
+        _.each(people[data.type], function(tender) {
+            if (tender._id.toString()===data.tenderId.toString()) {
+                var activityIndex = _.findIndex(tender.inviterActivities, function(activity) {
+                    return activity._id.toString()===data.activityId.toString();
+                });
+                if (activityIndex !== -1) {
+                    var validUser = false;
+                    _.each(tender.inviterActivities[activityIndex].acknowledgeUsers, function(user){
+                        if (user.email && user.email===data.email) {
+                            user.isAcknow = true;
+                            responseUrl = tender.inviterActivities[activityIndex].element.link;
+                            validUser = true;
+                        }
+                    });
+                    if (!validUser) {
+                        return res.send(500, {message: "You haven\'t privilege"});
+                    }
+                } else {
+                    return res.send(500,{message: "Error"});
+                }
+            }
+        });
+        people.save(function(err) {
+            if (err) {return res.send(500,err);}
+            return res.redirect(responseUrl);
+        });
+    });
+};
+
+exports.acknowledgement = function(req, res) {
+    People.findOne({project: req.params.id}, function(err, people) {
+        if (err) {return res.send(500,err);}
+        else if (!people) {return res.send(404);}
+        var roles = ["builders", "subcontractors", "consultants"];
+        var currentRole, index;
+        _.each(roles, function(role, key) {
+            _.each(people[role], function(tender, key) {
+                if (tender._id.toString()===req.params.tenderId.toString()) {
+                    currentRole = role,
+                    index = key;
+                    return false;
+                }
+            });
+        });
+        _.each(people[currentRole][index].inviterActivities, function(activity) {
+            if (activity.type === "attach-addendum") {
+                _.each(activity.acknowledgeUsers, function(user) {
+                    if (user._id && user._id.toString()===req.user._id.toString()) {
+                        user.isAcknow = true;
+                    }
+                });
+            }
+        });
+        people.save(function(err) {
+            if (err) {return res.send(500,err);}
+            People.populate(people, [
+                {path: "builders.tenderers._id", select: "_id name email"},
+                {path: "builders.inviter", select: "_id name email"},
+                {path: "builders.inviterActivities.user", select: "_id name email"},
+                {path: "builders.inviterActivities.acknowledgeUsers._id", select: "_id name email"},
+                {path: "consultants.tenderers._id", select: "_id name email"},
+                {path: "consultants.inviter", select: "_id name email"},
+                {path: "consultants.inviterActivities.user", select: "_id name email"},
+                {path: "consultants.inviterActivities.acknowledgeUsers._id", select: "_id name email"},
+                {path: "subcontractors.tenderers._id", select: "_id name email"},
+                {path: "subcontractors.inviter", select: "_id name email"},
+                {path: "subcontractors.inviterActivities.user", select: "_id name email"},
+                {path: "subcontractors.inviterActivities.acknowledgeUsers._id", select: "_id name email"},
+            ], function(err, people) {
+                if (err) {return res.send(500,err);}
+                responseTender(people, req, res);
+            });
         });
     });
 };

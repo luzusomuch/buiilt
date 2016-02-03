@@ -13,6 +13,8 @@ router.put('/:id/:tenderId/create-related-item', auth.isAuthenticated(), control
 router.get('/:id/get-invite-people', auth.isAuthenticated(), controller.getInvitePeople);
 router.get('/:id/:tenderId/get-tender', auth.isAuthenticated(), controller.getTender);
 router.get('/:id/:tenderId/update-distribute-status', auth.isAuthenticated(), controller.updateDistributeStatus);
+router.get('/:id/:tenderId/acknowledgement', auth.isAuthenticated(), controller.acknowledgement);
+router.get('/:id/:type/:tenderId/:activityId/:email/download-via-email', controller.acknowledgementViaEmail);
 
 router.post("/:id/submit-a-tender", auth.isAuthenticated(), controller.submitATender);
 router.post("/:id/:tenderId/attach-addendum", auth.isAuthenticated(), controller.attachAddendum);

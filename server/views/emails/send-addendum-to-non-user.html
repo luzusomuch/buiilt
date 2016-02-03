@@ -35,6 +35,9 @@
 									<p>Hi <%=invitee%>,</p>
 									<p>I have attached a new addendum for the tender <%=request.name%>.</p>
 									<p><strong>Details:</strong> <%=request.tenderDescription%></p>
+                                    {% if allowDownload %}
+                                        <p>You can download the addendum <a href="<%=downloadLink%>">here</a></p>
+                                    {% endif %}
 									<p>We see that you have not yet created an account with buiilt. We recommend you do so now, to ensure you receive the most up to date information.</p>
 									<p>All you need to do is click the button below, provide a name and a password and the website will do the rest.</p>
 									<p>By the way, it is completely free for you to join...</p>

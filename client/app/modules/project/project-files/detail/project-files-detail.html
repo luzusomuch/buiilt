@@ -50,10 +50,10 @@
 						</p>
 						
 						<p ng-switch="activity.type" class="activity-body md-body">
-                            <span ng-switch-when="upload-reversion" layout="column">{{activity.element.name}}<span ng-show="file.owner._id==currentUser._id" ng-repeat="user in activity.acknowledgeUsers" ng-class="{'available-tag':!user.isAcknow, 'selected-tag':user.isAcknow}" class="tagcloud-selection">{{(user._id) ? user._id.name : user.email}}</span>
+                            <span ng-switch-when="upload-reversion" layout="column">{{activity.element.name}}
                             </span>
 
-                            <span ng-switch-when="upload-file" layout="column">{{activity.element.name}}<span ng-show="file.owner._id==currentUser._id" ng-repeat="user in activity.acknowledgeUsers" ng-class="{'available-tag':!user.isAcknow, 'selected-tag':user.isAcknow}" class="tagcloud-selection">{{(user._id) ? user._id.name : user.email}}</span>
+                            <span ng-switch-when="upload-file" layout="column">{{activity.element.name}}
                             </span>
 							
 							<span ng-switch-when="edit"> ({{(activity.element.name) ? "Name: "+activity.element.name+", " : ""}} {{(activity.element.description) ? "Description: "+activity.element.description+", " : ""}} {{(activity.element.tags) ? "Tags : " : ""}}<span ng-repeat="tag in activity.element.tags">{{tag}}, </span>)</span>
@@ -62,6 +62,10 @@
 							<span ng-switch-when="related-task">"<a ui-sref="project.tasks.detail({id: file.project, taskId: activity.element.item})">{{activity.element.name}}</a>"</span>
 							<span ng-switch-when="related-file">"<a ui-sref="project.files.detail({id: file.project, fileId: activity.element.item})">{{activity.element.name}}</a>"</span>
 						</p>
+
+                        <div layout="row" class="tagcloud-selection" ng-show="file.owner._id==currentUser._id && (activity.type==='upload-file' || activity.type==='upload-reversion')">
+                            <span ng-repeat="user in activity.acknowledgeUsers" ng-class="{'available-tag':!user.isAcknow, 'selected-tag':user.isAcknow}">{{(user._id) ? user._id.name : user.email}}</span>
+                        </div>
 						
 					</div>
 				</div>

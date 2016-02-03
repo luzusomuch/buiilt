@@ -15,8 +15,8 @@ var async = require('async');
 var _ = require('lodash');
 
 EventBus.onSeries('People.Updated', function(req, next){
-    var from = req.editUser.name + "<"+req.editUser.email+">";
     if (req._modifiedPaths.indexOf('updateDistributeStatus') != -1) {
+        var from = req.editUser.name + "<"+req.editUser.email+">";
         var currentTender = req.updatedTender;
         async.parallel({
             project: function (cb) {
@@ -119,6 +119,7 @@ EventBus.onSeries('People.Updated', function(req, next){
         }
     } else if (req._modifiedPaths.indexOf("attach-addendum") !== -1) {
         var currentTender = req.updatedTender;
+        var from = req.editUser.name + "<"+req.editUser.email+">";
         async.parallel({
             project: function (cb) {
                 Project.findById(req.project, cb);
@@ -128,6 +129,7 @@ EventBus.onSeries('People.Updated', function(req, next){
             }
         }, function(err, result) {
             if (err) {return next();}
+            var latestActivity = _.last(currentTender.inviterActivities);
             async.each(currentTender.tenderers, function(tenderer, cb) {
                 if (tenderer.email) {
                     PackageInvite.findOne({to: tenderer.email}, function(err, packageInvite) {
@@ -139,6 +141,8 @@ EventBus.onSeries('People.Updated', function(req, next){
                                 invitee: packageInvite.to,
                                 project: result.project.toJSON(),
                                 request: currentTender,
+                                allowDownload: (latestActivity.element.link) ? true : false,
+                                downloadLink: config.baseUrl + "api/peoples/"+req._id+"/"+packageInvite.inviteType+"/"+currentTender._id+"/"+latestActivity._id+"/"+packageInvite.to+"/download-via-email",
                                 link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
                                 subject: req.editUser.name + ' has send you an addendum on ' + currentTender.tenderName
                             },function(err){
@@ -154,6 +158,7 @@ EventBus.onSeries('People.Updated', function(req, next){
         });
     } else if (req._modifiedPaths.indexOf("invitePeople") !== -1) {
         var currentTender = req.updatedTender;
+        var from = req.editUser.name + "<"+req.editUser.email+">";
         async.parallel({
             project: function (cb) {
                 Project.findById(req.project, cb);
