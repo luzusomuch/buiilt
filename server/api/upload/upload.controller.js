@@ -206,11 +206,12 @@ exports.upload = function(req, res){
     var notMembers = [];
     var acknowledgeUsers = [];
     async.parallel([
-        function(cb) {
+        function(callback) {
+            console.log(data.members, data.members.length);
             if (data.members && data.members.length > 0) {
                 async.each(data.members, function(member, cb) {
                     User.findOne({email: member.email}, function(err, user) {
-                        if (err) {cb();}
+                        if (err) {console.log(err);cb(err);}
                         else if (!user) {
                             acknowledgeUsers.push({email: member.email, isAcknow: false});
                             notMembers.push(member.email);
@@ -222,11 +223,11 @@ exports.upload = function(req, res){
                             cb();
                         }
                     });
-                }, cb());
+                }, callback);
             } else {
                 var roles = ["builders", "clients", "architects", "subcontractors", "consultants"];
                 People.findOne({project: req.params.id}, function(err, people) {
-                    if (err || !people) {cb();}
+                    if (err || !people) {callback();}
                     else {
                         _.each(roles, function(role) {
                             _.each(people[role], function(tender){
@@ -238,12 +239,13 @@ exports.upload = function(req, res){
                             });
                         });
                         _.remove(acknowledgeUsers, {_id: req.user._id});
-                        cb();
+                        callback();
                     }
-                })
+                });
             }
         }
-    ], function(err) {
+    ], function(err, result) {
+        if (err) {return res.send(500,err);}
         var mainItem = getMainItem(data.belongToType);
         async.each(data.files, function(item, cb) {
             var file = new File({
