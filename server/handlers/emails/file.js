@@ -38,6 +38,7 @@ EventBus.onSeries('File.Inserted', function(request, next) {
                             project: result.project.toJSON(),
                             request: request.toJSON(),
                             type: "file",
+                            downloadLink: config.baseUrl + "api/files/"+request._id+"/"+member+"/download-via-email",
                             link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
                             subject: result.editUser.name + ' has uploaded for you a file ' + request.name
                         },function(err){console.log(err);
@@ -66,6 +67,7 @@ EventBus.onSeries('File.Inserted', function(request, next) {
                                             project: result.project.toJSON(),
                                             request: request.toJSON(),
                                             type: "document",
+                                            downloadLink: config.baseUrl + "api/files/"+request._id+"/"+member+"/download-via-email",
                                             link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
                                             subject: result.editUser.name + ' has uploaded for you a document ' + request.name
                                         },function(err){console.log(err);
@@ -124,6 +126,7 @@ EventBus.onSeries('File.Updated', function(request, next) {
                                                 project: result.project.toJSON(),
                                                 request: request.toJSON(),
                                                 type: "document reversion",
+                                                downloadLink: config.baseUrl + "api/files/"+request._id+"/"+member+"/download-via-email",
                                                 link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
                                                 subject: result.editUser.name + ' has uploaded for you a document ' + request.name
                                             },function(err){console.log(err);
@@ -155,6 +158,7 @@ EventBus.onSeries('File.Updated', function(request, next) {
                             project: result.project.toJSON(),
                             request: request.toJSON(),
                             type: "file reversion",
+                            downloadLink: config.baseUrl + "api/files/"+request._id+"/"+member+"/download-via-email",
                             link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
                             subject: result.editUser.name + ' has uploaded for you a file ' + request.name
                         },function(err){console.log(err);

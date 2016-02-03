@@ -14,6 +14,12 @@ return $resource('/api/files/:id/:type/:action', {
     update: {
         method: "PUT"
     },
+    acknowledgement: {
+        method: "GET",
+        params: {
+            action: "acknowledgement"
+        }
+    },
     interested: {
       method: 'PUT',
       params: {

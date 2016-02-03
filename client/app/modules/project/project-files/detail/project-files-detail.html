@@ -6,6 +6,7 @@
 			<p>{{file.name}}</p>
 			<span flex></span>
 			<div>
+                <md-button ng-click="acknowledgement()" ng-show="file.owner._id != currentUser._id">acknowledgement</md-button>
 				<md-button ng-click="showModal($event, 'file-history.html')">View File</md-button>
 			</div>
 	    </div>
@@ -21,6 +22,7 @@
 					
 					<div class="icon-type" ng-switch="activity.type">
                         <md-icon ng-switch-when="upload-reversion" class="material-icons md-primary">attach_file</md-icon>
+                        <md-icon ng-switch-when="upload-file" class="material-icons md-primary">attach_file</md-icon>
 						<md-icon ng-switch-when="edit" class="material-icons md-primary">edit</md-icon>
 						<md-icon ng-switch-when="assign" class="material-icons md-primary">person_outline</md-icon>
 						<md-icon ng-switch-when="related-thread" class="material-icons md-primary">chat_bubble_outline</md-icon>
@@ -36,6 +38,9 @@
 							<span class="activity-creator">{{activity.user.name}}</strong>
 							
                             <span class="meta-data" ng-switch-when="upload-reversion"> uploaded a new revision at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
+
+                            <span class="meta-data" ng-switch-when="upload-file"> uploaded a new file at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
+
 							<span class="meta-data" ng-switch-when="edit"> edited the details of this file at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
 							<span class="meta-data" ng-switch-when="assign"> assigned the following people to this file at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
 							<span class="meta-data" ng-switch-when="related-thread"> attached the related message thread at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
@@ -47,6 +52,8 @@
 						<p ng-switch="activity.type" class="activity-body md-body">
 							
                             <span ng-switch-when="upload-reversion" layout="column"> {{activity.element.name}}</span>
+
+                            <span ng-switch-when="upload-file" layout="column"> {{activity.element.name}} <span ng-show="currentUser._id == file.owner._id" ng-repeat="user in acknowledgeUsers" ng-class="{'available-tag':!user.isAcknow, 'selected-tag':user.isAcknow}">{{(user._id) ? user.name : user.email}}</span> </span>
 							
 							<span ng-switch-when="edit"> ({{(activity.element.name) ? "Name: "+activity.element.name+", " : ""}} {{(activity.element.description) ? "Description: "+activity.element.description+", " : ""}} {{(activity.element.tags) ? "Tags : " : ""}}<span ng-repeat="tag in activity.element.tags">{{tag}}, </span>)</span>
 							<span ng-switch-when="assign"><span ng-repeat="member in activity.element.members">{{member}}, </span></span>

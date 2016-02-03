@@ -4,6 +4,45 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
     $scope.isShowRelatedItem = true;
     $scope.people = people;
 
+    function getAcknowledgeUser() {
+        $scope.acknowledgeUsers = $scope.file.members;
+        _.each($scope.file.notMembers, function(member) {
+            $scope.acknowledgeUsers.push({email: member, isAcknow: false});
+        });
+        _.each($scope.acknowledgeUsers, function(user) {
+            if (user._id) {
+                if (_.findIndex($scope.file.acknowledgeUser, function(item) {
+                    if (item._id) {
+                        return item._id._id.toString()===user._id.toString();
+                    }
+                }) !== -1) {
+                   user.isAcknow = true;
+                }
+            } else {
+                if (_.findIndex($scope.file.acknowledgeUser, function(item) {
+                    return item.email === user.email;
+                }) !== -1) {
+                    user.isAcknow = true;
+                }
+            }
+        });
+    };
+    getAcknowledgeUser();
+
+    $rootScope.$on("File.Updated", function(event, data) {
+        $scope.file = data;
+        getAcknowledgeUser();
+    });
+
+    $scope.acknowledgement = function() {
+        fileService.acknowledgement({id: $stateParams.fileId}).$promise.then(function(res) {
+            $scope.showToast("Sent acknowledgement to the owner successfully");
+            $rootScope.$broadcast("File.Updated", res);
+        }, function(err) {
+            $scope.showToast("Error");
+        });
+    };
+
     $scope.chipsFilter = function() {
         $scope.isShowRelatedItem = !$scope.isShowRelatedItem;
     };
@@ -80,7 +119,7 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
         _.remove($scope.membersList, {_id: $rootScope.currentUser._id});
 
         // get invitees for related item
-        $scope.invitees = $scope.file.members;
+        $scope.invitees = angular.copy($scope.file.members);
         _.each($scope.file.notMembers, function(member) {
             $scope.invitees.push({email: member});
         });

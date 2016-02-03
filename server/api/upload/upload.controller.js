@@ -27,6 +27,7 @@ var fs = require('fs');
 var exec = require('child_process').exec;
 var config = require('./../../config/environment');
 var RelatedItem = require('../../components/helpers/related-item');
+var EventBus = require('../../components/EventBus');
 
 var getMainItem = function(type) {
     var _item = {};
@@ -192,6 +193,14 @@ exports.upload = function(req, res){
                 tags.push(tag.name);
             });
             file.tags = tags;
+            file.activities.push({
+                type: "upload-file",
+                user: req.user._id,
+                createdAt: new Date(),
+                element: {
+                    name: file.name
+                }
+            });
             if (data.belongTo) {
                 file.belongTo.item = {_id: data.belongTo};
                 file.belongTo.type = data.belongToType;

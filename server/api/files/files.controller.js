@@ -11,6 +11,17 @@ var async = require('async');
 var s3 = require('../../components/S3');
 var mongoose = require('mongoose');
 
+function populateFile(file, res){
+    File.populate(file, [
+        {path: "owner", select: "_id email name"},
+        {path: "members", select: "_id email name"},
+        {path: "activities.user", select: "_id email name"},
+        {path: "acknowledgeUser._id", select: "_id email name"}
+    ], function(err, file) {
+        return res.send(200, file);
+    });
+};
+
 exports.getFilesByProject = function(req, res) {
     var query;
     if (req.params.type === "file") {
@@ -29,6 +40,7 @@ exports.show = function(req, res) {
     .populate("owner", "_id name email")
     .populate("members", "_id name email")
     .populate("activities.user", "_id name email")
+    .populate("acknowledgeUser._id", "_id name email")
     .exec(function(err, file) {
         if (err) 
             return res.send(500, err);
@@ -96,6 +108,41 @@ exports.update = function(req, res) {
                     });
                 });
             });
+        }
+    });
+};
+
+exports.acknowledgement = function(req, res) {
+    File.findById(req.params.id, function(err, file) {
+        if (err) {return res.send(500,err);}
+        else if (!file) {return res.send(404);}
+        if (_.findIndex(file.members, function(id) {
+            return id.toString()===req.user._id.toString();
+        }) !== -1) {
+            file.acknowledgeUser.push({_id: req.user._id});
+            file.save(function(err) {
+                if (err) {return res.send(500,err);}
+                populateFile(file, res);
+            });
+        } else {
+            return res.send(500, {message: "You haven\'t got privilege"});
+        }
+    });
+};
+
+exports.acknowledgementViaEmail = function(req, res) {
+    File.findById(req.params.id, function(err, file) {
+        if (err) {return res.send(500,err);}
+        else if (!file) {return res.send(404);}
+        if (_.indexOf(file.notMembers, req.params.type) !== -1) {
+            console.log(file.notMembers);
+            file.acknowledgeUser.push({email: req.params.type});
+            file.save(function(err) {
+                if (err) {return res.send(500,err);}
+                return res.redirect(file.path);
+            });
+        } else {
+            return res.send(500, {message: "You haven\'t got privilege"});
         }
     });
 };

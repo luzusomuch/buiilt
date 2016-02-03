@@ -86,6 +86,10 @@ var FileSchema = new Schema({
         version: String, 
         description: String,
         createdAt: {type: Date}
+    }],
+    acknowledgeUser: [{
+        _id: {type: Schema.Types.ObjectId, ref: "User"},
+        email: String
     }]
 });
 
