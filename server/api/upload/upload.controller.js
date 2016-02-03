@@ -114,47 +114,78 @@ exports.uploadReversion = function(req, res) {
         if (err) {return res.send(500,err);}
         else if (!file) {return res.send(404, "The specific file is not existed");}
         else {
-            var history = {
-                name: file.name,
-                description: file.description,
-                link: file.path,
-                version: file.version,
-                createdAt: new Date()
-            };  
-            file.name = newFile.filename,
-            file.path = newFile.url,
-            file.key = newFile.key,
-            file.server = 's3',
-            file.mimeType = newFile.mimeType,
-            file.description = req.body.description,
-            file.size = req.body.size,
-            file.version = file.version + 1;
-            file.fileHistory.push(history);
-            var activity = {
-                type: "upload-reversion",
-                user: req.user._id,
-                createdAt: new Date(),
-                acknowledgeUsers: [],
-                element: {
-                    name: file.name
+            var acknowledgeUsers = [];
+            async.parallel([
+                function(cb) {
+                    if (file.element.type === "file") {
+                        _.each(file.members, function(member) {
+                            acknowledgeUsers.push({_id: member, isAcknow: false});
+                        });
+                        _.each(file.notMembers, function(member) {
+                            acknowledgeUsers.push({email: member, isAcknow: false});
+                        });
+                        cb();
+                    } else {
+                        People.findOne({project: file.project}, function(err, people) {
+                            if (err || !people) {cb();}
+                            else {
+                                var roles = ["builders", "clients", "architects", "subcontractors", "consultants"];
+                                _.each(roles, function(role) {
+                                    _.each(people[role], function(tender){
+                                        if (tender.hasSelect && tender.tenderers[0]._id) {
+                                            acknowledgeUsers.push({_id: tender.tenderers[0]._id});
+                                        } else if (tender.hasSelect && tender.tenderers[0].email) {
+                                            acknowledgeUsers.push({email: tender.tenderers[0].email});
+                                        }
+                                    });
+                                });
+                                _.remove(acknowledgeUsers, {_id: req.user._id});
+                                cb();
+                            }
+                        });
+                    }
                 }
-            };
-            _.each(file.members, function(member) {
-                activity.acknowledgeUsers.push({_id: member, isAcknow: false});
-            });
-            _.each(file.notMembers, function(member) {
-                activity.acknowledgeUsers.push({email: member, isAcknow: false});
-            });
-            file.activities.push(activity);
-            file._editType = "uploadReversion";
-            file.save(function(err) {
+            ], function(err) {
                 if (err) {return res.send(500,err);}
-                File.populate(file, [
-                    {path: "owner", select: "_id email name"},
-                    {path: "members", select: "_id email name"},
-                    {path: "activities.user", select: "_id email name"}
-                ], function(err, file) {
-                    return res.send(200, file);
+                var history = {
+                    name: file.name,
+                    description: file.description,
+                    link: file.path,
+                    version: file.version,
+                    createdAt: new Date()
+                };  
+                file.name = newFile.filename,
+                file.path = newFile.url,
+                file.key = newFile.key,
+                file.server = 's3',
+                file.mimeType = newFile.mimeType,
+                file.description = req.body.description,
+                file.size = req.body.size,
+                file.version = file.version + 1;
+                file.fileHistory.push(history);
+                var activity = {
+                    type: "upload-reversion",
+                    user: req.user._id,
+                    createdAt: new Date(),
+                    acknowledgeUsers: acknowledgeUsers,
+                    element: {
+                        name: file.name,
+                        description: file.description
+                    }
+                };
+                
+                file.activities.push(activity);
+                file._editType = "uploadReversion";
+                file.save(function(err) {
+                    if (err) {return res.send(500,err);}
+                    File.populate(file, [
+                        {path: "owner", select: "_id email name"},
+                        {path: "members", select: "_id email name"},
+                        {path: "activities.user", select: "_id email name"},
+                        {path: "activities.acknowledgeUsers._id", select: "_id email name"}
+                    ], function(err, file) {
+                        return res.send(200, file);
+                    });
                 });
             });
         }
@@ -206,6 +237,7 @@ exports.upload = function(req, res){
                                 }
                             });
                         });
+                        _.remove(acknowledgeUsers, {_id: req.user._id});
                         cb();
                     }
                 })
@@ -239,7 +271,8 @@ exports.upload = function(req, res){
                 createdAt: new Date(),
                 acknowledgeUsers: acknowledgeUsers,
                 element: {
-                    name: file.name
+                    name: file.name,
+                    description: file.description
                 }
             });
             if (data.belongTo) {

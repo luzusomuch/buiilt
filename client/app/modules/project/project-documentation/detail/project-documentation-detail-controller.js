@@ -14,6 +14,35 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
         });
     };
 
+    $scope.openFileHistory = function($mdOpenMenu, event) {
+        $mdOpenMenu(event);
+    };
+
+    $scope.openHistoryDetail = function($event, history) {
+        $mdDialog.show({
+            targetEvent: $event,
+            controller: function($scope) {
+                $scope.history = history;
+                console.log($scope.history);
+                $scope.closeModal = function() {
+                    $mdDialog.cancel();
+                };
+
+                $scope.downloadFile = function() {
+                    filepicker.exportFile(
+                        {url: $scope.history.link, filename: $scope.history.name},
+                        function(Blob){
+                            console.log(Blob.url);
+                        }
+                    );
+                };
+            },
+            templateUrl: 'app/modules/project/project-files/detail/partials/file-history-detail.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: false
+        });
+    };
+
     function setUploadReversion() {
         $scope.uploadReversion = {
             files: []

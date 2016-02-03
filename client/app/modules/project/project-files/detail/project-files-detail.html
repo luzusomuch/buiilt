@@ -7,9 +7,12 @@
 			<span flex></span>
 			<div>
                 <md-button ng-click="acknowledgement()" ng-show="file.owner._id != currentUser._id">acknowledgement</md-button>
-                <md-menu>
+                <md-menu md-position-mode="target-right target">
 				    <md-button ng-click="openFileHistory($mdOpenMenu, $event)">View File</md-button>
                     <md-menu-content width="4">
+                        <md-menu-item ng-click="openHistoryDetail($event, {name: file.name, description: file.description, link: file.path})">
+                            <md-button>{{file.name}} (Version: Current version)</md-button>
+                        </md-menu-item>
                         <md-menu-item ng-click="openHistoryDetail($event, history)" ng-repeat="history in file.fileHistory">
                             <md-button>{{history.name}} (Version: {{history.version}})</md-button>
                         </md-menu-item>
@@ -42,7 +45,7 @@
 					<div flex class="activity-detail">
 						
 						<p ng-switch="activity.type" class="activity-header">
-							<span class="activity-creator">{{activity.user.name}}</strong>
+							<span class="activity-creator">{{activity.user.name}}</span>
 							
                             <span class="meta-data" ng-switch-when="upload-reversion"> uploaded a new revision at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
 

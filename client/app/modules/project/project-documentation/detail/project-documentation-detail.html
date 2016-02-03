@@ -5,14 +5,57 @@
 		<div class="detail-header" layout="row" layout-padding>
 			<p>{{document.name}}</p>
 			<span flex></span>
-			<md-button ng-click="download(document.name, document.path)">Download</md-button>
+			<!-- <md-button ng-click="download(document.name, document.path)">Download</md-button> -->
+            <md-menu md-position-mode="target-right target">
+                <md-button ng-click="openFileHistory($mdOpenMenu, $event)">View Document</md-button>
+                <md-menu-content width="4">
+                    <md-menu-item ng-click="openHistoryDetail($event, {name: document.name, description: document.description, link: document.path})">
+                        <md-button>{{document.name}} (Version: Current version)</md-button>
+                    </md-menu-item>
+                    <md-menu-item ng-click="openHistoryDetail($event, history)" ng-repeat="history in document.fileHistory">
+                        <md-button>{{history.name}} (Version: {{history.version}})</md-button>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
 			<md-button ng-click="acknowledgement()" ng-show="document.owner._id != currentUser._id">Acknowledge Document Revision</md-button>
 	    </div>
 		
 		<div class="main-page-content" layout-padding>
 			
-            <div layout="row">
-                <div flex file-picker-previewer type="filepicker-preview" url="{{document.path}}" style="height:75vh;"> </div>
+            <div class="item-activity">
+                <div layout="row" flex class="activity-stream-head">
+                    <p>This document was created by <strong>{{document.owner.name}}</strong> on {{document.createdAt | date: 'dd/MM/yyyy hh:mm a'}}.</span></p>
+                </div>
+                <div layout="row" layout-align="center center" flex class="activity-stream" ng-repeat="activity in document.activities" ng-class="{related: activity.element.related}">
+                    <span flex="5"></span>
+                    <div class="icon-type" ng-switch="activity.type">
+                        <md-icon ng-switch-when="upload-reversion" class="material-icons md-primary">attach_file</md-icon>
+                        <md-icon ng-switch-when="upload-file" class="material-icons md-primary">attach_file</md-icon>
+                    </div>
+                    <span flex="5"></span>
+
+                    <div flex class="activity-detail">
+                        <p ng-switch="activity.type" class="activity-header">
+                            <span class="activity-creator">{{activity.user.name}}</span>
+
+                            <span class="meta-data" ng-switch-when="upload-reversion"> uploaded a new revision at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
+
+                            <span class="meta-data" ng-switch-when="upload-file"> uploaded a new file at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
+                        </p>
+
+                        <p ng-switch="activity.type" class="activity-body md-body">
+                            <span ng-switch-when="upload-reversion" layout="column">Description: {{activity.element.description}}
+                            </span>
+
+                            <span ng-switch-when="upload-file" layout="column">Description: {{activity.element.description}}
+                            </span>
+                        </p>
+
+                        <div layout="row" class="tagcloud-selection" ng-show="document.owner._id==currentUser._id && (activity.type==='upload-file' || activity.type==='upload-reversion')">
+                            <span ng-repeat="user in activity.acknowledgeUsers" ng-class="{'available-tag':!user.isAcknow, 'selected-tag':user.isAcknow}">{{(user._id) ? user._id.name : user.email}}</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 			
 			<div>
@@ -35,6 +78,6 @@
 		</div>
 	</div>
 		
-	<doc-history data="document" flex="30"></doc-history>
+	<!-- <doc-history data="document" flex="30"></doc-history> -->
 		
 </div>
