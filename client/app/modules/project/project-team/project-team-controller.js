@@ -292,7 +292,7 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
                 $scope.email = null;
                 $scope.name = null;
             } else {
-                $scope.showToast("This email has already added");
+                $scope.showToast("This Invitee Has Already Been Added...");
             }   
         }
 	};	
@@ -318,16 +318,16 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
                 if ($scope.invite.isInviteTeamMember) {
                     $scope.invite.teamMember = _.filter($scope.teamMembersCanInvite, {select: true});
                     if ($scope.invite.teamMember.length === 0) {
-                        $scope.showToast("Please select at least 1 member");
+                        $scope.showToast("Please Specific At Least 1 Team Member...");
                         return;
                     }
                 }
     			peopleService.update({id: $stateParams.id},$scope.invite).$promise.then(function(res){
-    				$scope.showToast("Invited successfully");
+    				$scope.showToast("Invititation Has Been Sent Successfully.");
     	            $scope.cancelInviteTeamModal();
                     $rootScope.$broadcast("Project.Team.Invite", res);
     	        }, function(res){
-    	        	$scope.showToast("Error. Something went wrong.")
+    	        	$scope.showToast("There Has Been An Error...")
     	        });
             } else {
                 $rootScope.currentInviteData = $scope.invite;
@@ -338,7 +338,7 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
 	};
 
 	$scope.showToast = function(value) {
-        $mdToast.show($mdToast.simple().textContent(value).position('bottom','right').hideDelay(3000));
+        $mdToast.show($mdToast.simple().textContent(value).position('bottom','left').hideDelay(3000));
     };
 
 	//Functions to handle Invite Team Dialog.

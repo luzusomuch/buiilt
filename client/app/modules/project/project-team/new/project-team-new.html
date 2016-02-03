@@ -7,9 +7,9 @@
 		</md-toolbar>
 		
 		<md-dialog-content>
-			<div class="md-dialog-content" layout="column">
+			<div class="md-dialog-content" layout="column" layout-padding>
 				
-				<div layout="column" layout-margin>
+				<div layout="column">
 					<p class="md-body-2">Who would you like to invite?</p>
 					<md-input-container>
 						<md-radio-group ng-change="getChangeTypeValue(invite.type)" ng-model="invite.type" layout="row">
@@ -20,7 +20,7 @@
 					</md-input-container>
 				</div>
 				
-				<div layout="column" ng-show="invite.type == 'addClient' || invite.type == 'addArchitect'" layout-margin>
+				<div layout="column" ng-show="invite.type == 'addClient' || invite.type == 'addArchitect'">
 					<p class="md-body-2">Please provide the first name and email for your <span ng-show="invite.type == 'addClient'">Client</span><span ng-show="invite.type == 'addArchitect'">Architect</span>:</p>
 					<div layout="row">
 						<md-input-container flex="5">
@@ -38,18 +38,18 @@
 					</div>
 				</div>
 				
-				<div layout="column" ng-show="invite.type == 'addBuilder' || invite.type == 'addConsultant' || invite.type == 'addSubcontractor'" layout-margin>
+				<div layout="column" ng-show="invite.type == 'addBuilder' || invite.type == 'addConsultant' || invite.type == 'addSubcontractor'">
 					<a style="cursor: pointer" ng-click="setInviteTender(true)"><p class="md-body-2" style="color: #F44336; text-decoration: underline">If you require a Tender to be submitted from your <span ng-show="invite.type == 'addConsultant'">consultant</span><span ng-show="invite.type == 'addBuilder'">builder</span><span ng-show="invite.type == 'addSubcontractor'">subcontractor</span>, please click this link.</p></a>
 				</div>
 				
-				<div layout="column" layout-margin ng-show="invite.isInviteTeamMember">
+				<div layout="column" ng-show="invite.isInviteTeamMember">
 					<p class="md-body-2">Please select the employee's you would like to add to this project:</p>
 					<div layout="row" layout-align="center center" class="tagcloud" layout-wrap layout-padding>
 						<span ng-click="selectMember($index)" ng-class="{'available-tag':!member.select, 'selected-tag': member.select}" ng-repeat="member in teamMembersCanInvite track by $index">{{member.name}}</span>
 					</div>
 				</div>
 				
-				<div layout="column" ng-show="invite.type == 'addBuilder' || invite.type == 'addConsultant' || invite.type == 'addSubcontractor'" layout-margin>
+				<div layout="column" ng-show="invite.type == 'addBuilder' || invite.type == 'addConsultant' || invite.type == 'addSubcontractor'">
 					<p class="md-body-2">Please provide the first name and email for the <span ng-show="invite.type == 'addBuilder'">Builder</span><span ng-show="invite.type == 'addConsultant'">Consultant</span><span ng-show="invite.type == 'addSubcontractor'">Subcontractor</span> you would like to invite:</p>
 					
 					<div layout="row">
@@ -72,7 +72,7 @@
 		
 		<md-dialog-actions>
 			<md-button ng-click="cancelInviteTeamModal()">Cancel</md-button>
-			<md-button type="submit" class="">Invite to Project</md-button>
+			<md-button type="submit" class="md-primary">Invite to Project</md-button>
 		</md-dialog-actions>
 	</form>
 </md-dialog>
