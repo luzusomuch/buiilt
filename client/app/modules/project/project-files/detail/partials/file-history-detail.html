@@ -1,0 +1,23 @@
+<md-dialog aria-label="File History" flex="70">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>File History {{history.name}}</h2>
+        </div>
+    </md-toolbar>
+    
+    <md-dialog-content>
+        <div class="md-dialog-content" layout="column">
+            <div layout="row">
+                <h4>Reversion description: {{history.description}}</h4>
+            </div>
+            <div layout="row">
+                <div flex file-picker-previewer type="filepicker-preview" url="{{history.link}}" style="height:75vh;"> </div>
+            </div>
+        </div>
+    </md-dialog-content>
+    
+    <md-dialog-actions>
+        <md-button ng-click="closeModal()">Close</md-button>
+        <md-button ng-click="downloadFile()">Download</md-button>
+    </md-dialog-actions>
+</md-dialog>

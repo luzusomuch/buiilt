@@ -7,7 +7,14 @@
 			<span flex></span>
 			<div>
                 <md-button ng-click="acknowledgement()" ng-show="file.owner._id != currentUser._id">acknowledgement</md-button>
-				<md-button ng-click="showModal($event, 'file-history.html')">View File</md-button>
+                <md-menu>
+				    <md-button ng-click="openFileHistory($mdOpenMenu, $event)">View File</md-button>
+                    <md-menu-content width="4">
+                        <md-menu-item ng-click="openHistoryDetail($event, history)" ng-repeat="history in file.fileHistory">
+                            <md-button>{{history.name}} (Version: {{history.version}})</md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
 			</div>
 	    </div>
 		
