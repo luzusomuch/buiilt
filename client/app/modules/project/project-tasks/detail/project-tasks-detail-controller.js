@@ -143,7 +143,7 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
             $scope.task.editType = "edit-task";
             $scope.updateTask($scope.task, $scope.task.editType);
         } else {
-            $scope.showToast("Please check your input again");
+            $scope.showToast("There Has Been An Error...");
             return;
         }
     };
@@ -164,7 +164,7 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
             $scope.task.editType = "assign";
             $scope.updateTask($scope.task, $scope.task.editType);
         } else {
-            $scope.showToast("Please select at least 1 member");
+            $scope.showToast("Please select At Least 1 Assignee...");
             return false;
         }
     };
@@ -172,17 +172,17 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
     $scope.updateTask = function(task, updateType) {
         taskService.update({id: task._id}, task).$promise.then(function(res) {
             if (updateType == "complete-task" || updateType == "uncomplete-task") {
-                $scope.showToast((res.completed)?"Completed task successfully!":"Uncompleted task successfully!");
+                $scope.showToast((res.completed)?"Task Has Been Marked Completed.":"Task Has Been Marked Incomplete.");
             } else if (updateType == "edit-task") {
-                $scope.showToast("Updated task successfully!");
+                $scope.showToast("Task Has Been Updated Successfully.");
             } else if (updateType == "assign") {
-                $scope.showToast("Assign more people successfully!");
+                $scope.showToast("Task Has Been Updated Successfully.");
             }
             delete task.editType;
             $rootScope.$broadcast("Task.Updated", res);
             $scope.closeModal();
         }, function(err) {
-            $scope.showToast("Error");
+            $scope.showToast("There Has Been An Error...");
             delete task.editType;
         });
     };
@@ -256,7 +256,7 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
     };
 
     $scope.showToast = function(value) {
-        $mdToast.show($mdToast.simple().textContent(value).position('bottom','right').hideDelay(3000));
+        $mdToast.show($mdToast.simple().textContent(value).position('bottom','left').hideDelay(3000));
     };
 
     $scope.closeModal = function() {
