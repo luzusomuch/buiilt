@@ -484,6 +484,11 @@ md-input-container > label {
 	margin-top: 3vh;
 }
 
+.tagcloud-selection {
+	margin-top: 1vh;
+	margin-bottom: 3vh;
+}
+
 .available-tag {
 	font-size: 11px;
 	font-weight: 600;
@@ -527,5 +532,10 @@ md-list-item{
 	cursor: help;
 }
 
+.md-body-3 {
+	font-size: 14px;
+	font-weight: 500;
+	margin-bottom: 0px;
+}
 
 

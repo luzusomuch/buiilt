@@ -74,17 +74,17 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
 	$scope.addNewDocument = function(){
         $scope.uploadFile.tags = _.filter($scope.tags, {select: true});
         if ($scope.uploadFile.tags.length === 0) {
-            $scope.showToast("Please enter at least 1 tag");
+            $scope.showToast("Please Select At Least 1 Document Tag...");
             return;
         } else if ($scope.uploadFile.files.length === 0) {
-            $scope.showToast("Please select at least 1 document");
+            $scope.showToast("Please Select a Document to Upload...");
             return;
         } else {
             uploadService.upload({id: $stateParams.id}, $scope.uploadFile).$promise.then(function(res) {
                 $scope.closeModal();
-                $scope.showToast("Upload new document successfully");
+                $scope.showToast("Document Successfully Uploaded.");
                 $rootScope.$broadcast("Document.Uploaded", res);
-            }, function(err){$scope.showToast("Error");});
+            }, function(err){$scope.showToast("There Was an Error...");});
         }
 	};
 	

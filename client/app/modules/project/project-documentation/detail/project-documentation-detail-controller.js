@@ -30,14 +30,14 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
 
     $scope.uploadReversionDocument = function() {
         if ($scope.uploadReversion.files.length === 0) {
-            $scope.showToast("Please check your input again");
+            $scope.showToast("Please Select a File to Upload...");
             return;
         } else {
             uploadService.uploadReversion({id: $scope.document._id}, $scope.uploadReversion).$promise.then(function(res) {
                 $scope.closeModal();
-                $scope.showToast("Upload document reversion successfully");
+                $scope.showToast("Document Revision Successfully Uploaded.");
                 $rootScope.$broadcast("Document.Upload-Reversion", res);
-            }, function(err) {$scope.showToast("Error");});
+            }, function(err) {$scope.showToast("There Has Been An Error...");});
         }
     };
 

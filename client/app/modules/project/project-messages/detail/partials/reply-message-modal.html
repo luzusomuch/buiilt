@@ -11,8 +11,8 @@
                 
                 <div layout="row">
                     <md-input-container flex>
-                        <label>Enter your message</label>
-                        <textarea ng-model="message.text" columns="1" rows="5" required></textarea>
+                        <label>Enter Your Message</label>
+                        <textarea ng-model="message.text" columns="1" rows="5" required md-autofocus></textarea>
                     </md-input-container>
                 </div>
                 
@@ -21,7 +21,7 @@
         
         <md-dialog-actions>
             <md-button ng-click="closeModal()">Cancel</md-button>
-            <md-button type="submit">Send Reply</md-button>
+            <md-button type="submit" class="md-primary">Send Reply</md-button>
         </md-dialog-actions>
     </form>
 </md-dialog>

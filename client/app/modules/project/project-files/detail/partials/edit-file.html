@@ -2,7 +2,7 @@
     <form ng-submit="editFile(form)" name="form">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2>Edit File</h2>
+                <h2>Edit File Details</h2>
             </div>
         </md-toolbar>
         
@@ -17,21 +17,24 @@
 
                 <div layout="row">
                     <md-input-container flex>
-                        <label for="">Description</label>
+                        <label for="">File Description</label>
                         <textarea ng-model="file.description" name="description" md-maxlength="200" columns="5" rows="1" required></textarea>
                     </md-input-container>
                 </div>
                 
-                <div layout="row" layout-align="center center" class="tagcloud" layout-wrap>
-                    <span ng-click="selectMember($index, 'tag')" ng-class="{'available-tag':!tag.select, 'selected-tag': tag.select}" ng-repeat="tag in tags">{{tag.name}}</span>
-                </div>
-                
+				<div layout="column">
+					<p class="md-body-2">Select any relevant file tags:</p>
+	                <div layout="row" layout-align="center center" class="tagcloud-selection" layout-wrap>
+	                    <span ng-click="selectMember($index, 'tag')" ng-class="{'available-tag':!tag.select, 'selected-tag': tag.select}" ng-repeat="tag in tags">{{tag.name}}</span>
+	                </div>
+				</div>
+				
             </div>
         </md-dialog-content>
         
         <md-dialog-actions>
             <md-button ng-click="closeModal()">Cancel</md-button>
-            <md-button type="submit">Save Edits to File</md-button>
+            <md-button type="submit" class="md-primary">Save Edits</md-button>
         </md-dialog-actions>
     </form>
 </md-dialog>

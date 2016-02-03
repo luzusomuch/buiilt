@@ -2,7 +2,7 @@
     <form ng-submit="assignMember()" name="form">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2>Assign members to {{file.name}}</h2>
+                <h2>Assign Additional Members to {{file.name}}</h2>
             </div>
         </md-toolbar>
         
@@ -11,19 +11,6 @@
 				
 				<div layout="row" layout-align="center center" class="tagcloud" layout-wrap>
 			        <span ng-click="selectMember($index, 'member')" ng-class="{'available-tag':!member.select, 'selected-tag': member.select}" ng-repeat="member in membersList">{{(member._id) ? member.name : member.email}}<md-icon ng-show="!member._id" class="material-icons non-user-chip cursor-help"><md-tooltip>Messages will be sent via email to this Team Member</md-tooltip>mail_outline</md-icons></span>
-					<!-- <span class="available-tag">Assignee 1</span>
-					<span class="available-tag">Assignee 2</span>
-					<span class="available-tag">Assignee 3</span>
-					<span class="selected-tag">Assignee 4</span>
-					<span class="available-tag">Assignee 5</span>
-					<span class="selected-tag">Assignee 6</span>
-					<span class="selected-tag">Assignee 7</span>
-					<span class="selected-tag">Assignee 8</span>
-					<span class="available-tag">Assignee 9</span>
-					<span class="available-tag">Assignee 10</span>
-					<span class="available-tag">Assignee 11</span>
-					<span class="available-tag">Assignee 12</span> -->
-			
 				</div>
 				
             </div>
@@ -31,7 +18,7 @@
         
         <md-dialog-actions>
             <md-button ng-click="closeModal()">Cancel</md-button>
-            <md-button type="submit">Assign These Team Members</md-button>
+            <md-button type="submit" class="md-primary">Assign Members</md-button>
         </md-dialog-actions>
     </form>
 </md-dialog>

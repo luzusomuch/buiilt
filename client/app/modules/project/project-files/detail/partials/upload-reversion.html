@@ -1,4 +1,4 @@
-<md-dialog aria-label="Upload file reversion" flex="70">
+<md-dialog aria-label="Upload a File Revision" flex="70">
     <form>
         <md-toolbar>
             <div class="md-toolbar-tools">
@@ -7,24 +7,31 @@
         </md-toolbar>
         
         <md-dialog-content>
-            <div class="md-dialog-content" layout="column" md-padding>
+            <div class="md-dialog-content" layout="column" layout-padding>
                 
-                <div layout="row" layout-align="center center">
-                    <input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile, 'reversion')" data-fp-multiple="false"/>
-                </div>
+				<div layout="column">
+					<p class="md-body-2">Select the revision that you would like to upload:</p>
+	                <div layout="row" layout-align="center center" class="tagcloud-selection">
+	                    <input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile, 'reversion')" data-fp-multiple="false"/>
+	                </div>
+				</div>
 
-                <div layout="row">
-                    <md-input-container flex>
-                        <label>Description</label>
-                        <textarea ng-model="fileReversion.description" required md-maxlength="200" columns="1" rows="5"></textarea>
-                    </md-input-container>
+				<div layout="column">
+					<p class="md-body-2">Provide a description for the changes in this version:</p>
+	                <div layout="row">
+	                    <md-input-container flex="66" flex-offset="15">
+	                        <label>Description of the Changes</label>
+	                        <textarea ng-model="fileReversion.description" required md-maxlength="500" columns="1" rows="5"></textarea>
+	                    </md-input-container>
+					</div>
                 </div>
+				
             </div>
         </md-dialog-content>
         
         <md-dialog-actions>
             <md-button ng-click="closeModal()">Cancel</md-button>
-            <md-button ng-click="uploadReversionFile()">Add Revision to File</md-button>
+            <md-button ng-click="uploadReversionFile()" class="md-primary">Add Revision</md-button>
         </md-dialog-actions>
     </form>
 </md-dialog>

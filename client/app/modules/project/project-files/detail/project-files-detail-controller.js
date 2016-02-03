@@ -127,7 +127,7 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
             $scope.file.tags = _.filter($scope.tags, {select: true});
             $scope.update($scope.file);
         } else {
-            $scope.showToast("Error");
+            $scope.showToast("There Was An Error Saving Your Changes...");
         }
     };
 
@@ -149,10 +149,10 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
 
     $scope.update = function(file) {
         if (file.tags.length === 0) {
-            $scope.showToast("Please enter at least 1 tag");
+            $scope.showToast("Please Select At Least 1 Tag...");
             return;
         } else if (file.members.length === 0) {
-            $scope.showToast("Please select at least 1 invitee");
+            $scope.showToast("Please Select At Least 1 Invitee...");
             return;
         }
         fileService.update({id: file._id}, file).$promise.then(function(res) {
@@ -160,17 +160,17 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
             $scope.closeModal();
             switch (file.editType) {
                 case "edit":
-                    $scope.showToast("Update file information successfully");
+                    $scope.showToast("File Information Updated Successfully.");
                 break;
 
                 case "assign":
-                    $scope.showToast("Assign more invitees successfully");
+                    $scope.showToast("Additional Assignees Added Successfully.");
                 break;
 
                 default:
                 break
             }
-        }, function(err) {$scope.showToast("Error");});
+        }, function(err) {$scope.showToast("There Has Been An Error...");});
     };
 
     $scope.createRelatedThread = function(form) {
@@ -270,14 +270,14 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
 
     $scope.uploadReversionFile = function() {
         if ($scope.fileReversion.files.length === 0) {
-            $scope.showToast("Please check your input again");
+            $scope.showToast("Please Select A File To Upload...");
             return;
         } else {
             uploadService.uploadReversion({id: $scope.file._id}, $scope.fileReversion).$promise.then(function(res) {
                 $scope.closeModal();
-                $scope.showToast("Upload file reversion successfully");
+                $scope.showToast("File Revision Attached Successfully.");
                 $scope.file = res;
-            }, function(err) {$scope.showToast("Error");});
+            }, function(err) {$scope.showToast("There Has Been An Error...");});
         }
     };
 
@@ -297,7 +297,7 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
                 }
             );
         } else {
-            $scope.showToast("Error");
+            $scope.showToast("There Has Been An Error...");
         }
     }
 
