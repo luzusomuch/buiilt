@@ -1,21 +1,20 @@
-<li class="notification-open">
-  <a href="#!" style="position: relative">
-    <i class="material-icons">add_alert</i>
-    <span class="count" ng-if="total > 0">{{total}}</span>
-  </a>
-  <div class="notification-list z-depth-1">
-    <header class="z-depth-1">
-      <h5 style="display: inline-block">Notification</h5>
-      <a class="btn waves-effect waves-yellow" ng-click="markAllAsRead()" style="margin-left:120px">Mark all as read</a>
-    </header>
-    <div class="list-empty" ng-if="total == 0">
-      <p style="text-align: center">No notifications</p>
-    </div>
-    <div slimscroll slimscroll-option="slimScrollOptions" scroll-to-bottom-cb="loadMore" ng-if="total > 0">
-      <div notification="notification" current-user='currentUser' ng-repeat="notification in notifications">
 
-      </div>
-    </div>
-  </div>
-
-</li>
+<div>
+  <md-menu md-position-mode="target-right target">
+    <md-button ng-click="openNotification($mdOpenMenu, $event)">
+      <md-icon class="material-icons" ng-if="total == 0">notifications_none</md-icon>
+      <md-icon class="material-icons" ng-if="total > 0">notifications</md-icon>
+    </md-button>
+    <md-menu-content width="4" style="height: 60vh; overflow-y:auto">
+      <md-menu-item ng-if="total == 0">
+        <md-button>No notifications</md-button>
+      </md-menu-item>
+      <md-menu-item ng-if="total > 0" ng-click="markAllAsRead()">
+        <md-button>Mark all as read</md-button>
+      </md-menu-item>
+      <md-menu-item ng-if="total > 0" notification="notification" current-user='currentUser' ng-repeat="notification in notifications">
+        
+      </md-menu-item>
+    </md-menu-content>
+  </md-menu>
+</div>

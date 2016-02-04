@@ -68,7 +68,8 @@ angular.module('buiiltApp')
             }
             scope.notification.sref = getSref(scope.notification);
 
-            element.html('<a ui-sref="{{notification.sref}}" ui-sref-opts="{reload: true}" ng-click="click(notification)" style="padding: 0px"><div class="_notification"><p>' + text + '</p></div></a>').show();
+            // element.html('<a ui-sref="{{notification.sref}}" ui-sref-opts="{reload: true}" ng-click="click(notification)" style="padding: 0px"><div class="_notification"><p>' + text + '</p></div></a>').show();
+            element.html('<md-button>' + text + '</md-button>').show();
             $compile(element.contents())(scope);
         },
         controller: function ($scope, $rootScope, taskService, authService, $state, notificationService) {
@@ -91,12 +92,16 @@ angular.module('buiiltApp')
             $scope.readMore = true;
             $scope.currentUser = $rootScope.currentUser;
             $scope.notifications = [];
-            var limit = 10;
+            var limit = 20;
 
             notificationService.getTotal().$promise
             .then(function(res) {
                 $scope.total = res.count;
             });
+
+            $scope.openNotification = function($mdOpenMenu, $event) {
+                $mdOpenMenu($event);
+            };
 
             var getNotifications = function(limit) {
                 if ($scope.readMore) {
