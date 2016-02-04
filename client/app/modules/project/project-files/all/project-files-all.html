@@ -30,7 +30,7 @@
 
 <md-list ng-cloak class="main-page-content"  layout="column" flex>
 
-	<div ng-repeat="file in files | filter: search track by $index" ui-sref="project.files.detail({id: file.project, fileId: file._id})">
+	<div ng-repeat="file in files | filter: search | unique: '_id' track by $index" ui-sref="project.files.detail({id: file.project, fileId: file._id})">
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
 		          <h3>{{file.name}}</h3>

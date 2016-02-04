@@ -80,6 +80,11 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
 	function loadProjectMembers(id) {
 		// get all project team member
         $scope.membersList = [];
+        // show the current user if he is a project creator
+        if ($scope.people.project.projectManager._id.toString()===$rootScope.currentUser._id.toString()) {
+            var role = ($scope.people.project.projectManager.type === "builder") ? "builders" : "architects";
+            $scope.membersList.push({_id: $rootScope.currentUser._id, name: $rootScope.currentUser.name, email: $rootScope.currentUser.email, type: $rootScope.currentUser.type});
+        }
         _.each($rootScope.roles, function(role) {
             _.each($scope.people[role], function(tender) {
                 if (_.findIndex(tender.tenderers, function(tenderer) {
@@ -98,6 +103,8 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
                     });
                 }
             });
+
+            
 
             // Get team list
             _.each($scope.people[role], function(tender){
@@ -251,6 +258,7 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
                 }
             });
         });
+
 	};
 
 	$scope.getChangeTypeValue = function(type) {

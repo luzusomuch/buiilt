@@ -204,6 +204,7 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
                             $scope.projectMembers.push({email: tender.tenderers[0].email, select: false});
                         }
                     } else {
+                        $scope.projectMembers.push(tender.tenderers[0]._id);
                         _.each(tender.tenderers, function(tenderer) {
                             if (tenderer._id._id.toString() === $rootScope.currentUser._id.toString()) {
                                 _.each(tenderer.teamMember, function(member) {
@@ -216,7 +217,7 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
 				}
 			});
 		});
-		_.remove($scope.projectMembers, {_id: $rootScope.currentUser._id});
+		// _.remove($scope.projectMembers, {_id: $rootScope.currentUser._id});
 	};
 
 	getProjectMembers($stateParams.id);

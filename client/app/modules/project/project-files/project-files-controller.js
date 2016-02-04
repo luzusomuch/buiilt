@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $timeout, $mdDialog, uploadService, files, peopleService, $stateParams, $rootScope, $mdToast, people, $state) {
+angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $timeout, $mdDialog, uploadService, files, peopleService, $stateParams, $rootScope, $mdToast, people, $state, socket) {
     $scope.people = people;
 	$scope.files = files;
 	$scope.uploadFile = {
@@ -133,6 +133,7 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
 			uploadService.upload({id: $stateParams.id}, $scope.uploadFile).$promise.then(function(res) {
 				$mdDialog.hide();
 				$scope.showToast("Upload new file successfully");
+                $rootScope.$broadcast("File.Inserted", res[0]);
                 $state.go("project.files.detail", {id: res[0].project, fileId: res[0]._id});
 			}, function(err) {
 				$scope.showToast("Upload error");
@@ -166,6 +167,14 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
 	$scope.showToast = function(value) {
         $mdToast.show($mdToast.simple().textContent(value).position('bottom','right').hideDelay(3000));
     };
+
+    $rootScope.$on("File.Inserted", function(event, data) {
+        $scope.files.push(data);
+    });
+
+    socket.on("file:new", function(data) {
+        console.log(data);
+    });
 
 	getProjectMembers($stateParams.id);
 });
