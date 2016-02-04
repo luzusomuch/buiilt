@@ -7,6 +7,11 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
         $scope.tasks = _.uniq($scope.tasks, "_id");
     });
 
+    $rootScope.$on("Task.Inserted", function(event, data) {
+        $scope.tasks.push(data);
+        $scope.tasks = _.uniq($scope.tasks, "_id");
+    });
+
     // filter section
     $scope.dueDate = [{text: "today", value: "today"}, {text: "tomorrow", value: "tomorrow"}, {text: "this week", value: "thisWeek"}, {text: "next week", value: "nextWeek"}];
     $scope.assignStatus = [{text: "to me", value: "toMe"}, {text: "byMe", value: "byMe"}];
@@ -135,7 +140,7 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
 
 	$scope.task = {};
 	$scope.minDate = new Date();
-	$scope.createNewMessage = function(form) {
+	$scope.createNewTask = function(form) {
 		if (form.$valid) {
 		    $scope.task.members = _.filter($scope.projectMembers, {select: true});
 			$scope.task.type = "task-project";
@@ -143,6 +148,7 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
 				taskService.create({id: $stateParams.id}, $scope.task).$promise.then(function(res) {
 					$scope.cancelNewTaskModal();
 					$scope.showToast("New Task Has Been Created Successfully.");
+                    $rootScope.$broadcast("Task.Inserted", res);
 					$state.go("project.tasks.detail", {id: res.project, taskId: res._id});
 				}, function(err) {$scope.showToast("There Has Been An Error...");});
 			} else {

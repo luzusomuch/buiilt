@@ -35,7 +35,7 @@
 
 <md-list ng-cloak class="main-page-content" layout="column" flex>
 
-	<div ng-repeat="task in tasks | filter: search track by $index" ui-sref="project.tasks.detail({id: task.project, taskId: task._id})">
+	<div ng-repeat="task in tasks | filter: search | unique: '_id' track by $index" ui-sref="project.tasks.detail({id: task.project, taskId: task._id})">
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
 		          <h3>{{task.description}}</h3>

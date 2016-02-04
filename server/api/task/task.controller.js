@@ -41,6 +41,21 @@ function populateTask(task, res){
         {path: "members", select: "_id email name"},
         {path: "activities.user", select: "_id email name"}
     ], function(err, task) {
+        EventBus.emit('socket:emit', {
+            event: 'task:update',
+            room: task._id.toString(),
+            data: task
+        });
+        return res.send(200, task);
+    });
+};
+
+function populateNewTask(task, res){
+    Task.populate(task, [
+        {path: "owner", select: "_id email name"},
+        {path: "members", select: "_id email name"},
+        {path: "activities.user", select: "_id email name"}
+    ], function(err, task) {
         async.each(task.members, function(member, cb) {
             EventBus.emit('socket:emit', {
                 event: 'task:new',
@@ -150,7 +165,7 @@ exports.create = function(req,res) {
                             if (req.body.belongToType === "thread") 
                                 populateThread(main, res);
                             else if (req.body.belongToType === "task") {
-                                populateTask(main, res);
+                                populateNewTask(main, res);
                             } else if (req.body.belongToType === "file") {
                                 populateFile(main, res);
                             }
@@ -158,7 +173,7 @@ exports.create = function(req,res) {
                     }
                 });
             } else {
-                populateTask(task, res);
+                populateNewTask(task, res);
             }
         });
     });

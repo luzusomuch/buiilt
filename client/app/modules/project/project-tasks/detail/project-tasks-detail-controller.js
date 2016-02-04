@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootScope, $scope, $timeout, task, taskService, $mdToast, $mdDialog, peopleService, $stateParams, messageService, $state, people, uploadService) {
+angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootScope, $scope, $timeout, task, taskService, $mdToast, $mdDialog, peopleService, $stateParams, messageService, $state, people, uploadService, socket) {
 	$scope.task = task;
     $scope.people = people;
     $scope.task.dateEnd = new Date($scope.task.dateEnd);
@@ -94,7 +94,7 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
         _.remove($scope.membersList, {_id: $rootScope.currentUser._id});
 
         // get invitees for related item
-        $scope.invitees = $scope.task.members;
+        $scope.invitees = angular.copy($scope.task.members);
         _.each($scope.task.notMembers, function(member) {
             $scope.invitees.push({email: member});
         });
@@ -267,5 +267,10 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
     $rootScope.$on("Task.Updated", function(event, data) {
         $scope.task = data;
         getProjectMembers($stateParams.id);
+    });
+
+    socket.emit("join", task._id);
+    socket.on("task:update", function(data) {
+        $scope.task = data;
     });
 });
