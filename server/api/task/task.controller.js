@@ -211,7 +211,6 @@ exports.update = function(req,res) {
                         _.each(req.body.newMembers, function(member) {
                             members.push(member.name);
                         });
-                        console.log(members);
                         activity.element.members = members;
                     }
                     task.markModified('assignees');
@@ -310,97 +309,32 @@ exports.task = function(req,res,next) {
 };
 
 exports.myTask = function(req,res) {
-  var user = req.user;
-  var result = [];
-  Task.find({$or : [{'user' : user._id}, {assignees : user._id}],completed : false})
+    var user = req.user;
+    var result = [];
+    Task.find({$or : [{'owner' : user._id}, {assignees : user._id}],completed : false})
     .sort('hasDateEnd')
     .sort({'dateEnd': 1})
     .populate('assignees', '-hashedPassword -salt')
-    .populate('user', '-hashedPassword -salt')
+    .populate('owner', '-hashedPassword -salt')
     .populate('project')
 
     .exec(function(err,tasks) {
-      if (err) {
-        return res.send(500,err);
-      }
-      async.each(tasks,function(task,callback) {
-        if (task.type == 'builder') {
-          Task.populate(task,{path : 'package',model : 'BuilderPackage'},function(err,task) {
-            Task.populate(task,[{path : 'package.owner',model : 'Team'},{path : 'package.to.team',model : 'Team'}],function(err,task) {
-              Task.populate(task,[
-                {path : 'package.owner.leader',model : 'User', select: '-hashedPassword -salt'},{path : 'package.owner.member._id',model : 'User', select: '-hashedPassword -salt'},
-                {path : 'package.to.team.leader',model : 'User', select: '-hashedPassword -salt'},{path : 'package.to.team.member._id',model : 'User', select: '-hashedPassword -salt'}
-              ],function(err,task) {
-                result.push(task);
-                callback(null)
-              })
-            })
-          });
-        } else if (task.type == 'contractor') {
-          Task.populate(task,{path : 'package',model : 'ContractorPackage'},function(err,task) {
-            Task.populate(task,[{path : 'package.owner',model : 'Team'},{path : 'package.winnerTeam._id',model : 'Team'}],function(err,task) {
-              Task.populate(task,[
-                {path : 'package.owner.leader',model : 'User', select: '-hashedPassword -salt'},{path : 'package.owner.member._id',model : 'User', select: '-hashedPassword -salt'},
-                {path : 'package.winnerTeam._id.leader',model : 'User', select: '-hashedPassword -salt'},{path : 'package.winnerTeam._id.member._id',model : 'User', select: '-hashedPassword -salt'}
-              ],function(err,task) {
-                result.push(task);
-                callback(null)
-              })
-            })
-          });
-        } else if (task.type == 'material') {
-          Task.populate(task,{path : 'package',model : 'MaterialPackage'},function(err,task) {
-            Task.populate(task,[{path : 'package.owner',model : 'Team'},{path : 'package.winnerTeam._id',model : 'Team'}],function(err,task) {
-              Task.populate(task,[
-                {path : 'package.owner.leader',model : 'User', select: '-hashedPassword -salt'},{path : 'package.owner.member._id',model : 'User', select: '-hashedPassword -salt'},
-                {path : 'package.winnerTeam._id.leader',model : 'User', select: '-hashedPassword -salt'},{path : 'package.winnerTeam._id.member._id',model : 'User', select: '-hashedPassword -salt'}
-              ],function(err,task) {
-                result.push(task);
-                callback(null)
-              })
-            })
-          });
-        } else if (task.type == 'variation') {
-          Task.populate(task, {path: 'package', model: 'Variation'}, function (err, task) {
-            Task.populate(task, [{path: 'package.owner', model: 'Team'}, {
-              path: 'package.winnerTeam._id',
-              model: 'Team'
-            }], function (err, task) {
-              Task.populate(task, [
-                {path: 'package.owner.leader', model: 'User', select: '-hashedPassword -salt'}, 
-                {path: 'package.owner.member._id', model: 'User', select: '-hashedPassword -salt'},
-                {path: 'package.winnerTeam._id.leader', model: 'User', select: '-hashedPassword -salt'}, 
-                {path: 'package.winnerTeam._id.member._id', model: 'User', select: '-hashedPassword -salt'}
-              ], function (err, task) {
-                result.push(task);
-                callback(null)
-              })
-            })
-          });
-        } else if (task.type == 'staff') {
-          Task.populate(task,{path : 'package',model : 'StaffPackage'},function(err,task) {
-            User.populate(task,{path : 'package.staffs', select: '-hashedPassword -salt'},function(err,task) {
-              result.push(task);
-              callback(null)
-            })
-          });
-        } else if (task.type == "people") {
-          Task.populate(task,{path : 'package',model : 'People'},function(err,task) {
-            result.push(task);
-            callback(null);
-          });
-        } else if (task.type == "board") {
-          Task.populate(task,{path : 'package',model : 'Board'},function(err,task) {
-            result.push(task);
-            callback(null);
-          });
-        }
-      },function(err) {
         if (err) {
-          return res.send(500,err);
+            return res.send(500,err);
         }
-        return res.json(result)
-      });
+        async.each(tasks,function(task,callback) {
+            if (task.element.type === "task-project") {
+                result.push(task);
+                callback(null);
+            } else {
+                callback(null);
+            }
+        },function(err) {
+            if (err) {
+                return res.send(500,err);
+            }
+            return res.json(result)
+        });
     })
 };
 

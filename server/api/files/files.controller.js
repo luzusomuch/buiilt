@@ -414,31 +414,8 @@ exports.getInProject = function(req, res) {
 };
 
 exports.myFiles = function(req, res) {
-    Notification.find({owner: req.user._id, unread: true, $or:[{type: 'uploadDocument'}, {type: 'uploadNewDocumentVersion'}]}, function(err, files) {
+    Notification.find({owner: req.user._id, unread: true, $or:[{referenceTo: 'file'}, {referenceTo: 'document'}]}, function(err, files) {
         if (err) {return res.send(500,err);}
-        var results = [];
-        async.each(files, function(file, cb) {
-            if (file.referenceTo === "documentInpeople" || file.referenceTo === "documentInboard") {
-                Project.findById(file.element.package.project, function(err, project) {
-                    if (err || !project) {console.log('error');cb();}
-                    else {
-                        file.project = project;
-                        results.push(file);
-                        cb();
-                    }
-                });
-            } else if (file.referenceTo === "uploadDocument" || file.referenceTo === "uploadNewDocumentVersion") {
-                Project.findById(file.element.projectId, function(err, project) {
-                    if (err || !project) {console.log('err'); cb();}
-                    else {
-                        file.project = project;
-                        results.push(file);
-                        cb();
-                    }
-                });
-            }
-        }, function() {
-            return res.send(200, results);
-        });
+        return res.send(200,files);
     });
 };

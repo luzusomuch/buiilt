@@ -301,14 +301,14 @@ exports.myThread = function(req,res) {
     var user = req.user;
     var result = [];
     var query = Notification.find(
-        {owner : user._id,unread : true, $or:[{referenceTo : 'thread'},{type: 'chat'}]}
+        {owner : user._id,unread : true, referenceTo : 'thread'}
     );
-    query.exec(function(err, threads) {
+    query.exec(function(err, notifications) {
         if (err) {return res.send(500,err);}
-        async.each(threads,function(thread,callback) {
-            Thread.findById(thread)
+        async.each(notifications,function(notification,callback) {
+            Thread.findById(notification.element._id)
             .populate('messages.user','-hashedPassword -salt')
-            .populate('users','-hashedPassword -salt')
+            .populate('members','-hashedPassword -salt')
             .exec(function(err,thread) {
                 if (err || !thread) {return callback(err);}
                 Notification.where({owner : user._id,'element._id' : thread._id,referenceTo : 'thread',unread : true}).count(function(err,count) {
@@ -318,7 +318,7 @@ exports.myThread = function(req,res) {
                 });
             });
         },function() {
-        return res.json(result);
+            return res.json(result);
         });
     });
 };

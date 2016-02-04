@@ -69,7 +69,7 @@ angular.module('buiiltApp')
             scope.notification.sref = getSref(scope.notification);
 
             // element.html('<a ui-sref="{{notification.sref}}" ui-sref-opts="{reload: true}" ng-click="click(notification)" style="padding: 0px"><div class="_notification"><p>' + text + '</p></div></a>').show();
-            element.html('<md-button>' + text + '</md-button>').show();
+            element.html('<md-button ui-sref="{{notification.sref}}" ui-sref-opts="{reload: true}" ng-click="click(notification)">' + text + '</md-button>').show();
             $compile(element.contents())(scope);
         },
         controller: function ($scope, $rootScope, taskService, authService, $state, notificationService) {

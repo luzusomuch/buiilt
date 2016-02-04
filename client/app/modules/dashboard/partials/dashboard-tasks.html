@@ -27,7 +27,7 @@
 
 <md-list ng-cloak class="main-page-content">
 
-	<div ng-show="!search" ng-repeat="task in myTasks track by $index" ui-sref="project.tasks.detail">
+	<div ng-repeat="task in myTasks track by $index" ui-sref="project.tasks.detail({id: task.project._id, taskId: task._id})">
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
 		          <h3>{{ task.name }}</h3>
@@ -37,7 +37,7 @@
 		<md-divider></md-divider>
 	</div>
 
-	<div ng-show="search" ng-repeat="task in results track by $index" ui-sref="project.tasks.detail">
+	<!-- <div ng-show="search" ng-repeat="task in results track by $index" ui-sref="project.tasks.detail">
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
 		          <h3>{{ task.name }}</h3>
@@ -45,6 +45,6 @@
 	        </div>
 		</md-list-item>
 		<md-divider></md-divider>
-	</div>
+	</div> -->
 	
 </div>

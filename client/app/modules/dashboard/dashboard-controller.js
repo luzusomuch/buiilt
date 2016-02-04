@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $scope, $timeout, $q, $state, projectService, myTasks, myMessages, myFiles) {
+angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $scope, $timeout, $q, $state, projectService, myTasks, myMessages, myFiles, notificationService) {
 	$rootScope.title = "Dashboard";
 	$scope.myTasks = myTasks;
 	$scope.myMessages = myMessages;
@@ -235,5 +235,18 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     function getHandleArr(item) {
         $scope.results.push(item);
         return $scope.results = _.uniq($scope.results, '_id');
+    };
+
+    $scope.openLocation = function(item, type) {
+        var itemId = (type === "thread") ? item._id : item.element._id;
+        notificationService.read({_id : itemId}).$promise.then(function() {
+            if (type === "thread") 
+                $state.go("project.messages.detail", {id: item.project, messageId: item._id});
+            else if (type === "file") {
+                $state.go("project.files.detail", {id: item.element.project, fileId: item.element._id});
+            } else if (type === "document") {
+                $state.go("project.documentation.detail", {id: item.element.project, documentId: item.element._id});
+            }
+        });
     };
 });

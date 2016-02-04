@@ -27,17 +27,17 @@
 
 <md-list ng-cloak class="main-page-content">
 
-	<div ng-show="!search" ng-repeat="message in myMessages track by $index" ui-sref="project.messages.detail">
+	<div ng-repeat="thread in myMessages | unique:'_id' track by $index" ng-click="openLocation(thread, 'thread')">
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
-	          		<h3>{{ message.messages[message.messages.length -1].text }}</h3>
-          			<p>{{ message.messages[message.messages.length -1].user.name }}</p>
+	          		<h3>{{ thread.name }}</h3>
+          			<p>{{ thread.messages[message.messages.length -1].text }}</p>
 	        </div>
 		</md-list-item>
 		<md-divider></md-divider>
 	</div>
 
-	<div ng-show="search" ng-repeat="message in results track by $index" ui-sref="project.messages.detail">
+	<!-- <div ng-show="search" ng-repeat="message in results track by $index" ui-sref="project.messages.detail">
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
 		          	<h3>{{ message.messages[message.messages.length -1].text }}</h3>
@@ -45,6 +45,6 @@
 	        </div>
 		</md-list-item>
 		<md-divider></md-divider>
-	</div>
+	</div> -->
 	
 </div>

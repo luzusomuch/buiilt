@@ -10,11 +10,11 @@
 
 <md-list ng-cloak class="main-page-content">
 
-	<div ng-repeat="document in documentation" ui-sref="project.documentation.detail">
+	<div ng-repeat="file in myFiles track by $index" ng-click="openLocation(file, 'document')" ng-show="file.referenceTo=='document'">
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
-		          <h3>{{ document.name }}</h3>
-		          <p>{{ document.revision }}</p>
+		          	<h3>{{ file.element.name }}</h3>
+		          	<p>{{ file.element.revision }}</p>
 	        </div>
 		</md-list-item>
 		<md-divider></md-divider>

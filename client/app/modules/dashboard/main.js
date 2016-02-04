@@ -47,33 +47,4 @@ angular.module('buiiltApp').config(function($stateProvider) {
       	controller: 'dashboardCtrl',
       	authenticate : true
     });
-	
-	
-	
-  // .state('dashboardOld', {
-//     url: '/:id/dashboardOld',
-//     templateUrl: '/app/modules/dashboard/dashboard.html',
-//     controller: 'DashboardCtrl',
-//     hasCurrentProject : true,
-//     authenticate : true,
-//     resolve : {
-//       myTasks : [
-//         'taskService','$stateParams',
-//         function(taskService,$stateParams) {
-//           return taskService.myTask({id : $stateParams.id}).$promise;
-//         }
-//       ],
-//       myThreads : [
-//         'messageService','$stateParams',
-//         function(messageService,$stateParams) {
-//           return messageService.myThread({id : $stateParams.id}).$promise;
-//         }
-//       ],
-//       // myFiles: function($stateParams, notificationService){
-//         // return notificationService.getMyFile({'id':$stateParams.id}).$promise;
-//       // }
-//     }
-//   })
-
-
 });
