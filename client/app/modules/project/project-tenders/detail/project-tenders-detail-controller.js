@@ -4,17 +4,34 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($roo
     $rootScope.title = $scope.tender.tenderName + " detail";
 
     socket.emit('join', tender._id);
-    socket.on("broadcast:message", function(data) {
+    socket.on("tender:update", function(data) {
         var latestActivity = _.last(data.inviterActivities);
-        if (latestActivity.type === "broadcast-message" && _.indexOf(latestActivity.element.userMembers, $scope.currentUser._id) !== -1) {
+        if (latestActivity.type === "broadcast-message") {
+            if (_.indexOf(latestActivity.element.userMembers, $scope.currentUser._id) !== -1) {
+                $scope.tender.inviterActivities.push(latestActivity);
+            }
+        } else if (latestActivity.type === "invite-tender") {
+            if (latestActivity.user._id==$scope.currentUser._id) {
+                $scope.tender.inviterActivities.push(latestActivity);
+            }
+        } else if (latestActivity.type === "tender-file") {
+            if (latestActivity.user._id==$scope.currentUser._id || _.indexOf(latestActivity.element.userMembers, $scope.currentUser._id) !== -1) {
+                $scope.tender.inviterActivities.push(latestActivity);
+            }
+        } else {
             $scope.tender.inviterActivities.push(latestActivity);
+        }
+    });
+
+    socket.on("tender:acknowledgement", function(data) {
+        if ($scope.currentUser._id == data.inviter._id) {
+            $scope.tender = data;
         }
     });
 
     $scope.acknowledgement = function() {
         peopleService.acknowledgement({id: $stateParams.id, tenderId: $stateParams.tenderId}).$promise.then(function(res) {
             $scope.showToast("Sent acknowledgement to the owner successfully");
-            $rootScope.$broadcast("Tender.Updated", res);
         }, function(err){$scope.showToast("Error");});
     };
 
@@ -120,7 +137,7 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($roo
         peopleService.attachAddendum({id: $stateParams.id, tenderId: $stateParams.tenderId}, $scope.addendum).$promise.then(function(res) {
             $scope.cancelNewTenderModal();
             $scope.showToast("Addendum Has Been Attached Successfully.");
-            $rootScope.$broadcast("Tender.Updated", res);
+            // $rootScope.$broadcast("Tender.Updated", res);
         }, function(err){$scope.showToast("There Has Been An Error...");});
     };
 
@@ -178,7 +195,6 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($roo
                 peopleService.updateTender({id: $stateParams.id, tenderId: $stateParams.tenderId}, $scope.broadcastMessage).$promise.then(function(res) {
                     $scope.cancelNewTenderModal();
                     $scope.showToast("Message Has Been Sent Successfully.");
-                    $rootScope.$broadcast("Tender.Updated", res);
                 }, function(err) {$scope.showToast("There Has Been An Error...");});
             }
         } else {
@@ -195,7 +211,7 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($roo
         peopleService.submitATender({id: $stateParams.id}, $scope.uploadFile).$promise.then(function(res) {
             $scope.cancelNewTenderModal();
             $scope.showToast("Your Tender Has Been Submitted Successfully.");
-            $rootScope.$broadcast("Tender.Updated", res);
+            // $rootScope.$broadcast("Tender.Updated", res);
         }, function(err) {$scope.showToast("There Has Been An Error...");});
     };
 

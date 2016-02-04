@@ -357,12 +357,12 @@ exports.getTender = function(req, res) {
         if (err) {return res.send(500,err);}
         if (!people) {return res.send(404);}
         else {
-            responseTender(people, req, res);
+            responseTender(people, req, res, false);
         }
     });
 };
 
-function responseTender(people, req, res) {
+function responseTender(people, req, res, isUseSocket) {
     var result = [];
     var roles = ["builders", "subcontractors", "consultants"];
     _.each(roles, function(role) {
@@ -404,7 +404,16 @@ function responseTender(people, req, res) {
                     }
                 });
             }
-            return res.send(200,result);
+            if (!isUseSocket) {
+                return res.send(200,result);
+            } else if (isUseSocket) {
+                EventBus.emit("socket:emit", {
+                    event: 'tender:update',
+                    room: result._id.toString(),
+                    data: result
+                });
+                return res.send(200,result);
+            }
         }
     });
 };
@@ -683,7 +692,7 @@ exports.updateDistributeStatus = function(req, res) {
                     {path: "subcontractors.inviterActivities.acknowledgeUsers._id", select: "_id name email"}
                 ], function(err, people) {
                     if (err) {return res.send(500,err);}
-                    responseTender(people, req, res);
+                    responseTender(people, req, res, false);
                 });
             });
         }
@@ -763,6 +772,11 @@ exports.attachAddendum = function(req, res) {
                     {path: "subcontractors.inviterActivities.acknowledgeUsers._id", select: "_id name email"}
                 ], function(err, people) {
                     if (err) {return res.send(500,err);}
+                    EventBus.emit("socket:emit", {
+                        event: "tender:update",
+                        room: people[currentRole][index]._id.toString(),
+                        data: people[currentRole][index]
+                    });
                     return res.send(200,people[currentRole][index]);    
                 });
             });
@@ -772,6 +786,7 @@ exports.attachAddendum = function(req, res) {
 
 exports.updateTender = function(req, res) {
     var data = req.body;
+    console.log(data);
     var user = req.user;
     People.findOne({project: req.params.id})
     .populate("builders.tenderers._id", "_id email name")
@@ -868,7 +883,7 @@ exports.updateTender = function(req, res) {
                         });
                     } else if (data.editType === "broadcast-message") {
                         var members = [];
-                        var userMembers = [];
+                        var userMembers = [user._id];
                         var sentTo = [];
                         async.each(data.members, function(member, callback) {
                             User.findOne({email: member.email}, function(err, _user) {
@@ -881,7 +896,7 @@ exports.updateTender = function(req, res) {
                                 } else {
                                     userMembers.push(_user._id);
                                     members.push(_user.email);
-                                    sentTo.push(user.name);
+                                    sentTo.push(_user.name);
                                     callback();
                                 }
                             });
@@ -921,8 +936,8 @@ exports.updateTender = function(req, res) {
                     ], function(err, people) {
                         if (err) {return res.send(500,err);}
                         if (data.editType === "broadcast-message") {
-                            EventBus.emit('socket:emit', {
-                                event: 'broadcast:message',
+                            EventBus.emit("socket:emit", {
+                                event: "tender:update",
                                 room: people[currentRole][index]._id.toString(),
                                 data: people[currentRole][index]
                             });
@@ -1022,7 +1037,12 @@ exports.submitATender = function(req, res) {
                             {path: "subcontractors.inviterActivities.acknowledgeUsers._id", select: "_id name email"},
                         ], function(err, people) {
                             if (err) {return res.send(500,err);}
-                            return res.send(200,people[currentRole][tenderIndex]);    
+                            EventBus.emit("socket:emit", {
+                                event: "tender:update",
+                                room: people[currentRole][tenderIndex]._id.toString(),
+                                data: people[currentRole][tenderIndex]
+                            });
+                            return res.send(200);    
                         });
                     }
                 });
@@ -1222,7 +1242,12 @@ exports.acknowledgement = function(req, res) {
                 {path: "subcontractors.inviterActivities.acknowledgeUsers._id", select: "_id name email"},
             ], function(err, people) {
                 if (err) {return res.send(500,err);}
-                responseTender(people, req, res);
+                EventBus.emit("socket:emit", {
+                    event: "tender:acknowledgement",
+                    room: people[currentRole][index]._id.toString(),
+                    data: people[currentRole][index]
+                });
+                return res.send(200);
             });
         });
     });
