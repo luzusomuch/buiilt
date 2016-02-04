@@ -3,6 +3,11 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($roo
     $scope.currentUser = $rootScope.currentUser;
     $rootScope.title = $scope.tender.tenderName + " detail";
 
+    $rootScope.$on("Tender.Updated", function(event, data) {
+        $scope.tender = data;
+        $scope.setInviteMembers();
+    });
+
     socket.emit('join', tender._id);
     socket.on("tender:update", function(data) {
         var latestActivity = _.last(data.inviterActivities);
@@ -21,6 +26,7 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($roo
         } else {
             $scope.tender.inviterActivities.push(latestActivity);
         }
+        
     });
 
     socket.on("tender:acknowledgement", function(data) {
@@ -29,8 +35,28 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($roo
         }
     });
 
-    $scope.acknowledgement = function() {
+    function checkAcknowLedgement(tender) {
+        console.log(tender.inviterActivities);
+        _.each(tender.inviterActivities, function(activity) {
+            if (activity.type === "attach-addendum") {
+                activity.isAcknow = false;
+                if (activity.user._id == $scope.currentUser._id) {
+                    activity.isAcknow = true;
+                } else if (_.findIndex(activity.acknowledgeUsers, function(item) {
+                    if (item._id && item.isAcknow) {
+                        return item._id._id == $scope.currentUser._id;
+                    }
+                }) !== -1) {
+                    activity.isAcknow = true;
+                }
+            }
+        });
+    };
+    checkAcknowLedgement($scope.tender);
+
+    $scope.acknowledgement = function(activity) {
         peopleService.acknowledgement({id: $stateParams.id, tenderId: $stateParams.tenderId}).$promise.then(function(res) {
+            activity.isAcknow = true;
             $scope.showToast("Sent acknowledgement to the owner successfully");
         }, function(err){$scope.showToast("Error");});
     };
@@ -240,8 +266,5 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($roo
     };
 
     getTenderers();
-    $rootScope.$on("Tender.Updated", function(event, data) {
-        $scope.tender = data;
-        $scope.setInviteMembers();
-    });
+    
 });

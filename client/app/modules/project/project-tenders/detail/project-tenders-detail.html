@@ -9,7 +9,7 @@
 				<md-button ng-click="distributeTender()" ng-show="!tender.isDistribute">Distribute Tender</md-button>
 				<md-button ng-click="showModal($event, 'select-winner-tender-modal.html')" ng-show="tender.isDistribute && !tender.hasSelect">Select a Winner</md-button>
             </div>
-            <md-button ng-show="tender.inviter._id!==currentUser._id" ng-click="acknowledgement()">Acknowledgement</md-button>
+            <!-- <md-button ng-show="tender.inviter._id!==currentUser._id" ng-click="acknowledgement()">Acknowledgement</md-button> -->
 	    </div>
 		
 		<div class="main-page-content" layout-padding>
@@ -57,7 +57,7 @@
 						<p ng-switch="activity.type" class="activity-body md-body">
                             
                             <span ng-switch-when="attach-scope"> {{activity.element.content}} <br /><span ng-show="activity.element._id">The file attached <a ui-sref="project.files.detail({id: activity.element.project, fileId: activity.element._id})">here</a> is also part of this scope.</span> <br/> The due date for this tender is <strong>{{activity.element.dateEnd | date: 'dd-MM-yyyy'}}</strong>.</span>
-							<span ng-switch-when="attach-addendum"> {{activity.element.name}} <br /><span ng-show="activity.element.link">The file attached <a href="#" ng-click="showReviewFileModal($event, activity)">here</a> is also part of this addendum.</span></span>
+							<span ng-switch-when="attach-addendum"> {{activity.element.name}} <br /><span ng-show="activity.element.link">The file attached <a href="#" ng-click="showReviewFileModal($event, activity)">here</a> is also part of this addendum.</span><md-button ng-show="!activity.isAcknow" ng-click="acknowledgement(activity)">ACKNOWLEDGEMENT</md-button></span>
 							<span ng-switch-when="invite-tender"><span ng-repeat="member in activity.element.members">{{member.name}}, </span></span>
 							<span ng-switch-when="broadcast-message"> {{activity.element.message}} to <span ng-repeat="user in activity.element.sentTo track by $index"><strong>{{user}}</strong>, </span></span>
                             <span ng-switch-when="select-winner">has selected {{activity.element.name}} as the winner of this tender.</span>

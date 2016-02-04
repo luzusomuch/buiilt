@@ -382,7 +382,13 @@ function responseTender(people, req, res, isUseSocket) {
 
                 if (activity.type === "edit-tender" || activity.type === "attach-scope" || activity.type === "attach-addendum") {
                     if (activity.user._id.toString()!==req.user._id.toString()) {
-                        activity.acknowledgeUsers = [];
+                        var acknowledgeUsers = [];
+                        _.each(activity.acknowledgeUsers, function(user) {
+                            if (user._id && user._id._id.toString()===req.user._id.toString()) {
+                                acknowledgeUsers.push(user);
+                            }
+                        });
+                        activity.acknowledgeUsers = acknowledgeUsers;
                     }
                     inviterActivities.push(activity);
                 } else {
