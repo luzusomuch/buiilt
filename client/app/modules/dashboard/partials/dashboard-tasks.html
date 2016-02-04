@@ -38,8 +38,11 @@
 	<div ng-repeat="task in myTasks | filter: searchTask track by $index" ui-sref="project.tasks.detail({id: task.project._id, taskId: task._id})">
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
-		          <h3>{{ task.name }}</h3>
-		          <p>{{ task.description }}</p>
+		        <h3>{{ task.description }}</h3>
+		        <p ng-show="task.element.notificationType=='task-assign'">{{task.element.fromUser.name}} has assigned you a task</p>
+		        <p ng-show="task.element.notificationType=='task-completed'">{{task.element.fromUser.name}} has mark this task as completed</p>
+		        <p ng-show="task.element.notificationType=='task-reopened'">{{task.element.fromUser.name}} has re-open this task</p>
+		        <p ng-show="task.element.notificationType=='task-revoke'">{{task.element.fromUser.name}} has revoked this task</p>
 	        </div>
 		</md-list-item>
 		<md-divider></md-divider>

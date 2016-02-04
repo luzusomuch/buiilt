@@ -303,7 +303,7 @@ exports.myThread = function(req,res) {
     var query = Notification.find(
         {owner : user._id,unread : true, referenceTo : 'thread'}
     );
-    query.exec(function(err, notifications) {
+    query.populate("fromUser", "_id email name").exec(function(err, notifications) {
         if (err) {return res.send(500,err);}
         async.each(notifications,function(notification,callback) {
             Thread.findById(notification.element._id)
@@ -313,6 +313,8 @@ exports.myThread = function(req,res) {
                 if (err || !thread) {return callback(err);}
                 Notification.where({owner : user._id,'element._id' : thread._id,referenceTo : 'thread',unread : true}).count(function(err,count) {
                     thread.__v = count;
+                    thread.element.fromUser = notification.fromUser;
+                    thread.element.notificationType = notification.type;
                     result.push(thread);
                     callback();
                 });

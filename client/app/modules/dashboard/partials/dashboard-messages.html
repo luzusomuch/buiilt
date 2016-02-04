@@ -28,11 +28,12 @@
 
 <md-list ng-cloak class="main-page-content">
 
-	<div ng-repeat="thread in myMessages | filter: searchThread | unique:'_id' track by $index" ng-click="openLocation(thread, 'thread')">
+	<div ng-repeat="thread in myMessages | filter: searchThread track by $index" ng-click="openLocation(thread, 'thread')">
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
 	          		<h3>{{ thread.name }}</h3>
-          			<p>{{ thread.messages[message.messages.length -1].text }}</p>
+          			<p ng-show="thread.element.notificationType=='thread-assign'">{{thread.element.fromUser.name}} has assign you to new thread</p>
+          			<p ng-show="thread.element.notificationType=='thread-message'">{{thread.element.fromUser.name}} has sent you new message in thread {{thread.name}}</p>
 	        </div>
 		</md-list-item>
 		<md-divider></md-divider>

@@ -311,31 +311,54 @@ exports.task = function(req,res,next) {
 exports.myTask = function(req,res) {
     var user = req.user;
     var result = [];
-    Task.find({$or : [{'owner' : user._id}, {assignees : user._id}],completed : false})
-    .sort('hasDateEnd')
-    .sort({'dateEnd': 1})
-    .populate('assignees', '-hashedPassword -salt')
-    .populate('owner', '-hashedPassword -salt')
-    .populate('project')
-
-    .exec(function(err,tasks) {
-        if (err) {
-            return res.send(500,err);
-        }
-        async.each(tasks,function(task,callback) {
-            if (task.element.type === "task-project") {
-                result.push(task);
-                callback(null);
-            } else {
-                callback(null);
-            }
-        },function(err) {
-            if (err) {
-                return res.send(500,err);
-            }
-            return res.json(result)
+    Notification.find({owner: user._id, unread : true, referenceTo : 'task'})
+    .populate("fromUser", "_id email name")
+    .exec(function(err, notifications) {
+        if (err) {return res.send(500,err);}
+        async.each(notifications, function(notification, cb) {
+            Task.findById(notification.element._id)
+            .populate('members', '-hashedPassword -salt')
+            .populate('owner', '-hashedPassword -salt')
+            .populate('project')
+            .exec(function(err, task) {
+                if (err || !task) {
+                    cb();
+                } else {
+                    task.element.fromUser = notification.fromUser;
+                    task.element.notificationType = notification.type;
+                    result.push(task);
+                    cb();
+                }
+            })
+        }, function() {
+            return res.send(200, result);
         });
-    })
+    });
+    // Task.find({$or : [{'owner' : user._id}, {assignees : user._id}],completed : false})
+    // .sort('hasDateEnd')
+    // .sort({'dateEnd': 1})
+    // .populate('assignees', '-hashedPassword -salt')
+    // .populate('owner', '-hashedPassword -salt')
+    // .populate('project')
+
+    // .exec(function(err,tasks) {
+    //     if (err) {
+    //         return res.send(500,err);
+    //     }
+    //     async.each(tasks,function(task,callback) {
+    //         if (task.element.type === "task-project") {
+    //             result.push(task);
+    //             callback(null);
+    //         } else {
+    //             callback(null);
+    //         }
+    //     },function(err) {
+    //         if (err) {
+    //             return res.send(500,err);
+    //         }
+    //         return res.json(result)
+    //     });
+    // })
 };
 
 

@@ -34,20 +34,11 @@
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
 		          	<h3>{{ file.name }}</h3>
-		          	<p>{{ file.revision }}</p>
+		          	<p ng-show="file.element.notificationType=='file-assign'">{{file.element.fromUser.name}} has assigned you to this file</p>
+		          	<p ng-show="file.element.notificationType=='file-upload-reversion'">{{file.element.fromUser.name}} has uploaded reversion of this file</p>
 	        </div>
 		</md-list-item>
 		<md-divider></md-divider>
 	</div>
-
-	<!-- <div ng-show="search" ng-repeat="file in results track by $index" ui-sref="project.files.detail">
-		<md-list-item class="md-2-line" md-ink-ripple>
-			<div class="md-list-item-text" layout="column">
-		          	<h3>{{ file.element.file.name }}</h3>
-		          	<p>{{ file.element.file.revision }}</p>
-	        </div>
-		</md-list-item>
-		<md-divider></md-divider>
-	</div> -->
 	
 </div>

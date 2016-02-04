@@ -415,13 +415,16 @@ exports.getInProject = function(req, res) {
 
 exports.myFiles = function(req, res) {
     var result = [];
-    Notification.find({owner: req.user._id, unread: true, $or:[{referenceTo: 'file'}, {referenceTo: 'document'}]}, function(err, files) {
+    Notification.find({owner: req.user._id, unread: true, $or:[{referenceTo: 'file'}, {referenceTo: 'document'}]})
+    .populate("fromUser", "_id name email").exec(function(err, notifications) {
         if (err) {return res.send(500,err);}
-        async.each(files, function(file, cb) {
-            File.findById(file.element._id).populate("members", "_id name email")
+        async.each(notifications, function(notification, cb) {
+            File.findById(notification.element._id).populate("members", "_id name email")
             .exec(function(err, file) {
                 if (err || !file) {cb();}
                 else {
+                    file.element.fromUser = notification.fromUser;
+                    file.element.notificationType = notification.type;
                     result.push(file);
                     cb();
                 }
