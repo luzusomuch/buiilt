@@ -1,7 +1,12 @@
-angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', function($rootScope, $scope, document, uploadService, $mdDialog, $mdToast, $stateParams, fileService) {
+angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', function($rootScope, $scope, document, uploadService, $mdDialog, $mdToast, $stateParams, fileService, socket) {
     $scope.document = document;
     $rootScope.$on("Document.Updated", function(event, data) {
         setUploadReversion();
+        $scope.document = data;
+    });
+
+    socket.emit("join", document._id);
+    socket.on("document:update", function(data) {
         $scope.document = data;
     });
 

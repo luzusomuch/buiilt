@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('projectDocumentationCtrl', function($rootScope, $scope, $mdDialog, documents, uploadService, $mdToast, $stateParams) {
+angular.module('buiiltApp').controller('projectDocumentationCtrl', function($rootScope, $scope, $mdDialog, documents, uploadService, $mdToast, $stateParams, socket) {
     $scope.documents = documents;
 
     function setUploadFile(){
@@ -46,6 +46,10 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
 
     $rootScope.$on("Document.Uploaded", function(event, data) {
         $scope.documents = _.union($scope.documents, data);
+    });
+
+    socket.on("document:new", function(data) {
+        $scope.documents.push(data);
     });
 
     $scope.pickFile = pickFile;
