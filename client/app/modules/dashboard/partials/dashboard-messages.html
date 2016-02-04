@@ -31,9 +31,9 @@
 	<div ng-repeat="thread in myMessages | filter: searchThread track by $index" ng-click="openLocation(thread, 'thread')">
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
-	          		<h3>{{ thread.name }}</h3>
-          			<p ng-show="thread.element.notificationType=='thread-assign'">{{thread.element.fromUser.name}} has assign you to new thread</p>
-          			<p ng-show="thread.element.notificationType=='thread-message'">{{thread.element.fromUser.name}} has sent you new message in thread {{thread.name}}</p>
+          		<h3>{{ thread.name }}</h3>
+      			<p ng-show="thread.element.notificationType=='thread-assign'">{{thread.element.fromUser.name}} has assigned you to this thread.</p>
+      			<p ng-show="thread.element.notificationType=='thread-message'">{{thread.element.fromUser.name}} has sent a reply to this thread.</p>
 	        </div>
 		</md-list-item>
 		<md-divider></md-divider>
