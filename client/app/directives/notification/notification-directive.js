@@ -49,13 +49,13 @@ angular.module('buiiltApp')
 
             var text;
             if (scope.notification.type === "invite-to-project") {
-                text = params.fromUser() + " has invited you to join their project at " + params.time;
+                text = params.fromUser() + " has invited you to join their project, " + params.time;
             }
             if (scope.notification.type === 'team-invite') {
-                text = params.fromUser() + ' has invited you to the team ' + params.team() + ' at ' + params.time;
+                text = params.fromUser() + ' has invited you to join ' + params.team() + ' at ' + params.time;
             }
             if (scope.notification.type === 'team-accept') {
-                text = params.fromUser() + ' has accepted to join the team ' + params.team() + ' at ' + params.time;
+                text = params.fromUser() + ' has accepted to join ' + params.team() + ' at ' + params.time;
             }
             if (scope.notification.type === 'team-remove') {
                 text = params.fromUser() + ' has removed ' + params.toUser() + ' from ' + params.team() + ' at ' + params.time;

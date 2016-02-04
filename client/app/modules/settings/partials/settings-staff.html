@@ -27,10 +27,10 @@
 			          <h3>{{ (member._id) ? member._id.name : " "}} {{ (member._id) ? member._id.name : "Pending Sign Up"}}</h3>
 			          <p>{{ (member.email) ? member.email : member._id.email }}</p>
 		        </div>
-				<md-button class="md-secondary md-icon-button" ng-click="assignLeader(member)" ng-if="isLeader &&  member._id && member.status == 'Active'">
+				<md-button class="md-secondary" ng-click="assignLeader(member)" ng-if="isLeader &&  member._id && member.status == 'Active'">
 					<md-icon class="material-icons">supervisor_account</md-icon>
 				</md-button>
-				<md-button class="md-secondary md-icon-button" ng-click="removeMember(member)" ng-if="isLeader" style="margin-right: 60px">
+				<md-button class="md-secondary" ng-click="removeMember(member)" ng-if="isLeader" style="margin-right: 60px">
 					<md-icon class="material-icons">delete</md-icon>
 				</md-button>
 			</md-list-item>

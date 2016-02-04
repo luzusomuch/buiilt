@@ -25,16 +25,17 @@ angular.module('buiiltApp').controller('projectCtrl', function($rootScope, $scop
         if (form.$valid) {
             projectService.updateProject({id: $scope.project._id}, $scope.project).$promise.then(function(res) {
                 $rootScope.project = $scope.project = res;
-                $scope.showToast("Your changes have been saved!")
+                $scope.showToast("Your Edits Have Been Saved.");
+				$mdDialog.hide();
             }, function(err) {
                 console.log(err);
-                $scope.showToast("There was an Error...");
+                $scope.showToast("There Has Been An Error...");
             });
         }
     };
 	
     $scope.showToast = function(value) {
-        $mdToast.show($mdToast.simple().textContent(value).position('top','right').hideDelay(3000));
+        $mdToast.show($mdToast.simple().textContent(value).position('bottom','left').hideDelay(3000));
     };
 	
 	$scope.showEditProjectModal = function($event){
@@ -92,12 +93,12 @@ angular.module('buiiltApp').controller('projectCtrl', function($rootScope, $scop
         $mdDialog.show(confirm).then(function() {
             $scope.project.archive = true;
             projectService.updateProject({id: $stateParams.id}, $scope.project).$promise.then(function(res) {
-                $scope.showToast("Archive project successfully!");
+                $scope.showToast("Your Project Has Been Archived Successfully.");
                 $scope.closeDialog();
                 $state.go("projects.archived");
                 $rootScope.$broadcast("Project.Archive", res);
             }, function(err) {
-                $scope.showToast("Something went wrong!");
+                $scope.showToast("There Has Been An Error...");
             });
         }, function() {
             
@@ -106,19 +107,19 @@ angular.module('buiiltApp').controller('projectCtrl', function($rootScope, $scop
 
     $scope.downloadBackUp = function() {
         projectService.downloadBackUp({id: $stateParams.id}).$promise.then(function(res) {
-            $scope.showToast("The backup file has sent to your mailbox");
+            $scope.showToast("Please Check Your Inbox For The Backup File...");
         }, function(err) {$scope.showToast(err.message);});
     };
 
     $scope.uploadNewDocument = function() {
         if (!$scope.uploadFile.userType) {
-            $scope.showToast("Please check your input");
+            $scope.showToast("There Has Been An Error...");
             return
         }
         peopleService.submitATender({id: $stateParams.id}, $scope.uploadFile).$promise.then(function(res) {
             $scope.closeDialog();
-            $scope.showToast("Submit a tender successfully");
-        }, function(err) {$scope.showToast("Error");});
+            $scope.showToast("You Have Submitted Your Tender Successfully.");
+        }, function(err) {$scope.showToast("There Has Been An Error...");});
     };
 
 });
