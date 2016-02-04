@@ -1,21 +1,33 @@
-<div class="detail-header" layout-padding layout="row">
-		
-	<div layout="row">
-		<md-input-container flex>
-			<label for="">Search for documentation</label>
-			<input type="text" ng-model="element.name">
-		</md-input-container>
-	</div>
+<div class="detail-header" layout-padding layout="column">
 	
+	<div layout="column" layout-padding>
+		
+		<div layout="row" flex layout-align="center center">
+			<md-input-container flex="60" style="margin-bottom:-2vh">
+				<label for="">Document Name</label>
+				<input type="text" name="fileName" ng-model="name" md-autofocus>
+			</md-input-container>
+		</div>
+		
+		<div layout="row">
+			<div flex layout="row" layout-align="center center">
+				<span class="md-body-2" style="margin-top:2.5vh; margin-right: 2vh">Document Type:</span>
+				<div class="tagcloud" layout-wrap>
+					<span ng-class="{'available-tag': !tag.select, 'selected-tag': tag.select}" ng-repeat="tag in documentTags" ng-click="selectChip($index, 'document');selectDocumentFilterTag(tag.name)">{{tag.name}}</span>
+				</div>
+			</div>
+		</div>
+		
+	</div>
 </div>
 
 <md-list ng-cloak class="main-page-content">
 
-	<div ng-repeat="file in myFiles | filter: element.name track by $index" ng-click="openLocation(file, 'document')" ng-show="file.referenceTo=='document'">
+	<div ng-repeat="file in myFiles | filter: filterDocument track by $index" ng-click="openLocation(file, 'document')" ng-show="file.element.type=='document'">
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
-		          	<h3>{{ file.element.name }}</h3>
-		          	<p>{{ file.element.revision }}</p>
+		          	<h3>{{ file.name }}</h3>
+		          	<p>{{ file.revision }}</p>
 	        </div>
 		</md-list-item>
 		<md-divider></md-divider>

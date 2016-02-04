@@ -1,33 +1,34 @@
-<div class="detail-header" layout-padding layout="row">
-	    
-	<md-chips class="" ng-model="dashboardFilters" placeholder="Search..." secondary-placeholder="Search..." flex="50" md-autocomplete-snap="" md-require-math="autoCompleteRequireMath" md-on-add="addChip()" md-on-remove="removeChip()">
-		<md-autocomplete 
-			md-selected-item="selectedItem" 
-			md-search-text="searchText"
-			md-items="item in querySearch(searchText)" 
-			md-item-text="item" 
-			placeholder="Search..."
-			>
-			<span md-highlight-text="searchText">{{item.project.name}}</span>
-		</md-autocomplete>
-		<md-chip-template class="md-accent">
-	        <strong>{{$chip.project.name}}</strong>
-	    </md-chip-template>
-	</md-chips>
-	
-	<span flex></span>
+<div class="detail-header" layout-padding layout="column">
 
-	<md-chips class="set-filters" ng-model="messageChips" readonly="true">
-		<md-chip-template ng-click="selectedChip($chip)">
-	        <strong>{{$chip.text}}<i ng-show="$chip.select" style="font-size: 15px" class="material-icons">clear</i></strong>
-      	</md-chip-template>
-	</md-chips>
+	<div layout="column" layout-padding>
+		
+		<div layout="row">
+			<md-input-container flex="50" style="margin-bottom: -2vh">
+				<label for="">Message Thread Name</label>
+				<input type="text" name="messageThreadName" ng-model="name" md-autofocus>
+			</md-input-container>
+			
+			<md-input-container flex="50" style="margin-bottom: -2vh">
+				<label for="">Message Thread Recipients</label>
+				<input type="text" name="messageThreadRecipients" ng-model="recipient">
+			</md-input-container>
+			
+		</div>
+		
+		<div layout="row" layout-align="center center">
+			<md-input-container flex="60" style="margin-bottom: -2vh">
+				<label for="">Message Replies</label>
+				<input type="text" name="messageReplies" ng-model="reply">
+			</md-input-container>
+		</div>
+		
+	</div>
 	
 </div>
 
 <md-list ng-cloak class="main-page-content">
 
-	<div ng-repeat="thread in myMessages | unique:'_id' track by $index" ng-click="openLocation(thread, 'thread')">
+	<div ng-repeat="thread in myMessages | filter: searchThread | unique:'_id' track by $index" ng-click="openLocation(thread, 'thread')">
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
 	          		<h3>{{ thread.name }}</h3>
@@ -36,15 +37,4 @@
 		</md-list-item>
 		<md-divider></md-divider>
 	</div>
-
-	<!-- <div ng-show="search" ng-repeat="message in results track by $index" ui-sref="project.messages.detail">
-		<md-list-item class="md-2-line" md-ink-ripple>
-			<div class="md-list-item-text" layout="column">
-		          	<h3>{{ message.messages[message.messages.length -1].text }}</h3>
-          			<p>{{ message.messages[message.messages.length -1].user.name }}</p>
-	        </div>
-		</md-list-item>
-		<md-divider></md-divider>
-	</div> -->
-	
 </div>

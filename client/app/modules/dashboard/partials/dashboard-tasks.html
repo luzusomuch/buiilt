@@ -1,33 +1,41 @@
-<div class="detail-header" layout-padding layout="row">
-		
-	<md-chips class="" ng-model="dashboardFilters" placeholder="Search..." secondary-placeholder="Search..." flex="50" md-autocomplete-snap="" md-require-math="autoCompleteRequireMath" md-on-add="addChip()" md-on-remove="removeChip()">
-		<md-autocomplete 
-			md-selected-item="selectedItem" 
-			md-search-text="searchText"
-			md-items="item in querySearch(searchText)" 
-			md-item-text="item" 
-			placeholder="Search..."
-			>
-			<span md-highlight-text="searchText">{{item.project.name}}</span>
-		</md-autocomplete>
-		<md-chip-template class="md-accent">
-	        <strong>{{$chip.project.name}}</strong>
-	    </md-chip-template>
-	</md-chips>
+<div class="detail-header" layout-padding layout="column">
 	
-	<span flex></span>
-
-	<md-chips class="set-filters" ng-model="taskChips" readonly="true">
-		<md-chip-template ng-click="selectedChip($chip)">
-	        <strong>{{$chip.text}}<i ng-show="$chip.select" style="font-size: 15px" class="material-icons">clear</i></strong>
-      	</md-chip-template>
-	</md-chips>
-
+	<div layout="column" layout-padding>
+		
+		<div layout="row">
+			<md-input-container flex="50">
+				<label for="">Task Description</label>
+				<input type="text" name="taskDescription" ng-model="description" md-autofocus>
+			</md-input-container>
+			
+			<div flex="50" layout="row" layout-align="center center">
+				<span class="md-body-2" style="margin-top: -2vh">Assigned:</span>
+				<div class="tagcloud" style="margin-top: -2vh; margin-left: 2vh">
+					<span ng-repeat="tag in assignStatus" ng-class="{'available-tag': !tag.select, 'selected-tag': tag.select}" ng-click="selectFilterTag($index, 'status')">{{tag.text}}</span>
+				</div>
+			</div>
+			
+		</div>
+		
+		<div layout="row">
+			<div flex layout="row" layout-align="center center">
+				<span class="md-body-2" style="margin-top: -2vh">Due:</span>
+				<div class="tagcloud" style="margin-top: -2vh; margin-left: 2vh">
+					<span ng-repeat="tag in dueDate" ng-class="{'available-tag': !tag.select, 'selected-tag': tag.select}" ng-click="selectFilterTag($index, 'dueDate')">{{tag.text}}</span>
+				</div>
+				<div style="margin-top: -2.5vh">
+                    <md-datepicker  ng-model="dateEnd" ng-change="selectDueDate(dateEnd)" md-placeholder="Select due date">
+                    </md-datepicker>
+				</div>
+			</div>
+		</div>
+		
+	</div>
 </div>
 
 <md-list ng-cloak class="main-page-content">
 
-	<div ng-repeat="task in myTasks track by $index" ui-sref="project.tasks.detail({id: task.project._id, taskId: task._id})">
+	<div ng-repeat="task in myTasks | filter: searchTask track by $index" ui-sref="project.tasks.detail({id: task.project._id, taskId: task._id})">
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
 		          <h3>{{ task.name }}</h3>

@@ -414,8 +414,20 @@ exports.getInProject = function(req, res) {
 };
 
 exports.myFiles = function(req, res) {
+    var result = [];
     Notification.find({owner: req.user._id, unread: true, $or:[{referenceTo: 'file'}, {referenceTo: 'document'}]}, function(err, files) {
         if (err) {return res.send(500,err);}
-        return res.send(200,files);
+        async.each(files, function(file, cb) {
+            File.findById(file.element._id).populate("members", "_id name email")
+            .exec(function(err, file) {
+                if (err || !file) {cb();}
+                else {
+                    result.push(file);
+                    cb();
+                }
+            });
+        }, function() {
+            return res.send(200,result);
+        });
     });
 };

@@ -1,21 +1,40 @@
-<div class="detail-header" layout-padding layout="row">
+<div class="detail-header" layout-padding layout="column">
+	
+	<div layout="column" layout-padding>
 		
-	<div layout="row">
-		<md-input-container flex>
-			<label for="">Search for file</label>
-			<input type="text" ng-model="element.name">
-		</md-input-container>
+		<div layout="row">
+			<md-input-container flex="50">
+				<label for="">File Name</label>
+				<input type="text" name="fileName" ng-model="name" md-autofocus>
+			</md-input-container>
+			
+			<md-input-container flex="50">
+				<label for="">File Recipients</label>
+				<input type="text" name="fileRecipients" ng-model="recipient">
+			</md-input-container>
+			
+		</div>
+		
+		<div layout="row">
+			<div flex layout="row" layout-align="center center">
+				<span class="md-body-2" style="margin-top: -2vh">File Type:</span>
+				<div class="tagcloud" style="margin-top: -2vh; margin-left: 2vh">
+					<span ng-repeat="tag in fileTags" ng-class="{'available-tag': !tag.select, 'selected-tag': tag.select}" ng-click="selectChip($index, 'file'); selectFileFilterTag(tag.name)">{{tag.name}}</span>
+				</div>
+			</div>
+		</div>
+		
 	</div>
-		
+
 </div>
 
 <md-list ng-cloak class="main-page-content">
 
-	<div ng-repeat="file in myFiles |filter: element.name track by $index" ng-click="openLocation(file, 'document')" ng-show="file.referenceTo=='file'">
+	<div ng-repeat="file in myFiles |filter: searchFile track by $index" ng-click="openLocation(file, 'document')" ng-show="file.element.type=='file'">
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
-		          	<h3>{{ file.element.name }}</h3>
-		          	<p>{{ file.element.revision }}</p>
+		          	<h3>{{ file.name }}</h3>
+		          	<p>{{ file.revision }}</p>
 	        </div>
 		</md-list-item>
 		<md-divider></md-divider>

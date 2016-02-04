@@ -3,250 +3,248 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
 	$scope.myTasks = myTasks;
 	$scope.myMessages = myMessages;
 	$scope.myFiles = myFiles;
-	$scope.search = false;
-	// type can be a task, message, file or document
-	var type = $state.current.name.split(".")[1];
-    $scope.results = [];
 	
-	//Placeholder Set of Filters to use for layout demo
-	$scope.dashboardFilters = [];
-	$scope.querySearch = function(value) {
-		if (type === 'tasks') {
-			var tasks = angular.copy($scope.myTasks);
-        	var results = value ? tasks.filter(createFilter(value)) : [];
-		} else if (type === 'messages') {
-			var messages = angular.copy($scope.myMessages);
-        	var results = value ? messages.filter(createFilter(value)) : [];
-		} else if (type === 'files') {
-			var files = angular.copy($scope.myFiles);
-        	var results = value ? files.filter(createFilter(value)) : [];
-		} else if (type === 'documentation') {
-			var files = angular.copy($scope.myFiles);
-        	var results = value ? files.filter(createFilter(value)) : [];
-		}
-        $rootScope.filterResults = results;
-        filterByProject(results);
-        return results;
-    };
-
-    if ($rootScope.filterResults && $rootScope.filterResults.length > 0) {
-    	filterByProject($rootScope.filterResults);
-    }
-
-    if ($rootScope.dashboardFilters && $rootScope.dashboardFilters.length > 0) {
-    	$scope.search = true;
-    	$scope.dashboardFilters = $rootScope.dashboardFilters;
-    	_.each($scope.dashboardFilters, function(item) {
-    		if (item) {
-    			$scope.querySearch(item.project.name)
-    		}
-    	});
-    }
-
-    function createFilter(query) {
-        return function filterFn(item) {
-        	return item.project.name.toLowerCase().indexOf(query) > -1;
-        };
-    };
-
-    function filterByProject(results) {
-    	if (type === 'tasks') {
-    		_.each($scope.myTasks, function(task) {
-    			if (_.last(results)) {
-		        	if (task.project._id.toString() === _.last(results).project._id.toString()) {
-                        getHandleArr(task);
-		        	}
-    			}
-	        });
-    	} else if (type === 'messages') {
-    		_.each($scope.myMessages, function(message) {
-    			if (_.last(results)) {
-		        	if (message.project._id.toString() === _.last(results).project._id.toString()) {
-		        		getHandleArr(message);
-		        	}
-    			}
-	        });
-    	} else if (type === 'files') {
-    		_.each($scope.myFiles, function(file) {
-    			if (_.last(results)) {
-		        	if (file.project._id.toString() === _.last(results).project._id.toString()) {
-		        		getHandleArr(file);
-		        	}
-    			}
-	        });
-    	} else if (type === 'documentation') {
-    		_.each($scope.myFiles, function(file) {
-    			if (_.last(results)) {
-		        	if (file.project._id.toString() === _.last(results).project._id.toString()) {
-		        		getHandleArr(file);
-		        	}
-    			}
-	        });
-    	}
-    };
-
-    $scope.addChip = function() {
-        $scope.search = true;
-        $rootScope.dashboardFilters = $scope.dashboardFilters;
-    };
-
-    $scope.removeChip = function() {
-        if ($rootScope.dashboardFilters.length === 0) {
-            $scope.search = false;
-        }
-    };
-
-    var lastFilterResults = [];
-    $scope.selectedChip = function(chip) {
-        chip.select = !chip.select;
-        $scope.search = true;
-        var user = $rootScope.currentUser;
-        if (chip.select) {
-            if (chip.place === "task") {
-                switch (chip.value) {
-                    case "assignedToMe":
-                        _.each($scope.myTasks, function(task) {
-                            if (_.findIndex(task.assignees, function(assignee) {
-                                return assignee._id == user._id;
-                            }) !== -1) {
-                                lastFilterResults.push(task);
-                                getHandleArr(task);
-                            }
-                        });
-                    break;
-
-                    case "assignedByMe":
-                        _.each($scope.myTasks, function(task) {
-                            if (task.user && task.user._id == user._id) {
-                                lastFilterResults.push(task);
-                                getHandleArr(task);
-                            }
-                        });
-                    break;
-
-                    case "dueToDay":
-                        _.each($scope.myTasks, function(task) {
-                            if (moment(moment(task.dateEnd).format("YYYY-MM-DD")).isSame(moment(new Date()).format("YYYY-MM-DD"))) {
-                                lastFilterResults.push(task);
-                                getHandleArr(task);
-                            }
-                        });
-                    break;
-
-                    case "dueTomorrow":
-                        var tomorrow = moment(new Date()).add(1, "days").format("YYYY-MM-DD");
-                        _.each($scope.myTasks, function(task) {
-                            var dateEnd = moment(task.dateEnd).format("YYYY-MM-DD");
-                            if (moment(dateEnd).isSame(tomorrow)) {
-                                lastFilterResults.push(task);
-                                getHandleArr(task);
-                            }
-                        });
-                    break;
-
-                    case "dueThisWeek":
-                        _.each($scope.myTasks, function(task) {
-                            var currentWeek = getWeek(new Date());
-                            _.each(currentWeek, function(day) {
-                                if (moment(moment(new Date(day)).format("YYYY-MM-DD")).isSame(moment(new Date(task.dateEnd)).format("YYYY-MM-DD"))) {
-                                    lastFilterResults.push(task);
-                                    getHandleArr(task);
-                                }
-                            });
-                        });
-                    break;
-
-                    default:
-                    break;
-                }
-            } else if (chip.place === "message") {
-                switch (chip.value) {
-                    case "createdByMe":
-                        _.each($scope.myMessages, function(item) {
-                            if (item.owner == user._id) {
-                                lastFilterResults.push(item);
-                                getHandleArr(item);
-                            }
-                        });
-                    break;
-
-                    case "mentionsMe":
-                        _.each($scope.myMessages, function(item) {
-                            if (item.messages.length > 0) {
-                                _.each(item.messages, function(message) {
-                                    if (message.mentions && message.mentions.length > 0) {
-                                        if (_.indexOf(message.mentions, user._id) !== -1) {
-                                            lastFilterResults.push(item);
-                                            getHandleArr(item);
-                                            return false;
-                                        }
-                                    }
-                                });
-                            }
-                        });
-                    break;
-
-                    default:
-                    break;
-                }
-            }
-        } else {
-            if (lastFilterResults.length > 0 && $scope.results.length > 0) {
-                _.each(lastFilterResults, function(index, result) {
-                    $scope.results = _.remove($scope.results, function(item) {
-                        return item._id == result._Id;
-                    });
-                    lastFilterResults.splice(index, 1);
-                    if ($scope.results.length == 0) {
-                        $scope.search = false;
-                    }
-                });
-            } else {
-                $scope.search = false;
-            }
-        }
-    };
-
-    $scope.messageChips = [
-        {place: "message", value: "createdByMe", text: "CREATED BY ME", select: false},
-        {place: "message", value: "mentionsMe", text: "MENTIONS ME", select: false}
-    ];
-    $scope.taskChips = [
-        {place: "task", value: "assignedToMe", text: "Assigned to Me", select: false},
-        {place: "task", value: "assignedByMe", text: "Assigned by Me", select: false},
-        {place: "task", value: "dueToDay", text: "Due Today", select: false},
-        {place: "task", value: "dueTomorrow", text: "Due Tomorrow", select: false},
-        {place: "task", value: "dueThisWeek", text: "Due This Week", select: false}
-    ];
-    $scope.fileChips = [
-        {place: "file", value: "mine", text: "Mine", select: false},
-        {place: "file", value: "myTeam", text: "My Teams", select: false}
-    ];
-
-    function getWeek(fromDate){
-        var sunday = new Date(fromDate.setDate(fromDate.getDate()-fromDate.getDay()))
-            ,result = [new Date(sunday)];
-        while (sunday.setDate(sunday.getDate()+1) && sunday.getDay()!==0) {
-            result.push(new Date(sunday));
-        }
-        return result;
-    };
-
-    function getHandleArr(item) {
-        $scope.results.push(item);
-        return $scope.results = _.uniq($scope.results, '_id');
-    };
-
     $scope.openLocation = function(item, type) {
-        var itemId = (type === "thread") ? item._id : item.element._id;
-        notificationService.read({_id : itemId}).$promise.then(function() {
+        notificationService.read({_id : item._id}).$promise.then(function() {
             if (type === "thread") 
                 $state.go("project.messages.detail", {id: item.project, messageId: item._id});
             else if (type === "file") {
-                $state.go("project.files.detail", {id: item.element.project, fileId: item.element._id});
+                $state.go("project.files.detail", {id: item.project, fileId: item._id});
             } else if (type === "document") {
-                $state.go("project.documentation.detail", {id: item.element.project, documentId: item.element._id});
+                $state.go("project.documentation.detail", {id: item.project, documentId: item._id});
             }
         });
+    };
+
+    // filter for thread
+    $scope.searchThread = function(thread) {
+        if ($scope.name && $scope.name.length > 0) {
+            var found = false;
+            if (thread.name.toLowerCase().indexOf($scope.name) > -1 || thread.name.indexOf($scope.name) > -1) {
+                found = true
+            }
+            return found;
+        } else if ($scope.recipient && $scope.recipient.length > 0) {
+            var found = false;
+            if (thread.members && thread.members.length > 0) {
+                _.each(thread.members, function(member) {
+                    if ((member.name.toLowerCase().indexOf($scope.recipient) > -1 || member.name.indexOf($scope.recipient) > -1) || (member.email.toLowerCase().indexOf($scope.recipient) > -1 || member.email.indexOf($scope.recipient) > -1)) {
+                        found = true;
+                    }
+                });
+            }
+            if (thread.notMembers && thread.notMembers.length > 0) {
+                _.each(thread.notMembers, function(email) {
+                    if (email.toLowerCase().indexOf($scope.recipient) > -1) {
+                        found = true;
+                    }
+                });
+            }
+            return found;
+        } else if ($scope.reply && $scope.reply.length > 0) {
+            var found = false;
+            _.each(thread.messages, function(message) {
+                if (message.text.toLowerCase().indexOf($scope.reply) > -1 || message.text.indexOf($scope.reply) > -1) {
+                    found = true;
+                }
+            });
+            return found;
+        } else {
+            return true;
+        }
+    };
+
+    // filter for task
+    $scope.dueDate = [{text: "today", value: "today"}, {text: "tomorrow", value: "tomorrow"}, {text: "this week", value: "thisWeek"}, {text: "next week", value: "nextWeek"}];
+    $scope.assignStatus = [{text: "to me", value: "toMe"}, {text: "byMe", value: "byMe"}];
+    $scope.dueDateFilter = [];
+    $scope.selectDueDate = function(dateEnd) {
+        $scope.dateEnd = dateEnd;
+        $scope.dueDateFilter = [];
+    };
+
+    $scope.selectFilterTag = function(index, type) {
+        if (type === "status") {
+            $scope.dueDateFilter = [];
+            $scope.dateEnd = null;
+            _.each($scope.dueDate, function(date) {
+                date.select = false;
+            });
+            $scope.assignStatus[index].select = !$scope.assignStatus[index].select;
+            if (index === 0) {
+                $scope.assignStatus[1].select = false;
+            } else {
+                $scope.assignStatus[0].select = false;
+            }
+            if ($scope.assignStatus[index].select) {
+                $scope.status = $scope.assignStatus[index].value;
+            } else {
+                $scope.status = null;
+            }
+        } else {
+            $scope.status = null;
+            _.each($scope.assignStatus, function(status) {
+                status.select = false;
+            });
+            $scope.dueDate[index].select = !$scope.dueDate[index].select;
+            if ($scope.dueDate[index].select) {
+                $scope.dueDateFilter.push($scope.dueDate[index].value);
+            } else {
+                $scope.dueDateFilter.splice(_.indexOf($scope.dueDateFilter, $scope.dueDate[index].value), 1);
+            }
+        }
+    };
+
+    $scope.searchTask = function(task) {
+        var found = false
+        var taskDueDate = moment(task.dateEnd).format("YYYY-MM-DD");
+        if ($scope.description && $scope.description.length > 0) {
+            if (task.description.toLowerCase().indexOf($scope.description) > -1 || task.description.indexOf($scope.description) > -1) {
+                found = true;
+            }
+            return found;
+        } else if ($scope.dateEnd) {
+            if (moment(moment($scope.dateEnd).format("YYYY-MM-DD")).isSame(taskDueDate)) {
+                found = true;
+            }
+            return found;
+        } else if ($scope.status && $scope.status.length > 0) {
+            if ($scope.status === "toMe") {
+                found = (_.findIndex(task.members, function(member) {
+                    if (member._id) {
+                        return member._id.toString()===$rootScope.currentUser._id.toString();
+                    }
+                }) !== -1) ? true : false;
+            } else if ($scope.status === "byMe") {
+                if (task.owner._id.toString()===$rootScope.currentUser._id.toString()) {
+                    found = true
+                }
+            }
+            return found;
+        } else if ($scope.dueDateFilter && $scope.dueDateFilter.length > 0) {
+            _.each($scope.dueDateFilter, function(filter) {
+                switch (filter) {
+                    case "today":
+                        var today = moment(new Date()).format("YYYY-MM-DD");
+                        if (moment(taskDueDate).isSame(today)) {
+                            found = true;
+                        }
+                    break;
+
+                    case "tomorrow":
+                        var tomorrow = moment(new Date()).add(1, "days").format("YYYY-MM-DD");
+                        if (moment(taskDueDate).isSame(tomorrow)) {
+                            found = true;
+                        }
+                    break;
+
+                    case "thisWeek":
+                        var thisWeekStartDate = moment().startOf('week').format("YYYY-MM-DD");
+                        var thisWeekEndDate = moment().endOf('week').format("YYYY-MM-DD");
+                        if (moment(taskDueDate).isSameOrAfter(thisWeekStartDate) && moment(taskDueDate).isSameOrBefore(thisWeekEndDate)) {
+                            found = true;
+                        }
+                    break;
+
+                    case "nextWeek":
+                        var nextWeekStartDate = moment().startOf("week").add(7, "days").format("YYYY-MM-DD");
+                        var nextWeekEndDay = moment().endOf("week").add(7, "days").format("YYYY-MM-DD");
+                        if (moment(taskDueDate).isSameOrAfter(nextWeekStartDate) && moment(taskDueDate).isSameOrBefore(nextWeekEndDay)) {
+                            found = true;
+                        }
+                    break;
+
+                    default:
+                    break;
+                }
+            });
+            return found;
+        } else
+            return true;
+    };
+
+    // filter files
+    $scope.selectChip = function(index, type) {
+        if (type === "file")
+            $scope.fileTags[index].select = !$scope.fileTags[index].select;
+        else if (type === "document") 
+            $scope.documentTags[index].select =!$scope.documentTags[index].select;
+    };
+
+    $scope.fileTags = [];
+    _.each($rootScope.currentTeam.fileTags, function(tag) {
+        $scope.fileTags.push({name: tag, select: false});
+    });
+
+    $scope.filterTags = [];
+    $scope.selectFileFilterTag = function(tagName) {
+        var tagIndex = _.indexOf($scope.filterTags, tagName);
+        if (tagIndex !== -1) {
+            $scope.filterTags.splice(tagIndex, 1);
+        } else 
+            $scope.filterTags.push(tagName);
+    };
+
+    $scope.searchFile = function(file) {
+        var found = false;
+        if (($scope.name && $scope.name.length > 0) || ($scope.recipient && $scope.recipient.length > 0)) {
+            if ($scope.name) {
+                if (file.name.toLowerCase().indexOf($scope.name) > -1 || file.name.indexOf($scope.name) > -1) {
+                    found = true;
+                }
+            } else if ($scope.recipient) {
+                if (_.findIndex(file.members, function(member) {
+                    return ((member.name.toLowerCase().indexOf($scope.recipient) > -1 || member.name.indexOf($scope.recipient) > -1) || (member.email.toLowerCase().indexOf($scope.recipient) > -1 || member.email.indexOf($scope.recipient) > -1));
+                }) !== -1) {
+                    found = true;
+                } else if (_.findIndex(file.notMembers, function(member) {
+                    return member.indexOf($scope.recipient) > -1;
+                }) !== -1) {
+                    found = true;
+                }
+            } 
+            return found;
+        } else if ($scope.filterTags.length > 0) {
+            _.each($scope.filterTags, function(tag) {
+                if (_.indexOf(file.tags, tag) !== -1) {
+                    found = true;
+                }
+            })
+            return found;
+        } else
+            return true;
+    };
+
+    // filter for document
+    $scope.documentTags = [];
+    _.each($rootScope.currentTeam.documentTags, function(tag) {
+        $scope.documentTags.push({name: tag, select: false});
+    });
+
+    $scope.filterTags = [];
+    $scope.selectDocumentFilterTag = function(tagName) {
+        var tagIndex = _.indexOf($scope.filterTags, tagName);
+        if (tagIndex !== -1) {
+            $scope.filterTags.splice(tagIndex, 1);
+        } else 
+            $scope.filterTags.push(tagName);
+    };
+
+    $scope.filterDocument = function(document) {
+        var found = false;
+        if ($scope.name && $scope.name.length > 0) {
+            if (document.name.toLowerCase().indexOf($scope.name) > -1 || document.name.indexOf($scope.name) > -1) {
+                found = true;
+            }
+            return found;
+        } else if ($scope.filterTags.length > 0) {
+            _.each($scope.filterTags, function(tag) {
+                if (_.indexOf(document.tags, tag) !== -1) {
+                    found = true;
+                }
+            });
+            return found;
+        } else 
+            return true;
     };
 });
