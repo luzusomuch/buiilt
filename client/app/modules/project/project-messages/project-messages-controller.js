@@ -8,6 +8,11 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
         $scope.threads = _.uniq($scope.threads, "_id");
     });
 
+    $rootScope.$on("Thread.Inserted", function(event, data) {
+        $scope.threads.push(data);
+        $scope.threads = _.uniq($scope.threads, "_id"); 
+    });
+
     // filter section
     $scope.search = function(thread) {
         if ($scope.name && $scope.name.length > 0) {
@@ -134,6 +139,7 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
 			$scope.thread.type = "project-message";
 			messageService.create({id: $stateParams.id},$scope.thread).$promise.then(function(res) {
 				$scope.cancelNewMessageModal();
+                $rootScope.$broadcast("Thread.Inserted", res);
 				$scope.showToast("New Message Thread Created Successfully.");
 				$state.go("project.messages.detail", {id: $stateParams.id, messageId: res._id});
 			}, function(err) {

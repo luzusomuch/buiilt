@@ -1,12 +1,14 @@
-angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($rootScope, $scope, $timeout, $stateParams, messageService, $mdToast, $mdDialog, $state, thread, peopleService, taskService, uploadService, people, clipboard) {
+angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($rootScope, $scope, $timeout, $stateParams, messageService, $mdToast, $mdDialog, $state, thread, peopleService, taskService, uploadService, people, clipboard, socket) {
     $scope.error = {};
     $scope.thread = thread;
     $scope.people = people;
+    $scope.thread.members.push(thread.owner);
+    var allowMembers = angular.copy(thread.members);
+    allowMembers.push(thread.owner);
+
     function threadInitial() {
-        $scope.thread.members.push(thread.owner);
-        restriction($scope.thread.members);
+        restriction(allowMembers);
         $scope.orginalActivities = angular.copy($scope.thread.activities);
-        _.remove($scope.thread.members, {_id: $rootScope.currentUser._id});
         $rootScope.title = thread.name;
         $rootScope.currentUser.isLeader = (_.findIndex($rootScope.currentTeam.leader, function(leader){return leader._id == $rootScope.currentUser._id}) !== -1) ? true: false;
         $scope.showRelatedAction = true;
@@ -14,6 +16,13 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($ro
     }
 
     threadInitial();
+
+    socket.emit("join", $scope.thread._id);
+
+    socket.on("thread:update", function(data) {
+        $scope.thread = data;
+        threadInitial();
+    });
 
     $rootScope.$on("Thread.Update", function(event, data) {
         $scope.thread = data;
@@ -39,7 +48,9 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($ro
     });
 
     function restriction(members) {
-        if (_.findIndex(members, function(member){return member._id.toString() === $rootScope.currentUser._id.toString();}) === -1) {
+        if (_.findIndex(members, function(member){
+            return member._id.toString() === $rootScope.currentUser._id.toString();
+        }) === -1) {
             $state.go("project.messages.all", {id: $scope.thread.project});
         }
     };
@@ -101,7 +112,7 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($ro
         _.remove($scope.membersList, {_id: $rootScope.currentUser._id});
 
         // get invitees for related item
-        $scope.invitees = $scope.thread.members;
+        $scope.invitees = angular.copy($scope.thread.members);
         _.each($scope.thread.notMembers, function(member) {
             $scope.invitees.push({email: member});
         });

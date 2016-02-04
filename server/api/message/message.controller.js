@@ -13,7 +13,7 @@ var _ = require('lodash');
 var async = require('async');
 var EventBus = require('../../components/EventBus');
 
-function populateThread(thread, res){
+function populateNewThread(thread, res){
     Thread.populate(thread, [
         {path: "owner", select: "_id email name"},
         {path: "messages.user", select: "_id email name"},
@@ -31,6 +31,23 @@ function populateThread(thread, res){
         }, function(){
             return res.send(200, thread);
         });
+    });
+};
+
+function populateThread(thread, res){
+    Thread.populate(thread, [
+        {path: "owner", select: "_id email name"},
+        {path: "messages.user", select: "_id email name"},
+        {path: "messages.mentions", select: "_id email name"},
+        {path: "members", select: "_id email name"},
+        {path: "activities.user", select: "_id email name"}
+    ], function(err, thread) {
+        EventBus.emit('socket:emit', {
+            event: 'thread:update',
+            room: thread._id.toString(),
+            data: thread
+        });
+        return res.send(200, thread);
     });
 };
 
@@ -139,7 +156,7 @@ exports.create = function(req,res) {
                         main.save(function(err) {
                             if (err) {return res.send(500,err);}
                             if (req.body.belongToType === "thread") 
-                                populateThread(main, res);
+                                populateNewThread(main, res);
                             else if (req.body.belongToType === "task") {
                                 populateTask(main, res);
                             } else if (req.body.belongToType === "file") {
@@ -149,7 +166,7 @@ exports.create = function(req,res) {
                     }
                 });
             } else {
-                populateThread(thread, res);
+                populateNewThread(thread, res);
             }
         });
     });
@@ -229,24 +246,7 @@ exports.sendMessage = function(req,res) {
                     if (err) {
                         return res.send(422,err);
                     } else {
-                        Thread.populate(thread,[
-                            {path : 'members', select: '_id email name'},
-                            {path : 'messages.user', select: '_id email name'},
-                            {path : 'messages.mentions', select: '_id email name'},
-                            {path : 'activities.user', select: '_id email name'},
-                            {path : 'owner', select: '_id email name'}
-                        ],function(err,thread) {
-                            if (err) {
-                                return res.send(422,err);
-                            } else {
-                                EventBus.emit('socket:emit', {
-                                  event: 'message:new',
-                                  room: thread._id.toString(),
-                                  data: thread
-                                });
-                                return res.json(thread)
-                            }
-                        });
+                        populateThread(thread, res);
                     }
                 });
             });
