@@ -1,33 +1,17 @@
 <div class="detail-header" layout-padding layout="row">
 		
-	<md-chips class="" ng-model="dashboardFilters" placeholder="Search..." secondary-placeholder="Search..." flex="50" md-autocomplete-snap="" md-require-math="autoCompleteRequireMath" md-on-add="addChip()" md-on-remove="removeChip()">
-		<md-autocomplete 
-			md-selected-item="selectedItem" 
-			md-search-text="searchText"
-			md-items="item in querySearch(searchText)" 
-			md-item-text="item" 
-			placeholder="Search..."
-			>
-			<span md-highlight-text="searchText">{{item.project.name}}</span>
-		</md-autocomplete>
-		<md-chip-template class="md-accent">
-	        <strong>{{$chip.project.name}}</strong>
-	    </md-chip-template>
-	</md-chips>
-	
-	<span flex></span>
-
-	<md-chips class="set-filters" ng-model="fileChips" readonly="true">
-		<md-chip-template ng-click="selectedChip($chip)">
-	        <strong>{{$chip.text}}<i ng-show="$chip.select" style="font-size: 15px" class="material-icons">clear</i></strong>
-      	</md-chip-template>
-	</md-chips>
+	<div layout="row">
+		<md-input-container flex>
+			<label for="">Search for file</label>
+			<input type="text" ng-model="element.name">
+		</md-input-container>
+	</div>
 		
 </div>
 
 <md-list ng-cloak class="main-page-content">
 
-	<div ng-repeat="file in myFiles track by $index" ng-click="openLocation(file, 'document')" ng-show="file.referenceTo=='file'">
+	<div ng-repeat="file in myFiles |filter: element.name track by $index" ng-click="openLocation(file, 'document')" ng-show="file.referenceTo=='file'">
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
 		          	<h3>{{ file.element.name }}</h3>
