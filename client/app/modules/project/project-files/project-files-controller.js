@@ -124,19 +124,19 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
         $scope.uploadFile.members = _.filter($scope.projectMembers, {select: true});
         $scope.uploadFile.tags = _.filter($scope.tags, {select: true});
 		if ($scope.uploadFile.files.length == 0) {
-			$scope.showToast("Please choose at least 1 file");
+			$scope.showToast("Please Select a FIle...");
 		} else if ($scope.uploadFile.tags.length == 0) {
-			$scope.showToast("Please enter at least 1 tags");
+			$scope.showToast("Please Select At Least 1 Tag...");
 		} else if ($scope.uploadFile.members.length == 0) {
-			$scope.showToast("Please choose at least 1 member");
+			$scope.showToast("Please Select At Lease 1 Team Member...");
 		} else {
 			uploadService.upload({id: $stateParams.id}, $scope.uploadFile).$promise.then(function(res) {
 				$mdDialog.hide();
-				$scope.showToast("Upload new file successfully");
+				$scope.showToast("File Has Been Uploaded Successfully.");
                 $rootScope.$broadcast("File.Inserted", res[0]);
                 $state.go("project.files.detail", {id: res[0].project, fileId: res[0]._id});
 			}, function(err) {
-				$scope.showToast("Upload error");
+				$scope.showToast("There Has Been An Error...");
 			});
 		}
 	};
@@ -165,7 +165,7 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
 	};
 
 	$scope.showToast = function(value) {
-        $mdToast.show($mdToast.simple().textContent(value).position('bottom','right').hideDelay(3000));
+        $mdToast.show($mdToast.simple().textContent(value).position('bottom','left').hideDelay(3000));
     };
 
     $rootScope.$on("File.Inserted", function(event, data) {
