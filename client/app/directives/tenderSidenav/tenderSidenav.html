@@ -1,0 +1,45 @@
+<div flex class="md-whiteframe-1dp" style="height: 92vh; overflow: scroll">
+	
+		<div layout="column" layout-padding layout-margin>
+			<p layout-padding class="page-title">{{ project.name }}</p>
+		</div>
+
+		<md-list ng-cloak flex>
+			<div ui-sref="project.overview" ng-class="{activemenu: $state.includes('project.overview')}">
+				<md-list-item md-ink-ripple>
+				    <p layout-padding>Overview</p>
+				</md-list-item>
+			</div>
+			<div ui-sref="project.team.all" ng-class="{activemenu: $state.includes('project.team')}">
+				<md-list-item md-ink-ripple>
+				    <p layout-padding>Team</p>
+				</md-list-item>
+			</div>
+			<div ui-sref="project.tenders.all" ng-class="{activemenu: $state.includes('project.tenders')}">
+				<md-list-item md-ink-ripple>
+				    <p layout-padding>Tenders</p>
+				</md-list-item>
+			</div>
+			<div ui-sref="project.messages.all" ng-class="{activemenu: $state.includes('project.messages')}">
+				<md-list-item md-ink-ripple>
+				    <p layout-padding>Messages</p>
+				</md-list-item>
+			</div>
+			<div ui-sref="project.tasks.all" ng-class="{activemenu: $state.includes('project.tasks')}">
+				<md-list-item md-ink-ripple>
+				    <p layout-padding>Tasks</p>
+				</md-list-item>
+			</div>
+			<div ui-sref="project.files.all" ng-class="{activemenu: $state.includes('project.files')}">
+				<md-list-item md-ink-ripple>
+				    <p layout-padding>Files</p>
+				</md-list-item>
+			</div>
+			<div ui-sref="project.documentation.all" ng-class="{activemenu: $state.includes('project.documentation')}">
+				<md-list-item md-ink-ripple>
+				    <p layout-padding>Documentation</p>
+				</md-list-item>
+			</div>
+		</md-list>
+
+</div>
