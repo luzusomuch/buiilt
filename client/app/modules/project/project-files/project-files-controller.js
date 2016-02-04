@@ -173,7 +173,7 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
     });
 
     socket.on("file:new", function(data) {
-        console.log(data);
+        $scope.files.push(data);
     });
 
 	getProjectMembers($stateParams.id);

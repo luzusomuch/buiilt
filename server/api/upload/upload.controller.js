@@ -184,6 +184,19 @@ exports.uploadReversion = function(req, res) {
                         {path: "activities.user", select: "_id email name"},
                         {path: "activities.acknowledgeUsers._id", select: "_id email name"}
                     ], function(err, file) {
+                        if (file.element.type === "file") {
+                            EventBus.emit('socket:emit', {
+                                event: 'file:update',
+                                room: file._id.toString(),
+                                data: JSON.parse(JSON.stringify(file))
+                            });
+                        } else {
+                            EventBus.emit('socket:emit', {
+                                event: 'document:update',
+                                room: file._id.toString(),
+                                data: JSON.parse(JSON.stringify(file))
+                            });
+                        }
                         return res.send(200, file);
                     });
                 });
@@ -315,7 +328,27 @@ exports.upload = function(req, res){
                     });
                 });
             } else {
-                return res.send(200, filesAfterInsert);
+                async.each(filesAfterInsert, function(file, cb) {
+                    _.each(acknowledgeUsers, function(user) {
+                        if (file.element.type === "file" && user._id) {
+                            EventBus.emit('socket:emit', {
+                                event: 'file:new',
+                                room: user._id.toString(),
+                                data: JSON.parse(JSON.stringify(file))
+                            });
+                        } else if (file.element.type === "document" && user._id) {
+                            EventBus.emit('socket:emit', {
+                                event: 'document:new',
+                                room: user._id.toString(),
+                                data: JSON.parse(JSON.stringify(file))
+                            });
+                        }
+                    });
+                    cb();
+                }, function() {
+                    return res.send(200, filesAfterInsert);
+                });
+                
             }
         });
     });

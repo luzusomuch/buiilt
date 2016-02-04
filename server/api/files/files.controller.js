@@ -10,6 +10,7 @@ var _ = require('lodash');
 var async = require('async');
 var s3 = require('../../components/S3');
 var mongoose = require('mongoose');
+var EventBus = require('../../components/EventBus');
 
 function populateFile(file, res){
     File.populate(file, [
@@ -18,6 +19,19 @@ function populateFile(file, res){
         {path: "activities.user", select: "_id email name"},
         {path: "activities.acknowledgeUsers._id", select: "_id email name"}
     ], function(err, file) {
+        if (file.element.type === "file") {
+            EventBus.emit('socket:emit', {
+                event: 'file:update',
+                room: file._id.toString(),
+                data: JSON.parse(JSON.stringify(file))
+            });
+        } else {
+            EventBus.emit('socket:emit', {
+                event: 'document:update',
+                room: file._id.toString(),
+                data: JSON.parse(JSON.stringify(file))
+            });
+        }
         return res.send(200, file);
     });
 };
@@ -100,10 +114,24 @@ exports.update = function(req, res) {
                 file.save(function(err) {
                     if (err) {return res.send(500,err);}
                     File.populate(file, [
-                    {path:"owner", select:"_id name email"},
-                    {path:"members", select:"_id name email"},
-                    {path:"activities.user", select:"_id name email"},
+                        {path: "owner", select: "_id email name"},
+                        {path: "members", select: "_id email name"},
+                        {path: "activities.user", select: "_id email name"},
+                        {path: "activities.acknowledgeUsers._id", select: "_id email name"}
                     ], function(err, file) {
+                        if (file.element.type === "file") {
+                            EventBus.emit('socket:emit', {
+                                event: 'file:update',
+                                room: file._id.toString(),
+                                data: JSON.parse(JSON.stringify(file))
+                            });
+                        } else {
+                            EventBus.emit('socket:emit', {
+                                event: 'document:update',
+                                room: file._id.toString(),
+                                data: JSON.parse(JSON.stringify(file))
+                            });
+                        }
                         RelatedItem.responseWithRelated("file", file, req.user, res);
                     });
                 });
@@ -161,7 +189,27 @@ exports.acknowledgementViaEmail = function(req, res) {
         }
         file.save(function(err) {
             if (err) {return res.send(500,err);}
-            return res.redirect(file.path);
+            File.populate(file, [
+                {path: "owner", select: "_id email name"},
+                {path: "members", select: "_id email name"},
+                {path: "activities.user", select: "_id email name"},
+                {path: "activities.acknowledgeUsers._id", select: "_id email name"}
+            ], function(err, file) {
+                if (file.element.type === "file") {
+                    EventBus.emit('socket:emit', {
+                        event: 'file:update',
+                        room: file._id.toString(),
+                        data: JSON.parse(JSON.stringify(file))
+                    });
+                } else {
+                    EventBus.emit('socket:emit', {
+                        event: 'document:update',
+                        room: file._id.toString(),
+                        data: JSON.parse(JSON.stringify(file))
+                    });
+                }
+                return res.redirect(file.path);
+            });
         });
     });
 };

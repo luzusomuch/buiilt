@@ -1,10 +1,15 @@
-angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope, $rootScope, file, $mdDialog, uploadService, fileService, $mdToast, peopleService, $stateParams, messageService, taskService, $state, people) {
+angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope, $rootScope, file, $mdDialog, uploadService, fileService, $mdToast, peopleService, $stateParams, messageService, taskService, $state, people, socket) {
 	$scope.file = file;
     $scope.orginalActivities = angular.copy($scope.file.activities);
     $scope.isShowRelatedItem = true;
     $scope.people = people;
 
     $rootScope.$on("File.Updated", function(event, data) {
+        $scope.file = data;
+    });
+
+    socket.emit("join", file._id);
+    socket.on("file:update", function(data) {
         $scope.file = data;
     });
 
