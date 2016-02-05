@@ -1,0 +1,30 @@
+<md-dialog aria-label="Attach an Scope" flex="70">
+    <form name="form">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Attach an Scope</h2>
+            </div>
+        </md-toolbar>
+        
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column" layout-padding>
+                
+                <div layout="column">
+                    <p class="md-body-2">Describe the scope:</p>
+                    <div layout="row">
+                        <md-input-container flex-offset="15" flex="66">
+                            <label for="">Addendum Description</label>
+                            <textarea ng-model="scope.description" columns="1" rows="5" required md-maxlength="300"></textarea>
+                        </md-input-container>
+                    </div>
+                </div>
+                
+            </div>
+        </md-dialog-content>
+        
+        <md-dialog-actions>
+            <md-button ng-click="cancelNewTenderModal()">Cancel</md-button>
+            <md-button ng-click="attachScope()" class="md-primary">Send Addendum</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

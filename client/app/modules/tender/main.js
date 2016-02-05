@@ -13,17 +13,20 @@ angular.module('buiiltApp').config(function($stateProvider) {
   })
   .state('tender.overview', {
     url: '/overview',
-    templateUrl: '/app/modules/tender-overview/tender-overview.html',
-    controller: 'TenderCtrl'
+    templateUrl: '/app/modules/tender/tender-overview/tender-overview.html',
+    controller: 'tenderOverviewCtrl',
+    authenticate : true
   })
   .state('tender.invitees', {
     url: '/invitees',
-    templateUrl: '/app/modules/tender-invitees/tender-invitees.html',
-    controller: 'TenderCtrl'
+    templateUrl: '/app/modules/tender/tender-invitees/tender-invitees.html',
+    controller: 'tenderInviteesCtrl',
+    authenticate : true
   })
   .state('tender.documents', {
     url: '/documents',
-    templateUrl: '/app/modules/tender-documents/tender-documents.html',
-    controller: 'TenderCtrl'
+    templateUrl: '/app/modules/tender/tender-documents/tender-documents.html',
+    controller: 'tenderDocumentsCtrl',
+    authenticate : true
   });
 });

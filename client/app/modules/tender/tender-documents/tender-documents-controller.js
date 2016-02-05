@@ -1,3 +1,3 @@
-angular.module('buiiltApp').controller('projectOverviewCtrl', function($scope, $timeout, $q) {
+angular.module('buiiltApp').controller('tenderDocumentsCtrl', function($scope, $timeout, $q) {
 	
 });

@@ -18,6 +18,9 @@ angular.module('buiiltApp')
         },
         create: {
             method: "POST"
+        },
+        update: {
+            method: "PUT"
         }
     });
 });
