@@ -197,7 +197,7 @@ exports.createUserWithInviteToken = function(req, res, next) {
                                     File.find({}, function(err, files) {
                                         if (err) {cb();}
                                         async.each(files, function(file, callback) {
-                                            if (file.element.type === "document") {
+                                            if (file.element && file.element.type === "document") {
                                                 callback();
                                             } else {
                                                 var currentUserIndex = _.indexOf(file.notMembers, user.email);
