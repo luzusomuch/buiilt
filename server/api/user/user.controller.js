@@ -197,16 +197,19 @@ exports.createUserWithInviteToken = function(req, res, next) {
                                     File.find({}, function(err, files) {
                                         if (err) {cb();}
                                         async.each(files, function(file, callback) {
-                                            if (file.element && file.element.type === "document") {
-                                                callback();
-                                            } else {
-                                                var currentUserIndex = _.indexOf(file.notMembers, user.email);
-                                                if (currentUserIndex !== -1) {
-                                                    file.members.push(user._id);
-                                                    file.notMembers.splice(currentUserIndex, 1);
+                                            if (file.owner && file.project) {
+                                                if (file.element && file.element.type === "document") {
+                                                    callback();
+                                                } else {
+                                                    var currentUserIndex = _.indexOf(file.notMembers, user.email);
+                                                    if (currentUserIndex !== -1) {
+                                                        file.members.push(user._id);
+                                                        file.notMembers.splice(currentUserIndex, 1);
+                                                    }
+                                                    file.save(callback());
                                                 }
-                                                file.save(callback());
-                                            }
+                                            } else 
+                                                callback();
                                         },cb);
                                     });
                                 },
