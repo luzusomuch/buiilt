@@ -1,7 +1,7 @@
 angular.module('buiiltApp')
 .factory('uploadService', function($resource) {
 
-  return $resource('/api/uploads/:id/:action',
+    return $resource('/api/uploads/:id/:action',
     {
         id : '@_id'
     },

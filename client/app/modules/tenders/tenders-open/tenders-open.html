@@ -2,13 +2,21 @@
 </div>
 
 <md-list ng-cloak class="main-page-content">
-	
+	<div ng-show="tender.status=='open'" ng-repeat="tender in tenders track by $index" ui-sref="tender.overview({tenderId: tender._id})">
+        <md-list-item class="md-2-line" md-ink-ripple>
+            <div class="md-list-item-text" layout="column">
+                    <h3>{{ tender.name }}</h3>
+                    <p>{{ tender.address }}</p>
+            </div>
+        </md-list-item>
+        <md-divider></md-divider>
+    </div>
 </md-list>
 
 <div>
   <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-list">
 	  <md-fab-trigger>
-  	      <md-button aria-label="Create a New Tender" class="md-fab md-primary">
+  	      <md-button ng-click="showCreateTenderModal($event)" aria-label="Create a New Tender" class="md-fab md-primary">
 			  <md-tooltip md-direction="left">Create a New Tender</md-tooltip>
 		      <md-icon class="material-icons" >add</md-icon>
   	      </md-button>

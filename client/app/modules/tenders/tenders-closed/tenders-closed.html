@@ -7,25 +7,25 @@
 
 <md-list ng-cloak class="main-page-content">
 	
-	<div ng-show="!search && project.status=='waiting'" ng-repeat="project in projects | filter:{name: filter} track by $index" ui-sref="project.overview({id: project._id})">
-		<md-list-item class="md-2-line" md-ink-ripple>
-			<div class="md-list-item-text" layout="column">
-		          	<h3>{{ project.name }}</h3>
-					<p>{{ project.address }}, {{ project. suburb }} {{ project.postcode }}</p>
-	        </div>
-		</md-list-item>
-		<md-divider></md-divider>
-	</div>
+	<div ng-show="tender.status=='close'" ng-repeat="tender in tenders track by $index" ui-sref="tender.overview({tenderId: tender._id})">
+        <md-list-item class="md-2-line" md-ink-ripple>
+            <div class="md-list-item-text" layout="column">
+                    <h3>{{ tender.name }}</h3>
+                    <p>{{ tender.address }}</p>
+            </div>
+        </md-list-item>
+        <md-divider></md-divider>
+    </div>
 	
 </md-list>
 
 <div>
   <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-list">
-	  <md-fab-trigger>
-  	      <md-button aria-label="Create a New Project" class="md-fab md-primary" ng-show="allowCreateProject" ng-click="showCreateProjectModal($event)">
-			  <md-tooltip md-direction="left">Create a New Project</md-tooltip>
-		      <md-icon class="material-icons" >add</md-icon>
-  	      </md-button>
+      <md-fab-trigger>
+          <md-button ng-click="showCreateTenderModal($event)" aria-label="Create a New Tender" class="md-fab md-primary">
+              <md-tooltip md-direction="left">Create a New Tender</md-tooltip>
+              <md-icon class="material-icons" >add</md-icon>
+          </md-button>
       </md-fab-trigger>
   </md-fab-speed-dial>
 </div>

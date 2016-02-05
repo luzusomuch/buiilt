@@ -30,7 +30,7 @@
 
 <md-list ng-cloak class="main-page-content">
 
-	<div ng-repeat="file in myFiles |filter: searchFile track by $index" ng-click="openLocation(file, 'document')" ng-show="file.element.type=='file'">
+	<div ng-repeat="file in myFiles |filter: searchFile track by $index" ng-click="openLocation(file, 'file')" ng-show="file.element.type=='file'">
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
 	          	<h3>{{ file.name }}</h3>

@@ -38,6 +38,7 @@ module.exports = function(app) {
   app.use('/api/peoples', require('./api/people'));
   app.use('/api/peopleChats', require('./api/peopleChat'));
   app.use('/api/boards', require('./api/board'));
+  app.use('/api/tenders', require('./api/tender'));
 
   app.use('/auth', require('./auth'));
 
