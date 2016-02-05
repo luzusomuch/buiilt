@@ -183,13 +183,17 @@ exports.createUserWithInviteToken = function(req, res, next) {
                                     Task.find({}, function(err, tasks) {
                                         if (err) {cb();}
                                         async.each(tasks, function(task, callback) {
-                                            var currentUserIndex = _.indexOf(task.notMembers, user.email);
-                                            if (currentUserIndex !== -1) {
-                                                task.members.push(user._id);
-                                                task.notMembers.splice(currentUserIndex, 1);
+                                            if (task.owner && task.description) {
+                                                var currentUserIndex = _.indexOf(task.notMembers, user.email);
+                                                if (currentUserIndex !== -1) {
+                                                    task.members.push(user._id);
+                                                    task.notMembers.splice(currentUserIndex, 1);
+                                                }
+                                                task._editUser = user;
+                                                task.save(callback());
+                                            } else {
+                                                callback();
                                             }
-                                            task._editUser = user;
-                                            task.save(callback());
                                         },cb);
                                     });
                                 },
