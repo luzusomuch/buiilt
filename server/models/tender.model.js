@@ -28,6 +28,11 @@ var TenderSchema = new Schema({
         user: {type: Schema.Types.ObjectId, ref: "User", required: true},
         type: {type: String}, 
         createdAt: Date, 
+        acknowledgeUsers: [{
+            _id: {type: Schema.Types.ObjectId, ref: "User"},
+            email: String,
+            isAcknow: Boolean,
+        }],
         element: {}
     }],
     isDistribute: {type: Boolean, default: false},

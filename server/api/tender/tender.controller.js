@@ -50,6 +50,13 @@ exports.update = function(req, res) {
                 if (data.editType === "attach-addendum") {
                     activity.element.name = data.name;
                     activity.element.description = data.description;
+                    activity.acknowledgeUsers = [];
+                    _.each(tender.members, function(member) {
+                        activity.acknowledgeUsers.push({_id:member, isAcknow: false});
+                    });
+                    _.each(tender.notMembers, function(member) {
+                        activity.acknowledgeUsers.push({email: member, isAcknow: false});
+                    });
                     cb();
                 } else if (data.editType === "distribute-status") {
                     tender.isDistribute = true;
@@ -112,7 +119,8 @@ exports.update = function(req, res) {
                 Tender.populate(tender, [
                     {path: "owner", select: "_id name email"},
                     {path: "members", select: "_id name email"},
-                    {path: "activities.user", select: "_id name email"}
+                    {path: "activities.user", select: "_id name email"},
+                    {path: "activities.acknowledgeUsers._id", select: "_id name email"}
                 ], function(err, tender) {
                     EventBus.emit("socket:emit", {
                         event: "tender:update",
@@ -140,6 +148,7 @@ exports.get = function(req, res) {
     .populate("owner", "_id name email")
     .populate("members", "_id name email")
     .populate("activities.user", "_id name email")
+    .populate("activities.acknowledgeUsers._id", "_id name email")
     .exec(function(err, tender) {
         if (err) {return res.send(500,err);}
         else if (!tender) {return res.send(404);}
