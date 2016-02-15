@@ -100,7 +100,7 @@ angular.module('buiiltApp')
                             "$created": new Date(),
                             "$email": res.email
                         });
-                        mixpanel.track("Sign Up", {
+                        mixpanel.track("Sign Up via Invite", {
                             "first_name": res.firstName,
                             "last_name": res.lastName,
                             "created": new Date(),
