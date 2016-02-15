@@ -110,7 +110,7 @@ angular.module('buiiltApp').controller('tenderOverviewCtrl', function($scope, $r
                     
                 });
             } else {
-                $scope.showToast("You cann\'t update distribute of this status until have one tender scope");
+                $scope.showToast("You can\'t update distribute of this status until have one tender scope");
                 return false;
             }
         }
@@ -156,4 +156,8 @@ angular.module('buiiltApp').controller('tenderOverviewCtrl', function($scope, $r
             $scope.showToast("Successfully");
         }, function(err){$scope.showToast("There Has Been An Error...");});
     };
+	
+	$scope.cancelDialog = function(){
+		$mdDialog.cancel();
+	};
 });
