@@ -42,10 +42,35 @@ exports.update = function(req, res) {
                 element: {}
             }
         };
-        if (data.file) {
-            activity.element.link = addendum.element.link = data.file.url;
-        }
+        // if (data.file) {
+        //     activity.element.link = addendum.element.link = data.file.url;
+        // }
+        var newFile = {};
         async.parallel([
+            function(cb) {
+                if (data.file) {
+                    var file = new File({
+                        name : data.file.filename,
+                        path : data.file.url,
+                        key : data.file.key,
+                        server : 's3',
+                        mimeType : data.file.mimeType,
+                        description : req.body.description,
+                        size : data.file.size,
+                        project: tender.project,
+                        owner: req.user._id,
+                        element: {type: "tender"}
+                    });
+                    file.save(function(err) {
+                        if (err) {cb(err);}
+                        else {
+                            newFile = file;
+                            cb();
+                        }
+                    });
+                } else 
+                    cb();
+            },
             function(cb) {
                 if (data.editType === "attach-addendum") {
                     activity.element.name = data.name;
@@ -111,6 +136,10 @@ exports.update = function(req, res) {
             }
         ], function(err) {
             if (err) {return res,send(500,err);}
+            if (data.file) {
+                activity.element.link = data.file.url;
+                activity.element.fileId = newFile._id;
+            }
             tender.activities.push(activity);
             tender._editUser = req.user;
             tender.markModified(data.editType);
@@ -125,9 +154,9 @@ exports.update = function(req, res) {
                     EventBus.emit("socket:emit", {
                         event: "tender:update",
                         room: tender._id.toString(),
-                        data: tender
+                        data: responseTender(tender, req.user)
                     });
-                    return res.send(200, tender);
+                    return res.send(200, responseTender(tender, req.user));
                 });
             });
         });
@@ -152,6 +181,72 @@ exports.get = function(req, res) {
     .exec(function(err, tender) {
         if (err) {return res.send(500,err);}
         else if (!tender) {return res.send(404);}
-        return res.send(200,tender);
+        return res.send(200,responseTender(tender, req.user));
     });
+};
+
+exports.acknowledgement = function(req, res) {
+    Tender.findById(req.params.id, function(err, tender) {
+        if (err) {return res.send(500,err);}
+        else if (!tender) {return res.send(404);}
+        var activityIndex = _.findIndex(tender.activities, function(activity) {
+            return activity._id.toString()===req.params.activityId;
+        });
+        if (activityIndex !== -1) {
+            var acknowledgeUserIndex = _.findIndex(tender.activities[activityIndex].acknowledgeUsers, function(user) {
+                if (user._id) {
+                    return user._id.toString()===req.user._id.toString();
+                }
+            }); 
+            if (acknowledgeUserIndex !== -1) {
+                tender.activities[activityIndex].acknowledgeUsers[acknowledgeUserIndex].isAcknow = true;
+            } else {
+                tender.activities[activityIndex].acknowledgeUsers.push({_id: req.user._id, isAcknow: true});
+            }
+        }
+        tender.save(function(err) {
+            if (err) {return res.send(500,err);}
+            Tender.populate(tender, [
+                {path: "owner", select: "_id name email"},
+                {path: "members", select: "_id name email"},
+                {path: "activities.user", select: "_id name email"},
+                {path: "activities.acknowledgeUsers._id", select: "_id name email"}
+            ], function(err, tender) {
+                EventBus.emit("socket:emit", {
+                    event: "tender:update",
+                    room: tender._id.toString(),
+                    data: responseTender(tender, req.user)
+                });
+                return res.send(200, responseTender(tender, req.user));
+            });
+        });
+    });
+};
+
+function responseTender(tender, user) {
+    if (tender.owner._id.toString()===user._id.toString()) {
+        return tender;
+    } else {
+        var activities = [];
+        _.each(tender.activities, function(activity) {
+            if (activity.type === "attach-scope") {
+                activities.push(activity);
+            } else if (activity.type === "attach-addendum") {
+                var acknowledgeUsers = [];
+                _.each(activity.acknowledgeUsers, function(acknowledgeUser) {
+                    if (acknowledgeUser._id) {
+                        if (acknowledgeUser._id._id.toString()===user._id.toString()) {
+                            acknowledgeUsers.push(acknowledgeUser);
+                        }
+                    }
+                });
+                activity.acknowledgeUsers = acknowledgeUsers;
+                activities.push(activity);
+            }
+        });
+        tender.activities = activities;
+        tender.members = [tender.owner];
+        tender.notMembers = [];
+        return tender;
+    }
 };

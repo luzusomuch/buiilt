@@ -160,7 +160,7 @@ exports.uploadReversion = function(req, res) {
                 file.server = 's3',
                 file.mimeType = newFile.mimeType,
                 file.description = req.body.description,
-                file.size = req.body.size,
+                file.size = data.file.size,
                 file.version = file.version + 1;
                 file.fileHistory.push(history);
                 var activity = {

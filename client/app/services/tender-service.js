@@ -1,7 +1,7 @@
 angular.module('buiiltApp')
 .factory('tenderService', function($resource) {
 
-    return $resource('/api/tenders/:id/:action',
+    return $resource('/api/tenders/:id/:activityId/:action',
     {
         id : '@_id'
     },
@@ -21,6 +21,12 @@ angular.module('buiiltApp')
         },
         update: {
             method: "PUT"
+        },
+        acknowledgement: {
+            method: "PUT",
+            params: {
+                action: "acknowledgement"
+            }
         }
     });
 });

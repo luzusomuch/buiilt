@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-.factory('authService', function($location, $rootScope, $http, userService,teamService, $cookieStore, $q,$state, $mixpanel) {
+.factory('authService', function($location, $rootScope, $http, userService,teamService, $cookieStore, $q,$state) {
     var currentUser = {};
     if ($cookieStore.get('token')) {
         currentUser = userService.get();
@@ -59,10 +59,18 @@ angular.module('buiiltApp')
                     $cookieStore.put('token', data.token);
                     userService.get().$promise.then(function(res) {
                         currentUser = res;
-                        $mixpanel.identify(res._id);
-                        $mixpanel.track("SignUp", {
+                        mixpanel.identify(res._id);
+                        mixpanel.people.set({
+                            "$first_name": res.firstName,
+                            "$last_name": res.lastName,
+                            "$created": new Date(),
+                            "$email": res.email
+                        });
+                        mixpanel.track("Sign Up", {
+                            "first_name": res.firstName,
+                            "last_name": res.lastName,
+                            "created": new Date(),
                             "email": res.email,
-                            "name": res.name
                         }, function() {
                             window.location.href = "/settings/user";
                         });
@@ -85,10 +93,18 @@ angular.module('buiiltApp')
                     $cookieStore.put('token', data.token);
                     userService.get().$promise.then(function(res) {
                         currentUser = res;
-                        $mixpanel.identify(res._id);
-                        $mixpanel.track("SignUp", {
+                        mixpanel.identify(res._id);
+                        mixpanel.people.set({
+                            "$first_name": res.firstName,
+                            "$last_name": res.lastName,
+                            "$created": new Date(),
+                            "$email": res.email
+                        });
+                        mixpanel.track("Sign Up", {
+                            "first_name": res.firstName,
+                            "last_name": res.lastName,
+                            "created": new Date(),
                             "email": res.email,
-                            "name": res.name
                         }, function() {
                             if (!data.isSkipInTender) {
                                 window.location.href = "/projects/invitations";

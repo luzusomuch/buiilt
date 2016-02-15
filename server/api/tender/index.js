@@ -10,6 +10,7 @@ var router = express.Router();
 router.post("/", auth.isAuthenticated(), controller.create);
 
 router.put("/:id", auth.isAuthenticated(), controller.update);
+router.put("/:id/:activityId/acknowledgement", auth.isAuthenticated(), controller.acknowledgement);
 
 router.get("/get-all", auth.isAuthenticated(), controller.getAll);
 router.get("/:id", auth.isAuthenticated(), controller.get);

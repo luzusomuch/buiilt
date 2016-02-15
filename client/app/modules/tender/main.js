@@ -28,5 +28,11 @@ angular.module('buiiltApp').config(function($stateProvider) {
     templateUrl: '/app/modules/tender/tender-documents/tender-documents.html',
     controller: 'tenderDocumentsCtrl',
     authenticate : true
+  })
+  .state('tender.documents.detail', {
+    url: '/:documentId/detail',
+    templateUrl: '/app/modules/tender/tender-documents/detail/document-detail.html',
+    controller: 'tenderDocumentDetailCtrl',
+    authenticate: true
   });
 });

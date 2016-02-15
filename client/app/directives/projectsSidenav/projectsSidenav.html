@@ -10,7 +10,7 @@
 				    <p layout-padding>Open</p>
 				</md-list-item>
 			</div>
-			<div ui-sref="projects.invitations" ng-class="{activemenu: $state.includes('projects.invitations')}" ng-show="(currentTeam.type !== 'architect' || currentTeam.type !== 'homeOwner')">
+			<div ui-sref="projects.invitations" ng-class="{activemenu: $state.includes('projects.invitations')}" ng-hide="currentTeam.type == 'architect' || currentTeam.type == 'homeOwner'">
 				<md-list-item md-ink-ripple>
 				    <p layout-padding>Invitations to Tender</p>
 				</md-list-item>

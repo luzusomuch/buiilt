@@ -1,11 +1,29 @@
 angular.module('buiiltApp').controller('tenderOverviewCtrl', function($scope, $rootScope, $mdToast, tender, $mdDialog, $state, socket, tenderService, $stateParams) {
 	$scope.tender = tender;
     $rootScope.title = tender.name  + " Overview";
+    $scope.currentUser = $rootScope.currentUser;
 
     socket.emit("join", tender._id);
     socket.on("tender:update", function(data) {
         $scope.tender = data;
+        checkAcknowLedgement($scope.tender);
     });
+
+    function checkAcknowLedgement(tender) {
+        _.each(tender.activities, function(activity) {
+            if (activity.type === "attach-addendum") {
+                activity.isAcknow = false;
+                if (_.findIndex(activity.acknowledgeUsers, function(item) {
+                    if (item._id && item.isAcknow) {
+                        return item._id._id == $scope.currentUser._id;
+                    }
+                }) !== -1) {
+                    activity.isAcknow = true;
+                }
+            }
+        });
+    };
+    checkAcknowLedgement($scope.tender);
 
     $scope.pickFile = pickFile;
 
@@ -126,6 +144,15 @@ angular.module('buiiltApp').controller('tenderOverviewCtrl', function($scope, $r
     $scope.updateTender = function(tender) {
         tenderService.update({id: $stateParams.tenderId}, tender).$promise.then(function(res) {
             $mdDialog.cancel();
+            $scope.showToast("Successfully");
+        }, function(err){$scope.showToast("There Has Been An Error...");});
+    };
+
+    $scope.acknowledgement = function(activity) {
+        console.log(activity);
+        tenderService.acknowledgement({id: $stateParams.tenderId, activityId: activity._id},{}).$promise.then(function(res) {
+            $mdDialog.cancel();
+            activity.isAcknow = true;
             $scope.showToast("Successfully");
         }, function(err){$scope.showToast("There Has Been An Error...");});
     };
