@@ -58,6 +58,9 @@
 							<span ng-switch-when="related-file"> "<a ui-sref="project.files.detail({id: thread.project})">{{activity.element.name}}</a>".</span>
 							
 						</span>
+						<div layout="row" layout-align="center center" class="tagcloud-selection" layout-wrap ng-show="activity.type =='related-task'">
+							<span ng-class="{'available-tag':!member._id, 'selected-tag': member._id}" ng-repeat="member in activity.element.members">{{(member._id) ? member.name : member.email}}<md-icon ng-show="!member._id" class="material-icons non-user-chip cursor-help"><md-tooltip>Messages will be sent via email to this Team Member</md-tooltip>mail_outline</md-icon></span>
+						</div>
 						
 					</div>
 				</div>

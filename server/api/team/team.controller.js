@@ -67,7 +67,7 @@ exports.create = function (req, res) {
     }
     var team = new Team(data);
     team.leader.push(user);
-    team.documentTags = ["architectural", "structural engineering", "hydraulic engineering", "coucil", "certifier"];
+    team.documentTags = ["architectural", "structural engineering", "hydraulic engineering", "council", "certifier"];
     var listEmail = [];
     async.each(data.emails, function(email, callback) {
       User.findOne({'email': email.email}, function (err, user) {

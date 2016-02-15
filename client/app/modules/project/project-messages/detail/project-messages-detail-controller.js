@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($rootScope, $scope, $timeout, $stateParams, messageService, $mdToast, $mdDialog, $state, thread, peopleService, taskService, uploadService, people, clipboard, socket) {
+angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q, $rootScope, $scope, $timeout, $stateParams, messageService, $mdToast, $mdDialog, $state, thread, peopleService, taskService, uploadService, people, clipboard, socket) {
     $scope.error = {};
     $scope.thread = thread;
     $scope.people = people;
@@ -13,6 +13,29 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($ro
         $rootScope.currentUser.isLeader = (_.findIndex($rootScope.currentTeam.leader, function(leader){return leader._id == $rootScope.currentUser._id}) !== -1) ? true: false;
         $scope.showRelatedAction = true;
         getProjectMembers($stateParams.id);
+
+        var prom = [];
+        _.each($scope.thread.activities, function(item) {
+            if (item.type === "related-task") {
+                prom.push(taskService.get({id: item.element.item}).$promise);
+            }
+        });
+        $q.all(prom).then(function(data) {
+            _.each($scope.thread.activities, function(activity) {
+                if (activity.type === "related-task" && activity.element.item && _.findIndex(data, function(task) {
+                    return task._id.toString()===activity.element.item.toString();
+                }) !== -1) {
+                    var taskIndex = _.findIndex(data, function(task) {
+                        return task._id.toString()===activity.element.item.toString();
+                    });
+                    activity.element.name = data[taskIndex].description;
+                    activity.element.members = data[taskIndex].members;
+                    _.each(data[taskIndex].notMembers, function(member) {
+                        activity.element.members.push({email: member});
+                    });
+                }
+            });
+        });
     }
 
     threadInitial();

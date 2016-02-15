@@ -23,11 +23,11 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
 
     $scope.selectFilterTag = function(index, type) {
         if (type === "status") {
-            $scope.dueDateFilter = [];
-            $scope.dateEnd = null;
-            _.each($scope.dueDate, function(date) {
-                date.select = false;
-            });
+            // $scope.dueDateFilter = [];
+            // $scope.dateEnd = null;
+            // _.each($scope.dueDate, function(date) {
+            //     date.select = false;
+            // });
             $scope.assignStatus[index].select = !$scope.assignStatus[index].select;
             if (index === 0) {
                 $scope.assignStatus[1].select = false;
@@ -40,10 +40,11 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
                 $scope.status = null;
             }
         } else {
-            $scope.status = null;
-            _.each($scope.assignStatus, function(status) {
-                status.select = false;
-            });
+            // $scope.status = null;
+            // _.each($scope.assignStatus, function(status) {
+            //     status.select = false;
+            // });
+            $scope.dateEnd = null;
             $scope.dueDate[index].select = !$scope.dueDate[index].select;
             if ($scope.dueDate[index].select) {
                 $scope.dueDateFilter.push($scope.dueDate[index].value);
@@ -60,6 +61,79 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
             if (task.description.toLowerCase().indexOf($scope.description) > -1 || task.description.indexOf($scope.description) > -1) {
                 found = true;
             }
+            return found;
+        } else if ($scope.dateEnd && ($scope.status && $scope.status.length> 0)) { 
+            if (moment(moment($scope.dateEnd).format("YYYY-MM-DD")).isSame(taskDueDate)) {
+                if ($scope.status === "toMe" && _.findIndex(task.members, function(member) {
+                    return member._id.toString()===$rootScope.currentUser._id.toString();
+                }) !== -1) {
+                    found = true;
+                } else if ($scope.status === "byMe" && task.owner._id.toString()===$rootScope.currentUser._id.toString()) {
+                    found = true;
+                }
+            }
+            return found;
+        } else if (($scope.status && $scope.status.length > 0) && ($scope.dueDateFilter && $scope.dueDateFilter.length > 0)) {
+            _.each($scope.dueDateFilter, function(filter) {
+                switch (filter) {
+                    case "today":
+                        var today = moment(new Date()).format("YYYY-MM-DD");
+                        if (moment(taskDueDate).isSame(today)) {
+                            if ($scope.status === "toMe" && _.findIndex(task.members, function(member) {
+                                return member._id.toString()===$rootScope.currentUser._id.toString();
+                            }) !== -1) {
+                                found = true;
+                            } else if ($scope.status==="byMe" && task.owner._id.toString()===$rootScope.currentUser._id.toString()) {
+                                found = true;
+                            }
+                        }
+                    break;
+
+                    case "tomorrow":
+                        var tomorrow = moment(new Date()).add(1, "days").format("YYYY-MM-DD");
+                        if (moment(taskDueDate).isSame(tomorrow)) {
+                            if ($scope.status === "toMe" && _.findIndex(task.members, function(member) {
+                                return member._id.toString()===$rootScope.currentUser._id.toString();
+                            }) !== -1) {
+                                found = true;
+                            } else if ($scope.status==="byMe" && task.owner._id.toString()===$rootScope.currentUser._id.toString()) {
+                                found = true;
+                            }
+                        }
+                    break;
+
+                    case "thisWeek":
+                        var thisWeekStartDate = moment().startOf('week').format("YYYY-MM-DD");
+                        var thisWeekEndDate = moment().endOf('week').format("YYYY-MM-DD");
+                        if (moment(taskDueDate).isSameOrAfter(thisWeekStartDate) && moment(taskDueDate).isSameOrBefore(thisWeekEndDate)) {
+                            if ($scope.status === "toMe" && _.findIndex(task.members, function(member) {
+                                return member._id.toString()===$rootScope.currentUser._id.toString();
+                            }) !== -1) {
+                                found = true;
+                            } else if ($scope.status==="byMe" && task.owner._id.toString()===$rootScope.currentUser._id.toString()) {
+                                found = true;
+                            }
+                        }
+                    break;
+
+                    case "nextWeek":
+                        var nextWeekStartDate = moment().startOf("week").add(7, "days").format("YYYY-MM-DD");
+                        var nextWeekEndDay = moment().endOf("week").add(7, "days").format("YYYY-MM-DD");
+                        if (moment(taskDueDate).isSameOrAfter(nextWeekStartDate) && moment(taskDueDate).isSameOrBefore(nextWeekEndDay)) {
+                            if ($scope.status === "toMe" && _.findIndex(task.members, function(member) {
+                                return member._id.toString()===$rootScope.currentUser._id.toString();
+                            }) !== -1) {
+                                found = true;
+                            } else if ($scope.status==="byMe" && task.owner._id.toString()===$rootScope.currentUser._id.toString()) {
+                                found = true;
+                            }
+                        }
+                    break;
+
+                    default:
+                    break;
+                }
+            });
             return found;
         } else if ($scope.dateEnd) {
             if (moment(moment($scope.dateEnd).format("YYYY-MM-DD")).isSame(taskDueDate)) {
