@@ -33,6 +33,11 @@ angular.module('buiiltApp').config(function($stateProvider) {
     url: '/:documentId/detail',
     templateUrl: '/app/modules/tender/tender-documents/detail/document-detail.html',
     controller: 'tenderDocumentDetailCtrl',
-    authenticate: true
+    authenticate: true,
+    resolve: {
+      document: function($stateParams, fileService) {
+        return fileService.get({id: $stateParams.documentId}).$promise;
+      }
+    }
   });
 });

@@ -42,6 +42,8 @@ exports.getFilesByProject = function(req, res) {
         query = {project: req.params.id, 'element.type': 'file', $or: [{owner: req.user._id}, {members: req.user._id}]};
     } else if (req.params.type === "document") {
         query = {project: req.params.id, "element.type": "document"};
+    } else if (req.params.type === "tender") {
+        query = {project: req.params.id, "element.type": "tender"};
     }
     File.find(query).populate("members", "_id name email").exec(function(err, files) {
         if (err) {return res.send(500,err);}
