@@ -10,9 +10,14 @@
 				    <p layout-padding>Overview</p>
 				</md-list-item>
 			</div>
-			<div ui-sref="tender.invitees" ng-class="{activemenu: $state.includes('tender.invitees')}">
+			<div ng-show="tender.owner._id==currentUser._id" ui-sref="tender.invitees.all" ng-class="{activemenu: $state.includes('tender.invitees')}">
 				<md-list-item md-ink-ripple>
 				    <p layout-padding>Invitees</p>
+				</md-list-item>
+			</div>
+			<div ng-show="tender.owner._id!=currentUser._id" ui-sref="tender.invitees.detail({tenderId: tender._id, inviteeId: currentUser._id})" ng-class="{activemenu: $state.includes('tender.invitees')}">
+				<md-list-item md-ink-ripple>
+				    <p layout-padding>Message</p>
 				</md-list-item>
 			</div>
 			<div ui-sref="tender.documents" ng-class="{activemenu: $state.includes('tender.documents')}">

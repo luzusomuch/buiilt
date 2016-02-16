@@ -1,3 +1,6 @@
+<div class="detail-header" layout-padding layout="column">
+    <h3>{{tender.name}}'s document</h3>
+</div>
 <div class="main-page-content" layout-padding>
 	<md-list>
         <md-list-item class="md-2-line" ui-sref="tender.documents.detail({tenderId: document.belongTo.item._id, documentId: document._id})" ng-repeat="document in tenderDocuments">

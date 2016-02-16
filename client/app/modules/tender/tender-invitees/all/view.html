@@ -1,0 +1,38 @@
+<div class="detail-header" layout-padding layout="row">
+    <h3 ng-show="tender.owner.id==currentUser._id">{{tender.name}}'s invitees</h3>
+</div>
+
+<div class="main-page-content" layout-padding>
+    <md-list>
+        <md-list-item ui-sref="tender.invitees.detail({tenderId: tender._id, inviteeId: member._id})" ng-repeat="member in tender.members">
+            <div class="md-2-line">
+                <h4>{{member.name}}</h4>
+                <p>{{member.email}}</p>
+            </div>
+            <md-divider></md-divider>
+        </md-list-item>
+        <md-list-item ui-sref="tender.invitees.detail({tenderId: tender._id, inviteeId: member})" ng-repeat="member in tender.notMembers">
+            <div class="md-2-line">
+                <h4>{{member}}</h4>
+            </div>
+            <md-divider></md-divider>
+        </md-list-item>
+    </md-list>
+</div>
+
+<div>
+    <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-main" ng-show="tender.owner._id==currentUser._id">
+        <md-fab-trigger>
+            <md-button aria-label="Add an Item to this Project" class="md-fab md-primary">
+                <md-tooltip md-direction="left">Actions...</md-tooltip>
+                <md-icon class="material-icons" >add</md-icon>
+            </md-button>
+        </md-fab-trigger>
+        <md-fab-actions>
+            <md-button aria-label="Invite Tender" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'invite-tender.html')">
+                <md-tooltip md-direction="left">Invite a Tenderer</md-tooltip>
+                <md-icon class="material-icons">person_add</md-icon>
+            </md-button>
+        </md-fab-actions>
+    </md-fab-speed-dial>
+</div>

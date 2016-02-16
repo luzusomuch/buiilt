@@ -6,8 +6,9 @@ angular.module('buiiltApp').directive('tenderSidenav', function(){
         scope: {
             tender: "="
         },
-        controller: function($scope, $state) {
+        controller: function($scope, $state, $rootScope) {
             $scope.$state = $state;
+            $scope.currentUser = $rootScope.currentUser;
         }
     }
 });

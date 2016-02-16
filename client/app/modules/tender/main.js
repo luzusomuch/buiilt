@@ -18,10 +18,22 @@ angular.module('buiiltApp').config(function($stateProvider) {
     authenticate : true
   })
   .state('tender.invitees', {
-    url: '/invitees',
+    url: '/',
+    abstract: true,
     templateUrl: '/app/modules/tender/tender-invitees/tender-invitees.html',
+    authenticate : true
+  })
+  .state('tender.invitees.all', {
+    url: 'invitees',
+    templateUrl: '/app/modules/tender/tender-invitees/all/view.html',
     controller: 'tenderInviteesCtrl',
     authenticate : true
+  })
+  .state("tender.invitees.detail", {
+    url: "invitees/:inviteeId/detail",
+    templateUrl: "/app/modules/tender/tender-invitees/detail/tender-detail.html",
+    controller: "tenderInviteeDetailCtrl",
+    authenticate: true
   })
   .state('tender.documents', {
     url: '/documents',
