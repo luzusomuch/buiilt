@@ -27,6 +27,12 @@ angular.module('buiiltApp')
             params: {
                 action: "acknowledgement"
             }
+        },
+        uploadTenderDocument: {
+            method: "POST",
+            params: {
+                action: "upload-tender-document"
+            }
         }
     });
 });

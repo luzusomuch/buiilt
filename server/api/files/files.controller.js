@@ -43,7 +43,7 @@ exports.getFilesByProject = function(req, res) {
     } else if (req.params.type === "document") {
         query = {project: req.params.id, "element.type": "document"};
     } else if (req.params.type === "tender") {
-        query = {project: req.params.id, "element.type": "tender"};
+        query = {project: req.params.id, "element.type": "tender", "belongTo.item._id": mongoose.Types.ObjectId(req.query.tenderId)};
     }
     File.find(query).populate("members", "_id name email").exec(function(err, files) {
         if (err) {return res.send(500,err);}

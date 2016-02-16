@@ -59,6 +59,12 @@ exports.update = function(req, res) {
                         size : data.file.size,
                         project: tender.project,
                         owner: req.user._id,
+                        belongTo: {
+                            type: "tender",
+                            item: {
+                                _id: tender._id
+                            }
+                        },
                         element: {type: "tender"}
                     });
                     file.save(function(err) {
@@ -219,6 +225,44 @@ exports.acknowledgement = function(req, res) {
                 });
                 return res.send(200, responseTender(tender, req.user));
             });
+        });
+    });
+};
+
+
+exports.uploadTenderDocument = function(req, res) {
+    var data = req.body;
+    Tender.findById(req.params.id, function(err, tender) {
+        if (err) {return res.send(500,err);}
+        if (!tender) {
+            return res.send(404, {message: "This tender is not existed"});
+        }
+        var file = new File({
+            name : data.file.filename,
+            path : data.file.url,
+            key : data.file.key,
+            server : 's3',
+            mimeType : data.file.mimeType,
+            description : data.description,
+            size : data.file.size,
+            project: tender.project,
+            owner: req.user._id,
+            belongTo: {
+                type: "tender",
+                item: {
+                    _id: tender._id
+                }
+            },
+            element: {type: "tender"}
+        });
+        file.save(function(err) {
+            if (err) {return res.send(500,err);}
+            EventBus.emit("socket:emit", {
+                event: "tender-document:inserted",
+                room: tender._id.toString(),
+                data: JSON.parse(JSON.stringify(file))
+            });
+            return res.send(200);
         });
     });
 };

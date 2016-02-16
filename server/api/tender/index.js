@@ -8,6 +8,7 @@ var auth = require('../../auth/auth.service');
 var router = express.Router();
 
 router.post("/", auth.isAuthenticated(), controller.create);
+router.post("/:id/upload-tender-document", auth.isAuthenticated(), controller.uploadTenderDocument);
 
 router.put("/:id", auth.isAuthenticated(), controller.update);
 router.put("/:id/:activityId/acknowledgement", auth.isAuthenticated(), controller.acknowledgement);
