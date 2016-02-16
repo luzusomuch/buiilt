@@ -94,22 +94,14 @@
                 <md-tooltip md-direction="left">Distribute Tender</md-tooltip>
                 <md-icon class="material-icons">call_split</md-icon>
             </md-button>
-            <md-button aria-label="Send a File" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'select-winner-tender-modal.html')" ng-show="tender.isDistribute && tender.inviter._id == currentUser._id && !tender.hasSelect">
+            <md-button aria-label="Send a File" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'select-winner-tender.html')" ng-show="tender.isDistribute && tender.owner._id == currentUser._id && !tender.hasSelect">
                   <md-tooltip md-direction="left">Select a Winning Tender</md-tooltip>
                   <md-icon class="material-icons">playlist_add_check</md-icon>
-            </md-button>
-            <md-button aria-label="Broadcast a Message" class="md-fab md-raised md-mini" ng-click="showModal($event, 'attach-related-message.html')" ng-show="tender.isDistribute">
-                  <md-tooltip md-direction="left">Broadcast a Message</md-tooltip>
-                  <md-icon class="material-icons">chat_bubble_outline</md-icon>
             </md-button>
             <md-button aria-label="Add a Related Task" class="md-fab md-raised md-mini" ng-click="showModal($event, 'attach-related-task.html')" style="display:none">
                   <md-tooltip md-direction="left">Broadcast a Task</md-tooltip>
                   <md-icon class="material-icons">done_all</md-icon>
             </md-button>
-            <md-button aria-label="Add a Related File" class="md-fab md-raised md-mini" ng-click="showModal($event, 'attach-related-file.html')" ng-show="teamLeader && currentUser._id != tender.inviter._id">
-                  <md-tooltip md-direction="left">Submit Tender</md-tooltip>
-                  <md-icon class="material-icons">attach_file</md-icon>
-              </md-button>
           </md-fab-actions>
     </md-fab-speed-dial>
 </div>

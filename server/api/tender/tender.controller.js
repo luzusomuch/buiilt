@@ -254,7 +254,7 @@ exports.uploadTenderDocument = function(req, res) {
             owner: req.user._id,
             belongTo: {
                 type: "tender",
-                item: {
+                    item: {
                     _id: tender._id
                 }
             },
@@ -269,6 +269,82 @@ exports.uploadTenderDocument = function(req, res) {
             });
             return res.send(200);
         });
+    });
+};
+
+exports.selectWinner = function(req, res) {
+    Tender.findById(req.params.id).populate("members.user").exec(function(err, tender){
+        if (err) {return res.send(500,err);}
+        if (!tender) {return res.send(404, {message: "This tender is not existed"});}
+        var currentTendererIndex = _.findIndex(tender.members, function(member) {
+            return member._id.toString()===req.query.tendererId.toString();
+        });
+        if (currentTendererIndex!==-1) {
+            if (tender.members[currentTendererIndex].user) {
+                tender.winner._id = tender.members[currentTendererIndex].user._id;
+            } else {
+                tender.winner.email = tender.members[currentTendererIndex].email;
+            }
+            tender.status = "close";
+            var activity = {
+                user: req.user._id,
+                type: "select-winner",
+                createdAt: new Date(),
+                element: {name: (tender.members[currentTendererIndex].user) ? tender.members[currentTendererIndex].user.name : tender.members[currentTendererIndex].email}
+            }
+            tender.activities.push(activity);
+            tender.save(function(err){
+                if (err) {return res.send(500,err);}
+                Tender.populate(tender, [
+                    {path: "owner", select: "_id name email"},
+                    {path: "members.user", select: "_id name email"},
+                    {path: "members.activities.user", select: "_id name email"},
+                    {path: "activities.user", select: "_id name email"},
+                    {path: "activities.acknowledgeUsers._id", select: "_id name email"}
+                ], function(err, tender) {
+                    if (err) {return res.send(500,err);}
+                    async.parallel([
+                        function(cb) {
+                            People.findOne({project: tender.project}, function(err, people) {
+                                if (err || !people) {cb(err);}
+                                var newTender = {};
+                                newTender.isDistribute = true;
+                                newTender.hasSelect = true;
+                                newTender.inviterType = tender.ownerType;
+                                newTender.inviter = tender.owner._id;
+                                if (tender.winner._id) {
+                                    newTender.tenderers = [{_id: tender.winner._id}];
+                                } else {
+                                    newTender.tenderers = [{email: tender.winner.email}];
+                                }
+                                people[tender.type].push(newTender);
+                                people.save(cb());
+                            });
+                        },
+                        function(cb) {
+                            if (tender.winner._id) {
+                                User.findById(tender.winner._id, function(err, user) {
+                                    if (err || !user) {cb(err);}
+                                    user.projects.push(tender.project);
+                                    user.markModified("projects");
+                                    user.save(cb());
+                                });
+                            } else 
+                                cb();
+                        }
+                    ], function(err) {
+                        if (err) {return res.send(500,err);}
+                        EventBus.emit("socket:emit", {
+                            event: "tender:update",
+                            room: tender._id.toString(),
+                            data: responseTender(tender, req.user)
+                        });
+                        return res.send(200);
+                    });
+                });
+            });
+        } else
+            return res.send(500,{message: "Error"});
     });
 };
 

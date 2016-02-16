@@ -41,7 +41,7 @@ angular.module('buiiltApp').controller('TendersCtrl', function($scope, $rootScop
         $scope.tender.project = $scope.availableProjects[index];
         $scope.availableProjects[index].select = true;
         if ($scope.availableProjects[index].projectManager.type === "builder") {
-            $scope.availableUserType = [{value: "subconstractors", text: "Subconstractor"}, {value: "consultants", text: "Consultants"}];
+            $scope.availableUserType = [{value: "subcontractors", text: "Subconstractor"}, {value: "consultants", text: "Consultants"}];
         } else if ($scope.availableProjects[index].projectManager.type === "architect") {
             $scope.availableUserType = [{value: "builders", text: "Builder"}, {value: "consultants", text: "Consultants"}];
         }

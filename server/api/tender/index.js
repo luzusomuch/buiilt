@@ -16,5 +16,6 @@ router.put("/:id/:activityId/update-tender-invitee", auth.isAuthenticated(), con
 
 router.get("/get-all", auth.isAuthenticated(), controller.getAll);
 router.get("/:id", auth.isAuthenticated(), controller.get);
+router.get("/:id/select-winner", auth.isAuthenticated(), controller.selectWinner);
 
 module.exports = router;

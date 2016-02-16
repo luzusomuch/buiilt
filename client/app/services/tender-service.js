@@ -39,6 +39,12 @@ angular.module('buiiltApp')
             params: {
                 action: "update-tender-invitee"
             }
+        },
+        selectWinner: {
+            method: "GET",
+            params: {
+                action: "select-winner"
+            }
         }
     });
 });
