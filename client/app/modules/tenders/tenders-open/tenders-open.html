@@ -3,13 +3,15 @@
 
 <md-list ng-cloak class="main-page-content">
 	<div ng-show="tender.status=='open'" ng-repeat="tender in tenders track by $index" ui-sref="tender.overview({tenderId: tender._id})">
+		
         <md-list-item class="md-2-line" md-ink-ripple>
             <div class="md-list-item-text" layout="column">
-                    <h3>{{ tender.name }}</h3>
-                    <p>{{ tender.address }}</p>
+                <h3>{{ tender.name }}</h3>
+                <p>Address: {{ tender.address }}</p>
             </div>
         </md-list-item>
         <md-divider></md-divider>
+		
     </div>
 </md-list>
 

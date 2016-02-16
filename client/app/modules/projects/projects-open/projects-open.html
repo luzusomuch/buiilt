@@ -6,17 +6,17 @@
 </div>
 
 <md-list ng-cloak class="main-page-content">
-	
 	<div ng-show="!search && project.status=='waiting'" ng-repeat="project in projects | filter:{name: filter} track by $index" ui-sref="project.overview({id: project._id})">
+		
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
-		          	<h3>{{ project.name }}</h3>
-					<p>{{ project.address }}, {{ project. suburb }} {{ project.postcode }}</p>
+	          	<h3>{{ project.name }}</h3>
+				<p>{{ project.address }}, {{ project. suburb }} {{ project.postcode }}</p>
 	        </div>
 		</md-list-item>
 		<md-divider></md-divider>
+		
 	</div>
-	
 </md-list>
 
 <div>
