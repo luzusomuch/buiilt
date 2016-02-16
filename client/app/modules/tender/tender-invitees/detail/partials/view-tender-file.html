@@ -1,0 +1,31 @@
+<md-dialog aria-label="View Tender File" flex="70">
+    <form name="form">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>View Tender File</h2>
+            </div>
+        </md-toolbar>
+        
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column" layout-padding>
+                <div layout="row">
+                    <h4>{{file.name}}</h4>
+                </div>
+
+                <div layout="row">
+                    <h4>{{file.description}}</h4>
+                </div>
+                
+                <div layout="row">
+                    <div flex file-picker-previewer type="filepicker-preview" url="{{file.link}}" style="height:75vh;"> </div>
+                </div>
+                
+            </div>
+        </md-dialog-content>
+        
+        <md-dialog-actions>
+            <md-button ng-click="closeModal()">Cancel</md-button>
+            <md-button ng-click="download()" class="md-primary">Download</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

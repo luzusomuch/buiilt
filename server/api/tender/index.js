@@ -12,6 +12,7 @@ router.post("/:id/upload-tender-document", auth.isAuthenticated(), controller.up
 
 router.put("/:id", auth.isAuthenticated(), controller.update);
 router.put("/:id/:activityId/acknowledgement", auth.isAuthenticated(), controller.acknowledgement);
+router.put("/:id/:activityId/update-tender-invitee", auth.isAuthenticated(), controller.updateTenderInvitee);
 
 router.get("/get-all", auth.isAuthenticated(), controller.getAll);
 router.get("/:id", auth.isAuthenticated(), controller.get);

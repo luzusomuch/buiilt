@@ -1,0 +1,37 @@
+<md-dialog aria-label="Attach Tender" flex="70">
+    <form name="form" ng-submit="attachTender(form)">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Attach Tender</h2>
+            </div>
+        </md-toolbar>
+        
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column" layout-padding>
+                
+                <div layout="column">
+                    <p class="md-body-2">Tender description:</p>
+                    <div layout="row">
+                        <md-input-container flex="66" flex-offset="15">
+                            <label>Description</label>
+                            <textarea ng-model="uploadFile.description" columns="1" rows="5" required md-autofocus></textarea>
+                        </md-input-container>
+                    </div>
+                </div>
+
+                <div layout="column">
+                    <p class="md-body-2">Select a File to send:</p>
+                    <div layout="row" layout-align="center center" class="tagcloud-selection">
+                        <input filepicker class="filepicker-button" type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/>
+                    </div>
+                </div>
+                
+            </div>
+        </md-dialog-content>
+        
+        <md-dialog-actions>
+            <md-button ng-click="closeModal()">Cancel</md-button>
+            <md-button type="submit" class="md-primary">Attach Tender</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

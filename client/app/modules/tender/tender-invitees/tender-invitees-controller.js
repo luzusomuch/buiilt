@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('tenderInviteesCtrl', function($rootScope, $scope, $timeout, $q, tender, tenderService, $mdDialog, $mdToast, socket) {
+angular.module('buiiltApp').controller('tenderInviteesCtrl', function($rootScope, $scope, $timeout, $q, tender, tenderService, $mdDialog, $mdToast, socket, $state) {
     $scope.currentUser = $rootScope.currentUser;
     $scope.tender = tender;
     $rootScope.title = $scope.tender.name + "'s invitees";

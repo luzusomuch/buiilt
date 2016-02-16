@@ -33,6 +33,12 @@ angular.module('buiiltApp')
             params: {
                 action: "upload-tender-document"
             }
+        },
+        updateTenderInvitee: {
+            method: "PUT",
+            params: {
+                action: "update-tender-invitee"
+            }
         }
     });
 });

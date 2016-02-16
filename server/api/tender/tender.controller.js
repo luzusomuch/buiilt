@@ -83,10 +83,11 @@ exports.update = function(req, res) {
                     activity.element.description = data.description;
                     activity.acknowledgeUsers = [];
                     _.each(tender.members, function(member) {
-                        activity.acknowledgeUsers.push({_id:member, isAcknow: false});
-                    });
-                    _.each(tender.notMembers, function(member) {
-                        activity.acknowledgeUsers.push({email: member, isAcknow: false});
+                        if (member._id) {
+                            activity.acknowledgeUsers.push({_id:member.user, isAcknow: false});
+                        } else {
+                            activity.acknowledgeUsers.push({_id:member.email, isAcknow: false});
+                        }
                     });
                     cb();
                 } else if (data.editType === "distribute-status") {
@@ -98,13 +99,12 @@ exports.update = function(req, res) {
                 } else if (data.editType === "invite-tender") {
                     var members = [];
                     var tenderMembers = tender.members;
-                    var notMembers = tender.notMembers;
                     async.each(data.newMembers, function(member, cb) {
-                        User.findOne({email: member.email}, function(err, user) {
+                        User.findOne({email: member.email}, function(err, _user) {
                             if (err) {cb(err);}
-                            else if (!user) {
+                            else if (!_user) {
                                 members.push({name:member.name, email: member.email});
-                                notMembers.push(member.email);
+                                tenderMembers.push({email: member.email});
                                 var inviteToken = new InviteToken({
                                     type: 'tender-invite',
                                     email: member.email,
@@ -116,11 +116,11 @@ exports.update = function(req, res) {
                                 inviteToken._editUser = req.user;
                                 inviteToken.save(cb());
                             } else {
-                                members.push({name:user.name, email: user.email});
-                                tenderMembers.push(user._id);
+                                members.push({name:_user.name, email: _user.email});
+                                tenderMembers.push({user: _user._id});
                                 var inviteToken = new InviteToken({
                                     type: 'project-invite',
-                                    user: user._id,
+                                    user: _user._id,
                                     element: {
                                         project: tender.project,
                                         type: tender.type
@@ -133,7 +133,6 @@ exports.update = function(req, res) {
                     }, function() {
                         activity.element.members = members;
                         tender.members = tenderMembers;
-                        tender.notMembers = notMembers;
                         cb();
                     });
                 } else {
@@ -153,7 +152,8 @@ exports.update = function(req, res) {
                 if (err) {return res.send(500,err);}
                 Tender.populate(tender, [
                     {path: "owner", select: "_id name email"},
-                    {path: "members", select: "_id name email"},
+                    {path: "members.user", select: "_id name email"},
+                    {path: "members.activities.user", select: "_id name email"},
                     {path: "activities.user", select: "_id name email"},
                     {path: "activities.acknowledgeUsers._id", select: "_id name email"}
                 ], function(err, tender) {
@@ -170,9 +170,12 @@ exports.update = function(req, res) {
 };
 
 exports.getAll = function(req, res) {
-    Tender.find({$or:[{owner: req.user._id}, {members: req.user._id}]}, function(err, tenders) {
+    Tender.find({$or:[{owner: req.user._id}, {"members.user": req.user._id}]}, function(err, tenders) {
         if (err) {return res.send(500,err);}
         else {
+            _.each(tenders, function(tender) {
+                tender.members = [];
+            });
             return res.send(200, tenders);
         }
     });
@@ -181,7 +184,8 @@ exports.getAll = function(req, res) {
 exports.get = function(req, res) {
     Tender.findById(req.params.id)
     .populate("owner", "_id name email")
-    .populate("members", "_id name email")
+    .populate("members.user", "_id name email")
+    .populate("members.activities.user", "_id name email")
     .populate("activities.user", "_id name email")
     .populate("activities.acknowledgeUsers._id", "_id name email")
     .exec(function(err, tender) {
@@ -214,7 +218,8 @@ exports.acknowledgement = function(req, res) {
             if (err) {return res.send(500,err);}
             Tender.populate(tender, [
                 {path: "owner", select: "_id name email"},
-                {path: "members", select: "_id name email"},
+                {path: "members.user", select: "_id name email"},
+                {path: "members.activities.user", select: "_id name email"},
                 {path: "activities.user", select: "_id name email"},
                 {path: "activities.acknowledgeUsers._id", select: "_id name email"}
             ], function(err, tender) {
@@ -289,8 +294,58 @@ function responseTender(tender, user) {
             }
         });
         tender.activities = activities;
-        tender.members = [tender.owner];
-        tender.notMembers = [];
+        var currentTendererIndex = _.findIndex(tender.members, function(member) {
+            if (member.user) {
+                return member.user._id.toString()===user._id.toString();
+            }
+        })
+        tender.members = [tender.members[currentTendererIndex]];
         return tender;
     }
+};
+
+exports.updateTenderInvitee = function(req, res) {
+    var data = req.body;
+    Tender.findById(req.params.id, function(err, tender) {
+        if (err) {return res.send(500,err);}
+        if (!tender) {return res.send(404, {message: "This tender is not existed"});}
+        var currentTendererIndex = _.findIndex(tender.members, function(member){
+            return member._id.toString()===req.params.activityId.toString();
+        });
+        if (currentTendererIndex !== -1) {
+            var activity = {
+                user: req.user._id,
+                type: data.type,
+                createdAt: new Date(),
+                element: {}
+            }
+            if (data.type === "send-message") {
+                activity.element.text = data.text;
+            } else {
+                activity.element.link = data.file.url,
+                activity.element.name = data.file.filename,
+                activity.element.description = data.description
+            }
+            tender.members[currentTendererIndex].activities.push(activity);
+            tender.save(function(err) {
+                if (err) {return res.send(500,err);}
+                Tender.populate(tender, [
+                    {path: "owner", select: "_id name email"},
+                    {path: "members.user", select: "_id name email"},
+                    {path: "members.activities.user", select: "_id name email"},
+                    {path: "activities.user", select: "_id name email"},
+                    {path: "activities.acknowledgeUsers._id", select: "_id name email"}
+                ], function(err, tender) {
+                    EventBus.emit("socket:emit", {
+                        event: "invitee:updated",
+                        room: tender.members[currentTendererIndex]._id.toString(),
+                        data: tender.members[currentTendererIndex]
+                    });
+                    return res.send(200);
+                });
+            });
+        } else {
+            return res.send(500, {messsage: "Error"});
+        }
+    });
 };

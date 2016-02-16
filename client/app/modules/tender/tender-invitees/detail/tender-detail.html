@@ -3,5 +3,41 @@
 </div>
 
 <div class="main-page-content" layout-padding>
-    aaaaaaaaaaaaaaaaaaaa
+    <div layout="row" layout-align="center center" flex class="activity-stream" ng-repeat="activity in currentTenderere.activities">
+        <span flex="5"></span>
+        <div class="icon-type" ng-switch="activity.type">
+            <md-icon ng-switch-when="send-message" class="material-icons md-primary">chat_bubble_outline</md-icon>
+            <md-icon ng-switch-when="attach-tender" class="material-icons md-primary">attach_file</md-icon>
+        </div>
+        <span flex="5"></span>
+
+        <div flex class="activity-detail">
+            <p ng-switch="activity.type" class="activity-header">
+                <span class="activity-creator">{{(activity.user._id==currentUser._id) ? "you" : activity.user.name}}</span>
+                <span class="meta-data" ng-switch-when="send-message"> has sent a message <strong>{{activity.element.text}}</strong> at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span></span>
+                <span class="meta-data" ng-switch-when="attach-tender"> has sent you a tender {{activity.element.name}} with this {{activity.element.description}} as a <strong>description</strong> at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span> and you can view it by click <u style="cursor:pointer" ng-click="openTenderDetail($event, activity.element)">here</u></span>
+            </p>
+        </div>
+    </div>
+</div>
+
+<div>
+    <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-main">
+        <md-fab-trigger>
+            <md-button aria-label="Add an Item to this Tender" class="md-fab md-primary">
+                <md-tooltip md-direction="left">Actions...</md-tooltip>
+                <md-icon class="material-icons" >add</md-icon>
+            </md-button>
+        </md-fab-trigger>
+        <md-fab-actions>
+            <md-button aria-label="Send Message" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'send-message.html')">
+                <md-tooltip md-direction="left">Send a message</md-tooltip>
+                <md-icon class="material-icons">chat_bubble_outline</md-icon>
+            </md-button>
+            <md-button aria-label="Attach Tender" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'attach-tender.html')" ng-show="tender.owner._id!=currentUser._id">
+                <md-tooltip md-direction="left">Attach Tender</md-tooltip>
+                <md-icon class="material-icons">attach_file</md-icon>
+            </md-button>
+        </md-fab-actions>
+    </md-fab-speed-dial>
 </div>
