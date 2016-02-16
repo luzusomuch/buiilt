@@ -67,5 +67,9 @@ angular.module('buiiltApp').controller('TendersCtrl', function($scope, $rootScop
             $scope.showToast("Please check your input again");
         }
     };
+	
+	$scope.cancelDialog = function(){
+		$mdDialog.cancel();
+	}
 
 });

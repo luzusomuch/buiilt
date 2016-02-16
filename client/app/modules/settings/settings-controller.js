@@ -439,7 +439,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                 authService.changeProfile($scope.currentUser.firstName, $scope.currentUser.lastName, $scope.currentUser.phoneNumber)
                 .then(function(data){
                     $scope.cancelDialog();
-                    $scope.showToast("Change phone number successfully");
+                    $scope.showToast("Phone Number Updated Successfully.");
                     $rootScope.$emit('Profile.change',data);
                 }, function(err){$scope.showToast("Error");});
             } else if ($scope.editUserType === "password") {
