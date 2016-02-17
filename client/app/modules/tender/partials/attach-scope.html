@@ -20,7 +20,7 @@
                 </div>
 
                 <div layout="column">
-                    <p class="md-body-2">Set a due date for the tender, and attach any relevant file:</p>
+                    <p class="md-body-2">Set a due date for the tender:</p>
                     <div layout="row" class="tagcloud-selection" layout-align="center center">
                         <md-datepicker ng-model="tender.dateEnd" md-min-date="minDate" md-placeholder="Tender Due Date" style="margin-right: 5vh"></md-datepicker>
                     </div> 
@@ -31,7 +31,7 @@
         
         <md-dialog-actions>
             <md-button ng-click="cancelDialog()">Cancel</md-button>
-            <md-button ng-click="attachScope()" class="md-primary">Send Addendum</md-button>
+            <md-button ng-click="attachScope()" class="md-primary">Save Edits</md-button>
         </md-dialog-actions>
     </form>
 </md-dialog>

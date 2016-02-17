@@ -103,7 +103,7 @@ angular.module('buiiltApp').controller('tenderOverviewCtrl', function($scope, $r
             if (_.findIndex($scope.tender.activities, function(activity) {
                 return activity.type === "attach-scope";
             }) !== -1) {
-                var confirm = $mdDialog.confirm().title("Do you want to distribute this tenderer?").ok("Yes").cancel("No");
+                var confirm = $mdDialog.confirm().title("Do you want to distribute this tender?").ok("Yes").cancel("No");
                 $mdDialog.show(confirm).then(function() {
                     $scope.tender.editType = "distribute-status";
                     $scope.updateTender($scope.tender);
@@ -157,7 +157,7 @@ angular.module('buiiltApp').controller('tenderOverviewCtrl', function($scope, $r
     $scope.updateTender = function(tender) {
         tenderService.update({id: $stateParams.tenderId}, tender).$promise.then(function(res) {
             $mdDialog.cancel();
-            $scope.showToast("Successfully");
+            $scope.showToast("You Have Updated the Tender Successfully.");
         }, function(err){$scope.showToast("There Has Been An Error...");});
     };
 
@@ -166,7 +166,7 @@ angular.module('buiiltApp').controller('tenderOverviewCtrl', function($scope, $r
         tenderService.acknowledgement({id: $stateParams.tenderId, activityId: activity._id},{}).$promise.then(function(res) {
             $mdDialog.cancel();
             activity.isAcknow = true;
-            $scope.showToast("Successfully");
+            $scope.showToast("Your Acknowledgement Has Been Sent.");
         }, function(err){$scope.showToast("There Has Been An Error...");});
     };
 	

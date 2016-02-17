@@ -1,1 +1,29 @@
-<ui-view></ui-view>
+<div class="detail-header" layout-padding layout="column">
+    <p class="md-headline">Documents</h3>
+</div>
+
+<md-list ng-cloak class="main-page-content">
+	<div ui-sref="tender.documents.detail({tenderId: document.belongTo.item._id, documentId: document._id})" ng-repeat="document in tenderDocuments">
+        
+		<md-list-item class="md-2-line" md-ink-ripple>
+            <div class="md-list-item-text" layout="column">
+                <h3>{{document.name}}</h3>
+                <p>Description: {{document.description}}</p>
+            </div>
+            <md-divider></md-divider>
+        </md-list-item>
+		
+	</div>
+	
+</md-list>
+
+<div>
+    <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-list" ng-show="tender.owner._id==currentUser._id">
+        <md-fab-trigger>
+            <md-button ng-click="showModal($event, 'new-tender-document.html')" aria-label="Add a Document to this Tender" class="md-fab md-primary">
+                <md-tooltip md-direction="left">Add a Tender Document</md-tooltip>
+                <md-icon class="material-icons" >add</md-icon>
+            </md-button>
+        </md-fab-trigger>
+    </md-fab-speed-dial>
+</div>

@@ -37,15 +37,15 @@ angular.module('buiiltApp').controller('tenderDocumentsCtrl', function($rootScop
     $scope.uploadNewTenderDocument = function(form) {
         if (form.$valid) {
             if (!$scope.uploadFile.file) {
-                $scope.showToast("You Haven\'t Select Any File");
+                $scope.showToast("You Need To Select a File...");
                 return false;
             }
             tenderService.uploadTenderDocument({id: tender._id}, $scope.uploadFile).$promise.then(function(res) {
-                $scope.showToast("Insert New Document Successfully");
+                $scope.showToast("New Document Has Been Attached Successfully.");
                 $scope.closeModal();
-            }, function(err){$scope.showToast("Error");});
+            }, function(err){$scope.showToast("There Has Been An Error...");});
         } else 
-            $scope.showToast("Please Check Your Input!");
+            $scope.showToast("Please Check Your Input...");
     };
 
     $scope.showModal = function(event, name) {
