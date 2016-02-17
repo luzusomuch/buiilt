@@ -141,6 +141,11 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
 				$scope.cancelNewMessageModal();
                 $rootScope.$broadcast("Thread.Inserted", res);
 				$scope.showToast("New Message Thread Created Successfully.");
+				
+				//Track Message Thread Creation
+				mixpanel.identify($rootScope.currentUser._id);
+				mixpanel.track("New Message Thread Created");
+				
 				$state.go("project.messages.detail", {id: $stateParams.id, messageId: res._id});
 			}, function(err) {
 				$scope.showToast("There Has Been An Error...")

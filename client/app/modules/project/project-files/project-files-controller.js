@@ -133,6 +133,11 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
 			uploadService.upload({id: $stateParams.id}, $scope.uploadFile).$promise.then(function(res) {
 				$mdDialog.hide();
 				$scope.showToast("File Has Been Uploaded Successfully.");
+				
+				//Track New File
+				mixpanel.identify($rootScope.currentUser._id);
+				mixpanel.track("New File Created");
+				
                 $rootScope.$broadcast("File.Inserted", res[0]);
                 $state.go("project.files.detail", {id: res[0].project, fileId: res[0]._id});
 			}, function(err) {

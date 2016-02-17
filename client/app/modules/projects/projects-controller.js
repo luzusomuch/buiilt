@@ -25,7 +25,6 @@ angular.module('buiiltApp').controller('projectsCtrl', function ($rootScope, $sc
                     $scope.submitted = false;
 					
 					//Track Project Creation by User
-					console.log($rootScope.currentUser._id);
 					mixpanel.identify($rootScope.currentUser._id);
 					mixpanel.track("Project Created");
 					

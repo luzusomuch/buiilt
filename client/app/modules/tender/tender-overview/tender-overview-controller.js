@@ -76,17 +76,17 @@ angular.module('buiiltApp').controller('tenderOverviewCtrl', function($scope, $r
             $scope.scope.editType = "attach-scope";
             $scope.updateTender($scope.scope);
         } else {
-            $scope.showToast("Please check your input");
+            $scope.showToast("Please Check Your Inputs...");
             return false;
         }
     };
 
     $scope.sendAddendum = function() {
         if ($scope.addendum.name && $scope.addendum.name.length === 0) {
-            $scope.showToast("Please check your input");
+            $scope.showToast("Please Check Your Inputs...");
             return false;
         } else if ($scope.addendum.description && $scope.addendum.description.length === 0) {
-            $scope.showToast("Please check your input");
+            $scope.showToast("Please Check Your Inputs...");
             return false;
         } else {
             $scope.addendum.editType = "attach-addendum";
@@ -96,7 +96,7 @@ angular.module('buiiltApp').controller('tenderOverviewCtrl', function($scope, $r
 
     $scope.distributeTender = function() {
         if ($scope.tender.members.length === 0) {
-            $scope.showToast("You cann\'t update distribute of this tender until have one tender");
+            $scope.showToast("Please Add One Invitee Before Distributing Your Tender...");
             return;
         } else {
             if (_.findIndex($scope.tender.activities, function(activity) {
@@ -110,7 +110,7 @@ angular.module('buiiltApp').controller('tenderOverviewCtrl', function($scope, $r
                     
                 });
             } else {
-                $scope.showToast("You can\'t update distribute of this status until have one tender scope");
+                $scope.showToast("Please Attach a Scope Before Distributing Your Tender...");
                 return false;
             }
         }
@@ -133,7 +133,7 @@ angular.module('buiiltApp').controller('tenderOverviewCtrl', function($scope, $r
     };
     $scope.inviteTenderer = function() {
         if ($scope.tender.newMembers.length === 0) {
-            $scope.showToast("Please Enter The Email Of At Least 1 Invitee.");
+            $scope.showToast("Please Enter The Email Of At Least 1 Invitee...");
             return;
         } else {
             $scope.tender.editType = "invite-tender";
@@ -142,11 +142,11 @@ angular.module('buiiltApp').controller('tenderOverviewCtrl', function($scope, $r
     };
 
     $scope.selectWinner = function(tenderer) {
-        var confirm = $mdDialog.confirm().title("Do you want to select this tenderer as winner?").ok("Yes").cancel("No");
+        var confirm = $mdDialog.confirm().title("Do you want to select this tenderer as the winner?").ok("Yes").cancel("No");
         $mdDialog.show(confirm).then(function() {
             tenderService.selectWinner({id: $stateParams.tenderId, tendererId: tenderer._id}).$promise.then(function() {
                 $scope.cancelDialog();
-                $scope.showToast("Successfully");
+                $scope.showToast("You Have Successfully Selected the Winner.");
             }, function (err) {$scope.showToast("Error");});
         }, function() {
             

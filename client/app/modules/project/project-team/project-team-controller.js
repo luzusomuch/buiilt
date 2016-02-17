@@ -334,6 +334,11 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
     				$scope.showToast("Invititation Has Been Sent Successfully.");
     	            $scope.cancelInviteTeamModal();
                     $rootScope.$broadcast("Project.Team.Invite", res);
+					
+					//Track Project Team Update
+					mixpanel.identify($rootScope.currentUser._id);
+					mixpanel.track("Member Added to Project Team");
+					
     	        }, function(res){
     	        	$scope.showToast("There Has Been An Error...")
     	        });

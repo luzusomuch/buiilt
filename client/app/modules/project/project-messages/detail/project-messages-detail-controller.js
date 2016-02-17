@@ -180,6 +180,11 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
             messageService.sendMessage({id: $scope.thread._id}, $scope.message).$promise.then(function(res) {
                 $scope.closeModal();
                 $scope.showToast("Your Message Has Been Sent Successfully.");
+				
+				//Track Reply Sent
+				mixpanel.identify($rootScope.currentUser._id);
+				mixpanel.track("Reply Sent");
+				
                 $rootScope.$broadcast("Thread.Update", res);
             }, function(err) {$scope.showToast("There Has Been An Error...");});
         } else {

@@ -222,6 +222,11 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
 				taskService.create({id: $stateParams.id}, $scope.task).$promise.then(function(res) {
 					$scope.cancelNewTaskModal();
 					$scope.showToast("New Task Has Been Created Successfully.");
+					
+					//Track New Task
+					mixpanel.identify($rootScope.currentUser._id);
+					mixpanel.track("New Task Created");
+					
                     $rootScope.$broadcast("Task.Inserted", res);
 					$state.go("project.tasks.detail", {id: res.project, taskId: res._id});
 				}, function(err) {$scope.showToast("There Has Been An Error...");});

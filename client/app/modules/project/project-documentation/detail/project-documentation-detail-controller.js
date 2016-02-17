@@ -79,6 +79,11 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
             uploadService.uploadReversion({id: $scope.document._id}, $scope.uploadReversion).$promise.then(function(res) {
                 $scope.closeModal();
                 $scope.showToast("Document Revision Successfully Uploaded.");
+				
+				//Document Revision Uploaded
+				mixpanel.identify($rootScope.currentUser._id);
+				mixpanel.track("Document Revision Uploaded");
+				
                 $rootScope.$broadcast("Document.Updated", res);
             }, function(err) {$scope.showToast("There Has Been An Error...");});
         }

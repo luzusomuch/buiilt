@@ -212,7 +212,12 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
         teamService.update({id: $scope.currentTeam._id}, $scope.currentTeam).$promise.then(function(res) {
             $scope.isEditTags = false;
             $scope.cancelDialog();
-            $scope.showToast("Changed tags successfully");
+            $scope.showToast("Your Custom Tags Have Been Updated.");
+			
+			//Track Custom Tags Update
+			mixpanel.identify($rootScope.currentUser._id);
+			mixpanel.track("Custom Tags Updated");
+			
             $rootScope.$broadcast("Team.Update", res);
         }, function(err){$scope.showToast(err.data);});
     };
@@ -284,9 +289,13 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                 getTeamLeader($scope.currentTeam);
                 $rootScope.$emit('TeamUpdate',team);
                 $scope.cancelDialog();
-                $scope.showToast("Create new team successfully!");
-                $state.go('settings.staff', {},{reload: true}).then(function(data){
-                });
+                $scope.showToast("You Have Successfully Created Your Team.");
+				
+				//Track Team Creation
+				mixpanel.identify($rootScope.currentUser._id);
+				mixpanel.track("Team Created");
+				
+                $state.go('settings.staff', {},{reload: true}).then(function(data){});
             }, function (err) {
                 $scope.cancelDialog();
                 $scope.showToast("Error");
@@ -306,15 +315,20 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
 
     $scope.saveDetail = function(form) {
         if (!$scope.currentTeam._id) {
-            $scope.showToast("You haven\'t created or joined any team");
+            $scope.showToast("You Are Not Yet a Part of a Team...");
             return;
         } else if (form.$valid) {
             $scope.currentTeam.editType = "editCompanyDetail";
             teamService.update({_id : $scope.currentTeam._id},$scope.currentTeam).$promise
             .then(function(team) {
 				$mdDialog.hide();
-                $scope.showToast("Company details have updated successfully!");
+                $scope.showToast("Company Details Have Been Successfully Updated.");
                 $rootScope.$emit('Team.Update',team);
+				
+				//Track Company Update
+				mixpanel.identify($rootScope.currentUser._id);
+				mixpanel.track("Company Details Updated");
+				
             }, function(err) {
                 $scope.showToast("Error");
             });
@@ -334,9 +348,14 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
     $scope.addNewMember = function(){
         teamService.addMember({id: $scope.currentTeam._id},$scope.member.emails).$promise
         .then(function(team) {
-            $scope.showToast("Add new members successfully!");
+            $scope.showToast("Your Team Members Have Been Added Successfully.");
             $scope.currentTeam = team;
             $rootScope.$emit('TeamUpdate',team);
+			
+			//Track Addition of Members
+			mixpanel.identify($rootScope.currentUser._id);
+			mixpanel.track("Member Added to Team");
+			
             $scope.member.emails = [];
 			$mdDialog.hide();
         }, function(err){
@@ -441,6 +460,11 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                     $scope.cancelDialog();
                     $scope.showToast("Phone Number Updated Successfully.");
                     $rootScope.$emit('Profile.change',data);
+					
+					//Track Phone Number Update
+					mixpanel.identify($rootScope.currentUser._id);
+					mixpanel.track("Phone Number Updated");
+					
                 }, function(err){$scope.showToast("Error");});
             } else if ($scope.editUserType === "password") {
                 if ($scope.currentUser.newPassword.length < 6) {

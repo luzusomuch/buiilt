@@ -27,6 +27,11 @@ angular.module('buiiltApp').controller('projectCtrl', function($rootScope, $scop
                 $rootScope.project = $scope.project = res;
                 $scope.showToast("Your Edits Have Been Saved.");
 				$mdDialog.hide();
+				
+				//Project Details Updated
+				mixpanel.identify($rootScope.currentUser._id);
+				mixpanel.track("Project Details Updated");
+				
             }, function(err) {
                 console.log(err);
                 $scope.showToast("There Has Been An Error...");

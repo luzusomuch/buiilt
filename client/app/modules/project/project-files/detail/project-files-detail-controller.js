@@ -322,6 +322,11 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
             uploadService.uploadReversion({id: $scope.file._id}, $scope.fileReversion).$promise.then(function(res) {
                 $scope.closeModal();
                 $scope.showToast("File Revision Attached Successfully.");
+				
+				//Track File Revision
+				mixpanel.identify($rootScope.currentUser._id);
+				mixpanel.track("File Revision Uploaded");
+				
                 $scope.file = res;
             }, function(err) {$scope.showToast("There Has Been An Error...");});
         }

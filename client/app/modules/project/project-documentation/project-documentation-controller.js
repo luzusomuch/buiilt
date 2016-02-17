@@ -88,6 +88,11 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
                 $scope.closeModal();
                 $scope.showToast("Document Successfully Uploaded.");
                 $rootScope.$broadcast("Document.Uploaded", res);
+				
+				//Track Document Upload
+				mixpanel.identify($rootScope.currentUser._id);
+				mixpanel.track("Document Uploaded");
+				
             }, function(err){$scope.showToast("There Was an Error...");});
         }
 	};
