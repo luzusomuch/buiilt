@@ -88,9 +88,9 @@ angular.module('buiiltApp').controller('projectsCtrl', function ($rootScope, $sc
 
     $scope.selectInvitation = function(invitation, index) {
         var confirm = $mdDialog.confirm()
-        .title("Do you want to join or reject " + invitation.name + " team?")
-        .ok("Join this team")
-        .cancel("Reject this team");
+        .title("Do you want to join " + invitation.name + " ?")
+        .ok("Join")
+        .cancel("Ignore");
         $mdDialog.show(confirm).then(function() {
             $scope.accept(invitation);
         }, function() {
@@ -102,7 +102,7 @@ angular.module('buiiltApp').controller('projectsCtrl', function ($rootScope, $sc
         teamService.acceptTeam({_id: invitation._id}).$promise.then(function (res) {
             $scope.currentTeam = res;
             $rootScope.$emit('TeamUpdate',res);
-            $scope.showToast("Join team " + invitation.name + " successfully!");
+            $scope.showToast("You Have Joined " + invitation.name + " Successfully.");
             $scope.teamInvitations.splice(index, 1);
         }, function (err) {
             $scope.showToast(err);
