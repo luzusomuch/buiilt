@@ -1,17 +1,36 @@
 angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', function($rootScope, $scope, document, uploadService, $mdDialog, $mdToast, $stateParams, fileService, socket) {
     $scope.document = document;
-    $rootScope.$on("Document.Updated", function(event, data) {
-        setUploadReversion();
-        $scope.document = data;
-    });
+
+    function checkAcknowLedgement(document) {
+        _.each(document.activities, function(activity) {
+            if (activity.type === "upload-reversion" || activity.type === "upload-file") {
+                if (_.findIndex(activity.acknowledgeUsers, function(item) {
+                    if (item._id) {
+                        return item._id._id == $rootScope.currentUser._id && item.isAcknow;
+                    }
+                }) !== -1) {
+                    activity.isAcknow = true;
+                } else {
+                    activity.isAcknow = false;
+                }
+            }
+        });
+    };
+    checkAcknowLedgement($scope.document);
+
+    // $rootScope.$on("Document.Updated", function(event, data) {
+    //     setUploadReversion();
+    //     $scope.document = data;
+    // });
 
     socket.emit("join", document._id);
     socket.on("document:update", function(data) {
         $scope.document = data;
+        checkAcknowLedgement($scope.document);
     });
 
-    $scope.acknowledgement = function() {
-        fileService.acknowledgement({id: $stateParams.documentId}).$promise.then(function(res) {
+    $scope.acknowledgement = function(activity) {
+        fileService.acknowledgement({id: $stateParams.documentId, activityId: activity._id}).$promise.then(function(res) {
             $scope.showToast("Sent acknowledgement to the owner successfully");
             $rootScope.$broadcast("Document.Updated", res);
         }, function(err) {
