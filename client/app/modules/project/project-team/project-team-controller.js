@@ -6,14 +6,6 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
 
     // filter section
     $scope.search = false;
-    $scope.teamMemberTypeTags = [
-        {text: "internal", value:"internal"},
-        {text: "architect", value: "architects"},
-        {text: "builder", value: "builders"},
-        {text: "consultant", value: "consultants"},
-        {text: "sub contractor", value: "subcontractors"},
-        {text: "home owner", value: "clients"}
-    ];
 
     $scope.selectTag = function(index) {
         $scope.searchResults = [];
@@ -22,7 +14,7 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
         if (availableSearchTypes.length > 0) {
             $scope.search = true;
             _.each(availableSearchTypes, function(type) {
-                if (type !== "internal") {
+                if (type.value !== "internal") {
                     _.each($scope.membersList, function(member) {
                         if (member.type === type.value) {
                             $scope.searchResults.push(member);
@@ -103,8 +95,6 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
                     });
                 }
             });
-
-            
 
             // Get team list
             _.each($scope.people[role], function(tender){
@@ -259,6 +249,16 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
             });
         });
 
+        // Add filter for team type
+        $scope.teamMemberTypeTags = [
+            {text: "employee", value:"internal"},
+            {text: "architect", value: "architects"},
+            {text: "builder", value: "builders"},
+            {text: "consultant", value: "consultants"},
+            {text: "sub contractor", value: "subcontractors"},
+            {text: "home owner", value: "clients"}
+        ];
+        _.remove($scope.teamMemberTypeTags, {value: $rootScope.currentUser.type});
 	};
 
 	$scope.getChangeTypeValue = function(type) {

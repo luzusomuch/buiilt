@@ -124,6 +124,7 @@ exports.invitePeople = function(req, res) {
                                 else if (!user) {
                                     tender.tenderers.push({
                                         email: invite.email,
+                                        name: invite.name,
                                         teamMember: []
                                     });
                                     people._updatedTender = tender;

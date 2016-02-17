@@ -67,6 +67,7 @@ exports.create = function (req, res) {
     }
     var team = new Team(data);
     team.leader.push(user);
+    team.fileTags = ["invoice", "quote", "drawing"];
     team.documentTags = ["architectural", "structural engineering", "hydraulic engineering", "council", "certifier"];
     var listEmail = [];
     async.each(data.emails, function(email, callback) {

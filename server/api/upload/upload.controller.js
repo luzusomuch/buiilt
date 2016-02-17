@@ -160,7 +160,7 @@ exports.uploadReversion = function(req, res) {
                 file.server = 's3',
                 file.mimeType = newFile.mimeType,
                 file.description = req.body.description,
-                file.size = data.file.size,
+                file.size = newFile.size,
                 file.version = file.version + 1;
                 file.fileHistory.push(history);
                 var activity = {
@@ -220,7 +220,6 @@ exports.upload = function(req, res){
     var acknowledgeUsers = [];
     async.parallel([
         function(callback) {
-            console.log(data.members, data.members.length);
             if (data.members && data.members.length > 0) {
                 async.each(data.members, function(member, cb) {
                     User.findOne({email: member.email}, function(err, user) {

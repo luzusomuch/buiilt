@@ -183,7 +183,7 @@ EventBus.onSeries('People.Updated', function(req, next){
                     Mailer.sendMail('invite-non-user-to-project.html', from, packageInvite.to, {
                         team: result.team.toJSON(),
                         inviter: req.editUser.toJSON(),
-                        invitee: packageInvite.to,
+                        invitee: currentTender.tenderers[0].name,
                         project: result.project.toJSON(),
                         link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
                         subject: req.editUser.name + ' has invited you to project ' + result.project.name
@@ -197,7 +197,7 @@ EventBus.onSeries('People.Updated', function(req, next){
                     Mailer.sendMail('invite-user-to-project.html', from, user.email, {
                         team: result.team.toJSON(),
                         inviter: req.editUser.toJSON(),
-                        invitee: user.email,
+                        invitee: user,
                         project: result.project.toJSON(),
                         link : config.baseUrl + 'project/'+result.project._id+'/overview',
                         subject: req.editUser.name + ' has invited you to project ' + result.project.name
