@@ -1,34 +1,33 @@
-<div layout="row" class="main-content container" style="margin-top:50px;">
-  <div class="col-md-12">
-    <div class="add-comment contact-form boxed">
-      <div class="alert alert-success" ng-if="success"><strong>Success! </strong>{{successMsg}}</div>
-      <div class="alert alert-danger" ng-if="error"><strong>Error! </strong>{{errorMsg}}</div>
-      <div class="card collection">
-          <form method="post" name="form" ng-submit="signin(form)" style="padding:10px 50px;" novalidate>
-            <h3>Login</h3>
-            <div class="row">
-              <div class="input-field">
-                <label>Email</label>
-                <input ng-model="user.email" name="email" type="email" required ng-class="{'invalid' : form.email.$invalid && submitted}">
-                <p class="validate-message" ng-show="form.email.$error.required && submitted">Email is required</p>
-                <p class="validate-message" ng-show="form.email.$error.email && submitted">Wrong email format</p>
-              </div>
-            </div>
-            <div class="row">
-              <div class="input-field">
-                <label>Password</label>
-                <input ng-model="user.password" name="password" required type="password" ng-class="{'invalid' : form.password.$invalid && submitted}">
-                <p class="validate-message" ng-show="form.password.$error.required && submitted">Password is required</p>
+<div style="height: 92vh; background-color: #FAFAFA" layout-padding>
+    <div flex-offset="30" flex="40" class="md-whiteframe-1dp" style="background-color: white; margin-top: 15vh" layout-padding>
+        
+            <form name="form" ng-submit="signin(form)">
+                <div layout="column" layout-margin>
+                
+                    <div layout="row" layout-align="center center">
+                        <p style="font-size: 20px; font-weight: 500; margin-bottom: 3vh">Admin Login</p>
+                    </div>
+                
+                    <md-input-container>
+                        <label>Email Address</label>
+                        <input ng-model="user.email" name="email" type="email" ng-required="true" md-autofocus>
+                    </md-input-container>
+            
+                    <md-input-container>
+                        <label>Password</label>
+                        <input ng-model="user.password" type="password" ng-required="true" name="userPassword">
+                    </md-input-container>
 
-              </div>
-            </div>
-
-            <div class="row">
-              <button class="waves-effect waves-light btn">Login</button>
-            </div>
-          </form>
-      </div>
+                    <div layout="row" ng-show="error">
+                      <strong>Error! </strong>{{errorMsg}}
+                    </div>
+                
+                    <div layout="row" layout-align="center center">
+                        <md-button type="submit" class="">Login</md-button>
+                    </div>
+                
+                </div>
+            </form>
+        
     </div>
-
-  </div>
 </div>

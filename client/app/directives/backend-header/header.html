@@ -1,4 +1,25 @@
-<header>
+<md-toolbar layout="row" class="md-whiteframe-1dp">
+    <div class="md-toolbar-tools">
+        <div flex="15" layout="row" layout-align="start center">
+            <p class="logo-main">buiilt</p>
+        </div>
+        <div layout="row" layout-align="start center" ng-show="isLoggedIn">
+            <md-button ui-sref='dashboard.tasks'>Dashboard</md-button>
+            <md-button ui-sref='projects.open'>Projects</md-button>
+            <md-button ui-sref='tenders.open' ng-hide="currentTeam.type=='homeOwner'">Tenders</md-button>
+        </div>
+          
+        <span flex></span>
+          
+        <div layout="row" layout-align="end center" ng-show="isLoggedIn">
+            <md-button ui-sref='settings.user'>Settings</md-button>
+            <md-button ng-click="inlineHelp()">Help</md-button>
+            <div sp-notification ng-if="currentUser._id"></div>
+        </div>
+   </div>
+</md-toolbar>
+
+<!-- <header>
     <ul ng-if="currentUser._id" id="nav-mobile" class="side-nav fixed">
         <li><a ui-sref="projectsBackend">Projects</a></li>
         <li><a ui-sref="userBackend">Users</a></li>
@@ -27,4 +48,4 @@
             </ul>
         </div>
     </nav>
-</header>
+</header> -->

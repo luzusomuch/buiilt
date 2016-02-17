@@ -538,4 +538,13 @@ md-list-item{
 	margin-bottom: 0px;
 }
 
+div.ng-table-pager > div.ng-table-counts > .btn {
+  padding: 10px;
+  background-color: #42A5F5;
+  margin: 10px;
+}
 
+ul.ng-table-pagination > li {
+  display: inline-block;
+  margin-left: 10px;
+}

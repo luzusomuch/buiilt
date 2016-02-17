@@ -1,8 +1,15 @@
-<div class="col s12">
-    Total project: {{allProjects.length}}
-    Total contractor package: {{contractorPackages.length}}
-    Total material package: {{allMaterialPackages.length}}
-    Total user: {{allUsers.length}}
-    Total documents: {{allDocuments.length}}
-    Total task: {{allTasks.length}}
-</div>
+<md-content layout="row">
+
+    <backend-sidenav layout="column" flex="15">   
+    </backend-sidenav>
+
+    <div layout="column" flex="85" style="height: 90vh; overflow: scroll">
+        <div class="detail-header" layout-padding layout="column">
+            <h4>Dashboard</h4>
+        </div>
+        <div class="main-page-content" layout-padding>
+            There were <a ui-sref="projectsBackend">{{allProjects.length}} projects</a> and <a ui-sref="userBackend">{{allUsers.length}} users</a> has been created.
+        </div>        
+    </div>
+    
+</md-content>

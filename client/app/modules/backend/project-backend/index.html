@@ -1,46 +1,31 @@
-<div class="col s12">
-    <table ng-table="tableParams" class="table">
-        <tr ng-repeat="project in $data">
-            <td data-title="'#'">
-                {{$index + 1}}
-            </td>
-            <td data-title="'Name'" sortable="'name'">
-                {{project.name}}
-            </td>
-            <td data-title="'Status'" sortable="'status'">
-                {{project.status}}
-            </td>
-            <td data-title="'Contractor Packages'" sortable="'contractorPackages'">
-                <a ui-sref="contractorPackagesBackend({id: project._id})">{{project.contractorPackages}}</a>
-            </td>
-            <td data-title="'Material Packages'" sortable="'materialpackages'">
-                <a ui-sref="materialPackagesBackend({id: project._id})">{{project.materialpackages}}</a>
-            </td>
-            <td data-title="'Action'">
-                <i class="material-icons" ng-click="remove(project, $index)" style="color:#03A9F4">remove</i>
-                <a ng-click="getCurrentProject(project)" href="#editProject" class="modal-trigger"><i class="material-icons">create</i></a>
-            </td>
-        </tr>
-    </table>
-</div>
+<md-content layout="row">
 
-<div id="editProject" class="modal modal-fixed-bottom">
-    <form ng-submit="editProject()">
-        <div class="modal-content">
-            <h5>EDIT PROJECT</h5>
-            <div class="input-field col s12">
-                <label>Name </label>
-                <input name="name" ng-model="project.name" required type="text"
-                       ng-class="{'invalid' : form.name.$invalid && submitted}">
-            </div>
-            <div class="input-field col s12">
-                <label for="">Description</label>
-                <input type="text" ng-model="project.description">
-            </div>
+    <backend-sidenav layout="column" flex="15">   
+    </backend-sidenav>
+
+    <div layout="column" flex="85" style="height: 90vh; overflow: scroll">
+        <div class="detail-header" layout-padding layout="column">
+            <h4>Projects</h4>
         </div>
-        <div class="modal-footer">
-            <button type="submit" class="btn btn-flat modal-action modal-close">Save</button>
-            <a href="#" class="btn btn-flat modal-action modal-close">Close</a>
-        </div>
-    </form>
-</div>
+        <div class="main-page-content" layout-padding>
+            <table ng-table="tableParams" class="table" style="width:100%">
+                <tr ng-repeat="project in $data">
+                    <td data-title="'#'">
+                        {{$index + 1}}
+                    </td>
+                    <td data-title="'Name'" sortable="'name'">
+                        {{project.name}}
+                    </td>
+                    <td data-title="'Status'" sortable="'status'">
+                        {{project.status}}
+                    </td>
+                    <td data-title="'Action'">
+                        <i class="material-icons" ng-click="remove(project, $index)" style="color:#03A9F4">remove</i>
+                        <i ng-click="showModal($event, 'edit-project-modal.html', project)" class="material-icons">create</i>
+                    </td>
+                </tr>
+            </table>
+        </div>        
+    </div>
+    
+</md-content>

@@ -1,15 +1,6 @@
 angular.module('buiiltApp')
-.controller('ProjectBackendCtrl', function($state,authService,$rootScope,$scope, projects, projectService,ngTableParams,$filter,contractorService,materialPackageService) {
+.controller('ProjectBackendCtrl', function($state,$rootScope,$scope, projects, projectService,ngTableParams,$filter, $mdDialog, $mdToast) {
     var data = projects;
-
-    _.each(data, function(project) {
-        contractorService.get({id: project._id}).$promise.then(function(packages){
-            project.contractorPackages = packages.length;
-        });
-        materialPackageService.get({id: project._id}).$promise.then(function(packages){
-            project.materialpackages = packages.length;
-        });
-    });
     $scope.tableParams = new ngTableParams({
         page: 1,            // show first page
         count: 10,           // count per page
@@ -36,16 +27,41 @@ angular.module('buiiltApp')
         $scope.project = project;
     };
     $scope.editProject = function() {
-        projectService.updateProject({id: $scope.project._id},{project: $scope.project}).$promise.then(function(project) {
+        projectService.updateProject({id: $scope.project._id},$scope.project).$promise.then(function(project) {
+            $scope.closeModal();
+            $scope.showToast("Successfully");
+            $rootScope.backendEditProject = null;
             _.remove(data, {_id: $scope.project._id});
-            contractorService.get({id: project._id}).$promise.then(function(packages){
-                project.contractorPackages = packages.length;
-            });
-            materialPackageService.get({id: project._id}).$promise.then(function(packages){
-                project.materialpackages = packages.length;
-            });
             data.push(project);
             $scope.tableParams.reload();
+        }, function(err) {$scope.showToast("Error");});
+    };
+
+    $scope.showModal = function($event, name, project){
+        $rootScope.backendEditProject = project;
+        $mdDialog.show({
+            targetEvent: $event,
+            controller: 'ProjectBackendCtrl',
+            resolve: {
+                projects: function(projectService) {
+                    return projectService.getAllProjects().$promise;
+                }
+            },
+            templateUrl: 'app/modules/backend/partials/edit-project-modal.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: false
         });
     };
+
+    $scope.closeModal = function() {
+        $mdDialog.cancel();
+    };
+
+    $scope.showToast = function(value) {
+        $mdToast.show($mdToast.simple().textContent(value).position('bottom','left').hideDelay(3000));
+    };
+
+    if ($rootScope.backendEditProject) {
+        $scope.project = $rootScope.backendEditProject;
+    }
 });

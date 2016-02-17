@@ -171,7 +171,7 @@ exports.updateProject = function(req, res) {
     Project.findById(req.params.id, function(err, project) {
         if (err) {return res.send(500,err);}
         else if (!project) {return res.send(404, "The specific project is not existed");}
-        if (project.owner.toString()===req.user._id.toString()) {
+        if (project.owner.toString()===req.user._id.toString() || req.user.role==="admin") {
             project.name = data.name;
             project.description = data.description;
             project.address = data.address;
