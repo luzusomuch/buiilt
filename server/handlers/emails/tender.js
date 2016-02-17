@@ -26,7 +26,7 @@ EventBus.onSeries('Tender.Updated', function(tender, next){
             if (tender.isDistribute) {
                 if (tender.newInvitees && tender.newInvitees.length > 0) {
                     async.each(tender.newInvitees, function(invitee, cb) {
-                        PackageInvite.findOne({to: invitee.email}, function(err, p) {
+                        PackageInvite.findOne({project: tender.project, to: invitee.email}, function(err, p) {
                             if (err) {cb(err);}
                             if (!p) {
                                 var packageInvite = new PackageInvite({
@@ -71,7 +71,7 @@ EventBus.onSeries('Tender.Updated', function(tender, next){
         } else if (tender._modifiedPaths.indexOf("distribute-status") !== -1) {
             var from = tender.editUser.name + "<"+tender.editUser.email+">";
             async.each(tender.members, function(member, cb) {
-                PackageInvite.findOne({to: member.email}, function(err, p) {
+                PackageInvite.findOne({project: tender.project, to: member.email}, function(err, p) {
                     if (err) {cb(err);}
                     if (!p) {
                         var packageInvite = new PackageInvite({

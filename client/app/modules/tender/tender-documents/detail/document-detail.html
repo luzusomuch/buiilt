@@ -1,1 +1,16 @@
-document-detail.html
+<div class="detail-header" layout-padding layout="row">
+    <p class="md-headline">{{document.name}}</p>
+    <span flex></span>
+    <div>
+        <md-button ng-click="download()">Download This Document</md-button>
+    </div>
+</div>
+
+<div class="main-page-content" layout-padding>
+    <div layout="row">
+        <h4>{{document.description}}</h4>
+    </div>
+    <div layout="row">
+        <div flex file-picker-previewer type="filepicker-preview" url="{{document.path}}" style="height:75vh;"> </div>
+    </div>
+</div>

@@ -19,6 +19,7 @@ var TenderSchema = new Schema({
         name: String,
         activities: [{
             user: {type: Schema.Types.ObjectId, ref: "User", required: true},
+            email: String,
             type: {type: String}, 
             createdAt: Date, 
             element: {}

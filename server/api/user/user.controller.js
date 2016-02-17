@@ -14,6 +14,7 @@ var BuilderPackage = require('./../../models/builderPackage.model');
 var BuilderPackageNew = require('./../../models/builderPackageNew.model');
 var MaterialPackage = require('./../../models/materialPackage.model');
 var People = require('./../../models/people.model');
+var Tender = require('./../../models/tender.model');
 var PeopleChat = require('./../../models/peopleChat.model');
 var Board = require('./../../models/board.model');
 var Team = require('./../../models/team.model');
@@ -140,111 +141,113 @@ exports.createUserWithInviteToken = function(req, res, next) {
         newUser.save(function(err, user){
             if (err) {return validationError(res, err);}
             else {
+                var isSkipInTender = false;
                 var token = jwt.sign({_id: user._id}, config.secrets.session, {expiresInMinutes: 60 * 5});
-                People.findById(packageInvite.package, function(err, people) {
-                    if (err) {return res.send(500,err);}
-                    else if (!people) {return res.send(404);}
-                    else {
-                        _.each(people[packageInvite.inviteType], function(tender) {
-                            if (tender.hasSelect && tender.tenderers[0].email === user.email) {
-                                tender.tenderers[0]._id = user._id;
-                                tender.tenderers[0].email = null;
-                                user.projects.push(packageInvite.project);
-                                user.markModified("projects");
-                                user.save(function(){
-                                    return false;
-                                });
-                            } else {
-                                _.each(tender.tenderers, function(tenderer) {
-                                    if (tenderer.email === user.email) {
-                                        tenderer._id = user._id;
-                                        tenderer.email = null;
-                                        var inviteToken = new InviteToken({
-                                            type: 'project-invite',
-                                            user: user._id,
-                                            element: {
-                                                project: people.project,
-                                                type: packageInvite.inviteType
-                                            }
-                                        });
-                                        inviteToken._editUser = packageInvite.owner;
-                                        inviteToken.save(function() {
-                                            return false;
-                                        });
+                async.parallel([
+                    function (cb) {
+                        People.findById(packageInvite.package, function(err, people) {
+                            if (err || !people) {cb();}
+                            else {
+                                _.each(people[packageInvite.inviteType], function(tender) {
+                                    if (tender.hasSelect && tender.tenderers[0].email === user.email) {
+                                        isSkipInTender = true;
+                                        tender.tenderers[0]._id = user._id;
+                                        tender.tenderers[0].email = null;
+                                        user.projects.push(packageInvite.project);
+                                        user.markModified("projects");
+                                        user.save();
                                     }
                                 });
+                                people._editUser = user;
+                                people.save(cb);
                             }
                         });
-                        people._editUser = user;
-                        people.save(function(err) {
-                            if (err) {return res.send(500,err);}
-                            async.parallel([
-                                function (cb) {
-                                    Task.find({}, function(err, tasks) {
-                                        if (err) {cb();}
-                                        async.each(tasks, function(task, callback) {
-                                            if (task.owner && task.description) {
-                                                var currentUserIndex = _.indexOf(task.notMembers, user.email);
-                                                if (currentUserIndex !== -1) {
-                                                    task.members.push(user._id);
-                                                    task.notMembers.splice(currentUserIndex, 1);
+                    },
+                    function (cb) {
+                        Tender.findById(packageInvite.package, function(err, tender) {
+                            if (err || !tender) {cb();}
+                            else {
+                                _.each(tender.members, function(member) {
+                                    if (member.email === user.email) {
+                                        member.user = user._id;
+                                        member.email = null;
+                                        if (member.activities && member.activities.length > 0) {
+                                            _.each(member.activities, function(activity) {
+                                                if (activity.type === "send-message" && activity.email && activity.email===user.email) {
+                                                    activity.email = null;
+                                                    activity.user = user._id
                                                 }
-                                                task._editUser = user;
-                                                task.save(callback());
-                                            } else {
-                                                callback();
-                                            }
-                                        },cb);
-                                    });
-                                },
-                                function (cb) {
-                                    File.find({}, function(err, files) {
-                                        if (err) {cb();}
-                                        async.each(files, function(file, callback) {
-                                            if (file.owner && file.project) {
-                                                if (file.element && file.element.type === "document") {
-                                                    callback();
-                                                } else {
-                                                    var currentUserIndex = _.indexOf(file.notMembers, user.email);
-                                                    if (currentUserIndex !== -1) {
-                                                        file.members.push(user._id);
-                                                        file.notMembers.splice(currentUserIndex, 1);
-                                                    }
-                                                    file.save(callback());
-                                                }
-                                            } else 
-                                                callback();
-                                        },cb);
-                                    });
-                                },
-                                function (cb) {
-                                    Thread.find({}, function(err, threads) {
-                                        if (err) {cb();}
-                                        async.each(threads, function(thread, callback) {
-                                            var currentUserIndex = _.indexOf(thread.notMembers, user.email);
-                                            if (currentUserIndex !== -1) {
-                                                thread.members.push(user._id);
-                                                thread.notMembers.splice(currentUserIndex, 1);
-                                            }
-                                            thread.save(callback());
-                                        },cb);
-                                    });
-                                },
-                            ], function(err) {
-                                if (err) {return res.send(500,err);}
-                                var data = {
-                                    token: token,
-                                    emailVerified: true,
-                                    isSkipInTender: packageInvite.isSkipInTender,
-                                    package: people
-                                };
-                                packageInvite.remove(function(err){
-                                    if (err) {return res.send(500);}
-                                    return res.json(200,data);
+                                            });
+                                        }
+                                    }
                                 });
-                            });
+                                tender._editUser = user;
+                                tender.save(cb);
+                            }
                         });
-                    }
+                    },
+                    function (cb) {
+                        Task.find({}, function(err, tasks) {
+                            if (err) {cb();}
+                            async.each(tasks, function(task, callback) {
+                                if (task.owner && task.description) {
+                                    var currentUserIndex = _.indexOf(task.notMembers, user.email);
+                                    if (currentUserIndex !== -1) {
+                                        task.members.push(user._id);
+                                        task.notMembers.splice(currentUserIndex, 1);
+                                    }
+                                    task._editUser = user;
+                                    task.save(callback());
+                                } else {
+                                    callback();
+                                }
+                            },cb);
+                        });
+                    },
+                    function (cb) {
+                        File.find({}, function(err, files) {
+                            if (err) {cb();}
+                            async.each(files, function(file, callback) {
+                                if (file.owner && file.project) {
+                                    if (file.element && file.element.type === "document") {
+                                        callback();
+                                    } else {
+                                        var currentUserIndex = _.indexOf(file.notMembers, user.email);
+                                        if (currentUserIndex !== -1) {
+                                            file.members.push(user._id);
+                                            file.notMembers.splice(currentUserIndex, 1);
+                                        }
+                                        file.save(callback());
+                                    }
+                                } else 
+                                    callback();
+                            },cb);
+                        });
+                    },
+                    function (cb) {
+                        Thread.find({}, function(err, threads) {
+                            if (err) {cb();}
+                            async.each(threads, function(thread, callback) {
+                                var currentUserIndex = _.indexOf(thread.notMembers, user.email);
+                                if (currentUserIndex !== -1) {
+                                    thread.members.push(user._id);
+                                    thread.notMembers.splice(currentUserIndex, 1);
+                                }
+                                thread.save(callback());
+                            },cb);
+                        });
+                    },
+                ], function(err) {
+                    if (err) {return res.send(500,err);}
+                    var data = {
+                        token: token,
+                        emailVerified: true,
+                        isSkipInTender: packageInvite.isSkipInTender
+                    };
+                    packageInvite.remove(function(err){
+                        if (err) {return res.send(500);}
+                        return res.json(200,data);
+                    });
                 });
             }
         });

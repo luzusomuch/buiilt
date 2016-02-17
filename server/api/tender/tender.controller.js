@@ -221,6 +221,7 @@ exports.acknowledgement = function(req, res) {
                 tender.activities[activityIndex].acknowledgeUsers.push({_id: req.user._id, isAcknow: true});
             }
         }
+        tender._editUser = req.user;
         tender.save(function(err) {
             if (err) {return res.send(500,err);}
             Tender.populate(tender, [
@@ -300,6 +301,7 @@ exports.selectWinner = function(req, res) {
                 element: {name: (tender.members[currentTendererIndex].user) ? tender.members[currentTendererIndex].user.name : tender.members[currentTendererIndex].email}
             }
             tender.activities.push(activity);
+            tender._editUser = req.user;
             tender.save(function(err){
                 if (err) {return res.send(500,err);}
                 Tender.populate(tender, [
@@ -410,6 +412,7 @@ exports.updateTenderInvitee = function(req, res) {
                 activity.element.description = data.description
             }
             tender.members[currentTendererIndex].activities.push(activity);
+            tender._editUser = req.user;
             tender.save(function(err) {
                 if (err) {return res.send(500,err);}
                 Tender.populate(tender, [

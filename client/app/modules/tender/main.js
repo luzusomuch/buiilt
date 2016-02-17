@@ -20,8 +20,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
   .state('tender.invitees', {
     url: '/',
     abstract: true,
-    templateUrl: '/app/modules/tender/tender-invitees/tender-invitees.html',
-    authenticate : true
+    templateUrl: '/app/modules/tender/tender-invitees/tender-invitees.html'
   })
   .state('tender.invitees.all', {
     url: 'invitees',
@@ -36,8 +35,13 @@ angular.module('buiiltApp').config(function($stateProvider) {
     authenticate: true
   })
   .state('tender.documents', {
-    url: '/documents',
+    url: '/',
     templateUrl: '/app/modules/tender/tender-documents/tender-documents.html',
+    abstract: true
+  })
+  .state('tender.documents.all', {
+    url: 'documents',
+    templateUrl: '/app/modules/tender/tender-documents/all/view.html',
     controller: 'tenderDocumentsCtrl',
     authenticate : true
   })
