@@ -7,6 +7,7 @@ var People = require('./../../models/people.model');
 var Tender = require('./../../models/tender.model');
 var InviteToken = require('./../../models/inviteToken.model');
 var EventBus = require('../../components/EventBus');
+var moment = require("moment");
 
 exports.create = function(req, res) {
     var data = req.body;
@@ -46,6 +47,7 @@ exports.update = function(req, res) {
         //     activity.element.link = addendum.element.link = data.file.url;
         // }
         var newFile = {};
+        var newInvitees = [];
         async.parallel([
             function(cb) {
                 if (data.file) {
@@ -95,6 +97,9 @@ exports.update = function(req, res) {
                     cb();
                 } else if (data.editType === "attach-scope") {
                     activity.element.description = data.description;
+                    activity.element.dateEnd = (moment(moment(tender.dateEnd).format("YYYY-MM-DD")).isSame(moment(data.dateEnd).format("YYYY-MM-DD"))) ? null : data.dateEnd;
+                    tender.description = data.description;
+                    tender.dateEnd = data.dateEnd;
                     cb();
                 } else if (data.editType === "invite-tender") {
                     var members = [];
@@ -104,7 +109,8 @@ exports.update = function(req, res) {
                             if (err) {cb(err);}
                             else if (!_user) {
                                 members.push({name:member.name, email: member.email});
-                                tenderMembers.push({email: member.email});
+                                tenderMembers.push({email: member.email, name: member.name});
+                                newInvitees.push({email: member.email, name: member.name});
                                 var inviteToken = new InviteToken({
                                     type: 'tender-invite',
                                     email: member.email,
@@ -147,6 +153,7 @@ exports.update = function(req, res) {
             }
             tender.activities.push(activity);
             tender._editUser = req.user;
+            tender._newInvitees = newInvitees;
             tender.markModified(data.editType);
             tender.save(function(err) {
                 if (err) {return res.send(500,err);}

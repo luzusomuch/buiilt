@@ -71,10 +71,11 @@ angular.module('buiiltApp').controller('tenderOverviewCtrl', function($scope, $r
     };
 
     $scope.scope = {};
+    $scope.tender.dateEnd = new Date($scope.tender.dateEnd);
     $scope.attachScope = function() {
-        if ($scope.scope.description && $scope.scope.description.length > 0) {
-            $scope.scope.editType = "attach-scope";
-            $scope.updateTender($scope.scope);
+        if ($scope.tender.description && $scope.tender.description.length > 0) {
+            $scope.tender.editType = "attach-scope";
+            $scope.updateTender($scope.tender);
         } else {
             $scope.showToast("Please Check Your Inputs...");
             return false;

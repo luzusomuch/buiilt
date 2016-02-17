@@ -6,7 +6,7 @@
 	  	<div layout="row" layout-align="start center" ng-show="isLoggedIn">
 	  		<md-button ui-sref='dashboard.tasks'>Dashboard</md-button>
 		  	<md-button ui-sref='projects.open'>Projects</md-button>
-			<md-button ui-sref='tenders.open'>Tenders</md-button>
+			<md-button ui-sref='tenders.open' ng-hide="currentTeam.type=='homeOwner'">Tenders</md-button>
 	  	</div>
 		  
 	  	<span flex></span>

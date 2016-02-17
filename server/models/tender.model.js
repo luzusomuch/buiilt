@@ -16,6 +16,7 @@ var TenderSchema = new Schema({
     members: [{
         user: {type: Schema.Types.ObjectId, ref: "User"},
         email: String,
+        name: String,
         activities: [{
             user: {type: Schema.Types.ObjectId, ref: "User", required: true},
             type: {type: String}, 
@@ -51,12 +52,18 @@ var TenderSchema = new Schema({
 TenderSchema.pre('save', function(next) {
     this.wasNew = this.isNew;
     this.editUser = this._editUser;
+    this.newInvitees = this._newInvitees;
+    this._modifiedPaths = this.modifiedPaths();
     this.evtName = this._evtName;
     next();
 });
 
 TenderSchema.post('save', function (doc) {
     doc.editUser = this.editUser;
+    doc.newInvitees = this.newInvitees;
+    if (this._modifiedPaths) {
+        doc._modifiedPaths = this._modifiedPaths
+    }
     if (this.evtName ) {
         var evtName = this.evtName;
     } else {
