@@ -42,7 +42,7 @@ EventBus.onSeries('Tender.Updated', function(tender, next){
                                     Mailer.sendMail('invite-non-user-to-tender.html', from, packageInvite.to, {
                                         team: result.team.toJSON(),
                                         inviter: tender.editUser.toJSON(),
-                                        invitee: invitee.name,
+                                        invitee: invitee,
                                         project: result.project.toJSON(),
                                         link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
                                         subject: tender.editUser.name + ' has invited you to project ' + result.project.name
@@ -52,7 +52,7 @@ EventBus.onSeries('Tender.Updated', function(tender, next){
                                 Mailer.sendMail('invite-non-user-to-tender.html', from, p.to, {
                                     team: result.team.toJSON(),
                                     inviter: tender.editUser.toJSON(),
-                                    invitee: invitee.name,
+                                    invitee: invitee,
                                     project: result.project.toJSON(),
                                     link : config.baseUrl + 'signup-invite?packageInviteToken=' + p._id,
                                     subject: tender.editUser.name + ' has invited you to project ' + result.project.name
@@ -87,7 +87,7 @@ EventBus.onSeries('Tender.Updated', function(tender, next){
                             Mailer.sendMail('invite-non-user-to-tender.html', from, packageInvite.to, {
                                 team: result.team.toJSON(),
                                 inviter: tender.editUser.toJSON(),
-                                invitee: member.name,
+                                invitee: member,
                                 project: result.project.toJSON(),
                                 link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
                                 subject: tender.editUser.name + ' has invited you to project ' + result.project.name
@@ -97,7 +97,7 @@ EventBus.onSeries('Tender.Updated', function(tender, next){
                         Mailer.sendMail('invite-non-user-to-tender.html', from, p.to, {
                             team: result.team.toJSON(),
                             inviter: tender.editUser.toJSON(),
-                            invitee: member.name,
+                            invitee: member,
                             project: result.project.toJSON(),
                             link : config.baseUrl + 'signup-invite?packageInviteToken=' + p._id,
                             subject: tender.editUser.name + ' has invited you to project ' + result.project.name
