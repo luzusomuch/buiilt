@@ -2,7 +2,7 @@
     <form name="form" ng-submit="uploadNewTenderDocument(form)">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2>Attach new Tender Document</h2>
+                <h2>Attach a New Tender Document</h2>
             </div>
         </md-toolbar>
         
@@ -10,7 +10,7 @@
             <div class="md-dialog-content" layout="column" layout-padding>
                 
                 <div layout="column">
-                    <p class="md-body-2">Describe the document:</p>
+                    <p class="md-body-2">Describe the Document:</p>
                     <div layout="row">
                         <md-input-container flex-offset="15" flex="66">
                             <label for="">Document Description</label>
@@ -20,7 +20,7 @@
                 </div>
                 
                 <div layout="column">
-                    <p class="md-body-2">Select a Document to send:</p>
+                    <p class="md-body-2">Select a Document to Attach:</p>
                     <div layout="row" layout-align="center center" class="tagcloud-selection">
                         <input filepicker class="filepicker-button" type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/>
                     </div>
@@ -31,7 +31,7 @@
         
         <md-dialog-actions>
             <md-button ng-click="closeModal()">Cancel</md-button>
-            <md-button type="submit" class="md-primary">Send Document</md-button>
+            <md-button type="submit" class="md-primary">Attach Document</md-button>
         </md-dialog-actions>
     </form>
 </md-dialog>
