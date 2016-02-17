@@ -364,15 +364,15 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
     };
 
     $scope.removeMember = function(member){
-        var confirm = $mdDialog.confirm().title("Do you want to remove this member?").ok("Yes").cancel("No");
+        var confirm = $mdDialog.confirm().title("Do you want to remove this user from your team?").ok("Yes").cancel("No");
         $mdDialog.show(confirm).then(function() {
             teamService.removeMember({id: $scope.currentTeam._id}, member).$promise
             .then(function (team) {
-                $scope.showToast("Delete member successfully!");
+                $scope.showToast("Team Member Has Been Removed Successfully.");
                 $scope.currentTeam = team;
                 $rootScope.$emit('TeamUpdate',team);
             }, function (err) {
-                $scope.showToast("Error");
+                $scope.showToast("There Has Been An Error...");
             });
         }, function() {
             
@@ -380,15 +380,15 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
     };
 
     $scope.assignLeader = function(member) {
-        var confirm = $mdDialog.confirm().title("Do you want assign this member to leader?").ok("Yes").cancel("No");
+        var confirm = $mdDialog.confirm().title("Do you want to assign this user as a team administrator?").ok("Yes").cancel("No");
         $mdDialog.show(confirm).then(function() {
             teamService.assignLeader({id: $scope.currentTeam._id}, member).$promise
             .then(function (team) {
                 $scope.currentTeam = team;
-                $scope.showToast("Assign leader for " + member._id.name + " successfully!");
+                $scope.showToast("You Have Successfully Assigned " + member._id.name + " as a Team Administrator");
                 $rootScope.$emit('TeamUpdate',team);
             }, function(err) {
-                $scope.showToast("Error");
+                $scope.showToast("There Has Been An Error...");
             });
         }, function() {
             
