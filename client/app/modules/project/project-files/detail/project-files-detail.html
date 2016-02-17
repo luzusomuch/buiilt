@@ -6,7 +6,7 @@
 			<p>{{file.name}}</p>
 			<span flex></span>
 			<div>
-                <md-button ng-click="acknowledgement()" ng-show="file.owner._id != currentUser._id">acknowledgement</md-button>
+                
                 <md-menu md-position-mode="target-right target">
 				    <md-button ng-click="openFileHistory($mdOpenMenu, $event)">View File</md-button>
                     <md-menu-content width="4">
@@ -73,10 +73,10 @@
 							<span ng-switch-when="related-file">"<a ui-sref="project.files.detail({id: file.project, fileId: activity.element.item})">{{activity.element.name}}</a>"</span>
 						</p>
 
-                        <div layout="row" class="tagcloud-selection" ng-show="file.owner._id==currentUser._id && (activity.type==='upload-file' || activity.type==='upload-reversion')">
+                        <div layout="row" class="tagcloud-selection" ng-show="activity.user._id==currentUser._id && (activity.type==='upload-file' || activity.type==='upload-reversion')">
                             <span ng-repeat="user in activity.acknowledgeUsers" ng-class="{'available-tag':!user.isAcknow, 'selected-tag':user.isAcknow}">{{(user._id) ? user._id.name : user.email}}</span>
                         </div>
-						
+                        <div layout="row" ng-show="activity.user._id != currentUser._id && !activity.isAcknow && (activity.type==='upload-file' || activity.type==='upload-reversion')"><md-button ng-click="acknowledgement(activity)">acknowledgement</md-button></div>
 					</div>
 				</div>
 			</div>

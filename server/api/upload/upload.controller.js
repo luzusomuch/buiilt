@@ -124,6 +124,8 @@ exports.uploadReversion = function(req, res) {
                         _.each(file.notMembers, function(member) {
                             acknowledgeUsers.push({email: member, isAcknow: false});
                         });
+                        acknowledgeUsers.push({_id: file.owner, isAcknow: false});
+                        _.remove(acknowledgeUsers, {_id: req.user._id});
                         cb();
                     } else {
                         People.findOne({project: file.project}, function(err, people) {

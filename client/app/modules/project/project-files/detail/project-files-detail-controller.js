@@ -1,22 +1,41 @@
 angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope, $rootScope, file, $mdDialog, uploadService, fileService, $mdToast, peopleService, $stateParams, messageService, taskService, $state, people, socket) {
 	$scope.file = file;
+    function checkAcknowLedgement(file) {
+        _.each(file.activities, function(activity) {
+            if (activity.type === "upload-reversion" || activity.type === "upload-file") {
+                if (_.findIndex(activity.acknowledgeUsers, function(item) {
+                    if (item._id) {
+                        return item._id._id == $scope.currentUser._id && item.isAcknow;
+                    }
+                }) !== -1) {
+                    activity.isAcknow = true;
+                } else {
+                    activity.isAcknow = false;
+                }
+            }
+        });
+    };
+    checkAcknowLedgement($scope.file);
+    
     $scope.orginalActivities = angular.copy($scope.file.activities);
     $scope.isShowRelatedItem = true;
     $scope.people = people;
+    $scope.currentUser = $rootScope.currentUser;
 
-    $rootScope.$on("File.Updated", function(event, data) {
-        $scope.file = data;
-    });
+    // $rootScope.$on("File.Updated", function(event, data) {
+    //     $scope.file = data;
+    // });
 
     socket.emit("join", file._id);
     socket.on("file:update", function(data) {
         $scope.file = data;
+        checkAcknowLedgement($scope.file);
     });
 
-    $scope.acknowledgement = function() {
-        fileService.acknowledgement({id: $stateParams.fileId}).$promise.then(function(res) {
+    $scope.acknowledgement = function(activity) {
+        fileService.acknowledgement({id: $stateParams.fileId, activityId: activity._id}).$promise.then(function(res) {
             $scope.showToast("Sent acknowledgement to the owner successfully");
-            $rootScope.$broadcast("File.Updated", res);
+            // $rootScope.$broadcast("File.Updated", res);
         }, function(err) {
             $scope.showToast("Error");
         });

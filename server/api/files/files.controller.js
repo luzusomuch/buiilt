@@ -147,26 +147,52 @@ exports.acknowledgement = function(req, res) {
         if (err) {return res.send(500,err);}
         else if (!file) {return res.send(404);}
         if (file.element.type === "file") {
+            file.members.push(file.owner);
             if (_.findIndex(file.members, function(id) {
                 return id.toString()===req.user._id.toString();
             }) === -1) {
                 return res.send(500, {message: "You haven\'t got privilege"});
             }
         }
-        _.each(file.activities, function(activity) {
-            if (activity.type === "upload-file" || activity.type === "upload-reversion") {
-                var index = _.findIndex(activity.acknowledgeUsers, function(user) {
-                    return user._id.toString()===req.user._id.toString();
+        var currentActivityIndex = _.findIndex(file.activities, function(activity) {
+            return activity._id.toString()===req.query.activityId.toString();
+        });
+        if (currentActivityIndex !== -1) {
+            if (file.activities[currentActivityIndex].type === "upload-file" || file.activities[currentActivityIndex].type==="upload-reversion") {
+                var userIndex = _.findIndex(file.activities[currentActivityIndex].acknowledgeUsers, function(user) {
+                    if (user._id) {
+                        return user._id.toString()===req.user._id.toString();
+                    }
                 });
-                if (index !== -1) {
-                    activity.acknowledgeUsers[index].isAcknow = true;
+                if (userIndex !== -1) {
+                    file.activities[currentActivityIndex].acknowledgeUsers[userIndex].isAcknow = true;
+                } else {
+                    file.activities[currentActivityIndex].acknowledgeUsers.push({_id: req.user._id, isAcknow: true});
                 }
+                file.save(function(err) {
+                    if (err) {return res.send(500,err);}
+                    populateFile(file, res);
+                });
+            } else {
+                return res.send(500, {message: "Acitivity is not existed"});    
             }
-        });
-        file.save(function(err) {
-            if (err) {return res.send(500,err);}
-            populateFile(file, res);
-        });
+        } else {
+            return res.send(500, {message: "Acitivity is not existed"});
+        }
+        // _.each(file.activities, function(activity) {
+        //     if (activity.type === "upload-file" || activity.type === "upload-reversion") {
+        //         var index = _.findIndex(activity.acknowledgeUsers, function(user) {
+        //             return user._id.toString()===req.user._id.toString();
+        //         });
+        //         if (index !== -1) {
+        //             activity.acknowledgeUsers[index].isAcknow = true;
+        //         }
+        //     }
+        // });
+        // file.save(function(err) {
+        //     if (err) {return res.send(500,err);}
+        //     populateFile(file, res);
+        // });
     });
 };
 
