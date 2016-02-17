@@ -29,7 +29,7 @@ angular.module('buiiltApp').controller('projectsCtrl', function ($rootScope, $sc
 					mixpanel.track("Project Created");
 					
                 }, function(res) {
-                $scope.showToast(res.data.msg);
+                $scope.showToast(res.data.message);
             });
         }
     };

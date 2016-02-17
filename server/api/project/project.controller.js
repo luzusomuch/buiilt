@@ -28,8 +28,11 @@ exports.create = function(req, res){
         });
         var today = new Date();
         var allowCreate = false;
-        // filter out user is not purchase for plan and in 14 days trial
-        if (!user.plan && (moment(moment(user.createdAt).add(14, "days").format("YYYY-MM-DD")).isAfter(moment(today).format("YYYY-MM-DD")))) {
+        // filter out user is not purchase for plan and in 14 days trial with this code
+        // (moment(moment(user.createdAt).add(14, "days").format("YYYY-MM-DD")).isAfter(moment(today).format("YYYY-MM-DD")))
+
+        // New filter, filter that user have 1 free project
+        if (!user.plan && userTotalCreatedProjects===0) {
             allowCreate = true;
         } else {
             switch (user.plan) {
@@ -110,10 +113,10 @@ exports.create = function(req, res){
                 });
             });
         } else {
-            if (!user.plan && !(moment(moment(user.createdAt).add(14, "days").format("YYYY-MM-DD")).isAfter(moment(today).format("YYYY-MM-DD")))) {
-                return res.send(500, {msg: "You have out of 14 days trial. Please purchase a plan to countinue"});
+            if (!user.plan && userTotalCreatedProjects > 0) {
+                return res.send(500, {message: "You have reached limit project number for trial account. Please purchase a plan to countinue"});
             } else {
-                return res.send(500, {msg: "You have reached maximun projects with your plan. Please upgrade your plan to countinue"});
+                return res.send(500, {message: "You have reached maximun projects with your plan. Please upgrade your plan to countinue"});
             }
         }
     });
