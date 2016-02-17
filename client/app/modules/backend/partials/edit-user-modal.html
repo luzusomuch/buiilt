@@ -1,0 +1,44 @@
+<md-dialog aria-label="Edit the Project Details" flex="70">
+    <form ng-submit="editUser(form)" name="form">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Edit the User Details</h2>
+            </div>
+        </md-toolbar>
+        
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column">
+                
+                <div layout="row">
+                    <md-input-container flex class="modal-instructions">
+                        <p>Please provide the following details to edit your choosen user...</p>
+                    </md-input-container>
+                </div>
+                
+                <div layout="row">
+                    <md-input-container flex="50">
+                        <label>First Name</label>
+                        <input ng-model="user.firstName" md-autofocus ng-required>
+                    </md-input-container>
+                    <md-input-container flex="50">
+                        <label>Last Name</label>
+                        <input ng-model="user.lastName" md-autofocus ng-required>
+                    </md-input-container>
+                </div>
+                
+                <div layout="row">
+                    <md-input-container flex>
+                        <label>Phone Number</label>
+                        <input ng-model="user.phoneNumber">
+                    </md-input-container>
+                </div>
+            </div>
+        </md-dialog-content>
+        
+        <md-dialog-actions>
+            <md-button ng-click="closeModal()">Cancel</md-button>
+            <md-button class="md-primary" type="submit">Save Changes</md-button>
+        </md-dialog-actions>   
+        
+    </form>
+</md-dialog>

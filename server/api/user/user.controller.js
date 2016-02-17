@@ -47,6 +47,22 @@ exports.getUserProfile = function(req, res) {
     });
 };
 
+exports.adminUpdateUserProfile = function(req, res) {
+    var data = req.body;
+    User.findById(req.params.id, function(err, user) {
+        if (err) {return res.send(500,err);}
+        if (!user) {return res.send(404);}
+        user.firstName = data.firstName;
+        user.lastName = data.lastName;
+        user.phoneNumber = data.phoneNumber;
+        user.name = data.firstName + " " + data.lastName;
+        user.save(function(err) {
+            if (err) {return res.send(500,err);}
+            return res.send(200,user);
+        });
+    });
+};
+
 /**
  * Get list of users
  * restriction: 'admin'

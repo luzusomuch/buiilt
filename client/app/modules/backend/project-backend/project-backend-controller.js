@@ -23,9 +23,6 @@ angular.module('buiiltApp')
         });
     };
 
-    $scope.getCurrentProject = function(project) {
-        $scope.project = project;
-    };
     $scope.editProject = function() {
         projectService.updateProject({id: $scope.project._id},$scope.project).$promise.then(function(project) {
             $scope.closeModal();
@@ -37,7 +34,7 @@ angular.module('buiiltApp')
         }, function(err) {$scope.showToast("Error");});
     };
 
-    $scope.showModal = function($event, name, project){
+    $scope.showModal = function($event, project){
         $rootScope.backendEditProject = project;
         $mdDialog.show({
             targetEvent: $event,

@@ -53,6 +53,12 @@ angular.module('buiiltApp')
                 action: 'buy-plan'
             }
         },
+        adminUpdate: {
+            method: "PUT",
+            params: {
+                action: "admin-update"
+            }
+        },
         getTheBestProviders: { method: 'GET', params: { id: 'theBestProviders'}, isArray: true },
         gets:{method:'GET', params: {action: ''}, isArray: true},
         delete: {method:'DELETE', params: {id: 'id', action: ''}, isArray: true},

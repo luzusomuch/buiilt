@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('UserBackendCtrl', function(ngTableParams,$scope, users, userService) {
+angular.module('buiiltApp').controller('UserBackendCtrl', function(ngTableParams, $rootScope, $scope, users, userService, $mdDialog, $mdToast) {
     var data = users;
 
     $scope.tableParams = new ngTableParams({
@@ -17,4 +17,43 @@ angular.module('buiiltApp').controller('UserBackendCtrl', function(ngTableParams
             $scope.tableParams.reload();
         });
     };
+
+    $scope.editUser = function() {
+        userService.adminUpdate({id: $scope.user._id},$scope.user).$promise.then(function(project) {
+            $scope.closeModal();
+            $scope.showToast("Successfully");
+            $rootScope.backendEditUser = null;
+            _.remove(data, {_id: $scope.user._id});
+            data.push(user);
+            $scope.tableParams.reload();
+        }, function(err) {$scope.showToast("Error");});
+    };
+
+    $scope.showModal = function($event, user){
+        $rootScope.backendEditUser = user;
+        $mdDialog.show({
+            targetEvent: $event,
+            controller: 'UserBackendCtrl',
+            resolve: {
+                users: function(userService) {
+                    return userService.getAll().$promise;
+                }
+            },
+            templateUrl: 'app/modules/backend/partials/edit-user-modal.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: false
+        });
+    };
+
+    $scope.closeModal = function() {
+        $mdDialog.cancel();
+    };
+
+    $scope.showToast = function(value) {
+        $mdToast.show($mdToast.simple().textContent(value).position('bottom','left').hideDelay(3000));
+    };
+
+    if ($rootScope.backendEditUser) {
+        $scope.user = $rootScope.backendEditUser;
+    }
 });

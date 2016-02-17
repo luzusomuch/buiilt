@@ -1,21 +1,37 @@
-<div class="col s12">
-    <table ng-table="tableParams" class="table">
-        <tr ng-repeat="user in $data">
-            <td data-title="'#'">
-                {{$index + 1}}
-            </td>
-            <td data-title="'Email'">
-                {{user.email}}
-            </td>
-            <td data-title="'Full name'">
-                {{user.firstName}}  {{user.lastName}}
-            </td>
-            <td data-title="'Role'">
-                {{user.role}}
-            </td>
-            <td data-title="'Action'">
-                <i class="material-icons" ng-click="remove(user)" style="color:#03A9F4">remove</i>
-            </td>
-        </tr>
-    </table>
-</div>
+<md-content layout="row">
+
+    <backend-sidenav layout="column" flex="15">   
+    </backend-sidenav>
+
+    <div layout="column" flex="85" style="height: 90vh; overflow: scroll">
+        <div class="detail-header" layout-padding layout="column">
+            <h4>Users</h4>
+        </div>
+        <div class="main-page-content" layout-padding>
+            <table ng-table="tableParams" class="table" style="width:100%">
+                <tr ng-repeat="user in $data">
+                    <td data-title="'#'">
+                        {{$index + 1}}
+                    </td>
+                    <td data-title="'Email'">
+                        {{user.email}}
+                    </td>
+                    <td data-title="'Full name'">
+                        {{user.firstName}}  {{user.lastName}}
+                    </td>
+                    <td data-title="'Phone number'">
+                        {{user.phoneNumber}}
+                    </td>
+                    <td data-title="'Role'">
+                        {{user.role}}
+                    </td>
+                    <td data-title="'Action'">
+                        <i class="material-icons" ng-click="remove(user)" style="color:#03A9F4">remove</i>
+                        <i ng-click="showModal($event, user)" class="material-icons">create</i>
+                    </td>
+                </tr>
+            </table>
+        </div>        
+    </div>
+    
+</md-content>
