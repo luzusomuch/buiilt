@@ -136,6 +136,11 @@ exports.uploadReversion = function(req, res) {
                                     _.each(people[role], function(tender){
                                         if (tender.hasSelect && tender.tenderers[0]._id) {
                                             acknowledgeUsers.push({_id: tender.tenderers[0]._id});
+                                            if (tender.tenderers[0]._id.toString()===req.user._id.toString()) {
+                                                _.each(tender.tenderers[0].teamMember, function(member) {
+                                                    acknowledgeUsers.push({_id: member});
+                                                });
+                                            }
                                         } else if (tender.hasSelect && tender.tenderers[0].email) {
                                             acknowledgeUsers.push({email: tender.tenderers[0].email});
                                         }
@@ -247,6 +252,11 @@ exports.upload = function(req, res){
                             _.each(people[role], function(tender){
                                 if (tender.hasSelect && tender.tenderers[0]._id) {
                                     acknowledgeUsers.push({_id: tender.tenderers[0]._id});
+                                    if (tender.tenderers[0]._id.toString()===req.user._id.toString()) {
+                                        _.each(tender.tenderers[0].teamMember, function(member) {
+                                            acknowledgeUsers.push({_id: member});
+                                        });
+                                    }
                                 } else if (tender.hasSelect && tender.tenderers[0].email) {
                                     acknowledgeUsers.push({email: tender.tenderers[0].email});
                                 }
