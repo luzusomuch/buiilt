@@ -114,9 +114,9 @@ exports.create = function(req, res){
             });
         } else {
             if (!user.plan && userTotalCreatedProjects > 0) {
-                return res.send(500, {message: "You have reached limit project number for trial account. Please purchase a plan to countinue"});
+                return res.send(500, {message: "You Have Reached the Limit of Free Projects. Please Upgrade Your Subscription to Continue..."});
             } else {
-                return res.send(500, {message: "You have reached maximun projects with your plan. Please upgrade your plan to countinue"});
+                return res.send(500, {message: "You Have Reached the Limit of Projects In Your Subscription. Please Upgrade to Continue..."});
             }
         }
     });
