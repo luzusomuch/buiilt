@@ -11,26 +11,26 @@ var async = require('async');
 var EventBus = require('../../components/EventBus');
 
 var populatePaths = [
-    {path:"builders.tenderers._id", select: "_id email name"},
-    {path:"builders.inviter", select: "_id email name"},
-    {path:"builders.tenderers.teamMember", select: "_id email name"},
-    {path:"builders.inviterActivities.user", select: "_id email name"},
-    {path:"architects.tenderers._id", select: "_id email name"},
-    {path:"architects.inviter", select: "_id email name"},
-    {path:"architects.tenderers.teamMember", select: "_id email name"},
-    {path:"architects.inviterActivities.user", select: "_id email name"},
-    {path:"clients.tenderers._id", select: "_id email name"},
-    {path:"clients.inviter", select: "_id email name"},
-    {path:"clients.tenderers.teamMember", select: "_id email name"},
-    {path:"clients.inviterActivities.user", select: "_id email name"},
-    {path:"subcontractors.tenderers._id", select: "_id email name"},
-    {path:"subcontractors.inviter", select: "_id email name"},
-    {path:"subcontractors.tenderers.teamMember", select: "_id email name"},
-    {path:"subcontractors.inviterActivities.user", select: "_id email name"},
-    {path: "consultants.tenderers._id", select: "_id email name"},
-    {path:"consultants.inviter", select: "_id email name"},
-    {path: "consultants.tenderers.teamMember", select: "_id email name"},
-    {path:"consultants.inviterActivities.user", select: "_id email name"},
+    {path:"builders.tenderers._id", select: "_id email name phoneNumber"},
+    {path:"builders.inviter", select: "_id email name phoneNumber"},
+    {path:"builders.tenderers.teamMember", select: "_id email name phoneNumber"},
+    {path:"builders.inviterActivities.user", select: "_id email name phoneNumber"},
+    {path:"architects.tenderers._id", select: "_id email name phoneNumber"},
+    {path:"architects.inviter", select: "_id email name phoneNumber"},
+    {path:"architects.tenderers.teamMember", select: "_id email name phoneNumber"},
+    {path:"architects.inviterActivities.user", select: "_id email name phoneNumber"},
+    {path:"clients.tenderers._id", select: "_id email name phoneNumber"},
+    {path:"clients.inviter", select: "_id email name phoneNumber"},
+    {path:"clients.tenderers.teamMember", select: "_id email name phoneNumber"},
+    {path:"clients.inviterActivities.user", select: "_id email name phoneNumber"},
+    {path:"subcontractors.tenderers._id", select: "_id email name phoneNumber"},
+    {path:"subcontractors.inviter", select: "_id email name phoneNumber"},
+    {path:"subcontractors.tenderers.teamMember", select: "_id email name phoneNumber"},
+    {path:"subcontractors.inviterActivities.user", select: "_id email name phoneNumber"},
+    {path: "consultants.tenderers._id", select: "_id email name phoneNumber"},
+    {path:"consultants.inviter", select: "_id email name phoneNumber"},
+    {path: "consultants.tenderers.teamMember", select: "_id email name phoneNumber"},
+    {path:"consultants.inviterActivities.user", select: "_id email name phoneNumber"},
     {path: "project"}
 ];
 
@@ -315,21 +315,21 @@ exports.selectWinnerTender = function(req, res) {
 
 exports.getInvitePeople = function(req, res) {
     People.findOne({project: req.params.id})
-    .populate("builders.tenderers._id", "_id email name")
-    .populate("builders.tenderers.teamMember", "_id email name")
-    .populate("builders.inviter", "_id email name")
-    .populate("architects.tenderers._id", "_id email name")
-    .populate("architects.tenderers.teamMember", "_id email name")
-    .populate("architects.inviter", "_id email name")
-    .populate("clients.tenderers._id", "_id email name")
-    .populate("clients.tenderers.teamMember", "_id email name")
-    .populate("clients.inviter", "_id email name")
-    .populate("subcontractors.tenderers._id", "_id email name")
-    .populate("subcontractors.tenderers.teamMember", "_id email name")
-    .populate("subcontractors.inviter", "_id email name")
-    .populate("consultants.tenderers._id", "_id email name")
-    .populate("consultants.tenderers.teamMember", "_id email name")
-    .populate("consultants.inviter", "_id email name")
+    .populate("builders.tenderers._id", "_id email name phoneNumber")
+    .populate("builders.tenderers.teamMember", "_id email name phoneNumber")
+    .populate("builders.inviter", "_id email name phoneNumber")
+    .populate("architects.tenderers._id", "_id email name phoneNumber")
+    .populate("architects.tenderers.teamMember", "_id email name phoneNumber")
+    .populate("architects.inviter", "_id email name phoneNumber")
+    .populate("clients.tenderers._id", "_id email name phoneNumber")
+    .populate("clients.tenderers.teamMember", "_id email name phoneNumber")
+    .populate("clients.inviter", "_id email name phoneNumber")
+    .populate("subcontractors.tenderers._id", "_id email name phoneNumber")
+    .populate("subcontractors.tenderers.teamMember", "_id email name phoneNumber")
+    .populate("subcontractors.inviter", "_id email name phoneNumber")
+    .populate("consultants.tenderers._id", "_id email name phoneNumber")
+    .populate("consultants.tenderers.teamMember", "_id email name phoneNumber")
+    .populate("consultants.inviter", "_id email name phoneNumber")
     .populate("project")
     .exec(function(err, people){
         if (err) {return res.send(500,err);}

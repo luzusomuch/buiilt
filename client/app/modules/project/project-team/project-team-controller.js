@@ -75,7 +75,7 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
         // show the current user if he is a project creator
         if ($scope.people.project.projectManager._id.toString()===$rootScope.currentUser._id.toString()) {
             var role = ($scope.people.project.projectManager.type === "builder") ? "builders" : "architects";
-            $scope.membersList.push({_id: $rootScope.currentUser._id, name: $rootScope.currentUser.name, email: $rootScope.currentUser.email, type: $rootScope.currentUser.type});
+            $scope.membersList.push({_id: $rootScope.currentUser._id, name: $rootScope.currentUser.name, email: $rootScope.currentUser.email, phoneNumber: ($rootScope.currentUser.phoneNumber) ? $rootScope.currentUser.phoneNumber : null, type: $rootScope.currentUser.type});
         }
         _.each($rootScope.roles, function(role) {
             _.each($scope.people[role], function(tender) {
