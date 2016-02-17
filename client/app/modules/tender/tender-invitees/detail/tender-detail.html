@@ -6,18 +6,27 @@
     <div layout="row" layout-align="center center" flex class="activity-stream" ng-repeat="activity in currentTenderere.activities">
         <span flex="5"></span>
         <div class="icon-type" ng-switch="activity.type">
-            <md-icon ng-switch-when="send-message" class="material-icons md-primary">chat_bubble_outline</md-icon>
+            <md-icon ng-switch-when="send-message" class="material-icons md-primary">move_to_inbox</md-icon>
             <md-icon ng-switch-when="attach-tender" class="material-icons md-primary">attach_file</md-icon>
         </div>
         <span flex="5"></span>
 
         <div flex class="activity-detail">
+			
             <p ng-switch="activity.type" class="activity-header">
-                <span class="activity-creator">{{(activity.user._id==currentUser._id) ? "you" : activity.user.name}}</span>
-                <span class="meta-data" ng-switch-when="send-message"> has sent a message <strong>{{activity.element.text}}</strong> at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span></span>
+				<span class="activity-creator">{{(activity.user._id==currentUser._id) ? "you" : activity.user.name}}</span>
+				<span class="meta-data" ng-switch-when="send-message"> sent a message at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
                 <span class="meta-data" ng-switch-when="attach-tender"> has sent you a tender {{activity.element.name}} with this {{activity.element.description}} as a <strong>description</strong> at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span> and you can view it by click <u style="cursor:pointer" ng-click="openTenderDetail($event, activity.element)">here</u></span>
             </p>
+			
+			<span ng-switch="activity.type" class="activity-body md-body">
+				
+				<span ng-switch-when="send-message">{{activity.element.text | sanitize}}</span>
+				
+			</span>
+			
         </div>
+		
     </div>
 </div>
 
