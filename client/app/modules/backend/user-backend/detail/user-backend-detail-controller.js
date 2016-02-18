@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('UserBackendDetailCtrl', function(ngTableParams, $rootScope, $scope, userService, $mdDialog, $mdToast, projects, tenders, $filter) {
+angular.module('buiiltApp').controller('UserBackendDetailCtrl', function(ngTableParams, $rootScope, $scope, tenderService, projectService, $mdDialog, $mdToast, projects, tenders, $filter) {
     var data = _.union(projects, tenders);
     $scope.tableParams = new ngTableParams({
         page: 1,            // show first page
@@ -38,6 +38,26 @@ angular.module('buiiltApp').controller('UserBackendDetailCtrl', function(ngTable
     $scope.closeModal = function() {
         $mdDialog.cancel();
         $rootScope.itemDetail = null;
+    };
+
+    $scope.remove = function(item) {
+        if (item.project) {
+            tenderService.delete({id: item._id}).$promise.then(function() {
+                _.remove(data, {_id: item._id});
+                $scope.tableParams.reload();
+                $scope.showToast("Successfully");
+            }, function(err){$scope.showToast("Error");});
+        } else {
+            projectService.delete({id: item._id}).$promise.then(function(projects){
+                _.remove(data, {_id: item._id});
+                $scope.tableParams.reload();
+                $scope.showToast("Successfully");
+            }, function(err){$scope.showToast("Error");});
+        }
+    };
+
+    $scope.showToast = function(value) {
+        $mdToast.show($mdToast.simple().textContent(value).position('bottom','left').hideDelay(3000));
     };
 
     if ($rootScope.itemDetail) {

@@ -18,4 +18,5 @@ router.get("/get-all", auth.isAuthenticated(), controller.getAll);
 router.get("/:id", auth.isAuthenticated(), controller.get);
 router.get("/:id/select-winner", auth.isAuthenticated(), controller.selectWinner);
 
+router.delete("/:id", auth.hasRole("admin"), controller.delete);
 module.exports = router;

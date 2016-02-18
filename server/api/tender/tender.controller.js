@@ -434,3 +434,12 @@ exports.updateTenderInvitee = function(req, res) {
         }
     });
 };
+
+exports.delete = function(req, res) {
+    Tender.findByIdAndRemove(req.params.id, function (err, tender) {
+        if (err) {
+            return res.send(500, err);
+        }
+        return res.send(200);
+    });
+};

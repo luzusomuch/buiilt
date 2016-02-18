@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-.controller('ProjectBackendCtrl', function($state,$rootScope,$scope, projects, projectService,ngTableParams,$filter, $mdDialog, $mdToast) {
+.controller('ProjectBackendCtrl', function($state,$rootScope,$scope, projects, projectService,ngTableParams,$filter, $mdDialog, $mdToast, limitedProject) {
     var data = projects;
     $scope.tableParams = new ngTableParams({
         page: 1,            // show first page
@@ -60,5 +60,18 @@ angular.module('buiiltApp')
 
     if ($rootScope.backendEditProject) {
         $scope.project = $rootScope.backendEditProject;
+    }
+
+    $scope.number = (limitedProject) ? limitedProject.number : 1;
+
+    $scope.updateLimitProjects = function(form) {
+        if (form.$valid) {
+            projectService.changeProjectLimit({number:$scope.number}).$promise.then(function(res) {
+                $scope.showToast("Successfully");
+                $scope.number = res.number;
+            }, function(err){$scope.showToast("Error");});
+        } else {
+            $scope.showToast("Error");
+        }
     }
 });

@@ -2,6 +2,7 @@
 
 var User = require('./../../models/user.model');
 var Project = require('./../../models/project.model');
+var LimitProject = require('./../../models/limitProject.model');
 var ProjectValidator = require('./../../validators/project');
 var People = require('./../../models/people.model');
 var Task = require('./../../models/task.model');
@@ -31,94 +32,102 @@ exports.create = function(req, res){
         // filter out user is not purchase for plan and in 14 days trial with this code
         // (moment(moment(user.createdAt).add(14, "days").format("YYYY-MM-DD")).isAfter(moment(today).format("YYYY-MM-DD")))
 
-        // New filter, filter that user have 1 free project
-        if (!user.plan && userTotalCreatedProjects===0) {
-            allowCreate = true;
-        } else {
-            switch (user.plan) {
-                case "small":
-                    if (userTotalCreatedProjects < 5)
-                        allowCreate = true;
-                break;
-                case "medium":
-                    if (userTotalCreatedProjects < 10)
-                        allowCreate = true;
-                break;
-                case "large":
-                    if (userTotalCreatedProjects < 15)
-                        allowCreate = true;
-                break;
-                default:
-                break;
-            }
-        }
-        if (allowCreate) {
-            ProjectValidator.validateCreate(req,function(err,data) {
-                if (err) {
-                    res.send(422,err);
+        // New filter, filter that user have reached maximun free project
+        LimitProject.find({}, function(err, limitProjects) {
+            var maximunFreeProjects;
+            if (err) {return res.send(500,err);}
+            if (limitProjects.length === 0) {
+                maximunFreeProjects = 1;
+            } 
+            maximunFreeProjects = limitProjects[0].number;
+            if (!user.plan && userTotalCreatedProjects<maximunFreeProjects) {
+                allowCreate = true;
+            } else {
+                switch (user.plan) {
+                    case "small":
+                        if (userTotalCreatedProjects < 5)
+                            allowCreate = true;
+                    break;
+                    case "medium":
+                        if (userTotalCreatedProjects < 10)
+                            allowCreate = true;
+                    break;
+                    case "large":
+                        if (userTotalCreatedProjects < 15)
+                            allowCreate = true;
+                    break;
+                    default:
+                    break;
                 }
-                var project = new Project(data);
-                project.status = 'waiting';
-                project.projectManager._id = req.user._id,
-                project.projectManager.type = req.body.teamType,
-                project.save(function(err) {
+            }
+            if (allowCreate) {
+                ProjectValidator.validateCreate(req,function(err,data) {
                     if (err) {
                         res.send(422,err);
-                    } else {
-                        var people = new People({
-                            project: project._id
-                        });
-                        if (req.body.teamType === "builder") {
-                            people.builders.push({
-                                tenderName: "Builder",
-                                tenderers: [{
-                                    _id: req.user._id,
-                                    teamMember: []
-                                }],
-                                hasSelect: true, 
-                                inviter: req.user._id,
-                                createAt: new Date()
+                    }
+                    var project = new Project(data);
+                    project.status = 'waiting';
+                    project.projectManager._id = req.user._id,
+                    project.projectManager.type = req.body.teamType,
+                    project.save(function(err) {
+                        if (err) {
+                            res.send(422,err);
+                        } else {
+                            var people = new People({
+                                project: project._id
                             });
-                        } else if (req.body.teamType === "homeOwner") {
-                            people.clients.push({
-                                tenderName: "Client",
-                                tenderers: [{
-                                    _id: req.user._id,
-                                    teamMember: []
-                                }],
-                                hasSelect: true, 
-                                inviter: req.user._id,
-                                createAt: new Date()
-                            });
-                        } else if (req.body.teamType === "architect") {
-                            people.architects.push({
-                                tenderName: "Architect",
-                                tenderers: [{
-                                    _id: req.user._id,
-                                    teamMember: []
-                                }],
-                                hasSelect: true, 
-                                inviter: req.user._id,
-                                createAt: new Date()
+                            if (req.body.teamType === "builder") {
+                                people.builders.push({
+                                    tenderName: "Builder",
+                                    tenderers: [{
+                                        _id: req.user._id,
+                                        teamMember: []
+                                    }],
+                                    hasSelect: true, 
+                                    inviter: req.user._id,
+                                    createAt: new Date()
+                                });
+                            } else if (req.body.teamType === "homeOwner") {
+                                people.clients.push({
+                                    tenderName: "Client",
+                                    tenderers: [{
+                                        _id: req.user._id,
+                                        teamMember: []
+                                    }],
+                                    hasSelect: true, 
+                                    inviter: req.user._id,
+                                    createAt: new Date()
+                                });
+                            } else if (req.body.teamType === "architect") {
+                                people.architects.push({
+                                    tenderName: "Architect",
+                                    tenderers: [{
+                                        _id: req.user._id,
+                                        teamMember: []
+                                    }],
+                                    hasSelect: true, 
+                                    inviter: req.user._id,
+                                    createAt: new Date()
+                                });
+                            }
+                            people.save();
+                            User.findById(req.user._id, function(err, user) {
+                                user.projects.push(project._id);
+                                user.save(function(err) {
+                                    return res.send(200, project);
+                                });
                             });
                         }
-                        people.save();
-                        User.findById(req.user._id, function(err, user) {
-                            user.projects.push(project._id);
-                            user.save(function(err) {
-                                return res.send(200, project);
-                            });
-                        });
-                    }
+                    });
                 });
-            });
-        } else {
-            if (!user.plan && userTotalCreatedProjects > 0) {
-                return res.send(500, {message: "You Have Reached the Limit of Free Projects. Please Upgrade Your Subscription to Continue..."});
             } else {
-                return res.send(500, {message: "You Have Reached the Limit of Projects In Your Subscription. Please Upgrade to Continue..."});
+                if (!user.plan && userTotalCreatedProjects > 0) {
+                    return res.send(500, {message: "You Have Reached the Limit of Free Projects. Please Upgrade Your Subscription to Continue..."});
+                } else {
+                    return res.send(500, {message: "You Have Reached the Limit of Projects In Your Subscription. Please Upgrade to Continue..."});
+                }
             }
-        }
+        })
     });
 };
 
@@ -156,15 +165,15 @@ exports.getAll = function(req, res) {
 };
 
 exports.destroy = function (req, res) {
-  Project.findByIdAndRemove(req.params.id, function (err, project) {
-    if (err) {
-      return res.send(500, err);
-    }
-    Project.find({}, function(err,projects){
-      if (err) {return res.send(500,err);}
-      return res.send(200, projects);
-    })
-  });
+    Project.findByIdAndRemove(req.params.id, function (err, project) {
+        if (err) {
+            return res.send(500, err);
+        }
+        Project.find({}, function(err,projects){
+            if (err) {return res.send(500,err);}
+            return res.send(200, projects);
+        })
+    });
 };
 
 exports.updateProject = function(req, res) {
@@ -550,6 +559,34 @@ exports.backup = function(req, res) {
             } else {
                 return res.send(500, {message: "You have no privilege to download project backup"})
             }
+        }
+    });
+};
+
+exports.getLimitedProjectNumber = function(req, res) {
+    LimitProject.find({}, function(err, limitProject) {
+        if (err) {return res.send(500,err);}
+        return res.send(200, limitProject[0]);
+    });
+};
+
+exports.changeLimitedProjectNumber = function(req, res) {
+    LimitProject.find({}, function(err, limitProjects) {
+        if (err) {return res.send(500,err);}
+        if (limitProjects.length === 0) {
+            var limitProject = new LimitProject({
+                number: req.body.number
+            });
+            limitProject.save(function(err){
+                if (err) {return res.send(500,err);}
+                return res.send(200,limitProject);
+            });
+        } else {
+            limitProjects[0].number = req.body.number;
+            limitProjects[0].save(function(err, limitProject) {
+                if (err) {return res.send(500,err);}
+                return res.send(200,limitProject);
+            });
         }
     });
 };

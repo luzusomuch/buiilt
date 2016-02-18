@@ -45,6 +45,9 @@ angular.module('buiiltApp')
             params: {
                 action: "select-winner"
             }
+        },
+        delete: {
+            method: "DELETE"
         }
     });
 });

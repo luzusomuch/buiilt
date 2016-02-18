@@ -1,0 +1,27 @@
+<md-content layout="row">
+
+    <backend-sidenav layout="column" flex="15">   
+    </backend-sidenav>
+
+    <div layout="column" flex="85" style="height: 90vh; overflow: scroll">
+        <div class="detail-header" layout-padding layout="column">
+            <h4>Change Number Of Limited Projects</h4>
+        </div>
+        <div class="main-page-content" layout-padding>
+            <form name="form" ng-submit="updateLimitProjects(form)">
+                <div flex-offset="30" flex="40" class="md-whiteframe-1dp" style="background-color: white; margin-top: 15vh" layout-padding>
+                    <div layout="row">
+                        <md-input-container flex>
+                            <label for="">Enter Number Of Limited Projects</label>
+                            <input type="number" ng-model="number" required>
+                        </md-input-container>
+                    </div>
+                    <div layout="row">
+                        <md-button type="submit" class="md-primary">Update</md-button>
+                    </div>
+                </div>
+            </form>
+        </div>        
+    </div>
+    
+</md-content>

@@ -42,6 +42,18 @@ angular.module('buiiltApp')
             params: {
                 id: '@id'
             }
+        },
+        changeProjectLimit: {
+            method: "POST",
+            params: {
+                action: "change-project-limit"
+            }
+        },
+        getProjectLimit: {
+            method: "GET", 
+            params: {
+                action: "get-project-limit"
+            }
         }
     }
 );
