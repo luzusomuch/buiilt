@@ -5,7 +5,7 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
             if (activity.type === "upload-reversion" || activity.type === "upload-file") {
                 if (_.findIndex(activity.acknowledgeUsers, function(item) {
                     if (item._id) {
-                        return item._id._id == $scope.currentUser._id && item.isAcknow;
+                        return item._id._id == $rootScope.currentUser._id && item.isAcknow;
                     }
                 }) !== -1) {
                     activity.isAcknow = true;
