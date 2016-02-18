@@ -9,6 +9,7 @@ var EventBus = require('./../components/EventBus');
 var ProjectSchema = new Schema({
   //owner of project
   owner: {type: Schema.Types.ObjectId, ref: 'User', required: true},
+  element: {},
   name: {
     type: String,
     default: '',
