@@ -6,12 +6,12 @@ angular.module('buiiltApp').controller('tenderDocumentsCtrl', function($rootScop
 	prom.push(fileService.getProjectFiles({id: tender.project, type: "document"}).$promise);
     prom.push(fileService.getProjectFiles({id: tender.project, type: "tender", tenderId: tender._id}).$promise);
 
+    $scope.tenderDocuments = [];
     $q.all(prom).then(function(data) {
         $scope.tenderDocuments = _.union(data[0], data[1]);
     });
 
     socket.on("tender-document:inserted", function(data) {
-        console.log(data);
         $scope.tenderDocuments.push(data);
     });
 

@@ -158,6 +158,7 @@ exports.createUserWithInviteToken = function(req, res, next) {
             if (err) {return validationError(res, err);}
             else {
                 var isSkipInTender = false;
+                var peopleResult, tenderResult;
                 var token = jwt.sign({_id: user._id}, config.secrets.session, {expiresInMinutes: 60 * 5});
                 async.parallel([
                     function (cb) {
@@ -175,6 +176,7 @@ exports.createUserWithInviteToken = function(req, res, next) {
                                     }
                                 });
                                 people._editUser = user;
+                                peopleResult = people;
                                 people.save(cb);
                             }
                         });
@@ -198,6 +200,7 @@ exports.createUserWithInviteToken = function(req, res, next) {
                                     }
                                 });
                                 tender._editUser = user;
+                                tenderResult = tender;
                                 tender.save(cb);
                             }
                         });
@@ -258,7 +261,8 @@ exports.createUserWithInviteToken = function(req, res, next) {
                     var data = {
                         token: token,
                         emailVerified: true,
-                        isSkipInTender: packageInvite.isSkipInTender
+                        isSkipInTender: packageInvite.isSkipInTender,
+                        data: (isSkipInTender) ? peopleResult: tenderResult
                     };
                     packageInvite.remove(function(err){
                         if (err) {return res.send(500);}

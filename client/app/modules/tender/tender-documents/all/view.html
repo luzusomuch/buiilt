@@ -3,7 +3,7 @@
 </div>
 
 <md-list ng-cloak class="main-page-content">
-    <div ui-sref="tender.documents.detail({tenderId: document.belongTo.item._id, documentId: document._id})" ng-repeat="document in tenderDocuments">
+    <div ui-sref="tender.documents.detail({tenderId: tender._id, documentId: document._id})" ng-repeat="document in tenderDocuments">
         
         <md-list-item class="md-2-line" md-ink-ripple>
             <div class="md-list-item-text" layout="column">

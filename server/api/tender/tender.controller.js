@@ -43,9 +43,6 @@ exports.update = function(req, res) {
                 element: {}
             }
         };
-        // if (data.file) {
-        //     activity.element.link = addendum.element.link = data.file.url;
-        // }
         var newFile = {};
         var newInvitees = [];
         async.parallel([
@@ -177,7 +174,8 @@ exports.update = function(req, res) {
 };
 
 exports.getAll = function(req, res) {
-    Tender.find({$or:[{owner: req.user._id}, {"members.user": req.user._id}]}, function(err, tenders) {
+    Tender.find({$or:[{owner: req.user._id}, {"members.user": req.user._id}]})
+    .populate("project").exec(function(err, tenders) {
         if (err) {return res.send(500,err);}
         else {
             _.each(tenders, function(tender) {

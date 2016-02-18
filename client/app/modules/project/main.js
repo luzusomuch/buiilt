@@ -31,7 +31,7 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
     authenticate : true
   })
   .state('project.team.all', {
-    url: '',
+    url: '/',
     templateUrl: '/app/modules/project/project-team/all/project-team-all.html',
     controller: 'projectTeamCtrl',
     authenticate : true

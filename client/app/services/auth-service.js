@@ -107,9 +107,9 @@ angular.module('buiiltApp')
                             "email": res.email,
                         }, function() {
                             if (!data.isSkipInTender) {
-                                window.location.href = "/projects/invitations";
+                                window.location.href = "/tender/"+data.data._id+"/overview";
                             } else if (data.isSkipInTender) {
-                                window.location.href = "/projects/open";
+                                window.location.href = "/projects/"+data.data.project+"/team/";
                             } else {
                                 window.location.href = "/settings/user";
                             }
