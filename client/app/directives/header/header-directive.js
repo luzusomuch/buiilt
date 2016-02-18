@@ -42,6 +42,9 @@ angular.module('buiiltApp')
                             .then(function(res) {
                                 $scope.currentTeam = res;
                                 $rootScope.projects = $scope.currentUser.projects;
+                                if (!$scope.currentTeam._id) {
+                                    $state.go('settings.staff', {},{reload: true}).then(function(){});
+                                }
                                 return cb();
                             });
                         });

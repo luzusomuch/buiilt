@@ -32,7 +32,7 @@ angular.module('buiiltApp')
             };
 
             var threadArray = ['thread-assign','thread-message'];
-            var teamArray = ['team-invite','team-accept','team-remove','team-leave','team-assign-leader'];
+            var teamArray = ['team-invite','team-accept','team-remove','team-leave','team-assign-leader', 'team-reject'];
             var fileArray = ["file-assign",'file-upload-reversion'];
             var documentArray = ["document-assign",'document-upload-reversion'];
             var taskArray = ["task-assign", "task-reopened", "task-completed", "task-revoke"];
@@ -43,7 +43,7 @@ angular.module('buiiltApp')
                 }
 
                 if (teamArray.indexOf(notification.type) !== -1)  {
-                    return 'setting.staff';
+                    return 'settings.staff';
                 }
             };
 
@@ -65,6 +65,9 @@ angular.module('buiiltApp')
             }
             if (scope.notification.type === 'team-assign-leader') {
                 text = params.fromUser() + ' has assigned ' + params.toUser() + ' as an administrator in '+ params.team() + ' at ' + params.time;
+            }
+            if (scope.notification.type === 'team-reject') {
+                text = params.fromUser() + ' has rejected ' + params.toUser() + ' your invitation at ' + params.time;
             }
             scope.notification.sref = getSref(scope.notification);
 

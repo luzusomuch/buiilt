@@ -9,6 +9,7 @@ var router = express.Router();
 
 router.post('/', auth.isAuthenticated(), controller.create);
 router.get('/', auth.isAuthenticated(), controller.index);
+router.get('/all', auth.isAuthenticated(), controller.getAll);
 router.get('/me', auth.isAuthenticated(), controller.me);
 router.get('/invitation', auth.isAuthenticated(), controller.invitation);
 router.get('/:id', auth.isAuthenticated(), controller.show);

@@ -109,7 +109,7 @@ angular.module('buiiltApp')
                             if (!data.isSkipInTender) {
                                 window.location.href = "/tender/"+data.data._id+"/overview";
                             } else if (data.isSkipInTender) {
-                                window.location.href = "/projects/"+data.data.project+"/team/";
+                                window.location.href = "/project/"+data.data.project+"/team/";
                             } else {
                                 window.location.href = "/settings/user";
                             }

@@ -21,6 +21,13 @@ exports.team = function (req,res,next) {
   })
 };
 
+exports.getAll = function(req, res) {
+  Team.find({}, "_id name", function(err, teams) {
+    if (err) {return res.send(500,err);}
+    return res.send(200,teams);
+  });
+};
+
 exports.index = function (req, res) {
   if (!req.user.team) {
     return res.json([]);

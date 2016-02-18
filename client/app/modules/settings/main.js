@@ -5,8 +5,6 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
 	url: '/settings',
 	abstract: true,
 	templateUrl: '/app/modules/settings/settings.html',
-	controller: 'settingsCtrl',
-	authenticate : true
   })
   
   .state('settings.user', {

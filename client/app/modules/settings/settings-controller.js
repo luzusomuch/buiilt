@@ -3,6 +3,113 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
     $scope.currentTeam = $rootScope.currentTeam;
     $scope.currentUser = $rootScope.currentUser;
 
+    if (!$rootScope.currentTeam._id) {
+        $mdDialog.show({
+            controller: function($scope, $mdDialog){
+                $scope.showCreateOrJoinTeam = function($event, type) {
+                    $mdDialog.cancel();
+                    if (type === "create") {
+                        $mdDialog.show({
+                            targetEvent: $event,
+                            controller: function($rootScope, $scope, $mdToast, $mdDialog, teamService, $state){
+                                $scope.team = {
+                                    emails: []
+                                };
+                                $scope.showToast = function(value) {
+                                    $mdToast.show($mdToast.simple().textContent(value).position('bottom','right').hideDelay(3000));
+                                };
+                                $scope.createTeam = function(form) {
+                                    if (form.$valid) {
+                                        teamService.create($scope.team, function (team) {
+                                            $rootScope.currentTeam = $scope.currentTeam = team;
+                                            $rootScope.$emit('TeamUpdate',team);
+                                            $mdDialog.cancel();
+                                            $scope.showToast("You Have Successfully Created Your Team.");
+                                            
+                                            //Track Team Creation
+                                            mixpanel.identify($rootScope.currentUser._id);
+                                            mixpanel.track("Team Created");
+                                            
+                                            $state.go('settings.staff', {},{reload: true}).then(function(data){});
+                                        }, function (err) {
+                                            $scope.showToast("Error");
+                                        });
+                                    }
+                                };
+                            },
+                            templateUrl: 'app/modules/settings/partials/create-team.html',
+                            parent: angular.element(document.body),
+                            clickOutsideToClose: false,
+                            escapeToClose: false
+                        });
+                    } else {
+                        $mdDialog.show({
+                            targetEvent: $event,
+                            controller: function($rootScope, $scope, $mdToast, $mdDialog, teamService, $state, invitations, teams){
+                                $scope.invitations = invitations;
+                                $scope.teams = teams;
+                                
+                                $scope.showToast = function(value) {
+                                    $mdToast.show($mdToast.simple().textContent(value).position('bottom','right').hideDelay(3000));
+                                };
+
+                                $scope.accept = function(invitation) {
+                                    var confirm = $mdDialog.confirm().title("Do you want to accept this invitation?").ok("Yes").cancel("No");
+                                    $mdDialog.show(confirm).then(function() {
+                                        teamService.acceptTeam({_id: invitation._id}).$promise
+                                        .then(function (res) {
+                                            $rootScope.currentTeam = $scope.currentTeam = team;
+                                            $rootScope.$emit('TeamUpdate',team);
+                                            $scope.showToast("Successfully");
+                                            $state.go('settings.staff', {},{reload: true}).then(function(data){});
+                                        }, function (err) {
+                                            $scope.showToast("Error");
+                                        });
+                                    }, function() {
+                                        
+                                    });
+                                };
+
+                                $scope.reject = function(invitation, index) {
+                                    var confirm = $mdDialog.confirm().title("Do you want to reject this invitation?").ok("Yes").cancel("No");
+                                    $mdDialog.show(confirm).then(function() {
+                                        teamService.rejectTeam({_id: invitation._id}).$promise
+                                        .then(function () {
+                                            $scope.invitations.splice(index, 1);
+                                            $scope.showToast("Successfully");
+                                            $state.go('settings.staff', {},{reload: true}).then(function(data){});
+                                        }, function (err) {
+                                            $scope.showToast("Error");
+                                        });
+                                    }, function(){});
+                                };
+
+                                
+                                
+                            },
+                            templateUrl: 'app/modules/settings/partials/join-team.html',
+                            resolve: {
+                                invitations: function(authService) {
+                                    return authService.getCurrentInvitation().$promise;
+                                },
+                                teams: function(teamService) {
+                                    return teamService.getAll().$promise;
+                                }
+                            },
+                            parent: angular.element(document.body),
+                            clickOutsideToClose: false,
+                            escapeToClose: false
+                        });
+                    }
+                };
+            },
+            templateUrl: 'app/modules/settings/partials/create-or-join.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: false,
+            escapeToClose: false
+        });
+    }
+
     var handler = StripeCheckout.configure({
         key: 'pk_test_WGKFaZu6dXITEIxoyVI8DrVa',
         image: '/128x128.png',
@@ -113,6 +220,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                 targetEvent: $event,
                 controller: 'settingsCtrl',
                 templateUrl: 'app/modules/settings/partials/projects-list-modal.html',
+                
                 parent: angular.element(document.body),
                 clickOutsideToClose: false
             });
@@ -121,6 +229,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                 targetEvent: $event,
                 controller: 'settingsCtrl',
                 templateUrl: 'app/modules/settings/partials/projects-list-modal.html',
+                
                 parent: angular.element(document.body),
                 clickOutsideToClose: false
             });
@@ -228,6 +337,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             targetEvent: $event,
             controller: 'settingsCtrl',
             templateUrl: 'app/modules/settings/partials/create-team.html',
+            
             parent: angular.element(document.body),
             clickOutsideToClose: false
         });
@@ -240,6 +350,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             targetEvent: $event,
             controller: 'settingsCtrl',
             templateUrl: 'app/modules/settings/partials/settings-staff-addNew.html',
+            
             parent: angular.element(document.body),
             clickOutsideToClose: false
         });
@@ -252,6 +363,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             targetEvent: $event,
             controller: 'settingsCtrl',
             templateUrl: 'app/modules/settings/partials/settings-billing-newCC.html',
+            
             parent: angular.element(document.body),
             clickOutsideToClose: false
         });
@@ -264,6 +376,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             targetEvent: $event,
             controller: 'settingsCtrl',
             templateUrl: 'app/modules/settings/partials/settings-billing-editBilling.html',
+            
             parent: angular.element(document.body),
             clickOutsideToClose: false
         });
@@ -308,6 +421,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             targetEvent: $event,
             controller: 'settingsCtrl',
             templateUrl: 'app/modules/settings/partials/settings-company-edit.html',
+            
             parent: angular.element(document.body),
             clickOutsideToClose: false
         });
@@ -447,6 +561,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             targetEvent: $event,
             controller: 'settingsCtrl',
             templateUrl: 'app/modules/settings/partials/'+name,
+            
             parent: angular.element(document.body),
             clickOutsideToClose: false
         });

@@ -7,6 +7,13 @@ angular.module('buiiltApp')
         create: {
             method: 'POST'
         },
+        getAll: {
+            method: "GET",
+            params: {
+                action: "all"
+            },
+            isArray: true
+        },
         index: {
             method: 'GET'
         },
