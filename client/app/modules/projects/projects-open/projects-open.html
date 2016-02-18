@@ -10,8 +10,8 @@
 		
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
-	          	<h3>{{ project.name }}</h3>
-				<p>{{ project.address }}, {{ project. suburb }} {{ project.postcode }}</p>
+	          	<h3>{{ project.name }} <span ng-show="project.__v > 0">({{project.__v}})</span></h3>
+				<p>{{ project.address }}, {{ project.suburb }} {{ project.postcode }}</p>
 	        </div>
 		</md-list-item>
 		<md-divider></md-divider>

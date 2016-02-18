@@ -7,22 +7,22 @@
 		<md-list ng-cloak flex>
 			<div ui-sref="dashboard.tasks" ng-class="{activemenu: $state.includes('dashboard.tasks')}">
 				<md-list-item md-ink-ripple>
-				    <p layout-padding>Tasks</p>
+				    <p layout-padding>Tasks <span ng-show="totalTaskUpdates > 0">({{totalTaskUpdates}})</span></p>
 				</md-list-item>
 			</div>
 			<div ui-sref="dashboard.messages" ng-class="{activemenu: $state.includes('dashboard.messages')}">
 				<md-list-item md-ink-ripple>
-				    <p layout-padding>Messages</p>
+				    <p layout-padding>Messages<spam ng-show="messages.length > 0">({{messages.length}})</spam></p>
 				</md-list-item>
 			</div>
 			<div ui-sref="dashboard.files" ng-class="{activemenu: $state.includes('dashboard.files')}">
 				<md-list-item md-ink-ripple>
-				    <p layout-padding>Files</p>
+				    <p layout-padding>Files <span ng-show="totalFileUpdates > 0">({{totalFileUpdates}})</span></p>
 				</md-list-item>
 			</div>
 			<div ui-sref="dashboard.documentation" ng-class="{activemenu: $state.includes('dashboard.documentation')}">
 				<md-list-item md-ink-ripple>
-				    <p layout-padding>Documentation</p>
+				    <p layout-padding>Documentation <span ng-show="totalDocumentUpdates > 0">({{totalDocumentUpdates}})</span></p>
 				</md-list-item>
 			</div>
 		</md-list>

@@ -4,6 +4,7 @@ var User = require('./../../models/user.model');
 var InviteToken = require('./../../models/inviteToken.model');
 var errorsHelper = require('../../components/helpers/errors');
 var Project = require('./../../models/project.model');
+var Notification = require('./../../models/notification.model');
 var _ = require('lodash');
 var async = require('async');
 
@@ -27,9 +28,15 @@ exports.getProjectInvitation = function(req, res) {
             Project.findById(invite.element.project, function(err, project) {
                 if (err || !project) {cb();}
                 else {
-                    invite.element.project = project;
-                    result.push(invite);
-                    cb();
+                    Notification.find({owner: req.user._id, unread: true, "element.project": project._id, $or:[{referenceTo: "task"}, {referenceTo: "thread"}, {referenceTo: "file"}, {referenceTo: "document"}, {referenceTo: "tender"}]}, function(err, notifications) {
+                        if (err) {cb();}
+                        else {
+                            project.__v = notifications.length;
+                            invite.element.project = project;
+                            result.push(invite);
+                            cb();
+                        }
+                    });
                 }
             });
         }, function() {

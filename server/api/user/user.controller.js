@@ -4,6 +4,7 @@ var User = require('./../../models/user.model');
 var Task = require('./../../models/task.model');
 var Thread = require('./../../models/thread.model');
 var File = require('./../../models/file.model');
+var Notification = require('./../../models/notification.model');
 var NotificationHelper = require('./../../components/helpers/notification');
 
 var ResetPassword = require('./../../models/resetPassword.model');
@@ -387,19 +388,23 @@ exports.changeProfile = function(req, res) {
  * Get my info
  */
 exports.me = function (req, res, next) {
-  var userId = req.user._id;
-  User.findOne({
-    _id: userId
-  }, '-salt -hashedPassword')
-  .populate('projects').exec(function (err, user) { // don't ever give out the password or salt
-    if (err) {
-      return next(err);
-    }
-    if (!user) {
-      return res.json(404);
-    }
-    return res.json(user);
-  });
+    var userId = req.user._id;
+    User.findOne({_id: userId}, '-salt -hashedPassword')
+    .populate('projects').exec(function (err, user) { // don't ever give out the password or salt
+        if (err) {return next(err);}
+        if (!user) {return res.json(404);}
+        async.each(user.projects, function(project, cb) {
+            Notification.find({owner: user._id, unread: true, "element.project": project._id, $or:[{referenceTo: "task"}, {referenceTo: "thread"}, {referenceTo: "file"}, {referenceTo: "document"}, {referenceTo: "tender"}]}, function(err, notifications) {
+                if (err) {cb();}
+                else {
+                    project.__v = notifications.length;
+                    cb();
+                }
+            });
+        }, function() {
+            return res.json(user);
+        });
+    });
 };
 
 exports.all = function (req, res, next) {

@@ -17,7 +17,8 @@
 	<div ng-repeat="project in projectsInvitation" ui-sref="project.overview({id: project.element.project._id})">
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
-		        <h3 class="md-primary">{{ project.element.project.name }}</h3>
+		        <h3 class="md-primary">{{ project.element.project.name }}<span ng-show="project.element.project.__v > 0">({{project.element.project.__v}})</span></h3>
+		        <p>{{ project.element.project.address }}, {{ project.element.project.suburb }} {{ project.element.project.postcode }}</p>
 	        </div>
 		</md-list-item>
 		<md-divider></md-divider>
