@@ -12,10 +12,17 @@ angular.module('buiiltApp').controller('UserBackendCtrl', function(ngTableParams
     });
 
     $scope.remove = function(user){
-        userService.delete({'id': user._id}).$promise.then(function(users){
-            _.remove(data, {_id: user._id});
-            $scope.tableParams.reload();
+        var confirm = $mdDialog.confirm().title("Do you want to delete this user?").ok("Yes").cancel("No");
+        $mdDialog.show(confirm).then(function() {
+            userService.delete({'id': user._id}).$promise.then(function(users){
+                _.remove(data, {_id: user._id});
+                $scope.tableParams.reload();
+                $scope.showToast("Successfully");
+            }, function(err){$scope.showToast("Error")});
+        }, function() {
+            
         });
+        
     };
 
     $scope.editUser = function() {

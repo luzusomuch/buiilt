@@ -17,9 +17,15 @@ angular.module('buiiltApp')
         }
     });
     $scope.remove = function(project, index){
-        projectService.delete({'id': project._id}).$promise.then(function(projects){
-            _.remove(data, {_id: project._id});
-            $scope.tableParams.reload();
+        var confirm = $mdDialog.confirm().title("Do you want to delete this project?").ok("Yes").cancel("No");
+        $mdDialog.show(confirm).then(function() {
+            projectService.delete({'id': project._id}).$promise.then(function(projects){
+                _.remove(data, {_id: project._id});
+                $scope.tableParams.reload();
+                $scope.showToast("Successfully");
+            }, function(err){$scope.showToast("Error")});
+        }, function() {
+            
         });
     };
 
