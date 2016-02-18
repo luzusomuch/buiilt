@@ -73,10 +73,14 @@
 							<span ng-switch-when="related-file">"<a ui-sref="project.files.detail({id: file.project, fileId: activity.element.item})">{{activity.element.name}}</a>"</span>
 						</p>
 
-                        <div layout="row" class="tagcloud-selection" ng-show="activity.user._id==currentUser._id && (activity.type==='upload-file' || activity.type==='upload-reversion')">
+                        <div layout="row" layout-align="center center" class="tagcloud-selection" ng-show="activity.user._id==currentUser._id && (activity.type==='upload-file' || activity.type==='upload-reversion')">
                             <span ng-repeat="user in activity.acknowledgeUsers" ng-class="{'available-tag':!user.isAcknow, 'selected-tag':user.isAcknow}">{{(user._id) ? user._id.name : user.email}}</span>
                         </div>
-                        <div layout="row" ng-show="activity.user._id != currentUser._id && !activity.isAcknow && (activity.type==='upload-file' || activity.type==='upload-reversion')"><md-button ng-click="acknowledgement(activity)">acknowledgement</md-button></div>
+						
+                        <div layout="row" layout-align="center center" ng-show="activity.user._id != currentUser._id && !activity.isAcknow && (activity.type==='upload-file' || activity.type==='upload-reversion')">
+							<md-button ng-click="acknowledgement(activity)" class="md-primary">Acknowledge This File</md-button>
+						</div>
+						
 					</div>
 				</div>
 			</div>
@@ -102,18 +106,6 @@
   	  					  <md-tooltip md-direction="left">Assign to a Team Member</md-tooltip>
   	  				      <md-icon class="material-icons">person_outline</md-icon>
   			  	      </md-button>
-  			  	      <!-- <md-button aria-label="Add a Message" class="md-fab md-raised md-mini" ng-click="showModal($event, 'add-related-thread.html')">
-  	  					  <md-tooltip md-direction="left">Attach a Related Message</md-tooltip>
-  	  				      <md-icon class="material-icons">chat_bubble_outline</md-icon>
-  			  	      </md-button>
-  			  	      <md-button aria-label="Add a Task" class="md-fab md-raised md-mini" ng-click="showModal($event, 'add-related-task.html')">
-  	  					  <md-tooltip md-direction="left">Attach a Related Task</md-tooltip>
-  	  				      <md-icon class="material-icons">done_all</md-icon>
-  			  	      </md-button>
-  			  	      <md-button aria-label="Add a Related File" class="md-fab md-raised md-mini" ng-click="showModal($event, 'add-related-file.html')">
-  	  					  <md-tooltip md-direction="left">Attach a Related File</md-tooltip>
-  	  				      <md-icon class="material-icons">attach_file</md-icon>
-  			  	      </md-button> -->
   			  	  </md-fab-actions>
   		  	  </md-fab-speed-dial>
 		    </div>

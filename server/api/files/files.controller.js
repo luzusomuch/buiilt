@@ -68,7 +68,7 @@ exports.update = function(req, res) {
     var data = req.body;
     File.findById(req.params.id, function(err, file) {
         if (err) {return res.send(500,err);}
-        else if (!file) {return res.send(404, "The specific file is not existed");}
+        else if (!file) {return res.send(404, "We Can Not Find The Requested File...");}
         else {
             var activity = {
                 user: req.user._id,
@@ -202,7 +202,7 @@ exports.acknowledgementViaEmail = function(req, res) {
         else if (!file) {return res.send(404);}
         if (file.element.type === "file") {
             if (_.indexOf(file.notMembers, req.params.email) === -1) {
-                return res.send(500, {message: "You haven\'t got privilege"});
+                return res.send(500, {message: "You Do Not Have Permissions To Perform This Action."});
             }
         }
         var index = _.findIndex(file.activities, function(activity) {

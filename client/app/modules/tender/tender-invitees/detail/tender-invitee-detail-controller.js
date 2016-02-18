@@ -47,13 +47,13 @@ angular.module('buiiltApp').controller('tenderInviteeDetailCtrl', function($root
         if (form.$valid) {
             $scope.message.text = $scope.message.text.trim();
             if ($scope.message.text.length===0) {
-                $scope.showToast("Please enter the message");
+                $scope.showToast("Please Enter a Message...");
                 return false;
             } 
             $scope.message.type = "send-message";
             $scope.updateTenderInvitee($stateParams.inviteeId, $scope.message);
         } else {
-            $scope.showToast("Please Check Your Input");
+            $scope.showToast("Please Check Your Inputs...");
         }
     };
 
@@ -76,21 +76,21 @@ angular.module('buiiltApp').controller('tenderInviteeDetailCtrl', function($root
     $scope.attachTender = function(form) {
         if (form.$valid) {
             if (!$scope.uploadFile.file) {
-                $scope.showToast("Please Select At Least File");
+                $scope.showToast("Please Select At Least One File...");
                 return false;
             }
             $scope.uploadFile.type = "attach-tender";
             $scope.updateTenderInvitee($stateParams.inviteeId, $scope.uploadFile);
         } else {
-            $scope.showToast("Please Check Your Input");
+            $scope.showToast("Please Check Your Inputs...");
         }
     }
 
     $scope.updateTenderInvitee = function(inviteeId, data) {
         tenderService.updateTenderInvitee({id: $stateParams.tenderId, activityId: inviteeId}, data).$promise.then(function(res) {
             $scope.closeModal();
-            $scope.showToast("Successfully");
-        }, function(err) {$scope.showToast("Error");});
+            $scope.showToast("You Have Successfully Attached This Item.");
+        }, function(err) {$scope.showToast("There Has Been An Error...");});
     };
 
     $scope.openTenderDetail = function($event, file) {
