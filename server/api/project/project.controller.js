@@ -124,11 +124,11 @@ exports.create = function(req, res){
 
 
 exports.index = function(req, res) {
-  Project.find({'user._id': req.user._id}, function(err, projects) {
-    if (err)
-      return res.send(500, err);
-    res.json(200, projects);
-  });
+    Project.find({'user._id': req.user._id}, function(err, projects) {
+        if (err)
+        return res.send(500, err);
+        res.json(200, projects);
+    });
 };
 
 
@@ -148,10 +148,11 @@ exports.show = function(req, res){
 };
 
 exports.getAll = function(req, res) {
-  Project.find({}, function(err, projects){
-    if (err) {return res.send(500,err);}
-    return res.send(200,projects)
-  })
+    var query = (req.query.userId) ? {owner: req.query.userId} : {};
+    Project.find(query, function(err, projects){
+        if (err) {return res.send(500,err);}
+        return res.send(200,projects)
+    });
 };
 
 exports.destroy = function (req, res) {

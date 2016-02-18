@@ -38,10 +38,10 @@ angular.module('buiiltApp')
         },
         delete: {method:'DELETE', params: {id: 'id', action: ''}, isArray: true},
         updateProject: {
-          method: 'put',
-          params: {
-            id: '@id'
-          }
+            method: 'put',
+            params: {
+                id: '@id'
+            }
         }
     }
 );

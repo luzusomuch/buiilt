@@ -11,24 +11,24 @@ angular.module('buiiltApp')
             var params = {
                 fromUser : function() {
                     if (scope.notification.fromUser.email == scope.currentUser.email) {
-                        return '<span class="highlight">You</span> ';
+                        return '<span class="highlight"> You </span> ';
                     }
-                return '<span class="highlight">{{(notification.fromUser.firstName) ? notification.fromUser.firstName + " " + notification.fromUser.lastName : notification.fromUser.email}}</span> ';
+                return '<span class="highlight"> {{(notification.fromUser.firstName) ? notification.fromUser.firstName + " " + notification.fromUser.lastName : notification.fromUser.email}} </span> ';
                 },
                 toUser : function () {
                     if (scope.notification.toUser.email == scope.currentUser.email) {
-                        return '<span class="highlight">You</span> ';
+                        return '<span class="highlight"> You </span> ';
                     }
-                    return '<span class="highlight">{{(notification.toUser.firstName) ? notification.toUser.firstName + " "+ notification.toUser.lastName : notification.toUser.email}}</span>';
+                    return '<span class="highlight"> {{(notification.toUser.firstName) ? notification.toUser.firstName + " "+ notification.toUser.lastName : notification.toUser.email}} </span>';
                 },
                 team : function() {
                     if (scope.notification.element._id == scope.currentUser.team._id) {
-                        return '<span class="highlight">your team</span> ';
+                        return '<span class="highlight"> your team </span> ';
                     }
-                    return 'team <span class="highlight">{{notification.element.name}}</span>';
+                    return 'team <span class="highlight"> {{notification.element.name}} </span>';
                 },
-                element : '<span class="highlight">{{notification.element.name}}</span> ',
-                time: '<span>{{notification.createdAt | date: "hh:mm dd-MM-yyyy"}}</span>'
+                element : '<span class="highlight"> {{notification.element.name}} </span> ',
+                time: '<span> {{notification.createdAt | date: "hh:mm dd-MM-yyyy"}} </span>'
             };
 
             var threadArray = ['thread-assign','thread-message'];

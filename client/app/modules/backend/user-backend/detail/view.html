@@ -8,7 +8,27 @@
             <h4>User Detail</h4>
         </div>
         <div class="main-page-content" layout-padding>
-            
+            <div>
+                <table ng-table="tableParams" class="table" style="width:100%">
+                    <tr ng-repeat="item in $data" style="text-align: center">
+                        <td data-title="'#'">
+                            {{$index + 1}}
+                        </td>
+                        <td data-title="'Name'" sortable="'name'" ng-click="showModal($event, 'view-project-or-tender-detail.html', item)" style="cursor:pointer">
+                            {{item.name}}
+                        </td>
+                        <td data-title="'Status'" sortable="'status'">
+                            {{item.status}}
+                        </td>
+                        <td data-title="'Type'">
+                            {{(item.project) ? "Tender" : "Project"}}
+                        </td>
+                        <td data-title="'Action'">
+                            <i class="material-icons" ng-click="remove(item, $index)" style="color:#03A9F4">remove</i>
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </div>        
     </div>
     

@@ -1,0 +1,64 @@
+<md-dialog aria-label="View {{(itemDetail.project) ? 'Tender' : 'Project'}} Detail" flex="70">
+    <form name="form">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>View {{(itemDetail.project) ? 'Tender' : 'Project'}} Detail</h2>
+            </div>
+        </md-toolbar>
+        
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column">
+                
+                <div layout="row">
+                    <md-input-container flex>
+                        <label>Name</label>
+                        <input ng-model="itemDetail.name" disabled>
+                    </md-input-container>
+                </div>
+
+                <div layout="row">
+                    <md-input-container flex>
+                        <label>Description</label>
+                        <textarea ng-model="itemDetail.description" disabled columns="1" rows="5"></textarea>
+                    </md-input-container>
+                </div>
+                
+                <div layout="row" ng-show="!itemDetail.project">
+                    <md-input-container flex>
+                        <label>Street Address</label>
+                        <input ng-model="itemDetail.address" disabled>
+                    </md-input-container>
+                </div>
+                
+                <div layout="row" ng-show="!itemDetail.project">
+                    <md-input-container flex="60">
+                        <label>Suburb</label>
+                        <input ng-model="itemDetail.suburb" disabled>
+                    </md-input-container>
+
+                    <md-input-container flex="40">
+                        <label>Postcode</label>
+                        <input ng-model="itemDetail.postcode" disabled>
+                    </md-input-container>
+                </div>
+
+                <div layout="column" ng-show="itemDetail.project">
+                    <div flex layout-padding>
+                        <p>Tender's Due Date</p>
+                        <md-datepicker ng-model="itemDetail.dateEnd" md-placeholder="Tender Due Date" disabled style="margin-right: 5vh"></md-datepicker>
+                    </div>
+
+                    <div flex layout-padding>
+                        <p>This Tender's Belong To <strong ng-click="showModal($event, 'view-project-or-tender-detail.html', itemDetail.project)">{{itemDetail.project.name}}</strong> Project</p>
+                    </div>
+                </div>
+                
+            </div>
+        </md-dialog-content>
+        
+        <md-dialog-actions>
+            <md-button ng-click="closeModal()">Cancel</md-button>
+        </md-dialog-actions>   
+        
+    </form>
+</md-dialog>

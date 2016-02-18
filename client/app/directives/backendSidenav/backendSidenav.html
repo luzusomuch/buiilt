@@ -10,7 +10,7 @@
             </md-list-item>
         </div>
 
-        <div ui-sref="userBackend" ng-class="{activemenu: $state.includes('userBackend')}">
+        <div ui-sref="userBackend" ng-class="{activemenu: $state.includes('userBackend') || $state.includes('userBackendDetail')}">
             <md-list-item md-ink-ripple>
                 <p layout-padding>Users</p>
             </md-list-item>

@@ -174,7 +174,8 @@ exports.update = function(req, res) {
 };
 
 exports.getAll = function(req, res) {
-    Tender.find({$or:[{owner: req.user._id}, {"members.user": req.user._id}]})
+    var userId = (req.query.userId) ? req.query.userId : req.user._id;
+    Tender.find({$or:[{owner: userId}, {"members.user": userId}]})
     .populate("project").exec(function(err, tenders) {
         if (err) {return res.send(500,err);}
         else {
