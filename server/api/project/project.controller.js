@@ -67,6 +67,7 @@ exports.create = function(req, res){
                     }
                     var project = new Project(data);
                     project.status = 'waiting';
+                    project.element = {};
                     project.projectManager._id = req.user._id,
                     project.projectManager.type = req.body.teamType,
                     project.save(function(err) {
