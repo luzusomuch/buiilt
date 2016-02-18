@@ -12,4 +12,11 @@ angular.module('buiiltApp').config(function($stateProvider) {
         }
     }
   })
+  .state("userBackendDetail", {
+    url:"/backend/user/:userId",
+    templateUrl: "/app/modules/backend/user-backend/detail/view.html",
+    controller: "UserBackendDetailCtrl",
+    authenticate: true,
+    isAdmin: true
+  });
 });

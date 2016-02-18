@@ -14,7 +14,7 @@
                         {{$index + 1}}
                     </td>
                     <td data-title="'Email'">
-                        {{user.email}}
+                        <a ui-sref="userBackendDetail({userId:user._id})">{{user.email}}</a>
                     </td>
                     <td data-title="'Full name'">
                         {{user.firstName}}  {{user.lastName}}
