@@ -14,6 +14,18 @@ angular.module('buiiltApp')
             },
             isArray: true
         },
+        sendJoinTeamRequest: {
+            method: "GET",
+            params: {
+                action: "send-join-team-request"
+            }
+        },
+        acceptJoinRequest: {
+            method: "GET",
+            params: {
+                action: "accept-join-request"
+            }
+        },
         index: {
             method: 'GET'
         },

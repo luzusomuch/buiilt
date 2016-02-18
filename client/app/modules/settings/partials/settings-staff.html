@@ -27,6 +27,9 @@
 			          <h3>{{ (member._id) ? member._id.name : "Pending Sign Up"}}</h3>
 			          <p>{{ (member.email) ? member.email : member._id.email }}</p>
 		        </div>
+				<md-button class="md-secondary" ng-click="acceptJoinRequest(member)" ng-if="currentUser.isLeader &&  member._id && member.status == 'Waiting'" style="margin-right: 90px">
+					<md-icon class="material-icons">check</md-icon>
+				</md-button>
 				<md-button class="md-secondary" ng-click="removeMember(member)" ng-if="currentUser.isLeader">
 					<md-icon class="material-icons">delete</md-icon>
 				</md-button>

@@ -13,6 +13,8 @@ router.get('/all', auth.isAuthenticated(), controller.getAll);
 router.get('/me', auth.isAuthenticated(), controller.me);
 router.get('/invitation', auth.isAuthenticated(), controller.invitation);
 router.get('/:id', auth.isAuthenticated(), controller.show);
+router.get('/:id/send-join-team-request', auth.isAuthenticated(), controller.sendJoinTeamRequest);
+router.get('/:id/accept-join-request', auth.isAuthenticated(), controller.acceptJoinRequest);
 router.post('/:id/add-member',auth.isAuthenticated(), controller.team, controller.addMember);
 router.post('/:id/remove-member',auth.isAuthenticated(), controller.team, controller.removeMember);
 router.put('/:id', auth.isAuthenticated(),controller.team, controller.update);

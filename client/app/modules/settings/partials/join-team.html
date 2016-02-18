@@ -35,12 +35,12 @@
 					<p class="md-body-2">Search for the team you would like to join:</p>
                     <div layout="row">
                         <md-input-container flex>
-							<md-autocomplete md-selected-item="ctrl.selectedItem" md-search-text-change="ctrl.searchTextChange(ctrl.searchText)" md-search-text="ctrl.searchText" md-selected-item-change="ctrl.selectedItemChange(item)" md-items="item in ctrl.querySearch(ctrl.searchText)" md-item-text="item.display" md-min-length="0" placeholder="Search for your Team...">
+							<md-autocomplete md-selected-item="selectedItem.name" md-search-text="searchText" md-selected-item-change="selectedItemChange(item)" md-items="item in querySearch(searchText)" md-item-text="item.name" md-min-length="0" placeholder="Search for your Team...">
 						        <md-item-template>
-						          <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.display}}</span>
+						          <span md-highlight-text="searchText" md-highlight-flags="^i">{{item.name}}</span>
 						        </md-item-template>
 						        <md-not-found>
-						          No team matching "{{ctrl.searchText}}" were found.
+						          No team matching "{{searchText}}" were found.
 						        </md-not-found>
 						      </md-autocomplete>
                         </md-input-container>
@@ -51,7 +51,7 @@
         </md-dialog-content>
         
         <md-dialog-actions>
-            <md-button class="md-primary" type="submit">Request Access</md-button>
+            <md-button ng-click="sendJoinTeamRequest()" class="md-primary" type="submit">Request Access</md-button>
         </md-dialog-actions>
     </form>
 </md-dialog>

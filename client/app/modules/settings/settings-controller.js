@@ -48,7 +48,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                             controller: function($rootScope, $scope, $mdToast, $mdDialog, teamService, $state, invitations, teams){
                                 $scope.invitations = invitations;
                                 $scope.teams = teams;
-                                
+
                                 $scope.showToast = function(value) {
                                     $mdToast.show($mdToast.simple().textContent(value).position('bottom','right').hideDelay(3000));
                                 };
@@ -84,7 +84,31 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                                     }, function(){});
                                 };
 
-                                
+                                $scope.querySearch = function(value) {
+                                    var result = value ? $scope.teams.filter(filterFunction(value)) : null;
+                                    return result;
+                                };
+
+                                function filterFunction(value){
+                                    return function filterFn(team) {
+                                        return (team.name.toLowerCase().indexOf(value) > -1 || team.name.indexOf(value) > -1);
+                                    }
+                                };
+
+                                $scope.selectedItemChange = function(item) {
+                                    $scope.selectedTeam = item;
+                                };
+
+                                $scope.sendJoinTeamRequest = function() {
+                                    if ($scope.selectedTeam._id) {
+                                        teamService.sendJoinTeamRequest({id: $scope.selectedTeam._id}).$promise.then(function(res) {
+                                            $scope.showToast("Successfully! Please wait until that team leader accept your request");
+                                            $mdDialog.cancel();
+                                        }, function(err){$scope.showToast("Error");});
+                                    } else {
+                                        $scope.showToast("Please select a team");
+                                    }
+                                };
                                 
                             },
                             templateUrl: 'app/modules/settings/partials/join-team.html',
@@ -612,6 +636,16 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
         }
     };
 
+    $scope.acceptJoinRequest = function(member) {
+        var confirm = $mdDialog.confirm().title("Do you want to accept this request?").ok("Yes").cancel("No");
+        $mdDialog.show(confirm).then(function() {
+            teamService.acceptJoinRequest({id: $scope.currentTeam._id, memberId: member._id._id}).$promise.then(function(res) {
+                $scope.showToast("Successfully");
+                $rootScope.currentTeam = $scope.currentTeam = res;
+            }, function(err) {$scope.showToast("Error");});
+        }, function(){});
+    };
+    
     getTeamLeader($scope.currentTeam);
 
 });

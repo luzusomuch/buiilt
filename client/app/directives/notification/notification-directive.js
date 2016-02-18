@@ -32,7 +32,7 @@ angular.module('buiiltApp')
             };
 
             var threadArray = ['thread-assign','thread-message'];
-            var teamArray = ['team-invite','team-accept','team-remove','team-leave','team-assign-leader', 'team-reject'];
+            var teamArray = ['team-invite','team-accept','team-remove','team-leave','team-assign-leader', 'team-reject', 'join-team-request', "accept-team-request"];
             var fileArray = ["file-assign",'file-upload-reversion'];
             var documentArray = ["document-assign",'document-upload-reversion'];
             var taskArray = ["task-assign", "task-reopened", "task-completed", "task-revoke"];
@@ -68,6 +68,12 @@ angular.module('buiiltApp')
             }
             if (scope.notification.type === 'team-reject') {
                 text = params.fromUser() + ' has rejected ' + params.toUser() + ' your invitation at ' + params.time;
+            }
+            if (scope.notification.type === 'join-team-request') {
+                text = params.fromUser() + " has asked you to accept his join team request at " + params.time;
+            }
+            if (scope.notification.type === 'accept-team-request') {
+                text = params.fromUser() + " has accepted your request to join "+params.team()+" at " + params.time;
             }
             scope.notification.sref = getSref(scope.notification);
 

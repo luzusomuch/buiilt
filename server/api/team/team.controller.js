@@ -7,6 +7,7 @@ var StaffPackage = require('./../../models/staffPackage.model');
 var errorsHelper = require('../../components/helpers/errors');
 var ValidateInvite = require('./../../models/validateInvite.model');
 var TeamValidator = require('./../../validators/team');
+var NotificationHelper = require('./../../components/helpers/notification');
 var _ = require('lodash');
 var async = require('async');
 
@@ -25,6 +26,75 @@ exports.getAll = function(req, res) {
   Team.find({}, "_id name", function(err, teams) {
     if (err) {return res.send(500,err);}
     return res.send(200,teams);
+  });
+};
+
+exports.sendJoinTeamRequest = function(req, res) {
+  Team.findById(req.params.id, function(err, team) {
+    if (err) {return res.send(500,err);}
+    if (!team) {return res.send(404);}
+    team.member.push({_id: req.user._id, status: "Waiting"});
+    team._user = req.user;
+    team.save(function(err) {
+      if (err) {return res.send(500,err);}
+      var params = {
+        owners: team.leader,
+        fromUser: req.user._id,
+        element: team,
+        referenceTo : 'team',
+        type : 'join-team-request'
+      };
+      NotificationHelper.create(params,function(err) {
+        if (err) {
+          return res.send(500,err);
+        }
+        return res.send(200);
+      });
+    });
+  });
+};
+
+exports.acceptJoinRequest = function(req, res) {
+  Team.findById(req.params.id, function(err, team) {
+    if (err) {return res.send(500,err);}
+    if (!team) {return res.send(404);}
+    var currentTeamRequestIndex = _.findIndex(team.member, function(member) {
+      if (member._id && member.status==="Waiting") {
+        return member._id.toString()===req.query.memberId.toString();
+      }
+    });
+    team.member[currentTeamRequestIndex].status = "Active";
+    team._user = req.user;
+    team.save(function(err) {
+      if (err) {return res.send(500,err);}
+      Team.populate(team, [
+        {path: "leader", select: "_id name email phoneNumber"},
+        {path: "member._id", select: "_id name email phoneNumber"}
+      ], function(err, team) {
+        if (err) {return res.send(500,err);}
+        var params = {
+          owners: [req.query.memberId],
+          fromUser: req.user._id,
+          element: team,
+          referenceTo: "team",
+          type: "accept-team-request"
+        };
+        NotificationHelper.create(params,function(err) {
+          if (err) {
+            return res.send(500,err);
+          }
+          User.findById(req.query.memberId, function(err, user) {
+            if (err) {return res.send(500,err);}
+            if (!user) {return res.send(404);}
+            user.team = {_id: team._id, role: "member"};
+            user.save(function(err){
+              if (err) {return res.send(500,err);}
+              return res.send(200, team);
+            });
+          });
+        });
+      });
+    });
   });
 };
 
