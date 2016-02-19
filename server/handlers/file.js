@@ -81,14 +81,14 @@ EventBus.onSeries('File.Updated', function(file, next) {
                     });
                 }
             });
-        } else if (file.element.type === "file") {
+        } else if (file.element.type === "file" || file.element.type === "tender") {
             if (file.members.length > 0) {
                 var params = {
                     owners : file.members,
                     fromUser : file.owner,
                     element : file,
-                    referenceTo : 'file',
-                    type : 'file-upload-reversion'
+                    referenceTo : file.element.type,
+                    type : file.element.type+'-upload-reversion'
                 };
                 NotificationHelper.create(params, function() {
                     return next();

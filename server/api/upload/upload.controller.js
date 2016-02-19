@@ -117,7 +117,7 @@ exports.uploadReversion = function(req, res) {
             var acknowledgeUsers = [];
             async.parallel([
                 function(cb) {
-                    if (file.element.type === "file") {
+                    if (file.element.type === "file" || file.element.type === "tender") {
                         _.each(file.members, function(member) {
                             acknowledgeUsers.push({_id: member, isAcknow: false});
                         });

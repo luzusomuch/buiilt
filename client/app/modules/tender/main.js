@@ -46,7 +46,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
     authenticate : true
   })
   .state('tender.documents.detail', {
-    url: '/:documentId/detail',
+    url: 'document/:documentId/detail',
     templateUrl: '/app/modules/tender/tender-documents/detail/document-detail.html',
     controller: 'tenderDocumentDetailCtrl',
     authenticate: true,

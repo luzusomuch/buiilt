@@ -50,6 +50,15 @@ exports.update = function(req, res) {
         async.parallel([
             function(cb) {
                 if (data.file) {
+                    var members = [];
+                    var notMembers = [];
+                    _.each(tender.members, function(member) {
+                        if (member.user) {
+                            members.push(member.user);
+                        } else {
+                            notMembers.push(member.email);
+                        }
+                    });
                     var file = new File({
                         name : data.file.filename,
                         path : data.file.url,
@@ -60,6 +69,8 @@ exports.update = function(req, res) {
                         size : data.file.size,
                         project: tender.project,
                         owner: req.user._id,
+                        members: members,
+                        notMembers: notMembers,
                         belongTo: {
                             type: "tender",
                             item: {

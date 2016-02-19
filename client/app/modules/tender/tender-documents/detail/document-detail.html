@@ -1,16 +1,80 @@
-<div class="detail-header" layout-padding layout="row">
-    <p class="md-headline">{{document.name}}</p>
-    <span flex></span>
-    <div>
-        <md-button ng-click="download()">Download This Document</md-button>
-    </div>
-</div>
+<div layout="row" class="detail-view-content">
+    
+    <div layout="column" flex class="md-whiteframe-1dp">
+        
+        <div class="detail-header" layout="row" layout-padding>
+            <p>{{document.name}}</p>
+            <span flex></span>
+            <!-- <md-button ng-click="download(document.name, document.path)">Download</md-button> -->
+            <md-menu md-position-mode="target-right target">
+                <md-button ng-click="openFileHistory($mdOpenMenu, $event)">View Document</md-button>
+                <md-menu-content width="4">
+                    <md-menu-item ng-click="openHistoryDetail($event, {name: document.name, description: document.description, link: document.path})">
+                        <md-button>{{document.name}} (Version: Current version)</md-button>
+                    </md-menu-item>
+                    <md-menu-item ng-click="openHistoryDetail($event, history)" ng-repeat="history in document.fileHistory">
+                        <md-button>{{history.name}} (Version: {{history.version}})</md-button>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
+            
+        </div>
+        
+        <div class="main-page-content" layout-padding>
+            
+            <div class="item-activity">
+                <div layout="row" flex class="activity-stream-head">
+                    <p>This document was created by <strong>{{document.owner.name}}</strong> on {{document.createdAt | date: 'dd/MM/yyyy hh:mm a'}}.</span></p>
+                </div>
+                <div layout="row" layout-align="center center" flex class="activity-stream" ng-repeat="activity in document.activities" ng-class="{related: activity.element.related}" ng-show="activity.type=='upload-reversion'">
+                    <span flex="5"></span>
+                    <div class="icon-type" ng-switch="activity.type">
+                        <md-icon ng-switch-when="upload-reversion" class="material-icons md-primary">attach_file</md-icon>
+                    </div>
+                    <span flex="5"></span>
 
-<div class="main-page-content" layout-padding>
-    <div layout="row">
-        <h4>{{document.description}}</h4>
+                    <div flex class="activity-detail">
+                        <p ng-switch="activity.type" class="activity-header">
+                            <span class="activity-creator">{{activity.user.name}}</span>
+
+                            <span class="meta-data" ng-switch-when="upload-reversion"> uploaded a new revision at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
+
+                        </p>
+
+                        <p ng-switch="activity.type" class="activity-body md-body">
+                            <span ng-switch-when="upload-reversion" layout="column">Description: {{activity.element.description}}</span>
+                        </p>
+
+                        <div flex layout="row" layout-align="center center" class="tagcloud-selection" ng-show="activity.user._id==currentUser._id && activity.type==='upload-reversion'">
+                            <span ng-repeat="user in activity.acknowledgeUsers" ng-class="{'available-tag':!user.isAcknow, 'selected-tag':user.isAcknow}">{{(user._id) ? user._id.name : user.email}}</span>
+                        </div>
+                        <div layout="row" layout-align="center center" ng-show="activity.user._id!=currentUser._id && !activity.isAcknow &&activity.type==='upload-reversion'">
+                            <md-button ng-click="acknowledgement(activity)" class="md-primary">Acknowledge This Document</md-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+              <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-main" ng-show="allowUploadReversion && document.element.type =='tender'">
+                  <md-fab-trigger>
+                      <md-button aria-label="Add an Item to this Project" class="md-fab md-primary">
+                          <md-tooltip md-direction="left">Actions...</md-tooltip>
+                          <md-icon class="material-icons" >add</md-icon>
+                      </md-button>
+                  </md-fab-trigger>
+                  <md-fab-actions>
+                      <md-button aria-label="Upload a Document Revision" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'upload-document-reversion.html')">
+                          <md-tooltip md-direction="left">Upload a Document Revision</md-tooltip>
+                          <md-icon class="material-icons">file_upload</md-icon>
+                      </md-button>
+                  </md-fab-actions>
+              </md-fab-speed-dial>
+            </div>
+            
+        </div>
     </div>
-    <div layout="row">
-        <div flex file-picker-previewer type="filepicker-preview" url="{{document.path}}" style="height:75vh;"> </div>
-    </div>
+        
+    <!-- <doc-history data="document" flex="30"></doc-history> -->
+        
 </div>
