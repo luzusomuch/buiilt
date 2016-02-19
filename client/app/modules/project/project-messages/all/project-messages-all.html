@@ -29,7 +29,7 @@
 	<div ng-repeat="thread in threads | filter: search | unique: '_id' track by $index" ui-sref="project.messages.detail({id: thread.project, messageId: thread._id})">
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
-	        	<h3>{{ thread.name }}</h3>
+	        	<h3>{{ thread.name }} <span ng-show="thread.__v > 0">({{thread.__v}} Update(s))</span></h3>
 	       		<p><span ng-repeat="member in thread.members">{{member.name}}, </span></p>
 	        </div>
 		</md-list-item>

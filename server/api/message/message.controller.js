@@ -259,8 +259,18 @@ exports.getProjectThread = function(req, res) {
     .populate('members', '_id name email')
     .populate('owner', '_id name email')
     .exec(function(err, threads) {
-        if (err) {return res.send(500,err);}
-        return res.send(200, threads);
+        async.each(threads, function(thread, cb) {
+            Notification.find({owner: req.user._id, unread: true, "element._id": thread._id}, function(err, notifications) {
+                if (err) {cb(err);}
+                else {
+                    thread.__v = notifications.length;
+                    cb();
+                }
+            });
+        }, function(err) {
+            if (err) {return res.send(500,err);}
+            return res.send(200, threads);
+        });
     });
 };
 

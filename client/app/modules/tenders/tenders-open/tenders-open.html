@@ -42,8 +42,8 @@
 		
         <md-list-item class="md-2-line" md-ink-ripple>
             <div class="md-list-item-text" layout="column">
-                <h3>{{ tender.name }}</h3>
-                <p>Project: {{ tender.project.name }} - Address: {{tender.project.address}}</p>
+                <h3>{{ tender.name }} <span ng-show="tender.__v > 0">({{tender.__v}} Update(s))</span></h3>
+                <p>Project: {{ tender.project.name }} - {{tender.project.address}}</p>
             </div>
         </md-list-item>
         <md-divider></md-divider>

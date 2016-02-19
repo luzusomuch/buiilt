@@ -6,6 +6,7 @@ var Project = require('./../../models/project.model');
 var People = require('./../../models/people.model');
 var Tender = require('./../../models/tender.model');
 var InviteToken = require('./../../models/inviteToken.model');
+var Notification = require('./../../models/notification.model');
 var EventBus = require('../../components/EventBus');
 var moment = require("moment");
 
@@ -179,10 +180,19 @@ exports.getAll = function(req, res) {
     .populate("project").exec(function(err, tenders) {
         if (err) {return res.send(500,err);}
         else {
-            _.each(tenders, function(tender) {
-                tender.members = [];
+            async.each(tenders, function(tender, cb) {
+                Notification.find({owner: req.user._id, unread: true, referenceTo: "tender", $or:[{type: "tender-message"}, {type: "tender-submission"}]}, function(err, notifications) {
+                    if (err) {cb(err);}
+                    else {
+                        tender.members = [];
+                        tender.__v = notifications.length;
+                        cb();
+                    }
+                });
+            }, function(err) {
+                if (err) {return res.send(500,err);}
+                return res.send(200, tenders);
             });
-            return res.send(200, tenders);
         }
     });
 };
