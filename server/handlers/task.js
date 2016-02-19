@@ -10,9 +10,6 @@ var PushNotificationHelper = require('./../components/helpers/PushNotification')
 
 EventBus.onSeries('Task.Inserted', function(task, next){
     if (task.members.length > 0) {
-        _.remove(task.members, function(item) {
-            return item == task.editUser._id.toString();
-        });
         var params = {
             owners : task.members,
             fromUser : task.owner,
