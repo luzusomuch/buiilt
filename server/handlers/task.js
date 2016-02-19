@@ -10,6 +10,9 @@ var PushNotificationHelper = require('./../components/helpers/PushNotification')
 
 EventBus.onSeries('Task.Inserted', function(task, next){
     if (task.members.length > 0) {
+        if (_.indexOf(task.members, task.editUser._id) === -1) {
+            task.members.push(task.editUser._id);
+        }
         var params = {
             owners : task.members,
             fromUser : task.owner,
