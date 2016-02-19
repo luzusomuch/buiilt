@@ -55,7 +55,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     };
 
     // filter for task
-    $scope.dueDate = [{text: "today", value: "today"}, {text: "tomorrow", value: "tomorrow"}, {text: "this week", value: "thisWeek"}, {text: "next week", value: "nextWeek"}];
+    $scope.dueDate = [{text: "past", value: "past"}, {text: "today", value: "today"}, {text: "tomorrow", value: "tomorrow"}, {text: "this week", value: "thisWeek"}, {text: "next week", value: "nextWeek"}];
     $scope.assignStatus = [{text: "to me", value: "toMe"}, {text: "byMe", value: "byMe"}];
     $scope.dueDateFilter = [];
     $scope.selectDueDate = function(dateEnd) {
@@ -124,6 +124,13 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         } else if ($scope.dueDateFilter && $scope.dueDateFilter.length > 0) {
             _.each($scope.dueDateFilter, function(filter) {
                 switch (filter) {
+                    case "past":
+                        var today = moment(new Date()).format("YYYY-MM-DD");
+                        if (moment(taskDueDate).isBefore(today)) {
+                            found = true;
+                        }
+                    break;
+
                     case "today":
                         var today = moment(new Date()).format("YYYY-MM-DD");
                         if (moment(taskDueDate).isSame(today)) {
