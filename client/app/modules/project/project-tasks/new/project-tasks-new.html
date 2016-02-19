@@ -13,17 +13,17 @@
 					<p class="md-body-2">Provide a description for the task:</p>
 	                <div layout="row">
 	                    <md-input-container flex="66" flex-offset="15">
-				        <label>Task Description</label>
-				        <textarea ng-model="task.description" name="description" md-maxlength="300" required rows="3" columns="1"></textarea>
-					</md-input-container>
+					        <label>Task Description</label>
+					        <textarea ng-model="task.description" name="description" md-maxlength="300" required rows="3" columns="1"></textarea>
+						</md-input-container>
+					</div>
 				</div>
 				
 					
 				<div layout="column">
 					<p class="md-body-2">Specify a due date for the task:</p>
 					<div layout="row" layout-align="center center" class="tagcloud-selection">
-	                    <md-datepicker ng-model="task.dateEnd" md-min-date="minDate" md-placeholder="Enter Due Date">
-	                    </md-datepicker>
+	                    <md-datepicker ng-model="task.dateEnd" md-min-date="minDate" md-placeholder="Enter Due Date"></md-datepicker>
 					</div>
 				</div>
 				
