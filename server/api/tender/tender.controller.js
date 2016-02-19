@@ -7,6 +7,7 @@ var People = require('./../../models/people.model');
 var Tender = require('./../../models/tender.model');
 var InviteToken = require('./../../models/inviteToken.model');
 var Notification = require('./../../models/notification.model');
+var NotificationHelper = require('./../../components/helpers/notification');
 var EventBus = require('../../components/EventBus');
 var moment = require("moment");
 
@@ -181,7 +182,7 @@ exports.getAll = function(req, res) {
         if (err) {return res.send(500,err);}
         else {
             async.each(tenders, function(tender, cb) {
-                Notification.find({owner: req.user._id, unread: true, referenceTo: "tender", $or:[{type: "tender-message"}, {type: "tender-submission"}]}, function(err, notifications) {
+                Notification.find({owner: req.user._id, "element._id": tender._id, unread: true, referenceTo: "tender", $or:[{type: "tender-message"}, {type: "tender-submission"}]}, function(err, notifications) {
                     if (err) {cb(err);}
                     else {
                         tender.members = [];
@@ -415,10 +416,24 @@ exports.updateTenderInvitee = function(req, res) {
             }
             if (data.type === "send-message") {
                 activity.element.text = data.text;
+                var params = {
+                    owners: [(tender.owner.toString()===req.user._id.toString()) ? tender.members[currentTendererIndex].user : tender.owner],
+                    fromUser: req.user._id,
+                    element: tender,
+                    referenceTo: "tender",
+                    type: "tender-message"
+                };
             } else {
-                activity.element.link = data.file.url,
-                activity.element.name = data.file.filename,
-                activity.element.description = data.description
+                activity.element.link = data.file.url;
+                activity.element.name = data.file.filename;
+                activity.element.description = data.description;
+                var params = {
+                    owners: [tender.owner],
+                    fromUser: req.user._id,
+                    element: tender,
+                    referenceTo: "tender",
+                    type: "tender-submission"
+                };
             }
             tender.members[currentTendererIndex].activities.push(activity);
             tender._editUser = req.user;
@@ -431,12 +446,16 @@ exports.updateTenderInvitee = function(req, res) {
                     {path: "activities.user", select: "_id name email"},
                     {path: "activities.acknowledgeUsers._id", select: "_id name email"}
                 ], function(err, tender) {
-                    EventBus.emit("socket:emit", {
-                        event: "invitee:updated",
-                        room: tender.members[currentTendererIndex]._id.toString(),
-                        data: tender.members[currentTendererIndex]
+                    
+                    NotificationHelper.create(params, function(err) {
+                        if (err) {return res.send(500,err);}
+                        EventBus.emit("socket:emit", {
+                            event: "invitee:updated",
+                            room: tender.members[currentTendererIndex]._id.toString(),
+                            data: tender.members[currentTendererIndex]
+                        });
+                        return res.send(200);
                     });
-                    return res.send(200);
                 });
             });
         } else {
