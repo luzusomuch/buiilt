@@ -26,6 +26,12 @@ angular.module('buiiltApp')
                 action: "accept-join-request"
             }
         },
+        isWaitingTeamAccept: {
+            method: "GET",
+            params: {
+                action: "is-waiting-team-accept"
+            }
+        },
         index: {
             method: 'GET'
         },

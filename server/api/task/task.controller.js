@@ -99,6 +99,7 @@ var getMainItem = function(type) {
     return _item;
 };
 
+
 exports.get = function(req, res) {
     Task.findById(req.params.id)
     .populate('members', '_id name email')

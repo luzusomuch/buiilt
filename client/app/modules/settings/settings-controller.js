@@ -3,145 +3,153 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
     $scope.currentTeam = $rootScope.currentTeam;
     $scope.currentUser = $rootScope.currentUser;
 
-    if (!$rootScope.currentTeam._id) {
-		
-		inline_manual_player.activateTopic('10595');
-		
-        $mdDialog.show({
-            controller: function($scope, $mdDialog){
-                $scope.showCreateOrJoinTeam = function($event, type) {
-                    $mdDialog.cancel();
-                    if (type === "create") {
-						
-						inline_manual_player.activateTopic('10596');
-						
-                        $mdDialog.show({
-                            targetEvent: $event,
-                            controller: function($rootScope, $scope, $mdToast, $mdDialog, teamService, $state){
-                                $scope.team = {
-                                    emails: []
-                                };
-                                $scope.showToast = function(value) {
-                                    $mdToast.show($mdToast.simple().textContent(value).position('bottom','right').hideDelay(3000));
-                                };
-                                $scope.createTeam = function(form) {
-                                    if (form.$valid) {
-                                        teamService.create($scope.team, function (team) {
-                                            $rootScope.currentTeam = $scope.currentTeam = team;
-                                            $rootScope.$emit('TeamUpdate',team);
-                                            $mdDialog.cancel();
-                                            $scope.showToast("You Have Successfully Created Your Team.");
-                                            
-                                            //Track Team Creation
-                                            mixpanel.identify($rootScope.currentUser._id);
-                                            mixpanel.track("Team Created");
-                                            
-                                            $state.go('settings.staff', {},{reload: true}).then(function(data){});
-                                        }, function (err) {
-                                            $scope.showToast("There Has Been An Error...");
-                                        });
-                                    }
-                                };
-                            },
-                            templateUrl: 'app/modules/settings/partials/create-team.html',
-                            parent: angular.element(document.body),
-                            clickOutsideToClose: false,
-                            escapeToClose: false
-                        });
-                    } else {
-						
-						inline_manual_player.activateTopic('10597');
-						
-                        $mdDialog.show({
-                            targetEvent: $event,
-                            controller: function($rootScope, $scope, $mdToast, $mdDialog, teamService, $state, invitations, teams){
-                                $scope.invitations = invitations;
-                                $scope.teams = teams;
 
-                                $scope.showToast = function(value) {
-                                    $mdToast.show($mdToast.simple().textContent(value).position('bottom','right').hideDelay(3000));
-                                };
-
-                                $scope.accept = function(invitation) {
-                                    var confirm = $mdDialog.confirm().title("Do you want to accept this invitation?").ok("Yes").cancel("No");
-                                    $mdDialog.show(confirm).then(function() {
-                                        teamService.acceptTeam({_id: invitation._id}).$promise
-                                        .then(function (res) {
-                                            $rootScope.currentTeam = $scope.currentTeam = team;
-                                            $rootScope.$emit('TeamUpdate',team);
-                                            $scope.showToast("Successfully");
-                                            $state.go('settings.staff', {},{reload: true}).then(function(data){});
-                                        }, function (err) {
-                                            $scope.showToast("There Has Been An Error...");
-                                        });
-                                    }, function() {
-                                        
+    $timeout(function() {
+        if (!$rootScope.currentTeam._id) {
+            teamService.isWaitingTeamAccept().$promise.then(function(data) {
+                $scope.isWaitingTeamAccept = data.data;    
+                if (!$scope.isWaitingTeamAccept) {
+            		inline_manual_player.activateTopic('10595');
+            		
+                    $mdDialog.show({
+                        controller: function($scope, $mdDialog){
+                            $scope.showCreateOrJoinTeam = function($event, type) {
+                                $mdDialog.cancel();
+                                if (type === "create") {
+            						
+            						inline_manual_player.activateTopic('10596');
+            						
+                                    $mdDialog.show({
+                                        targetEvent: $event,
+                                        controller: function($rootScope, $scope, $mdToast, $mdDialog, teamService, $state){
+                                            $scope.team = {
+                                                emails: []
+                                            };
+                                            $scope.showToast = function(value) {
+                                                $mdToast.show($mdToast.simple().textContent(value).position('bottom','right').hideDelay(3000));
+                                            };
+                                            $scope.createTeam = function(form) {
+                                                if (form.$valid) {
+                                                    teamService.create($scope.team, function (team) {
+                                                        $rootScope.currentTeam = $scope.currentTeam = team;
+                                                        $rootScope.$emit('TeamUpdate',team);
+                                                        $mdDialog.cancel();
+                                                        $scope.showToast("You Have Successfully Created Your Team.");
+                                                        
+                                                        //Track Team Creation
+                                                        mixpanel.identify($rootScope.currentUser._id);
+                                                        mixpanel.track("Team Created");
+                                                        
+                                                        $state.go('settings.staff', {},{reload: true}).then(function(data){});
+                                                    }, function (err) {
+                                                        $scope.showToast("There Has Been An Error...");
+                                                    });
+                                                }
+                                            };
+                                        },
+                                        templateUrl: 'app/modules/settings/partials/create-team.html',
+                                        parent: angular.element(document.body),
+                                        clickOutsideToClose: false,
+                                        escapeToClose: false
                                     });
-                                };
+                                } else {
+            						
+            						inline_manual_player.activateTopic('10597');
+            						
+                                    $mdDialog.show({
+                                        targetEvent: $event,
+                                        controller: function($rootScope, $scope, $mdToast, $mdDialog, teamService, $state, invitations, teams){
+                                            $scope.invitations = invitations;
+                                            $scope.teams = teams;
 
-                                $scope.reject = function(invitation, index) {
-                                    var confirm = $mdDialog.confirm().title("Do you want to reject this invitation?").ok("Yes").cancel("No");
-                                    $mdDialog.show(confirm).then(function() {
-                                        teamService.rejectTeam({_id: invitation._id}).$promise
-                                        .then(function () {
-                                            $scope.invitations.splice(index, 1);
-                                            $scope.showToast("Successfully");
-                                            $state.go('settings.staff', {},{reload: true}).then(function(data){});
-                                        }, function (err) {
-                                            $scope.showToast("There Has Been An Error...");
-                                        });
-                                    }, function(){});
-                                };
+                                            $scope.showToast = function(value) {
+                                                $mdToast.show($mdToast.simple().textContent(value).position('bottom','right').hideDelay(3000));
+                                            };
 
-                                $scope.querySearch = function(value) {
-                                    var result = value ? $scope.teams.filter(filterFunction(value)) : null;
-                                    return result;
-                                };
+                                            $scope.accept = function(invitation) {
+                                                var confirm = $mdDialog.confirm().title("Do you want to accept this invitation?").ok("Yes").cancel("No");
+                                                $mdDialog.show(confirm).then(function() {
+                                                    teamService.acceptTeam({_id: invitation._id}).$promise
+                                                    .then(function (res) {
+                                                        $rootScope.currentTeam = $scope.currentTeam = team;
+                                                        $rootScope.$emit('TeamUpdate',team);
+                                                        $scope.showToast("Successfully");
+                                                        $state.go('settings.staff', {},{reload: true}).then(function(data){});
+                                                    }, function (err) {
+                                                        $scope.showToast("There Has Been An Error...");
+                                                    });
+                                                }, function() {
+                                                    
+                                                });
+                                            };
 
-                                function filterFunction(value){
-                                    return function filterFn(team) {
-                                        return (team.name.toLowerCase().indexOf(value) > -1 || team.name.indexOf(value) > -1);
-                                    }
-                                };
+                                            $scope.reject = function(invitation, index) {
+                                                var confirm = $mdDialog.confirm().title("Do you want to reject this invitation?").ok("Yes").cancel("No");
+                                                $mdDialog.show(confirm).then(function() {
+                                                    teamService.rejectTeam({_id: invitation._id}).$promise
+                                                    .then(function () {
+                                                        $scope.invitations.splice(index, 1);
+                                                        $scope.showToast("Successfully");
+                                                        $state.go('settings.staff', {},{reload: true}).then(function(data){});
+                                                    }, function (err) {
+                                                        $scope.showToast("There Has Been An Error...");
+                                                    });
+                                                }, function(){});
+                                            };
 
-                                $scope.selectedItemChange = function(item) {
-                                    $scope.selectedTeam = item;
-                                };
+                                            $scope.querySearch = function(value) {
+                                                var result = value ? $scope.teams.filter(filterFunction(value)) : null;
+                                                return result;
+                                            };
 
-                                $scope.sendJoinTeamRequest = function() {
-                                    if ($scope.selectedTeam._id) {
-                                        teamService.sendJoinTeamRequest({id: $scope.selectedTeam._id}).$promise.then(function(res) {
-                                            $scope.showToast("Successfully! Please wait until that team leader accept your request");
-                                            $mdDialog.cancel();
-                                        }, function(err){$scope.showToast("There Has Been An Error...");});
-                                    } else {
-                                        $scope.showToast("Please select a team");
-                                    }
-                                };
-                                
-                            },
-                            templateUrl: 'app/modules/settings/partials/join-team.html',
-                            resolve: {
-                                invitations: function(authService) {
-                                    return authService.getCurrentInvitation().$promise;
-                                },
-                                teams: function(teamService) {
-                                    return teamService.getAll().$promise;
+                                            function filterFunction(value){
+                                                return function filterFn(team) {
+                                                    return (team.name.toLowerCase().indexOf(value) > -1 || team.name.indexOf(value) > -1);
+                                                }
+                                            };
+
+                                            $scope.selectedItemChange = function(item) {
+                                                $scope.selectedTeam = item;
+                                            };
+
+                                            $scope.sendJoinTeamRequest = function() {
+                                                if ($scope.selectedTeam._id) {
+                                                    teamService.sendJoinTeamRequest({id: $scope.selectedTeam._id}).$promise.then(function(res) {
+                                                        $scope.showToast("Successfully! Please wait until that team leader accept your request");
+                                                        $mdDialog.cancel();
+                                                        $state.go('settings.staff', {},{reload: true}).then(function(data){});
+                                                    }, function(err){$scope.showToast("There Has Been An Error...");});
+                                                } else {
+                                                    $scope.showToast("Please select a team");
+                                                }
+                                            };
+                                            
+                                        },
+                                        templateUrl: 'app/modules/settings/partials/join-team.html',
+                                        resolve: {
+                                            invitations: function(authService) {
+                                                return authService.getCurrentInvitation().$promise;
+                                            },
+                                            teams: function(teamService) {
+                                                return teamService.getAll().$promise;
+                                            }
+                                        },
+                                        parent: angular.element(document.body),
+                                        clickOutsideToClose: false,
+                                        escapeToClose: false
+                                    });
                                 }
-                            },
-                            parent: angular.element(document.body),
-                            clickOutsideToClose: false,
-                            escapeToClose: false
-                        });
-                    }
-                };
-            },
-            templateUrl: 'app/modules/settings/partials/create-or-join.html',
-            parent: angular.element(document.body),
-            clickOutsideToClose: false,
-            escapeToClose: false
-        });
-    }
+                            };
+                        },
+                        templateUrl: 'app/modules/settings/partials/create-or-join.html',
+                        parent: angular.element(document.body),
+                        clickOutsideToClose: false,
+                        escapeToClose: false
+                    });
+                }
+            });
+        }
+    }, 500);
 
     var handler = StripeCheckout.configure({
         key: 'pk_test_WGKFaZu6dXITEIxoyVI8DrVa',

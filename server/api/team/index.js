@@ -12,6 +12,7 @@ router.get('/', auth.isAuthenticated(), controller.index);
 router.get('/all', auth.isAuthenticated(), controller.getAll);
 router.get('/me', auth.isAuthenticated(), controller.me);
 router.get('/invitation', auth.isAuthenticated(), controller.invitation);
+router.get('/is-waiting-team-accept', auth.isAuthenticated(), controller.isWaitingTeamAccept);
 router.get('/:id', auth.isAuthenticated(), controller.show);
 router.get('/:id/send-join-team-request', auth.isAuthenticated(), controller.sendJoinTeamRequest);
 router.get('/:id/accept-join-request', auth.isAuthenticated(), controller.acceptJoinRequest);

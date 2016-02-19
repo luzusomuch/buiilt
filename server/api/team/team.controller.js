@@ -11,6 +11,15 @@ var NotificationHelper = require('./../../components/helpers/notification');
 var _ = require('lodash');
 var async = require('async');
 
+
+exports.isWaitingTeamAccept = function(req, res) {
+  Team.findOne({"member._id": req.user._id}, function(err, team) {
+    if (err) {return res.send(500,err);}
+    if (!team) {return res.send(200, {data: false});}
+    return res.send(200, {data: true});
+  });
+};
+
 exports.team = function (req,res,next) {
   Team.findById(req.params.id,function(err,team) {
     if (err || !team) {

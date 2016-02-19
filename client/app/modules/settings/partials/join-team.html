@@ -35,7 +35,7 @@
 					<p class="md-body-2">Search for the team you would like to join:</p>
                     <div layout="row">
                         <md-input-container flex>
-							<md-autocomplete md-selected-item="selectedItem.name" md-search-text="searchText" md-selected-item-change="selectedItemChange(item)" md-items="item in querySearch(searchText)" md-item-text="item.name" md-min-length="0" placeholder="Search for your Team...">
+							<md-autocomplete md-selected-item="selectedItem.name" md-search-text="searchText" md-selected-item-change="selectedItemChange(item)" md-items="item in querySearch(searchText)" md-item-text="item.name" md-min-length="0">
 						        <md-item-template>
 						          <span md-highlight-text="searchText" md-highlight-flags="^i">{{item.name}}</span>
 						        </md-item-template>
