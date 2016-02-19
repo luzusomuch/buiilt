@@ -4,11 +4,17 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
     $scope.currentUser = $rootScope.currentUser;
 
     if (!$rootScope.currentTeam._id) {
+		
+		inline_manual_player.activateTopic('10595');
+		
         $mdDialog.show({
             controller: function($scope, $mdDialog){
                 $scope.showCreateOrJoinTeam = function($event, type) {
                     $mdDialog.cancel();
                     if (type === "create") {
+						
+						inline_manual_player.activateTopic('10596');
+						
                         $mdDialog.show({
                             targetEvent: $event,
                             controller: function($rootScope, $scope, $mdToast, $mdDialog, teamService, $state){
@@ -32,7 +38,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                                             
                                             $state.go('settings.staff', {},{reload: true}).then(function(data){});
                                         }, function (err) {
-                                            $scope.showToast("Error");
+                                            $scope.showToast("There Has Been An Error...");
                                         });
                                     }
                                 };
@@ -43,6 +49,9 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                             escapeToClose: false
                         });
                     } else {
+						
+						inline_manual_player.activateTopic('10597');
+						
                         $mdDialog.show({
                             targetEvent: $event,
                             controller: function($rootScope, $scope, $mdToast, $mdDialog, teamService, $state, invitations, teams){
@@ -63,7 +72,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                                             $scope.showToast("Successfully");
                                             $state.go('settings.staff', {},{reload: true}).then(function(data){});
                                         }, function (err) {
-                                            $scope.showToast("Error");
+                                            $scope.showToast("There Has Been An Error...");
                                         });
                                     }, function() {
                                         
@@ -79,7 +88,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                                             $scope.showToast("Successfully");
                                             $state.go('settings.staff', {},{reload: true}).then(function(data){});
                                         }, function (err) {
-                                            $scope.showToast("Error");
+                                            $scope.showToast("There Has Been An Error...");
                                         });
                                     }, function(){});
                                 };
@@ -104,7 +113,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                                         teamService.sendJoinTeamRequest({id: $scope.selectedTeam._id}).$promise.then(function(res) {
                                             $scope.showToast("Successfully! Please wait until that team leader accept your request");
                                             $mdDialog.cancel();
-                                        }, function(err){$scope.showToast("Error");});
+                                        }, function(err){$scope.showToast("There Has Been An Error...");});
                                     } else {
                                         $scope.showToast("Please select a team");
                                     }
@@ -225,7 +234,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                     maximumCreatedProject = 15;
                 break;
                 default:
-                    console.log("error");
+                    console.log("There Has Been An Error...");
                 break;
             }
             if ($scope.totalProject === maximumCreatedProject) {
@@ -233,7 +242,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                 handler.open($scope.plans[$rootScope.purchaseType]);
             }
         }, function(err) {
-            $scope.showToast("Error");
+            $scope.showToast("There Has Been An Error...");
         });
     };
 
@@ -283,7 +292,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                     $scope.cancelDialog();
                     $scope.showToast("Purchase successfully");
                     $rootScope.$broadcast("User.Update", res);
-                }, function(err) {$scope.showToast("Error");});
+                }, function(err) {$scope.showToast("There Has Been An Error...");});
             });
         } else {
             $scope.showToast("Please check your input");
@@ -435,7 +444,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                 $state.go('settings.staff', {},{reload: true}).then(function(data){});
             }, function (err) {
                 $scope.cancelDialog();
-                $scope.showToast("Error");
+                $scope.showToast("There Has Been An Error...");
             });
         }
     };
@@ -468,7 +477,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
 				mixpanel.track("Company Details Updated");
 				
             }, function(err) {
-                $scope.showToast("Error");
+                $scope.showToast("There Has Been An Error...");
             });
         }
     };
@@ -497,7 +506,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             $scope.member.emails = [];
 			$mdDialog.hide();
         }, function(err){
-            $scope.showToast("Error");
+            $scope.showToast("There Has Been An Error...");
         });
     };
 
@@ -541,7 +550,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                 $rootScope.currentTeam = {};
                 $state.go($state.current, {}, {reload: true});
             }, function(err) {
-                $scope.showToast("Error");
+                $scope.showToast("There Has Been An Error...");
             });
         }, function() {
             
@@ -561,7 +570,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                 $mdDialog.hide();
                 $scope.showToast("Submit credit card successfully");
                 $rootScope.$broadcast("User.Update", res);
-            }, function(err) {$scope.showToast("Error");});
+            }, function(err) {$scope.showToast("There Has Been An Error...");});
         } else {
             $scope.showToast("Please check your input again");
         }
@@ -573,7 +582,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                 $mdDialog.hide();
                 $scope.showToast("Update billing address successfully");
                 $rootScope.$broadcast("Team.Update", res);
-            }, function(err) {$scope.showToast("Error");});
+            }, function(err) {$scope.showToast("There Has Been An Error...");});
         } else {
             $scope.showToast("Please check your input again");
         }
@@ -604,7 +613,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
 					mixpanel.identify($rootScope.currentUser._id);
 					mixpanel.track("Phone Number Updated");
 					
-                }, function(err){$scope.showToast("Error");});
+                }, function(err){$scope.showToast("There Has Been An Error...");});
             } else if ($scope.editUserType === "password") {
                 if ($scope.currentUser.newPassword.length < 6) {
                     $scope.showToast("Please enter password at least 6 characters");
@@ -617,14 +626,14 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                 authService.changePassword($scope.currentUser.oldPassword,$scope.currentUser.newPassword).then(function(res) {
                     $scope.cancelDialog();
                     $scope.showToast("Your password has been changed");
-                    }, function(err) {$scope.showToast("Error");});
+                    }, function(err) {$scope.showToast("There Has Been An Error...");});
             } else {
                 if ($scope.email !== $scope.currentUser.email) {
                     authService.changeEmail($scope.email).then(function() {
                         $scope.cancelDialog();
                         $scope.showToast("An email has been sent to your email to confirm your change");
                     }, function(err) {
-                        $scope.showToast("Error");
+                        $scope.showToast("There Has Been An Error...");
                     });
                 } else {
                     $scope.showToast("Please check your input again");
@@ -642,7 +651,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             teamService.acceptJoinRequest({id: $scope.currentTeam._id, memberId: member._id._id}).$promise.then(function(res) {
                 $scope.showToast("Successfully");
                 $rootScope.currentTeam = $scope.currentTeam = res;
-            }, function(err) {$scope.showToast("Error");});
+            }, function(err) {$scope.showToast("There Has Been An Error...");});
         }, function(){});
     };
     
