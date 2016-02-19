@@ -47,7 +47,18 @@ exports.getFilesByProject = function(req, res) {
     }
     File.find(query).populate("members", "_id name email").exec(function(err, files) {
         if (err) {return res.send(500,err);}
-        return res.send(200,files);
+        async.each(files, function(file, cb) {
+            Notification.find({owner: req.user._id, "element._id": file._id, referenceTo: req.params.type}, function(err, notifications) {
+                if (err) {cb(err);}
+                else {
+                    file.__v = notifications.length;
+                    cb();
+                }
+            });
+        }, function(err){
+            if (err) {return res.send(500,err);}
+            return res.send(200,files);
+        });
     });
 };  
 

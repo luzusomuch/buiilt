@@ -2,6 +2,7 @@
 
 var User = require('./../../models/user.model');
 var Project = require('./../../models/project.model');
+var Notification = require('./../../models/notification.model');
 var LimitProject = require('./../../models/limitProject.model');
 var ProjectValidator = require('./../../validators/project');
 var People = require('./../../models/people.model');
@@ -151,8 +152,27 @@ exports.show = function(req, res){
         if(err){ return res.send(500, err); }
         else {
             req.project = project;
-            // sendInfoToUser(req, res);
-            return res.send(200, project);
+            Notification.find({owner: req.user._id, unread: true, "element.project": project._id, $or:[{referenceTo: "task"}, {referenceTo: "thread"}, {referenceTo: "file"}, {referenceTo: "document"}]}, function(err, notifications) {
+                if (err) {return res.send(500,err);}
+                project.element = {
+                    totalTasks: 0,
+                    totalMessages: 0,
+                    totalFiles: 0,
+                    totalDocuments: 0,
+                };
+                _.each(notifications, function(notification) {
+                    if (notification.referenceTo === "task") {
+                        project.element.totalTasks +=1;
+                    } else if (notification.referenceTo === "thread") {
+                        project.element.totalMessages +=1;
+                    } else if (notification.referenceTo === "file") {
+                        project.element.totalFiles +=1;
+                    } else {
+                        project.element.totalDocuments +=1;
+                    }
+                });
+                return res.send(200, project);
+            });
         }
     });
 };

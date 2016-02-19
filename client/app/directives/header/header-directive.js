@@ -16,6 +16,10 @@ angular.module('buiiltApp')
 			$scope.inlineHelp = function() {
 				inline_manual_player.showPanel();
 			};
+			
+			$scope.inlinePlay = function(topicID) {
+				inline_manual_player.activateTopic(topicID);
+			};
 
             function queryProjects(callback){
                 var cb = callback || angular.noop;

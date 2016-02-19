@@ -3,6 +3,7 @@
 var User = require('./../../models/user.model');
 var Team = require('./../../models/team.model');
 var Task = require('./../../models/task.model');
+var Notification = require('./../../models/notification.model');
 var Thread = require('./../../models/thread.model');
 var StaffPackage = require('./../../models/staffPackage.model'),
     BuilderPackage = require('./../../models/builderPackage.model'),
@@ -22,6 +23,7 @@ var _ = require('lodash');
 var async = require('async');
 var mongoose = require('mongoose');
 var EventBus = require('../../components/EventBus');
+var moment = require("moment");
 
 function populateThread(thread, res){
     Thread.populate(thread, [
@@ -236,10 +238,26 @@ exports.getTasksByProject = function(req, res) {
     .populate("owner", "_id name email")
     .populate("members", "_id name email")
     .exec(function(err, tasks) {
-        if (err) {return res.send(500,err);}
-        else {
-            return res.send(200, tasks);
-        }
+        async.each(tasks, function(task, cb) {
+            Notification.find({owner: req.user._id, "element._id": task._id, referenceTo: "task"}, function(err, notifications) {
+                if (err) {cb(err);}
+                else {
+                    var total = 0;
+                    _.each(notifications, function(notification) {
+                        if (notification.element.dateEnd && moment(moment(notification.element.dateEnd).format("YYYY-MM-DD")).isBetween(moment(new Date()).format("YYYY-MM-DD"), moment(new Date()).add(3, "days").format("YYYY-MM-DD"))) {
+                            total += 1;
+                        }
+                    });
+                    task.__v = total;
+                    cb();
+                }
+            });
+        }, function(err) {
+            if (err) {return res.send(500,err);}
+            else {
+                return res.send(200, tasks);
+            }
+        });
     });
 };
 

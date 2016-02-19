@@ -38,7 +38,7 @@
 	<div ng-repeat="task in tasks | filter: search | unique: '_id' track by $index" ui-sref="project.tasks.detail({id: task.project, taskId: task._id})">
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
-		          <h3>{{task.description}}</h3>
+		          <h3>{{task.description}} <span ng-show="task.__v > 0">({{task.__v}} Update(s))</span></h3>
 		          <p><span ng-repeat="member in task.members track by $index">{{member.name}}, </span><span ng-repeat="member in task.notMembers track by $index">{{member}}, </span></p>
 	        </div>
 		</md-list-item>

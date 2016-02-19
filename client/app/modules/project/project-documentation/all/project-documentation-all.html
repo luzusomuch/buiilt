@@ -25,7 +25,7 @@
 	<div ng-repeat="document in documents | filter: search | unique: '_id' track by $index" ui-sref="project.documentation.detail({id:document.project, documentId: document._id})">
 		<md-list-item class="md-2-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
-		          <h3>{{document.name}}</h3>
+		          <h3>{{document.name}} <span ng-show="document.__v > 0">({{document.__v}} Update(s))</span></h3>
 		          <p>{{document.revision}}</p>
 	        </div>
 		</md-list-item>
