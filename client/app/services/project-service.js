@@ -36,7 +36,7 @@ angular.module('buiiltApp')
             action: 'list'
           }
         },
-        delete: {method:'DELETE', params: {id: 'id', action: ''}, isArray: true},
+        delete: {method:'DELETE'},
         updateProject: {
             method: 'put',
             params: {

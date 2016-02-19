@@ -124,9 +124,9 @@ exports.create = function(req, res){
                 });
             } else {
                 if (!user.plan && userTotalCreatedProjects > 0) {
-                    return res.send(500, {message: "You Have Reached the Limit of Free Projects. Please Upgrade Your Subscription to Continue..."});
+                    return res.send(500, {msg: "You Have Reached the Limit of Free Projects. Please Upgrade Your Subscription to Continue..."});
                 } else {
-                    return res.send(500, {message: "You Have Reached the Limit of Projects In Your Subscription. Please Upgrade to Continue..."});
+                    return res.send(500, {msg: "You Have Reached the Limit of Projects In Your Subscription. Please Upgrade to Continue..."});
                 }
             }
         })
@@ -190,10 +190,7 @@ exports.destroy = function (req, res) {
         if (err) {
             return res.send(500, err);
         }
-        Project.find({}, function(err,projects){
-            if (err) {return res.send(500,err);}
-            return res.send(200, projects);
-        })
+        return res.send(200);
     });
 };
 

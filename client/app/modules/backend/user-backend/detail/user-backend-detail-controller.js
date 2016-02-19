@@ -1,5 +1,50 @@
 angular.module('buiiltApp').controller('UserBackendDetailCtrl', function(ngTableParams, $rootScope, $scope, tenderService, projectService, $mdDialog, $mdToast, projects, tenders, $filter) {
     var data = _.union(projects, tenders);
+    $scope.datas = _.union(projects, tenders);
+
+    $scope.searchType = [];
+    $scope.selectItem = function(type) {
+        var index = _.indexOf($scope.searchType, type);
+        if (index !== -1) {
+            $scope.searchType.splice(index, 1);
+        } else {
+            $scope.searchType.push(type);
+        }
+    };
+
+    $scope.search = function(item) {
+        var text = $scope.searchText;
+        var type = $scope.searchType;
+        var found = false;
+        if ((text && text.length > 0) && (type.length > 0)) {
+            _.each(type, function(t) {
+                if ((t === "tender" && item.project) && (item.name.toLowerCase().indexOf(text) > -1 || item.name.indexOf(text) > -1)) {
+                    found = true;
+                } else if ((t === "project" && !item.project) && (item.name.toLowerCase().indexOf(text) > -1 || item.name.indexOf(text) > -1)) {
+                    found = true;
+                }
+            });
+            return found;
+        } else if (text && text.length > 0) {
+            if (item.name.toLowerCase().indexOf(text) > -1 || item.name.indexOf(text) > -1) {
+                found = true;
+            }
+            return found;
+        } else if (type.length > 0) {
+            _.each(type, function(t) {
+                if (t === "tender" && item.project) {
+                    found = true;
+                } else if (t === "project" && !item.project) {
+                    found = true
+                }
+            });
+            return found;
+        } else {
+            return true;
+        }
+    };
+
+
     $scope.tableParams = new ngTableParams({
         page: 1,            // show first page
         count: 10,           // count per page

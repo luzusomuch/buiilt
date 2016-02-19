@@ -1,27 +1,12 @@
 angular.module('buiiltApp')
-.controller('ProjectBackendCtrl', function($state,$rootScope,$scope, projects, projectService,ngTableParams,$filter, $mdDialog, $mdToast, limitedProject) {
-    var data = projects;
-    $scope.tableParams = new ngTableParams({
-        page: 1,            // show first page
-        count: 10,           // count per page
-        sorting: {
-            name: 'asc'     // initial sorting
-        }
-    }, {
-        total: data.length, // length of data
-        getData: function ($defer, params) {
-            var orderedData = params.sorting() ?
-                    $filter('orderBy')(data, params.orderBy()) :
-                    data;
-            $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-        }
-    });
-    $scope.remove = function(project, index){
+.controller('ProjectBackendCtrl', function($state, $rootScope, $scope, projects, projectService, $mdDialog, $mdToast) {
+    $scope.projects = projects;
+
+    $scope.remove = function(project){
         var confirm = $mdDialog.confirm().title("Do you want to delete this project?").ok("Yes").cancel("No");
         $mdDialog.show(confirm).then(function() {
-            projectService.delete({'id': project._id}).$promise.then(function(projects){
-                _.remove(data, {_id: project._id});
-                $scope.tableParams.reload();
+            projectService.delete({id: project._id}).$promise.then(function(){
+                _.remove($scope.projects, {_id: project._id});
                 $scope.showToast("Successfully");
             }, function(err){$scope.showToast("Error")});
         }, function() {
@@ -34,9 +19,6 @@ angular.module('buiiltApp')
             $scope.closeModal();
             $scope.showToast("Successfully");
             $rootScope.backendEditProject = null;
-            _.remove(data, {_id: $scope.project._id});
-            data.push(project);
-            $scope.tableParams.reload();
         }, function(err) {$scope.showToast("Error");});
     };
 
@@ -66,18 +48,5 @@ angular.module('buiiltApp')
 
     if ($rootScope.backendEditProject) {
         $scope.project = $rootScope.backendEditProject;
-    }
-
-    $scope.number = (limitedProject) ? limitedProject.number : 1;
-
-    $scope.updateLimitProjects = function(form) {
-        if (form.$valid) {
-            projectService.changeProjectLimit({number:$scope.number}).$promise.then(function(res) {
-                $scope.showToast("Successfully");
-                $scope.number = res.number;
-            }, function(err){$scope.showToast("Error");});
-        } else {
-            $scope.showToast("Error");
-        }
     }
 });

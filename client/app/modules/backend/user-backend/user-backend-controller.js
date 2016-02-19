@@ -1,28 +1,29 @@
-angular.module('buiiltApp').controller('UserBackendCtrl', function(ngTableParams, $rootScope, $scope, users, userService, $mdDialog, $mdToast) {
-    var data = users;
+angular.module('buiiltApp').controller('UserBackendCtrl', function($rootScope, $scope, users, userService, $mdDialog, $mdToast) {
+    $scope.users = users;
 
-    $scope.tableParams = new ngTableParams({
-        page: 1,            // show first page
-        count: 10           // count per page
-    }, {
-        total: data.length, // length of data
-        getData: function ($defer, params) {
-            $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+    $scope.search = function(user) {
+        var found = false;
+        var text = $scope.searchText;
+        if (text && text.length > 0) {
+            if ((user.phoneNumber && user.phoneNumber.indexOf(text) > -1) || user.email.indexOf(text) > -1 || user.name.toLowerCase().indexOf(text) > -1 || user.name.indexOf(text) > -1) {
+                found = true
+            }
+            return found;
+        } else {
+            return true;
         }
-    });
+    };
 
     $scope.remove = function(user){
         var confirm = $mdDialog.confirm().title("Do you want to delete this user?").ok("Yes").cancel("No");
         $mdDialog.show(confirm).then(function() {
-            userService.delete({'id': user._id}).$promise.then(function(users){
-                _.remove(data, {_id: user._id});
-                $scope.tableParams.reload();
+            userService.delete({id: user._id}).$promise.then(function(){
+                _.remove($scope.users, {_id: user._id});
                 $scope.showToast("Successfully");
             }, function(err){$scope.showToast("Error")});
         }, function() {
             
         });
-        
     };
 
     $scope.editUser = function() {
@@ -30,9 +31,6 @@ angular.module('buiiltApp').controller('UserBackendCtrl', function(ngTableParams
             $scope.closeModal();
             $scope.showToast("Successfully");
             $rootScope.backendEditUser = null;
-            _.remove(data, {_id: $scope.user._id});
-            data.push(user);
-            $scope.tableParams.reload();
         }, function(err) {$scope.showToast("Error");});
     };
 

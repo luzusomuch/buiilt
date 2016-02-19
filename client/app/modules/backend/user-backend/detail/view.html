@@ -4,32 +4,40 @@
     </backend-sidenav>
 
     <div layout="column" flex="85" style="height: 90vh; overflow: scroll">
-        <div class="detail-header" layout-padding layout="column">
+        <div class="detail-header" layout-padding layout="row">
             <h4>User Detail</h4>
-        </div>
-        <div class="main-page-content" layout-padding>
-            <div>
-                <table ng-table="tableParams" class="table" style="width:100%">
-                    <tr ng-repeat="item in $data" style="text-align: center">
-                        <td data-title="'#'">
-                            {{$index + 1}}
-                        </td>
-                        <td data-title="'Name'" sortable="'name'" ng-click="showModal($event, 'view-project-or-tender-detail.html', item)" style="cursor:pointer">
-                            {{item.name}}
-                        </td>
-                        <td data-title="'Status'" sortable="'status'">
-                            {{item.status}}
-                        </td>
-                        <td data-title="'Type'">
-                            {{(item.project) ? "Tender" : "Project"}}
-                        </td>
-                        <td data-title="'Action'">
-                            <i class="material-icons" ng-click="remove(item, $index)" style="color:#03A9F4">remove</i>
-                        </td>
-                    </tr>
-                </table>
+            <md-input-container flex="50">
+                <label for="">Search for Project Or Tender</label>
+                <input type="text" ng-model="searchText">
+            </md-input-container>
+            <div flex="50">
+                <label for="">
+                    <input type="checkbox" ng-click="selectItem('project')">Project
+                    <input type="checkbox" ng-click="selectItem('tender')">Tender
+                </label>
             </div>
-        </div>        
+        </div>
+        <div class="main-page-content" layout-padding style="height: 90vh; overflow: scroll">
+            <md-list ng-cloak class="main-page-content">
+                <div  ng-repeat="data in datas | filter: search">
+                
+                    <md-list-item class="md-2-line secondary-button-padding" md-ink-ripple>
+                        <div class="md-list-item-text" layout="column">
+                            <h3>{{data.name}}</h3>
+                            <p>{{(data.project) ? "Tender" : "Project"}} - {{data.status}}</p>
+                        </div>
+                        <md-button class="md-secondary" ng-click="showModal($event, data)">
+                            <md-icon class="material-icons">create</md-icon>
+                        </md-button>
+                        <md-button class="md-secondary" ng-click="remove(data)" style="margin-right: 90px">
+                            <md-icon class="material-icons">remove</md-icon>
+                        </md-button>
+                    </md-list-item>
+                    <md-divider></md-divider>
+                
+                </div>
+            </md-list>
+        </div>       
     </div>
     
 </md-content>

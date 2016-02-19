@@ -3,28 +3,34 @@
     <backend-sidenav layout="column" flex="15">   
     </backend-sidenav>
 
-    <div layout="column" flex="85" style="height: 90vh; overflow: scroll">
+    <div layout="column" flex="85">
         <div class="detail-header" layout-padding layout="column">
             <h4>Projects</h4>
+            <md-input-container>
+                <label for="">Search for project</label>
+                <input type="text" ng-model="searchText">
+            </md-input-container>
         </div>
-        <div class="main-page-content" layout-padding>
-            <table ng-table="tableParams" class="table" style="width:100%">
-                <tr ng-repeat="project in $data" style="text-align: center">
-                    <td data-title="'#'">
-                        {{$index + 1}}
-                    </td>
-                    <td data-title="'Name'" sortable="'name'">
-                        {{project.name}}
-                    </td>
-                    <td data-title="'Status'" sortable="'status'">
-                        {{project.status}}
-                    </td>
-                    <td data-title="'Action'">
-                        <i class="material-icons" ng-click="remove(project, $index)" style="color:#03A9F4">remove</i>
-                        <i ng-click="showModal($event, project)" class="material-icons">create</i>
-                    </td>
-                </tr>
-            </table>
+        <div class="main-page-content" layout-padding style="height: 90vh; overflow: scroll">
+            <md-list ng-cloak class="main-page-content">
+                <div  ng-repeat="project in projects | filter: {name: searchText}">
+                
+                    <md-list-item class="md-2-line secondary-button-padding" md-ink-ripple>
+                        <div class="md-list-item-text" layout="column">
+                            <h3>{{project.name}}</h3>
+                            <p>{{project.address}}</p>
+                        </div>
+                        <md-button class="md-secondary" ng-click="showModal($event, project)">
+                            <md-icon class="material-icons">create</md-icon>
+                        </md-button>
+                        <md-button class="md-secondary" ng-click="remove(project)" style="margin-right: 90px">
+                            <md-icon class="material-icons">remove</md-icon>
+                        </md-button>
+                    </md-list-item>
+                    <md-divider></md-divider>
+                
+                </div>
+            </md-list>
         </div>        
     </div>
     

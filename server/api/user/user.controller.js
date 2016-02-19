@@ -297,31 +297,31 @@ exports.show = function (req, res, next) {
  * restriction: 'admin'
  */
 exports.destroy = function (req, res) {
-  User.findByIdAndRemove(req.params.id, function (err, user) {
-    if (err) {
-      return res.send(500, err);
-    }
-    if (user.team._id) {
-      Team.findById(user.team._id, function(err, team){
-        if (err) {return res.send(500,err);}
-        var teamMembers = team.leader;
-        _.each(team.member, function(member){
-          if (member._id) {
-            teamMembers.push(member._id);
-          }
-        });
-        _.remove(teamMembers, user._id);
-        team.markModified('member');
-        team.markModified('leader');
-        team._user = req.user;
-        team.save();
-      });
-    }
-    User.find({}, function(err,users){
-      if (err) {return res.send(500,err);}
-      return res.send(200, users);
-    })
-  });
+    User.findByIdAndRemove(req.params.id, function (err, user) {
+        if (err) {
+            return res.send(500, err);
+        }
+        if (user.team._id) {
+            Team.findById(user.team._id, function(err, team){
+                if (err) {return res.send(500,err);}
+                var teamMembers = team.leader;
+                _.each(team.member, function(member){
+                    if (member._id) {
+                        teamMembers.push(member._id);
+                    }
+                });
+                _.remove(teamMembers, user._id);
+                team.markModified('member');
+                team.markModified('leader');
+                team._user = req.user;
+                team.save(function(err) {
+                    if (err) {return res.send(500,err);}
+                    return res.send(200);
+                });
+            });
+        }
+        return res.send(200);
+    });
 };
 
 /**
