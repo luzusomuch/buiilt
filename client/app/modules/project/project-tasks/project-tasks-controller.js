@@ -1,5 +1,30 @@
 angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, $scope, $mdDialog, tasks, taskService, $mdToast, $stateParams, $state, peopleService, people, socket) {
 	$scope.tasks = tasks;
+    function filterTaskDueDate(tasks) {
+        var today = moment(new Date()).format("YYYY-MM-DD");
+        var tomorrow = moment(new Date()).add(1, "day").format("YYYY-MM-DD");
+        var yesterday = moment(new Date()).subtract(1, "day").format("YYYY-MM-DD");
+        _.each(tasks, function(task) {
+            var taskDueDate = moment(task.dateEnd).format("YYYY-MM-DD");
+            if (!task.element.notificationType) {
+                if (moment(taskDueDate).isSame(tomorrow)) {
+                    task.element.dueClose = true;
+                    task.element.due = "Tomorrow";
+                } else if (moment(taskDueDate).isSame(today)) {
+                    task.element.dueClose = true;
+                    task.element.due = "Today";
+                } else if (moment(taskDueDate).isSame(yesterday)) {
+                    task.element.dueClose = true;
+                    task.element.due = "Yesterday";
+                } else if (moment(taskDueDate).isBefore(yesterday)) {
+                    task.element.duePast = true;
+                    task.element.due = task.dueDate;
+                }
+            }
+        });
+    };
+    filterTaskDueDate($scope.tasks);
+
 	$scope.people = people;
 
     socket.on("task:new", function(data) {

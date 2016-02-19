@@ -27,10 +27,14 @@
 
 <md-list ng-cloak class="main-page-content"  layout="column" flex>
 	<div ng-repeat="thread in threads | filter: search | unique: '_id' track by $index" ui-sref="project.messages.detail({id: thread.project, messageId: thread._id})">
-		<md-list-item class="md-2-line" md-ink-ripple>
+		<md-list-item class="md-3-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
 	        	<h3>{{ thread.name }} <span ng-show="thread.__v > 0">({{thread.__v}} Update(s))</span></h3>
 	       		<p><span ng-repeat="member in thread.members">{{member.name}}, </span></p>
+	       		<p ng-show="thread.element.notificationBy">{{thread.element.notificationBy.name}} has 
+	       			<span ng-show="thread.element.notificationType=='thread-assign'"> assigned you to this thread</span>
+	       			<span ng-show="thread.element.notificationType=='thread-message'"> sent you new message</span>
+	       		</p>
 	        </div>
 		</md-list-item>
 		<md-divider></md-divider>

@@ -260,9 +260,15 @@ exports.getProjectThread = function(req, res) {
     .populate('owner', '_id name email')
     .exec(function(err, threads) {
         async.each(threads, function(thread, cb) {
-            Notification.find({owner: req.user._id, unread: true, "element._id": thread._id}, function(err, notifications) {
+            Notification.find({owner: req.user._id, unread: true, "element._id": thread._id})
+            .populate("fromUser", "_id name email").exec(function(err, notifications) {
                 if (err) {cb(err);}
                 else {
+                    if (notifications.length > 0) {
+                        var latestNotification = _.last(notifications);
+                        thread.element.notificationType = latestNotification.type;
+                        thread.element.notificationBy = latestNotification.fromUser;
+                    }
                     thread.__v = notifications.length;
                     cb();
                 }

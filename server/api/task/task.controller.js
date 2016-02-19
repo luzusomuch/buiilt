@@ -240,16 +240,16 @@ exports.getTasksByProject = function(req, res) {
     .populate("members", "_id name email")
     .exec(function(err, tasks) {
         async.each(tasks, function(task, cb) {
-            Notification.find({owner: req.user._id, "element._id": task._id, referenceTo: "task"}, function(err, notifications) {
+            Notification.find({unread: true, owner: req.user._id, "element._id": task._id, referenceTo: "task"})
+            .populate("fromUser", "_id name email").exec(function(err, notifications) {
                 if (err) {cb(err);}
                 else {
-                    var total = 0;
-                    _.each(notifications, function(notification) {
-                        if (notification.element.dateEnd && moment(moment(notification.element.dateEnd).format("YYYY-MM-DD")).isBetween(moment(new Date()).format("YYYY-MM-DD"), moment(new Date()).add(3, "days").format("YYYY-MM-DD"))) {
-                            total += 1;
-                        }
-                    });
-                    task.__v = total;
+                    if (notifications.length > 0) {
+                        var latestNotification = _.last(notifications);
+                        task.element.notificationType = latestNotification.type;
+                        task.element.notificationBy = latestNotification.fromUser;
+                    }
+                    task.__v = notifications.length;
                     cb();
                 }
             });

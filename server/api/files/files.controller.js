@@ -48,9 +48,15 @@ exports.getFilesByProject = function(req, res) {
     File.find(query).populate("members", "_id name email").exec(function(err, files) {
         if (err) {return res.send(500,err);}
         async.each(files, function(file, cb) {
-            Notification.find({owner: req.user._id, "element._id": file._id, referenceTo: req.params.type}, function(err, notifications) {
+            Notification.find({owner: req.user._id, "element._id": file._id, referenceTo: req.params.type})
+            .populate("fromUser", "_id name email").exec(function(err, notifications) {
                 if (err) {cb(err);}
                 else {
+                    if (notifications.length > 0) {
+                        var latestNotification = _.last(notifications);
+                        file.element.notificationType = latestNotification.type;
+                        file.element.notificationBy = latestNotification.fromUser;
+                    }
                     file.__v = notifications.length;
                     cb();
                 }
