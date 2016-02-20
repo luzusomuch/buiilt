@@ -255,12 +255,13 @@ exports.sendMessage = function(req,res) {
 };
 
 exports.getProjectThread = function(req, res) {
-    Thread.find({project: req.params.id, 'element.type': 'project-message', $or:[{owner: req.user._id},{members: req.user._id}]})
+    var userId = (req.query.userId && req.user.role==="admin") ? req.query.userId : req.user._id;
+    Thread.find({project: req.params.id, 'element.type': 'project-message', $or:[{owner: userId},{members: userId}]})
     .populate('members', '_id name email')
     .populate('owner', '_id name email')
     .exec(function(err, threads) {
         async.each(threads, function(thread, cb) {
-            Notification.find({owner: req.user._id, unread: true, "element._id": thread._id})
+            Notification.find({owner: userId, unread: true, "element._id": thread._id})
             .populate("fromUser", "_id name email").exec(function(err, notifications) {
                 if (err) {cb(err);}
                 else {

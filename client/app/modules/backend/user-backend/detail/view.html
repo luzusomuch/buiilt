@@ -22,7 +22,7 @@
                 <div  ng-repeat="data in datas | filter: search">
                 
                     <md-list-item class="md-2-line secondary-button-padding" md-ink-ripple>
-                        <div class="md-list-item-text" layout="column">
+                        <div ng-click="goToDetail(data)" class="md-list-item-text" layout="column">
                             <h3>{{data.name}}</h3>
                             <p>{{(data.project) ? "Tender" : "Project"}} - {{data.status}}</p>
                         </div>
