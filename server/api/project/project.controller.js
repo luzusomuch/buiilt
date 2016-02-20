@@ -42,8 +42,9 @@ exports.create = function(req, res){
             if (err) {return res.send(500,err);}
             if (!limitProject) {
                 maximunFreeProjects = 1;
-            } 
-            maximunFreeProjects = limitProject.number;
+            } else {
+                maximunFreeProjects = limitProject.number;
+            }
             if (!user.plan && userTotalCreatedProjects<maximunFreeProjects) {
                 allowCreate = true;
             } else {
