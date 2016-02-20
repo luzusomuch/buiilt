@@ -216,9 +216,13 @@ exports.get = function(req, res) {
     .populate("members.activities.user", "_id name email")
     .populate("activities.user", "_id name email")
     .populate("activities.acknowledgeUsers._id", "_id name email")
+    .populate("winner._id", "_id name email")
     .exec(function(err, tender) {
         if (err) {return res.send(500,err);}
-        else if (!tender) {return res.send(404);}
+        if (!tender) {return res.send(404);}
+        if (req.query.admin && req.user.role==="admin") {
+            return res.send(200, tender);
+        }
         return res.send(200,responseTender(tender, req.user));
     });
 };

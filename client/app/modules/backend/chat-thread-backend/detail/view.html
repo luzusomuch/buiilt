@@ -1,15 +1,35 @@
-<div class="col s12">
-    <table ng-table="tableParams" class="table">
-        <tr ng-repeat="message in $data">
-            <td data-title="'#'">
-                {{$index + 1}}
-            </td>
-            <td data-title="'From'">
-                {{(message.user.firstName) ? message.user.firstName + ' ' + message.user.lastName : message.user.email}}
-            </td>
-            <td data-title="'Message'">
-                {{message.text}}
-            </td>
-        </tr>
-    </table>
-</div>
+<md-content layout="row">
+    <backend-sidenav layout="column" flex="15">   
+    </backend-sidenav>
+
+    <div layout="column" flex="85" style="height: 90vh; overflow: scroll">
+        <div class="detail-header" layout-padding layout="row">
+            <div layout="row">
+                <h4>View {{thread.name}} Detail</h4>
+            </div>
+        </div>
+
+        <div class="main-page-content" layout-padding style="height: 90vh; overflow: scroll">
+            <div layout="row">
+                <p>This thread has created by <strong style="cursor:pointer" ui-sref="userBackendDetail.projectsAndTenders({userId: thread.owner._id})">{{task.owner.name}}</strong> at {{thread.createdAt | date: 'MM/dd/yyyy'}}</p>
+            </div>
+            <div layout="row" layout-align="center center">
+                <p>This task has assigned to these users: </p>
+                <div class="tag-cloud">
+                    <span ng-class="{'available-tag': !user._id, 'selected-tag': user._id}" ng-repeat="user in assignees">{{(user._id) ? user.name : user.email}}</span>
+                </div>
+            </div>
+            <div layout-padding>
+                <md-list ng-cloak class="main-page-content">
+                    <md-list-item class="md-2-line" ng-repeat="message in thread.messages">
+                        <div class="md-list-item-text" layout="column">
+                            <h4>{{message.text}}</h4>
+                            <p>This message sent by <strong style="cursor: poiter" ui-sref="userBackendDetail.projectsAndTenders({userId: message.user._id})">{{message.user.name}}</strong> at {{message.sentAt | date: 'MM/dd/yyyy'}}</p>
+                        </div>
+                        <md-divider></md-divider>
+                    </md-list-item>
+                </md-list>
+            </div>
+        </div>
+    </div>
+</md-content>

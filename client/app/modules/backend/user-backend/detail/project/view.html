@@ -25,11 +25,11 @@
                         <h3>{{data.description}}</h3>
                         <p>{{date.dateEnd | date: 'dd/MM/yyyy'}}</p>
                     </div>
-                    <div class="md-list-item-text" layout="column" ng-show="result.type=='messages'" ui-sref="messageDetailBackend({messageId: data._id})">
+                    <div class="md-list-item-text" layout="column" ng-show="result.type=='messages'" ui-sref="chatThreadsBackend.detail({messageId: data._id})">
                         <h3>{{data.name}}</h3>
                         <p>This message thread was created by {{data.owner.name}} - {{data.owner.email}}</p>
                     </div>
-                    <div class="md-list-item-text" layout="column" ng-show="result.type=='files' || result.type=='documents'" ui-sref="fileDetailBackend({fileId: data._id})">
+                    <div class="md-list-item-text" layout="column" ng-show="result.type=='files' || result.type=='documents'" ui-sref="documentBackend.detail({documentId: data._id})">
                         <h3>{{data.name}}</h3>
                         <p>This {{(result.type=='files') ? " file " : " document "}} was created by {{data.owner.name}} - {{data.owner.email}}</p>
                     </div>

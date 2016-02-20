@@ -1,18 +1,31 @@
-<div class="col s12">
-    <h5>{{document.title}} - {{document.name}}</h5>
-    <p>{{document.description}}</p>
-    <div class="card-image" ng-switch="document.mimeType">
-        <span ng-switch-when="image/jpeg">
-            <img src="../../../../media/files/{{document._id}}-{{document.title}}.jpg" alt="">
-        </span>
-        <span ng-switch-when="image/png">
-            <img src="../../../../media/files/{{document._id}}-{{document.title}}.jpg" alt="">
-        </span>
-        <span ng-switch-when="application/pdf">
-            <img src="../../../../media/files/{{document._id}}-{{document.title}}.jpg" alt="" style="height:250px;">
-        </span>
-        <span ng-switch-default>
-            <img src="../../../../media/sample-1.jpg" alt="">
-        </span>
+<md-content layout="row">
+    <backend-sidenav layout="column" flex="15">   
+    </backend-sidenav>
+
+    <div layout="column" flex="85" style="height: 90vh; overflow: scroll">
+        <div class="detail-header" layout-padding layout="row">
+            <div>
+                <h4>View {{document.name}} Detail</h4>
+            </div>
+            <span flex></span>
+            <div>
+                <md-button ng-click="download()">Download</md-button>
+            </div>
+        </div>
+
+        <div class="main-page-content" layout-padding style="height: 90vh; overflow: scroll">
+            <div layout="row">
+                <p>This document has created by <strong style="cursor:pointer" ui-sref="userBackendDetail.projectsAndTenders({userId: document.owner._id})">{{document.owner.name}}</strong> at {{document.createdAt | date: 'MM/dd/yyyy'}}</p>
+            </div>
+            <div layout="row" layout-align="center center">
+                <p>This document has assigned to these users: </p>
+                <div class="tag-cloud">
+                    <span ng-class="{'available-tag': !user._id, 'selected-tag': user._id}" ng-repeat="user in assignees">{{(user._id) ? user.name : user.email}}</span>
+                </div>
+            </div>
+            <div layout="row" layout-padding>
+                <div flex file-picker-previewer type="filepicker-preview" url="{{document.path}}" style="height:75vh;"> </div>
+            </div>
+        </div>
     </div>
-</div>
+</md-content>

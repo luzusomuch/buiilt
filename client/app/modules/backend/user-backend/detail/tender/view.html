@@ -1,0 +1,37 @@
+<md-content layout="row">
+
+    <backend-sidenav layout="column" flex="15">   
+    </backend-sidenav>
+
+    <div layout="column" flex="85" style="height: 90vh; overflow: scroll">
+        <div class="detail-header" layout-padding layout="row">
+            <h4>Tender {{tender.name}} Detail</h4>
+        </div>
+        <div class="main-page-content" layout-padding style="height: 90vh; overflow: scroll">
+            <div layout="row">
+                <p>This tender has created by <strong style="cursor:pointer" ui-sref="userBackendDetail.projectsAndTenders({userId: tender.owner._id})">{{tender.owner.name}}</strong> at {{tender.createdAt | date: 'MM/dd/yyyy'}}</p>
+            </div>
+            <div layout="row" layout-align="center center">
+                <p>This tender has assigned to these users: </p>
+                <div class="tag-cloud">
+                    <span ng-class="{'available-tag': !user._id, 'selected-tag': user._id}" ng-repeat="user in assignees">{{(user._id) ? user.name : user.email}}</span>
+                </div>
+            </div>
+            <div layout="row" ng-show="tender.winner">
+                <p><strong style="cursor:pointer" ui-sref="userBackendDetail.projectsAndTenders({userId: tender.winner._id._id})">{{(tender.winner._id) ? tender.winner._id.name : tender.winner.email}}</strong> has won this tender</p>
+            </div>
+            <div ng-show="documents.length > 0">
+                <p>Here is the documents list of this tender:</p>
+                <md-list ng-cloak class="main-page-content">
+                    <md-list-item ng-repeat="document in documents" class="md-2-line" md-ink-ripple>
+                        <div class="md-list-item-text" ui-sref="documentBackend.detail({documentId: document._id})">
+                            <h3>{{document.name}}</h3>
+                            <p>This document was created by {{document.owner.name}}</p>
+                        </div>
+                    </md-list-item>
+                </md-list>
+            </div>
+        </div>   
+    </div>
+    
+</md-content>

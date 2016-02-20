@@ -105,6 +105,7 @@ exports.get = function(req, res) {
     .populate('members', '_id name email')
     .populate('owner', '_id name email')
     .populate('activities.user','_id name email')
+    .populate("completedBy, '_id name email")
     .exec(function(err, task){
         if (err) {return res.send(500,err);}
         if (!task) {return res.send(404);}

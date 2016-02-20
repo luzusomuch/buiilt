@@ -55,5 +55,17 @@ angular.module('buiiltApp').config(function($stateProvider) {
                 return fileService.getProjectFiles({id: $stateParams.projectId, type: "document", userId: $stateParams.userId}).$promise;
             }
         }
+    })
+    .state("userBackendDetail.tender", {
+        url: "/tender/:tenderId",
+        templateUrl: "/app/modules/backend/user-backend/detail/tender/view.html",
+        controller: "UserBackendDetailTenderCtrl",
+        authenticate: true,
+        isAdmin: true,
+        resolve: {
+            tender: function($stateParams, tenderService) {
+                return tenderService.get({id: $stateParams.tenderId, admin: true}).$promise;
+            }
+        }
     });
 });
