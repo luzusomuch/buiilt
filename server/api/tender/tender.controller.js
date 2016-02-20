@@ -461,7 +461,14 @@ exports.updateTenderInvitee = function(req, res) {
                     {path: "activities.user", select: "_id name email"},
                     {path: "activities.acknowledgeUsers._id", select: "_id name email"}
                 ], function(err, tender) {
-                    
+                    if (data.type === "send-message" && !tender.members[currentTendererIndex].user) {
+                        EventBus.emit("socket:emit", {
+                            event: "invitee:updated",
+                            room: tender.members[currentTendererIndex]._id.toString(),
+                            data: tender.members[currentTendererIndex]
+                        });
+                        return res.send(200);
+                    }
                     NotificationHelper.create(params, function(err) {
                         if (err) {return res.send(500,err);}
                         EventBus.emit("socket:emit", {

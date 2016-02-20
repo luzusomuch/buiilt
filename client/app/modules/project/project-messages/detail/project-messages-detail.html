@@ -50,8 +50,7 @@
 						</p>
 						
 						<span ng-switch="activity.type" class="activity-body md-body">
-							
-							<span ng-switch-when="chat">{{activity.element.message | sanitize}}</span>
+							<span ng-switch-when="chat" ng-bind-html="activity.element.message | htmlize"></span>
 							<span ng-switch-when="assign"> {{activity.element.invitee}} </span>
 							<span ng-switch-when="related-thread"> "<a ui-sref="project.messages.detail({id: thread.project, messageId: activity.element.item})">{{activity.element.name}}</a>".</span>
 							<span ng-switch-when="related-task"> "<a ui-sref="project.tasks.detail({id: thread.project, taskId: activity.element.item})">{{activity.element.name}}</a>".</span>

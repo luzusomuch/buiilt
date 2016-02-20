@@ -20,8 +20,7 @@
             </p>
 			
 			<span ng-switch="activity.type" class="activity-body md-body">
-				
-				<span ng-switch-when="send-message">{{activity.element.text | sanitize}}</span>
+				<span ng-switch-when="send-message" ng-bind-html="activity.element.text | htmlize"></span>
 				
 			</span>
 			
