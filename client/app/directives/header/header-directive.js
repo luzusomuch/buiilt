@@ -100,6 +100,18 @@ angular.module('buiiltApp')
             $rootScope.sendVerification = function() {
                 $scope.duration = 0;
             };
+
+            $scope.showHelpDialog = function(event) {
+                $mdDialog.show({
+                    targetEvent: event,
+                    controller: function() {
+
+                    },
+                    templateUrl: 'app/directives/header/helpModal.html',
+                    parent: angular.element(document.body),
+                    clickOutsideToClose: false
+                });
+            }
         }
     };
 });
