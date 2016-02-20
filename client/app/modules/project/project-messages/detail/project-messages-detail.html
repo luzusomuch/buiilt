@@ -54,7 +54,7 @@
 							<span ng-switch-when="assign"> {{activity.element.invitee}} </span>
 							<span ng-switch-when="related-thread"> "<a ui-sref="project.messages.detail({id: thread.project, messageId: activity.element.item})">{{activity.element.name}}</a>".</span>
 							<span ng-switch-when="related-task"> "<a ui-sref="project.tasks.detail({id: thread.project, taskId: activity.element.item})">{{activity.element.name}}</a>".</span>
-							<span ng-switch-when="related-file"> "<a ui-sref="project.files.detail({id: thread.project})">{{activity.element.name}}</a>".</span>
+							<span ng-switch-when="related-file"> "<a ui-sref="project.files.detail({id: thread.project, fileId: activity.element.item})">{{activity.element.name}}</a>".</span>
 							
 						</span>
 						<div layout="row" layout-align="center center" class="tagcloud-selection" layout-wrap ng-show="activity.type =='related-task'">
@@ -111,6 +111,6 @@
 		</div>
 	</div>
 		
-	<related-items data="thread" flex="30"></related-items>
+	<related-items data="thread" hide-related-thread="true" flex="30"></related-items>
 		
 </div>
