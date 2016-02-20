@@ -34,13 +34,16 @@ exports.create = function(req, res){
         // (moment(moment(user.createdAt).add(14, "days").format("YYYY-MM-DD")).isAfter(moment(today).format("YYYY-MM-DD")))
 
         // New filter, filter that user have reached maximun free project
-        LimitProject.find({}, function(err, limitProjects) {
+        if (!user.team._id) {
+            return res.send(500, {message: "You cann\'t create a project when not in any teams"});
+        }
+        LimitProject.findOne({team: user.team._id}, function(err, limitProject) {
             var maximunFreeProjects;
             if (err) {return res.send(500,err);}
-            if (limitProjects.length === 0) {
+            if (!limitProject) {
                 maximunFreeProjects = 1;
             } 
-            maximunFreeProjects = limitProjects[0].number;
+            maximunFreeProjects = limitProject.number;
             if (!user.plan && userTotalCreatedProjects<maximunFreeProjects) {
                 allowCreate = true;
             } else {
@@ -582,17 +585,18 @@ exports.backup = function(req, res) {
 };
 
 exports.getLimitedProjectNumber = function(req, res) {
-    LimitProject.find({}, function(err, limitProject) {
+    LimitProject.findOne({team: req.query.teamId}, function(err, limitProject) {
         if (err) {return res.send(500,err);}
-        return res.send(200, limitProject[0]);
+        return res.send(200, limitProject);
     });
 };
 
 exports.changeLimitedProjectNumber = function(req, res) {
-    LimitProject.find({}, function(err, limitProjects) {
+    LimitProject.findOne({team: req.body.teamId}, function(err, limitProject) {
         if (err) {return res.send(500,err);}
-        if (limitProjects.length === 0) {
+        if (!limitProject) {
             var limitProject = new LimitProject({
+                team: req.body.teamId,
                 number: req.body.number
             });
             limitProject.save(function(err){
@@ -600,8 +604,8 @@ exports.changeLimitedProjectNumber = function(req, res) {
                 return res.send(200,limitProject);
             });
         } else {
-            limitProjects[0].number = req.body.number;
-            limitProjects[0].save(function(err, limitProject) {
+            limitProjectnumber = req.body.number;
+            limitProject.save(function(err, limitProject) {
                 if (err) {return res.send(500,err);}
                 return res.send(200,limitProject);
             });

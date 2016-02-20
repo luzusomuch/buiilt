@@ -1,0 +1,57 @@
+<md-content layout="row">
+    <backend-sidenav layout="column" flex="15">
+    </backend-sidenav>
+    <div layout="column" flex="85" layout-margin layout-padding>
+        <div class="detail-header" layout-padding layout="column">
+            <div>
+                <h4>Team {{team.name}}'s Detail</h4>
+            </div>
+            <span flex></span>
+            <div>
+                <md-button ng-click="showEditLimitProject=true">Update Limit Project Number</md-button>
+            </div>
+        </div>
+        <div class="main-page-content" layout-padding style="height: 90vh; overflow: scroll">
+            <md-list ng-cloak class="main-page-content" ng-show="!showEditLimitProject">
+                <div  ng-repeat="leader in team.leader">
+                
+                    <md-list-item class="md-2-line secondary-button-padding" md-ink-ripple>
+                        <div ui-sref="teamBackend.detail({teamId:team._id})" class="md-list-item-text" layout="column">
+                            <h3>{{leader.name}}</h3>
+                            <p>{{leader.email}}</p>
+                        </div>
+                    </md-list-item>
+                    <md-divider></md-divider>
+                
+                </div>
+
+                <div  ng-repeat="member in team.member" ng-show="member.status=='Acive'">
+                
+                    <md-list-item class="md-2-line secondary-button-padding" md-ink-ripple>
+                        <div ui-sref="teamBackend.detail({teamId:team._id})" class="md-list-item-text" layout="column">
+                            <h3>{{(member._id) ? member._id.name : member.email}}</h3>
+                            <p>{{(member._id) ? member._id.email : "Pending signup"}}</p>
+                        </div>
+                    </md-list-item>
+                    <md-divider></md-divider>
+                
+                </div>
+            </md-list>
+
+            <div ng-show="showEditLimitProject" layout-align="center center">
+                <form ng-submit="updateLimitProject(form)" name="form">
+                    <div layout="row">
+                        <md-input-container flex="40">
+                            <label for="">Enter limit number</label>
+                            <input type="number" required ng-model="number">
+                        </md-input-container>
+                    </div>
+                    <div layout="row">
+                        <md-button type="submit" class="md-primary">Save Change</md-button>
+                        <md-button ng-click="showEditLimitProject=false">Cancel</md-button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</md-content>

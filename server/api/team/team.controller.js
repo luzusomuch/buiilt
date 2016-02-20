@@ -108,16 +108,14 @@ exports.acceptJoinRequest = function(req, res) {
 };
 
 exports.index = function (req, res) {
-  if (!req.user.team) {
-    return res.json([]);
-  }
-  Team.findById(req.user.team._id, function (err, team) {
-    if (err) {
-      return errorsHelper.validationErrors(res, err);
-    }
-    res.json(team);
-
-  });
+    Team.findById(req.query.teamId)
+    .populate("leader", "_id name email")
+    .populate("member._id", "_id name email")
+    .exec(function(err, team) {
+        if (err) {return res.send(500,err);}
+        if (!team) {return res.send(404);}
+        return res.send(200, team);
+    });
 };
 
 exports.me = function(req,res) {

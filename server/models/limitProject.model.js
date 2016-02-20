@@ -7,7 +7,7 @@ var okay = require('okay');
 var EventBus = require('./../components/EventBus');
 
 var LimitProjectSchema = new Schema({
-  //owner of project
+  team: {type: Schema.Types.ObjectId, required: true},
   number: {type: Number, default: 1},
   //TODO - store subscription data
   createdAt: { type: Date, default: Date.now },
