@@ -4,14 +4,13 @@ angular.module('buiiltApp').directive('relatedItems', function(){
         restrict: 'EA',
         templateUrl: 'app/directives/relatedItems/relatedItems.html',
         scope:{
-            data:'='
+            data:'=',
+            hideRelatedThread: "@"
         },
         controller: function($scope, $rootScope, $location, userService, projectService, $state, $mdDialog) {
-            $scope.errors = {};
-            $scope.success = {};
+console.log($scope.hideRelatedThread);
 			$scope.$state = $state;
             $scope.currentUser = $rootScope.currentUser;
-            console.log($scope.data);
             $scope.data.members = _.uniq($scope.data.members, "_id");
 
 			$scope.showRelatedMessageModal = function ($event, relatedItem) {

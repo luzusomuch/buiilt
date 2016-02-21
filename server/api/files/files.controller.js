@@ -38,17 +38,20 @@ function populateFile(file, res){
 
 exports.getFilesByProject = function(req, res) {
     var query;
+    var userId = (req.query.userId && req.user.role==="admin") ? req.query.userId : req.user._id;
     if (req.params.type === "file") {
-        query = {project: req.params.id, 'element.type': 'file', $or: [{owner: req.user._id}, {members: req.user._id}]};
+        query = {project: req.params.id, 'element.type': 'file', $or: [{owner: userId}, {members: userId}]};
     } else if (req.params.type === "document") {
         query = {project: req.params.id, "element.type": "document"};
     } else if (req.params.type === "tender") {
         query = {project: req.params.id, "element.type": "tender", "belongTo.item._id": mongoose.Types.ObjectId(req.query.tenderId)};
     }
-    File.find(query).populate("members", "_id name email").exec(function(err, files) {
+    File.find(query)
+    .populate("owner", "_id name email")
+    .populate("members", "_id name email").exec(function(err, files) {
         if (err) {return res.send(500,err);}
         async.each(files, function(file, cb) {
-            Notification.find({owner: req.user._id, "element._id": file._id, referenceTo: req.params.type})
+            Notification.find({owner: userId, "element._id": file._id, referenceTo: req.params.type})
             .populate("fromUser", "_id name email").exec(function(err, notifications) {
                 if (err) {cb(err);}
                 else {

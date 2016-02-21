@@ -216,9 +216,13 @@ exports.get = function(req, res) {
     .populate("members.activities.user", "_id name email")
     .populate("activities.user", "_id name email")
     .populate("activities.acknowledgeUsers._id", "_id name email")
+    .populate("winner._id", "_id name email")
     .exec(function(err, tender) {
         if (err) {return res.send(500,err);}
-        else if (!tender) {return res.send(404);}
+        if (!tender) {return res.send(404);}
+        if (req.query.admin && req.user.role==="admin") {
+            return res.send(200, tender);
+        }
         return res.send(200,responseTender(tender, req.user));
     });
 };
@@ -457,7 +461,14 @@ exports.updateTenderInvitee = function(req, res) {
                     {path: "activities.user", select: "_id name email"},
                     {path: "activities.acknowledgeUsers._id", select: "_id name email"}
                 ], function(err, tender) {
-                    
+                    if (data.type === "send-message" && !tender.members[currentTendererIndex].user) {
+                        EventBus.emit("socket:emit", {
+                            event: "invitee:updated",
+                            room: tender.members[currentTendererIndex]._id.toString(),
+                            data: tender.members[currentTendererIndex]
+                        });
+                        return res.send(200);
+                    }
                     NotificationHelper.create(params, function(err) {
                         if (err) {return res.send(500,err);}
                         EventBus.emit("socket:emit", {

@@ -335,6 +335,9 @@ exports.getInvitePeople = function(req, res) {
         if (err) {return res.send(500,err);}
         if (!people) {return res.send(404);}
         else {
+            if (req.query.admin && req.user.role==="admin") {
+                return res.send(200,people)
+            }
             responseWithEachType(people, req, res);
         }
     });

@@ -339,7 +339,11 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
     };
 
     $scope.createRelatedFile = function() {
-        $scope.relatedFile.members = _.filter($scope.invitees, {select: true});
+        // Old code
+        // $scope.relatedFile.members = _.filter($scope.invitees, {select: true});
+
+        // New one
+        $scope.relatedFile.members = $scope.invitees;
         $scope.relatedFile.tags = _.filter($scope.tags, {select: true});
         if ($scope.relatedFile.files.length == 0) {
             $scope.showToast("Please Select a File...");

@@ -1,0 +1,40 @@
+<md-content layout="row">
+    <backend-sidenav layout="column" flex="15">   
+    </backend-sidenav>
+
+    <div layout="column" flex="85" style="height: 90vh; overflow: scroll">
+        <div class="detail-header" layout-padding layout="row">
+            <div layout="row">
+                <h4>User's Project Detail</h4>
+            </div>
+            <div layout="row" layout-align="center center">
+                <div class="tagcloud" style="margin-top: -2vh; margin-left: 2vh">
+                    <span ng-repeat="tag in filterTags" ng-class="{'available-tag': !tag.select, 'selected-tag': tag.select}" ng-click="selectFilterTag($index)">{{tag.text}}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-page-content" layout-padding style="height: 90vh; overflow: scroll">
+            <md-list ng-cloak class="main-page-content">
+                <md-list-item ng-repeat="data in result.datas" class="md-2-line secondary-button-padding" md-ink-ripple>
+                    <div class="md-list-item-text" layout="column" ng-show="result.type=='members'" ng-click="openUserDetail(data)">
+                        <h3>{{(data._id) ? data.name : data.email}}</h3>
+                        <p>{{data.type}} - {{data.email}} - {{(data.phoneNumber) ? data.phoneNumber : "No Phone Number In File"}}</p>
+                    </div>
+                    <div class="md-list-item-text" layout="column" ng-show="result.type=='tasks'" ui-sref="taskBackend.detail({taskId: data._id})">
+                        <h3>{{data.description}}</h3>
+                        <p>{{date.dateEnd | date: 'dd/MM/yyyy'}}</p>
+                    </div>
+                    <div class="md-list-item-text" layout="column" ng-show="result.type=='messages'" ui-sref="chatThreadsBackend.detail({messageId: data._id})">
+                        <h3>{{data.name}}</h3>
+                        <p>This message thread was created by {{data.owner.name}} - {{data.owner.email}}</p>
+                    </div>
+                    <div class="md-list-item-text" layout="column" ng-show="result.type=='files' || result.type=='documents'" ui-sref="documentBackend.detail({documentId: data._id})">
+                        <h3>{{data.name}}</h3>
+                        <p>This {{(result.type=='files') ? " file " : " document "}} was created by {{data.owner.name}} - {{data.owner.email}}</p>
+                    </div>
+                </md-list-item>
+            </md-list>
+        </div>
+    </div>
+</md-content>

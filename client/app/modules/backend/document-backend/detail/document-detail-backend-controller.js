@@ -1,10 +1,18 @@
-angular.module('buiiltApp').controller('DocumentDetailBackendCtrl', function($scope, document, fileService) {
+angular.module('buiiltApp').controller('DocumentDetailBackendCtrl', function($scope, document) {
     $scope.document = document;
-
-
-    $scope.remove = function(value){
-        fileService.delete({'id': value._id}).$promise.then(function(documents){
-            data = documents;
+    if (document.members.length > 0 || document.notMembers.length > 0) {
+        $scope.assignees = document.members;
+        _.each(document.notMembers, function(email) {
+            $scope.assignees.push({email: email});
         });
+    }
+
+    $scope.download = function() {
+        filepicker.exportFile(
+            {url: document.path, filename: document.name},
+            function(Blob){
+                console.log(Blob.url);
+            }
+        );
     };
 });

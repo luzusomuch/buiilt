@@ -105,9 +105,13 @@ exports.get = function(req, res) {
     .populate('members', '_id name email')
     .populate('owner', '_id name email')
     .populate('activities.user','_id name email')
+    .populate("completedBy, '_id name email")
     .exec(function(err, task){
         if (err) {return res.send(500,err);}
         if (!task) {return res.send(404);}
+        if (req.query.isAdmin && req.user.role==="admin") {
+            return res.send(200, task);
+        }
         RelatedItem.responseWithRelated("task", task, req.user, res);
     });
 };
@@ -234,13 +238,13 @@ exports.update = function(req,res) {
 };
 
 exports.getTasksByProject = function(req, res) {
-    var user  = req.user;
-    Task.find({project: req.params.id, $or:[{owner: user._id}, {members: user._id}]})
+    var userId  = (req.query.userId && req.user.role==="admin") ? req.query.userId : req.user._id;
+    Task.find({project: req.params.id, $or:[{owner: userId}, {members: userId}]})
     .populate("owner", "_id name email")
     .populate("members", "_id name email")
     .exec(function(err, tasks) {
         async.each(tasks, function(task, cb) {
-            Notification.find({unread: true, owner: req.user._id, "element._id": task._id, referenceTo: "task"})
+            Notification.find({unread: true, owner: userId, "element._id": task._id, referenceTo: "task"})
             .populate("fromUser", "_id name email").exec(function(err, notifications) {
                 if (err) {cb(err);}
                 else {
