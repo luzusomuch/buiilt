@@ -1,1 +1,24 @@
-helpModal.html
+<md-dialog aria-label="buiilt Help Bar" flex="70">
+	<md-toolbar>
+		<div class="md-toolbar-tools">
+			<h2>Help Bar</h2>
+		</div>
+	</md-toolbar>
+		
+	<md-dialog-content>
+		<div class="md-dialog-content" layout="column">
+			
+			<div layout="row">
+				<md-input-container flex class="modal-instructions">
+					<p>Hi, this is the help bar.</p>
+				</md-input-container>
+			</div>
+			
+		</div>
+	</md-dialog-content>
+		
+	<md-dialog-actions layout="row">
+		<md-button ng-click="closeDialog()" class="md-primary">Close</md-button>
+	</md-dialog-actions>
+	
+</md-dialog>

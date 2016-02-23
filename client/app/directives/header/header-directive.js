@@ -16,10 +16,6 @@ angular.module('buiiltApp')
 			$scope.inlineHelp = function() {
 				inline_manual_player.showPanel();
 			};
-			
-			$scope.inlinePlay = function(topicID) {
-				inline_manual_player.activateTopic(topicID);
-			};
 
             function queryProjects(callback){
                 var cb = callback || angular.noop;
@@ -104,9 +100,17 @@ angular.module('buiiltApp')
             $scope.showHelpDialog = function(event) {
                 $mdDialog.show({
                     targetEvent: event,
-                    controller: function() {
-
-                    },
+					controller: function helpBarController($scope, $mdDialog) {
+						
+						$scope.closeDialog = function() {
+				            $mdDialog.hide();
+				        };
+						
+						$scope.inlinePlay = function(topicID) {
+							$mdDialog.hide();
+							inline_manual_player.activateTopic(topicID);
+						};
+			        },
                     templateUrl: 'app/directives/header/helpModal.html',
                     parent: angular.element(document.body),
                     clickOutsideToClose: false

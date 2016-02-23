@@ -5,37 +5,32 @@
 		</div>
 
 		<md-list ng-cloak flex>
-			<div ui-sref="project.overview" ng-class="{activemenu: $state.includes('project.overview')}">
+			<div ui-sref="project.overview" ng-class="{activemenu: $state.includes('project.overview')}" id="projMenuOverview">
 				<md-list-item md-ink-ripple>
 				    <p layout-padding>Overview</p>
 				</md-list-item>
 			</div>
-			<div ui-sref="project.team.all" ng-class="{activemenu: $state.includes('project.team')}">
+			<div ui-sref="project.team.all" ng-class="{activemenu: $state.includes('project.team')}"id="projMenuTeam">
 				<md-list-item md-ink-ripple>
 				    <p layout-padding>Team</p>
 				</md-list-item>
 			</div>
-			<!-- <div ui-sref="project.tenders.all" ng-class="{activemenu: $state.includes('project.tenders')}">
-				<md-list-item md-ink-ripple>
-				    <p layout-padding>Tenders</p>
-				</md-list-item>
-			</div> -->
-			<div ui-sref="project.messages.all" ng-class="{activemenu: $state.includes('project.messages')}">
+			<div ui-sref="project.messages.all" ng-class="{activemenu: $state.includes('project.messages')}"id="projMenuMessages">
 				<md-list-item md-ink-ripple>
 				    <p layout-padding>Messages <span ng-show="project.element.totalMessages > 0">({{project.element.totalMessages}})</span></p>
 				</md-list-item>
 			</div>
-			<div ui-sref="project.tasks.all" ng-class="{activemenu: $state.includes('project.tasks')}">
+			<div ui-sref="project.tasks.all" ng-class="{activemenu: $state.includes('project.tasks')}"id="projMenuTasks">
 				<md-list-item md-ink-ripple>
 				    <p layout-padding>Tasks <span ng-show="project.element.totalTasks > 0">({{project.element.totalTasks}})</span></p>
 				</md-list-item>
 			</div>
-			<div ui-sref="project.files.all" ng-class="{activemenu: $state.includes('project.files')}">
+			<div ui-sref="project.files.all" ng-class="{activemenu: $state.includes('project.files')}"id="projMenuFiles">
 				<md-list-item md-ink-ripple>
 				    <p layout-padding>Files <span ng-show="project.element.totalFiles > 0">({{project.element.totalFiles}})</span></p>
 				</md-list-item>
 			</div>
-			<div ui-sref="project.documentation.all" ng-class="{activemenu: $state.includes('project.documentation')}">
+			<div ui-sref="project.documentation.all" ng-class="{activemenu: $state.includes('project.documentation')}"id="projMenuDocumentation">
 				<md-list-item md-ink-ripple>
 				    <p layout-padding>Documentation <span ng-show="project.element.totalDocuments > 0">({{project.element.totalDocuments}})</span></p>
 				</md-list-item>
