@@ -20,4 +20,5 @@ router.put('/:id/mark-read-by-package', auth.isAuthenticated(), controller.markR
 //router.get('/:id/get', auth.isAuthenticated(), controller.staffPackage, controller.getOne);
 ////router.get('/:id', auth.isAuthenticated(), controller.show);
 //router.post('/:id', auth.isAuthenticated(), controller.project, controller.create);
+router.get("/:id/mark-items-as-read", auth.isAuthenticated(), controller.markItemsAsRead);
 module.exports = router;

@@ -99,6 +99,24 @@ var getMainItem = function(type) {
     return _item;
 };
 
+exports.getAll = function(req, res) {
+    Task.find({}).populate('assignees', '-hashedPassword -salt').exec(function(err, tasks){
+        if (err) {return res.send(500,err);}
+        return res.json(200, tasks);
+    });
+};
+
+exports.destroy = function (req, res) {
+    Task.findByIdAndRemove(req.params.id, function (err, task) {
+        if (err) {
+            return res.send(500, err);
+        }
+        Task.find({}, function(err,tasks){
+            if (err) {return res.send(500,err);}
+            return res.send(200, tasks);
+        });
+    });
+};
 
 exports.get = function(req, res) {
     Task.findById(req.params.id)
@@ -266,6 +284,58 @@ exports.getTasksByProject = function(req, res) {
     });
 };
 
+exports.myTask = function(req,res) {
+    var user = req.user;
+    var notifications = [];
+    var tasks = [];
+    Notification.find({owner: user._id, unread : true, referenceTo : 'task'})
+    .populate("fromUser", "_id email name")
+    .exec(function(err, notifications) {
+        if (err) {return res.send(500,err);}
+        notifications = notifications;
+        async.each(notifications, function(notification, cb) {
+            Task.findById(notification.element._id)
+            .populate('members', '-hashedPassword -salt')
+            .populate('owner', '-hashedPassword -salt')
+            .populate('project')
+            .exec(function(err, task) {
+                if (err || !task) {
+                    cb();
+                } else {
+                    tasks.push(task);
+                    cb();
+                }
+            });
+        }, function(err) {
+            if (err) {return res.send(500,err);}
+            var uniqueTasksList = _.map(_.groupBy(tasks,function(doc){
+                return doc._id;
+            }),function(grouped){
+              return grouped[0];
+            });
+            _.each(uniqueTasksList, function(task) {
+                task.element.notifications = [];
+                task.element.limitNotifications = [];
+                var index = 1;
+                _.each(notifications, function(notification) {
+                    task.element.notifications.push({
+                        fromUser: notification.fromUser,
+                        type: notification.type
+                    });
+                    if (index < 4) {
+                       task.element.limitNotifications.push({
+                            fromUser: notification.fromUser,
+                            type: notification.type
+                        }); 
+                    }
+                    index += 1;
+                });
+            });
+            return res.send(200, uniqueTasksList);
+        });
+    });
+};
+
 var getPackage = function(type) {
   var _package = {};
   switch (type) {
@@ -331,58 +401,7 @@ exports.task = function(req,res,next) {
   })
 };
 
-exports.myTask = function(req,res) {
-    var user = req.user;
-    var result = [];
-    Notification.find({owner: user._id, unread : true, referenceTo : 'task'})
-    .populate("fromUser", "_id email name")
-    .exec(function(err, notifications) {
-        if (err) {return res.send(500,err);}
-        async.each(notifications, function(notification, cb) {
-            Task.findById(notification.element._id)
-            .populate('members', '-hashedPassword -salt')
-            .populate('owner', '-hashedPassword -salt')
-            .populate('project')
-            .exec(function(err, task) {
-                if (err || !task) {
-                    cb();
-                } else {
-                    task.element.fromUser = notification.fromUser;
-                    task.element.notificationType = notification.type;
-                    result.push(task);
-                    cb();
-                }
-            })
-        }, function() {
-            return res.send(200, result);
-        });
-    });
-    // Task.find({$or : [{'owner' : user._id}, {assignees : user._id}],completed : false})
-    // .sort('hasDateEnd')
-    // .sort({'dateEnd': 1})
-    // .populate('assignees', '-hashedPassword -salt')
-    // .populate('owner', '-hashedPassword -salt')
-    // .populate('project')
 
-    // .exec(function(err,tasks) {
-    //     if (err) {
-    //         return res.send(500,err);
-    //     }
-    //     async.each(tasks,function(task,callback) {
-    //         if (task.element.type === "task-project") {
-    //             result.push(task);
-    //             callback(null);
-    //         } else {
-    //             callback(null);
-    //         }
-    //     },function(err) {
-    //         if (err) {
-    //             return res.send(500,err);
-    //         }
-    //         return res.json(result)
-    //     });
-    // })
-};
 
 
 
@@ -412,26 +431,7 @@ exports.getByPackage = function(req, res){
   });
 };
 
-exports.getAll = function(req, res) {
-  Task.find({}).populate('assignees', '-hashedPassword -salt').exec(function(err, tasks){
-    if (err) {return res.send(500,err);}
-    return res.json(200, tasks);
-  });
-};
 
-
-
-exports.destroy = function (req, res) {
-  Task.findByIdAndRemove(req.params.id, function (err, task) {
-    if (err) {
-      return res.send(500, err);
-    }
-    Task.find({}, function(err,tasks){
-      if (err) {return res.send(500,err);}
-      return res.send(200, tasks);
-    })
-  });
-};
 
 exports.show = function(req, res) {
   var _package = getPackage(req.params.type);

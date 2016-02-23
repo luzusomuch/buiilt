@@ -11,7 +11,7 @@ router.post("/:id", auth.isAuthenticated(), controller.create);
 // router.post('/:id/:type', auth.isAuthenticated(), controller.package, controller.create);
 router.put('/:id', auth.isAuthenticated(), controller.update);
 router.delete('/:id', auth.hasRole('admin'), controller.destroy);
-router.get('/list', auth.isAuthenticated(), controller.getAll);
+router.get('/list', auth.hasRole("admin"), controller.getAll);
 router.get('/list-by-user', auth.isAuthenticated(), controller.getAllByUser);
 router.get('/dashboard/me', auth.isAuthenticated(), controller.myTask);
 

@@ -1,8 +1,206 @@
-angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $scope, $timeout, $q, $state, projectService, myTasks, myMessages, myFiles, notificationService) {
+angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $scope, $timeout, $q, $state, $mdDialog, $mdToast, projectService, myTasks, myMessages, myFiles, notificationService, taskService, peopleService) {
 	$rootScope.title = "Dashboard";
 	$scope.myTasks = myTasks;
 	$scope.myMessages = myMessages;
 	$scope.myFiles = myFiles;
+    $scope.projects = $rootScope.projects;
+
+    $scope.showToast = function(value) {
+        $mdToast.show($mdToast.simple().textContent(value).position('bottom','left').hideDelay(3000));
+    };
+
+    $scope.closeModal = function() {
+        $mdDialog.cancel();
+    };
+
+    $scope.markRead = function(item) {
+        notificationService.markItemsAsRead({id: item._id}).$promise.then(function() {
+            $scope.showToast("Successfully");
+            item.element.limitNotifications = [];
+            item.element.notifications = [];
+        }, function(err){$scope.showToast("Error");});
+    };
+
+    function getProjectMembers(id) {
+        $scope.selectedProjectId = id;
+        peopleService.getInvitePeople({id: id}).$promise.then(function(res) {
+            $scope.projectMembers = [];
+            _.each($rootScope.roles, function(role) {
+                _.each(res[role], function(tender){
+                    if (tender.hasSelect) {
+                        var isLeader = (_.findIndex(tender.tenderers, function(tenderer) {
+                            if (tenderer._id) {
+                                return tenderer._id._id.toString() === $rootScope.currentUser._id.toString();
+                            }
+                        }) !== -1) ? true : false;
+                        if (!isLeader) {
+                            _.each(tender.tenderers, function(tenderer) {
+                                var memberIndex = _.findIndex(tenderer.teamMember, function(member) {
+                                    return member._id.toString() === $rootScope.currentUser._id.toString();
+                                });
+                                if (memberIndex !== -1) {
+                                    _.each(tenderer.teamMember, function(member) {
+                                        member.select = false;
+                                        $scope.projectMembers.push(member);
+                                    });
+                                }
+                            });
+                            if (tender.tenderers[0]._id) {
+                                tender.tenderers[0]._id.select = false;
+                                $scope.projectMembers.push(tender.tenderers[0]._id);
+                            } else {
+                                $scope.projectMembers.push({email: tender.tenderers[0].email, select: false});
+                            }
+                        } else {
+                            $scope.projectMembers.push(tender.tenderers[0]._id);
+                            _.each(tender.tenderers, function(tenderer) {
+                                if (tenderer._id._id.toString() === $rootScope.currentUser._id.toString()) {
+                                    _.each(tenderer.teamMember, function(member) {
+                                        member.select = false;
+                                        $scope.projectMembers.push(member);
+                                    });
+                                }
+                            });
+                        }
+                    }
+                });
+            });
+        });
+    };
+
+    $scope.selectMember = function(index) {
+        $scope.projectMembers[index].select = !$scope.projectMembers[index].select;
+    };
+
+    $scope.selectProject = function($index) {
+        _.each($scope.project, function(project) {
+            project.select = false;
+        });
+        $scope.projects[$index].select = !$scope.projects[$index].select;
+        getProjectMembers($scope.projects[$index]._id);
+    };
+
+    // task section
+    $scope.task = {members: []};
+    if ($rootScope.dashboardEditTask) {
+        $scope.task = $rootScope.dashboardEditTask;
+        $scope.task.dateEnd = new Date($scope.task.dateEnd);
+    }
+
+    angular.forEach($scope.myTasks, function(task) {
+        var taskDueDate = moment(task.dateEnd).format("YYYY-MM-DD");
+        if (moment(taskDueDate).isSame(moment().format("YYYY-MM-DD"))) {
+            task.dueDate = "Today";
+        } else if (moment(taskDueDate).isSame(moment().add(1, "days").format("YYYY-MM-DD"))) {
+            task.dueDate = "Tomorrow";
+        } else if (moment(taskDueDate).isSame(moment().subtract(1, "days").format("YYYY-MM-DD"))) {
+            task.dueDate = "Yesterday";
+        }
+    });
+
+    $scope.markComplete = function(task) {
+        task.completed = !task.completed;
+        if (task.completed) {
+            task.completedBy = $rootScope.currentUser._id;
+            task.editType = "complete-task";
+            task.completedAt = new Date();
+        } else {
+            task.completedBy = null;
+            task.editType = "uncomplete-task";
+            task.completedAt = null;
+        }
+        taskService.update({id: task._id}, task).$promise.then(function(res) {
+            $scope.showToast((res.completed)?"Task Has Been Marked Completed.":"Task Has Been Marked Incomplete.");
+        }, function(err) {$scope.showToast("Error");});
+    };
+
+    $scope.showEditTaskModal = function(event, task) {
+        $rootScope.dashboardEditTask = task;
+        $mdDialog.show({
+            targetEvent: event,
+            controller: "dashboardCtrl",
+            resolve: {
+                myTasks: function(taskService) {
+                    return taskService.myTask().$promise;
+                },
+                myMessages: function(messageService) {
+                    return messageService.myMessages().$promise;
+                },
+                myFiles: function(fileService) {
+                    return fileService.myFiles().$promise;
+                }
+            },
+            templateUrl: 'app/modules/dashboard/partials/edit-task.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: false
+        });
+    };
+
+    $scope.showNewTaskModal = function(event) {
+        $mdDialog.show({
+            targetEvent: event,
+            controller: "dashboardCtrl",
+            resolve: {
+                myTasks: function(taskService) {
+                    return taskService.myTask().$promise;
+                },
+                myMessages: function(messageService) {
+                    return messageService.myMessages().$promise;
+                },
+                myFiles: function(fileService) {
+                    return fileService.myFiles().$promise;
+                }
+            },
+            templateUrl: 'app/modules/dashboard/partials/project-task-new.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: false
+        });
+    };
+
+    $scope.minDate = new Date();
+    $scope.createNewTask = function(form) {
+        if (form.$valid) {
+            $scope.task.members = _.filter($scope.projectMembers, {select: true});
+            $scope.task.type = "task-project";
+            if ($scope.task.members.length > 0) {
+                taskService.create({id: $scope.selectedProjectId}, $scope.task).$promise.then(function(res) {
+                    $scope.closeModal();
+                    $scope.showToast("New Task Has Been Created Successfully.");
+                    
+                    //Track New Task
+                    mixpanel.identify($rootScope.currentUser._id);
+                    mixpanel.track("New Task Created");
+                    
+                    $state.go("project.tasks.detail", {id: res.project, taskId: res._id});
+                }, function(err) {$scope.showToast("There Has Been An Error...");});
+            } else {
+                $scope.showToast("Please Select At Least 1 Assignee...");
+                return false;
+            }
+        } else {
+            $scope.showToast("There Has Been An Error...");
+            return false;
+        }
+    };
+
+    $scope.editTaskDetail = function(form) {
+        if (form.$valid) {
+            $scope.task.editType = "edit-task";
+            taskService.update({id: $scope.task._id}, $scope.task).$promise.then(function(res) {
+                $rootScope.dashboardEditTask = null;
+                $scope.showToast("Task Has Been Updated Successfully.");
+                $scope.closeModal();
+            }, function(err) {
+                $scope.showToast("There Has Been An Error...");
+                delete task.editType;
+            });
+        } else {
+            $scope.showToast("There Has Been An Error...");
+            return;
+        }
+    };
+
+    // end task section
 	
     $scope.openLocation = function(item, type) {
         notificationService.read({_id : item._id}).$promise.then(function() {

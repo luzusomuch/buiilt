@@ -11,6 +11,14 @@ var _ = require('lodash');
 var async = require('async');
 var EventBus = require('../../components/EventBus');
 
+exports.markItemsAsRead = function(req, res) {
+    var id= new require('mongoose').Types.ObjectId(req.params.id);
+    Notification.update({'element._id': id},{unread : false},{multi : true},function(err) {
+        if (err) {return res.send(500);}
+        return res.send(200);
+    });
+};
+
 /**
  * Get single notification
  * @param req

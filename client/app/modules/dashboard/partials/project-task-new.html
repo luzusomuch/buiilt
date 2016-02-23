@@ -1,0 +1,49 @@
+<md-dialog aria-label="Create a New Task" flex="70">
+    <form ng-submit="createNewTask(form)" name="form">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Create a New Task</h2>
+            </div>
+        </md-toolbar>
+        
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column">
+
+                <div flex layout="row" layout-align="center center" class="tagcloud-selection" layout-wrap>
+                    <span ng-repeat="project in projects" ng-class="{'selected-tag': project.select, 'available-tag': !project.select}" ng-click="selectProject($index)">{{project.name}}</span>
+                </div>
+                
+                <div layout="column">
+                    <p class="md-body-2">Provide a description for the task:</p>
+                    <div layout="row">
+                        <md-input-container flex="66" flex-offset="15">
+                            <label>Task Description</label>
+                            <textarea ng-model="task.description" name="description" md-maxlength="300" required rows="3" columns="1"></textarea>
+                        </md-input-container>
+                    </div>
+                </div>
+                
+                    
+                <div layout="column">
+                    <p class="md-body-2">Specify a due date for the task:</p>
+                    <div layout="row" layout-align="center center" class="tagcloud-selection">
+                        <md-datepicker ng-model="task.dateEnd" md-min-date="minDate" md-placeholder="Enter Due Date"></md-datepicker>
+                    </div>
+                </div>
+                
+                <div layout="column">
+                    <p class="md-body-2">Assign at least one team member:</p>
+                    <div layout="row" layout-align="center center" class="tagcloud-selection" layout-wrap>
+                        <span ng-click="selectMember($index)" ng-class="{'available-tag':!member.select, 'selected-tag': member.select}" ng-repeat="member in projectMembers">{{(member._id) ? member.name : member.email}}<md-icon ng-show="!member._id" class="material-icons non-user-chip cursor-help"><md-tooltip>Task will be sent via email to this Team Member</md-tooltip>mail_outline</md-icon></span>
+                    </div>
+                </div>
+                
+            </div>
+        </md-dialog-content>
+        
+        <md-dialog-actions>
+            <md-button ng-click="closeModal()">Cancel</md-button>
+            <md-button type="submit" class="md-primary">Create Task</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

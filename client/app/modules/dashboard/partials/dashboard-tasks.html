@@ -35,27 +35,53 @@
 
 <md-list ng-cloak class="main-page-content">
 
-	<div ng-repeat="task in myTasks | filter: searchTask track by $index" ui-sref="project.tasks.detail({id: task.project._id, taskId: task._id})">
-		<md-list-item class="md-2-line" md-ink-ripple>
+	<div ng-repeat="task in myTasks | filter: searchTask track by $index">
+		<md-list-item class="md-3-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
-		        <h3>{{ task.description }}</h3>
-		        <p ng-show="task.element.notificationType=='task-assign'">{{task.element.fromUser.name}} has assigned you this task.</p>
-		        <p ng-show="task.element.notificationType=='task-completed'">{{task.element.fromUser.name}} has marked this task as complete.</p>
-		        <p ng-show="task.element.notificationType=='task-reopened'">{{task.element.fromUser.name}} has marked this task as incomplete.</p>
-		        <p ng-show="task.element.notificationType=='task-revoke'">{{task.element.fromUser.name}} has removed you from this task.</p>
+		        <h3 ui-sref="project.tasks.detail({id: task.project._id, taskId: task._id})">{{ task.description }}({{task.element.notifications.length}})</h3>
+		        <div layout="row">
+		        	<div layout="row" flex="70">
+		        		<div flex="30">
+		        			<p>Due date: {{(task.dueDate) ? task.dueDate : task.dateEnd | date: 'MM/dd/yyyy'}}</p>
+		        		</div>
+		        		<div flex="70">
+		        			<div layout="row" class="tagcloud-selection" layout-wrap>
+		        				Assignees: <span class="selected-tag" ng-repeat="member in task.members">{{(member._id==currentUser._id) ? "me" : member.name}}</span> <span class="available-tag" ng-repeat="email in notMembers">{{email}}</span>
+		        			</div>
+		        		</div>
+		        	</div>
+		        	<div flex="30">
+		        		<md-button ng-show="task.owner._id==currentUser._id" class="md-primary" ng-click="showEditTaskModal($event, task)">Edit</md-button>
+		        		<md-button ng-show="!task.completed" class="md-primary" ng-click="markComplete(task)">Mark complete</md-button>
+		        		<md-button ng-show="task.completed && task.owner._id==currentUser._id" class="md-primary" ng-click="markRead(task)">Mark read</md-button>
+		        	</div>
+		        </div>
+		        <p>
+		        	<span ng-repeat="notification in task.element.limitNotifications">
+		        		<span ng-show="notification.type=='task-assign'">
+		        			This task was assigned to <span ng-repeat="member in task.members">{{(member._id==currentUser._id) ? "me" : member.name}}, </span> <span ng-repeat="email in notMembers">{{email}}, </span>.
+		        		</span>	
+		        		<span ng-show="notification.type=='task-completed'">
+		        			{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} has marked this task as complete.
+		        		</span>
+		        		<span ng-show="notification.type=='task-reopened'">
+		        			{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} has marked this task as incomplete.
+		        		</span>
+		        	</span> <span ng-show="{{task.element.notifications.length - task.element.limitNotifications.length > 0}}">... +({{task.element.notifications.length - task.element.limitNotifications.length}}) More</span>
+		        </p>
 	        </div>
 		</md-list-item>
 		<md-divider></md-divider>
 	</div>
+</div>
 
-	<!-- <div ng-show="search" ng-repeat="task in results track by $index" ui-sref="project.tasks.detail">
-		<md-list-item class="md-2-line" md-ink-ripple>
-			<div class="md-list-item-text" layout="column">
-		          <h3>{{ task.name }}</h3>
-		          <p>{{ task.description }}</p>
-	        </div>
-		</md-list-item>
-		<md-divider></md-divider>
-	</div> -->
-	
+<div>
+	<md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-list" ng-show="!isArchive">
+	  	<md-fab-trigger>
+  	      	<md-button aria-label="Add a New Task to this Project" class="md-fab md-primary" ng-click="showNewTaskModal($event)">
+			  	<md-tooltip md-direction="left">Add a New Task</md-tooltip>
+		      	<md-icon class="material-icons" >add</md-icon>
+  	      	</md-button>
+      	</md-fab-trigger>
+  	</md-fab-speed-dial>
 </div>
