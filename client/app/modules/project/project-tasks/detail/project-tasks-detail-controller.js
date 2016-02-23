@@ -1,5 +1,8 @@
-angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootScope, $scope, $timeout, task, taskService, $mdToast, $mdDialog, peopleService, $stateParams, messageService, $state, people, uploadService, socket) {
-	$scope.task = task;
+angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootScope, $scope, $timeout, task, taskService, $mdToast, $mdDialog, peopleService, $stateParams, messageService, $state, people, uploadService, socket, notificationService) {
+	notificationService.markItemsAsRead({id: $stateParams.taskId}).$promise.then(function() {
+        $rootScope.$broadcast("UpdateCountNumber", "task");
+    });
+    $scope.task = task;
     $scope.people = people;
     $scope.task.dateEnd = new Date($scope.task.dateEnd);
     $scope.minDate = new Date();
@@ -272,5 +275,6 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
     socket.emit("join", task._id);
     socket.on("task:update", function(data) {
         $scope.task = data;
+        notificationService.markItemsAsRead({id: $stateParams.taskId}).$promise.then();
     });
 });

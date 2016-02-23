@@ -11,6 +11,11 @@ angular.module('buiiltApp').directive('projectSidenav', function(){
             $scope.success = {};
             $scope.$state = $state;
             $scope.showTeamMenu = false;
+
+            $rootScope.$on("UpdateCountNumber", function(event, type) {
+                if (type==="task") 
+                    $scope.project.element.totalTasks = 0;
+            });
         }
     };
 });
