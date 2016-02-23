@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $scope, $timeout, $q, $state, $mdDialog, $mdToast, projectService, myTasks, myMessages, myFiles, notificationService, taskService, peopleService) {
+angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $scope, $timeout, $q, $state, $mdDialog, $mdToast, projectService, myTasks, myMessages, myFiles, notificationService, taskService, peopleService, messageService) {
 	$rootScope.title = "Dashboard";
 	$scope.myTasks = myTasks;
 	$scope.myMessages = myMessages;
@@ -199,8 +199,77 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             return;
         }
     };
-
     // end task section
+
+    // start message section
+    $scope.message = {};
+    if ($rootScope.selectedMessage) {
+        $scope.thread = $rootScope.selectedMessage;
+    }
+    $scope.showReplyModal = function(event, message) {
+        $rootScope.selectedMessage = message;
+        $mdDialog.show({
+            targetEvent: event,
+            controller: "dashboardCtrl",
+            resolve: {
+                myTasks: function(taskService) {
+                    return taskService.myTask().$promise;
+                },
+                myMessages: function(messageService) {
+                    return messageService.myMessages().$promise;
+                },
+                myFiles: function(fileService) {
+                    return fileService.myFiles().$promise;
+                }
+            },
+            templateUrl: 'app/modules/dashboard/partials/reply-message.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: false
+        });
+    };
+
+    $scope.viewReplyModal = function(event, message) {
+        $rootScope.selectedMessage = message;
+        $mdDialog.show({
+            targetEvent: event,
+            controller: "dashboardCtrl",
+            resolve: {
+                myTasks: function(taskService) {
+                    return taskService.myTask().$promise;
+                },
+                myMessages: function(messageService) {
+                    return messageService.myMessages().$promise;
+                },
+                myFiles: function(fileService) {
+                    return fileService.myFiles().$promise;
+                }
+            },
+            templateUrl: 'app/modules/dashboard/partials/view-reply.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: false
+        });
+    };
+
+    $scope.sendMessage = function() {
+        $scope.message.text = $scope.message.text.trim();
+        if ($scope.message.text.length===0 || $scope.message.text === '') {
+            $scope.showToast("Please check your message");
+            return;
+        } else {
+            messageService.sendMessage({id: $scope.thread._id}, $scope.message).$promise.then(function(res) {
+                $scope.closeModal();
+                $scope.showToast("Your Message Has Been Sent Successfully.");
+                
+                //Track Reply Sent
+                mixpanel.identify($rootScope.currentUser._id);
+                mixpanel.track("Reply Sent");
+                
+                $rootScope.selectedMessage = res;
+            }, function(err) {$scope.showToast("There Has Been An Error...");});
+        }
+    };
+
+    // end message section
 	
     $scope.openLocation = function(item, type) {
         notificationService.read({_id : item._id}).$promise.then(function() {

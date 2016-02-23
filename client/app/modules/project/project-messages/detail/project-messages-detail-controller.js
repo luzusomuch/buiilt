@@ -1,4 +1,7 @@
-angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q, $rootScope, $scope, $timeout, $stateParams, messageService, $mdToast, $mdDialog, $state, thread, peopleService, taskService, uploadService, people, clipboard, socket) {
+angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q, $rootScope, $scope, $timeout, $stateParams, messageService, $mdToast, $mdDialog, $state, thread, peopleService, taskService, uploadService, people, clipboard, socket, notificationService) {
+    notificationService.markItemsAsRead({id: $stateParams.messageId}).$promise.then(function() {
+        $rootScope.$broadcast("UpdateCountNumber", "message");
+    });
     $scope.error = {};
     $scope.thread = thread;
     $scope.people = people;
@@ -44,6 +47,7 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
 
     socket.on("thread:update", function(data) {
         $scope.thread = data;
+        notificationService.markItemsAsRead({id: $stateParams.messageId}).$promise.then();
         threadInitial();
     });
 

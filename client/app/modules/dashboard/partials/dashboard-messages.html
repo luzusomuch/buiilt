@@ -21,6 +21,13 @@
 				<input type="text" name="messageReplies" ng-model="reply">
 			</md-input-container>
 		</div>
+
+		<div layout="row">
+			<p>Projects:</p>
+			<div flex layout="row" layout-align="center center" class="tagcloud-selection" layout-wrap>
+				<span ng-repeat="tag in projects" ng-class="{'available-tag': !tag.select, 'selected-tag': tag.select}" ng-click="selectFilterTag(	$index, 'project')">{{tag.name}}</span>
+			</div>
+		</div>
 		
 	</div>
 	
@@ -28,14 +35,32 @@
 
 <md-list ng-cloak class="main-page-content">
 
-	<div ng-repeat="thread in myMessages | filter: searchThread track by $index" ng-click="openLocation(thread, 'thread')">
-		<md-list-item class="md-2-line" md-ink-ripple>
+	<div ng-repeat="thread in myMessages | filter: searchThread track by $index">
+		<md-list-item class="md-3-line" md-ink-ripple>
 			<div class="md-list-item-text" layout="column">
-          		<h3>{{ thread.name }}</h3>
-      			<p ng-show="thread.element.notificationType=='thread-assign'">{{thread.element.fromUser.name}} has assigned you to this thread.</p>
-      			<p ng-show="thread.element.notificationType=='thread-message'">{{thread.element.fromUser.name}} has sent a reply to this thread.</p>
+          		<h3 ng-click="openLocation(thread, 'thread')">{{ thread.name }}({{thread.element.notifications.length}})</h3>
+          		<div layout="row">
+          			<div flex="70" layout="row" class="tagcloud-selection" layout-wrap>
+          				Assignees: <span class="selected-tag" ng-repeat="member in thread.members">{{(member._id==currentUser._id) ? "me" : member.name}}</span> <span class="available-tag" ng-repeat="email in thread.notMembers">{{email}}</span>
+          			</div>
+          			<div>
+		        		<md-button class="md-primary" ng-click="showReplyModal($event, thread)">Reply</md-button>
+		        		<md-button class="md-primary" ng-click="viewReplyModal($event, thread)">View Reply</md-button>
+          			</div>
+          		</div>
+          		<p>
+          			<span ng-repeat="notification in thread.element.limitNotifications">
+          				<span ng-show="notification.type=='thread-assign'">
+          					{{(notification.fromUser._id==currentUser._id) ? "Me" : notification.fromUser.name}} has assigned <span ng-repeat="member in thread.members">{{(member._id==currentUser._id) ? "me" : member.name}}, </span>
+							<span ng-repeat="email in thread.notMembers">{{email}}, </span>
+          				</span>
+	          			<span ng-show="notification.type=='thread-message'">
+	          				{{(notification.fromUser._id==currentUser._id) ? "Me" : notification.fromUser.name}} has sent a reply: "{{notification.message}}".
+	          			</span>
+          			</span><span ng-show="{{thread.element.notifications.length - thread.element.limitNotifications.length > 0}}">... +({{thread.element.notifications.length - thread.element.limitNotifications.length}}) More</span>
+          		</p>
 	        </div>
 		</md-list-item>
 		<md-divider></md-divider>
 	</div>
-</div>
+</md-list>

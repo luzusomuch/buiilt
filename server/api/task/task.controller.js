@@ -318,17 +318,19 @@ exports.myTask = function(req,res) {
                 task.element.limitNotifications = [];
                 var index = 1;
                 _.each(notifications, function(notification) {
-                    task.element.notifications.push({
-                        fromUser: notification.fromUser,
-                        type: notification.type
-                    });
-                    if (index < 4) {
-                       task.element.limitNotifications.push({
+                    if (notification.element._id.toString()===task._id.toString()) {
+                        task.element.notifications.push({
                             fromUser: notification.fromUser,
                             type: notification.type
-                        }); 
+                        });
+                        if (index < 4) {
+                           task.element.limitNotifications.push({
+                                fromUser: notification.fromUser,
+                                type: notification.type
+                            }); 
+                        }
+                        index += 1;
                     }
-                    index += 1;
                 });
             });
             return res.send(200, uniqueTasksList);

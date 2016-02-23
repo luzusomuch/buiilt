@@ -53,7 +53,7 @@
 		        		</div>
 		        		<div flex="70">
 		        			<div layout="row" class="tagcloud-selection" layout-wrap>
-		        				Assignees: <span class="selected-tag" ng-repeat="member in task.members">{{(member._id==currentUser._id) ? "me" : member.name}}</span> <span class="available-tag" ng-repeat="email in notMembers">{{email}}</span>
+		        				Assignees: <span class="selected-tag" ng-repeat="member in task.members">{{(member._id==currentUser._id) ? "me" : member.name}}</span> <span class="available-tag" ng-repeat="email in task.notMembers">{{email}}</span>
 		        			</div>
 		        		</div>
 		        	</div>
@@ -80,7 +80,7 @@
 		</md-list-item>
 		<md-divider></md-divider>
 	</div>
-</div>
+</md-list>
 
 <div>
 	<md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-list" ng-show="!isArchive">

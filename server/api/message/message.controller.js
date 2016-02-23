@@ -316,28 +316,59 @@ exports.getOne = function(req,res) {
 
 exports.myThread = function(req,res) {
     var user = req.user;
-    var result = [];
+    var notifications = [];
+    var threads = [];
     var query = Notification.find(
         {owner : user._id,unread : true, referenceTo : 'thread'}
     );
     query.populate("fromUser", "_id email name").exec(function(err, notifications) {
         if (err) {return res.send(500,err);}
+        notifications = notifications;
         async.each(notifications,function(notification,callback) {
             Thread.findById(notification.element._id)
             .populate('messages.user','-hashedPassword -salt')
             .populate('members','-hashedPassword -salt')
             .exec(function(err,thread) {
                 if (err || !thread) {return callback(err);}
-                Notification.where({owner : user._id,'element._id' : thread._id,referenceTo : 'thread',unread : true}).count(function(err,count) {
-                    thread.__v = count;
-                    thread.element.fromUser = notification.fromUser;
-                    thread.element.notificationType = notification.type;
-                    result.push(thread);
+                else {
+                    threads.push(thread);
                     callback();
+                }
+            });
+        },function(err) {
+            if (err) {return res.send(500,err);}
+            var uniqueThreadsList = _.map(_.groupBy(threads,function(doc){
+                return doc._id;
+            }),function(grouped){
+              return grouped[0];
+            });
+            _.each(uniqueThreadsList, function(thread) {
+                thread.element.notifications = [];
+                thread.element.limitNotifications = [];
+                var index = 1;
+                _.each(notifications, function(notification) {
+                    if (notification.element._id.toString()===thread._id.toString()) {
+                        var message;
+                        if (notification.type==="thread-message") {
+                            message = _.last(notification.element.messages).text;
+                        }
+                        thread.element.notifications.push({
+                            fromUser: notification.fromUser,
+                            type: notification.type,
+                            message: message
+                        });
+                        if (index < 4) {
+                           thread.element.limitNotifications.push({
+                                fromUser: notification.fromUser,
+                                type: notification.type,
+                                message: message
+                            }); 
+                        }
+                        index += 1;
+                    }
                 });
             });
-        },function() {
-            return res.json(result);
+            return res.send(200, uniqueThreadsList);
         });
     });
 };
