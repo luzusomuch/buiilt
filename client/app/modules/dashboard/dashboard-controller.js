@@ -117,7 +117,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
 
     $scope.markRead = function(item) {
         notificationService.markItemsAsRead({id: item._id}).$promise.then(function() {
-            $scope.showToast("Successfully");
+            $scope.showToast("You Have Successfully Marked This Read.");
             item.element.limitNotifications = [];
             item.element.notifications = [];
         }, function(err){$scope.showToast("Error");});
@@ -492,7 +492,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     }
     $scope.acknowledgement = function() {
         fileService.acknowledgement({id: $scope.file._id, activityId: $scope.latestActivity._id}).$promise.then(function(res) {
-            $scope.showToast("Sent acknowledgement to the owner successfully");
+            $scope.showToast("Acknowledgement Has Been Sent Successfully.");
             $scope.closeModal();
             notificationService.markItemsAsRead({id: $scope.file._id}).$promise.then(function() {
                 $rootScope.$broadcast("DashboardSidenav-UpdateNumber", {type: $scope.file.element.type, number: 1});
