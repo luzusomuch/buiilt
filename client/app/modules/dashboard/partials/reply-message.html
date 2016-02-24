@@ -11,8 +11,7 @@
                 <md-list>
                     <md-list-item ng-repeat="message in selectedThread.messages">
                         <div class="md-list-item-text">
-                            <h3>{{message.text}}</h3>
-                            <p>{{(message.user._id==currentUser._id) ? "You" : message.user.name}} has sent this message at {{message.createAt | date: 'MM/dd/yyyy hh:mm a' }}</p>
+                            <p class="md-body-1">{{message.text}} - <strong>{{(message.user._id==currentUser._id) ? "You" : message.user.name}}</strong></p>
                         </div>
                         <md-divider></md-divider>
                     </md-list-item>
