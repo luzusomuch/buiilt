@@ -111,6 +111,7 @@ FileSchema.virtual('fileUrl')
 FileSchema.pre('save', function(next) {
   this.wasNew = this.isNew;
   this.editType = this._editType;
+  this.editUser = this._editUser;
   if (!this.isNew){
     this.createdAt = new Date();
   }
@@ -120,6 +121,7 @@ FileSchema.pre('save', function(next) {
 FileSchema.post('save', function(doc){
   var evtName = this.wasNew ? 'File.Inserted' : 'File.Updated';
   doc.editType = this._editType;
+  doc.editUser = this._editUser;
   EventBus.emit(evtName, doc);
 });
 

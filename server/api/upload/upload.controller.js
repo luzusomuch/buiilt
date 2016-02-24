@@ -183,6 +183,7 @@ exports.uploadReversion = function(req, res) {
                 
                 file.activities.push(activity);
                 file._editType = "uploadReversion";
+                file._editUser = req.user;
                 file.save(function(err) {
                     if (err) {return res.send(500,err);}
                     File.populate(file, [

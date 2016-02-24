@@ -1,6 +1,6 @@
 angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q, $rootScope, $scope, $timeout, $stateParams, messageService, $mdToast, $mdDialog, $state, thread, peopleService, taskService, uploadService, people, clipboard, socket, notificationService) {
     notificationService.markItemsAsRead({id: $stateParams.messageId}).$promise.then(function() {
-        $rootScope.$broadcast("UpdateCountNumber", "message");
+        $rootScope.$broadcast("UpdateCountNumber", {type: "message", number: thread.__v});
     });
     $scope.error = {};
     $scope.thread = thread;

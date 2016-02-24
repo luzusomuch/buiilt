@@ -12,15 +12,15 @@ angular.module('buiiltApp').directive('projectSidenav', function(){
             $scope.$state = $state;
             $scope.showTeamMenu = false;
 
-            $rootScope.$on("UpdateCountNumber", function(event, type) {
-                if (type==="task") 
-                    $scope.project.element.totalTasks = 0;
-                else if (type==="message") {
-                    $scope.project.element.totalMessages = 0;
-                } else if (type==="file") {
-                    $scope.project.element.totalFiles = 0;
-                } else if (type==="document") {
-                    $scope.project.element.totalDocuments = 0;
+            $rootScope.$on("UpdateCountNumber", function(event, data) {
+                if (data.type==="task") 
+                    $scope.project.element.totalTasks = $scope.project.element.totalTasks - data.number;
+                else if (data.type==="message") {
+                    $scope.project.element.totalMessages = $scope.project.element.totalMessages - data.number;
+                } else if (data.type==="file") {
+                    $scope.project.element.totalFiles = $scope.project.element.totalFiles - data.number;
+                } else if (data.type==="document") {
+                    $scope.project.element.totalDocuments = $scope.project.element.totalDocuments - data.number;
                 }
             });
         }

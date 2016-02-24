@@ -1,5 +1,8 @@
-angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', function($rootScope, $scope, document, uploadService, $mdDialog, $mdToast, $stateParams, fileService, socket) {
+angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', function($rootScope, $scope, document, uploadService, $mdDialog, $mdToast, $stateParams, fileService, socket, notificationService) {
     $scope.document = document;
+    notificationService.markItemsAsRead({id: $stateParams.documentId}).$promise.then(function() {
+        $rootScope.$broadcast("UpdateCountNumber", {type: "document", number: document.__v});
+    });
 
     function checkAcknowLedgement(document) {
         _.each(document.activities, function(activity) {
@@ -27,6 +30,7 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
     socket.on("document:update", function(data) {
         $scope.document = data;
         checkAcknowLedgement($scope.document);
+        notificationService.markItemsAsRead({id: $stateParams.documentId}).$promise.then();
     });
 
     $scope.acknowledgement = function(activity) {

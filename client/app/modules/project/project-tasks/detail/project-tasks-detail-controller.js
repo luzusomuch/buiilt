@@ -1,6 +1,6 @@
 angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootScope, $scope, $timeout, task, taskService, $mdToast, $mdDialog, peopleService, $stateParams, messageService, $state, people, uploadService, socket, notificationService) {
 	notificationService.markItemsAsRead({id: $stateParams.taskId}).$promise.then(function() {
-        $rootScope.$broadcast("UpdateCountNumber", "task");
+        $rootScope.$broadcast("UpdateCountNumber", {type: "task", number: task.__v});
     });
     $scope.task = task;
     $scope.people = people;

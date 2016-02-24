@@ -127,10 +127,14 @@ exports.get = function(req, res) {
     .exec(function(err, task){
         if (err) {return res.send(500,err);}
         if (!task) {return res.send(404);}
-        if (req.query.isAdmin && req.user.role==="admin") {
-            return res.send(200, task);
-        }
-        RelatedItem.responseWithRelated("task", task, req.user, res);
+        Notification.find({owner: req.user._id, unread: true, "element._id": task._id}, function(err, notifications) {
+            if (err) {return res.send(500,err);}
+            task.__v = notifications.length;
+            if (req.query.isAdmin && req.user.role==="admin") {
+                return res.send(200, task);
+            }
+            RelatedItem.responseWithRelated("task", task, req.user, res);
+        });
     });
 };
 

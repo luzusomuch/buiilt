@@ -51,7 +51,7 @@ exports.getFilesByProject = function(req, res) {
     .populate("members", "_id name email").exec(function(err, files) {
         if (err) {return res.send(500,err);}
         async.each(files, function(file, cb) {
-            Notification.find({owner: userId, "element._id": file._id, referenceTo: req.params.type})
+            Notification.find({unread: true, owner: userId, "element._id": file._id, referenceTo: req.params.type})
             .populate("fromUser", "_id name email").exec(function(err, notifications) {
                 if (err) {cb(err);}
                 else {
@@ -80,7 +80,11 @@ exports.show = function(req, res) {
     .exec(function(err, file) {
         if (err) 
             return res.send(500, err);
-        RelatedItem.responseWithRelated("file", file, req.user, res);
+        Notification.find({"element._id": file._id, owner: req.user._id, unread: true}, function(err, notifications) {
+            if (err) {return res.send(500,err);}
+            file.__v = notifications.length;
+            RelatedItem.responseWithRelated("file", file, req.user, res);
+        });
     });
 };
 
@@ -189,6 +193,8 @@ exports.acknowledgement = function(req, res) {
                 } else {
                     file.activities[currentActivityIndex].acknowledgeUsers.push({_id: req.user._id, isAcknow: true});
                 }
+                file._editType = "sendAcknowledge";
+                file._editUser = req.user;
                 file.save(function(err) {
                     if (err) {return res.send(500,err);}
                     populateFile(file, res);
@@ -463,22 +469,49 @@ exports.getInProject = function(req, res) {
 
 exports.myFiles = function(req, res) {
     var result = [];
+    var notifications = [];
+    var files = [];
     Notification.find({owner: req.user._id, unread: true, $or:[{referenceTo: 'file'}, {referenceTo: 'document'}]})
     .populate("fromUser", "_id name email").exec(function(err, notifications) {
         if (err) {return res.send(500,err);}
+        notifications = notifications;
         async.each(notifications, function(notification, cb) {
             File.findById(notification.element._id).populate("members", "_id name email")
             .exec(function(err, file) {
                 if (err || !file) {cb();}
                 else {
-                    file.element.fromUser = notification.fromUser;
-                    file.element.notificationType = notification.type;
-                    result.push(file);
+                    files.push(file);
                     cb();
                 }
             });
-        }, function() {
-            return res.send(200,result);
+        }, function(err) {
+            if (err) {return res.send(500,err);}
+            var uniqueFilesList = _.map(_.groupBy(files,function(doc){
+                return doc._id;
+            }),function(grouped){
+              return grouped[0];
+            });
+            _.each(uniqueFilesList, function(file) {
+                file.element.notifications = [];
+                file.element.limitNotifications = [];
+                var index = 1;
+                _.each(notifications, function(notification) {
+                    if (notification.element._id.toString()===file._id.toString()) {
+                        file.element.notifications.push({
+                            fromUser: notification.fromUser,
+                            type: notification.type
+                        });
+                        if (index < 4) {
+                           file.element.limitNotifications.push({
+                                fromUser: notification.fromUser,
+                                type: notification.type
+                            }); 
+                        }
+                        index += 1;
+                    }
+                });
+            });
+            return res.send(200, uniqueFilesList);
         });
     });
 };

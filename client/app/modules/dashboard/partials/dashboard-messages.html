@@ -51,11 +51,11 @@
           		<p>
           			<span ng-repeat="notification in thread.element.limitNotifications">
           				<span ng-show="notification.type=='thread-assign'">
-          					{{(notification.fromUser._id==currentUser._id) ? "Me" : notification.fromUser.name}} has assigned <span ng-repeat="member in thread.members">{{(member._id==currentUser._id) ? "me" : member.name}}, </span>
+          					{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} has assigned <span ng-repeat="member in thread.members">{{(member._id==currentUser._id) ? "me" : member.name}}, </span>
 							<span ng-repeat="email in thread.notMembers">{{email}}, </span>
           				</span>
 	          			<span ng-show="notification.type=='thread-message'">
-	          				{{(notification.fromUser._id==currentUser._id) ? "Me" : notification.fromUser.name}} has sent a reply: "{{notification.message}}".
+	          				{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} has sent a reply: "{{notification.message}}".
 	          			</span>
           			</span><span ng-show="{{thread.element.notifications.length - thread.element.limitNotifications.length > 0}}">... +({{thread.element.notifications.length - thread.element.limitNotifications.length}}) More</span>
           		</p>

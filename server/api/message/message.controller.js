@@ -292,7 +292,11 @@ exports.getById = function(req, res){
         if (err) {return res.send(500,err);}
         else if (!thread) {return res.send(404);}
         else {
-            RelatedItem.responseWithRelated("thread", thread, req.user, res);
+            Notification.find({owner: req.user._id, unread: true, "element._id": thread._id}, function(err, notifications) {
+                if (err) {return res.send(500,err);}
+                thread.__v = notifications.length;
+                RelatedItem.responseWithRelated("thread", thread, req.user, res);
+            });
         }
     });
 };

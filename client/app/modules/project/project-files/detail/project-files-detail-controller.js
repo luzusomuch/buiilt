@@ -1,5 +1,8 @@
-angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope, $rootScope, file, $mdDialog, uploadService, fileService, $mdToast, peopleService, $stateParams, messageService, taskService, $state, people, socket) {
-	$scope.file = file;
+angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope, $rootScope, file, $mdDialog, uploadService, fileService, $mdToast, peopleService, $stateParams, messageService, taskService, $state, people, socket, notificationService) {
+    $scope.file = file;
+    notificationService.markItemsAsRead({id: $stateParams.fileId}).$promise.then(function() {
+        $rootScope.$broadcast("UpdateCountNumber", {type: "file", number: file.__v});
+    });
     function checkAcknowLedgement(file) {
         _.each(file.activities, function(activity) {
             if (activity.type === "upload-reversion" || activity.type === "upload-file") {
@@ -30,6 +33,7 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
     socket.on("file:update", function(data) {
         $scope.file = data;
         checkAcknowLedgement($scope.file);
+        notificationService.markItemsAsRead({id: $stateParams.fileId}).$promise.then();
     });
 
     $scope.acknowledgement = function(activity) {

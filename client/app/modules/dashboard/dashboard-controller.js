@@ -1,9 +1,10 @@
-angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $scope, $timeout, $q, $state, $mdDialog, $mdToast, projectService, myTasks, myMessages, myFiles, notificationService, taskService, peopleService, messageService) {
+angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $scope, $timeout, $q, $state, $mdDialog, $mdToast, projectService, myTasks, myMessages, myFiles, notificationService, taskService, peopleService, messageService, fileService) {
 	$rootScope.title = "Dashboard";
 	$scope.myTasks = myTasks;
 	$scope.myMessages = myMessages;
 	$scope.myFiles = myFiles;
     $scope.projects = $rootScope.projects;
+    $scope.currentUser = $rootScope.currentUser;
 
     $scope.showToast = function(value) {
         $mdToast.show($mdToast.simple().textContent(value).position('bottom','left').hideDelay(3000));
@@ -333,8 +334,56 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             $scope.showToast("Error");
         }
     };
-
     // end message section
+
+    // start file section
+    $scope.showViewFileModal = function(event, file) {
+        $rootScope.selectedFile = file;
+        $mdDialog.show({
+            targetEvent: event,
+            controller: "dashboardCtrl",
+            resolve: {
+                myTasks: function(taskService) {
+                    return taskService.myTask().$promise;
+                },
+                myMessages: function(messageService) {
+                    return messageService.myMessages().$promise;
+                },
+                myFiles: function(fileService) {
+                    return fileService.myFiles().$promise;
+                }
+            },
+            templateUrl: 'app/modules/dashboard/partials/view-file.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: false
+        });
+    };
+
+    if ($rootScope.selectedFile) {
+        $scope.file = $rootScope.selectedFile;
+        $scope.latestActivity = {};
+        _.each($scope.file.activities, function(activity) {
+            if (activity.type==="upload-file" || activity.type==="upload-reversion") {
+                $scope.latestActivity = activity;
+            }
+        });
+        $scope.latestActivity.isAcknowledge = false;
+        if (_.findIndex($scope.latestActivity.acknowledgeUsers, function(user) {
+            if (user._id && user.isAcknow) {
+                return user._id.toString()===$scope.currentUser._id.toString();
+            }
+        })!==-1) {
+            $scope.latestActivity.isAcknowledge = true;
+        }
+    }
+    $scope.acknowledgement = function() {
+        fileService.acknowledgement({id: $scope.file._id, activityId: $scope.latestActivity._id}).$promise.then(function(res) {
+            $scope.showToast("Sent acknowledgement to the owner successfully");
+        }, function(err) {
+            $scope.showToast("Error");
+        });
+    };
+    // end file section
 	
     $scope.openLocation = function(item, type) {
         notificationService.read({_id : item._id}).$promise.then(function() {
@@ -645,6 +694,13 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                 }
             })
             return found;
+        } else if ($scope.projectsFilter.length > 0) {
+            _.each($scope.projectsFilter, function(project) {
+                if (project.toString()===file.project.toString()) {
+                    found = true;
+                }
+            });
+            return found;
         } else
             return true;
     };
@@ -674,6 +730,13 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         } else if ($scope.filterTags.length > 0) {
             _.each($scope.filterTags, function(tag) {
                 if (_.indexOf(document.tags, tag) !== -1) {
+                    found = true;
+                }
+            });
+            return found;
+        } else if ($scope.projectsFilter.length > 0) {
+            _.each($scope.projectsFilter, function(project) {
+                if (project.toString()===document.project.toString()) {
                     found = true;
                 }
             });

@@ -67,7 +67,7 @@ EventBus.onSeries('File.Updated', function(file, next) {
                             if (tender.hasSelect && tender.tenderers[0]._id && tender.tenderers[0]._id.toString()!==file.owner.toString()) {
                                 var params = {
                                     owners : [tender.tenderers[0]._id],
-                                    fromUser : file.owner,
+                                    fromUser : file.editUser._id,
                                     element : file,
                                     referenceTo : 'document',
                                     type : 'document-upload-reversion'
@@ -85,7 +85,7 @@ EventBus.onSeries('File.Updated', function(file, next) {
             if (file.members.length > 0) {
                 var params = {
                     owners : file.members,
-                    fromUser : file.owner,
+                    fromUser : file.editUser._id,
                     element : file,
                     referenceTo : file.element.type,
                     type : file.element.type+'-upload-reversion'
@@ -95,6 +95,50 @@ EventBus.onSeries('File.Updated', function(file, next) {
                 });
             } else
                 return next();
+        } else {
+            return next();
+        }
+    } else if (file.editType==="sendAcknowledge") {
+        if (file.element.type==="file" || file.element.type==="tender") {
+            if (file.members.length > 0) {
+                _.remove(file.members, file.editUser._id);
+                var params = {
+                    owners : file.members,
+                    fromUser : file.editUser._id,
+                    element : file,
+                    referenceTo : file.element.type,
+                    type : file.element.type+'-send-acknowledge'
+                };
+                NotificationHelper.create(params, function() {
+                    return next();
+                });
+            } else
+                return next();
+        } else if (file.element.type==="document") {
+            var roles = ["builders", "clients", "architects", "subcontractors", "consultants"];
+            People.findOne({project: file.project}, function(err, people) {
+                if (err || !people)
+                    return next();
+                else {
+                    async.each(roles, function(role, cb) {
+                        async.each(people[role], function(tender, callback) {
+                            if (tender.hasSelect && tender.tenderers[0]._id && tender.tenderers[0]._id.toString()!==file.owner.toString()) {
+                                var params = {
+                                    owners : [tender.tenderers[0]._id],
+                                    fromUser : file.editUser._id,
+                                    element : file,
+                                    referenceTo : 'document',
+                                    type : 'document-send-acknowledge'
+                                };
+                                NotificationHelper.create(params, callback);
+                            } else 
+                                callback();
+                        }, cb);
+                    }, function(){
+                        return next();
+                    });
+                }
+            });
         } else {
             return next();
         }
