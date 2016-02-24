@@ -476,7 +476,9 @@ exports.myFiles = function(req, res) {
         if (err) {return res.send(500,err);}
         notifications = notifications;
         async.each(notifications, function(notification, cb) {
-            File.findById(notification.element._id).populate("members", "_id name email")
+            File.findById(notification.element._id)
+            .populate("members", "_id name email")
+            .populate("project")
             .exec(function(err, file) {
                 if (err || !file) {cb();}
                 else {

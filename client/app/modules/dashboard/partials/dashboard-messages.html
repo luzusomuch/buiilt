@@ -28,7 +28,7 @@
 			<div ng-click="openLocation(thread, 'thread')" class="md-list-item-text">
 				
 				<h3 class="md-display-1" style="margin-top: 15px">
-					<strong>{{ thread.name }} ({{thread.element.notifications.length}})</strong> - Project Name
+					<strong>{{ thread.name }} ({{thread.element.notifications.length}})</strong> - {{thread.project.name}}
 				</h3>
 				
           		<p ng-repeat="notification in thread.element.limitNotifications track by $index" style="margin-top: 15px; margin-bottom: 15px">

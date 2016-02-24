@@ -35,7 +35,7 @@
 			<div ng-click="openLocation(file, 'file')" class="md-list-item-text">
 				
 				<h3 class="md-display-1" style="margin-top: 15px">
-					<strong>{{ file.name }} ({{file.element.notifications.length}})</strong> - Project Name | Tags: <span ng-repeat="tag in file.tags">{{tag}} </span>
+					<strong>{{ file.name }} ({{file.element.notifications.length}})</strong> - {{file.project.name}} | Tags: <span ng-repeat="tag in file.tags">{{tag}} </span>
 				</h3>
           		
 				<p ng-repeat="notification in file.element.limitNotifications track by $index"  style="margin-bottom: 15px; margin-top: 15px">

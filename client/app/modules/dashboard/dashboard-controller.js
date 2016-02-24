@@ -554,7 +554,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             return found;
         } else if ($scope.projectsFilter.length > 0) {
             _.each($scope.projectsFilter, function(project) {
-                if (project.toString()===thread.project.toString()) {
+                if (project._id.toString()===thread.project.toString()) {
                     found = true
                 }
             });
@@ -818,7 +818,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             return found;
         } else if ($scope.projectsFilter.length > 0) {
             _.each($scope.projectsFilter, function(project) {
-                if (project.toString()===file.project.toString()) {
+                if (project._id.toString()===file.project.toString()) {
                     found = true;
                 }
             });
@@ -858,7 +858,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             return found;
         } else if ($scope.projectsFilter.length > 0) {
             _.each($scope.projectsFilter, function(project) {
-                if (project.toString()===document.project.toString()) {
+                if (project._id.toString()===document.project.toString()) {
                     found = true;
                 }
             });

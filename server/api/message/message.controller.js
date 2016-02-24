@@ -373,6 +373,7 @@ exports.myThread = function(req,res) {
             Thread.findById(notification.element._id)
             .populate('messages.user','-hashedPassword -salt')
             .populate('members','-hashedPassword -salt')
+            .populate("project")
             .exec(function(err,thread) {
                 if (err || !thread) {return callback(err);}
                 else {
