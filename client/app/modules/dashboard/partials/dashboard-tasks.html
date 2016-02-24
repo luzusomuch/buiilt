@@ -1,40 +1,33 @@
 <div class="detail-header" layout-padding layout="column">
 	
-	<div layout="column" layout-padding>
+	<div layout="column">
 		
 		<div layout="row">
-			<md-input-container flex="50">
+			<div flex layout="row" layout-align="center center" class="tagcloud-selection-mini" layout-wrap>
+				<span ng-repeat="tag in projects" ng-class="{'available-tag': !tag.select, 'selected-tag': tag.select}" ng-click="selectFilterTag(	$index, 'project')">{{tag.name}}</span>
+			</div>
+		</div>
+		
+		<div layout="row">
+			<md-input-container flex="35">
 				<label for="">Task Description</label>
 				<input type="text" name="taskDescription" ng-model="description" md-autofocus>
 			</md-input-container>
 			
-			<div flex="50" layout="row" layout-align="center center">
+			<div flex="25" layout="row" layout-align="center center">
 				<span class="md-body-2" style="margin-top: -2vh">Assigned:</span>
-				<div class="tagcloud" style="margin-top: -2vh; margin-left: 2vh">
+				<div class="tagcloud-selection-mini" style="margin-top: -2vh; margin-left: 2vh">
 					<span ng-repeat="tag in assignStatus" ng-class="{'available-tag': !tag.select, 'selected-tag': tag.select}" ng-click="selectFilterTag($index, 'status')">{{tag.text}}</span>
 				</div>
 			</div>
 			
-		</div>
-		
-		<div layout="row">
 			<div flex layout="row" layout-align="center center">
 				<span class="md-body-2" style="margin-top: -2vh">Due:</span>
-				<div class="tagcloud" style="margin-top: -2vh; margin-left: 2vh">
+				<div class="tagcloud-selection-mini" style="margin-top: -2vh; margin-left: 2vh">
 					<span ng-repeat="tag in dueDate" ng-class="{'available-tag': !tag.select, 'selected-tag': tag.select}" ng-click="selectFilterTag($index, 'dueDate')">{{tag.text}}</span>
 				</div>
-				<div style="margin-top: -2.5vh">
-                    <md-datepicker  ng-model="dateEnd" ng-change="selectDueDate(dateEnd)" md-placeholder="Select due date">
-                    </md-datepicker>
-				</div>
 			</div>
-		</div>
-
-		<div layout="row">
-			<p>Projects:</p>
-			<div flex layout="row" layout-align="center center" class="tagcloud-selection" layout-wrap>
-				<span ng-repeat="tag in projects" ng-class="{'available-tag': !tag.select, 'selected-tag': tag.select}" ng-click="selectFilterTag(	$index, 'project')">{{tag.name}}</span>
-			</div>
+			
 		</div>
 		
 	</div>
@@ -42,38 +35,38 @@
 
 <md-list ng-cloak class="main-page-content">
 
-	<div ng-repeat="task in myTasks | filter: searchTask track by $index" ui-sref="project.tasks.detail({id: task.project._id, taskId: task._id})" md-ink-ripple>
+	<div ng-repeat="task in myTasks | filter: searchTask track by $index" ui-sref="project.tasks.detail({id: task.project._id, taskId: task._id})">
 		
-		<md-list-item class="md-3-line md-long-text">
+		<md-list-item class="md-3-line" md-ink-ripple class="md-padding">
+	
 			<div class="md-list-item-text">
-				
-		        <h3>{{ task.description }}({{task.element.notifications.length}})</h3>
-				
-				<p>Due date: {{(task.dueDate) ? task.dueDate : task.dateEnd | date: 'MM/dd/yyyy'}}</p>
-    			<div layout="row" class="tagcloud-selection" layout-wrap>
-    				Assignees: <span class="selected-tag" ng-repeat="member in task.members">{{(member._id==currentUser._id) ? "me" : member.name}}</span> <span class="available-tag" ng-repeat="email in task.notMembers">{{email}}</span>
-    			</div>
-				
-	        	<p ng-repeat="notification in task.element.limitNotifications">
+			
+		        <h3 class="md-display-1" style="margin-top: 15px"><span class="update-count">{{task.element.notifications.length}}</span> {{ task.description }}</h3>
+			
+    			<p style="margin-top: 15px; margin-bottom: 15px">
+					<span style="margin-right: 15px"><span class="available-tag">Project Name</span></span>
+					<span style="margin-right: 15px">Due: <span class="available-tag">{{(task.dueDate) ? task.dueDate : task.dateEnd | date: 'MM/dd/yyyy'}}</span></span>
+					<span>Assignees: <span class="available-tag" ng-repeat="member in task.members">{{(member._id==currentUser._id) ? "Me" : member.name}}</span> <span class="available-tag" ng-repeat="email in task.notMembers">{{email}}</span></span>
+				</p>
+			
+	        	<p ng-repeat="notification in task.element.limitNotifications" style="margin-bottom: 15px; margin-left: 5px">
 	        		<span ng-show="notification.type=='task-assign'">
-	        			This task was assigned to <span ng-repeat="member in task.members">{{(member._id==currentUser._id) ? "me" : member.name}}, </span> <span ng-repeat="email in notMembers">{{email}}, </span>.
+	        			This task was assigned to <span ng-repeat="member in task.members">{{(member._id==currentUser._id) ? "you" : member.name}}, </span> <span ng-repeat="email in notMembers">{{email}}, </span>.
 	        		</span>
 	        		<span ng-show="notification.type=='task-completed'">
-	        			{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} has marked this task as complete.
+	        			{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} marked this task complete.
 	        		</span>
 	        		<span ng-show="notification.type=='task-reopened'">
-	        			{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} has marked this task as incomplete.
+	        			{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} marked this task incomplete.
 	        		</span>
-	        	</p>
-				<span ng-show="{{task.element.notifications.length - task.element.limitNotifications.length > 0}}">... +({{task.element.notifications.length - task.element.limitNotifications.length}}) More</span>
-
-	        	<div>
-	        		<md-button ng-show="task.owner._id==currentUser._id" class="md-secondary" ng-click="showEditTaskModal($event, task)">Edit</md-button>
-	        		<md-button ng-show="!task.completed" class="md-secondary" ng-click="markComplete(task)" style="margin-right: 90px">Mark Complete</md-button>
-	        		<md-button ng-show="task.completed && task.owner._id==currentUser._id" class="md-secondary" ng-click="markRead(task)" style="margin-right: 90px">Mark Read</md-button>
-	        	</div>
+					<span ng-show="{{task.element.notifications.length - task.element.limitNotifications.length > 0}}">... +({{task.element.notifications.length - task.element.limitNotifications.length}}) More</span>
+				</p>
 				
-	        </div>
+        		<md-button ng-show="task.owner._id==currentUser._id" class="md-secondary" ng-click="showEditTaskModal($event, task)">Edit</md-button>
+        		<md-button ng-show="!task.completed" class="md-secondary" ng-click="markComplete(task)" style="margin-right: 90px">Mark Complete</md-button>
+        		<md-button ng-show="task.completed && task.owner._id==currentUser._id" class="md-secondary" ng-click="markRead(task)" style="margin-right: 90px">Mark Read</md-button>
+			
+			</div>
 		</md-list-item>
 		<md-divider></md-divider>
 		

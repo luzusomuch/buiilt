@@ -489,6 +489,25 @@ md-input-container > label {
 	margin-bottom: 3vh;
 }
 
+.tagcloud-selection-mini {
+	margin-top: 0.5vh;
+	margin-bottom: 0.5vh;
+}
+
+.update-count {
+	font-size: 11px;
+	font-weight: 600;
+	color: #FFFFFF;
+	background-color: #2196F3;
+	border-radius: 100px;
+	padding: 3px;
+	margin: 3px;
+	text-transform: uppercase;
+	padding-left: 15px;
+	padding-right: 15px;
+	outline: none;
+}
+
 .available-tag {
 	font-size: 11px;
 	font-weight: 600;
