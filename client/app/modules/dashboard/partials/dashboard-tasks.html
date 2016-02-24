@@ -43,7 +43,7 @@
 			<div ui-sref="project.tasks.detail({id: task.project._id, taskId: task._id})" class="md-list-item-text">
 				
 				<h3 class="md-display-1" style="margin-top: 15px">
-					<strong>{{ task.description }} ({{task.element.notifications.length}})</strong> - Project Name | Due: <strong>{{(task.dueDate) ? task.dueDate : task.dateEnd | date: 'MM/dd/yyyy'}}</strong>
+					<strong>{{ task.description }} ({{task.element.notifications.length}})</strong> [Due {{(task.dueDate) ? task.dueDate : task.dateEnd | date: 'MM/dd/yyyy'}}] - Project Name
 				</h3>
 			
 	        	<p ng-repeat="notification in task.element.limitNotifications" style="margin-bottom: 15px; margin-top: 15px">
