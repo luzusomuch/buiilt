@@ -21,31 +21,35 @@
 
 <md-list ng-cloak class="main-page-content">
 
-	<div ng-repeat="thread in myMessages | filter: searchThread track by $index">
-		<md-list-item class="md-3-line" md-ink-ripple>
-			<div ng-click="openLocation(thread, 'thread')" flex="80" class="md-list-item-text" layout="column">
-          		<h3>{{ thread.name }}({{thread.element.notifications.length}})</h3>
-          		<div layout="row">
-          			<div flex="70" layout="row" class="tagcloud-selection" layout-wrap>
-          				Assignees: <span class="selected-tag" ng-repeat="member in thread.members">{{(member._id==currentUser._id) ? "me" : member.name}}</span> <span class="available-tag" ng-repeat="email in thread.notMembers">{{email}}</span>
-          			</div>
-          		</div>
-          		<p>
-          			<span ng-repeat="notification in thread.element.limitNotifications">
-          				<span ng-show="notification.type=='thread-assign'">
-          					{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} has assigned <span ng-repeat="member in thread.members">{{(member._id==currentUser._id) ? "me" : member.name}}, </span>
-							<span ng-repeat="email in thread.notMembers">{{email}}, </span>
-          				</span>
-	          			<span ng-show="notification.type=='thread-message'">
-	          				{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} has sent a reply: "{{notification.message}}".
-	          			</span>
-          			</span><span ng-show="{{thread.element.notifications.length - thread.element.limitNotifications.length > 0}}">... +({{thread.element.notifications.length - thread.element.limitNotifications.length}}) More</span>
+	<div ng-repeat="thread in myMessages | filter: searchThread track by $index" ng-click="openLocation(thread, 'thread')">
+		
+		<md-list-item class="md-3-line" md-ink-ripple layout-padding>
+		
+			<div class="md-list-item-text">
+				
+          		<h3 class="md-display-1" style="margin-top: 15px"><span class="update-count">{{thread.element.notifications.length}}</span> {{ thread.name }}</h3>
+				
+          		<p style="margin-top: 15px; margin-bottom: 15px">
+					<span style="margin-right: 15px"><span class="available-tag">Project Name</span></span>
+					<span>Assignees: <span class="available-tag" ng-repeat="member in thread.members">{{(member._id==currentUser._id) ? "Me" : member.name}}</span> <span class="available-tag" ng-repeat="email in thread.notMembers">{{email}}</span></span>
           		</p>
+				
+          		<p ng-repeat="notification in thread.element.limitNotifications" style="margin-bottom: 15px; margin-left: 5px">
+      				<span ng-show="notification.type=='thread-assign'">
+      					{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} has assigned <span ng-repeat="member in thread.members">{{(member._id==currentUser._id) ? "me" : member.name}}, </span>
+						<span ng-repeat="email in thread.notMembers">{{email}}, </span>
+      				</span>
+          			<span ng-show="notification.type=='thread-message'">
+          				{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} has sent a reply: "{{notification.message}}".
+          			</span>
+					<span ng-show="{{thread.element.notifications.length - thread.element.limitNotifications.length > 0}}">... +({{thread.element.notifications.length - thread.element.limitNotifications.length}}) More</span>
+          		</p>
+				
 	        </div>
-            <div flex="20">
-                <md-button class="md-primary" ng-click="showReplyModal($event, thread)">Reply</md-button>
-                <md-button class="md-primary" ng-click="viewReplyModal($event, thread)">View Reply</md-button>
-            </div>
+			
+            <md-button class="md-secondary" ng-click="showReplyModal($event, thread)">Compose Reply</md-button>
+            <md-button class="md-secondary" ng-click="viewReplyModal($event, thread)" style="margin-right: 90px">View Thread</md-button>
+			
 		</md-list-item>
 		<md-divider></md-divider>
 	</div>
