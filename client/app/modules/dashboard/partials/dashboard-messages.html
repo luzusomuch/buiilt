@@ -31,7 +31,7 @@
 					<strong>{{ thread.name }} ({{thread.element.notifications.length}})</strong> - Project Name
 				</h3>
 				
-          		<p ng-repeat="notification in thread.element.limitNotifications" style="margin-top: 15px; margin-bottom: 15px">
+          		<p ng-repeat="notification in thread.element.limitNotifications track by $index" style="margin-top: 15px; margin-bottom: 15px">
       				<span ng-show="notification.type=='thread-assign'">
       					{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} has assigned <span ng-repeat="member in thread.members">{{(member._id==currentUser._id) ? "me" : member.name}}, </span>
 						<span ng-repeat="email in thread.notMembers">{{email}}, </span>

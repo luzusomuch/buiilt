@@ -205,6 +205,31 @@ exports.uploadReversion = function(req, res) {
                                 data: JSON.parse(JSON.stringify(file))
                             });
                         }
+                        _.each(acknowledgeUsers, function(user) {
+                            if (file.element.type === "file" && user._id) {
+                                EventBus.emit('socket:emit', {
+                                    event: 'dashboard:new',
+                                    room: user._id.toString(),
+                                    data: {
+                                        type: "file",
+                                        _id: file._id,
+                                        file: JSON.parse(JSON.stringify(file)),
+                                        newNotification: {fromUser: req.user, type: "file-upload-reversion"}
+                                    }
+                                });
+                            } else if (file.element.type === "document" && user._id) {
+                                EventBus.emit('socket:emit', {
+                                    event: 'dashboard:new',
+                                    room: user._id.toString(),
+                                    data: {
+                                        type: "file",
+                                        _id: file._id,
+                                        file: JSON.parse(JSON.stringify(file)),
+                                        newNotification: {fromUser: req.user, type: "document-upload-reversion"}
+                                    }
+                                });
+                            }
+                        });
                         return res.send(200, file);
                     });
                 });
@@ -348,11 +373,31 @@ exports.upload = function(req, res){
                                 room: user._id.toString(),
                                 data: JSON.parse(JSON.stringify(file))
                             });
+                            EventBus.emit('socket:emit', {
+                                event: 'dashboard:new',
+                                room: user._id.toString(),
+                                data: {
+                                    type: "file",
+                                    _id: file._id,
+                                    file: JSON.parse(JSON.stringify(file)),
+                                    newNotification: {fromUser: req.user, type: "file-assign"}
+                                }
+                            });
                         } else if (file.element.type === "document" && user._id) {
                             EventBus.emit('socket:emit', {
                                 event: 'document:new',
                                 room: user._id.toString(),
                                 data: JSON.parse(JSON.stringify(file))
+                            });
+                            EventBus.emit('socket:emit', {
+                                event: 'dashboard:new',
+                                room: user._id.toString(),
+                                data: {
+                                    type: "file",
+                                    _id: file._id,
+                                    file: JSON.parse(JSON.stringify(file)),
+                                    newNotification: {fromUser: req.user, type: "document-assign"}
+                                }
                             });
                         }
                     });

@@ -31,7 +31,7 @@
 					<strong>{{ file.name }} ({{file.element.notifications.length}})</strong> - Project Name | <span class="available-tag" ng-repeat="tag in file.tags">{{tag}}</span>
 				</h3>
 				
-          		<p ng-repeat="notification in file.element.limitNotifications" style="margin-bottom: 15px; margin-top: 15px">
+          		<p ng-repeat="notification in file.element.limitNotifications track by $index" style="margin-bottom: 15px; margin-top: 15px">
       				<span ng-show="notification.type=='document-assign'">
       					{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} assigned you to this file.
       				</span>

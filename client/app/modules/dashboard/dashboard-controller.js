@@ -12,12 +12,16 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     $scope.projectFilterTags = angular.copy($scope.projects);
     $scope.currentUser = $rootScope.currentUser;
 
+    $rootScope.$on("Dashboard-UpdateThread", function(event, index) {
+        $scope.myMessages.splice(index, 1);
+    });
+
     function sortTask(tasks) {
         tasks.sort(function(a,b) {
-            if (a.dateEnd > b.dateEnd) {
+            if (a.dateEnd < b.dateEnd) {
                 return -1;
             } 
-            if (a.dateEnd < b.dateEnd) {
+            if (a.dateEnd > b.dateEnd) {
                 return 1;
             }
             return 0;
@@ -32,6 +36,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     };
 
     socket.on("dashboard:new", function(data) {
+        console.log(data);
         if (data.type==="thread") {
             var index = getItemIndex($scope.myMessages, data._id);
             if (index !== -1) {
@@ -75,6 +80,27 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             });
             $scope.myTasks = copyThreads;
             sortTask($scope.myTasks);
+        } else if (data.type==="file") {
+            var index = getItemIndex($scope.myFiles, data._id);
+            if (index !== -1) {
+                $scope.myFiles[index].element.notifications.push(data.newNotification);
+                if ($scope.myFiles[index].element.limitNotifications.length < 3) {
+                    $scope.myFiles[index].element.limitNotifications.push(data.newNotification);
+                }
+            } else {
+                data.file.element.limitNotifications = [];
+                data.file.element.notifications = [];
+                data.file.element.limitNotifications.push(data.newNotification);
+                data.file.element.notifications.push(data.newNotification);
+                $scope.myFiles.push(data.file);
+            }
+            var copyFiles = [];
+            _.each($scope.myFiles, function(file) {
+                if (file.name) {
+                    copyFiles.push(file);
+                }
+            });
+            $scope.myFiles = copyFiles;
         }
     });
 
@@ -162,12 +188,14 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
 
     angular.forEach($scope.myTasks, function(task) {
         var taskDueDate = moment(task.dateEnd).format("YYYY-MM-DD");
-        if (moment(taskDueDate).isSame(moment().format("YYYY-MM-DD"))) {
-            task.dueDate = "Today";
-        } else if (moment(taskDueDate).isSame(moment().add(1, "days").format("YYYY-MM-DD"))) {
-            task.dueDate = "Tomorrow";
-        } else if (moment(taskDueDate).isSame(moment().subtract(1, "days").format("YYYY-MM-DD"))) {
-            task.dueDate = "Yesterday";
+        if (task.dateEnd) {
+            if (moment(taskDueDate).isSame(moment().format("YYYY-MM-DD"))) {
+                task.dueDate = "Today";
+            } else if (moment(taskDueDate).isSame(moment().add(1, "days").format("YYYY-MM-DD"))) {
+                task.dueDate = "Tomorrow";
+            } else if (moment(taskDueDate).isSame(moment().subtract(1, "days").format("YYYY-MM-DD"))) {
+                task.dueDate = "Yesterday";
+            }
         }
     });
 
@@ -384,9 +412,14 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                 mixpanel.identify($rootScope.currentUser._id);
                 mixpanel.track("Reply Sent");
                 
-                $rootScope.selectedMessage = null;
+                $scope.selectedThread = $rootScope.selectedMessage = res;
                 notificationService.markItemsAsRead({id: res._id}).$promise.then(function() {
                     $rootScope.$broadcast("DashboardSidenav-UpdateNumber", {type: "message", number: 1});
+                    var currentThreadIndex = _.findIndex($scope.myMessages, function(message) {
+                        console.log(message._id, $scope.selectedThread._id);
+                        return message._id.toString()===$scope.selectedThread._id.toString();
+                    });
+                    $rootScope.$broadcast("Dashboard-UpdateThread", currentThreadIndex);
                 });
             }, function(err) {$scope.showToast("There Has Been An Error...");});
         }
