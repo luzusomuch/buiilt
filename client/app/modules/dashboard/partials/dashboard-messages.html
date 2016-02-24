@@ -37,15 +37,11 @@
 
 	<div ng-repeat="thread in myMessages | filter: searchThread track by $index">
 		<md-list-item class="md-3-line" md-ink-ripple>
-			<div class="md-list-item-text" layout="column">
-          		<h3 ng-click="openLocation(thread, 'thread')">{{ thread.name }}({{thread.element.notifications.length}})</h3>
+			<div ng-click="openLocation(thread, 'thread')" flex="80" class="md-list-item-text" layout="column">
+          		<h3>{{ thread.name }}({{thread.element.notifications.length}})</h3>
           		<div layout="row">
           			<div flex="70" layout="row" class="tagcloud-selection" layout-wrap>
           				Assignees: <span class="selected-tag" ng-repeat="member in thread.members">{{(member._id==currentUser._id) ? "me" : member.name}}</span> <span class="available-tag" ng-repeat="email in thread.notMembers">{{email}}</span>
-          			</div>
-          			<div>
-		        		<md-button class="md-primary" ng-click="showReplyModal($event, thread)">Reply</md-button>
-		        		<md-button class="md-primary" ng-click="viewReplyModal($event, thread)">View Reply</md-button>
           			</div>
           		</div>
           		<p>
@@ -60,6 +56,10 @@
           			</span><span ng-show="{{thread.element.notifications.length - thread.element.limitNotifications.length > 0}}">... +({{thread.element.notifications.length - thread.element.limitNotifications.length}}) More</span>
           		</p>
 	        </div>
+            <div flex="20">
+                <md-button class="md-primary" ng-click="showReplyModal($event, thread)">Reply</md-button>
+                <md-button class="md-primary" ng-click="viewReplyModal($event, thread)">View Reply</md-button>
+            </div>
 		</md-list-item>
 		<md-divider></md-divider>
 	</div>

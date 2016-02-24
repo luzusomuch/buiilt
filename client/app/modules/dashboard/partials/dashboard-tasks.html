@@ -42,10 +42,10 @@
 
 <md-list ng-cloak class="main-page-content">
 
-	<div ng-repeat="task in myTasks | filter: searchTask track by $index" ui-sref="project.tasks.detail({id: task.project._id, taskId: task._id})" md-ink-ripple>
+	<div ng-repeat="task in myTasks | filter: searchTask track by $index">
 		
-		<md-list-item class="md-3-line md-long-text">
-			<div class="md-list-item-text">
+		<md-list-item class="md-3-line md-long-text" md-ink-ripple>
+			<div flex="80" ui-sref="project.tasks.detail({id: task.project._id, taskId: task._id})" class="md-list-item-text">
 				
 		        <h3>{{ task.description }}({{task.element.notifications.length}})</h3>
 				
@@ -66,17 +66,14 @@
 	        		</span>
 	        	</p>
 				<span ng-show="{{task.element.notifications.length - task.element.limitNotifications.length > 0}}">... +({{task.element.notifications.length - task.element.limitNotifications.length}}) More</span>
-
-	        	<div>
-	        		<md-button ng-show="task.owner._id==currentUser._id" class="md-secondary" ng-click="showEditTaskModal($event, task)">Edit</md-button>
-	        		<md-button ng-show="!task.completed" class="md-secondary" ng-click="markComplete(task)" style="margin-right: 90px">Mark Complete</md-button>
-	        		<md-button ng-show="task.completed && task.owner._id==currentUser._id" class="md-secondary" ng-click="markRead(task)" style="margin-right: 90px">Mark Read</md-button>
-	        	</div>
-				
 	        </div>
+	        <div flex="20">
+        		<md-button ng-show="task.owner._id==currentUser._id" class="md-secondary" ng-click="showEditTaskModal($event, task)">Edit</md-button>
+        		<md-button ng-show="!task.completed" class="md-secondary" ng-click="markComplete(task)" style="margin-right: 90px">Mark Complete</md-button>
+        		<md-button ng-show="task.completed && task.owner._id==currentUser._id" class="md-secondary" ng-click="markRead(task)" style="margin-right: 90px">Mark Read</md-button>
+        	</div>
 		</md-list-item>
 		<md-divider></md-divider>
-		
 	</div>
 </md-list>
 
