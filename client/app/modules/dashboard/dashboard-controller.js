@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $scope, $timeout, $q, $state, $mdDialog, $mdToast, projectService, myTasks, myMessages, myFiles, notificationService, taskService, peopleService, messageService, fileService) {
+angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $scope, $timeout, $q, $state, $mdDialog, $mdToast, projectService, myTasks, myMessages, myFiles, notificationService, taskService, peopleService, messageService, fileService, socket) {
 	$rootScope.title = "Dashboard";
 	$scope.myTasks = myTasks;
 	$scope.myMessages = myMessages;
@@ -11,6 +11,37 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     });
     $scope.projectFilterTags = angular.copy($scope.projects);
     $scope.currentUser = $rootScope.currentUser;
+
+    function getItemIndex(array, id) {
+        return _.findIndex(array, function(item) {
+            return item._id.toString()===id.toString();
+        });
+    };
+
+    socket.on("dashboard:new", function(data) {
+        if (data.type==="thread") {
+            var index = getItemIndex($scope.myMessages, data._id);
+            if (index !== -1) {
+                $scope.myMessages[index].element.notifications.push(data.newNotification);
+                if ($scope.myMessages[index].element.limitNotifications.length < 3) {
+                    $scope.myMessages[index].element.limitNotifications.push(data.newNotification);
+                }
+            } else {
+                data.thread.element.limitNotifications = [];
+                data.thread.element.notifications = [];
+                data.thread.element.limitNotifications.push(data.newNotification);
+                data.thread.element.notifications.push(data.newNotification);
+                $scope.myMessages.push(data.thread);
+            }
+            var copyThreads = [];
+            _.each($scope.myMessages, function(message) {
+                if (message.name) {
+                    copyThreads.push(message);
+                }
+            });
+            $scope.myMessages = copyThreads;
+        }
+    });
 
     $scope.showToast = function(value) {
         $mdToast.show($mdToast.simple().textContent(value).position('bottom','left').hideDelay(3000));
@@ -105,7 +136,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         }
     });
 
-    $scope.markComplete = function(task) {
+    $scope.markComplete = function(task, index) {
         task.completed = !task.completed;
         if (task.completed) {
             task.completedBy = $rootScope.currentUser._id;
@@ -118,6 +149,10 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         }
         taskService.update({id: task._id}, task).$promise.then(function(res) {
             $scope.showToast((res.completed)?"Task Has Been Marked Completed.":"Task Has Been Marked Incomplete.");
+            notificationService.markItemsAsRead({id: res._id}).$promise.then(function() {
+                $scope.myTasks.splice(index ,1);
+                $rootScope.$broadcast("DashboardSidenav-UpdateNumber", {type: "task", number: 1});
+            });
         }, function(err) {$scope.showToast("Error");});
     };
 
@@ -314,7 +349,10 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                 mixpanel.identify($rootScope.currentUser._id);
                 mixpanel.track("Reply Sent");
                 
-                $rootScope.selectedMessage = res;
+                $rootScope.selectedMessage = null;
+                notificationService.markItemsAsRead({id: res._id}).$promise.then(function() {
+                    $rootScope.$broadcast("DashboardSidenav-UpdateNumber", {type: "message", number: 1});
+                });
             }, function(err) {$scope.showToast("There Has Been An Error...");});
         }
     };

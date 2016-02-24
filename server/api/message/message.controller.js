@@ -246,6 +246,21 @@ exports.sendMessage = function(req,res) {
                     if (err) {
                         return res.send(422,err);
                     } else {
+                        var owners = thread.members;
+                        owners.push(thread.owner);
+                        _.remove(owners, req.user._id);
+                        _.each(owners, function(user) {
+                            EventBus.emit('socket:emit', {
+                                event: 'dashboard:new',
+                                room: user.toString(),
+                                data: {
+                                    type: "thread",
+                                    _id: thread._id,
+                                    thread: thread,
+                                    newNotification: {fromUser: req.user, message: data.text, type: "thread-message"}
+                                }
+                            });
+                        });
                         populateThread(thread, res);
                     }
                 });

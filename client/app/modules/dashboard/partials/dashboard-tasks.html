@@ -65,7 +65,7 @@
 			</div>
 			<div flex="20">
 	    		<md-button ng-show="task.owner._id==currentUser._id" class="md-secondary" ng-click="showEditTaskModal($event, task)">Edit</md-button>
-	    		<md-button ng-show="!task.completed" class="md-secondary" ng-click="markComplete(task)" style="margin-right: 90px">Mark Complete</md-button>
+	    		<md-button ng-show="!task.completed" class="md-secondary" ng-click="markComplete(task, $index)" style="margin-right: 90px">Mark Complete</md-button>
 	    		<md-button ng-show="task.completed && task.owner._id==currentUser._id" class="md-secondary" ng-click="markRead(task)" style="margin-right: 90px">Mark Read</md-button>
 			</div>
 			
