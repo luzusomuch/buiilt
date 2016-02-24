@@ -52,7 +52,7 @@ function populateTask(task, res){
     });
 };
 
-function populateNewTask(task, res){
+function populateNewTask(task, res, req){
     Task.populate(task, [
         {path: "owner", select: "_id email name"},
         {path: "members", select: "_id email name"},
@@ -63,6 +63,16 @@ function populateNewTask(task, res){
                 event: 'task:new',
                 room: member._id.toString(),
                 data: task
+            });
+            EventBus.emit('socket:emit', {
+                event: 'dashboard:new',
+                room: member._id.toString(),
+                data: {
+                    type: "task",
+                    _id: task._id,
+                    task: task,
+                    newNotification: {fromUser: req.user, type: "task-assign"}
+                }
             });
             cb();
         }, function() {
@@ -194,7 +204,7 @@ exports.create = function(req,res) {
                             if (req.body.belongToType === "thread") 
                                 populateThread(main, res);
                             else if (req.body.belongToType === "task") {
-                                populateNewTask(main, res);
+                                populateNewTask(main, res, req);
                             } else if (req.body.belongToType === "file") {
                                 populateFile(main, res);
                             }
@@ -202,7 +212,7 @@ exports.create = function(req,res) {
                     }
                 });
             } else {
-                populateNewTask(task, res);
+                populateNewTask(task, res, req);
             }
         });
     });
@@ -290,36 +300,20 @@ exports.getTasksByProject = function(req, res) {
 
 exports.myTask = function(req,res) {
     var user = req.user;
-    var notifications = [];
-    var tasks = [];
-    Notification.find({owner: user._id, unread : true, referenceTo : 'task'})
-    .populate("fromUser", "_id email name")
-    .exec(function(err, notifications) {
+    var tasksList = [];
+    Task.find({completed: false, $or:[{owner: user._id}, {members: user._id}]})
+    .populate('members', '-hashedPassword -salt')
+    .populate('owner', '-hashedPassword -salt')
+    .populate('project')
+    .exec(function(err, tasks) {
         if (err) {return res.send(500,err);}
-        notifications = notifications;
-        async.each(notifications, function(notification, cb) {
-            Task.findById(notification.element._id)
-            .populate('members', '-hashedPassword -salt')
-            .populate('owner', '-hashedPassword -salt')
-            .populate('project')
-            .exec(function(err, task) {
-                if (err || !task) {
-                    cb();
-                } else {
-                    tasks.push(task);
-                    cb();
-                }
-            });
-        }, function(err) {
-            if (err) {return res.send(500,err);}
-            var uniqueTasksList = _.map(_.groupBy(tasks,function(doc){
-                return doc._id;
-            }),function(grouped){
-              return grouped[0];
-            });
-            _.each(uniqueTasksList, function(task) {
-                task.element.notifications = [];
-                task.element.limitNotifications = [];
+        tasksList = tasks;
+        async.each(tasks, function(task, cb) {
+            task.element.notifications = [];
+            task.element.limitNotifications = [];
+            Notification.find({"element._id": task._id, unread: true})
+            .populate("fromUser", "_id name email").exec(function(err, notifications) {
+                if (err) {cb(err);}
                 var index = 1;
                 _.each(notifications, function(notification) {
                     if (notification.element._id.toString()===task._id.toString()) {
@@ -336,8 +330,10 @@ exports.myTask = function(req,res) {
                         index += 1;
                     }
                 });
+                cb();
             });
-            return res.send(200, uniqueTasksList);
+        }, function() {
+            return res.send(200, tasks);
         });
     });
 };

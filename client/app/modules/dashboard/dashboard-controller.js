@@ -12,6 +12,19 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     $scope.projectFilterTags = angular.copy($scope.projects);
     $scope.currentUser = $rootScope.currentUser;
 
+    function sortTask(tasks) {
+        tasks.sort(function(a,b) {
+            if (a.dateEnd > b.dateEnd) {
+                return -1;
+            } 
+            if (a.dateEnd < b.dateEnd) {
+                return 1;
+            }
+            return 0;
+        });
+    };
+    sortTask($scope.myTasks);
+
     function getItemIndex(array, id) {
         return _.findIndex(array, function(item) {
             return item._id.toString()===id.toString();
@@ -40,6 +53,28 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                 }
             });
             $scope.myMessages = copyThreads;
+        } else if (data.type==="task") {
+            var index = getItemIndex($scope.myTasks, data._id);
+            if (index !== -1) {
+                $scope.myTasks[index].element.notifications.push(data.newNotification);
+                if ($scope.myTasks[index].element.limitNotifications.length < 3) {
+                    $scope.myTasks[index].element.limitNotifications.push(data.newNotification);
+                }
+            } else {
+                data.task.element.limitNotifications = [];
+                data.task.element.notifications = [];
+                data.task.element.limitNotifications.push(data.newNotification);
+                data.task.element.notifications.push(data.newNotification);
+                $scope.myTasks.push(data.task);
+            }
+            var copyThreads = [];
+            _.each($scope.myTasks, function(message) {
+                if (message.description) {
+                    copyThreads.push(message);
+                }
+            });
+            $scope.myTasks = copyThreads;
+            sortTask($scope.myTasks);
         }
     });
 
