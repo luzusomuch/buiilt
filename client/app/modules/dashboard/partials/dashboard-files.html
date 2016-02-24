@@ -30,19 +30,15 @@
 
 <md-list ng-cloak class="main-page-content">
 	<div ng-repeat="file in myFiles |filter: searchFile track by $index" ng-show="file.element.type=='file'">
-		<md-list-item class="md-3-line" md-ink-ripple layout-padding>
+		<md-list-item class="md-2-line" md-ink-ripple layout-padding>
 		
 			<div flex="80" ng-click="openLocation(file, 'file')" class="md-list-item-text">
 				
-	          	<h3 class="md-display-1" style="margin-top: 15px"><span class="update-count">{{task.element.notifications.length}}</span> {{ file.name }}</h3>
-				
-				<p style="margin-top: 15px; margin-bottom: 15px">
-					<span style="margin-right: 15px"><span class="available-tag">Project Name</span></span>
-					<span>Assignees: <span class="available-tag" ng-repeat="member in file.members">{{(member._id==currentUser._id) ? "Me" : member.name}}</span> <span class="available-tag" ng-repeat="email in file.notMembers">{{email}}</span></span>
-	          		<span style="margin-right: 15px">Tags: <span class="available-tag" ng-repeat="tag in file.tags">{{tag}}</span></span>
-				</p>
+				<h3 class="md-display-1" style="margin-top: 15px">
+					<strong>{{ file.name }} ({{file.element.notifications.length}})</strong> - Project Name | <span class="available-tag" ng-repeat="tag in file.tags">{{tag}}</span>
+				</h3>
           		
-				<p ng-repeat="notification in file.element.limitNotifications"  style="margin-bottom: 15px; margin-left: 5px">
+				<p ng-repeat="notification in file.element.limitNotifications"  style="margin-bottom: 15px; margin-top: 15px">
       				<span ng-show="notification.type=='file-assign'">
       					{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} assigned you to this file.
       				</span>
@@ -55,13 +51,12 @@
 					<span ng-show="{{file.element.notifications.length - file.element.limitNotifications.length > 0}}">... +({{file.element.notifications.length - file.element.limitNotifications.length}}) More</span>
           		</p>
 				
-        		
-				
 	        </div>
-	        <div flex="20">
-	        	<md-button class="md-primary" ng-click="showViewFileModal($event, file)">View File</md-button>
-        		<md-button class="md-primary" ng-click="markRead(file)">Mark Read</md-button>
+			
+	        <div>
+				<md-button class="md-secondary" ng-click="showViewFileModal($event, file)"><md-icon class="material-icons">remove_red_eye</md-icon><md-tooltip md-direction="down">View File</md-tooltip></md-button>
 	        </div>
+			
 		</md-list-item>
 		<md-divider></md-divider>
 	</div>

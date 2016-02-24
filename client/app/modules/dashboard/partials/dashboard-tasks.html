@@ -38,7 +38,7 @@
 
 	<div ng-repeat="task in myTasks | filter: searchTask track by $index">
 		
-		<md-list-item class="md-3-line" md-ink-ripple layout-padding>
+		<md-list-item class="md-2-line" md-ink-ripple layout-padding>
 	
 			<div ui-sref="project.tasks.detail({id: task.project._id, taskId: task._id})" class="md-list-item-text">
 				
