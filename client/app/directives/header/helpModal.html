@@ -1,4 +1,4 @@
-<md-dialog aria-label="buiilt Help Bar" flex="70">
+<md-dialog aria-label="buiilt Help Bar" flex="90">
 	<md-toolbar>
 		<div class="md-toolbar-tools">
 			<h2>Help Bar</h2>
@@ -8,10 +8,37 @@
 	<md-dialog-content>
 		<div class="md-dialog-content" layout="column">
 			
+			<div layout="row" layout-align="center center" layout-padding>
+				<div layout="column" layout-align="center center">
+					<p class="md-body-2">Team Settings:</p>
+					<md-button class="md-primary" ng-click="inlinePlay('9826')">Add More Members To Your Company</md-button>
+				</div>
+			</div>
+			
 			<div layout="row">
-				<md-input-container flex class="modal-instructions">
-					<p>Hi, this is the help bar.</p>
-				</md-input-container>
+				<div layout="column" flex="50" layout-align="center center" layout-padding>
+					<p class="md-body-2">Setting Up a New Project:</p>
+					<md-button class="md-primary" ng-click="inlinePlay('9833')">Create a New Project</md-button>
+					<md-button class="md-primary" ng-click="inlinePlay('9834')">Add More Members To A Project</md-button>
+					<md-button class="md-primary" ng-click="inlinePlay('9840')">Add Project Documentation</md-button>
+					<md-button class="md-primary" ng-click="inlinePlay('9845')">Attach a Document Revision</md-button>
+				</div>
+				
+				<div layout="column" flex="50" layout-align="center center" layout-padding>
+					<p class="md-body-2">Adding Info to Your Projects:</p>
+					<md-button class="md-primary" ng-click="inlinePlay('9836')">Create a New Message Thread</md-button>
+					<md-button class="md-primary" ng-click="inlinePlay('9838')">Create a New Task</md-button>
+					<md-button class="md-primary" ng-click="inlinePlay('9839')">Create a New File</md-button>
+					<md-button class="md-primary" ng-click="inlinePlay('9841')">Attach a File Revision</md-button>
+				</div>
+				
+			</div>
+			
+			<div layout="row" layout-align="center center" layout-padding>
+				<div layout="column">
+					<p class="md-body-2">If you are still stuck, call Myles on 0410 955 611, or email him at myles@buiilt.com</p>
+					<p class="md-body-2">Alternatively, try the chat bar on the right of the screen at any time...</p>
+				</div>
 			</div>
 			
 		</div>
