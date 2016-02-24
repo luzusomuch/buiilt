@@ -36,7 +36,7 @@
 
 <md-list ng-cloak class="main-page-content">
 
-	<div ng-repeat="task in myTasks | filter: searchTask track by $index">
+	<div ng-repeat="task in myTasks | filter: searchTask track by $index" ng-show="task.element.notifications.length > 0">
 		
 		<md-list-item class="md-2-line" md-ink-ripple layout-padding>
 	
@@ -62,7 +62,40 @@
 			
 			<div>
 	    		<md-button ng-show="!task.completed" class="md-secondary" ng-click="markComplete(task)"><md-icon class="material-icons">check</md-icon><md-tooltip md-direction="down">Mark As Complete</md-tooltip></md-button>
-	    		<md-button ng-show="task.completed && task.owner._id==currentUser._id" class="md-secondary" ng-click="markRead(task)" style="margin-right: 90px"><md-icon class="material-icons">clear_all</md-icon><md-tooltip md-direction="down">Mark As Read</md-tooltip></md-button>
+	    		<md-button class="md-secondary" ng-click="markRead(task)" style="margin-right: 90px"><md-icon class="material-icons">clear_all</md-icon><md-tooltip md-direction="down">Mark As Read</md-tooltip></md-button>
+			</div>
+			
+		</md-list-item>
+		<md-divider></md-divider>
+		
+	</div>
+
+	<div ng-repeat="task in myTasks | filter: searchTask track by $index" ng-show="task.element.notifications.length == 0">
+		
+		<md-list-item class="md-2-line" md-ink-ripple layout-padding>
+	
+			<div ui-sref="project.tasks.detail({id: task.project._id, taskId: task._id})" class="md-list-item-text">
+				
+				<h3 class="md-display-1" style="margin-top: 15px">
+					<strong>{{ task.description }} ({{task.element.notifications.length}})</strong> [Due {{(task.dueDate) ? task.dueDate : task.dateEnd | date: 'MM/dd/yyyy'}}] - {{task.project.name}}
+				</h3>
+			
+	        	<p ng-repeat="notification in task.element.limitNotifications track by $index" style="margin-bottom: 15px; margin-top: 15px">
+	        		<span ng-show="notification.type=='task-assign'">
+	        			This task was assigned to <span ng-repeat="member in task.members">{{(member._id==currentUser._id) ? "you" : member.name}}, </span> <span ng-repeat="email in notMembers">{{email}}, </span>.
+	        		</span>
+	        		<span ng-show="notification.type=='task-completed'">
+	        			{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} marked this task complete.
+	        		</span>
+	        		<span ng-show="notification.type=='task-reopened'">
+	        			{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} marked this task incomplete.
+	        		</span>
+					<span ng-show="{{task.element.notifications.length - task.element.limitNotifications.length > 0}}">... +({{task.element.notifications.length - task.element.limitNotifications.length}}) More</span>
+				</p>
+			</div>
+			
+			<div>
+	    		<md-button ng-show="!task.completed" class="md-secondary" ng-click="markComplete(task)"><md-icon class="material-icons">check</md-icon><md-tooltip md-direction="down">Mark As Complete</md-tooltip></md-button>
 			</div>
 			
 		</md-list-item>
