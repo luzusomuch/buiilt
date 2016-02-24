@@ -44,7 +44,7 @@
 					
 					<div flex class="activity-detail">
 						
-						<p ng-switch="activity.type" class="activity-header">
+						<p ng-switch="activity.type" class="activity-header" style="margin-bottom: 15px; border-bottom: 0.5px solid #EEEEEE">
 							<span class="activity-creator">{{activity.user.name}}</span>
 							
                             <span class="meta-data" ng-switch-when="upload-reversion"> uploaded a new revision at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
