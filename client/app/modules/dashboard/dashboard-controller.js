@@ -250,6 +250,49 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         });
     };
 
+    $scope.viewReplyModal = function(event, message) {
+        $rootScope.selectedMessage = message;
+        $mdDialog.show({
+            targetEvent: event,
+            controller: "dashboardCtrl",
+            resolve: {
+                myTasks: function(taskService) {
+                    return taskService.myTask().$promise;
+                },
+                myMessages: function(messageService) {
+                    return messageService.myMessages().$promise;
+                },
+                myFiles: function(fileService) {
+                    return fileService.myFiles().$promise;
+                }
+            },
+            templateUrl: 'app/modules/dashboard/partials/view-reply.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: false
+        });
+    };
+
+    $scope.showNewThreadModal = function(event) {
+        $mdDialog.show({
+            targetEvent: event,
+            controller: "dashboardCtrl",
+            resolve: {
+                myTasks: function(taskService) {
+                    return taskService.myTask().$promise;
+                },
+                myMessages: function(messageService) {
+                    return messageService.myMessages().$promise;
+                },
+                myFiles: function(fileService) {
+                    return fileService.myFiles().$promise;
+                }
+            },
+            templateUrl: 'app/modules/dashboard/partials/new-thread.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: false
+        });
+    };
+
     $scope.sendMessage = function() {
         $scope.message.text = $scope.message.text.trim();
         if ($scope.message.text.length===0 || $scope.message.text === '') {
@@ -266,6 +309,28 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                 
                 $rootScope.selectedMessage = res;
             }, function(err) {$scope.showToast("There Has Been An Error...");});
+        }
+    };
+
+    $scope.thread = {members: []};
+    $scope.addNewThread = function(form) {
+        if (form.$valid) {
+            $scope.thread.members = _.filter($scope.projectMembers, {select: true});
+            $scope.thread.type = "project-message";
+            messageService.create({id: $scope.selectedProjectId},$scope.thread).$promise.then(function(res) {
+                $scope.closeModal();
+                $scope.showToast("New Message Thread Created Successfully.");
+                
+                //Track Message Thread Creation
+                mixpanel.identify($rootScope.currentUser._id);
+                mixpanel.track("New Message Thread Created");
+                
+                $state.go("project.messages.detail", {id: $scope.selectedProjectId, messageId: res._id});
+            }, function(err) {
+                $scope.showToast("There Has Been An Error...")
+            });
+        } else {
+            $scope.showToast("Error");
         }
     };
 
@@ -313,6 +378,13 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             _.each(thread.messages, function(message) {
                 if (message.text.toLowerCase().indexOf($scope.reply) > -1 || message.text.indexOf($scope.reply) > -1) {
                     found = true;
+                }
+            });
+            return found;
+        } else if ($scope.projectsFilter.length > 0) {
+            _.each($scope.projectsFilter, function(project) {
+                if (project.toString()===thread.project.toString()) {
+                    found = true
                 }
             });
             return found;

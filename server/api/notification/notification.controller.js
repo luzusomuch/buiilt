@@ -13,7 +13,7 @@ var EventBus = require('../../components/EventBus');
 
 exports.markItemsAsRead = function(req, res) {
     var id= new require('mongoose').Types.ObjectId(req.params.id);
-    Notification.update({'element._id': id},{unread : false},{multi : true},function(err) {
+    Notification.update({'element._id': id, owner: req.user._id},{unread : false},{multi : true},function(err) {
         if (err) {return res.send(500);}
         return res.send(200);
     });
