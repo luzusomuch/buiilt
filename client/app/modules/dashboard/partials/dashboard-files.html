@@ -1,34 +1,27 @@
 <div class="detail-header" layout-padding layout="column">
 	
-	<div layout="column" layout-padding>
+	<div layout="column">
 		
-		<div layout="row">
-			<md-input-container flex="50">
+		<div layout="row" layout-align="center center">
+			<span class="md-body-2" style="margin-top:">Projects:</span>
+			<div class="tagcloud-selection-mini" style="margin-left: 2vh" layout-wrap>
+				<span ng-repeat="tag in projectFilterTags" ng-class="{'available-tag': !tag.select, 'selected-tag': tag.select}" ng-click="selectFilterTag(	$index, 'project')">{{tag.name}}</span>
+			</div>
+		</div>
+		
+		<div layout="row" layout-align="center center">
+			<md-input-container flex="35">
 				<label for="">File Name</label>
 				<input type="text" name="fileName" ng-model="name" md-autofocus>
 			</md-input-container>
 			
-			<md-input-container flex="50">
-				<label for="">File Recipients</label>
-				<input type="text" name="fileRecipients" ng-model="recipient">
-			</md-input-container>
-			
-		</div>
-		
-		<div layout="row">
 			<div flex layout="row" layout-align="center center">
 				<span class="md-body-2" style="margin-top: -2vh">File Type:</span>
 				<div class="tagcloud" style="margin-top: -2vh; margin-left: 2vh">
 					<span ng-repeat="tag in fileTags" ng-class="{'available-tag': !tag.select, 'selected-tag': tag.select}" ng-click="selectChip($index, 'file'); selectFileFilterTag(tag.name)">{{tag.name}}</span>
 				</div>
 			</div>
-		</div>
-
-		<div layout="row">
-			<p>Projects:</p>
-			<div flex layout="row" layout-align="center center" class="tagcloud-selection" layout-wrap>
-				<span ng-repeat="tag in projectFilterTags" ng-class="{'available-tag': !tag.select, 'selected-tag': tag.select}" ng-click="selectFilterTag(	$index, 'project')">{{tag.name}}</span>
-			</div>
+			
 		</div>
 		
 	</div>

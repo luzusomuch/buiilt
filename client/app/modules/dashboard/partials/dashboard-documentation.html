@@ -1,12 +1,12 @@
 <div class="detail-header" layout-padding layout="column">
 	
-	<div layout="column" layout-padding>
+	<div layout="column">
 		
-		<div layout="row" flex layout-align="center center">
-			<md-input-container flex="60" style="margin-bottom:-2vh">
-				<label for="">Document Name</label>
-				<input type="text" name="fileName" ng-model="name" md-autofocus>
-			</md-input-container>
+		<div layout="row" layout-align="center center">
+			<span class="md-body-2" style="margin-top:">Projects:</span>
+			<div class="tagcloud-selection-mini" style="margin-left: 2vh" layout-wrap>
+				<span ng-repeat="tag in projectFilterTags" ng-class="{'available-tag': !tag.select, 'selected-tag': tag.select}" ng-click="selectFilterTag(	$index, 'project')">{{tag.name}}</span>
+			</div>
 		</div>
 		
 		<div layout="row">
@@ -17,28 +17,21 @@
 				</div>
 			</div>
 		</div>
-
-		<div layout="row">
-			<p>Projects:</p>
-			<div flex layout="row" layout-align="center center" class="tagcloud-selection" layout-wrap>
-				<span ng-repeat="tag in projectFilterTags" ng-class="{'available-tag': !tag.select, 'selected-tag': tag.select}" ng-click="selectFilterTag(	$index, 'project')">{{tag.name}}</span>
-			</div>
-		</div>
 		
 	</div>
 </div>
 
 <md-list ng-cloak class="main-page-content">
 
-	<div ng-repeat="file in myFiles | filter: filterDocument track by $index" ng-show="file.element.type=='document'">
+	<div ng-repeat="file in myFiles | filter: filterDocument track by $index" ng-show="file.element.type=='document'" ng-click="openLocation(file, 'document')">
 		<md-list-item class="md-3-line" md-ink-ripple>
-			<div flex="80" ng-click="openLocation(file, 'document')" class="md-list-item-text" layout="column">
-	          	<h3>{{ file.name }}({{file.element.notifications.length}})</h3>
-	          	<div layout="row">
-	          		<div flex="70" layout="row">
-	          			Tags: <span class="selected-tag" ng-repeat="tag in file.tags">{{tag}}</span>
-	          		</div>
-          		</div>
+			<div class="md-list-item-text" layout="column">
+				
+	          	<h3 class="md-display-1" style="margin-top: 15px"><span class="update-count">{{task.element.notifications.length}}</span> {{ file.name }}({{file.element.notifications.length}})</h3>
+				
+				<p style="margin-top: 15px; margin-bottom: 15px">
+					<span style="margin-right: 15px"><span class="available-tag">Project Name</span></span>
+					<span style="margin-right: 15px">Tags: <span class="available-tag" ng-repeat="tag in file.tags">{{tag}}</span></span>
           		<p>
           			<span ng-repeat="notification in file.element.limitNotifications">
           				<span ng-show="notification.type=='document-assign'">
@@ -50,13 +43,14 @@
 	          			<span ng-show="notification.type=='document-send-acknowledge'">
 	          				{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} has sent an acknowledgement.
 	          			</span>
-          			</span><span ng-show="{{file.element.notifications.length - file.element.limitNotifications.length > 0}}">... +({{file.element.notifications.length - file.element.limitNotifications.length}}) More</span>
+          			</span>
+					<span ng-show="{{file.element.notifications.length - file.element.limitNotifications.length > 0}}">... +({{file.element.notifications.length - file.element.limitNotifications.length}}) More</span>
           		</p>
+				
 	        </div>
-  			<div flex="20">
-        		<md-button class="md-primary" ng-click="showViewFileModal($event, file)">View File</md-button>
-        		<md-button class="md-primary" ng-click="markRead(file)">Mark Read</md-button>
-  			</div>
+			
+    		<md-button class="md-secondary" ng-click="showViewFileModal($event, file)">View File</md-button>
+    		<md-button class="md-secondary" ng-click="markRead(file)">Mark Read</md-button>
 		</md-list-item>
 		<md-divider></md-divider>
 	</div>

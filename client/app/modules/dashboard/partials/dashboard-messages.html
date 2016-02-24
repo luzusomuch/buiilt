@@ -1,34 +1,20 @@
 <div class="detail-header" layout-padding layout="column">
 
-	<div layout="column" layout-padding>
-		
-		<div layout="row">
-			<md-input-container flex="50" style="margin-bottom: -2vh">
-				<label for="">Message Thread Name</label>
-				<input type="text" name="messageThreadName" ng-model="name" md-autofocus>
-			</md-input-container>
-			
-			<md-input-container flex="50" style="margin-bottom: -2vh">
-				<label for="">Message Thread Recipients</label>
-				<input type="text" name="messageThreadRecipients" ng-model="recipient">
-			</md-input-container>
-			
-		</div>
+	<div layout="column">
 		
 		<div layout="row" layout-align="center center">
-			<md-input-container flex="60" style="margin-bottom: -2vh">
-				<label for="">Message Replies</label>
-				<input type="text" name="messageReplies" ng-model="reply">
-			</md-input-container>
-		</div>
-
-		<div layout="row">
-			<p>Projects:</p>
-			<div flex layout="row" layout-align="center center" class="tagcloud-selection" layout-wrap>
+			<span class="md-body-2" style="margin-top:">Projects:</span>
+			<div class="tagcloud-selection-mini" style="margin-left: 2vh" layout-wrap>
 				<span ng-repeat="tag in projectFilterTags" ng-class="{'available-tag': !tag.select, 'selected-tag': tag.select}" ng-click="selectFilterTag(	$index, 'project')">{{tag.name}}</span>
 			</div>
 		</div>
 		
+		<div layout="row">
+			<md-input-container flex style="margin-bottom: -2vh">
+				<label for="">Message Thread Name</label>
+				<input type="text" name="messageThreadName" ng-model="name" md-autofocus>
+			</md-input-container>
+		</div>
 	</div>
 	
 </div>
