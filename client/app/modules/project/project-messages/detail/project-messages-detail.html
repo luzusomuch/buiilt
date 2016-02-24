@@ -6,7 +6,7 @@
 			<p>{{thread.name}}</p>
 			<span flex></span>
 			<div>
-				<md-button ng-click="showReplyModal($event)">Send a Reply</md-button>
+				<md-button ng-click="showReplyModal($event)">Compose a Message</md-button>
 			</div>
 	    </div>
 		
@@ -77,7 +77,7 @@
 				  
   				  <md-fab-actions>
 			  	      <md-button aria-label="Send a Reply" class="md-fab md-raised md-mini md-primary" ng-click="showReplyModal($event)">
-						  <md-tooltip md-direction="left">Send a Reply</md-tooltip>
+						  <md-tooltip md-direction="left">Compose a Message</md-tooltip>
 					      <md-icon class="material-icons">reply</md-icon>
 			  	      </md-button>
 			  	      <!-- <md-button aria-label="Edit the Message Details" class="md-fab md-raised md-mini md-primary" ng-click="showEditMessageModal($event)" ng-show="thread.owner._id == currentUser._id">
