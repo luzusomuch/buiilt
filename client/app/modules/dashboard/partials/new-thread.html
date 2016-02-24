@@ -8,19 +8,33 @@
         
         <md-dialog-content>
             <div class="md-dialog-content" layout="column">
-                <div flex layout="row" layout-align="center center" class="tagcloud-selection" layout-wrap>
-                    <span ng-repeat="project in projects" ng-class="{'selected-tag': project.select, 'available-tag': !project.select}" ng-click="selectProject($index)">{{project.name}}</span>
-                </div>
+				
+				<div layout="column">
+					<p class="md-body-2">Which project should this message be added to:</p> 
+	                <div flex layout="row" layout-align="center center" class="tagcloud-selection" layout-wrap>
+	                    <span ng-repeat="project in projects" ng-class="{'selected-tag': project.select, 'available-tag': !project.select}" ng-click="selectProject($index)">{{project.name}}</span>
+	                </div>
+				</div>
                 
                 <div layout="column">
-                    <p class="md-body-2">Provide a name for the message thread:</p>
+                    <p class="md-body-2">Provide a subject for the message thread:</p>
                     <div layout="row">
                         <md-input-container flex="66" flex-offset="15">
-                            <label>Message Thread Name</label>
+                            <label>Subject of Thread</label>
                             <input md-autofocus type="text" ng-model="thread.name" name="name" required/>
                         </md-input-container>
                     </div>
                 </div>
+				
+				<div layout="column">
+                    <p class="md-body-2">The body of your message:</p>
+                    <div layout="row">
+                        <md-input-container flex="66" flex-offset="15">
+                            <label>Message Body</label>
+                            <input type="text" ng-model="" name="" />
+                        </md-input-container>
+                    </div>
+				</div>
                 
                 <div layout="column">
                     <p class="md-body-2">Select the team members to include in this thread:</p>
@@ -31,9 +45,11 @@
                 
             </div>
         </md-dialog-content>
+		
         <md-dialog-actions>
             <md-button ng-click="cancelNewMessageModal()">Cancel</md-button>
             <md-button type="submit" class="md-primary">Create Message Thread</md-button>
         </md-dialog-actions>
+		
     </form>
 </md-dialog>
