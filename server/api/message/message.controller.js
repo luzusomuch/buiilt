@@ -13,7 +13,7 @@ var _ = require('lodash');
 var async = require('async');
 var EventBus = require('../../components/EventBus');
 
-function populateNewThread(thread, res){
+function populateNewThread(thread, res, req){
     Thread.populate(thread, [
         {path: "owner", select: "_id email name"},
         {path: "messages.user", select: "_id email name"},
@@ -26,6 +26,16 @@ function populateNewThread(thread, res){
                 event: 'thread:new',
                 room: member._id.toString(),
                 data: thread
+            });
+            EventBus.emit('socket:emit', {
+                event: 'dashboard:new',
+                room: member._id.toString(),
+                data: {
+                    type: "thread",
+                    _id: thread._id,
+                    thread: thread,
+                    newNotification: {fromUser: req.user, type: "thread-assign"}
+                }
             });
             cb();
         }, function(){
@@ -172,7 +182,7 @@ exports.create = function(req,res) {
                         main.save(function(err) {
                             if (err) {return res.send(500,err);}
                             if (req.body.belongToType === "thread") 
-                                populateNewThread(main, res);
+                                populateNewThread(main, res, req);
                             else if (req.body.belongToType === "task") {
                                 populateTask(main, res);
                             } else if (req.body.belongToType === "file") {
@@ -182,7 +192,7 @@ exports.create = function(req,res) {
                     }
                 });
             } else {
-                populateNewThread(thread, res);
+                populateNewThread(thread, res, req);
             }
         });
     });
