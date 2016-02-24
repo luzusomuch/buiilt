@@ -21,11 +21,11 @@
 
 <md-list ng-cloak class="main-page-content">
 
-	<div ng-repeat="thread in myMessages | filter: searchThread track by $index" ng-click="openLocation(thread, 'thread')">
+	<div ng-repeat="thread in myMessages | filter: searchThread track by $index">
 		
 		<md-list-item class="md-3-line" md-ink-ripple layout-padding>
 		
-			<div class="md-list-item-text">
+			<div flex="80" ng-click="openLocation(thread, 'thread')" class="md-list-item-text">
 				
           		<h3 class="md-display-1" style="margin-top: 15px"><span class="update-count">{{thread.element.notifications.length}}</span> {{ thread.name }}</h3>
 				
@@ -46,9 +46,11 @@
           		</p>
 				
 	        </div>
-			
-            <md-button class="md-secondary" ng-click="showReplyModal($event, thread)">Compose Reply</md-button>
-            <md-button class="md-secondary" ng-click="viewReplyModal($event, thread)" style="margin-right: 90px">View Thread</md-button>
+            <div flex="20">
+                <md-button class="md-secondary" ng-click="showReplyModal($event, thread)">Compose Reply</md-button>
+                <md-button class="md-secondary" ng-click="viewReplyModal($event, thread)" style="margin-right: 90px">View Thread</md-button>
+            </div>
+            
 			
 		</md-list-item>
 		<md-divider></md-divider>
