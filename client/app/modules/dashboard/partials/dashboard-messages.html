@@ -23,18 +23,15 @@
 
 	<div ng-repeat="thread in myMessages | filter: searchThread track by $index">
 		
-		<md-list-item class="md-3-line" md-ink-ripple layout-padding>
+		<md-list-item class="md-2-line" md-ink-ripple layout-padding>
 		
-			<div flex="80" ng-click="openLocation(thread, 'thread')" class="md-list-item-text">
+			<div ng-click="openLocation(thread, 'thread')" class="md-list-item-text">
 				
-          		<h3 class="md-display-1" style="margin-top: 15px"><span class="update-count">{{thread.element.notifications.length}}</span> {{ thread.name }}</h3>
+				<h3 class="md-display-1" style="margin-top: 15px">
+					<strong>{{ thread.name }} ({{thread.element.notifications.length}})</strong> - Project Name
+				</h3>
 				
-          		<p style="margin-top: 15px; margin-bottom: 15px">
-					<span style="margin-right: 15px"><span class="available-tag">Project Name</span></span>
-					<span>Assignees: <span class="available-tag" ng-repeat="member in thread.members">{{(member._id==currentUser._id) ? "Me" : member.name}}</span> <span class="available-tag" ng-repeat="email in thread.notMembers">{{email}}</span></span>
-          		</p>
-				
-          		<p ng-repeat="notification in thread.element.limitNotifications" style="margin-bottom: 15px; margin-left: 5px">
+          		<p ng-repeat="notification in thread.element.limitNotifications" style="margin-top: 15px; margin-bottom: 15px">
       				<span ng-show="notification.type=='thread-assign'">
       					{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} has assigned <span ng-repeat="member in thread.members">{{(member._id==currentUser._id) ? "me" : member.name}}, </span>
 						<span ng-repeat="email in thread.notMembers">{{email}}, </span>
@@ -44,11 +41,10 @@
           			</span>
 					<span ng-show="{{thread.element.notifications.length - thread.element.limitNotifications.length > 0}}">... +({{thread.element.notifications.length - thread.element.limitNotifications.length}}) More</span>
           		</p>
-				
 	        </div>
-            <div flex="20">
-                <md-button class="md-secondary" ng-click="showReplyModal($event, thread)">Compose Reply</md-button>
-                <md-button class="md-secondary" ng-click="viewReplyModal($event, thread)" style="margin-right: 90px">View Thread</md-button>
+			
+            <div>
+                <md-button class="md-secondary" ng-click="showReplyModal($event, thread)"><md-icon class="material-icons">reply</md-icon><md-tooltip md-direction="down">Compose Reply</md-tooltip></md-button>
             </div>
             
 			

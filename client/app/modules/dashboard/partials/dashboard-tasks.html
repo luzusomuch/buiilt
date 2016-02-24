@@ -38,19 +38,15 @@
 
 	<div ng-repeat="task in myTasks | filter: searchTask track by $index">
 		
-		<md-list-item class="md-3-line" md-ink-ripple layout-padding>
+		<md-list-item class="md-2-line" md-ink-ripple layout-padding>
 	
-			<div flex="80" ui-sref="project.tasks.detail({id: task.project._id, taskId: task._id})" class="md-list-item-text">
+			<div ui-sref="project.tasks.detail({id: task.project._id, taskId: task._id})" class="md-list-item-text">
+				
+				<h3 class="md-display-1" style="margin-top: 15px">
+					<strong>{{ task.description }} ({{task.element.notifications.length}})</strong> [Due {{(task.dueDate) ? task.dueDate : task.dateEnd | date: 'MM/dd/yyyy'}}] - Project Name
+				</h3>
 			
-		        <h3 class="md-display-1" style="margin-top: 15px"><span class="update-count">{{task.element.notifications.length}}</span> {{ task.description }}</h3>
-			
-    			<p style="margin-top: 15px; margin-bottom: 15px">
-					<span style="margin-right: 15px"><span class="available-tag">Project Name</span></span>
-					<span style="margin-right: 15px">Due: <span class="available-tag">{{(task.dueDate) ? task.dueDate : task.dateEnd | date: 'MM/dd/yyyy'}}</span></span>
-					<span>Assignees: <span class="available-tag" ng-repeat="member in task.members">{{(member._id==currentUser._id) ? "Me" : member.name}}</span> <span class="available-tag" ng-repeat="email in task.notMembers">{{email}}</span></span>
-				</p>
-			
-	        	<p ng-repeat="notification in task.element.limitNotifications" style="margin-bottom: 15px; margin-left: 5px">
+	        	<p ng-repeat="notification in task.element.limitNotifications" style="margin-bottom: 15px; margin-top: 15px">
 	        		<span ng-show="notification.type=='task-assign'">
 	        			This task was assigned to <span ng-repeat="member in task.members">{{(member._id==currentUser._id) ? "you" : member.name}}, </span> <span ng-repeat="email in notMembers">{{email}}, </span>.
 	        		</span>
@@ -63,10 +59,11 @@
 					<span ng-show="{{task.element.notifications.length - task.element.limitNotifications.length > 0}}">... +({{task.element.notifications.length - task.element.limitNotifications.length}}) More</span>
 				</p>
 			</div>
-			<div flex="20">
-	    		<md-button ng-show="task.owner._id==currentUser._id" class="md-secondary" ng-click="showEditTaskModal($event, task)">Edit</md-button>
-	    		<md-button ng-show="!task.completed" class="md-secondary" ng-click="markComplete(task, $index)" style="margin-right: 90px">Mark Complete</md-button>
-	    		<md-button ng-show="task.completed && task.owner._id==currentUser._id" class="md-secondary" ng-click="markRead(task)" style="margin-right: 90px">Mark Read</md-button>
+			
+			<div>
+	    		<md-button ng-show="!task.completed" class="md-secondary" ng-click="markComplete(task)"><md-icon class="material-icons">check</md-icon><md-tooltip md-direction="down">Mark As Complete</md-tooltip></md-button>
+	    		<md-button ng-show="task.completed && task.owner._id==currentUser._id" class="md-secondary" ng-click="markRead(task)" style="margin-right: 90px"><md-icon class="material-icons">clear</md-icon><md-tooltip md-direction="down">Mark As Read</md-tooltip></md-button>
+				<md-button ng-show="task.owner._id==currentUser._id" class="md-secondary" ng-click="showEditTaskModal($event, task)" style="margin-right: 180px"><md-icon class="material-icons">edit</md-icon><md-tooltip md-direction="down">Edit Task</md-tooltip></md-button>
 			</div>
 			
 		</md-list-item>
