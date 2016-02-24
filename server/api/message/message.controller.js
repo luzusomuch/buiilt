@@ -120,6 +120,22 @@ exports.create = function(req,res) {
         thread.project = req.params.id;
         thread.owner = user._id;
         thread.element = {type: req.body.type};
+        var message = {
+            text : req.body.message,
+            user : user,
+            sendAt: new Date()
+        };
+        thread.activities = [];
+        thread.messages = [];
+        thread.activities.push({
+            user: req.user._id,
+            type: 'chat',
+            createdAt: new Date(),
+            element: {
+                message: req.body.message
+            }
+        });
+        thread.messages.push(message);
         if (req.body.belongTo) {
             thread.belongTo.item = {_id: req.body.belongTo};
             thread.belongTo.type = req.body.belongToType;
