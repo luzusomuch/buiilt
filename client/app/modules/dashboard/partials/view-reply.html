@@ -1,8 +1,8 @@
 <md-dialog aria-label="Reply message" flex="70">
-    <form ng-submit="sendMessage()">
+    <form>
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2>View message of {{thread.name}}</h2>
+                <h2>View message of {{selectedThread.name}}</h2>
             </div>
         </md-toolbar>
         
@@ -10,7 +10,7 @@
             <div class="md-dialog-content" layout="column" layout-padding>
                 
                 <md-list>
-                    <md-list-item ng-repeat="message in thread.messages">
+                    <md-list-item ng-repeat="message in selectedThread.messages">
                         <div class="md-list-item-text">
                             <h3>{{message.text}}</h3>
                             <p>{{(message.user._id==currentUser._id) ? "You" : message.user.name}} has sent this message at {{message.createAt | date: 'MM/dd/yyyy hh:mm a' }}</p>
@@ -24,8 +24,8 @@
         
         <md-dialog-actions>
             <md-button ng-click="closeModal()">Cancel</md-button>
-            <md-button ng-click="showReplyModal($event, thread)" class="md-primary">Send Reply</md-button>
-            <md-button ng-click="markRead(thread)" class="md-primary">Mark Read</md-button>
+            <md-button ng-click="showReplyModal($event, selectedThread)" class="md-primary">Send Reply</md-button>
+            <md-button ng-click="markRead(selectedThread)" class="md-primary">Mark Read</md-button>
         </md-dialog-actions>
     </form>
 </md-dialog>

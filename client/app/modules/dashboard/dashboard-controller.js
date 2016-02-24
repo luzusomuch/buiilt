@@ -3,7 +3,13 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
 	$scope.myTasks = myTasks;
 	$scope.myMessages = myMessages;
 	$scope.myFiles = myFiles;
-    $scope.projects = $rootScope.projects;
+    $scope.projects = [];
+    _.each($rootScope.projects, function(project) {
+        if (project.status==="waiting") {
+            $scope.projects.push(project);
+        }
+    });
+    $scope.projectFilterTags = angular.copy($scope.projects);
     $scope.currentUser = $rootScope.currentUser;
 
     $scope.showToast = function(value) {
@@ -74,7 +80,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     };
 
     $scope.selectProject = function($index) {
-        _.each($scope.project, function(project) {
+        _.each($scope.projects, function(project) {
             project.select = false;
         });
         $scope.projects[$index].select = !$scope.projects[$index].select;
@@ -205,7 +211,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     // start message section
     $scope.message = {};
     if ($rootScope.selectedMessage) {
-        $scope.thread = $rootScope.selectedMessage;
+        $scope.selectedThread = $rootScope.selectedMessage;
     }
     $scope.showReplyModal = function(event, message) {
         $rootScope.selectedMessage = message;
@@ -300,7 +306,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             $scope.showToast("Please check your message");
             return;
         } else {
-            messageService.sendMessage({id: $scope.thread._id}, $scope.message).$promise.then(function(res) {
+            messageService.sendMessage({id: $scope.selectedThread._id}, $scope.message).$promise.then(function(res) {
                 $scope.closeModal();
                 $scope.showToast("Your Message Has Been Sent Successfully.");
                 
@@ -471,11 +477,11 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                 $scope.status = null;
             }
         } else if (type === "project") {
-            $scope.projects[index].select = !$scope.projects[index].select;
-            if ($scope.projects[index].select) {
-                $scope.projectsFilter.push($scope.projects[index]._id);
+            $scope.projectFilterTags[index].select = !$scope.projectFilterTags[index].select;
+            if ($scope.projectFilterTags[index].select) {
+                $scope.projectsFilter.push($scope.projectFilterTags[index]._id);
             } else {
-                $scope.projectsFilter.splice(_.indexOf($scope.projectsFilter, $scope.projects[index]._id), 1);
+                $scope.projectsFilter.splice(_.indexOf($scope.projectsFilter, $scope.projectFilterTags[index]._id), 1);
             }
             $rootScope.projectsDashboardFilter = $scope.projectsFilter;
         } else {
