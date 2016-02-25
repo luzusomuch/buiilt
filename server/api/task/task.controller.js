@@ -56,7 +56,8 @@ function populateNewTask(task, res, req){
     Task.populate(task, [
         {path: "owner", select: "_id email name"},
         {path: "members", select: "_id email name"},
-        {path: "activities.user", select: "_id email name"}
+        {path: "activities.user", select: "_id email name"},
+        {path: "project"}
     ], function(err, task) {
         async.each(task.members, function(member, cb) {
             EventBus.emit('socket:emit', {
@@ -311,7 +312,7 @@ exports.myTask = function(req,res) {
         async.each(tasks, function(task, cb) {
             task.element.notifications = [];
             task.element.limitNotifications = [];
-            Notification.find({"element._id": task._id, unread: true})
+            Notification.find({owner: user._id, "element._id": task._id, unread: true})
             .populate("fromUser", "_id name email").exec(function(err, notifications) {
                 if (err) {cb(err);}
                 var index = 1;

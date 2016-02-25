@@ -38,7 +38,7 @@
 					<strong>{{ file.name }} ({{file.element.notifications.length}})</strong> - {{file.project.name}} | Tags: <span ng-repeat="tag in file.tags">{{tag}} </span>
 				</h3>
           		
-				<p ng-repeat="notification in file.element.limitNotifications track by $index"  style="margin-bottom: 15px; margin-top: 15px">
+				<span ng-repeat="notification in file.element.limitNotifications track by $index"  style="margin-bottom: 15px; margin-top: 15px">
       				<span ng-show="notification.type=='file-assign'">
       					{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} assigned you to this file.
       				</span>
@@ -48,8 +48,7 @@
           			<span ng-show="notification.type=='file-send-acknowledge'">
           				{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} sent an acknowledgement.
           			</span>
-					<span ng-show="{{file.element.notifications.length - file.element.limitNotifications.length > 0}}">... +({{file.element.notifications.length - file.element.limitNotifications.length}}) More</span>
-          		</p>
+          		</span><span ng-show="{{file.element.notifications.length - file.element.limitNotifications.length > 0}}">... +({{file.element.notifications.length - file.element.limitNotifications.length}}) More</span>
 				
 	        </div>
 			

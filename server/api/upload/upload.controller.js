@@ -28,6 +28,7 @@ var exec = require('child_process').exec;
 var config = require('./../../config/environment');
 var RelatedItem = require('../../components/helpers/related-item');
 var EventBus = require('../../components/EventBus');
+var mongoose = require("mongoose");
 
 var getMainItem = function(type) {
     var _item = {};
@@ -205,6 +206,7 @@ exports.uploadReversion = function(req, res) {
                                 data: JSON.parse(JSON.stringify(file))
                             });
                         }
+                        var randomId = mongoose.Types.ObjectId();
                         _.each(acknowledgeUsers, function(user) {
                             if (file.element.type === "file" && user._id) {
                                 EventBus.emit('socket:emit', {
@@ -214,7 +216,7 @@ exports.uploadReversion = function(req, res) {
                                         type: "file",
                                         _id: file._id,
                                         file: JSON.parse(JSON.stringify(file)),
-                                        newNotification: {fromUser: req.user, type: "file-upload-reversion"}
+                                        newNotification: {randomId: randomId, fromUser: req.user, type: "file-upload-reversion"}
                                     }
                                 });
                             } else if (file.element.type === "document" && user._id) {

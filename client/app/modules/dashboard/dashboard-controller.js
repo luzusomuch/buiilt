@@ -43,6 +43,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         if (data.type==="thread") {
             var index = getItemIndex($scope.myMessages, data._id);
             if (index !== -1) {
+                
                 $scope.myMessages[index].element.notifications.push(data.newNotification);
                 if ($scope.myMessages[index].element.limitNotifications.length < 3) {
                     $scope.myMessages[index].element.limitNotifications.push(data.newNotification);
@@ -57,6 +58,8 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             var copyThreads = [];
             _.each($scope.myMessages, function(message) {
                 if (message.name) {
+                    message.element.notifications = _.uniq(message.element.notifications, "message");
+                    message.element.limitNotifications = _.uniq(message.element.limitNotifications, "message");
                     copyThreads.push(message);
                 }
             });
@@ -76,9 +79,11 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                 $scope.myTasks.push(data.task);
             }
             var copyThreads = [];
-            _.each($scope.myTasks, function(message) {
-                if (message.description) {
-                    copyThreads.push(message);
+            _.each($scope.myTasks, function(task) {
+                if (task.description) {
+                    task.element.notifications = _.uniq(task.element.notifications, "type")
+                    task.element.limitNotifications = _.uniq(task.element.limitNotifications, "type")
+                    copyThreads.push(task);
                 }
             });
             $scope.myTasks = copyThreads;
@@ -86,9 +91,16 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         } else if (data.type==="file") {
             var index = getItemIndex($scope.myFiles, data._id);
             if (index !== -1) {
-                $scope.myFiles[index].element.notifications.push(data.newNotification);
-                if ($scope.myFiles[index].element.limitNotifications.length < 3) {
-                    $scope.myFiles[index].element.limitNotifications.push(data.newNotification);
+                var currentNotificationIndex = _.findIndex($scope.myFiles[index].element.notifications, function(notification) {
+                    if (notification.randomId) {
+                        return notification.randomId.toString()===data.newNotification.randomId.toString();
+                    }
+                });
+                if (currentNotificationIndex===-1) {
+                    $scope.myFiles[index].element.notifications.push(data.newNotification);
+                    if ($scope.myFiles[index].element.limitNotifications.length < 3) {
+                        $scope.myFiles[index].element.limitNotifications.push(data.newNotification);
+                    }
                 }
             } else {
                 data.file.element.limitNotifications = [];
@@ -278,8 +290,12 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                     //Track New Task
                     mixpanel.identify($rootScope.currentUser._id);
                     mixpanel.track("New Task Created");
+
+                    _.each($scope.projects, function(project) {
+                        project.select = false;
+                    });
                     
-                    $state.go("project.tasks.detail", {id: res.project, taskId: res._id});
+                    $state.go("project.tasks.detail", {id: res.project._id, taskId: res._id});
                 }, function(err) {$scope.showToast("There Has Been An Error...");});
             } else {
                 $scope.showToast("Please Select At Least 1 Assignee...");
@@ -439,6 +455,10 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                 //Track Message Thread Creation
                 mixpanel.identify($rootScope.currentUser._id);
                 mixpanel.track("New Message Thread Created");
+
+                _.each($scope.projects, function(project) {
+                    project.select = false;
+                });
                 
                 $state.go("project.messages.detail", {id: $scope.selectedProjectId, messageId: res._id});
             }, function(err) {
@@ -510,11 +530,11 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     $scope.openLocation = function(item, type) {
         notificationService.read({_id : item._id}).$promise.then(function() {
             if (type === "thread") 
-                $state.go("project.messages.detail", {id: item.project, messageId: item._id});
+                $state.go("project.messages.detail", {id: item.project._id, messageId: item._id});
             else if (type === "file") {
-                $state.go("project.files.detail", {id: item.project, fileId: item._id});
+                $state.go("project.files.detail", {id: item.project._id, fileId: item._id});
             } else if (type === "document") {
-                $state.go("project.documentation.detail", {id: item.project, documentId: item._id});
+                $state.go("project.documentation.detail", {id: item.project._id, documentId: item._id});
             }
         });
     };

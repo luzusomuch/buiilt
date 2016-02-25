@@ -12,6 +12,7 @@ var RelatedItem = require('../../components/helpers/related-item');
 var _ = require('lodash');
 var async = require('async');
 var EventBus = require('../../components/EventBus');
+var mongoose = require("mongoose");
 
 function populateNewThread(thread, res, req){
     Thread.populate(thread, [
@@ -19,7 +20,8 @@ function populateNewThread(thread, res, req){
         {path: "messages.user", select: "_id email name"},
         {path: "messages.mentions", select: "_id email name"},
         {path: "members", select: "_id email name"},
-        {path: "activities.user", select: "_id email name"}
+        {path: "activities.user", select: "_id email name"},
+        {path: "project"}
     ], function(err, thread) {
         async.each(thread.members, function(member, cb) {
             EventBus.emit('socket:emit', {
@@ -272,22 +274,25 @@ exports.sendMessage = function(req,res) {
                     if (err) {
                         return res.send(422,err);
                     } else {
-                        var owners = thread.members;
-                        owners.push(thread.owner);
-                        _.remove(owners, req.user._id);
-                        _.each(owners, function(user) {
-                            EventBus.emit('socket:emit', {
-                                event: 'dashboard:new',
-                                room: user.toString(),
-                                data: {
-                                    type: "thread",
-                                    _id: thread._id,
-                                    thread: thread,
-                                    newNotification: {fromUser: req.user, message: data.text, type: "thread-message"}
-                                }
+                        Thread.populate(thread, [{path: "project"}], function(err, thread) {
+                            if (err) {return res.send(500,err);}
+                            var owners = thread.members;
+                            owners.push(thread.owner);
+                            _.remove(owners, req.user._id);
+                            _.each(owners, function(user) {
+                                EventBus.emit('socket:emit', {
+                                    event: 'dashboard:new',
+                                    room: user.toString(),
+                                    data: {
+                                        type: "thread",
+                                        _id: thread._id,
+                                        thread: thread,
+                                        newNotification: {fromUser: req.user, message: data.text, type: "thread-message"}
+                                    }
+                                });
                             });
+                            populateThread(thread, res);
                         });
-                        populateThread(thread, res);
                     }
                 });
             });

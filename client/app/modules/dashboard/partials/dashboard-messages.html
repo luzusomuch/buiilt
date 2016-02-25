@@ -31,7 +31,7 @@
 					<strong>{{ thread.name }} ({{thread.element.notifications.length}})</strong> - {{thread.project.name}}
 				</h3>
 				
-          		<p ng-repeat="notification in thread.element.limitNotifications track by $index" style="margin-top: 15px; margin-bottom: 15px">
+          		<span ng-repeat="notification in thread.element.limitNotifications track by $index" style="margin-top: 15px; margin-bottom: 15px">
       				<span ng-show="notification.type=='thread-assign'">
       					{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} has assigned <span ng-repeat="member in thread.members">{{(member._id==currentUser._id) ? "me" : member.name}}, </span>
 						<span ng-repeat="email in thread.notMembers">{{email}}, </span>
@@ -39,8 +39,7 @@
           			<span ng-show="notification.type=='thread-message'">
           				{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} has sent a reply: "{{notification.message}}".
           			</span>
-					<span ng-show="{{thread.element.notifications.length - thread.element.limitNotifications.length > 0}}">... +({{thread.element.notifications.length - thread.element.limitNotifications.length}}) More</span>
-          		</p>
+          		</span><span ng-show="{{thread.element.notifications.length - thread.element.limitNotifications.length > 0}}">... +({{thread.element.notifications.length - thread.element.limitNotifications.length}}) More</span>
 	        </div>
 			
             <div>
