@@ -34,11 +34,11 @@
 		
 			<div ng-click="openLocation(file, 'file')" class="md-list-item-text">
 				
-				<h3 class="md-display-1" style="margin-top: 15px">
+				<h3 class="md-display-1" style="margin-top: 15px; margin-bottom: 5px">
 					<strong>{{ file.name }} ({{file.element.notifications.length}})</strong> - {{file.project.name}} | Tags: <span ng-repeat="tag in file.tags">{{tag}} </span>
 				</h3>
           		
-				<span ng-repeat="notification in file.element.limitNotifications track by $index"  style="margin-bottom: 15px; margin-top: 15px">
+				<span class="md-body-2" ng-repeat="notification in file.element.limitNotifications track by $index">
       				<span ng-show="notification.type=='file-assign'">
       					{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} assigned you to this file.
       				</span>

@@ -42,11 +42,11 @@
 	
 			<div ui-sref="project.tasks.detail({id: task.project._id, taskId: task._id})" class="md-list-item-text">
 				
-				<h3 class="md-display-1" style="margin-top: 15px">
+				<h3 class="md-display-1" style="margin-top: 15px; margin-bottom: 5px">
 					<strong>{{ task.description }} ({{task.element.notifications.length}})</strong> [Due {{(task.dueDate) ? task.dueDate : task.dateEnd | date: 'dd/MM/yyyy'}}] - {{task.project.name}}
 				</h3>
 			
-	        	<span ng-repeat="notification in task.element.limitNotifications track by $index" style="margin-bottom: 15px; margin-top: 15px">
+	        	<span class="md-body-2" ng-repeat="notification in task.element.limitNotifications track by $index">
 	        		<span ng-show="notification.type=='task-assign'">
 	        			This task was assigned to <span ng-repeat="member in task.members">{{(member._id==currentUser._id) ? "you" : member.name}}, </span> <span ng-repeat="email in notMembers">{{email}}, </span>.
 	        		</span>
