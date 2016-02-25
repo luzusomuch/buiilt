@@ -253,7 +253,7 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
 					mixpanel.track("New Task Created");
 					
                     $rootScope.$broadcast("Task.Inserted", res);
-					$state.go("project.tasks.detail", {id: res.project, taskId: res._id});
+					$state.go("project.tasks.detail", {id: res.project._id, taskId: res._id});
 				}, function(err) {$scope.showToast("There Has Been An Error...");});
 			} else {
 				$scope.showToast("Please Select At Least 1 Assignee...");

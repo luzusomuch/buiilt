@@ -12,7 +12,10 @@
                     <md-menu-item ng-show="document.fileHistory.length==0">
                         <md-button>No versions yet</md-button>
                     </md-menu-item>
-                    <md-menu-item ng-click="openHistoryDetail($event, history)" ng-repeat="history in document.fileHistory track by $index">
+                    <md-menu-item ng-click="openHistoryDetail($event, {link: document.path, name: document.name})" ng-show="document.fileHistory.length > 1">
+                        <md-button>{{document.createdAt | date: 'dd/MM/yyyy'}} - {{document.version}} - Tags: <span ng-repeat="tag in document.versionTags">{{tag}}, </span> </md-button>
+                    </md-menu-item>
+                    <md-menu-item ng-click="openHistoryDetail($event, history)" ng-repeat="history in document.fileHistory track by $index" ng-show="history.version">
                         <md-button>{{history.createdAt | date: 'dd/MM/yyyy'}} - {{history.version}} - Tags: <span ng-repeat="tag in history.versionTags">{{tag}}, </span> </md-button>
                     </md-menu-item>
                 </md-menu-content>
@@ -44,7 +47,7 @@
                         </p>
 
                         <p ng-switch="activity.type" class="activity-body md-body">
-                            <span ng-switch-when="upload-reversion" layout="column">Description: {{activity.element.description}}</span>
+                            <span ng-switch-when="upload-reversion" layout="column">Document Version: {{activity.element.name}}</span>
                             <span ng-switch-when="upload-file" layout="column">Description: {{activity.element.description}}</span>
                         </p>
 
