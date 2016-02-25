@@ -20,6 +20,12 @@ return $resource('/api/files/:id/:type/:action', {
             action: "acknowledgement"
         }
     },
+    assignMoreMembers: {
+        method: "PUT", 
+        params: {
+            action: "assign-more-members"
+        }
+    },
     interested: {
       method: 'PUT',
       params: {

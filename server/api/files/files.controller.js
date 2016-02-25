@@ -36,6 +36,66 @@ function populateFile(file, res){
     });
 };
 
+exports.assignMoreMembers = function(req, res) {
+    File.findById(req.params.id, function(err, file) {
+        if (err) {return res.send(500,err);}
+        if (!file) {return res.send(404,err);}
+        var activityIndex = _.findIndex(file.activities, function(activity) {
+            if (activity.activityAndHisToryId) 
+                return activity.activityAndHisToryId===req.query.activityAndHisToryId;
+        });
+        var historyIndex = _.findIndex(file.fileHistory, function(history) {
+            if (history.activityAndHisToryId) 
+                return history.activityAndHisToryId===req.query.activityAndHisToryId;
+        });
+        var newMembers = [];
+        if (historyIndex !== -1 && activityIndex !== -1) {
+            _.each(req.body, function(member) {
+                if (member._id) {
+                    file.activities[activityIndex].members.push({_id: member._id});
+                    file.activities[activityIndex].acknowledgeUsers.push({_id: member._id, isAcknow: false});
+                    file.fileHistory[historyIndex].members.push({_id: member._id});
+                    newMembers.push(member._id);
+                } else {
+                    file.activities[activityIndex].members.push({email: member.email});
+                    file.activities[activityIndex].acknowledgeUsers.push({email: member.email, isAcknow: false});
+                    file.fileHistory[historyIndex].members.push({email: member.email});
+                }
+            });
+        }
+        file.save(function(err) {
+            if (err) {return res.send(500,err);}
+            File.populate(file, [
+                {path: "owner", select: "_id email name"},
+                {path: "members", select: "_id email name"},
+                {path: "activities.user", select: "_id email name"},
+                {path: "activities.acknowledgeUsers._id", select: "_id email name"},
+                {path: "project"}
+            ], function(err, file) {
+                EventBus.emit('socket:emit', {
+                    event: 'document:update',
+                    room: file._id.toString(),
+                    data: JSON.parse(JSON.stringify(file))
+                });
+                var randomId = mongoose.Types.ObjectId();
+                _.each(newMembers, function(user) {
+                    EventBus.emit('socket:emit', {
+                        event: 'dashboard:new',
+                        room: user.toString(),
+                        data: {
+                            type: "file",
+                            _id: file._id,
+                            file: JSON.parse(JSON.stringify(file)),
+                            newNotification: {randomId: randomId, fromUser: req.user, type: "document-upload-reversion"}
+                        }
+                    });
+                });
+                return res.send(200, file);
+            });
+        });
+    });
+};
+
 exports.getFilesByProject = function(req, res) {
     var query;
     var userId = (req.query.userId && req.user.role==="admin") ? req.query.userId : req.user._id;

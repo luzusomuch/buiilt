@@ -26,6 +26,7 @@ router.get("/:id/:activityId/:email/download-via-email", controller.acknowledgem
 
 router.put("/:id", auth.isAuthenticated(), controller.update);
 router.put('/:id/interested', auth.isAuthenticated(), controller.interested);
+router.put('/:id/assign-more-members', auth.isAuthenticated(), controller.assignMoreMembers);
 router.delete('/:id', auth.isAuthenticated(), controller.deleteFile);
 router.post('/:id/send-to-document', auth.isAuthenticated(), controller.sendToDocument);
 

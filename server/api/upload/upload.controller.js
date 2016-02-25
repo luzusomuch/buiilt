@@ -177,11 +177,13 @@ exports.uploadReversion = function(req, res) {
                 }
             ], function(err) {
                 if (err) {return res.send(500,err);}
+                var activityAndHisToryId = mongoose.Types.ObjectId();
                 var history = {
                     description: file.description,
                     link: file.path,
                     version: file.version,
-                    createdAt: new Date()
+                    createdAt: new Date(),
+                    activityAndHisToryId: activityAndHisToryId
                 };  
                 var activity = {
                     type: "upload-reversion",
@@ -191,7 +193,8 @@ exports.uploadReversion = function(req, res) {
                     element: {
                         name: newFile.filename,
                         description: req.body.description
-                    }
+                    },
+                    activityAndHisToryId: activityAndHisToryId
                 };
                 if (file.element.type==="document") {
                     activity.members = acknowledgeUsers;

@@ -1,0 +1,27 @@
+<md-dialog aria-label="Assign More Members to Document Version" flex="70">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Assign More Members to Document Version</h2>
+            </div>
+        </md-toolbar>
+        
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column" layout-padding>
+
+                <div layout="column">
+                    <p class="md-body-2">Select the team members who can view this version:</p>
+                    <div layout="row" layout-align="center center" class="tagcloud-selection" layout-wrap>
+                        <span ng-click="selectTag($index, 'member')" ng-class="{'available-tag':!member.select, 'selected-tag': member.select}" ng-repeat="member in projectMembers">{{(member._id) ? member.name : member.email}}<md-icon ng-show="!member._id" class="material-icons non-user-chip cursor-help"><md-tooltip>File will be sent via email to this Team Member</md-tooltip>mail_outline</md-icon></span>
+                    </div>
+                </div>
+                
+            </div>
+        </md-dialog-content>
+        
+        <md-dialog-actions>
+            <md-button ng-click="closeModal()">Cancel</md-button>
+            <md-button ng-click="inviteMoreMembers()" class="md-primary">Assign Members</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

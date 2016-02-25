@@ -119,6 +119,14 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
                 });
             });
             _.remove($scope.projectMembers, {_id: $rootScope.currentUser._id});
+            if ($rootScope.activity) {
+                _.each($rootScope.activity.members, function(member) {
+                    if (member._id) 
+                        _.remove($scope.projectMembers, {_id: member._id});
+                    else
+                        _.remove($scope.projectMembers, {email: member.email});
+                });
+            }
         });
     };
 
@@ -242,5 +250,35 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
                 console.log(Blob.url);
             }
         );
-    }
+    };
+
+    $scope.showInviteMoreMemberModal = function($event, activity) {
+        $rootScope.activity = activity;
+        $mdDialog.show({
+            targetEvent: $event,
+            controller: 'projectDocumentationDetailCtrl',
+            resolve: {
+                document: function($stateParams, fileService) {
+                    return fileService.get({id: $stateParams.documentId}).$promise;
+                }
+            },
+            templateUrl: 'app/modules/project/project-documentation/detail/invite-members.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: false
+        });
+    };
+
+    $scope.inviteMoreMembers = function() {
+        $scope.newMembers = _.filter($scope.projectMembers, {select: true});
+        if ($scope.newMembers.length === 0) {
+            $scope.showToast("Please Select At Least 1 Member");
+            return;
+        } else {
+            fileService.assignMoreMembers({id: $scope.document._id, activityAndHisToryId: $rootScope.activity.activityAndHisToryId}, $scope.newMembers).$promise.then(function(res) {
+                $scope.showToast("Successfully");
+                $scope.closeModal();
+                $rootScope.activity = null;
+            }, function(err) {$scope.showToast("Error");});
+        }
+    };
 });
