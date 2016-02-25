@@ -15,16 +15,23 @@
 	                    <input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/>
 	                </div>
 				</div>
-				
-				<div layout="column">
-					<p class="md-body-2">Provide a description for the changes in this version:</p>
-	                <div layout="row">
-	                    <md-input-container flex="66" flex-offset="15">
-	                        <label>Description of the Changes</label>
-	                        <textarea ng-model="uploadReversion.description" required md-maxlength="500" columns="1" rows="5"></textarea>
-	                    </md-input-container>
-	                </div>
-				</div>
+
+                <div layout="column">
+                    <p class="md-body-2">Provide a document version name for the changes in this version:</p>
+                    <div layout="row">
+                        <md-input-container flex="66" flex-offset="15">
+                            <label>Document version name</label>
+                            <input type="text" name="versionName" ng-model="uploadReversion.files[0].filename" required></input>
+                        </md-input-container>
+                    </div>
+                </div>
+
+                <div layout="column">
+                    <p class="md-body-2">Select at least one tag that is relevant to this document:</p>
+                    <div layout="row" layout-align="center center" class="tagcloud-selection" layout-wrap>
+                        <span ng-click="selectTag($index, 'version')" ng-class="{'available-tag':!tag.select, 'selected-tag': tag.select}" ng-repeat="tag in versionTags">{{tag.tag}}</span>
+                    </div>
+                </div>
 				
             </div>
         </md-dialog-content>

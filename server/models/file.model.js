@@ -36,8 +36,7 @@ var FileSchema = new Schema({
         type: Number
     },
     version: {
-        type: Number,
-        default: 1
+        type: String
     },
     description: String,
     previewData: {//preview meta data which is generated from image, pdf, psd, videos
@@ -88,8 +87,10 @@ var FileSchema = new Schema({
         link: String, 
         version: String, 
         description: String,
+        versionTags: [String],
         createdAt: {type: Date}
-    }]
+    }],
+    versionTags: [String],
 });
 
 /**

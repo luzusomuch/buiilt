@@ -162,13 +162,21 @@ exports.uploadReversion = function(req, res) {
                     version: file.version,
                     createdAt: new Date()
                 };  
-                file.path = newFile.url,
-                file.key = newFile.key,
-                file.server = 's3',
-                file.mimeType = newFile.mimeType,
-                file.description = req.body.description,
-                file.size = newFile.size,
-                file.version = file.version + 1;
+                if (file.element.type==="document") {
+                    history.versionTags = file.versionTags;
+                    var versionTags = [];
+                    _.each(req.body.versionTags, function(tag) {
+                        versionTags.push(tag.tag);
+                    });
+                    file.versionTags = versionTags;
+                } else {
+                    file.description = req.body.description;
+                }
+                file.path = newFile.url;
+                file.key = newFile.key;
+                file.mimeType = newFile.mimeType;
+                file.size = newFile.size;
+                file.version = newFile.filename;
                 file.fileHistory.push(history);
                 var activity = {
                     type: "upload-reversion",
@@ -176,7 +184,7 @@ exports.uploadReversion = function(req, res) {
                     createdAt: new Date(),
                     acknowledgeUsers: acknowledgeUsers,
                     element: {
-                        name: newFile.name,
+                        name: newFile.filename,
                         description: req.body.description
                     }
                 };

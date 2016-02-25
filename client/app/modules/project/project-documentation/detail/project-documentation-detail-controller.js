@@ -4,6 +4,17 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
         $rootScope.$broadcast("UpdateCountNumber", {type: "document", number: document.__v});
     });
 
+    $scope.versionTags = [];
+    _.each($rootScope.currentTeam.versionTags, function(tag) {
+        $scope.versionTags.push({tag:tag});
+    });
+
+    $scope.selectTag = function(index, type) {
+        if (type==="version") {
+            $scope.versionTags[index].select = !$scope.versionTags[index].select;
+        }
+    };
+
     function checkAcknowLedgement(document) {
         _.each(document.activities, function(activity) {
             if (activity.type === "upload-reversion" || activity.type === "upload-file") {
@@ -20,11 +31,6 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
         });
     };
     checkAcknowLedgement($scope.document);
-
-    // $rootScope.$on("Document.Updated", function(event, data) {
-    //     setUploadReversion();
-    //     $scope.document = data;
-    // });
 
     socket.emit("join", document._id);
     socket.on("document:update", function(data) {
@@ -73,7 +79,8 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
 
     function setUploadReversion() {
         $scope.uploadReversion = {
-            files: []
+            files: [],
+            versionTags: []
         };
         $scope.allowUploadReversion = ($scope.document.owner._id == $rootScope.currentUser._id) ? true : false;
     };
@@ -95,9 +102,13 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
     $scope.onSuccess = onSuccess;
 
     $scope.uploadReversionDocument = function() {
+        $scope.uploadReversion.versionTags = _.filter($scope.versionTags, {select: true});
         if ($scope.uploadReversion.files.length === 0) {
             $scope.showToast("Please Select a File to Upload...");
             return;
+        } else if ($scope.uploadReversion.versionTags.length===0) {
+            $scope.showToast("Please Select At Least 1 Version Tag");
+            return false
         } else {
             uploadService.uploadReversion({id: $scope.document._id}, $scope.uploadReversion).$promise.then(function(res) {
                 $scope.closeModal();
