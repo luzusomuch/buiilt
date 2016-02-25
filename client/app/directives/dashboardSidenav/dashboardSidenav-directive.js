@@ -47,9 +47,11 @@ angular.module('buiiltApp').directive('dashboardSidenav', function(){
                 } else if (data.type==="task") {
                     $scope.totalTaskUpdates = $scope.totalTaskUpdates + 1;
                 } else if (data.type==="file") {
-                    $scope.totalFileUpdates = $scope.totalFileUpdates + 1;
-                } else {
-                    $scope.totalDocumentUpdates = $scope.totalDocumentUpdates + 1;
+                    if (data.file.element.type==="file") {
+                        $scope.totalFileUpdates = $scope.totalFileUpdates + 1;
+                    } else if (data.file.element.type==="document") {
+                        $scope.totalDocumentUpdates = $scope.totalDocumentUpdates + 1;
+                    }
                 }
             });
 

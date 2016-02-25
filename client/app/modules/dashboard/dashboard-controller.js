@@ -89,6 +89,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             $scope.myTasks = copyThreads;
             sortTask($scope.myTasks);
         } else if (data.type==="file") {
+            console.log(data);
             var index = getItemIndex($scope.myFiles, data._id);
             if (index !== -1) {
                 var currentNotificationIndex = _.findIndex($scope.myFiles[index].element.notifications, function(notification) {
