@@ -47,7 +47,7 @@
                         </p>
 
                         <p ng-switch="activity.type" class="activity-body md-body">
-                            <span ng-switch-when="upload-reversion" layout="column">Document Version: {{activity.element.name}}</span>
+                            <span ng-switch-when="upload-reversion" layout="column">Document Version: <strong>{{activity.element.name}}</strong>. Document Version Tag: <strong>{{activity.element.versionTags[0]}}</strong></span>
                             <span ng-switch-when="upload-file" layout="column">Description: {{activity.element.description}}</span>
                         </p>
 

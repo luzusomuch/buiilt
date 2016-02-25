@@ -24,31 +24,6 @@ EventBus.onSeries('File.Inserted', function(file, next) {
             });
         } else
             return next();
-    } else if (file.element.type === "document") {
-        var roles = ["builders", "clients", "architects", "subcontractors", "consultants"];
-        People.findOne({project: file.project}, function(err, people) {
-            if (err || !people)
-                return next();
-            else {
-                async.each(roles, function(role, cb) {
-                    async.each(people[role], function(tender, callback) {
-                        if (tender.hasSelect && tender.tenderers[0]._id && tender.tenderers[0]._id.toString()!==file.owner.toString()) {
-                            var params = {
-                                owners : [tender.tenderers[0]._id],
-                                fromUser : file.owner,
-                                element : file,
-                                referenceTo : 'document',
-                                type : 'document-assign'
-                            };
-                            NotificationHelper.create(params, callback);
-                        } else 
-                            callback();
-                    }, cb);
-                }, function(){
-                    return next();
-                });
-            }
-        });
     } else {
         return next();
     }

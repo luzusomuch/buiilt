@@ -192,7 +192,7 @@ exports.uploadReversion = function(req, res) {
                     acknowledgeUsers: acknowledgeUsers,
                     element: {
                         name: newFile.filename,
-                        description: req.body.description
+                        description: req.body.description,
                     },
                     activityAndHisToryId: activityAndHisToryId
                 };
@@ -205,6 +205,7 @@ exports.uploadReversion = function(req, res) {
                         versionTags.push(tag.tag);
                     });
                     file.versionTags = versionTags;
+                    activity.element.versionTags = versionTags;
                 } else {
                     file.description = req.body.description;
                 }
@@ -305,28 +306,29 @@ exports.upload = function(req, res){
                     });
                 }, callback);
             } else {
-                var roles = ["builders", "clients", "architects", "subcontractors", "consultants"];
-                People.findOne({project: req.params.id}, function(err, people) {
-                    if (err || !people) {callback();}
-                    else {
-                        _.each(roles, function(role) {
-                            _.each(people[role], function(tender){
-                                if (tender.hasSelect && tender.tenderers[0]._id) {
-                                    acknowledgeUsers.push({_id: tender.tenderers[0]._id});
-                                    if (tender.tenderers[0]._id.toString()===req.user._id.toString()) {
-                                        _.each(tender.tenderers[0].teamMember, function(member) {
-                                            acknowledgeUsers.push({_id: member});
-                                        });
-                                    }
-                                } else if (tender.hasSelect && tender.tenderers[0].email) {
-                                    acknowledgeUsers.push({email: tender.tenderers[0].email});
-                                }
-                            });
-                        });
-                        _.remove(acknowledgeUsers, {_id: req.user._id});
-                        callback();
-                    }
-                });
+                // var roles = ["builders", "clients", "architects", "subcontractors", "consultants"];
+                // People.findOne({project: req.params.id}, function(err, people) {
+                //     if (err || !people) {callback();}
+                //     else {
+                //         _.each(roles, function(role) {
+                //             _.each(people[role], function(tender){
+                //                 if (tender.hasSelect && tender.tenderers[0]._id) {
+                //                     acknowledgeUsers.push({_id: tender.tenderers[0]._id});
+                //                     if (tender.tenderers[0]._id.toString()===req.user._id.toString()) {
+                //                         _.each(tender.tenderers[0].teamMember, function(member) {
+                //                             acknowledgeUsers.push({_id: member});
+                //                         });
+                //                     }
+                //                 } else if (tender.hasSelect && tender.tenderers[0].email) {
+                //                     acknowledgeUsers.push({email: tender.tenderers[0].email});
+                //                 }
+                //             });
+                //         });
+                //         _.remove(acknowledgeUsers, {_id: req.user._id});
+                //         callback();
+                //     }
+                // });
+                callback();
             }
         }
     ], function(err, result) {

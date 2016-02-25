@@ -102,7 +102,7 @@ exports.getFilesByProject = function(req, res) {
     if (req.params.type === "file") {
         query = {project: req.params.id, 'element.type': 'file', $or: [{owner: userId}, {members: userId}]};
     } else if (req.params.type === "document") {
-        query = {project: req.params.id, "element.type": "document"};
+        query = {project: req.params.id, "element.type": "document", $or:[{"fileHistory.members._id": userId},{owner: userId}]};
     } else if (req.params.type === "tender") {
         query = {project: req.params.id, "element.type": "tender", "belongTo.item._id": mongoose.Types.ObjectId(req.query.tenderId)};
     }
