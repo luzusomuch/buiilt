@@ -53,11 +53,11 @@
                         </div>
 
                         <div ng-show="document.owner._id==currentUser._id && activity.type=='upload-reversion'">
-                            <md-button class="md-primary" ng-click="showInviteMoreMemberModal($event, activity)">Invite More Members</md-button>
+                            <md-button class="md-primary" ng-click="showInviteMoreMemberModal($event, activity)">Assign This Version to Others</md-button>
                         </div>                        
 
                         <div layout="row" layout-align="center center" ng-show="activity.user._id!=currentUser._id && !activity.isAcknow && (activity.type==='upload-file' || activity.type==='upload-reversion')">
-                            <md-button ng-click="acknowledgement(activity)" class="md-primary">Acknowledge This Document</md-button>
+                            <md-button ng-click="acknowledgement(activity)" class="md-primary">Acknowledge This Version</md-button>
                         </div>
                     </div>
                 </div>
