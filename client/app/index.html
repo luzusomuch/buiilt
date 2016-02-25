@@ -40,7 +40,6 @@
 	<script src="/bower_components/angular-ui-utils/ui-utils.js"></script>
 	<script src="/bower_components/angular-tooltips/dist/angular-tooltips.min.js"></script>
 	<script src="/bower_components/angular-socket-io/socket.min.js"></script>
-	<script src="/bower_components/angular-file-upload/angular-file-upload.min.js"></script>
 	<script src="/bower_components/angular-notify/angular-notify.js"></script>
 	<script src="/bower_components/angular-loading-bar/build/loading-bar.js"></script>
 	<script src="/bower_components/velocity/velocity.js"></script>
@@ -82,23 +81,13 @@
 
 	<script src="/app/components/filters.js"></script>
 	<script src="/app/components/directive.js"></script>
-	<script src="/app/components/angular-slimscroll/angular-slimscroll.js"></script>
 	<script src="/app/components/socket/socket.service.js"></script>
-	<script src="/app/components/modal/modal.service.js"></script>
 
 	<script src="socket.io-client/socket.io.js"></script>
 	<script src="/app/directives/footer/footer-directive.js"></script>
 	<script src="/app/directives/header/header-directive.js"></script>
-	<script src="/app/directives/quote/quote-directive.js"></script>
-	<script src="/app/directives/upload/upload-directive.js"></script>
-	<script src="/app/directives/file/file-directive.js"></script>
-	<script src="/app/directives/task/task-directive.js"></script>
-	<script src="/app/directives/message/message-directive.js"></script>
 	<script src="/app/directives/notification/notification-directive.js"></script>
-	<script src="/app/directives/addOn/add-on-directive.js"></script>
-	<script src="/app/directives/addendum/addendum-directive.js"></script>
 	<script src="/app/directives/contenteditable/contenteditable-directive.js"></script>
-	<script src="/app/directives/create-package/create-package-directive.js"></script>
 	<script src="/app/directives/datepicker/datepicker-directive.js"></script>
 	<script src="/app/directives/file-picker-previewer/file-picker-previewer-directive.js"></script>
 	
@@ -120,15 +109,6 @@
 	<script src="/app/modules/auth/forgot-password/forgot-password-controller.js"></script>
 	<script src="/app/modules/auth/reset-password/reset-password-controller.js"></script>
 	<script src="/app/modules/auth/signout/signout-controller.js"></script>
-	<script src="/app/modules/home/main.js"></script>
-	<script src="/app/modules/home/home-controller.js"></script>
-	<script src="/app/modules/user/main.js"></script>
-	<script src="/app/modules/user/user-controller.js"></script>
-
-	<script src="/app/modules/contractors/main.js"></script>
-	<script src="/app/modules/contractors/contractors-controller.js"></script>
-	<script src="/app/modules/materials/main.js"></script>
-	<script src="/app/modules/materials/materials-controller.js"></script>
 	
 	<script src="/app/modules/dashboard/main.js"></script>
 	<script src="/app/modules/dashboard/dashboard-controller.js"></script>
@@ -168,83 +148,27 @@
 	<script src="/app/modules/project/project-files/detail/project-files-detail-controller.js"></script>
 	
 	<script src="/app/modules/project/view-project/view-project-controller.js"></script>
-	
-	<script src="/app/modules/quote-request/main.js"></script>
-	<script src="/app/modules/quote-request/view-request/view-request-controller.js"></script>
-	<script src="/app/modules/quote/main.js"></script>
-	<script src="/app/modules/quote/quote-controller.js"></script>
-	<script src="/app/modules/staff/main.js"></script>
-	<script src="/app/modules/staff/staff-controller.js"></script>
-	<script src="/app/modules/client/main.js"></script>
-	<script src="/app/modules/client/client-controller.js"></script>
-	<script src="/app/modules/document/main.js"></script>
-	<script src="/app/modules/document/document-controller.js"></script>
-	<script src="/app/modules/team/main.js"></script>
-	<script src="/app/modules/team/manager-team/manager-team-controller.js"></script>
-	<script src="/app/modules/contractor-request/main.js"></script>
-	<script src="/app/modules/contractor-request/send-quote/send-quote-controller.js"></script>
-	<script src="/app/modules/contractor-request/view-contractor-request/view-contractor-request-controller.js"></script>
-	<script src="/app/modules/contractor-request/contractor-package-in-process/contractor-package-in-process-controller.js"></script>
-	<script src="/app/modules/material-request/main.js"></script>
-	<script src="/app/modules/material-request/send-quote/send-quote-controller.js"></script>
-	<script src="/app/modules/material-request/view-material-request/view-material-request-controller.js"></script>
-	<script src="/app/modules/material-request/material-package-in-process/material-package-in-process-controller.js"></script>
 	<script src="/app/modules/notification/main.js"></script>
 	<script src="/app/modules/notification/view-notification/view-notification-controller.js"></script>
-	<script src="/app/modules/variation-request/main.js"></script>
-	<script src="/app/modules/variation-request/send-quote/send-quote-controller.js"></script>
-	<script src="/app/modules/variation-request/view-variation-request/view-variation-request-controller.js"></script>
-	<script src="/app/modules/variation-request/variation-in-process/variation-in-process-controller.js"></script>
 	<script src="/app/modules/error/error-controller.js"></script>
 	<script src="/app/modules/error/main.js"></script>
-	<script src="/app/modules/design/main.js"></script>
-	<script src="/app/modules/design/index/design-controller.js"></script>
-	<script src="/app/modules/design/detail/design-detail-controller.js"></script>
-	<script src="/app/modules/builder/main.js"></script>
-	<script src="/app/modules/builder/in-progress/in-progress-controller.js"></script>
-	<script src="/app/modules/builder/send-quote/send-quote-controller.js"></script>
-	<script src="/app/modules/builder/view-request/view-request-controller.js"></script>
-	<script src="/app/modules/builder/list/architect-list-page-controller.js"></script>
-	<script src="/app/modules/people/main.js"></script>
-	<script src="/app/modules/people/people-controller.js"></script>
-	<script src="/app/modules/boards/main.js"></script>
-	<script src="/app/modules/boards/boards-controller.js"></script>
 
 	<script src="/app/services/auth-service.js"></script>
 	<script src="/app/services/user-service.js"></script>
-	<script src="/app/services/contractors-services.js"></script>
-	<script src="/app/services/material-package-service.js"></script>
 	<script src="/app/services/project-service.js"></script>
-	<script src="/app/services/quote-service.js"></script>
-	<script src="/app/services/document-service.js"></script>
 	<script src="/app/services/upload-service.js"></script>
 	<script src="/app/services/team-service.js"></script>
 	<script src="/app/services/inviteToken-service.js"></script>
 	<script src="/app/services/package-invite-service.js"></script>
-	<script src="/app/services/package-service.js"></script>
-	<script src="/app/services/staff-package.js"></script>
 	<script src="/app/services/task-service.js"></script>
 	<script src="/app/services/file-service.js"></script>
-	<script src="/app/services/builder-package.js"></script>
-	<script src="/app/services/quote-request-service.js"></script>
-	<script src="/app/services/registry-for-contractor-service.js"></script>
-	<script src="/app/services/contractor-request-service.js"></script>
-	<script src="/app/services/material-request-service.js"></script>
 	<script src="/app/services/validate-invite-service.js"></script>
 	<script src="/app/services/notification-service.js"></script>
 	<script src="/app/services/message-service.js"></script>
-	<script src="/app/services/add-on-package-service.js"></script>
-	<script src="/app/services/variation-request-service.js"></script>
-	<script src="/app/services/design-service.js"></script>
 	<script src="/app/services/people-service.js"></script>
-	<script src="/app/services/people-chat-service.js"></script>
-	<script src="/app/services/board-service.js"></script>
 	<script src="/app/services/dialog-service.js"></script>
 	<script src="/app/services/tender-service.js"></script>
-	
 
-	<script src="/assets/js/jquery.slimscroll.js"></script>
-	
 	<script>!function(){var e=document.createElement("script"),t=document.getElementsByTagName("script")[0];e.async=1,e.src="https://inlinemanual.com/embed/player.5aff7ac0939b170ff68618a7789a2a80.js",e.charset="UTF-8",t.parentNode.insertBefore(e,t)}();</script>
 	<!-- start Mixpanel --><script type="text/javascript">(function(e,b){if(!b.__SV){var a,f,i,g;window.mixpanel=b;b._i=[];b.init=function(a,e,d){function f(b,h){var a=h.split(".");2==a.length&&(b=b[a[0]],h=a[1]);b[h]=function(){b.push([h].concat(Array.prototype.slice.call(arguments,0)))}}var c=b;"undefined"!==typeof d?c=b[d]=[]:d="mixpanel";c.people=c.people||[];c.toString=function(b){var a="mixpanel";"mixpanel"!==d&&(a+="."+d);b||(a+=" (stub)");return a};c.people.toString=function(){return c.toString(1)+".people (stub)"};i="disable time_event track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config people.set people.set_once people.increment people.append people.union people.track_charge people.clear_charges people.delete_user".split(" ");
 	for(g=0;g<i.length;g++)f(c,i[g]);b._i.push([a,e,d])};b.__SV=1.2;a=e.createElement("script");a.type="text/javascript";a.async=!0;a.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"file:"===e.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";f=e.getElementsByTagName("script")[0];f.parentNode.insertBefore(a,f)}})(document,window.mixpanel||[]);

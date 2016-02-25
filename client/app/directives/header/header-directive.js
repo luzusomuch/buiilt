@@ -3,7 +3,7 @@ angular.module('buiiltApp')
     return {
         restrict: 'E',
         templateUrl: 'app/directives/header/header.html',
-        controller: function($scope,$state, $stateParams, $rootScope,materialPackageService, authService, projectService, contractorService,teamService,filterFilter, builderPackageService, socket, $mdDialog, $mdMedia) {
+        controller: function($scope,$state, $stateParams, $rootScope, authService, projectService,teamService,filterFilter, socket, $mdDialog, $mdMedia) {
             $rootScope.projects = [];
             $scope.submitted = false;
     	  
