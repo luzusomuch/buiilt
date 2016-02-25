@@ -2,26 +2,9 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
     $scope.people = people;
 	$scope.files = files;
 	$scope.uploadFile = {
-		files:[],
 		tags:[],
 		members:[]
 	};
-    $scope.pickFile = pickFile;
-
-    $scope.onSuccess = onSuccess;
-
-    function pickFile(){
-        filepickerService.pick(
-        	// add max files for multiple pick
-            // {maxFiles: 5},
-            onSuccess
-        );
-    };
-
-    function onSuccess(file){
-    	file.type = "file";
-    	$scope.uploadFile.files.push(file);
-    };
 
     // filter section
     $scope.filterTags = [];
@@ -123,13 +106,12 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
 	$scope.createNewFile = function() {
         $scope.uploadFile.members = _.filter($scope.projectMembers, {select: true});
         $scope.uploadFile.tags = _.filter($scope.tags, {select: true});
-		if ($scope.uploadFile.files.length == 0) {
-			$scope.showToast("Please Select a FIle...");
-		} else if ($scope.uploadFile.tags.length == 0) {
+		if ($scope.uploadFile.tags.length == 0) {
 			$scope.showToast("Please Select At Least 1 Tag...");
 		} else if ($scope.uploadFile.members.length == 0) {
 			$scope.showToast("Please Select At Lease 1 Team Member...");
 		} else {
+            $scope.uploadFile.type="file";
 			uploadService.upload({id: $stateParams.id}, $scope.uploadFile).$promise.then(function(res) {
 				$mdDialog.hide();
 				$scope.showToast("File Has Been Uploaded Successfully.");
@@ -138,8 +120,8 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
 				mixpanel.identify($rootScope.currentUser._id);
 				mixpanel.track("New File Created");
 				
-                $rootScope.$broadcast("File.Inserted", res[0]);
-                $state.go("project.files.detail", {id: res[0].project, fileId: res[0]._id});
+                $rootScope.$broadcast("File.Inserted", res);
+                $state.go("project.files.detail", {id: res.project._id, fileId: res._id});
 			}, function(err) {
 				$scope.showToast("There Has Been An Error...");
 			});

@@ -317,7 +317,6 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
 
     $scope.setRelatedFile = function() {
         $scope.relatedFile = {
-            files:[],
             tags:[],
             belongTo: $scope.thread._id,
             belongToType: "thread"
@@ -325,42 +324,20 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
     }
     $scope.setRelatedFile();
 
-    $scope.pickFile = pickFile;
-
-    $scope.onSuccess = onSuccess;
-
-    function pickFile(){
-        filepickerService.pick(
-            // add max files for multiple pick
-            // {maxFiles: 5},
-            onSuccess
-        );
-    };
-
-    function onSuccess(file){
-        file.type = "file";
-        $scope.relatedFile.files.push(file);
-    };
-
     $scope.createRelatedFile = function() {
-        // Old code
-        // $scope.relatedFile.members = _.filter($scope.invitees, {select: true});
-
-        // New one
         $scope.relatedFile.members = $scope.invitees;
         $scope.relatedFile.tags = _.filter($scope.tags, {select: true});
-        if ($scope.relatedFile.files.length == 0) {
-            $scope.showToast("Please Select a File...");
-        } else if ($scope.relatedFile.tags.length == 0) {
+        if ($scope.relatedFile.tags.length == 0) {
             $scope.showToast("Please Select At Least 1 Tag...");
         } else if ($scope.relatedFile.members.length == 0) {
             $scope.showToast("Please Select At Least 1 Recipient...");
         } else { 
+            $scope.relatedFile.type="file";
             uploadService.upload({id: $stateParams.id}, $scope.relatedFile).$promise.then(function(res) {
                 $scope.closeModal();
                 $scope.showToast("Related File Has Been Uploaded Successfully.");
                 $scope.setRelatedFile();
-                $state.go("project.files.detail", {id: res[0].project, fileId: res[0]._id});
+                $state.go("project.files.detail", {id: res.project._id, fileId: res._id});
             }, function(err) {$scope.showToast("Error");});
         }
     };

@@ -549,58 +549,43 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     };
 
     $scope.uploadFile = {
-        files:[],
         tags:[],
         members:[]
     };
-    $scope.pickFile = pickFile;
 
-    $scope.onSuccess = onSuccess;
+    $scope.createNewFile = function(form) {
+        if (form.$valid) {
+            $scope.uploadFile.members = _.filter($scope.projectMembers, {select: true});
+            $scope.uploadFile.tags = _.filter($scope.fileTags, {select: true});
+            if ($scope.uploadFile.tags.length == 0) {
+                $scope.showToast("Please Select At Least 1 Tag...");
+            } else if ($scope.uploadFile.members.length == 0) {
+                $scope.showToast("Please Select At Lease 1 Team Member...");
+            } else {
+                $scope.uploadFile.type = "file";
+                uploadService.upload({id: $scope.selectedProjectId}, $scope.uploadFile).$promise.then(function(res) {
+                    $mdDialog.hide();
+                    $scope.showToast("File Has Been Uploaded Successfully.");
+                    
+                    //Track New File
+                    mixpanel.identify($rootScope.currentUser._id);
+                    mixpanel.track("New File Created");
 
-    function pickFile(){
-        filepickerService.pick(
-            // add max files for multiple pick
-            // {maxFiles: 5},
-            onSuccess
-        );
-    };
+                    _.each($scope.fileTags, function(tag) {
+                        tag.select = false;
+                    });
 
-    function onSuccess(file){
-        file.type = "file";
-        $scope.uploadFile.files.push(file);
-    };
-
-    $scope.createNewFile = function() {
-        $scope.uploadFile.members = _.filter($scope.projectMembers, {select: true});
-        $scope.uploadFile.tags = _.filter($scope.fileTags, {select: true});
-        if ($scope.uploadFile.files.length == 0) {
-            $scope.showToast("Please Select a FIle...");
-        } else if ($scope.uploadFile.tags.length == 0) {
-            $scope.showToast("Please Select At Least 1 Tag...");
-        } else if ($scope.uploadFile.members.length == 0) {
-            $scope.showToast("Please Select At Lease 1 Team Member...");
-        } else {
-            uploadService.upload({id: $scope.selectedProjectId}, $scope.uploadFile).$promise.then(function(res) {
-                $mdDialog.hide();
-                $scope.showToast("File Has Been Uploaded Successfully.");
-                
-                //Track New File
-                mixpanel.identify($rootScope.currentUser._id);
-                mixpanel.track("New File Created");
-
-                _.each($scope.fileTags, function(tag) {
-                    tag.select = false;
+                    _.each($scope.projects, function(project) {
+                        project.select = false;
+                    });
+                    
+                    $state.go("project.files.detail", {id: res.project._id, fileId: res._id});
+                }, function(err) {
+                    $scope.showToast("There Has Been An Error...");
                 });
-
-                _.each($scope.projects, function(project) {
-                    project.select = false;
-                });
-                
-                $state.go("project.files.detail", {id: res[0].project, fileId: res[0]._id});
-            }, function(err) {
-                $scope.showToast("There Has Been An Error...");
-            });
-        }
+            }
+        } else 
+            $scope.showToast("Check your input again");
     };
     // end file section
 	

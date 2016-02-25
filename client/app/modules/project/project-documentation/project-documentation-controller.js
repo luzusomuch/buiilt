@@ -1,9 +1,8 @@
-angular.module('buiiltApp').controller('projectDocumentationCtrl', function($rootScope, $scope, $mdDialog, documents, uploadService, $mdToast, $stateParams, socket) {
+angular.module('buiiltApp').controller('projectDocumentationCtrl', function($rootScope, $scope, $mdDialog, documents, uploadService, $mdToast, $stateParams, socket, $state) {
     $scope.documents = documents;
 
     function setUploadFile(){
         $scope.uploadFile = {
-            files:[],
             tags:[],
             members: []
         };
@@ -52,24 +51,6 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
         $scope.documents.push(data);
     });
 
-    $scope.pickFile = pickFile;
-    $scope.onSuccess = onSuccess;
-
-    function pickFile(){
-        filepickerService.pick(
-        	// add max files for multiple pick
-            {maxFiles: 5},
-            onSuccess
-        );
-    };
-
-    function onSuccess(files){
-        _.each(files, function(file) {
-            file.type = "document";
-        });
-    	$scope.uploadFile.files = files;
-    };
-
     $scope.selectChip = function(index) {
         $scope.tags[index].select = !$scope.tags[index].select;
     };
@@ -80,10 +61,8 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
         if ($scope.uploadFile.tags.length === 0) {
             $scope.showToast("Please Select At Least 1 Document Tag...");
             return;
-        } else if ($scope.uploadFile.files.length === 0) {
-            $scope.showToast("Please Select a Document to Upload...");
-            return;
         } else {
+            $scope.uploadFile.type="document";
             uploadService.upload({id: $stateParams.id}, $scope.uploadFile).$promise.then(function(res) {
                 $scope.closeModal();
                 $scope.showToast("Document Successfully Uploaded.");
@@ -92,7 +71,8 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
 				//Track Document Upload
 				mixpanel.identify($rootScope.currentUser._id);
 				mixpanel.track("Document Uploaded");
-				
+
+                $state.go("project.documentation.detail", {id: res.project._id, documentId: res._id});
             }, function(err){$scope.showToast("There Was an Error...");});
         }
 	};

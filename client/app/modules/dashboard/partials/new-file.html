@@ -1,5 +1,5 @@
 <md-dialog aria-label="Create a New File" flex="70">
-    <form>
+    <form name="form" ng-submit="createNewFile(form)">
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2>Attach a New File</h2>
@@ -16,9 +16,12 @@
                 </div>
                 
                 <div layout="column">
-                    <p class="md-body-2">Select the file you would like to upload:</p>
-                    <div layout="row" layout-align="center center" layout-margin class="tagcloud-selection">
-                        <input filepicker class="filepicker-button" type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/>
+                    <p class="md-body-2">Provide a name for this file:</p>
+                    <div layout="row">
+                        <md-input-container flex="66" flex-offset="15">
+                            <label for="">File Name</label>
+                            <input type="text" ng-model="uploadFile.name" required name="name">
+                        </md-input-container>
                     </div>
                 </div>
                 
@@ -50,8 +53,8 @@
         </md-dialog-content>
         
         <md-dialog-actions>
-            <md-button ng-click="cancelNewFileModal()">Cancel</md-button>
-            <md-button ng-click="createNewFile()" class="md-primary">Add File</md-button>
+            <md-button ng-click="closeModal()">Cancel</md-button>
+            <md-button type="submit" class="md-primary">Add File</md-button>
         </md-dialog-actions>
     </form>
 </md-dialog>

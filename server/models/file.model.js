@@ -23,12 +23,10 @@ var FileSchema = new Schema({
     }],
     notMembers: [String],
     path: {
-        type: String,
-        required: true // path to server
+        type: String // path to server
     },
     server: {
-        type: String, //server which is store file
-        required: true
+        type: String //server which is store file
     },
     _serverData: Schema.Types.Mixed,
     mimeType: {

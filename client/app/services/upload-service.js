@@ -10,8 +10,7 @@ angular.module('buiiltApp')
             method: 'POST',
             params: {
                 id: '@id',
-            },
-            isArray: true
+            }
         },
         uploadReversion: {
             method: "POST",

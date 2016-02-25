@@ -26,7 +26,6 @@ EventBus.onSeries('File.Inserted', function(request, next) {
     }, function(err, result) {
         if (err) {return next();}
         var from = result.editUser.name + "<"+result.editUser.email+">";
-        var latestActivity = _.last(request.activities);
         if (request.element.type === "file" && request.notMembers.length > 0) {
             async.each(request.notMembers, function(member, cb) {
                 PackageInvite.findOne({project: request.project, to: member}, function(err, packageInvite) {
@@ -39,7 +38,6 @@ EventBus.onSeries('File.Inserted', function(request, next) {
                             project: result.project.toJSON(),
                             request: request.toJSON(),
                             type: "file",
-                            downloadLink: config.baseUrl + "api/files/"+request._id+"/"+latestActivity._id+"/"+member+"/download-via-email",
                             link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
                             subject: result.editUser.name + ' has uploaded for you a file ' + request.name
                         },function(err){console.log(err);
@@ -68,7 +66,6 @@ EventBus.onSeries('File.Inserted', function(request, next) {
                                             project: result.project.toJSON(),
                                             request: request.toJSON(),
                                             type: "document",
-                                            downloadLink: config.baseUrl + "api/files/"+request._id+"/"+latestActivity._id+"/"+packageInvite.to+"/download-via-email",
                                             link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
                                             subject: result.editUser.name + ' has uploaded for you a document ' + request.name
                                         },function(err){console.log(err);

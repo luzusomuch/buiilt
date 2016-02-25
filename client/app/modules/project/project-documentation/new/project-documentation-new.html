@@ -10,9 +10,22 @@
 			<div class="md-dialog-content" layout="column" layout-padding>
 				
 				<div layout="column">
-					<p class="md-body-2">Select the document that you would like to upload:</p>
-					<div layout="row" layout-align="center center" layout-margin>
-						<input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfiles)" data-fp-multiple="true"/>
+					<p class="md-body-2">Provide a name for this file:</p>
+	                <div layout="row">
+	                    <md-input-container flex="66" flex-offset="15">
+					        <label>Description of the File</label>
+							<input ng-model="uploadFile.name" required type="text" name="name"></input>
+					    </md-input-container>
+					</div>
+				</div>
+				
+				<div layout="column">
+					<p class="md-body-2">Provide a description for this file:</p>
+	                <div layout="row">
+	                    <md-input-container flex="66" flex-offset="15">
+					        <label>Description of the File</label>
+							<textarea name="description" ng-model="uploadFile.description" required md-maxlength="500" columns="1" rows="5"></textarea>
+					    </md-input-container>
 					</div>
 				</div>
 					
