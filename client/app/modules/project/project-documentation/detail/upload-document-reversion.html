@@ -2,7 +2,7 @@
     <form>
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2>Upload a Document Revision</h2>
+                <h2>Upload a Document Version</h2>
             </div>
         </md-toolbar>
         
@@ -10,14 +10,14 @@
             <div class="md-dialog-content" layout="column" layout-padding>
                 
 				<div layout="column">
-					<p class="md-body-2">Select the revision that you would like to upload:</p>
+					<p class="md-body-2">Select the document that you would like to upload:</p>
 	                <div layout="row" layout-align="center center" class="tagcloud-selection">
 	                    <input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/>
 	                </div>
 				</div>
 
                 <div layout="column">
-                    <p class="md-body-2">Provide a document version name for the changes in this version:</p>
+                    <p class="md-body-2">Provide a version name:</p>
                     <div layout="row">
                         <md-input-container flex="66" flex-offset="15">
                             <label>Document version name</label>
@@ -27,14 +27,14 @@
                 </div>
 
                 <div layout="column">
-                    <p class="md-body-2">Select at least one tag that is relevant to this document:</p>
+                    <p class="md-body-2">Select the relevant version tag:</p>
                     <div layout="row" layout-align="center center" class="tagcloud-selection" layout-wrap>
                         <span ng-click="selectTag($index, 'version')" ng-class="{'available-tag':!tag.select, 'selected-tag': tag.select}" ng-repeat="tag in versionTags">{{tag.tag}}</span>
                     </div>
                 </div>
 
                 <div layout="column">
-                    <p class="md-body-2">Select at least one member for this document version:</p>
+                    <p class="md-body-2">Select the team members who can view this version:</p>
                     <div layout="row" layout-align="center center" class="tagcloud-selection" layout-wrap>
                         <span ng-click="selectTag($index, 'member')" ng-class="{'available-tag':!member.select, 'selected-tag': member.select}" ng-repeat="member in projectMembers">{{(member._id) ? member.name : member.email}}<md-icon ng-show="!member._id" class="material-icons non-user-chip cursor-help"><md-tooltip>File will be sent via email to this Team Member</md-tooltip>mail_outline</md-icon></span>
                     </div>
