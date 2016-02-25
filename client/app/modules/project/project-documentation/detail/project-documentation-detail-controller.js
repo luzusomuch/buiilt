@@ -12,6 +12,9 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
 
     $scope.selectTag = function(index, type) {
         if (type==="version") {
+            _.each($scope.versionTags, function(tag) {
+                tag.select = false;
+            });
             $scope.versionTags[index].select = !$scope.versionTags[index].select;
         } else if (type==="member") {
             $scope.projectMembers[index].select = !$scope.projectMembers[index].select;
