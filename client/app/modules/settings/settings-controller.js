@@ -317,6 +317,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
 
     $scope.addNewTagFileText = "+ Add Another";
     $scope.addNewTagDocumentText = "+ Add Another";
+    $scope.addNewTagVersionText = "+ Add Another";
 
     $scope.newTag = {};
     $scope.isEditTags = false;
@@ -337,15 +338,26 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             } else {
                 $scope.showToast("Please check your tag again");
             }
+        } else if (type==="version") {
+            if (newTag !== "{{addNewTagVersionText}}") {
+                $scope.currentTeam.versionTags.push(newTag);
+                $scope.newTag.version = null;
+                $scope.isEditTags = true;
+            } else {
+                $scope.showToast("Please check your tag again");
+            }
         }
     };
 
     $scope.removeTag = function(index, type) {
         if (type === "file") {
-            $scope.currentTeam.fileTags.splice(index);
+            $scope.currentTeam.fileTags.splice(index,1);
         } else if (type === "document") {
-            $scope.currentTeam.documentTags.splice(index);
+            $scope.currentTeam.documentTags.splice(index,1);
+        } else if (type==="version") {
+            $scope.currentTeam.versionTags.splice(index,1);
         }
+        $scope.isEditTags = true;
     };
     
     function getTeamLeader(team) {

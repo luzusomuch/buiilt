@@ -27,6 +27,17 @@
 			<span class="available-tag" ng-repeat="tag in currentTeam.documentTags track by $index">{{tag}}<md-icon style="margin-left: 1vh; margin-bottom: -1vh; font-size: 16px" ng-click="removeTag($index, 'document')" class="material-icons">delete</md-icon></span>
 			<span class="selected-tag" ng-model="newTag.document" ng-click="addNewTagDocumentText = null" contenteditable="true">{{addNewTagDocumentText}}</span><i style="cursor: pointer" ng-click="addNewTag(newTag.document, 'document')" class="material-icons">add</i></span>
 		</div>
+
+		<md-divider></md-divider>
+		
+		<div layout-margin>
+			<p><strong>Project Documentation Version Tags:</strong></p>
+		</div>
+		
+		<div layout="row" layout-align="center center" class="tagcloud" layout-wrap style="margin-bottom: 5vh">
+			<span class="available-tag" ng-repeat="tag in currentTeam.versionTags track by $index">{{tag}}<md-icon style="margin-left: 1vh; margin-bottom: -1vh; font-size: 16px" ng-click="removeTag($index, 'version')" class="material-icons">delete</md-icon></span>
+			<span class="selected-tag" ng-model="newTag.version" ng-click="addNewTagVersionText = null" contenteditable="true">{{addNewTagVersionText}}</span><i style="cursor: pointer" ng-click="addNewTag(newTag.version, 'version')" class="material-icons">add</i></span>
+		</div>
 		
 	</div>
 </div>

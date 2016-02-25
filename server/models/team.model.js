@@ -60,6 +60,7 @@ var TeamSchema = new Schema({
     }],
     fileTags: [String],
     documentTags: [String],
+    versionTags: [String],
     createdAt: {
         type: Date,
         default: Date.now

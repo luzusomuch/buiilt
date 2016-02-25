@@ -153,6 +153,7 @@ exports.create = function (req, res) {
     team.leader.push(user);
     team.fileTags = ["invoice", "quote", "drawing"];
     team.documentTags = ["architectural", "structural engineering", "hydraulic engineering", "council", "certifier"];
+    team.versionTags = ["approvals", "checking & commenting", "premimitary", "tender", "construction"];
     var listEmail = [];
     async.each(data.emails, function(email, callback) {
       User.findOne({'email': email.email}, function (err, user) {
@@ -490,6 +491,7 @@ exports.update = function (req, res) {
         } else if (req.body.editType === "change-tags") {
             team.fileTags = req.body.fileTags;
             team.documentTags = req.body.documentTags;
+            team.versionTags = req.body.versionTags;
         }
         team._user = req.user;
         team.save(function() {
