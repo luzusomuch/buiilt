@@ -27,11 +27,11 @@
 		
 			<div ng-click="openLocation(thread, 'thread')" class="md-list-item-text">
 				
-				<h3 class="md-display-1" style="margin-top: 15px">
+				<h3 class="md-display-1" style="margin-top: 15px; margin-bottom: 5px">
 					<strong>{{ thread.name }} ({{thread.element.notifications.length}})</strong> - {{thread.project.name}}
 				</h3>
 				
-          		<span ng-repeat="notification in thread.element.limitNotifications track by $index" style="margin-top: 15px; margin-bottom: 15px">
+          		<span class="md-body-2" ng-repeat="notification in thread.element.limitNotifications track by $index">
       				<span ng-show="notification.type=='thread-assign'">
       					{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} has assigned <span ng-repeat="member in thread.members">{{(member._id==currentUser._id) ? "me" : member.name}}, </span>
 						<span ng-repeat="email in thread.notMembers">{{email}}, </span>
