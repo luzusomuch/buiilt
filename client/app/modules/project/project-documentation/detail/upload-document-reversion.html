@@ -32,6 +32,13 @@
                         <span ng-click="selectTag($index, 'version')" ng-class="{'available-tag':!tag.select, 'selected-tag': tag.select}" ng-repeat="tag in versionTags">{{tag.tag}}</span>
                     </div>
                 </div>
+
+                <div layout="column">
+                    <p class="md-body-2">Select at least one member for this document version:</p>
+                    <div layout="row" layout-align="center center" class="tagcloud-selection" layout-wrap>
+                        <span ng-click="selectTag($index, 'member')" ng-class="{'available-tag':!member.select, 'selected-tag': member.select}" ng-repeat="member in projectMembers">{{(member._id) ? member.name : member.email}}<md-icon ng-show="!member._id" class="material-icons non-user-chip cursor-help"><md-tooltip>File will be sent via email to this Team Member</md-tooltip>mail_outline</md-icon></span>
+                    </div>
+                </div>
 				
             </div>
         </md-dialog-content>

@@ -69,6 +69,10 @@ var FileSchema = new Schema({
             email: String,
             isAcknow: Boolean,
         }],
+        members: [{
+            _id: String,
+            email: String
+        }],
         element: {}
     }],
     relatedItem: [{
@@ -88,7 +92,11 @@ var FileSchema = new Schema({
         version: String, 
         description: String,
         versionTags: [String],
-        createdAt: {type: Date}
+        createdAt: {type: Date},
+        members: [{
+            _id: String,
+            email: String
+        }]
     }],
     versionTags: [String],
 });

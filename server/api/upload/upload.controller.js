@@ -112,6 +112,7 @@ exports.uploadMobile = function(req, res) {
 
 exports.uploadReversion = function(req, res) {
     var newFile = req.body.files[0];
+    console.log(req.body);
     File.findById(req.params.id, function(err, file) {
         if (err) {return res.send(500,err);}
         else if (!file) {return res.send(404, "The specific file is not existed");}
@@ -135,20 +136,40 @@ exports.uploadReversion = function(req, res) {
                             else {
                                 var roles = ["builders", "clients", "architects", "subcontractors", "consultants"];
                                 _.each(roles, function(role) {
-                                    _.each(people[role], function(tender){
+                                    _.each(people[role], function(tender) {
                                         if (tender.hasSelect && tender.tenderers[0]._id) {
-                                            acknowledgeUsers.push({_id: tender.tenderers[0]._id});
-                                            if (tender.tenderers[0]._id.toString()===req.user._id.toString()) {
+                                            if (_.findIndex(req.body.teamMembers, function(member) {
+                                                if (member._id) {
+                                                    return member._id.toString()===tender.tenderers[0]._id.toString();
+                                                }
+                                            }) !== -1) {
+                                                acknowledgeUsers.push({_id: tender.tenderers[0]._id, isAcknow: false});
+                                                if (tender.tenderers[0].teamMember.length > 0) {
+                                                    _.each(tender.tenderers[0].teamMember, function(member) {
+                                                        acknowledgeUsers.push({_id: member, isAcknow: false});
+                                                    });
+                                                }
+                                            } else {
                                                 _.each(tender.tenderers[0].teamMember, function(member) {
-                                                    acknowledgeUsers.push({_id: member});
+                                                    if (_.findIndex(req.body.teamMembers, function(item) {
+                                                        if (item._id) 
+                                                            return item._id.toString()===member.toString();
+                                                    }) !== -1) {
+                                                        acknowledgeUsers.push({_id: member, isAcknow: false});
+                                                    }
                                                 });
                                             }
                                         } else if (tender.hasSelect && tender.tenderers[0].email) {
-                                            acknowledgeUsers.push({email: tender.tenderers[0].email});
+                                            if (_.findIndex(req.body.teamMembers, function(member) {
+                                                if (member.email) {
+                                                    return member.email.toString()===tender.tenderers[0].email.toString();
+                                                }
+                                            }) !== -1) {
+                                                acknowledgeUsers.push({email: tender.tenderers[0].email, isAcknow: false});
+                                            }
                                         }
                                     });
                                 });
-                                _.remove(acknowledgeUsers, {_id: req.user._id});
                                 cb();
                             }
                         });
@@ -162,7 +183,19 @@ exports.uploadReversion = function(req, res) {
                     version: file.version,
                     createdAt: new Date()
                 };  
+                var activity = {
+                    type: "upload-reversion",
+                    user: req.user._id,
+                    createdAt: new Date(),
+                    acknowledgeUsers: acknowledgeUsers,
+                    element: {
+                        name: newFile.filename,
+                        description: req.body.description
+                    }
+                };
                 if (file.element.type==="document") {
+                    activity.members = acknowledgeUsers;
+                    history.members = acknowledgeUsers;
                     history.versionTags = file.versionTags;
                     var versionTags = [];
                     _.each(req.body.versionTags, function(tag) {
@@ -178,17 +211,6 @@ exports.uploadReversion = function(req, res) {
                 file.size = newFile.size;
                 file.version = newFile.filename;
                 file.fileHistory.push(history);
-                var activity = {
-                    type: "upload-reversion",
-                    user: req.user._id,
-                    createdAt: new Date(),
-                    acknowledgeUsers: acknowledgeUsers,
-                    element: {
-                        name: newFile.filename,
-                        description: req.body.description
-                    }
-                };
-                
                 file.activities.push(activity);
                 file._editType = "uploadReversion";
                 file._editUser = req.user;

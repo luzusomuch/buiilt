@@ -12,7 +12,7 @@
                     <md-menu-item ng-click="openHistoryDetail($event, {name: document.name, description: document.description, link: document.path})">
                         <md-button>{{document.createdAt | date: 'dd/MM/yyyy'}} - {{document.version}}(Current Version) - Tags: <span ng-repeat="tag in document.versionTags">{{tag}}, </span> </md-button>
                     </md-menu-item>
-                    <md-menu-item ng-click="openHistoryDetail($event, history)" ng-repeat="history in document.fileHistory">
+                    <md-menu-item ng-click="openHistoryDetail($event, history)" ng-repeat="history in document.fileHistory track by $index">
                         <md-button>{{history.createdAt | date: 'dd/MM/yyyy'}} - {{history.version}} - Tags: <span ng-repeat="tag in history.versionTags">{{tag}}, </span> </md-button>
                     </md-menu-item>
                 </md-menu-content>
