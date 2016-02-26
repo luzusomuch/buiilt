@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $timeout, $mdDialog, uploadService, files, peopleService, $stateParams, $rootScope, $mdToast, people, $state, socket) {
+angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $timeout, $mdDialog, uploadService, files, peopleService, $stateParams, $rootScope, $mdToast, people, $state, socket, fileService, notificationService) {
     $scope.people = people;
 	$scope.files = files;
 	$scope.uploadFile = {
@@ -164,4 +164,67 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
     });
 
 	getProjectMembers($stateParams.id);
+
+    $scope.showViewFileModal = function($event, file) {
+        $rootScope.prjectSelectedFile = file;
+        $mdDialog.show({
+            targetEvent: $event,
+            controller: "projectFilesCtrl",
+            resolve: {
+                files: function($stateParams, fileService) {
+                    return fileService.getProjectFiles({id: $stateParams.id, type: "file"}).$promise;
+                },
+                people: function(peopleService, $stateParams) {
+                    return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
+                }
+            },
+            templateUrl: 'app/modules/dashboard/partials/view-file.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: false
+        });
+    };
+
+    if ($rootScope.prjectSelectedFile) {
+        $scope.file = $rootScope.prjectSelectedFile;
+        $scope.latestActivity = {};
+        _.each($scope.file.activities, function(activity) {
+            if (activity.type==="upload-file" || activity.type==="upload-reversion") {
+                $scope.latestActivity = activity;
+            }
+        });
+        $scope.latestActivity.isAcknowledge = false;
+        if (_.findIndex($scope.latestActivity.acknowledgeUsers, function(user) {
+            if (user._id && user.isAcknow) {
+                return user._id.toString()===$rootScope.currentUser._id.toString();
+            }
+        })!==-1) {
+            $scope.latestActivity.isAcknowledge = true;
+        }
+    }
+
+    $scope.acknowledgement = function() {
+        fileService.acknowledgement({id: $scope.file._id, activityId: $scope.latestActivity._id}).$promise.then(function(res) {
+            $scope.showToast("Acknowledgement Has Been Sent Successfully.");
+            $scope.cancelNewFileModal();
+            notificationService.markItemsAsRead({id: $scope.file._id}).$promise.then(function() {
+                $rootScope.$broadcast("UpdateCountNumber", {type: "file", number: $scope.file.__v});
+                var currentIndex = _.findIndex($scope.files, function(file) {
+                    return file._id.toString()===$scope.file._id.toString();
+                });
+                $rootScope.$broadcast("Project-File-Acknowledge", currentIndex);
+                $rootScope.prjectSelectedFile = null;
+            });
+        }, function(err) {
+            $scope.showToast("Error");
+        });
+    };
+
+    $scope.closeModal = function() {
+        $mdDialog.cancel();
+    };
+
+    $rootScope.$on("Project-File-Acknowledge", function(event, index) {
+        $scope.files[index].element.notificationType = null;
+        $scope.files[index].__v = 0;
+    });
 });

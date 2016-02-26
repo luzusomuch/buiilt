@@ -30,18 +30,26 @@
 
 <md-list ng-cloak class="main-page-content"  layout="column" flex>
 
-	<div ng-repeat="file in files | filter: search | unique: '_id' track by $index" ui-sref="project.files.detail({id: file.project, fileId: file._id})">
-		<md-list-item class="md-3-line" md-ink-ripple>
-			<div class="md-list-item-text" layout="column">
-		          	<h3>{{file.name}} <span ng-show="file.__v > 0">({{file.__v}} Update(s))</span></h3>
-		          	<p>File version {{file.version}}</p>
-		          	<p ng-show="file.element.notificationType">{{file.element.notificationBy.name}} has 
-		          		<span ng-show="file.element.notificationType=='file-upload-reversion'">uploaded new reversion of this file</span>
-		          		<span ng-show="file.element.notificationType=='file-assign'">assigned you to this file</span>
-		          	</p>
+	<div ng-repeat="file in files | filter: search | unique: '_id' track by $index">
+		<md-list-item class="md-2-line" md-ink-ripple layout-padding>
+			<div  ui-sref="project.files.detail({id: file.project, fileId: file._id})" class="md-list-item-text">
+				
+				<h3 class="md-display-1" style="margin-top: 15px; margin-bottom: 5px">
+					<strong>{{ file.name }}</strong> <span ng-show="file.__v > 0">({{file.__v}} Update(s))</span> | Tags: <span ng-repeat="tag in file.tags">{{tag}} </span>
+				</h3>
+	      		
+				<span class="md-body-2" ng-show="file.element.notificationType">{{file.element.notificationBy.name}} has 
+	  				<span ng-show="file.element.notificationType=='file-upload-reversion'">uploaded new reversion of this file</span>
+	          		<span ng-show="file.element.notificationType=='file-assign'">assigned you to this file</span>
+	          		<span ng-show="file.element.notificationType=='file-send-acknowledge'">has sent acknowledgement to this file</span>
+	      		</span>
+	        </div>
+			
+	        <div>
+				<md-button class="md-secondary" ng-click="showViewFileModal($event, file)"><md-icon class="material-icons">remove_red_eye</md-icon><md-tooltip md-direction="down">View File</md-tooltip></md-button>
 	        </div>
 		</md-list-item>
-		<md-divider></md-dividers>
+		
 	</div>
 
 </md-list>
