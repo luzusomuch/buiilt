@@ -32,29 +32,22 @@ EventBus.onSeries('File.Inserted', function(file, next) {
 EventBus.onSeries('File.Updated', function(file, next) {
     if (file.editType === "uploadReversion") {
         if (file.element.type === "document") {
-            var roles = ["builders", "clients", "architects", "subcontractors", "consultants"];
-            People.findOne({project: file.project}, function(err, people) {
-                if (err || !people)
-                    return next();
-                else {
-                    async.each(roles, function(role, cb) {
-                        async.each(people[role], function(tender, callback) {
-                            if (tender.hasSelect && tender.tenderers[0]._id && tender.tenderers[0]._id.toString()!==file.owner.toString()) {
-                                var params = {
-                                    owners : [tender.tenderers[0]._id],
-                                    fromUser : file.editUser._id,
-                                    element : file,
-                                    referenceTo : 'document',
-                                    type : 'document-upload-reversion'
-                                };
-                                NotificationHelper.create(params, callback);
-                            } else 
-                                callback();
-                        }, cb);
-                    }, function(){
-                        return next();
-                    });
+            var latestHistory = _.last(file.fileHistory);
+            async.each(latestHistory.members, function(member, callback) {
+                if (member._id) {
+                    var params = {
+                        owners : [member._id],
+                        fromUser : file.editUser._id,
+                        element : file,
+                        referenceTo : 'document',
+                        type : 'document-upload-reversion'
+                    };
+                    NotificationHelper.create(params, callback);
+                } else {
+                    callback();
                 }
+            }, function() {
+                return next();
             });
         } else if (file.element.type === "file" || file.element.type === "tender") {
             if (file.members.length > 0) {
@@ -90,29 +83,15 @@ EventBus.onSeries('File.Updated', function(file, next) {
             } else
                 return next();
         } else if (file.element.type==="document") {
-            var roles = ["builders", "clients", "architects", "subcontractors", "consultants"];
-            People.findOne({project: file.project}, function(err, people) {
-                if (err || !people)
-                    return next();
-                else {
-                    async.each(roles, function(role, cb) {
-                        async.each(people[role], function(tender, callback) {
-                            if (tender.hasSelect && tender.tenderers[0]._id && tender.tenderers[0]._id.toString()!==file.owner.toString()) {
-                                var params = {
-                                    owners : [tender.tenderers[0]._id],
-                                    fromUser : file.editUser._id,
-                                    element : file,
-                                    referenceTo : 'document',
-                                    type : 'document-send-acknowledge'
-                                };
-                                NotificationHelper.create(params, callback);
-                            } else 
-                                callback();
-                        }, cb);
-                    }, function(){
-                        return next();
-                    });
-                }
+            var params = {
+                owners : [file.owner],
+                fromUser : file.editUser._id,
+                element : file,
+                referenceTo : 'document',
+                type : 'document-send-acknowledge'
+            };
+            NotificationHelper.create(params, function() {
+                return next();
             });
         } else {
             return next();
