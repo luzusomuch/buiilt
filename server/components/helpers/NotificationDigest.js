@@ -1,6 +1,9 @@
 var Notification = require('./../../models/notification.model');
 var Mailer = require('./../Mailer');
 var User = require('./../../models/user.model');
+var Task = require('./../../models/task.model');
+var Thread = require('./../../models/thread.model');
+var File = require('./../../models/file.model');
 var config = require('./../../config/environment');
 var async = require('async');
 var _ = require('lodash');
@@ -13,9 +16,10 @@ var CronJob = require('cron').CronJob;
 
 // job1.start();
 
+var today = new Date();
+var currentTime = today.getHours()+":"+today.getMinutes();
+
 function getUserNotification(){
-    var today = new Date();
-    var currentTime = today.getHours()+":"+today.getMinutes();
     Notification.find({unread: true})
     .populate("owner", "_id name email")
     .populate("fromUser", "_id name email")
@@ -57,6 +61,92 @@ function getUserNotification(){
     });
 };
 
+function getNotificationNonUser(){
+    async.parallel({
+        tasks: function(cb) {
+            Task.find({}, cb);
+        },
+        threads: function(cb) {
+            Thread.find({}, cb);
+        },
+        files: function(cb) {
+            File.find({}, cb);
+        }
+    }, function(err, result) {
+        if (err) {console.log(err);}
+        var notificationsListPreviousHour = [];
+        // Get Task
+        _.each(result.tasks, function(task) {
+            task.element.notification="task-assign";
+            var notificationTime = new Date(task.createdAt).getHours() +":"+ new Date(task.createdAt).getMinutes();
+            if (isValidPreviousHourNotification(notificationTime, currentTime)) {
+                getNotificationForNonUser(task, notificationsListPreviousHour);
+            }
+        });
+        // Get Thread
+        _.each(result.threads, function(thread) {
+            thread.element.notification="thread-message";
+            var latestMessage = _.last(thread.messages);
+            if (latestMessage) {
+                var notificationTime = new Date(latestMessage.sendAt).getHours() +":"+ new Date(latestMessage.sendAt).getMinutes();
+                if (isValidPreviousHourNotification(notificationTime, currentTime)) {
+                    getNotificationForNonUser(thread, notificationsListPreviousHour);
+                }
+            }
+        });
+        // Get File
+        _.each(result.files, function(file) {
+            if (file.element.type==="file") {
+                var notificationTime = new Date(file.createdAt).getHours() +":"+ new Date(file.createdAt).getMinutes();
+                if (isValidPreviousHourNotification(notificationTime, currentTime)) {
+                    file.element.notification="file-assign";
+                    getNotificationForNonUser(file, notificationsListPreviousHour);
+                } else {
+                    _.each(file.activities, function(activity) {
+                        if (activity.type==="upload-reversion") {
+                            _.each(activity.acknowledgeUsers, function(user) {
+                                if (user.email) {
+                                    var fileIndex = _.findIndex(notificationsListPreviousHour, function(item) {
+                                        return item.owner===user.email;
+                                    });
+                                    file.element.notification="file-upload-reversion";
+                                    if (fileIndex===-1) {
+                                        notificationsListPreviousHour.push({owner: email, notifications: [file]});
+                                    } else {
+                                        notificationsListPreviousHour[fileIndex].notifications.push(file);
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
+            // Get Document
+            } else if (file.element.type==="document" && file.fileHistory.length > 0) {
+                _.each(file.fileHistory, function(history) {
+                    _.each(history.members, function(member) {
+                        if (member.email) {
+                            var documentIndex = _.findIndex(notificationsListPreviousHour, function(item) {
+                                return item.owner===member.email;
+                            });
+                            file.element.notification="document-upload-reversion";
+                            if (documentIndex===-1) {
+                                notificationsListPreviousHour.push({owner: email, notifications: [file]});
+                            } else {
+                                notificationsListPreviousHour[documentIndex].notifications.push(file);
+                            }
+                        }
+                    });
+                });
+            }
+        });
+        console.log(notificationsListPreviousHour);
+        _.each(notificationsListPreviousHour, function(user) {
+            
+        });
+    });
+};
+getNotificationNonUser();
+
 function isValidPreviousHourNotification(notificationTime, currentTime) {
     // valid when notification time smaller than current time
     // and greator than current time substract an hour
@@ -68,3 +158,16 @@ function isValidPreviousHourNotification(notificationTime, currentTime) {
         return false;
     }
 };
+
+function getNotificationForNonUser(item, notificationsListPreviousHour) {
+    _.each(item.notMembers, function(email) {
+        var index = _.findIndex(notificationsListPreviousHour, function(n) {
+            return n.owner.toString()===email.toString();
+        });
+        if (index===-1) {
+            notificationsListPreviousHour.push({owner: email, notifications: [item]});
+        } else {
+            notificationsListPreviousHour[index].notifications.push(item);
+        }
+    });
+}
