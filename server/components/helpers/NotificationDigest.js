@@ -4,17 +4,19 @@ var User = require('./../../models/user.model');
 var Task = require('./../../models/task.model');
 var Thread = require('./../../models/thread.model');
 var File = require('./../../models/file.model');
+var PackageInvite = require('./../../models/packageInvite.model');
 var config = require('./../../config/environment');
 var async = require('async');
 var _ = require('lodash');
 var moment = require("moment");
 var CronJob = require('cron').CronJob;
 
-// var job1 = new CronJob('0 */1 * * * *', function(){
-//     run()
-// }, null, false, 'Australia/Melbourne');
+var job1 = new CronJob('0 */59 * * * *', function(){
+    getUserNotification();
+    getNotificationNonUser();
+}, null, false, 'Australia/Melbourne');
 
-// job1.start();
+job1.start();
 
 var today = new Date();
 var currentTime = today.getHours()+":"+today.getMinutes();
@@ -29,7 +31,7 @@ function getUserNotification(){
         var notificationsList = [];
         var notificationsListPreviousHour = [];
         _.each(notifications, function(n) {
-            if (n.type==="task-assign" || n.type==="thread-assign" || n.type==="file-assign" || n.type==="document-upload-reversion") {
+            if (n.type==="task-assign" || n.type==="thread-message" || n.type==="file-assign" || n.type==="file-upload-reversion" || n.type==="document-upload-reversion") {
                 notificationsList.push({owner: n.owner, notification: n});
                 if (moment(moment(today).format("YYYY-MM-DD")).isSame(moment(new Date(n.createdAt)).format("YYYY-MM-DD"))) {
                     var notificationTime = new Date(n.createdAt).getHours() +":"+ new Date(n.createdAt).getMinutes();
@@ -64,13 +66,13 @@ function getUserNotification(){
 function getNotificationNonUser(){
     async.parallel({
         tasks: function(cb) {
-            Task.find({}, cb);
+            Task.find({}).populate("owner").exec(cb);
         },
         threads: function(cb) {
-            Thread.find({}, cb);
+            Thread.find({}).populate("owner").exec(cb);
         },
         files: function(cb) {
-            File.find({}, cb);
+            File.find({}).populate("owner").exec(cb);
         }
     }, function(err, result) {
         if (err) {console.log(err);}
@@ -111,7 +113,7 @@ function getNotificationNonUser(){
                                     });
                                     file.element.notification="file-upload-reversion";
                                     if (fileIndex===-1) {
-                                        notificationsListPreviousHour.push({owner: email, notifications: [file]});
+                                        notificationsListPreviousHour.push({owner: user.email, notifications: [file]});
                                     } else {
                                         notificationsListPreviousHour[fileIndex].notifications.push(file);
                                     }
@@ -130,7 +132,7 @@ function getNotificationNonUser(){
                             });
                             file.element.notification="document-upload-reversion";
                             if (documentIndex===-1) {
-                                notificationsListPreviousHour.push({owner: email, notifications: [file]});
+                                notificationsListPreviousHour.push({owner: member.email, notifications: [file]});
                             } else {
                                 notificationsListPreviousHour[documentIndex].notifications.push(file);
                             }
@@ -139,13 +141,21 @@ function getNotificationNonUser(){
                 });
             }
         });
-        console.log(notificationsListPreviousHour);
         _.each(notificationsListPreviousHour, function(user) {
-            
+            PackageInvite.findOne({to: user.owner}, function(err, packageInvite) {
+                if (err) {console.log(err);}
+                else {
+                    Mailer.sendMail('notifications-non-user-previous-hour.html', config.emailFrom, user.owner, {
+                        invitee: user.owner,
+                        notifications: user.notifications,
+                        link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
+                        subject: "Hourly Notifications Digest"
+                    },function(err){console.log(err);});
+                }
+            });
         });
     });
 };
-getNotificationNonUser();
 
 function isValidPreviousHourNotification(notificationTime, currentTime) {
     // valid when notification time smaller than current time

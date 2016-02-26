@@ -32,38 +32,38 @@
                             </tr>
                             <tr>
                                 <td align="left" style="padding: 20px 0 0 0; font-size: 16px; line-height: 25px; font-family: Roboto, Arial, sans-serif; color: black;" class="padding-copy">
-                                    <p>Hi <%= invitee.name %>,</p>
+                                    <p>Hi <%= invitee %>,</p>
                                     <div style="width: 100%">
                                         <p>You have received <%= notifications.length %> notifications in the past hour... Here's a summary:</p>
                                         <ul>
                                             {% for n in notifications %}
-                                                {% if n.type=='task-assign' %}
+                                                {% if n.element.notification=='task-assign' %}
                                                 <li style="list-style-type: none">
-                                                    <strong><%= n.fromUser.name %></strong> has assigned you to the task, <strong><%= n.element.description %></strong>.
+                                                    <strong><%= n.owner.name %></strong> has assigned you to the task, <strong><%= n.description %></strong>.
                                                 </li>
                                                 {% endif %}
 
-                                                {% if n.type=='thread-assign' %}
+                                                {% if n.element.notification=='thread-message' %}
                                                 <li style="list-style-type: none">
-                                                    <strong><%= n.fromUser.name %></strong> has assigned you to the message thread, <strong><%= n.element.name %></strong>.
+                                                    You got new message in thread, <strong><%= n.name %></strong>.
                                                 </li style="list-style-type: none">
                                                 {% endif %}
 
-                                                {% if n.type=='file-assign' %}
+                                                {% if n.element.notification=='file-assign' %}
                                                 <li style="list-style-type: none">
-                                                    <strong><%= n.fromUser.name %></strong> has uploaded a new file, <strong><%= n.element.name %></strong>.
+                                                    <strong><%= n.owner.name %></strong> has uploaded a new file, <strong><%= n.name %></strong>.
                                                 </li>
                                                 {% endif %}
 
-                                                {% if n.type=='file-upload-reversion' %}
+                                                {% if n.element.notification=='file-upload-reversion' %}
                                                 <li style="list-style-type: none">
-                                                    <strong><%= n.fromUser.name %></strong> has uploaded a new file reversion, <strong><%= n.element.name %></strong>.
+                                                    <strong><%= n.owner.name %></strong> has uploaded a new file reversion, <strong><%= n.name %></strong>.
                                                 </li>
                                                 {% endif %}
 
-                                                {% if n.type=='document-upload-reversion' %}
+                                                {% if n.element.notification=='document-upload-reversion' %}
                                                 <li style="list-style-type: none">
-                                                    <strong><%= n.fromUser.name %></strong> has uploaded a new document, <strong><%= n.element.name %></strong>.
+                                                    <strong><%= n.owner.name %></strong> has uploaded a new document reversion, <strong><%= n.name %></strong>.
                                                 </li>
                                                 {% endif %}
                                             {% endfor %}
