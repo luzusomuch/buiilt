@@ -34,7 +34,7 @@
                                 <td align="left" style="padding: 20px 0 0 0; font-size: 16px; line-height: 25px; font-family: Roboto, Arial, sans-serif; color: black;" class="padding-copy">
                                     <p>Hi <%= invitee %>,</p>
                                     <div style="width: 100%">
-                                        <p>You have received <%= notifications.length %> notifications <%= inPastHour %>... Here's a summary:</p>
+                                        <p>You've received some notifications <%= inPastHour %>... here's a summary:</p>
                                         <ul>
                                             {% for n in notifications %}
                                                 {% if n.element.notification=='task-assign' %}
@@ -45,37 +45,32 @@
 
                                                 {% if n.element.notification=='thread-message' %}
                                                 <li style="list-style-type: none">
-                                                    You got new message in thread, <strong><%= n.name %></strong>.
+                                                    You have a new message in the thread named <strong><%= n.name %></strong>.
                                                 </li style="list-style-type: none">
                                                 {% endif %}
 
                                                 {% if n.element.notification=='file-assign' %}
                                                 <li style="list-style-type: none">
-                                                    <strong><%= n.owner.name %></strong> has uploaded a new file, <strong><%= n.name %></strong>.
+                                                    <strong><%= n.owner.name %></strong> has uploaded a new file called <strong><%= n.name %></strong>.
                                                 </li>
                                                 {% endif %}
 
                                                 {% if n.element.notification=='file-upload-reversion' %}
                                                 <li style="list-style-type: none">
-                                                    <strong><%= n.owner.name %></strong> has uploaded a new file reversion, <strong><%= n.name %></strong>.
+                                                    <strong><%= n.owner.name %></strong> has uploaded a new version for the file <strong><%= n.name %></strong>.
                                                 </li>
                                                 {% endif %}
 
                                                 {% if n.element.notification=='document-upload-reversion' %}
                                                 <li style="list-style-type: none">
-                                                    <strong><%= n.owner.name %></strong> has uploaded a new document reversion, <strong><%= n.name %></strong>.
+                                                    <strong><%= n.owner.name %></strong> has uploaded a new version to a document, <strong><%= n.name %></strong>.
                                                 </li>
                                                 {% endif %}
                                             {% endfor %}
                                         </ul>
                                     </div>
-                                    <p>Please click the button below to view your notifications in detail.</p>
+                                    <p>Please click the button below to create an account and view all of your notifications in detail.</p>
                                     <div align="center"><a href="<%= link %>" target="_blank" style="font-size: 16px; font-family: Roboto, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #2196F3; border-top: 15px solid #2196F3; border-bottom: 15px solid #2196F3; border-left: 25px solid #2196F3; border-right: 25px solid #2196F3; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; display: inline-block;" class="mobile-button">View Notifications</a></div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td align="left" style="padding: 20px 0 0 0; font-size: 16px; line-height: 25px; font-family: Roboto, Arial, sans-serif; color: black;" class="padding-copy">
-                                    <p>We look forward to seeing you on buiilt.</p>
                                 </td>
                             </tr>
                             <tr>
