@@ -34,7 +34,7 @@
                                 <td align="left" style="padding: 20px 0 0 0; font-size: 16px; line-height: 25px; font-family: Roboto, Arial, sans-serif; color: black;" class="padding-copy">
                                     <p>Hi <%= invitee %>,</p>
                                     <div style="width: 100%">
-                                        <p>You have received <%= notifications.length %> notifications in the past hour... Here's a summary:</p>
+                                        <p>You have received <%= notifications.length %> notifications <%= inPastHour %>... Here's a summary:</p>
                                         <ul>
                                             {% for n in notifications %}
                                                 {% if n.element.notification=='task-assign' %}

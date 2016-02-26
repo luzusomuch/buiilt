@@ -18,6 +18,13 @@ var job1 = new CronJob('0 */59 * * * *', function(){
 
 job1.start();
 
+var job2 = new CronJob('0 0 17 * * *', function(){
+    getAllNotificationsForUser();
+    getAllNotificationsForNonUser();
+}, null, false, 'Australia/Melbourne');
+
+job2.start();
+
 var today = new Date();
 var currentTime = today.getHours()+":"+today.getMinutes();
 
@@ -53,12 +60,15 @@ function getUserNotification(){
 
         // Fire email to owner
         _.each(notificationsListPreviousHour, function(n) {
-            Mailer.sendMail('notifications-user-previous-hour.html', config.emailFrom, n.owner.email, {
-                invitee: n.owner,
-                notifications: n.notifications,
-                link : config.baseUrl + 'dashboard/tasks',
-                subject: "Hourly Notifications Digest"
-            },function(err){console.log(err);});
+            if (n.notifications.length > 0) {
+                Mailer.sendMail('notifications-user-previous-hour.html', config.emailFrom, n.owner.email, {
+                    inPastHour: "in the past hour",
+                    invitee: n.owner,
+                    notifications: n.notifications,
+                    link : config.baseUrl + 'dashboard/tasks',
+                    subject: "Hourly Notifications Digest"
+                },function(err){console.log(err);});
+            }
         });
     });
 };
@@ -142,17 +152,145 @@ function getNotificationNonUser(){
             }
         });
         _.each(notificationsListPreviousHour, function(user) {
-            PackageInvite.findOne({to: user.owner}, function(err, packageInvite) {
-                if (err) {console.log(err);}
-                else {
-                    Mailer.sendMail('notifications-non-user-previous-hour.html', config.emailFrom, user.owner, {
-                        invitee: user.owner,
-                        notifications: user.notifications,
-                        link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
-                        subject: "Hourly Notifications Digest"
-                    },function(err){console.log(err);});
+            if (user.notifications.length > 0) {
+                PackageInvite.findOne({to: user.owner}, function(err, packageInvite) {
+                    if (err) {console.log(err);}
+                    else {
+                        Mailer.sendMail('notifications-non-user-previous-hour.html', config.emailFrom, user.owner, {
+                            inPastHour: "in the past hour",
+                            invitee: user.owner,
+                            notifications: user.notifications,
+                            link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
+                            subject: "Hourly Notifications Digest"
+                        },function(err){console.log(err);});
+                    }
+                });
+            }
+        });
+    });
+};
+
+// this function will fire when 17:00 to get whole notifications for user
+function getAllNotificationsForUser() {
+    Notification.find({unread: true})
+    .populate("owner", "_id name email")
+    .populate("fromUser", "_id name email")
+    .exec(function(err, notifications) {
+        if (err) {console.log(err);}
+        // get all notification and all notification in previous hour
+        var notificationsList = [];
+        _.each(notifications, function(n) {
+            if (n.type==="task-assign" || n.type==="thread-message" || n.type==="file-assign" || n.type==="file-upload-reversion" || n.type==="document-upload-reversion") {
+                var currentOnwerIndex = _.findIndex(notificationsList, function(item) {
+                    if (item.owner) {
+                        return item.owner._id.toString()===n.owner._id.toString();
+                    }
+                });
+                if (currentOnwerIndex === -1) {
+                    notificationsList.push({owner: n.owner, notifications: [n]});
+                } else {
+                    notificationsList[currentOnwerIndex].notifications.push(n);
                 }
-            });
+            }
+        });
+
+        // Fire email to owner
+        _.each(notificationsList, function(n) {
+            if (n.notifications.length > 0) {
+                Mailer.sendMail('notifications-user-previous-hour.html', config.emailFrom, n.owner.email, {
+                    invitee: n.owner,
+                    notifications: n.notifications,
+                    link : config.baseUrl + 'dashboard/tasks',
+                    subject: "Hourly Notifications Digest"
+                },function(err){console.log(err);});
+            }
+        });
+    });
+};
+
+// this function will fire when 17:00 to get whole notifications for non user
+function getAllNotificationsForNonUser() {
+    async.parallel({
+        tasks: function(cb) {
+            Task.find({}).populate("owner").exec(cb);
+        },
+        threads: function(cb) {
+            Thread.find({}).populate("owner").exec(cb);
+        },
+        files: function(cb) {
+            File.find({}).populate("owner").exec(cb);
+        }
+    }, function(err, result) {
+        if (err) {console.log(err);}
+        var notificationsList = [];
+        // Get Task
+        _.each(result.tasks, function(task) {
+            task.element.notification="task-assign";
+            getNotificationForNonUser(task, notificationsList);
+        });
+        // Get Thread
+        _.each(result.threads, function(thread) {
+            thread.element.notification="thread-message";
+            var latestMessage = _.last(thread.messages);
+            if (latestMessage) {
+                getNotificationForNonUser(thread, notificationsList);
+            }
+        });
+        // Get File
+        _.each(result.files, function(file) {
+            if (file.element.type==="file") {
+                file.element.notification="file-assign";
+                getNotificationForNonUser(file, notificationsList);
+                _.each(file.activities, function(activity) {
+                    if (activity.type==="upload-reversion") {
+                        _.each(activity.acknowledgeUsers, function(user) {
+                            if (user.email) {
+                                var fileIndex = _.findIndex(notificationsList, function(item) {
+                                    return item.owner===user.email;
+                                });
+                                file.element.notification="file-upload-reversion";
+                                if (fileIndex===-1) {
+                                    notificationsList.push({owner: user.email, notifications: [file]});
+                                } else {
+                                    notificationsList[fileIndex].notifications.push(file);
+                                }
+                            }
+                        });
+                    }
+                });
+            // Get Document
+            } else if (file.element.type==="document" && file.fileHistory.length > 0) {
+                _.each(file.fileHistory, function(history) {
+                    _.each(history.members, function(member) {
+                        if (member.email) {
+                            var documentIndex = _.findIndex(notificationsList, function(item) {
+                                return item.owner===member.email;
+                            });
+                            file.element.notification="document-upload-reversion";
+                            if (documentIndex===-1) {
+                                notificationsList.push({owner: member.email, notifications: [file]});
+                            } else {
+                                notificationsList[documentIndex].notifications.push(file);
+                            }
+                        }
+                    });
+                });
+            }
+        });
+        _.each(notificationsList, function(user) {
+            if (user.notifications.length > 0) {
+                PackageInvite.findOne({to: user.owner}, function(err, packageInvite) {
+                    if (err) {console.log(err);}
+                    else {
+                        Mailer.sendMail('notifications-non-user-previous-hour.html', config.emailFrom, user.owner, {
+                            invitee: user.owner,
+                            notifications: user.notifications,
+                            link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
+                            subject: "Hourly Notifications Digest"
+                        },function(err){console.log(err);});
+                    }
+                });
+            }
         });
     });
 };
