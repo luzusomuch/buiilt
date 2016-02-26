@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, $scope, $mdDialog, tasks, taskService, $mdToast, $stateParams, $state, peopleService, people, socket) {
+angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, $scope, $mdDialog, tasks, taskService, $mdToast, $stateParams, $state, peopleService, people, socket, notificationService) {
 	$scope.tasks = tasks;
     function filterTaskDueDate(tasks) {
         var today = moment(new Date()).format("YYYY-MM-DD");
@@ -16,9 +16,6 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
                 } else if (moment(taskDueDate).isSame(yesterday)) {
                     task.element.dueClose = true;
                     task.element.due = "Yesterday";
-                } else if (moment(taskDueDate).isBefore(yesterday)) {
-                    task.element.duePast = true;
-                    task.element.due = task.dueDate;
                 }
             }
         });
@@ -327,4 +324,33 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
 	getProjectMembers($stateParams.id);
 	
 	$scope.taskFilters = ['Task Description 1', 'Assignee 3'];
+
+    $scope.markComplete = function(task) {
+        task.completed = !task.completed;
+        if (task.completed) {
+            task.completedBy = $rootScope.currentUser._id;
+            task.editType = "complete-task";
+            task.completedAt = new Date();
+        } else {
+            task.completedBy = null;
+            task.editType = "uncomplete-task";
+            task.completedAt = null;
+        }
+        taskService.update({id: task._id}, task).$promise.then(function(res) {
+            $scope.showToast((res.completed)?"Task Has Been Marked Completed.":"Task Has Been Marked Incomplete.");
+            notificationService.markItemsAsRead({id: res._id}).$promise.then(function() {
+                $rootScope.$broadcast("UpdateCountNumber", {type: "task", number: task.__v});
+                task.__v = 0;
+            });
+        }, function(err) {$scope.showToast("Error");});
+    };
+
+    $scope.markRead = function(item, type) {
+        notificationService.markItemsAsRead({id: item._id}).$promise.then(function() {
+            $scope.showToast("You Have Successfully Marked This Read.");
+            $rootScope.$broadcast("UpdateCountNumber", {type: type, number: item.__v});
+            item.element.notificationType = null;
+            item.__v = 0;
+        }, function(err){$scope.showToast("Error");});
+    };
 });
