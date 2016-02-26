@@ -8,7 +8,7 @@
     <tr>
         <td bgcolor="#ffffff" align="center">
             <div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: Roboto, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
-                List of Notifications Unread In An Previous Hour
+                You have notifications on buiilt.com.au
             </div>
         </td>
     </tr>
@@ -23,7 +23,7 @@
                         <table width="100%" border="0" cellspacing="0" cellpadding="0">
                             <tr>
                                 <td align="center" style="font-size: 16px; font-family: Roboto, Arial, sans-serif; color: #666666; padding-top: 30px;" class="padding-copy">
-                                    Join Us on buiilt:
+                                    You have notifications on buiilt:
                                 </td>
                             </tr>
                             <tr>
@@ -34,37 +34,37 @@
                                 <td align="left" style="padding: 20px 0 0 0; font-size: 16px; line-height: 25px; font-family: Roboto, Arial, sans-serif; color: black;" class="padding-copy">
                                     <p>Hi <%= invitee.name %>,</p>
                                     <div style="width: 100%">
-                                        <p>You have <%= notifications.length %> notification(s) that unread in previous hour</p>
+                                        <p>You have received <%= notifications.length %> notifications in the past hour... Here's a summary:</p>
                                         <ul>
                                             {% for n in notifications %}
                                                 {% if n.type=='task-assign' %}
                                                 <li style="list-style-type: none">
-                                                    <strong><%= n.fromUser.name %></strong> has assigned you new task <%= n.element.description %>
+                                                    <strong><%= n.fromUser.name %></strong> has assigned you to the task, <strong><%= n.element.description %></strong>.
                                                 </li>
                                                 {% endif %}
 
                                                 {% if n.type=='thread-assign' %}
                                                 <li style="list-style-type: none">
-                                                    <strong><%= n.fromUser.name %></strong> has assigned you new thread <%= n.element.name %>
+                                                    <strong><%= n.fromUser.name %></strong> has assigned you to the message thread, <strong><%= n.element.name %></strong>.
                                                 </li style="list-style-type: none">
                                                 {% endif %}
 
                                                 {% if n.type=='file-assign' %}
                                                 <li style="list-style-type: none">
-                                                    <strong><%= n.fromUser.name %></strong> has assigned you new file <%= n.element.name %>
+                                                    <strong><%= n.fromUser.name %></strong> has uploaded a new file, <strong><%= n.element.name %></strong>.
                                                 </li>
                                                 {% endif %}
 
                                                 {% if n.type=='document-upload-reversion' %}
                                                 <li style="list-style-type: none">
-                                                    <strong><%= n.fromUser.name %></strong> has uploaded new reversion of document <%= n.element.name %>
+                                                    <strong><%= n.fromUser.name %></strong> has uploaded a new document, <strong><%= n.element.name %></strong>.
                                                 </li>
                                                 {% endif %}
                                             {% endfor %}
                                         </ul>
                                     </div>
-                                    <p>You can click the button below to view your notification(s) detail</p>
-                                    <div align="center"><a href="<%= link %>" target="_blank" style="font-size: 16px; font-family: Roboto, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #2196F3; border-top: 15px solid #2196F3; border-bottom: 15px solid #2196F3; border-left: 25px solid #2196F3; border-right: 25px solid #2196F3; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; display: inline-block;" class="mobile-button">View Notification</a></div>
+                                    <p>Please click the button below to view your notifications in detail.</p>
+                                    <div align="center"><a href="<%= link %>" target="_blank" style="font-size: 16px; font-family: Roboto, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #2196F3; border-top: 15px solid #2196F3; border-bottom: 15px solid #2196F3; border-left: 25px solid #2196F3; border-right: 25px solid #2196F3; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; display: inline-block;" class="mobile-button">View Notifications</a></div>
                                 </td>
                             </tr>
                             <tr>
@@ -74,12 +74,12 @@
                             </tr>
                             <tr>
                                 <td align="left" style="padding: 20px 0 0 0; font-size: 13px; line-height: 25px; font-family: Roboto, Arial, sans-serif; color: #666666;" class="padding-copy">
-                                    Regards,
+                                    Best Regards,
                                 </td>
                             </tr>
                             <tr>
                                 <td align="left" style="padding: 0px 0 0 0; font-size: 13px; line-height: 25px; font-family: Roboto, Arial, sans-serif; color: #666666;" class="padding-copy">
-                                    Buiilt Team
+                                    The team at buiilt.com.au.
                                 </td>
                             </tr>
                             <tr>
