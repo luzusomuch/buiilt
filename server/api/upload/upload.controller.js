@@ -180,8 +180,8 @@ exports.uploadReversion = function(req, res) {
                 var activityAndHisToryId = mongoose.Types.ObjectId();
                 var history = {
                     description: file.description,
-                    link: file.path,
-                    version: file.version,
+                    link: newFile.url,
+                    version: newFile.filename,
                     createdAt: new Date(),
                     activityAndHisToryId: activityAndHisToryId
                 };  
@@ -199,12 +199,12 @@ exports.uploadReversion = function(req, res) {
                 if (file.element.type==="document") {
                     activity.members = acknowledgeUsers;
                     history.members = acknowledgeUsers;
-                    history.versionTags = file.versionTags;
                     var versionTags = [];
                     _.each(req.body.versionTags, function(tag) {
                         versionTags.push(tag.tag);
                     });
                     file.versionTags = versionTags;
+                    history.versionTags = versionTags;
                     activity.element.versionTags = versionTags;
                 } else {
                     file.description = req.body.description;
