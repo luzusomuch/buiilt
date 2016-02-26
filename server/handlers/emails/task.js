@@ -9,77 +9,9 @@ var PackageInvite = require('./../../models/packageInvite.model');
 var _ = require('lodash');
 
 EventBus.onSeries('Task.Inserted', function(req, next){
-    var from = req.editUser.name + "<"+req.editUser.email+">";
-    async.parallel({
-        project: function(cb) {
-            Project.findById(req.project, cb);
-        },
-        team: function(cb) {
-            Team.findOne({$or:[{leader: req.editUser._id}, {member: req.editUser._id}]}, cb);
-        }
-    }, function(err, result) {
-        if (err) {return next();}
-        async.each(req.notMembers, function(member, cb) {
-            PackageInvite.findOne({project: req.project, to: member}, function(err, packageInvite) {
-                if (err || !packageInvite) {cb();}
-                else {
-                    Mailer.sendMail('assign-task-to-non-user.html', from, member, {
-                        team: result.team.toJSON(),
-                        inviter: req.editUser.toJSON(),
-                        invitee: member,
-                        project: result.project.toJSON(),
-                        request: req.toJSON(),
-                        link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
-                        subject: req.editUser.name + ' has assigned you a task ' + req.description
-                    },function(err){console.log(err);
-                        return cb();
-                    });
-                }
-            });
-        }, function() {
-            return next();
-        });
-    });
+    return next();
 });
 
 EventBus.onSeries('Task.Updated', function(req, next){
-    var from = req.editUser.name + "<"+req.editUser.email+">";
-    if (req._modifiedPaths.indexOf('assignees') != -1) {
-        async.parallel({
-            project: function(cb) {
-                Project.findById(req.project, cb);
-            },
-            team: function(cb) {
-                Team.findOne({$or:[{leader: req.editUser._id}, {member: req.editUser._id}]}, cb);
-            }
-        }, function(err, result) {
-            if (err) {return next();}
-            async.each(req.notMembers, function(member, cb) {
-                if (member && !(_.find(req.oldAssignees,{ email : member}))) {
-                    PackageInvite.findOne({to: member}, function(err, packageInvite) {
-                        if (err || !packageInvite) {cb();}
-                        else {
-                            Mailer.sendMail('assign-task-to-non-user.html', from, member, {
-                                team: result.team.toJSON(),
-                                inviter: req.editUser.toJSON(),
-                                invitee: member,
-                                request: req.toJSON(),
-                                project: result.project.toJSON(),
-                                link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
-                                subject: req.editUser.name + ' has assigned you a task ' + req.description
-                            },function(err){console.log(err);
-                                return cb();
-                            });
-                        }
-                    });
-                } else {
-                    cb();
-                }
-            }, function() {
-                return next();
-            });
-        });
-    } else {
-        return next();
-    }
+    return next();
 });

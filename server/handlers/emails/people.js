@@ -74,49 +74,7 @@ EventBus.onSeries('People.Updated', function(req, next){
     } else if (req._modifiedPaths.indexOf("broadcast-message") !== -1) {
         var currentTender = req.updatedTender;
         var latestActivity = _.last(currentTender.inviterActivities);
-        if (latestActivity.type === "broadcast-message") {
-            async.parallel({
-                project: function (cb) {
-                    Project.findById(req.project, cb);
-                },
-                team: function (cb) {
-                    Team.findOne({$or:[{leader: req.editUser._id}, {member: req.editUser._id}]}, cb);
-                }
-            }, function(err, result) {
-                if (err) {return next();}
-                async.each(latestActivity.element.members, function(member, cb) {
-                    User.findOne({email: member}, function(err, user) {
-                        if (err) 
-                            cb()
-                        else if (!user) {
-                            PackageInvite.findOne({project: req.project, to: member}, function(err, packageInvite) {
-                                if (err || !packageInvite) 
-                                    cb();
-                                else {
-                                    Mailer.sendMail('message-to-non-user.html', req.editUser.name + "<" + currentTender._id+"tender@mg.buiilt.com.au" + ">", member, {
-                                        newestMessage: {text: latestActivity.element.message},
-                                        user: member,
-                                        sendBy: req.editUser.toJSON(),
-                                        team: result.team.toJSON(),
-                                        request: req.toJSON(),
-                                        link: config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
-                                        subject: 'New message on ' + currentTender.tenderName
-                                    },function(err){
-                                        console.log(err)
-                                        cb();
-                                    });
-                                }
-                            });
-                        } else 
-                            cb();
-                    });
-                }, function() {
-                    return next();
-                });
-            });
-        } else {
-            return next();
-        }
+        return next();
     } else if (req._modifiedPaths.indexOf("attach-addendum") !== -1) {
         var currentTender = req.updatedTender;
         var from = req.editUser.name + "<"+req.editUser.email+">";
