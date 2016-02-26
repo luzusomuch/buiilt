@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScope, $scope, $timeout, $mdDialog, peopleService, $stateParams, $state, $mdToast, messageService, threads, people, socket) {
+angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScope, $scope, $timeout, $mdDialog, peopleService, $stateParams, $state, $mdToast, messageService, threads, people, socket, notificationService) {
 	$rootScope.title = $rootScope.project.name +" messages list";
     $scope.people = people;
 	$scope.threads = threads;
@@ -158,4 +158,62 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
     };
 	
 	getPeopleList($stateParams.id);
+
+    $scope.message = {};
+    if ($rootScope.projectSelectedMessage) {
+        $scope.selectedThread = $rootScope.projectSelectedMessage;
+    }
+    $scope.showReplyModal = function(event, message) {
+        $rootScope.projectSelectedMessage = message;
+        $mdDialog.show({
+            targetEvent: event,
+            controller: "projectMessagesCtrl",
+            resolve: {
+                threads: function($stateParams, messageService) {
+                    return messageService.getProjectThread({id: $stateParams.id}).$promise;
+                },
+                people: function(peopleService, $stateParams) {
+                    return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
+                }
+            },
+            templateUrl: 'app/modules/dashboard/partials/reply-message.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: false
+        });
+    };
+
+    $scope.closeModal = function() {
+        $mdDialog.cancel();
+    };
+
+    $scope.sendMessage = function() {
+        $scope.message.text = $scope.message.text.trim();
+        if ($scope.message.text.length===0 || $scope.message.text === '') {
+            $scope.showToast("Please check your message");
+            return;
+        } else {
+            messageService.sendMessage({id: $scope.selectedThread._id}, $scope.message).$promise.then(function(res) {
+                $scope.closeModal();
+                $scope.showToast("Your Message Has Been Sent Successfully.");
+                
+                //Track Reply Sent
+                mixpanel.identify($rootScope.currentUser._id);
+                mixpanel.track("Reply Sent");
+                
+                $scope.selectedThread = $rootScope.projectSelectedMessage = res;
+                notificationService.markItemsAsRead({id: res._id}).$promise.then(function() {
+                    $rootScope.$broadcast("UpdateCountNumber", {type: "message", number: $scope.selectedThread.__v});
+                    var currentThreadIndex = _.findIndex($scope.threads, function(message) {
+                        return message._id.toString()===$scope.selectedThread._id.toString();
+                    });
+                    $rootScope.$broadcast("Project-Message-Update", currentThreadIndex);
+                });
+            }, function(err) {$scope.showToast("There Has Been An Error...");});
+        }
+    };
+
+    $rootScope.$on("Project-Message-Update", function(event, index) {
+        $scope.threads[index].element.notificationType = null;
+        $scope.threads[index].__v = 0;
+    });
 });

@@ -305,6 +305,7 @@ exports.getProjectThread = function(req, res) {
     Thread.find({project: req.params.id, 'element.type': 'project-message', $or:[{owner: userId},{members: userId}]})
     .populate('members', '_id name email')
     .populate('owner', '_id name email')
+    .populate('messages.user', '_id name email')
     .exec(function(err, threads) {
         async.each(threads, function(thread, cb) {
             Notification.find({owner: userId, unread: true, "element._id": thread._id})
