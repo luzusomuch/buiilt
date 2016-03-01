@@ -155,6 +155,7 @@ function getNotificationNonUser(){
             if (user.notifications.length > 0) {
                 PackageInvite.findOne({to: user.owner}, function(err, packageInvite) {
                     if (err) {console.log(err);}
+                    if (!packageInvite) {console.log("No Package Invite Found");}
                     else {
                         Mailer.sendMail('notifications-non-user-previous-hour.html', config.emailFrom, user.owner, {
                             inPastHour: "in the past hour",
@@ -281,6 +282,7 @@ function getAllNotificationsForNonUser() {
             if (user.notifications.length > 0) {
                 PackageInvite.findOne({to: user.owner}, function(err, packageInvite) {
                     if (err) {console.log(err);}
+                    if (!packageInvite) {console.log("No Package Invite Found");}
                     else {
                         Mailer.sendMail('notifications-non-user-previous-hour.html', config.emailFrom, user.owner, {
                             invitee: user.owner,

@@ -5,6 +5,7 @@ var User = require('./../models/user.model');
 var Project = require('./../models/project.model');
 var People = require('./../models/people.model');
 var NotificationHelper = require('./../components/helpers/notification');
+var PushNotificationHelper = require('./../components/helpers/PushNotification');
 var _ = require('lodash');
 var async = require('async');
 
@@ -20,7 +21,9 @@ EventBus.onSeries('File.Inserted', function(file, next) {
                 type : 'file-assign'
             };
             NotificationHelper.create(params, function() {
-                return next();
+                PushNotificationHelper.getData(file.project, file._id, file.name, "This file has assigned to you", file.members, "file", function() {
+                    return next();
+                });
             });
         } else
             return next();
@@ -47,7 +50,9 @@ EventBus.onSeries('File.Updated', function(file, next) {
                     callback();
                 }
             }, function() {
-                return next();
+                PushNotificationHelper.getData(file.project, file._id, file.name, "This document has uploaded new version", file.members, "file", function() {
+                    return next();
+                });
             });
         } else if (file.element.type === "file" || file.element.type === "tender") {
             if (file.members.length > 0) {
@@ -59,7 +64,13 @@ EventBus.onSeries('File.Updated', function(file, next) {
                     type : file.element.type+'-upload-reversion'
                 };
                 NotificationHelper.create(params, function() {
-                    return next();
+                    if (file.element.type==="file") {
+                        PushNotificationHelper.getData(file.project, file._id, file.name, "This file has uploaded new version", file.members, "file", function() {
+                            return next();
+                        });
+                    } else {
+                        return next();
+                    }
                 });
             } else
                 return next();

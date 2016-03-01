@@ -109,14 +109,12 @@ exports.getData = function(projectId,id,threadName, message, users, type, cb){
                         var path = '';
                         if (type == 'task') {
                             path = "#/task/"+id;
-                        } else if (type == "board") {
-                            path = "#/board/" + id;
-                        } else if (type == "people") {
-                            path = "#/"+projectId+"/people-chat/" + id;
+                        } else if (type == "file") {
+                            path = "#/file/" + id;
                         } else if (type == 'invite-people') {
                             path = "#/dashboard";
-                        } else if (type == 'message') {
-                            path = "#/"+projectId+"/thread/"+id;
+                        } else if (type == 'thread') {
+                            path = "#/thread/"+id;
                         }
                         var sender = new gcm.Sender("AIzaSyABcNG7VNgSzOhXIxapNGxmQWLElWHgHDU");//api id
                         messageGcm.addData('message', message);

@@ -21,7 +21,7 @@ EventBus.onSeries('Task.Inserted', function(task, next){
             type : 'task-assign'
         };
         NotificationHelper.create(params, function() {
-            PushNotificationHelper.getData(task.project,task._id,task.name, 'has assigned to you', task.members, 'task', function() {
+            PushNotificationHelper.getData(task.project, task._id, task.description, 'has assigned to you', task.members, 'task', function() {
                 return next();
             });
         });
@@ -46,7 +46,13 @@ EventBus.onSeries('Task.Updated', function(task, next){
             type : task.completed ? 'task-completed' : 'task-reopened'
         };
         NotificationHelper.create(params, function() {
-            return next();
+            if (task.completed) {
+                PushNotificationHelper(task.project, task._id, task.description, 'This task has marked as completed', task.members, 'task', function() {
+                    return next();
+                });
+            } else {
+                return next();
+            }
         });
     } else if (task._modifiedPaths.indexOf('assignees') != -1) {
         async.parallel([

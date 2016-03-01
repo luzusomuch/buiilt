@@ -20,7 +20,9 @@ EventBus.onSeries('Thread.Inserted', function(thread, next) {
             type: 'thread-assign'
         };
         NotificationHelper.create(params, function () {
-            return next();
+            PushNotificationHelper.getData(thread.project, thread._id, thread.name, "This thread has assigned to you", thread.members, "thread", function() {
+                return next();
+            });
         });
     }
 });
@@ -98,6 +100,9 @@ EventBus.onSeries('Thread.NewMessage', function(thread, next) {
         type : 'thread-message'
     };
     NotificationHelper.create(params,function() {
-        return next();
+        var latestMessage = _.last(thread.messages);
+        PushNotificationHelper.getData(thread.project, thread._id, thread.name, latestMessage.text, thread.members, "thread", function() {
+            return next();
+        });
     });
 });
