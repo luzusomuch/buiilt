@@ -1,105 +1,98 @@
-<div class="main-page-content" layout-padding>
-    <div class="item-activity">
-        <div layout="row" flex class="activity-stream-head">
-            <p>This tender was created by <strong>{{tender.owner.name}}</strong> on {{tender.createdAt | date: 'dd-MM-yyyy'}}.</p>
-        </div>
-        <div layout="row" layout-align="center center" flex class="activity-stream" ng-show="tender.activities.length == 0">
-            <span flex="5"></span>
-            <div class="icon-type">
-                <md-icon class="material-icons md-primary">gps_fixed</md-icon>
-            </div>
-            <span flex="5"></span>
-            <div flex class="activity-detail">
-                <p class="activity-header">
-                    <span class="activity-creator">{{tender.owner.name}}</span>
-                    <span class="meta-data"> attached the following scope at <span class="date-time">{{tender.createdAt | date:'hh:mm a'}}, {{tender.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
-                </p>
-                <p class="activity-body md-body">
-                    <span> {{tender.description}} <br />The due date for this tender is <strong>{{tender.dateEnd | date: 'dd-MM-yyyy'}}</strong>.</span>
-                </p>
-            </div>
-        </div>
+<div layout="column">
+	<div class="main-page-content" layout-padding>
+	    <div class="item-activity">
+	        <div layout="row" flex class="activity-stream-head">
+	            <p>This tender was created by <strong>{{tender.owner.name}}</strong> on {{tender.createdAt | date: 'dd-MM-yyyy'}}.</p>
+	        </div>
+	        <div layout="row" layout-align="center center" flex class="activity-stream" ng-show="tender.activities.length == 0">
+	            <span flex="5"></span>
+	            <div class="icon-type">
+	                <md-icon class="material-icons md-primary">gps_fixed</md-icon>
+	            </div>
+	            <span flex="5"></span>
+	            <div flex class="activity-detail">
+	                <p class="activity-header">
+	                    <span class="activity-creator">{{tender.owner.name}}</span>
+	                    <span class="meta-data"> attached the following scope at <span class="date-time">{{tender.createdAt | date:'hh:mm a'}}, {{tender.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
+	                </p>
+	                <p class="activity-body md-body">
+	                    <span> {{tender.description}} <br />The due date for this tender is <strong>{{tender.dateEnd | date: 'dd-MM-yyyy'}}</strong>.</span>
+	                </p>
+	            </div>
+	        </div>
 
-        <div layout="row" layout-align="center center" flex class="activity-stream" ng-repeat="activity in tender.activities">
-            <span flex="5"></span>
-            <div class="icon-type" ng-switch="activity.type">
-                <md-icon ng-switch-when="attach-scope" class="material-icons md-primary">gps_fixed</md-icon>
-                <md-icon ng-switch-when="attach-addendum" class="material-icons md-primary">gps_fixed</md-icon>
-                <md-icon ng-switch-when="distribute-status" class="material-icons md-primary">call_split</md-icon>
-                <md-icon ng-switch-when="invite-tender" class="material-icons md-primary">person_outline</md-icon>
-                <md-icon ng-switch-when="broadcast-message" class="material-icons md-primary">chat_bubble_outline</md-icon>
+	        <div layout="row" layout-align="center center" flex class="activity-stream" ng-repeat="activity in tender.activities">
+	            <span flex="5"></span>
+	            <div class="icon-type" ng-switch="activity.type">
+	                <md-icon ng-switch-when="attach-scope" class="material-icons md-primary">gps_fixed</md-icon>
+	                <md-icon ng-switch-when="attach-addendum" class="material-icons md-primary">gps_fixed</md-icon>
+	                <md-icon ng-switch-when="distribute-status" class="material-icons md-primary">call_split</md-icon>
+	                <md-icon ng-switch-when="invite-tender" class="material-icons md-primary">person_outline</md-icon>
+	                <md-icon ng-switch-when="broadcast-message" class="material-icons md-primary">chat_bubble_outline</md-icon>
                 
-                <md-icon ng-switch-when="edit-tender" class="material-icons md-primary">edit</md-icon>
-                <md-icon ng-switch-when="related-file" class="material-icons md-primary">attach_file</md-icon>
-                <md-icon ng-switch-when="tender-file" class="material-icons md-primary">move_to_inbox</md-icon>
-            </div>
+	                <md-icon ng-switch-when="edit-tender" class="material-icons md-primary">edit</md-icon>
+	                <md-icon ng-switch-when="related-file" class="material-icons md-primary">attach_file</md-icon>
+	                <md-icon ng-switch-when="tender-file" class="material-icons md-primary">move_to_inbox</md-icon>
+	            </div>
             
-            <span flex="5"></span>
+	            <span flex="5"></span>
             
-            <div flex class="activity-detail">
+	            <div flex class="activity-detail">
                 
-                <p ng-switch="activity.type" class="activity-header">
+	                <p ng-switch="activity.type" class="activity-header">
                     
-                    <span class="activity-creator">{{activity.user.name}}</span>
+	                    <span class="activity-creator">{{activity.user.name}}</span>
                     
-                    <span class="meta-data" ng-switch-when="attach-scope"> attached the following scope at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
-                    <span class="meta-data" ng-switch-when="attach-addendum"> attached the following addendum at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
-                    <span class="meta-data" ng-switch-when="distribute-status"> distributed this tender at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
-                    <span class="meta-data" ng-switch-when="invite-tender"> added the following invitees at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
-                    <span class="meta-data" ng-switch-when="broadcast-message"> sent the following message at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
-                    <span class="meta-data" ng-switch-when="select-winner"> selected {{activity.element.name}} as the winner of this tender at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>.</span>
-                    <span class="meta-data" ng-switch-when="tender-file"> has submitted their tender at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}:</span>
+	                    <span class="meta-data" ng-switch-when="attach-scope"> attached the following scope at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
+	                    <span class="meta-data" ng-switch-when="attach-addendum"> attached the following addendum at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
+	                    <span class="meta-data" ng-switch-when="distribute-status"> distributed this tender at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
+	                    <span class="meta-data" ng-switch-when="invite-tender"> added the following invitees at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
+	                    <span class="meta-data" ng-switch-when="broadcast-message"> sent the following message at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
+	                    <span class="meta-data" ng-switch-when="select-winner"> selected {{activity.element.name}} as the winner of this tender at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>.</span>
+	                    <span class="meta-data" ng-switch-when="tender-file"> has submitted their tender at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}:</span>
                     
-                </p>
+	                </p>
                 
-                <p ng-switch="activity.type" class="activity-body md-body">
+	                <p ng-switch="activity.type" class="activity-body md-body">
                     
-                    <span ng-switch-when="attach-scope"> {{activity.element.description}} <br /><span ng-show="activity.element._id">The file attached <a ui-sref="project.files.detail({id: activity.element.project, fileId: activity.element._id})">here</a> is also part of this scope.</span> <br/> The due date for this tender is <strong>{{(activity.element.dateEnd) ? activity.element.dateEnd : tender.dateEnd | date: 'dd-MM-yyyy'}}</strong>.</span>
-                    <span ng-switch-when="attach-addendum"> {{activity.element.name}} <br /><span ng-show="activity.element.link">The file attached <a ui-sref="tender.documents.detail({tenderId: tender._id, documentId: activity.element.fileId})">here</a> is also part of this addendum.</span><md-button ng-show="!activity.isAcknow && activity.user._id !== currentUser._id" ng-click="acknowledgement(activity)" class="md-primary">Acknowledge This Addendum</md-button></span>
-                    <span ng-switch-when="invite-tender"><span ng-repeat="member in activity.element.members">{{member.name}}, </span></span>
-                    <span ng-switch-when="broadcast-message"> {{activity.element.message}} to <span ng-repeat="user in activity.element.sentTo track by $index"><strong>{{user}}</strong>, </span></span>
-                    <span ng-switch-when="select-winner">has selected {{activity.element.name}} as the winner of this tender.</span>
-                    <span ng-switch-when="tender-file"> You can view the file <a ui-sref="project.files.detail({id: activity.element.project, fileId: activity.element._id})">here</a>.</span>
+	                    <span ng-switch-when="attach-scope"> {{activity.element.description}} <br /><span ng-show="activity.element._id">The file attached <a ui-sref="project.files.detail({id: activity.element.project, fileId: activity.element._id})">here</a> is also part of this scope.</span> <br/> The due date for this tender is <strong>{{(activity.element.dateEnd) ? activity.element.dateEnd : tender.dateEnd | date: 'dd-MM-yyyy'}}</strong>.</span>
+	                    <span ng-switch-when="attach-addendum"> {{activity.element.name}} <br /><span ng-show="activity.element.link">The file attached <a ui-sref="tender.documents.detail({tenderId: tender._id, documentId: activity.element.fileId})">here</a> is also part of this addendum.</span><md-button ng-show="!activity.isAcknow && activity.user._id !== currentUser._id" ng-click="acknowledgement(activity)" class="md-primary">Acknowledge This Addendum</md-button></span>
+	                    <span ng-switch-when="invite-tender"><span ng-repeat="member in activity.element.members">{{member.name}}, </span></span>
+	                    <span ng-switch-when="broadcast-message"> {{activity.element.message}} to <span ng-repeat="user in activity.element.sentTo track by $index"><strong>{{user}}</strong>, </span></span>
+	                    <span ng-switch-when="select-winner">has selected {{activity.element.name}} as the winner of this tender.</span>
+	                    <span ng-switch-when="tender-file"> You can view the file <a ui-sref="project.files.detail({id: activity.element.project, fileId: activity.element._id})">here</a>.</span>
                     
-                    <span ng-switch-when="edit-tender">has edited the details of this tender: {{(activity.element.name) ? "Name: "+activity.element.name+", " : ""}} {{(activity.element.description) ? "Description: "+activity.element.description+", " : ""}}.</span>
+	                    <span ng-switch-when="edit-tender">has edited the details of this tender: {{(activity.element.name) ? "Name: "+activity.element.name+", " : ""}} {{(activity.element.description) ? "Description: "+activity.element.description+", " : ""}}.</span>
                     
-                </p>
-                <div layout="row" layout-align="center center" class="tagcloud-selection" ng-show="activity.user._id===currentUser._id && activity.type==='attach-addendum'">
-                    <span ng-repeat="user in activity.acknowledgeUsers" ng-class="{'available-tag':!user.isAcknow, 'selected-tag':user.isAcknow}">{{(user._id) ? user._id.name : user.email}}</span>
-                </div>
+	                </p>
+	                <div layout="row" layout-align="center center" class="tagcloud-selection" ng-show="activity.user._id===currentUser._id && activity.type==='attach-addendum'">
+	                    <span ng-repeat="user in activity.acknowledgeUsers" ng-class="{'available-tag':!user.isAcknow, 'selected-tag':user.isAcknow}">{{(user._id) ? user._id.name : user.email}}</span>
+	                </div>
                 
-            </div>
-        </div>
-    </div>
-</div>
-
-<div>
-    <md-fab-toolbar ng-cloak md-open="false" md-direction="left" class="" ng-show="tender.status=='open'">
-        <md-fab-trigger>
-            <md-button aria-label="Add an Item to this Project" class="md-fab md-primary">
-                <md-tooltip md-direction="up">Actions...</md-tooltip>
-                <md-icon class="material-icons" >add</md-icon>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+	
+	<md-toolbar>
+		<div class="md-toolbar-tools" layout="row" layout-align="end center">
+            <md-button aria-label="Attach an Addendum" class="md-icon-button" ng-click="showModal($event, 'attach-an-addendum.html')" ng-show="tender.owner._id == currentUser._id && tender.isDistribute" style="margin-right: 30px">
+                <md-tooltip md-direction="top">Attach an Addendum</md-tooltip>
+                <md-icon class="material-icons">gps_fixed</md-icon>
             </md-button>
-        </md-fab-trigger>
-        <md-toolbar>
-            <md-fab-actions class="md-toolbar-tools">
-                <md-button aria-label="Attach an Addendum" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'attach-an-addendum.html')" ng-show="tender.owner._id == currentUser._id && tender.isDistribute">
-                    <md-tooltip md-direction="up">Attach an Addendum</md-tooltip>
-                    <md-icon class="material-icons">gps_fixed</md-icon>
-                </md-button>
-                <md-button aria-label="Edit the Scope" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'attach-scope.html')" ng-show="tender.owner._id == currentUser._id && !tender.isDistribute">
-                    <md-tooltip md-direction="up">Edit the Scope</md-tooltip>
-                    <md-icon class="material-icons">gps_fixed</md-icon>
-                </md-button>
-                <md-button aria-label="Distribute Tender" class="md-fab md-raised md-mini md-primary" ng-click="distributeTender()" ng-show="tender.owner._id == currentUser._id && !tender.isDistribute">
-                    <md-tooltip md-direction="up">Distribute Tender</md-tooltip>
-                    <md-icon class="material-icons">call_split</md-icon>
-                </md-button>
-                <md-button aria-label="Select a Winner" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'select-winner-tender.html')" ng-show="tender.isDistribute && tender.owner._id == currentUser._id && !tender.hasSelect">
-                      <md-tooltip md-direction="up">Select a Winning Tender</md-tooltip>
-                      <md-icon class="material-icons">playlist_add_check</md-icon>
-                </md-button>
-            </md-fab-actions>
-        </md-toolbar>
-    </md-fab-toolbar>
+            <md-button aria-label="Edit the Scope" class="md-icon-button" ng-click="showModal($event, 'attach-scope.html')" ng-show="tender.owner._id == currentUser._id && !tender.isDistribute" style="margin-right: 30px">
+                <md-tooltip md-direction="top">Edit the Scope</md-tooltip>
+                <md-icon class="material-icons">gps_fixed</md-icon>
+            </md-button>
+            <md-button aria-label="Distribute Tender" class="md-icon-button" ng-click="distributeTender()" ng-show="tender.owner._id == currentUser._id && !tender.isDistribute" style="margin-right: 30px">
+                <md-tooltip md-direction="top">Distribute Tender</md-tooltip>
+                <md-icon class="material-icons">call_split</md-icon>
+            </md-button>
+            <md-button aria-label="Select a Winner" class="md-icon-button" ng-click="showModal($event, 'select-winner-tender.html')" ng-show="tender.isDistribute && tender.owner._id == currentUser._id && !tender.hasSelect" style="margin-right: 30px">
+                  <md-tooltip md-direction="top">Select a Winning Tender</md-tooltip>
+                  <md-icon class="material-icons">playlist_add_check</md-icon>
+            </md-button>
+		</div>
+	</md-toolbar>
+	
 </div>

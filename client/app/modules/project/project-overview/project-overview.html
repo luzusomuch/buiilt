@@ -1,59 +1,51 @@
-<div class="detail-header" layout-padding layout="row">
-	<div class="md-toolbar-tools">
-		<p>Project Overview</p>
-		<span flex></span>
-		<md-button ng-show="showSubmitTender && project.projectManager._id != currentUser._id" ng-click="showFileUpload($event)">Submit a Tender</md-button>
-	</div>
-</div>
-
-<div class="main-page-content" layout-padding>
-	
-    <md-content>
-		
-		<div layout="column">
-			<div layout-margin>
-				<p><strong>Project Name:</strong></p>
-				<p>{{ project.name }}</p>
-			</div>
-			<div layout-margin>
-				<p><strong>Project Address:</strong></p>
-				<p>{{ project.address }}, {{ project.suburb }} {{ project.postcode }}</p>
-			</div>
-			<div layout-margin>
-				<p><strong>Project Description:</strong></p>
-				<p ng-hide="!project.description">{{ project.description }}</p>
-				<p ng-show="!project.description && project.projectManager._id == currentUser._id">There is no description for this project yet.</p>
-				<p ng-show="!project.description && project.projectManager._id == currentUser._id">You can add one by clicking the blue action button below, and then clicking "Edit"</p>
-			</div>
+<div layout="column">
+	<div class="detail-header" layout-padding layout="row">
+		<div class="md-toolbar-tools">
+			<p>Project Overview</p>
+			<span flex></span>
+			<md-button ng-show="showSubmitTender && project.projectManager._id != currentUser._id" ng-click="showFileUpload($event)">Submit a Tender</md-button>
 		</div>
+	</div>
+
+	<div class="main-page-content" layout-padding>
+	    <md-content>
 		
-    </md-content>
+			<div layout="column">
+				<div layout-margin>
+					<p><strong>Project Name:</strong></p>
+					<p>{{ project.name }}</p>
+				</div>
+				<div layout-margin>
+					<p><strong>Project Address:</strong></p>
+					<p>{{ project.address }}, {{ project.suburb }} {{ project.postcode }}</p>
+				</div>
+				<div layout-margin>
+					<p><strong>Project Description:</strong></p>
+					<p ng-hide="!project.description">{{ project.description }}</p>
+					<p ng-show="!project.description && project.projectManager._id == currentUser._id">There is no description for this project yet.</p>
+					<p ng-show="!project.description && project.projectManager._id == currentUser._id">You can add one by clicking the blue action button below, and then clicking "Edit"</p>
+				</div>
+			</div>
+		
+	    </md-content>
+	</div>
 	
-	<div>
-  	  	<md-fab-toolbar ng-cloak md-open="false" md-direction="left" ng-show="!isArchive">
-		  	<md-fab-trigger>
-	  	      	<md-button aria-label="Actions" class="md-fab md-primary">
-				  	<md-tooltip md-direction="up">Actions...</md-tooltip>
-			      	<md-icon class="material-icons" >add</md-icon>
-	  	      	</md-button>
-  	      	</md-fab-trigger>
-		  	<md-toolbar>
-		  		<md-fab-actions class="md-toolbar-tools">
-		  	      	<md-button aria-label="Edit Project Details" class="md-fab md-raised md-mini" ng-click="showEditProjectModal($event)" ng-show="project.projectManager._id == currentUser._id">
-					  	<md-tooltip md-direction="up">Edit Project Details</md-tooltip>
-				      	<md-icon class="material-icons">edit</md-icon>
-		  	      	</md-button>
-		  	      	<md-button aria-label="Download a Backup of this Project" class="md-fab md-raised md-mini" ng-click="downloadBackUp()">
-					  	<md-tooltip md-direction="up">Download a Backup of this Project</md-tooltip>
-				      	<md-icon class="material-icons">file_download</md-icon>
-		  	      	</md-button>
-		  	      	<md-button aria-label="Archive this Project" class="md-fab md-raised md-mini" ng-show="currentUser._id == project.projectManager._id" ng-click="archiveProject()">
-					  	<md-tooltip md-direction="up">Archive this Project</md-tooltip>
-				      	<md-icon class="material-icons">archive</md-icon>
-		  	      	</md-button>
-		  	  	</md-fab-actions>
-		  	</md-toolbar>
-  	  </md-fab-speed-dial>
-    </div>
+	<md-toolbar>
+		<div class="md-toolbar-tools" layout="row" layout-align="end center">
+  	      	<md-button aria-label="Edit Project Details" class="md-icon-button" ng-click="showEditProjectModal($event)" ng-show="project.projectManager._id == currentUser._id" style="margin-right: 30px">
+			  	<md-tooltip md-direction="up">Edit Project Details</md-tooltip>
+		      	<md-icon class="material-icons">edit</md-icon>
+  	      	</md-button>
+  	      	<md-button aria-label="Download a Backup of this Project" class="md-icon-button" ng-click="downloadBackUp()" style="margin-right: 30px">
+			  	<md-tooltip md-direction="up">Download a Backup of this Project</md-tooltip>
+		      	<md-icon class="material-icons">file_download</md-icon>
+  	      	</md-button>
+  	      	<md-button aria-label="Archive this Project" class="md-icon-button" ng-show="currentUser._id == project.projectManager._id" ng-click="archiveProject()" style="margin-right: 30px">
+			  	<md-tooltip md-direction="up">Archive this Project</md-tooltip>
+		      	<md-icon class="material-icons">archive</md-icon>
+  	      	</md-button>
+		</div>
+	</md-toolbar>
+	
 	
 </div>
