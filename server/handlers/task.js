@@ -146,6 +146,25 @@ EventBus.onSeries('Task.Updated', function(task, next){
         ],function() {
             return next();
         });
+    } else if (task._modifiedPaths.indexOf("insertNote") !== -1) {
+        var latestActivity = _.last(task.activities);
+        if (latestActivity.type==="insert-note") {
+            var owners = task.members;
+            owners.push(task.owner);
+            _.remove(owners, task.editUser._id);
+            var params = {
+                owners : owners,
+                fromUser : task.editUser._id,
+                element : task,
+                referenceTo : 'task',
+                type : 'task-new-note'
+            };
+            NotificationHelper.create(params, function() {
+                return next();
+            });
+        } else {
+            return next();
+        }
     } else {
         return next();
     }

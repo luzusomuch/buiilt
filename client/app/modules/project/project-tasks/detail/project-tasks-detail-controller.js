@@ -172,6 +172,16 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
         }
     };
 
+    $scope.insertNote = function(form) {
+        if (form.$valid) {
+            $scope.task.editType="insert-note";
+            $scope.updateTask($scope.task, $scope.task.editType);
+        } else {
+            $scope.showToast("Please Check Your Input");
+            return;
+        }
+    };
+
     $scope.updateTask = function(task, updateType) {
         taskService.update({id: task._id}, task).$promise.then(function(res) {
             if (updateType == "complete-task" || updateType == "uncomplete-task") {
@@ -180,6 +190,8 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
                 $scope.showToast("Task Has Been Updated Successfully.");
             } else if (updateType == "assign") {
                 $scope.showToast("Task Has Been Updated Successfully.");
+            } else if (updateType==="insert-note") {
+                $scope.showToast("Insert New Note Successfully");
             }
             delete task.editType;
             $rootScope.$broadcast("Task.Updated", res);

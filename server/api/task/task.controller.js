@@ -256,6 +256,9 @@ exports.update = function(req,res) {
                     task.markModified('assignees');
                 } else if (req.body.editType === "complete-task") {
                     task.markModified('completed');
+                } else if (req.body.editType==="insert-note") {
+                    activity.element.content = req.body.note;
+                    task.markModified("insertNote")
                 }
                 task.activities.push(activity);
                 task._editUser = user;

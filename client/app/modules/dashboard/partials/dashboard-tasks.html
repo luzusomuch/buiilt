@@ -56,6 +56,9 @@
 	        		<span ng-show="notification.type=='task-reopened'">
 	        			{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} marked this task incomplete.
 	        		</span>
+	        		<span ng-show="notification.type=='task-new-note'">
+	        			{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} has created new note.
+	        		</span>
 				</span><span ng-show="{{task.element.notifications.length - task.element.limitNotifications.length > 0}}">... +({{task.element.notifications.length - task.element.limitNotifications.length}}) More</span>
 			</div>
 			
