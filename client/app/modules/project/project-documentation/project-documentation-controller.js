@@ -95,6 +95,31 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
 	      	clickOutsideToClose: false
 	    });
 	};
+
+    $scope.showViewFileModal = function($event, document) {
+        $mdDialog.show({
+            targetEvent: $event,
+            controller: function($scope, $mdDialog) {
+                $scope.document = document;
+                $scope.latestHistory = _.last($scope.document.fileHistory);
+                $scope.closeModal = function() {
+                    $mdDialog.cancel();
+                };
+
+                $scope.download = function() {
+                    filepicker.exportFile(
+                        {url: $scope.latestHistory.link, filename: $scope.document.name},
+                        function(Blob){
+                            console.log(Blob.url);
+                        }
+                    );
+                };
+            },
+            templateUrl: 'app/modules/project/project-documentation/all/view-file.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: false
+        });
+    };
 	
 	$scope.closeModal = function(){
 		$mdDialog.cancel();
