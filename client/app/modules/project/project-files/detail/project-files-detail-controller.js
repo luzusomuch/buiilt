@@ -247,15 +247,15 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
                 break;
 
                 case "insert-note":
-                    $scope.showToast("Added New Note Successfully");
+                    $scope.showToast("Your Note Has Been Successfully Added.");
                 break;
 
                 case "archive":
-                    $scope.showToast("Archive Successfully");
+                    $scope.showToast("This File Has Been Archived Successfully.");
                 break;
 
                 case "unarchive":
-                    $scope.showToast("Unarchive Successfully");
+                    $scope.showToast("This File Has Been Unarchived Successfully.");
                 break;
 
                 default:

@@ -288,7 +288,7 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
             $scope.document.editType = (!$scope.document.isArchive) ? "archive" : "unarchive";
             $scope.document.isArchive = !$scope.document.isArchive;
             fileService.update({id: $scope.document._id}, $scope.document).$promise.then(function(res) {
-                $scope.showToast("Successfully");
+                $scope.showToast("This Document Has Been Archived Successfully.");
             }, function(err) {
                 $scope.showToast("Error");
             });

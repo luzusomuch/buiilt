@@ -16,13 +16,16 @@
 		</div>
 		
 		<div layout="row" layout-align="center center">
+			
 			<md-input-container flex="60" style="margin-bottom: -2vh">
 				<label for="">Message Replies</label>
 				<input type="text" name="messageReplies" ng-model="reply">
 			</md-input-container>
-            <div class="tagcloud" style="margin-bottom: -2vh; margin-left: 2vh">
-                <span ng-class="{'available-tag': !showArchived, 'selected-tag': showArchived}" ng-click="showArchived=!showArchived">Archived Thread</span>
+			
+            <div class="tagcloud" style="margin-bottom: 2vh; margin-left: 2vh">
+                <span ng-class="{'available-tag': !showArchived, 'selected-tag': showArchived}" ng-click="showArchived=!showArchived">Show Archived Messages</span>
             </div>
+			
 		</div>
 		
 	</div>

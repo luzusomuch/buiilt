@@ -78,7 +78,7 @@
 		<md-toolbar class="fab-toolbar-btn">
 			<div class="md-toolbar-tools" layout="row" layout-align="end center">
                 <md-button ng-click="archive()" aria-label="Compose Message" class="md-icon-button" style="margin-right: 30px">
-                    <md-tooltip md-direction="top">{{(!document.isArchive) ? 'Archive' : 'Unarchive'}}</md-tooltip>
+                    <md-tooltip md-direction="top">{{(!document.isArchive) ? 'Archive this Document' : 'Unarchive this Document'}}</md-tooltip>
                     <md-icon class="material-icons"><i class="material-icons">{{(!document.isArchive) ? 'archive' : 'unarchive'}}</i></md-icon>
                 </md-button>
                 <md-button aria-label="Upload a Document Revision" class="md-icon-button" ng-click="showModal($event, 'upload-document-reversion.html')" ng-show="allowUploadReversion && !document.isArchive" style="margin-right: 30px">

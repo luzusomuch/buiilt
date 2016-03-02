@@ -15,10 +15,13 @@
 				<div class="tagcloud" layout-wrap>
 					<span ng-class="{'available-tag': !tag.select, 'selected-tag': tag.select}" ng-repeat="tag in tags" ng-click="selectChip($index);selectFilterTag(tag.name)">{{tag.name}}</span>
 				</div>
+				
+				<div class="tagcloud" style="margin-top: 2.5vh; margin-left: 8vh">
+					<span ng-class="{'available-tag': !showArchived, 'selected-tag': showArchived}" ng-click="showArchived=!showArchived">Show Archived Documents</span>
+				</div>
 			</div>
-			<div class="tagcloud" style="margin-top: 2.5vh; margin-left: 2vh">
-				<span ng-class="{'available-tag': !showArchived, 'selected-tag': showArchived}" ng-click="showArchived=!showArchived">Archived Document</span>
-			</div>
+			
+			
 		</div>
 		
 	</div>

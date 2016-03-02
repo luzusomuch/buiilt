@@ -95,7 +95,7 @@
 		<md-toolbar class="fab-toolbar-btn">
 			<div class="md-toolbar-tools" layout="row" layout-align="end center">
                 <md-button ng-click="archive()" aria-label="Compose Message" class="md-icon-button" style="margin-right: 30px">
-                    <md-tooltip md-direction="top">{{(!file.isArchive) ? 'Archive' : 'Unarchive'}}</md-tooltip>
+                    <md-tooltip md-direction="top">{{(!file.isArchive) ? 'Archive this File' : 'Unarchive this File'}}</md-tooltip>
                     <md-icon class="material-icons"><i class="material-icons">{{(!file.isArchive) ? 'archive' : 'unarchive'}}</i></md-icon>
                 </md-button>
                 <md-button ng-show="!file.isArchive" aria-label="Edit the File Details" class="md-icon-button" ng-click="showModal($event, 'edit-file.html')" style="margin-right: 30px">

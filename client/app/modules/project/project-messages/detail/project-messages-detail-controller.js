@@ -338,7 +338,7 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
                 $scope.showToast("Related File Has Been Uploaded Successfully.");
                 $scope.setRelatedFile();
                 $state.go("project.files.detail", {id: res.project._id, fileId: res._id});
-            }, function(err) {$scope.showToast("Error");});
+            }, function(err) {$scope.showToast("There Has Been An Error...");});
         }
     };
 
@@ -348,8 +348,8 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
             $scope.thread.elementType = (!$scope.thread.isArchive) ? "archive" : "unarchive";
             $scope.thread.isArchive = !$scope.thread.isArchive;
             messageService.update({id: $scope.thread._id}, $scope.thread).$promise.then(function(res) {
-                $scope.showToast((res.isArchive) ? "Archive Successfully" : "Unarchive Successfully");
-            }, function(err) {$scope.showToast("Error");});
+                $scope.showToast((res.isArchive) ? "This Message Was Archived Successfully" : "This Message Was Unarchived Successfully");
+            }, function(err) {$scope.showToast("There Has Been An Error...");});
         }, function() {
             
         });

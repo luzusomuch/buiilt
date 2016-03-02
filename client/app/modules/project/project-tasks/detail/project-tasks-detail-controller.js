@@ -191,7 +191,7 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
             } else if (updateType == "assign") {
                 $scope.showToast("Task Has Been Updated Successfully.");
             } else if (updateType==="insert-note") {
-                $scope.showToast("Insert New Note Successfully");
+                $scope.showToast("Your Note Has Been Successfully Added.");
             }
             delete task.editType;
             $rootScope.$broadcast("Task.Updated", res);
