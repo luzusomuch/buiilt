@@ -15,6 +15,7 @@
         </md-dialog-content>
         
         <md-dialog-actions>
+            <md-button ng-click="download()">Download</md-button>
             <md-button ng-click="closeModal()">Cancel</md-button>
             <md-button ng-show="latestActivity.user!=currentUser._id && !latestActivity.isAcknowledge" ng-click="acknowledgement()" class="md-primary">Send Acknowledgement</md-button>
         </md-dialog-actions>

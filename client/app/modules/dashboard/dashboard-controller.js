@@ -532,6 +532,15 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         }
     }
 
+    $scope.download = function() {
+        filepicker.exportFile(
+            {url: $scope.file.path, filename: $scope.file.name},
+            function(Blob){
+                console.log(Blob.url);
+            }
+        );
+    };
+
     $scope.acknowledgement = function() {
         fileService.acknowledgement({id: $scope.file._id, activityId: $scope.latestActivity._id}).$promise.then(function(res) {
             $scope.showToast("Acknowledgement Has Been Sent Successfully.");
