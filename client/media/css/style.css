@@ -399,6 +399,14 @@ md-input-container > label {
 	min-height: 10vh;
 }
 
+.action-toolbar {
+	min-height: 10vh;
+}
+
+.action-toolbar-button {
+	margin-right: 100px;
+}
+
 .detail-header p {
 	font-size: 15px;
 	font-weight: 500;

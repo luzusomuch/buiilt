@@ -2,44 +2,41 @@
 	
 	<div layout="column" flex="70" class="md-whiteframe-1dp">
 		
-		<div class="detail-header" layout="row" layout-padding>
+		<div class="detail-header" layout="column" layout-padding>
 			<p>{{thread.name}}</p>
-			<span flex></span>
-			<div>
-				<md-button ng-click="showReplyModal($event)">Compose a Message</md-button>
-			</div>
 	    </div>
+		
 		
 		<div class="main-page-content" layout-padding>
 			<div class="item-activity">
-			
+		
 				<div layout="row" flex class="activity-stream-head">
-					<p>This message was created by <strong>{{thread.owner.name}}</strong> on {{thread.createdAt | date: longDate}}. <span></p>
+					<p>This message was created by <strong>{{thread.owner.name}}</strong> on {{thread.createdAt | date: longDate}}.</p>
 				</div>
-				
+			
 				<div layout="row" layout-align="center center" flex class="activity-stream" ng-repeat="activity in thread.activities" ng-class="{related: activity.element.related}">
-					
+				
 					<span flex="5"></span>
-					
+				
 					<div class="icon-type" ng-switch="activity.type">
-						
+					
 						<md-icon ng-switch-when="chat" class="material-icons md-primary">move_to_inbox</md-icon>
 						<md-icon ng-switch-when="edit-thread" class="material-icons md-primary">edit</md-icon>
 						<md-icon ng-switch-when="assign" class="material-icons md-primary">person_outline</md-icon>
 						<md-icon ng-switch-when="related-thread" class="material-icons md-primary">chat_bubble_outline</md-icon>
 						<md-icon ng-switch-when="related-task" class="material-icons md-primary">done_all</md-icon>
 						<md-icon ng-switch-when="related-file" class="material-icons md-primary">attach_file</md-icon>
-						
+					
 					</div>
-					
+				
 					<span flex="5"></span>
-					
+				
 					<div flex class="activity-detail">
-						
+					
 						<p ng-switch="activity.type" class="activity-head" style="margin-bottom: 15px; border-bottom: 0.5px solid #EEEEEE">
-							
+						
 							<span class="activity-creator">{{activity.user.name}}</span>
-							
+						
 							<span class="meta-data" ng-switch-when="chat"> replied to this message at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
 							<span class="meta-data" ng-switch-when="edit-thread"> changed the name of this thread to {{thread.name}} at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>.</span>
 							<span class="meta-data" ng-switch-when="assign"> assigned the following people to this thread at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
@@ -48,62 +45,51 @@
 							<span class="meta-data" ng-switch-when="related-file"> attached the related file at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
 
 						</p>
-						
+					
 						<span ng-switch="activity.type" class="activity-body md-body">
 							<span ng-switch-when="chat" ng-bind-html="activity.element.message | htmlize"></span>
 							<span ng-switch-when="assign"> {{activity.element.invitee}} </span>
 							<span ng-switch-when="related-thread"> "<a ui-sref="project.messages.detail({id: thread.project, messageId: activity.element.item})">{{activity.element.name}}</a>".</span>
 							<span ng-switch-when="related-task"> "<a ui-sref="project.tasks.detail({id: thread.project, taskId: activity.element.item})">{{activity.element.name}}</a>".</span>
 							<span ng-switch-when="related-file"> "<a ui-sref="project.files.detail({id: thread.project, fileId: activity.element.item})">{{activity.element.name}}</a>".</span>
-							
+						
 						</span>
 						<div layout="row" layout-align="center center" class="tagcloud-selection" layout-wrap ng-show="activity.type =='related-task'">
 							<span ng-class="{'available-tag':!member._id, 'selected-tag': member._id}" ng-repeat="member in activity.element.members">{{(member._id) ? member.name : member.email}}<md-icon ng-show="!member._id" class="material-icons non-user-chip cursor-help"><md-tooltip>Messages will be sent via email to this Team Member</md-tooltip>mail_outline</md-icon></span>
 						</div>
-						
+					
 					</div>
 				</div>
-				
 			</div>
-			
-			<div>
-  		  	  	<md-fab-toolbar ng-cloak md-open="false" md-direction="left" class="fab-toolbar-btn" ng-show="!isArchive">
-  				  	<md-fab-trigger>
-  			  	      	<md-button aria-label="Add an Item to this Project" class="md-fab md-primary">
-  						  	<md-tooltip md-direction="up">Actions...</md-tooltip>
-  					      	<md-icon class="material-icons" >add</md-icon>
-  			  	      	</md-button>
-  		  	      	</md-fab-trigger>
-				  
-  				  	<md-toolbar>
-  				  		<md-fab-actions class="md-toolbar-tools">
-  				  	      	<md-button aria-label="Send a Reply" class="md-fab md-raised md-mini md-primary" ng-click="showReplyModal($event)">
-  							  	<md-tooltip md-direction="up">Compose a Message</md-tooltip>
-  						      	<md-icon class="material-icons">reply</md-icon>
-  				  	      	</md-button>
-  				  	      	<md-button aria-label="Copy Message Address" class="md-fab md-raised md-mini md-primary" ng-click="copyMessageAddress(thread._id)">
-  		  					  	<md-tooltip md-direction="up">Copy Message Address</md-tooltip>
-  		  				      	<md-icon class="material-icons">content_paste</md-icon>
-  				  	      	</md-button>
-  	  			  	      	<md-button aria-label="Assign a Team Member" class="md-fab md-raised md-mini md-primary" ng-click="showAssignTeamMemberModal($event)">
-  	  	  					  	<md-tooltip md-direction="up">Assign to a Team Member</md-tooltip>
-  	  	  				      	<md-icon class="material-icons">person_outline</md-icon>
-  	  			  	      	</md-button>
-  	  			  	      	<md-button aria-label="Add a Related Task" class="md-fab md-raised md-mini" ng-click="showCreateRelatedTask($event)">
-  	  	  					  	<md-tooltip md-direction="up">Attach a Related Task</md-tooltip>
-  	  	  				      	<md-icon class="material-icons">done_all</md-icon>
-  	  			  	      	</md-button>
-  	  			  	      	<md-button aria-label="Add a Related File" class="md-fab md-raised md-mini" ng-click="showCreateRelatedFile($event)">
-  	  	  					  	<md-tooltip md-direction="up">Attach a Related File</md-tooltip>
-  	  	  				      	<md-icon class="material-icons">attach_file</md-icon>
-  	  			  	      	</md-button>
-  	  			  	  	</md-fab-actions>
-  				  	</md-toolbar>
-  		  	  	</md-fab-toolbar>
-		    </div>
 		</div>
+		
+		<md-toolbar>
+			<div class="md-toolbar-tools" layout="row" layout-align="end center">
+	  	      	<md-button aria-label="Compose Message" class="md-icon-button" ng-click="showReplyModal($event)" style="margin-right: 30px">
+				  	<md-tooltip md-direction="top">Compose a Message</md-tooltip>
+			      	<md-icon class="material-icons">reply</md-icon>
+	  	      	</md-button>
+	  	      	<md-button aria-label="Copy Message Address" class="md-icon-button" ng-click="copyMessageAddress(thread._id)" style="margin-right: 30px">
+					<md-tooltip md-direction="top">Copy Message Address</md-tooltip>
+			      	<md-icon class="material-icons">content_paste</md-icon>
+	  	      	</md-button>
+	  	      	<md-button aria-label="Assign a Team Member" class="md-icon-button" ng-click="showAssignTeamMemberModal($event)" style="margin-right: 30px">
+					<md-tooltip md-direction="top">Assign to a Team Member</md-tooltip>
+			      	<md-icon class="material-icons">person_outline</md-icon>
+	  	      	</md-button>
+	  	      	<md-button aria-label="Add a Related Task" class="md-icon-button" ng-click="showCreateRelatedTask($event)" style="margin-right: 30px">
+					<md-tooltip md-direction="top">Attach a Related Task</md-tooltip>
+			      	<md-icon class="material-icons">done_all</md-icon>
+	  	      	</md-button>
+	  	      	<md-button aria-label="Add a Related File" class="md-icon-button" ng-click="showCreateRelatedFile($event)" style="margin-right: 30px">
+					<md-tooltip md-direction="top">Attach a Related File</md-tooltip>
+			      	<md-icon class="material-icons">attach_file</md-icon>
+	  	      	</md-button>
+			</div>
+		</md-toolbar>
+		
 	</div>
-		
+	
 	<related-items data="thread" hide-related-thread="true" flex="30"></related-items>
-		
+	
 </div>

@@ -16,21 +16,24 @@
                     </md-menu-item>
                 </md-menu-content>
             </md-menu>
-			
 	    </div>
 		
 		<div class="main-page-content" layout-padding>
-			
             <div class="item-activity">
+				
                 <div layout="row" flex class="activity-stream-head">
-                    <p>This document was created by <strong>{{document.owner.name}}</strong> on {{document.createdAt | date: 'dd/MM/yyyy hh:mm a'}}.</span></p>
+                    <p>This document was created by <strong>{{document.owner.name}}</strong> on {{document.createdAt | date: 'dd/MM/yyyy hh:mm a'}}.</p>
                 </div>
+				
                 <div layout="row" layout-align="center center" flex class="activity-stream" ng-repeat="activity in document.activities" ng-class="{related: activity.element.related}">
-                    <span flex="5"></span>
-                    <div class="icon-type" ng-switch="activity.type">
+                    
+					<span flex="5"></span>
+                    
+					<div class="icon-type" ng-switch="activity.type">
                         <md-icon ng-switch-when="upload-reversion" class="material-icons md-primary">attach_file</md-icon>
                         <md-icon ng-switch-when="upload-file" class="material-icons md-primary">attach_file</md-icon>
-                    </div>
+                    
+					</div>
                     <span flex="5"></span>
 
                     <div flex class="activity-detail">
@@ -60,27 +63,20 @@
                             <md-button ng-click="acknowledgement(activity)" class="md-primary">Acknowledge This Version</md-button>
                         </div>
                     </div>
+					
                 </div>
+				
             </div>
-			
-			<div>
-	  	        <md-fab-toolbar ng-cloak md-open="false" md-direction="left" class="fab-toolbar-btn" ng-show="!isArchive">
-                    <md-fab-trigger>
-  			  	        <md-button aria-label="Add an Item to this Project" class="md-fab md-primary">
-  						    <md-tooltip md-direction="up">Actions...</md-tooltip>
-  					         <md-icon class="material-icons" >add</md-icon>
-  			  	        </md-button>
-	  	            </md-fab-trigger>
-                    <md-toolbar>
-                        <md-fab-actions class="md-toolbar-tools">
-                            <md-button aria-label="Upload a Document Revision" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'upload-document-reversion.html')" ng-show="allowUploadReversion">
-                                <md-tooltip md-direction="up">Upload a Document Version</md-tooltip>
-                                <md-icon class="material-icons">file_upload</md-icon>
-                            </md-button>
-                        </md-fab-actions>
-                    </md-toolbar>
-                </md-fab-toolbar>
-		    </div>
 		</div>
-	</div>
+		
+		<md-toolbar>
+			<div class="md-toolbar-tools" layout="row" layout-align="end center">
+                <md-button aria-label="Upload a Document Revision" class="md-icon-button" ng-click="showModal($event, 'upload-document-reversion.html')" ng-show="allowUploadReversion" style="margin-right: 30px">
+                    <md-tooltip md-direction="top">Upload a Document Version</md-tooltip>
+                    <md-icon class="material-icons">file_upload</md-icon>
+                </md-button>
+			</div>
+		</md-toolbar>
+		
+	</div>	
 </div>

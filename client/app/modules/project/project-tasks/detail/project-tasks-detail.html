@@ -65,40 +65,28 @@
 						</p>
 						
 					</div>
-					
 				</div>
-				
 			</div>
-			
-			<div>
-  		  	    <md-fab-toolbar class="fab-toolbar-btn" ng-cloak md-open="false" md-direction="left" ng-show="!isArchive">
-  				    <md-fab-trigger>
-  			  	        <md-button aria-label="Add an Item to this Project" class="md-fab md-primary">
-  						    <md-tooltip md-direction="up">Actions...</md-tooltip>
-  					        <md-icon class="material-icons" >add</md-icon>
-  			  	        </md-button>
-  		  	        </md-fab-trigger>
-  				    <md-toolbar>
-                        <md-fab-actions class="md-toolbar-tools">
-                            <md-button aria-label="Add a Team Member" class="md-fab md-raised md-mini md-primary" ng-click="markComplete()">
-                                <md-tooltip md-direction="up">Mark Task Complete</md-tooltip>
-                                <md-icon class="material-icons">done</md-icon>
-                            </md-button>
-                            <md-button aria-label="Add a Team Member" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'edit-task-detail.html')">
-                                <md-tooltip md-direction="up">Edit Task Details</md-tooltip>
-                                <md-icon class="material-icons">edit</md-icon>
-                            </md-button>
-                            <md-button aria-label="Add a Team Member" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'assign-task-team-member.html')">
-                                <md-tooltip md-direction="up">Assign to a Team Member</md-tooltip>
-                                <md-icon class="material-icons">person_outline</md-icon>
-                            </md-button>
-                        </md-fab-actions>
-                    </md-toolbar>
-  		  	    </md-fab-toolbar>
-		    </div>
 		</div>
-	</div>
 		
+		<md-toolbar>
+			<div class="md-toolbar-tools" layout="row" layout-align="end center">
+                <md-button aria-label="Add a Team Member" class="md-icon-button" ng-click="markComplete()" style="margin-right: 30px">
+                    <md-tooltip md-direction="top">Mark Task Complete</md-tooltip>
+                    <md-icon class="material-icons">done</md-icon>
+                </md-button>
+                <md-button aria-label="Add a Team Member" class="md-icon-button" ng-click="showModal($event, 'edit-task-detail.html')" style="margin-right: 30px">
+                    <md-tooltip md-direction="top">Edit Task Details</md-tooltip>
+                    <md-icon class="material-icons">edit</md-icon>
+                </md-button>
+                <md-button aria-label="Add a Team Member" class="md-icon-button" ng-click="showModal($event, 'assign-task-team-member.html')" style="margin-right: 30px">
+                    <md-tooltip md-direction="top">Assign to a Team Member</md-tooltip>
+                    <md-icon class="material-icons">person_outline</md-icon>
+                </md-button>
+			</div>
+		</md-toolbar>
+		
+	</div>
 	<related-items data="task" flex="30"></related-items>
 		
 </div>
