@@ -586,9 +586,7 @@ ul.ng-table-pagination > li {
 }
 div > .fab-toolbar-btn {
   position: absolute;
-  bottom: 10%;
-  left: 15%;
-  right: 30%;
+  bottom: 0px;
 }
 
 .header-tenders, .header-tender-detail {

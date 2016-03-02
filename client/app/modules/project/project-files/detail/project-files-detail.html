@@ -1,6 +1,6 @@
 <div layout="row" class="detail-view-content">
 	
-	<div layout="column" flex="70" class="md-whiteframe-1dp">
+	<div layout="column" flex="70" class="md-whiteframe-1dp" style="position: relative;">
 		
 		<div class="detail-header" layout="row" layout-padding>
 			<p>{{file.name}}</p>
@@ -85,7 +85,7 @@
 			</div>
 		</div>
 		
-		<md-toolbar>
+		<md-toolbar class="fab-toolbar-btn">
 			<div class="md-toolbar-tools" layout="row" layout-align="end center">
                 <md-button aria-label="Edit the File Details" class="md-icon-button" ng-click="showModal($event, 'edit-file.html')" style="margin-right: 30px">
                     <md-tooltip md-direction="top">Edit File Details</md-tooltip>
