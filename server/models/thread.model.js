@@ -64,6 +64,7 @@ var ThreadSchema = new Schema({
         type: {type: String}
     },
     messages : [MessageSchema],
+    isArchive: {type: Boolean, default: false},
     createdAt: {
         type: Date,
         default: Date.now
@@ -95,6 +96,7 @@ ThreadSchema.post( 'init', function() {
 });
 
 ThreadSchema.pre('save', function(next) {
+    this._modifiedPaths = this.modifiedPaths();
     this.wasNew = this.isNew;
     this.editUser = this._editUser;
     this.evtName = this._evtName;
@@ -105,6 +107,9 @@ ThreadSchema.pre('save', function(next) {
   });
 
 ThreadSchema.post('save', function (doc) {
+    if (this._modifiedPaths) {
+        doc._modifiedPaths = this._modifiedPaths
+    }
     if (this._original) {
         doc.oldUsers = this._original.members.slice();
     }

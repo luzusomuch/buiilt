@@ -45,63 +45,77 @@ EventBus.onSeries('Thread.Inserted', function(thread, next) {
 });
 
 EventBus.onSeries('Thread.Updated', function(thread, next) {
-  if (thread.members.length > 0 || thread.oldUsers.length > 0) {
-    async.waterfall([
-      function(callback) {
-        var toUsers = [];
-        thread.members.forEach(function(user) {
-          if (_.findIndex(thread.oldUsers,user) == -1)  {
-            toUsers.push(user)
-          }
-        });
-        async.each(toUsers,function(toUser,callback) {
-          var params = {
-            owners : thread.members,
-            fromUser : thread.editUser,
-            element : thread,
-            toUser : toUser,
-            referenceTo : 'thread',
-            type : 'thread-assign'
-          };
-          NotificationHelper.create(params,function() {
-            callback();
-          });
-        },function() {
-          callback();
-        })
-      },
-      function (callback) {
-        var toUsers = [];
+    if (thread._modifiedPaths.indexOf("archive") !== -1 || thread._modifiedPaths.indexOf("unarchive") !== -1) {
         var owners = thread.members;
-        thread.oldUsers.forEach(function(user) {
-          if (_.findIndex(thread.members, user) == -1) {
-            toUsers.push(user)
-          }
+        owners.push(thread.owner);
+        _.remove(owners, thread.editUser._id);
+        var params = {
+            owners: owners,
+            fromUser: thread.editUser._id,
+            element: thread,
+            referenceTo: 'thread',
+            type: (thread._modifiedPaths.indexOf("archive") !== -1) ? "thread-archive" : "thread-unarchive"
+        };
+        NotificationHelper.create(params, function() {
+            return next();
         });
-        owners = _.union(owners,toUsers)
+    } else if (thread.members.length > 0 || thread.oldUsers.length > 0) {
+        async.waterfall([
+            function(callback) {
+                var toUsers = [];
+                thread.members.forEach(function(user) {
+                    if (_.findIndex(thread.oldUsers,user) == -1)  {
+                        toUsers.push(user)
+                    }
+                });
+                async.each(toUsers,function(toUser,callback) {
+                    var params = {
+                        owners : thread.members,
+                        fromUser : thread.editUser,
+                        element : thread,
+                        toUser : toUser,
+                        referenceTo : 'thread',
+                        type : 'thread-assign'
+                    };
+                    NotificationHelper.create(params,function() {
+                        callback();
+                    });
+                },function() {
+                    callback();
+                });
+            },
+            function (callback) {
+                var toUsers = [];
+                var owners = thread.members;
+                thread.oldUsers.forEach(function(user) {
+                    if (_.findIndex(thread.members, user) == -1) {
+                        toUsers.push(user)
+                    }
+                });
+                owners = _.union(owners,toUsers)
 
-        async.each(toUsers,function(toUser,callback) {
-          var params = {
-            owners : owners,
-            fromUser : thread.editUser,
-            element : thread,
-            toUser : toUser,
-            referenceTo : 'thread',
-            type : 'thread-remove'
-          };
-          NotificationHelper.create(params,function() {
-            callback();
-          });
-        },function() {
-          callback();
-        })
-      }
-    ],function() {
-      return next();
-    })
-  } else {
-    return next();
-  }
+                async.each(toUsers,function(toUser,callback) {
+                    var params = {
+                        owners : owners,
+                        fromUser : thread.editUser,
+                        element : thread,
+                        toUser : toUser,
+                        referenceTo : 'thread',
+                        type : 'thread-remove'
+                    };
+                    NotificationHelper.create(params,function() {
+                        callback();
+                    });
+                },function() {
+                    callback();
+                });
+            }
+        ],function() {
+            return next();
+        });
+    } else {
+        return next();
+    }
 });
 
 EventBus.onSeries('Thread.NewMessage', function(thread, next) {

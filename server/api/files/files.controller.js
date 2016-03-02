@@ -2,7 +2,6 @@
 var User = require('./../../models/user.model');
 var File = require('./../../models/file.model');
 var People = require('./../../models/people.model');
-var Board = require('./../../models/board.model');
 var Project = require('./../../models/project.model');
 var Notification = require('./../../models/notification.model');
 var RelatedItem = require('../../components/helpers/related-item');

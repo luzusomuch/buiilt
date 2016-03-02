@@ -202,7 +202,7 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
 
     $scope.editMessage = function(form) {
         if (form.$valid) {
-            $scope.thread.updateInfo = true;
+            $scope.thread.elementType = "edit-thread";
             messageService.update({id: $scope.thread._id}, $scope.thread).$promise.then(function(res) {
                 $scope.closeModal();
                 $scope.showToast("Message Thread Has Been Updated.");
@@ -340,6 +340,19 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
                 $state.go("project.files.detail", {id: res.project._id, fileId: res._id});
             }, function(err) {$scope.showToast("Error");});
         }
+    };
+
+    $scope.archive = function() {
+        var confirm = $mdDialog.confirm().title((!$scope.thread.isArchive) ? "Archive?" : "Unarchive?").ok("Yes").cancel("No");
+        $mdDialog.show(confirm).then(function() {
+            $scope.thread.elementType = (!$scope.thread.isArchive) ? "archive" : "unarchive";
+            $scope.thread.isArchive = !$scope.thread.isArchive;
+            messageService.update({id: $scope.thread._id}, $scope.thread).$promise.then(function(res) {
+                $scope.showToast((res.isArchive) ? "Archive Successfully" : "Unarchive Successfully");
+            }, function(err) {$scope.showToast("Error");});
+        }, function() {
+            
+        });
     };
 
     getProjectMembers($stateParams.id);

@@ -37,6 +37,8 @@ exports.validateUpdate = function (req, cb) {
         notMembers: notMembers
       }));
     });
+  } else {
+    return cb(req.validationErrors(), _.pick(req.body, 'name'));
   }
 };
 

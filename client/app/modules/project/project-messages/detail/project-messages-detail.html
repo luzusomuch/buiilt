@@ -26,6 +26,8 @@
 						<md-icon ng-switch-when="related-thread" class="material-icons md-primary">chat_bubble_outline</md-icon>
 						<md-icon ng-switch-when="related-task" class="material-icons md-primary">done_all</md-icon>
 						<md-icon ng-switch-when="related-file" class="material-icons md-primary">attach_file</md-icon>
+						<md-icon ng-switch-when="archive" class="material-icons md-primary">archive</md-icon>
+						<md-icon ng-switch-when="unarchive" class="material-icons md-primary">unarchive</md-icon>
 					
 					</div>
 				
@@ -38,17 +40,26 @@
 							<span class="activity-creator">{{activity.user.name}}</span>
 						
 							<span class="meta-data" ng-switch-when="chat"> replied to this message at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
+
 							<span class="meta-data" ng-switch-when="edit-thread"> changed the name of this thread to {{thread.name}} at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>.</span>
+
 							<span class="meta-data" ng-switch-when="assign"> assigned the following people to this thread at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
+
 							<span class="meta-data" ng-switch-when="related-thread"> attached the related message thread at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
+
 							<span class="meta-data" ng-switch-when="related-task"> attached the related task at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
+
 							<span class="meta-data" ng-switch-when="related-file"> attached the related file at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
+
+							<span class="meta-data" ng-switch-when="archive"> archived this thread at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
+
+							<span class="meta-data" ng-switch-when="unarchive"> unarchived this thread at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
 
 						</p>
 					
 						<span ng-switch="activity.type" class="activity-body md-body">
 							<span ng-switch-when="chat" ng-bind-html="activity.element.message | htmlize"></span>
-							<span ng-switch-when="assign"> {{activity.element.invitee}} </span>
+							<span ng-switch-when="assign"> <span ng-repeat="member in activity.element.invitees">{{member}}, </span></span>
 							<span ng-switch-when="related-thread"> "<a ui-sref="project.messages.detail({id: thread.project, messageId: activity.element.item})">{{activity.element.name}}</a>".</span>
 							<span ng-switch-when="related-task"> "<a ui-sref="project.tasks.detail({id: thread.project, taskId: activity.element.item})">{{activity.element.name}}</a>".</span>
 							<span ng-switch-when="related-file"> "<a ui-sref="project.files.detail({id: thread.project, fileId: activity.element.item})">{{activity.element.name}}</a>".</span>
@@ -65,23 +76,27 @@
 		
 		<md-toolbar class="fab-toolbar-btn">
 			<div class="md-toolbar-tools" layout="row" layout-align="end center">
-	  	      	<md-button aria-label="Compose Message" class="md-icon-button" ng-click="showReplyModal($event)" style="margin-right: 30px">
+				<md-button ng-click="archive()" aria-label="Compose Message" class="md-icon-button" style="margin-right: 30px">
+				  	<md-tooltip md-direction="top">{{(!thread.isArchive) ? 'Archive' : 'Unarchive'}}</md-tooltip>
+			      	<md-icon class="material-icons"><i class="material-icons">{{(!thread.isArchive) ? 'archive' : 'unarchive'}}</i></md-icon>
+	  	      	</md-button>
+	  	      	<md-button ng-show="!thread.isArchive" aria-label="Compose Message" class="md-icon-button" ng-click="showReplyModal($event)" style="margin-right: 30px">
 				  	<md-tooltip md-direction="top">Compose a Message</md-tooltip>
 			      	<md-icon class="material-icons">reply</md-icon>
 	  	      	</md-button>
-	  	      	<md-button aria-label="Copy Message Address" class="md-icon-button" ng-click="copyMessageAddress(thread._id)" style="margin-right: 30px">
+	  	      	<md-button ng-show="!thread.isArchive" aria-label="Copy Message Address" class="md-icon-button" ng-click="copyMessageAddress(thread._id)" style="margin-right: 30px">
 					<md-tooltip md-direction="top">Copy Message Address</md-tooltip>
 			      	<md-icon class="material-icons">content_paste</md-icon>
 	  	      	</md-button>
-	  	      	<md-button aria-label="Assign a Team Member" class="md-icon-button" ng-click="showAssignTeamMemberModal($event)" style="margin-right: 30px">
+	  	      	<md-button ng-show="!thread.isArchive" aria-label="Assign a Team Member" class="md-icon-button" ng-click="showAssignTeamMemberModal($event)" style="margin-right: 30px">
 					<md-tooltip md-direction="top">Assign to a Team Member</md-tooltip>
 			      	<md-icon class="material-icons">person_outline</md-icon>
 	  	      	</md-button>
-	  	      	<md-button aria-label="Add a Related Task" class="md-icon-button" ng-click="showCreateRelatedTask($event)" style="margin-right: 30px">
+	  	      	<md-button ng-show="!thread.isArchive" aria-label="Add a Related Task" class="md-icon-button" ng-click="showCreateRelatedTask($event)" style="margin-right: 30px">
 					<md-tooltip md-direction="top">Attach a Related Task</md-tooltip>
 			      	<md-icon class="material-icons">done_all</md-icon>
 	  	      	</md-button>
-	  	      	<md-button aria-label="Add a Related File" class="md-icon-button" ng-click="showCreateRelatedFile($event)" style="margin-right: 30px">
+	  	      	<md-button ng-show="!thread.isArchive" aria-label="Add a Related File" class="md-icon-button" ng-click="showCreateRelatedFile($event)" style="margin-right: 30px">
 					<md-tooltip md-direction="top">Attach a Related File</md-tooltip>
 			      	<md-icon class="material-icons">attach_file</md-icon>
 	  	      	</md-button>

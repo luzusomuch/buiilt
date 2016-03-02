@@ -3,7 +3,6 @@
 var User = require('./../../models/user.model');
 var Team = require('./../../models/team.model');
 var Task = require('./../../models/task.model');
-var StaffPackage = require('./../../models/staffPackage.model');
 var errorsHelper = require('../../components/helpers/errors');
 var ValidateInvite = require('./../../models/validateInvite.model');
 var TeamValidator = require('./../../validators/team');

@@ -211,28 +211,31 @@ exports.update = function(req,res) {
                 if (err) {
                     return errorsHelper.validationErrors(res,err)
                 } else {
-                    if (req.body.updateInfo) {
-                        thread.activities.push({
-                            user: req.user._id,
-                            type: "edit-thread",
-                            createdAt: new Date()
-                        });
-                    } else {
-                        if (req.body.elementType === "assign") {
-                            _.each(req.body.newMembers, function(member) {
-                                thread.activities.push({
-                                    user: req.user._id,
-                                    type: req.body.elementType,
-                                    createdAt: new Date(),
-                                    element: {invitee: (member.name)?member.name: member.email}
-                                });
-                            });
-                        }
-                    }
                     thread = _.merge(thread,data);
-                    thread.members = data.members;
-                    thread.notMembers = data.notMembers;
-                    thread.markModified('members');
+                    var activity = {
+                        user: req.user._id,
+                        type: req.body.elementType,
+                        createdAt: new Date(),
+                        element: {}
+                    };
+                    if (req.body.elementType==="assign") {
+                        var invitees = [];
+                        _.each(req.body.newMembers, function(member) {
+                            if (member.name) {
+                                invitees.push(member.name);
+                            } else {
+                                invitees.push(member.email);
+                            }
+                        });
+                        activity.element.invitees = invitees;
+                        thread.members = data.members;
+                        thread.notMembers = data.notMembers;
+                    } else {
+                        thread.isArchive = req.body.isArchive;
+                    }
+                    
+                    thread.activities.push(activity);
+                    thread.markModified(req.body.elementType);
                     thread._editUser = req.user;
                     thread.save(function(err) {
                         if (err) {

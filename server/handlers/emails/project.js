@@ -6,7 +6,6 @@ var _ = require('lodash');
 
 var Mailer = require('./../../components/Mailer');
 var Team = require('./../../models/team.model');
-var BuilderPackage = require('./../../models/builderPackage.model');
 var EventBus = require('./../../components/EventBus');
 var User = require('./../../models/user.model');
 var config = require('./../../config/environment');
