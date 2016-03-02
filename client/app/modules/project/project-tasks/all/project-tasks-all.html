@@ -27,11 +27,8 @@
                     <md-datepicker  ng-model="dateEnd" ng-change="selectDueDate(dateEnd)" md-placeholder="Select due date">
                     </md-datepicker>
 				</div>
-				<div style="margin-left: 10px;">
-					<label for="">
-						<input type="checkbox" ng-model="showCompletedTask">
-						Show Completed Tasks
-					</label>
+				<div class="tagcloud" style="margin-top: -2vh; margin-left: 2vh">
+					<span ng-class="{'available-tag': !showCompletedTask, 'selected-tag': showCompletedTask}" ng-click="showCompletedTask=!showCompletedTask">Completed Tasks</span>
 				</div>
 			</div>
 		</div>
