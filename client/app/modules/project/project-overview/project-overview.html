@@ -30,27 +30,29 @@
     </md-content>
 	
 	<div>
-  	  <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-list" ng-show="!isArchive">
-		  <md-fab-trigger>
-	  	      <md-button aria-label="Actions" class="md-fab md-primary">
-				  <md-tooltip md-direction="left">Actions...</md-tooltip>
-			      <md-icon class="material-icons" >add</md-icon>
-	  	      </md-button>
-  	      </md-fab-trigger>
-		  <md-fab-actions>
-	  	      <md-button aria-label="Edit Project Details" class="md-fab md-raised md-mini" ng-click="showEditProjectModal($event)" ng-show="project.projectManager._id == currentUser._id">
-				  <md-tooltip md-direction="left">Edit Project Details</md-tooltip>
-			      <md-icon class="material-icons">edit</md-icon>
-	  	      </md-button>
-	  	      <md-button aria-label="Download a Backup of this Project" class="md-fab md-raised md-mini" ng-click="downloadBackUp()">
-				  <md-tooltip md-direction="left">Download a Backup of this Project</md-tooltip>
-			      <md-icon class="material-icons">file_download</md-icon>
-	  	      </md-button>
-	  	      <md-button aria-label="Archive this Project" class="md-fab md-raised md-mini" ng-show="currentUser._id == project.projectManager._id" ng-click="archiveProject()">
-				  <md-tooltip md-direction="left">Archive this Project</md-tooltip>
-			      <md-icon class="material-icons">archive</md-icon>
-	  	      </md-button>
-	  	  </md-fab-actions>
+  	  	<md-fab-toolbar ng-cloak md-open="false" md-direction="left" ng-show="!isArchive">
+		  	<md-fab-trigger>
+	  	      	<md-button aria-label="Actions" class="md-fab md-primary">
+				  	<md-tooltip md-direction="up">Actions...</md-tooltip>
+			      	<md-icon class="material-icons" >add</md-icon>
+	  	      	</md-button>
+  	      	</md-fab-trigger>
+		  	<md-toolbar>
+		  		<md-fab-actions class="md-toolbar-tools">
+		  	      	<md-button aria-label="Edit Project Details" class="md-fab md-raised md-mini" ng-click="showEditProjectModal($event)" ng-show="project.projectManager._id == currentUser._id">
+					  	<md-tooltip md-direction="up">Edit Project Details</md-tooltip>
+				      	<md-icon class="material-icons">edit</md-icon>
+		  	      	</md-button>
+		  	      	<md-button aria-label="Download a Backup of this Project" class="md-fab md-raised md-mini" ng-click="downloadBackUp()">
+					  	<md-tooltip md-direction="up">Download a Backup of this Project</md-tooltip>
+				      	<md-icon class="material-icons">file_download</md-icon>
+		  	      	</md-button>
+		  	      	<md-button aria-label="Archive this Project" class="md-fab md-raised md-mini" ng-show="currentUser._id == project.projectManager._id" ng-click="archiveProject()">
+					  	<md-tooltip md-direction="up">Archive this Project</md-tooltip>
+				      	<md-icon class="material-icons">archive</md-icon>
+		  	      	</md-button>
+		  	  	</md-fab-actions>
+		  	</md-toolbar>
   	  </md-fab-speed-dial>
     </div>
 	

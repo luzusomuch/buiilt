@@ -5,16 +5,12 @@
 		<div class="detail-header" layout="row" layout-padding>
 			<p>{{document.name}}</p>
 			<span flex></span>
-			<!-- <md-button ng-click="download(document.name, document.path)">Download</md-button> -->
             <md-menu md-position-mode="target-right target">
                 <md-button ng-click="openFileHistory($mdOpenMenu, $event)">View Document</md-button>
                 <md-menu-content width="4">
                     <md-menu-item ng-show="document.fileHistory.length==0">
                         <md-button>No versions yet</md-button>
                     </md-menu-item>
-                    <!-- <md-menu-item ng-click="openHistoryDetail($event, {link: document.path, name: document.name})" ng-show="document.fileHistory.length > 0">
-                        <md-button>{{document.createdAt | date: 'dd/MM/yyyy'}} - {{document.version}} - Tags: <span ng-repeat="tag in document.versionTags">{{tag}}, </span> </md-button>
-                    </md-menu-item> -->
                     <md-menu-item ng-click="openHistoryDetail($event, history)" ng-repeat="history in document.fileHistory track by $index">
                         <md-button>{{history.createdAt | date: 'dd/MM/yyyy'}} - {{history.version}} - Tags: {{history.versionTags[0]}} </md-button>
                     </md-menu-item>
@@ -68,25 +64,23 @@
             </div>
 			
 			<div>
-  		  	  <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-main" ng-show="!isArchive">
-  				  <md-fab-trigger>
-  			  	      <md-button aria-label="Add an Item to this Project" class="md-fab md-primary">
-  						  <md-tooltip md-direction="left">Actions...</md-tooltip>
-  					      <md-icon class="material-icons" >add</md-icon>
-  			  	      </md-button>
-  		  	      </md-fab-trigger>
-  				  <md-fab-actions>
-  			  	      <md-button aria-label="Upload a Document Revision" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'upload-document-reversion.html')" ng-show="allowUploadReversion">
-  	  					  <md-tooltip md-direction="left">Upload a Document Version</md-tooltip>
-  	  				      <md-icon class="material-icons">file_upload</md-icon>
-  			  	      </md-button>
-  			  	  </md-fab-actions>
-  		  	  </md-fab-speed-dial>
+	  	        <md-fab-toolbar ng-cloak md-open="false" md-direction="left" class="fab-toolbar-btn" ng-show="!isArchive">
+                    <md-fab-trigger>
+  			  	        <md-button aria-label="Add an Item to this Project" class="md-fab md-primary">
+  						    <md-tooltip md-direction="up">Actions...</md-tooltip>
+  					         <md-icon class="material-icons" >add</md-icon>
+  			  	        </md-button>
+	  	            </md-fab-trigger>
+                    <md-toolbar>
+                        <md-fab-actions class="md-toolbar-tools">
+                            <md-button aria-label="Upload a Document Revision" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'upload-document-reversion.html')" ng-show="allowUploadReversion">
+                                <md-tooltip md-direction="up">Upload a Document Version</md-tooltip>
+                                <md-icon class="material-icons">file_upload</md-icon>
+                            </md-button>
+                        </md-fab-actions>
+                    </md-toolbar>
+                </md-fab-toolbar>
 		    </div>
-			
 		</div>
 	</div>
-		
-	<!-- <doc-history data="document" flex="30"></doc-history> -->
-		
 </div>

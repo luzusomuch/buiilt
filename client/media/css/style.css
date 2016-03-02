@@ -574,4 +574,9 @@ ul.ng-table-pagination > li {
 .active-child-module-header {
   background-color: #0D47A1 !important;
 }
-
+div > .fab-toolbar-btn {
+  position: absolute;
+  bottom: 10%;
+  left: 15%;
+  right: 30%;
+}

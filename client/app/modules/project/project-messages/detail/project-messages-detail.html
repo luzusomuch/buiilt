@@ -67,47 +67,40 @@
 			</div>
 			
 			<div>
-  		  	  <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-main" ng-show="!isArchive">
-  				  <md-fab-trigger>
-  			  	      <md-button aria-label="Add an Item to this Project" class="md-fab md-primary">
-  						  <md-tooltip md-direction="left">Actions...</md-tooltip>
-  					      <md-icon class="material-icons" >add</md-icon>
-  			  	      </md-button>
-  		  	      </md-fab-trigger>
+  		  	  	<md-fab-toolbar ng-cloak md-open="false" md-direction="left" class="fab-toolbar-btn" ng-show="!isArchive">
+  				  	<md-fab-trigger>
+  			  	      	<md-button aria-label="Add an Item to this Project" class="md-fab md-primary">
+  						  	<md-tooltip md-direction="up">Actions...</md-tooltip>
+  					      	<md-icon class="material-icons" >add</md-icon>
+  			  	      	</md-button>
+  		  	      	</md-fab-trigger>
 				  
-  				  <md-fab-actions>
-			  	      <md-button aria-label="Send a Reply" class="md-fab md-raised md-mini md-primary" ng-click="showReplyModal($event)">
-						  <md-tooltip md-direction="left">Compose a Message</md-tooltip>
-					      <md-icon class="material-icons">reply</md-icon>
-			  	      </md-button>
-			  	      <!-- <md-button aria-label="Edit the Message Details" class="md-fab md-raised md-mini md-primary" ng-click="showEditMessageModal($event)" ng-show="thread.owner._id == currentUser._id">
-	  					  <md-tooltip md-direction="left">Edit Message Details</md-tooltip>
-	  				      <md-icon class="material-icons">edit</md-icon>
-			  	      </md-button> -->
-			  	      <md-button aria-label="Copy Message Address" class="md-fab md-raised md-mini md-primary" ng-click="copyMessageAddress(thread._id)">
-	  					  <md-tooltip md-direction="left">Copy Message Address</md-tooltip>
-	  				      <md-icon class="material-icons">content_paste</md-icon>
-			  	      </md-button>
-  			  	      <md-button aria-label="Assign a Team Member" class="md-fab md-raised md-mini md-primary" ng-click="showAssignTeamMemberModal($event)">
-  	  					  <md-tooltip md-direction="left">Assign to a Team Member</md-tooltip>
-  	  				      <md-icon class="material-icons">person_outline</md-icon>
-  			  	      </md-button>
-			  	      <!-- <md-button aria-label="Attach a Related Message" class="md-fab md-raised md-mini" ng-click="showCreateRelatedThread($event)">
-						  <md-tooltip md-direction="left">Attach a Related Message</md-tooltip>
-					      <md-icon class="material-icons">chat_bubble_outline</md-icon>
-			  	      </md-button> -->
-  			  	      <md-button aria-label="Add a Related Task" class="md-fab md-raised md-mini" ng-click="showCreateRelatedTask($event)">
-  	  					  <md-tooltip md-direction="left">Attach a Related Task</md-tooltip>
-  	  				      <md-icon class="material-icons">done_all</md-icon>
-  			  	      </md-button>
-  			  	      <md-button aria-label="Add a Related File" class="md-fab md-raised md-mini" ng-click="showCreateRelatedFile($event)">
-  	  					  <md-tooltip md-direction="left">Attach a Related File</md-tooltip>
-  	  				      <md-icon class="material-icons">attach_file</md-icon>
-  			  	      </md-button>
-  			  	  </md-fab-actions>
-  		  	  </md-fab-speed-dial>
+  				  	<md-toolbar>
+  				  		<md-fab-actions class="md-toolbar-tools">
+  				  	      	<md-button aria-label="Send a Reply" class="md-fab md-raised md-mini md-primary" ng-click="showReplyModal($event)">
+  							  	<md-tooltip md-direction="up">Compose a Message</md-tooltip>
+  						      	<md-icon class="material-icons">reply</md-icon>
+  				  	      	</md-button>
+  				  	      	<md-button aria-label="Copy Message Address" class="md-fab md-raised md-mini md-primary" ng-click="copyMessageAddress(thread._id)">
+  		  					  	<md-tooltip md-direction="up">Copy Message Address</md-tooltip>
+  		  				      	<md-icon class="material-icons">content_paste</md-icon>
+  				  	      	</md-button>
+  	  			  	      	<md-button aria-label="Assign a Team Member" class="md-fab md-raised md-mini md-primary" ng-click="showAssignTeamMemberModal($event)">
+  	  	  					  	<md-tooltip md-direction="up">Assign to a Team Member</md-tooltip>
+  	  	  				      	<md-icon class="material-icons">person_outline</md-icon>
+  	  			  	      	</md-button>
+  	  			  	      	<md-button aria-label="Add a Related Task" class="md-fab md-raised md-mini" ng-click="showCreateRelatedTask($event)">
+  	  	  					  	<md-tooltip md-direction="up">Attach a Related Task</md-tooltip>
+  	  	  				      	<md-icon class="material-icons">done_all</md-icon>
+  	  			  	      	</md-button>
+  	  			  	      	<md-button aria-label="Add a Related File" class="md-fab md-raised md-mini" ng-click="showCreateRelatedFile($event)">
+  	  	  					  	<md-tooltip md-direction="up">Attach a Related File</md-tooltip>
+  	  	  				      	<md-icon class="material-icons">attach_file</md-icon>
+  	  			  	      	</md-button>
+  	  			  	  	</md-fab-actions>
+  				  	</md-toolbar>
+  		  	  	</md-fab-toolbar>
 		    </div>
-			
 		</div>
 	</div>
 		

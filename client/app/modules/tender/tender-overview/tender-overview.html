@@ -74,30 +74,32 @@
 </div>
 
 <div>
-    <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-list" ng-show="tender.status=='open'">
+    <md-fab-toolbar ng-cloak md-open="false" md-direction="left" class="" ng-show="tender.status=='open'">
         <md-fab-trigger>
             <md-button aria-label="Add an Item to this Project" class="md-fab md-primary">
-                <md-tooltip md-direction="left">Actions...</md-tooltip>
+                <md-tooltip md-direction="up">Actions...</md-tooltip>
                 <md-icon class="material-icons" >add</md-icon>
             </md-button>
         </md-fab-trigger>
-        <md-fab-actions>
-            <md-button aria-label="Attach an Addendum" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'attach-an-addendum.html')" ng-show="tender.owner._id == currentUser._id && tender.isDistribute">
-                <md-tooltip md-direction="left">Attach an Addendum</md-tooltip>
-                <md-icon class="material-icons">gps_fixed</md-icon>
-            </md-button>
-            <md-button aria-label="Edit the Scope" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'attach-scope.html')" ng-show="tender.owner._id == currentUser._id && !tender.isDistribute">
-                <md-tooltip md-direction="left">Edit the Scope</md-tooltip>
-                <md-icon class="material-icons">gps_fixed</md-icon>
-            </md-button>
-            <md-button aria-label="Distribute Tender" class="md-fab md-raised md-mini md-primary" ng-click="distributeTender()" ng-show="tender.owner._id == currentUser._id && !tender.isDistribute">
-                <md-tooltip md-direction="left">Distribute Tender</md-tooltip>
-                <md-icon class="material-icons">call_split</md-icon>
-            </md-button>
-            <md-button aria-label="Select a Winner" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'select-winner-tender.html')" ng-show="tender.isDistribute && tender.owner._id == currentUser._id && !tender.hasSelect">
-                  <md-tooltip md-direction="left">Select a Winning Tender</md-tooltip>
-                  <md-icon class="material-icons">playlist_add_check</md-icon>
-            </md-button>
-          </md-fab-actions>
-    </md-fab-speed-dial>
+        <md-toolbar>
+            <md-fab-actions class="md-toolbar-tools">
+                <md-button aria-label="Attach an Addendum" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'attach-an-addendum.html')" ng-show="tender.owner._id == currentUser._id && tender.isDistribute">
+                    <md-tooltip md-direction="up">Attach an Addendum</md-tooltip>
+                    <md-icon class="material-icons">gps_fixed</md-icon>
+                </md-button>
+                <md-button aria-label="Edit the Scope" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'attach-scope.html')" ng-show="tender.owner._id == currentUser._id && !tender.isDistribute">
+                    <md-tooltip md-direction="up">Edit the Scope</md-tooltip>
+                    <md-icon class="material-icons">gps_fixed</md-icon>
+                </md-button>
+                <md-button aria-label="Distribute Tender" class="md-fab md-raised md-mini md-primary" ng-click="distributeTender()" ng-show="tender.owner._id == currentUser._id && !tender.isDistribute">
+                    <md-tooltip md-direction="up">Distribute Tender</md-tooltip>
+                    <md-icon class="material-icons">call_split</md-icon>
+                </md-button>
+                <md-button aria-label="Select a Winner" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'select-winner-tender.html')" ng-show="tender.isDistribute && tender.owner._id == currentUser._id && !tender.hasSelect">
+                      <md-tooltip md-direction="up">Select a Winning Tender</md-tooltip>
+                      <md-icon class="material-icons">playlist_add_check</md-icon>
+                </md-button>
+            </md-fab-actions>
+        </md-toolbar>
+    </md-fab-toolbar>
 </div>
