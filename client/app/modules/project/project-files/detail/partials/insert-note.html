@@ -1,0 +1,29 @@
+<md-dialog aria-label="Insert Note for {{file.name}}" flex="70">
+    <form ng-submit="insertNote(form)" name="form">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Edit {{file.name}}</h2>
+            </div>
+        </md-toolbar>
+        
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column" layout-padding>
+
+                <div layout="column">
+                    <p class="md-body-2">Note for this file:</p>
+                    <div layout="row">
+                        <md-input-container flex="66" flex-offset="15">
+                            <label>Note</label>
+                            <textarea ng-model="file.note" columns="1" rows="5" required></textarea>
+                        </md-input-container>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        
+        <md-dialog-actions>
+            <md-button ng-click="closeModal()">Cancel</md-button>
+            <md-button type="submit" class="md-primary">Insert New Note</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

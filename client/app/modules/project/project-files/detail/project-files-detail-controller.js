@@ -216,6 +216,16 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
         $scope.update($scope.file);
     };
 
+    $scope.insertNote = function(form) {
+        if (form.$valid) {
+            $scope.file.editType="insert-note";
+            $scope.update($scope.file);
+        } else {
+            $scope.showToast("Please Check Your Input");
+            return;
+        }
+    };
+
     $scope.update = function(file) {
         if (file.tags.length === 0) {
             $scope.showToast("Please Select At Least 1 Tag...");
@@ -234,6 +244,10 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
 
                 case "assign":
                     $scope.showToast("Additional Assignees Added Successfully.");
+                break;
+
+                case "insert-note":
+                    $scope.showToast("Added New Note Successfully");
                 break;
 
                 default:

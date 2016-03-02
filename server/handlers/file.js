@@ -163,6 +163,20 @@ EventBus.onSeries('File.Updated', function(file, next) {
         } else {
             return next();
         }
+    } else if (file.editType==="insert-note") {
+        var owners = file.members;
+        owners.push(file.owner);
+        _.remove(owners, file.editUser._id);
+        var params = {
+            owners : [owners],
+            fromUser : file.editUser._id,
+            element : file,
+            referenceTo : 'file',
+            type : 'file-new-note'
+        };
+        NotificationHelper.create(params, function() {
+            return next();
+        });
     } else {
         return next();
     }

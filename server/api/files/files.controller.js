@@ -192,11 +192,16 @@ exports.update = function(req, res) {
                             activity.element.members = members;
                             cb();
                         });
+                    } else if (data.editType==="insert-note") {
+                        activity.element.content = req.body.note;
+                        file._editType = "insert-note";
+                        cb();
                     }
                 }
             ], function(err, result) {
                 if (err) {return res.send(500,err);}
                 file.activities.push(activity);
+                file._editUser =  req.user;
                 file.save(function(err) {
                     if (err) {return res.send(500,err);}
                     File.populate(file, [
