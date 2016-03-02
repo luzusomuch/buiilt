@@ -590,3 +590,7 @@ div > .fab-toolbar-btn {
   left: 15%;
   right: 30%;
 }
+
+.header-tenders, .header-tender-detail {
+  background-color: #0D47A1 !important;
+}
