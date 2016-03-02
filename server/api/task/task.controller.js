@@ -322,13 +322,13 @@ exports.myTask = function(req,res) {
                             fromUser: notification.fromUser,
                             type: notification.type
                         });
-                        if (index < 4) {
+                        if (index === 1) {
                            task.element.limitNotifications.push({
                                 fromUser: notification.fromUser,
                                 type: notification.type
                             }); 
                         }
-                        index += 1;
+                        index+=1
                     }
                 });
                 cb();

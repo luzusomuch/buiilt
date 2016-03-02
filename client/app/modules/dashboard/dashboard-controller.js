@@ -45,7 +45,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             if (index !== -1) {
                 
                 $scope.myMessages[index].element.notifications.push(data.newNotification);
-                if ($scope.myMessages[index].element.limitNotifications.length < 3) {
+                if ($scope.myMessages[index].element.limitNotifications.length < 1) {
                     $scope.myMessages[index].element.limitNotifications.push(data.newNotification);
                 }
             } else {
@@ -68,7 +68,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             var index = getItemIndex($scope.myTasks, data._id);
             if (index !== -1) {
                 $scope.myTasks[index].element.notifications.push(data.newNotification);
-                if ($scope.myTasks[index].element.limitNotifications.length < 3) {
+                if ($scope.myTasks[index].element.limitNotifications.length < 1) {
                     $scope.myTasks[index].element.limitNotifications.push(data.newNotification);
                 }
             } else {
@@ -89,7 +89,6 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             $scope.myTasks = copyThreads;
             sortTask($scope.myTasks);
         } else if (data.type==="file") {
-            console.log(data);
             var index = getItemIndex($scope.myFiles, data._id);
             if (index !== -1) {
                 var currentNotificationIndex = _.findIndex($scope.myFiles[index].element.notifications, function(notification) {
@@ -99,7 +98,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                 });
                 if (currentNotificationIndex===-1) {
                     $scope.myFiles[index].element.notifications.push(data.newNotification);
-                    if ($scope.myFiles[index].element.limitNotifications.length < 3) {
+                    if ($scope.myFiles[index].element.limitNotifications.length < 1) {
                         $scope.myFiles[index].element.limitNotifications.push(data.newNotification);
                     }
                 }

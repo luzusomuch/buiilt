@@ -269,12 +269,14 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
     getProjectMembers($stateParams.id);
     $rootScope.$on("Task.Updated", function(event, data) {
         $scope.task = data;
+        $scope.task.dateEnd = new Date($scope.task.dateEnd);
         getProjectMembers($stateParams.id);
     });
 
     socket.emit("join", task._id);
     socket.on("task:update", function(data) {
         $scope.task = data;
+        $scope.task.dateEnd = new Date($scope.task.dateEnd);
         notificationService.markItemsAsRead({id: $stateParams.taskId}).$promise.then();
     });
 });

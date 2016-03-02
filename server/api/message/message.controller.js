@@ -409,14 +409,14 @@ exports.myThread = function(req,res) {
                             type: notification.type,
                             message: message
                         });
-                        if (index < 4) {
+                        if (index === 1) {
                            thread.element.limitNotifications.push({
                                 fromUser: notification.fromUser,
                                 type: notification.type,
                                 message: message
                             }); 
                         }
-                        index += 1;
+                        index+=1;
                     }
                 });
             });

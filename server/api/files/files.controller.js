@@ -563,7 +563,7 @@ exports.myFiles = function(req, res) {
                             fromUser: notification.fromUser,
                             type: notification.type
                         });
-                        if (index < 4) {
+                        if (index === 1) {
                            file.element.limitNotifications.push({
                                 fromUser: notification.fromUser,
                                 type: notification.type
