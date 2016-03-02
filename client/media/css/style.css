@@ -567,3 +567,11 @@ ul.ng-table-pagination > li {
   display: inline-block;
   margin-left: 10px;
 }
+
+.active-module-header {
+  background-color: #0D47A1 !important;
+}
+.active-child-module-header {
+  background-color: #0D47A1 !important;
+}
+

@@ -4,9 +4,9 @@
 		  	<p class="logo-main">buiilt</p>
 	  	</div>
 	  	<div layout="row" layout-align="start center" ng-show="isLoggedIn">
-	  		<md-button ui-sref='dashboard.tasks'>Dashboard</md-button>
-		  	<md-button ui-sref='projects.open'>Projects</md-button>
-			<md-button ui-sref='tenders.open' ng-hide="currentTeam.type=='homeOwner'">Tenders</md-button>
+	  		<md-button ng-class="{'active-module-header': $state.includes('dashboard')}" ui-sref='dashboard.tasks'>Dashboard</md-button>
+		  	<md-button ng-class="{'active-module-header': $state.includes('projects'), 'active-child-module-header': $state.includes('project')}" ui-sref='projects.open'>Projects</md-button>
+			<md-button ng-class="{'active-module-header': $state.includes('tenders'), 'active-child-module-header': $state.includes('tender')}" ui-sref='tenders.open' ng-hide="currentTeam.type=='homeOwner'">Tenders</md-button>
 	  	</div>
 		  
 	  	<span flex></span>

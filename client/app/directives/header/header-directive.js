@@ -6,7 +6,7 @@ angular.module('buiiltApp')
         controller: function($scope,$state, $stateParams, $rootScope, authService,teamService, socket, $mdDialog, $mdMedia) {
             $rootScope.projects = [];
             $scope.submitted = false;
-    	  
+    	    $scope.$state = $state;
     	    var originatorEv;
     	  
             $scope.goto = function(newstate) {
