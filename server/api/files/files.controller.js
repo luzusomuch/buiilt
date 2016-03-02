@@ -195,6 +195,10 @@ exports.update = function(req, res) {
                         activity.element.content = req.body.note;
                         file._editType = "insert-note";
                         cb();
+                    } else if (data.editType==="archive" || data.editType==="unarchive") {
+                        file.isArchive=req.body.isArchive;
+                        file._editType=data.editType;
+                        cb();
                     }
                 }
             ], function(err, result) {

@@ -281,4 +281,19 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
             }, function(err) {$scope.showToast("Error");});
         }
     };
+
+    $scope.archive = function() {
+        var confirm = $mdDialog.confirm().title((!$scope.document.isArchive) ? "Archive?" : "Unarchive?").ok("Yes").cancel("No");
+        $mdDialog.show(confirm).then(function() {
+            $scope.document.editType = (!$scope.document.isArchive) ? "archive" : "unarchive";
+            $scope.document.isArchive = !$scope.document.isArchive;
+            fileService.update({id: $scope.document._id}, $scope.document).$promise.then(function(res) {
+                $scope.showToast("Successfully");
+            }, function(err) {
+                $scope.showToast("Error");
+            });
+        }, function() {
+            
+        });
+    };
 });

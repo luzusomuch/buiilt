@@ -38,8 +38,13 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
                 }
             });
             return found;
-        } else 
-            return true;
+        }  else if ($scope.showArchived) {
+            var found = (document.isArchive) ? true: false;
+            return found;
+        } else {
+            var found = (!document.isArchive) ? true : false;
+            return found;
+        }
     };
     // end filter
 

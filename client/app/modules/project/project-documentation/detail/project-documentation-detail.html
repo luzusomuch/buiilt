@@ -32,6 +32,8 @@
 					<div class="icon-type" ng-switch="activity.type">
                         <md-icon ng-switch-when="upload-reversion" class="material-icons md-primary">attach_file</md-icon>
                         <md-icon ng-switch-when="upload-file" class="material-icons md-primary">attach_file</md-icon>
+                        <md-icon ng-switch-when="archive" class="material-icons md-primary">archive</md-icon>
+                        <md-icon ng-switch-when="unarchive" class="material-icons md-primary">unarchive</md-icon>
                     
 					</div>
                     <span flex="5"></span>
@@ -43,6 +45,10 @@
                             <span class="meta-data" ng-switch-when="upload-reversion"> uploaded a new revision at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
 
                             <span class="meta-data" ng-switch-when="upload-file"> uploaded a new file at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
+
+                            <span class="meta-data" ng-switch-when="archive"> archived this document at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
+
+                            <span class="meta-data" ng-switch-when="unarchive"> unarchived this document at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
                         </p>
 
                         <p ng-switch="activity.type" class="activity-body md-body">
@@ -71,7 +77,11 @@
 		
 		<md-toolbar class="fab-toolbar-btn">
 			<div class="md-toolbar-tools" layout="row" layout-align="end center">
-                <md-button aria-label="Upload a Document Revision" class="md-icon-button" ng-click="showModal($event, 'upload-document-reversion.html')" ng-show="allowUploadReversion" style="margin-right: 30px">
+                <md-button ng-click="archive()" aria-label="Compose Message" class="md-icon-button" style="margin-right: 30px">
+                    <md-tooltip md-direction="top">{{(!document.isArchive) ? 'Archive' : 'Unarchive'}}</md-tooltip>
+                    <md-icon class="material-icons"><i class="material-icons">{{(!document.isArchive) ? 'archive' : 'unarchive'}}</i></md-icon>
+                </md-button>
+                <md-button aria-label="Upload a Document Revision" class="md-icon-button" ng-click="showModal($event, 'upload-document-reversion.html')" ng-show="allowUploadReversion && !document.isArchive" style="margin-right: 30px">
                     <md-tooltip md-direction="top">Upload a Document Version</md-tooltip>
                     <md-icon class="material-icons">file_upload</md-icon>
                 </md-button>

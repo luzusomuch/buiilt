@@ -39,6 +39,12 @@
           			<span ng-show="notification.type=='thread-message'">
           				{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} has sent a reply: "{{notification.message}}".
           			</span>
+                    <span ng-show="notification.type=='thread-archive'">
+                        {{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} archived this file.
+                    </span>
+                    <span ng-show="notification.type=='thread-unarchive'">
+                        {{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} unarchived this file.
+                    </span>
           		</span><span ng-show="{{thread.element.notifications.length - thread.element.limitNotifications.length > 0}}">... +({{thread.element.notifications.length - thread.element.limitNotifications.length}}) More</span>
 	        </div>
 			

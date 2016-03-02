@@ -250,6 +250,14 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
                     $scope.showToast("Added New Note Successfully");
                 break;
 
+                case "archive":
+                    $scope.showToast("Archive Successfully");
+                break;
+
+                case "unarchive":
+                    $scope.showToast("Unarchive Successfully");
+                break;
+
                 default:
                 break
             }
@@ -387,7 +395,18 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
         } else {
             $scope.showToast("There Has Been An Error...");
         }
-    }
+    };
+
+    $scope.archive = function() {
+        var confirm = $mdDialog.confirm().title((!$scope.file.isArchive) ? "Archive?" : "Unarchive?").ok("Yes").cancel("No");
+        $mdDialog.show(confirm).then(function() {
+            $scope.file.editType = (!$scope.file.isArchive) ? "archive" : "unarchive";
+            $scope.file.isArchive = !$scope.file.isArchive;
+            $scope.update($scope.file, $scope.file.editType);
+        }, function() {
+            
+        });
+    };
 
     getProjectMembers($stateParams.id);
 });

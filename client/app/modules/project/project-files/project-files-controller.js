@@ -42,8 +42,13 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
                 }
             })
             return found;
-        } else
-            return true;
+        } else if ($scope.showArchived) {
+            var found = (file.isArchive) ? true: false;
+            return found;
+        } else {
+            var found = (!file.isArchive) ? true : false;
+            return found;
+        }
     };
     // end filter section
 

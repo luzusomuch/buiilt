@@ -49,10 +49,7 @@ var FileSchema = new Schema({
         required: true
     },
     project: {type: Schema.Types.ObjectId, ref: 'Project', required: true},
-    archive: {
-        type: Boolean,
-        default: true
-    },
+    isArchive: {type: Boolean, default: false},
     createdAt: {
         type: Date,
         default: Date.now

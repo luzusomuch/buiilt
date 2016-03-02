@@ -51,6 +51,12 @@
                     <span ng-show="notification.type=='file-new-note'">
                         {{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} added new note.
                     </span>
+                    <span ng-show="notification.type=='file-archive'">
+                        {{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} archived this file.
+                    </span>
+                    <span ng-show="notification.type=='file-unarchive'">
+                        {{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} unarchived this file.
+                    </span>
           		</span><span ng-show="{{file.element.notifications.length - file.element.limitNotifications.length > 0}}">... +({{file.element.notifications.length - file.element.limitNotifications.length}}) More</span>
 				
 	        </div>

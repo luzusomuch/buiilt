@@ -46,8 +46,12 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
                 }
             });
             return found;
+        } else if ($scope.showArchived) {
+            var found = (thread.isArchive) ? true: false;
+            return found;
         } else {
-            return true;
+            var found = (!thread.isArchive) ? true : false;
+            return found;
         }
     };
     // end filter section

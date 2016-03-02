@@ -37,7 +37,9 @@
 						<md-icon ng-switch-when="related-thread" class="material-icons md-primary">chat_bubble_outline</md-icon>
 						<md-icon ng-switch-when="related-task" class="material-icons md-primary">done_all</md-icon>
                         <md-icon ng-switch-when="related-file" class="material-icons md-primary">attach_file</md-icon>
-						<md-icon ng-switch-when="insert-note" class="material-icons md-primary">note_add</md-icon>
+                        <md-icon ng-switch-when="insert-note" class="material-icons md-primary">note_add</md-icon>
+                        <md-icon ng-switch-when="archive" class="material-icons md-primary">archive</md-icon>
+						<md-icon ng-switch-when="unarchive" class="material-icons md-primary">unarchive</md-icon>
 					</div>
 				
 					<span flex="5"></span>
@@ -56,7 +58,9 @@
 							<span class="meta-data" ng-switch-when="related-thread"> attached the related message thread at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
 							<span class="meta-data" ng-switch-when="related-task"> attached the related task at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
                             <span class="meta-data" ng-switch-when="related-file"> attached the related file at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
-							<span class="meta-data" ng-switch-when="insert-note"> added new note at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
+                            <span class="meta-data" ng-switch-when="insert-note"> added new note at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
+                            <span class="meta-data" ng-switch-when="archive"> archived this file at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
+							<span class="meta-data" ng-switch-when="unarchive"> unarchived this file at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
 						
 						</p>
 					
@@ -90,19 +94,23 @@
 		
 		<md-toolbar class="fab-toolbar-btn">
 			<div class="md-toolbar-tools" layout="row" layout-align="end center">
-                <md-button aria-label="Edit the File Details" class="md-icon-button" ng-click="showModal($event, 'edit-file.html')" style="margin-right: 30px">
+                <md-button ng-click="archive()" aria-label="Compose Message" class="md-icon-button" style="margin-right: 30px">
+                    <md-tooltip md-direction="top">{{(!file.isArchive) ? 'Archive' : 'Unarchive'}}</md-tooltip>
+                    <md-icon class="material-icons"><i class="material-icons">{{(!file.isArchive) ? 'archive' : 'unarchive'}}</i></md-icon>
+                </md-button>
+                <md-button ng-show="!file.isArchive" aria-label="Edit the File Details" class="md-icon-button" ng-click="showModal($event, 'edit-file.html')" style="margin-right: 30px">
                     <md-tooltip md-direction="top">Edit File Details</md-tooltip>
                     <md-icon class="material-icons">edit</md-icon>
                 </md-button>
-                <md-button aria-label="Add a Team Member" class="md-icon-button" ng-click="showModal($event, 'insert-note.html')" style="margin-right: 30px">
+                <md-button ng-show="!file.isArchive" aria-label="Add a Team Member" class="md-icon-button" ng-click="showModal($event, 'insert-note.html')" style="margin-right: 30px">
                     <md-tooltip md-direction="top">Insert A Note</md-tooltip>
                     <md-icon class="material-icons">note_add</md-icon>
                 </md-button>
-                <md-button aria-label="Upload a Revision" class="md-icon-button" ng-click="showModal($event, 'upload-reversion.html')" style="margin-right: 30px">
+                <md-button ng-show="!file.isArchive" aria-label="Upload a Revision" class="md-icon-button" ng-click="showModal($event, 'upload-reversion.html')" style="margin-right: 30px">
                     <md-tooltip md-direction="top">Upload a Reivsion</md-tooltip>
                     <md-icon class="material-icons">file_upload</md-icon>
                 </md-button>
-                <md-button aria-label="Add a Team Member" class="md-icon-button" ng-click="showModal($event, 'assign.html')" ng-show="!file.belongTo" style="margin-right: 30px">
+                <md-button ng-show="!file.isArchive" aria-label="Add a Team Member" class="md-icon-button" ng-click="showModal($event, 'assign.html')" ng-show="!file.belongTo" style="margin-right: 30px">
                     <md-tooltip md-direction="top">Assign to a Team Member</md-tooltip>
                     <md-icon class="material-icons">person_outline</md-icon>
                 </md-button>

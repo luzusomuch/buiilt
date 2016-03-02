@@ -20,6 +20,9 @@
 				<label for="">Message Replies</label>
 				<input type="text" name="messageReplies" ng-model="reply">
 			</md-input-container>
+            <div class="tagcloud" style="margin-bottom: -2vh; margin-left: 2vh">
+                <span ng-class="{'available-tag': !showArchived, 'selected-tag': showArchived}" ng-click="showArchived=!showArchived">Archived Thread</span>
+            </div>
 		</div>
 		
 	</div>
@@ -39,7 +42,9 @@
                         assigned <span ng-repeat="member in thread.members">{{(member._id==currentUser._id) ? "you" : member.name}}, </span>
                         <span ng-repeat="email in thread.notMembers">{{email}}, </span>
                     </span>
-	       			<span ng-show="thread.element.notificationType=='thread-message'"> sent a reply: "{{thread.element.text}}"</span>
+                    <span ng-show="thread.element.notificationType=='thread-message'"> sent a reply: "{{thread.element.text}}"</span>
+                    <span ng-show="thread.element.notificationType=='thread-archive'"> archived this thread</span>
+	       			<span ng-show="thread.element.notificationType=='thread-unarchive'"> unarchived this thread</span>
           		</span>...<span ng-show="thread.element.notificationBy && thread.__v - 1 > 0">+{{thread.__v - 1}} More</span>
 	        </div>
 			
