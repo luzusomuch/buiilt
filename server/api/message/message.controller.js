@@ -316,6 +316,7 @@ exports.getProjectThread = function(req, res) {
                         var latestNotification = _.last(notifications);
                         thread.element.notificationType = latestNotification.type;
                         thread.element.notificationBy = latestNotification.fromUser;
+                        thread.element.text = _.last(latestNotification.element.messages).text;
                     }
                     thread.__v = notifications.length;
                     cb();

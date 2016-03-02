@@ -211,8 +211,13 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
                 }
             });
             return found;
-        } else
-            return true;
+        } else if ($scope.showCompletedTask) {
+            found = (task.completed) ? true : false;
+            return found;
+        } else {
+            found = (task.completed) ? false : true;
+            return found;
+        }
     };
     // end filter section
 

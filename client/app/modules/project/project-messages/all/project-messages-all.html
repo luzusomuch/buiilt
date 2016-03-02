@@ -31,13 +31,16 @@
 			<div ui-sref="project.messages.detail({id: thread.project, messageId: thread._id})" class="md-list-item-text">
 				
 				<h3 class="md-display-1" style="margin-top: 15px; margin-bottom: 5px">
-					<strong>{{ thread.name }}</strong><span ng-show="thread.__v > 0">({{thread.__v}} Update(s))</span>
+					<strong>{{ thread.name }}</strong>
 				</h3>
 				
-          		<span class="md-body-2" ng-show="thread.element.notificationBy">{{thread.element.notificationBy.name}} has 
-      				<span ng-show="thread.element.notificationType=='thread-assign'"> assigned you to this thread</span>
-	       			<span ng-show="thread.element.notificationType=='thread-message'"> sent you new message</span>
-          		</span>
+          		<span class="md-body-2" ng-show="thread.element.notificationBy">{{(thread.element.notificationBy._id==currentUser._id) ? "You" : thread.element.notificationBy.name}} has 
+      				<span ng-show="thread.element.notificationType=='thread-assign'">
+                        assigned <span ng-repeat="member in thread.members">{{(member._id==currentUser._id) ? "you" : member.name}}, </span>
+                        <span ng-repeat="email in thread.notMembers">{{email}}, </span>
+                    </span>
+	       			<span ng-show="thread.element.notificationType=='thread-message'"> sent a reply: "{{thread.element.text}}"</span>
+          		</span>...<span ng-show="thread.element.notificationBy && thread.__v - 1 > 0">+{{thread.__v - 1}} More</span>
 	        </div>
 			
             <div>
@@ -51,13 +54,16 @@
 			<div ui-sref="project.messages.detail({id: thread.project, messageId: thread._id})" class="md-list-item-text">
 				
 				<h3 class="md-display-1" style="margin-top: 15px; margin-bottom: 5px">
-					<strong>{{ thread.name }}</strong><span ng-show="thread.__v > 0">({{thread.__v}} Update(s))</span>
-				</h3>
-				
-          		<span class="md-body-2" ng-show="thread.element.notificationBy">{{thread.element.notificationBy.name}} has 
-      				<span ng-show="thread.element.notificationType=='thread-assign'"> assigned you to this thread</span>
-	       			<span ng-show="thread.element.notificationType=='thread-message'"> sent you new message</span>
-          		</span>
+                    <strong>{{ thread.name }}</strong>
+                </h3>
+                
+                <span class="md-body-2" ng-show="thread.element.notificationBy">{{(thread.element.notificationBy._id==currentUser._id) ? "You" : thread.element.notificationBy.name}} has 
+                    <span ng-show="thread.element.notificationType=='thread-assign'">
+                        assigned <span ng-repeat="member in thread.members">{{(member._id==currentUser._id) ? "you" : member.name}}, </span>
+                        <span ng-repeat="email in thread.notMembers">{{email}}, </span>
+                    </span>
+                    <span ng-show="thread.element.notificationType=='thread-message'"> sent a reply: "{{thread.element.text}}"</span>
+                </span><span ng-show="thread.element.notificationBy && thread.__v - 1 > 0">... +{{thread.__v - 1}} More</span>
 	        </div>
 			
             <div>

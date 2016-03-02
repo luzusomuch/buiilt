@@ -27,6 +27,12 @@
                     <md-datepicker  ng-model="dateEnd" ng-change="selectDueDate(dateEnd)" md-placeholder="Select due date">
                     </md-datepicker>
 				</div>
+				<div style="margin-left: 10px;">
+					<label for="">
+						<input type="checkbox" ng-model="showCompletedTask">
+						Show Completed Tasks
+					</label>
+				</div>
 			</div>
 		</div>
 		
@@ -35,25 +41,6 @@
 
 <md-list ng-cloak class="main-page-content" layout="column" flex>
 
-	<!-- <div ng-repeat="task in tasks | filter: search | unique: '_id' track by $index" ui-sref="project.tasks.detail({id: task.project, taskId: task._id})">
-		<md-list-item class="md-3-line" md-ink-ripple>
-			<div class="md-list-item-text" layout="column">
-		          	<h3>{{task.description}} <span ng-show="task.__v > 0">({{task.__v}} Update(s))</span></h3>
-		          	<p><span ng-repeat="member in task.members track by $index">{{member.name}}, </span><span ng-repeat="member in task.notMembers track by $index">{{member}}, </span></p>
-		          	<p ng-show="task.element.notificationType">{{task.element.notificationBy.name}} has 
-		          		<span ng-show="task.element.notificationType=='task-assign'"> assigned you to this task</span>
-		          		<span ng-show="task.element.notificationType=='task-completed'"> mark this task as completed</span>
-		          		<span ng-show="task.element.notificationType=='task-reopend'"> reopened this task</span>
-		          	</p>
-		          	<p ng-show="task.element.dueClose || task.element.duePast">
-		          		<span ng-show="task.element.dueClose">This task has due {{task.element.due}}</span>
-		          		<span ng-show="task.element.duePast">This task was due in {{task.element.due | date: 'MM-dd-yyyy'}}</span>
-		          	</p>
-	        </div>
-		</md-list-item>
-		<md-divider></md-divider>
-	</div> -->
-
 	<div ng-repeat="task in tasks | filter: search track by $index">
 		
 		<md-list-item class="md-2-line" md-ink-ripple layout-padding>
@@ -61,19 +48,19 @@
 			<div ui-sref="project.tasks.detail({id: task.project, taskId: task._id})" class="md-list-item-text">
 				
 				<h3 class="md-display-1" style="margin-top: 15px; margin-bottom: 5px">
-					<strong>{{ task.description }}</strong> <span ng-show="task.__v > 0">({{task.__v}})</span> [Due {{(task.element.due) ? task.element.due : task.dateEnd | date: 'dd/MM/yyyy'}}]
+					<strong ng-show="!task.completed">{{ task.description }}</strong> <span ng-show="task.completed">{{task.description}}</span> [Due {{(task.element.due) ? task.element.due : task.dateEnd | date: 'dd/MM/yyyy'}}]
 				</h3>
 				<p><span ng-repeat="member in task.members track by $index">{{member.name}}, </span><span ng-repeat="member in task.notMembers track by $index">{{member}}, </span></p>
-	          	<span ng-show="task.element.notificationType">{{task.element.notificationBy.name}} has 
+	          	<span ng-show="task.element.notificationType">{{(task.element.notificationBy._id==currentUser._id) ? "You" : task.element.notificationBy.name}} has 
 	          		<span ng-show="task.element.notificationType=='task-assign'"> assigned you to this task</span>
 	          		<span ng-show="task.element.notificationType=='task-completed'"> mark this task as completed</span>
 	          		<span ng-show="task.element.notificationType=='task-reopend'"> reopened this task</span>
-	          	</span>
+	          	</span><span ng-show="task.element.notificationBy && task.__v - 1 > 0">... +{{task.__v - 1}} More</span>
 			</div>
 			
 			<div>
 	    		<md-button ng-show="!task.completed" class="md-secondary" ng-click="markComplete(task)"><md-icon class="material-icons">check</md-icon><md-tooltip md-direction="down">Mark As Complete</md-tooltip></md-button>
-	    		<md-button class="md-secondary" ng-click="markRead(task, 'task')" style="margin-right: 90px"><md-icon class="material-icons">clear_all</md-icon><md-tooltip md-direction="down">Mark As Read</md-tooltip></md-button>
+	    		<md-button ng-show="task.__v > 0" class="md-secondary" ng-click="markRead(task, 'task')" style="margin-right: 90px"><md-icon class="material-icons">clear_all</md-icon><md-tooltip md-direction="down">Mark As Read</md-tooltip></md-button>
 			</div>
 			
 		</md-list-item>
