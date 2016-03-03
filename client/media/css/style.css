@@ -605,3 +605,11 @@ div > .fab-toolbar-btn {
 .unread-notification {
   color: #2196F3
 }
+
+.notification-hover {
+  position: absolute;
+  top: 0px; 
+  left: 10%;
+  background-color: #dedede;
+  z-index: 9999;
+}

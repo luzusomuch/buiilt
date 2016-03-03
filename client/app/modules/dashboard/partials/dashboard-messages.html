@@ -29,23 +29,28 @@
 				
 				<h3>{{ thread.name }} - {{thread.project.name}}</h3>
 				<h4>Assignees: <span ng-repeat="member in thread.members track by $index">{{member.name}}, </span><span ng-repeat="member in thread.notMembers track by $index">{{member}}</h4>
-				<p style="color: #2196F3">Updates: {{thread.element.notifications.length}}</p>
-				
-          		<!-- <span class="md-body-2" ng-repeat="notification in thread.element.limitNotifications track by $index">
-      				<span ng-show="notification.type=='thread-assign'">
-      					{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} has assigned <span ng-repeat="member in thread.members">{{(member._id==currentUser._id) ? "me" : member.name}}, </span>
-						<span ng-repeat="email in thread.notMembers">{{email}}, </span>
-      				</span>
-          			<span ng-show="notification.type=='thread-message'">
-          				{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} has sent a reply: "{{notification.message}}".
-          			</span>
-                    <span ng-show="notification.type=='thread-archive'">
-                        {{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} archived this file.
-                    </span>
-                    <span ng-show="notification.type=='thread-unarchive'">
-                        {{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} unarchived this file.
-                    </span>
-          		</span><span ng-show="{{thread.element.notifications.length - thread.element.limitNotifications.length > 0}}">... +({{thread.element.notifications.length - thread.element.limitNotifications.length}}) More</span> -->
+				<p ng-mouseover="isHover=true" ng-mouseout="isHover=false" style="color: #2196F3">
+                    Updates: {{thread.element.notifications.length}}
+                    <div ng-show="isHover" class="notification-hover">
+                        <md-list ng-cloak>
+                            <md-list-item layout-padding ng-repeat="n in thread.element.notifications">
+                                <p ng-show="n.type=='thread-assign'">
+                                    {{(n.fromUser._id==currentUser._id) ? "You" : n.fromUser.name}} has assigned <span ng-repeat="member in thread.members">{{(member._id==currentUser._id) ? "me" : member.name}}, </span>
+                                    <span ng-repeat="email in thread.notMembers">{{email}}, </span>
+                                </p>
+                                <p ng-show="n.type=='thread-message'">
+                                    {{(n.fromUser._id==currentUser._id) ? "You" : n.fromUser.name}} has sent a reply: "{{n.message}}".
+                                </p>
+                                <p ng-show="n.type=='thread-archive'">
+                                    {{(n.fromUser._id==currentUser._id) ? "You" : n.fromUser.name}} archived this file.
+                                </p>
+                                <p ng-show="n.type=='thread-unarchive'">
+                                    {{(n.fromUser._id==currentUser._id) ? "You" : n.fromUser.name}} unarchived this file.
+                                </p>
+                            </md-list-item>
+                        </md-list>
+                    </div>
+                </p>
 	        </div>
 			
             <div>
