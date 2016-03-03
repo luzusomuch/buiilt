@@ -472,25 +472,31 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
 
     // start file section
     $scope.showViewFileModal = function(event, file) {
-        $rootScope.selectedFile = file;
-        $mdDialog.show({
-            targetEvent: event,
-            controller: "dashboardCtrl",
-            resolve: {
-                myTasks: function(taskService) {
-                    return taskService.myTask().$promise;
-                },
-                myMessages: function(messageService) {
-                    return messageService.myMessages().$promise;
-                },
-                myFiles: function(fileService) {
-                    return fileService.myFiles().$promise;
-                }
-            },
-            templateUrl: 'app/modules/dashboard/partials/view-file.html',
-            parent: angular.element(document.body),
-            clickOutsideToClose: false
-        });
+        // $rootScope.selectedFile = file;
+        // $mdDialog.show({
+        //     targetEvent: event,
+        //     controller: "dashboardCtrl",
+        //     resolve: {
+        //         myTasks: function(taskService) {
+        //             return taskService.myTask().$promise;
+        //         },
+        //         myMessages: function(messageService) {
+        //             return messageService.myMessages().$promise;
+        //         },
+        //         myFiles: function(fileService) {
+        //             return fileService.myFiles().$promise;
+        //         }
+        //     },
+        //     templateUrl: 'app/modules/dashboard/partials/view-file.html',
+        //     parent: angular.element(document.body),
+        //     clickOutsideToClose: false
+        // });
+        if (file.element.type==="file") {
+            var win = window.open(file.path, "_blank");
+        } else {
+            var win = window.open(_.last(file.fileHistory).link, "_blank");
+        }
+        win.focus();
     };
 
     $scope.showNewFileModal = function(event) {

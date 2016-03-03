@@ -171,22 +171,24 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
 	getProjectMembers($stateParams.id);
 
     $scope.showViewFileModal = function($event, file) {
-        $rootScope.prjectSelectedFile = file;
-        $mdDialog.show({
-            targetEvent: $event,
-            controller: "projectFilesCtrl",
-            resolve: {
-                files: function($stateParams, fileService) {
-                    return fileService.getProjectFiles({id: $stateParams.id, type: "file"}).$promise;
-                },
-                people: function(peopleService, $stateParams) {
-                    return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
-                }
-            },
-            templateUrl: 'app/modules/dashboard/partials/view-file.html',
-            parent: angular.element(document.body),
-            clickOutsideToClose: false
-        });
+        // $rootScope.prjectSelectedFile = file;
+        // $mdDialog.show({
+        //     targetEvent: $event,
+        //     controller: "projectFilesCtrl",
+        //     resolve: {
+        //         files: function($stateParams, fileService) {
+        //             return fileService.getProjectFiles({id: $stateParams.id, type: "file"}).$promise;
+        //         },
+        //         people: function(peopleService, $stateParams) {
+        //             return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
+        //         }
+        //     },
+        //     templateUrl: 'app/modules/dashboard/partials/view-file.html',
+        //     parent: angular.element(document.body),
+        //     clickOutsideToClose: false
+        // });
+        var win = window.open(file.path, "_blank");
+        win.focus();
     };
 
     if ($rootScope.prjectSelectedFile) {

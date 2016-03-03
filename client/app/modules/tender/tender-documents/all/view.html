@@ -3,12 +3,15 @@
 </div>
 
 <md-list ng-cloak class="main-page-content">
-    <div ui-sref="tender.documents.detail({tenderId: tender._id, documentId: document._id})" ng-repeat="document in tenderDocuments">
+    <div ng-repeat="document in tenderDocuments">
         
         <md-list-item class="md-2-line" md-ink-ripple>
-            <div class="md-list-item-text" layout="column">
+            <div class="md-list-item-text m0-p0" ui-sref="tender.documents.detail({tenderId: tender._id, documentId: document._id})" layout="column">
                 <h3>{{document.name}}</h3>
                 <p>Description: {{document.description}}</p>
+            </div>
+            <div>
+                <md-button ng-show="document.fileHistory.length > 0" class="md-secondary" ng-click="showViewFileModal($event, document)"><md-icon class="material-icons">remove_red_eye</md-icon><md-tooltip md-direction="down">View Document</md-tooltip></md-button>
             </div>
             <md-divider></md-divider>
         </md-list-item>

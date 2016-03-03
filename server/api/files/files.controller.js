@@ -125,6 +125,21 @@ exports.getFilesByProject = function(req, res) {
             });
         }, function(err){
             if (err) {return res.send(500,err);}
+            _.each(files, function(file) {
+                if (file.element.type==="document"&&file.owner._id.toString()!==req.user._id.toString()) {
+                    var fileHistory = [];
+                    _.each(file.fileHistory, function(h) {
+                        if (_.findIndex(h.members, function(m) {
+                            if (m._id) {
+                                return m._id.toString()===req.user._id.toString();
+                            }
+                        }) !== -1) {
+                            fileHistory.push(h);
+                        }
+                    });
+                    file.fileHistory = fileHistory;
+                }
+            });
             return res.send(200,files);
         });
     });
@@ -142,6 +157,19 @@ exports.show = function(req, res) {
         Notification.find({"element._id": file._id, owner: req.user._id, unread: true}, function(err, notifications) {
             if (err) {return res.send(500,err);}
             file.__v = notifications.length;
+            if (file.element.type==="document"&&file.owner._id.toString()===req.user._id.toString()) {
+                var fileHistory = [];
+                _.each(file.fileHistory, function(h) {
+                    if (_.findIndex(h.members, function(m) {
+                        if (m._id) {
+                            return m._id.toString()===req.user._id.toString();
+                        }
+                    }) !== -1) {
+                        fileHistory.push(h);
+                    }
+                });
+                file.fileHistory = fileHistory;
+            }
             RelatedItem.responseWithRelated("file", file, req.user, res);
         });
     });
@@ -580,6 +608,19 @@ exports.myFiles = function(req, res) {
                         index += 1;
                     }
                 });
+                if (file.element.type==="document"&&file.owner.toString()!==req.user._id.toString()) {
+                    var fileHistory = [];
+                    _.each(file.fileHistory, function(h) {
+                        if (_.findIndex(h.members, function(m) {
+                            if (m._id) {
+                                return m._id.toString()===req.user._id.toString();
+                            }
+                        }) !== -1) {
+                            fileHistory.push(h);
+                        }
+                    });
+                    file.fileHistory = fileHistory;
+                }
             });
             return res.send(200, uniqueFilesList);
         });

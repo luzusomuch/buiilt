@@ -67,4 +67,9 @@ angular.module('buiiltApp').controller('tenderDocumentsCtrl', function($rootScop
         $mdDialog.cancel();
     };
 
+    $scope.showViewFileModal = function($event, file) {
+        var win = window.open(_.last(file.fileHistory).link, "_blank");
+        win.focus();
+    };
+
 });
