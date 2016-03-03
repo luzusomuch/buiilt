@@ -23,15 +23,15 @@
 
 	<div ng-repeat="thread in myMessages | filter: searchThread track by $index">
 		
-		<md-list-item class="md-2-line" md-ink-ripple layout-padding>
+		<md-list-item class="md-3-line" md-ink-ripple layout-padding>
 		
-			<div ng-click="openLocation(thread, 'thread')" class="md-list-item-text m0-p0">
+			<div ng-click="openLocation(thread, 'thread')" class="md-list-item-text">
 				
-				<h3 class="md-display-1" style="margin-top: 15px; margin-bottom: 5px">
-					<strong>{{ thread.name }} ({{thread.element.notifications.length}})</strong> - {{thread.project.name}}
-				</h3>
+				<h3>{{ thread.name }} - {{thread.project.name}}</h3>
+				<h4>Assignee 1, Assignee 1</h4>
+				<p style="color: #2196F3">Updates: {{thread.element.notifications.length}}</p>
 				
-          		<span class="md-body-2" ng-repeat="notification in thread.element.limitNotifications track by $index">
+          		<!-- <span class="md-body-2" ng-repeat="notification in thread.element.limitNotifications track by $index">
       				<span ng-show="notification.type=='thread-assign'">
       					{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} has assigned <span ng-repeat="member in thread.members">{{(member._id==currentUser._id) ? "me" : member.name}}, </span>
 						<span ng-repeat="email in thread.notMembers">{{email}}, </span>
@@ -45,7 +45,7 @@
                     <span ng-show="notification.type=='thread-unarchive'">
                         {{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} unarchived this file.
                     </span>
-          		</span><span ng-show="{{thread.element.notifications.length - thread.element.limitNotifications.length > 0}}">... +({{thread.element.notifications.length - thread.element.limitNotifications.length}}) More</span>
+          		</span><span ng-show="{{thread.element.notifications.length - thread.element.limitNotifications.length > 0}}">... +({{thread.element.notifications.length - thread.element.limitNotifications.length}}) More</span> -->
 	        </div>
 			
             <div>

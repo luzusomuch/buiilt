@@ -29,16 +29,17 @@
 
 <md-list ng-cloak class="main-page-content"  layout="column" flex>
 	<div ng-repeat="document in documents | filter: search | unique: '_id' track by $index">
-		<md-list-item class="md-3-line" md-ink-ripple>
-			<div ui-sref="project.documentation.detail({id:document.project, documentId: document._id})" class="md-list-item-text m0-p0" layout="column">
-	          	<h3>{{document.name}} <span ng-show="document.__v > 0">({{document.__v}} Update(s))</span></h3>
-	          	<p>{{document.revision}}</p>
-	          	<p ng-show="document.element.notificationType">{{document.element.notificationBy.name}} has 
+		<md-list-item class="md-2-line" md-ink-ripple>
+			<div ui-sref="project.documentation.detail({id:document.project, documentId: document._id})" class="md-list-item-text" layout="column">
+	          	<h3>{{document.name}}</h3>
+				<h4>Tags:</h4>
+	          	<p style="color: #2196F3"><span ng-show="document.__v > 0">Updates: {{document.__v}}</span></p>
+	          	<!-- <p ng-show="document.element.notificationType">{{document.element.notificationBy.name}} has
 	          		<span ng-show="document.element.notificationType=='document-upload-reversion'">uploaded new reversion of this document</span>
 	          		<span ng-show="document.element.notificationType=='document-assign'">assigned you to this document</span>
 	          		<span ng-show="document.element.notificationType=='document-archive'">archived this document</span>
 	          		<span ng-show="document.element.notificationType=='document-unarchive'">unarchived this document</span>
-	          	</p>
+	          	</p> -->
 	        </div>
 	        <div>
 	        	<md-button ng-show="document.fileHistory.length > 0" class="md-secondary" ng-click="showViewFileModal($event, document)"><md-icon class="material-icons">remove_red_eye</md-icon><md-tooltip md-direction="down">View Document</md-tooltip></md-button>
