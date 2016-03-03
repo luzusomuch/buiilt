@@ -40,20 +40,21 @@
 
 	<div ng-repeat="task in tasks | filter: search track by $index">
 		
-		<md-list-item class="md-2-line" md-ink-ripple layout-padding>
+		<md-list-item class="md-3-line" md-ink-ripple layout-padding>
 	
-			<div ui-sref="project.tasks.detail({id: task.project, taskId: task._id})" class="md-list-item-text m0-p0">
+			<div ui-sref="project.tasks.detail({id: task.project, taskId: task._id})" class="md-list-item-text">
 				
-				<h3 class="md-display-1" style="margin-top: 15px; margin-bottom: 5px">
-					<strong ng-show="!task.completed">{{ task.description }}</strong> <span ng-show="task.completed">{{task.description}}</span> [Due {{(task.element.due) ? task.element.due : task.dateEnd | date: 'dd/MM/yyyy'}}]
-				</h3>
-				<p><span ng-repeat="member in task.members track by $index">{{member.name}}, </span><span ng-repeat="member in task.notMembers track by $index">{{member}}, </span></p>
-	          	<span ng-show="task.element.notificationType">{{(task.element.notificationBy._id==currentUser._id) ? "You" : task.element.notificationBy.name}} has 
+				<h3>{{ task.description }}</h3>
+				<h4>Due: {{(task.element.due) ? task.element.due : task.dateEnd | date: 'dd/MM/yyyy'}} | Assignees: <span ng-repeat="member in task.members track by $index">{{member.name}}, </span><span ng-repeat="member in task.notMembers track by $index">{{member}}</h4>
+				<p style="color: #2196F3">Updates: </p>
+	          	
+				<!-- <span ng-show="task.element.notificationType">{{(task.element.notificationBy._id==currentUser._id) ? "You" : task.element.notificationBy.name}} has
 	          		<span ng-show="task.element.notificationType=='task-assign'"> assigned you to this task</span>
 	          		<span ng-show="task.element.notificationType=='task-completed'"> mark this task as completed</span>
 	          		<span ng-show="task.element.notificationType=='task-reopend'"> reopened this task</span>
 	          		<span ng-show="task.element.notificationType=='task-new-note'"> created new note</span>
-	          	</span><span ng-show="task.element.notificationBy && task.__v - 1 > 0">... +{{task.__v - 1}} More</span>
+	          	</span><span ng-show="task.element.notificationBy && task.__v - 1 > 0">... +{{task.__v - 1}} More</span> -->
+					
 			</div>
 			
 			<div>

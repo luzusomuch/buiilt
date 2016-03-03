@@ -25,13 +25,13 @@
 	<div ng-repeat="file in myFiles | filter: filterDocument track by $index" ng-show="file.element.type=='document'">
 		<md-list-item class="md-2-line" md-ink-ripple layout-padding>
 		
-			<div ng-click="openLocation(file, 'document')" class="md-list-item-text m0-p0">
+			<div ng-click="openLocation(file, 'document')" class="md-list-item-text">
 				
-				<h3 class="md-display-1" style="margin-top: 15px; margin-bottom: 5px">
-					<strong>{{ file.name }} ({{file.element.notifications.length}})</strong> - {{file.project.name}} | <span ng-repeat="tag in file.tags">{{tag}}</span>
-				</h3>
+				<h3>{{ file.name }} - {{file.project.name}}</h3>
+				<h4>Tags:</h4>
+				<p style="color: #2196F3">Updates: {{file.element.notifications.length}}</p>
 				
-          		<span class="md-body-2" ng-repeat="notification in file.element.limitNotifications track by $index" style="margin-bottom: 15px; margin-top: 15px">
+          		<!-- <span class="md-body-2" ng-repeat="notification in file.element.limitNotifications track by $index" style="margin-bottom: 15px; margin-top: 15px">
       				<span ng-show="notification.type=='document-assign'">
       					{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} assigned you to this file.
       				</span>
@@ -48,7 +48,7 @@
                         {{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} unarchived this file.
                     </span>
 					<span ng-show="{{file.element.notifications.length - file.element.limitNotifications.length > 0}}">... +({{file.element.notifications.length - file.element.limitNotifications.length}}) More</span>
-				</span>
+				</span> -->
 				
 	        </div>
 			

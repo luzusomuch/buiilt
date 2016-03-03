@@ -35,21 +35,21 @@
 <md-list ng-cloak class="main-page-content"  layout="column" flex>
 
 	<div ng-repeat="file in files | filter: search | unique: '_id' track by $index">
-		<md-list-item class="md-2-line" md-ink-ripple layout-padding>
-			<div  ui-sref="project.files.detail({id: file.project, fileId: file._id})" class="md-list-item-text m0-p0">
+		<md-list-item class="md-3-line" md-ink-ripple layout-padding>
+			<div  ui-sref="project.files.detail({id: file.project, fileId: file._id})" class="md-list-item-text">
 				
-				<h3 class="md-display-1" style="margin-top: 15px; margin-bottom: 5px">
-					<strong>{{ file.name }}</strong> | Tags: <span ng-repeat="tag in file.tags">{{tag}} </span>
-				</h3>
+				<h3>{{ file.name }}</h3>
+				<h4>Tags: <span ng-repeat="tag in file.tags">{{tag}}</h4>
+				<p style="color: #2196F3">Updates: {{file.element.notifications.length}}</p>
 	      		
-				<span class="md-body-2" ng-show="file.element.notificationType">{{(file.element.notificationBy._id==currentUser._id) ? "You" : file.element.notificationBy.name}} has 
+				<!-- <span class="md-body-2" ng-show="file.element.notificationType">{{(file.element.notificationBy._id==currentUser._id) ? "You" : file.element.notificationBy.name}} has
 	  				<span ng-show="file.element.notificationType=='file-upload-reversion'">uploaded new reversion of this file</span>
 	          		<span ng-show="file.element.notificationType=='file-assign'">assigned you to this file</span>
 	          		<span ng-show="file.element.notificationType=='file-send-acknowledge'">has sent acknowledgement to this file</span>
 	          		<span ng-show="file.element.notificationType=='file-new-note'">has added new note</span>
 	          		<span ng-show="file.element.notificationType=='file-archive'">has archived this file</span>
 	          		<span ng-show="file.element.notificationType=='file-unarchive'">has unarchived this file</span>
-	      		</span><span ng-show="file.element.notificationBy && file.__v - 1 > 0">... +{{file.__v - 1}} More</span>
+	      		</span><span ng-show="file.element.notificationBy && file.__v - 1 > 0">... +{{file.__v - 1}} More</span> -->
 	        </div>
 			
 	        <div>

@@ -33,13 +33,13 @@
 
 <md-list ng-cloak class="main-page-content"  layout="column" flex>
 	<md-list-item class="md-3-line" ng-repeat="thread in threads | filter: search | unique: '_id' track by $index" ng-show="thread.element.notificationBy" md-ink-ripple>
-		<div ui-sref="project.messages.detail({id: thread.project, messageId: thread._id})" class="md-list-item-text m0-p0">
+		<div ui-sref="project.messages.detail({id: thread.project, messageId: thread._id})" class="md-list-item-text">
 			
-			<h3 class="md-display-1" style="margin-top: 15px; margin-bottom: 5px">
-				<strong>{{ thread.name }}</strong>
-			</h3>
+			<h3>{{ thread.name }}</h3>
+			<h4>Assignee 1, Assignee 2</h4>
+			<p style="color: #2196F3">Updates: {{thread.element.notifications.length}}</p>
 			
-      		<span class="md-body-2" ng-show="thread.element.notificationBy">{{(thread.element.notificationBy._id==currentUser._id) ? "You" : thread.element.notificationBy.name}} has 
+      		<!-- <span class="md-body-2" ng-show="thread.element.notificationBy">{{(thread.element.notificationBy._id==currentUser._id) ? "You" : thread.element.notificationBy.name}} has
   				<span ng-show="thread.element.notificationType=='thread-assign'">
                     assigned <span ng-repeat="member in thread.members">{{(member._id==currentUser._id) ? "you" : member.name}}, </span>
                     <span ng-repeat="email in thread.notMembers">{{email}}, </span>
@@ -47,7 +47,7 @@
                 <span ng-show="thread.element.notificationType=='thread-message'"> sent a reply: "{{thread.element.text}}"</span>
                 <span ng-show="thread.element.notificationType=='thread-archive'"> archived this thread</span>
        			<span ng-show="thread.element.notificationType=='thread-unarchive'"> unarchived this thread</span>
-      		</span>...<span ng-show="thread.element.notificationBy && thread.__v - 1 > 0">+{{thread.__v - 1}} More</span>
+      		</span>...<span ng-show="thread.element.notificationBy && thread.__v - 1 > 0">+{{thread.__v - 1}} More</span> -->
         </div>
 		
         <div>
@@ -55,20 +55,21 @@
         </div>
 	    <md-divider></md-divider>
     </md-list-item>
+	
 	<md-list-item class="md-3-line" ng-repeat="thread in threads | filter: search | unique: '_id' track by $index" ng-show="!thread.element.notificationBy" md-ink-ripple>
-		<div ui-sref="project.messages.detail({id: thread.project, messageId: thread._id})" class="md-list-item-text m0-p0">
+		<div ui-sref="project.messages.detail({id: thread.project, messageId: thread._id})" class="md-list-item-text">
 			
-			<h3 class="md-display-1" style="margin-top: 15px; margin-bottom: 5px">
-                <strong>{{ thread.name }}</strong>
-            </h3>
+			<h3>{{ thread.name }}</h3>
+			<h4>Assignee 1, Assignee 2</h4>
+			<p style="color: #2196F3">Updates: {{thread.element.notifications.length}}</p>
             
-            <span class="md-body-2" ng-show="thread.element.notificationBy">{{(thread.element.notificationBy._id==currentUser._id) ? "You" : thread.element.notificationBy.name}} has 
+            <!-- <span class="md-body-2" ng-show="thread.element.notificationBy">{{(thread.element.notificationBy._id==currentUser._id) ? "You" : thread.element.notificationBy.name}} has
                 <span ng-show="thread.element.notificationType=='thread-assign'">
                     assigned <span ng-repeat="member in thread.members">{{(member._id==currentUser._id) ? "you" : member.name}}, </span>
                     <span ng-repeat="email in thread.notMembers">{{email}}, </span>
                 </span>
                 <span ng-show="thread.element.notificationType=='thread-message'"> sent a reply: "{{thread.element.text}}"</span>
-            </span><span ng-show="thread.element.notificationBy && thread.__v - 1 > 0">... +{{thread.__v - 1}} More</span>
+            </span><span ng-show="thread.element.notificationBy && thread.__v - 1 > 0">... +{{thread.__v - 1}} More</span> -->
         </div>
 		
         <div>

@@ -40,13 +40,13 @@
 		
 		<md-list-item class="md-2-line" md-ink-ripple layout-padding>
 	
-			<div ui-sref="project.tasks.detail({id: task.project._id, taskId: task._id})" class="md-list-item-text m0-p0">
+			<div ui-sref="project.tasks.detail({id: task.project._id, taskId: task._id})" class="md-list-item-text">
 				
-				<h3 class="md-display-1" style="margin-top: 15px; margin-bottom: 5px">
-					<strong>{{ task.description }} ({{task.element.notifications.length}})</strong> [Due {{(task.dueDate) ? task.dueDate : task.dateEnd | date: 'dd/MM/yyyy'}}] - {{task.project.name}}
-				</h3>
+				<h3>{{ task.description }} - {{task.project.name}}</h3>
+				<h4>Due: {{(task.dueDate) ? task.dueDate : task.dateEnd | date: 'dd/MM/yyyy'}} | Assignees: <span ng-repeat="member in task.members track by $index">{{member.name}}, </span><span ng-repeat="member in task.notMembers track by $index">{{member}}</h4>
+				<p style="color: #2196F3">Updates: {{task.element.notifications.length}}</p>
 			
-	        	<span class="md-body-2" ng-repeat="notification in task.element.limitNotifications track by $index">
+	        	<!-- <span class="md-body-2" ng-repeat="notification in task.element.limitNotifications track by $index">
 	        		<span ng-show="notification.type=='task-assign'">
 	        			This task was assigned to <span ng-repeat="member in task.members">{{(member._id==currentUser._id) ? "you" : member.name}}, </span> <span ng-repeat="email in notMembers">{{email}}, </span>.
 	        		</span>
@@ -59,7 +59,9 @@
 	        		<span ng-show="notification.type=='task-new-note'">
 	        			{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} has created new note.
 	        		</span>
-				</span><span ng-show="{{task.element.notifications.length - task.element.limitNotifications.length > 0}}">... +({{task.element.notifications.length - task.element.limitNotifications.length}}) More</span>
+				</span>
+				<span ng-show="{{task.element.notifications.length - task.element.limitNotifications.length > 0}}">... +({{task.element.notifications.length - task.element.limitNotifications.length}}) More</span> -->
+					
 			</div>
 			
 			<div>
@@ -76,7 +78,7 @@
 		
 		<md-list-item class="md-2-line" md-ink-ripple layout-padding>
 	
-			<div ui-sref="project.tasks.detail({id: task.project._id, taskId: task._id})" class="md-list-item-text m0-p0">
+			<div ui-sref="project.tasks.detail({id: task.project._id, taskId: task._id})" class="md-list-item-text">
 				
 				<h3 class="md-display-1" style="margin-top: 15px">
 					<strong>{{ task.description }}</strong> [Due {{(task.dueDate) ? task.dueDate : task.dateEnd | date: 'dd/MM/yyyy'}}] - {{task.project.name}}
