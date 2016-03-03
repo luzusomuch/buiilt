@@ -12,6 +12,28 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     $scope.projectFilterTags = angular.copy($scope.projects);
     $scope.currentUser = $rootScope.currentUser;
 
+    function filterAcknowledgeFiles(files) {
+        _.each(files, function(file) {
+            var latestActivity = {};
+            _.each(file.activities, function(activity) {
+                if (activity.type==="upload-file" || activity.type==="upload-reversion") {
+                    latestActivity = activity;
+                }
+            });
+            if (_.findIndex(latestActivity.acknowledgeUsers, function(user) {
+                if (user._id && user.isAcknow) {
+                    return user._id.toString()===$scope.currentUser._id.toString();
+                }
+            })!==-1) {
+                latestActivity.isAcknowledge = true;
+            } else {
+                latestActivity.isAcknowledge = false;
+            }
+            file.latestActivity = latestActivity;
+        });
+    };
+    filterAcknowledgeFiles($scope.myFiles);
+
     $rootScope.$on("Dashboard-Update", function(event, data) {
         if (data.type==="thread") {
             $scope.myMessages.splice(data.index, 1);
@@ -116,6 +138,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                 }
             });
             $scope.myFiles = copyFiles;
+            filterAcknowledgeFiles($scope.myFiles);
         }
     });
 
@@ -547,16 +570,16 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         );
     };
 
-    $scope.acknowledgement = function() {
-        fileService.acknowledgement({id: $scope.file._id, activityId: $scope.latestActivity._id}).$promise.then(function(res) {
+    $scope.sendAcknowledgement = function(file) {
+        fileService.acknowledgement({id: file._id, activityId: file.latestActivity._id}).$promise.then(function(res) {
             $scope.showToast("Acknowledgement Has Been Sent Successfully.");
             $scope.closeModal();
-            notificationService.markItemsAsRead({id: $scope.file._id}).$promise.then(function() {
-                $rootScope.$broadcast("DashboardSidenav-UpdateNumber", {type: $scope.file.element.type, number: 1});
-                var currentIndex = _.findIndex($scope.myFiles, function(file) {
-                    return file._id.toString()===$scope.file._id.toString();
+            notificationService.markItemsAsRead({id: file._id}).$promise.then(function() {
+                $rootScope.$broadcast("DashboardSidenav-UpdateNumber", {type: file.element.type, number: 1});
+                var currentIndex = _.findIndex($scope.myFiles, function(f) {
+                    return f._id.toString()===file._id.toString();
                 });
-                $rootScope.$broadcast("Dashboard-Update", {type: $scope.file.element.type, index: currentIndex});
+                $rootScope.$broadcast("Dashboard-Update", {type: file.element.type, index: currentIndex});
             });
         }, function(err) {
             $scope.showToast("Error");
