@@ -29,27 +29,30 @@
 				
 				<h3>{{ file.name }} - {{file.project.name}}</h3>
 				<h4>Tags: <span ng-repeat="tag in file.tags">{{tag}} </span></h4>
-				<p style="color: #2196F3">Updates: {{file.element.notifications.length}}</p>
-				
-          		<!-- <span class="md-body-2" ng-repeat="notification in file.element.limitNotifications track by $index" style="margin-bottom: 15px; margin-top: 15px">
-      				<span ng-show="notification.type=='document-assign'">
-      					{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} assigned you to this file.
-      				</span>
-          			<span ng-show="notification.type=='document-upload-reversion'">
-          				{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} uploaded a revision of this file.
-          			</span>
-          			<span ng-show="notification.type=='document-send-acknowledge'">
-          				{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} sent an acknowledgement.
-          			</span>
-          			<span ng-show="notification.type=='docuent-archive'">
-                        {{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} archived this file.
-                    </span>
-                    <span ng-show="notification.type=='document-unarchive'">
-                        {{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} unarchived this file.
-                    </span>
-					<span ng-show="{{file.element.notifications.length - file.element.limitNotifications.length > 0}}">... +({{file.element.notifications.length - file.element.limitNotifications.length}}) More</span>
-				</span> -->
-				
+				<p ng-mouseover="isHover=true" ng-mouseout="isHover=false" style="color: #2196F3">
+                    Updates: {{file.element.notifications.length}}
+                    <div ng-show="isHover" class="notification-hover">
+                        <md-list ng-cloak>
+                            <md-list-item layout-padding ng-repeat="n in file.element.notifications">
+                                <p ng-show="n.type=='document-assign'">
+                                    {{(n.fromUser._id==currentUser._id) ? "You" : n.fromUser.name}} assigned you to this file.
+                                </p>
+                                <p ng-show="n.type=='document-upload-reversion'">
+                                    {{(n.fromUser._id==currentUser._id) ? "You" : n.fromUser.name}} uploaded a revision of this file.
+                                </p>
+                                <p ng-show="n.type=='document-send-acknowledge'">
+                                    {{(n.fromUser._id==currentUser._id) ? "You" : n.fromUser.name}} sent an acknowledgement.
+                                </p>
+                                <p ng-show="n.type=='docuent-archive'">
+                                    {{(n.fromUser._id==currentUser._id) ? "You" : n.fromUser.name}} archived this file.
+                                </p>
+                                <p ng-show="n.type=='document-unarchive'">
+                                    {{(n.fromUser._id==currentUser._id) ? "You" : n.fromUser.name}} unarchived this file.
+                                </p>
+                            </md-list-item>
+                        </md-list>
+                    </div>
+                </p>
 	        </div>
 			
 	        <div>
