@@ -76,10 +76,11 @@
 		
 		<md-toolbar class="fab-toolbar-btn">
 			<div class="md-toolbar-tools" layout="row" layout-align="end center">
-				<md-button ng-click="archive()" aria-label="Compose Message" class="md-icon-button" style="margin-right: 30px">
+				<md-button ng-click="archive()" aria-label="Compose Message" class="md-icon-button" style="margin-left: 30px">
 				  	<md-tooltip md-direction="top">{{(!thread.isArchive) ? 'Archive this Message Thread' : 'Unarchive this Message Thread'}}</md-tooltip>
 			      	<md-icon class="material-icons"><i class="material-icons">{{(!thread.isArchive) ? 'archive' : 'unarchive'}}</i></md-icon>
 	  	      	</md-button>
+				<span flex></span>
 	  	      	<md-button ng-show="!thread.isArchive" aria-label="Compose Message" class="md-icon-button" ng-click="showReplyModal($event)" style="margin-right: 30px">
 				  	<md-tooltip md-direction="top">Compose a Message</md-tooltip>
 			      	<md-icon class="material-icons">reply</md-icon>

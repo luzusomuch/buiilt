@@ -94,25 +94,26 @@
 		
 		<md-toolbar class="fab-toolbar-btn">
 			<div class="md-toolbar-tools" layout="row" layout-align="end center">
-                <md-button ng-click="archive()" aria-label="Compose Message" class="md-icon-button" style="margin-right: 30px">
+                <md-button ng-click="archive()" aria-label="Compose Message" class="md-icon-button" style="margin-left: 30px">
                     <md-tooltip md-direction="top">{{(!file.isArchive) ? 'Archive this File' : 'Unarchive this File'}}</md-tooltip>
                     <md-icon class="material-icons"><i class="material-icons">{{(!file.isArchive) ? 'archive' : 'unarchive'}}</i></md-icon>
+                </md-button>
+				<span flex></span>
+                <md-button ng-show="!file.isArchive" aria-label="Upload a Revision" class="md-icon-button" ng-click="showModal($event, 'upload-reversion.html')" style="margin-right: 30px">
+                    <md-tooltip md-direction="top">Upload a Revision</md-tooltip>
+                    <md-icon class="material-icons">file_upload</md-icon>
                 </md-button>
                 <md-button ng-show="!file.isArchive" aria-label="Edit the File Details" class="md-icon-button" ng-click="showModal($event, 'edit-file.html')" style="margin-right: 30px">
                     <md-tooltip md-direction="top">Edit File Details</md-tooltip>
                     <md-icon class="material-icons">edit</md-icon>
                 </md-button>
-                <md-button ng-show="!file.isArchive" aria-label="Add a Team Member" class="md-icon-button" ng-click="showModal($event, 'insert-note.html')" style="margin-right: 30px">
-                    <md-tooltip md-direction="top">Insert A Note</md-tooltip>
-                    <md-icon class="material-icons">note_add</md-icon>
-                </md-button>
-                <md-button ng-show="!file.isArchive" aria-label="Upload a Revision" class="md-icon-button" ng-click="showModal($event, 'upload-reversion.html')" style="margin-right: 30px">
-                    <md-tooltip md-direction="top">Upload a Reivsion</md-tooltip>
-                    <md-icon class="material-icons">file_upload</md-icon>
-                </md-button>
                 <md-button ng-show="!file.isArchive" aria-label="Add a Team Member" class="md-icon-button" ng-click="showModal($event, 'assign.html')" ng-show="!file.belongTo" style="margin-right: 30px">
                     <md-tooltip md-direction="top">Assign to a Team Member</md-tooltip>
                     <md-icon class="material-icons">person_outline</md-icon>
+                </md-button>
+                <md-button ng-show="!file.isArchive" aria-label="Add a Team Member" class="md-icon-button" ng-click="showModal($event, 'insert-note.html')" style="margin-right: 30px">
+                    <md-tooltip md-direction="top">Insert A Note</md-tooltip>
+                    <md-icon class="material-icons">note_add</md-icon>
                 </md-button>
 			</div>
 		</md-toolbar>
