@@ -11,16 +11,18 @@ angular.module('buiiltApp')
       }]
     };
   }])
-  .directive('scrollToBottom',[function() {
+  .directive('scrollToBottom',["$timeout", function($timeout) {
     return {
       restrict: 'AE',
       scope : {
         scrollToBottom : '='
       },
-      link : function(scope,element,attrs) {
+      link : function(scope,element) {
         scope.$watchCollection('scrollToBottom',function(value) {
           if (value) {
-            $(element).scrollTop($(element)[0].scrollHeight);
+            $timeout(function() {
+              $(element).scrollTop($(element)[0].scrollHeight);
+            }, 500);
           }
         });
       }
