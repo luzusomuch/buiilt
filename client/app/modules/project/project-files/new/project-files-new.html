@@ -9,24 +9,21 @@
 		<md-dialog-content>
 			<div class="md-dialog-content" layout="column" layout-padding>
 				<div layout="column">
-					<p class="md-body-2">Provide a name for this file:</p>
-	                <div layout="row">
-	                    <md-input-container flex="66" flex-offset="15">
-					        <label>Name of this File</label>
-							<input ng-model="uploadFile.name" required type="text" name="name"></input>
-					    </md-input-container>
-					</div>
+					<p class="md-body-2">Select the document that you would like to upload:</p>
+	                <div layout="row" layout-align="center center" class="tagcloud-selection">
+	                    <input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/>
+	                </div>
 				</div>
-				
-				<div layout="column">
-					<p class="md-body-2">Provide a description for this file:</p>
-	                <div layout="row">
-	                    <md-input-container flex="66" flex-offset="15">
-					        <label>Description of the File</label>
-							<textarea name="description" ng-model="uploadFile.description" required md-maxlength="500" columns="1" rows="5"></textarea>
-					    </md-input-container>
-					</div>
-				</div>
+
+                <div layout="column">
+                    <p class="md-body-2">Provide a name:</p>
+                    <div layout="row">
+                        <md-input-container flex="66" flex-offset="15">
+                            <label>File Name</label>
+                            <input type="text" name="versionName" ng-model="uploadFile.file.filename" required></input>
+                        </md-input-container>
+                    </div>
+                </div>
 				
 				<div layout="column">
 					<p class="md-body-2">Select at least one tag that is relevant to this file:</p>

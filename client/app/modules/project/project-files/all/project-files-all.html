@@ -36,7 +36,7 @@
 
 	<div ng-repeat="file in files | filter: search | unique: '_id' track by $index">
 		<md-list-item class="md-3-line" md-ink-ripple layout-padding>
-			<div  ui-sref="project.files.detail({id: file.project, fileId: file._id})" class="md-list-item-text">
+			<div  ui-sref="project.files.detail({id: file.project._id, fileId: file._id})" class="md-list-item-text">
 				
 				<h3>{{ file.name }}</h3>
 				<h4>Tags: <span ng-repeat="tag in file.tags">{{tag}}</h4>
@@ -53,7 +53,7 @@
 	        </div>
 			
 	        <div>
-	        	<md-button ng-show="!file.latestActivity.isAcknowledge&&file.latestActivity.user!=currentUser._id&&file.__v>0" ng-click="sendAcknowledgement(file)"><md-icon class="material-icons">input</md-icon><md-tooltip md-direction="down">Send Acknowledgement</md-tooltip></md-button>
+	        	<md-button ng-show="!file.latestActivity.isAcknowledge&&file.latestActivity.user!=currentUser._id&&file.__v>0&&file.activities.length>0" ng-click="sendAcknowledgement(file)"><md-icon class="material-icons">input</md-icon><md-tooltip md-direction="down">Send Acknowledgement</md-tooltip></md-button>
 				<md-button ng-click="showViewFileModal($event, file)"><md-icon class="material-icons">remove_red_eye</md-icon><md-tooltip md-direction="down">View File</md-tooltip></md-button>
 	        </div>
 		</md-list-item>

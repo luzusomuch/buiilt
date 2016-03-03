@@ -130,14 +130,35 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
         }
     };
 
+    $scope.pickFile = pickFile;
+
+    $scope.onSuccess = onSuccess;
+
+    function pickFile(){
+        filepickerService.pick(
+            // add max files for multiple pick
+            // {maxFiles: 5},
+            onSuccess
+        );
+    };
+
+    function onSuccess(file){
+        $scope.uploadFile.file = file;
+    };
+
 	$scope.createNewFile = function() {
         $scope.uploadFile.members = _.filter($scope.projectMembers, {select: true});
         $scope.uploadFile.tags = _.filter($scope.tags, {select: true});
 		if ($scope.uploadFile.tags.length == 0) {
 			$scope.showToast("Please Select At Least 1 Tag...");
+            return;
 		} else if ($scope.uploadFile.members.length == 0) {
 			$scope.showToast("Please Select At Lease 1 Team Member...");
-		} else {
+            return;
+		} else if (!$scope.uploadFile.file) {
+            $scope.showToast("Please Select A File");
+            return;
+        } else {
             $scope.uploadFile.type="file";
 			uploadService.upload({id: $stateParams.id}, $scope.uploadFile).$promise.then(function(res) {
 				$mdDialog.hide();

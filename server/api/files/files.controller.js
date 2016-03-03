@@ -107,6 +107,7 @@ exports.getFilesByProject = function(req, res) {
     }
     File.find(query)
     .populate("owner", "_id name email")
+    .populate("project")
     .populate("members", "_id name email").exec(function(err, files) {
         if (err) {return res.send(500,err);}
         async.each(files, function(file, cb) {

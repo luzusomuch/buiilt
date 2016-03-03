@@ -30,7 +30,7 @@
 <md-list ng-cloak class="main-page-content"  layout="column" flex>
 	<div ng-repeat="document in documents | filter: search | unique: '_id' track by $index">
 		<md-list-item class="md-2-line" md-ink-ripple>
-			<div ui-sref="project.documentation.detail({id:document.project, documentId: document._id})" class="md-list-item-text" layout="column">
+			<div ui-sref="project.documentation.detail({id:document.project._id, documentId: document._id})" class="md-list-item-text" layout="column">
 	          	<h3>{{document.name}}</h3>
 				<h4>Tags:</h4>
 	          	<p style="color: #2196F3"><span ng-show="document.__v > 0">Updates: {{document.__v}}</span></p>

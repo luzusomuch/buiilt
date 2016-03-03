@@ -335,6 +335,15 @@ exports.upload = function(req, res){
             notMembers: notMembers,
             element: {type: data.type}
         });
+        if (data.file) {
+            file.name = data.file.filename;
+            file.path = data.file.url;
+            file.key = data.file.key;
+            file.mimeType = data.file.mimeType;
+            file.size = data.file.size;
+            file.version = data.file.filename;
+            file.server = "s3";
+        }
         var tags = [];
         _.each(data.tags, function(tag) {
             tags.push(tag.name);
