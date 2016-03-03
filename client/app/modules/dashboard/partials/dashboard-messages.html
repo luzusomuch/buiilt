@@ -28,7 +28,7 @@
 			<div ng-click="openLocation(thread, 'thread')" class="md-list-item-text">
 				
 				<h3>{{ thread.name }} - {{thread.project.name}}</h3>
-				<h4>Assignee 1, Assignee 1</h4>
+				<h4>Assignees: <span ng-repeat="member in thread.members track by $index">{{member.name}}, </span><span ng-repeat="member in thread.notMembers track by $index">{{member}}</h4>
 				<p style="color: #2196F3">Updates: {{thread.element.notifications.length}}</p>
 				
           		<!-- <span class="md-body-2" ng-repeat="notification in thread.element.limitNotifications track by $index">

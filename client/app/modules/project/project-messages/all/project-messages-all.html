@@ -36,8 +36,8 @@
 		<div ui-sref="project.messages.detail({id: thread.project, messageId: thread._id})" class="md-list-item-text">
 			
 			<h3>{{ thread.name }}</h3>
-			<h4>Assignee 1, Assignee 2</h4>
-			<p style="color: #2196F3">Updates: {{thread.element.notifications.length}}</p>
+			<h4>Assignees: <span ng-repeat="member in thread.members track by $index">{{member.name}}, </span><span ng-repeat="member in thread.notMembers track by $index">{{member}}</h4>
+			<p ng-show="thread.__v > 0" style="color: #2196F3">Updates: {{thread.__v}}</p>
 			
       		<!-- <span class="md-body-2" ng-show="thread.element.notificationBy">{{(thread.element.notificationBy._id==currentUser._id) ? "You" : thread.element.notificationBy.name}} has
   				<span ng-show="thread.element.notificationType=='thread-assign'">
@@ -60,8 +60,7 @@
 		<div ui-sref="project.messages.detail({id: thread.project, messageId: thread._id})" class="md-list-item-text">
 			
 			<h3>{{ thread.name }}</h3>
-			<h4>Assignee 1, Assignee 2</h4>
-			<p style="color: #2196F3">Updates: {{thread.element.notifications.length}}</p>
+			<h4>Assignees: <span ng-repeat="member in thread.members track by $index">{{member.name}}, </span><span ng-repeat="member in thread.notMembers track by $index">{{member}}</h4>
             
             <!-- <span class="md-body-2" ng-show="thread.element.notificationBy">{{(thread.element.notificationBy._id==currentUser._id) ? "You" : thread.element.notificationBy.name}} has
                 <span ng-show="thread.element.notificationType=='thread-assign'">

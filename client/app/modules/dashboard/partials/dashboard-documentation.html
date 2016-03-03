@@ -28,7 +28,7 @@
 			<div ng-click="openLocation(file, 'document')" class="md-list-item-text">
 				
 				<h3>{{ file.name }} - {{file.project.name}}</h3>
-				<h4>Tags:</h4>
+				<h4>Tags: <span ng-repeat="tag in file.tags">{{tag}} </span></h4>
 				<p style="color: #2196F3">Updates: {{file.element.notifications.length}}</p>
 				
           		<!-- <span class="md-body-2" ng-repeat="notification in file.element.limitNotifications track by $index" style="margin-bottom: 15px; margin-top: 15px">

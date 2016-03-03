@@ -34,13 +34,39 @@
 
 <md-list ng-cloak class="main-page-content"  layout="column" flex>
 
-	<div ng-repeat="file in files | filter: search | unique: '_id' track by $index">
+	<div ng-repeat="file in files | filter: search | unique: '_id' track by $index" ng-show="file.__v > 0">
 		<md-list-item class="md-3-line" md-ink-ripple layout-padding>
 			<div  ui-sref="project.files.detail({id: file.project._id, fileId: file._id})" class="md-list-item-text">
 				
 				<h3>{{ file.name }}</h3>
-				<h4>Tags: <span ng-repeat="tag in file.tags">{{tag}}</h4>
-				<p style="color: #2196F3">Updates: {{file.__v}}</p>
+				<h4>Tags: <span ng-repeat="tag in file.tags">{{tag}} </span></h4>
+				<p ng-show="file.__v>0" style="color: #2196F3">Updates: {{file.__v}}</p>
+	      		
+				<!-- <span class="md-body-2" ng-show="file.element.notificationType">{{(file.element.notificationBy._id==currentUser._id) ? "You" : file.element.notificationBy.name}} has
+	  				<span ng-show="file.element.notificationType=='file-upload-reversion'">uploaded new reversion of this file</span>
+	          		<span ng-show="file.element.notificationType=='file-assign'">assigned you to this file</span>
+	          		<span ng-show="file.element.notificationType=='file-send-acknowledge'">has sent acknowledgement to this file</span>
+	          		<span ng-show="file.element.notificationType=='file-new-note'">has added new note</span>
+	          		<span ng-show="file.element.notificationType=='file-archive'">has archived this file</span>
+	          		<span ng-show="file.element.notificationType=='file-unarchive'">has unarchived this file</span>
+	      		</span><span ng-show="file.element.notificationBy && file.__v - 1 > 0">... +{{file.__v - 1}} More</span> -->
+	        </div>
+			
+	        <div>
+	        	<md-button ng-show="!file.latestActivity.isAcknowledge&&file.latestActivity.user!=currentUser._id&&file.__v>0&&file.activities.length>0" ng-click="sendAcknowledgement(file)"><md-icon class="material-icons">input</md-icon><md-tooltip md-direction="down">Send Acknowledgement</md-tooltip></md-button>
+				<md-button ng-click="showViewFileModal($event, file)"><md-icon class="material-icons">remove_red_eye</md-icon><md-tooltip md-direction="down">View File</md-tooltip></md-button>
+	        </div>
+		</md-list-item>
+		<md-divider></md-divider>
+		
+	</div>
+
+	<div ng-repeat="file in files | filter: search | unique: '_id' track by $index" ng-show="file.__v == 0">
+		<md-list-item class="md-3-line" md-ink-ripple layout-padding>
+			<div  ui-sref="project.files.detail({id: file.project._id, fileId: file._id})" class="md-list-item-text">
+				
+				<h3>{{ file.name }}</h3>
+				<h4>Tags: <span ng-repeat="tag in file.tags">{{tag}} </span></h4>
 	      		
 				<!-- <span class="md-body-2" ng-show="file.element.notificationType">{{(file.element.notificationBy._id==currentUser._id) ? "You" : file.element.notificationBy.name}} has
 	  				<span ng-show="file.element.notificationType=='file-upload-reversion'">uploaded new reversion of this file</span>
