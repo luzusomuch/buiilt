@@ -33,15 +33,15 @@
 	<md-toolbar>
 		<div class="md-toolbar-tools" layout="row" layout-align="end center">
   	      	<md-button aria-label="Edit Project Details" class="md-icon-button" ng-click="showEditProjectModal($event)" ng-show="project.projectManager._id == currentUser._id" style="margin-right: 30px">
-			  	<md-tooltip md-direction="up">Edit Project Details</md-tooltip>
+			  	<md-tooltip md-direction="top">Edit Project Details</md-tooltip>
 		      	<md-icon class="material-icons">edit</md-icon>
   	      	</md-button>
   	      	<md-button aria-label="Download a Backup of this Project" class="md-icon-button" ng-click="downloadBackUp()" style="margin-right: 30px">
-			  	<md-tooltip md-direction="up">Download a Backup of this Project</md-tooltip>
+			  	<md-tooltip md-direction="top">Download a Backup of this Project</md-tooltip>
 		      	<md-icon class="material-icons">file_download</md-icon>
   	      	</md-button>
   	      	<md-button aria-label="Archive this Project" class="md-icon-button" ng-show="currentUser._id == project.projectManager._id" ng-click="archiveProject()" style="margin-right: 30px">
-			  	<md-tooltip md-direction="up">Archive this Project</md-tooltip>
+			  	<md-tooltip md-direction="top">Archive this Project</md-tooltip>
 		      	<md-icon class="material-icons">archive</md-icon>
   	      	</md-button>
 		</div>
