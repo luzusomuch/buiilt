@@ -42,7 +42,7 @@
 		
 		<md-list-item class="md-2-line" md-ink-ripple layout-padding>
 	
-			<div ui-sref="project.tasks.detail({id: task.project, taskId: task._id})" class="md-list-item-text">
+			<div ui-sref="project.tasks.detail({id: task.project, taskId: task._id})" class="md-list-item-text m0-p0">
 				
 				<h3 class="md-display-1" style="margin-top: 15px; margin-bottom: 5px">
 					<strong ng-show="!task.completed">{{ task.description }}</strong> <span ng-show="task.completed">{{task.description}}</span> [Due {{(task.element.due) ? task.element.due : task.dateEnd | date: 'dd/MM/yyyy'}}]

@@ -32,7 +32,7 @@
 	<div ng-repeat="file in myFiles |filter: searchFile track by $index" ng-show="file.element.type=='file'">
 		<md-list-item class="md-2-line" md-ink-ripple layout-padding>
 		
-			<div ng-click="openLocation(file, 'file')" class="md-list-item-text">
+			<div ng-click="openLocation(file, 'file')" class="md-list-item-text m0-p0">
 				
 				<h3 class="md-display-1" style="margin-top: 15px; margin-bottom: 5px">
 					<strong>{{ file.name }} ({{file.element.notifications.length}})</strong> - {{file.project.name}} | Tags: <span ng-repeat="tag in file.tags">{{tag}} </span>

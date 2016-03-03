@@ -36,7 +36,7 @@
 
 	<div ng-repeat="file in files | filter: search | unique: '_id' track by $index">
 		<md-list-item class="md-2-line" md-ink-ripple layout-padding>
-			<div  ui-sref="project.files.detail({id: file.project, fileId: file._id})" class="md-list-item-text">
+			<div  ui-sref="project.files.detail({id: file.project, fileId: file._id})" class="md-list-item-text m0-p0">
 				
 				<h3 class="md-display-1" style="margin-top: 15px; margin-bottom: 5px">
 					<strong>{{ file.name }}</strong> | Tags: <span ng-repeat="tag in file.tags">{{tag}} </span>

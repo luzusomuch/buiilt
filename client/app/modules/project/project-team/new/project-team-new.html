@@ -38,10 +38,6 @@
 					</div>
 				</div>
 				
-				<div layout="column" ng-show="invite.type == 'addBuilder' || invite.type == 'addConsultant' || invite.type == 'addSubcontractor'">
-					<a style="cursor: pointer" ng-click="setInviteTender(true)"><p class="md-body-2" style="color: #F44336; text-decoration: underline">If you require a Tender to be submitted from your <span ng-show="invite.type == 'addConsultant'">consultant</span><span ng-show="invite.type == 'addBuilder'">builder</span><span ng-show="invite.type == 'addSubcontractor'">subcontractor</span>, please click this link.</p></a>
-				</div>
-				
 				<div layout="column" ng-show="invite.isInviteTeamMember">
 					<p class="md-body-2">Please select the employee's you would like to add to this project:</p>
 					<div layout="row" layout-align="center center" class="tagcloud" layout-wrap layout-padding>
