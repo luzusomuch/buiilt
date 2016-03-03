@@ -44,7 +44,7 @@
 				
 				<h3>{{ task.description }} - {{task.project.name}}</h3>
 				<h4>Due: {{(task.dueDate) ? task.dueDate : task.dateEnd | date: 'dd/MM/yyyy'}} | Assignees: <span ng-repeat="member in task.members track by $index">{{member.name}}, </span><span ng-repeat="member in task.notMembers track by $index">{{member}}</h4>
-				<p ng-mouseover="isHover=true" ng-mouseout="isHover=false" style="color: #2196F3">
+				<p style="color: #2196F3">
                     Updates: {{task.element.notifications.length}}
                     <div ng-show="isHover" class="notification-hover">
                         <md-list ng-cloak>
