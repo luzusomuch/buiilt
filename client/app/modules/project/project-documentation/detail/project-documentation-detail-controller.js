@@ -16,10 +16,13 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
 
     getAcvititiesAndHistoriesByUser($scope.document);
 
+    // remove notifications count immeditely
+    $rootScope.$broadcast("UpdateCountNumber", {type: "document", number: 1});
+    // end
+    
     // set timeout 4s for mark as read
     $timeout(function() {
         notificationService.markItemsAsRead({id: $stateParams.documentId}).$promise.then(function() {
-            $rootScope.$broadcast("UpdateCountNumber", {type: "document", number: 1});
             $rootScope.$broadcast("Document.Read", document);
             markActivitesAsRead($scope.document);
         });

@@ -1,8 +1,12 @@
 angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootScope, $scope, $timeout, task, taskService, $mdToast, $mdDialog, peopleService, $stateParams, messageService, $state, people, uploadService, socket, notificationService) {
-	// set timeout 4s for mark read notification 
+    // remove the notifications count immeditely
+    $rootScope.$emit("UpdateCountNumber", {type: "task", number: 1});
+    // end 
+    
+    // set timeout 4s for mark read notification 
     $timeout(function(){
         notificationService.markItemsAsRead({id: $stateParams.taskId}).$promise.then(function() {
-            $rootScope.$broadcast("UpdateCountNumber", {type: "task", number: task.__v});
+            $rootScope.$emit("Task.Read", task);
             markActivitesAsRead($scope.task);
         });
     }, 4000);
@@ -229,7 +233,7 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
                 $scope.showToast("Your Note Has Been Successfully Added.");
             }
             delete task.editType;
-            $rootScope.$broadcast("Task.Updated", res);
+            $rootScope.$emit("Task.Updated", res);
             $scope.closeModal();
         }, function(err) {
             $scope.showToast("There Has Been An Error...");

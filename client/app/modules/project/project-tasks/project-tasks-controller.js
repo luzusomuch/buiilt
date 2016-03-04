@@ -35,8 +35,18 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
         $scope.tasks = _.uniq($scope.tasks, "_id");
     });
 
+    var listenerCleanFnRead = $rootScope.$on("Task.Read", function(event, data) {
+        var index = _.findIndex($scope.tasks, function(task) {
+            return task._id.toString()===data._id.toString();
+        });
+        if (index !== -1) {
+            $scope.tasks[index].__v=0;
+        }
+    });
+
     $scope.$on('$destroy', function() {
         listenerCleanFnPush();
+        listenerCleanFnRead();
     });
 
     // filter section
