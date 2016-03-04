@@ -331,10 +331,27 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
         $scope.relatedFile = {
             tags:[],
             belongTo: $scope.thread._id,
-            belongToType: "thread"
+            belongToType: "thread",
+            type: "file"
         };
     }
     $scope.setRelatedFile();
+
+    $scope.pickFile = pickFile;
+
+    $scope.onSuccess = onSuccess;
+
+    function pickFile(){
+        filepickerService.pick(
+            // add max files for multiple pick
+            // {maxFiles: 5},
+            onSuccess
+        );
+    };
+
+    function onSuccess(file){
+        $scope.relatedFile.file = file;
+    };
 
     $scope.createRelatedFile = function() {
         $scope.relatedFile.members = $scope.invitees;
