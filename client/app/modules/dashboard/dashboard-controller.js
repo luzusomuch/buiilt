@@ -91,7 +91,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             return t._id.toString()===data._id.toString();
         });
         if (currentThreadIndex !== -1) {
-            $scope.myMessages.splice(index, 1);
+            $scope.myMessages.splice(currentThreadIndex, 1);
             $rootScope.$broadcast("DashboardSidenav-UpdateNumber", {type: "message", number: 1});
         }
     });
