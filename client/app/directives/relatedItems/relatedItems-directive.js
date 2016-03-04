@@ -8,9 +8,10 @@ angular.module('buiiltApp').directive('relatedItems', function(){
             hideRelatedThread: "@"
         },
         controller: function($scope, $rootScope, $location, userService, projectService, $state, $mdDialog) {
-console.log($scope.hideRelatedThread);
 			$scope.$state = $state;
             $scope.currentUser = $rootScope.currentUser;
+            $scope.data.members.push($scope.data.owner);
+            $scope.data.members.push($scope.currentUser);
             $scope.data.members = _.uniq($scope.data.members, "_id");
 
 			$scope.showRelatedMessageModal = function ($event, relatedItem) {

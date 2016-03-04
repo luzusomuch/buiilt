@@ -410,12 +410,6 @@ exports.upload = function(req, res){
                                 });
                             }
                         });
-                    } else if (file.element.type==="document") {
-                        EventBus.emit('socket:emit', {
-                            event: 'document:new',
-                            room: req.user._id.toString(),
-                            data: JSON.parse(JSON.stringify(file))
-                        });
                     }
                     return res.send(200, file);
                 });

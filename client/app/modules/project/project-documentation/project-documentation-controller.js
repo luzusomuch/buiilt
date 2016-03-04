@@ -49,13 +49,7 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
     // end filter
 
     $rootScope.$on("Document.Uploaded", function(event, data) {
-        $scope.documents = _.union($scope.documents, data);
-    });
-
-    socket.on("document:new", function(data) {
-        // data.__v=1;
         $scope.documents.push(data);
-        _.uniq($scope.documents, "_id");
     });
 
     socket.on("document:archive", function(data) {
