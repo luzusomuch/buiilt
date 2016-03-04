@@ -14,7 +14,10 @@ angular.module('buiiltApp').directive('dashboardSidenav', function(){
             var today = new Date();
             $scope.totalTaskUpdates = 0;
             _.each($scope.tasks, function(task) {
-                if (task.dateEnd && moment(moment(task.dateEnd).format("YYYY-MM-DD")).isBetween(moment(today).format("YYYY-MM-DD"),moment(today).add(3, "days").format("YYYY-MM-DD"))) {
+                // if (task.dateEnd && moment(moment(task.dateEnd).format("YYYY-MM-DD")).isBetween(moment(today).format("YYYY-MM-DD"),moment(today).add(3, "days").format("YYYY-MM-DD"))) {
+                    // $scope.totalTaskUpdates += 1;
+                // }
+                if (task.element.notifications.length > 0) {
                     $scope.totalTaskUpdates += 1;
                 }
             });
