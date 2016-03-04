@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope, $rootScope, file, $mdDialog, uploadService, fileService, $mdToast, peopleService, $stateParams, messageService, taskService, $state, people, socket, notificationService) {
+angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope, $rootScope, $timeout, file, $mdDialog, uploadService, fileService, $mdToast, peopleService, $stateParams, messageService, taskService, $state, people, socket, notificationService) {
     $scope.file = file;
     // Check owner team
     $scope.isOwnerTeam=false;
@@ -12,9 +12,44 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
         $scope.isOwnerTeam=true;
     }
     // end check owner team
-    notificationService.markItemsAsRead({id: $stateParams.fileId}).$promise.then(function() {
-        $rootScope.$broadcast("UpdateCountNumber", {type: "file", number: file.__v});
-    });
+
+    // set timeout 4s for mark as read
+    $timeout(function() {
+        notificationService.markItemsAsRead({id: $stateParams.fileId}).$promise.then(function() {
+            $rootScope.$broadcast("UpdateCountNumber", {type: "file", number: file.__v});
+            markActivitesAsRead($scope.file);
+        });
+    }, 4000);
+    // end timeout
+
+    // function to filter out that unread activities
+    function filterUnreadActivites(file) {
+        if (file.__v > 0) {
+            var temp = 0;
+            for (var i = file.activities.length - 1; i >= 0; i--) {
+                if (i===0) {
+                    file.activities[i].unreadLine=true;
+                }
+                file.activities[i].unread = true;
+                temp+=1;
+                if (temp===file.__v) {
+                    break;
+                }
+            };
+        }
+    };
+    // end filter unread activities
+
+    // function to mark activities as read
+    function markActivitesAsRead(file) {
+        _.each(file.activities, function(a){
+            a.unread = false;
+            a.unreadLine=false;
+        });
+    };
+    // end mark activities as read
+
+    // this function use for check if current user is sent acknowledge yet
     function checkAcknowLedgement(file) {
         _.each(file.activities, function(activity) {
             if (activity.type === "upload-reversion" || activity.type === "upload-file") {
@@ -30,6 +65,9 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
             }
         });
     };
+    // end check acknowledge
+
+    filterUnreadActivites($scope.file);
     checkAcknowLedgement($scope.file);
     
     $scope.orginalActivities = angular.copy($scope.file.activities);

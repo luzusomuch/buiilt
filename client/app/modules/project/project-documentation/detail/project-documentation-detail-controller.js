@@ -1,5 +1,6 @@
-angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', function($rootScope, $scope, document, uploadService, $mdDialog, $mdToast, $stateParams, fileService, socket, notificationService, peopleService) {
+angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', function($rootScope, $scope, $timeout, document, uploadService, $mdDialog, $mdToast, $stateParams, fileService, socket, notificationService, peopleService) {
     $scope.document = document;
+
     // Check owner team
     $scope.isOwnerTeam=false;
     if (_.findIndex($rootScope.currentTeam.leader, function(leader) {
@@ -12,10 +13,46 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
         $scope.isOwnerTeam=true;
     }
     // end check owner team
+
     getAcvititiesAndHistoriesByUser($scope.document);
-    notificationService.markItemsAsRead({id: $stateParams.documentId}).$promise.then(function() {
-        $rootScope.$broadcast("UpdateCountNumber", {type: "document", number: document.__v});
-    });
+
+    // set timeout 4s for mark as read
+    $timeout(function() {
+        notificationService.markItemsAsRead({id: $stateParams.documentId}).$promise.then(function() {
+            $rootScope.$broadcast("UpdateCountNumber", {type: "document", number: document.__v});
+            markActivitesAsRead($scope.document);
+        });
+    }, 4000);
+    // end timeout
+
+    // function to filter out that unread activities
+    function filterUnreadActivites(document) {
+        if (document.__v > 0) {
+            var temp = 0;
+            for (var i = document.activities.length - 1; i >= 0; i--) {
+                if (i===0) {
+                    document.activities[i].unreadLine=true;
+                }
+                document.activities[i].unread = true;
+                temp+=1;
+                if (temp===document.__v) {
+                    break;
+                }
+            };
+        }
+    };
+    // end filter unread activities
+
+    // function to mark activities as read
+    function markActivitesAsRead(document) {
+        _.each(document.activities, function(a){
+            a.unread = false;
+            a.unreadLine=false;
+        });
+    };
+    // end mark activities as read
+
+    filterUnreadActivites($scope.document);
 
     $scope.versionTags = [];
     _.each($rootScope.currentTeam.versionTags, function(tag) {

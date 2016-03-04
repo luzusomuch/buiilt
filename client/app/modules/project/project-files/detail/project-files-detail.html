@@ -25,7 +25,7 @@
 				<div layout="row" flex class="activity-stream-head">
 					<p>This file was created by <strong>{{file.owner.name}}</strong> on {{file.createdAt | date: 'dd/MM/yyyy hh:mm a'}}. <span ng-show="file.belongTo.item">This file is related to the {{file.belongTo.type}} <a href="{{file.belongTo.link}}">{{file.belongTo.item.name}}</a>.</span></p>
 				</div>
-				<div layout="row" layout-align="center center" flex class="activity-stream" ng-repeat="activity in file.activities" ng-class="{related: activity.element.related}">
+				<div layout="row" layout-align="center center" flex class="activity-stream" ng-repeat="activity in file.activities" ng-class="{related: activity.element.related, 'unread-notification': activity.unread, 'unread-notification-line': activity.unreadLine}">
 				
 					<span flex="5"></span>
 				

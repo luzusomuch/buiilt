@@ -603,7 +603,13 @@ div > .fab-toolbar-btn {
 }
 
 .unread-notification {
-  color: #2196F3
+  border-left-color: #2196F3;
+  border-left-width: 3px;
+}
+
+.unread-notification-line {
+  border-top-color: #2196F3;
+  border-top-width: 3px;
 }
 
 .notification-hover {

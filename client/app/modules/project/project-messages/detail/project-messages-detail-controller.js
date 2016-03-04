@@ -11,11 +11,46 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
         $scope.isOwnerTeam=true;
     }
     // end check owner team
-    notificationService.markItemsAsRead({id: $stateParams.messageId}).$promise.then(function() {
-        $rootScope.$broadcast("UpdateCountNumber", {type: "message", number: thread.__v});
-    });
-    $scope.error = {};
+
+    // set timeout 4s to mark as read 
+    $timeout(function() {
+        notificationService.markItemsAsRead({id: $stateParams.messageId}).$promise.then(function() {
+            $rootScope.$broadcast("UpdateCountNumber", {type: "message", number: thread.__v});
+            markActivitesAsRead($scope.thread);
+        });
+    }, 4000);
+    // end timeout
+
+    // function to filter out that unread activities
+    function filterUnreadActivites(thread) {
+        if (thread.__v > 0) {
+            var temp = 0;
+            for (var i = thread.activities.length - 1; i >= 0; i--) {
+                if (i===0) {
+                    thread.activities[i].unreadLine=true;
+                }
+                thread.activities[i].unread = true;
+                temp+=1;
+                if (temp===thread.__v) {
+                    break;
+                }
+            };
+        }
+    };
+    // end filter unread activities
+
+    // function to mark activities as read
+    function markActivitesAsRead(thread) {
+        _.each(thread.activities, function(a){
+            a.unread = false;
+            a.unreadLine=false;
+        });
+    };
+    // end mark activities as read
     $scope.thread = thread;
+
+    filterUnreadActivites($scope.thread);
+
     $scope.people = people;
     $scope.thread.members.push(thread.owner);
     var allowMembers = angular.copy(thread.members);

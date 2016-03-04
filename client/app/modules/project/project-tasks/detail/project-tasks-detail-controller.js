@@ -1,8 +1,43 @@
 angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootScope, $scope, $timeout, task, taskService, $mdToast, $mdDialog, peopleService, $stateParams, messageService, $state, people, uploadService, socket, notificationService) {
-	notificationService.markItemsAsRead({id: $stateParams.taskId}).$promise.then(function() {
-        $rootScope.$broadcast("UpdateCountNumber", {type: "task", number: task.__v});
-    });
+	// set timeout 4s for mark read notification 
+    $timeout(function(){
+        notificationService.markItemsAsRead({id: $stateParams.taskId}).$promise.then(function() {
+            $rootScope.$broadcast("UpdateCountNumber", {type: "task", number: task.__v});
+            markActivitesAsRead($scope.task);
+        });
+    }, 4000);
+    // end timeout
+
+    // function to filter out that unread activities
+    function filterUnreadActivites(task) {
+        if (task.__v > 0) {
+            var temp = 0;
+            for (var i = task.activities.length - 1; i >= 0; i--) {
+                if (i===0) {
+                    task.activities[i].unreadLine=true;
+                }
+                task.activities[i].unread = true;
+                temp+=1;
+                if (temp===task.__v) {
+                    break;
+                }
+            };
+        }
+    };
+    // end filter unread activities
+
+    // function to mark activities as read
+    function markActivitesAsRead(task) {
+        _.each(task.activities, function(a){
+            a.unread = false;
+            a.unreadLine=false;
+        });
+    };
+    // end mark activities as read
     $scope.task = task;
+
+    filterUnreadActivites($scope.task);
+
     $scope.people = people;
     $scope.task.dateEnd = new Date($scope.task.dateEnd);
     $scope.minDate = new Date();
