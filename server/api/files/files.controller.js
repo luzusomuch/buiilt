@@ -244,6 +244,7 @@ exports.update = function(req, res) {
                     ], function(err, file) {
                         if (file.element.type === "file") {
                             if (file.isArchive) {
+                                file.members.push(file.owner);
                                 _.each(file.members, function(member) {
                                     EventBus.emit('socket:emit', {
                                         event: 'file:archive',
@@ -268,6 +269,7 @@ exports.update = function(req, res) {
                                         }
                                     });
                                 });
+                                members.push(req.user._id);
                                 members = _.uniq(members);
                                 _.each(members, function(member) {
                                     EventBus.emit('socket:emit', {
