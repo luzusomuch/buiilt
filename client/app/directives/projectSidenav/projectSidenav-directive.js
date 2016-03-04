@@ -27,17 +27,24 @@ angular.module('buiiltApp').directive('projectSidenav', function(){
             socket.on("file:new", function(data) {
                 $scope.project.element.totalFiles = $scope.project.element.totalFiles + 1;
             });
-
             socket.on("document:new", function(data) {
                 $scope.project.element.totalDocuments = $scope.project.element.totalDocuments +1;
             });
-
             socket.on("thread:new", function(data) {
                 $scope.project.element.totalMessages = $scope.project.element.totalMessages +1;
             });
-
             socket.on("task:new", function(data) {
                 $scope.project.element.totalTasks = $scope.project.element.totalTasks +1;
+            });
+
+            socket.on("file:archive", function(data) {
+                $scope.project.element.totalFiles -=1;
+            });
+            socket.on("document:archive", function(data) {
+                $scope.project.element.totalDocuments -=1;
+            });
+            socket.on("thread:archive", function(data) {
+                $scope.project.element.totalMessages -=1;
             });
         }
     };

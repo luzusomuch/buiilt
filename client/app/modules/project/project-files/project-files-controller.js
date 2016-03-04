@@ -6,6 +6,22 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
 		members:[]
 	};
 
+    socket.on("file:new", function(data) {
+        data.__v=1;
+        $scope.files.push(data);
+        filterAcknowledgeFiles($scope.files);
+    });
+
+    socket.on("file:archive", function(data) {
+        var currentFileIndex=_.findIndex($scope.files, function(t) {
+            return t._id.toString()===data._id.toString();
+        });
+        if (currentFileIndex !== -1) {
+            $scope.files[currentFileIndex].isArchive=true;
+            $scope.files[currentFileIndex].__v = 0;
+        }
+    });
+
     function filterAcknowledgeFiles(files) {
         _.each(files, function(file) {
             var latestActivity = {};
@@ -204,12 +220,6 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
     };
 
     $rootScope.$on("File.Inserted", function(event, data) {
-        $scope.files.push(data);
-        filterAcknowledgeFiles($scope.files);
-    });
-
-    socket.on("file:new", function(data) {
-        data.__v=1;
         $scope.files.push(data);
         filterAcknowledgeFiles($scope.files);
     });

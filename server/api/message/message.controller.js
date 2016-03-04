@@ -54,11 +54,21 @@ function populateThread(thread, res){
         {path: "members", select: "_id email name"},
         {path: "activities.user", select: "_id email name"}
     ], function(err, thread) {
-        EventBus.emit('socket:emit', {
-            event: 'thread:update',
-            room: thread._id.toString(),
-            data: thread
-        });
+        if (thread.isArchive) {
+            _.each(thread.members, function(m) {
+                EventBus.emit('socket:emit', {
+                    event: 'thread:archive',
+                    room: m._id.toString(),
+                    data: thread
+                });
+            });
+        } else {
+            EventBus.emit('socket:emit', {
+                event: 'thread:update',
+                room: thread._id.toString(),
+                data: thread
+            });
+        }
         return res.send(200, thread);
     });
 };

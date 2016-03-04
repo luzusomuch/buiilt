@@ -45,19 +45,15 @@ EventBus.onSeries('Thread.Inserted', function(thread, next) {
 });
 
 EventBus.onSeries('Thread.Updated', function(thread, next) {
-    if (thread._modifiedPaths.indexOf("archive") !== -1 || thread._modifiedPaths.indexOf("unarchive") !== -1) {
-        var owners = thread.members;
-        owners.push(thread.owner);
-        _.remove(owners, thread.editUser._id);
-        var params = {
-            owners: owners,
-            fromUser: thread.editUser._id,
-            element: thread,
-            referenceTo: 'thread',
-            type: (thread._modifiedPaths.indexOf("archive") !== -1) ? "thread-archive" : "thread-unarchive"
-        };
-        NotificationHelper.create(params, function() {
-            return next();
+    if (thread._modifiedPaths.indexOf("archive") !== -1) {
+        Notification.find({"element._id": thread._id, unread: true}, function(err, notifications) {
+            if (err) {return next();}
+            async.each(notifications, function(n, cb) {
+                n.unread = false;
+                n.save(cb);
+            }, function() {
+                return next();
+            });
         });
     } else if (thread.members.length > 0 || thread.oldUsers.length > 0) {
         async.waterfall([

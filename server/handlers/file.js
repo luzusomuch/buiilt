@@ -177,37 +177,15 @@ EventBus.onSeries('File.Updated', function(file, next) {
         NotificationHelper.create(params, function() {
             return next();
         });
-    } else if (file.editType==="archive" || file.editType==="unarchive") {
-        var owners = [];
-        if (file.element.type==="file") {
-            var owners = file.members;
-            owners.push(file.owner);
-        } else if (file.element.type==="document") {
-            _.each(file.fileHistory, function(h) {
-                _.each(h.members, function(m) {
-                    if (m._id) {
-                        owners.push(m._id);
-                    }
-                });
+    } else if (file.editType==="archive") {
+        Notification.find({"element._id": file._id, unread: true}, function(err, notifications) {
+            if (err) {return next();}
+            async.each(notifications, function(n, cb) {
+                n.unread = false;
+                n.save(cb);
+            }, function() {
+                return next();
             });
-            owners = _.uniq(owners);
-        }
-        _.remove(owners, file.editUser._id);
-        var type = file.element.type;
-        if (file.editType==="archive") {
-            type += "-archive";
-        } else if (file.editType==="unarchive") {
-            type += "-unarchive";
-        }
-        var params = {
-            owners : owners,
-            fromUser : file.editUser._id,
-            element : file,
-            referenceTo : file.element.type,
-            type : type
-        };
-        NotificationHelper.create(params, function() {
-            return next();
         });
     } else {
         return next();

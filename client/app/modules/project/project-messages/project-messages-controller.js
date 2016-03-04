@@ -9,6 +9,16 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
         $scope.threads = _.uniq($scope.threads, "_id");
     });
 
+    socket.on("thread:archive", function(data) {
+        var currentThreadIndex=_.findIndex($scope.threads, function(t) {
+            return t._id.toString()===data._id.toString();
+        });
+        if (currentThreadIndex !== -1) {
+            $scope.threads[currentThreadIndex].isArchive=true;
+            $scope.threads[currentThreadIndex].__v = 0;
+        }
+    });
+
     $rootScope.$on("Thread.Inserted", function(event, data) {
         $scope.threads.push(data);
         $scope.threads = _.uniq($scope.threads, "_id"); 
@@ -207,7 +217,7 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
                 
                 $scope.selectedThread = $rootScope.projectSelectedMessage = res;
                 notificationService.markItemsAsRead({id: res._id}).$promise.then(function() {
-                    $rootScope.$broadcast("UpdateCountNumber", {type: "message", number: $scope.selectedThread.__v});
+                    $rootScope.$broadcast("UpdateCountNumber", {type: "message", number: 1});
                     var currentThreadIndex = _.findIndex($scope.threads, function(message) {
                         return message._id.toString()===$scope.selectedThread._id.toString();
                     });

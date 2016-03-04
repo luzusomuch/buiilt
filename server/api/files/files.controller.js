@@ -243,18 +243,48 @@ exports.update = function(req, res) {
                         {path: "activities.acknowledgeUsers._id", select: "_id email name"}
                     ], function(err, file) {
                         if (file.element.type === "file") {
-                            EventBus.emit('socket:emit', {
-                                event: 'file:update',
-                                room: file._id.toString(),
-                                data: JSON.parse(JSON.stringify(file))
-                            });
+                            if (file.isArchive) {
+                                _.each(file.members, function(member) {
+                                    EventBus.emit('socket:emit', {
+                                        event: 'file:archive',
+                                        room: member._id.toString(),
+                                        data: JSON.parse(JSON.stringify(file))
+                                    });
+                                });
+                            } else {
+                                EventBus.emit('socket:emit', {
+                                    event: 'file:update',
+                                    room: file._id.toString(),
+                                    data: JSON.parse(JSON.stringify(file))
+                                });
+                            }
                         } else {
-                            EventBus.emit('socket:emit', {
-                                event: 'document:update',
-                                room: file._id.toString(),
-                                data: JSON.parse(JSON.stringify(file))
-                            });
+                            if (file.isArchive) {
+                                var members = [];
+                                _.each(file.fileHistory, function(history) {
+                                    _.each(history.members, function(member) {
+                                        if (member._id) {
+                                            members.push(member._id);
+                                        }
+                                    });
+                                });
+                                members = _.uniq(members);
+                                _.each(members, function(member) {
+                                    EventBus.emit('socket:emit', {
+                                        event: 'document:archive',
+                                        room: member.toString(),
+                                        data: JSON.parse(JSON.stringify(file))
+                                    });
+                                });
+                            } else {
+                                EventBus.emit('socket:emit', {
+                                    event: 'document:update',
+                                    room: file._id.toString(),
+                                    data: JSON.parse(JSON.stringify(file))
+                                });
+                            }
                         }
+
                         RelatedItem.responseWithRelated("file", file, req.user, res);
                     });
                 });

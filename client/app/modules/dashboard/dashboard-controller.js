@@ -61,6 +61,41 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         });
     };
 
+    // socket section
+    socket.on("file:archive", function(data) {
+        var currentFileIndex=_.findIndex($scope.myFiles, function(t) {
+            if (t.element.type==="file") {
+                return t._id.toString()===data._id.toString();
+            }
+        });
+        if (currentFileIndex !== -1) {
+            $scope.myFiles.splice(currentFileIndex,1);
+            $rootScope.$broadcast("DashboardSidenav-UpdateNumber", {type: "file", number: 1});
+        }
+    });
+
+    socket.on("document:archive", function(data) {
+        var currentFileIndex=_.findIndex($scope.myFiles, function(t) {
+            if (t.element.type==="document") {
+                return t._id.toString()===data._id.toString();
+            }
+        });
+        if (currentFileIndex !== -1) {
+            $scope.myFiles.splice(currentFileIndex,1);
+            $rootScope.$broadcast("DashboardSidenav-UpdateNumber", {type: "document", number: 1});
+        }
+    });
+
+    socket.on("thread:archive", function(data) {
+        var currentThreadIndex=_.findIndex($scope.myMessages, function(t) {
+            return t._id.toString()===data._id.toString();
+        });
+        if (currentThreadIndex !== -1) {
+            $scope.myMessages.splice(index, 1);
+            $rootScope.$broadcast("DashboardSidenav-UpdateNumber", {type: "message", number: 1});
+        }
+    });
+
     socket.on("dashboard:new", function(data) {
         if (data.type==="thread") {
             var index = getItemIndex($scope.myMessages, data._id);
@@ -141,6 +176,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             filterAcknowledgeFiles($scope.myFiles);
         }
     });
+    // end socket section
 
     $scope.showToast = function(value) {
         $mdToast.show($mdToast.simple().textContent(value).position('bottom','left').hideDelay(3000));

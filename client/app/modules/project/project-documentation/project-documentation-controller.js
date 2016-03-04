@@ -57,6 +57,16 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
         $scope.documents.push(data);
     });
 
+    socket.on("document:archive", function(data) {
+        var currentFileIndex=_.findIndex($scope.documents, function(t) {
+            return t._id.toString()===data._id.toString();
+        });
+        if (currentFileIndex !== -1) {
+            $scope.documents[currentFileIndex].isArchive=true;
+            $scope.documents[currentFileIndex].__v = 0;
+        }
+    });
+
     $scope.selectChip = function(index) {
         $scope.tags[index].select = !$scope.tags[index].select;
     };
