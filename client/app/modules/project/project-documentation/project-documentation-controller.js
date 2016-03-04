@@ -61,9 +61,20 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
         }
     });
 
+    var listenerCleanFnPushFromDashboard = $rootScope.$on("Dashboard.Document.Update", function(event, data) {
+        var index = _.findIndex($scope.documents, function(document) {
+            return document._id.toString()===data.file._id.toString();
+        });
+        if (index !== -1 && ($scope.documents[index] && $scope.documents[index].uniqId!==data.uniqId)) {
+            $scope.documents[index].uniqId = data.uniqId;
+            $scope.documents[index].__v+=1;
+        }
+    });
+
     $scope.$on('$destroy', function() {
         listenerCleanFnPush();
         listenerCleanFnRead();
+        listenerCleanFnPushFromDashboard();
     });
 
     socket.on("document:archive", function(data) {
@@ -76,6 +87,10 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
         }
     });
 
+    socket.on("dashboard:new", function(data) {
+        if (data.type==="file" && data.file.element.type==="document") 
+            $rootScope.$emit("Dashboard.Document.Update", data);
+    });
     
     $scope.selectChip = function(index) {
         $scope.tags[index].select = !$scope.tags[index].select;

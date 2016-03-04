@@ -60,7 +60,8 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
     });
 
     socket.on("dashboard:new", function(data) {
-        $rootScope.$emit("Dashboard.Thread.Update", data);
+        if (data.type==="thread") 
+            $rootScope.$emit("Dashboard.Thread.Update", data);
     });
 
     var listenerCleanFnPushFromDashboard = $rootScope.$on("Dashboard.Thread.Update", function(event, data) {

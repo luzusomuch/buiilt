@@ -241,6 +241,7 @@ exports.uploadReversion = function(req, res) {
                                     data: {
                                         type: "file",
                                         _id: file._id,
+                                        uniqId: randomId,
                                         file: JSON.parse(JSON.stringify(file)),
                                         newNotification: {randomId: randomId, fromUser: req.user, type: "file-upload-reversion"}
                                     }
@@ -252,6 +253,7 @@ exports.uploadReversion = function(req, res) {
                                     data: {
                                         type: "file",
                                         _id: file._id,
+                                        uniqId: randomId,
                                         file: JSON.parse(JSON.stringify(file)),
                                         newNotification: {randomId: randomId, fromUser: req.user, type: "document-upload-reversion"}
                                     }

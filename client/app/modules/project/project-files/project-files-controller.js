@@ -22,6 +22,11 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
         }
     });
 
+    socket.on("dashboard:new", function(data) {
+        if (data.type==="file" && data.file.element.type==="file") 
+            $rootScope.$emit("Dashboard.File.Update", data);
+    });
+
     var listenerCleanFnRead = $rootScope.$on("File.Read", function(event, data) {
         var index = _.findIndex($scope.files, function(file) {
             return file._id.toString()===data._id.toString();
@@ -41,10 +46,21 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
         $scope.files[index].__v = 0;
     });
 
+    var listenerCleanFnPushFromDashboard = $rootScope.$on("Dashboard.File.Update", function(event, data) {
+        var index = _.findIndex($scope.files, function(file) {
+            return file._id.toString()===data.file._id.toString();
+        });
+        if (index !== -1 && ($scope.files[index] && $scope.files[index].uniqId!==data.uniqId)) {
+            $scope.files[index].uniqId = data.uniqId;
+            $scope.files[index].__v+=1;
+        }
+    });
+
     $scope.$on('$destroy', function() {
         listenerCleanFnPush();
         listenerCleanFnRead();
         listenerCleanFnAcknow();
+        listenerCleanFnPushFromDashboard();
     });
 
     function filterAcknowledgeFiles(files) {
