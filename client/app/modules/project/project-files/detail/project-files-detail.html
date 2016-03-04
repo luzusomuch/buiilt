@@ -10,7 +10,7 @@
 				    <md-button ng-click="openFileHistory($mdOpenMenu, $event)">View File</md-button>
                     <md-menu-content width="4">
                         <md-menu-item ng-click="openHistoryDetail($event, {name: file.name, description: file.description, link: file.path})">
-                            <md-button>{{file.name}} (Version: Current version)</md-button>
+                            <md-button>Current Version: {{file.createdAt | date: 'dd-MM-yyyy'}}</md-button>
                         </md-menu-item>
                         <md-menu-item ng-click="openHistoryDetail($event, history)" ng-repeat="history in file.fileHistory">
                             <md-button>Version {{$index+1}}: {{history.createdAt | date: 'dd-MM-yyyy'}}</md-button>

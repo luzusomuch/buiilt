@@ -195,9 +195,9 @@ exports.update = function(req, res) {
                         _.each(data.tags, function(tag) {
                             tags.push(tag.name);
                         });
-                        activity.element.name = (file.name.length !== data.name.length) ? file.name : null;
-                        activity.element.description = (file.description && file.description.length !== data.description.length) ? file.description : null;
-                        activity.element.tags = (file.tags.length !== data.tags.length) ? file.tags : null;
+                        activity.element.name = (file.name.length !== data.name.length) ? data.name : null;
+                        activity.element.description = (file.description && file.description.length !== data.description.length) ? data.description : null;
+                        activity.element.tags = (file.tags.length !== data.tags.length) ? data.tags : null;
                         file.name = data.name;
                         file.description = data.description;
                         file.tags = tags;

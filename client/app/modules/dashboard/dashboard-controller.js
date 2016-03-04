@@ -628,15 +628,13 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     // end file section
 	
     $scope.openLocation = function(item, type) {
-        notificationService.read({_id : item._id}).$promise.then(function() {
-            if (type === "thread") 
-                $state.go("project.messages.detail", {id: item.project._id, messageId: item._id});
-            else if (type === "file") {
-                $state.go("project.files.detail", {id: item.project._id, fileId: item._id});
-            } else if (type === "document") {
-                $state.go("project.documentation.detail", {id: item.project._id, documentId: item._id});
-            }
-        });
+        if (type === "thread") 
+            $state.go("project.messages.detail", {id: item.project._id, messageId: item._id});
+        else if (type === "file") {
+            $state.go("project.files.detail", {id: item.project._id, fileId: item._id});
+        } else if (type === "document") {
+            $state.go("project.documentation.detail", {id: item.project._id, documentId: item._id});
+        }
     };
 
     // filter for thread
