@@ -69,7 +69,7 @@
                             <span ng-switch-when="upload-file" layout="column">{{activity.element.name}}
                             </span>
 						
-							<span ng-switch-when="edit"> ({{(activity.element.name) ? "Name: "+activity.element.name+", " : ""}} {{(activity.element.description) ? "Description: "+activity.element.description+", " : ""}} {{(activity.element.tags) ? "Tags : " : ""}}<span ng-repeat="tag in activity.element.tags">{{tag}}, </span>)</span>
+							<span ng-switch-when="edit"> ({{(activity.element.name) ? "Name: "+activity.element.name+", " : ""}} {{(activity.element.description) ? "Description: "+activity.element.description+", " : ""}} {{(activity.element.tags) ? "Tags : " : ""}}<span ng-repeat="tag in activity.element.tags">{{tag.name}}, </span>)</span>
 
 							<span ng-switch-when="assign"><span ng-repeat="member in activity.element.members">{{member}}, </span></span>
 
