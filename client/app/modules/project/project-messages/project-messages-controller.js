@@ -24,6 +24,15 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
         $scope.threads = _.uniq($scope.threads, "_id"); 
     });
 
+    $rootScope.$on("Thread.Read", function(event, data) {
+        var index = _.findIndex($scope.threads, function(thread) {
+            return thread._id.toString()===data._id.toString();
+        });
+        if (index !== -1) {
+            $scope.threads[index].__v=0;
+        }
+    });
+
     // filter section
     $scope.search = function(thread) {
         if ($scope.name && $scope.name.length > 0) {

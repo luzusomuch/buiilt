@@ -15,7 +15,8 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
     // set timeout 4s to mark as read 
     $timeout(function() {
         notificationService.markItemsAsRead({id: $stateParams.messageId}).$promise.then(function() {
-            $rootScope.$broadcast("UpdateCountNumber", {type: "message", number: thread.__v});
+            $rootScope.$broadcast("UpdateCountNumber", {type: "message", number: 1});
+            $rootScope.$broadcast("Thread.Read", thread);
             markActivitesAsRead($scope.thread);
         });
     }, 4000);

@@ -53,8 +53,9 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
     });
 
     socket.on("document:new", function(data) {
-        data.__v=1;
+        // data.__v=1;
         $scope.documents.push(data);
+        _.uniq($scope.documents, "_id");
     });
 
     socket.on("document:archive", function(data) {
@@ -64,6 +65,15 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
         if (currentFileIndex !== -1) {
             $scope.documents[currentFileIndex].isArchive=true;
             $scope.documents[currentFileIndex].__v = 0;
+        }
+    });
+
+    $rootScope.$on("Document.Read", function(event, data) {
+        var index = _.findIndex($scope.documents, function(document) {
+            return document._id.toString()===data._id.toString();
+        });
+        if (index !== -1) {
+            $scope.documents[index].__v=0;
         }
     });
 

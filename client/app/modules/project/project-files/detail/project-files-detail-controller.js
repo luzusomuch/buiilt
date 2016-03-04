@@ -16,7 +16,8 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
     // set timeout 4s for mark as read
     $timeout(function() {
         notificationService.markItemsAsRead({id: $stateParams.fileId}).$promise.then(function() {
-            $rootScope.$broadcast("UpdateCountNumber", {type: "file", number: file.__v});
+            $rootScope.$broadcast("UpdateCountNumber", {type: "file", number: 1});
+            $rootScope.$broadcast("File.Read", file);
             markActivitesAsRead($scope.file);
         });
     }, 4000);

@@ -22,6 +22,15 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
         }
     });
 
+    $rootScope.$on("File.Read", function(event, data) {
+        var index = _.findIndex($scope.files, function(file) {
+            return file._id.toString()===data._id.toString();
+        });
+        if (index !== -1) {
+            $scope.files[index].__v=0;
+        }
+    });
+
     function filterAcknowledgeFiles(files) {
         _.each(files, function(file) {
             var latestActivity = {};
