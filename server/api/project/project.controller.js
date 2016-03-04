@@ -158,23 +158,47 @@ exports.show = function(req, res){
             req.project = project;
             Notification.find({owner: req.user._id, unread: true, "element.project": project._id, $or:[{referenceTo: "task"}, {referenceTo: "thread"}, {referenceTo: "file"}, {referenceTo: "document"}]}, function(err, notifications) {
                 if (err) {return res.send(500,err);}
-                project.element = {
-                    totalTasks: 0,
-                    totalMessages: 0,
-                    totalFiles: 0,
-                    totalDocuments: 0,
-                };
+                var tasks = [];
+                var threads = [];
+                var files = [];
+                var documents = [];
                 _.each(notifications, function(notification) {
                     if (notification.referenceTo === "task") {
-                        project.element.totalTasks +=1;
+                        tasks.push(notification);
                     } else if (notification.referenceTo === "thread") {
-                        project.element.totalMessages +=1;
+                        threads.push(notification);
                     } else if (notification.referenceTo === "file") {
-                        project.element.totalFiles +=1;
+                        files.push(notification);
                     } else {
-                        project.element.totalDocuments +=1;
+                        documents.push(notification);
                     }
                 });
+                var uniqTasks = _.map(_.groupBy(tasks,function(doc){
+                    return doc.element._id;
+                }),function(grouped){
+                  return grouped[0];
+                });
+                var uniqThreads = _.map(_.groupBy(threads,function(doc){
+                    return doc.element._id;
+                }),function(grouped){
+                  return grouped[0];
+                });
+                var uniqFiles = _.map(_.groupBy(files,function(doc){
+                    return doc.element._id;
+                }),function(grouped){
+                  return grouped[0];
+                });
+                var uniqDocuments = _.map(_.groupBy(documents,function(doc){
+                    return doc.element._id;
+                }),function(grouped){
+                  return grouped[0];
+                });
+                project.element = {
+                    totalTasks: uniqTasks.length,
+                    totalMessages: uniqThreads.length,
+                    totalFiles: uniqFiles.length,
+                    totalDocuments: uniqDocuments.length,
+                };
                 return res.send(200, project);
             });
         }

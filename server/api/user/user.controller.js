@@ -391,7 +391,42 @@ exports.me = function (req, res, next) {
             Notification.find({owner: user._id, unread: true, "element.project": project._id, $or:[{referenceTo: "task"}, {referenceTo: "thread"}, {referenceTo: "file"}, {referenceTo: "document"}, {referenceTo: "tender"}]}, function(err, notifications) {
                 if (err) {cb();}
                 else {
-                    project.__v = notifications.length;
+                    var tasks = [];
+                    var threads = [];
+                    var files = [];
+                    var documents = [];
+                    _.each(notifications, function(notification) {
+                        if (notification.referenceTo === "task") {
+                            tasks.push(notification);
+                        } else if (notification.referenceTo === "thread") {
+                            threads.push(notification);
+                        } else if (notification.referenceTo === "file") {
+                            files.push(notification);
+                        } else {
+                            documents.push(notification);
+                        }
+                    });
+                    var uniqTasks = _.map(_.groupBy(tasks,function(doc){
+                        return doc.element._id;
+                    }),function(grouped){
+                      return grouped[0];
+                    });
+                    var uniqThreads = _.map(_.groupBy(threads,function(doc){
+                        return doc.element._id;
+                    }),function(grouped){
+                      return grouped[0];
+                    });
+                    var uniqFiles = _.map(_.groupBy(files,function(doc){
+                        return doc.element._id;
+                    }),function(grouped){
+                      return grouped[0];
+                    });
+                    var uniqDocuments = _.map(_.groupBy(documents,function(doc){
+                        return doc.element._id;
+                    }),function(grouped){
+                      return grouped[0];
+                    });
+                    project.__v = uniqTasks.length + uniqThreads.length + uniqFiles.length + uniqDocuments.length;
                     cb();
                 }
             });
