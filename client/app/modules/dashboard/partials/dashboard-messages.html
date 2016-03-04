@@ -30,7 +30,7 @@
 				<h3>{{ thread.name }} - {{thread.project.name}}</h3>
 				<h4>Assignees: <span ng-repeat="member in thread.members track by $index">{{member.name}}, </span><span ng-repeat="member in thread.notMembers track by $index">{{member}}</h4>
 				<p style="color: #2196F3">
-                    Updates: {{thread.element.notifications.length}}
+                    Updates: {{thread.element.notifications.length}}<!-- 
                     <div ng-show="isHover" class="notification-hover">
                         <md-list ng-cloak>
                             <md-list-item layout-padding ng-repeat="n in thread.element.notifications">
@@ -49,7 +49,7 @@
                                 </p>
                             </md-list-item>
                         </md-list>
-                    </div>
+                    </div> -->
                 </p>
 	        </div>
 			

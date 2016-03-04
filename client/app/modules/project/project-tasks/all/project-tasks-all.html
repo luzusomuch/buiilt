@@ -47,7 +47,7 @@
 				<h3>{{ task.description }}</h3>
 				<h4>Due: {{(task.element.due) ? task.element.due : task.dateEnd | date: 'dd/MM/yyyy'}} | Assignees: <span ng-repeat="member in task.members track by $index">{{member.name}}, </span><span ng-repeat="member in task.notMembers track by $index">{{member}}</h4>
 				<p ng-show="task.__v > 0" style="color: #2196F3">Updates: {{task.__v}}</p>
-	          	
+	          	<p ng-show="task.__v==0">No New Updates</p>
 				<!-- <span ng-show="task.element.notificationType">{{(task.element.notificationBy._id==currentUser._id) ? "You" : task.element.notificationBy.name}} has
 	          		<span ng-show="task.element.notificationType=='task-assign'"> assigned you to this task</span>
 	          		<span ng-show="task.element.notificationType=='task-completed'"> mark this task as completed</span>

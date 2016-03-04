@@ -61,7 +61,7 @@
 			
 			<h3>{{ thread.name }}</h3>
 			<h4>Assignees: <span ng-repeat="member in thread.members track by $index">{{member.name}}, </span><span ng-repeat="member in thread.notMembers track by $index">{{member}}</h4>
-            
+            <p>No New Updates</p>
             <!-- <span class="md-body-2" ng-show="thread.element.notificationBy">{{(thread.element.notificationBy._id==currentUser._id) ? "You" : thread.element.notificationBy.name}} has
                 <span ng-show="thread.element.notificationType=='thread-assign'">
                     assigned <span ng-repeat="member in thread.members">{{(member._id==currentUser._id) ? "you" : member.name}}, </span>

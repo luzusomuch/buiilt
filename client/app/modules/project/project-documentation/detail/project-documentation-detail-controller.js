@@ -1,5 +1,17 @@
 angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', function($rootScope, $scope, document, uploadService, $mdDialog, $mdToast, $stateParams, fileService, socket, notificationService, peopleService) {
     $scope.document = document;
+    // Check owner team
+    $scope.isOwnerTeam=false;
+    if (_.findIndex($rootScope.currentTeam.leader, function(leader) {
+        return leader._id.toString()===document.owner._id.toString();
+    }) !== -1 || _.findIndex($rootScope.currentTeam.member, function(member) {
+        if (member._id && member.status=="Active") {
+            return member._id._id.toString()===document.owner._id.toString();
+        }
+    }) !== -1) {
+        $scope.isOwnerTeam=true;
+    }
+    // end check owner team
     getAcvititiesAndHistoriesByUser($scope.document);
     notificationService.markItemsAsRead({id: $stateParams.documentId}).$promise.then(function() {
         $rootScope.$broadcast("UpdateCountNumber", {type: "document", number: document.__v});
@@ -177,7 +189,6 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
             versionTags: [],
             teamMembers: [],
         };
-        $scope.allowUploadReversion = ($scope.document.owner._id == $rootScope.currentUser._id) ? true : false;
     };
 
     setUploadReversion();

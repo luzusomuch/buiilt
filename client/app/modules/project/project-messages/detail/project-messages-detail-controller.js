@@ -1,4 +1,16 @@
 angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q, $rootScope, $scope, $timeout, $stateParams, messageService, $mdToast, $mdDialog, $state, thread, peopleService, taskService, uploadService, people, clipboard, socket, notificationService) {
+    // Check owner team
+    $scope.isOwnerTeam=false;
+    if (_.findIndex($rootScope.currentTeam.leader, function(leader) {
+        return leader._id.toString()===thread.owner._id.toString();
+    }) !== -1 || _.findIndex($rootScope.currentTeam.member, function(member) {
+        if (member._id && member.status=="Active") {
+            return member._id._id.toString()===thread.owner._id.toString();
+        }
+    }) !== -1) {
+        $scope.isOwnerTeam=true;
+    }
+    // end check owner team
     notificationService.markItemsAsRead({id: $stateParams.messageId}).$promise.then(function() {
         $rootScope.$broadcast("UpdateCountNumber", {type: "message", number: thread.__v});
     });

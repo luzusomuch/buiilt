@@ -1,5 +1,17 @@
 angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope, $rootScope, file, $mdDialog, uploadService, fileService, $mdToast, peopleService, $stateParams, messageService, taskService, $state, people, socket, notificationService) {
     $scope.file = file;
+    // Check owner team
+    $scope.isOwnerTeam=false;
+    if (_.findIndex($rootScope.currentTeam.leader, function(leader) {
+        return leader._id.toString()===file.owner._id.toString();
+    }) !== -1 || _.findIndex($rootScope.currentTeam.member, function(member) {
+        if (member._id && member.status=="Active") {
+            return member._id._id.toString()===file.owner._id.toString();
+        }
+    }) !== -1) {
+        $scope.isOwnerTeam=true;
+    }
+    // end check owner team
     notificationService.markItemsAsRead({id: $stateParams.fileId}).$promise.then(function() {
         $rootScope.$broadcast("UpdateCountNumber", {type: "file", number: file.__v});
     });
