@@ -22,13 +22,29 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
         }
     });
 
-    $rootScope.$on("File.Read", function(event, data) {
+    var listenerCleanFnRead = $rootScope.$on("File.Read", function(event, data) {
         var index = _.findIndex($scope.files, function(file) {
             return file._id.toString()===data._id.toString();
         });
         if (index !== -1) {
             $scope.files[index].__v=0;
         }
+    });
+
+    var listenerCleanFnPush = $rootScope.$on("File.Inserted", function(event, data) {
+        $scope.files.push(data);
+        filterAcknowledgeFiles($scope.files);
+    });
+
+    var listenerCleanFnAcknow = $rootScope.$on("Project-File-Acknowledge", function(event, index) {
+        $scope.files[index].element.notificationType = null;
+        $scope.files[index].__v = 0;
+    });
+
+    $scope.$on('$destroy', function() {
+        listenerCleanFnPush();
+        listenerCleanFnRead();
+        listenerCleanFnAcknow();
     });
 
     function filterAcknowledgeFiles(files) {
@@ -193,7 +209,7 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
 				mixpanel.identify($rootScope.currentUser._id);
 				mixpanel.track("New File Created");
 				
-                $rootScope.$broadcast("File.Inserted", res);
+                $rootScope.$emit("File.Inserted", res);
                 $state.go("project.files.detail", {id: res.project._id, fileId: res._id});
 			}, function(err) {
 				$scope.showToast("There Has Been An Error...");
@@ -227,11 +243,6 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
 	$scope.showToast = function(value) {
         $mdToast.show($mdToast.simple().textContent(value).position('bottom','left').hideDelay(3000));
     };
-
-    $rootScope.$on("File.Inserted", function(event, data) {
-        $scope.files.push(data);
-        filterAcknowledgeFiles($scope.files);
-    });
 
 	getProjectMembers($stateParams.id);
 
@@ -288,11 +299,11 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
             $scope.showToast("Acknowledgement Has Been Sent Successfully.");
             $scope.closeModal();
             notificationService.markItemsAsRead({id: file._id}).$promise.then(function() {
-                $rootScope.$broadcast("UpdateCountNumber", {type: "file", number: file.__v});
+                $rootScope.$emit("UpdateCountNumber", {type: "file", number: file.__v});
                 var currentIndex = _.findIndex($scope.files, function(f) {
                     return f._id.toString()===file._id.toString();
                 });
-                $rootScope.$broadcast("Project-File-Acknowledge", currentIndex);
+                $rootScope.$emit("Project-File-Acknowledge", currentIndex);
             });
         }, function(err) {
             $scope.showToast("Error");
@@ -302,9 +313,4 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
     $scope.closeModal = function() {
         $mdDialog.cancel();
     };
-
-    $rootScope.$on("Project-File-Acknowledge", function(event, index) {
-        $scope.files[index].element.notificationType = null;
-        $scope.files[index].__v = 0;
-    });
 });

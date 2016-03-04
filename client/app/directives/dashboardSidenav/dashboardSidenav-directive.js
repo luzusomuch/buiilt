@@ -32,7 +32,7 @@ angular.module('buiiltApp').directive('dashboardSidenav', function(){
                 }
             });
 
-            $rootScope.$on("DashboardSidenav-UpdateNumber", function(event, data) {
+            var listenerCleanFn = $rootScope.$on("DashboardSidenav-UpdateNumber", function(event, data) {
                 if (data.type==="task") {
                     $scope.totalTaskUpdates = $scope.totalTaskUpdates-data.number;
                 } else if (data.type==="file") {
@@ -42,6 +42,10 @@ angular.module('buiiltApp').directive('dashboardSidenav', function(){
                 } else if (data.type==="message") {
                     $scope.messages.splice(0, data.number);
                 }
+            });
+
+            $scope.$on('$destroy', function() {
+                listenerCleanFn();
             });
 
             socket.on("dashboard:new", function(data) {

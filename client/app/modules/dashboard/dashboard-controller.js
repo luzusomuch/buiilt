@@ -34,7 +34,11 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     };
     filterAcknowledgeFiles($scope.myFiles);
 
-    $rootScope.$on("Dashboard-Update", function(event, data) {
+    $scope.$on('$destroy', function() {
+        listenerCleanFn();
+    });
+
+    var listenerCleanFn = $rootScope.$on("Dashboard-Update", function(event, data) {
         if (data.type==="thread") {
             $scope.myMessages.splice(data.index, 1);
         } if (data.type==="file" || data.type==="document") {
@@ -70,7 +74,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         });
         if (currentFileIndex !== -1) {
             $scope.myFiles.splice(currentFileIndex,1);
-            $rootScope.$broadcast("DashboardSidenav-UpdateNumber", {type: "file", number: 1});
+            $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "file", number: 1});
         }
     });
 
@@ -82,7 +86,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         });
         if (currentFileIndex !== -1) {
             $scope.myFiles.splice(currentFileIndex,1);
-            $rootScope.$broadcast("DashboardSidenav-UpdateNumber", {type: "document", number: 1});
+            $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "document", number: 1});
         }
     });
 
@@ -92,7 +96,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         });
         if (currentThreadIndex !== -1) {
             $scope.myMessages.splice(currentThreadIndex, 1);
-            $rootScope.$broadcast("DashboardSidenav-UpdateNumber", {type: "message", number: 1});
+            $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "message", number: 1});
         }
     });
 
@@ -288,7 +292,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             $scope.showToast((res.completed)?"Task Has Been Marked Completed.":"Task Has Been Marked Incomplete.");
             notificationService.markItemsAsRead({id: res._id}).$promise.then(function() {
                 $scope.myTasks.splice(index ,1);
-                $rootScope.$broadcast("DashboardSidenav-UpdateNumber", {type: "task", number: 1});
+                $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "task", number: 1});
             });
         }, function(err) {$scope.showToast("Error");});
     };
@@ -492,11 +496,11 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                 
                 $scope.selectedThread = $rootScope.selectedMessage = res;
                 notificationService.markItemsAsRead({id: res._id}).$promise.then(function() {
-                    $rootScope.$broadcast("DashboardSidenav-UpdateNumber", {type: "message", number: 1});
+                    $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "message", number: 1});
                     var currentThreadIndex = _.findIndex($scope.myMessages, function(message) {
                         return message._id.toString()===$scope.selectedThread._id.toString();
                     });
-                    $rootScope.$broadcast("Dashboard-Update", {type: "thread", index: currentThreadIndex});
+                    $rootScope.$emit("Dashboard-Update", {type: "thread", index: currentThreadIndex});
                 });
             }, function(err) {$scope.showToast("There Has Been An Error...");});
         }
@@ -611,11 +615,11 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             $scope.showToast("Acknowledgement Has Been Sent Successfully.");
             $scope.closeModal();
             notificationService.markItemsAsRead({id: file._id}).$promise.then(function() {
-                $rootScope.$broadcast("DashboardSidenav-UpdateNumber", {type: file.element.type, number: 1});
+                $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: file.element.type, number: 1});
                 var currentIndex = _.findIndex($scope.myFiles, function(f) {
                     return f._id.toString()===file._id.toString();
                 });
-                $rootScope.$broadcast("Dashboard-Update", {type: file.element.type, index: currentIndex});
+                $rootScope.$emit("Dashboard-Update", {type: file.element.type, index: currentIndex});
             });
         }, function(err) {
             $scope.showToast("Error");

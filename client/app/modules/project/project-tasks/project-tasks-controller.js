@@ -30,9 +30,13 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
         $scope.tasks = _.uniq($scope.tasks, "_id");
     });
 
-    $rootScope.$on("Task.Inserted", function(event, data) {
+    var listenerCleanFnPush = $rootScope.$on("Task.Inserted", function(event, data) {
         $scope.tasks.push(data);
         $scope.tasks = _.uniq($scope.tasks, "_id");
+    });
+
+    $scope.$on('$destroy', function() {
+        listenerCleanFnPush();
     });
 
     // filter section
@@ -255,7 +259,7 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
 					mixpanel.identify($rootScope.currentUser._id);
 					mixpanel.track("New Task Created");
 					
-                    $rootScope.$broadcast("Task.Inserted", res);
+                    $rootScope.$emit("Task.Inserted", res);
 					$state.go("project.tasks.detail", {id: res.project._id, taskId: res._id});
 				}, function(err) {$scope.showToast("There Has Been An Error...");});
 			} else {
@@ -345,7 +349,7 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
         taskService.update({id: task._id}, task).$promise.then(function(res) {
             $scope.showToast((res.completed)?"Task Has Been Marked Completed.":"Task Has Been Marked Incomplete.");
             notificationService.markItemsAsRead({id: res._id}).$promise.then(function() {
-                $rootScope.$broadcast("UpdateCountNumber", {type: "task", number: task.__v});
+                $rootScope.$emit("UpdateCountNumber", {type: "task", number: task.__v});
                 task.__v = 0;
             });
         }, function(err) {$scope.showToast("Error");});
@@ -354,7 +358,7 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
     $scope.markRead = function(item, type) {
         notificationService.markItemsAsRead({id: item._id}).$promise.then(function() {
             $scope.showToast("You Have Successfully Marked This Read.");
-            $rootScope.$broadcast("UpdateCountNumber", {type: type, number: item.__v});
+            $rootScope.$emit("UpdateCountNumber", {type: type, number: item.__v});
             item.element.notificationType = null;
             item.__v = 0;
         }, function(err){$scope.showToast("Error");});

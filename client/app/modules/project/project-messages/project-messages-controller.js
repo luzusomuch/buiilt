@@ -19,18 +19,29 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
         }
     });
 
-    $rootScope.$on("Thread.Inserted", function(event, data) {
+    var listenerCleanFnPush = $rootScope.$on("Thread.Inserted", function(event, data) {
         $scope.threads.push(data);
         $scope.threads = _.uniq($scope.threads, "_id"); 
     });
 
-    $rootScope.$on("Thread.Read", function(event, data) {
+    var listenerCleanFnRead = $rootScope.$on("Thread.Read", function(event, data) {
         var index = _.findIndex($scope.threads, function(thread) {
             return thread._id.toString()===data._id.toString();
         });
         if (index !== -1) {
             $scope.threads[index].__v=0;
         }
+    });
+
+    var listenerCleanFnAcknow = $rootScope.$on("Project-Message-Update", function(event, index) {
+        $scope.threads[index].element.notificationType = null;
+        $scope.threads[index].__v = 0;
+    });
+
+    $scope.$on('$destroy', function() {
+        listenerCleanFnPush();
+        listenerCleanFnRead();
+        listenerCleanFnAcknow();
     });
 
     // filter section
@@ -163,7 +174,7 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
 			$scope.thread.type = "project-message";
 			messageService.create({id: $stateParams.id},$scope.thread).$promise.then(function(res) {
 				$scope.cancelNewMessageModal();
-                $rootScope.$broadcast("Thread.Inserted", res);
+                $rootScope.$emit("Thread.Inserted", res);
 				$scope.showToast("New Message Thread Created Successfully.");
 				
 				//Track Message Thread Creation
@@ -226,18 +237,13 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
                 
                 $scope.selectedThread = $rootScope.projectSelectedMessage = res;
                 notificationService.markItemsAsRead({id: res._id}).$promise.then(function() {
-                    $rootScope.$broadcast("UpdateCountNumber", {type: "message", number: 1});
+                    $rootScope.$emit("UpdateCountNumber", {type: "message", number: 1});
                     var currentThreadIndex = _.findIndex($scope.threads, function(message) {
                         return message._id.toString()===$scope.selectedThread._id.toString();
                     });
-                    $rootScope.$broadcast("Project-Message-Update", currentThreadIndex);
+                    $rootScope.$emit("Project-Message-Update", currentThreadIndex);
                 });
             }, function(err) {$scope.showToast("There Has Been An Error...");});
         }
     };
-
-    $rootScope.$on("Project-Message-Update", function(event, index) {
-        $scope.threads[index].element.notificationType = null;
-        $scope.threads[index].__v = 0;
-    });
 });

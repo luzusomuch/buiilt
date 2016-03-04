@@ -48,8 +48,22 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
     };
     // end filter
 
-    $rootScope.$on("Document.Uploaded", function(event, data) {
+    var listenerCleanFnPush = $rootScope.$on("Document.Uploaded", function(event, data) {
         $scope.documents.push(data);
+    });
+
+    var listenerCleanFnRead = $rootScope.$on("Document.Read", function(event, data) {
+        var index = _.findIndex($scope.documents, function(document) {
+            return document._id.toString()===data._id.toString();
+        });
+        if (index !== -1) {
+            $scope.documents[index].__v=0;
+        }
+    });
+
+    $scope.$on('$destroy', function() {
+        listenerCleanFnPush();
+        listenerCleanFnRead();
     });
 
     socket.on("document:archive", function(data) {
@@ -62,15 +76,7 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
         }
     });
 
-    $rootScope.$on("Document.Read", function(event, data) {
-        var index = _.findIndex($scope.documents, function(document) {
-            return document._id.toString()===data._id.toString();
-        });
-        if (index !== -1) {
-            $scope.documents[index].__v=0;
-        }
-    });
-
+    
     $scope.selectChip = function(index) {
         $scope.tags[index].select = !$scope.tags[index].select;
     };
@@ -86,7 +92,7 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
             uploadService.upload({id: $stateParams.id}, $scope.uploadFile).$promise.then(function(res) {
                 $scope.closeModal();
                 $scope.showToast("Document Successfully Uploaded.");
-                $rootScope.$broadcast("Document.Uploaded", res);
+                $rootScope.$emit("Document.Uploaded", res);
 				
 				//Track Document Upload
 				mixpanel.identify($rootScope.currentUser._id);

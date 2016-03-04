@@ -12,7 +12,7 @@ angular.module('buiiltApp').directive('projectSidenav', function(){
             $scope.$state = $state;
             $scope.showTeamMenu = false;
 
-            $rootScope.$on("UpdateCountNumber", function(event, data) {
+            var listenerCleanFn = $rootScope.$on("UpdateCountNumber", function(event, data) {
                 if (data.type==="task") 
                     $scope.project.element.totalTasks = $scope.project.element.totalTasks - data.number;
                 else if (data.type==="message") {
@@ -22,6 +22,10 @@ angular.module('buiiltApp').directive('projectSidenav', function(){
                 } else if (data.type==="document") {
                     $scope.project.element.totalDocuments = $scope.project.element.totalDocuments - data.number;
                 }
+            });
+
+            $scope.$on('$destroy', function() {
+                listenerCleanFn();
             });
 
             socket.on("file:new", function(data) {

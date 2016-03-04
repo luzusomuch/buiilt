@@ -55,6 +55,7 @@ function populateThread(thread, res){
         {path: "activities.user", select: "_id email name"}
     ], function(err, thread) {
         if (thread.isArchive) {
+            thread.members.push(thread.owner);
             _.each(thread.members, function(m) {
                 EventBus.emit('socket:emit', {
                     event: 'thread:archive',
@@ -287,15 +288,19 @@ exports.sendMessage = function(req,res) {
                     if (err) {
                         return res.send(422,err);
                     } else {
-                        Thread.populate(thread, [{path: "project"}], function(err, thread) {
+                        Thread.populate(thread, [
+                            {path: "project"},
+                            {path: "members", select: "_id name email"},
+                            {path: "onwer", select: "_id name email"}
+                        ], function(err, thread) {
                             if (err) {return res.send(500,err);}
                             var owners = thread.members;
                             owners.push(thread.owner);
-                            _.remove(owners, req.user._id);
+                            _.remove(owners, {_id: req.user._id});
                             _.each(owners, function(user) {
                                 EventBus.emit('socket:emit', {
                                     event: 'dashboard:new',
-                                    room: user.toString(),
+                                    room: user._id.toString(),
                                     data: {
                                         type: "thread",
                                         _id: thread._id,
