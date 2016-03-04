@@ -209,6 +209,7 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
     });
 
     socket.on("file:new", function(data) {
+        data.__v=1;
         $scope.files.push(data);
         filterAcknowledgeFiles($scope.files);
     });

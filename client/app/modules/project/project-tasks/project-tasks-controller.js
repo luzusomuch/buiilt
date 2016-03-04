@@ -25,6 +25,7 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
 	$scope.people = people;
 
     socket.on("task:new", function(data) {
+        data.__v=1;
         $scope.tasks.push(data);
         $scope.tasks = _.uniq($scope.tasks, "_id");
     });

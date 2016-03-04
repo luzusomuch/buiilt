@@ -4,6 +4,7 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
 	$scope.threads = threads;
 
     socket.on("thread:new", function(data) {
+        data.__v =1;
         $scope.threads.push(data);
         $scope.threads = _.uniq($scope.threads, "_id");
     });

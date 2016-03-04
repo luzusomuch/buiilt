@@ -53,6 +53,7 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
     });
 
     socket.on("document:new", function(data) {
+        data.__v=1;
         $scope.documents.push(data);
     });
 

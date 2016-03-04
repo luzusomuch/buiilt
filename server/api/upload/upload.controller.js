@@ -343,6 +343,12 @@ exports.upload = function(req, res){
             file.size = data.file.size;
             file.version = data.file.filename;
             file.server = "s3";
+            file.activities.push({
+                user: req.user._id,
+                createdAt: new Date(),
+                type: "upload-file",
+                element: {name: file.name}
+            });
         }
         var tags = [];
         _.each(data.tags, function(tag) {

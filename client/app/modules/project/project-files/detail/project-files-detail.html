@@ -13,7 +13,7 @@
                             <md-button>{{file.name}} (Version: Current version)</md-button>
                         </md-menu-item>
                         <md-menu-item ng-click="openHistoryDetail($event, history)" ng-repeat="history in file.fileHistory">
-                            <md-button>{{history.name}} (Version: {{history.version}})</md-button>
+                            <md-button>Version {{$index+1}}: {{history.createdAt | date: 'dd-MM-yyyy'}}</md-button>
                         </md-menu-item>
                     </md-menu-content>
                 </md-menu>
@@ -65,17 +65,20 @@
 						</p>
 					
 						<p ng-switch="activity.type" class="activity-body md-body">
-                            <span ng-switch-when="upload-reversion" layout="column">{{activity.element.name}}
-                            </span>
 
                             <span ng-switch-when="upload-file" layout="column">{{activity.element.name}}
                             </span>
 						
 							<span ng-switch-when="edit"> ({{(activity.element.name) ? "Name: "+activity.element.name+", " : ""}} {{(activity.element.description) ? "Description: "+activity.element.description+", " : ""}} {{(activity.element.tags) ? "Tags : " : ""}}<span ng-repeat="tag in activity.element.tags">{{tag}}, </span>)</span>
+
 							<span ng-switch-when="assign"><span ng-repeat="member in activity.element.members">{{member}}, </span></span>
+
 							<span ng-switch-when="related-thread">"<a ui-sref="project.messages.detail({id: file.project, messageId: activity.element.item})">{{activity.element.name}}</a>"</span>
+
 							<span ng-switch-when="related-task">"<a ui-sref="project.tasks.detail({id: file.project, taskId: activity.element.item})">{{activity.element.name}}</a>"</span>
+
                             <span ng-switch-when="related-file">"<a ui-sref="project.files.detail({id: file.project, fileId: activity.element.item})">{{activity.element.name}}</a>"</span>
+
 							<span ng-switch-when="insert-note">{{activity.element.content}}</span>
 						</p>
 

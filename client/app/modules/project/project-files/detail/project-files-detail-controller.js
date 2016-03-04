@@ -112,6 +112,16 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
         _.each($rootScope.currentTeam.fileTags, function(tag) {
             $scope.tags.push({name: tag, select: false});
         });
+        if ($rootScope.isEditFile) {
+            _.each($scope.file.tags, function(tag) {
+                var tagIndex = _.findIndex($scope.tags, function(t) {
+                    return t.name===tag;
+                });
+                if (tagIndex !== -1) {
+                    $scope.tags[tagIndex].select = true;
+                }
+            });
+        }
         _.each($rootScope.roles, function(role) {
             _.each($scope.people[role], function(tender){
                 if (tender.hasSelect) {
@@ -178,6 +188,8 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
         } else if (modalName === "add-related-task.html") {
             $scope.minDate = new Date();
             $scope.relatedTask = {};
+        } else if (modalName==="edit-file.html") {
+            $rootScope.isEditFile = true;
         }
         $mdDialog.show({
             targetEvent: $event,
