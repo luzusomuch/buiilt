@@ -297,6 +297,7 @@ exports.sendMessage = function(req,res) {
                             var owners = thread.members;
                             owners.push(thread.owner);
                             _.remove(owners, {_id: req.user._id});
+                            var uniqId = mongoose.Types.ObjectId();
                             _.each(owners, function(user) {
                                 EventBus.emit('socket:emit', {
                                     event: 'dashboard:new',
@@ -305,6 +306,7 @@ exports.sendMessage = function(req,res) {
                                         type: "thread",
                                         _id: thread._id,
                                         thread: thread,
+                                        uniqId: uniqId,
                                         newNotification: {fromUser: req.user, message: data.text, type: "thread-message"}
                                     }
                                 });

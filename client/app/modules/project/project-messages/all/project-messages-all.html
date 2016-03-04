@@ -55,12 +55,12 @@
         </div>
 	    <md-divider></md-divider>
     </md-list-item>
-	
-	<md-list-item class="md-3-line" ng-repeat="thread in threads | filter: search | unique: '_id' track by $index" ng-show="thread.__v==0" md-ink-ripple>
-		<div ui-sref="project.messages.detail({id: thread.project, messageId: thread._id})" class="md-list-item-text">
-			
-			<h3>{{ thread.name }}</h3>
-			<h4>Assignees: <span ng-repeat="member in thread.members track by $index">{{member.name}}, </span><span ng-repeat="member in thread.notMembers track by $index">{{member}}</h4>
+
+    <md-list-item class="md-3-line" ng-repeat="thread in threads | filter: search | unique: '_id' track by $index" ng-show="thread.__v==0" md-ink-ripple>
+        <div ui-sref="project.messages.detail({id: thread.project, messageId: thread._id})" class="md-list-item-text">
+            
+            <h3>{{ thread.name }}</h3>
+            <h4>Assignees: <span ng-repeat="member in thread.members track by $index">{{member.name}}, </span><span ng-repeat="member in thread.notMembers track by $index">{{member}}</h4>
             <p>No New Updates</p>
             <!-- <span class="md-body-2" ng-show="thread.element.notificationBy">{{(thread.element.notificationBy._id==currentUser._id) ? "You" : thread.element.notificationBy.name}} has
                 <span ng-show="thread.element.notificationType=='thread-assign'">
@@ -70,11 +70,11 @@
                 <span ng-show="thread.element.notificationType=='thread-message'"> sent a reply: "{{thread.element.text}}"</span>
             </span><span ng-show="thread.element.notificationBy && thread.__v - 1 > 0">... +{{thread.__v - 1}} More</span> -->
         </div>
-		
+        
         <div>
             <md-button class="md-secondary" ng-click="showReplyModal($event, thread)"><md-icon class="material-icons">reply</md-icon><md-tooltip md-direction="down">Compose Reply</md-tooltip></md-button>
         </div>
-	    <md-divider></md-divider>
+        <md-divider></md-divider>
     </md-list-item>
 </md-list>
 

@@ -3,6 +3,20 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
     $scope.people = people;
 	$scope.threads = threads;
 
+    // this function use to seperate non-notification and notifications
+    function threadsSeperate(threads) {
+        $scope.threadsWithNotification = [];
+        $scope.threadsWithoutNotification = [];
+        _.each(threads, function(thread) {
+            if (thread.__v>0) {
+                $scope.threadsWithNotification.push(thread);
+            } else {
+                $scope.threadsWithoutNotification.push(thread);
+            }
+        });
+    }
+    // end
+
     socket.on("thread:new", function(data) {
         data.__v =1;
         $scope.threads.push(data);
@@ -18,6 +32,13 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
             $scope.threads[currentThreadIndex].__v = 0;
         }
     });
+
+    // this socket fire when thread update
+    function getItemIndex(array, id) {
+        return _.findIndex(array, function(item) {
+            return item._id.toString()===id.toString();
+        });
+    };
 
     var listenerCleanFnPush = $rootScope.$on("Thread.Inserted", function(event, data) {
         $scope.threads.push(data);
@@ -38,10 +59,25 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
         $scope.threads[index].__v = 0;
     });
 
+    socket.on("dashboard:new", function(data) {
+        $rootScope.$emit("Dashboard.Thread.Update", data);
+    });
+
+    var listenerCleanFnPushFromDashboard = $rootScope.$on("Dashboard.Thread.Update", function(event, data) {
+        var index = _.findIndex($scope.threads, function(thread) {
+            return thread._id.toString()===data.thread._id.toString();
+        });
+        if (index !== -1 && ($scope.threads[index] && $scope.threads[index].uniqId!==data.uniqId)) {
+            $scope.threads[index].uniqId = data.uniqId;
+            $scope.threads[index].__v+=1;
+        }
+    });
+
     $scope.$on('$destroy', function() {
         listenerCleanFnPush();
         listenerCleanFnRead();
         listenerCleanFnAcknow();
+        listenerCleanFnPushFromDashboard();
     });
 
     // filter section
