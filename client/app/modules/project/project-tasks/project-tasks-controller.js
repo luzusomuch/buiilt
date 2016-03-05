@@ -32,6 +32,21 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
         $scope.tasks = _.uniq($scope.tasks, "_id");
     });
 
+    socket.on("dashboard:new", function(data) {
+        if (data.type==="task") {
+            var index = _.findIndex($scope.tasks, function(task) {
+                return task._id==data.task._id;
+            });
+            if (index !==-1 && $scope.tasks[index].uniqId!=data.uniqId) {
+                if ($scope.tasks[index].__v===0) {
+                    $rootScope.$emit("UpdateCountNumber", {type: "task", isAdd: true});
+                }
+                $scope.tasks[index].uniqId=data.uniqId;
+                $scope.tasks[index].__v+=1;
+            }
+        }
+    });
+
     var listenerCleanFnPush = $rootScope.$on("Task.Inserted", function(event, data) {
         $scope.tasks.push(data);
         $scope.tasks = _.uniq($scope.tasks, "_id");

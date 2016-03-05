@@ -42,6 +42,7 @@ function populateTask(task, res, req){
         var owners = _.clone(task.members);
         owners.push(task.owner);
         _.remove(owners, {_id: req.user._id});
+        var uniqId = mongoose.Types.ObjectId();
         _.each(owners, function(owner) {
             EventBus.emit("socket:emit", {
                 event: "dashboard:new",
@@ -51,6 +52,7 @@ function populateTask(task, res, req){
                     _id: task._id,
                     task: task,
                     user: req.user,
+                    uniqId: uniqId,
                     newNotification: {fromUser: req.user, type: "task-update"}
                 }
             });

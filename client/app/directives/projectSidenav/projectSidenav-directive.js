@@ -14,13 +14,13 @@ angular.module('buiiltApp').directive('projectSidenav', function(){
 
             var listenerCleanFn = $rootScope.$on("UpdateCountNumber", function(event, data) {
                 if (data.type==="task") 
-                    $scope.project.element.totalTasks = $scope.project.element.totalTasks - data.number;
+                    $scope.project.element.totalTasks = (data.isAdd) ? $scope.project.element.totalTasks+1 : $scope.project.element.totalTasks - data.number;
                 else if (data.type==="message") {
-                    $scope.project.element.totalMessages = $scope.project.element.totalMessages - data.number;
+                    $scope.project.element.totalMessages = (data.isAdd) ? $scope.project.element.totalMessages+1 :  $scope.project.element.totalMessages - data.number;
                 } else if (data.type==="file") {
-                    $scope.project.element.totalFiles = $scope.project.element.totalFiles - data.number;
+                    $scope.project.element.totalFiles = (data.isAdd) ? $scope.project.element.totalFiles+1 :  $scope.project.element.totalFiles - data.number;
                 } else if (data.type==="document") {
-                    $scope.project.element.totalDocuments = $scope.project.element.totalDocuments - data.number;
+                    $scope.project.element.totalDocuments = (data.isAdd) ? $scope.project.element.totalDocuments+1 :  $scope.project.element.totalDocuments - data.number;
                 }
             });
 

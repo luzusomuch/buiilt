@@ -167,8 +167,9 @@ EventBus.onSeries('File.Updated', function(file, next) {
         var owners = file.members;
         owners.push(file.owner);
         _.remove(owners, file.editUser._id);
+        _.uniq(owners);
         var params = {
-            owners : [owners],
+            owners : owners,
             fromUser : file.editUser._id,
             element : file,
             referenceTo : 'file',

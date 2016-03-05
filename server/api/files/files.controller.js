@@ -76,7 +76,7 @@ exports.assignMoreMembers = function(req, res) {
                     room: file._id.toString(),
                     data: JSON.parse(JSON.stringify(file))
                 });
-                var randomId = mongoose.Types.ObjectId();
+                var uniqId = mongoose.Types.ObjectId();
                 _.each(newMembers, function(user) {
                     EventBus.emit('socket:emit', {
                         event: 'dashboard:new',
@@ -84,8 +84,9 @@ exports.assignMoreMembers = function(req, res) {
                         data: {
                             type: "file",
                             _id: file._id,
+                            uniqId: uniqId,
                             file: JSON.parse(JSON.stringify(file)),
-                            newNotification: {randomId: randomId, fromUser: req.user, type: "document-upload-reversion"}
+                            newNotification: {fromUser: req.user, type: "document-upload-reversion"}
                         }
                     });
                 });
@@ -240,7 +241,8 @@ exports.update = function(req, res) {
                         {path: "owner", select: "_id email name"},
                         {path: "members", select: "_id email name"},
                         {path: "activities.user", select: "_id email name"},
-                        {path: "activities.acknowledgeUsers._id", select: "_id email name"}
+                        {path: "activities.acknowledgeUsers._id", select: "_id email name"},
+                        {path: "project"}
                     ], function(err, file) {
                         if (file.element.type === "file") {
                             if (file.isArchive) {
@@ -257,6 +259,23 @@ exports.update = function(req, res) {
                                     event: 'file:update',
                                     room: file._id.toString(),
                                     data: JSON.parse(JSON.stringify(file))
+                                });
+                                var owners = _.clone(file.members);
+                                owners.push(file.owner);
+                                _.remove(owners, {_id: req.user._id});
+                                var uniqId = mongoose.Types.ObjectId();
+                                _.each(owners, function(owner) {
+                                    EventBus.emit('socket:emit', {
+                                        event: 'dashboard:new',
+                                        room: owner._id.toString(),
+                                        data: {
+                                            type: "file",
+                                            _id: file._id,
+                                            uniqId: uniqId,
+                                            file: JSON.parse(JSON.stringify(file)),
+                                            newNotification: {fromUser: req.user, type: "document-upload-reversion"}
+                                        }
+                                    });
                                 });
                             }
                         } else {

@@ -109,13 +109,8 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                 var index = getItemIndex($scope.myMessages, data._id);
                 if (index !== -1) {
                     $scope.myMessages[index].element.notifications.push(data.newNotification);
-                    if ($scope.myMessages[index].element.limitNotifications.length < 1) {
-                        $scope.myMessages[index].element.limitNotifications.push(data.newNotification);
-                    }
                 } else {
-                    data.thread.element.limitNotifications = [];
                     data.thread.element.notifications = [];
-                    data.thread.element.limitNotifications.push(data.newNotification);
                     data.thread.element.notifications.push(data.newNotification);
                     if (data.thread.owner._id.toString()===$rootScope.currentUser._id.toString()) {
                         data.thread.element.notifications=[];
@@ -128,7 +123,6 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                 _.each($scope.myMessages, function(message) {
                     if (message.name) {
                         message.element.notifications = _.uniq(message.element.notifications, "message");
-                        message.element.limitNotifications = _.uniq(message.element.limitNotifications, "message");
                         copyThreads.push(message);
                     }
                 });
@@ -144,9 +138,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                 }
                 $scope.myTasks[index].element.notifications.push(data.newNotification);
             } else {
-                data.task.element.limitNotifications = [];
                 data.task.element.notifications = [];
-                data.task.element.limitNotifications.push(data.newNotification);
                 data.task.element.notifications.push(data.newNotification);
                 if (data.user._id.toString()===$rootScope.currentUser._id.toString()) {
                     data.task.element.notifications=[];
@@ -159,7 +151,6 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             _.each($scope.myTasks, function(task) {
                 if (task.description) {
                     task.element.notifications = _.uniq(task.element.notifications, "type")
-                    task.element.limitNotifications = _.uniq(task.element.limitNotifications, "type")
                     copyThreads.push(task);
                 }
             });
@@ -168,23 +159,20 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         } else if (data.type==="file") {
             var originalLength = angular.copy($scope.myMessages.length);
             var index = getItemIndex($scope.myFiles, data._id);
-            if (index !== -1) {
-                var currentNotificationIndex = _.findIndex($scope.myFiles[index].element.notifications, function(notification) {
-                    if (notification.randomId) {
-                        return notification.randomId.toString()===data.newNotification.randomId.toString();
-                    }
-                });
-                if (currentNotificationIndex===-1) {
-                    $scope.myFiles[index].element.notifications.push(data.newNotification);
-                    if ($scope.myFiles[index].element.limitNotifications.length < 1) {
-                        $scope.myFiles[index].element.limitNotifications.push(data.newNotification);
+            if (index !== -1 && $scope.myFiles[index].uniqId!=data.uniqId) {
+                if ($scope.myFiles[index].element.notifications.length===0) {
+                    if (data.file.element.type==="file") {
+                        $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "file", isAdd: true, number: 1});
+                    } else if (data.file.element.type==="document") {
+                        $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "document", isAdd: true, number: 1});
                     }
                 }
-            } else {
-                data.file.element.limitNotifications = [];
+                $scope.myFiles[index].uniqId=data.uniqId;
+                $scope.myFiles[index].element.notifications.push(data.newNotification);
+            } else if (index === -1) {
                 data.file.element.notifications = [];
-                data.file.element.limitNotifications.push(data.newNotification);
                 data.file.element.notifications.push(data.newNotification);
+                data.file.uniqId=data.uniqId;
                 $scope.myFiles.push(data.file);
                 if (originalLength!==$scope.myFiles.length) {
                     if (data.file.element.type==="file") {
