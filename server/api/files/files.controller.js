@@ -96,6 +96,29 @@ exports.assignMoreMembers = function(req, res) {
     });
 };
 
+exports.lastAccess = function(req, res) {
+    File.findById(req.params.id, function(err, file) {
+        if (err) {return res.send(500,err);}
+        if (!file) {
+            return res.send(404);
+        }
+        if (file.lastAccess && file.lastAccess.length > 0) {
+            var index = _.findIndex(file.lastAccess, function(access) {
+                access.user.toString()===req.user._id.toString();
+            });
+            if (index !== -1) {
+                file.lastAccess[index].time = new Date();
+            }
+        } else {
+            file.lastAccess = [{user: req.user._id, time: new Date()}];
+        }
+        file.save(function(err) {
+            if (err) {return res.send(500,err);}
+            return res.send(200);
+        });
+    });
+};
+
 exports.getFilesByProject = function(req, res) {
     var query;
     var userId = (req.query.userId && req.user.role==="admin") ? req.query.userId : req.user._id;

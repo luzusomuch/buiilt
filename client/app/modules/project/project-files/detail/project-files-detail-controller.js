@@ -15,12 +15,24 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
 
     // remove notifications count immeditely
     $rootScope.$emit("UpdateCountNumber", {type: "file", number: (file.__v>0)?1:0});
+    fileService.lastAccess({id: $stateParams.fileId}).$promise.then(function(data) {
+        if (file.lastAccess && file.lastAccess.length > 0) {
+            var index = _.findIndex(file.lastAccess, function(access) {
+                access.user==$rootScope.currentUser._id;
+            });
+            if (index !== -1) {
+                file.lastAccess[index].time = new Date();
+            }
+        } else {
+            file.lastAccess = [{user: $rootScope.currentUser._id, time: new Date()}];
+        }
+        $rootScope.$emit("File.Read", file);
+    });
     // end
 
     // set timeout 4s for mark as read
     $timeout(function() {
         notificationService.markItemsAsRead({id: $stateParams.fileId}).$promise.then(function() {
-            $rootScope.$emit("File.Read", file);
             markActivitesAsRead($scope.file);
         });
     }, 4000);

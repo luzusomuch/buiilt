@@ -9,6 +9,10 @@ var FileSchema = new Schema({
         type: String, // filename
         required: true
     },
+    lastAccess: [{
+        time: Date,
+        user: Schema.Types.ObjectId
+    }],
     comments: [{
         user: {
             type: Schema.Types.ObjectId,

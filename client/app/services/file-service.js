@@ -26,6 +26,12 @@ return $resource('/api/files/:id/:type/:action', {
             action: "assign-more-members"
         }
     },
+    lastAccess: {
+        method: "GET",
+        params: {
+            action: "last-access"
+        }
+    },
     interested: {
       method: 'PUT',
       params: {

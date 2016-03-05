@@ -19,6 +19,7 @@ router.get('/:id/download-all', auth.isAuthenticated(), controller.downloadAll);
 router.get('/:id/get-in-people', auth.isAuthenticated(), controller.getInPeople);
 router.get('/:id/get-in-board', auth.isAuthenticated(), controller.getInBoard);
 router.get('/:id/get-in-project', auth.isAuthenticated(), controller.getInProject);
+router.get('/:id/last-access', auth.isAuthenticated(), controller.lastAccess);
 router.get('/:id/:type/get-by-package', auth.isAuthenticated(), controller.getFileByPackage);
 router.get('/:id/:type/project-files', auth.isAuthenticated(), controller.getFilesByProject);
 

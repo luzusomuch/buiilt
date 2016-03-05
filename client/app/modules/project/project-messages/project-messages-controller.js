@@ -76,8 +76,8 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
         });
         if (index !== -1) {
             $scope.threads[index].__v=0;
-            getLastAccess($scope.threads);
         }
+        getLastAccess($scope.threads);
     });
 
     var listenerCleanFnAcknow = $rootScope.$on("Project-Message-Update", function(event, index) {

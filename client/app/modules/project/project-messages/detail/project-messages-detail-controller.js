@@ -14,8 +14,6 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
 
     // remove notifications count immeditely
     $rootScope.$emit("UpdateCountNumber", {type: "message", number: (thread.__v>0)?1:0});
-    // end
-
     messageService.lastAccess({id: $stateParams.messageId}).$promise.then(function(data) {
         if (thread.lastAccess && thread.lastAccess.length > 0) {
             var index = _.findIndex(thread.lastAccess, function(access) {
@@ -29,12 +27,14 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
         }
         $rootScope.$emit("Thread.Read", thread);
     });
-    // set timeout 4s to mark as read 
+    // end
+
+    // set timeout 3s to mark as read 
     $timeout(function() {
         notificationService.markItemsAsRead({id: $stateParams.messageId}).$promise.then(function() {
             markActivitesAsRead($scope.thread);
         });
-    }, 4000);
+    }, 3000);
     // end timeout
 
     // function to filter out that unread activities
