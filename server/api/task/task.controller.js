@@ -28,7 +28,7 @@ function populateThread(thread, res){
     });
 };
 
-function populateTask(task, res){
+function populateTask(task, res, req){
     Task.populate(task, [
         {path: "owner", select: "_id email name"},
         {path: "members", select: "_id email name"},
@@ -38,6 +38,22 @@ function populateTask(task, res){
             event: 'task:update',
             room: task._id.toString(),
             data: task
+        });
+        var owners = _.clone(task.members);
+        owners.push(task.owner);
+        _.remove(owners, {_id: req.user._id});
+        _.each(owners, function(owner) {
+            EventBus.emit("socket:emit", {
+                event: "dashboard:new",
+                room: owner._id.toString(),
+                data: {
+                    type: "task",
+                    _id: task._id,
+                    task: task,
+                    user: req.user,
+                    newNotification: {fromUser: req.user, type: "task-update"}
+                }
+            });
         });
         return res.send(200, task);
     });
@@ -258,7 +274,7 @@ exports.update = function(req,res) {
                     if (err) {
                         return res.send(500,err)
                     }
-                    populateTask(task, res);
+                    populateTask(task, res, req);
                 });
             });
         }

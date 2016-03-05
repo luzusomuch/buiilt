@@ -136,18 +136,19 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             }
         } else if (data.type==="task") {
             _.uniq(data.task.members, "_id");
+            var originalLength = angular.copy($scope.myTasks.length);
             var index = getItemIndex($scope.myTasks, data._id);
             if (index !== -1) {
-                $scope.myTasks[index].element.notifications.push(data.newNotification);
-                if ($scope.myTasks[index].element.limitNotifications.length < 1) {
-                    $scope.myTasks[index].element.limitNotifications.push(data.newNotification);
+                if ($scope.myTasks[index].element.notifications.length===0) {
+                    $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "task", isAdd: true, number: 1});
                 }
+                $scope.myTasks[index].element.notifications.push(data.newNotification);
             } else {
                 data.task.element.limitNotifications = [];
                 data.task.element.notifications = [];
                 data.task.element.limitNotifications.push(data.newNotification);
                 data.task.element.notifications.push(data.newNotification);
-                if (data.task.owner._id.toString()===$rootScope.currentUser._id.toString()) {
+                if (data.user._id.toString()===$rootScope.currentUser._id.toString()) {
                     data.task.element.notifications=[];
                 } else {
                     $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "task", isAdd: true, number: 1});
