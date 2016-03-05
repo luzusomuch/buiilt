@@ -48,7 +48,7 @@
 		<md-divider></md-divider>
 	</div>
 
-	<div ng-repeat="document in documents | filter: search | unique: '_id' track by $index" ng-show="document.__v==0">
+	<div ng-repeat="document in documents | orderBy: '-createdAt' | filter: search | unique: '_id' track by $index" ng-show="document.__v==0">
 		<md-list-item class="md-3-line" md-ink-ripple>
 			<div ui-sref="project.documentation.detail({id:document.project._id, documentId: document._id})" class="md-list-item-text" layout="column">
 	          	<h3>{{document.name}}</h3>

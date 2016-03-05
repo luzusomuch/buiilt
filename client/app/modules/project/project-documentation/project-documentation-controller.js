@@ -21,7 +21,7 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
                     return access.user.toString()===$rootScope.currentUser._id.toString();
                 });
                 if (accessIndex !==-1) {
-                    document.updatedAt = document.lastAccess[accessIndex].time;
+                    document.createdAt = document.lastAccess[accessIndex].time;
                 }
             }
         });

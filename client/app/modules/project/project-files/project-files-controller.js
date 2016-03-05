@@ -13,7 +13,7 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
                     return access.user.toString()===$rootScope.currentUser._id.toString();
                 });
                 if (accessIndex !==-1) {
-                    file.updatedAt = file.lastAccess[accessIndex].time;
+                    file.createdAt = file.lastAccess[accessIndex].time;
                 }
             }
         });
