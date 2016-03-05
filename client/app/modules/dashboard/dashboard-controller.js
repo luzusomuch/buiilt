@@ -101,6 +101,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     });
 
     socket.on("dashboard:new", function(data) {
+        console.log(data);
         if (data.type==="thread") {
             var index = getItemIndex($scope.myMessages, data._id);
             if (index !== -1) {
@@ -358,7 +359,6 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                         project.select = false;
                     });
                     
-                    $state.go("project.tasks.detail", {id: res.project._id, taskId: res._id});
                 }, function(err) {$scope.showToast("There Has Been An Error...");});
             } else {
                 $scope.showToast("Please Select At Least 1 Assignee...");
@@ -523,7 +523,6 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                     project.select = false;
                 });
                 
-                $state.go("project.messages.detail", {id: $scope.selectedProjectId, messageId: res._id});
             }, function(err) {
                 $scope.showToast("There Has Been An Error...")
             });
@@ -657,7 +656,6 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                         project.select = false;
                     });
                     
-                    $state.go("project.files.detail", {id: res.project._id, fileId: res._id});
                 }, function(err) {
                     $scope.showToast("There Has Been An Error...");
                 });
