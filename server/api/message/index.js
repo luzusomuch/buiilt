@@ -14,6 +14,7 @@ router.post('/:id/message', auth.isAuthenticated(), controller.sendMessage);
 router.get('/dashboard/me', auth.isAuthenticated(), controller.myThread);
 router.get('/:id', auth.isAuthenticated(), controller.getById);
 router.get('/:id/project-thread', auth.isAuthenticated(), controller.getProjectThread);
+router.get('/:id/last-access', auth.isAuthenticated(), controller.lastAccess);
 
 router.put('/:id', auth.isAuthenticated(), controller.update);
 // router.get('/list', auth.isAuthenticated(), controller.getAll);

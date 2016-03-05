@@ -37,6 +37,10 @@ var ThreadSchema = new Schema({
         ref : 'User',
         required : true
     },
+    lastAccess: [{
+        time: Date,
+        user: Schema.Types.ObjectId
+    }],
     project : {
         type : Schema.Types.ObjectId,
         ref : 'Project',

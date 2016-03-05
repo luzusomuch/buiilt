@@ -26,6 +26,12 @@ angular.module('buiiltApp')
                 action : 'message'
             }
         },
+        lastAccess: {
+            method: "GET",
+            params: {
+                action: "last-access"
+            }
+        },
 
       myMessages : {
         method : 'GET',

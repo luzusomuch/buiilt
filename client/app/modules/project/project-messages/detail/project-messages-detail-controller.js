@@ -16,10 +16,22 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
     $rootScope.$emit("UpdateCountNumber", {type: "message", number: (thread.__v>0)?1:0});
     // end
 
+    messageService.lastAccess({id: $stateParams.messageId}).$promise.then(function(data) {
+        if (thread.lastAccess && thread.lastAccess.length > 0) {
+            var index = _.findIndex(thread.lastAccess, function(access) {
+                access.user==$rootScope.currentUser._id;
+            });
+            if (index !== -1) {
+                thread.lastAccess[index].time = new Date();
+            }
+        } else {
+            thread.lastAccess = [{user: $rootScope.currentUser._id, time: new Date()}];
+        }
+        $rootScope.$emit("Thread.Read", thread);
+    });
     // set timeout 4s to mark as read 
     $timeout(function() {
         notificationService.markItemsAsRead({id: $stateParams.messageId}).$promise.then(function() {
-            $rootScope.$emit("Thread.Read", thread);
             markActivitesAsRead($scope.thread);
         });
     }, 4000);

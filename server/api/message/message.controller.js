@@ -115,6 +115,29 @@ var getMainItem = function(type) {
     return _item;
 };
 
+exports.lastAccess = function(req, res) {
+    Thread.findById(req.params.id, function(err, thread) {
+        if (err) {return res.send(500,err);}
+        if (!thread) {
+            return res.send(404);
+        }
+        if (thread.lastAccess && thread.lastAccess.length > 0) {
+            var index = _.findIndex(thread.lastAccess, function(access) {
+                access.user.toString()===req.user._id.toString();
+            });
+            if (index !== -1) {
+                thread.lastAccess[index].time = new Date();
+            }
+        } else {
+            thread.lastAccess = [{user: req.user._id, time: new Date()}];
+        }
+        thread.save(function(err) {
+            if (err) {return res.send(500,err);}
+            return res.send(200);
+        });
+    });
+};
+
 exports.project = function(req,res,next) {
     Project.findById(req.params.id,function(err,project) {
         if (err || !project) {
