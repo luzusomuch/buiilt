@@ -23,6 +23,7 @@ function populateNewThread(thread, res, req){
         {path: "activities.user", select: "_id email name"},
         {path: "project"}
     ], function(err, thread) {
+        var uniqId = mongoose.Types.ObjectId();
         async.each(thread.members, function(member, cb) {
             EventBus.emit('socket:emit', {
                 event: 'thread:new',
@@ -36,6 +37,8 @@ function populateNewThread(thread, res, req){
                     type: "thread",
                     _id: thread._id,
                     thread: thread,
+                    user: req.user,
+                    uniqId: uniqId,
                     newNotification: {fromUser: req.user, type: "thread-assign"}
                 }
             });
@@ -291,7 +294,7 @@ exports.sendMessage = function(req,res) {
                         Thread.populate(thread, [
                             {path: "project"},
                             {path: "members", select: "_id name email"},
-                            {path: "onwer", select: "_id name email"}
+                            {path: "owner", select: "_id name email"}
                         ], function(err, thread) {
                             if (err) {return res.send(500,err);}
                             var owners = thread.members;
@@ -307,6 +310,7 @@ exports.sendMessage = function(req,res) {
                                         _id: thread._id,
                                         thread: thread,
                                         uniqId: uniqId,
+                                        user: req.user,
                                         newNotification: {fromUser: req.user, message: data.text, type: "thread-message"}
                                     }
                                 });

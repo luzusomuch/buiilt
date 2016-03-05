@@ -32,6 +32,11 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
             $scope.threads[currentThreadIndex].__v = 0;
         }
     });
+    
+    socket.on("dashboard:new", function(data) {
+        if (data.type==="thread") 
+            $rootScope.$emit("Dashboard.Thread.Update", data);
+    });
 
     // this socket fire when thread update
     function getItemIndex(array, id) {
@@ -57,11 +62,6 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
     var listenerCleanFnAcknow = $rootScope.$on("Project-Message-Update", function(event, index) {
         $scope.threads[index].element.notificationType = null;
         $scope.threads[index].__v = 0;
-    });
-
-    socket.on("dashboard:new", function(data) {
-        if (data.type==="thread") 
-            $rootScope.$emit("Dashboard.Thread.Update", data);
     });
 
     var listenerCleanFnPushFromDashboard = $rootScope.$on("Dashboard.Thread.Update", function(event, data) {

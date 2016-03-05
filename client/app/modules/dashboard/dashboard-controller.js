@@ -103,41 +103,35 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     });
 
     socket.on("dashboard:new", function(data) {
-        console.log(data);
         if (data.type==="thread") {
-            if (data.thread.owner._id!=$rootScope.currentUser._id) {
-                var index = getItemIndex($scope.myMessages, data._id);
-                if (index !== -1) {
-                    $scope.myMessages[index].element.notifications.push(data.newNotification);
-                } else {
-                    data.thread.element.notifications = [];
-                    data.thread.element.notifications.push(data.newNotification);
-                    if (data.thread.owner._id.toString()===$rootScope.currentUser._id.toString()) {
-                        data.thread.element.notifications=[];
-                    } else {
-                        $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "message", isAdd: true, number: 1});
-                    }
-                    $scope.myMessages.push(data.thread);
+            var index = getItemIndex($scope.myMessages, data._id);
+            if (index !== -1 && $scope.myMessages[index].uniqId!=data.uniqId) {
+                if ($scope.myMessages[index].element.notifications.length===0) {
+                    $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "message", isAdd: true, number: 1});
                 }
-                var copyThreads = [];
-                _.each($scope.myMessages, function(message) {
-                    if (message.name) {
-                        message.element.notifications = _.uniq(message.element.notifications, "message");
-                        copyThreads.push(message);
-                    }
-                });
-                $scope.myMessages = copyThreads;
+                $scope.myMessages[index].uniqId=data.uniqId;
+                $scope.myMessages[index].element.notifications.push(data.newNotification);
+            } else if (index === -1) {
+                data.thread.element.notifications = [];
+                data.thread.element.notifications.push(data.newNotification);
+                if (data.user._id.toString()===$rootScope.currentUser._id.toString()) {
+                    data.thread.element.notifications=[];
+                } else {
+                    $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "message", isAdd: true, number: 1});
+                }
+                data.thread.uniqId=data.uniqId;
+                $scope.myMessages.push(data.thread);
             }
         } else if (data.type==="task") {
             _.uniq(data.task.members, "_id");
-            var originalLength = angular.copy($scope.myTasks.length);
             var index = getItemIndex($scope.myTasks, data._id);
-            if (index !== -1) {
+            if (index !== -1 && $scope.myTasks[index].uniqId!=data.uniqId) {
                 if ($scope.myTasks[index].element.notifications.length===0) {
                     $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "task", isAdd: true, number: 1});
                 }
+                $scope.myTasks[index].uniqId = data.uniqId;
                 $scope.myTasks[index].element.notifications.push(data.newNotification);
-            } else {
+            } else if (index===-1) {
                 data.task.element.notifications = [];
                 data.task.element.notifications.push(data.newNotification);
                 if (data.user._id.toString()===$rootScope.currentUser._id.toString()) {
@@ -145,16 +139,9 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                 } else {
                     $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "task", isAdd: true, number: 1});
                 }
+                data.task.uniqId = data.uniqId;
                 $scope.myTasks.push(data.task);
             }
-            var copyThreads = [];
-            _.each($scope.myTasks, function(task) {
-                if (task.description) {
-                    task.element.notifications = _.uniq(task.element.notifications, "type")
-                    copyThreads.push(task);
-                }
-            });
-            $scope.myTasks = copyThreads;
             sortTask($scope.myTasks);
         } else if (data.type==="file") {
             var originalLength = angular.copy($scope.myMessages.length);
@@ -182,13 +169,6 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                     }
                 }
             }
-            var copyFiles = [];
-            _.each($scope.myFiles, function(file) {
-                if (file.name) {
-                    copyFiles.push(file);
-                }
-            });
-            $scope.myFiles = copyFiles;
             filterAcknowledgeFiles($scope.myFiles);
         }
     });

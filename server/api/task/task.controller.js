@@ -68,6 +68,7 @@ function populateNewTask(task, res, req){
         {path: "activities.user", select: "_id email name"},
         {path: "project"}
     ], function(err, task) {
+        var uniqId = mongoose.Types.ObjectId()
         async.each(task.members, function(member, cb) {
             EventBus.emit('socket:emit', {
                 event: 'task:new',
@@ -81,6 +82,7 @@ function populateNewTask(task, res, req){
                     type: "task",
                     _id: task._id,
                     task: task,
+                    uniqId: uniqId,
                     newNotification: {fromUser: req.user, type: "task-assign"}
                 }
             });

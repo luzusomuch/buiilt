@@ -388,7 +388,7 @@ exports.me = function (req, res, next) {
         if (err) {return next(err);}
         if (!user) {return res.json(404);}
         async.each(user.projects, function(project, cb) {
-            Notification.find({owner: user._id, unread: true, "element.project": project._id, $or:[{referenceTo: "task"}, {referenceTo: "thread"}, {referenceTo: "file"}, {referenceTo: "document"}, {referenceTo: "tender"}]}, function(err, notifications) {
+            Notification.find({owner: user._id, unread: true, "element.project": project._id, $or:[{referenceTo: "task"}, {referenceTo: "thread"}, {referenceTo: "file"}, {referenceTo: "document"}]}, function(err, notifications) {
                 if (err) {cb();}
                 else {
                     var tasks = [];

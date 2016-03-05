@@ -33,6 +33,7 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
     });
 
     socket.on("dashboard:new", function(data) {
+        console.log(data);
         if (data.type==="task") {
             var index = _.findIndex($scope.tasks, function(task) {
                 return task._id==data.task._id;
