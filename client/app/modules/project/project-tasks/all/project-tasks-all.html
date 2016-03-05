@@ -38,11 +38,11 @@
 
 <md-list ng-cloak class="main-page-content" layout="column" flex>
 
-	<div ng-repeat="task in tasks | filter: search track by $index">
+	<div ng-repeat="task in tasks | filter: search | unique: '_id' track by $index">
 		
 		<md-list-item class="md-3-line" md-ink-ripple layout-padding>
 	
-			<div ui-sref="project.tasks.detail({id: task.project, taskId: task._id})" class="md-list-item-text">
+			<div ui-sref="project.tasks.detail({id: task.project._id, taskId: task._id})" class="md-list-item-text">
 				
 				<h3>{{ task.description }}</h3>
 				<h4>Due: {{(task.element.due) ? task.element.due : task.dateEnd | date: 'dd/MM/yyyy'}} | Assignees: <span ng-repeat="member in task.members track by $index">{{member.name}}, </span><span ng-repeat="member in task.notMembers track by $index">{{member}}</h4>

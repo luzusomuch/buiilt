@@ -270,6 +270,7 @@ exports.getTasksByProject = function(req, res) {
     Task.find({project: req.params.id, $or:[{owner: userId}, {members: userId}]})
     .populate("owner", "_id name email")
     .populate("members", "_id name email")
+    .populate("project")
     .exec(function(err, tasks) {
         async.each(tasks, function(task, cb) {
             Notification.find({unread: true, owner: userId, "element._id": task._id, referenceTo: "task"})
