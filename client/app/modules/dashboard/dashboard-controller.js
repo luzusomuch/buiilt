@@ -184,6 +184,11 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                 data.file.element.limitNotifications.push(data.newNotification);
                 data.file.element.notifications.push(data.newNotification);
                 $scope.myFiles.push(data.file);
+                if (data.file.element.type==="file") {
+                    $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "file", isAdd: true, number: 1});
+                } else if (data.file.element.type==="document") {
+                    $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "document", isAdd: true, number: 1});
+                }
             }
             var copyFiles = [];
             _.each($scope.myFiles, function(file) {

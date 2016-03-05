@@ -53,12 +53,7 @@ angular.module('buiiltApp').directive('dashboardSidenav', function(){
             });
 
             // socket.on("dashboard:new", function(data) {
-            //     if (data.type==="thread") {
-            //         $scope.messages.push({_id: data._id});
-            //         $scope.messages = _.uniq($scope.messages, "_id");
-            //     } else if (data.type==="task") {
-            //         $scope.totalTaskUpdates = $scope.totalTaskUpdates + 1;
-            //     } else if (data.type==="file") {
+            //     if (data.type==="file") {
             //         if (data.file.element.type==="file") {
             //             $scope.totalFileUpdates = $scope.totalFileUpdates + 1;
             //         } else if (data.file.element.type==="document") {

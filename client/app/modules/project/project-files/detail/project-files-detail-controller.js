@@ -14,13 +14,13 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
     // end check owner team
 
     // remove notifications count immeditely
-    $rootScope.$broadcast("UpdateCountNumber", {type: "file", number: 1});
+    $rootScope.$emit("UpdateCountNumber", {type: "file", number: (file.__v>0)?1:0});
     // end
 
     // set timeout 4s for mark as read
     $timeout(function() {
         notificationService.markItemsAsRead({id: $stateParams.fileId}).$promise.then(function() {
-            $rootScope.$broadcast("File.Read", file);
+            $rootScope.$emit("File.Read", file);
             markActivitesAsRead($scope.file);
         });
     }, 4000);
