@@ -1,23 +1,27 @@
 angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, $scope, $mdDialog, tasks, taskService, $mdToast, $stateParams, $state, peopleService, people, socket, notificationService) {
 	$scope.tasks = tasks;
+
     function filterTaskDueDate(tasks) {
-        var today = moment(new Date()).format("YYYY-MM-DD");
-        var tomorrow = moment(new Date()).add(1, "day").format("YYYY-MM-DD");
-        var yesterday = moment(new Date()).subtract(1, "day").format("YYYY-MM-DD");
-        _.each(tasks, function(task) {
+        angular.forEach(tasks, function(task) {
             var taskDueDate = moment(task.dateEnd).format("YYYY-MM-DD");
-            if (!task.element.notificationType) {
-                if (moment(taskDueDate).isSame(tomorrow)) {
-                    task.element.dueClose = true;
-                    task.element.due = "Tomorrow";
-                } else if (moment(taskDueDate).isSame(today)) {
-                    task.element.dueClose = true;
-                    task.element.due = "Today";
-                } else if (moment(taskDueDate).isSame(yesterday)) {
-                    task.element.dueClose = true;
-                    task.element.due = "Yesterday";
+            if (task.dateEnd) {
+                if (moment(taskDueDate).isSame(moment().format("YYYY-MM-DD"))) {
+                    task.dueDate = "Today";
+                } else if (moment(taskDueDate).isSame(moment().add(1, "days").format("YYYY-MM-DD"))) {
+                    task.dueDate = "Tomorrow";
+                } else if (moment(taskDueDate).isSame(moment().subtract(1, "days").format("YYYY-MM-DD"))) {
+                    task.dueDate = "Yesterday";
                 }
             }
+        });
+        tasks.sort(function(a,b) {
+            if (a.dateEnd < b.dateEnd) {
+                return -1;
+            } 
+            if (a.dateEnd > b.dateEnd) {
+                return 1;
+            }
+            return 0;
         });
     };
     filterTaskDueDate($scope.tasks);
@@ -30,10 +34,10 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
         }
         $scope.tasks.push(data);
         $scope.tasks = _.uniq($scope.tasks, "_id");
+        filterTaskDueDate($scope.tasks);
     });
 
     socket.on("dashboard:new", function(data) {
-        console.log(data);
         if (data.type==="task") {
             var index = _.findIndex($scope.tasks, function(task) {
                 return task._id==data.task._id;
@@ -51,6 +55,7 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
     var listenerCleanFnPush = $rootScope.$on("Task.Inserted", function(event, data) {
         $scope.tasks.push(data);
         $scope.tasks = _.uniq($scope.tasks, "_id");
+        filterTaskDueDate($scope.tasks);
     });
 
     var listenerCleanFnRead = $rootScope.$on("Task.Read", function(event, data) {
