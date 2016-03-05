@@ -165,6 +165,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             $scope.myTasks = copyThreads;
             sortTask($scope.myTasks);
         } else if (data.type==="file") {
+            var originalLength = angular.copy($scope.myMessages.length);
             var index = getItemIndex($scope.myFiles, data._id);
             if (index !== -1) {
                 var currentNotificationIndex = _.findIndex($scope.myFiles[index].element.notifications, function(notification) {
@@ -184,10 +185,12 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                 data.file.element.limitNotifications.push(data.newNotification);
                 data.file.element.notifications.push(data.newNotification);
                 $scope.myFiles.push(data.file);
-                if (data.file.element.type==="file") {
-                    $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "file", isAdd: true, number: 1});
-                } else if (data.file.element.type==="document") {
-                    $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "document", isAdd: true, number: 1});
+                if (originalLength!==$scope.myFiles.length) {
+                    if (data.file.element.type==="file") {
+                        $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "file", isAdd: true, number: 1});
+                    } else if (data.file.element.type==="document") {
+                        $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "document", isAdd: true, number: 1});
+                    }
                 }
             }
             var copyFiles = [];
