@@ -12,8 +12,10 @@ var _ = require('lodash');
 
 EventBus.onSeries('Thread.Inserted', function(thread, next) {
     if (thread.members.length > 0) {
+        var owners = _.clone(thread.members);
+        _.remove(owners, thread.editUser._id);
         var params = {
-            owners: thread.members,
+            owners: owners,
             fromUser: thread.owner,
             element: thread,
             referenceTo: 'thread',

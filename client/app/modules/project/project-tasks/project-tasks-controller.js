@@ -230,7 +230,7 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
             found = (task.completed) ? true : false;
             return found;
         } else {
-            found = (task.completed && !task.element.notificationType) ? false : true;
+            found = (task.completed && task.__v===0) ? false : true;
             return found;
         }
     };

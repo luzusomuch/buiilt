@@ -61,7 +61,9 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
 
     function getItemIndex(array, id) {
         return _.findIndex(array, function(item) {
-            return item._id.toString()===id.toString();
+            if (item._id) {
+                return item._id.toString()===id.toString();
+            }
         });
     };
 
@@ -103,29 +105,35 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     socket.on("dashboard:new", function(data) {
         console.log(data);
         if (data.type==="thread") {
-            var index = getItemIndex($scope.myMessages, data._id);
-            if (index !== -1) {
-                $scope.myMessages[index].element.notifications.push(data.newNotification);
-                if ($scope.myMessages[index].element.limitNotifications.length < 1) {
-                    $scope.myMessages[index].element.limitNotifications.push(data.newNotification);
+            if (data.thread.owner._id!=$rootScope.currentUser._id) {
+                var index = getItemIndex($scope.myMessages, data._id);
+                if (index !== -1) {
+                    $scope.myMessages[index].element.notifications.push(data.newNotification);
+                    if ($scope.myMessages[index].element.limitNotifications.length < 1) {
+                        $scope.myMessages[index].element.limitNotifications.push(data.newNotification);
+                    }
+                } else {
+                    data.thread.element.limitNotifications = [];
+                    data.thread.element.notifications = [];
+                    data.thread.element.limitNotifications.push(data.newNotification);
+                    data.thread.element.notifications.push(data.newNotification);
+                    if (data.thread.owner._id.toString()===$rootScope.currentUser._id.toString()) {
+                        data.thread.element.notifications=[];
+                    } else {
+                        $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "message", isAdd: true, number: 1});
+                    }
+                    $scope.myMessages.push(data.thread);
                 }
-            } else {
-                data.thread.element.limitNotifications = [];
-                data.thread.element.notifications = [];
-                data.thread.element.limitNotifications.push(data.newNotification);
-                data.thread.element.notifications.push(data.newNotification);
-
-                $scope.myMessages.push(data.thread);
+                var copyThreads = [];
+                _.each($scope.myMessages, function(message) {
+                    if (message.name) {
+                        message.element.notifications = _.uniq(message.element.notifications, "message");
+                        message.element.limitNotifications = _.uniq(message.element.limitNotifications, "message");
+                        copyThreads.push(message);
+                    }
+                });
+                $scope.myMessages = copyThreads;
             }
-            var copyThreads = [];
-            _.each($scope.myMessages, function(message) {
-                if (message.name) {
-                    message.element.notifications = _.uniq(message.element.notifications, "message");
-                    message.element.limitNotifications = _.uniq(message.element.limitNotifications, "message");
-                    copyThreads.push(message);
-                }
-            });
-            $scope.myMessages = copyThreads;
         } else if (data.type==="task") {
             _.uniq(data.task.members, "_id");
             var index = getItemIndex($scope.myTasks, data._id);
@@ -528,7 +536,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                 _.each($scope.projects, function(project) {
                     project.select = false;
                 });
-                
+                $state.go("project.messages.detail", {id: res.project._id, messageId: res._id});
             }, function(err) {
                 $scope.showToast("There Has Been An Error...")
             });

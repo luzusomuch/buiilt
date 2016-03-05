@@ -13,13 +13,13 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
     // end check owner team
 
     // remove notifications count immeditely
-    $rootScope.$broadcast("UpdateCountNumber", {type: "message", number: 1});
+    $rootScope.$emit("UpdateCountNumber", {type: "message", number: (thread.__v>0)?1:0});
     // end
 
     // set timeout 4s to mark as read 
     $timeout(function() {
         notificationService.markItemsAsRead({id: $stateParams.messageId}).$promise.then(function() {
-            $rootScope.$broadcast("Thread.Read", thread);
+            $rootScope.$emit("Thread.Read", thread);
             markActivitesAsRead($scope.thread);
         });
     }, 4000);
@@ -240,7 +240,7 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
 				mixpanel.identify($rootScope.currentUser._id);
 				mixpanel.track("Reply Sent");
 				
-                $rootScope.$broadcast("Thread.Update", res);
+                $rootScope.$emit("Thread.Update", res);
             }, function(err) {$scope.showToast("There Has Been An Error...");});
         } else {
             $scope.showToast("There Has Been An Error...");
@@ -257,7 +257,7 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
             messageService.update({id: $scope.thread._id}, $scope.thread).$promise.then(function(res) {
                 $scope.closeModal();
                 $scope.showToast("Message Thread Has Been Updated.");
-                $rootScope.$broadcast("Thread.Update", res);
+                $rootScope.$emit("Thread.Update", res);
             }, function(err){$scope.showToast("There Has Been An Error...");});
         }
     };
@@ -288,7 +288,7 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
             messageService.update({id: $scope.thread._id}, $scope.thread).$promise.then(function(res) {
                 $scope.closeModal();
                 $scope.showToast("Message Thread Has Been Assigned To " +res.name+ " Successfully.");
-                $rootScope.$broadcast("Thread.Update", res);
+                $rootScope.$emit("Thread.Update", res);
             }, function(err){$scope.showToast("There Has Been An Error...");});
         } else {
             $scope.showToast("Please Select At Least 1 Team Member...");
