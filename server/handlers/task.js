@@ -11,11 +11,10 @@ var PushNotificationHelper = require('./../components/helpers/PushNotification')
 
 EventBus.onSeries('Task.Inserted', function(task, next){
     if (task.members.length > 0) {
-        if (_.indexOf(task.members, task.editUser._id) === -1) {
-            task.members.push(task.editUser._id);
-        }
+        var owners = _.clone(task.members);
+        _.remove(owners, task.editUser._id);
         var params = {
-            owners : task.members,
+            owners : owners,
             fromUser : task.owner,
             element : task,
             referenceTo : 'task',

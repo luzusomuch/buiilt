@@ -34,7 +34,7 @@ angular.module('buiiltApp').directive('dashboardSidenav', function(){
 
             var listenerCleanFn = $rootScope.$on("DashboardSidenav-UpdateNumber", function(event, data) {
                 if (data.type==="task") {
-                    $scope.totalTaskUpdates = $scope.totalTaskUpdates-data.number;
+                    $scope.totalTaskUpdates = (data.isAdd) ? $scope.totalTaskUpdates+1 : $scope.totalTaskUpdates-1;
                 } else if (data.type==="file") {
                     $scope.totalFileUpdates = $scope.totalFileUpdates-data.number;
                 } else if (data.type==="document") {
@@ -48,20 +48,20 @@ angular.module('buiiltApp').directive('dashboardSidenav', function(){
                 listenerCleanFn();
             });
 
-            socket.on("dashboard:new", function(data) {
-                if (data.type==="thread") {
-                    $scope.messages.push({_id: data._id});
-                    $scope.messages = _.uniq($scope.messages, "_id");
-                } else if (data.type==="task") {
-                    $scope.totalTaskUpdates = $scope.totalTaskUpdates + 1;
-                } else if (data.type==="file") {
-                    if (data.file.element.type==="file") {
-                        $scope.totalFileUpdates = $scope.totalFileUpdates + 1;
-                    } else if (data.file.element.type==="document") {
-                        $scope.totalDocumentUpdates = $scope.totalDocumentUpdates + 1;
-                    }
-                }
-            });
+            // socket.on("dashboard:new", function(data) {
+            //     if (data.type==="thread") {
+            //         $scope.messages.push({_id: data._id});
+            //         $scope.messages = _.uniq($scope.messages, "_id");
+            //     } else if (data.type==="task") {
+            //         $scope.totalTaskUpdates = $scope.totalTaskUpdates + 1;
+            //     } else if (data.type==="file") {
+            //         if (data.file.element.type==="file") {
+            //             $scope.totalFileUpdates = $scope.totalFileUpdates + 1;
+            //         } else if (data.file.element.type==="document") {
+            //             $scope.totalDocumentUpdates = $scope.totalDocumentUpdates + 1;
+            //         }
+            //     }
+            // });
 
         }
     };

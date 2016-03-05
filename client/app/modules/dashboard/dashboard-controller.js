@@ -105,7 +105,6 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         if (data.type==="thread") {
             var index = getItemIndex($scope.myMessages, data._id);
             if (index !== -1) {
-                
                 $scope.myMessages[index].element.notifications.push(data.newNotification);
                 if ($scope.myMessages[index].element.limitNotifications.length < 1) {
                     $scope.myMessages[index].element.limitNotifications.push(data.newNotification);
@@ -115,6 +114,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                 data.thread.element.notifications = [];
                 data.thread.element.limitNotifications.push(data.newNotification);
                 data.thread.element.notifications.push(data.newNotification);
+
                 $scope.myMessages.push(data.thread);
             }
             var copyThreads = [];
@@ -127,6 +127,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             });
             $scope.myMessages = copyThreads;
         } else if (data.type==="task") {
+            _.uniq(data.task.members, "_id");
             var index = getItemIndex($scope.myTasks, data._id);
             if (index !== -1) {
                 $scope.myTasks[index].element.notifications.push(data.newNotification);
@@ -138,6 +139,11 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                 data.task.element.notifications = [];
                 data.task.element.limitNotifications.push(data.newNotification);
                 data.task.element.notifications.push(data.newNotification);
+                if (data.task.owner._id.toString()===$rootScope.currentUser._id.toString()) {
+                    data.task.element.notifications=[];
+                } else {
+                    $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "task", isAdd: true, number: 1});
+                }
                 $scope.myTasks.push(data.task);
             }
             var copyThreads = [];
