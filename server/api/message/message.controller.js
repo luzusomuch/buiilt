@@ -171,6 +171,8 @@ exports.create = function(req,res) {
         thread.project = req.params.id;
         thread.owner = user._id;
         thread.element = {type: req.body.type};
+        thread.members.push(req.user._id);
+        _.uniq(thread.members);
         var message = {
             text : req.body.message,
             user : user,
