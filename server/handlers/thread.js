@@ -91,7 +91,6 @@ EventBus.onSeries('Thread.Updated', function(thread, next) {
                     }
                 });
                 owners = _.union(owners,toUsers)
-
                 async.each(toUsers,function(toUser,callback) {
                     var params = {
                         owners : owners,
