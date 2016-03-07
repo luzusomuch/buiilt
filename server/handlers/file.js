@@ -14,10 +14,8 @@ var async = require('async');
 EventBus.onSeries('File.Inserted', function(file, next) {
     if (file.element.type === "file") {
         if (file.members.length > 0) {
-            console.log(file.members);
             var owners = _.clone(file.members);
             _.remove(owners, file.owner);
-            console.log(owners);
             var params = {
                 owners : owners,
                 fromUser : file.owner,
@@ -168,7 +166,7 @@ EventBus.onSeries('File.Updated', function(file, next) {
             return next();
         }
     } else if (file.editType==="insert-note") {
-        var owners = file.members;
+        var owners = _.clone(file.members);
         owners.push(file.owner);
         _.remove(owners, file.editUser._id);
         _.uniq(owners);
