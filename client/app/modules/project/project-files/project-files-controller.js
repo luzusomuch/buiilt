@@ -6,6 +6,13 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
 		members:[]
 	};
 
+    if ($state.includes("project.files.all")) {
+        fileService.getProjectFiles({id: $stateParams.id, type: "file"}).$promise.then(function(res) {
+            $scope.files = res;
+            getLastAccess($scope.files);
+        });
+    }
+
     function getLastAccess(files) {
         _.each(files, function(file) {
             if (file.lastAccess&&file.lastAccess.length>0) {
@@ -24,7 +31,6 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
         data.__v=1;
         $scope.files.push(data);
         filterAcknowledgeFiles($scope.files);
-        getLastAccess($scope.files);
     });
 
     socket.on("file:archive", function(data) {
@@ -35,7 +41,6 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
             $scope.files[currentFileIndex].isArchive=true;
             $scope.files[currentFileIndex].__v = 0;
         }
-        getLastAccess($scope.files);
     });
 
     socket.on("dashboard:new", function(data) {
@@ -50,19 +55,16 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
         if (index !== -1) {
             $scope.files[index].__v=0;
         }
-        getLastAccess($scope.files);
     });
 
     var listenerCleanFnPush = $rootScope.$on("File.Inserted", function(event, data) {
         $scope.files.push(data);
         filterAcknowledgeFiles($scope.files);
-        getLastAccess($scope.files);
     });
 
     var listenerCleanFnAcknow = $rootScope.$on("Project-File-Acknowledge", function(event, index) {
         $scope.files[index].element.notificationType = null;
         $scope.files[index].__v = 0;
-        getLastAccess($scope.files);
     });
 
     var listenerCleanFnPushFromDashboard = $rootScope.$on("Dashboard.File.Update", function(event, data) {
@@ -73,7 +75,6 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
             $scope.files[index].uniqId = data.uniqId;
             $scope.files[index].__v+=1;
         }
-        getLastAccess($scope.files);
     });
 
     $scope.$on('$destroy', function() {

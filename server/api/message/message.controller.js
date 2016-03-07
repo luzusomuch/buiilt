@@ -127,6 +127,8 @@ exports.lastAccess = function(req, res) {
             });
             if (index !== -1) {
                 thread.lastAccess[index].time = new Date();
+            } else {
+                thread.lastAccess.push({user: req.user._id, time: new Date()});
             }
         } else {
             thread.lastAccess = [{user: req.user._id, time: new Date()}];

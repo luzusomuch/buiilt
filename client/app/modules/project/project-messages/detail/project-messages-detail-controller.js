@@ -15,16 +15,16 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
     // remove notifications count immeditely
     $rootScope.$emit("UpdateCountNumber", {type: "message", number: (thread.__v>0)?1:0});
     messageService.lastAccess({id: $stateParams.messageId}).$promise.then(function(data) {
-        if (thread.lastAccess && thread.lastAccess.length > 0) {
-            var index = _.findIndex(thread.lastAccess, function(access) {
-                access.user==$rootScope.currentUser._id;
-            });
-            if (index !== -1) {
-                thread.lastAccess[index].time = new Date();
-            }
-        } else {
-            thread.lastAccess = [{user: $rootScope.currentUser._id, time: new Date()}];
-        }
+        // if (thread.lastAccess && thread.lastAccess.length > 0) {
+        //     var index = _.findIndex(thread.lastAccess, function(access) {
+        //         access.user==$rootScope.currentUser._id;
+        //     });
+        //     if (index !== -1) {
+        //         thread.lastAccess[index].time = new Date();
+        //     }
+        // } else {
+        //     thread.lastAccess = [{user: $rootScope.currentUser._id, time: new Date()}];
+        // }
         $rootScope.$emit("Thread.Read", thread);
     });
     // end

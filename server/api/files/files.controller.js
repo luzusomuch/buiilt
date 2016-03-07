@@ -108,6 +108,8 @@ exports.lastAccess = function(req, res) {
             });
             if (index !== -1) {
                 file.lastAccess[index].time = new Date();
+            } else {
+                file.lastAccess.push({user: req.user._id, time: new Date()});
             }
         } else {
             file.lastAccess = [{user: req.user._id, time: new Date()}];

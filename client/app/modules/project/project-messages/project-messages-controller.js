@@ -3,6 +3,13 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
     $scope.people = people;
 	$scope.threads = threads;
 
+    if ($state.includes("project.messages.all")) {
+        messageService.getProjectThread({id: $stateParams.id}).$promise.then(function(res) {
+            $scope.threads = res;
+            getLastAccess($scope.threads);
+        });
+    }
+
     // this function use to seperate non-notification and notifications
     function threadsSeperate(threads) {
         $scope.threadsWithNotification = [];
@@ -30,6 +37,15 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
                 }
             }
         });
+        threads.sort(function(a,b) {
+            if (a.updatedAt < b.updatedAt) {
+                return 1;
+            } 
+            if (a.updatedAt > b.updatedAt) {
+                return -1;
+            }
+            return 0;
+        });
     };
 
     getLastAccess($scope.threads);
@@ -38,7 +54,6 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
         data.__v =1;
         $scope.threads.push(data);
         $scope.threads = _.uniq($scope.threads, "_id");
-        getLastAccess($scope.threads);
     });
 
     socket.on("thread:archive", function(data) {
@@ -49,7 +64,6 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
             $scope.threads[currentThreadIndex].isArchive=true;
             $scope.threads[currentThreadIndex].__v = 0;
         }
-        getLastAccess($scope.threads);
     });
     
     socket.on("dashboard:new", function(data) {
@@ -67,7 +81,6 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
     var listenerCleanFnPush = $rootScope.$on("Thread.Inserted", function(event, data) {
         $scope.threads.push(data);
         $scope.threads = _.uniq($scope.threads, "_id"); 
-        getLastAccess($scope.threads);
     });
 
     var listenerCleanFnRead = $rootScope.$on("Thread.Read", function(event, data) {
@@ -77,13 +90,11 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
         if (index !== -1) {
             $scope.threads[index].__v=0;
         }
-        getLastAccess($scope.threads);
     });
 
     var listenerCleanFnAcknow = $rootScope.$on("Project-Message-Update", function(event, index) {
         $scope.threads[index].element.notificationType = null;
         $scope.threads[index].__v = 0;
-        getLastAccess($scope.threads);
     });
 
     var listenerCleanFnPushFromDashboard = $rootScope.$on("Dashboard.Thread.Update", function(event, data) {
@@ -94,7 +105,6 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
             $scope.threads[index].uniqId = data.uniqId;
             $scope.threads[index].__v+=1;
         }
-        getLastAccess($scope.threads);
     });
 
     $scope.$on('$destroy', function() {

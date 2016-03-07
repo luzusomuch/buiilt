@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('projectDocumentationCtrl', function($rootScope, $scope, $mdDialog, documents, uploadService, $mdToast, $stateParams, socket, $state) {
+angular.module('buiiltApp').controller('projectDocumentationCtrl', function($rootScope, $scope, $mdDialog, documents, uploadService, $mdToast, $stateParams, socket, $state, fileService) {
     $scope.documents = documents;
 
     function setUploadFile(){
@@ -13,6 +13,13 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
         });
     };
     setUploadFile();
+
+    if ($state.includes("project.documentation.all")) {
+        fileService.getProjectFiles({id: $stateParams.id, type: "document"}).$promise.then(function(res) {
+            $scope.documents = res;
+            getLastAccess($scope.documents);
+        });
+    }
 
     function getLastAccess(documents) {
         _.each(documents, function(document) {
@@ -64,7 +71,6 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
 
     var listenerCleanFnPush = $rootScope.$on("Document.Uploaded", function(event, data) {
         $scope.documents.push(data);
-        getLastAccess($scope.documents);
     });
 
     var listenerCleanFnRead = $rootScope.$on("Document.Read", function(event, data) {
@@ -74,7 +80,6 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
         if (index !== -1) {
             $scope.documents[index].__v=0;
         }
-        getLastAccess($scope.documents);
     });
 
     var listenerCleanFnPushFromDashboard = $rootScope.$on("Dashboard.Document.Update", function(event, data) {
@@ -85,7 +90,6 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
             $scope.documents[index].uniqId = data.uniqId;
             $scope.documents[index].__v+=1;
         }
-        getLastAccess($scope.documents);
     });
 
     $scope.$on('$destroy', function() {
@@ -102,7 +106,6 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
             $scope.documents[currentFileIndex].isArchive=true;
             $scope.documents[currentFileIndex].__v = 0;
         }
-        getLastAccess($scope.documents);
     });
 
     socket.on("dashboard:new", function(data) {
