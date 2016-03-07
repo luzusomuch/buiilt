@@ -19,7 +19,7 @@ var all = {
   root: path.normalize(__dirname + '/../../..'),
 
   // new root path
-  newRoot: path.normalize(__dirname + '/../../../'),
+  newRoot: path.normalize(__dirname + '/../../../csv/'),
 
   //Path to media file
   media: path.normalize(__dirname + '/../../../client/media/files/'),

@@ -251,26 +251,35 @@ exports.updateProject = function(req, res) {
         }
     });
 };
+// Change date to DD/MM/YYYY hh:mm:ss
+function changeDateToMiniFormat(date) {
+    return moment(date).format("DD/MM/YYYY HH:mm:ss");
+};
+
+// Change date to MMM Do, YYYY
+function changeDateToFullFormat(Date) {
+    return moment().format("MMM Do, YYYY");
+};
 
 function sendInfoToUser(req, res) {
     async.parallel({
         people: function(cb) {
             People.findOne({project: req.project._id})
-            .populate("builders.tenderers._id", "_id email name")
-            .populate("builders.tenderers.teamMember", "_id email name")
-            .populate("builders.inviter", "_id email name")
-            .populate("architects.tenderers._id", "_id email name")
-            .populate("architects.tenderers.teamMember", "_id email name")
-            .populate("architects.inviter", "_id email name")
-            .populate("clients.tenderers._id", "_id email name")
-            .populate("clients.tenderers.teamMember", "_id email name")
-            .populate("clients.inviter", "_id email name")
-            .populate("subcontractors.tenderers._id", "_id email name")
-            .populate("subcontractors.tenderers.teamMember", "_id email name")
-            .populate("subcontractors.inviter", "_id email name")
-            .populate("consultants.tenderers._id", "_id email name")
-            .populate("consultants.tenderers.teamMember", "_id email name")
-            .populate("consultants.inviter", "_id email name")
+            .populate("builders.tenderers._id", "_id email name phoneNumber")
+            .populate("builders.tenderers.teamMember", "_id email name phoneNumber")
+            .populate("builders.inviter", "_id email name phoneNumber")
+            .populate("architects.tenderers._id", "_id email name phoneNumber")
+            .populate("architects.tenderers.teamMember", "_id email name phoneNumber")
+            .populate("architects.inviter", "_id email name phoneNumber")
+            .populate("clients.tenderers._id", "_id email name phoneNumber")
+            .populate("clients.tenderers.teamMember", "_id email name phoneNumber")
+            .populate("clients.inviter", "_id email name phoneNumber")
+            .populate("subcontractors.tenderers._id", "_id email name phoneNumber")
+            .populate("subcontractors.tenderers.teamMember", "_id email name phoneNumber")
+            .populate("subcontractors.inviter", "_id email name phoneNumber")
+            .populate("consultants.tenderers._id", "_id email name phoneNumber")
+            .populate("consultants.tenderers.teamMember", "_id email name phoneNumber")
+            .populate("consultants.inviter", "_id email name phoneNumber")
             .populate("project")
             .exec(cb);
         },
@@ -286,169 +295,304 @@ function sendInfoToUser(req, res) {
             var data = [];
             async.parallel([
                 function(cb) {
-                    _.each(roles, function(role) {
-                        _.each(people[role], function(tender) {
-                            // if the current loop user is the inviter
-                            if (tender.inviter._id.toString()===user._id.toString()) {
-                                _.each(tender.tenderers, function(tenderer) {
-                                    if (tenderer._id) {
-                                        data.push({
-                                            type: "Tender invited",
-                                            createdAt: '',
-                                            name: "You have invited " + tenderer._id.name + " for tender " + tender.tenderName,
-                                            description: '',
-                                            url: '',
-                                            version: '',
-                                            content: ''
-                                        });
-                                    }
-                                });
-                            }
-                            // if the current loop user is tenderer
-                            if (_.findIndex(tender.tenderers, function(tenderer) {
-                                if (tenderer._id) {
-                                    return tenderer._id._id.toString() === user._id.toString();
-                                }
-                            }) !== -1) {
-                                data.push({
-                                    type: "Tenderer",
-                                    createdAt: '',
-                                    name: "You have been invited by " + tender.inviter.name + " for tender " + tender.tenderName,
-                                    description: '',
-                                    url: '',
-                                    version: '',
-                                    content: ''
-                                });
-                            } else {
-                                _.each(tender.tenderers, function(tenderer) {
-                                    _.each(tenderer.teamMember, function(member) {
-                                        if (member._id.toString() === user._id.toString()) {
-                                            data.push({
-                                                type: "Tenderer Team Member",
-                                                createdAt: '',
-                                                name: "You have been invited as a team member for tender " + tender.tenderName,
-                                                description: '',
-                                                url: '',
-                                                version: '',
-                                                content: ''
-                                            });
-                                        }
-                                    });
-                                });
-                            }
-                        });
-                    });
-                    cb();
-                },
-                function(cb) {
-                    Task.find({project: req.params.id, $or:[{owner: user._id}, {members: user._id}]}, function(err, tasks) {
-                        if (err || tasks.length === 0) {cb();}
+                    var fields = ["Project Name", "Project Address", "Project Description"];
+                    json2csv({data: [{"Project Name": req.project.name, "Project Address": req.project.address, "Project Description": req.project.description}], fields: fields}, function(err, csv) {
+                        if (err) {cb(err);}
                         else {
-                        _.each(tasks, function(task) {
-                            data.push({
-                                type: "Task",
-                                createdAt: moment(task.createdAt).format("MM-DD-YYYY"),
-                                name: task.name,
-                                description: task.description,
-                                url: '',
-                                version: '',
-                                content: ''
+                            var filename = user._id+"-"+req.project._id+"-archive-overview.csv";
+                            fs.writeFile(config.newRoot+filename, csv, function(err){
+                                if (err) {cb(err);}
+                                data.push(filename);
+                                cb(null);
                             });
-                        });
-                        cb(null,data);
                         }
                     });
                 },
                 function(cb) {
-                    File.find({
-                    project: req.params.id, 
-                    $or:[{"element.type":"file", $or:[{members: user._id}, {owner: user._id}]}, 
-                        {"element.type":"document"}]}, function(err, files) {
-                        if (err || files.length === 0) {cb();}
-                        else {
-                            _.each(files, function(file) {
-                                data.push({
-                                    type: (file.element.type === "file") ? "File" : "Document",
-                                    createdAt: moment(file.createdAt).format("MM-DD-YYYY"),
-                                    name: file.name,
-                                    description: file.description,
-                                    url: file.path,
-                                    version: file.version,
-                                    content: ''
+                    var team = [];
+                    _.each(roles, function(role) {
+                        _.each(people[role], function(tender) {
+                            if (tender.hasSelect && tender.tenderers[0]._id && tender.tenderers[0]._id._id.toString()===user._id.toString()) {
+                                team.push({"Member Name": user.name, "Email": user.email, "Phone Number": user.phoneNumber, "Team Type": role});
+                                _.each(tender.tenderers[0].teamMember, function(member) {
+                                    team.push({"Member Name": member.name, "Email": member.email, "Phone Number": member.phoneNumber, "Team Type": role});
                                 });
-                                if (file.fileHistory.length > 0) {
-                                    _.each(file.fileHistory, function(history) {
-                                        data.push({
-                                            type: (file.element.type === "file") ? "File Reversion" : "Document Reversion",
-                                            createdAt: moment(history.createdAt).format("MM-DD-YYYY"),
-                                            name: history.name,
-                                            description: history.description,
-                                            url: history.link,
-                                            version: history.version,
-                                            content: ''
+                            } else {
+                                var index = _.findIndex(tender.tenderers[0].teamMember, function(member) {
+                                    return member._id.toString()===user._id.toString();
+                                });
+                                if (index !== -1) {
+                                    team.push({"Member Name": tender.tenderers[0]._id.name, "Email": tender.tenderers[0]._id.email, "Phone Number": tender.tenderers[0]._id.phoneNumber, "Team Type": role});
+                                    _.each(tender.tenderers[0].teamMember, function(member) {
+                                        team.push({"Member Name": member.name, "Email": member.email, "Phone Number": member.phoneNumber, "Team Type": role});
+                                    });
+                                }
+                            }
+                        });
+                    });
+                    var fields = ["Member Name", "Email", "Phone Number", "Team Type"];
+                    json2csv({data: team, fields: fields}, function(err, csv) {
+                        if (err) {cb(err);}
+                        else {
+                            var filename = user._id+"-"+req.project._id+"-archive-team.csv";
+                            fs.writeFile(config.newRoot+filename, csv, function(err){
+                                if (err) {cb(err);}
+                                data.push(filename);
+                                cb(null);
+                            });
+                        }
+                    });
+                },
+                function(cb) {
+                    var threadsData = [];
+                    Thread.find({project: req.project._id, $or:[{owner: user._id}, {members: user._id}]})
+                    .populate("members")
+                    .populate("activities.user")
+                    .exec(function(err, threads) {
+                        if (err) {cb(err);}
+                        else {
+                            _.each(threads, function(thread) {
+                                var threadMembers ="";
+                                _.each(thread.members, function(member) {
+                                    threadMembers += member.name + ", ";
+                                });
+                                threadsData.push({"Thread Name": thread.name, "Assignees": threadMembers, "Activity Time": changeDateToMiniFormat(thread.createdAt), "Activity Description": "This message thread was created on "+changeDateToFullFormat(thread.createdAt), "Activity Detail": "N/A"});
+                                _.each(thread.activities, function(activity) {
+                                    if (activity.type==="chat") {
+                                        threadsData.push({"Thread Name": thread.name, "Assignees": threadMembers, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": activity.user.name + " replied to this message thread at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(thread.createdAt), "Activity Detail": activity.element.message});
+                                    } else if (activity.type==="assign") {
+                                        var assignees="";
+                                        _.each(activity.element.invitees, function(assignee) {
+                                            assignees += assignee + ", ";
                                         });
+                                        threadsData.push({"Thread Name": thread.name, "Assignees": threadMembers, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": activity.user.name + " assigned new members this message thread at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(thread.createdAt), "Activity Detail": assignees});
+                                    } else if (activity.type==="related-task") {
+                                        threadsData.push({"Thread Name": thread.name, "Assignees": threadMembers, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": activity.user.name + " created new related task for this message thread at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(thread.createdAt), "Activity Detail": "Task "+activity.element.name});
+                                    } else if (activity.type==="related-file") {
+                                        threadsData.push({"Thread Name": thread.name, "Assignees": threadMembers, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": activity.user.name + " created new related file for this message thread at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(thread.createdAt), "Activity Detail": "File "+activity.element.name});                                    
+                                    } else if (activity.type==="archive") {
+                                        threadsData.push({"Thread Name": thread.name, "Assignees": threadMembers, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": activity.user.name + " archived this message thread at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(thread.createdAt), "Activity Detail": "N/a"});                                    
+                                    } else if (activity.type==="unarchive") {
+                                        threadsData.push({"Thread Name": thread.name, "Assignees": threadMembers, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": activity.user.name + " unarchived this message thread at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(thread.createdAt), "Activity Detail": "N/a"});                                    
+                                    }
+                                });
+                            });
+                            var fields = ["Thread Name", "Assignees", "Activity Time", "Activity Description", "Activity Detail"];
+                            json2csv({data: threadsData, fields: fields}, function(err, csv) {
+                                if (err) {cb(err);}
+                                else {
+                                    var filename = user._id+"-"+req.project._id+"-archive-threads.csv";
+                                    fs.writeFile(config.newRoot+filename, csv, function(err){
+                                        if (err) {cb(err);}
+                                        else {
+                                            data.push(filename);
+                                            cb(null);
+                                        }
                                     });
                                 }
                             });
-                            cb(null, data);
                         }
                     });
                 }, 
                 function(cb) {
-                    Thread.find({project: req.params.id, $or:[{owner: user._id}, {members: user._id}]})
-                    .populate("messages.user")
-                    .exec(function(err, threads) {
-                        if (err || threads.length === 0) {cb();}
+                    var taskDatas = [];
+                    Task.find({project: req.project._id, $or:[{members: user._id}, {owner: user._id}]})
+                    .populate("members")
+                    .populate("activities.user")
+                    .exec(function(err, tasks) {
+                        if (err) {cb(err);}
                         else {
-                            _.each(threads, function(thread) {
-                                data.push({
-                                    type: "Thread",
-                                    createdAt: moment(thread.createdAt).format("MM-DD-YYYY"),
-                                    name: thread.name,
-                                    description: thread.description,
-                                    url: '',
-                                    version: '',
-                                    content: ''
+                            _.each(tasks, function(task) {
+                                var taskMembers ="";
+                                _.each(task.members, function(member) {
+                                    taskMembers += member.name + ", ";
                                 });
-                                if (thread.messages.length > 0) {
-                                    _.each(thread.messages, function(message) {
-                                        data.push({
-                                            type: "Thread Message Detail",
-                                            createdAt: moment(message.sendAt).format("MM-DD-YYYY"),
-                                            name: thread.name,
-                                            description: thread.description,
-                                            url: '',
-                                            version: '',
-                                            content: message.user.name + " said: " + message.text
+                                taskDatas.push({"Task Description": task.description, "Assignees": taskMembers, "Activity Time": changeDateToMiniFormat(task.createdAt), "Activity Description": "This task was created on "+changeDateToFullFormat(task.createdAt), "Activity Detail": "N/A"});
+                                _.each(task.activities, function(activity) {
+                                    if (activity.type==="edit-task") {
+                                        var editedString = "";
+                                        if (activity.element.description) {
+                                            editedString += "Description: " + activity.element.description + ", ";
+                                        } 
+                                        if (activity.element.dateEnd) {
+                                            editedString += "Date End: " + moment(activity.element.dateEnd).format("DD/MM/YYYY");
+                                        }
+                                        taskDatas.push({"Task Description": task.description, "Assignees": taskMembers, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": activity.user.name + " edited this task at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(task.createdAt), "Activity Detail": editedString});
+                                    } else if (activity.type==="assign") {
+                                        var assignees=""; 
+                                        _.each(activity.element.members, function(assignee) {
+                                            assignees += assignee + ", ";
                                         });
+                                        taskDatas.push({"Task Description": task.description, "Assignees": taskMembers, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": activity.user.name + " assigned new members this task at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(task.createdAt), "Activity Detail": assignees});
+                                    } else if (activity.type==="insert-note") {
+                                        taskDatas.push({"Task Description": task.description, "Assignees": taskMembers, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": activity.user.name + " added new note for this task at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(task.createdAt), "Activity Detail": activity.element.content});
+                                    } else if (activity.type==="complete-task") {
+                                        taskDatas.push({"Task Description": task.description, "Assignees": taskMembers, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": activity.user.name + " marked this task as completed at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(task.createdAt), "Activity Detail": "N/A"});
+                                    } else if (activity.type==="uncomplete-task") {
+                                        taskDatas.push({"Task Description": task.description, "Assignees": taskMembers, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": activity.user.name + " marked this task as un-complete at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(task.createdAt), "Activity Detail": "N/A"});
+                                    }
+                                });
+                            });
+                            var fields = ["Task Description", "Assignees", "Activity Time", "Activity Description", "Activity Detail"];
+                            json2csv({data: taskDatas, fields: fields}, function(err, csv) {
+                                if (err) {cb(err);}
+                                else {
+                                    var filename = user._id+"-"+req.project._id+"-archive-tasks.csv";
+                                    fs.writeFile(config.newRoot+filename, csv, function(err){
+                                        if (err) {cb(err);}
+                                        else {
+                                            data.push(filename);
+                                            cb(null);
+                                        }
                                     });
                                 }
                             });
-                            cb(null, data);
+                        }
+                    });
+                }, 
+                function(cb) {
+                    File.find({project: req.project._id, "element.type":"file", $or:[{owner: user._id},{members:user._id}]})
+                    .populate("members")
+                    .populate("activities.user")
+                    .exec(function(err, files) {
+                        if (err) {cb(err);}
+                        else {
+                            var fileDatas = [];
+                            _.each(files, function(file) {
+                                var fileMembers ="";
+                                _.each(file.members, function(member) {
+                                    fileMembers += member.name + ", ";
+                                });
+                                var fileTags = "";
+                                _.each(file.tags, function(tag) {
+                                    fileTags += tag + ", ";
+                                });
+                                fileDatas.push({"File Name": file.name, "Assignees": fileMembers, "Activity Time": changeDateToMiniFormat(file.createdAt), "Activity Description": "This File was created on "+changeDateToFullFormat(file.createdAt), "Activity Detail": "N/A", "URL": "N/A", "Tag": fileTags});
+                                _.each(file.activities, function(activity) {
+                                    if (activity.type==="upload-reversion") {
+                                        var index = _.findIndex(file.fileHistory, function(history) {
+                                            if (history.activityAndHisToryId) {
+                                                return history.activityAndHisToryId.toString()===activity.activityAndHisToryId.toString();
+                                            }
+                                        });
+                                        if (index !== -1) {
+                                            var link = file.fileHistory[index].link;
+                                        }
+                                        fileDatas.push({"File Name": file.name, "Assignees": fileMembers, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": activity.user.name + " upload this file reversion at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(file.createdAt), "Activity Detail": "N/A", "URL": (link) ? link : "N/A", "Tags": fileTags});
+                                    } else if (activity.type==="insert-note") {
+                                        fileDatas.push({"File Name": file.name, "Assignees": fileMembers, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": activity.user.name + " added a note for this file reversion at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(file.createdAt), "Activity Detail": activity.element.content, "URL": "N/A", "Tags": fileTags});
+                                    } else if (activity.type==="archive") {
+                                        fileDatas.push({"File Name": file.name, "Assignees": fileMembers, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": activity.user.name + " archived this file reversion at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(file.createdAt), "Activity Detail": "N/A", "URL": "N/A", "Tags": fileTags});
+                                    } else if (activity.type==="unarchived") {
+                                        fileDatas.push({"File Name": file.name, "Assignees": fileMembers, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": activity.user.name + " unarchived this file reversion at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(file.createdAt), "Activity Detail": "N/A", "URL": "N/A", "Tags": fileTags});
+                                    }
+                                });
+                            });
+                            var fields = ["File Name", "Assignees", "Activity Time", "Activity Description", "Activity Detail", "URL", "Tags"];
+                            json2csv({data: fileDatas, fields: fields}, function(err, csv) {
+                                if (err) {cb(err);}
+                                else {
+                                    var filename = user._id+"-"+req.project._id+"-archive-files.csv";
+                                    fs.writeFile(config.newRoot+filename, csv, function(err){
+                                        if (err) {cb(err);}
+                                        else {
+                                            data.push(filename);
+                                            cb(null);
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                },
+                function(cb) {
+                    File.find({project: req.project._id, "element.type":"document", $or:[{owner: user._id},{"fileHistory.members._id":user._id}]})
+                    .populate("members")
+                    .populate("activities.user")
+                    .populate("fileHistory.members._id")
+                    .exec(function(err, files) {
+                        if (err) {cb(err);}
+                        else {
+                            var documentDatas = [];
+                            _.each(files, function(file) {
+                                documentDatas.push({"Document Name": file.name, "Activity Time": changeDateToMiniFormat(file.createdAt), "Activity Description": "This Document was created on "+changeDateToFullFormat(file.createdAt), "Activity Detail": "N/A", "URL": "N/A", "Version Tag": "N/a", "Assignees": "N/a"});
+                                _.each(file.activities, function(activity) {
+                                    if (activity.type==="upload-reversion") {
+                                        var index = _.findIndex(file.fileHistory, function(history) {
+                                            if (history.activityAndHisToryId) {
+                                                return history.activityAndHisToryId.toString()===activity.activityAndHisToryId.toString();
+                                            }
+                                        });
+                                        if (index !== -1) {
+                                            var link = file.fileHistory[index].link;
+                                            var versionMembers = "";
+                                            var versionTags = file.fileHistory[index].versionTags[0];
+                                            _.each(file.fileHistory[index].members, function(member) {
+                                                if (member._id) {
+                                                    versionMembers += member._id.name + ", ";
+                                                }
+                                            });
+                                        }
+                                        documentDatas.push({"Document Name": file.name, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": activity.user.name + " upload this document reversion at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(file.createdAt), "Activity Detail": "N/A", "URL": (link) ? link : "N/A", "Version Tag": versionTags, "Assignees": versionMembers});
+                                    } else if (activity.type==="archive") {
+                                        documentDatas.push({"Document Name": file.name, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": activity.user.name + " archived this document at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(file.createdAt), "Activity Detail": "N/A", "URL": "N/A", "Version Tags": "N/A", "Assignees": "N/A"});
+                                    } else if (activity.type==="unarchived") {
+                                        documentDatas.push({"Document Name": file.name, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": activity.user.name + " unarchived this document at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(file.createdAt), "Activity Detail": "N/A", "URL": "N/A", "Version Tags": "N/A", "Assignees": "N/A"});
+                                    }
+                                });
+                            });
+                            var fields = ["Document Name", "Assignees", "Activity Time", "Activity Description", "Activity Detail", "URL", "Tags"];
+                            json2csv({data: documentDatas, fields: fields}, function(err, csv) {
+                                if (err) {cb(err);}
+                                else {
+                                    var filename = user._id+"-"+req.project._id+"-archive-documents.csv";
+                                    fs.writeFile(config.newRoot+filename, csv, function(err){
+                                        if (err) {cb(err);}
+                                        else {
+                                            data.push(filename);
+                                            cb(null);
+                                        }
+                                    });
+                                }
+                            });
                         }
                     });
                 }
             ], function(err, result) {
                 if (err) {return res.send(500,err);}
-                var filename = user._id+"-archive-"+people.project.name+".csv"
-                json2csv({data: data}, function(err, csv) {
-                    if (err) {console.log(err);}
-                    fs.writeFile(filename, csv, function(err) {
-                        if (err) 
-                            throw err;
-                        S3.uploadFile({path: config.newRoot+filename, name: filename}, function(err, data) {
-                            if (err) {console.log(err);return res.send(err);}
-                            var link = S3.getPublicUrl(filename);
-                            Mailer.sendMail('download-project-data.html', config.emailFrom, user.email, {
-                                user: user.toJSON(),
-                                link: link,
-                                subject: 'Archived data for ' + people.project.name
-                            },function(err){
-                                console.log(err);
-                                fs.unlinkSync(config.newRoot+filename);
-                                callback();
-                            });
+                var links = [];
+                async.each(data, function(file, cb) {
+                    S3.uploadFile({path: config.newRoot+file, name: file}, function(err, data) {
+                        if (err) {cb(err);}
+                        else {
+                            var type = "";
+                            if (file.search("tasks") !== -1) {
+                                type = "Tasks";
+                            } else if (file.search("threads") !== -1) {
+                                type = "Threads";
+                            } else if (file.search("files") !== -1) {
+                                type = "Files";
+                            } else if (file.search("documents") !== -1) {
+                                type = "Documents";
+                            } else if (file.search("overview") !== -1) {
+                                type = "Overview";
+                            } else if (file.search("team") !== -1) {
+                                type = "Team";
+                            }
+                            links.push({type: type, url: S3.getPublicUrl(file)});
+                            cb(null);
+                        }
+                    });
+                }, function() {
+                    Mailer.sendMail('download-project-data.html', config.emailFrom, user.email, {
+                        user: user.toJSON(),
+                        links: links,
+                        subject: 'Archived data for ' + req.project.name
+                    },function(err){
+                        _.each(data, function(d) {
+                            fs.unlinkSync(config.newRoot+d);
                         });
+                        callback();
                     });
                 });
             });
@@ -497,108 +641,252 @@ exports.backup = function(req, res) {
             if (isAvailableUser) {
                 async.parallel([
                     function(cb) {
-                        Task.find({project: req.params.id, $or:[{owner: user._id}, {members: user._id}]}, function(err, tasks) {
-                            if (err || tasks.length === 0) {cb();}
-                            _.each(tasks, function(task) {
-                                data.push({
-                                    type: "Task",
-                                    createdAt: moment(task.createdAt).format("MM-DD-YYYY"),
-                                    name: task.name,
-                                    description: task.description,
-                                    url: '',
-                                    version: '',
-                                    content: ''
-                                });
-                            });
-                            cb(null,data);
-                        });
-                    },
-                    function(cb) {
-                        File.find({
-                        project: req.params.id, 
-                        $or:[{"element.type":"file", $or:[{members: user._id}, {owner: user._id}]}, 
-                            {"element.type":"document"}]}, function(err, files) {
-                            if (err || files.length === 0) {cb();}
-                            _.each(files, function(file) {
-                                data.push({
-                                    type: (file.element.type === "file") ? "File" : "Document",
-                                    createdAt: moment(file.createdAt).format("MM-DD-YYYY"),
-                                    name: file.name,
-                                    description: file.description,
-                                    url: file.path,
-                                    version: file.version,
-                                    content: ''
-                                });
-                                if (file.fileHistory.length > 0) {
-                                    _.each(file.fileHistory, function(history) {
-                                        data.push({
-                                            type: (file.element.type === "file") ? "File Reversion" : "Document Reversion",
-                                            createdAt: moment(history.createdAt).format("MM-DD-YYYY"),
-                                            name: history.name,
-                                            description: history.description,
-                                            url: history.link,
-                                            version: history.version,
-                                            content: ''
-                                        });
+                        var threadsData = [];
+                        Thread.find({project: project._id, $or:[{owner: user._id}, {members: user._id}]})
+                        .populate("members")
+                        .populate("activities.user")
+                        .exec(function(err, threads) {
+                            if (err) {cb(err);}
+                            else {
+                                _.each(threads, function(thread) {
+                                    var threadMembers ="";
+                                    _.each(thread.members, function(member) {
+                                        threadMembers += member.name + ", ";
                                     });
-                                }
-                            });
-                            cb(null, data);
+                                    threadsData.push({"Thread Name": thread.name, "Assignees": threadMembers, "Activity Time": changeDateToMiniFormat(thread.createdAt), "Activity Description": "This message thread was created on "+changeDateToFullFormat(thread.createdAt), "Activity Detail": "N/A"});
+                                    _.each(thread.activities, function(activity) {
+                                        if (activity.type==="chat") {
+                                            threadsData.push({"Thread Name": thread.name, "Assignees": threadMembers, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": activity.user.name + " replied to this message thread at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(thread.createdAt), "Activity Detail": activity.element.message});
+                                        } else if (activity.type==="assign") {
+                                            var assignees="";
+                                            _.each(activity.element.invitees, function(assignee) {
+                                                assignees += assignee + ", ";
+                                            });
+                                            threadsData.push({"Thread Name": thread.name, "Assignees": threadMembers, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": activity.user.name + " assigned new members this message thread at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(thread.createdAt), "Activity Detail": assignees});
+                                        } else if (activity.type==="related-task") {
+                                            threadsData.push({"Thread Name": thread.name, "Assignees": threadMembers, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": activity.user.name + " created new related task for this message thread at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(thread.createdAt), "Activity Detail": "Task "+activity.element.name});
+                                        } else if (activity.type==="related-file") {
+                                            threadsData.push({"Thread Name": thread.name, "Assignees": threadMembers, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": activity.user.name + " created new related file for this message thread at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(thread.createdAt), "Activity Detail": "File "+activity.element.name});                                    
+                                        } else if (activity.type==="archive") {
+                                            threadsData.push({"Thread Name": thread.name, "Assignees": threadMembers, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": activity.user.name + " archived this message thread at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(thread.createdAt), "Activity Detail": "N/a"});                                    
+                                        } else if (activity.type==="unarchive") {
+                                            threadsData.push({"Thread Name": thread.name, "Assignees": threadMembers, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": activity.user.name + " unarchived this message thread at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(thread.createdAt), "Activity Detail": "N/a"});                                    
+                                        }
+                                    });
+                                });
+                                var fields = ["Thread Name", "Assignees", "Activity Time", "Activity Description", "Activity Detail"];
+                                json2csv({data: threadsData, fields: fields}, function(err, csv) {
+                                    if (err) {cb(err);}
+                                    else {
+                                        var filename = user._id+"-"+project._id+"-archive-threads.csv";
+                                        fs.writeFile(config.newRoot+filename, csv, function(err){
+                                            if (err) {cb(err);}
+                                            else {
+                                                data.push(filename);
+                                                cb(null);
+                                            }
+                                        });
+                                    }
+                                });
+                            }
                         });
                     }, 
                     function(cb) {
-                        Thread.find({project: req.params.id, $or:[{owner: user._id}, {members: user._id}]})
-                        .populate("messages.user")
-                        .exec(function(err, threads) {
-                            if (err || threads.length === 0) {cb();}
-                            _.each(threads, function(thread) {
-                                data.push({
-                                    type: "Thread",
-                                    createdAt: moment(thread.createdAt).format("MM-DD-YYYY"),
-                                    name: thread.name,
-                                    description: thread.description,
-                                    url: '',
-                                    version: '',
-                                    content: ''
-                                });
-                                if (thread.messages.length > 0) {
-                                    _.each(thread.messages, function(message) {
-                                        data.push({
-                                            type: "Thread Message Detail",
-                                            createdAt: moment(message.sendAt).format("MM-DD-YYYY"),
-                                            name: thread.name,
-                                            description: thread.description,
-                                            url: '',
-                                            version: '',
-                                            content: message.user.name + "said: " + message.text
-                                        });
+                        var taskDatas = [];
+                        Task.find({project: project._id, $or:[{members: user._id}, {owner: user._id}]})
+                        .populate("members")
+                        .populate("activities.user")
+                        .exec(function(err, tasks) {
+                            if (err) {cb(err);}
+                            else {
+                                _.each(tasks, function(task) {
+                                    var taskMembers ="";
+                                    _.each(task.members, function(member) {
+                                        taskMembers += member.name + ", ";
                                     });
-                                }
-                            });
-                            cb(null, data);
+                                    taskDatas.push({"Task Description": task.description, "Assignees": taskMembers, "Activity Time": changeDateToMiniFormat(task.createdAt), "Activity Description": "This task was created on "+changeDateToFullFormat(task.createdAt), "Activity Detail": "N/A"});
+                                    _.each(task.activities, function(activity) {
+                                        if (activity.type==="edit-task") {
+                                            var editedString = "";
+                                            if (activity.element.description) {
+                                                editedString += "Description: " + activity.element.description + ", ";
+                                            } 
+                                            if (activity.element.dateEnd) {
+                                                editedString += "Date End: " + moment(activity.element.dateEnd).format("DD/MM/YYYY");
+                                            }
+                                            taskDatas.push({"Task Description": task.description, "Assignees": taskMembers, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": activity.user.name + " edited this task at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(task.createdAt), "Activity Detail": editedString});
+                                        } else if (activity.type==="assign") {
+                                            var assignees=""; 
+                                            _.each(activity.element.members, function(assignee) {
+                                                assignees += assignee + ", ";
+                                            });
+                                            taskDatas.push({"Task Description": task.description, "Assignees": taskMembers, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": activity.user.name + " assigned new members this task at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(task.createdAt), "Activity Detail": assignees});
+                                        } else if (activity.type==="insert-note") {
+                                            taskDatas.push({"Task Description": task.description, "Assignees": taskMembers, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": activity.user.name + " added new note for this task at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(task.createdAt), "Activity Detail": activity.element.content});
+                                        } else if (activity.type==="complete-task") {
+                                            taskDatas.push({"Task Description": task.description, "Assignees": taskMembers, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": activity.user.name + " marked this task as completed at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(task.createdAt), "Activity Detail": "N/A"});
+                                        } else if (activity.type==="uncomplete-task") {
+                                            taskDatas.push({"Task Description": task.description, "Assignees": taskMembers, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": activity.user.name + " marked this task as un-complete at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(task.createdAt), "Activity Detail": "N/A"});
+                                        }
+                                    });
+                                });
+                                var fields = ["Task Description", "Assignees", "Activity Time", "Activity Description", "Activity Detail"];
+                                json2csv({data: taskDatas, fields: fields}, function(err, csv) {
+                                    if (err) {cb(err);}
+                                    else {
+                                        var filename = user._id+"-"+project._id+"-archive-tasks.csv";
+                                        fs.writeFile(config.newRoot+filename, csv, function(err){
+                                            if (err) {cb(err);}
+                                            else {
+                                                data.push(filename);
+                                                cb(null);
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }, 
+                    function(cb) {
+                        File.find({project: project._id, "element.type":"file", $or:[{owner: user._id},{members:user._id}]})
+                        .populate("members")
+                        .populate("activities.user")
+                        .exec(function(err, files) {
+                            if (err) {cb(err);}
+                            else {
+                                var fileDatas = [];
+                                _.each(files, function(file) {
+                                    var fileMembers ="";
+                                    _.each(file.members, function(member) {
+                                        fileMembers += member.name + ", ";
+                                    });
+                                    var fileTags = "";
+                                    _.each(file.tags, function(tag) {
+                                        fileTags += tag + ", ";
+                                    });
+                                    fileDatas.push({"File Name": file.name, "Assignees": fileMembers, "Activity Time": changeDateToMiniFormat(file.createdAt), "Activity Description": "This File was created on "+changeDateToFullFormat(file.createdAt), "Activity Detail": "N/A", "URL": "N/A", "Tag": fileTags});
+                                    _.each(file.activities, function(activity) {
+                                        if (activity.type==="upload-reversion") {
+                                            var index = _.findIndex(file.fileHistory, function(history) {
+                                                if (history.activityAndHisToryId) {
+                                                    return history.activityAndHisToryId.toString()===activity.activityAndHisToryId.toString();
+                                                }
+                                            });
+                                            if (index !== -1) {
+                                                var link = file.fileHistory[index].link;
+                                            }
+                                            fileDatas.push({"File Name": file.name, "Assignees": fileMembers, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": activity.user.name + " upload this file reversion at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(file.createdAt), "Activity Detail": "N/A", "URL": (link) ? link : "N/A", "Tags": fileTags});
+                                        } else if (activity.type==="insert-note") {
+                                            fileDatas.push({"File Name": file.name, "Assignees": fileMembers, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": activity.user.name + " added a note for this file reversion at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(file.createdAt), "Activity Detail": activity.element.content, "URL": "N/A", "Tags": fileTags});
+                                        } else if (activity.type==="archive") {
+                                            fileDatas.push({"File Name": file.name, "Assignees": fileMembers, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": activity.user.name + " archived this file reversion at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(file.createdAt), "Activity Detail": "N/A", "URL": "N/A", "Tags": fileTags});
+                                        } else if (activity.type==="unarchived") {
+                                            fileDatas.push({"File Name": file.name, "Assignees": fileMembers, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": activity.user.name + " unarchived this file reversion at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(file.createdAt), "Activity Detail": "N/A", "URL": "N/A", "Tags": fileTags});
+                                        }
+                                    });
+                                });
+                                var fields = ["File Name", "Assignees", "Activity Time", "Activity Description", "Activity Detail", "URL", "Tags"];
+                                json2csv({data: fileDatas, fields: fields}, function(err, csv) {
+                                    if (err) {cb(err);}
+                                    else {
+                                        var filename = user._id+"-"+project._id+"-archive-files.csv";
+                                        fs.writeFile(config.newRoot+filename, csv, function(err){
+                                            if (err) {cb(err);}
+                                            else {
+                                                data.push(filename);
+                                                cb(null);
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    },
+                    function(cb) {
+                        File.find({project: project._id, "element.type":"document", $or:[{owner: user._id},{"fileHistory.members._id":user._id}]})
+                        .populate("members")
+                        .populate("activities.user")
+                        .populate("fileHistory.members._id")
+                        .exec(function(err, files) {
+                            if (err) {cb(err);}
+                            else {
+                                var documentDatas = [];
+                                _.each(files, function(file) {
+                                    documentDatas.push({"Document Name": file.name, "Activity Time": changeDateToMiniFormat(file.createdAt), "Activity Description": "This Document was created on "+changeDateToFullFormat(file.createdAt), "Activity Detail": "N/A", "URL": "N/A", "Version Tag": "N/a", "Assignees": "N/a"});
+                                    _.each(file.activities, function(activity) {
+                                        if (activity.type==="upload-reversion") {
+                                            var index = _.findIndex(file.fileHistory, function(history) {
+                                                if (history.activityAndHisToryId) {
+                                                    return history.activityAndHisToryId.toString()===activity.activityAndHisToryId.toString();
+                                                }
+                                            });
+                                            if (index !== -1) {
+                                                var link = file.fileHistory[index].link;
+                                                var versionMembers = "";
+                                                var versionTags = file.fileHistory[index].versionTags[0];
+                                                _.each(file.fileHistory[index].members, function(member) {
+                                                    if (member._id) {
+                                                        versionMembers += member._id.name + ", ";
+                                                    }
+                                                });
+                                            }
+                                            documentDatas.push({"Document Name": file.name, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": activity.user.name + " upload this document reversion at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(file.createdAt), "Activity Detail": "N/A", "URL": (link) ? link : "N/A", "Version Tag": versionTags, "Assignees": versionMembers});
+                                        } else if (activity.type==="archive") {
+                                            documentDatas.push({"Document Name": file.name, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": activity.user.name + " archived this document at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(file.createdAt), "Activity Detail": "N/A", "URL": "N/A", "Version Tags": "N/A", "Assignees": "N/A"});
+                                        } else if (activity.type==="unarchived") {
+                                            documentDatas.push({"Document Name": file.name, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": activity.user.name + " unarchived this document at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(file.createdAt), "Activity Detail": "N/A", "URL": "N/A", "Version Tags": "N/A", "Assignees": "N/A"});
+                                        }
+                                    });
+                                });
+                                var fields = ["Document Name", "Assignees", "Activity Time", "Activity Description", "Activity Detail", "URL", "Tags"];
+                                json2csv({data: documentDatas, fields: fields}, function(err, csv) {
+                                    if (err) {cb(err);}
+                                    else {
+                                        var filename = user._id+"-"+project._id+"-archive-documents.csv";
+                                        fs.writeFile(config.newRoot+filename, csv, function(err){
+                                            if (err) {cb(err);}
+                                            else {
+                                                data.push(filename);
+                                                cb(null);
+                                            }
+                                        });
+                                    }
+                                });
+                            }
                         });
                     }
                 ], function(err, result) {
-                    if (err) {console.log(err);return res.send(500,err);}
-                    var filename = user._id+"-"+project.name+".csv";
-                    json2csv({data: data}, function(err, csv) {
-                        if (err) {console.log(err);}
-                        fs.writeFile(filename, csv, function(err) {
-                            if (err) 
-                                throw err;
-                            S3.uploadFile({path: config.newRoot+filename, name: filename}, function(err, data) {
-                                if (err) {console.log(err);return res.send(err);}
-                                var link = S3.getPublicUrl(filename);
-                                Mailer.sendMail('download-project-data.html', config.emailFrom, user.email, {
-                                    user: user.toJSON(),
-                                    link: link,
-                                    subject: 'Requested a backup for ' + project.name
-                                },function(err){
-                                    console.log(err);
-                                    fs.unlinkSync(config.newRoot+filename);
-                                    return res.send(200);
-                                });
+                    if (err) {return res.send(500,err);}
+                    var links = [];
+                    async.each(data, function(file, cb) {
+                        S3.uploadFile({path: config.newRoot+file, name: file}, function(err, data) {
+                            if (err) {cb(err);}
+                            else {
+                                var type = "";
+                                if (file.search("tasks") !== -1) {
+                                    type = "Tasks";
+                                } else if (file.search("threads") !== -1) {
+                                    type = "Threads";
+                                } else if (file.search("files") !== -1) {
+                                    type = "Files";
+                                } else if (file.search("documents") !== -1) {
+                                    type = "Documents";
+                                }
+                                links.push({type: type, url: S3.getPublicUrl(file)});
+                                cb(null);
+                            }
+                        });
+                    }, function() {
+                        Mailer.sendMail('download-project-data.html', config.emailFrom, user.email, {
+                            user: user.toJSON(),
+                            links: links,
+                            subject: 'Requested a backup for ' + project.name
+                        },function(err){
+                            if (err) {return res.send(500,err);}
+                            _.each(data, function(d) {
+                                fs.unlinkSync(config.newRoot+d);
                             });
+                            return res.send(200);
                         });
                     });
                 });
