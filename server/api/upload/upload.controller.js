@@ -242,6 +242,7 @@ exports.uploadReversion = function(req, res) {
                                         type: "file",
                                         _id: file._id,
                                         uniqId: randomId,
+                                        user: req.user,
                                         file: JSON.parse(JSON.stringify(file)),
                                         newNotification: {randomId: randomId, fromUser: req.user, type: "file-upload-reversion"}
                                     }
@@ -254,6 +255,7 @@ exports.uploadReversion = function(req, res) {
                                         type: "file",
                                         _id: file._id,
                                         uniqId: randomId,
+                                        user: req.user,
                                         file: JSON.parse(JSON.stringify(file)),
                                         newNotification: {randomId: randomId, fromUser: req.user, type: "document-upload-reversion"}
                                     }
@@ -407,6 +409,7 @@ exports.upload = function(req, res){
                                         type: "file",
                                         _id: file._id,
                                         uniqId: randomId,
+                                        user: req.user,
                                         file: JSON.parse(JSON.stringify(file)),
                                         newNotification: {fromUser: req.user, type: "file-assign"}
                                     }

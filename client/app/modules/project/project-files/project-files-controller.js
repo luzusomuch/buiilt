@@ -71,7 +71,7 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
         var index = _.findIndex($scope.files, function(file) {
             return file._id.toString()===data.file._id.toString();
         });
-        if (index !== -1 && ($scope.files[index] && $scope.files[index].uniqId!==data.uniqId)) {
+        if (index !== -1 && data.user._id.toString()!==$rootScope.currentUser._id.toString() && ($scope.files[index] && $scope.files[index].uniqId!==data.uniqId)) {
             $scope.files[index].uniqId = data.uniqId;
             $scope.files[index].__v+=1;
         }

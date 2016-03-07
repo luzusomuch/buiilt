@@ -14,8 +14,12 @@ var async = require('async');
 EventBus.onSeries('File.Inserted', function(file, next) {
     if (file.element.type === "file") {
         if (file.members.length > 0) {
+            console.log(file.members);
+            var owners = _.clone(file.members);
+            _.remove(owners, file.owner);
+            console.log(owners);
             var params = {
-                owners : file.members,
+                owners : owners,
                 fromUser : file.owner,
                 element : file,
                 referenceTo : 'file',

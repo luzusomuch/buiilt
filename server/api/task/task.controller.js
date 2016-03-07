@@ -82,6 +82,7 @@ function populateNewTask(task, res, req){
                     type: "task",
                     _id: task._id,
                     task: task,
+                    user: req.user,
                     uniqId: uniqId,
                     newNotification: {fromUser: req.user, type: "task-assign"}
                 }

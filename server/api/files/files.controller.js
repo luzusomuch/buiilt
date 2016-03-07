@@ -85,6 +85,7 @@ exports.assignMoreMembers = function(req, res) {
                             type: "file",
                             _id: file._id,
                             uniqId: uniqId,
+                            user: req.user,
                             file: JSON.parse(JSON.stringify(file)),
                             newNotification: {fromUser: req.user, type: "document-upload-reversion"}
                         }
@@ -297,6 +298,7 @@ exports.update = function(req, res) {
                                             type: "file",
                                             _id: file._id,
                                             uniqId: uniqId,
+                                            user: req.user,
                                             file: JSON.parse(JSON.stringify(file)),
                                             newNotification: {fromUser: req.user, type: "document-upload-reversion"}
                                         }

@@ -26,16 +26,6 @@
                 </div>
                 
                 <div layout="column">
-                    <p class="md-body-2">Provide a description for this file:</p>
-                    <div layout="row">
-                        <md-input-container flex="66" flex-offset="15">
-                            <label>Description of the File</label>
-                            <textarea ng-model="uploadFile.description" required md-maxlength="500" columns="1" rows="5"></textarea>
-                        </md-input-container>
-                    </div>
-                </div>
-                
-                <div layout="column">
                     <p class="md-body-2">Select at least one tag that is relevant to this file:</p>
                     <div layout="row" layout-align="center center" class="tagcloud-selection" layout-wrap>
                         <span ng-click="selectChip($index, 'file')" ng-class="{'available-tag':!tag.select, 'selected-tag': tag.select}" ng-repeat="tag in fileTags">{{tag.name}}</span>

@@ -14,7 +14,9 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
     // end check owner team
 
     // remove notifications count immeditely
-    $rootScope.$emit("UpdateCountNumber", {type: "file", number: (file.__v>0)?1:0});
+    $timeout(function() {
+        $rootScope.$emit("UpdateCountNumber", {type: "file", number: (file.__v>0)?1:0});
+    }, 500);
     fileService.lastAccess({id: $stateParams.fileId}).$promise.then(function(data) {
         $rootScope.$emit("File.Read", file);
     });
