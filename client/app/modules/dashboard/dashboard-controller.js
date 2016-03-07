@@ -105,7 +105,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     socket.on("dashboard:new", function(data) {
         if (data.type==="thread") {
             var index = getItemIndex($scope.myMessages, data._id);
-            if (index !== -1 && $scope.myMessages[index].uniqId!=data.uniqId) {
+            if (index !== -1 && ($scope.myMessages[index] && $scope.myMessages[index].uniqId!=data.uniqId)) {
                 if ($scope.myMessages[index].element.notifications.length===0) {
                     $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "message", isAdd: true, number: 1});
                 }
@@ -621,6 +621,22 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         members:[]
     };
 
+    $scope.pickFile = pickFile;
+
+    $scope.onSuccess = onSuccess;
+
+    function pickFile(){
+        filepickerService.pick(
+            // add max files for multiple pick
+            // {maxFiles: 5},
+            onSuccess
+        );
+    };
+
+    function onSuccess(file){
+        $scope.uploadFile.file = file;
+    };
+
     $scope.createNewFile = function(form) {
         if (form.$valid) {
             $scope.uploadFile.members = _.filter($scope.projectMembers, {select: true});
@@ -629,6 +645,9 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                 $scope.showToast("Please Select At Least 1 Tag...");
             } else if ($scope.uploadFile.members.length == 0) {
                 $scope.showToast("Please Select At Lease 1 Team Member...");
+            } else if (!$scope.uploadFile.file) {
+                $scope.showToast("Please Select A File");
+                return;
             } else {
                 $scope.uploadFile.type = "file";
                 uploadService.upload({id: $scope.selectedProjectId}, $scope.uploadFile).$promise.then(function(res) {

@@ -13,7 +13,9 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
     // end check owner team
 
     // remove notifications count immeditely
-    $rootScope.$emit("UpdateCountNumber", {type: "message", number: (thread.__v>0)?1:0});
+    $timeout(function() {
+        $rootScope.$emit("UpdateCountNumber", {type: "message", number: (thread.__v>0)?1:0});
+    }, 500);
     messageService.lastAccess({id: $stateParams.messageId}).$promise.then(function(data) {
         // if (thread.lastAccess && thread.lastAccess.length > 0) {
         //     var index = _.findIndex(thread.lastAccess, function(access) {
