@@ -159,9 +159,9 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
 
 	function getPeopleList(id) {
 		$scope.projectMembers = [];
-		_.each($rootScope.roles, function(role) {
-			_.each($scope.people[role], function(tender){
-				if (tender.hasSelect) {
+        _.each($rootScope.roles, function(role) {
+            _.each($scope.people[role], function(tender){
+                if (tender.hasSelect) {
                     var isLeader = (_.findIndex(tender.tenderers, function(tenderer) {
                         if (tenderer._id) {
                             return tenderer._id._id.toString() === $rootScope.currentUser._id.toString();
@@ -180,12 +180,13 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
                             }
                         });
                         if (tender.tenderers[0]._id) {
-    				        tender.tenderers[0]._id.select = false;
-        					$scope.projectMembers.push(tender.tenderers[0]._id);
+                            tender.tenderers[0]._id.select = false;
+                            $scope.projectMembers.push(tender.tenderers[0]._id);
                         } else {
                             $scope.projectMembers.push({email: tender.tenderers[0].email, select: false});
                         }
                     } else {
+                        $scope.projectMembers.push(tender.tenderers[0]._id);
                         _.each(tender.tenderers, function(tenderer) {
                             if (tenderer._id._id.toString() === $rootScope.currentUser._id.toString()) {
                                 _.each(tenderer.teamMember, function(member) {
@@ -195,11 +196,10 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
                             }
                         });
                     }
-				}
-			});
-		});
-        $scope.projectMembers = _.uniq($scope.projectMembers, "email");
-		_.remove($scope.projectMembers, {_id: $rootScope.currentUser._id});
+                }
+            });
+        });
+        // _.remove($scope.projectMembers, {_id: $rootScope.currentUser._id});
 	};
 	
 	//Functions to handle New Work Room Dialog.
