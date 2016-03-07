@@ -1,6 +1,8 @@
 angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootScope, $scope, $timeout, task, taskService, $mdToast, $mdDialog, peopleService, $stateParams, messageService, $state, people, uploadService, socket, notificationService) {
     // remove the notifications count immeditely
-    $rootScope.$emit("UpdateCountNumber", {type: "task", number: (task.__v>0)?1:0});
+    $timeout(function() {
+        $rootScope.$emit("UpdateCountNumber", {type: "task", number: (task.__v>0)?1:0});
+    },500);
     // end 
     
     // set timeout 4s for mark read notification 

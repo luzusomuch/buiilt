@@ -29,9 +29,6 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
 	$scope.people = people;
 
     socket.on("task:new", function(data) {
-        if (data.owner._id!=$rootScope.currentUser._id) {
-            data.__v=1;
-        }
         $scope.tasks.push(data);
         $scope.tasks = _.uniq($scope.tasks, "_id");
         filterTaskDueDate($scope.tasks);
@@ -42,7 +39,7 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
             var index = _.findIndex($scope.tasks, function(task) {
                 return task._id==data.task._id;
             });
-            if (index !==-1 && $scope.tasks[index].uniqId!=data.uniqId) {
+            if (index !==-1 && data.user._id.toString()!==$rootScope.currentUser._id.toString() && $scope.tasks[index].uniqId!=data.uniqId) {
                 if ($scope.tasks[index].__v===0) {
                     $rootScope.$emit("UpdateCountNumber", {type: "task", isAdd: true});
                 }
