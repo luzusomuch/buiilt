@@ -220,11 +220,14 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
     function getUserProjects() {
         $scope.projects = [];
         $scope.totalProject = 0;
-        _.each($rootScope.projects, function(project) {
-            if (project.owner == $scope.currentUser._id && project.status !== "archive") {
-                $scope.totalProject += 1;
-                $scope.projects.push(project);
-            }
+        authService.getCurrentUser().$promise.then(function(res) {
+            $rootScope.currentUser = $scope.currentUser = res;
+            _.each($rootScope.currentUser.projects, function(project) {
+                if (project.owner == $scope.currentUser._id && project.status !== "archive") {
+                    $scope.totalProject += 1;
+                    $scope.projects.push(project);
+                }
+            });
         });
     };
     getUserProjects();
@@ -256,7 +259,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             }
             if ($scope.totalProject === maximumCreatedProject) {
                 $mdDialog.cancel();
-                userService.getCurrentStipeCustomer({plan: type}).$promise.then(function(res) {
+                userService.getCurrentStipeCustomer({plan: $rootScope.purchaseType}).$promise.then(function(res) {
                     if (!res._id) {
                         handler.open($scope.plans[$rootScope.purchaseType]);
                     } else {

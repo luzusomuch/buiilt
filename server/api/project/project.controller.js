@@ -318,14 +318,16 @@ function sendInfoToUser(req, res) {
                                     team.push({"Member Name": member.name, "Email": member.email, "Phone Number": member.phoneNumber, "Team Type": role});
                                 });
                             } else {
-                                var index = _.findIndex(tender.tenderers[0].teamMember, function(member) {
-                                    return member._id.toString()===user._id.toString();
-                                });
-                                if (index !== -1) {
-                                    team.push({"Member Name": tender.tenderers[0]._id.name, "Email": tender.tenderers[0]._id.email, "Phone Number": tender.tenderers[0]._id.phoneNumber, "Team Type": role});
-                                    _.each(tender.tenderers[0].teamMember, function(member) {
-                                        team.push({"Member Name": member.name, "Email": member.email, "Phone Number": member.phoneNumber, "Team Type": role});
+                                if (tender.tenderers && tender.tenderers.length > 0) {
+                                    var index = _.findIndex(tender.tenderers[0].teamMember, function(member) {
+                                        return member._id.toString()===user._id.toString();
                                     });
+                                    if (index !== -1) {
+                                        team.push({"Member Name": tender.tenderers[0]._id.name, "Email": tender.tenderers[0]._id.email, "Phone Number": tender.tenderers[0]._id.phoneNumber, "Team Type": role});
+                                        _.each(tender.tenderers[0].teamMember, function(member) {
+                                            team.push({"Member Name": member.name, "Email": member.email, "Phone Number": member.phoneNumber, "Team Type": role});
+                                        });
+                                    }
                                 }
                             }
                         });
