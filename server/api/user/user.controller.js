@@ -622,6 +622,38 @@ exports.buyPlan = function(req, res) {
   });
 };
 
+exports.getCurrentStripeCustomer = function(req, res) {
+    stripe.customers.list(function(err, customers) {
+        if (err) {return res.send(500,err);}
+        var currentCustomer = _.find(customers.data, function(item) {return item.email === req.user.email});
+        if (currentCustomer) {
+            stripe.plans.list({limit: 3}, function(err, plan) {
+                if (err) {return res.send(500,err);}
+                var currentPlan = _.find(plan.data, function(item) {return item.id === req.query.plan});
+                stripe.customers.updateSubscription(currentCustomer.id, currentCustomer.subscriptions.data[0].id, {plan: currentPlan.id}, function(err, subscription) {
+                    if (err) {return res.send(500,err);}
+                    stripe.charges.create({
+                        amount: currentPlan.amount, // amount in cents, again
+                        currency: currentPlan.currency,
+                        description: req.user.name + " has purchased for " + req.query.plan,
+                        customer: currentCustomer.id // Previously stored, then retrieved
+                    }, function(err, data) {
+                        if (err) {return res.send(500,err);}
+                        req.user.plan = req.query.plan;
+                        req.user.save(function(err, user) {
+                            if (err) {return res.send(500,err);}
+                            user.isRegistered = true;
+                            return res.send(200, user);
+                        });
+                    });
+                });
+            });
+        } else {
+            return res.send(200, {isRegistered: false});
+        }
+    });
+};
+
 /**
  * Authentication callback
  */

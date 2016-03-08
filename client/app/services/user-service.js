@@ -53,6 +53,12 @@ angular.module('buiiltApp')
                 action: 'buy-plan'
             }
         },
+        getCurrentStipeCustomer: {
+            method: "GET",
+            params: {
+                action: "get-current-stripe-customer"
+            }
+        },
         adminUpdate: {
             method: "PUT",
             params: {

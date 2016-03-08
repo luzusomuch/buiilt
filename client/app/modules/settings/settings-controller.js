@@ -170,7 +170,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             var data = {stripeEmail: token.email, stripeToken: token.id, stripeType: token.type, plan: $rootScope.purchaseType};
             userService.buyPlan({}, data).$promise.then(function(res) {
                 handler.close();
-                $rootScope.$edit("User.Update", res);
+                $rootScope.$emit("User.Update", res);
             }, function(err) {$scope.showToast(err.data);})
         }
     });
@@ -256,7 +256,14 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             }
             if ($scope.totalProject === maximumCreatedProject) {
                 $mdDialog.cancel();
-                handler.open($scope.plans[$rootScope.purchaseType]);
+                userService.getCurrentStipeCustomer({plan: type}).$promise.then(function(res) {
+                    if (!res._id) {
+                        handler.open($scope.plans[$rootScope.purchaseType]);
+                    } else {
+                        $scope.showToast("Change Plan Successfully");
+                        $rootScope.$emit("User.Update", res);
+                    }
+                }, function(err) {$scope.showToast("Error");});
             }
         }, function(err) {
             $scope.showToast("There Has Been An Error...");
@@ -284,7 +291,14 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                 clickOutsideToClose: false
             });
         } else {
-                handler.open($scope.plans[type]);
+            userService.getCurrentStipeCustomer({plan: type}).$promise.then(function(res) {
+                if (!res._id) {
+                    handler.open($scope.plans[type]);
+                } else {
+                    $scope.showToast("Change Plan Successfully");
+                    $rootScope.$emit("User.Update", res);
+                }
+            }, function(err) {$scope.showToast("Error");});
         }
     };
     if ($rootScope.purchaseType) {
