@@ -6,7 +6,8 @@ angular.module('buiiltApp').directive('dashboardSidenav', function(){
         scope:{
             tasks:'=',
             messages: "=",
-            files: "="
+            files: "=",
+            documents: "="
         },
         controller: function($scope, $rootScope, $location, $state, socket) {
 			$scope.$state = $state;
@@ -14,37 +15,24 @@ angular.module('buiiltApp').directive('dashboardSidenav', function(){
             var today = new Date();
             $scope.totalTaskUpdates = 0;
             _.each($scope.tasks, function(task) {
-                // if (task.dateEnd && moment(moment(task.dateEnd).format("YYYY-MM-DD")).isBetween(moment(today).format("YYYY-MM-DD"),moment(today).add(3, "days").format("YYYY-MM-DD"))) {
-                    // $scope.totalTaskUpdates += 1;
-                // }
                 if (task.element.notifications.length > 0) {
                     $scope.totalTaskUpdates += 1;
                 }
             });
 
-            $scope.totalFileUpdates = 0;
-            $scope.totalDocumentUpdates = 0;
-            _.each($scope.files, function(file) {
-                if (file.element.type==="file") {
-                    $scope.totalFileUpdates+=1;
-                } else if (file.element.type==="document") {
-                    $scope.totalDocumentUpdates+=1;
-                }
-            });
+            $scope.totalFileUpdates = $scope.files.length;
+            $scope.totalDocumentUpdates = $scope.documents.length;
+            $scope.totalMessagesUpdate = $scope.messages.length;
 
             var listenerCleanFn = $rootScope.$on("DashboardSidenav-UpdateNumber", function(event, data) {
                 if (data.type==="task") {
-                    $scope.totalTaskUpdates = (data.isAdd) ? $scope.totalTaskUpdates+1 : $scope.totalTaskUpdates-1;
+                    $scope.totalTaskUpdates = (data.isAdd) ? data.number : $scope.totalTaskUpdates-1;
                 } else if (data.type==="file") {
-                    $scope.totalFileUpdates = (data.isAdd) ? $scope.totalFileUpdates+1 : $scope.totalFileUpdates-data.number;
+                    $scope.totalFileUpdates = (data.isAdd) ? data.number : $scope.totalFileUpdates-data.number;
                 } else if (data.type==="document") {
-                    $scope.totalDocumentUpdates = (data.isAdd) ? $scope.totalDocumentUpdates+1 : $scope.totalDocumentUpdates-data.number;
+                    $scope.totalDocumentUpdates = (data.isAdd) ? data.number : $scope.totalDocumentUpdates-data.number;
                 } else if (data.type==="message") {
-                    if (data.isAdd) {
-                        $scope.messages.push(data);
-                    } else {
-                        $scope.messages.splice(0, data.number);
-                    }
+                    $scope.totalMessagesUpdate = (data.isAdd) ? data.number : $scope.totalMessagesUpdate-data.number;
                 }
             });
 

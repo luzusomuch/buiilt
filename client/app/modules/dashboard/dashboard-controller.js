@@ -2,7 +2,15 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
 	$rootScope.title = "Dashboard";
 	$scope.myTasks = myTasks;
 	$scope.myMessages = myMessages;
-	$scope.myFiles = myFiles;
+	$scope.myFiles = [];
+    $scope.myDocuments = [];
+    _.each(myFiles, function(file) {
+        if (file.element.type==="file") {
+            $scope.myFiles.push(file);
+        } else if (file.element.type==="document") {
+            $scope.myDocuments.push(file);
+        }
+    });
     $scope.projects = [];
     _.each($rootScope.projects, function(project) {
         if (project.status==="waiting") {
@@ -41,8 +49,10 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     var listenerCleanFn = $rootScope.$on("Dashboard-Update", function(event, data) {
         if (data.type==="thread") {
             $scope.myMessages.splice(data.index, 1);
-        } if (data.type==="file" || data.type==="document") {
+        } if (data.type==="file") {
             $scope.myFiles.splice(data.index, 1);
+        } if (data.type==="document") {
+            $scope.myDocuments.splice(data.index, 1);
         }
     });
 
@@ -81,13 +91,13 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     });
 
     socket.on("document:archive", function(data) {
-        var currentFileIndex=_.findIndex($scope.myFiles, function(t) {
+        var currentFileIndex=_.findIndex($scope.myDocuments, function(t) {
             if (t.element.type==="document") {
                 return t._id.toString()===data._id.toString();
             }
         });
         if (currentFileIndex !== -1) {
-            $scope.myFiles.splice(currentFileIndex,1);
+            $scope.myDocuments.splice(currentFileIndex,1);
             $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "document", number: 1});
         }
     });
@@ -107,7 +117,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             var index = getItemIndex($scope.myMessages, data._id);
             if (index !== -1 && ($scope.myMessages[index] && $scope.myMessages[index].uniqId!=data.uniqId)) {
                 if ($scope.myMessages[index].element.notifications.length===0) {
-                    $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "message", isAdd: true, number: 1});
+                    $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "message", isAdd: true, number: $scope.myMessages.length});
                 }
                 $scope.myMessages[index].uniqId=data.uniqId;
                 $scope.myMessages[index].element.notifications.push(data.newNotification);
@@ -116,60 +126,92 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                 data.thread.element.notifications.push(data.newNotification);
                 if (data.user._id.toString()===$rootScope.currentUser._id.toString()) {
                     data.thread.element.notifications=[];
-                } else {
-                    $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "message", isAdd: true, number: 1});
                 }
                 data.thread.uniqId=data.uniqId;
                 $scope.myMessages.push(data.thread);
+                $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "message", isAdd: true, number: $scope.myMessages.length});
             }
         } else if (data.type==="task") {
             _.uniq(data.task.members, "_id");
             var index = getItemIndex($scope.myTasks, data._id);
             if (index !== -1 && $scope.myTasks[index].uniqId!=data.uniqId) {
-                if ($scope.myTasks[index].element.notifications.length===0) {
-                    $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "task", isAdd: true, number: 1});
-                }
                 $scope.myTasks[index].uniqId = data.uniqId;
                 $scope.myTasks[index].element.notifications.push(data.newNotification);
+                var notificationTask = _.filter($scope.myTasks, function(task) {
+                    return task.element.notifications.length > 0;
+                });
+                if ($scope.myTasks[index].element.notifications.length===0) {
+                    $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "task", isAdd: true, number: notificationTask.length});
+                }
             } else if (index===-1) {
                 data.task.element.notifications = [];
                 data.task.element.notifications.push(data.newNotification);
                 if (data.user._id.toString()===$rootScope.currentUser._id.toString()) {
                     data.task.element.notifications=[];
-                } else {
-                    $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "task", isAdd: true, number: 1});
                 }
                 data.task.uniqId = data.uniqId;
                 $scope.myTasks.push(data.task);
+                var notificationTask = _.filter($scope.myTasks, function(task) {
+                    return task.element.notifications.length > 0;
+                });
+                $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "task", isAdd: true, number: notificationTask.length});
             }
             sortTask($scope.myTasks);
         } else if (data.type==="file") {
-            var originalLength = angular.copy($scope.myFiles.length);
-            var index = getItemIndex($scope.myFiles, data._id);
-            if (index !== -1 && $scope.myFiles[index].uniqId!=data.uniqId) {
-                if ($scope.myFiles[index].element.notifications.length===0) {
-                    if (data.file.element.type==="file") {
-                        $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "file", isAdd: true, number: 1});
-                    } else if (data.file.element.type==="document") {
-                        $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "document", isAdd: true, number: 1});
+            if (data.file.element.type==="file") {
+                var index = getItemIndex($scope.myFiles, data._id);
+                var original = angular.copy($scope.myFiles);
+                if (index !== -1 && $scope.myFiles[index].uniqId!=data.uniqId) {
+                    if ($scope.myFiles[index].element.notifications.length===0) {
+                        $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "file", isAdd: true, number: $scope.myFiles.length});
+                    }
+                    $scope.myFiles[index].uniqId=data.uniqId;
+                    $scope.myFiles[index].element.notifications.push(data.newNotification);
+                } else if (index === -1) {
+                    data.file.element.notifications = [];
+                    data.file.element.notifications.push(data.newNotification);
+                    if (_.findIndex($scope.myFiles, function(file) {
+                        if (file.uniqId) {
+                            return file.uniqId.toString()===data.uniqId.toString();
+                        }
+                    }) === -1) {
+                        if (data.user._id.toString()!==$rootScope.currentUser._id.toString()) {
+                            data.file.uniqId=data.uniqId;
+                            $scope.myFiles.push(data.file);
+                        }     
                     }
                 }
-                $scope.myFiles[index].uniqId=data.uniqId;
-                $scope.myFiles[index].element.notifications.push(data.newNotification);
-            } else if (index === -1) {
-                data.file.element.notifications = [];
-                data.file.element.notifications.push(data.newNotification);
-                data.file.uniqId=data.uniqId;
-                if (data.user._id.toString()!==$rootScope.currentUser._id.toString()) {
-                    if (data.file.element.type==="file") {
-                        $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "file", isAdd: true, number: 1});
-                    } else if (data.file.element.type==="document") {
-                        $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "document", isAdd: true, number: 1});
+                if (original.length < $scope.myFiles.length) {
+                    $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "file", isAdd: true, number: $scope.myFiles.length});
+                }
+                filterAcknowledgeFiles($scope.myFiles);
+            } else if (data.file.element.type==="document") {
+                var index = getItemIndex($scope.myDocuments, data._id);
+                var original = angular.copy($scope.myDocuments);
+                if (index !== -1 && $scope.myDocuments[index].uniqId!=data.uniqId) {
+                    if ($scope.myDocuments[index].element.notifications.length===0) {
+                        $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "document", isAdd: true, number: $scope.myDocuments.length});
                     }
-                    $scope.myFiles.push(data.file);
-                } 
+                    $scope.myDocuments[index].uniqId=data.uniqId;
+                    $scope.myDocuments[index].element.notifications.push(data.newNotification);
+                } else if (index === -1) {
+                    data.file.element.notifications = [];
+                    data.file.element.notifications.push(data.newNotification);
+                    if (_.findIndex($scope.myDocuments, function(file) {
+                        if (file.uniqId) {
+                            return file.uniqId.toString()===data.uniqId.toString();
+                        }
+                    }) === -1) {
+                        if (data.user._id.toString()!==$rootScope.currentUser._id.toString()) {
+                            data.file.uniqId=data.uniqId;
+                            $scope.myDocuments.push(data.file);
+                        }     
+                    }
+                }
+                if (original.length < $scope.myDocuments.length) {
+                    $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "document", isAdd: true, number: $scope.myDocuments.length});
+                }
             }
-            filterAcknowledgeFiles($scope.myFiles);
         }
     });
     // end socket section

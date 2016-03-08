@@ -12,7 +12,7 @@
 			</div>
 			<div ui-sref="dashboard.messages" ng-class="{activemenu: $state.includes('dashboard.messages')}">
 				<md-list-item md-ink-ripple>
-				    <p layout-padding>Messages<spam ng-show="messages.length > 0">({{messages.length}})</spam></p>
+				    <p layout-padding>Messages<spam ng-show="totalMessagesUpdate > 0">({{totalMessagesUpdate}})</spam></p>
 				</md-list-item>
 			</div>
 			<div ui-sref="dashboard.files" ng-class="{activemenu: $state.includes('dashboard.files')}">
