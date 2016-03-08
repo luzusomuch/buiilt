@@ -51,8 +51,10 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
     getLastAccess($scope.threads);
 
     socket.on("thread:new", function(data) {
-        $scope.threads.push(data);
-        $scope.threads = _.uniq($scope.threads, "_id");
+        if (data.project._id.toString()===$stateParams.id.toString()) {
+            $scope.threads.push(data);
+            $scope.threads = _.uniq($scope.threads, "_id");
+        }
     });
 
     socket.on("thread:archive", function(data) {

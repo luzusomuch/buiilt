@@ -29,9 +29,11 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
 	$scope.people = people;
 
     socket.on("task:new", function(data) {
-        $scope.tasks.push(data);
-        $scope.tasks = _.uniq($scope.tasks, "_id");
-        filterTaskDueDate($scope.tasks);
+        if (data.project._id.toString()===$stateParams.id.toString()) {
+            $scope.tasks.push(data);
+            $scope.tasks = _.uniq($scope.tasks, "_id");
+            filterTaskDueDate($scope.tasks);
+        }
     });
 
     socket.on("dashboard:new", function(data) {

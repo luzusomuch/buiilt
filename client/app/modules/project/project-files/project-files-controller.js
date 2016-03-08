@@ -28,9 +28,11 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
     getLastAccess($scope.files);
 
     socket.on("file:new", function(data) {
-        data.__v=1;
-        $scope.files.push(data);
-        filterAcknowledgeFiles($scope.files);
+        if (data.project._id.toString()===$stateParams.id.toString()) {
+            data.__v=1;
+            $scope.files.push(data);
+            filterAcknowledgeFiles($scope.files);
+        }
     });
 
     socket.on("file:archive", function(data) {

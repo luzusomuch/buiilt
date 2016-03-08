@@ -83,23 +83,25 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
     });
 
     var listenerCleanFnPushFromDashboard = $rootScope.$on("Dashboard.Document.Update", function(event, data) {
-        var index = _.findIndex($scope.documents, function(document) {
-            return document._id.toString()===data.file._id.toString();
-        });
-        if (index !== -1 && ($scope.documents[index] && $scope.documents[index].uniqId!==data.uniqId)) {
-            $scope.documents[index].uniqId = data.uniqId;
-            $scope.documents[index].__v+=1;
-            if ($scope.documents[index].__v===0) {
-                $rootScope.$broadcast("UpdateCountNumber", {type: "document", isAdd: true, number: 1});
-            }
-        } else if (index === -1) {
-            data.file.__v = 1;
-            data.file.uniqId = data.uniqId;
-            $scope.documents.push(data.file);
-            var notificationDocuments = _.filter($scope.documents, function(document) {
-                return document.__v > 0;
+        if (data.file.project._id.toString()===$stateParams.id.toString()) {
+            var index = _.findIndex($scope.documents, function(document) {
+                return document._id.toString()===data.file._id.toString();
             });
-            $rootScope.$broadcast("UpdateCountNumber", {type: "document", isList: true, number: notificationDocuments.length});
+            if (index !== -1 && ($scope.documents[index] && $scope.documents[index].uniqId!==data.uniqId)) {
+                $scope.documents[index].uniqId = data.uniqId;
+                $scope.documents[index].__v+=1;
+                if ($scope.documents[index].__v===0) {
+                    $rootScope.$broadcast("UpdateCountNumber", {type: "document", isAdd: true, number: 1});
+                }
+            } else if (index === -1) {
+                data.file.__v = 1;
+                data.file.uniqId = data.uniqId;
+                $scope.documents.push(data.file);
+                var notificationDocuments = _.filter($scope.documents, function(document) {
+                    return document.__v > 0;
+                });
+                $rootScope.$broadcast("UpdateCountNumber", {type: "document", isList: true, number: notificationDocuments.length});
+            }
         }
     });
 
