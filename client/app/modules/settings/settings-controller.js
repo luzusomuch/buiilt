@@ -1,7 +1,41 @@
-angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $scope, $timeout, $state, teamService, $mdToast, $mdDialog, authService, userService, stripe, projectService, $state) {
+angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $scope, $timeout, $state, teamService, $mdToast, $mdDialog, authService, userService, stripe, projectService, $state, currentUser) {
     $rootScope.title = "Settings"
     $scope.currentTeam = $rootScope.currentTeam;
-    $scope.currentUser = $rootScope.currentUser;
+    $rootScope.currentUser = null;
+    $rootScope.currentUser = $scope.currentUser = currentUser;
+    function getCurrentUserPlan() {
+        if ($scope.currentUser.plan) {
+            $scope.currentUser.noPlan = false;
+            switch($scope.currentUser.plan) {
+                case "small":
+                    $scope.currentUser.smallPlan = true;
+                break;
+                case "medium":
+                    $scope.currentUser.mediumPlan = true;
+                break;
+                case "large":
+                    $scope.currentUser.largePlan = true;
+                break;
+                default:
+                break;
+            }
+        } else {
+            $scope.currentUser.noPlan = true;
+        }
+    };
+    getCurrentUserPlan();
+
+    function getUserProjects() {
+        $scope.projects = [];
+        $scope.totalProject = 0;
+        _.each($scope.currentUser.projects, function(project) {
+            if (project.owner == $scope.currentUser._id && project.status !== "archive") {
+                $scope.totalProject += 1;
+                $scope.projects.push(project);
+            }
+        });
+    };
+    getUserProjects();
 
     $timeout(function() {
         if (!$rootScope.currentTeam._id) {
@@ -164,6 +198,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
         key: 'pk_test_WGKFaZu6dXITEIxoyVI8DrVa',
         image: '/128x128.png',
         locale: 'auto',
+        email: $scope.currentUser.email,
         token: function(token) {
           // Use the token to create the charge with a server-side script.
           // You can access the token ID with `token.id`
@@ -180,30 +215,10 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
         medium : {name: "Medium plan", description: "Purchase for medium plan ($80.00)", amount: 8000, currency: "aud"},
         large : {name: "Large plan", description: "Purchase for large plan ($105.00)", amount: 10500, currency: "aud"},
     };
-
-    function getCurrentUserPlan() {
-        if ($scope.currentUser.plan) {
-            $scope.currentUser.noPlan = false;
-            switch($scope.currentUser.plan) {
-                case "small":
-                    $scope.currentUser.smallPlan = true;
-                break;
-                case "medium":
-                    $scope.currentUser.mediumPlan = true;
-                break;
-                case "large":
-                    $scope.currentUser.largePlan = true;
-                break;
-                default:
-                break;
-            }
-        } else {
-            $scope.currentUser.noPlan = true;
-        }
-    };
-    getCurrentUserPlan();
+    
     $rootScope.$on("User.Update", function(event, data) {
-        $scope.currentUser = $rootScope.currentUser = data;
+        $rootScope.currentUser = null;
+        $rootScope.currentUser = $scope.currentUser = data;
         $rootScope.currentUser.isLeader = ($scope.currentUser.team && $scope.currentUser.team.role == 'admin');
         getCurrentUserPlan();
     });
@@ -216,21 +231,6 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
         $scope.purchase = {};
     };
     setPurchase();
-
-    function getUserProjects() {
-        $scope.projects = [];
-        $scope.totalProject = 0;
-        authService.getCurrentUser().$promise.then(function(res) {
-            $rootScope.currentUser = $scope.currentUser = res;
-            _.each($rootScope.currentUser.projects, function(project) {
-                if (project.owner == $scope.currentUser._id && project.status !== "archive") {
-                    $scope.totalProject += 1;
-                    $scope.projects.push(project);
-                }
-            });
-        });
-    };
-    getUserProjects();
 
     $scope.archiveProject = function(project) {
         project.archive = true;
@@ -274,35 +274,62 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
     };
 
     $scope.showModalPayment = function($event, type) {
-        $rootScope.purchaseType = type;
-        if (type === "small" && $scope.totalProject > 5) {
-            $mdDialog.show({
-                targetEvent: $event,
-                controller: 'settingsCtrl',
-                templateUrl: 'app/modules/settings/partials/projects-list-modal.html',
-                
-                parent: angular.element(document.body),
-                clickOutsideToClose: false
-            });
-        } else if (type === "medium" && $scope.totalProject > 10) {
-            $mdDialog.show({
-                targetEvent: $event,
-                controller: 'settingsCtrl',
-                templateUrl: 'app/modules/settings/partials/projects-list-modal.html',
-                
-                parent: angular.element(document.body),
-                clickOutsideToClose: false
-            });
-        } else {
-            userService.getCurrentStipeCustomer({plan: type}).$promise.then(function(res) {
-                if (!res._id) {
-                    handler.open($scope.plans[type]);
-                } else {
-                    $scope.showToast("Change Plan Successfully");
-                    $rootScope.$emit("User.Update", res);
-                }
-            }, function(err) {$scope.showToast("Error");});
+        var title = "Do you want to ";
+        var content = "You can create ";
+        if (type==="small") {
+            content += "5 open projects with $45/month";
+        } else if (type==="medium") {
+            content += "10 open projects with $80/month";
+        } else if (type==="large") {
+            content += "15 open projects with $105/month";
         }
+        if ($scope.currentUser.noPlan) {
+            title += "buy " + type + " plan ?";
+        } else {
+            title += "change to " + type + " plan ?";
+        }
+        var confirm = $mdDialog.confirm().title(title).textContent(content).ok("Yes").cancel("No");
+        $mdDialog.show(confirm).then(function() {
+            $rootScope.purchaseType = type;
+            if (type === "small" && $scope.totalProject > 5) {
+                $mdDialog.show({
+                    targetEvent: $event,
+                    controller: 'settingsCtrl',
+                    templateUrl: 'app/modules/settings/partials/projects-list-modal.html',
+                    resolve: {
+                        currentUser: function(authService) {
+                            return authService.getCurrentUser().$promise;
+                        }
+                    },
+                    parent: angular.element(document.body),
+                    clickOutsideToClose: false
+                });
+            } else if (type === "medium" && $scope.totalProject > 10) {
+                $mdDialog.show({
+                    targetEvent: $event,
+                    controller: 'settingsCtrl',
+                    templateUrl: 'app/modules/settings/partials/projects-list-modal.html',
+                    resolve: {
+                        currentUser: function(authService) {
+                            return authService.getCurrentUser().$promise;
+                        }
+                    },
+                    parent: angular.element(document.body),
+                    clickOutsideToClose: false
+                });
+            } else {
+                userService.getCurrentStipeCustomer({plan: type}).$promise.then(function(res) {
+                    if (!res._id) {
+                        handler.open($scope.plans[type]);
+                    } else {
+                        $scope.showToast("Change Plan Successfully");
+                        $rootScope.$emit("User.Update", res);
+                    }
+                }, function(err) {$scope.showToast("Error");});
+            }
+        }, function() {
+            
+        });
     };
     if ($rootScope.purchaseType) {
         $scope.purchaseType = $rootScope.purchaseType;
@@ -416,7 +443,11 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             targetEvent: $event,
             controller: 'settingsCtrl',
             templateUrl: 'app/modules/settings/partials/create-team.html',
-            
+            resolve: {
+                currentUser: function(authService) {
+                    return authService.getCurrentUser().$promise;
+                }
+            },
             parent: angular.element(document.body),
             clickOutsideToClose: false
         });
@@ -429,7 +460,11 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             targetEvent: $event,
             controller: 'settingsCtrl',
             templateUrl: 'app/modules/settings/partials/settings-staff-addNew.html',
-            
+            resolve: {
+                currentUser: function(authService) {
+                    return authService.getCurrentUser().$promise;
+                }
+            },
             parent: angular.element(document.body),
             clickOutsideToClose: false
         });
@@ -442,7 +477,11 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             targetEvent: $event,
             controller: 'settingsCtrl',
             templateUrl: 'app/modules/settings/partials/settings-billing-newCC.html',
-            
+            resolve: {
+                currentUser: function(authService) {
+                    return authService.getCurrentUser().$promise;
+                }
+            },
             parent: angular.element(document.body),
             clickOutsideToClose: false
         });
@@ -455,7 +494,11 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             targetEvent: $event,
             controller: 'settingsCtrl',
             templateUrl: 'app/modules/settings/partials/settings-billing-editBilling.html',
-            
+            resolve: {
+                currentUser: function(authService) {
+                    return authService.getCurrentUser().$promise;
+                }
+            },
             parent: angular.element(document.body),
             clickOutsideToClose: false
         });
@@ -500,7 +543,11 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             targetEvent: $event,
             controller: 'settingsCtrl',
             templateUrl: 'app/modules/settings/partials/settings-company-edit.html',
-            
+            resolve: {
+                currentUser: function(authService) {
+                    return authService.getCurrentUser().$promise;
+                }
+            },
             parent: angular.element(document.body),
             clickOutsideToClose: false
         });
@@ -640,7 +687,11 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             targetEvent: $event,
             controller: 'settingsCtrl',
             templateUrl: 'app/modules/settings/partials/'+name,
-            
+            resolve: {
+                currentUser: function(authService) {
+                    return authService.getCurrentUser().$promise;
+                }
+            },
             parent: angular.element(document.body),
             clickOutsideToClose: false
         });

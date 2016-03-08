@@ -559,7 +559,7 @@ exports.getResetPasswordToken = function(req,res) {
 
 exports.buyPlan = function(req, res) {
   var data = req.body;
-  User.findOne({email: data.stripeEmail}, '-hashedPassword -salt', function(err, user) {
+  User.findOne({email: req.user.email}, '-hashedPassword -salt', function(err, user) {
     if (err) {return res.send(500,err);}
     else if (!user) {return res.send(404, {msg: "The specific user is not existed"});}
     else {
@@ -639,11 +639,14 @@ exports.getCurrentStripeCustomer = function(req, res) {
                         customer: currentCustomer.id // Previously stored, then retrieved
                     }, function(err, data) {
                         if (err) {return res.send(500,err);}
-                        req.user.plan = req.query.plan;
-                        req.user.save(function(err, user) {
+                        User.findById(req.user._id, function(err, user) {
                             if (err) {return res.send(500,err);}
-                            user.isRegistered = true;
-                            return res.send(200, user);
+                            user.plan = req.query.plan;
+                            user.save(function(err, user) {
+                                if (err) {return res.send(500,err);}
+                                user.isRegistered = true;
+                                return res.send(200, user);
+                            });
                         });
                     });
                 });

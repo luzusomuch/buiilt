@@ -5,6 +5,11 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
 	url: '/settings',
 	abstract: true,
 	templateUrl: '/app/modules/settings/settings.html',
+    resolve: {
+        currentUser: function(authService) {
+            return authService.getCurrentUser().$promise;
+        }
+    }
   })
   
   .state('settings.user', {
