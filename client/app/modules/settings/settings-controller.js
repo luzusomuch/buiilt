@@ -3,7 +3,6 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
     $scope.currentTeam = $rootScope.currentTeam;
     $scope.currentUser = $rootScope.currentUser;
 
-
     $timeout(function() {
         if (!$rootScope.currentTeam._id) {
             teamService.isWaitingTeamAccept().$promise.then(function(data) {
@@ -23,11 +22,21 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                                         targetEvent: $event,
                                         controller: function($rootScope, $scope, $mdToast, $mdDialog, teamService, $state){
                                             $scope.team = {
-                                                emails: []
+                                                emails: [],
                                             };
+
+                                            $scope.getTeamType = function(type) {
+                                                if (type == "homeOwner") {
+                                                    $scope.team.name = $rootScope.currentUser.name;
+                                                } else {
+                                                    $scope.team.name = '';
+                                                }
+                                            };
+
                                             $scope.showToast = function(value) {
                                                 $mdToast.show($mdToast.simple().textContent(value).position('bottom','right').hideDelay(3000));
                                             };
+
                                             $scope.createTeam = function(form) {
                                                 if (form.$valid) {
                                                     teamService.create($scope.team, function (team) {
@@ -161,7 +170,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             var data = {stripeEmail: token.email, stripeToken: token.id, stripeType: token.type, plan: $rootScope.purchaseType};
             userService.buyPlan({}, data).$promise.then(function(res) {
                 handler.close();
-                $rootScope.$broadcast("User.Update", res);
+                $rootScope.$edit("User.Update", res);
             }, function(err) {$scope.showToast(err.data);})
         }
     });
@@ -224,7 +233,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
         project.archive = true;
         projectService.updateProject({id: project._id}, project).$promise.then(function(res) {
             $scope.showToast("Archive project successfully!");
-            $rootScope.$broadcast("Project.Archive", res);
+            $rootScope.$emit("Project.Archive", res);
             var index = _.findIndex($scope.projects, function(item) {
                 return item._id == project._id;
             });
@@ -299,7 +308,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                 userService.buyPlan({id:$scope.currentUser._id}, $scope.purchase).$promise.then(function(res) {
                     $scope.cancelDialog();
                     $scope.showToast("Purchase successfully");
-                    $rootScope.$broadcast("User.Update", res);
+                    $rootScope.$emit("User.Update", res);
                 }, function(err) {$scope.showToast("There Has Been An Error...");});
             });
         } else {
@@ -380,7 +389,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
 			mixpanel.identify($rootScope.currentUser._id);
 			mixpanel.track("Custom Tags Updated");
 			
-            $rootScope.$broadcast("Team.Update", res);
+            $rootScope.$emit("Team.Update", res);
         }, function(err){$scope.showToast(err.data);});
     };
 
@@ -442,7 +451,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
 
     $scope.getTeamType = function(type) {
         if (type == "homeOwner") {
-            $scope.team.name = $scope.currentUser.lastName;
+            $scope.team.name = $scope.currentUser.name;
         } else {
             $scope.team.name = '';
         }
@@ -589,7 +598,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             userService.changeProfile({id: $scope.currentUser._id}, $scope.currentUser).$promise.then(function(res) {
                 $mdDialog.hide();
                 $scope.showToast("Submit credit card successfully");
-                $rootScope.$broadcast("User.Update", res);
+                $rootScope.$emit("User.Update", res);
             }, function(err) {$scope.showToast("There Has Been An Error...");});
         } else {
             $scope.showToast("Please check your input again");
@@ -601,7 +610,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             teamService.update({id: $scope.currentTeam._id}, $scope.currentTeam).$promise.then(function(res) {
                 $mdDialog.hide();
                 $scope.showToast("Update billing address successfully");
-                $rootScope.$broadcast("Team.Update", res);
+                $rootScope.$emit("Team.Update", res);
             }, function(err) {$scope.showToast("There Has Been An Error...");});
         } else {
             $scope.showToast("Please check your input again");

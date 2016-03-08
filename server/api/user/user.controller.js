@@ -172,7 +172,12 @@ exports.createUserWithInviteToken = function(req, res, next) {
                                 });
                                 people._editUser = user;
                                 peopleResult = people;
-                                people.save(cb);
+                                people.save(function(err) {
+                                    if (err) {cb(err);}
+                                    user.projects.push(packageInvite.project);
+                                    user.markModified("projects");
+                                    user.save(cb());
+                                });
                             }
                         });
                     },
@@ -223,16 +228,53 @@ exports.createUserWithInviteToken = function(req, res, next) {
                             if (err) {cb();}
                             async.each(files, function(file, callback) {
                                 if (file.owner && file.project) {
+                                    _.each(file.activities, function(activity) {
+                                        if (activity.members && activity.acknowledgeUsers) {
+                                            var memberIndex = _.findIndex(activity.members, function(member) {
+                                                if (member.email) {
+                                                    return member.email===user.email;
+                                                }
+                                            });
+                                            if (memberIndex !== -1) {
+                                                activity.members[memberIndex]._id = user._id;
+                                                activity.members[memberIndex].email = null;
+                                            }
+
+                                            var acknowUserIndex = _.findIndex(activity.acknowledgeUsers, function(u) {
+                                                if (u.email) {
+                                                    return u.email===user.email;
+                                                }
+                                            });
+                                            if (acknowUserIndex !== -1) {
+                                                activity.acknowledgeUsers[acknowUserIndex]._id = user._id;
+                                                activity.acknowledgeUsers[acknowUserIndex].email = null;
+                                            }
+                                        }
+                                    });
                                     if (file.element && file.element.type === "document") {
-                                        callback();
+                                        if (file.fileHistory && file.fileHistory.length > 0) {
+                                            _.each(file.fileHistory, function(history) {
+                                                if (history.members && history.members.length > 0) {
+                                                    var index = _.findIndex(history.members, function(member) {
+                                                        if (member.email) {
+                                                            return member.email===user.email;
+                                                        }
+                                                    });
+                                                    if (index !== -1) {
+                                                        history.members[index]._id = user._id;
+                                                        history.members[index].email = null;
+                                                    }
+                                                }
+                                            });
+                                        }
                                     } else {
                                         var currentUserIndex = _.indexOf(file.notMembers, user.email);
                                         if (currentUserIndex !== -1) {
                                             file.members.push(user._id);
                                             file.notMembers.splice(currentUserIndex, 1);
                                         }
-                                        file.save(callback());
                                     }
+                                    file.save(callback());
                                 } else 
                                     callback();
                             },cb);
