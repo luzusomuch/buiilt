@@ -11,19 +11,19 @@ var _ = require('lodash');
 var moment = require("moment");
 var CronJob = require('cron').CronJob;
 
-var job1 = new CronJob('0 */59 * * * *', function(){
+var job1 = new CronJob('0 */59 7-18 * * 1-5', function(){
     getUserNotification();
     getNotificationNonUser();
 }, null, false, 'Australia/Melbourne');
 
 job1.start();
 
-var job2 = new CronJob('0 0 17 * * *', function(){
-    getAllNotificationsForUser();
-    getAllNotificationsForNonUser();
-}, null, false, 'Australia/Melbourne');
+// var job2 = new CronJob('0 0 17 * * *', function(){
+//     getAllNotificationsForUser();
+//     getAllNotificationsForNonUser();
+// }, null, false, 'Australia/Melbourne');
 
-job2.start();
+// job2.start();
 
 var today = new Date();
 var currentTime = today.getHours()+":"+today.getMinutes();
@@ -284,7 +284,7 @@ function getAllNotificationsForNonUser() {
                     if (err) {console.log(err);}
                     if (!packageInvite) {console.log("No Package Invite Found");}
                     else {
-                        Mailer.sendMail('notifications-non-user-previous-hour.html', config.emailFrom, user.owner, {
+                        Mailer.sendMail('outstanding-notification-non-user.html', config.emailFrom, user.owner, {
                             invitee: user.owner,
                             notifications: user.notifications,
                             link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
