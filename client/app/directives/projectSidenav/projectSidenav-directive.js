@@ -20,7 +20,13 @@ angular.module('buiiltApp').directive('projectSidenav', function(){
                 } else if (data.type==="file") {
                     $scope.project.element.totalFiles = (data.isAdd) ? $scope.project.element.totalFiles+1 :  $scope.project.element.totalFiles - data.number;
                 } else if (data.type==="document") {
-                    $scope.project.element.totalDocuments = (data.isAdd) ? $scope.project.element.totalDocuments+1 :  $scope.project.element.totalDocuments - data.number;
+                    if (data.isAdd) {
+                        $scope.project.element.totalDocuments = $scope.project.element.totalDocuments+1;
+                    } else if (data.isList) {
+                        $scope.project.element.totalDocuments = data.number;
+                    } else {
+                        $scope.project.element.totalDocuments = $scope.project.element.totalDocuments - data.number;
+                    }
                 }
             });
 

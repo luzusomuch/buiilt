@@ -89,6 +89,17 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
         if (index !== -1 && ($scope.documents[index] && $scope.documents[index].uniqId!==data.uniqId)) {
             $scope.documents[index].uniqId = data.uniqId;
             $scope.documents[index].__v+=1;
+            if ($scope.documents[index].__v===0) {
+                $rootScope.$broadcast("UpdateCountNumber", {type: "document", isAdd: true, number: 1});
+            }
+        } else if (index === -1) {
+            data.file.__v = 1;
+            data.file.uniqId = data.uniqId;
+            $scope.documents.push(data.file);
+            var notificationDocuments = _.filter($scope.documents, function(document) {
+                return document.__v > 0;
+            });
+            $rootScope.$broadcast("UpdateCountNumber", {type: "document", isList: true, number: notificationDocuments.length});
         }
     });
 

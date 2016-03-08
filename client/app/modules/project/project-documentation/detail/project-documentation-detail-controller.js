@@ -17,7 +17,9 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
     getAcvititiesAndHistoriesByUser($scope.document);
 
     // remove notifications count immeditely
-    $rootScope.$broadcast("UpdateCountNumber", {type: "document", number: 1});
+    $timeout(function() {
+        $rootScope.$broadcast("UpdateCountNumber", {type: "document", number: 1});
+    },500);
     fileService.lastAccess({id: $stateParams.documentId}).$promise.then(function(data) {
         $rootScope.$emit("Document.Read", document);
     });
