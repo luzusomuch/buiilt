@@ -22,7 +22,7 @@ router.post('/invite-token', controller.createUserWithInviteToken);
 router.post('/send-verification', auth.isAuthenticated(), controller.sendVerification);
 router.post('/forgot-password', controller.forgotPassword);
 router.post('/reset-password', controller.resetPassword);
-router.post('/buy-plan', controller.buyPlan);
+router.post('/buy-plan', auth.isAuthenticated(), controller.buyPlan);
 router.get('/:id/reset-password', controller.getResetPasswordToken);
 
 module.exports = router;

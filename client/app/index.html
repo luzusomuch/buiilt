@@ -25,12 +25,15 @@
 	<div class="overlay-bg" ng-class="{'hidden' : !overlay}">
 		<i class="fa fa-spinner fa-pulse"></i>
 	</div>
+	<script src="socket.io-client/socket.io.js"></script>
+	<script src="/bower_components/angular/angular.js"></script>
+	<script src="/bower_components/angular-socket-io/socket.min.js"></script>
+	
 	<script src="/bower_components/jquery/dist/jquery.js"></script>
 	<script src="/bower_components/jquery-ui/ui/jquery-ui.js"></script>
 	<script src="/bower_components/prism/prism.js"></script>
 	<script src="/bower_components/lodash/dist/lodash.js"></script>
 	<script src="/bower_components/moment/min/moment-with-locales.min.js"></script>
-	<script src="/bower_components/angular/angular.js"></script>
 	<script src="/bower_components/angucomplete-alt/dist/angucomplete-alt.min.js"></script>
 	<script src="/bower_components/angular-cookies/angular-cookies.js"></script>
 	<script src="/bower_components/angular-sanitize/angular-sanitize.js"></script>
@@ -39,7 +42,7 @@
 	<script src="/bower_components/angular-resource/angular-resource.js"></script>
 	<script src="/bower_components/angular-ui-utils/ui-utils.js"></script>
 	<script src="/bower_components/angular-tooltips/dist/angular-tooltips.min.js"></script>
-	<script src="/bower_components/angular-socket-io/socket.min.js"></script>
+	
 	<script src="/bower_components/angular-notify/angular-notify.js"></script>
 	<script src="/bower_components/angular-loading-bar/build/loading-bar.js"></script>
 	<script src="/bower_components/velocity/velocity.js"></script>
@@ -81,9 +84,9 @@
 
 	<script src="/app/components/filters.js"></script>
 	<script src="/app/components/directive.js"></script>
+	
 	<script src="/app/components/socket/socket.service.js"></script>
 
-	<script src="socket.io-client/socket.io.js"></script>
 	<script src="/app/directives/footer/footer-directive.js"></script>
 	<script src="/app/directives/header/header-directive.js"></script>
 	<script src="/app/directives/notification/notification-directive.js"></script>

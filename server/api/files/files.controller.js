@@ -185,7 +185,7 @@ exports.show = function(req, res) {
         Notification.find({"element._id": file._id, owner: req.user._id, unread: true}, function(err, notifications) {
             if (err) {return res.send(500,err);}
             file.__v = notifications.length;
-            if (file.element.type==="document"&&file.owner._id.toString()===req.user._id.toString()) {
+            if (file.element.type==="document"&&file.owner._id.toString()!==req.user._id.toString()) {
                 var fileHistory = [];
                 _.each(file.fileHistory, function(h) {
                     if (_.findIndex(h.members, function(m) {
