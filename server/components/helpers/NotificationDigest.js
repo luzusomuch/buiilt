@@ -12,6 +12,7 @@ var moment = require("moment");
 var CronJob = require('cron').CronJob;
 
 var job1 = new CronJob('00 40 07-18 * * 1-5', function(){
+    console.log("Cron start");
     getUserNotification();
     getNotificationNonUser();
 }, null, false, 'Australia/Melbourne');
