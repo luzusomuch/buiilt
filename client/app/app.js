@@ -119,6 +119,9 @@ angular
                 authService.getCurrentTeam().$promise.then(function(res){
                     $rootScope.currentTeam = res;
                 });
+                authService.getCurrentUser().$promise.then(function(res) {
+                    $rootScope.currentUser = res;
+                });
             }
             if (toState.authenticate && !loggedIn) {
                 $location.path('/');
@@ -137,7 +140,7 @@ angular
         if (toState.isAdmin) {
             authService.getCurrentUser().$promise.then(function(user){
                 if (user.role !== 'admin') {
-                    $state.go('signin');
+                    $state.go('signinBackend');
                 }
             });
         }

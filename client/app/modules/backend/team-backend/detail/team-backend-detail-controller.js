@@ -1,7 +1,7 @@
 angular.module('buiiltApp').controller('TeamBackendDetailCtrl', function($scope, projectLimit, team, projectService, $mdToast) {
     $scope.team = team;
     $scope.projectLimit = projectLimit;
-    $scope.number = ($scope.projectLimit._id) ? $scope.projectLimit.number : 1;
+    $scope.number = ($scope.projectLimit && $scope.projectLimit._id) ? $scope.projectLimit.number : 1;
 
     $scope.showEditLimitProject = false;
 

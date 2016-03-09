@@ -1,5 +1,5 @@
 angular.module('buiiltApp')
-.directive('builtHeader', function($rootScope) {
+.directive('builtHeaderBackend', function($rootScope) {
     return {
         restrict: 'E',
         templateUrl: 'app/directives/backend-header/header.html',
