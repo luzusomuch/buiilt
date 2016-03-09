@@ -203,7 +203,7 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
                 }
             });
         });
-        // _.remove($scope.projectMembers, {_id: $rootScope.currentUser._id});
+        _.remove($scope.projectMembers, {_id: $rootScope.currentUser._id});
 	};
 	
 	//Functions to handle New Work Room Dialog.

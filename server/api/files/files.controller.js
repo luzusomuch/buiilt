@@ -82,7 +82,7 @@ exports.assignMoreMembers = function(req, res) {
                         event: 'dashboard:new',
                         room: user.toString(),
                         data: {
-                            type: "file",
+                            type: file.element.type,
                             _id: file._id,
                             uniqId: uniqId,
                             user: req.user,
@@ -295,7 +295,7 @@ exports.update = function(req, res) {
                                         event: 'dashboard:new',
                                         room: owner._id.toString(),
                                         data: {
-                                            type: "file",
+                                            type: file.element.type,
                                             _id: file._id,
                                             uniqId: uniqId,
                                             user: req.user,

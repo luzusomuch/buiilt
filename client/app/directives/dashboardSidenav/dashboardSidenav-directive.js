@@ -6,8 +6,7 @@ angular.module('buiiltApp').directive('dashboardSidenav', function(){
         scope:{
             tasks:'=',
             messages: "=",
-            files: "=",
-            documents: "="
+            files: "="
         },
         controller: function($scope, $rootScope, $location, $state, socket) {
 			$scope.$state = $state;
@@ -20,8 +19,15 @@ angular.module('buiiltApp').directive('dashboardSidenav', function(){
                 }
             });
 
-            $scope.totalFileUpdates = $scope.files.length;
-            $scope.totalDocumentUpdates = $scope.documents.length;
+            $scope.totalFileUpdates = 0;
+            $scope.totalDocumentUpdates = 0
+            _.each($scope.files, function(file) {
+                if (file.element.type==="file") {
+                    $scope.totalFileUpdates += 1;
+                } else if (file.element.type==="document") {
+                    $scope.totalDocumentUpdates += 1;
+                }
+            })
             $scope.totalMessagesUpdate = $scope.messages.length;
 
             var listenerCleanFn = $rootScope.$on("DashboardSidenav-UpdateNumber", function(event, data) {

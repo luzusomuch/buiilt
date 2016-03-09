@@ -239,7 +239,7 @@ exports.uploadReversion = function(req, res) {
                                     event: 'dashboard:new',
                                     room: user._id.toString(),
                                     data: {
-                                        type: "file",
+                                        type: file.element.type,
                                         _id: file._id,
                                         uniqId: randomId,
                                         user: req.user,
@@ -252,7 +252,7 @@ exports.uploadReversion = function(req, res) {
                                     event: 'dashboard:new',
                                     room: user._id.toString(),
                                     data: {
-                                        type: "file",
+                                        type: file.element.type,
                                         _id: file._id,
                                         uniqId: randomId,
                                         user: req.user,
@@ -406,7 +406,7 @@ exports.upload = function(req, res){
                                     event: 'dashboard:new',
                                     room: user._id.toString(),
                                     data: {
-                                        type: "file",
+                                        type: file.element.type,
                                         _id: file._id,
                                         uniqId: randomId,
                                         user: req.user,
