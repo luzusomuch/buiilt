@@ -18,6 +18,7 @@ var CronJob = require('cron').CronJob;
 // }, null, false, 'Australia/Melbourne');
 
 // job1.start();
+console.log("IN THE NOTIFICATION Digest");
 
 var job2 = new CronJob('* * * * * *', function(){
     console.log("RUN EVERY 1 secnd");
