@@ -353,6 +353,7 @@ exports.upload = function(req, res){
                 type: "upload-file",
                 element: {name: file.name}
             });
+            file.members.push(req.user._id);
         }
         var tags = [];
         _.each(data.tags, function(tag) {

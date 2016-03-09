@@ -12,7 +12,7 @@ var moment = require("moment");
 var CronJob = require('cron').CronJob;
 
 console.log("IN THE NOTIFICATION Digest");
-var job1 = new CronJob('0 06 07-18 * * 1-5', function(){
+var job1 = new CronJob('0 09 07-18 * * 1-5', function(){
     console.log("Cron start");
     getUserNotification();
     getNotificationNonUser();

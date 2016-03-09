@@ -51,6 +51,7 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
     getLastAccess($scope.threads);
 
     socket.on("thread:new", function(data) {
+        console.log(data);
         if (data.project._id.toString()===$stateParams.id.toString()) {
             $scope.threads.push(data);
             $scope.threads = _.uniq($scope.threads, "_id");
@@ -99,6 +100,7 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
     });
 
     var listenerCleanFnPushFromDashboard = $rootScope.$on("Dashboard.Thread.Update", function(event, data) {
+        console.log(data);
         var index = _.findIndex($scope.threads, function(thread) {
             return thread._id.toString()===data.thread._id.toString();
         });

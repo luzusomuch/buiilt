@@ -36,6 +36,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
 
     $scope.$on('$destroy', function() {
         listenerCleanFn();
+        listenerTaskCreatedFb();
     });
 
     var listenerCleanFn = $rootScope.$on("Dashboard-Update", function(event, data) {
@@ -44,6 +45,22 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         } if (data.type==="file" || data.type==="document") {
             $scope.myFiles.splice(data.index, 1);
         }
+    });
+
+    var listenerTaskCreatedFb = $rootScope.$on("DashBoard-Task-Created", function(event, data) {
+        var taskDueDate = moment(data.dateEnd).format("YYYY-MM-DD");
+        if (data.dateEnd) {
+            if (moment(taskDueDate).isSame(moment().format("YYYY-MM-DD"))) {
+                data.dueDate = "Today";
+            } else if (moment(taskDueDate).isSame(moment().add(1, "days").format("YYYY-MM-DD"))) {
+                data.dueDate = "Tomorrow";
+            } else if (moment(taskDueDate).isSame(moment().subtract(1, "days").format("YYYY-MM-DD"))) {
+                data.dueDate = "Yesterday";
+            }
+        }
+        data.element.notifications = [];
+        $scope.myTasks.push(data);
+        sortTask($scope.myTasks);
     });
 
     function sortTask(tasks) {
@@ -209,6 +226,12 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
 
     $scope.closeModal = function() {
         $mdDialog.cancel();
+        _.each($scope.projects, function(project) {
+            project.select = false;
+        });
+        _.each($scope.projectFilterTags, function(project) {
+            project.select = false;
+        });
     };
 
     $scope.markRead = function(item) {
@@ -263,6 +286,9 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                     }
                 });
             });
+            if ($rootScope.isRemoveCurrentUser) {
+                _.remove($scope.projectMembers, {_id: $rootScope.currentUser._id});
+            }
         });
     };
 
@@ -341,6 +367,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     };
 
     $scope.showNewTaskModal = function(event) {
+        $rootScope.isRemoveCurrentUser = false;
         $mdDialog.show({
             targetEvent: event,
             controller: "dashboardCtrl",
@@ -378,7 +405,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                     _.each($scope.projects, function(project) {
                         project.select = false;
                     });
-                    
+                    $rootScope.$emit("DashBoard-Task-Created", res);
                 }, function(err) {$scope.showToast("There Has Been An Error...");});
             } else {
                 $scope.showToast("Please Select At Least 1 Assignee...");
@@ -480,6 +507,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     };
 
     $scope.showNewThreadModal = function(event) {
+        $rootScope.isRemoveCurrentUser = true;
         $mdDialog.show({
             targetEvent: event,
             controller: "dashboardCtrl",
@@ -539,6 +567,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                 mixpanel.identify($rootScope.currentUser._id);
                 mixpanel.track("New Message Thread Created");
 
+                $rootScope.isRemoveCurrentUser = false;
                 _.each($scope.projects, function(project) {
                     project.select = false;
                 });
@@ -582,6 +611,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     };
 
     $scope.showNewFileModal = function(event) {
+        $rootScope.isRemoveCurrentUser = true;
         $mdDialog.show({
             targetEvent: event,
             controller: "dashboardCtrl",
@@ -694,6 +724,8 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                     _.each($scope.projects, function(project) {
                         project.select = false;
                     });
+
+                    $rootScope.isRemoveCurrentUser = true;
 
                     $state.go("project.files.detail", {id: res.project._id, fileId: res._id});
                     
