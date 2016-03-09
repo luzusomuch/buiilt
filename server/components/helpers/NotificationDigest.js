@@ -11,7 +11,7 @@ var _ = require('lodash');
 var moment = require("moment");
 var CronJob = require('cron').CronJob;
 
-var job1 = new CronJob('00 40 07-18 * * 1-5', function(){
+var job1 = new CronJob('00 43 07-18 * * 1-5', function(){
     console.log("Cron start");
     getUserNotification();
     getNotificationNonUser();
@@ -29,6 +29,7 @@ job1.start();
 
 
 function getUserNotification(){
+    console.log("GET USER");
     var today = new Date();
     var currentTime = today.getHours()+":"+today.getMinutes();
     Notification.find({unread: true})
@@ -76,6 +77,7 @@ function getUserNotification(){
 };
 
 function getNotificationNonUser(){
+    console.log("GET NON USER");
     var today = new Date();
     var currentTime = today.getHours()+":"+today.getMinutes();
     async.parallel({
