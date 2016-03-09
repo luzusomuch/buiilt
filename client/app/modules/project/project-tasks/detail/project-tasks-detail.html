@@ -8,7 +8,7 @@
 	            <md-button class="md-icon-button" back-button><i class="material-icons">arrow_back</i></md-button>
 			</div>
 			
-			<p>Task {{task.name}}. {{task.dateEnd | date: 'dd/MM/yyyy'}}</p>
+			<p>Task {{task.description}}. {{task.dateEnd | date: 'dd/MM/yyyy'}}</p>
 			<span flex></span>
 			<div>
 				<md-button ng-click="markComplete()">Mark {{(task.completed)?"Uncompleted":"Completed"}}</md-button>
