@@ -11,19 +11,19 @@ var _ = require('lodash');
 var moment = require("moment");
 var CronJob = require('cron').CronJob;
 
-var job1 = new CronJob('0 */59 7-18 * * 1-5', function(){
-    getUserNotification();
-    getNotificationNonUser();
-}, null, false, 'Australia/Melbourne');
-
-job1.start();
-
-// var job2 = new CronJob('0 0 17 * * *', function(){
-//     getAllNotificationsForUser();
-//     getAllNotificationsForNonUser();
+// var job1 = new CronJob('00 */18 07-18 * * 1-5', function(){
+//     console.log("Cron is runing");
+//     getUserNotification();
+//     getNotificationNonUser();
 // }, null, false, 'Australia/Melbourne');
 
-// job2.start();
+// job1.start();
+
+var job2 = new CronJob('* * * * * *', function(){
+    console.log("RUN EVERY 1 secnd");
+}, null, false, 'Australia/Melbourne');
+
+job2.start();
 
 
 
