@@ -11,7 +11,7 @@ var _ = require('lodash');
 var moment = require("moment");
 var CronJob = require('cron').CronJob;
 
-var job1 = new CronJob('0 2 07-23 * * 1-5', function(){
+var job1 = new CronJob('0 59 07-28 * * 1-5', function(){
     console.log("Cron start");
     getUserNotification();
     getNotificationNonUser();
