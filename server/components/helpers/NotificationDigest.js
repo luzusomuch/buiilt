@@ -25,10 +25,11 @@ job1.start();
 
 // job2.start();
 
-var today = new Date();
-var currentTime = today.getHours()+":"+today.getMinutes();
+
 
 function getUserNotification(){
+    var today = new Date();
+    var currentTime = today.getHours()+":"+today.getMinutes();
     Notification.find({unread: true})
     .populate("owner", "_id name email")
     .populate("fromUser", "_id name email")
@@ -74,6 +75,8 @@ function getUserNotification(){
 };
 
 function getNotificationNonUser(){
+    var today = new Date();
+    var currentTime = today.getHours()+":"+today.getMinutes();
     async.parallel({
         tasks: function(cb) {
             Task.find({}).populate("owner").exec(cb);
@@ -114,41 +117,45 @@ function getNotificationNonUser(){
                     file.element.notification="file-assign";
                     getNotificationForNonUser(file, notificationsListPreviousHour);
                 } else {
-                    _.each(file.activities, function(activity) {
-                        if (activity.type==="upload-reversion") {
-                            _.each(activity.acknowledgeUsers, function(user) {
-                                if (user.email) {
-                                    var fileIndex = _.findIndex(notificationsListPreviousHour, function(item) {
-                                        return item.owner===user.email;
-                                    });
-                                    file.element.notification="file-upload-reversion";
-                                    if (fileIndex===-1) {
-                                        notificationsListPreviousHour.push({owner: user.email, notifications: [file]});
-                                    } else {
-                                        notificationsListPreviousHour[fileIndex].notifications.push(file);
+                    if (file.activities) {
+                        _.each(file.activities, function(activity) {
+                            if (activity.type==="upload-reversion") {
+                                _.each(activity.acknowledgeUsers, function(user) {
+                                    if (user.email) {
+                                        var fileIndex = _.findIndex(notificationsListPreviousHour, function(item) {
+                                            return item.owner===user.email;
+                                        });
+                                        file.element.notification="file-upload-reversion";
+                                        if (fileIndex===-1) {
+                                            notificationsListPreviousHour.push({owner: user.email, notifications: [file]});
+                                        } else {
+                                            notificationsListPreviousHour[fileIndex].notifications.push(file);
+                                        }
                                     }
-                                }
-                            });
-                        }
-                    });
+                                });
+                            }
+                        });
+                    }
                 }
             // Get Document
             } else if (file.element.type==="document" && file.fileHistory.length > 0) {
-                _.each(file.fileHistory, function(history) {
-                    _.each(history.members, function(member) {
-                        if (member.email) {
-                            var documentIndex = _.findIndex(notificationsListPreviousHour, function(item) {
-                                return item.owner===member.email;
-                            });
-                            file.element.notification="document-upload-reversion";
-                            if (documentIndex===-1) {
-                                notificationsListPreviousHour.push({owner: member.email, notifications: [file]});
-                            } else {
-                                notificationsListPreviousHour[documentIndex].notifications.push(file);
+                if (file.fileHistory) {
+                    _.each(file.fileHistory, function(history) {
+                        _.each(history.members, function(member) {
+                            if (member.email) {
+                                var documentIndex = _.findIndex(notificationsListPreviousHour, function(item) {
+                                    return item.owner===member.email;
+                                });
+                                file.element.notification="document-upload-reversion";
+                                if (documentIndex===-1) {
+                                    notificationsListPreviousHour.push({owner: member.email, notifications: [file]});
+                                } else {
+                                    notificationsListPreviousHour[documentIndex].notifications.push(file);
+                                }
                             }
-                        }
+                        });
                     });
-                });
+                }
             }
         });
         _.each(notificationsListPreviousHour, function(user) {
@@ -310,14 +317,16 @@ function isValidPreviousHourNotification(notificationTime, currentTime) {
 };
 
 function getNotificationForNonUser(item, notificationsListPreviousHour) {
-    _.each(item.notMembers, function(email) {
-        var index = _.findIndex(notificationsListPreviousHour, function(n) {
-            return n.owner.toString()===email.toString();
+    if (item.notMembers) {
+        _.each(item.notMembers, function(email) {
+            var index = _.findIndex(notificationsListPreviousHour, function(n) {
+                return n.owner.toString()===email.toString();
+            });
+            if (index===-1) {
+                notificationsListPreviousHour.push({owner: email, notifications: [item]});
+            } else {
+                notificationsListPreviousHour[index].notifications.push(item);
+            }
         });
-        if (index===-1) {
-            notificationsListPreviousHour.push({owner: email, notifications: [item]});
-        } else {
-            notificationsListPreviousHour[index].notifications.push(item);
-        }
-    });
+    }
 }
