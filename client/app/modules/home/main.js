@@ -3,7 +3,8 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
     
   .state('home', {
     url: '',
-    templateUrl: '/app/modules/home/view.html'
+    templateUrl: '/app/modules/home/view.html',
+    noHeader: true
   });
   
 });
