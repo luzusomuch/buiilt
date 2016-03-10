@@ -244,7 +244,7 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($roo
     $scope.showReviewFileModal = function($event, addendum) {
         $mdDialog.show({
             targetEvent: $event,
-            controller: function($scope, $stateParams, $state){
+            controller: ["$scope", "$stateParams", "$state", function($scope, $stateParams, $state){
                 $scope.addendum = addendum;
                 $scope.closeModal = function() {
                     $mdDialog.cancel();
@@ -258,7 +258,7 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($roo
                         }
                     );
                 };
-            },
+            }],
             templateUrl: 'app/modules/project/project-tenders/detail/addendum-riWindow.html',
             parent: angular.element(document.body),
             clickOutsideToClose: false

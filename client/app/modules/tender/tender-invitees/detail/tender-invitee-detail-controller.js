@@ -96,7 +96,8 @@ angular.module('buiiltApp').controller('tenderInviteeDetailCtrl', function($root
     $scope.openTenderDetail = function($event, file) {
         $mdDialog.show({
             targetEvent: $event,
-            controller: function($scope, $stateParams, $state){
+            controller: ["$scope", "$stateParams", "$state", 
+            function($scope, $stateParams, $state){
                 $scope.file = file;
 
                 $scope.closeModal = function() {
@@ -111,7 +112,7 @@ angular.module('buiiltApp').controller('tenderInviteeDetailCtrl', function($root
                         }
                     );
                 };
-            },
+            }],
             templateUrl: 'app/modules/tender/tender-invitees/detail/partials/view-tender-file.html',
             parent: angular.element(document.body),
             clickOutsideToClose: false

@@ -163,7 +163,7 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
 	$scope.showNewTenderModal = function() {
         $mdDialog.show({
             // targetEvent: $event,
-            controller: function($scope, $rootScope, peopleService) {
+            controller: ["$scope", "$rootScope", "peopleService", function($scope, $rootScope, peopleService) {
                 $scope.minDate = new Date();
                 $scope.cancelNewTenderModal = function () {
                     $mdDialog.cancel();
@@ -246,7 +246,7 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
                 $scope.showToast = function(value) {
                     $mdToast.show($mdToast.simple().textContent(value).position('bottom','left').hideDelay(3000));
                 };
-            },
+            }],
             templateUrl: 'app/modules/project/project-tenders/new/project-tenders-new.html',
             parent: angular.element(document.body),
             clickOutsideToClose: false
