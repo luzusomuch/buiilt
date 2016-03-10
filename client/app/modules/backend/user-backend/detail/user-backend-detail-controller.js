@@ -50,12 +50,12 @@ angular.module('buiiltApp').controller('UserBackendDetailCtrl', function($rootSc
             targetEvent: event,
             controller: 'UserBackendDetailCtrl',
             resolve: {
-                projects: function($stateParams, projectService) {
+                projects: ["$stateParams", "projectService", function($stateParams, projectService) {
                     return projectService.getAllProjects({userId: $stateParams.userId}).$promise;
-                },
-                tenders: function($stateParams, tenderService) {
+                }],
+                tenders: ["$stateParams", "tenderService", function($stateParams, tenderService) {
                     return tenderService.getAll({userId: $stateParams.userId}).$promise;
-                }
+                }]
             },
             templateUrl: 'app/modules/backend/partials/'+name,
             parent: angular.element(document.body),

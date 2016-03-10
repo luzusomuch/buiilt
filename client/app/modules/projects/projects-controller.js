@@ -45,12 +45,12 @@ angular.module('buiiltApp').controller('projectsCtrl', function ($rootScope, $sc
             targetEvent: $event,
             controller: 'projectsCtrl',
             resolve: {
-                teamInvitations: function(authService){
+                teamInvitations: ["authService", function(authService){
                     return authService.getCurrentInvitation().$promise;
-                },
-                projectsInvitation: function(inviteTokenService) {
+                }],
+                projectsInvitation: ["inviteTokenService", function(inviteTokenService) {
                     return inviteTokenService.getProjectsInvitation().$promise;
-                }
+                }]
             },
             templateUrl: 'app/modules/projects/projects-create/projects-create.html',
             parent: angular.element(document.body),

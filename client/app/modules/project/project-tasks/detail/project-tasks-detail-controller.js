@@ -171,12 +171,12 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
             targetEvent: $event,
             controller: 'projectTaskDetailCtrl',
             resolve: {
-                task: function($stateParams, taskService) {
+                task: ["$stateParams", "taskService", function($stateParams, taskService) {
                     return taskService.get({id: $stateParams.taskId}).$promise;
-                },
-                people: function(peopleService, $stateParams) {
+                }],
+                people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
                     return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
-                }
+                }]
             },
             templateUrl: 'app/modules/project/project-tasks/detail/partials/' + modalName,
             parent: angular.element(document.body),

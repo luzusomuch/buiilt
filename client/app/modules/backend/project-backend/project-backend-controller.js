@@ -28,9 +28,9 @@ angular.module('buiiltApp')
             targetEvent: $event,
             controller: 'ProjectBackendCtrl',
             resolve: {
-                projects: function(projectService) {
+                projects: ["projectService", function(projectService) {
                     return projectService.getAllProjects().$promise;
-                }
+                }]
             },
             templateUrl: 'app/modules/backend/partials/edit-project-modal.html',
             parent: angular.element(document.body),

@@ -124,9 +124,9 @@ angular.module('buiiltApp').controller('TendersCtrl', function($scope, $rootScop
             targetEvent: event,
             controller: "TendersCtrl",
             resolve: {
-                tenders: function(tenderService) {
+                tenders: ["tenderService", function(tenderService) {
                     return tenderService.getAll().$promise;
-                }
+                }]
             },
             templateUrl: 'app/modules/tenders/new-tender.html',
             parent: angular.element(document.body),

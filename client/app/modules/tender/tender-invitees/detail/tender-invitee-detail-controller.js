@@ -32,9 +32,9 @@ angular.module('buiiltApp').controller('tenderInviteeDetailCtrl', function($root
             targetEvent: event,
             controller: 'tenderInviteeDetailCtrl',
             resolve: {
-                tender: function($stateParams, tenderService) {
+                tender: ["$stateParams", "tenderService", function($stateParams, tenderService) {
                     return tenderService.get({id: $stateParams.tenderId}).$promise;
-                }
+                }]
             },
             templateUrl: 'app/modules/tender/tender-invitees/detail/partials/'+name,
             parent: angular.element(document.body),

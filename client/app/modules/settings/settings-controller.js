@@ -170,12 +170,12 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                                         },
                                         templateUrl: 'app/modules/settings/partials/join-team.html',
                                         resolve: {
-                                            invitations: function(authService) {
+                                            invitations: ["authService", function(authService) {
                                                 return authService.getCurrentInvitation().$promise;
-                                            },
-                                            teams: function(teamService) {
+                                            }],
+                                            teams: ["teamService", function(teamService) {
                                                 return teamService.getAll().$promise;
-                                            }
+                                            }]
                                         },
                                         parent: angular.element(document.body),
                                         clickOutsideToClose: false,
@@ -297,9 +297,9 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                     controller: 'settingsCtrl',
                     templateUrl: 'app/modules/settings/partials/projects-list-modal.html',
                     resolve: {
-                        currentUser: function(authService) {
+                        currentUser: ["authService", function(authService) {
                             return authService.getCurrentUser().$promise;
-                        }
+                        }]
                     },
                     parent: angular.element(document.body),
                     clickOutsideToClose: false
@@ -310,9 +310,9 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                     controller: 'settingsCtrl',
                     templateUrl: 'app/modules/settings/partials/projects-list-modal.html',
                     resolve: {
-                        currentUser: function(authService) {
+                        currentUser: ["authService", function(authService) {
                             return authService.getCurrentUser().$promise;
-                        }
+                        }]
                     },
                     parent: angular.element(document.body),
                     clickOutsideToClose: false
@@ -444,9 +444,9 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             controller: 'settingsCtrl',
             templateUrl: 'app/modules/settings/partials/create-team.html',
             resolve: {
-                currentUser: function(authService) {
+                currentUser: ["authService", function(authService) {
                     return authService.getCurrentUser().$promise;
-                }
+                }]
             },
             parent: angular.element(document.body),
             clickOutsideToClose: false
@@ -461,9 +461,9 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             controller: 'settingsCtrl',
             templateUrl: 'app/modules/settings/partials/settings-staff-addNew.html',
             resolve: {
-                currentUser: function(authService) {
+                currentUser: ["authService", function(authService) {
                     return authService.getCurrentUser().$promise;
-                }
+                }]
             },
             parent: angular.element(document.body),
             clickOutsideToClose: false
@@ -478,9 +478,9 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             controller: 'settingsCtrl',
             templateUrl: 'app/modules/settings/partials/settings-billing-newCC.html',
             resolve: {
-                currentUser: function(authService) {
+                currentUser: ["authService", function(authService) {
                     return authService.getCurrentUser().$promise;
-                }
+                }]
             },
             parent: angular.element(document.body),
             clickOutsideToClose: false
@@ -495,9 +495,9 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             controller: 'settingsCtrl',
             templateUrl: 'app/modules/settings/partials/settings-billing-editBilling.html',
             resolve: {
-                currentUser: function(authService) {
+                currentUser: ["authService", function(authService) {
                     return authService.getCurrentUser().$promise;
-                }
+                }]
             },
             parent: angular.element(document.body),
             clickOutsideToClose: false
@@ -544,9 +544,9 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             controller: 'settingsCtrl',
             templateUrl: 'app/modules/settings/partials/settings-company-edit.html',
             resolve: {
-                currentUser: function(authService) {
+                currentUser: ["authService", function(authService) {
                     return authService.getCurrentUser().$promise;
-                }
+                }]
             },
             parent: angular.element(document.body),
             clickOutsideToClose: false
@@ -688,9 +688,9 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             controller: 'settingsCtrl',
             templateUrl: 'app/modules/settings/partials/'+name,
             resolve: {
-                currentUser: function(authService) {
+                currentUser: ["authService", function(authService) {
                     return authService.getCurrentUser().$promise;
-                }
+                }]
             },
             parent: angular.element(document.body),
             clickOutsideToClose: false

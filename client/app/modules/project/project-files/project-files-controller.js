@@ -262,12 +262,12 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
 		  	targetEvent: $event,
 	      	controller: 'projectFilesCtrl',
 	      	resolve: {
-		      	files: function($stateParams, fileService) {
+		      	files: ["$stateParams", "fileService",function($stateParams, fileService) {
 		        	return fileService.getProjectFiles({id: $stateParams.id, type: "file"}).$promise;
-		      	},
-                people: function(peopleService, $stateParams) {
+		      	}],
+                people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
                     return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
-                }
+                }]
 		    },
 	      	templateUrl: 'app/modules/project/project-files/new/project-files-new.html',
 	      	parent: angular.element(document.body),

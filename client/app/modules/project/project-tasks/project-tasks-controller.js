@@ -263,12 +263,12 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
 		  	targetEvent: $event,
 	      	controller: "projectTasksCtrl",
 	      	resolve: {
-		      	tasks: function(taskService, $stateParams) {
+		      	tasks: ["taskService", "$stateParams", function(taskService, $stateParams) {
 		        	return taskService.getProjectTask({id: $stateParams.id}).$promise;
-		      	},
-		      	people: function(peopleService, $stateParams) {
+		      	}],
+		      	people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
                     return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
-                }
+                }]
 		    },
 	      	templateUrl: 'app/modules/project/project-tasks/new/project-tasks-new.html',
 	      	parent: angular.element(document.body),

@@ -60,9 +60,9 @@ angular.module('buiiltApp').controller('tenderOverviewCtrl', function($scope, $r
             targetEvent: event,
             controller: 'tenderOverviewCtrl',
             resolve: {
-                tender: function($stateParams, tenderService) {
+                tender: ["$stateParams", "tenderService", function($stateParams, tenderService) {
                     return tenderService.get({id: $stateParams.tenderId}).$promise;
-                }
+                }]
             },
             templateUrl: 'app/modules/tender/partials/'+name,
             parent: angular.element(document.body),

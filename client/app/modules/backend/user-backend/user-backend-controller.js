@@ -40,9 +40,9 @@ angular.module('buiiltApp').controller('UserBackendCtrl', function($rootScope, $
             targetEvent: $event,
             controller: 'UserBackendCtrl',
             resolve: {
-                users: function(userService) {
+                users: ["userService", function(userService) {
                     return userService.getAll().$promise;
-                }
+                }]
             },
             templateUrl: 'app/modules/backend/partials/edit-user-modal.html',
             parent: angular.element(document.body),

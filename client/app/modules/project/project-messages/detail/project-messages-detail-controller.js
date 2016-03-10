@@ -226,12 +226,12 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
             targetEvent: $event,
             controller: 'projectMessagesDetailCtrl',
             resolve: {
-                thread: function($stateParams, messageService) {
+                thread: ["$stateParams", "messageService", function($stateParams, messageService) {
                     return messageService.get({id: $stateParams.messageId}).$promise;
-                },
-                people: function(peopleService, $stateParams) {
+                }],
+                people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
                     return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
-                }
+                }]
             },
             templateUrl: 'app/modules/project/project-messages/detail/partials/' + name,
             parent: angular.element(document.body),

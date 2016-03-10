@@ -107,9 +107,9 @@ angular.module('buiiltApp').controller('tenderDocumentDetailCtrl', function($roo
             targetEvent: $event,
             controller: 'tenderDocumentDetailCtrl',
             resolve: {
-                document: function($stateParams, fileService) {
+                document: ["$stateParams", "fileService", function($stateParams, fileService) {
                     return fileService.get({id: $stateParams.documentId}).$promise;
-                }
+                }]
             },
             templateUrl: 'app/modules/project/project-documentation/detail/' + modalName,
             parent: angular.element(document.body),

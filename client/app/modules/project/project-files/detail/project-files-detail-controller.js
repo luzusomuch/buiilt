@@ -241,12 +241,12 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
             targetEvent: $event,
             controller: 'projectFileDetailCtrl',
             resolve: {
-                file: function($stateParams, fileService) {
+                file: ["$stateParams", "fileService", function($stateParams, fileService) {
                     return fileService.get({id: $stateParams.fileId}).$promise;
-                },
-                people: function(peopleService, $stateParams) {
+                }],
+                people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
                     return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
-                }
+                }]
             },
             templateUrl: 'app/modules/project/project-files/detail/partials/' + modalName,
             parent: angular.element(document.body),

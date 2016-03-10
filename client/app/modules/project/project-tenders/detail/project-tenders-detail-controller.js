@@ -80,9 +80,9 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($roo
             targetEvent: $event,
             controller: 'projectTendersDetailCtrl',
             resolve: {
-                tender: function($stateParams, peopleService) {
+                tender: ["$stateParams", "peopleService", function($stateParams, peopleService) {
                     return peopleService.getTender({id: $stateParams.id, tenderId: $stateParams.tenderId}).$promise;
-                }
+                }]
             },
             templateUrl: 'app/modules/project/project-tenders/detail/'+name,
             parent: angular.element(document.body),

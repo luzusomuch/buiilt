@@ -361,9 +361,9 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
 		  	targetEvent: $event,
 	      	controller: 'projectTeamCtrl',
             resolve: {
-                people: function(peopleService, $stateParams) {
+                people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
                     return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
-                }
+                }]
             },
 	      	templateUrl: 'app/modules/project/project-team/new/project-team-new.html',
 	      	parent: angular.element(document.body),

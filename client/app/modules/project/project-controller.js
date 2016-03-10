@@ -48,9 +48,9 @@ angular.module('buiiltApp').controller('projectCtrl', function($rootScope, $scop
 		    targetEvent: $event,
 	        controller: 'projectCtrl',
             resolve: {
-                people: function(peopleService, $stateParams) {
+                people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
                     return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
-                }
+                }]
             },
 	        templateUrl: 'app/modules/project/project-overview/partials/project-overview-edit.html',
 	        parent: angular.element(document.body),
@@ -67,9 +67,9 @@ angular.module('buiiltApp').controller('projectCtrl', function($rootScope, $scop
             targetEvent: $event,
             controller: 'projectCtrl',
             resolve: {
-                people: function(peopleService, $stateParams) {
+                people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
                     return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
-                }
+                }]
             },
             templateUrl: 'app/modules/project/project-overview/partials/upload-modal.html',
             parent: angular.element(document.body),

@@ -158,12 +158,12 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
 		  	targetEvent: $event,
 	      	controller: "projectDocumentationCtrl",
 	      	resolve: {
-                documents: function($stateParams, fileService) {
+                documents: ["$stateParams", "fileService", function($stateParams, fileService) {
                     return fileService.getProjectFiles({id: $stateParams.id, type: "document"}).$promise;
-                },
-                people: function(peopleService, $stateParams) {
+                }],
+                people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
                     return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
-                }
+                }]
             },
 	      	templateUrl: 'app/modules/project/project-documentation/new/project-documentation-new.html',
 	      	parent: angular.element(document.body),

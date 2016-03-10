@@ -53,9 +53,9 @@ angular.module('buiiltApp').controller('tenderDocumentsCtrl', function($rootScop
             targetEvent: event,
             controller: 'tenderDocumentsCtrl',
             resolve: {
-                tender: function($stateParams, tenderService) {
+                tender: ["$stateParams", "tenderService", function($stateParams, tenderService) {
                     return tenderService.get({id: $stateParams.tenderId}).$promise;
-                }
+                }]
             },
             templateUrl: 'app/modules/tender/tender-documents/'+name,
             parent: angular.element(document.body),

@@ -283,9 +283,9 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
             targetEvent: $event,
             controller: 'projectDocumentationDetailCtrl',
             resolve: {
-                document: function($stateParams, fileService) {
+                document: ["$stateParams", "fileService", function($stateParams, fileService) {
                     return fileService.get({id: $stateParams.documentId}).$promise;
-                }
+                }]
             },
             templateUrl: 'app/modules/project/project-documentation/detail/' + modalName,
             parent: angular.element(document.body),
@@ -316,9 +316,9 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
             targetEvent: $event,
             controller: 'projectDocumentationDetailCtrl',
             resolve: {
-                document: function($stateParams, fileService) {
+                document: ["$stateParams", "fileService", function($stateParams, fileService) {
                     return fileService.get({id: $stateParams.documentId}).$promise;
-                }
+                }]
             },
             templateUrl: 'app/modules/project/project-documentation/detail/invite-members.html',
             parent: angular.element(document.body),
