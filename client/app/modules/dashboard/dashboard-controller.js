@@ -350,15 +350,15 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             targetEvent: event,
             controller: "dashboardCtrl",
             resolve: {
-                myTasks: function(taskService) {
+                myTasks: ["taskService", function(taskService) {
                     return taskService.myTask().$promise;
-                },
-                myMessages: function(messageService) {
+                }],
+                myMessages: ["messageService", function(messageService) {
                     return messageService.myMessages().$promise;
-                },
-                myFiles: function(fileService) {
+                }],
+                myFiles: ["fileService" ,function(fileService) {
                     return fileService.myFiles().$promise;
-                }
+                }]
             },
             templateUrl: 'app/modules/dashboard/partials/edit-task.html',
             parent: angular.element(document.body),
@@ -372,15 +372,15 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             targetEvent: event,
             controller: "dashboardCtrl",
             resolve: {
-                myTasks: function(taskService) {
+                myTasks: ["taskService", function(taskService) {
                     return taskService.myTask().$promise;
-                },
-                myMessages: function(messageService) {
+                }],
+                myMessages: ["messageService", function(messageService) {
                     return messageService.myMessages().$promise;
-                },
-                myFiles: function(fileService) {
+                }],
+                myFiles: ["fileService" ,function(fileService) {
                     return fileService.myFiles().$promise;
-                }
+                }]
             },
             templateUrl: 'app/modules/dashboard/partials/project-task-new.html',
             parent: angular.element(document.body),
@@ -446,15 +446,15 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             targetEvent: event,
             controller: "dashboardCtrl",
             resolve: {
-                myTasks: function(taskService) {
+                myTasks: ["taskService", function(taskService) {
                     return taskService.myTask().$promise;
-                },
-                myMessages: function(messageService) {
+                }],
+                myMessages: ["messageService", function(messageService) {
                     return messageService.myMessages().$promise;
-                },
-                myFiles: function(fileService) {
+                }],
+                myFiles: ["fileService" ,function(fileService) {
                     return fileService.myFiles().$promise;
-                }
+                }]
             },
             templateUrl: 'app/modules/dashboard/partials/reply-message.html',
             parent: angular.element(document.body),
@@ -468,15 +468,15 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             targetEvent: event,
             controller: "dashboardCtrl",
             resolve: {
-                myTasks: function(taskService) {
+                myTasks: ["taskService", function(taskService) {
                     return taskService.myTask().$promise;
-                },
-                myMessages: function(messageService) {
+                }],
+                myMessages: ["messageService", function(messageService) {
                     return messageService.myMessages().$promise;
-                },
-                myFiles: function(fileService) {
+                }],
+                myFiles: ["fileService" ,function(fileService) {
                     return fileService.myFiles().$promise;
-                }
+                }]
             },
             templateUrl: 'app/modules/dashboard/partials/view-reply.html',
             parent: angular.element(document.body),
@@ -490,15 +490,15 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             targetEvent: event,
             controller: "dashboardCtrl",
             resolve: {
-                myTasks: function(taskService) {
+                myTasks: ["taskService", function(taskService) {
                     return taskService.myTask().$promise;
-                },
-                myMessages: function(messageService) {
+                }],
+                myMessages: ["messageService", function(messageService) {
                     return messageService.myMessages().$promise;
-                },
-                myFiles: function(fileService) {
+                }],
+                myFiles: ["fileService" ,function(fileService) {
                     return fileService.myFiles().$promise;
-                }
+                }]
             },
             templateUrl: 'app/modules/dashboard/partials/view-reply.html',
             parent: angular.element(document.body),
@@ -512,15 +512,15 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             targetEvent: event,
             controller: "dashboardCtrl",
             resolve: {
-                myTasks: function(taskService) {
+                myTasks: ["taskService", function(taskService) {
                     return taskService.myTask().$promise;
-                },
-                myMessages: function(messageService) {
+                }],
+                myMessages: ["messageService", function(messageService) {
                     return messageService.myMessages().$promise;
-                },
-                myFiles: function(fileService) {
+                }],
+                myFiles: ["fileService" ,function(fileService) {
                     return fileService.myFiles().$promise;
-                }
+                }]
             },
             templateUrl: 'app/modules/dashboard/partials/new-thread.html',
             parent: angular.element(document.body),
@@ -616,15 +616,15 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             targetEvent: event,
             controller: "dashboardCtrl",
             resolve: {
-                myTasks: function(taskService) {
+                myTasks: ["taskService", function(taskService) {
                     return taskService.myTask().$promise;
-                },
-                myMessages: function(messageService) {
+                }],
+                myMessages: ["messageService", function(messageService) {
                     return messageService.myMessages().$promise;
-                },
-                myFiles: function(fileService) {
+                }],
+                myFiles: ["fileService" ,function(fileService) {
                     return fileService.myFiles().$promise;
-                }
+                }]
             },
             templateUrl: 'app/modules/dashboard/partials/new-file.html',
             parent: angular.element(document.body),

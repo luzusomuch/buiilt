@@ -217,12 +217,12 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
 	      	parent: angular.element(document.body),
 	      	clickOutsideToClose: false,
 		    resolve: {
-		      	threads: function($stateParams, messageService) {
+		      	threads: ["$stateParams","messageService" ,function($stateParams, messageService) {
 		        	return messageService.getProjectThread({id: $stateParams.id}).$promise;
-		      	},
-                people: function(peopleService, $stateParams) {
+		      	}],
+                people: ["peopleService", "$stateParams" ,function(peopleService, $stateParams) {
                     return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
-                }
+                }]
 		    }
 	    });
 	};
@@ -280,12 +280,12 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
             targetEvent: event,
             controller: "projectMessagesCtrl",
             resolve: {
-                threads: function($stateParams, messageService) {
+                threads: ["$stateParams","messageService" ,function($stateParams, messageService) {
                     return messageService.getProjectThread({id: $stateParams.id}).$promise;
-                },
-                people: function(peopleService, $stateParams) {
+                }],
+                people: ["peopleService", "$stateParams" ,function(peopleService, $stateParams) {
                     return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
-                }
+                }]
             },
             templateUrl: 'app/modules/dashboard/partials/reply-message.html',
             parent: angular.element(document.body),
