@@ -117,12 +117,21 @@ EventBus.onSeries('Thread.Updated', function(thread, next) {
 
 EventBus.onSeries('Thread.NewMessage', function(thread, next) {
     var owners = _.clone(thread.members);
-    owners.push(thread.owner);
-    var index = _.findIndex(owners,thread.message.user._id);
-    _.uniq(owners);
-    _.remove(owners, thread.message.user._id);
+    if (owners[0]._id) {
+        var newOwners = [];
+        _.each(owners, function(owner) {
+            newOwners.push(owner._id);
+        });
+        owners = newOwners;
+    }
+    var uniqOwners = _.map(_.groupBy(owners,function(doc){
+        return doc;
+    }),function(grouped){
+        return grouped[0];
+    });
+    _.remove(uniqOwners, thread.message.user._id);
     var params = {
-        owners : owners,
+        owners : uniqOwners,
         fromUser : thread.message.user,
         element : thread,
         referenceTo : 'thread',
@@ -132,13 +141,13 @@ EventBus.onSeries('Thread.NewMessage', function(thread, next) {
         setTimeout(function() {
             var notReadMembers = [];
             var latestMessage = _.last(thread.messages);
-            async.each(owners, function(member, cb) {
-                Notification.find({unread: true, owner: member._id, type: "thread-message"}, function(err, notifications) {
+            async.each(uniqOwners, function(member, cb) {
+                Notification.find({unread: true, owner: member, type: "thread-message"}, function(err, notifications) {
                     if (err) {cb(err);}
                     _.each(notifications, function(n) {
                         var latestNotificationMessage = _.last(n.element.messages);
                         if (latestMessage._id.toString()===latestNotificationMessage._id.toString()) {
-                            notReadMembers.push(member._id);
+                            notReadMembers.push(member);
                         }
                     });
                     cb(null);
