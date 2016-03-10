@@ -442,9 +442,9 @@ exports.me = function (req, res, next) {
                             tasks.push(notification);
                         } else if (notification.referenceTo === "thread") {
                             threads.push(notification);
-                        } else if (notification.referenceTo === "file") {
+                        } else if (notification.referenceTo === "file" && !req.query.isMobile) {
                             files.push(notification);
-                        } else {
+                        } else if (notification.referenceTo === "document" && !req.query.isMobile) {
                             documents.push(notification);
                         }
                     });
