@@ -100,7 +100,7 @@ angular.module('buiiltApp')
             $scope.showHelpDialog = function(event) {
                 $mdDialog.show({
                     targetEvent: event,
-					controller: function helpBarController($scope, $mdDialog) {
+					controller: ["$scope", "$mdDialog", function($scope, $mdDialog) {
 						
 						$scope.closeDialog = function() {
 				            $mdDialog.hide();
@@ -110,7 +110,7 @@ angular.module('buiiltApp')
 							$mdDialog.hide();
 							inline_manual_player.activateTopic(topicID);
 						};
-			        },
+			        }],
                     templateUrl: 'app/directives/header/helpModal.html',
                     parent: angular.element(document.body),
                     clickOutsideToClose: false

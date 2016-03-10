@@ -95,7 +95,8 @@ angular.module('buiiltApp')
         restrict: 'EA',
         replace : true,
         templateUrl: 'app/directives/notification/notification.html',
-        controller: ['$scope', '$rootScope','notificationService','socket','authService', function ($scope, $rootScope, notificationService,socket,authService ) {
+        controller: ['$scope', '$rootScope','notificationService','socket','authService', 
+        function ($scope, $rootScope, notificationService,socket,authService ) {
             $scope.slimScrollOptions = {height: '390px'};
             $scope.readMore = true;
             $scope.currentUser = $rootScope.currentUser;

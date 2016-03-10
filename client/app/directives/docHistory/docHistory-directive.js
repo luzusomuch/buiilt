@@ -12,7 +12,7 @@ angular.module('buiiltApp').directive('docHistory', function(){
             $scope.showDocumentHistoryDetail = function($event, history) {
                 $mdDialog.show({
                     targetEvent: $event,
-                    controller: function($scope) {
+                    controller: ["$scope", function($scope) {
                         $scope.history =  history;
                         
                         $scope.closeModal = function() {
@@ -27,7 +27,7 @@ angular.module('buiiltApp').directive('docHistory', function(){
                                 }
                             );
                         };
-                    },
+                    }],
                     templateUrl: 'app/directives/docHistory/document-history-detail.html',
                     parent: angular.element(document.body),
                     clickOutsideToClose: false

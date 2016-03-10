@@ -39,8 +39,8 @@ if (config.ssl) {
 // Setup server
 // var server = require('http').createServer(app);
 var socketio = require('socket.io')(server, {
-  // serveClient: (config.env === 'production') ? false : true,//this is the development
-  serveClient: (config.env === 'production') ? true : false,//this is the production
+  serveClient: (config.env === 'production') ? false : true,//this is the development
+  // serveClient: (config.env === 'production') ? true : false,//this is the production
   path: '/socket.io-client'
 });
 

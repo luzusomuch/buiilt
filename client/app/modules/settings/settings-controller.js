@@ -45,7 +45,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             		inline_manual_player.activateTopic('10595');
             		
                     $mdDialog.show({
-                        controller: function($scope, $mdDialog){
+                        controller: ["$scope", "$mdDialog", function($scope, $mdDialog){
                             $scope.showCreateOrJoinTeam = function($event, type) {
                                 $mdDialog.cancel();
                                 if (type === "create") {
@@ -54,7 +54,8 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             						
                                     $mdDialog.show({
                                         targetEvent: $event,
-                                        controller: function($rootScope, $scope, $mdToast, $mdDialog, teamService, $state){
+                                        controller: ["$rootScope", "$scope", "$mdToast", "$mdDialog", "teamService", "$state", 
+                                        function($rootScope, $scope, $mdToast, $mdDialog, teamService, $state){
                                             $scope.team = {
                                                 emails: [],
                                             };
@@ -89,7 +90,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                                                     });
                                                 }
                                             };
-                                        },
+                                        }],
                                         templateUrl: 'app/modules/settings/partials/create-team.html',
                                         parent: angular.element(document.body),
                                         clickOutsideToClose: false,
@@ -101,7 +102,8 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             						
                                     $mdDialog.show({
                                         targetEvent: $event,
-                                        controller: function($rootScope, $scope, $mdToast, $mdDialog, teamService, $state, invitations, teams){
+                                        controller: ["$rootScope", "$scope", "mdToast", "mdDialog", "teamService", "$state", "invitations", "team", 
+                                        function($rootScope, $scope, $mdToast, $mdDialog, teamService, $state, invitations, teams){
                                             $scope.invitations = invitations;
                                             $scope.teams = teams;
 
@@ -167,7 +169,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                                                 }
                                             };
                                             
-                                        },
+                                        }],
                                         templateUrl: 'app/modules/settings/partials/join-team.html',
                                         resolve: {
                                             invitations: ["authService", function(authService) {
@@ -183,7 +185,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                                     });
                                 }
                             };
-                        },
+                        }],
                         templateUrl: 'app/modules/settings/partials/create-or-join.html',
                         parent: angular.element(document.body),
                         clickOutsideToClose: false,
