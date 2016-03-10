@@ -33,10 +33,10 @@ module.exports = function(app) {
     .get(function(req, res) {
       res.sendfile(app.get('appPath') + '/backend.html')
     });
-    app.route('/')
-    .get(function(req, res) {
-      res.sendfile(app.get('appPath') + '/home.html')
-    });
+    // app.route('/')
+    // .get(function(req, res) {
+    //   res.sendfile(app.get('appPath') + '/home.html')
+    // });
   // All other routes should redirect to the index.html
 
 
