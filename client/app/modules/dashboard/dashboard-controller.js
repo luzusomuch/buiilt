@@ -141,7 +141,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         } else if (data.type==="task") {
             _.uniq(data.task.members, "_id");
             var index = getItemIndex($scope.myTasks, data._id);
-            if (index !== -1 && $scope.myTasks[index].uniqId!=data.uniqId) {
+            if (index !== -1 && $scope.myTasks[index].uniqId!=data.uniqId && data.user._id.toString()!==$rootScope.currentUser._id.toString()) {
                 $scope.myTasks[index].uniqId = data.uniqId;
                 $scope.myTasks[index].element.notifications.push(data.newNotification);
                 var notificationTask = _.filter($scope.myTasks, function(task) {

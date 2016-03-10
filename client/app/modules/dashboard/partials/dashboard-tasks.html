@@ -36,7 +36,7 @@
 
 <md-list ng-cloak class="main-page-content">
 
-	<div ng-repeat="task in myTasks | filter: searchTask track by $index" ng-show="task.element.notifications.length > 0">
+	<div ng-repeat="task in myTasks | filter: searchTask | unique: '_id' track by $index" ng-show="task.element.notifications.length > 0">
 		
 		<md-list-item class="md-2-line" md-ink-ripple layout-padding>
 	
@@ -93,7 +93,7 @@
 		
 	</div>
 
-	<div ng-repeat="task in myTasks | filter: searchTask track by $index" ng-show="task.element.notifications.length == 0">
+	<div ng-repeat="task in myTasks | filter: searchTask | unique: '_id' track by $index" ng-show="task.element.notifications.length == 0">
 		
 		<md-list-item class="md-2-line" md-ink-ripple layout-padding>
 	
