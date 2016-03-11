@@ -123,8 +123,9 @@ exports.lastAccess = function(req, res) {
         }
         if (thread.lastAccess && thread.lastAccess.length > 0) {
             var index = _.findIndex(thread.lastAccess, function(access) {
-                access.user.toString()===req.user._id.toString();
+                return access.user.toString()===req.user._id.toString();
             });
+            console.log(index);
             if (index !== -1) {
                 thread.lastAccess[index].time = new Date();
             } else {

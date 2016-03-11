@@ -105,7 +105,7 @@ exports.lastAccess = function(req, res) {
         }
         if (file.lastAccess && file.lastAccess.length > 0) {
             var index = _.findIndex(file.lastAccess, function(access) {
-                access.user.toString()===req.user._id.toString();
+                return access.user.toString()===req.user._id.toString();
             });
             if (index !== -1) {
                 file.lastAccess[index].time = new Date();
