@@ -10,8 +10,8 @@ var gcm = require('node-gcm'),
 
 exports.getData = function(projectId,id,threadName, message, users, type, cb){
     agent
-        .set('cert file', __dirname+'/../../cert/PushChatCert.pem')
-        .set('key file', __dirname+'/../../cert/PushChatKey.pem')    
+        .set('cert file', __dirname+'/../../cert/BuiiltPushChatCert.pem')
+        .set('key file', __dirname+'/../../cert/BuiiltPushChatKey.pem')    
         .set('passphrase', '123456')
         .disable('sandbox');//enable production
         // .enable('sandbox');//disable production
@@ -109,10 +109,6 @@ exports.getData = function(projectId,id,threadName, message, users, type, cb){
                         var path = '';
                         if (type == 'task') {
                             path = "#/task/"+id;
-                        } else if (type == "file") {
-                            path = "#/file/" + id;
-                        } else if (type == 'invite-people') {
-                            path = "#/dashboard";
                         } else if (type == 'thread') {
                             path = "#/thread/"+id;
                         }
