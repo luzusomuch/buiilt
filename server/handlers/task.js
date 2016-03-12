@@ -21,26 +21,7 @@ EventBus.onSeries('Task.Inserted', function(task, next){
             type : 'task-assign'
         };
         NotificationHelper.create(params, function() {
-            setTimeout(function() {
-                var notReadMembers = [];
-                async.each(task.members, function(member, cb) {
-                    Notification.find({unread: true, owner: member._id, type: "task-assign"}, function(err, notifications) {
-                        if (err) {cb(err);}
-                        _.each(notifications, function(n) {
-                            if (task._id.toString()===n.element._id.toString()) {
-                                notReadMembers.push(member._id);
-                            }
-                        });
-                        cb(null);
-                    });
-                }, function(err) {
-                    if (err) {console.log(err);return next()}
-                    notReadMembers = _.uniq(notReadMembers);
-                    PushNotificationHelper.getData(task.project, task._id, task.description, 'has assigned to you', notReadMembers, 'task', function() {
-                        return next();
-                    });
-                });
-            }, 60000);
+            return next();
         });
     } else {
         return next();

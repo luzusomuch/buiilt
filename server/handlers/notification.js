@@ -21,7 +21,19 @@ EventBus.onSeries('Notification.Inserted', function(notification, next) {
                         return next();
                     });
                 } else if (notification.type==="thread-assign") {
-                    PushNotificationHelper.getData(notification.element.project, notification.element._id, notification.element.name, "has assigned for you", notification.owner, "thread", function() {
+                    PushNotificationHelper.getData(notification.element.project, notification.element._id, notification.element.name, "has assigned to you by " + notification.fromUser.name, notification.owner, "thread", function() {
+                        return next();
+                    });
+                } else if (notification.type==="task-assign") {
+                    PushNotificationHelper.getData(notification.element.project, notification.element._id, notification.element.description, "has assigned to you by " + notification.fromUser.name, notification.owner, "task", function() {
+                        return next();
+                    });
+                } else if (notification.type ==="task-completed") {
+                    PushNotificationHelper.getData(notification.element.project, notification.element._id, notification.element.description, notification.fromUser.name + " has marked this task as completed", notification.owner, "task", function() {
+                        return next();
+                    });
+                } else if (notification.type==="invite-to-project") {
+                    PushNotificationHelper.getData(notification.element.project, notification.element._id, "", notification.fromUser.name + " has invited you to join their project", notification.owner, "project", function() {
                         return next();
                     });
                 } else {

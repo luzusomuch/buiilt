@@ -104,6 +104,8 @@ exports.getData = function(projectId,id,threadName, message, user, type, cb){
                             path = "#/task/"+id;
                         } else if (type == 'thread') {
                             path = "#/thread/"+id;
+                        } else if (type == "project") {
+                            path = "#/dashboard";
                         }
                         var sender = new gcm.Sender("AIzaSyABcNG7VNgSzOhXIxapNGxmQWLElWHgHDU");//api id
                         messageGcm.addData('message', message);

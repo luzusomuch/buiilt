@@ -21,9 +21,7 @@ EventBus.onSeries('People.Updated', function(req, next) {
                 type: 'invite-to-project'
             }
             NotificationHelper.create(params, function(){
-                PushNotificationHelper.getData(req.project,req._id,'People package', req.editUser.name, req.newInviteeSignUpAlready, 'invite-people', function() {
-                    return next();
-                });
+                return next();
             });
         } else {
             return next();

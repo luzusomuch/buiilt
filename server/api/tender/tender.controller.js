@@ -352,6 +352,8 @@ exports.selectWinner = function(req, res) {
                                     newTender.tenderers = [{email: tender.winner.email}];
                                 }
                                 people[tender.type].push(newTender);
+                                people._newInviteeSignUpAlready = [tender.winner._id];
+                                people.markModified("invitePeople");
                                 people.save(cb());
                             });
                         },
