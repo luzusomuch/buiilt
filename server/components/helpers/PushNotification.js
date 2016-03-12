@@ -8,7 +8,7 @@ var gcm = require('node-gcm'),
   messageGcm = new gcm.Message();
 
 
-exports.getData = function(projectId,id,threadName, message, users, type, cb){
+exports.getData = function(projectId,id,threadName, message, user, type, cb){
     agent
         // .set('cert file', __dirname+'/../../cert/BuiiltPushCert.pem')
         // .set('key file', __dirname+'/../../cert/BuiiltPushKey.pem')    
@@ -74,9 +74,9 @@ exports.getData = function(projectId,id,threadName, message, users, type, cb){
     });
 
     //push notification test
-    async.each(users, function(user, cb){
+    // async.each(users, function(user, cb){
         device.find({'user' : user}, function(err, devices) {
-            if (err) {console.log(err);cb(err);}
+            if (err) {console.log(err);cb(null);}
             if (devices && devices.length > 0) {
                 async.each(devices, function(device, callback){
                     if (device.platform == 'ios') {
@@ -131,10 +131,10 @@ exports.getData = function(projectId,id,threadName, message, users, type, cb){
                 cb(null);
             }
         }); 
-    }, function(err) {
-        if (err) {console.log("Error on send push notification :" + err);return cb(err);}
-        else {return cb(null);}
-    });
+    // }, function(err) {
+    //     if (err) {console.log("Error on send push notification :" + err);return cb(err);}
+    //     else {return cb(null);}
+    // });
 };
 
     

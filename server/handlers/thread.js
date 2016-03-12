@@ -22,26 +22,7 @@ EventBus.onSeries('Thread.Inserted', function(thread, next) {
             type: 'thread-assign'
         };
         NotificationHelper.create(params, function () {
-            setTimeout(function() {
-                var notReadMembers = [];
-                async.each(thread.members, function(member, cb) {
-                    Notification.find({unread: true, owner: member._id, type: "thread-assign"}, function(err, notifications) {
-                        if (err) {cb(err);}
-                        _.each(notifications, function(n) {
-                            if (thread._id.toString()===n.element._id.toString()) {
-                                notReadMembers.push(member._id);
-                            }
-                        });
-                        cb(null);
-                    });
-                }, function(err) {
-                    if (err) {console.log(err);return next()}
-                    notReadMembers = _.uniq(notReadMembers);
-                    PushNotificationHelper.getData(thread.project, thread._id, thread.name, "This thread has assigned to you", notReadMembers, "thread", function() {
-                        return next();
-                    });
-                });
-            }, 60000);
+            return next();
         });
     }
 });
@@ -138,27 +119,6 @@ EventBus.onSeries('Thread.NewMessage', function(thread, next) {
         type : 'thread-message'
     };
     NotificationHelper.create(params,function() {
-        setTimeout(function() {
-            var notReadMembers = [];
-            var latestMessage = _.last(thread.messages);
-            async.each(uniqOwners, function(member, cb) {
-                Notification.find({unread: true, owner: member, type: "thread-message"}, function(err, notifications) {
-                    if (err) {cb(err);}
-                    _.each(notifications, function(n) {
-                        var latestNotificationMessage = _.last(n.element.messages);
-                        if (latestMessage._id.toString()===latestNotificationMessage._id.toString()) {
-                            notReadMembers.push(member);
-                        }
-                    });
-                    cb(null);
-                });
-            }, function(err) {
-                if (err) {console.log(err);return next()}
-                notReadMembers = _.uniq(notReadMembers);
-                PushNotificationHelper.getData(thread.project, thread._id, thread.name, thread.message.text, notReadMembers, "thread", function() {
-                    return next();
-                });
-            });
-        }, 60000);
+        return next();
     });
 });
