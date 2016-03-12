@@ -41,5 +41,5 @@ EventBus.onSeries('Notification.Inserted', function(notification, next) {
                 }
             }
         });
-    }, 1000);
+    }, 60000);
 });

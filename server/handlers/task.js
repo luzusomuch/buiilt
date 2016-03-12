@@ -44,30 +44,7 @@ EventBus.onSeries('Task.Updated', function(task, next){
             type : task.completed ? 'task-completed' : 'task-reopened'
         };
         NotificationHelper.create(params, function() {
-            if (task.completed) {
-                setTimeout(function() {
-                    var notReadMembers = [];
-                    async.each(task.members, function(member, cb) {
-                        Notification.find({unread: true, owner: member._id, type: "task-completed"}, function(err, notifications) {
-                            if (err) {cb(err);}
-                            _.each(notifications, function(n) {
-                                if (task._id.toString()===n.element._id.toString()) {
-                                    notReadMembers.push(member._id);
-                                }
-                            });
-                            cb(null);
-                        });
-                    }, function(err) {
-                        if (err) {console.log(err);return next()}
-                        notReadMembers = _.uniq(notReadMembers);
-                        PushNotificationHelper.getData(task.project, task._id, task.description, 'This task has marked as completed', notReadMembers, 'task', function() {
-                            return next();
-                        });
-                    });
-                }, 60000);
-            } else {
-                return next();
-            }
+            return next();
         });
     } else if (task._modifiedPaths.indexOf('assignees') != -1) {
         async.parallel([
