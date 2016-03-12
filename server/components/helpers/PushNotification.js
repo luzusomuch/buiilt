@@ -10,47 +10,41 @@ var gcm = require('node-gcm'),
 
 exports.getData = function(projectId,id,threadName, message, users, type, cb){
     agent
-        .set('cert file', __dirname+'/../../cert/BuiiltPushCert.pem')
-        .set('key file', __dirname+'/../../cert/BuiiltPushKey.pem')    
+        // .set('cert file', __dirname+'/../../cert/BuiiltPushCert.pem')
+        // .set('key file', __dirname+'/../../cert/BuiiltPushKey.pem')    
+        .set('pfx file', __dirname+'/../../cert/Certificates.p12')
         .set('passphrase', '123456')
         .disable('sandbox');//enable production
         // .enable('sandbox');//disable production
     
     agent.on('message:error', function (err, msg) {
-        var errMsg = '';
         switch (err.name) {
-    // This error occurs when Apple reports an issue parsing the message.
-        case 'GatewayNotificationError':      
-            errMsg = '[message:error] GatewayNotificationError: '+err.message; 
-      // The err.code is the number that Apple reports.
-      // Example: 8 means the token supplied is invalid or not subscribed
-      // to notifications for your application.
-            if (err.code === 8) {    
-                errMsg = '[message:error] GatewayNotificationError: '+err.message; 
-     // In production you should flag this token as invalid and not
-     // send any futher messages to it until you confirm validity
-            }
-      
-        break;
+        // This error occurs when Apple reports an issue parsing the message.
+            case 'GatewayNotificationError':
+                console.log('[message:error] GatewayNotificationError: %s', err.message);
 
-    // This happens when apnagent has a problem encoding the message for transfer
-        case 'SerializationError':
-            errMsg = '[message:error] SerializationError:' + err.message;      
-        break;
+                // The err.code is the number that Apple reports.
+                // Example: 8 means the token supplied is invalid or not subscribed
+                // to notifications for your application.
+                if (err.code === 8) {
+                    console.log('    > %s', msg.device().toString());
+                    // In production you should flag this token as invalid and not
+                    // send any futher messages to it until you confirm validity
+                }
 
-    // unlikely, but could occur if trying to send over a dead socket
-        default:
-            errMsg = '[message:error] other error: '+ err.message;      
+            break;
+
+            // This happens when apnagent has a problem encoding the message for transfer
+            case 'SerializationError':
+                console.log('[message:error] SerializationError: %s', err.message);
+            break;
+
+            // unlikely, but could occur if trying to send over a dead socket
+            default:
+                console.log('[message:error] other error: %s', err.message);
             break;
         }
-        console.log({
-            status: "error",
-            message: errMsg
-        });
-        cb(err);
     });
-
-   
 
     agent.connect(function (err) {
         var msg = '';
@@ -58,7 +52,7 @@ exports.getData = function(projectId,id,threadName, message, users, type, cb){
         if (err && err.name === 'GatewayAuthorizationError') {        
             console.log ({
                 status: "error",
-                message: 'Authentication Error: '+err.message
+                message: 'Authentication Error: '+err
             });
             cb(err);
         }
@@ -76,7 +70,6 @@ exports.getData = function(projectId,id,threadName, message, users, type, cb){
         else {
             var env = agent.enabled('sandbox') ? 'sandbox' : 'production';
             console.log('apnagent [%s] gateway connected', env);
-            cb(null);
         }
     });
 
@@ -84,7 +77,7 @@ exports.getData = function(projectId,id,threadName, message, users, type, cb){
     async.each(users, function(user, cb){
         device.find({'user' : user}, function(err, devices) {
             if (err) {console.log(err);cb(err);}
-            if (devices) {
+            if (devices && devices.length > 0) {
                 async.each(devices, function(device, callback){
                     if (device.platform == 'ios') {
                         Notification.find({owner: user, unread:true, $or:[{referenceTo: 'task'},{referenceTo: 'thread'}]}, function(err, notifications){
@@ -101,7 +94,7 @@ exports.getData = function(projectId,id,threadName, message, users, type, cb){
                                 .set("projectid", projectId)
                                 .sound('defauld').send(function(err){
                                     if (err) {console.log(err);callback(err);}
-                                    else {callback(null);}
+                                    else {console.log("Sent");callback(null);}
                                 });
                             }
                         });
@@ -134,6 +127,8 @@ exports.getData = function(projectId,id,threadName, message, users, type, cb){
                     if (err) {cb(err);}
                     else {cb(null);}
                 });
+            } else {
+                cb(null);
             }
         }); 
     }, function(err) {
