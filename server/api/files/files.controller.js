@@ -208,6 +208,7 @@ exports.update = function(req, res) {
     File.findById(req.params.id, function(err, file) {
         if (err) {return res.send(500,err);}
         else if (!file) {return res.send(404, "We Can Not Find The Requested File...");}
+        else if (file.isArchive) {return res.send(500, {message: "This file is archived"});}
         else {
             var activity = {
                 user: req.user._id,

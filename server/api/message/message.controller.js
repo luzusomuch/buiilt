@@ -247,6 +247,7 @@ exports.update = function(req,res) {
     Thread.findById(req.params.id, function(err, thread) {
         if (err) {return res.send(500,err);}
         else if (!thread) {return res.send(404, "The specific message is not existed");}
+        else if (thread.isArchive) {return res.send(500, {message: "This thread is archived"});}
         else {
             req.thread = thread;
             ThreadValidator.validateUpdate(req,function(err,data) {
