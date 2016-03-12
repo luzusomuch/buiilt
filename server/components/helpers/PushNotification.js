@@ -10,8 +10,8 @@ var gcm = require('node-gcm'),
 
 exports.getData = function(projectId,id,threadName, message, users, type, cb){
     agent
-        .set('cert file', __dirname+'/../../cert/BuiiltPushChatCert.pem')
-        .set('key file', __dirname+'/../../cert/BuiiltPushChatKey.pem')    
+        .set('cert file', __dirname+'/../../cert/BuiiltPushCert.pem')
+        .set('key file', __dirname+'/../../cert/BuiiltPushKey.pem')    
         .set('passphrase', '123456')
         .disable('sandbox');//enable production
         // .enable('sandbox');//disable production
