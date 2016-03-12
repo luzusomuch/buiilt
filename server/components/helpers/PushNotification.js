@@ -127,6 +127,8 @@ exports.getData = function(projectId,id,threadName, message, users, type, cb){
                                 callback(null);
                             }
                         });
+                    } else {
+                        callback(null);
                     }
                 }, function(err) {
                     if (err) {cb(err);}
