@@ -6,7 +6,7 @@ var _ = require('lodash');
 var async = require('async');
 
 exports.insertDevice = function(req, res) {
-    Device.findOne({user: req.user._id, platform: req.body.deviceplatform}, function(err, device) {
+    Device.findOne({user: req.user._id, platform: req.body.deviceplatform, deviceToken: req.body.deviceToken}, function(err, device) {
         if (err) {return res.send(500,err);}
         else if (!device) {
             var newDevice = new Device({
