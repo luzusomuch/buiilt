@@ -1,5 +1,6 @@
 angular.module('buiiltApp')
-  .controller('ResetPasswordCtrl', function ($scope, authService, $stateParams,token,$state) {
+  .controller('ResetPasswordCtrl', function ($rootScope, $scope, authService, $stateParams,token,$state) {
+    $rootScope.title = "Reset Password";
     $scope.email = '';
     $scope.errors = {};
     $scope.submitted = false;

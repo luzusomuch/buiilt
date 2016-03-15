@@ -1,5 +1,6 @@
 angular.module('buiiltApp')
-  .controller('ForgotPasswordCtrl', function ($scope, authService, $window,$timeout) {
+  .controller('ForgotPasswordCtrl', function ($rootScope, $scope, authService, $window,$timeout) {
+    $rootScope.title = "Forgot Password";
     $scope.email = '';
     $scope.errors = {};
     $scope.submitted = false;
