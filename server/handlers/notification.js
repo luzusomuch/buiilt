@@ -2,6 +2,7 @@
 
 var EventBus = require('./../components/EventBus');
 var Notification = require('./../models/notification.model');
+var Project = require('./../models/project.model');
 var PushNotificationHelper = require('./../components/helpers/PushNotification');
 var _ = require('lodash');
 var async = require('async');
@@ -17,29 +18,32 @@ EventBus.onSeries('Notification.Inserted', function(notification, next) {
             } else {
                 if (notification.type === "thread-message") {
                     var latestMessage = _.last(notification.element.messages);
-                    PushNotificationHelper.getData(notification.element.project, notification.element._id, notification.element.name, latestMessage.text, notification.owner, "thread", function() {
+                    PushNotificationHelper.getData(notification.element.project, notification.element._id, n.fromUser.name + "to " + notification.element.name + ": " + latestMessage.text, notification.owner, "thread", function() {
                         return next();
                     });
                 } else if (notification.type==="thread-assign") {
-                    PushNotificationHelper.getData(notification.element.project, notification.element._id, notification.element.name, "has assigned to you by " + n.fromUser.name, notification.owner, "thread", function() {
+                    PushNotificationHelper.getData(notification.element.project, notification.element._id, n.fromUser.name + " has assigned you to the subject " + notification.element.name, notification.owner, "thread", function() {
                         return next();
                     });
                 } else if (notification.type==="task-assign") {
-                    PushNotificationHelper.getData(notification.element.project, notification.element._id, notification.element.description, "has assigned to you by " + n.fromUser.name, notification.owner, "task", function() {
+                    PushNotificationHelper.getData(notification.element.project, notification.element._id, n.fromUser.name + " has assigned you to the task " +  notification.element.description,  notification.owner, "task", function() {
                         return next();
                     });
                 } else if (notification.type ==="task-completed") {
-                    PushNotificationHelper.getData(notification.element.project, notification.element._id, notification.element.description, n.fromUser.name + " has marked this task as completed", notification.owner, "task", function() {
+                    PushNotificationHelper.getData(notification.element.project, notification.element._id, n.fromUser.name + " has completed the task " +  notification.element.description, notification.owner, "task", function() {
                         return next();
                     });
                 } else if (notification.type==="invite-to-project") {
-                    PushNotificationHelper.getData(notification.element.project, notification.element._id, "", n.fromUser.name + " has invited you to join their project", notification.owner, "project", function() {
-                        return next();
+                    Project.findById(notification.element.project, function(err, p) {
+                        if (err || !p) {return next();}
+                        PushNotificationHelper.getData(notification.element.project, notification.element._id, n.fromUser.name + " has invited you to join their project " + p.name, notification.owner, "project", function() {
+                            return next();
+                        });
                     });
                 } else {
                     return next();
                 }
             }
         });
-    }, 60000);
+    }, 10000);
 });

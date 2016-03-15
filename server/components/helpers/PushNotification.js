@@ -8,7 +8,7 @@ var gcm = require('node-gcm'),
   messageGcm = new gcm.Message();
 
 
-exports.getData = function(projectId,id,threadName, message, user, type, cb){
+exports.getData = function(projectId, id, message, user, type, cb){
     agent
         // .set('cert file', __dirname+'/../../cert/BuiiltPushCert.pem')
         // .set('key file', __dirname+'/../../cert/BuiiltPushKey.pem')    
@@ -80,13 +80,13 @@ exports.getData = function(projectId,id,threadName, message, user, type, cb){
             if (devices && devices.length > 0) {
                 async.each(devices, function(device, callback){
                     if (device.platform == 'ios') {
-                        Notification.find({owner: user, unread:true, $or:[{referenceTo: 'task'},{referenceTo: 'thread'}]}, function(err, notifications){
+                        Notification.find({owner: user, unread:true, $or:[{type: "thread-message"}, {type: "thread-assign"}, {type: "task-completed"},{type: "task-assign"}, {type: "invite-to-project"}]}, function(err, notifications){
                             if (err) {console.log(err);callback(err);}
                             else {
                                 var totalBadge = notifications.length;
                                 agent.createMessage()
                                 .device(device.deviceToken)
-                                .alert(threadName+': '+message)
+                                .alert(message)
                                 .badge(totalBadge)
                                 .set("push", true)
                                 .set("relatedto", type)
@@ -110,7 +110,7 @@ exports.getData = function(projectId,id,threadName, message, user, type, cb){
                         var sender = new gcm.Sender("AIzaSyABcNG7VNgSzOhXIxapNGxmQWLElWHgHDU");//api id
                         messageGcm.addData('message', message);
                         messageGcm.addData('hasSound', true);
-                        messageGcm.addData('title', threadName+': '+message);
+                        messageGcm.addData('title', message);
                         messageGcm.addData('path', path);
                         messageGcm.delayWhileIdle = true;
                         //sender.send(message, device.deviceid, 4, function (err, result) {
