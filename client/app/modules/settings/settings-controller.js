@@ -102,7 +102,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             						
                                     $mdDialog.show({
                                         targetEvent: $event,
-                                        controller: ["$rootScope", "$scope", "mdToast", "mdDialog", "teamService", "$state", "invitations", "team", 
+                                        controller: ["$rootScope", "$scope", "$mdToast", "$mdDialog", "teamService", "$state", "invitations", "team", 
                                         function($rootScope, $scope, $mdToast, $mdDialog, teamService, $state, invitations, teams){
                                             $scope.invitations = invitations;
                                             $scope.teams = teams;

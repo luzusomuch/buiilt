@@ -4,6 +4,7 @@
 // =================================
 module.exports = {
   // Server IP
+  baseUrl: process.env.SITE_URL || 'https://buiilt.com.au/',
   ip:       process.env.OPENSHIFT_NODEJS_IP ||
             process.env.IP ||
             undefined,
