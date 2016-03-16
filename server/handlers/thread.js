@@ -22,7 +22,20 @@ EventBus.onSeries('Thread.Inserted', function(thread, next) {
             type: 'thread-assign'
         };
         NotificationHelper.create(params, function () {
-            return next();
+            if (thread.messages && thread.messages.length > 0) {
+                var newMessage = {
+                    owners: owners,
+                    fromUser: thread.owner,
+                    element: thread,
+                    referenceTo: "thread",
+                    type: "thread-message"
+                }
+                NotificationHelper.create(newMessage, function() {
+                    return next();
+                });
+            } else {
+                return next();
+            }
         });
     }
 });

@@ -18,15 +18,15 @@ EventBus.onSeries('Notification.Inserted', function(notification, next) {
             } else {
                 if (notification.type === "thread-message") {
                     var latestMessage = _.last(notification.element.messages);
-                    PushNotificationHelper.getData(notification.element.project, notification.element._id, n.fromUser.name + "to " + notification.element.name + ": " + latestMessage.text, notification.owner, "thread", function() {
+                    PushNotificationHelper.getData(notification.element.project, notification.element._id, n.fromUser.name + " to " + notification.element.name + ": " + latestMessage.text, notification.owner, "thread", function() {
                         return next();
                     });
                 } else if (notification.type==="thread-assign") {
-                    PushNotificationHelper.getData(notification.element.project, notification.element._id, n.fromUser.name + " has assigned you to the subject " + notification.element.name, notification.owner, "thread", function() {
+                    PushNotificationHelper.getData(notification.element.project, notification.element._id, n.fromUser.name + " has assigned you to the subject " + "\"" + notification.element.name + "\"", notification.owner, "thread", function() {
                         return next();
                     });
                 } else if (notification.type==="task-assign") {
-                    PushNotificationHelper.getData(notification.element.project, notification.element._id, n.fromUser.name + " has assigned you to the task " +  notification.element.description,  notification.owner, "task", function() {
+                    PushNotificationHelper.getData(notification.element.project, notification.element._id, n.fromUser.name + " has assigned you to the task " + "\"" + notification.element.description + "\"",  notification.owner, "task", function() {
                         return next();
                     });
                 } else if (notification.type ==="task-completed") {

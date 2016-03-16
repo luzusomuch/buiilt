@@ -80,7 +80,7 @@ exports.getData = function(projectId, id, message, user, type, cb){
             if (devices && devices.length > 0) {
                 async.each(devices, function(device, callback){
                     if (device.platform == 'ios') {
-                        Notification.find({owner: user, unread:true, $or:[{type: "thread-message"}, {type: "thread-assign"}, {type: "task-completed"},{type: "task-assign"}, {type: "invite-to-project"}]}, function(err, notifications){
+                        Notification.find({owner: user, unread:true, $or:[{type: "thread-message"}, {type: "thread-assign"}, {type: "task-completed"}, {type: "task-assign"}, {type: "task-reopened"}, {type: "invite-to-project"}]}, function(err, notifications){
                             if (err) {console.log(err);callback(err);}
                             else {
                                 var totalBadge = notifications.length;
