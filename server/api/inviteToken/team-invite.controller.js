@@ -9,16 +9,16 @@ var _ = require('lodash');
 var async = require('async');
 
 exports.get = function(req,res) {
-    InviteToken.findOne({inviteToken : req.params.token})
+  InviteToken
+    .findOne({inviteToken : req.params.token})
     .exec(function(err,invite) {
-        if (err || !invite) {
-            return res.send(500,err)
-        }
-        return res.json(invite);
-    });
+      if (err || !invite) {
+        return res.send(500,err)
+      }
+      return res.json(invite);
+    })
 };
 
-// get project inviations list
 exports.getProjectInvitation = function(req, res) {
     InviteToken.find({type: 'project-invite', user: req.user._id})
     .exec(function(err, invites) {

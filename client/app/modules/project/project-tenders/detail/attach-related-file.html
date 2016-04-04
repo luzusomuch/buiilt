@@ -1,0 +1,24 @@
+<md-dialog aria-label="Submit a Tender" flex="70">
+    <form ng-submit="submitTender(form)" name="form">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Submit a Tender</h2>
+            </div>
+        </md-toolbar>
+        
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column">
+                
+                <div layout="row" layout="center center">
+                    <div layout-padding>
+                        <input filepicker class="filepicker-button" type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile, 'tender')" data-fp-multiple="false"/>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions>
+            <md-button ng-click="cancelNewTenderModal()">Cancel</md-button>
+            <md-button type="submit" class="md-raised md-accent md-hue-1">Submit</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

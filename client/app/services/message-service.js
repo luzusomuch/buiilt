@@ -32,14 +32,44 @@ angular.module('buiiltApp')
                 action: "last-access"
             }
         },
-        myMessages : {
-            method : 'GET',
-            isArray : true,
-            params : {
-                type : 'dashboard',
-                action : 'me'
-            }
+
+      myMessages : {
+        method : 'GET',
+        isArray : true,
+        params : {
+          type : 'dashboard',
+          action : 'me'
+        }
+      },
+      getOne : {
+        method : 'GET',
+        params : {
+          action : 'one'
+        }
+      },
+      
+      
+      getAll: {
+        method: 'get',
+        params: {
+          action: 'list'
         },
-        delete: {method:'DELETE', params: {id: 'id', action: ''}, isArray: true}
-    });
+        isArray: true
+      },
+      delete: {method:'DELETE', params: {id: 'id', action: ''}, isArray: true},
+      getByPackage: {
+        method: 'get',
+        params: {
+          action: 'get-by-package'
+        },
+        isArray: true
+      },
+      getThread:{
+        method: 'get',
+        params: {
+          action: 'get-thread'
+        }
+      }
+    }
+  );
 });

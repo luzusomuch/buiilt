@@ -3,6 +3,7 @@
 		<div class="md-toolbar-tools">
 			<p>Project Overview</p>
 			<span flex></span>
+			<md-button ng-show="showSubmitTender && project.projectManager._id != currentUser._id" ng-click="showFileUpload($event)">Submit a Tender</md-button>
 		</div>
 	</div>
 
