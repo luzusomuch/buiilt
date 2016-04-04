@@ -7,13 +7,6 @@
 var errors = require('./components/errors');
 
 module.exports = function(app) {
-  // app.all('*', checkHome);
-
-  // function checkHome(req, res, next) {
-  //   if ( req.path == '/')
-  //     return res.sendfile(app.get('appPath') + '/home.html');
-  //   next();
-  // }
   
   // Insert routes below
   app.use('/api/users', require('./api/user'));

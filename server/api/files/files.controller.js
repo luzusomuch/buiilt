@@ -35,6 +35,7 @@ function populateFile(file, res){
     });
 };
 
+// assign more people to a documentation reversion
 exports.assignMoreMembers = function(req, res) {
     File.findById(req.params.id, function(err, file) {
         if (err) {return res.send(500,err);}
@@ -97,6 +98,8 @@ exports.assignMoreMembers = function(req, res) {
     });
 };
 
+// update last access of current user for file or documentation
+// to show the latest access show first
 exports.lastAccess = function(req, res) {
     File.findById(req.params.id, function(err, file) {
         if (err) {return res.send(500,err);}
@@ -122,6 +125,8 @@ exports.lastAccess = function(req, res) {
     });
 };
 
+// get list of files or documentations for the project by type
+// type is included file, document, tender
 exports.getFilesByProject = function(req, res) {
     var query;
     var userId = (req.query.userId && req.user.role==="admin") ? req.query.userId : req.user._id;
@@ -173,6 +178,7 @@ exports.getFilesByProject = function(req, res) {
     });
 };  
 
+// get file by id
 exports.show = function(req, res) {
     File.findById(req.params.id)
     .populate("owner", "_id name email")
@@ -381,170 +387,6 @@ exports.acknowledgement = function(req, res) {
         } else {
             return res.send(500, {message: "Acitivity is not existed"});
         }
-        // _.each(file.activities, function(activity) {
-        //     if (activity.type === "upload-file" || activity.type === "upload-reversion") {
-        //         var index = _.findIndex(activity.acknowledgeUsers, function(user) {
-        //             return user._id.toString()===req.user._id.toString();
-        //         });
-        //         if (index !== -1) {
-        //             activity.acknowledgeUsers[index].isAcknow = true;
-        //         }
-        //     }
-        // });
-        // file.save(function(err) {
-        //     if (err) {return res.send(500,err);}
-        //     populateFile(file, res);
-        // });
-    });
-};
-
-exports.acknowledgementViaEmail = function(req, res) {
-    File.findById(req.params.id, function(err, file) {
-        if (err) {return res.send(500,err);}
-        else if (!file) {return res.send(404);}
-        if (file.element.type === "file") {
-            if (_.indexOf(file.notMembers, req.params.email) === -1) {
-                return res.send(500, {message: "You Do Not Have Permissions To Perform This Action."});
-            }
-        }
-        var index = _.findIndex(file.activities, function(activity) {
-            return activity._id.toString()===req.params.activityId.toString();
-        });
-        if (index !== -1) {
-            _.each(file.activities[index].acknowledgeUsers, function(user){
-                if (user.email===req.params.email) {
-                    user.isAcknow = true;
-                }
-            });
-        }
-        file.save(function(err) {
-            if (err) {return res.send(500,err);}
-            File.populate(file, [
-                {path: "owner", select: "_id email name"},
-                {path: "members", select: "_id email name"},
-                {path: "activities.user", select: "_id email name"},
-                {path: "activities.acknowledgeUsers._id", select: "_id email name"}
-            ], function(err, file) {
-                if (file.element.type === "file") {
-                    EventBus.emit('socket:emit', {
-                        event: 'file:update',
-                        room: file._id.toString(),
-                        data: JSON.parse(JSON.stringify(file))
-                    });
-                } else {
-                    EventBus.emit('socket:emit', {
-                        event: 'document:update',
-                        room: file._id.toString(),
-                        data: JSON.parse(JSON.stringify(file))
-                    });
-                }
-                return res.redirect(file.path);
-            });
-        });
-    });
-};
-
-exports.interested = function(req, res) {
-    File.findById(req.body.id, function(err, file) {
-        if (err) {return res.send(500, err);}
-        else {
-            if (req.body.isInterested == true) {
-                _.remove(file.usersInterestedIn, {_id: req.user._id});
-            }
-            else {
-                file.usersInterestedIn.push({_id: req.user._id});
-            }
-            file.markModified('usersInterestedIn');
-            file.save(function(err, savedFile) {
-                if (err) {return res.send(500, err);}
-                else {
-                    return res.json(savedFile);
-                }
-            });
-        }
-    });
-};
-
-exports.getFileByStateParam = function(req, res) {
-    File.find({'belongTo': req.params.id}, function(err, files) {
-        if (err) {return res.send(500,err)}
-        else {
-            return res.json(200,files);
-        }
-    });
-};
-
-exports.getFileByStateParamIos = function(req, res) {
-    var result = [];
-    File.find({'belongTo': req.params.id}, function(err, files) {
-        if (err) {return res.send(500,err)}
-        else {
-            async.each(files, function(file, cb){
-                var query = Notification.find(
-                    {owner : req.user._id,unread : true, type : 'uploadNewDocumentVersion','element.file._id' : file._id }
-                );
-                query.distinct('element.file._id');
-
-                query.exec(function(err, fileNotifications) {
-                    if (err) {return cb(err);}
-                    if (fileNotifications.length > 0) {
-                        _.each(fileNotifications, function(fileNotification){
-                            if (file._id.toString() == fileNotification.toString()) {
-                                file.isNewNotification = true;
-                                result.push(file);
-                                cb();
-                            }
-                        });
-                    }
-                    else {
-                        result.push(file);
-                        cb()
-                    }
-                });
-            }, function(err){
-                if (err) {return res.send(500,err);}
-                return res.json(200,result);
-            });
-        }
-    });
-};
-
-exports.downloadFile = function(req, res) {
-    File.findById(req.params.id, function(err, file){
-        if (err) {return res.send(500,err);}
-        else {
-            var fileUrl = {url: s3.getPublicUrl(file.name)};
-            return res.json(200,fileUrl);
-        }
-    });
-};
-
-exports.downloadAll = function(req, res) {
-    File.find({belongTo:req.params.id}, function(err, files){
-        if (err) {return res.send(500,err);}
-        else {
-            var listFileUrls = [];
-            _.each(files, function(file){
-                var fileUrl = {url: s3.getPublicUrl(file.name)};    
-                listFileUrls.push(fileUrl);
-            });
-            return res.json(200,listFileUrls);
-        }
-    });
-};
-
-exports.getAll = function(req, res) {
-    File.find({}, function(err, files){
-        if (err) {return res.send(500,err);}
-        return res.json(200,files)
-    })
-};
-
-exports.getFileByPackage = function(req, res) {
-    File.find({belongTo: req.params.id, belongToType: req.params.type}, function(err, files){
-        if (err) {return res.send(500,err);}
-        if (!files) {return res.send(404);}
-        return res.send(200,files);
     });
 };
 
@@ -552,94 +394,6 @@ exports.deleteFile = function(req, res) {
     File.findByIdAndRemove(req.params.id, function(err, file) {
         if (err) {return res.send(500,err);}
         return res.send(200);
-    });
-};
-
-exports.sendToDocument = function(req, res) {
-    File.findById(req.params.id, function(err, file){
-        if (err) {return res.send(500,err);}
-        if (!file) {return res.send(404);}
-        File.findOne({belongTo: req.body.projectId, isSendToDocumentation: true, wasBelongTo: req.body.package}, function(err, _file){
-            if (err) {return res.send(500,err);}
-            if (!_file) {
-                var newFile = new File({
-                    documentDesignId: mongoose.Types.ObjectId(file._id.toString()),
-                    wasBelongTo: file.belongTo,
-                    isSendToDocumentation: true,
-                    belongTo: req.body.projectId,
-                    belongToType: file.belongToType,
-                    size: file.size,
-                    description: file.description,
-                    mimeType: file.mimeType,
-                    path: file.path,
-                    user: file.user,
-                    server: file.server,
-                    name: file.name,
-                    title: file.title,
-                    isQuote: file.isQuote,
-                    tags: file.tags,
-                    usersInterestedIn: file.usersInterestedIn,
-                    usersRelatedTo: file.usersInterestedIn,
-                    version: 0
-                });
-                newFile.save(function(err){
-                    if (err) {return res.send(500,err);}
-                    return res.send(200, newFile);
-                });
-            } else {
-                _file.documentDesignId = mongoose.Types.ObjectId(file._id.toString());
-                _file.wasBelongTo = file.belongTo;
-                _file.isSendToDocumentation = true;
-                _file.belongTo = req.body.projectId;
-                _file.belongToType = file.belongToType;
-                _file.size = file.size;
-                _file.description = file.description;
-                _file.mimeType = file.mimeType;
-                _file.path = file.path;
-                _file.user = file.user;
-                _file.server = file.server;
-                _file.name = file.name;
-                _file.title = file.title;
-                _file.isQuote = file.isQuote;
-                _file.tags = file.tags;
-                _file.usersInterestedIn = file.usersInterestedIn;
-                _file.usersRelatedTo = file.usersInterestedIn;
-                _file.version = file.version + 1;
-
-                _file.save(function(err){
-                    if (err) {return res.send(500,err);}
-                    return res.send(200,_file);
-                });
-            }
-        });
-    });
-};
-
-exports.getAllByUser = function(req, res) {
-    Notification.find({owner: req.user._id, unread: true, $or:[{type: 'uploadNewDocumentVersion'},{type: 'uploadDocument'}]}, function(err, documents){
-        if (err) {return res.send(500,err);}
-        return res.send(200,documents);
-    });
-};
-
-exports.getInPeople = function(req, res) {
-    File.find({belongTo: req.params.id, belongToType: 'people'}, function(err, files){
-        if (err) {return res.send(500,err);}
-        return res.send(200,files);
-    });
-};
-
-exports.getInBoard = function(req, res) {
-    File.find({belongTo: req.params.id, belongToType: 'board'}, function(err, files){
-        if (err) {return res.send(500,err);}
-        return res.send(200,files);
-    });
-};
-
-exports.getInProject = function(req, res) {
-    File.find({belongTo: req.params.id, belongToType: 'project'}, function(err, files){
-        if (err) {return res.send(500,err);}
-        return res.send(200,files);
     });
 };
 

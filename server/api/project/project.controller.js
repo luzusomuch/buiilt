@@ -18,6 +18,7 @@ var fs = require('fs');
 var moment = require("moment");
 var config = require('./../../config/environment');
 
+// create new project and people package with project manager
 exports.create = function(req, res){
     var user = req.user;
     Project.find({}, function(err, projects) {
@@ -137,16 +138,6 @@ exports.create = function(req, res){
     });
 };
 
-
-exports.index = function(req, res) {
-    Project.find({'user._id': req.user._id}, function(err, projects) {
-        if (err)
-        return res.send(500, err);
-        res.json(200, projects);
-    });
-};
-
-
 /**
  * show project detail
  */
@@ -205,6 +196,8 @@ exports.show = function(req, res){
     });
 };
 
+// get all projects
+// restrict admin only
 exports.getAll = function(req, res) {
     var query = (req.query.userId) ? {owner: req.query.userId} : {};
     Project.find(query, function(err, projects){
@@ -213,6 +206,8 @@ exports.getAll = function(req, res) {
     });
 };
 
+// remove project
+// restrict admin only
 exports.destroy = function (req, res) {
     Project.findByIdAndRemove(req.params.id, function (err, project) {
         if (err) {
@@ -222,6 +217,8 @@ exports.destroy = function (req, res) {
     });
 };
 
+// update the project information 
+// restrict project manager or admin
 exports.updateProject = function(req, res) {
     var data = req.body;
     Project.findById(req.params.id, function(err, project) {
@@ -261,6 +258,8 @@ function changeDateToFullFormat(Date) {
     return moment().format("MMM Do, YYYY");
 };
 
+// this function fire when update project status to archive
+// it send an excel file to users whose related to that project
 function sendInfoToUser(req, res) {
     async.parallel({
         people: function(cb) {
@@ -604,6 +603,8 @@ function sendInfoToUser(req, res) {
     });
 };
 
+// send an backup with excel file to the requested user.
+// the backup include: threads, tasks, files, documentations
 exports.backup = function(req, res) {
     var user = req.user;
     var roles = ["builders", "clients", "architects", "subcontractors", "consultants"];
@@ -899,6 +900,8 @@ exports.backup = function(req, res) {
     });
 };
 
+// get limited project number for selected team
+// restrict admin
 exports.getLimitedProjectNumber = function(req, res) {
     LimitProject.findOne({team: req.query.teamId}, function(err, limitProject) {
         if (err) {return res.send(500,err);}
@@ -906,6 +909,8 @@ exports.getLimitedProjectNumber = function(req, res) {
     });
 };
 
+// update the limited project number for selected team
+// restrict admin
 exports.changeLimitedProjectNumber = function(req, res) {
     LimitProject.findOne({team: req.body.teamId}, function(err, limitProject) {
         if (err) {return res.send(500,err);}

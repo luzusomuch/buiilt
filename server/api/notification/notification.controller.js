@@ -11,6 +11,7 @@ var _ = require('lodash');
 var async = require('async');
 var EventBus = require('../../components/EventBus');
 
+// mark all notifications which related to the current opening element as read
 exports.markItemsAsRead = function(req, res) {
     var id= new require('mongoose').Types.ObjectId(req.params.id);
     Notification.update({'element._id': id, owner: req.user._id},{unread : false},{multi : true},function(err) {
@@ -57,6 +58,7 @@ exports.get = function(req,res) {
     })
 };
 
+// count total notifications for web app
 exports.countTotal = function(req,res) {
     var user = req.user;
     Notification.find({owner : user._id, unread : true, $or:[{type: "invite-to-project"}, {referenceTo: "team"}]})
@@ -85,44 +87,7 @@ exports.update = function(req,res) {
   })
 };
 
-exports.dashboardRead = function(req,res) {
-  var id= new require('mongoose').Types.ObjectId(req.params.id);
-  Notification.update({'element._id': id},{unread : false},{multi : true},function(err) {
-    if (err) {
-      return res.send(500)
-    }
-    return res.json(true);
-  });
-};
-
-exports.markReadByPackage = function(req,res) {
-  var user = req.user;
-  var packageId = new objectID(req.params.id);
-  Notification.find({owner:user._id,'element.package' : packageId,unread : true},function(err,notifications) {
-    async.each(notifications,function(notification,callback) {
-      notification.unread = false;
-      notification.save(callback)
-    },function() {
-      EventBus.emit('socket:emit', {
-        event: 'notification:read',
-        room: user._id.toString(),
-        data: notifications
-      });
-      return res.json(notifications);
-    });
-  })
-}
-
-exports.dashboardReadDocument = function(req,res){
-  var id= new objectID(req.params.id);
-  Notification.update({'_id': id},{unread : false},{multi : true},function(err) {
-    if (err) {
-      return res.send(500)
-    }
-    return res.json(true);
-  });
-};
-
+// mark all notification as read
 exports.allRead = function(req,res) {
   var user = req.user;
   Notification.update({owner: user._id},{unread : false},{multi : true},function(err,e) {
@@ -144,22 +109,11 @@ exports.allRead = function(req,res) {
   })
 };
 
-
-
-exports.getMyFile = function(req, res) {
-  var user = req.user;
-  Notification.find({owner: user._id,unread: true, 'element.projectId': mongoose.Types.ObjectId(req.params.id)}, function(err, notifications){
-    if (err) {;return res.send(500,err);}
-    if (!notifications) {return res.send(500,err);}
-    else {
-      return res.send(200,notifications);
-    }
-  });
-};
-
+// count total notifications for ionic app
+// but this no need longer because current ionic app haven't got count notification
 exports.countTotalForIOS = function(req, res) {
   var user = req.user;
-  Notification.find({owner: user._id, unread:true, $or:[{referenceTo: 'task'},{referenceTo: 'thread'}, {referenceTo: 'people-chat'}, {referenceTo: 'board-chat'}, {type: 'invite-people'}, {type: "NewBoard"}]})
+  Notification.find({owner : user._id, unread : true, $or:[{type: "invite-to-project"}, {referenceTo: "team"}]})
   .populate('fromUser','-hashedPassword -salt')
   .exec(function(err, notifications){
     if (err) {return res.send(500,err);}
@@ -177,30 +131,4 @@ exports.countTotalForIOS = function(req, res) {
       return res.send(200, notifications);
     });
   })
-};
-
-exports.getOne = function(req, res) {
-  Notification.findById(req.params.id, function(err, notification){
-    if (err) {return res.send(500,err);}
-    if (!notification) {return res.send(404);}
-    return res.send(200,notification);
-  });
-};
-
-exports.getAllChatMessageNotificationByBoard = function(req, res) {
-  Notification.find({'element._id': mongoose.Types.ObjectId(req.params.id), type: "chat"})
-  .populate('owner', '-hashedPassword -salt')
-  .exec(function(err, notifications) {
-    if (err) {return res.send(500,err);}
-    return res.send(200, notifications);
-  });
-};
-
-exports.getAllChatMessageNotificationByUserInPeople = function(req, res) {
-  Notification.find({'element._id': mongoose.Types.ObjectId(req.params.id), referenceTo: "people-chat"})
-  .populate('owner', '-hashedPassword -salt')
-  .exec(function(err, notifications) {
-    if (err) {return res.send(500,err);}
-    return res.send(200, notifications);
-  });
 };
