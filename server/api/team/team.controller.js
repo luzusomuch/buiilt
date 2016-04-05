@@ -10,7 +10,9 @@ var NotificationHelper = require('./../../components/helpers/notification');
 var _ = require('lodash');
 var async = require('async');
 
-
+/*
+  checking if current is waiting for acception to make him join or create new team
+*/
 exports.isWaitingTeamAccept = function(req, res) {
   Team.findOne({"member._id": req.user._id}, function(err, team) {
     if (err) {return res.send(500,err);}
@@ -19,17 +21,23 @@ exports.isWaitingTeamAccept = function(req, res) {
   });
 };
 
+/*
+  get team by id and join this to request object
+*/
 exports.team = function (req,res,next) {
   Team.findById(req.params.id,function(err,team) {
     if (err || !team) {
       return errorsHelper.validationErrors(res, "Team not found")
     }
     req.team = team;
-
     next();
   })
 };
 
+/*
+  get all team for another user can request an acception
+  just show _id and name
+*/
 exports.getAll = function(req, res) {
   Team.find({}, "_id name", function(err, teams) {
     if (err) {return res.send(500,err);}
@@ -37,6 +45,9 @@ exports.getAll = function(req, res) {
   });
 };
 
+/*
+  send join team requestion to team leader and waiting for accept
+*/
 exports.sendJoinTeamRequest = function(req, res) {
   Team.findById(req.params.id, function(err, team) {
     if (err) {return res.send(500,err);}
@@ -62,6 +73,9 @@ exports.sendJoinTeamRequest = function(req, res) {
   });
 };
 
+/*
+  leaders of team accept the join request from other user
+*/
 exports.acceptJoinRequest = function(req, res) {
   Team.findById(req.params.id, function(err, team) {
     if (err) {return res.send(500,err);}
@@ -106,17 +120,24 @@ exports.acceptJoinRequest = function(req, res) {
   });
 };
 
+/*
+  get teams list in backend
+  require admin role
+*/
 exports.index = function (req, res) {
-    Team.findById(req.query.teamId)
-    .populate("leader", "_id name email")
-    .populate("member._id", "_id name email")
-    .exec(function(err, team) {
-        if (err) {return res.send(500,err);}
-        if (!team) {return res.send(404);}
-        return res.send(200, team);
-    });
+  Team.findById(req.query.teamId)
+  .populate("leader", "_id name email")
+  .populate("member._id", "_id name email")
+  .exec(function(err, team) {
+    if (err) {return res.send(500,err);}
+    if (!team) {return res.send(404);}
+    return res.send(200, team);
+  });
 };
 
+/*
+  get team of current user
+*/
 exports.me = function(req,res) {
   var user = req.user;
   if (!user.team) {
@@ -338,9 +359,7 @@ exports.accept = function(req,res) {
         return res.json(team);
       });
     });
-
   })
-
 };
 
 /**
@@ -363,6 +382,9 @@ exports.reject = function(req,res) {
   })
 };
 
+/*
+  assign team member become a leader
+*/
 exports.assignLeader = function(req,res) {
   var team = req.team;
   var user = req.user
@@ -393,6 +415,9 @@ exports.assignLeader = function(req,res) {
   });
 };
 
+/*
+  leave the current team 
+*/
 exports.leaveTeam = function(req,res) {
   var team = req.team;
   var user = req.user;
@@ -462,50 +487,37 @@ exports.leaveTeam = function(req,res) {
   })
 };
 
-/**
- * show team detail
- */
-exports.show = function (req, res) {
-  
-};
-
+/*
+  update team information: team tags, address, detail
+*/
 exports.update = function (req, res) {
-    var team = req.team;
-    TeamValidator.validateUpdate(req,function(err,data) {
-        if (err) {
-            return errorsHelper.validationErrors(res, err, 'Validation');
-        }
-        team = _.merge(team,data);
-        if (req.body.editType === "editBillingAddress") {
-            team.detail.billingAddress.suburb = req.body.detail.billingAddress.suburb;
-            team.detail.billingAddress.postCode = req.body.detail.billingAddress.postCode;
-        } else if (req.body.editType === "editCompanyDetail") {
-            team.name = req.body.name;
-            team.detail.companyAddress.address = req.body.detail.companyAddress.address;
-            team.detail.companyAddress.suburb = req.body.detail.companyAddress.suburb;
-            team.detail.companyAddress.postCode = req.body.detail.companyAddress.postCode;
-            team.detail.companyPhoneNumber = req.body.detail.companyPhoneNumber;
-            team.detail.licenseNumber = req.body.detail.licenseNumber;
-            team.detail.companyABN = req.body.detail.companyABN;
-        } else if (req.body.editType === "change-tags") {
-            team.fileTags = req.body.fileTags;
-            team.documentTags = req.body.documentTags;
-            team.versionTags = req.body.versionTags;
-        }
-        team._user = req.user;
-        team.save(function() {
-            Team.populate(team, [{path:"leader"},{path:"member._id"}], function(err, team ) {
-                return res.json(team);
-            });
-        });
-    })
-};
-
-exports.getTeamByUser = function(req, res) {
-  Team.findOne({$or: [{'user': req.params.id}, {'groupUser._id': req.params.id}]}, function(err, team){
-    if (err) {return res.send(500, err);}
-    else {
-      return res.json(team);
+  var team = req.team;
+  TeamValidator.validateUpdate(req,function(err,data) {
+    if (err) {
+      return errorsHelper.validationErrors(res, err, 'Validation');
     }
+    team = _.merge(team,data);
+    if (req.body.editType === "editBillingAddress") {
+      team.detail.billingAddress.suburb = req.body.detail.billingAddress.suburb;
+      team.detail.billingAddress.postCode = req.body.detail.billingAddress.postCode;
+    } else if (req.body.editType === "editCompanyDetail") {
+      team.name = req.body.name;
+      team.detail.companyAddress.address = req.body.detail.companyAddress.address;
+      team.detail.companyAddress.suburb = req.body.detail.companyAddress.suburb;
+      team.detail.companyAddress.postCode = req.body.detail.companyAddress.postCode;
+      team.detail.companyPhoneNumber = req.body.detail.companyPhoneNumber;
+      team.detail.licenseNumber = req.body.detail.licenseNumber;
+      team.detail.companyABN = req.body.detail.companyABN;
+    } else if (req.body.editType === "change-tags") {
+      team.fileTags = req.body.fileTags;
+      team.documentTags = req.body.documentTags;
+      team.versionTags = req.body.versionTags;
+    }
+    team._user = req.user;
+    team.save(function() {
+      Team.populate(team, [{path:"leader"},{path:"member._id"}], function(err, team ) {
+        return res.json(team);
+      });
+    });
   });
 };
