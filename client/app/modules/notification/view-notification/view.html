@@ -1,9 +1,0 @@
-<div class="row">
-    <h5>Notification</h5>
-  <a class="btn waves-effect waves-yellow" style="font-size: 12px" ng-click="markAllAsRead()">Mark all as read</a>
-    <ul class="collection notifications">
-      <li class="collection-item" ng-repeat="notification in notifications | orderBy : ['-unread','-createdAt']">
-        <div notification="notification" ng-class="{'read' : !notification.unread}"></div>
-      </li>
-    </ul>
-</div>

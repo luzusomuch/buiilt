@@ -37,32 +37,6 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
     authenticate : true
   })
   
-	//Tenders for Single Project
-  // .state('project.tenders', {
-  //   url: '/tenders',
-	 //  abstract: true,
-  //   templateUrl: '/app/modules/project/project-tenders/project-tenders.html',
-  //   controller: 'projectTendersCtrl',
-  //   authenticate : true
-  // })
-  // .state('project.tenders.all', {
-  //   url: '',
-  //   templateUrl: '/app/modules/project/project-tenders/all/project-tenders-all.html',
-  //   controller: 'projectTendersCtrl',
-  //   authenticate : true
-  // })
-  // .state('project.tenders.detail', {
-  //   url: '/detail/:tenderId',
-  //   templateUrl: '/app/modules/project/project-tenders/detail/project-tenders-detail.html',
-  //   controller: 'projectTendersDetailCtrl',
-  //   authenticate : true,
-  //   resolve: {
-  //     tender: function($stateParams, peopleService) {
-  //       return peopleService.getTender({id: $stateParams.id, tenderId: $stateParams.tenderId}).$promise;
-  //     }
-  //   }
-  // })
-  
   	//Messages for Single Project
   .state('project.messages', {
     url: '/messages',
@@ -185,23 +159,6 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
         return fileService.get({id: $stateParams.documentId}).$promise;
       }
     }
-  })
-  
-  //Old Code
-  .state('projects.view', {
-    url: '/:id',
-    templateUrl: '/app/modules/project/view-project/view.html',
-    controller: 'ViewProjectCtrl',
-    authenticate : true,
-    resolve: {
-      project: function($stateParams, projectService) {
-        return projectService.get({id: $stateParams.id}).$promise;
-      },
-      builderPackage: function(builderPackageService, $stateParams) {
-        return builderPackageService.findDefaultByProject({id: $stateParams.id}).$promise;
-      }
-    },
-    hasCurrentProject : true
   });
   
 });

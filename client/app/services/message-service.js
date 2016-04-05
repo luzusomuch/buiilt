@@ -32,6 +32,14 @@ angular.module('buiiltApp').factory('messageService', function($resource) {
                 action: "last-access"
             }
         },
+        myMessages : {
+            method : 'GET',
+            isArray : true,
+            params : {
+                type : 'dashboard',
+                action : 'me'
+            }
+        },
         delete: {method:'DELETE', params: {id: 'id', action: ''}, isArray: true},
     });
 });
