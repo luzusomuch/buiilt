@@ -7,18 +7,9 @@ var Project = require('./../../models/project.model');
 var File = require('./../../models/file.model');
 var Notification = require('./../../models/notification.model');
 var NotificationHelper = require('./../../components/helpers/notification');
-var errorsHelper = require('../../components/helpers/errors');
-var formidable = require('formidable');
-var mkdirp = require('mkdirp');
-var path = require('path');
-var s3 = require('../../components/S3');
 var _ = require('lodash');
 var async = require('async');
-var gm = require('gm');
-var fs = require('fs');
-var exec = require('child_process').exec;
 var config = require('./../../config/environment');
-var RelatedItem = require('../../components/helpers/related-item');
 var EventBus = require('../../components/EventBus');
 var mongoose = require("mongoose");
 
@@ -73,10 +64,10 @@ function populateFile(file, res){
     });
 };
 
-var validationError = function (res, err) {
-    return res.json(422, err);
-};
-
+/*
+    upload file for ionic app 
+    not need now but maybe need in future
+*/
 exports.uploadMobile = function(req, res) {
     var filesAfterInsert = [];
     var item = req.body;
@@ -102,9 +93,11 @@ exports.uploadMobile = function(req, res) {
     });
 };
 
+/*
+    Upload file or document reversion
+*/
 exports.uploadReversion = function(req, res) {
     var newFile = req.body.files[0];
-    console.log(req.body);
     File.findById(req.params.id, function(err, file) {
         if (err) {return res.send(500,err);}
         else if (!file) {return res.send(404, "The specific file is not existed");}
@@ -302,28 +295,6 @@ exports.upload = function(req, res){
                     });
                 }, callback);
             } else {
-                // var roles = ["builders", "clients", "architects", "subcontractors", "consultants"];
-                // People.findOne({project: req.params.id}, function(err, people) {
-                //     if (err || !people) {callback();}
-                //     else {
-                //         _.each(roles, function(role) {
-                //             _.each(people[role], function(tender){
-                //                 if (tender.hasSelect && tender.tenderers[0]._id) {
-                //                     acknowledgeUsers.push({_id: tender.tenderers[0]._id});
-                //                     if (tender.tenderers[0]._id.toString()===req.user._id.toString()) {
-                //                         _.each(tender.tenderers[0].teamMember, function(member) {
-                //                             acknowledgeUsers.push({_id: member});
-                //                         });
-                //                     }
-                //                 } else if (tender.hasSelect && tender.tenderers[0].email) {
-                //                     acknowledgeUsers.push({email: tender.tenderers[0].email});
-                //                 }
-                //             });
-                //         });
-                //         _.remove(acknowledgeUsers, {_id: req.user._id});
-                //         callback();
-                //     }
-                // });
                 callback();
             }
         }

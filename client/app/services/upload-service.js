@@ -1,6 +1,4 @@
-angular.module('buiiltApp')
-.factory('uploadService', function($resource) {
-
+angular.module('buiiltApp').factory('uploadService', function($resource) {
     return $resource('/api/uploads/:id/:action',
     {
         id : '@_id'
@@ -18,37 +16,6 @@ angular.module('buiiltApp')
                 id: '@id',
                 action: 'upload-reversion'
             }
-        },
-        submitTender: {
-            method: "POST",
-            params: {
-                id: '@id',
-                action: "submit-tender"
-            }
-        },
-        uploadInPackage: {
-            method: 'POST', 
-            params: {
-                id: '@id',
-                action: 'file-package'
-            }
-        },
-        uploadInPeople: {
-            method: 'POST', 
-            params: {
-                id: '@id',
-                action: 'file-in-people'
-            },
-            isArray: true
-        },
-        uploadInBoard: {
-            method: 'POST', 
-            params: {
-                id: '@id',
-                action: 'file-in-board'
-            },
-            isArray: true
         }
-    }
-);
+    });
 });

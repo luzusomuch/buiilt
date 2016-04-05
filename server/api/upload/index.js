@@ -9,6 +9,5 @@ var router = express.Router();
 
 router.post('/:id', auth.isAuthenticated(), controller.upload);
 router.post('/:id/upload-reversion', auth.isAuthenticated(), controller.uploadReversion);
-router.post('/:id/upload-mobile', auth.isAuthenticated(), controller.uploadMobile);
 
 module.exports = router;
