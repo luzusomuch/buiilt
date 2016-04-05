@@ -1,8 +1,5 @@
-angular.module('buiiltApp')
-.factory('tenderService', function($resource) {
-
-    return $resource('/api/tenders/:id/:activityId/:action',
-    {
+angular.module('buiiltApp').factory('tenderService', function($resource) {
+    return $resource('/api/tenders/:id/:activityId/:action', {
         id : '@_id'
     },
     {

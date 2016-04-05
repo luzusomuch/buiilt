@@ -11,6 +11,9 @@ var NotificationHelper = require('./../../components/helpers/notification');
 var EventBus = require('../../components/EventBus');
 var moment = require("moment");
 
+/*
+    create new tender package
+*/
 exports.create = function(req, res) {
     var data = req.body;
     var tender = new Tender({
@@ -30,6 +33,10 @@ exports.create = function(req, res) {
     });  
 };
 
+/*
+    Update tender info
+    attach addendum, distribute status, invite tender, attach scope, attach tender file
+*/
 exports.update = function(req, res) {
     var data = req.body;
     Tender.findById(req.params.id, function(err, tender) {
@@ -186,6 +193,10 @@ exports.update = function(req, res) {
     });
 };
 
+/*
+    get all tenders package for current user
+    if in backend, it'll need query userId
+*/
 exports.getAll = function(req, res) {
     var userId = (req.query.userId) ? req.query.userId : req.user._id;
     Tender.find({$or:[{owner: userId}, {"members.user": userId}]})
@@ -209,6 +220,9 @@ exports.getAll = function(req, res) {
     });
 };
 
+/*
+    get tender package by id
+*/
 exports.get = function(req, res) {
     Tender.findById(req.params.id)
     .populate("owner", "_id name email")
@@ -227,6 +241,9 @@ exports.get = function(req, res) {
     });
 };
 
+/*
+    send accknowledgement to tender owner
+*/
 exports.acknowledgement = function(req, res) {
     Tender.findById(req.params.id, function(err, tender) {
         if (err) {return res.send(500,err);}
@@ -267,7 +284,9 @@ exports.acknowledgement = function(req, res) {
     });
 };
 
-
+/*
+    Tender package owner upload new tender document
+*/
 exports.uploadTenderDocument = function(req, res) {
     var data = req.body;
     Tender.findById(req.params.id, function(err, tender) {
@@ -305,6 +324,9 @@ exports.uploadTenderDocument = function(req, res) {
     });
 };
 
+/*
+    Tender package owner select a winner
+*/
 exports.selectWinner = function(req, res) {
     Tender.findById(req.params.id).populate("members.user").exec(function(err, tender){
         if (err) {return res.send(500,err);}
@@ -384,6 +406,9 @@ exports.selectWinner = function(req, res) {
     });
 };
 
+/*
+    Response correct data for the current tenderer
+*/
 function responseTender(tender, user) {
     if (tender.owner._id.toString()===user._id.toString()) {
         return tender;
@@ -416,6 +441,10 @@ function responseTender(tender, user) {
     }
 };
 
+/*
+    Tenderer and owner send reply
+    Tenderer send a submission to owner
+*/
 exports.updateTenderInvitee = function(req, res) {
     var data = req.body;
     Tender.findById(req.params.id, function(err, tender) {
@@ -488,6 +517,10 @@ exports.updateTenderInvitee = function(req, res) {
     });
 };
 
+/*
+    Delete selected tender package
+    Require admin role
+*/
 exports.delete = function(req, res) {
     Tender.findByIdAndRemove(req.params.id, function (err, tender) {
         if (err) {
