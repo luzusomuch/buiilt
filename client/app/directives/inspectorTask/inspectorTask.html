@@ -10,7 +10,7 @@
 	</md-subheader>
 	
 	<div ng-show="showActivity" class="activity-stream-head" layout-padding>
-		<p>This message was created by <strong>{{thread.owner.name}}</strong> on {{thread.createdAt | date: longDate}}.</p>
+		<p>This message was created by <strong>{{thread.owner.name}}</strong> on {{thread.createdAt | date: longDate}} in reference to ...... </p>
 	</div>
 	
 </section>
@@ -29,7 +29,30 @@
 	<md-list ng-show="showMembers" ng-show="data.members != 'null'">
 		<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event, member._id)" ng-show="data.element" ng-repeat="member in data.members | unique: '_id' track by $index">
 		    <div class="md-list-item-text">
-			    <p>{{(member._id) ? member.name : member.email}}</p>
+			    <h3>{{(member._id) ? member.name : member.email}}</h3>
+				<p>Phone Number</p>
+		    </div>
+		</md-list-item>
+	</md-list>
+	
+</section>
+
+<section>
+	
+	<md-subheader ng-click="showRelatedMessages=!showRelatedMessages" class="border-top inspector-header md-primary">
+		<div layout="row">
+			<span>RELATED MESSAGES</span>
+			<span flex></span>
+			<md-icon class="material-icons accordian-icon md-primary" ng-show="!showRelatedMessages">expand_more</md-icon>
+			<md-icon class="material-icons accordian-icon md-primary" ng-show="showRelatedMessages">expand_less</md-icon>
+		</div>
+	</md-subheader>
+	
+	<md-list ng-show="showRelatedTasks">
+		<md-list-item class="md-2-line" ng-click="showRelatedTasksModal($event, task)" ng-repeat="task in data.relatedItem" ng-show="task.type == 'task'">
+		    <div class="md-list-item-text">
+			    <h3>{{task.item.name}}</h3>
+		        <p>{{task.item.description}}</p>
 		    </div>
 		</md-list-item>
 	</md-list>
@@ -50,30 +73,8 @@
 	<md-list ng-show="showSharedFiles" ng-show="data.relatedItem != 'null'">
 		<md-list-item class="md-2-line" ng-click="showRelatedFilesModal($event, file)" ng-repeat="file in data.relatedItem" ng-show="file.type == 'file'">
 		    <div class="md-list-item-text">
-			    <p>{{file.item.name}}</p>
+			    <h3>{{file.item.name}}</h3>
 			    <p>{{file.item.description}}</p>
-		    </div>
-		</md-list-item>
-	</md-list>
-	
-</section>
-
-<section>
-	
-	<md-subheader ng-click="showRelatedTasks=!showRelatedTasks" class="border-top inspector-header md-primary">
-		<div layout="row">
-			<span>RELATED MESSAGES</span>
-			<span flex></span>
-			<md-icon class="material-icons accordian-icon md-primary" ng-show="!showRelatedTasks">expand_more</md-icon>
-			<md-icon class="material-icons accordian-icon md-primary" ng-show="showRelatedTasks">expand_less</md-icon>
-		</div>
-	</md-subheader>
-	
-	<md-list ng-show="showRelatedTasks">
-		<md-list-item class="md-2-line" ng-click="showRelatedTasksModal($event, task)" ng-repeat="task in data.relatedItem" ng-show="task.type == 'task'">
-		    <div class="md-list-item-text">
-			    <p>{{task.item.name}}</p>
-		        <p>{{task.item.description}}</p>
 		    </div>
 		</md-list-item>
 	</md-list>

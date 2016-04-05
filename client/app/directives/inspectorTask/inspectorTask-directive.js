@@ -14,7 +14,7 @@ angular.module('buiiltApp').directive('inspectorTask', function(){
             $scope.data.members.push($scope.currentUser);
             $scope.data.members = _.uniq($scope.data.members, "_id");
 			$scope.showMembers = false;
-			$scope.showRelatedTasks = false;
+			$scope.showRelatedMessages = false;
 			$scope.showSharedFiles = false;
 			$scope.showActivity = true;
 

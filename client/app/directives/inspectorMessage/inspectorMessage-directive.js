@@ -16,8 +16,7 @@ angular.module('buiiltApp').directive('inspectorMessage', function(){
 			$scope.showMembers = false;
 			$scope.showRelatedTasks = false;
 			$scope.showSharedFiles = false;
-			$scope.showDetail = false;
-			$scope.showActivity = false;
+			$scope.showActivity = true;
 
 			$scope.showRelatedMessageModal = function ($event, relatedItem) {
 				$mdDialog.show({
