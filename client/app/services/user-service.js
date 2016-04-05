@@ -1,5 +1,4 @@
-angular.module('buiiltApp')
-.factory('userService', function($resource) {
+angular.module('buiiltApp').factory('userService', function($resource) {
     return $resource('/api/users/:id/:action', {
         id: '@uuid'
     },
@@ -65,12 +64,27 @@ angular.module('buiiltApp')
                 action: "admin-update"
             }
         },
-        getTheBestProviders: { method: 'GET', params: { id: 'theBestProviders'}, isArray: true },
-        gets:{method:'GET', params: {action: ''}, isArray: true},
-        delete: {method:'DELETE'},
-        changePassword: { method: 'PUT', params: {id: 'id', action: 'password'}},
-        changeEmail: { method: 'PUT', params: {id: 'id', action: 'email'}},
-        changeProfile: { method: 'PUT', params: {id: 'id', action: 'change-profile'}},
-        createUserWithInviteToken: {method: 'POST', params: {action: 'invite-token'}}
+        delete: {
+            method:'DELETE'
+        },
+        changePassword: {
+            method: 'PUT', 
+            params: {
+                id: 'id', 
+                action: 'password'
+            }
+        },
+        changeEmail: { 
+            method: 'PUT', 
+            params: {id: 'id', action: 'email'}
+        },
+        changeProfile: { 
+            method: 'PUT', 
+            params: {id: 'id', action: 'change-profile'}
+        },
+        createUserWithInviteToken: {
+            method: 'POST', 
+            params: {action: 'invite-token'}
+        }
     });
 });

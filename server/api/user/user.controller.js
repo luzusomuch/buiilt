@@ -32,6 +32,9 @@ var validationError = function (res, err) {
     return res.json(422, err);
 };
 
+/*
+    Show user profile by id include his team
+*/
 exports.getUserProfile = function(req, res) {
     User.findOne({_id: req.params.id}).populate("team._id").exec(function(err, user) {
         if (err) {return res.send(500,err);}
@@ -42,6 +45,10 @@ exports.getUserProfile = function(req, res) {
     });
 };
 
+/*
+    Update user profile
+    require admin role
+*/
 exports.adminUpdateUserProfile = function(req, res) {
     var data = req.body;
     User.findById(req.params.id, function(err, user) {
@@ -69,6 +76,7 @@ exports.index = function (req, res) {
     res.json(200, users);
   });
 };
+
 /**
  * Creates a new user
  */
@@ -474,17 +482,16 @@ exports.createUserWithInviteToken = function(req, res, next) {
  * Get a single user
  */
 exports.show = function (req, res, next) {
-  var userId = req.params.id;
-
-  User.findById(userId, '-salt -hashedPassword', function (err, user) {
-    if (err) {
-      return next(err);
-    }
-    if (!user) {
-      return res.send(404);
-    }
-    return res.json(user);
-  });
+    var userId = req.params.id;
+    User.findById(userId, '-salt -hashedPassword', function (err, user) {
+        if (err) {
+            return next(err);
+        }
+        if (!user) {
+            return res.send(404);
+        }
+        return res.json(user);
+    });
 };
 
 /**
@@ -523,41 +530,47 @@ exports.destroy = function (req, res) {
  * Change a users password
  */
 exports.changePassword = function (req, res, next) {
-  var user = req.user;
-  var oldPass = String(req.body.oldPassword);
-  var newPass = String(req.body.newPassword);
-  User.findById(user._id, function (err, user) {
-    if (!user.authenticate(oldPass)) {
-      return res.send(422,{msg : 'This password is not correct.'});
-    }
-    user.password = newPass;
-    user.save(function(err) {
-      if (err) {return validationError(res, err);}
-      res.send(200);
+    var user = req.user;
+    var oldPass = String(req.body.oldPassword);
+    var newPass = String(req.body.newPassword);
+    User.findById(user._id, function (err, user) {
+        if (!user.authenticate(oldPass)) {
+            return res.send(422,{msg : 'This password is not correct.'});
+        }
+        user.password = newPass;
+        user.save(function(err) {
+            if (err) {return validationError(res, err);}
+            res.send(200);
+        });
     });
-  });
 };
 
+/*
+    Change user email
+*/
 exports.changeEmail = function(req,res) {
-  var user = req.user;
-  User.findById(user._id,function(err,user) {
-    if (user.email == req.body.email) {
-      return res.json(true);
-    }
-    user.changeEmailToken = crypto.randomBytes(20).toString('hex');
-    var currentDate = new Date();
-    user.expired = currentDate.setMinutes(currentDate.getMinutes() + 30);
-    user.emailChange = req.body.email;
-    user._evtName = "User.ChangeEmail";
-    user.save(function(err) {
-      if (err) {
-        return res.send(500,err)
-      }
-      return res.json(true);
-    })
-  })
+    var user = req.user;
+    User.findById(user._id,function(err,user) {
+        if (user.email == req.body.email) {
+            return res.json(true);
+        }
+        user.changeEmailToken = crypto.randomBytes(20).toString('hex');
+        var currentDate = new Date();
+        user.expired = currentDate.setMinutes(currentDate.getMinutes() + 30);
+        user.emailChange = req.body.email;
+        user._evtName = "User.ChangeEmail";
+        user.save(function(err) {
+            if (err) {
+                return res.send(500,err)
+            }
+            return res.json(true);
+        });
+    });
 };
 
+/*
+    User change their current profile
+*/
 exports.changeProfile = function(req, res) {
     User.findById(req.user._id, function(err, user){
         if (err) {return res.send(500,err);}
@@ -637,150 +650,157 @@ exports.me = function (req, res, next) {
     });
 };
 
-exports.all = function (req, res, next) {
-  User.find({}, '-salt -hashedPassword',function(err,users) {
-    if (err) {
-      // return validationError(res,err);
-      return res.send(500,err);
-    }
-    return res.json(users);
-  });
-};
-
+/*
+    Send email verification again
+*/
 exports.sendVerification = function(req,res) {
-  var user = req.user;
-  if(!user.emailVerified){
-    Mailer.sendMail('confirm-email.html', config.emailFrom, user.email, {
-      user: user,
-      confirmation: config.baseUrl + 'auth/confirm-email/' + user.emailVerifyToken,
-      subject: 'Confirm email from buiilt.com'
-    }, function(err){
-      if (err) {
-        return res.send(500,err);
-      } else {
-        return res.json(200, 'successful');
-      }
-    });
-  }else{
-    return res.send(422,{msg: 'blah blah blah'})
-  }
+    var user = req.user;
+    if(!user.emailVerified){
+        Mailer.sendMail('confirm-email.html', config.emailFrom, user.email, {
+            user: user,
+            confirmation: config.baseUrl + 'auth/confirm-email/' + user.emailVerifyToken,
+            subject: 'Confirm email from buiilt.com'
+        }, function(err){
+            if (err) {
+                return res.send(500,err);
+            } else {
+                return res.json(200, 'successful');
+            }
+        });
+    } else {
+        return res.send(422,{msg: 'blah blah blah'})
+    }
 };
 
+/*
+    send reset password token to request email
+*/
 exports.forgotPassword = function(req,res) {
-  ResetPassword.remove({email : req.body.email},function(err) {
-    if (err) {
-      return res.send(500,err);
-    }
-    ResetPasswordValidator.create(req,function(err,data) {
-      if (err) {
-        return res.send(422,err);
-      }
-      var resetPassword = new ResetPassword(data);
-      resetPassword.save(function(err) {
+    ResetPassword.remove({email : req.body.email},function(err) {
         if (err) {
-          return res.send(422,err);
+            return res.send(500,err);
         }
-        return res.json(true);
-
-      })
-    })
-  });
-
-};
-
-exports.resetPassword = function(req,res) {
-  ResetPassword.findOne({resetPasswordToken : req.body.token},function(err,resetPassword) {
-    if (err || !resetPassword){
-      return res.send(422,err);
-    }
-    User.findOne({email : resetPassword.email},function(err,user) {
-      if (err || !user) {
-        return res.send(422,err)
-      }
-      user.password = req.body.password;
-      user.save(function(err) {
-        if (err) {return res.send(422, err);}
-        resetPassword.remove();
-        return res.json(true);
-      });
-    })
-  })
-};
-
-exports.getResetPasswordToken = function(req,res) {
-  ResetPassword.findOne({resetPasswordToken : req.params.id},function(err,resetPassword) {
-    if (err || !resetPassword) {
-      return res.send(500,err);
-    }
-    return res.json(resetPassword);
-  })
-};
-
-exports.buyPlan = function(req, res) {
-  var data = req.body;
-  User.findOne({email: req.user.email}, '-hashedPassword -salt', function(err, user) {
-    if (err) {return res.send(500,err);}
-    else if (!user) {return res.send(404, {msg: "The specific user is not existed"});}
-    else {
-      stripe.plans.list({limit: 3}, function(err, plan) {
-        if (err) {return res.send(500,err);}
-        else if (plan.data.length === 0) {return res.send(404, {msg: "There are no plan to purchase"});}
-        else {
-          var currentPlan = _.find(plan.data, function(item) {return item.id === data.plan});
-          stripe.customers.list(function(err, customers) {
-            if (err) {return res.send(500,err);}
-            var currentCustomer = _.find(customers.data, function(item) {return item.email === user.email});
-            var isCustomer = false;
-            async.parallel([
-              function(cb) {
-                if (!currentCustomer) {
-                  stripe.customers.create({email: user.email, source: data.stripeToken}, function(err, customer) {
-                    if (err) {cb(err);}
-                    else {cb(null, customer);}
-                  });
-                } else {
-                  isCustomer = true;
-                  cb(null, currentCustomer);
+        ResetPasswordValidator.create(req,function(err,data) {
+            if (err) {
+                return res.send(422,err);
+            }
+            var resetPassword = new ResetPassword(data);
+            resetPassword.save(function(err) {
+                if (err) {
+                    return res.send(422,err);
                 }
-              }
-            ], function(err, result) {
-              if (err) {return res.send(err);}
-              var customer = result[0];
-              if (!isCustomer) {
-                stripe.customers.createSubscription(customer.id, {plan: currentPlan.id}, function(err, subscription) {
-                  if (err) {return res.send(500,err);}
-                  user.plan = data.plan;
-                  user.save(function(err) {
-                    if (err) {return res.send(500,err);}
-                    return res.send(200, user);
-                  });
-                });
-              } else {
-                stripe.customers.updateSubscription(customer.id, customer.subscriptions.data[0].id, {plan: currentPlan.id}, function(err, subscription) {
-                  if (err) {return res.send(500,err);}
-                  stripe.charges.create({
-                    amount: currentPlan.amount,
-                    currency: currentPlan.currency,
-                    source: data.stripeToken,
-                    description: user.name + " has purchased for " + data.plan
-                  },function(err, charge) {
-                    if (err) {return res.send(500,err);}
-                    user.plan = data.plan;
-                    user.save(function(err) {
-                      if (err) {return res.send(500,err);}
-                      return res.send(200, user);
-                    });
-                  });
-                });
-              }
+                return res.json(true);
             });
-          });
-        }
-      });
-    }
-  });
+        });
+    });
 };
 
+/*
+    reset password when it's valid token
+*/
+exports.resetPassword = function(req,res) {
+    ResetPassword.findOne({resetPasswordToken : req.body.token},function(err,resetPassword) {
+        if (err || !resetPassword){
+            return res.send(422,err);
+        }
+        User.findOne({email : resetPassword.email},function(err,user) {
+            if (err || !user) {
+                return res.send(422,err)
+            }
+            user.password = req.body.password;
+            user.save(function(err) {
+                if (err) {return res.send(422, err);}
+                resetPassword.remove();
+                return res.json(true);
+            });
+        });
+    });
+};
+
+/*
+    get the reset password token when user open reset password email
+*/
+exports.getResetPasswordToken = function(req,res) {
+    ResetPassword.findOne({resetPasswordToken : req.params.id},function(err,resetPassword) {
+        if (err || !resetPassword) {
+            return res.send(500,err);
+        }
+        return res.json(resetPassword);
+    });
+};
+
+/*
+    charge user when they click buy plan in a stripe modal
+*/
+exports.buyPlan = function(req, res) {
+    var data = req.body;
+    User.findOne({email: req.user.email}, '-hashedPassword -salt', function(err, user) {
+        if (err) {return res.send(500,err);}
+        else if (!user) {return res.send(404, {msg: "The specific user is not existed"});}
+        else {
+            stripe.plans.list({limit: 3}, function(err, plan) {
+                if (err) {return res.send(500,err);}
+                else if (plan.data.length === 0) {return res.send(404, {msg: "There are no plan to purchase"});}
+                else {
+                    var currentPlan = _.find(plan.data, function(item) {return item.id === data.plan});
+                    stripe.customers.list(function(err, customers) {
+                        if (err) {return res.send(500,err);}
+                        var currentCustomer = _.find(customers.data, function(item) {return item.email === user.email});
+                        var isCustomer = false;
+                        async.parallel([
+                            function(cb) {
+                                if (!currentCustomer) {
+                                    stripe.customers.create({email: user.email, source: data.stripeToken}, function(err, customer) {
+                                        if (err) {cb(err);}
+                                        else {cb(null, customer);}
+                                    });
+                                } else {
+                                    isCustomer = true;
+                                    cb(null, currentCustomer);
+                                }
+                            }
+                        ], function(err, result) {
+                            if (err) {return res.send(err);}
+                            var customer = result[0];
+                            if (!isCustomer) {
+                            stripe.customers.createSubscription(customer.id, {plan: currentPlan.id}, function(err, subscription) {
+                                if (err) {return res.send(500,err);}
+                                user.plan = data.plan;
+                                user.save(function(err) {
+                                    if (err) {return res.send(500,err);}
+                                    return res.send(200, user);
+                                });
+                            });
+                          } else {
+                            stripe.customers.updateSubscription(customer.id, customer.subscriptions.data[0].id, {plan: currentPlan.id}, function(err, subscription) {
+                                if (err) {return res.send(500,err);}
+                                stripe.charges.create({
+                                    amount: currentPlan.amount,
+                                    currency: currentPlan.currency,
+                                    source: data.stripeToken,
+                                    description: user.name + " has purchased for " + data.plan
+                                },function(err, charge) {
+                                    if (err) {return res.send(500,err);}
+                                    user.plan = data.plan;
+                                    user.save(function(err) {
+                                        if (err) {return res.send(500,err);}
+                                        return res.send(200, user);
+                                    });
+                                });
+                            });
+                          }
+                        });
+                    });
+                }
+            });
+        }
+    });
+};
+
+/*
+    charge user immedietly if they already is stripe customer
+    if not app'll open a stripe modal
+*/
 exports.getCurrentStripeCustomer = function(req, res) {
     stripe.customers.list(function(err, customers) {
         if (err) {return res.send(500,err);}
@@ -820,5 +840,5 @@ exports.getCurrentStripeCustomer = function(req, res) {
  * Authentication callback
  */
 exports.authCallback = function (req, res, next) {
-  res.redirect('/');
+    res.redirect('/');
 };
