@@ -18,6 +18,9 @@ var fs = require('fs');
 var moment = require("moment");
 var config = require('./../../config/environment');
 
+/*
+    Create new project and new people package with first team also.
+*/
 exports.create = function(req, res){
     var user = req.user;
     Project.find({}, function(err, projects) {
@@ -30,9 +33,6 @@ exports.create = function(req, res){
         });
         var today = new Date();
         var allowCreate = false;
-        // filter out user is not purchase for plan and in 14 days trial with this code
-        // (moment(moment(user.createdAt).add(14, "days").format("YYYY-MM-DD")).isAfter(moment(today).format("YYYY-MM-DD")))
-
         // New filter, filter that user have reached maximun free project
         if (!user.team._id) {
             return res.send(500, {message: "You cann\'t create a project when not in any teams"});
@@ -137,16 +137,6 @@ exports.create = function(req, res){
     });
 };
 
-
-exports.index = function(req, res) {
-    Project.find({'user._id': req.user._id}, function(err, projects) {
-        if (err)
-        return res.send(500, err);
-        res.json(200, projects);
-    });
-};
-
-
 /**
  * show project detail
  */
@@ -205,6 +195,10 @@ exports.show = function(req, res){
     });
 };
 
+/*
+    Get all projects in backend
+    Required admin role
+*/
 exports.getAll = function(req, res) {
     var query = (req.query.userId) ? {owner: req.query.userId} : {};
     Project.find(query, function(err, projects){
@@ -213,6 +207,10 @@ exports.getAll = function(req, res) {
     });
 };
 
+/*
+    Remove selected project in backend
+    Required admin role
+*/
 exports.destroy = function (req, res) {
     Project.findByIdAndRemove(req.params.id, function (err, project) {
         if (err) {
@@ -222,6 +220,10 @@ exports.destroy = function (req, res) {
     });
 };
 
+/*
+    Update project information
+    Required project manager or admin role
+*/
 exports.updateProject = function(req, res) {
     var data = req.body;
     Project.findById(req.params.id, function(err, project) {
@@ -261,6 +263,11 @@ function changeDateToFullFormat(Date) {
     return moment().format("MMM Do, YYYY");
 };
 
+/*
+    This function fire when project status change to archive
+    Send an excel file to project members via email
+    Excel file includes all information related to him within project
+*/
 function sendInfoToUser(req, res) {
     async.parallel({
         people: function(cb) {
@@ -604,6 +611,10 @@ function sendInfoToUser(req, res) {
     });
 };
 
+/*
+    Send backup by excel file to requested user
+    The file includes file, tasks, threads, documents
+*/
 exports.backup = function(req, res) {
     var user = req.user;
     var roles = ["builders", "clients", "architects", "subcontractors", "consultants"];
@@ -899,6 +910,10 @@ exports.backup = function(req, res) {
     });
 };
 
+/*
+    Get limited project numbers for selected team in backend
+    Require admin role
+*/
 exports.getLimitedProjectNumber = function(req, res) {
     LimitProject.findOne({team: req.query.teamId}, function(err, limitProject) {
         if (err) {return res.send(500,err);}
@@ -906,6 +921,10 @@ exports.getLimitedProjectNumber = function(req, res) {
     });
 };
 
+/*
+    Update limited project numbers for selected team in backend
+    Require admin role
+*/
 exports.changeLimitedProjectNumber = function(req, res) {
     LimitProject.findOne({team: req.body.teamId}, function(err, limitProject) {
         if (err) {return res.send(500,err);}
