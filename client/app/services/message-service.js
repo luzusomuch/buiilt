@@ -1,8 +1,8 @@
-angular.module('buiiltApp')
-.factory('messageService', function($rootScope, $q, $resource) {
+angular.module('buiiltApp').factory('messageService', function($resource) {
     return $resource('/api/messages/:id/:type/:action',{
         id : '@_id',
-        type : '@_type'},
+        type : '@_type'
+    },
     {
         create: {
             method: 'POST'
@@ -32,44 +32,6 @@ angular.module('buiiltApp')
                 action: "last-access"
             }
         },
-
-      myMessages : {
-        method : 'GET',
-        isArray : true,
-        params : {
-          type : 'dashboard',
-          action : 'me'
-        }
-      },
-      getOne : {
-        method : 'GET',
-        params : {
-          action : 'one'
-        }
-      },
-      
-      
-      getAll: {
-        method: 'get',
-        params: {
-          action: 'list'
-        },
-        isArray: true
-      },
-      delete: {method:'DELETE', params: {id: 'id', action: ''}, isArray: true},
-      getByPackage: {
-        method: 'get',
-        params: {
-          action: 'get-by-package'
-        },
-        isArray: true
-      },
-      getThread:{
-        method: 'get',
-        params: {
-          action: 'get-thread'
-        }
-      }
-    }
-  );
+        delete: {method:'DELETE', params: {id: 'id', action: ''}, isArray: true},
+    });
 });

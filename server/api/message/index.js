@@ -17,13 +17,4 @@ router.get('/:id/project-thread', auth.isAuthenticated(), controller.getProjectT
 router.get('/:id/last-access', auth.isAuthenticated(), controller.lastAccess);
 
 router.put('/:id', auth.isAuthenticated(), controller.update);
-// router.get('/list', auth.isAuthenticated(), controller.getAll);
-// router.get('/list-by-user', auth.isAuthenticated(), controller.getAllByUser);
-// router.get('/:id/list-by-project', auth.isAuthenticated(), controller.getAllByProject);
-// router.get('/:id/get-thread', auth.isAuthenticated(), controller.getThreadById);
-// router.get('/:id/:type', auth.isAuthenticated(), controller.package, controller.getMessages);
-// router.get('/:id/:type/ios', auth.isAuthenticated(), controller.package, controller.getMessagesIos);
-// router.get('/:id/:type/get-by-package', auth.isAuthenticated(), controller.getByPackage);
-// router.get('/:id/:type/one', auth.isAuthenticated(), controller.thread, controller.getOne);
-
 module.exports = router;
