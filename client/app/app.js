@@ -20,7 +20,7 @@ angular.module('buiiltApp', [
 ]);
 
 angular
-.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider, $locationProvider, $urlRouterProvider, $httpProvider, $sceDelegateProvider, cfpLoadingBarProvider, filepickerProvider, stripeProvider) {
+.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider, $sceDelegateProvider, cfpLoadingBarProvider, filepickerProvider, stripeProvider) {
     $sceDelegateProvider.resourceUrlWhitelist(['^(?:http(?:s)?:\/\/)?(?:[^\.]+\.)?\(vimeo|youtube)\.com(/.*)?$', 'self']);
     $urlRouterProvider.otherwise('/signin');
 
