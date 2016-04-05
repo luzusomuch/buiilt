@@ -15,9 +15,9 @@ angular.module('buiiltApp').directive('inspectorFile', function(){
             $scope.data.members = _.uniq($scope.data.members, "_id");
 			$scope.showMembers = false;
 			$scope.showRelatedTasks = false;
-			$scope.showSharedFiles = false;
+			$scope.showRelatedMessages = false;
 			$scope.showDetail = false;
-			$scope.showActivity = false;
+			$scope.showActivity = true;
 
 			$scope.showRelatedMessageModal = function ($event, relatedItem) {
 				$mdDialog.show({
