@@ -102,7 +102,7 @@ exports.assignMoreMembers = function(req, res) {
 };
 
 /*
-    Update last access time of current user to file or document
+    Update last access time of current user to file or document to show it first
 */
 exports.lastAccess = function(req, res) {
     File.findById(req.params.id, function(err, file) {
@@ -219,6 +219,7 @@ exports.show = function(req, res) {
 
 /*
     Update the selected file belong to editType
+    file content, assign member, insert note, archive or unarchive file
 */
 exports.update = function(req, res) {
     var data = req.body;

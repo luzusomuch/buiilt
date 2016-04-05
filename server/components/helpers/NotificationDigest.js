@@ -11,6 +11,9 @@ var _ = require('lodash');
 var moment = require("moment");
 var CronJob = require('cron').CronJob;
 
+/*
+    Create a crontab from monday to friday from 7:00 to 18:00 at every 59 minutes
+*/
 var job1 = new CronJob('0 59 07-18 * * 1-5', function(){
     getUserNotification();
     getNotificationNonUser();
@@ -18,8 +21,11 @@ var job1 = new CronJob('0 59 07-18 * * 1-5', function(){
 
 job1.start();
 
+/*
+    get notifications for all users
+    and send via email for each user
+*/
 function getUserNotification(){
-    console.log("GET USER STILL RUN");
     Notification.find({unread: true})
     .populate("owner", "_id name email")
     .populate("fromUser", "_id name email")
@@ -64,8 +70,11 @@ function getUserNotification(){
     });
 };
 
+/*
+    get notifications for non-users
+    send it via email for each non-user
+*/
 function getNotificationNonUser(){
-    console.log("GET NON USER STILL RUN");
     async.parallel({
         tasks: function(cb) {
             Task.find({}).populate("owner").exec(cb);
@@ -179,14 +188,22 @@ function getNotificationNonUser(){
     });
 };
 
+/*
+    check if notification is in previous hours
+*/
 function isValidPreviousHourNotification(notificationTime) {
-    if (moment(notificationTime).isBetween(moment().format("YYYY-MM-DD"), moment().add(1, "days").format("YYYY-MM-DD"))) {
+    if (moment(notificationTime).isBetween(moment().format("YYYY-MM-DD HH:mm"), moment().add(1, "hours").format("YYYY-MM-DD HH:mm"))) {
         return true;
     } else {
         return false;
     }
 };
 
+/*
+    check if the owner of nofication is already existed or not
+    if existed just push new notification
+    else will create new owner with notification
+*/
 function getNotificationForNonUser(item, notificationsListPreviousHour) {
     if (item.notMembers) {
         _.each(item.notMembers, function(email) {

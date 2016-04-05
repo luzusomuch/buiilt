@@ -65,35 +65,6 @@ function populateFile(file, res){
 };
 
 /*
-    upload file for ionic app 
-    not need now but maybe need in future
-*/
-exports.uploadMobile = function(req, res) {
-    var filesAfterInsert = [];
-    var item = req.body;
-    var file = new File({
-        name: item.filename,
-        path: item.url,
-        key: item.key,
-        server: 's3',
-        mimeType: item.mimeType,
-        description: item.desc,
-        size: item.size,
-        user: req.user._id,
-        belongTo: req.params.id,
-        belongToType: item.belongToType,
-        peopleChat: item.peopleChat,
-        tags: item.tags
-    });
-    file.save(function(err) {
-        if (err) {return res.send(500,err);}
-        else {
-            return res.send(200,file);
-        }
-    });
-};
-
-/*
     Upload file or document reversion
 */
 exports.uploadReversion = function(req, res) {

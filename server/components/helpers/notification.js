@@ -3,6 +3,10 @@ var async = require('async');
 var Notification = require('./../../models/notification.model'),
     User = require('./../../models/user.model');
 var EventBus = require('./../EventBus');
+
+/*
+    Create new notification
+*/
 exports.create = function(params,cb){
     async.each(params.owners,function(owner,callback) {
         var notification = new Notification({

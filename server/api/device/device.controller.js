@@ -5,6 +5,9 @@ var User = require('./../../models/user.model');
 var _ = require('lodash');
 var async = require('async');
 
+/*
+    insert device token for user when he sign-in with ionic app for push notification
+*/
 exports.insertDevice = function(req, res) {
     Device.findOne({user: req.user._id, platform: req.body.deviceplatform, deviceToken: req.body.deviceToken}, function(err, device) {
         if (err) {return res.send(500,err);}
@@ -24,6 +27,9 @@ exports.insertDevice = function(req, res) {
     })
 };
 
+/*
+    remove device token for current user when he sign-out the ionic app
+*/
 exports.removeDevice = function(req, res) {
     Device.findOne({user: req.params.id, platform: req.query.deviceplatform}, function(err, device){
         if (err) {return res.send(500,err);}
@@ -32,13 +38,5 @@ exports.removeDevice = function(req, res) {
             if (err) {return res.send(500,err);}
             return res.send(200);
         });
-    });
-};
-
-exports.getDevice = function(req, res) {
-    Device.findOne({user: req.params.id}, function(err, device){
-        if (err) {return res.send(500,err);}
-        if (!device) {return res.send(404,err);}
-        return res.send(200,device);
     });
 };

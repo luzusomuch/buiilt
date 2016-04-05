@@ -7,7 +7,6 @@ var auth = require('../../auth/auth.service');
 var router = express.Router();
 
 router.post('/', auth.isAuthenticated(), controller.insertDevice);
-router.get('/:id/device', auth.isAuthenticated(), controller.getDevice);
 router.get('/:id/remove-device', auth.isAuthenticated(), controller.removeDevice);
 
 module.exports = router;

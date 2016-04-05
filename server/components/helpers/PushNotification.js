@@ -7,11 +7,12 @@ var async = require('async');
 var gcm = require('node-gcm'),
   messageGcm = new gcm.Message();
 
-
+/*
+    get data to create push notification for ionic app
+    require projectId, elementId, message, user and type
+*/
 exports.getData = function(projectId, id, message, user, type, cb){
     agent
-        // .set('cert file', __dirname+'/../../cert/BuiiltPushCert.pem')
-        // .set('key file', __dirname+'/../../cert/BuiiltPushKey.pem')    
         .set('pfx file', __dirname+'/../../cert/Certificates.p12')
         .set('passphrase', '123456')
         .disable('sandbox');//enable production
@@ -73,70 +74,65 @@ exports.getData = function(projectId, id, message, user, type, cb){
         }
     });
 
-    //push notification test
-    // async.each(users, function(user, cb){
-        device.find({'user' : user}, function(err, devices) {
-            if (err) {console.log(err);cb(null);}
-            if (devices && devices.length > 0) {
-                async.each(devices, function(device, callback){
-                    if (device.platform == 'ios') {
-                        Notification.find({owner: user, unread:true, $or:[{type: "thread-message"}, {type: "thread-assign"}, {type: "task-completed"}, {type: "task-assign"}, {type: "task-reopened"}, {type: "invite-to-project"}]}, function(err, notifications){
-                            if (err) {console.log(err);callback(err);}
-                            else {
-                                var totalBadge = notifications.length;
-                                agent.createMessage()
-                                .device(device.deviceToken)
-                                .alert(message)
-                                .badge(totalBadge)
-                                .set("push", true)
-                                .set("relatedto", type)
-                                .set("id", id)
-                                .set("projectid", projectId)
-                                .sound('defauld').send(function(err){
-                                    if (err) {console.log(err);callback(err);}
-                                    else {console.log("Sent");callback(null);}
-                                });
-                            }
-                        });
-                    } else if (device.platform == 'android') {
-                        var path = '';
-                        if (type == 'task') {
-                            path = "#/task/"+id;
-                        } else if (type == 'thread') {
-                            path = "#/thread/"+id;
-                        } else if (type == "project") {
-                            path = "#/dashboard";
+    // get user devices token
+    device.find({'user' : user}, function(err, devices) {
+        if (err) {console.log(err);cb(null);}
+        if (devices && devices.length > 0) {
+            async.each(devices, function(device, callback){
+                if (device.platform == 'ios') {
+                    Notification.find({owner: user, unread:true, $or:[{type: "thread-message"}, {type: "thread-assign"}, {type: "task-completed"}, {type: "task-assign"}, {type: "task-reopened"}, {type: "invite-to-project"}]}, function(err, notifications){
+                        if (err) {console.log(err);callback(err);}
+                        else {
+                            var totalBadge = notifications.length;
+                            agent.createMessage()
+                            .device(device.deviceToken)
+                            .alert(message)
+                            .badge(totalBadge)
+                            .set("push", true)
+                            .set("relatedto", type)
+                            .set("id", id)
+                            .set("projectid", projectId)
+                            .sound('defauld').send(function(err){
+                                if (err) {console.log(err);callback(err);}
+                                else {console.log("Sent");callback(null);}
+                            });
                         }
-                        var sender = new gcm.Sender("AIzaSyABcNG7VNgSzOhXIxapNGxmQWLElWHgHDU");//api id
-                        messageGcm.addData('message', message);
-                        messageGcm.addData('hasSound', true);
-                        messageGcm.addData('title', message);
-                        messageGcm.addData('path', path);
-                        messageGcm.delayWhileIdle = true;
-                        //sender.send(message, device.deviceid, 4, function (err, result) {
-                        sender.sendNoRetry(messageGcm, device.deviceToken, function (err, result) {
-                            if (err) {
-                                console.log(err);callback(err);
-                            } else {
-                                console.log(result);
-                                callback(null);
-                            }
-                        });
-                    } else {
-                        callback(null);
+                    });
+                } else if (device.platform == 'android') {
+                    var path = '';
+                    if (type == 'task') {
+                        path = "#/task/"+id;
+                    } else if (type == 'thread') {
+                        path = "#/thread/"+id;
+                    } else if (type == "project") {
+                        path = "#/dashboard";
                     }
-                }, function(err) {
-                    if (err) {cb(err);}
-                    else {cb(null);}
-                });
-            } else {
-                cb(null);
-            }
-        }); 
-    // }, function(err) {
-    //     if (err) {console.log("Error on send push notification :" + err);return cb(err);}
-    //     else {return cb(null);}
-    // });
+                    var sender = new gcm.Sender("AIzaSyABcNG7VNgSzOhXIxapNGxmQWLElWHgHDU");//api id
+                    messageGcm.addData('message', message);
+                    messageGcm.addData('hasSound', true);
+                    messageGcm.addData('title', message);
+                    messageGcm.addData('path', path);
+                    messageGcm.delayWhileIdle = true;
+                    //sender.send(message, device.deviceid, 4, function (err, result) {
+                    sender.sendNoRetry(messageGcm, device.deviceToken, function (err, result) {
+                        if (err) {
+                            console.log(err);callback(err);
+                        } else {
+                            console.log(result);
+                            callback(null);
+                        }
+                    });
+                } else {
+                    callback(null);
+                }
+            }, function(err) {
+                if (err) {cb(err);}
+                else {cb(null);}
+            });
+        } else {
+            cb(null);
+        }
+    }); 
 };
 
     
