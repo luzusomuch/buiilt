@@ -1,5 +1,7 @@
 angular.module('buiiltApp').controller('projectDocumentationCtrl', function($rootScope, $scope, $mdDialog, documents, uploadService, $mdToast, $stateParams, socket, $state, fileService) {
     $scope.documents = documents;
+	
+	$scope.showFilter = false;
 
     function setUploadFile(){
         $scope.uploadFile = {

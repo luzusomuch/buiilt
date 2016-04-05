@@ -3,6 +3,8 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
     $scope.invite = {
         isTender: false
     };
+	
+	$scope.showFilter = false;
 
     // filter section
     $scope.search = false;

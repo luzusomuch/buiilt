@@ -75,7 +75,9 @@
 	<main>
 		
 		<md-content flex id="content">
-			<div ui-view></div>
+		
+			<div ui-view class="main-content-div"></div>
+			
 		</md-content>
 		
 	</main>
@@ -100,7 +102,10 @@
 	<script src="/app/directives/projectsSidenav/projectsSidenav-directive.js"></script>
 	<script src="/app/directives/settingsSidenav/settingsSidenav-directive.js"></script>
 	<script src="/app/directives/dashboardSidenav/dashboardSidenav-directive.js"></script>
-	<script src="/app/directives/relatedItems/relatedItems-directive.js"></script>
+	<script src="/app/directives/inspectorMessage/inspectorMessage-directive.js"></script>
+	<script src="/app/directives/inspectorTask/inspectorTask-directive.js"></script>
+	<script src="/app/directives/inspectorFile/inspectorFile-directive.js"></script>
+	<script src="/app/directives/inspectorDocument/inspectorDocument-directive.js"></script>
 	<script src="/app/directives/tenderItems/tenderItems-directive.js"></script>
 	<script src="/app/directives/docHistory/docHistory-directive.js"></script>
 	<script src="/app/directives/back-button/back-button-directive.js"></script>
@@ -142,6 +147,8 @@
 	<script src="/app/modules/project/project-controller.js"></script>
 	<script src="/app/modules/project/project-overview/project-overview-controller.js"></script>
 	<script src="/app/modules/project/project-team/project-team-controller.js"></script>
+	<!-- // <script src="/app/modules/project/project-tenders/project-tenders-controller.js"></script> -->
+	<!-- // <script src="/app/modules/project/project-tenders/detail/project-tenders-detail-controller.js"></script> -->
 	<script src="/app/modules/project/project-documentation/project-documentation-controller.js"></script>
 	<script src="/app/modules/project/project-documentation/detail/project-documentation-detail-controller.js"></script>
 	<script src="/app/modules/project/project-messages/project-messages-controller.js"></script>
@@ -153,6 +160,7 @@
 	<script src="/app/modules/project/project-files/project-files-controller.js"></script>
 	<script src="/app/modules/project/project-files/detail/project-files-detail-controller.js"></script>
 	
+	<script src="/app/modules/project/view-project/view-project-controller.js"></script>
 	<script src="/app/modules/notification/main.js"></script>
 	<script src="/app/modules/notification/view-notification/view-notification-controller.js"></script>
 

@@ -389,16 +389,6 @@ md-input-container > label {
 	text-transform: uppercase;
 }
 
-.detail-view-content {
-	height: 92vh; 
-	overflow: scroll
-}
-
-.detail-header {
-	border-bottom: 1px solid #E0E0E0;
-	min-height: 10vh;
-}
-
 .action-toolbar {
 	min-height: 10vh;
 }
@@ -407,13 +397,6 @@ md-input-container > label {
 	margin-right: 100px;
 }
 
-.detail-header p {
-	font-size: 15px;
-	font-weight: 500;
-	color: #424242;
-	text-transform: capitalize;
-	margin-top: 2vh;
-}
 
 .activity-stream .icon-type {
 	padding: 8px; 
@@ -432,10 +415,6 @@ md-input-container > label {
 
 
 .activity-stream {
-	border: 1px solid #eee;
-	border-radius: 2px;
-	margin-bottom: 2vh;
-	padding: 12px;
 }
 
 .activity-stream.related {
@@ -445,13 +424,9 @@ md-input-container > label {
 }
 
 .activity-stream-head {
-	border: 1px solid #F5F5F5;
-	border-radius: 2px;
-	margin-bottom: 2vh;
 	font-size: 12px;
 	font-weight: 500;
 	text-transform: uppercase;
-	padding: 12px;
 }
 
 .activity-creator {
@@ -584,6 +559,7 @@ ul.ng-table-pagination > li {
   border-bottom: 2px solid !important;
   border-radius: 0px !important;
 }
+
 div > .fab-toolbar-btn {
   position: absolute;
   bottom: 0px;
@@ -619,3 +595,132 @@ div > .fab-toolbar-btn {
   background-color: #dedede;
   z-index: 9999;
 }
+
+.sidenav {
+	background-color: white;
+}
+
+.main-content-div {
+	background-color: #EEEEEE;
+}
+
+.content-card {
+	background-color: white;
+	padding: 12px;
+	padding-left: 15px;
+	margin: 5px;
+}
+
+.cursor-pointer {
+	cursor: pointer;
+}
+
+.content-card > h3 {
+	font-size: 16px;
+	font-weight: 500;
+	text-transform: uppercase;
+	margin-bottom: 15px;
+	margin-top: 5px;
+}
+
+.content-card > h3 > span {
+	font-size: 14px;
+	font-weight: 400;
+	text-transform: capitalize;
+}
+
+.content-card > p {
+	font-size: 14px;
+	font-weight: 500;
+	margin-bottom: 8px;
+}
+
+.filter-card {
+	background-color: white;
+}
+
+.filter-card > div > md-input-container {
+	margin-top: 5px;
+	margin-bottom: -10px;
+}
+
+.filter-checkbox {
+	text-transform: uppercase;
+	font-size: 11px;
+	font-weight: 500;
+}
+
+.pretty-radio {
+	text-transform: uppercase;
+	font-size: 11px;
+	font-weight: 500;
+}
+
+.content-list {
+	background-color: white;
+}
+
+.detail-view-main {
+	background-color: white;
+}
+
+.detail-view-main .content{
+	height: 66.5vh; 
+	overflow: scroll;
+}
+
+.detail-view-main > md-button h2 {
+	color: black;
+}
+
+.dashboard-empty {
+	height: 67vh;
+}
+
+.detail-view-inspector {
+	background-color: white;
+}
+
+.detail-view-inspector .content {
+	height: 79.5vh; 
+	overflow: scroll;
+}
+
+.border-top {
+	border-top: 0.5px solid #E5E5E5
+}
+
+.inspector-header {
+	outline: none;
+	cursor: pointer;
+	margin-bottom:0px;
+}
+
+.accordian-icon {
+	margin-top: -5px;
+}
+
+.overview-view {
+	background-color: white;
+}
+
+.add-fab {
+	margin-right: 2vh;
+}
+
+md-card {
+	padding: 5px 5px;
+}
+
+.card-header {
+	 text-transform: uppercase; 
+	 font-size: 16px;
+	 margin-bottom: 10px;
+	 font-size: 18px;
+	 font-weight: 500;
+}
+
+
+
+
+

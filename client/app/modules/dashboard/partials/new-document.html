@@ -1,0 +1,74 @@
+<md-dialog aria-label="Create a New File" flex="70">
+    <form name="form" ng-submit="">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Create a New Document</h2>
+            </div>
+        </md-toolbar>
+        
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column" layout-padding>
+                <div layout="column">
+                    <p class="md-body-2">Which project should this file be added to:</p>
+					
+					<div layout="row" flex layout-align="center center" layout-wrap layout-padding>
+						<md-radio-group>
+							<md-radio-button ng-repeat="project in projects" ng-click="selectProject($index)" class="md-primary">{{ project.name }}</md-radio-button>
+						</md-radio-group>
+					</div>
+					 
+                    <!-- <div flex layout="row" layout-align="center center" class="tagcloud-selection" layout-wrap>
+                        <span ng-repeat="project in projects" ng-class="{'selected-tag': project.select, 'available-tag': !project.select}" ng-click="selectProject($index)">{{project.name}}</span>
+                    </div> -->
+                </div>
+
+                <div layout="column">
+                    <p class="md-body-2">Select the document that you would like to upload:</p>
+                    <div layout="row" layout-align="center center" class="tagcloud-selection">
+                        <input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/>
+                    </div>
+                </div>
+                
+                <div layout="column">
+                    <p class="md-body-2">Provide a name for this file:</p>
+                    <div layout="row">
+                        <md-input-container flex="66" flex-offset="15">
+                            <label for="">File Name</label>
+                            <input type="text" ng-model="uploadFile.file.filename" required name="name">
+                        </md-input-container>
+                    </div>
+                </div>
+                
+                <div layout="column">
+                    <p class="md-body-2">Select at least one tag that is relevant to this file:</p>
+					
+					<div layout="row" flex layout-align="center center" layout-wrap layout-padding>
+						<md-checkbox class="filter-checkbox md-primary" ng-repeat="tag in fileTags" ng-click="selectChip($index, 'file')">{{ tag.name }}</md-checkbox>
+					</div>
+					
+                    <!-- <div layout="row" layout-align="center center" class="tagcloud-selection" layout-wrap>
+                        <span ng-click="selectChip($index, 'file')" ng-class="{'available-tag':!tag.select, 'selected-tag': tag.select}" ng-repeat="tag in fileTags">{{tag.name}}</span>
+                    </div> -->
+                </div>
+                
+                <div layout="column">
+                    <p class="md-body-2">Select the team members who are able to view this file:</p>
+					
+					<div layout="row" flex layout-align="center center" layout-wrap layout-padding>
+						<md-checkbox class="filter-checkbox md-primary" ng-repeat="member in projectMembers" ng-click="selectMember($index)">{{(member._id) ? member.name : member.email}}</md-checkbox>
+					</div>
+					
+                    <!-- <div layout="row" layout-align="center center" class="tagcloud-selection" layout-wrap>
+                        <span ng-click="selectMember($index, 'member')" ng-class="{'available-tag':!member.select, 'selected-tag': member.select}" ng-repeat="member in projectMembers">{{(member._id) ? member.name : member.email}}<md-icon ng-show="!member._id" class="material-icons non-user-chip cursor-help"><md-tooltip>Messages will be sent via email to this Team Member</md-tooltip>mail_outline</md-icon></span>
+                    </div> -->
+                </div>
+                
+            </div>
+        </md-dialog-content>
+        
+        <md-dialog-actions>
+            <md-button ng-click="closeModal()">Cancel</md-button>
+            <md-button type="submit" class="md-primary">Add File</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

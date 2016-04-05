@@ -1,0 +1,23 @@
+<md-dialog aria-label="Upload File" flex="70">
+    <form ng-submit="uploadNewDocument()" name="form">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Edit the Project Details</h2>
+            </div>
+        </md-toolbar>
+        
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column">
+                <div layout="row">
+                    <md-input-container flex class="modal-instructions">
+                        <input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/>
+                    </md-input-container>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions>
+            <md-button ng-click="closeDialog()">Cancel</md-button>
+            <md-button type="submit" class="md-raised md-accent md-hue-1">Upload</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

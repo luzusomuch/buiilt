@@ -13,7 +13,7 @@
 					<p class="md-body-2">Who would you like to invite?</p>
 					<md-input-container>
 						<md-radio-group ng-change="getChangeTypeValue(invite.type)" ng-model="invite.type" layout="row">
-							<md-radio-button ng-repeat="type in availableUserType" ng-value="type.value" aria-label="{{type.text}}">
+							<md-radio-button ng-repeat="type in availableUserType" class="md-primary" ng-value="type.value" aria-label="{{type.text}}">
 								{{type.text}}
 							</md-radio-button>
 						</md-radio-group>
@@ -40,9 +40,14 @@
 				
 				<div layout="column" ng-show="invite.isInviteTeamMember">
 					<p class="md-body-2">Please select the employee's you would like to add to this project:</p>
-					<div layout="row" layout-align="center center" class="tagcloud" layout-wrap layout-padding>
-						<span ng-click="selectMember($index)" ng-class="{'available-tag':!member.select, 'selected-tag': member.select}" ng-repeat="member in teamMembersCanInvite track by $index">{{member.name}}</span>
+					
+					<div layout="row" flex layout-align="center center" layout-wrap layout-padding>
+						<md-checkbox class="filter-checkbox md-primary" ng-repeat="member in teamMembersCanInvite track by $index" ng-click="selectMember($index)">{{ member.name }}</md-checkbox>
 					</div>
+					
+					<!-- <div layout="row" layout-align="center center" class="tagcloud" layout-wrap layout-padding>
+						<span ng-click="selectMember($index)" ng-class="{'available-tag':!member.select, 'selected-tag': member.select}" >{{member.name}}</span>
+					</div> -->
 				</div>
 				
 				<div layout="column" ng-show="invite.type == 'addBuilder' || invite.type == 'addConsultant' || invite.type == 'addSubcontractor'">

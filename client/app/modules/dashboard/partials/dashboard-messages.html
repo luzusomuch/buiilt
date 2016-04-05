@@ -1,75 +1,50 @@
-<div class="detail-header" layout-padding layout="column">
-
-	<div layout="column">
-		
-		<div layout="row" layout-align="center center">
-			<span class="md-body-2" style="margin-top:">Projects:</span>
-			<div class="tagcloud-selection-mini" style="margin-left: 2vh" layout-wrap>
-				<span ng-repeat="tag in projectFilterTags" ng-class="{'available-tag': !tag.select, 'selected-tag': tag.select}" ng-click="selectFilterTag(	$index, 'project')">{{tag.name}}</span>
-			</div>
-		</div>
+<div layout="column" layout-padding>
+	
+	<div class="filter-card md-whiteframe-1dp" layout="column" layout-margin>
 		
 		<div layout="row">
-			<md-input-container flex style="margin-bottom: -2vh">
-				<label for="">Message Thread Name</label>
-				<input type="text" name="messageThreadName" ng-model="name" md-autofocus>
+			
+			<md-input-container flex md-no-float class="md-block md-icon-float">
+				<md-icon class="material-icons" style="margin-top: 6px;">search</md-icon>
+				<input type="text" name="messageThreadName" ng-model="name" placeholder="Search by thread name...">
 			</md-input-container>
+			
+			<span flex="5"></span>
+			
+			<div class="add-fab">
+				<md-button class="md-fab md-mini md-primary" ng-click="showNewThreadModal($event)">
+					 <md-tooltip md-direction="down">Add a New Message</md-tooltip>
+				     <md-icon class="material-icons md-primary">add</md-icon>
+		      	</md-button>
+			</div>
+			
 		</div>
 	</div>
 	
-</div>
-
-<md-list ng-cloak class="main-page-content">
-
-	<div ng-repeat="thread in myMessages | filter: searchThread track by $index" ng-show="thread._id">
+	<div layout="column">
 		
-		<md-list-item class="md-3-line" md-ink-ripple layout-padding>
+		<div ng-show="myMessages = 'null'" layout="column" layout-align="center center" class="dashboard-empty">
+			<h4>No Messages Here</h4>
+		</div>
 		
-			<div ng-click="openLocation(thread, 'thread')" class="md-list-item-text">
+		<md-list ng-cloak class="md-whiteframe-1dp content-list" ng-show="myMessages > 0">
+			<div ng-repeat="thread in myMessages | filter: searchThread track by $index" ng-show="thread._id">
+				<md-list-item class="md-3-line" md-ink-ripple layout-padding>
+		
+					<div ng-click="openLocation(thread, 'thread')" class="md-list-item-text">
 				
-				<h3>{{ thread.name }} - {{thread.project.name}}</h3>
-				<h4>Assignees: <span ng-repeat="member in thread.members track by $index">{{member.name}}, </span><span ng-repeat="member in thread.notMembers track by $index">{{member}}</h4>
-				<p style="color: #2196F3">
-                    Updates: {{thread.element.notifications.length}}<!-- 
-                    <div ng-show="isHover" class="notification-hover">
-                        <md-list ng-cloak>
-                            <md-list-item layout-padding ng-repeat="n in thread.element.notifications">
-                                <p ng-show="n.type=='thread-assign'">
-                                    {{(n.fromUser._id==currentUser._id) ? "You" : n.fromUser.name}} has assigned <span ng-repeat="member in thread.members">{{(member._id==currentUser._id) ? "me" : member.name}}, </span>
-                                    <span ng-repeat="email in thread.notMembers">{{email}}, </span>
-                                </p>
-                                <p ng-show="n.type=='thread-message'">
-                                    {{(n.fromUser._id==currentUser._id) ? "You" : n.fromUser.name}} has sent a reply: "{{n.message}}".
-                                </p>
-                                <p ng-show="n.type=='thread-archive'">
-                                    {{(n.fromUser._id==currentUser._id) ? "You" : n.fromUser.name}} archived this file.
-                                </p>
-                                <p ng-show="n.type=='thread-unarchive'">
-                                    {{(n.fromUser._id==currentUser._id) ? "You" : n.fromUser.name}} unarchived this file.
-                                </p>
-                            </md-list-item>
-                        </md-list>
-                    </div> -->
-                </p>
-	        </div>
+						<h3>{{ thread.name }} - {{thread.project.name}}</h3>
+						<h4>Assignees: <span ng-repeat="member in thread.members track by $index">{{member.name}}, </span><span ng-repeat="member in thread.notMembers track by $index">{{member}}</h4>
+						<p style="color: #2196F3">Updates: {{thread.element.notifications.length}}</p>
+			        </div>
 			
-            <div>
-                <md-button class="md-secondary" ng-click="showReplyModal($event, thread)"><md-icon class="material-icons">reply</md-icon><md-tooltip md-direction="down">Compose Reply</md-tooltip></md-button>
-            </div>
+		            <div>
+		                <md-button class="md-secondary" ng-click="showReplyModal($event, thread)"><md-icon class="material-icons">reply</md-icon><md-tooltip md-direction="down">Compose Reply</md-tooltip></md-button>
+		            </div>
             
-			
-		</md-list-item>
-		<md-divider></md-divider>
+				</md-list-item>
+				<md-divider ng-hide="$last"></md-divider>
+			</div>
+		</md-list>
 	</div>
-</md-list>
-
-<div>
-    <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-list" ng-show="!isArchive">
-        <md-fab-trigger>
-            <md-button aria-label="Add a New Thread to this Project" class="md-fab md-primary" ng-click="showNewThreadModal($event)">
-                <md-tooltip md-direction="left">Add a New Thread</md-tooltip>
-                <md-icon class="material-icons" >add</md-icon>
-            </md-button>
-        </md-fab-trigger>
-    </md-fab-speed-dial>
 </div>

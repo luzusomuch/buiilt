@@ -1,5 +1,69 @@
-<md-tabs md-dynamic-height md-center-tabs md-no-ink-bar md-no-ink flex layout-padding>
+<section>
+	
+	<md-subheader ng-click="showMembers=!showMembers" class="related-header md-primary">
+		<div layout="row">
+			<span>TEAM MEMBERS</span>
+			<span flex></span>
+			<md-icon class="material-icons accordian-icon md-primary" ng-show="!showMembers">expand_more</md-icon>
+			<md-icon class="material-icons accordian-icon md-primary" ng-show="showMembers">expand_less</md-icon>
+		</div>
+	</md-subheader>
+	
+	<md-list ng-show="showMembers">
+		<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event, member._id)" ng-show="data.element" ng-repeat="member in data.members | unique: '_id' track by $index">
+		    <div class="md-list-item-text">
+			    <p>{{(member._id) ? member.name : member.email}}</p>
+		    </div>
+		</md-list-item>
+	</md-list>
+	
+</section>
 
+<section>
+	
+	<md-subheader ng-click="showSharedFiles=!showSharedFiles" class="border-top related-header md-primary">
+		<div layout="row">
+			<span>SHARED FILES</span>
+			<span flex></span>
+			<md-icon class="material-icons accordian-icon md-primary" ng-show="!showSharedFiles">expand_more</md-icon>
+			<md-icon class="material-icons accordian-icon md-primary" ng-show="showSharedFiles">expand_less</md-icon>
+		</div>
+	</md-subheader>
+	
+	<md-list ng-show="showSharedFiles">
+		<md-list-item class="md-2-line" ng-click="showRelatedFilesModal($event, file)" ng-repeat="file in data.relatedItem" ng-show="file.type == 'file'">
+		    <div class="md-list-item-text">
+			    <p>{{file.item.name}}</p>
+			    <p>{{file.item.description}}</p>
+		    </div>
+		</md-list-item>
+	</md-list>
+	
+</section>
+
+<section>
+	
+	<md-subheader ng-click="showRelatedTasks=!showRelatedTasks" class="border-top related-header md-primary">
+		<div layout="row">
+			<span>RELATED TASKS</span>
+			<span flex></span>
+			<md-icon class="material-icons accordian-icon md-primary" ng-show="!showRelatedTasks">expand_more</md-icon>
+			<md-icon class="material-icons accordian-icon md-primary" ng-show="showRelatedTasks">expand_less</md-icon>
+		</div>
+	</md-subheader>
+	
+	<md-list ng-show="showRelatedTasks">
+		<md-list-item class="md-2-line" ng-click="showRelatedTasksModal($event, task)" ng-repeat="task in data.relatedItem" ng-show="task.type == 'task'">
+		    <div class="md-list-item-text">
+			    <p>{{task.item.name}}</p>
+		        <p>{{task.item.description}}</p>
+		    </div>
+		</md-list-item>
+	</md-list>
+	
+</section>
+
+<!-- <md-tabs md-dynamic-height md-center-tabs md-no-ink-bar md-no-ink flex layout-padding>
     <md-tab>
 		<md-tab-label>
 			<md-tooltip md-direction="bottom">Related Team Members</md-tooltip>
@@ -21,23 +85,17 @@
 					<md-divider></md-divider>
 				</md-list-item>
 
-				<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event, member._id)" ng-show="data.element" ng-repeat="member in data.members | unique: '_id' track by $index">
+				<md-list-item class="md-1-line" ng-click="showRelatedTeamMemberModal($event, member._id)" ng-show="data.element" ng-repeat="member in data.members | unique: '_id' track by $index">
 				    <div class="md-list-item-text">
 					    <h3>{{(member._id) ? member.name : member.email}}</h3>
 				    </div>
 					<md-divider></md-divider>
 				</md-list-item>
-				<!-- <md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event, member._id)" ng-show="data.element" ng-repeat="member in data.notMembers track by $index">
-				    <div class="md-list-item-text">
-					    <h3>{{member}}</h3>
-				    </div>
-					<md-divider></md-divider>
-				</md-list-item> -->
 
 			</md-list>
         </md-tab-body>
     </md-tab>
-	
+
 	<md-tab ng-if="!hideRelatedThread">
 		<md-tab-label>
 			<md-tooltip md-direction="bottom">Related Messages</md-tooltip>
@@ -54,7 +112,7 @@
 			</md-list>
         </md-tab-body>
     </md-tab>
-	
+
     <md-tab>
 		<md-tab-label>
 			<md-tooltip md-direction="bottom">Related Tasks</md-tooltip>
@@ -72,7 +130,7 @@
 			</md-list>
         </md-tab-body>
     </md-tab>
-	
+
     <md-tab>
 		<md-tab-label>
 			<md-tooltip md-direction="bottom">Related Files</md-tooltip>
@@ -90,4 +148,4 @@
 			</md-list>
         </md-tab-body>
     </md-tab>
-</md-tabs>
+</md-tabs> -->

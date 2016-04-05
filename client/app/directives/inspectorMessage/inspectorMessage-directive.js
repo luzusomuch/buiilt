@@ -1,8 +1,8 @@
 'use strict';
-angular.module('buiiltApp').directive('relatedItems', function(){
+angular.module('buiiltApp').directive('inspectorMessage', function(){
     return {
         restrict: 'EA',
-        templateUrl: 'app/directives/relatedItems/relatedItems.html',
+        templateUrl: 'app/directives/inspectorMessage/inspectorMessage.html',
         scope:{
             data:'=',
             hideRelatedThread: "@"
@@ -13,6 +13,11 @@ angular.module('buiiltApp').directive('relatedItems', function(){
             $scope.data.members.push($scope.data.owner);
             $scope.data.members.push($scope.currentUser);
             $scope.data.members = _.uniq($scope.data.members, "_id");
+			$scope.showMembers = false;
+			$scope.showRelatedTasks = false;
+			$scope.showSharedFiles = false;
+			$scope.showDetail = false;
+			$scope.showActivity = false;
 
 			$scope.showRelatedMessageModal = function ($event, relatedItem) {
 				$mdDialog.show({

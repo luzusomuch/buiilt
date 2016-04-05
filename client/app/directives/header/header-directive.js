@@ -110,6 +110,10 @@ angular.module('buiiltApp')
 							$mdDialog.hide();
 							inline_manual_player.activateTopic(topicID);
 						};
+						
+						$scope.helpChatSupport = function(){
+							Tawk_API.toggle();
+						};
 			        }],
                     templateUrl: 'app/directives/header/helpModal.html',
                     parent: angular.element(document.body),

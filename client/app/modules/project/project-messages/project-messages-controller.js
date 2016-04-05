@@ -2,6 +2,8 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
 	$rootScope.title = $rootScope.project.name +" messages list";
     $scope.people = people;
 	$scope.threads = threads;
+	
+	$scope.showFilter = false;
 
     if ($state.includes("project.messages.all")) {
         messageService.getProjectThread({id: $stateParams.id}).$promise.then(function(res) {

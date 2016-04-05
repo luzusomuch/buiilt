@@ -1,101 +1,111 @@
-<div class="detail-header" layout-padding layout="column">
+<div layout="column" layout-padding>
 	
-	<div layout="column" layout-padding>
+	<div class="filter-card md-whiteframe-1dp" layout="column" layout-margin>
 		
 		<div layout="row">
-			<md-input-container flex="50">
-				<label for="">File Name</label>
-				<input type="text" name="fileName" ng-model="name" md-autofocus>
+			<md-input-container md-no-float flex class="md-block md-icon-float" style="margin-right: 15px">
+				<md-icon class="material-icons" style="margin-top: 6px;">search</md-icon>
+				<input type="text" name="fileName" ng-model="name" placeholder="Search by file name...">
 			</md-input-container>
 			
-			<md-input-container flex="50">
-				<label for="">File Recipients</label>
-				<input type="text" name="fileRecipients" ng-model="recipient">
-			</md-input-container>
+			<div>
+				<md-button class="md-icon-button more-filter-button" ng-click="showFilter=!showFilter">
+					 <md-tooltip md-direction="down">Show Filters</md-tooltip>
+				     <md-icon class="material-icons">filter_list</md-icon>
+		      	</md-button>
+			</div>
 			
-		</div>
-		
-		<div layout="row">
+			<div>
+				<md-button class="md-icon-button more-filter-button" ng-click="showArchived=!showArchived">
+					 <md-tooltip md-direction="down">Show Archived Files</md-tooltip>
+				     <md-icon class="material-icons">history</md-icon>
+		      	</md-button>
+			</div>
 			
-			<div flex layout="row" layout-align="center center">
-				<span class="md-body-2" style="margin-top: -2vh">File Type:</span>
-				<div class="tagcloud" style="margin-top: -2vh; margin-left: 2vh">
-					<span ng-repeat="tag in tags" ng-class="{'available-tag': !tag.select, 'selected-tag': tag.select}" ng-click="selectChip($index, 'tag'); selectFilterTag(tag.name)">{{tag.name}}</span>
-				</div>
-				<div class="tagcloud" style="margin-top: -2vh; margin-left: 8vh">
-					<span ng-class="{'available-tag': !showArchived, 'selected-tag': showArchived}" ng-click="showArchived=!showArchived">Show Archived Files</span>
-				</div>
+			<span flex="5"></span>
+			
+			<div ng-show="!isArchive" class="add-fab">
+				<md-button class="md-fab md-mini md-primary" ng-click="showNewFileModal($event)">
+					 <md-tooltip md-direction="down">Add a New File</md-tooltip>
+				     <md-icon class="material-icons md-primary">add</md-icon>
+		      	</md-button>
 			</div>
 		</div>
 		
-	</div>
-
-</div>
-
-<md-list ng-cloak class="main-page-content"  layout="column" flex>
-
-	<div ng-repeat="file in files | filter: search | unique: '_id' track by $index" ng-show="file.__v > 0">
-		<md-list-item class="md-3-line" md-ink-ripple layout-padding>
-			<div  ui-sref="project.files.detail({id: file.project._id, fileId: file._id})" class="md-list-item-text">
-				
-				<h3>{{ file.name }}</h3>
-				<h4>Tags: <span ng-repeat="tag in file.tags">{{tag}} </span></h4>
-				<p ng-show="file.__v>0" style="color: #2196F3">Updates: {{file.__v}}</p>
-	      		
-				<!-- <span class="md-body-2" ng-show="file.element.notificationType">{{(file.element.notificationBy._id==currentUser._id) ? "You" : file.element.notificationBy.name}} has
-	  				<span ng-show="file.element.notificationType=='file-upload-reversion'">uploaded new reversion of this file</span>
-	          		<span ng-show="file.element.notificationType=='file-assign'">assigned you to this file</span>
-	          		<span ng-show="file.element.notificationType=='file-send-acknowledge'">has sent acknowledgement to this file</span>
-	          		<span ng-show="file.element.notificationType=='file-new-note'">has added new note</span>
-	          		<span ng-show="file.element.notificationType=='file-archive'">has archived this file</span>
-	          		<span ng-show="file.element.notificationType=='file-unarchive'">has unarchived this file</span>
-	      		</span><span ng-show="file.element.notificationBy && file.__v - 1 > 0">... +{{file.__v - 1}} More</span> -->
-	        </div>
-			
-	        <div>
-	        	<!-- <md-button ng-show="!file.latestActivity.isAcknowledge&&file.latestActivity.user!=currentUser._id&&file.__v>0&&file.activities.length>0" ng-click="sendAcknowledgement(file)"><md-icon class="material-icons">input</md-icon><md-tooltip md-direction="down">Send Acknowledgement</md-tooltip></md-button> -->
-				<md-button ng-click="showViewFileModal($event, file)"><md-icon class="material-icons">remove_red_eye</md-icon><md-tooltip md-direction="down">View File</md-tooltip></md-button>
-	        </div>
-		</md-list-item>
-		<md-divider></md-divider>
+		<div layout="row" ng-show="showFilter" layout-align="center center" layout-wrap layout-padding>
+			<md-checkbox class="filter-checkbox md-primary" ng-repeat="tag in tags" ng-click="selectChip($index, 'tag'); selectFilterTag(tag.name)">{{tag.name}}</md-checkbox>
+		</div>
 		
 	</div>
-
-	<div ng-repeat="file in files | orderBy: '-createdAt' | filter: search | unique: '_id' track by $index" ng-show="file.__v == 0">
-		<md-list-item class="md-3-line" md-ink-ripple layout-padding>
-			<div  ui-sref="project.files.detail({id: file.project._id, fileId: file._id})" class="md-list-item-text">
-				
-				<h3>{{ file.name }}</h3>
-				<h4>Tags: <span ng-repeat="tag in file.tags">{{tag}} </span></h4>
-	      		<p>No New Updates</p>
-				<!-- <span class="md-body-2" ng-show="file.element.notificationType">{{(file.element.notificationBy._id==currentUser._id) ? "You" : file.element.notificationBy.name}} has
-	  				<span ng-show="file.element.notificationType=='file-upload-reversion'">uploaded new reversion of this file</span>
-	          		<span ng-show="file.element.notificationType=='file-assign'">assigned you to this file</span>
-	          		<span ng-show="file.element.notificationType=='file-send-acknowledge'">has sent acknowledgement to this file</span>
-	          		<span ng-show="file.element.notificationType=='file-new-note'">has added new note</span>
-	          		<span ng-show="file.element.notificationType=='file-archive'">has archived this file</span>
-	          		<span ng-show="file.element.notificationType=='file-unarchive'">has unarchived this file</span>
-	      		</span><span ng-show="file.element.notificationBy && file.__v - 1 > 0">... +{{file.__v - 1}} More</span> -->
-	        </div>
-			
-	        <div>
-	        	<!-- <md-button ng-show="!file.latestActivity.isAcknowledge&&file.latestActivity.user!=currentUser._id&&file.__v>0&&file.activities.length>0" ng-click="sendAcknowledgement(file)"><md-icon class="material-icons">input</md-icon><md-tooltip md-direction="down">Send Acknowledgement</md-tooltip></md-button> -->
-				<md-button ng-click="showViewFileModal($event, file)"><md-icon class="material-icons">remove_red_eye</md-icon><md-tooltip md-direction="down">View File</md-tooltip></md-button>
-	        </div>
-		</md-list-item>
-		<md-divider></md-divider>
+	
+	<div layout="column">
 		
+		<div layout="row" layout-wrap>
+			
+			<div flex="33" ng-repeat="file in files | filter: search | unique: '_id' track by $index" ng-show="file.__v > 0">
+				<md-card flex>
+				 	<md-card-content ui-sref="project.files.detail({id: file.project._id, fileId: file._id})" style="cursor: pointer">
+				   		<h4 class="card-header">{{ file.name }}</h4>
+						<p class="md-body-1"><span ng-repeat="tag in file.tags">'{{tag}}' </span></p>
+						<p class="md-body-1" ng-show="file.__v>0" style="color: #2196F3">Updates: {{file.__v}}</p>
+					</md-card-content>
+				
+				 	<md-card-actions layout="row" layout-align="end center">
+						<md-button ng-click="showViewFileModal($event, file)" class="md-icon-button"><md-icon class="material-icons">remove_red_eye</md-icon><md-tooltip md-direction="down">View Current Version</md-tooltip></md-button>
+					</md-card-actions>
+				</md-card>
+			</div>
+			
+			<div flex="33" ng-repeat="file in files | orderBy: '-createdAt' | filter: search | unique: '_id' track by $index" ng-show="file.__v == 0">
+				<md-card flex>
+				 	<md-card-content ui-sref="project.files.detail({id: file.project._id, fileId: file._id})" style="cursor: pointer">
+				   		<h4 class="card-header">{{ file.name }}</h4>
+						<p class="md-body-1"><span ng-repeat="tag in file.tags">'{{tag}}' </span></p>
+						<p class="md-body-1">No New Updates</p>
+					</md-card-content>
+				
+				 	<md-card-actions layout="row" layout-align="end center">
+						<md-button ng-click="showViewFileModal($event, file)" class="md-icon-button"><md-icon class="material-icons">remove_red_eye</md-icon><md-tooltip md-direction="down">View Current Version</md-tooltip></md-button href="../../project-overview/project-overview.html" title="project-overview">
+					</md-card-actions>
+				</md-card>
+			</div>
+			
+		</div>
+		
+		
+		<!-- <md-list ng-cloak flex class="md-whiteframe-1dp content-list">
+			<div ng-repeat="file in files | filter: search | unique: '_id' track by $index" ng-show="file.__v > 0">
+				<md-list-item class="md-3-line" md-ink-ripple layout-padding>
+
+					<div  ui-sref="project.files.detail({id: file.project._id, fileId: file._id})" class="md-list-item-text">
+						<h3>{{ file.name }}</h3>
+						<h4><span ng-repeat="tag in file.tags">'{{tag}}' </span></h4>
+						<p ng-show="file.__v>0" style="color: #2196F3">Updates: {{file.__v}}</p>
+			        </div>
+
+					<md-button ng-click="showViewFileModal($event, file)"><md-icon class="material-icons">remove_red_eye</md-icon><md-tooltip md-direction="down">View File</md-tooltip></md-button>
+
+				</md-list-item>
+				<md-divider ng-hide="$last"></md-divider>
+
+			</div>
+
+			<div ng-repeat="file in files | orderBy: '-createdAt' | filter: search | unique: '_id' track by $index" ng-show="file.__v == 0">
+				<md-list-item class="md-3-line" md-ink-ripple layout-padding>
+
+					<div  ui-sref="project.files.detail({id: file.project._id, fileId: file._id})" class="md-list-item-text">
+						<h3>{{ file.name }}</h3>
+						<h4><span ng-repeat="tag in file.tags">'{{tag}}' </span></h4>
+			      		<p>No New Updates</p>
+			        </div>
+
+					<md-button ng-click="showViewFileModal($event, file)"><md-icon class="material-icons">remove_red_eye</md-icon><md-tooltip md-direction="down">View File</md-tooltip></md-button>
+
+				</md-list-item>
+				<md-divider ng-hide="$last"></md-divider>
+			</div>
+		</md-list> -->
+	
 	</div>
-
-</md-list>
-
-<div>
-  <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-list" style="position: fixed;" ng-show="!isArchive">
-	  <md-fab-trigger>
-  	      <md-button aria-label="Add a New File to this Projecs" class="md-fab md-primary" ng-click="showNewFileModal($event)">
-			  <md-tooltip md-direction="left">Add a New File</md-tooltip>
-		      <md-icon class="material-icons" >add</md-icon>
-  	      </md-button>
-      </md-fab-trigger>
-  </md-fab-speed-dial>
+	
 </div>

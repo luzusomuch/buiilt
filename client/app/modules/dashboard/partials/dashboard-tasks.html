@@ -1,138 +1,80 @@
-<div class="detail-header" layout-padding layout="column">
+<div layout="column" layout-padding>
 	
-	<div layout="column">
-		
-		<div layout="row" layout-align="center center">
-			<span class="md-body-2" style="margin-top:">Projects:</span>
-			<div class="tagcloud-selection-mini" style="margin-left: 2vh" layout-wrap>
-				<span ng-repeat="tag in projectFilterTags" ng-class="{'available-tag': !tag.select, 'selected-tag': tag.select}" ng-click="selectFilterTag(	$index, 'project')">{{tag.name}}</span>
-			</div>
-		</div>
+	<div class="filter-card md-whiteframe-1dp" layout="column" layout-margin>
 		
 		<div layout="row">
-			<md-input-container flex="35">
-				<label for="">Task Description</label>
-				<input type="text" name="taskDescription" ng-model="description" md-autofocus>
+			<md-input-container flex md-no-float class="md-block md-icon-float" style="margin-right: 15px">
+				<md-icon class="material-icons" style="margin-top: 6px;">search</md-icon>
+				<input type="text" name="taskDescription" ng-model="description" placeholder="Search by task name...">
 			</md-input-container>
 			
-			<div flex="25" layout="row" layout-align="center center">
-				<span class="md-body-2" style="margin-top: -2vh">Assigned:</span>
-				<div class="tagcloud-selection-mini" style="margin-top: -2vh; margin-left: 2vh">
-					<span ng-repeat="tag in assignStatus" ng-class="{'available-tag': !tag.select, 'selected-tag': tag.select}" ng-click="selectFilterTag($index, 'status')">{{tag.text}}</span>
-				</div>
+			<div>
+				<md-button class="md-icon-button more-filter-button" ng-click="showFilter=!showFilter">
+					 <md-tooltip md-direction="down">Show Filters</md-tooltip>
+				     <md-icon class="material-icons">filter_list</md-icon>
+		      	</md-button>
 			</div>
 			
-			<div flex layout="row" layout-align="center center">
-				<span class="md-body-2" style="margin-top: -2vh">Due:</span>
-				<div class="tagcloud-selection-mini" style="margin-top: -2vh; margin-left: 2vh">
-					<span ng-repeat="tag in dueDate" ng-class="{'available-tag': !tag.select, 'selected-tag': tag.select}" ng-click="selectFilterTag($index, 'dueDate')">{{tag.text}}</span>
-				</div>
-			</div>
+			<span flex="5"></span>
 			
+			<div class="add-fab">
+				<md-button class="md-fab md-mini md-primary" ng-click="showNewTaskModal($event)">
+					 <md-tooltip md-direction="down">Add a New Task</md-tooltip>
+				     <md-icon class="material-icons md-primary">add</md-icon>
+		      	</md-button>
+			</div>
 		</div>
 		
-	</div>
-</div>
-
-<md-list ng-cloak class="main-page-content">
-
-	<div ng-repeat="task in myTasks | filter: searchTask | unique: '_id' track by $index" ng-show="task.element.notifications.length > 0">
+		<div layout="row" ng-show="showFilter">
+			<div layout="row" flex="40" layout-align="center center" layout-wrap layout-padding>
+				<md-checkbox class="filter-checkbox md-primary" ng-repeat="tag in assignStatus" ng-click="selectFilterTag($index, 'status')">{{ tag.text }}</md-checkbox>
+			</div>
 		
-		<md-list-item class="md-2-line" md-ink-ripple layout-padding>
+			<div layout="row" flex layout-align="center center"  layout-wrap layout-padding>
+				<md-checkbox class="filter-checkbox md-primary" ng-repeat="tag in dueDate" ng-click="selectFilterTag($index, 'dueDate')">{{ tag.text }}</md-checkbox>
+			</div>
+		</div>
+	</div>
 	
-			<div ui-sref="project.tasks.detail({id: task.project._id, taskId: task._id})" class="md-list-item-text">
-				
-				<h3>{{ task.description }} - {{task.project.name}}</h3>
-				<h4>Due: {{(task.dueDate) ? task.dueDate : task.dateEnd | date: 'dd/MM/yyyy'}} | Assignees: <span ng-repeat="member in task.members track by $index">{{member.name}}, </span><span ng-repeat="member in task.notMembers track by $index">{{member}}</h4>
-				<p style="color: #2196F3">
-                    Updates: {{task.element.notifications.length}}
-                    <!-- <div ng-show="isHover" class="notification-hover">
-                        <md-list ng-cloak>
-                            <md-list-item layout-padding ng-repeat="n in task.element.notifications">
-                                <p ng-show="notification.type=='task-assign'">
-				        			This task was assigned to <span ng-repeat="member in task.members">{{(member._id==currentUser._id) ? "you" : member.name}}, </span> <span ng-repeat="email in notMembers">{{email}}, </span>.
-				        		</p>
-				        		<p ng-show="notification.type=='task-completed'">
-				        			{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} marked this task complete.
-				        		</p>
-				        		<p ng-show="notification.type=='task-reopened'">
-				        			{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} marked this task incomplete.
-				        		</p>
-				        		<p ng-show="notification.type=='task-new-note'">
-				        			{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} has created new note.
-				        		</p>
-                            </md-list-item>
-                        </md-list>
-                    </div> -->
-                </p>
-			
-	        	<!-- <span class="md-body-2" ng-repeat="notification in task.element.limitNotifications track by $index">
-	        		<span ng-show="notification.type=='task-assign'">
-	        			This task was assigned to <span ng-repeat="member in task.members">{{(member._id==currentUser._id) ? "you" : member.name}}, </span> <span ng-repeat="email in notMembers">{{email}}, </span>.
-	        		</span>
-	        		<span ng-show="notification.type=='task-completed'">
-	        			{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} marked this task complete.
-	        		</span>
-	        		<span ng-show="notification.type=='task-reopened'">
-	        			{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} marked this task incomplete.
-	        		</span>
-	        		<span ng-show="notification.type=='task-new-note'">
-	        			{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} has created new note.
-	        		</span>
-				</span>
-				<span ng-show="{{task.element.notifications.length - task.element.limitNotifications.length > 0}}">... +({{task.element.notifications.length - task.element.limitNotifications.length}}) More</span> -->
-					
-			</div>
-			
-			<div>
-	    		<md-button ng-show="!task.completed" class="md-secondary" ng-click="markComplete(task, index)"><md-icon class="material-icons">check</md-icon><md-tooltip md-direction="down">Mark As Complete</md-tooltip></md-button>
-			</div>
-			
-		</md-list-item>
-		<md-divider></md-divider>
-		
-	</div>
-
-	<div ng-repeat="task in myTasks | filter: searchTask | unique: '_id' track by $index" ng-show="task.element.notifications.length == 0">
-		
-		<md-list-item class="md-2-line" md-ink-ripple layout-padding>
+	<div layout="column">
+		<md-list ng-cloak class="md-whiteframe-1dp content-list">
+			<div ng-repeat="task in myTasks | filter: searchTask | unique: '_id' track by $index" ng-show="task.element.notifications.length > 0">
+				<md-list-item class="md-2-line" md-ink-ripple layout-padding>
 	
-			<div ui-sref="project.tasks.detail({id: task.project._id, taskId: task._id})" class="md-list-item-text">
+					<div ui-sref="project.tasks.detail({id: task.project._id, taskId: task._id})" class="md-list-item-text">
 				
-				<h3>{{ task.description }} - {{task.project.name}}</h3>
-				<h4>Due: {{(task.dueDate) ? task.dueDate : task.dateEnd | date: 'dd/MM/yyyy'}} | Assignees: <span ng-repeat="member in task.members track by $index">{{member.name}}, </span><span ng-repeat="member in task.notMembers track by $index">{{member}}</h4>
+						<h3>{{ task.description }} - {{task.project.name}}</h3>
+						<h4>Due: {{(task.dueDate) ? task.dueDate : task.dateEnd | date: 'dd/MM/yyyy'}} | Assignees: <span ng-repeat="member in task.members track by $index">{{member.name}}, </span><span ng-repeat="member in task.notMembers track by $index">{{member}}</h4>
+						<p style="color: #2196F3">Updates: {{task.element.notifications.length}}</p>
+				
+					</div>
 			
-	        	<p ng-repeat="notification in task.element.limitNotifications track by $index" style="margin-bottom: 15px; margin-top: 15px">
-	        		<span ng-show="notification.type=='task-assign'">
-	        			This task was assigned to <span ng-repeat="member in task.members">{{(member._id==currentUser._id) ? "you" : member.name}}, </span> <span ng-repeat="email in notMembers">{{email}}, </span>.
-	        		</span>
-	        		<span ng-show="notification.type=='task-completed'">
-	        			{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} marked this task complete.
-	        		</span>
-	        		<span ng-show="notification.type=='task-reopened'">
-	        			{{(notification.fromUser._id==currentUser._id) ? "You" : notification.fromUser.name}} marked this task incomplete.
-	        		</span>
-					<span ng-show="{{task.element.notifications.length - task.element.limitNotifications.length > 0}}">... +({{task.element.notifications.length - task.element.limitNotifications.length}}) More</span>
-				</p>
-			</div>
+					<div>
+			    		<md-button ng-show="!task.completed" class="md-secondary" ng-click="markComplete(task, index)"><md-icon class="material-icons">check</md-icon><md-tooltip md-direction="down">Mark As Complete</md-tooltip></md-button>
+					</div>
 			
-			<div>
-	    		<md-button ng-show="!task.completed" class="md-secondary" ng-click="markComplete(task)"><md-icon class="material-icons">check</md-icon><md-tooltip md-direction="down">Mark As Complete</md-tooltip></md-button>
-			</div>
-			
-		</md-list-item>
-		<md-divider></md-divider>
+				</md-list-item>
+				<md-divider ng-hide="$last"></md-divider>
 		
-	</div>
-</md-list>
+			</div>
 
-<div>
-	<md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-list" ng-show="!isArchive">
-	  	<md-fab-trigger>
-  	      	<md-button aria-label="Add a New Task to this Project" class="md-fab md-primary" ng-click="showNewTaskModal($event)">
-			  	<md-tooltip md-direction="left">Add a New Task</md-tooltip>
-		      	<md-icon class="material-icons" >add</md-icon>
-  	      	</md-button>
-      	</md-fab-trigger>
-  	</md-fab-speed-dial>
+			<div ng-repeat="task in myTasks | filter: searchTask | unique: '_id' track by $index" ng-show="task.element.notifications.length == 0">
+				<md-list-item class="md-2-line" md-ink-ripple layout-padding>
+					<div ui-sref="project.tasks.detail({id: task.project._id, taskId: task._id})" class="md-list-item-text">
+				
+						<h3>{{ task.description }} - {{task.project.name}}</h3>
+						<h4>Due: {{(task.dueDate) ? task.dueDate : task.dateEnd | date: 'dd/MM/yyyy'}} | Assignees: <span ng-repeat="member in task.members track by $index">{{member.name}}, </span><span ng-repeat="member in task.notMembers track by $index">{{member}}</h4>
+			
+					</div>
+			
+					<div>
+			    		<md-button ng-show="!task.completed" class="md-secondary" ng-click="markComplete(task)"><md-icon class="material-icons">check</md-icon><md-tooltip md-direction="down">Mark As Complete</md-tooltip></md-button>
+					</div>
+			
+				</md-list-item>
+				<md-divider ng-hide="$last"></md-divider>
+		
+			</div>
+		</md-list>
+	</div>
 </div>
