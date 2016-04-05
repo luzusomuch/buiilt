@@ -11,6 +11,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     });
     $scope.projectFilterTags = angular.copy($scope.projects);
     $scope.currentUser = $rootScope.currentUser;
+	$scope.showFilter = false;
 
     function filterAcknowledgeFiles(files) {
         _.each(files, function(file) {
@@ -631,6 +632,28 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             clickOutsideToClose: false
         });
     };
+	
+    $scope.showNewDocumentModal = function(event) {
+        $rootScope.isRemoveCurrentUser = true;
+        $mdDialog.show({
+            targetEvent: event,
+            controller: "dashboardCtrl",
+            resolve: {
+                myTasks: ["taskService", function(taskService) {
+                    return taskService.myTask().$promise;
+                }],
+                myMessages: ["messageService", function(messageService) {
+                    return messageService.myMessages().$promise;
+                }],
+                myFiles: ["fileService" ,function(fileService) {
+                    return fileService.myFiles().$promise;
+                }]
+            },
+            templateUrl: 'app/modules/dashboard/partials/new-document.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: false
+        });
+    };
 
     if ($rootScope.selectedFile) {
         $scope.file = $rootScope.selectedFile;
@@ -795,7 +818,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
 
     // filter for task
     $scope.dueDate = [{text: "past", value: "past"}, {text: "today", value: "today"}, {text: "tomorrow", value: "tomorrow"}, {text: "this week", value: "thisWeek"}, {text: "next week", value: "nextWeek"}];
-    $scope.assignStatus = [{text: "to me", value: "toMe"}, {text: "byMe", value: "byMe"}];
+    $scope.assignStatus = [{text: "Assigned To Me", value: "toMe"}, {text: "Assigned To Others", value: "byMe"}];
     $scope.dueDateFilter = [];
     $scope.projectsFilter = ($rootScope.projectsDashboardFilter) ? $rootScope.projectsDashboardFilter : [];
     $scope.selectDueDate = function(dateEnd) {

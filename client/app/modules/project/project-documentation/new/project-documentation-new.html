@@ -10,10 +10,10 @@
 			<div class="md-dialog-content" layout="column" layout-padding>
 				
 				<div layout="column">
-					<p class="md-body-2">Provide a name for this file:</p>
+					<p class="md-body-2">Provide a name for this document:</p>
 	                <div layout="row">
 	                    <md-input-container flex="66" flex-offset="15">
-					        <label>Name of the File</label>
+					        <label>Name of the Document...</label>
 							<input ng-model="uploadFile.name" required type="text" name="name"></input>
 					    </md-input-container>
 					</div>
@@ -21,9 +21,14 @@
 					
 				<div layout="column">
 					<p class="md-body-2">Select at least one tag that is relevant to this document:</p>
-					<div layout="row" layout-align="center center" class="tagcloud-selection" layout-wrap>
-						<span ng-click="selectChip($index)" ng-class="{'available-tag':!tag.select, 'selected-tag': tag.select}" ng-repeat="tag in tags">{{tag.name}}</span>
+					
+					<div layout="row" flex layout-align="center center" layout-wrap layout-padding>
+						<md-checkbox class="filter-checkbox md-primary" ng-repeat="tag in tags" ng-click="selectChip($index)">{{ tag.name }}</md-checkbox>
 					</div>
+					
+					<!-- <div layout="row" layout-align="center center" class="tagcloud-selection" layout-wrap>
+						<span ng-click="selectChip($index)" ng-class="{'available-tag':!tag.select, 'selected-tag': tag.select}" ng-repeat="tag in tags">{{tag.name}}</span>
+					</div> -->
 				</div>
 				
 			</div>

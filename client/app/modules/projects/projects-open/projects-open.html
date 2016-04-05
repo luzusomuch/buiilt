@@ -1,28 +1,44 @@
-<div class="detail-header" layout-padding layout="row">
-	<md-input-container flex>
-		<label for="">Search for a Project</label>
-		<input type="text" ng-model="filter">
-	</md-input-container>
-</div>
-
-<md-list ng-cloak class="main-page-content">
-	<div ng-show="!search && project.status=='waiting'" ng-repeat="project in projects | filter:{name: filter} track by $index" ui-sref="project.overview({id: project._id})">
+<div layout="column" layout-padding flex="90" flex-offset="5">
+	
+	<div class="filter-card md-whiteframe-1dp" layout="column" layout-margin>
 		
-		<md-list-item class="md-2-line" md-ink-ripple>
-			<div class="md-list-item-text" layout="column">
-	          	<h3>{{ project.name }} <span ng-show="project.__v > 0">({{project.__v}})</span></h3>
-				<p>{{ project.address }}, {{ project.suburb }} {{ project.postcode }}</p>
-	        </div>
-		</md-list-item>
-		<md-divider></md-divider>
+		<div layout="row">
+			
+		    <md-input-container md-no-float class="md-block md-icon-float" flex>
+				<md-icon class="material-icons" style="margin-top: 6px;">search</md-icon>
+		        <input ng-model="filter" placeholder="Search for a project...">
+		    </md-input-container>
+	
+			<div layout-margin>
+				<md-button class="md-icon-button more-filter-button" ng-click="showFilter=!showFilter">
+					 <md-tooltip md-direction="down">Show Filters</md-tooltip>
+				     <md-icon class="material-icons">filter_list</md-icon>
+		      	</md-button>
+			</div>
+			
+		</div>
+		
+		<div layout="row" ng-show="showFilter">
+			
+			<p>Hi</p>
+			
+		</div>
 		
 	</div>
-</md-list>
+	
+	<div layout="row">
+		<div ng-show="!search && project.status=='waiting'" ng-repeat="project in projects | filter:{name: filter} track by $index" ui-sref="project.overview({id: project._id})" class="content-card cursor-pointer md-whiteframe-1dp" flex="33">
+			<h3>{{ project.name }} <span ng-show="project.__v > 0">({{project.__v}})</span></h3>
+			<p>{{ project.address }}, {{ project.suburb }} {{ project.postcode }}</p>
+		</div>
+	</div>
+	
+</div>
 
 <div>
   <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-list">
 	  <md-fab-trigger>
-  	      <md-button aria-label="Create a New Project" class="md-fab md-primary" ng-show="allowCreateProject" ng-click="showCreateProjectModal($event)">
+  	      <md-button aria-label="Create a New Project" class="md-fab md-primary" >
 			  <md-tooltip md-direction="left">Create a New Project</md-tooltip>
 		      <md-icon class="material-icons" >add</md-icon>
   	      </md-button>

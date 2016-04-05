@@ -1,20 +1,20 @@
-<div flex class="md-whiteframe-1dp" style="height: 92vh; overflow: scroll">
+<div flex class="md-whiteframe-1dp sidenav" style="height: 92vh; overflow: scroll">
 		
-		<div layout="row" layout-padding layout-margin>
-			<p layout-padding class="page-title">Tenders</p>
-		</div>
+	<div layout="row" layout-padding layout-margin>
+		<p layout-padding class="page-title">Tenders</p>
+	</div>
 
-		<md-list ng-cloak flex>
-			<div ui-sref="tenders.open" ng-class="{activemenu: $state.includes('tenders.open')}">
-				<md-list-item md-ink-ripple>
-				    <p layout-padding>Open</p>
-				</md-list-item>
-			</div>
-			<div ui-sref="tenders.closed" ng-class="{activemenu: $state.includes('tenders.closed')}">
-				<md-list-item md-ink-ripple>
-				    <p layout-padding>Closed</p>
-				</md-list-item>
-			</div>
-		</md-list>
+	<md-list ng-cloak flex>
+		<div ui-sref="tenders.open" ng-class="{activemenu: $state.includes('tenders.open')}">
+			<md-list-item md-ink-ripple>
+			    <p layout-padding>Open</p>
+			</md-list-item>
+		</div>
+		<div ui-sref="tenders.closed" ng-class="{activemenu: $state.includes('tenders.closed')}">
+			<md-list-item md-ink-ripple>
+			    <p layout-padding>Closed</p>
+			</md-list-item>
+		</div>
+	</md-list>
 
 </div>

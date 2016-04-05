@@ -5,8 +5,23 @@
 	  	</div>
 	  	<div layout="row" layout-align="start center" ng-show="isLoggedIn">
 	  		<md-button ng-class="{'active-module-header': $state.includes('dashboard')}" ui-sref='dashboard.tasks'>Dashboard</md-button>
+			
+			<md-menu>
+				<md-button ng-click="$mdOpenMenu($event)" class="" aria-label="Select a Project">Select a Project <md-icon class="material-icons">arrow_drop_down</md-icon></md-button>
+			 	<md-menu-content width="4">
+					
+					<md-menu-item><md-button ng-click="">Create a New Project</md-button></md-menu-item>
+					<md-divider></md-divider>
+			   		<md-menu-item><md-button ng-click="">Do Something</md-button></md-menu-item>
+					<md-divider></md-divider>
+					<md-menu-item><md-button ng-click="">View Archives</md-button></md-menu-item>
+					
+			 	</md-menu-content>
+			</md-menu>
+			
 		  	<md-button ng-class="{'active-module-header': $state.includes('projects'), 'active-child-module-header': $state.includes('project')}" ui-sref='projects.open'>Projects</md-button>
-			<md-button ng-class="{'active-module-header': $state.includes('tenders'), 'active-child-module-header': $state.includes('tender')}" ui-sref='tenders.open' ng-hide="currentTeam.type=='homeOwner'">Tenders</md-button>
+			
+			<!-- <md-button ng-class="{'active-module-header': $state.includes('tenders'), 'active-child-module-header': $state.includes('tender')}" ui-sref='tenders.open' ng-hide="currentTeam.type=='homeOwner'">Tenders</md-button> -->
 	  	</div>
 		  
 	  	<span flex></span>

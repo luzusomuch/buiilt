@@ -7,6 +7,7 @@ angular.module('buiiltApp').controller('projectsCtrl', function ($rootScope, $sc
     $scope.projects = $rootScope.projects;
     $scope.allowCreateProject = false;
     $scope.currentTeam = $rootScope.currentTeam;
+	$scope.showFilter = false;
     if ($rootScope.currentUser.isLeader && $scope.currentTeam._id && ($scope.currentTeam.type === "builder" || $scope.currentTeam.type === "architect")) {
         $scope.allowCreateProject = true;
     }

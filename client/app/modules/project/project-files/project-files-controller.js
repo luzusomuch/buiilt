@@ -5,6 +5,8 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
 		tags:[],
 		members:[]
 	};
+	
+	$scope.showFilter = false;
 
     if ($state.includes("project.files.all")) {
         fileService.getProjectFiles({id: $stateParams.id, type: "file"}).$promise.then(function(res) {
