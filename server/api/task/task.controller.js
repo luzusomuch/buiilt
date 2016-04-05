@@ -104,6 +104,9 @@ function populateFile(file, res){
     });
 };
 
+/*
+    Get related item of task when create it which related item
+*/
 var getMainItem = function(type) {
     var _item = {};
     switch (type) {
@@ -122,13 +125,10 @@ var getMainItem = function(type) {
     return _item;
 };
 
-exports.getAll = function(req, res) {
-    Task.find({}).populate('assignees', '-hashedPassword -salt').exec(function(err, tasks){
-        if (err) {return res.send(500,err);}
-        return res.json(200, tasks);
-    });
-};
-
+/*
+    Remove selected task
+    Require admin role
+*/
 exports.destroy = function (req, res) {
     Task.findByIdAndRemove(req.params.id, function (err, task) {
         if (err) {
@@ -141,6 +141,9 @@ exports.destroy = function (req, res) {
     });
 };
 
+/*
+    Get task by id
+*/
 exports.get = function(req, res) {
     Task.findById(req.params.id)
     .populate('members', '_id name email')
@@ -161,6 +164,9 @@ exports.get = function(req, res) {
     });
 };
 
+/*
+    Create new task
+*/
 exports.create = function(req,res) {
     var user = req.user;
     TaskValidator.validateCreate(req,function(err,data) {
@@ -232,6 +238,10 @@ exports.create = function(req,res) {
     });
 };
 
+/*
+    Update selected task
+    Update type: assign members, edit detail, mark completed or re-open, insert note
+*/
 exports.update = function(req,res) {
     var user = req.user;
     Task.findById(req.params.id, function(err, task) {
@@ -286,8 +296,12 @@ exports.update = function(req,res) {
     });
 };
 
+/*
+    Get tasks list by selected project
+    If in backend, it'll request query userId and require admin role
+*/
 exports.getTasksByProject = function(req, res) {
-    var userId  = (req.query.userId && req.user.role==="admin") ? req.query.userId : req.user._id;
+    var userId  = (req.query.userId && req.user.role==="admin") ? mongoose.Types.ObjectId(req.query.userId) : req.user._id;
     Task.find({project: req.params.id, $or:[{owner: userId}, {members: userId}]})
     .populate("owner", "_id name email")
     .populate("members", "_id name email")
@@ -316,6 +330,9 @@ exports.getTasksByProject = function(req, res) {
     });
 };
 
+/*
+    Get tasks list with unread notification for current user
+*/
 exports.myTask = function(req,res) {
     var user = req.user;
     var tasksList = [];
@@ -354,134 +371,4 @@ exports.myTask = function(req,res) {
             return res.send(200, tasks);
         });
     });
-};
-
-var getPackage = function(type) {
-  var _package = {};
-  switch (type) {
-    case 'staff' :
-      _package = StaffPackage;
-      break;
-    case 'builder' :
-      _package = BuilderPackage;
-      break;
-    case 'contractor' :
-      _package = ContractorPackage;
-      break;
-    case 'material' :
-      _package = MaterialPackage;
-      break;
-    case 'variation' :
-      _package = Variation;
-      break;
-    case 'design':
-      _package = Design;
-      break;
-    case 'people':
-      _package = People;
-      break;
-    case 'board':
-      _package = Board;
-      break;
-    default :
-      break;
-  }
-  return _package;
-};
-
-exports.project = function(req,res,next) {
-  Project.findById(req.params.id,function(err,project) {
-    if (err || !project) {
-      return res.send(500,err);
-    }
-    req.project = project;
-    next();
-  })
-};
-
-exports.package = function(req,res,next) {
-  var _package = getPackage(req.params.type);
-  _package.findById(req.params.id,function(err,aPackage) {
-    if (err) {
-      return res.send(500,err);
-    } 
-    if (!aPackage) {return res.send(404);}
-    req.aPackage = aPackage;
-    next();
-  })
-};
-
-exports.task = function(req,res,next) {
-  Task.findById(req.params.id,function(err,task) {
-    if (err || !task) {
-      return res.send(500,err)
-    }
-    req.task = task;
-    next();
-  })
-};
-
-
-
-
-
-
-
-exports.getTask = function(req,res) {
-  var aPackage = req.aPackage;
-  var user = req.user;
-  Task.find({$and:[{package : aPackage}, {$or:[{user: user._id},{assignees: user._id}]}]})
-    .sort('hasDateEnd')
-    .sort({'dateEnd': -1})
-    .populate('assignees', '-hashedPassword -salt')
-    .exec(function(err,tasks) {
-    if (err) {
-      return res.send(500,err);
-    }
-    return res.json(tasks);
-  });
-};
-
-exports.getByPackage = function(req, res){
-  Task.find({package: req.params.id, type: req.params.type})
-  .populate('assignees', '-hashedPassword -salt').exec(function(err, tasks){
-    if (err) {return res.send(500,err);}
-    if (!tasks) {return res.send(404);}
-    return res.send(200,tasks);
-  });
-};
-
-
-
-exports.show = function(req, res) {
-  var _package = getPackage(req.params.type);
-  Task.findById(req.params.id)
-  .populate('assignees', '-hashedPassword -salt')
-  .populate('project').exec(function(err, task){
-    if (err) {return res.send(500,err);}
-    if (!task) {return res.send(404);}
-    _package.findById(task.package, function(err, aPackage){
-      if (err) {return res.send(500,err);}
-      if (!aPackage) {return res.send(404);}
-      return res.send(200, {task: task, aPackage: aPackage});
-    });
-  });
-};
-
-exports.getAllByUser = function(req, res) {
-  Task.find({$or:[{user: req.user._id},{assignees: req.user._id}]})
-  .populate('user')
-  .populate('assignees').exec(function(err, tasks){
-    if (err) {return res.send(500,err);}
-    return res.send(200,tasks);
-  });
-};
-
-exports.getAllByProject = function(req, res) {
-  Task.find({project: req.params.id})
-  .populate('user')
-  .populate('assignees').exec(function(err, tasks){
-    if (err) {return res.send(500,err);}
-    return res.send(200,tasks);
-  });
 };
