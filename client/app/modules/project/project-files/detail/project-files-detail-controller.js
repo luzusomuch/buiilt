@@ -1,6 +1,6 @@
 angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope, $rootScope, $timeout, file, $mdDialog, uploadService, fileService, $mdToast, peopleService, $stateParams, messageService, taskService, $state, people, socket, notificationService) {
     $scope.file = file;
-    // Check owner team
+    /*Check if current team is team owner of file*/
     $scope.isOwnerTeam=false;
     if (_.findIndex($rootScope.currentTeam.leader, function(leader) {
         return leader._id.toString()===file.owner._id.toString();
@@ -11,26 +11,28 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
     }) !== -1) {
         $scope.isOwnerTeam=true;
     }
-    // end check owner team
 
-    // remove notifications count immeditely
+    /*Update count total after 0.5s*/
     $timeout(function() {
         $rootScope.$emit("UpdateCountNumber", {type: "file", number: (file.__v>0)?1:0});
     }, 500);
+
+    /*Update last access for current user*/
     fileService.lastAccess({id: $stateParams.fileId}).$promise.then(function(data) {
         $rootScope.$emit("File.Read", file);
     });
-    // end
 
-    // set timeout 3s for mark as read
+    /*Mark all notifications related to current file as read*/
     $timeout(function() {
         notificationService.markItemsAsRead({id: $stateParams.fileId}).$promise.then(function() {
-            markActivitesAsRead($scope.file);
+            _.each($scope.file.activities, function(a){
+                a.unread = false;
+                a.unreadLine=false;
+            });
         });
     }, 3000);
-    // end timeout
 
-    // function to filter out that unread activities
+    /*Filter unread activities depend on notifications list*/
     function filterUnreadActivites(file) {
         if (file.__v > 0) {
             var temp = 0;
@@ -46,18 +48,8 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
             };
         }
     };
-    // end filter unread activities
 
-    // function to mark activities as read
-    function markActivitesAsRead(file) {
-        _.each(file.activities, function(a){
-            a.unread = false;
-            a.unreadLine=false;
-        });
-    };
-    // end mark activities as read
-
-    // this function use for check if current user is sent acknowledge yet
+    /*Check is current user has sent acknowledgement or not*/
     function checkAcknowLedgement(file) {
         _.each(file.activities, function(activity) {
             if (activity.type === "upload-reversion" || activity.type === "upload-file") {
@@ -73,86 +65,44 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
             }
         });
     };
-    // end check acknowledge
 
     filterUnreadActivites($scope.file);
     checkAcknowLedgement($scope.file);
     
-    $scope.orginalActivities = angular.copy($scope.file.activities);
-    $scope.isShowRelatedItem = true;
     $scope.people = people;
     $scope.currentUser = $rootScope.currentUser;
 
-    // $rootScope.$on("File.Updated", function(event, data) {
-    //     $scope.file = data;
-    // });
-
     socket.emit("join", file._id);
+
+    /*Receive when someone updated file that current user is in members list*/
     socket.on("file:update", function(data) {
         $scope.file = data;
         checkAcknowLedgement($scope.file);
         notificationService.markItemsAsRead({id: $stateParams.fileId}).$promise.then();
     });
 
+    /*Send acknowledgement to reversion owner*/
     $scope.acknowledgement = function(activity) {
         fileService.acknowledgement({id: $stateParams.fileId, activityId: activity._id}).$promise.then(function(res) {
             $scope.showToast("Sent acknowledgement to the owner successfully");
-            // $rootScope.$broadcast("File.Updated", res);
         }, function(err) {
             $scope.showToast("Error");
         });
     };
 
+    /*Open file history list*/
     $scope.openFileHistory = function($mdOpenMenu, event) {
         $mdOpenMenu(event);
     };
 
+    /*Open selected file history in a new window*/
     $scope.openHistoryDetail = function($event, history) {
-        // $mdDialog.show({
-        //     targetEvent: $event,
-        //     controller: function($scope) {
-        //         $scope.history = history;
-        //         $scope.closeModal = function() {
-        //             $mdDialog.cancel();
-        //         };
-
-        //         $scope.downloadFile = function() {
-        //             filepicker.exportFile(
-        //                 {url: $scope.history.link, filename: $scope.history.name},
-        //                 function(Blob){
-        //                     console.log(Blob.url);
-        //                 }
-        //             );
-        //         };
-        //     },
-        //     templateUrl: 'app/modules/project/project-files/detail/partials/file-history-detail.html',
-        //     parent: angular.element(document.body),
-        //     clickOutsideToClose: false
-        // });
         var win = window.open(history.link, "_blank");
         win.focus();
     };
 
-    $scope.chipsFilter = function() {
-        $scope.isShowRelatedItem = !$scope.isShowRelatedItem;
-    };
-
-    $scope.$watch("isShowRelatedItem", function(value) {
-        if (!value) {
-            var activities = [];
-            var relatedActivities = ["related-task","related-thread","related-file"];
-            _.each($scope.orginalActivities, function(activity) {
-                if (_.indexOf(relatedActivities, activity.type) === -1) {
-                    activities.push(activity);
-                }
-            });
-            $scope.file.activities = activities;
-        } else {
-            $scope.file.activities = $scope.orginalActivities;
-        }
-    });
-
-    function getProjectMembers(id) {
+    /*Get project members list and file tags list*/
+    function getProjectMembers() {
         $scope.membersList = [];
         $scope.tags = [];
         _.each($rootScope.currentTeam.fileTags, function(tag) {
@@ -228,6 +178,7 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
         _.remove($scope.invitees, {_id: $rootScope.currentUser._id});
     };
 
+    /*Show modal with valid name*/
     $scope.showModal = function($event, modalName) {
         if (modalName === "add-related-thread.html") {
             $scope.relatedThread = {};
@@ -254,14 +205,17 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
         });
     };
 
+    /*Close opening modal*/
     $scope.closeModal = function() {
         $mdDialog.cancel();
     };
 
+    /*Show a toast with an inform*/
     $scope.showToast = function(value) {
         $mdToast.show($mdToast.simple().textContent(value).position('bottom','right').hideDelay(3000));
     };
 
+    /*Edit selected file detail*/
     $scope.editFile = function(form) {
         if (form.$valid) {
             $scope.file.editType = "edit";
@@ -272,6 +226,9 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
         }
     };
 
+    /*Select project members to assign to current file
+    Select file tags for update file detail
+    Select current file members to create new related item*/
     $scope.selectMember = function(index, type) {
         if (type === "member") {
             $scope.membersList[index].select = !$scope.membersList[index].select;
@@ -282,12 +239,14 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
         }
     };
 
+    /*Assign project members to current file*/
     $scope.assignMember = function() {
         $scope.file.newMembers = _.filter($scope.membersList, {select: true});
         $scope.file.editType = "assign";
         $scope.update($scope.file);
     };
 
+    /*Insert a note to current file*/
     $scope.insertNote = function(form) {
         if (form.$valid) {
             $scope.file.editType="insert-note";
@@ -298,6 +257,7 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
         }
     };
 
+    /*Update file*/
     $scope.update = function(file) {
         if (file.tags.length === 0) {
             $scope.showToast("Please Select At Least 1 Tag...");
@@ -336,6 +296,7 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
         }, function(err) {$scope.showToast("There Has Been An Error...");});
     };
 
+    /*Create related thread with valid members then open thread detail*/
     $scope.createRelatedThread = function(form) {
         if (form.$valid) {
             $scope.relatedThread.members = _.filter($scope.invitees, {select: true});
@@ -358,6 +319,7 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
         }
     };
 
+    /*Create related task with valid members then open task detail*/
     $scope.createRelatedTask = function(form) {
         if (form.$valid) {
             $scope.relatedTask.members = _.filter($scope.invitees, {select: true});
@@ -408,6 +370,7 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
             $scope.fileReversion.files.push(file);
     };
 
+    /*Create related file with valid tags and members then open it*/
     $scope.createRelatedFile = function() {
         $scope.relatedFile.tags = _.filter($scope.tags, {select: true});
         $scope.relatedFile.members = _.filter($scope.invitees, {select: true});
@@ -431,6 +394,8 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
         files: []
     };
 
+    /*Upload file reversion then call mixpanel to track current user
+    has uploaded reversion*/
     $scope.uploadReversionFile = function() {
         if ($scope.fileReversion.files.length === 0) {
             $scope.showToast("Please Select A File To Upload...");
@@ -449,26 +414,7 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
         }
     };
 
-    // show file history
-    $scope.isShowHistory = false;
-    $scope.getFileHistory = function(history) {
-        $scope.history = history;
-        $scope.isShowHistory = true;
-    };
-
-    $scope.downloadFile = function() {
-        if ($scope.history) {
-            filepicker.exportFile(
-                {url: $scope.history.link, filename: $scope.history.name},
-                function(Blob){
-                    console.log(Blob.url);
-                }
-            );
-        } else {
-            $scope.showToast("There Has Been An Error...");
-        }
-    };
-
+    /*Archive or unarchive file*/
     $scope.archive = function() {
         var confirm = $mdDialog.confirm().title((!$scope.file.isArchive) ? "Archive?" : "Unarchive?").ok("Yes").cancel("No");
         $mdDialog.show(confirm).then(function() {
@@ -480,5 +426,5 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
         });
     };
 
-    getProjectMembers($stateParams.id);
+    getProjectMembers();
 });
