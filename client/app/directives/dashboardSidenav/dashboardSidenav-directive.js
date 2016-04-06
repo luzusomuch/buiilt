@@ -11,7 +11,7 @@ angular.module('buiiltApp').directive('dashboardSidenav', function(){
         controller: function($scope, $rootScope, $location, $state, socket) {
 			$scope.$state = $state;
             
-            var today = new Date();
+            /*Count total in dashboard side nav*/
             $scope.totalTaskUpdates = 0;
             _.each($scope.tasks, function(task) {
                 if (task.element.notifications.length > 0) {
@@ -30,6 +30,7 @@ angular.module('buiiltApp').directive('dashboardSidenav', function(){
             })
             $scope.totalMessagesUpdate = $scope.messages.length;
 
+            /*Update count total in dashboard side nav*/
             var listenerCleanFn = $rootScope.$on("DashboardSidenav-UpdateNumber", function(event, data) {
                 if (data.type==="task") {
                     $scope.totalTaskUpdates = (data.isAdd) ? data.number : $scope.totalTaskUpdates-1;
@@ -45,17 +46,6 @@ angular.module('buiiltApp').directive('dashboardSidenav', function(){
             $scope.$on('$destroy', function() {
                 listenerCleanFn();
             });
-
-            // socket.on("dashboard:new", function(data) {
-            //     if (data.type==="file") {
-            //         if (data.file.element.type==="file") {
-            //             $scope.totalFileUpdates = $scope.totalFileUpdates + 1;
-            //         } else if (data.file.element.type==="document") {
-            //             $scope.totalDocumentUpdates = $scope.totalDocumentUpdates + 1;
-            //         }
-            //     }
-            // });
-
         }
     };
 });

@@ -3,49 +3,5 @@
         <div flex="15" layout="row" layout-align="start center">
             <p class="logo-main">buiilt</p>
         </div>
-        <div layout="row" layout-align="start center" ng-show="isLoggedIn">
-            <md-button ui-sref='dashboard.tasks'>Dashboard</md-button>
-            <md-button ui-sref='projects.open'>Projects</md-button>
-            <md-button ui-sref='tenders.open' ng-hide="currentTeam.type=='homeOwner'">Tenders</md-button>
-        </div>
-          
-        <span flex></span>
-          
-        <div layout="row" layout-align="end center" ng-show="isLoggedIn">
-            <md-button ui-sref='settings.user'>Settings</md-button>
-            <md-button ng-click="inlineHelp()">Help</md-button>
-            <div sp-notification ng-if="currentUser._id"></div>
-        </div>
    </div>
 </md-toolbar>
-
-<!-- <header>
-    <ul ng-if="currentUser._id" id="nav-mobile" class="side-nav fixed">
-        <li><a ui-sref="projectsBackend">Projects</a></li>
-        <li><a ui-sref="userBackend">Users</a></li>
-        <li><a ui-sref="contractorPackagesBackend({id: currentProjectBackend._id})">Contractor packages</a></li>
-        <li><a ui-sref="materialPackagesBackend({id: currentProjectBackend._id})">Material packages</a></li>
-        <li><a ui-sref="builderPackagesBackend({id: currentProjectBackend._id})">Builder packages</a></li>
-        <li><a ui-sref="workPackagesBackend({id: currentProjectBackend._id})">Work packages</a></li>
-        <li><a ui-sref="chatThreadsBackend.list({id: currentProjectBackend._id,packageId: currentPackageId, type: currentPackageType})">Chat threads</a></li>
-        <li><a ui-sref="taskBackend.list({id: currentProjectBackend._id,packageId: currentPackageId, type: currentPackageType})">Tasks</a></li>
-        <li><a ui-sref="documentBackend.list({id: currentProjectBackend._id,packageId: currentPackageId, type: currentPackageType})">Document</a></li>
-    </ul>
-    <nav style="padding-left: 240px;">
-        <div class="nav-wrapper container">
-            <a ui-sref="backend" class="brand-logo">buiilt</a>
-            <ul id="nav-mobile" class="right">
-                <li ng-if="currentUser._id">
-                    <a href="#!" class="dropdown-button" data-activates="userSettings" dropdown data-gutter="-30">
-                        <span ng-if="!currentUser.name">{{currentUser.email}}<i class="mdi-navigation-arrow-drop-down right"></i></span>
-                        <span ng-if="currentUser.name">{{currentUser.name}}<i class="mdi-navigation-arrow-drop-down right"></i></span>
-                    </a>
-                  
-                    <ul id="userSettings" class="dropdown-content"  style="margin-top: 15px">
-                        <li><a ui-sref="signoutBackend">Sign out</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-    </nav>
-</header> -->
