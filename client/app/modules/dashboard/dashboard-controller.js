@@ -13,7 +13,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     $scope.currentUser = $rootScope.currentUser;
 	$scope.showFilter = false;
 
-    function filterAcknowledgeFiles(files) {
+    /*function filterAcknowledgeFiles(files) {
         _.each(files, function(file) {
             var latestActivity = {};
             _.each(file.activities, function(activity) {
@@ -33,7 +33,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             file.latestActivity = latestActivity;
         });
     };
-    // filterAcknowledgeFiles($scope.myFiles);
+    filterAcknowledgeFiles($scope.myFiles);*/
 
     $scope.$on('$destroy', function() {
         listenerCleanFn();
@@ -70,6 +70,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         sortTask($scope.myTasks);
     });
 
+    /*Sort tasks by due date asc*/
     function sortTask(tasks) {
         tasks.sort(function(a,b) {
             if (a.dateEnd < b.dateEnd) {
@@ -512,7 +513,8 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             clickOutsideToClose: false
         });
     };
-    
+
+    /*Show create new thread modal*/
     $scope.showNewThreadModal = function(event) {
         $rootScope.isRemoveCurrentUser = true;
         $mdDialog.show({
@@ -535,6 +537,14 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         });
     };
 
+    /*
+    Send a reply in selected thread
+    Check if form has reply text or not
+    If valid, send a reply then call mixpanel to track that current user has sent reply
+    and update all notifications within selected thread as read
+    When mark notifications as read success, subtract the count notification by 1
+    and call function listenerCleanFn
+    */
     $scope.sendMessage = function() {
         $scope.message.text = $scope.message.text.trim();
         if ($scope.message.text.length===0 || $scope.message.text === '') {
@@ -562,6 +572,11 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     };
 
     $scope.thread = {members: []};
+    /*
+    Add new thread if form is valid with selected project members then
+    call mixpanel to track that current user has created new thread
+    and go to created thread detail immedietly
+    */
     $scope.addNewThread = function(form) {
         if (form.$valid) {
             $scope.thread.members = _.filter($scope.projectMembers, {select: true});
@@ -589,26 +604,8 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     // end message section
 
     // start file section
+    /*Open latest version of select file or document in new tab*/
     $scope.showViewFileModal = function(event, file) {
-        // $rootScope.selectedFile = file;
-        // $mdDialog.show({
-        //     targetEvent: event,
-        //     controller: "dashboardCtrl",
-        //     resolve: {
-        //         myTasks: function(taskService) {
-        //             return taskService.myTask().$promise;
-        //         },
-        //         myMessages: function(messageService) {
-        //             return messageService.myMessages().$promise;
-        //         },
-        //         myFiles: function(fileService) {
-        //             return fileService.myFiles().$promise;
-        //         }
-        //     },
-        //     templateUrl: 'app/modules/dashboard/partials/view-file.html',
-        //     parent: angular.element(document.body),
-        //     clickOutsideToClose: false
-        // });
         if (file.element.type==="file") {
             var win = window.open(file.path, "_blank");
         } else {
@@ -617,6 +614,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         win.focus();
     };
 
+    /*Open create new file modal*/
     $scope.showNewFileModal = function(event) {
         $rootScope.isRemoveCurrentUser = true;
         $mdDialog.show({
@@ -639,6 +637,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         });
     };
 	
+    /*Open create new document modal*/
     $scope.showNewDocumentModal = function(event) {
         $rootScope.isRemoveCurrentUser = true;
         $mdDialog.show({
@@ -661,7 +660,8 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         });
     };
 
-    if ($rootScope.selectedFile) {
+    /*Check if */
+    /*if ($rootScope.selectedFile) {
         $scope.file = $rootScope.selectedFile;
         $scope.latestActivity = {};
         _.each($scope.file.activities, function(activity) {
@@ -677,8 +677,9 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         })!==-1) {
             $scope.latestActivity.isAcknowledge = true;
         }
-    }
+    }*/
 
+    /*Download selected file with file picker*/
     $scope.download = function() {
         filepicker.exportFile(
             {url: $scope.file.path, filename: $scope.file.name},
@@ -688,7 +689,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         );
     };
 
-    $scope.sendAcknowledgement = function(file) {
+    /*$scope.sendAcknowledgement = function(file) {
         fileService.acknowledgement({id: file._id, activityId: file.latestActivity._id}).$promise.then(function(res) {
             $scope.showToast("Acknowledgement Has Been Sent Successfully.");
             $scope.closeModal();
@@ -702,7 +703,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         }, function(err) {
             $scope.showToast("Error");
         });
-    };
+    };*/
 
     $scope.uploadFile = {
         tags:[],
@@ -715,8 +716,6 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
 
     function pickFile(){
         filepickerService.pick(
-            // add max files for multiple pick
-            // {maxFiles: 5},
             onSuccess
         );
     };
@@ -725,6 +724,11 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         $scope.uploadFile.file = file;
     };
 
+    /*
+    Create new file with valid form included project members, tags
+    If success, call mixpanel to track current user has created new file
+    and go to created file detail
+    */
     $scope.createNewFile = function(form) {
         if (form.$valid) {
             $scope.uploadFile.members = _.filter($scope.projectMembers, {select: true});
@@ -767,6 +771,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     };
     // end file section
 	
+    /*Go to item detail*/
     $scope.openLocation = function(item, type) {
         if (type === "thread") 
             $state.go("project.messages.detail", {id: item.project._id, messageId: item._id});

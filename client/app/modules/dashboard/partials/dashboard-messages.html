@@ -23,11 +23,11 @@
 	
 	<div layout="column">
 		
-		<div ng-show="myMessages = 'null'" layout="column" layout-align="center center" class="dashboard-empty">
+		<div ng-show="myMessages.length == 0" layout="column" layout-align="center center" class="dashboard-empty">
 			<h4>No Messages Here</h4>
 		</div>
 		
-		<md-list ng-cloak class="md-whiteframe-1dp content-list" ng-show="myMessages > 0">
+		<md-list ng-cloak class="md-whiteframe-1dp content-list" ng-show="myMessages.length > 0">
 			<div ng-repeat="thread in myMessages | filter: searchThread track by $index" ng-show="thread._id">
 				<md-list-item class="md-3-line" md-ink-ripple layout-padding>
 		
