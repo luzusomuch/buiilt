@@ -23,6 +23,7 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
         });
     }
 
+    /*Get last access of user for each document to show recently open first*/
     function getLastAccess(documents) {
         _.each(documents, function(document) {
             if (document.lastAccess&&document.lastAccess.length>0) {
@@ -71,10 +72,13 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
     };
     // end filter
 
+    /*Receive when owner created new document*/
     var listenerCleanFnPush = $rootScope.$on("Document.Uploaded", function(event, data) {
         $scope.documents.push(data);
     });
 
+    /*Receive when user open document detail then update this document notification
+    to 0*/
     var listenerCleanFnRead = $rootScope.$on("Document.Read", function(event, data) {
         var index = _.findIndex($scope.documents, function(document) {
             return document._id.toString()===data._id.toString();
@@ -84,6 +88,9 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
         }
     });
 
+    /*Receive when updated document then check if document is belong to current project
+    then check if document is existed in documents list
+    after that update count number and update notifications list*/
     var listenerCleanFnPushFromDashboard = $rootScope.$on("Dashboard.Document.Update", function(event, data) {
         if (data.file.project._id.toString()===$stateParams.id.toString()) {
             var index = _.findIndex($scope.documents, function(document) {
@@ -113,6 +120,7 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
         listenerCleanFnPushFromDashboard();
     });
 
+    /*Receive when archived document then move it to archived list*/
     socket.on("document:archive", function(data) {
         var currentFileIndex=_.findIndex($scope.documents, function(t) {
             return t._id.toString()===data._id.toString();
@@ -123,16 +131,20 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
         }
     });
 
+    /*Receive when updated document*/
     socket.on("dashboard:new", function(data) {
         if (data.type==="file" && data.file.element.type==="document") 
             $rootScope.$emit("Dashboard.Document.Update", data);
     });
     
+    /*Select document tags to create new document*/
     $scope.selectChip = function(index) {
         $scope.tags[index].select = !$scope.tags[index].select;
     };
 
-	//Add a New Document to the Project
+	/*Create new document with valid tags
+    then call mixpanel to track current user has created new document
+    and open document detail*/
 	$scope.addNewDocument = function(){
         $scope.uploadFile.tags = _.filter($scope.tags, {select: true});
         if ($scope.uploadFile.tags.length === 0) {
@@ -154,7 +166,7 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
         }
 	};
 	
-	//Functions to handle New Documentation Modal.
+	/*Show create new document modal*/
 	$scope.showNewDocumentModal = function($event) {
 		$mdDialog.show({
 		  	targetEvent: $event,
@@ -173,29 +185,8 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
 	    });
 	};
 
+    /*Open latest document history in new window*/
     $scope.showViewFileModal = function($event, document) {
-        // $mdDialog.show({
-        //     targetEvent: $event,
-        //     controller: function($scope, $mdDialog) {
-        //         $scope.document = document;
-        //         $scope.latestHistory = _.last($scope.document.fileHistory);
-        //         $scope.closeModal = function() {
-        //             $mdDialog.cancel();
-        //         };
-
-        //         $scope.download = function() {
-        //             filepicker.exportFile(
-        //                 {url: $scope.latestHistory.link, filename: $scope.document.name},
-        //                 function(Blob){
-        //                     console.log(Blob.url);
-        //                 }
-        //             );
-        //         };
-        //     },
-        //     templateUrl: 'app/modules/project/project-documentation/all/view-file.html',
-        //     parent: angular.element(document.body),
-        //     clickOutsideToClose: false
-        // });
         var win;
         if (document.owner._id==$rootScope.currentUser._id) {
             win = window.open(document.path, "_blank");
@@ -205,15 +196,13 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
         win.focus();
     };
 	
+    /*Close opening modal*/
 	$scope.closeModal = function(){
 		$mdDialog.cancel();
 	};
 
+    /*Show a toast dialog with inform*/
     $scope.showToast = function(value) {
         $mdToast.show($mdToast.simple().textContent(value).position('bottom','right').hideDelay(3000));
     };
-	
-	//Placeholder set of filters to use for layout demo
-	$scope.docTypes = [];
-	
 });
