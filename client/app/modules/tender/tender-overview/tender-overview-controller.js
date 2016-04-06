@@ -4,11 +4,14 @@ angular.module('buiiltApp').controller('tenderOverviewCtrl', function($scope, $r
     $scope.currentUser = $rootScope.currentUser;
 
     socket.emit("join", tender._id);
+
+    /*Receive when tender updated*/
     socket.on("tender:update", function(data) {
         $scope.tender = data;
         checkAcknowLedgement($scope.tender);
     });
 
+    /*Check if current user has acknowledgement for attach addendum or not*/
     function checkAcknowLedgement(tender) {
         _.each(tender.activities, function(activity) {
             if (activity.type === "attach-addendum") {
@@ -47,14 +50,12 @@ angular.module('buiiltApp').controller('tenderOverviewCtrl', function($scope, $r
 
     $scope.addendum = {};
 
-    $scope.cancelNewTenderModal = function() {
-        $mdToast.cancel();
-    };
-
+    /*Show toast dialog*/
     $scope.showToast = function(value) {
         $mdToast.show($mdToast.simple().textContent(value).position('bottom','left').hideDelay(3000));
     };
 
+    /*Show modal with valid name*/
     $scope.showModal = function(event, name) {
         $mdDialog.show({
             targetEvent: event,
@@ -72,6 +73,7 @@ angular.module('buiiltApp').controller('tenderOverviewCtrl', function($scope, $r
 
     $scope.scope = {};
     $scope.tender.dateEnd = new Date($scope.tender.dateEnd);
+    /*Attach new scope to tender*/
     $scope.attachScope = function() {
         if ($scope.tender.description && $scope.tender.description.length > 0) {
             $scope.tender.editType = "attach-scope";
@@ -82,6 +84,7 @@ angular.module('buiiltApp').controller('tenderOverviewCtrl', function($scope, $r
         }
     };
 
+    /*Send new addendum to tender*/
     $scope.sendAddendum = function() {
         if ($scope.addendum.name && $scope.addendum.name.length === 0) {
             $scope.showToast("Please Check Your Inputs...");
@@ -95,6 +98,7 @@ angular.module('buiiltApp').controller('tenderOverviewCtrl', function($scope, $r
         }
     };
 
+    /*Update distribute status of tender*/
     $scope.distributeTender = function() {
         if ($scope.tender.members.length === 0) {
             $scope.showToast("Please Add One Invitee Before Distributing Your Tender...");
@@ -118,6 +122,7 @@ angular.module('buiiltApp').controller('tenderOverviewCtrl', function($scope, $r
     };
 
     $scope.tender.newMembers = [];
+    /*Add invitee to invitations list*/
     $scope.addInvitee = function(email, name) {
         if (email && email != '' && name && name != '') {
             if (_.findIndex($scope.tender.newMembers, {email: email}) === -1) {
@@ -129,9 +134,13 @@ angular.module('buiiltApp').controller('tenderOverviewCtrl', function($scope, $r
             }
         }
     }; 
+
+    /*Remove invitee from inviations list*/
     $scope.removeInvitee = function(index) {
         $scope.tender.newMembers.splice(index, 1);
     };
+
+    /*Invite more invitees with invitations list*/
     $scope.inviteTenderer = function() {
         if ($scope.tender.newMembers.length === 0) {
             $scope.showToast("Please Enter The Email Of At Least 1 Invitee...");
@@ -142,6 +151,7 @@ angular.module('buiiltApp').controller('tenderOverviewCtrl', function($scope, $r
         }
     };
 
+    /*Select winner tenderer for tender*/
     $scope.selectWinner = function(tenderer) {
         var confirm = $mdDialog.confirm().title("Do you want to select this tenderer as the winner?").ok("Yes").cancel("No");
         $mdDialog.show(confirm).then(function() {
@@ -154,6 +164,7 @@ angular.module('buiiltApp').controller('tenderOverviewCtrl', function($scope, $r
         });
     };
 
+    /*Update tender belong*/
     $scope.updateTender = function(tender) {
         tenderService.update({id: $stateParams.tenderId}, tender).$promise.then(function(res) {
             $mdDialog.cancel();
@@ -161,8 +172,8 @@ angular.module('buiiltApp').controller('tenderOverviewCtrl', function($scope, $r
         }, function(err){$scope.showToast("There Has Been An Error...");});
     };
 
+    /*Send acknowledgement to tender owner*/
     $scope.acknowledgement = function(activity) {
-        console.log(activity);
         tenderService.acknowledgement({id: $stateParams.tenderId, activityId: activity._id},{}).$promise.then(function(res) {
             $mdDialog.cancel();
             activity.isAcknow = true;
@@ -170,6 +181,7 @@ angular.module('buiiltApp').controller('tenderOverviewCtrl', function($scope, $r
         }, function(err){$scope.showToast("There Has Been An Error...");});
     };
 	
+    /*Close opening modal*/
 	$scope.cancelDialog = function(){
 		$mdDialog.cancel();
 	};

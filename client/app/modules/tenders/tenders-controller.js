@@ -103,22 +103,27 @@ angular.module('buiiltApp').controller('TendersCtrl', function($scope, $rootScop
     };
     // end filter section
 
+    /*Receive when owner inserted new tender*/
     $rootScope.$on("Tender.Inserted", function(event, data) {
         $scope.tenders.push(data);
     });
 
     $scope.tender = {};
     $scope.availableProjects = [];
+    /*Get available project which project manager is current user 
+    and project status is waiting*/
     _.each($rootScope.projects, function(project) {
         if (project.projectManager._id == $rootScope.currentUser._id && project.status==="waiting") {
             $scope.availableProjects.push(project);
         }
     });
 
+    /*Show toast dialog*/
     $scope.showToast = function(value) {
         $mdToast.show($mdToast.simple().textContent(value).position('bottom','left').hideDelay(3000));
     };
 
+    /*Show create new tender modal*/
     $scope.showCreateTenderModal = function(event) {
         $mdDialog.show({
             targetEvent: event,
@@ -134,6 +139,8 @@ angular.module('buiiltApp').controller('TendersCtrl', function($scope, $rootScop
         });
     };
 
+    /*Get available type when create new tender
+    belong to this project manager type*/
     $scope.selectProject = function(index) {
         _.each($scope.availableProjects, function(project) {
             project.select = false;
@@ -147,6 +154,7 @@ angular.module('buiiltApp').controller('TendersCtrl', function($scope, $rootScop
         }
     };
 
+    /*Create new tender then go to this tender detail*/
     $scope.createNewTender = function(form) {
         if (form.$valid) {
             if (!$scope.tender.project) {
@@ -168,6 +176,7 @@ angular.module('buiiltApp').controller('TendersCtrl', function($scope, $rootScop
         }
     };
 	
+    /*Close opening modal*/
 	$scope.cancelDialog = function(){
 		$mdDialog.cancel();
 	}

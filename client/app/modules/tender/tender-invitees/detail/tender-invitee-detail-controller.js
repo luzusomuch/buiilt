@@ -3,6 +3,7 @@ angular.module('buiiltApp').controller('tenderInviteeDetailCtrl', function($root
     $scope.currentUser = $rootScope.currentUser;
     $rootScope.title = $scope.tender.name + "'s message";
 
+    /*Filter out current tenderer is talking with tender owner*/
     function findCurrentTenderer(members) {
         var index = _.findIndex(members, function(member) {
             return member._id==$stateParams.inviteeId;
@@ -13,20 +14,24 @@ angular.module('buiiltApp').controller('tenderInviteeDetailCtrl', function($root
     findCurrentTenderer($scope.tender.members);
 
     socket.emit("join", $stateParams.inviteeId);
+    /*Receive when invitee updated*/
     socket.on("invitee:updated", function(data) {
         if ($scope.currentTenderere._id==data._id) {
             $scope.currentTenderere = data;
         }
     });
 
+    /*Show toast dialog*/
     $scope.showToast = function(value) {
         $mdToast.show($mdToast.simple().textContent(value).position('bottom','left').hideDelay(3000));
     };
 
+    /*Close opening modal*/
     $scope.closeModal = function() {
         $mdDialog.cancel();
     };
 
+    /*Open modal with valid name*/
     $scope.showModal = function(event, name) {
         $mdDialog.show({
             targetEvent: event,
@@ -43,6 +48,8 @@ angular.module('buiiltApp').controller('tenderInviteeDetailCtrl', function($root
     };
 
     $scope.message = {};
+
+    /*Send message with valid message text*/
     $scope.sendMessage = function(form) {
         if (form.$valid) {
             $scope.message.text = $scope.message.text.trim();
@@ -73,6 +80,7 @@ angular.module('buiiltApp').controller('tenderInviteeDetailCtrl', function($root
         $scope.uploadFile.file = file;
     };
 
+    /*Attach file to tenderer*/
     $scope.attachTender = function(form) {
         if (form.$valid) {
             if (!$scope.uploadFile.file) {
@@ -86,6 +94,7 @@ angular.module('buiiltApp').controller('tenderInviteeDetailCtrl', function($root
         }
     }
 
+    /*Update tenderer information*/
     $scope.updateTenderInvitee = function(inviteeId, data) {
         tenderService.updateTenderInvitee({id: $stateParams.tenderId, activityId: inviteeId}, data).$promise.then(function(res) {
             $scope.closeModal();
@@ -93,6 +102,7 @@ angular.module('buiiltApp').controller('tenderInviteeDetailCtrl', function($root
         }, function(err) {$scope.showToast("There Has Been An Error...");});
     };
 
+    /*Open tender file*/
     $scope.openTenderDetail = function($event, file) {
         $mdDialog.show({
             targetEvent: $event,

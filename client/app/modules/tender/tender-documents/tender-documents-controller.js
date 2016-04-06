@@ -7,14 +7,17 @@ angular.module('buiiltApp').controller('tenderDocumentsCtrl', function($rootScop
     prom.push(fileService.getProjectFiles({id: tender.project, type: "tender", tenderId: tender._id}).$promise);
 
     $scope.tenderDocuments = [];
+    /*Get all file related to document and tender for current user in selected project*/
     $q.all(prom).then(function(data) {
         $scope.tenderDocuments = _.union(data[0], data[1]);
     });
 
+    /*Receive when tender-document inserted*/
     socket.on("tender-document:inserted", function(data) {
         $scope.tenderDocuments.push(data);
     });
 
+    /*Show toast dialog*/
     $scope.showToast = function(value) {
         $mdToast.show($mdToast.simple().textContent(value).position('bottom','left').hideDelay(3000));
     };
@@ -34,6 +37,7 @@ angular.module('buiiltApp').controller('tenderDocumentsCtrl', function($rootScop
         $scope.uploadFile.file = file;
     };
 
+    /*Upload new tender document*/
     $scope.uploadNewTenderDocument = function(form) {
         if (form.$valid) {
             if (!$scope.uploadFile.file) {
@@ -48,6 +52,7 @@ angular.module('buiiltApp').controller('tenderDocumentsCtrl', function($rootScop
             $scope.showToast("Please Check Your Input...");
     };
 
+    /*Show modal with valid name*/
     $scope.showModal = function(event, name) {
         $mdDialog.show({
             targetEvent: event,
@@ -63,10 +68,12 @@ angular.module('buiiltApp').controller('tenderDocumentsCtrl', function($rootScop
         });
     };
 
+    /*Close opening model*/
     $scope.closeModal = function() {
         $mdDialog.cancel();
     };
 
+    /*View latest file history in new window*/
     $scope.showViewFileModal = function($event, file) {
         var win = window.open(_.last(file.fileHistory).link, "_blank");
         win.focus();
