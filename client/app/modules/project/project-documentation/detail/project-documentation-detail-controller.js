@@ -1,7 +1,7 @@
 angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', function($rootScope, $scope, $timeout, document, uploadService, $mdDialog, $mdToast, $stateParams, fileService, socket, notificationService, peopleService) {
     $scope.document = document;
 
-    // Check owner team
+    /*Check if current team is team owner*/
     $scope.isOwnerTeam=false;
     if (_.findIndex($rootScope.currentTeam.leader, function(leader) {
         return leader._id.toString()===document.owner._id.toString();
@@ -12,28 +12,30 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
     }) !== -1) {
         $scope.isOwnerTeam=true;
     }
-    // end check owner team
 
     getAcvititiesAndHistoriesByUser($scope.document);
 
-    // remove notifications count immeditely
+    /*Update count total after 0.5s*/
     $timeout(function() {
         $rootScope.$broadcast("UpdateCountNumber", {type: "document", number: 1});
     },500);
+    
+    /*Update last access for current document*/
     fileService.lastAccess({id: $stateParams.documentId}).$promise.then(function(data) {
         $rootScope.$emit("Document.Read", document);
     });
-    // end
     
-    // set timeout 3s for mark as read
+    /*Mark all notifications related to document as read*/
     $timeout(function() {
         notificationService.markItemsAsRead({id: $stateParams.documentId}).$promise.then(function() {
-            markActivitesAsRead($scope.document);
+            _.each($scope.document.activities, function(a){
+                a.unread = false;
+                a.unreadLine=false;
+            });
         });
     }, 3000);
-    // end timeout
 
-    // function to filter out that unread activities
+    /*Filter unread activities belong to notifications list*/
     function filterUnreadActivites(document) {
         if (document.__v > 0) {
             var temp = 0;
@@ -49,24 +51,17 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
             };
         }
     };
-    // end filter unread activities
-
-    // function to mark activities as read
-    function markActivitesAsRead(document) {
-        _.each(document.activities, function(a){
-            a.unread = false;
-            a.unreadLine=false;
-        });
-    };
-    // end mark activities as read
 
     filterUnreadActivites($scope.document);
 
+    /*Get reversion tags*/
     $scope.versionTags = [];
     _.each($rootScope.currentTeam.versionTags, function(tag) {
         $scope.versionTags.push({tag:tag});
     });
 
+    /*Select reversion tags for upload reversion
+    Select project members to assign to document reversion*/
     $scope.selectTag = function(index, type) {
         if (type==="version") {
             _.each($scope.versionTags, function(tag) {
@@ -78,6 +73,7 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
         }
     };
 
+    /*Check if current user is send acknowledgement to reversion owner or not*/
     function checkAcknowLedgement(document) {
         _.each(document.activities, function(activity) {
             if (activity.type === "upload-reversion" || activity.type === "upload-file") {
@@ -96,6 +92,8 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
     checkAcknowLedgement($scope.document);
 
     socket.emit("join", document._id);
+
+    /*Receive when someone updated document*/
     socket.on("document:update", function(data) {
         $scope.document = data;
         getAcvititiesAndHistoriesByUser($scope.document);
@@ -103,6 +101,7 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
         notificationService.markItemsAsRead({id: $stateParams.documentId}).$promise.then();
     });
 
+    /*Checking activities and file histories that belong to current user*/
     function getAcvititiesAndHistoriesByUser(document) {
         if (document.owner._id.toString()!==$rootScope.currentUser._id.toString()) {
             var activities = [];
@@ -132,6 +131,7 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
         }
     };
 
+    /*Get project members list*/
     function getProjectMembers(id) {
         peopleService.getInvitePeople({id: id}).$promise.then(function(res) {
             $scope.projectMembers = [];
@@ -189,6 +189,7 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
 
     getProjectMembers(document.project);
 
+    /*Send acknowledgement to reversion owner*/
     $scope.acknowledgement = function(activity) {
         fileService.acknowledgement({id: $stateParams.documentId, activityId: activity._id}).$promise.then(function(res) {
             $scope.showToast("Sent acknowledgement to the owner successfully");
@@ -198,45 +199,22 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
         });
     };
 
+    /*Open file history list*/
     $scope.openFileHistory = function($mdOpenMenu, event) {
         $mdOpenMenu(event);
     };
 
+    /*Open selected history detail in new window*/
     $scope.openHistoryDetail = function($event, history) {
-        // $mdDialog.show({
-        //     targetEvent: $event,
-        //     controller: function($scope) {
-        //         $scope.history = history;
-        //         $scope.closeModal = function() {
-        //             $mdDialog.cancel();
-        //         };
-
-        //         $scope.downloadFile = function() {
-        //             filepicker.exportFile(
-        //                 {url: $scope.history.link, filename: $scope.history.name},
-        //                 function(Blob){
-        //                     console.log(Blob.url);
-        //                 }
-        //             );
-        //         };
-        //     },
-        //     templateUrl: 'app/modules/project/project-files/detail/partials/file-history-detail.html',
-        //     parent: angular.element(document.body),
-        //     clickOutsideToClose: false
-        // });
         var win = window.open(history.link, "_blank");
         win.focus();
     };
 
-    function setUploadReversion() {
-        $scope.uploadReversion = {
-            files: [],
-            versionTags: [],
-            teamMembers: [],
-        };
+    $scope.uploadReversion = {
+        files: [],
+        versionTags: [],
+        teamMembers: [],
     };
-
-    setUploadReversion();
 
     function pickFile(){
         filepickerService.pick(
@@ -252,6 +230,8 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
 
     $scope.onSuccess = onSuccess;
 
+    /*Upload document reversion with vaid version tags and project members
+    then call mixpanel track current user has uploaded document reversion*/
     $scope.uploadReversionDocument = function() {
         $scope.uploadReversion.versionTags = _.filter($scope.versionTags, {select: true});
         $scope.uploadReversion.teamMembers = _.filter($scope.projectMembers, {select: true});
@@ -278,6 +258,7 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
         }
     };
 
+    /*Show modal with a valid name*/
     $scope.showModal = function($event, modalName) {
         $mdDialog.show({
             targetEvent: $event,
@@ -293,14 +274,17 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
         });
     };
 
+    /*Close opening modal*/
     $scope.closeModal = function() {
         $mdDialog.cancel();
     };
 
+    /*Show a toast dialog*/
     $scope.showToast = function(value) {
         $mdToast.show($mdToast.simple().textContent(value).position('bottom','right').hideDelay(3000));
     };
 
+    /*Download selected file history*/
     $scope.download = function(name, link) {
         filepicker.exportFile(
             {url: link, filename: name},
@@ -310,6 +294,7 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
         );
     };
 
+    /*Show invite more members to reversion*/
     $scope.showInviteMoreMemberModal = function($event, activity) {
         $rootScope.activity = activity;
         $mdDialog.show({
@@ -326,6 +311,7 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
         });
     };
 
+    /*Invite more members to document reversion*/
     $scope.inviteMoreMembers = function() {
         $scope.newMembers = _.filter($scope.projectMembers, {select: true});
         if ($scope.newMembers.length === 0) {
@@ -340,6 +326,7 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
         }
     };
 
+    /*Archive or unarchived document*/
     $scope.archive = function() {
         var confirm = $mdDialog.confirm().title((!$scope.document.isArchive) ? "Archive?" : "Unarchive?").ok("Yes").cancel("No");
         $mdDialog.show(confirm).then(function() {
