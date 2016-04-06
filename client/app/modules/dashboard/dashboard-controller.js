@@ -13,28 +13,6 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     $scope.currentUser = $rootScope.currentUser;
 	$scope.showFilter = false;
 
-    /*function filterAcknowledgeFiles(files) {
-        _.each(files, function(file) {
-            var latestActivity = {};
-            _.each(file.activities, function(activity) {
-                if (activity.type==="upload-file" || activity.type==="upload-reversion") {
-                    latestActivity = activity;
-                }
-            });
-            if (_.findIndex(latestActivity.acknowledgeUsers, function(user) {
-                if (user._id && user.isAcknow) {
-                    return user._id.toString()===$scope.currentUser._id.toString();
-                }
-            })!==-1) {
-                latestActivity.isAcknowledge = true;
-            } else {
-                latestActivity.isAcknowledge = false;
-            }
-            file.latestActivity = latestActivity;
-        });
-    };
-    filterAcknowledgeFiles($scope.myFiles);*/
-
     $scope.$on('$destroy', function() {
         listenerCleanFn();
         listenerTaskCreatedFb();
@@ -660,25 +638,6 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         });
     };
 
-    /*Check if */
-    /*if ($rootScope.selectedFile) {
-        $scope.file = $rootScope.selectedFile;
-        $scope.latestActivity = {};
-        _.each($scope.file.activities, function(activity) {
-            if (activity.type==="upload-file" || activity.type==="upload-reversion") {
-                $scope.latestActivity = activity;
-            }
-        });
-        $scope.latestActivity.isAcknowledge = false;
-        if (_.findIndex($scope.latestActivity.acknowledgeUsers, function(user) {
-            if (user._id && user.isAcknow) {
-                return user._id.toString()===$scope.currentUser._id.toString();
-            }
-        })!==-1) {
-            $scope.latestActivity.isAcknowledge = true;
-        }
-    }*/
-
     /*Download selected file with file picker*/
     $scope.download = function() {
         filepicker.exportFile(
@@ -688,22 +647,6 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             }
         );
     };
-
-    /*$scope.sendAcknowledgement = function(file) {
-        fileService.acknowledgement({id: file._id, activityId: file.latestActivity._id}).$promise.then(function(res) {
-            $scope.showToast("Acknowledgement Has Been Sent Successfully.");
-            $scope.closeModal();
-            notificationService.markItemsAsRead({id: file._id}).$promise.then(function() {
-                $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: file.element.type, number: 1});
-                var currentIndex = _.findIndex($scope.myFiles, function(f) {
-                    return f._id.toString()===file._id.toString();
-                });
-                $rootScope.$emit("Dashboard-Update", {type: file.element.type, index: currentIndex});
-            });
-        }, function(err) {
-            $scope.showToast("Error");
-        });
-    };*/
 
     $scope.uploadFile = {
         tags:[],
