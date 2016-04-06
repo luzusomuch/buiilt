@@ -2,6 +2,7 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
 	$scope.tasks = tasks;
 	$scope.showFilter = false;
 
+    /*Change due date to text and sort it by dateEnd asc*/
     function filterTaskDueDate(tasks) {
         angular.forEach(tasks, function(task) {
             var taskDueDate = moment(task.dateEnd).format("YYYY-MM-DD");
@@ -29,6 +30,8 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
 
 	$scope.people = people;
 
+    /*Receive when someone assign current user to new task
+    then check if that task is belong to current project*/
     socket.on("task:new", function(data) {
         if (data.project._id.toString()===$stateParams.id.toString()) {
             $scope.tasks.push(data);
@@ -37,6 +40,11 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
         }
     });
 
+    /*Receive when someone updated task
+    then check if that task is in current tasks list
+    if true then check if updated task is has notification or not
+    if notification is 0 then updated the count total increase by 1
+    after that update task notification increase by 1*/
     socket.on("dashboard:new", function(data) {
         if (data.type==="task") {
             var index = _.findIndex($scope.tasks, function(task) {
@@ -52,12 +60,15 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
         }
     });
 
+    /*Receive when owner created new task*/
     var listenerCleanFnPush = $rootScope.$on("Task.Inserted", function(event, data) {
         $scope.tasks.push(data);
         $scope.tasks = _.uniq($scope.tasks, "_id");
         filterTaskDueDate($scope.tasks);
     });
 
+    /*Receive when current user open specific task detail
+    then get that task in list and update itself notification to 0*/
     var listenerCleanFnRead = $rootScope.$on("Task.Read", function(event, data) {
         var index = _.findIndex($scope.tasks, function(task) {
             return task._id.toString()===data._id.toString();
@@ -274,6 +285,7 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
     };
     // end filter section
 
+    /*Show create new task modal*/
 	$scope.showNewTaskModal = function($event) {
 		$mdDialog.show({
 		  	targetEvent: $event,
@@ -294,6 +306,9 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
 
 	$scope.task = {};
 	$scope.minDate = new Date();
+    /*Create new task with valid project members list
+    then call mixpanel to track current user has created new task
+    and go to specific task*/
 	$scope.createNewTask = function(form) {
 		if (form.$valid) {
 		    $scope.task.members = _.filter($scope.projectMembers, {select: true});
@@ -320,21 +335,25 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
 		}
 	};
 
+    /*Close create new task modal*/
 	$scope.cancelNewTaskModal = function() {
 		$mdDialog.cancel();
 	};
 
+    /*Add project members to new task*/
 	$scope.selectMember = function(index, type) {
 		if (type === "member") {
             $scope.projectMembers[index].select = !$scope.projectMembers[index].select;
         }
 	};
 
+    /*Show a toast dialog with information*/
 	$scope.showToast = function(value) {
 	    $mdToast.show($mdToast.simple().textContent(value).position('bottom','left').hideDelay(3000));
 	};
 
-	function getProjectMembers(id) {
+    /*Get project members list*/
+	function getProjectMembers() {
 	    $scope.projectMembers = [];
 		_.each($rootScope.roles, function(role) {
 			_.each($scope.people[role], function(tender){
@@ -379,10 +398,11 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
 		// _.remove($scope.projectMembers, {_id: $rootScope.currentUser._id});
 	};
 
-	getProjectMembers($stateParams.id);
+	getProjectMembers();
 	
 	$scope.taskFilters = ['Task Description 1', 'Assignee 3'];
 
+    /*Mark selected task as complete or uncomplete*/
     $scope.markComplete = function(task) {
         task.completed = !task.completed;
         if (task.completed) {
@@ -401,14 +421,5 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
                 task.__v = 0;
             });
         }, function(err) {$scope.showToast("Error");});
-    };
-
-    $scope.markRead = function(item, type) {
-        notificationService.markItemsAsRead({id: item._id}).$promise.then(function() {
-            $scope.showToast("You Have Successfully Marked This Read.");
-            $rootScope.$emit("UpdateCountNumber", {type: type, number: item.__v});
-            item.element.notificationType = null;
-            item.__v = 0;
-        }, function(err){$scope.showToast("Error");});
     };
 });
