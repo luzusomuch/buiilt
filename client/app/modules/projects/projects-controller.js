@@ -8,6 +8,7 @@ angular.module('buiiltApp').controller('projectsCtrl', function ($rootScope, $sc
     $scope.allowCreateProject = false;
     $scope.currentTeam = $rootScope.currentTeam;
 	$scope.showFilter = false;
+    /*Check if current user is team leader, so he can create project*/
     if ($rootScope.currentUser.isLeader && $scope.currentTeam._id && ($scope.currentTeam.type === "builder" || $scope.currentTeam.type === "architect")) {
         $scope.allowCreateProject = true;
     }
@@ -15,6 +16,8 @@ angular.module('buiiltApp').controller('projectsCtrl', function ($rootScope, $sc
     $scope.projectsInvitation = projectsInvitation;
     $scope.teamInvitations = teamInvitations;
 
+    /*Create new project then call mixpanel to track current user has created project
+    then go to this project overview*/
     $scope.createProject = function(form) {
         $scope.submitted = true;
             if (form.$valid) {
@@ -35,13 +38,8 @@ angular.module('buiiltApp').controller('projectsCtrl', function ($rootScope, $sc
         }
     };
     
-    $scope.saveProject = function (){
-        $mdDialog.hide();
-    };
-    
-    //Functions to Handle the Create Project Dialog.
+    /*Show create new project modal*/
     $scope.showCreateProjectModal = function($event) {
-    
         $mdDialog.show({
             targetEvent: $event,
             controller: 'projectsCtrl',
@@ -57,14 +55,14 @@ angular.module('buiiltApp').controller('projectsCtrl', function ($rootScope, $sc
             parent: angular.element(document.body),
             clickOutsideToClose:false
         });
-        
     };
     
+    /*Close create new project modal*/
     $scope.hideCreateProjectModal = function () {
         $mdDialog.cancel();
     };
-    
 
+    /*Filter with auto complete*/
     $scope.querySearch = function(value) {
         var results = value ? $scope.projects.filter(createFilter(value)) : [];
         results = _.uniq(results, '_id');
@@ -77,16 +75,7 @@ angular.module('buiiltApp').controller('projectsCtrl', function ($rootScope, $sc
         };
     };
 
-    $scope.addChip = function() {
-        $scope.search = true;
-    };
-
-    $scope.removeChip = function() {
-        if ($scope.projectsFilter.length === 0) {
-            $scope.search = false;
-        }
-    };
-
+    /*Accept or reject team invitation*/
     $scope.selectInvitation = function(invitation, index) {
         var confirm = $mdDialog.confirm()
         .title("Do you want to join " + invitation.name + " ?")
@@ -99,6 +88,7 @@ angular.module('buiiltApp').controller('projectsCtrl', function ($rootScope, $sc
         });
     };
 
+    /*Accept invitation*/
     $scope.accept = function(invitation, index) {
         teamService.acceptTeam({_id: invitation._id}).$promise.then(function (res) {
             $scope.currentTeam = res;
@@ -110,6 +100,7 @@ angular.module('buiiltApp').controller('projectsCtrl', function ($rootScope, $sc
         });
     };
 
+    /*Reject invitation*/
     $scope.reject = function(invitation, index) {
         teamService.rejectTeam({_id: invitation._id}).$promise.then(function () {
             $scope.teamInvitations.splice(index, 1);
@@ -119,6 +110,7 @@ angular.module('buiiltApp').controller('projectsCtrl', function ($rootScope, $sc
         });
     };
 
+    /*Show toast dialog with inform*/
     $scope.showToast = function(value) {
         $mdToast.show($mdToast.simple().textContent(value).position('bottom','right').hideDelay(3000));
     };

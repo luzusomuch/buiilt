@@ -3,6 +3,8 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
     $scope.currentTeam = $rootScope.currentTeam;
     $rootScope.currentUser = null;
     $rootScope.currentUser = $scope.currentUser = currentUser;
+
+    /*Get plan of current user*/
     function getCurrentUserPlan() {
         if ($scope.currentUser.plan) {
             $scope.currentUser.noPlan = false;
@@ -25,6 +27,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
     };
     getCurrentUserPlan();
 
+    /*Get all projects of current user which status is not archive*/
     function getUserProjects() {
         $scope.projects = [];
         $scope.totalProject = 0;
@@ -38,9 +41,13 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
     getUserProjects();
 
     $timeout(function() {
+        /*Check if current user hasn't got a team*/
         if (!$rootScope.currentTeam._id) {
             teamService.isWaitingTeamAccept().$promise.then(function(data) {
+                /*Check if he has any join request*/
                 $scope.isWaitingTeamAccept = data.data;    
+                /*If not the app'll request him to send join request to another team
+                or create new one*/
                 if (!$scope.isWaitingTeamAccept) {
             		inline_manual_player.activateTopic('10595');
             		
@@ -196,6 +203,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
         }
     }, 500);
 
+    /*Stripe checkout form*/
     var handler = StripeCheckout.configure({
         key: 'pk_test_WGKFaZu6dXITEIxoyVI8DrVa',
         image: '/128x128.png',
@@ -218,6 +226,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
         large : {name: "Large plan", description: "Purchase for large plan ($105.00)", amount: 10500, currency: "aud"},
     };
     
+    /*Receive when current user update his info, change plan or buy new plan*/
     $rootScope.$on("User.Update", function(event, data) {
         $rootScope.currentUser = null;
         $rootScope.currentUser = $scope.currentUser = data;
@@ -225,15 +234,18 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
         getCurrentUserPlan();
     });
 
+    /*Receive when current user update his team*/
     $rootScope.$on("Team.Update", function(event, data) {
         $scope.currentTeam = $rootScope.currentTeam = data;
     });
 
-    function setPurchase(){
-        $scope.purchase = {};
-    };
-    setPurchase();
+    $scope.purchase = {};
 
+    /*When change plan if user choose downgrade plan
+    and the current projects list is larger than maximum project of this plan.
+    Then user need to archive somes project until these current project same 
+    max project of plan.
+    Now they can downgrade*/
     $scope.archiveProject = function(project) {
         project.archive = true;
         projectService.updateProject({id: project._id}, project).$promise.then(function(res) {
@@ -275,6 +287,8 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
         });
     };
 
+    /*payment modal open when current projects number is larger than plan
+    else charge user if he already a stripe customer other wise open stripe checkout*/
     $scope.showModalPayment = function($event, type) {
         var title = "Do you want to ";
         var content = "You can create ";
@@ -337,31 +351,31 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
         $scope.purchaseType = $rootScope.purchaseType;
     }
 
-    $scope.buyPlan = function(form) {
-        var currentDate = new Date();
-        if (form.$valid) {
-            if ($scope.purchase.exp_month.length > 2 && ($scope.purchase.exp_month < 1 || $scope.purchase.exp_month > 12)) {
-                $scope.showToast("Please check your expiration month");
-                return false;
-            } else if ($scope.purchase.exp_year.length > 4) {
-                $scope.showToast("Please check your expiration year");
-                return false;
-            }
-            stripe.card.createToken($scope.purchase).then(function(res) {
-                $scope.purchase.purchaseType = $rootScope.purchaseType;
-                $scope.purchase.token = res.id;
-                $scope.purchase.cardLast4 = res.card.last4;
-                userService.buyPlan({id:$scope.currentUser._id}, $scope.purchase).$promise.then(function(res) {
-                    $scope.cancelDialog();
-                    $scope.showToast("Purchase successfully");
-                    $rootScope.$emit("User.Update", res);
-                }, function(err) {$scope.showToast("There Has Been An Error...");});
-            });
-        } else {
-            $scope.showToast("Please check your input");
-            return;
-        }
-    };
+    // $scope.buyPlan = function(form) {
+    //     var currentDate = new Date();
+    //     if (form.$valid) {
+    //         if ($scope.purchase.exp_month.length > 2 && ($scope.purchase.exp_month < 1 || $scope.purchase.exp_month > 12)) {
+    //             $scope.showToast("Please check your expiration month");
+    //             return false;
+    //         } else if ($scope.purchase.exp_year.length > 4) {
+    //             $scope.showToast("Please check your expiration year");
+    //             return false;
+    //         }
+    //         stripe.card.createToken($scope.purchase).then(function(res) {
+    //             $scope.purchase.purchaseType = $rootScope.purchaseType;
+    //             $scope.purchase.token = res.id;
+    //             $scope.purchase.cardLast4 = res.card.last4;
+    //             userService.buyPlan({id:$scope.currentUser._id}, $scope.purchase).$promise.then(function(res) {
+    //                 $scope.cancelDialog();
+    //                 $scope.showToast("Purchase successfully");
+    //                 $rootScope.$emit("User.Update", res);
+    //             }, function(err) {$scope.showToast("There Has Been An Error...");});
+    //         });
+    //     } else {
+    //         $scope.showToast("Please check your input");
+    //         return;
+    //     }
+    // };
 
     $scope.member = {
       emails : []
@@ -376,6 +390,8 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
 
     $scope.newTag = {};
     $scope.isEditTags = false;
+
+    /*Add new tag*/
     $scope.addNewTag = function(newTag, type) {
         if (type === "file") {
             if (newTag !== "{{addNewTagFileText}}") {
@@ -404,6 +420,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
         }
     };
 
+    /*Remove selected tag*/
     $scope.removeTag = function(index, type) {
         if (type === "file") {
             $scope.currentTeam.fileTags.splice(index,1);
@@ -424,6 +441,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
         }
     };
 
+    /*Update team tags then call mixpanel track current user updated tags*/
     $scope.saveChangedTags = function() {
         $scope.currentTeam.editType = "change-tags";
         teamService.update({id: $scope.currentTeam._id}, $scope.currentTeam).$promise.then(function(res) {
@@ -438,26 +456,9 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             $rootScope.$emit("Team.Update", res);
         }, function(err){$scope.showToast(err.data);});
     };
-
-    $scope.showModalCreateTeam = function($event) {
-		
-        $mdDialog.show({
-            targetEvent: $event,
-            controller: 'settingsCtrl',
-            templateUrl: 'app/modules/settings/partials/create-team.html',
-            resolve: {
-                currentUser: ["authService", function(authService) {
-                    return authService.getCurrentUser().$promise;
-                }]
-            },
-            parent: angular.element(document.body),
-            clickOutsideToClose: false
-        });
-		
-    };
 	
+    /*Show add new member to team modal*/
     $scope.showAddNewStaffMemberModal = function($event) {
-		
         $mdDialog.show({
             targetEvent: $event,
             controller: 'settingsCtrl',
@@ -470,28 +471,10 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             parent: angular.element(document.body),
             clickOutsideToClose: false
         });
-		
     };
 	
-    $scope.showAddCCModal = function($event) {
-		
-        $mdDialog.show({
-            targetEvent: $event,
-            controller: 'settingsCtrl',
-            templateUrl: 'app/modules/settings/partials/settings-billing-newCC.html',
-            resolve: {
-                currentUser: ["authService", function(authService) {
-                    return authService.getCurrentUser().$promise;
-                }]
-            },
-            parent: angular.element(document.body),
-            clickOutsideToClose: false
-        });
-		
-    };
-	
+    /*Show edit billing modal*/
     $scope.showEditBillingModal = function($event) {
-		
         $mdDialog.show({
             targetEvent: $event,
             controller: 'settingsCtrl',
@@ -504,42 +487,14 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             parent: angular.element(document.body),
             clickOutsideToClose: false
         });
-		
     };
 	
+    /*Close opening modal*/
     $scope.cancelDialog = function() {
         $mdDialog.cancel();
     };
-
-    $scope.getTeamType = function(type) {
-        if (type == "homeOwner") {
-            $scope.team.name = $scope.currentUser.name;
-        } else {
-            $scope.team.name = '';
-        }
-    };
-
-    $scope.createTeam = function(form) {
-        if (form.$valid) {
-            teamService.create($scope.team, function (team) {
-                $rootScope.currentTeam = $scope.currentTeam = team;
-                getTeamLeader($scope.currentTeam);
-                $rootScope.$emit('TeamUpdate',team);
-                $scope.cancelDialog();
-                $scope.showToast("You Have Successfully Created Your Team.");
-				
-				//Track Team Creation
-				mixpanel.identify($rootScope.currentUser._id);
-				mixpanel.track("Team Created");
-				
-                $state.go('settings.staff', {},{reload: true}).then(function(data){});
-            }, function (err) {
-                $scope.cancelDialog();
-                $scope.showToast("There Has Been An Error...");
-            });
-        }
-    };
 	
+    /*Show edit company detail modal*/
     $scope.showEditCompanyModal = function($event) {
         $mdDialog.show({
             targetEvent: $event,
@@ -555,6 +510,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
         });
     };
 
+    /*Save team detail then call mixpanel to track current user has updated company detail*/
     $scope.saveDetail = function(form) {
         if (!$scope.currentTeam._id) {
             $scope.showToast("You Are Not Yet a Part of a Team...");
@@ -577,16 +533,20 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
         }
     };
 
+    /*Add user to team invitation*/
     $scope.addUser = function(email) {
         if (email !== '') {
             $scope.member.emails.push({email: email});
         }
     };
 
+    /*Remove user from team invitation*/
     $scope.removeUser = function(index) {
         $scope.member.emails.splice(index, 1);
     };
 
+    /*Add members to team then call mixpanel to track that current user
+    has added new member*/
     $scope.addNewMember = function(){
         teamService.addMember({id: $scope.currentTeam._id},$scope.member.emails).$promise
         .then(function(team) {
@@ -605,6 +565,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
         });
     };
 
+    /*Remove member to current team*/
     $scope.removeMember = function(member){
         var confirm = $mdDialog.confirm().title("Do you want to remove this user from your team?").ok("Yes").cancel("No");
         $mdDialog.show(confirm).then(function() {
@@ -621,6 +582,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
         });
     };
 
+    /*Assign selected member become a leader*/
     $scope.assignLeader = function(member) {
         var confirm = $mdDialog.confirm().title("Do you want to assign this user as a team administrator?").ok("Yes").cancel("No");
         $mdDialog.show(confirm).then(function() {
@@ -637,6 +599,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
         });
     };
 
+    /*Leave current team*/
     $scope.leaveTeam = function() {
         var confirm = $mdDialog.confirm().title("Do you want to leave this member?").ok("Yes").cancel("No");
         $mdDialog.show(confirm).then(function() {
@@ -652,25 +615,12 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
         });
     };
 
-    
-
+    /*Show toast dialog with inform*/
     $scope.showToast = function(value) {
         $mdToast.show($mdToast.simple().textContent(value).position('bottom','right').hideDelay(3000));
     };
 
-    $scope.submitCreditCard = function(form) {
-        if (form.$valid) {
-            $scope.currentUser.editType = "enterCreditCard";
-            userService.changeProfile({id: $scope.currentUser._id}, $scope.currentUser).$promise.then(function(res) {
-                $mdDialog.hide();
-                $scope.showToast("Submit credit card successfully");
-                $rootScope.$emit("User.Update", res);
-            }, function(err) {$scope.showToast("There Has Been An Error...");});
-        } else {
-            $scope.showToast("Please check your input again");
-        }
-    };
-
+    /*Update team billing address*/
     $scope.editBillingAddress = function(form) {
         if (form.$valid) {
             teamService.update({id: $scope.currentTeam._id}, $scope.currentTeam).$promise.then(function(res) {
@@ -683,6 +633,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
         }
     };
 
+    /*Show modal with valid name*/
     $scope.showModal = function($event, name, type) {
         $rootScope.editUserType = type;
         $mdDialog.show({
@@ -698,7 +649,10 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             clickOutsideToClose: false
         });
     };
+
     $scope.editUserType = ($rootScope.editUserType) ? $rootScope.editUserType : null;
+    /*Edit user information if success call mixpanel to track that
+    current user has updated their info belong to editType*/
     $scope.editUserInfo = function(form) {
         if (form.$valid) {
             if ($scope.editUserType === "phoneNumber") {
@@ -744,6 +698,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
         }
     };
 
+    /*Team leader accept join team request*/
     $scope.acceptJoinRequest = function(member) {
         var confirm = $mdDialog.confirm().title("Do you want to accept this request?").ok("Yes").cancel("No");
         $mdDialog.show(confirm).then(function() {
