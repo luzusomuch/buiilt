@@ -15,6 +15,7 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
         });
     }
 
+    /*Get last access of current user in files list to show recently first*/
     function getLastAccess(files) {
         _.each(files, function(file) {
             if (file.lastAccess&&file.lastAccess.length>0) {
@@ -29,14 +30,15 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
     };
     getLastAccess($scope.files);
 
+    /*Receive when new file inserted and current user assigned as file members*/
     socket.on("file:new", function(data) {
         if (data.project._id.toString()===$stateParams.id.toString()) {
             data.__v=1;
             $scope.files.push(data);
-            filterAcknowledgeFiles($scope.files);
         }
     });
 
+    /*Receive when file archived then move that file to archived files list*/
     socket.on("file:archive", function(data) {
         var currentFileIndex=_.findIndex($scope.files, function(t) {
             return t._id.toString()===data._id.toString();
@@ -47,11 +49,14 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
         }
     });
 
+    /*Receive when file updated then update count total*/
     socket.on("dashboard:new", function(data) {
         if (data.type==="file" && data.file.element.type==="file") 
             $rootScope.$emit("Dashboard.File.Update", data);
     });
 
+    /*Receive when current user open file detail
+    then update that file notification to 0*/
     var listenerCleanFnRead = $rootScope.$on("File.Read", function(event, data) {
         var index = _.findIndex($scope.files, function(file) {
             return file._id.toString()===data._id.toString();
@@ -61,16 +66,12 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
         }
     });
 
+    /*Receive when owner created file*/
     var listenerCleanFnPush = $rootScope.$on("File.Inserted", function(event, data) {
         $scope.files.push(data);
-        filterAcknowledgeFiles($scope.files);
     });
 
-    var listenerCleanFnAcknow = $rootScope.$on("Project-File-Acknowledge", function(event, index) {
-        $scope.files[index].element.notificationType = null;
-        $scope.files[index].__v = 0;
-    });
-
+    /*Receive when file updated then update notification of file increase 1*/
     var listenerCleanFnPushFromDashboard = $rootScope.$on("Dashboard.File.Update", function(event, data) {
         var index = _.findIndex($scope.files, function(file) {
             return file._id.toString()===data.file._id.toString();
@@ -84,31 +85,8 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
     $scope.$on('$destroy', function() {
         listenerCleanFnPush();
         listenerCleanFnRead();
-        listenerCleanFnAcknow();
         listenerCleanFnPushFromDashboard();
     });
-
-    function filterAcknowledgeFiles(files) {
-        _.each(files, function(file) {
-            var latestActivity = {};
-            _.each(file.activities, function(activity) {
-                if (activity.type==="upload-file" || activity.type==="upload-reversion") {
-                    latestActivity = activity;
-                }
-            });
-            if (_.findIndex(latestActivity.acknowledgeUsers, function(user) {
-                if (user._id && user.isAcknow) {
-                    return user._id.toString()===$rootScope.currentUser._id.toString();
-                }
-            })!==-1) {
-                latestActivity.isAcknowledge = true;
-            } else {
-                latestActivity.isAcknowledge = false;
-            }
-            file.latestActivity = latestActivity;
-        });
-    };
-    filterAcknowledgeFiles($scope.files);
 
     // filter section
     $scope.filterTags = [];
@@ -156,6 +134,7 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
     };
     // end filter section
 
+    /*Get project members list and file tags list*/
     function getProjectMembers(id) {
         $scope.projectMembers = [];
         $scope.tags = [];
@@ -204,6 +183,7 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
         _.remove($scope.projectMembers, {_id: $rootScope.currentUser._id});
     };
 
+    /*Select project members or file tags to assign to current file or new file*/
     $scope.selectChip = function(index, type) {
         if (type === "member") {
             $scope.projectMembers[index].select = !$scope.projectMembers[index].select;
@@ -228,6 +208,9 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
         $scope.uploadFile.file = file;
     };
 
+    /*Create new file with valid tags and members
+    then call mixpanel to track current user has created new file
+    and go to new file detail*/
 	$scope.createNewFile = function() {
         $scope.uploadFile.members = _.filter($scope.projectMembers, {select: true});
         $scope.uploadFile.tags = _.filter($scope.tags, {select: true});
@@ -258,7 +241,7 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
 		}
 	};
 	
-	//Functions to handle New Work Room Dialog.
+	/*Open create new file modal*/
 	$scope.showNewFileModal = function($event) {
 		$mdDialog.show({
 		  	targetEvent: $event,
@@ -277,80 +260,25 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
 	    });
 	};
 	
+    /*Close create new file modal*/
 	$scope.cancelNewFileModal = function() {
 		$mdDialog.cancel();
 	};
 
+    /*Show a toast dialog with inform*/
 	$scope.showToast = function(value) {
         $mdToast.show($mdToast.simple().textContent(value).position('bottom','left').hideDelay(3000));
     };
 
-	getProjectMembers($stateParams.id);
+	getProjectMembers();
 
+    /*When click on eye icon, it'll open current file version in a new window*/
     $scope.showViewFileModal = function($event, file) {
-        // $rootScope.prjectSelectedFile = file;
-        // $mdDialog.show({
-        //     targetEvent: $event,
-        //     controller: "projectFilesCtrl",
-        //     resolve: {
-        //         files: function($stateParams, fileService) {
-        //             return fileService.getProjectFiles({id: $stateParams.id, type: "file"}).$promise;
-        //         },
-        //         people: function(peopleService, $stateParams) {
-        //             return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
-        //         }
-        //     },
-        //     templateUrl: 'app/modules/dashboard/partials/view-file.html',
-        //     parent: angular.element(document.body),
-        //     clickOutsideToClose: false
-        // });
         var win = window.open(file.path, "_blank");
         win.focus();
     };
 
-    if ($rootScope.prjectSelectedFile) {
-        $scope.file = $rootScope.prjectSelectedFile;
-        $scope.latestActivity = {};
-        _.each($scope.file.activities, function(activity) {
-            if (activity.type==="upload-file" || activity.type==="upload-reversion") {
-                $scope.latestActivity = activity;
-            }
-        });
-        $scope.latestActivity.isAcknowledge = false;
-        if (_.findIndex($scope.latestActivity.acknowledgeUsers, function(user) {
-            if (user._id && user.isAcknow) {
-                return user._id.toString()===$rootScope.currentUser._id.toString();
-            }
-        })!==-1) {
-            $scope.latestActivity.isAcknowledge = true;
-        }
-    }
-
-    $scope.download = function() {
-        filepicker.exportFile(
-            {url: $scope.file.path, filename: $scope.file.name},
-            function(Blob){
-                console.log(Blob.url);
-            }
-        );
-    };
-
-    $scope.sendAcknowledgement = function(file) {
-        fileService.acknowledgement({id: file._id, activityId: file.latestActivity._id}).$promise.then(function(res) {
-            $scope.showToast("Acknowledgement Has Been Sent Successfully.");
-            $scope.closeModal();
-            notificationService.markItemsAsRead({id: file._id}).$promise.then(function() {
-                $rootScope.$emit("UpdateCountNumber", {type: "file", number: file.__v});
-                var currentIndex = _.findIndex($scope.files, function(f) {
-                    return f._id.toString()===file._id.toString();
-                });
-                $rootScope.$emit("Project-File-Acknowledge", currentIndex);
-            });
-        }, function(err) {
-            $scope.showToast("Error");
-        });
-    };
-
+    /*Close opening modal*/
     $scope.closeModal = function() {
         $mdDialog.cancel();
     };
