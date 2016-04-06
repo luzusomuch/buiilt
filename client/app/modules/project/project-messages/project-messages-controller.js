@@ -12,22 +12,7 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
         });
     }
 
-    // this function use to seperate non-notification and notifications
-    function threadsSeperate(threads) {
-        $scope.threadsWithNotification = [];
-        $scope.threadsWithoutNotification = [];
-        _.each(threads, function(thread) {
-            if (!thread.isArchive) {
-                if (thread.__v>0) {
-                    $scope.threadsWithNotification.push(thread);
-                } else {
-                    $scope.threadsWithoutNotification.push(thread);
-                }
-            }
-        });
-    }
-    // end
-
+    /*Update last access to show recently first*/
     function getLastAccess(threads) {
         _.each(threads, function(thread) {
             if (thread.lastAccess&&thread.lastAccess.length>0) {
@@ -52,14 +37,22 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
 
     getLastAccess($scope.threads);
 
+    /*
+    Receive when new thread inserted and current user is member of it
+    Check if new thread is belong to current project
+    */
     socket.on("thread:new", function(data) {
-        console.log(data);
         if (data.project._id.toString()===$stateParams.id.toString()) {
             $scope.threads.push(data);
             $scope.threads = _.uniq($scope.threads, "_id");
         }
     });
 
+    /*
+    Receive when someone archive a thread
+    Check thread is in threads list, if it's belong to
+    then mark it as archive and show in archived threads list
+    */
     socket.on("thread:archive", function(data) {
         var currentThreadIndex=_.findIndex($scope.threads, function(t) {
             return t._id.toString()===data._id.toString();
@@ -70,23 +63,22 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
         }
     });
     
+    /*Receive when update a thread*/
     socket.on("dashboard:new", function(data) {
         if (data.type==="thread") 
             $rootScope.$emit("Dashboard.Thread.Update", data);
     });
 
-    // this socket fire when thread update
-    function getItemIndex(array, id) {
-        return _.findIndex(array, function(item) {
-            return item._id.toString()===id.toString();
-        });
-    };
-
+    /*Receive when owner created thread*/
     var listenerCleanFnPush = $rootScope.$on("Thread.Inserted", function(event, data) {
         $scope.threads.push(data);
         $scope.threads = _.uniq($scope.threads, "_id"); 
     });
 
+    /*
+    Receive when opened thread detail and check if it's belong to threads list
+    then change it notification number to 0
+    */
     var listenerCleanFnRead = $rootScope.$on("Thread.Read", function(event, data) {
         var index = _.findIndex($scope.threads, function(thread) {
             return thread._id.toString()===data._id.toString();
@@ -96,13 +88,18 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
         }
     });
 
+    /*Receive when sent a reply in reply modal and change thread notification to 0*/
     var listenerCleanFnAcknow = $rootScope.$on("Project-Message-Update", function(event, index) {
         $scope.threads[index].element.notificationType = null;
         $scope.threads[index].__v = 0;
     });
 
+    /*
+    Receive when updated thread, check updated thread notification number
+    if notification number is 0 then increase count total by 1
+    then keep countinue increase notification number by 1
+    */
     var listenerCleanFnPushFromDashboard = $rootScope.$on("Dashboard.Thread.Update", function(event, data) {
-        console.log(data);
         var index = _.findIndex($scope.threads, function(thread) {
             return thread._id.toString()===data.thread._id.toString();
         });
@@ -122,7 +119,7 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
         listenerCleanFnPushFromDashboard();
     });
 
-    // filter section
+    /*Search thread depend on input value*/
     $scope.search = function(thread) {
         if ($scope.name && $scope.name.length > 0) {
             var found = false;
@@ -163,9 +160,9 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
             return found;
         }
     };
-    // end filter section
 
-	function getPeopleList(id) {
+    /*Get project members list*/
+	function getPeopleList() {
 		$scope.projectMembers = [];
         _.each($rootScope.roles, function(role) {
             _.each($scope.people[role], function(tender){
@@ -209,8 +206,10 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
         });
         _.remove($scope.projectMembers, {_id: $rootScope.currentUser._id});
 	};
+
+    getPeopleList();
 	
-	//Functions to handle New Work Room Dialog.
+	/*Show create new Thead modal*/
 	$scope.showNewMessageModal = function($event) {
 		$mdDialog.show({
 		  	targetEvent: $event,
@@ -228,24 +227,28 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
 		    }
 	    });
 	};
-
     
+    /*Close create new thread modal*/
     $scope.cancelNewMessageModal = function() {
         $mdDialog.cancel();
     };
 
-    function setThread() {
-        $scope.thread = {
-            members : []
-        };
+    $scope.thread = {
+        members : []
     };
-    setThread();
+
+    /*Select project members for create new thread*/
 	$scope.selectMember = function(index, type) {
         if (type === "member") {
 		    $scope.projectMembers[index].select = !$scope.projectMembers[index].select;
         }
 	};	
 
+    /*
+    Creat new thread when form valid 
+    then call mixpanel to track current user has create new Thread
+    and go to the thread detail
+    */
 	$scope.addNewThread = function(form) {
 		if (form.$valid) {
 		    $scope.thread.members = _.filter($scope.projectMembers, {select: true});
@@ -266,16 +269,16 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
 		}
 	};
 
+    /*Show a toast inforation*/
 	$scope.showToast = function(value) {
         $mdToast.show($mdToast.simple().textContent(value).position('bottom','left').hideDelay(3000));
     };
 	
-	getPeopleList($stateParams.id);
-
     $scope.message = {};
     if ($rootScope.projectSelectedMessage) {
         $scope.selectedThread = $rootScope.projectSelectedMessage;
     }
+    /*Show reply message modal with a messages list*/
     $scope.showReplyModal = function(event, message) {
         $rootScope.projectSelectedMessage = message;
         $mdDialog.show({
@@ -295,10 +298,17 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
         });
     };
 
+    /*Close opening modal*/
     $scope.closeModal = function() {
         $mdDialog.cancel();
     };
 
+    /*
+    Used in show messages modal
+    Check if message text is not empty and sent then
+    call mixpanel track current user has sent reply and mark all notifications
+    which related to selected thread as read
+    */
     $scope.sendMessage = function() {
         $scope.message.text = $scope.message.text.trim();
         if ($scope.message.text.length===0 || $scope.message.text === '') {

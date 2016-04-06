@@ -359,8 +359,12 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
 	loadProjectMembers();
     getCurrentTeamMember();
     /*Update project members when invited success*/
-	$rootScope.$on("Project.Team.Invite", function(event, data) {
+    var updateProjectTeam = $rootScope.$on("Project.Team.Invite", function(ev, data) {
         $scope.people = data;
         loadProjectMembers();
+    });
+
+    $scope.$on('$destroy', function() {
+        updateProjectTeam();
     });
 });
