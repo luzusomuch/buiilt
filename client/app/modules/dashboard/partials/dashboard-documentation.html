@@ -35,11 +35,11 @@
 	
 	<div layout="column">
 		
-		<div ng-show="myFiles = 'null'" layout="column" layout-align="center center" class="dashboard-empty">
+		<div ng-show="myFiles.length == 0" layout="column" layout-align="center center" class="dashboard-empty">
 			<h4>No Documents Here</h4>
 		</div>
 
-		<md-list ng-cloak class="md-whiteframe-1dp content-list" ng-show="myFiles > 0">
+		<md-list ng-cloak class="md-whiteframe-1dp content-list" ng-show="myFiles.length > 0">
 			<div ng-repeat="file in myFiles | filter: filterDocument track by $index" ng-show="file.element.type=='document'">
 				<md-list-item class="md-2-line" md-ink-ripple layout-padding>
 		
