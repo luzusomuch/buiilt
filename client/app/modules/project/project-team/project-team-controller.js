@@ -9,6 +9,7 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
     // filter section
     $scope.search = false;
 
+    /*Select team tags for search*/
     $scope.selectTag = function(index) {
         $scope.searchResults = [];
         $scope.teamMemberTypeTags[index].select = !$scope.teamMemberTypeTags[index].select;
@@ -32,6 +33,7 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
         }
     };
 
+    /*Search member depend on search input text*/
     $scope.searchMember = function(member) {
         if ($scope.name && $scope.name.length > 0) {
             var found = false;
@@ -51,8 +53,11 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
     };
     // end filter section
 
+    /*
+    Get members list of current user's team
+    and filter out member that not in project member list
+    */
 	function getCurrentTeamMember() {
-		//get current user logged in team member
 		$scope.teamMembersCanInvite = $rootScope.currentTeam.leader;
 		_.each($rootScope.currentTeam.member, function(member) {
 			if (member._id && member.status === "Active") {
@@ -71,10 +76,10 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
         }
 	};
 
-	function loadProjectMembers(id) {
-		// get all project team member
+    /*Get all project members*/
+	function loadProjectMembers() {
         $scope.membersList = [];
-        // show the current user if he is a project creator
+        /*If current user is project manager, add himself to project members list*/
         if ($scope.people.project.projectManager._id.toString()===$rootScope.currentUser._id.toString()) {
             var role = ($scope.people.project.projectManager.type === "builder") ? "builders" : "architects";
             $scope.membersList.push({_id: $rootScope.currentUser._id, name: $rootScope.currentUser.name, email: $rootScope.currentUser.email, phoneNumber: ($rootScope.currentUser.phoneNumber) ? $rootScope.currentUser.phoneNumber : null, type: $rootScope.currentUser.type});
@@ -98,7 +103,7 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
                 }
             });
 
-            // Get team list
+            /*Get another project members team*/
             _.each($scope.people[role], function(tender){
                 if (tender.hasSelect) {
                     var isLeader = (_.findIndex(tender.tenderers, function(tenderer) {
@@ -263,6 +268,10 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
         _.remove($scope.teamMemberTypeTags, {value: $rootScope.currentUser.type});
 	};
 
+    /*
+    Get selected invite project member type
+    If type is employee, call getCurrentTeamMember function
+    */
 	$scope.getChangeTypeValue = function(type) {
 		$scope.invite.isTender = false;
         if (type === 'addClient' || type === "addEmployee") {
@@ -279,47 +288,15 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
         $scope.invite.invitees = [];
 	};
 
-	$scope.inviteTeamMember = function(member, index) {
-        $scope.invite.teamMember.push(member);
-        $scope.teamMembersCanInvite.splice(index,1);
-        member.canRevoke = true;
-    };
-
-	$scope.revokeTeamMember = function(member, index) {
-        $scope.teamMembersCanInvite.push(member);
-        $scope.invite.teamMember.splice(index, 1);
-        member.canRevoke = false;
-    };
-
+    /*
+    Only use for invite employee
+    Select current team member to add him to project members
+    */
     $scope.selectMember = function(index) {
         $scope.teamMembersCanInvite[index].select = !$scope.teamMembersCanInvite[index].select;
     };
 
-	$scope.addInvitee = function(email, name) {
-		if (email && email != '' && name && name != '') {
-            if (_.findIndex($scope.invite.invitees, {email: email}) === -1) {
-                $scope.invite.invitees.push({email: email, name: name});
-                $scope.email = null;
-                $scope.name = null;
-            } else {
-                $scope.showToast("This Invitee Has Already Been Added...");
-            }   
-        }
-	};	
-
-	$scope.removeInvitee = function(index) {
-        $scope.invite.invitees.splice(index, 1);
-    };
-
-    $scope.setInviteTender = function(value) {
-        $scope.invite.isTender = value;
-        if (value) {
-            $rootScope.currentInviteData = $scope.invite;
-            $state.go("project.tenders.all", {id: $stateParams.id});
-            $scope.cancelInviteTeamModal();
-        }
-    };
-
+    /*Add new user or team member to project members*/
 	$scope.inviteNewTeamMember = function(form) {
 		if (form.$valid) {
 			$scope.invite.inviterType = $rootScope.currentUser.type;
@@ -352,11 +329,12 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
 		}
 	};
 
+    /*Show toast information*/
 	$scope.showToast = function(value) {
         $mdToast.show($mdToast.simple().textContent(value).position('bottom','left').hideDelay(3000));
     };
 
-	//Functions to handle Invite Team Dialog.
+	/*Show invite team modal*/
 	$scope.showInviteTeamModal = function($event) {
         $scope.invite.event = $event;
 		$mdDialog.show({
@@ -373,14 +351,16 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
 	    });
 	};
 	
+    /*Close opening modal*/
 	$scope.cancelInviteTeamModal = function () {
 		$mdDialog.cancel();
 	};
 
-	loadProjectMembers($stateParams.id);
+	loadProjectMembers();
     getCurrentTeamMember();
+    /*Update project members when invited success*/
 	$rootScope.$on("Project.Team.Invite", function(event, data) {
         $scope.people = data;
-        loadProjectMembers($stateParams.id);
+        loadProjectMembers();
     });
 });
