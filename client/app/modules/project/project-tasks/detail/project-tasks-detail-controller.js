@@ -1,22 +1,27 @@
 angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootScope, $scope, $timeout, task, taskService, $mdToast, $mdDialog, peopleService, $stateParams, messageService, $state, people, uploadService, socket, notificationService) {
-    // remove the notifications count immeditely
+    /*Update total count in project side bar after 0.5s*/
     $timeout(function() {
         $rootScope.$emit("UpdateCountNumber", {type: "task", number: (task.__v>0)?1:0});
     },500);
-    // end 
     
-    // set timeout 4s for mark read notification 
+    /*If notification of task greator than 0 then mark it as read
+    and update unread activities to false after 4s*/
     $timeout(function(){
         if (task.__v>0) {
             notificationService.markItemsAsRead({id: $stateParams.taskId}).$promise.then(function() {
                 $rootScope.$emit("Task.Read", task);
                 markActivitesAsRead($scope.task);
+                _.each($scope.task.activities, function(a){
+                    a.unread = false;
+                    a.unreadLine=false;
+                });
             });
         }
     }, 4000);
-    // end timeout
 
-    // function to filter out that unread activities
+    /*If notification of current task greator than 0
+    then mark activities from the bottom to the top
+    until activities length is the same with notification length*/
     function filterUnreadActivites(task) {
         if (task.__v > 0) {
             var temp = 0;
@@ -32,16 +37,7 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
             };
         }
     };
-    // end filter unread activities
 
-    // function to mark activities as read
-    function markActivitesAsRead(task) {
-        _.each(task.activities, function(a){
-            a.unread = false;
-            a.unreadLine=false;
-        });
-    };
-    // end mark activities as read
     $scope.task = task;
 
     filterUnreadActivites($scope.task);
@@ -49,6 +45,8 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
     $scope.people = people;
     $scope.task.dateEnd = new Date($scope.task.dateEnd);
     $scope.minDate = new Date();
+    /*If current task is the related item of another one
+    then create for itself a link to it's parent item*/
     if ($scope.task.belongTo) {
         switch ($scope.task.belongTo.type) {
             case "thread":
@@ -63,27 +61,9 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
             break;
         }
     }
-    $scope.orginalActivities = angular.copy($scope.task.activities);
 
-    $scope.isShowRelativeActivities = true;
-    $scope.showRelatedActivities = function() {
-        $scope.isShowRelativeActivities = !$scope.isShowRelativeActivities;
-    };
-    $scope.$watch("isShowRelativeActivities", function(value) {
-        var activities = [];
-        if (!value) {
-            _.each($scope.orginalActivities, function(activity) {
-                if (activity.type === "complete-task" || activity.type === "uncomplete-task" || activity.type === "edit-task" || activity.type === "assign") {
-                    activities.push(activity);
-                }
-            });
-            $scope.task.activities = activities;
-        } else {
-            $scope.task.activities = $scope.orginalActivities;
-        }
-    });
-
-    function getProjectMembers(id) {
+    /*Get project members list and file tags list for create related file*/
+    function getProjectMembers() {
         $scope.membersList = [];
         $scope.tags = [];
         _.each($rootScope.currentTeam.fileTags, function(tag) {
@@ -149,6 +129,7 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
         _.remove($scope.invitees, {_id: $rootScope.currentUser._id});
     };
 
+    /*Mark task as complete or uncomplete*/
     $scope.markComplete = function() {
         $scope.task.completed = !$scope.task.completed;
         if ($scope.task.completed) {
@@ -163,6 +144,7 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
         $scope.updateTask($scope.task, $scope.task.editType);
     };
 
+    /*Show modal with valid name*/
     $scope.showModal = function($event, modalName){
         if (modalName === "add-related-thread.html") {
             $scope.relatedThread = {};
@@ -184,6 +166,7 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
         });
     };
 
+    /*Edit task detail*/
     $scope.editTaskDetail = function(form) {
         if (form.$valid) {
             $scope.task.editType = "edit-task";
@@ -194,6 +177,9 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
         }
     };
 
+    /*Select project members to assign them to current thread
+    Select tags for create related file
+    Select task members for create related item*/
     $scope.selectMember = function(index, type) {
         if (type === "member") {
             $scope.membersList[index].select = !$scope.membersList[index].select;
@@ -204,6 +190,7 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
         }
     };
 
+    /*Assign more project members to current task*/
     $scope.assignMember = function() {
         $scope.task.newMembers = _.filter($scope.membersList, {select: true});
         if ($scope.task.newMembers.length > 0) {
@@ -215,6 +202,7 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
         }
     };
 
+    /*Insert a note to current task*/
     $scope.insertNote = function(form) {
         if (form.$valid) {
             $scope.task.editType="insert-note";
@@ -225,6 +213,7 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
         }
     };
 
+    /*Update task*/
     $scope.updateTask = function(task, updateType) {
         taskService.update({id: task._id}, task).$promise.then(function(res) {
             if (updateType == "complete-task" || updateType == "uncomplete-task") {
@@ -245,6 +234,7 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
         });
     };
 
+    /*Create related thread with valid members then open specific thread*/
     $scope.createRelatedThread = function(form) {
         if (form.$valid) {
             $scope.relatedThread.members = _.filter($scope.invitees, {select: true});
@@ -267,15 +257,12 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
         }
     };
 
-    $scope.setRelatedFile = function() {
-        $scope.relatedFile = {
-            files:[],
-            tags:[],
-            belongTo: $scope.task._id,
-            belongToType: "task"
-        };
-    }
-    $scope.setRelatedFile();
+    $scope.relatedFile = {
+        files:[],
+        tags:[],
+        belongTo: $scope.task._id,
+        belongToType: "task"
+    };
 
     $scope.pickFile = pickFile;
 
@@ -283,8 +270,6 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
 
     function pickFile(){
         filepickerService.pick(
-            // add max files for multiple pick
-            // {maxFiles: 5},
             onSuccess
         );
     };
@@ -294,6 +279,7 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
         $scope.relatedFile.files.push(file);
     };
 
+    /*Create new related file with valid tags and members then open specific file*/
     $scope.createRelatedFile = function() {
         $scope.relatedFile.members = _.filter($scope.invitees, {select: true});
         $scope.relatedFile.tags = _.filter($scope.tags, {select: true});
@@ -307,28 +293,36 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
             uploadService.upload({id: $stateParams.id}, $scope.relatedFile).$promise.then(function(res) {
                 $scope.closeModal();
                 $scope.showToast("Upload new related file successfully");
-                $scope.setRelatedFile();
                 $state.go("project.files.detail", {id: res[0].project, fileId: res[0]._id});
             }, function(err) {$scope.showToast("Error");});
         }
     };
 
+    /*Show toast inform*/
     $scope.showToast = function(value) {
         $mdToast.show($mdToast.simple().textContent(value).position('bottom','left').hideDelay(3000));
     };
 
+    /*Close opening modal*/
     $scope.closeModal = function() {
         $mdDialog.cancel();
     };
 
-    getProjectMembers($stateParams.id);
-    $rootScope.$on("Task.Updated", function(event, data) {
+    getProjectMembers();
+
+    /*Receive when owner updated their task*/
+    var clearTaskUpdate = $rootScope.$on("Task.Updated", function(event, data) {
         $scope.task = data;
         $scope.task.dateEnd = new Date($scope.task.dateEnd);
-        getProjectMembers($stateParams.id);
+        getProjectMembers();
+    });
+
+    $scope.$on('$destroy', function() {
+        clearTaskUpdate();
     });
 
     socket.emit("join", task._id);
+    /*Receive when someone updated task and current user is members of task*/
     socket.on("task:update", function(data) {
         $scope.task = data;
         $scope.task.dateEnd = new Date($scope.task.dateEnd);

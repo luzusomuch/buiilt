@@ -101,9 +101,13 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
     });
 
     /*Receive when current user updated thread*/
-    $rootScope.$on("Thread.Update", function(event, data) {
+    var clearThreadUpdate = $rootScope.$on("Thread.Update", function(event, data) {
         $scope.thread = data;
         threadInitial();
+    });
+
+    $scope.$on('$destroy', function() {
+        clearThreadUpdate();
     });
 
     /*Check if current user is in thread members list or is the thread owner
