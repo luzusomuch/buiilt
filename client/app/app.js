@@ -32,9 +32,9 @@ angular
     filepickerProvider.setKey('AM6Wn3DzwRimryydBnsj7z');
     // $mixpanelProvider.apiKey('e6d853e9a8af11b4aa36ea63291ead38'); // your token is different than your API key
     // for testing mode
-    // stripeProvider.setPublishableKey('pk_test_WGKFaZu6dXITEIxoyVI8DrVa');
+    stripeProvider.setPublishableKey('pk_test_WGKFaZu6dXITEIxoyVI8DrVa');
     // for live mode
-    stripeProvider.setPublishableKey('pk_live_INyU3RmhNGx4GSBQUjuqZne9');
+    // stripeProvider.setPublishableKey('pk_live_INyU3RmhNGx4GSBQUjuqZne9');
 })
 .config(function($mdThemingProvider) {
     $mdThemingProvider.theme('default')

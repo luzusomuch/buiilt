@@ -38,6 +38,7 @@ var UserSchema = new Schema({
     packageToken: String,
     status: {type: String, default: 'offline'},
     projects: [{type: Schema.Types.ObjectId, ref: 'Project'}],
+    favouriteProjects: [{type: Schema.Types.ObjectId, ref: "Project"}],
     createdAt: {type: Date, default: Date.now},
     updatedAt: {type: Date, default: Date.now},
     plan: {type: String, enum:["small", "medium", "large"]},

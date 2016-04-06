@@ -27,9 +27,17 @@
 	</div>
 	
 	<div layout="row">
-		<div ng-show="!search && project.status=='waiting'" ng-repeat="project in projects | filter:{name: filter} track by $index" ui-sref="project.overview({id: project._id})" class="content-card cursor-pointer md-whiteframe-1dp" flex="33">
-			<h3>{{ project.name }} <span ng-show="project.__v > 0">({{project.__v}})</span></h3>
-			<p>{{ project.address }}, {{ project.suburb }} {{ project.postcode }}</p>
+		<div ng-show="project.status=='waiting'" ng-repeat="project in projects | filter:{name: filter} track by $index" class="content-card cursor-pointer md-whiteframe-1dp" flex="33">
+			<div ui-sref="project.overview({id: project._id})">
+				<h3>{{ project.name }} <span ng-show="project.__v > 0">({{project.__v}})</span></h3>
+				<p>{{ project.address }}, {{ project.suburb }} {{ project.postcode }}</p>
+			</div>
+			<div>
+				<md-button ng-click="setFavourite(project)" class="md-primary" aria-label="Favourite Project">
+					<i ng-show="project.isFavourite" class="md-primary material-icons">star</i>
+					<i ng-show="!project.isFavourite" class="md-primary material-icons">star_border</i>
+				<md-button>
+			</div>
 		</div>
 	</div>
 	

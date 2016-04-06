@@ -9,15 +9,13 @@
 			<md-menu>
 				<md-button ng-click="$mdOpenMenu($event)" class="" aria-label="Select a Project">Select a Project <md-icon class="material-icons">arrow_drop_down</md-icon></md-button>
 			 	<md-menu-content width="4">
-					
-					<md-menu-item><md-button ng-click="">Create a New Project</md-button></md-menu-item>
+					<md-menu-item><md-button ng-click="showModal($event, 'projects-create.html')">Create a New Project</md-button></md-menu-item>
 					<md-divider></md-divider>
 			   		<md-menu-item><md-button ng-click="">Project Name 1</md-button></md-menu-item>
 					<md-menu-item><md-button ng-click="">Project Name 2</md-button></md-menu-item>
 					<md-menu-item><md-button ng-click="">Project Name 3</md-button></md-menu-item>
 					<md-divider></md-divider>
-					<md-menu-item><md-button ng-click="">View All Projects</md-button></md-menu-item>
-					
+					<md-menu-item><md-button ui-sref="projects.open">View All Projects</md-button></md-menu-item>
 			 	</md-menu-content>
 			</md-menu>
 			

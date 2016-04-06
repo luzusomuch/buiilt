@@ -1,20 +1,25 @@
-angular.module('buiiltApp').controller('projectsCtrl', function ($rootScope, $scope, $timeout, $state, $mdDialog, projectService, inviteTokenService, projectsInvitation, teamInvitations, teamService, $mdToast) {
+angular.module('buiiltApp').controller('projectsCtrl', function ($rootScope, $scope, $timeout, $state, $mdDialog, projectService, inviteTokenService, projectsInvitation, teamInvitations, teamService, $mdToast, userService) {
 	$rootScope.title = "Projects List";
     $scope.autoCompleteRequireMath = true;
     $scope.selectedItem = null;
     $scope.search = false;
 	$scope.projectsFilter = [];
     $scope.projects = $rootScope.projects;
-    $scope.allowCreateProject = false;
     $scope.currentTeam = $rootScope.currentTeam;
-	$scope.showFilter = false;
+    $scope.showFilter = false;
+
     /*Check if current user is team leader, so he can create project*/
+    $scope.allowCreateProject = false;
     if ($rootScope.currentUser.isLeader && $scope.currentTeam._id && ($scope.currentTeam.type === "builder" || $scope.currentTeam.type === "architect")) {
         $scope.allowCreateProject = true;
     }
 
     $scope.projectsInvitation = projectsInvitation;
     $scope.teamInvitations = teamInvitations;
+
+    $scope.setFavourite = function(project) {
+        project.isFavourite = !project.isFavourite;
+    };
 
     /*Create new project then call mixpanel to track current user has created project
     then go to this project overview*/
@@ -24,7 +29,7 @@ angular.module('buiiltApp').controller('projectsCtrl', function ($rootScope, $sc
                 $scope.project.teamType = $scope.currentTeam.type;
                 projectService.create($scope.project).$promise.then(function(data){
                     $scope.projects.push(data);
-                    $scope.saveProject();
+                    $scope.hideCreateProjectModal();
                     $state.go('project.overview', {id: data._id},{reload: true});
                     $scope.submitted = false;
 					

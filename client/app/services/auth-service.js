@@ -1,5 +1,4 @@
-angular.module('buiiltApp')
-.factory('authService', function($location, $rootScope, $http, userService,teamService, $cookieStore, $q,$state) {
+angular.module('buiiltApp').factory('authService', function($location, $rootScope, $http, userService,teamService, $cookieStore, $q,$state) {
     var currentUser = {};
     if ($cookieStore.get('token')) {
         currentUser = userService.get();
@@ -35,21 +34,21 @@ angular.module('buiiltApp')
             return deferred.promise;
         },
         /**
-         * Delete access token and user info
-         *
-         * @param  {Function}
-         */
+        * Delete access token and user info
+        *
+        * @param  {Function}
+        */
         logout: function() {
             $cookieStore.remove('token');
             currentUser = {};
         },
         /**
-         * Create a new user
-         *
-         * @param  {Object}   user     - user info
-         * @param  {Function} callback - optional
-         * @return {Promise}
-         */
+        * Create a new user
+        *
+        * @param  {Object}   user     - user info
+        * @param  {Function} callback - optional
+        * @return {Promise}
+        */
         createUser: function(user, callback) {
             var cb = callback || angular.noop;
 
@@ -124,90 +123,78 @@ angular.module('buiiltApp')
             }.bind(this)).$promise;
         },
         /**
-         * Change password
-         *
-         * @param  {String}   oldPassword
-         * @param  {String}   newPassword
-         * @param  {Function} callback    - optional
-         * @return {Promise}
-         */
+        * Change password
+        *
+        * @param  {String}   oldPassword
+        * @param  {String}   newPassword
+        * @param  {Function} callback    - optional
+        * @return {Promise}
+        */
         changePassword: function(oldPassword, newPassword, callback) {
-          var cb = callback || angular.noop;
+            var cb = callback || angular.noop;
 
-          return userService.changePassword({id: currentUser._id}, {
-            oldPassword: oldPassword,
-            newPassword: newPassword
-          }, function(user) {
-            return cb(user);
-          }, function(err) {
-            return cb(err);
-          }).$promise;
+            return userService.changePassword({id: currentUser._id}, {
+                oldPassword: oldPassword,
+                newPassword: newPassword
+            }, function(user) {
+                return cb(user);
+            }, function(err) {
+                return cb(err);
+            }).$promise;
         },
 
         changeEmail : function(email) {
-          return userService.changeEmail({id : currentUser._id},email).$promise
+            return userService.changeEmail({id : currentUser._id},email).$promise
         },
-
-        // changePhoneNum: function(phoneNumber, callback) {
-        //   var cb = callback || angular.noop;
-
-        //   return userService.changePhoneNum({id: currentUser._id}, {
-        //     phoneNumber: phoneNumber
-        //   }, function(user) {
-        //     return cb(user);
-        //   }, function(err) {
-        //     return cb(err);
-        //   }.bind(this)).$promise;
-        // },
 
         changeProfile: function(firstName, lastName, phoneNumber, callback) {
-          var cb = callback || angular.noop;
-          return userService.changeProfile({id: currentUser._id}, {
-            firstName: firstName,
-            lastName: lastName,
-            phoneNumber: phoneNumber
-          }, function(user) {
-            return cb(user);
-          }, function(err){
-            return cb(err);
-          }).$promise;
+            var cb = callback || angular.noop;
+            return userService.changeProfile({id: currentUser._id}, {
+                firstName: firstName,
+                lastName: lastName,
+                phoneNumber: phoneNumber
+            }, function(user) {
+                return cb(user);
+            }, function(err){
+                return cb(err);
+            }).$promise;
         },
         /**
-         * Gets all available info on authenticated user
-         *
-         * @return {Object} user
-         */
+        * Gets all available info on authenticated user
+        *
+        * @return {Object} user
+        */
         getCurrentUser: function() {
-          return currentUser;
+            return currentUser;
         },
         /**
-         * Get team on authenticated user
-         * @returns {*}
-         */
+        * Get team on authenticated user
+        * @returns {*}
+        */
         getCurrentTeam : function() {
-          return teamService.getCurrentTeam();
+            return teamService.getCurrentTeam();
         },
         getCurrentInvitation : function() {
-          return teamService.getCurrentInvitation();
+            return teamService.getCurrentInvitation();
         },
         /**
-         * Gets all available info on authenticated user in async
-         *
-         * @param {Function} cb
-         * @returns {void}
-         */
+        * Gets all available info on authenticated user in async
+        *
+        * @param {Function} cb
+        * @returns {void}
+        */
         getCurrentUserInAsync: function(cb) {
-          if (currentUser.hasOwnProperty('$promise')) {
-            currentUser.$promise.then(function() {
-              cb(currentUser);
-            }). catch (function() {
-              cb(null);
-            });
-          } else if (currentUser.hasOwnProperty('role')) {
-            cb(currentUser);
-          } else {
-            cb(null);
-          }
+            if (currentUser.hasOwnProperty('$promise')) {
+                currentUser.$promise.then(function() {
+                    cb(currentUser);
+                }). catch (function() {
+                    cb(null);
+                });
+            } else if (currentUser.hasOwnProperty('role')) {
+                cb(currentUser);
+            } else {
+                cb(null);
+            }
         },
 
         /**
@@ -216,23 +203,23 @@ angular.module('buiiltApp')
          * @return {Boolean}
          */
         isLoggedIn: function() {
-          return currentUser.hasOwnProperty('role');
+            return currentUser.hasOwnProperty('role');
         },
         /**
          * Waits for currentUser to resolve before checking if user is logged in
          */
         isLoggedInAsync: function(cb) {
-          if (currentUser.hasOwnProperty('$promise')) {
-            currentUser.$promise.then(function() {
-              cb(true);
-            }). catch (function() {
-              cb(false);
-            });
-          } else if (currentUser.hasOwnProperty('role')) {
-            cb(true);
-          } else {
-            cb(false);
-          }
+            if (currentUser.hasOwnProperty('$promise')) {
+                currentUser.$promise.then(function() {
+                    cb(true);
+                }). catch (function() {
+                    cb(false);
+                });
+            } else if (currentUser.hasOwnProperty('role')) {
+                cb(true);
+            } else {
+                cb(false);
+            }
         },
         /**
          * Check if a user is an admin
@@ -240,71 +227,70 @@ angular.module('buiiltApp')
          * @return {Boolean}
          */
         isAdmin: function() {
-          return currentUser.role === 'admin';
+            return currentUser.role === 'admin';
         },
         /**
          * Get auth token
          */
         getToken: function() {
-          return $cookieStore.get('token');
+            return $cookieStore.get('token');
         },
 
         recoverPassword: function(email, callback){
-          var cb = callback || angular.noop;
-          var deferred = $q.defer();
+            var cb = callback || angular.noop;
+            var deferred = $q.defer();
 
-          $http.post('/auth/recoverPassword', {
-            email: email
-          })
-          .success(function(data) {
-            deferred.resolve(data);
-            return cb();
-          })
-          .error(function(err) {
-            deferred.reject(err);
-            return cb(err);
-          }.bind(this));
+            $http.post('/auth/recoverPassword', {
+                email: email
+            })
+            .success(function(data) {
+                deferred.resolve(data);
+                return cb();
+            })
+            .error(function(err) {
+                deferred.reject(err);
+                return cb(err);
+            }.bind(this));
 
-          return deferred.promise;
+            return deferred.promise;
         },
 
         confirmResetPasswordToken: function(token, callback){
-          var cb = callback || angular.noop;
-          var deferred = $q.defer();
+            var cb = callback || angular.noop;
+            var deferred = $q.defer();
 
-          $http.get('/auth/confirmPasswordResetToken/' + token)
-          .success(function(data) {
-            //do login
-            $cookieStore.put('token', data.token);
-            currentUser = userService.get();
+            $http.get('/auth/confirmPasswordResetToken/' + token)
+            .success(function(data) {
+                //do login
+                $cookieStore.put('token', data.token);
+                currentUser = userService.get();
 
-            deferred.resolve(data);
-            return cb();
-          })
-          .error(function(err) {
-            deferred.reject(err);
-            return cb(err);
-          }.bind(this));
+                deferred.resolve(data);
+                return cb();
+            })
+            .error(function(err) {
+                deferred.reject(err);
+                return cb(err);
+            }.bind(this));
 
-          return deferred.promise;
+            return deferred.promise;
         },
 
         setCurrentUser: function(user){
-          currentUser = user;
+            currentUser = user;
         },
 
         sendVerification: function() {
-          return userService.sendVerification();
+            return userService.sendVerification();
         },
         forgotPassword: function(email) {
-          return userService.forgotPassword(email);
+            return userService.forgotPassword(email);
         },
         resetPassword : function(data) {
-          return userService.resetPassword(data);
+            return userService.resetPassword(data);
         },
         getResetPasswordToken : function(id) {
-          return userService.getResetPasswordToken({id : id});
+            return userService.getResetPasswordToken({id : id});
         }
-
     };
 });

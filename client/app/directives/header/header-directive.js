@@ -25,6 +25,7 @@ angular.module('buiiltApp')
                         $scope.duration = 10000;
                         authService.getCurrentUser().$promise
                         .then(function(res) {
+                            checkFavouriteProjects(res.projects, res.favouriteProjects);
                             $rootScope.currentUser = $scope.currentUser = res;
                             Tawk_API.visitor = {
                                 name : $rootScope.currentUser.name,
@@ -119,7 +120,38 @@ angular.module('buiiltApp')
                     parent: angular.element(document.body),
                     clickOutsideToClose: false
                 });
-            }
+            };
+
+            $scope.showModal = function(event, name) {
+                $mdDialog.show({
+                    targetEvent: event,
+                    controller: 'projectsCtrl',
+                    resolve: {
+                        teamInvitations: ["authService", function(authService){
+                            return authService.getCurrentInvitation().$promise;
+                        }],
+                        projectsInvitation: ["inviteTokenService", function(inviteTokenService) {
+                            return inviteTokenService.getProjectsInvitation().$promise;
+                        }]
+                    },
+                    templateUrl: (name === "projects-create.html" ? 'app/modules/projects/projects-create/projects-create.html' : ""),
+                    parent: angular.element(document.body),
+                    clickOutsideToClose:false
+                });
+            };
+
+            /*Mark project as favourite if existed in favourite list*/
+            function checkFavouriteProjects(projects, favouriteProjects) {
+                angular.forEach(projects, function(p) {
+                    p.isFavourite = false;
+                    var index = _.findIndex(favouriteProjects, function(project) {
+                        return project._id == p._id
+                    });
+                    if (index !== -1) {
+                        p.isFavourite = true
+                    }
+                });
+            };
         }
     };
 });

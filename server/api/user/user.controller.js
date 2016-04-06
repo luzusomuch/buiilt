@@ -578,6 +578,8 @@ exports.changeProfile = function(req, res) {
         else {
             if (req.body.editType === "enterCreditCard") {
                 user.creditCard = req.body.creditCard;
+            } else if(req.body.editType === "favouriteProjects") {
+                console.log(req.body)
             } else {
                 user.firstName = req.body.firstName;
                 user.lastName = req.body.lastName;
@@ -598,6 +600,7 @@ exports.changeProfile = function(req, res) {
 exports.me = function (req, res, next) {
     var userId = req.user._id;
     User.findOne({_id: userId}, '-salt -hashedPassword')
+    .populate("favouriteProjects")
     .populate('projects').exec(function (err, user) { // don't ever give out the password or salt
         if (err) {return next(err);}
         if (!user) {return res.json(404);}
