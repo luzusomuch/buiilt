@@ -40,6 +40,9 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         listenerTaskCreatedFb();
     });
 
+    /*
+        Update dashboard items list when user interactive with
+    */
     var listenerCleanFn = $rootScope.$on("Dashboard-Update", function(event, data) {
         if (data.type==="thread") {
             $scope.myMessages.splice(data.index, 1);
@@ -48,6 +51,9 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         }
     });
 
+    /*
+        Change task due date to string and insert to tasks list
+    */
     var listenerTaskCreatedFb = $rootScope.$on("DashBoard-Task-Created", function(event, data) {
         var taskDueDate = moment(data.dateEnd).format("YYYY-MM-DD");
         if (data.dateEnd) {
@@ -77,6 +83,9 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     };
     sortTask($scope.myTasks);
 
+    /*
+        Get item index in items list
+    */
     function getItemIndex(array, id) {
         return _.findIndex(array, function(item) {
             if (item._id) {
@@ -86,6 +95,10 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     };
 
     // socket section
+    /*
+        Receive socket when archived file
+        Get file index then remove it from files list and update count number by -1
+    */
     socket.on("file:archive", function(data) {
         var currentFileIndex=_.findIndex($scope.myFiles, function(t) {
             if (t.element.type==="file") {
@@ -98,6 +111,10 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         }
     });
 
+    /*
+        Receive socket when archived document
+        Get document index then remove it from documents list and update count number by -1
+    */
     socket.on("document:archive", function(data) {
         var currentFileIndex=_.findIndex($scope.myFiles, function(t) {
             if (t.element.type==="document") {
@@ -110,6 +127,10 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         }
     });
 
+    /*
+        Receive socket when archived thread
+        Get thread index then remove it from threads list and update count number by -1
+    */
     socket.on("thread:archive", function(data) {
         var currentThreadIndex=_.findIndex($scope.myMessages, function(t) {
             return t._id.toString()===data._id.toString();
@@ -120,6 +141,13 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         }
     });
 
+    /*
+        Recevie socket when insert new item and current user hasn't read
+        1. Get new item type
+        2. Check if existed or not
+            a. If existed then add count number by 1 and update count notitication of item
+            b. If not then insert new item to list items type and increase count number by 1
+    */
     socket.on("dashboard:new", function(data) {
         if (data.type==="thread") {
             var index = getItemIndex($scope.myMessages, data._id);
@@ -221,10 +249,12 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     });
     // end socket section
 
+    /*Show a toast modal*/
     $scope.showToast = function(value) {
         $mdToast.show($mdToast.simple().textContent(value).position('bottom','left').hideDelay(3000));
     };
 
+    /*Close current open modal and set projects filter, selected project by default*/
     $scope.closeModal = function() {
         $mdDialog.cancel();
         _.each($scope.projects, function(project) {
@@ -235,6 +265,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         });
     };
 
+    /*Mark the selected item as read*/
     $scope.markRead = function(item) {
         notificationService.markItemsAsRead({id: item._id}).$promise.then(function() {
             $scope.showToast("You Have Successfully Marked This Read.");
@@ -243,6 +274,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         }, function(err){$scope.showToast("Error");});
     };
 
+    /*Get all project members when create new item*/
     function getProjectMembers(id) {
         $scope.selectedProjectId = id;
         peopleService.getInvitePeople({id: id}).$promise.then(function(res) {
@@ -293,10 +325,12 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         });
     };
 
+    /*Add project member to new item*/
     $scope.selectMember = function(index) {
         $scope.projectMembers[index].select = !$scope.projectMembers[index].select;
     };
 
+    /*Select project for getting member of it's*/
     $scope.selectProject = function($index) {
         _.each($scope.projects, function(project) {
             project.select = false;
@@ -312,6 +346,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         $scope.task.dateEnd = new Date($scope.task.dateEnd);
     }
 
+    /*Change task due date to a text*/
     angular.forEach($scope.myTasks, function(task) {
         var taskDueDate = moment(task.dateEnd).format("YYYY-MM-DD");
         if (task.dateEnd) {
@@ -325,6 +360,12 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         }
     });
 
+    /*
+    Mark selected task as completed or un-completed
+    1.If mark complete then set completed by current user and completed at now
+    2.If mark uncomplete then set completed by null and completed at null
+    Then remove current task from tasks list and update count number
+    */
     $scope.markComplete = function(task, index) {
         task.completed = !task.completed;
         if (task.completed) {
@@ -345,6 +386,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         }, function(err) {$scope.showToast("Error");});
     };
 
+    /*Show edit task modal with selected task*/
     $scope.showEditTaskModal = function(event, task) {
         $rootScope.dashboardEditTask = task;
         $mdDialog.show({
@@ -367,6 +409,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         });
     };
 
+    /*Show add new task modal*/
     $scope.showNewTaskModal = function(event) {
         $rootScope.isRemoveCurrentUser = false;
         $mdDialog.show({
@@ -389,6 +432,11 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         });
     };
 
+    /*
+    Create new task if enter a valid form with selected project members
+    When success call mixpanel that current user has created new task
+    then call function listenerTaskCreatedFb
+    */
     $scope.minDate = new Date();
     $scope.createNewTask = function(form) {
         if (form.$valid) {
@@ -418,6 +466,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         }
     };
 
+    /*Edit selected task when entered valid form*/
     $scope.editTaskDetail = function(form) {
         if (form.$valid) {
             $scope.task.editType = "edit-task";
@@ -441,6 +490,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     if ($rootScope.selectedMessage) {
         $scope.selectedThread = $rootScope.selectedMessage;
     }
+    /*Show reply message modal with selected thread*/
     $scope.showReplyModal = function(event, message) {
         $rootScope.selectedMessage = message;
         $mdDialog.show({
@@ -462,51 +512,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             clickOutsideToClose: false
         });
     };
-
-    $scope.viewReplyModal = function(event, message) {
-        $rootScope.selectedMessage = message;
-        $mdDialog.show({
-            targetEvent: event,
-            controller: "dashboardCtrl",
-            resolve: {
-                myTasks: ["taskService", function(taskService) {
-                    return taskService.myTask().$promise;
-                }],
-                myMessages: ["messageService", function(messageService) {
-                    return messageService.myMessages().$promise;
-                }],
-                myFiles: ["fileService" ,function(fileService) {
-                    return fileService.myFiles().$promise;
-                }]
-            },
-            templateUrl: 'app/modules/dashboard/partials/view-reply.html',
-            parent: angular.element(document.body),
-            clickOutsideToClose: false
-        });
-    };
-
-    $scope.viewReplyModal = function(event, message) {
-        $rootScope.selectedMessage = message;
-        $mdDialog.show({
-            targetEvent: event,
-            controller: "dashboardCtrl",
-            resolve: {
-                myTasks: ["taskService", function(taskService) {
-                    return taskService.myTask().$promise;
-                }],
-                myMessages: ["messageService", function(messageService) {
-                    return messageService.myMessages().$promise;
-                }],
-                myFiles: ["fileService" ,function(fileService) {
-                    return fileService.myFiles().$promise;
-                }]
-            },
-            templateUrl: 'app/modules/dashboard/partials/view-reply.html',
-            parent: angular.element(document.body),
-            clickOutsideToClose: false
-        });
-    };
-
+    
     $scope.showNewThreadModal = function(event) {
         $rootScope.isRemoveCurrentUser = true;
         $mdDialog.show({
