@@ -16,7 +16,9 @@ angular.module('buiiltApp', [
     'angular-filepicker',
     'ngMaterial',
     'angular-clipboard',
-    'angular-stripe'
+    'angular-stripe',
+    "materialCalendar",
+    "mdPickers"
 ]);
 
 angular

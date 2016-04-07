@@ -15,6 +15,11 @@
 				    <p layout-padding>Team</p>
 				</md-list-item>
 			</div>
+			<div ui-sref="project.calendar" ng-class="{activemenu: $state.includes('project.calendar')}"id="projMenuCalendar">
+				<md-list-item md-ink-ripple>
+				    <p layout-padding>Calendar</p>
+				</md-list-item>
+			</div>
 			<div ui-sref="project.messages.all" ng-class="{activemenu: $state.includes('project.messages')}"id="projMenuMessages">
 				<md-list-item md-ink-ripple>
 				    <p layout-padding>Messages <span ng-show="project.element.totalMessages > 0">({{project.element.totalMessages}})</span></p>

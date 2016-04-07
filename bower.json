@@ -35,7 +35,9 @@
     "angular-mixpanel": "1.1.2",
     "angular-material": "master",
     "angular-clipboard": "1.2.1",
-    "angular-stripe": "~4.2.8"
+    "angular-stripe": "~4.2.8",
+    "material-calendar": "~0.2",
+    "mdPickers": "~0.7.2"
   },
   "resolutions": {
     "angular": "~1.3",

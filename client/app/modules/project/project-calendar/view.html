@@ -1,1 +1,32 @@
-view.html
+<div layout="row" layout-padding>
+    <div layout="column" flex>
+        <div layout="column" class="md-whiteframe-1dp overview-view">
+            <div class="md-toolbar-tools">
+                <h5 layout-margin><span>{{ project.name }} Calendar</span></h5>
+                <span flex></span>
+                <md-button aria-label="Create new Activity Or Milestone" class="md-icon-button" ng-click="showModal($event, 'create-activity-or-milestone.html')">
+                    <md-tooltip md-direction="bottom">Create new Activity or Milestone</md-tooltip>
+                    <md-icon class="material-icons">add</md-icon>
+                </md-button>
+            </div>
+        
+            <md-divider layout="row" flex></md-divider>
+        
+            <div layout="column" layout-padding flex>
+                <calendar-md flex layout layout-fill id="calendar-demo"
+                    calendar-direction="direction"
+                    on-prev-month="prevMonth"
+                    on-next-month="nextMonth"
+                    on-day-click="dayClick"
+                    title-format="'MMMM y'"
+                    ng-model='selectedDate'
+                    day-format="'d'"
+                    day-label-format="'EEE'"
+                    day-label-tooltip-format="'EEEE'"
+                    day-tooltip-format="'fullDate'"
+                    week-starts-on="firstDayOfWeek"
+                    day-content="setDayContent"></calendar-md>
+            </div>
+        </div>
+    </div>
+</div>
