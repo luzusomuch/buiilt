@@ -1,29 +1,29 @@
 <div layout="column" layout-padding>
 	
-	<div class="filter-card md-whiteframe-1dp" layout="column" layout-margin>
-		
+	<!-- <div class="filter-card md-whiteframe-1dp" layout="column" layout-margin>
+
 		<div layout="row">
 			<md-input-container md-no-float flex class="md-block md-icon-float" style="margin-right: 15px">
 				<md-icon class="material-icons" style="margin-top: 6px;">search</md-icon>
 				<input type="text" name="fileName" ng-model="name" placeholder="Search by document name...">
 			</md-input-container>
-			
+
 			<div>
 				<md-button class="md-icon-button more-filter-button" ng-click="showFilter=!showFilter">
 					 <md-tooltip md-direction="down">Show Filters</md-tooltip>
 				     <md-icon class="material-icons">filter_list</md-icon>
 		      	</md-button>
 			</div>
-			
+
 			<div>
 				<md-button class="md-icon-button more-filter-button" ng-click="showArchived=!showArchived">
 					 <md-tooltip md-direction="down">Show Archived Documents</md-tooltip>
 				     <md-icon class="material-icons">history</md-icon>
 		      	</md-button>
 			</div>
-			
+
 			<span flex="5"></span>
-			
+
 			<div ng-show="!isArchive && allowUploadDocument" class="add-fab">
 				<md-button class="md-fab md-mini md-primary" ng-click="showNewDocumentModal($event)">
 					 <md-tooltip md-direction="down">Add a New Document</md-tooltip>
@@ -31,81 +31,106 @@
 		      	</md-button>
 			</div>
 		</div>
-		
+
 		<div layout="row" ng-show="showFilter" layout-align="center center" layout-wrap layout-padding>
 			<md-checkbox class="filter-checkbox md-primary" ng-repeat="tag in tags" ng-click="selectChip($index);selectFilterTag(tag.name)">{{tag.name}}</md-checkbox>
 		</div>
-	</div>
+	</div> -->
 	
 	<div layout="column">
 		
-		<div layout="row" layout-wrap>
-			
-			<div flex="33" ng-repeat="document in documents | filter: search | unique: '_id' track by $index" ng-show="document.__v>0">
-				<md-card flex>
-				 	<md-card-content>
-				   		<h4 class="card-header">{{ document.name }}</h4>
-						<p class="md-body-1"><span ng-repeat="tag in document.tags" style="text-transform: capitalize">'{{tag}}' </span></p>
-						<p class="md-body-1" ng-show="document.__v > 0" style="color: #2196F3">Updates: {{document.__v}}</h5>
-					</md-card-content>
-					
-				 	<md-card-actions layout="row" layout-align="end center">
-						<md-button class="md-icon-button"><md-icon class="material-icons">file_upload</md-icon><md-tooltip md-direction="bottom">Upload New Version</md-tooltip></md-button>
-						<md-button ng-show="document.fileHistory.length > 0" ng-click="showViewFileModal($event, document)"><md-icon class="material-icons">remove_red_eye</md-icon><md-tooltip md-direction="down">View Current Version</md-tooltip></md-button>
-				   		<md-button ui-sref="project.documentation.detail({id:document.project._id, documentId: document._id})"><md-icon class="material-icons">open_in_new</md-icon><md-tooltip md-direction="bottom">Open Document</md-tooltip></md-button>
-					</md-card-actions>
-				</md-card>
+		<div layout="row" layout-margin>
+		
+			<div layout="column" flex="35" class="md-whiteframe-1dp documentation-view">
+				<div class="md-toolbar-tools">
+					<h5>Sets</h5>
+					<span flex></span>
+					<md-button class="md-icon-button"><md-icon class="material-icons">add</md-icon></md-button>
+				</div>
+				<md-divider layout="row"></md-divider>
+				<md-list ng-cloak>
+					<div>
+						<md-list-item class="md-2-line">
+							<div class="md-list-item-text" layout="column">
+								<h3>Set Name 1</h3>
+								<p>Assignee 1, Assignee 2, Assignee 3</p>
+							</div>
+							<md-button class="md-icon-button md-secondary"><md-icon class="material-icons">settings</md-icon></md-button>
+						</md-list-item>
+					</div>
+				</md-list>
 			</div>
-			
-			<div flex="33" ng-repeat="document in documents | orderBy: '-createdAt' | filter: search | unique: '_id' track by $index" ng-show="document.__v==0">
-				<md-card flex>
-				 	<md-card-content>
-				   		<h4 class="card-header">{{ document.name }}</h4>
-						<p class="md-body-1"><span ng-repeat="tag in document.tags" style="text-transform: capitalize">'{{tag}}' </span></p>
-						<p class="md-body-1">No New Updates</p>
-					</md-card-content>
-					
-				 	<md-card-actions layout="row" layout-align="end center">
-				   		<md-button class="md-icon-button"><md-icon class="material-icons">file_upload</md-icon><md-tooltip md-direction="bottom">Upload New Version</md-tooltip></md-button>
-						<md-button ng-show="document.fileHistory.length > 0" class="md-icon-button" ng-click="showViewFileModal($event, document)"><md-icon class="material-icons">remove_red_eye</md-icon><md-tooltip md-direction="bottom">View Current Version</md-tooltip></md-button>
-						<md-button class="md-icon-button" ui-sref="project.documentation.detail({id:document.project._id, documentId: document._id})"><md-icon class="material-icons">open_in_new</md-icon><md-tooltip md-direction="bottom">Open Document</md-tooltip></md-button>
-					</md-card-actions>
-				</md-card>
+		
+			<div layout="column" flex="65" class="md-whiteframe-1dp documentation-view">
+				<div class="md-toolbar-tools">
+					<h5>Detail</h5>
+					<span flex></span>
+					<md-button class="md-icon-button"><md-icon class="material-icons">add</md-icon></md-button>
+				</div>
+				<md-divider layout="row"></md-divider>
+				<md-list ng-cloak flex>
+					<div ng-repeat="document in documents | filter: search | unique: '_id' track by $index" ng-show="document.__v>0">
+						<md-list-item class="md-3-line" md-ink-ripple>
+							<div ui-sref="project.documentation.detail({id:document.project._id, documentId: document._id})" class="md-list-item-text" layout="column">
+					          	<h3>{{document.name}}</h3>
+								<p><span ng-repeat="tag in document.tags">'{{tag}}' </span></p>
+					          	<p ng-show="document.__v > 0" style="color: #2196F3">Updates: {{document.__v}}</p>
+					        </div>
+					        <md-button ng-show="document.fileHistory.length > 0" class="md-secondary" ng-click="showViewFileModal($event, document)"><md-icon class="material-icons">remove_red_eye</md-icon><md-tooltip md-direction="down">View Document</md-tooltip></md-button>
+						</md-list-item>
+						<md-divider ng-hide="$last"></md-divider>
+					</div>
+
+					<div ng-repeat="document in documents | orderBy: '-createdAt' | filter: search | unique: '_id' track by $index" ng-show="document.__v==0">
+						<md-list-item class="md-3-line" md-ink-ripple>
+							<div ui-sref="project.documentation.detail({id:document.project._id, documentId: document._id})" class="md-list-item-text" layout="column">
+					          	<h3>{{document.name}}</h3>
+								<p><span ng-repeat="tag in document.tags">'{{tag}}' </span></p>
+								<p>No New Updates</p>
+					        </div>
+					       	<md-button ng-show="document.fileHistory.length > 0" class="md-secondary" ng-click="showViewFileModal($event, document)"><md-icon class="material-icons">remove_red_eye</md-icon><md-tooltip md-direction="down">View Document</md-tooltip></md-button>
+						</md-list-item>
+						<md-divider ng-hide="$last"></md-divider>
+					</div>
+				</md-list>
 			</div>
 			
 		</div>
+			
+			
+		<!-- <div flex="33" ng-repeat="document in documents | filter: search | unique: '_id' track by $index" ng-show="document.__v>0">
+			<md-card flex>
+			 	<md-card-content>
+			   		<h4 class="card-header">{{ document.name }}</h4>
+					<p class="md-body-1"><span ng-repeat="tag in document.tags" style="text-transform: capitalize">'{{tag}}' </span></p>
+					<p class="md-body-1" ng-show="document.__v > 0" style="color: #2196F3">Updates: {{document.__v}}</h5>
+				</md-card-content>
+
+			 	<md-card-actions layout="row" layout-align="end center">
+					<md-button class="md-icon-button"><md-icon class="material-icons">file_upload</md-icon><md-tooltip md-direction="bottom">Upload New Version</md-tooltip></md-button>
+					<md-button ng-show="document.fileHistory.length > 0" ng-click="showViewFileModal($event, document)"><md-icon class="material-icons">remove_red_eye</md-icon><md-tooltip md-direction="down">View Current Version</md-tooltip></md-button>
+			   		<md-button ui-sref="project.documentation.detail({id:document.project._id, documentId: document._id})"><md-icon class="material-icons">open_in_new</md-icon><md-tooltip md-direction="bottom">Open Document</md-tooltip></md-button>
+				</md-card-actions>
+			</md-card>
+		</div>
+
+		<div flex="33" ng-repeat="document in documents | orderBy: '-createdAt' | filter: search | unique: '_id' track by $index" ng-show="document.__v==0">
+			<md-card flex>
+			 	<md-card-content>
+			   		<h4 class="card-header">{{ document.name }}</h4>
+					<p class="md-body-1"><span ng-repeat="tag in document.tags" style="text-transform: capitalize">'{{tag}}' </span></p>
+					<p class="md-body-1">No New Updates</p>
+				</md-card-content>
+
+			 	<md-card-actions layout="row" layout-align="end center">
+			   		<md-button class="md-icon-button"><md-icon class="material-icons">file_upload</md-icon><md-tooltip md-direction="bottom">Upload New Version</md-tooltip></md-button>
+					<md-button ng-show="document.fileHistory.length > 0" class="md-icon-button" ng-click="showViewFileModal($event, document)"><md-icon class="material-icons">remove_red_eye</md-icon><md-tooltip md-direction="bottom">View Current Version</md-tooltip></md-button>
+					<md-button class="md-icon-button" ui-sref="project.documentation.detail({id:document.project._id, documentId: document._id})"><md-icon class="material-icons">open_in_new</md-icon><md-tooltip md-direction="bottom">Open Document</md-tooltip></md-button>
+				</md-card-actions>
+			</md-card>
+		</div> -->
 		
-		<!-- <md-list ng-cloak flex class="md-whiteframe-1dp content-list">
-
-			<div ng-repeat="document in documents | filter: search | unique: '_id' track by $index" ng-show="document.__v>0">
-
-				<md-list-item class="md-3-line" md-ink-ripple>
-					<div ui-sref="project.documentation.detail({id:document.project._id, documentId: document._id})" class="md-list-item-text" layout="column">
-			          	<h3>{{document.name}}</h3>
-						<p><span ng-repeat="tag in document.tags">'{{tag}}' </span></p>
-			          	<p ng-show="document.__v > 0" style="color: #2196F3">Updates: {{document.__v}}</p>
-			        </div>
-			        <md-button ng-show="document.fileHistory.length > 0" class="md-secondary" ng-click="showViewFileModal($event, document)"><md-icon class="material-icons">remove_red_eye</md-icon><md-tooltip md-direction="down">View Document</md-tooltip></md-button>
-				</md-list-item>
-				<md-divider ng-hide="$last"></md-divider>
-
-			</div>
-
-			<div ng-repeat="document in documents | orderBy: '-createdAt' | filter: search | unique: '_id' track by $index" ng-show="document.__v==0">
-
-				<md-list-item class="md-3-line" md-ink-ripple>
-					<div ui-sref="project.documentation.detail({id:document.project._id, documentId: document._id})" class="md-list-item-text" layout="column">
-			          	<h3>{{document.name}}</h3>
-						<p><span ng-repeat="tag in document.tags">'{{tag}}' </span></p>
-						<p>No New Updates</p>
-			        </div>
-			       	<md-button ng-show="document.fileHistory.length > 0" class="md-secondary" ng-click="showViewFileModal($event, document)"><md-icon class="material-icons">remove_red_eye</md-icon><md-tooltip md-direction="down">View Document</md-tooltip></md-button>
-				</md-list-item>
-				<md-divider ng-hide="$last"></md-divider>
-
-			</div>
-			 -->
-		</md-list>
+		
 	</div>
 </div>
 	
