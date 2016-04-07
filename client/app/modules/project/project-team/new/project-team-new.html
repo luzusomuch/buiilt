@@ -44,10 +44,6 @@
 					<div layout="row" flex layout-align="center center" layout-wrap layout-padding>
 						<md-checkbox class="filter-checkbox md-primary" ng-repeat="member in teamMembersCanInvite track by $index" ng-click="selectMember($index)">{{ member.name }}</md-checkbox>
 					</div>
-					
-					<!-- <div layout="row" layout-align="center center" class="tagcloud" layout-wrap layout-padding>
-						<span ng-click="selectMember($index)" ng-class="{'available-tag':!member.select, 'selected-tag': member.select}" >{{member.name}}</span>
-					</div> -->
 				</div>
 				
 				<div layout="column" ng-show="invite.type == 'addBuilder' || invite.type == 'addConsultant' || invite.type == 'addSubcontractor'">

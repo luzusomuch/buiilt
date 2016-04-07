@@ -6,19 +6,14 @@
                 <label for="">Tender Name</label>
                 <input type="text" name="tenderName" ng-model="name" md-autofocus>
             </md-input-container>
-            
-            <!-- <md-input-container flex="50">
-                <label for="">Includes Invitee</label>
-                <input type="text" name="tenderInvitee" ng-model="invitee">
-            </md-input-container> -->
-            
         </div>
         
         <div layout="row">
             <div flex="50" layout="row" layout-align="center center">
                 <span class="md-body-2" style="margin-top: -2vh">Due:</span>
-                <div class="tagcloud" style="margin-top: -2vh; margin-left: 2vh">
-                    <span ng-repeat="tag in weekTags" ng-class="{'available-tag': !tag.select, 'selected-tag': tag.select}" ng-click="selectTag($index, 'week')">{{tag.text}}</span>
+                <div style="margin-top: -2vh; margin-left: 2vh" flex>
+                    <md-checkbox class="filter-checkbox md-primary" ng-repeat="tag in weekTags" ng-click="selectTag($index, 'week')">{{tag.text}}</md-checkbox>
+                    <!-- <span ng-repeat="tag in weekTags" ng-class="{'available-tag': !tag.select, 'selected-tag': tag.select}" ng-click="selectTag($index, 'week')">{{tag.text}}</span> -->
                 </div>
                 <div style="margin-top: -2.5vh">
                     <md-datepicker ng-change="selectDueDate(dueDate)" ng-model="dueDate" md-min-date="minDate" md-placeholder="Select due date">
@@ -28,8 +23,9 @@
             
             <div flex="50" layout="row" layout-align="center center">
                 <span class="md-body-2" style="margin-top: -2vh">Status:</span>
-                <div class="tagcloud" style="margin-top: -2vh; margin-left: 2vh">
-                    <span ng-repeat="tag in statusTags" ng-class="{'available-tag': !tag.select, 'selected-tag': tag.select}" ng-click="selectTag($index, 'status')">{{tag.text}}</span>
+                <div flex style="margin-top: -2vh; margin-left: 2vh">
+                    <md-checkbox class="filter-checkbox md-primary" ng-repeat="tag in statusTags" ng-click="selectTag($index, 'status')">{{tag.text}}</md-checkbox>
+                    <!-- <span ng-repeat="tag in statusTags" ng-class="{'available-tag': !tag.select, 'selected-tag': tag.select}" ng-click="selectTag($index, 'status')">{{tag.text}}</span> -->
                 </div>
             </div>
         </div>

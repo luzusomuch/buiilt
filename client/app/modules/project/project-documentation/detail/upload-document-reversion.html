@@ -28,15 +28,17 @@
 
                 <div layout="column">
                     <p class="md-body-2">Select the relevant version tag:</p>
-                    <div layout="row" layout-align="center center" class="tagcloud-selection" layout-wrap>
-                        <span ng-click="selectTag($index, 'version')" ng-class="{'available-tag':!tag.select, 'selected-tag': tag.select}" ng-repeat="tag in versionTags">{{tag.tag}}</span>
+                    <div flex layout="row" layout-align="center center" layout-wrap layout-padding>
+                        <md-radio-group>
+                            <md-radio-button ng-model="tagVersion" ng-repeat="tag in versionTags" ng-value="tag" ng-click="selectTag($index, 'version')" class="md-primary">{{ tag.tag }}</md-radio-button>
+                        </md-radio-group>
                     </div>
                 </div>
 
                 <div layout="column">
                     <p class="md-body-2">Select the team members who can view this version:</p>
-                    <div layout="row" layout-align="center center" class="tagcloud-selection" layout-wrap>
-                        <span ng-click="selectTag($index, 'member')" ng-class="{'available-tag':!member.select, 'selected-tag': member.select}" ng-repeat="member in projectMembers">{{(member._id) ? member.name : member.email}}<md-icon ng-show="!member._id" class="material-icons non-user-chip cursor-help"><md-tooltip>File will be sent via email to this Team Member</md-tooltip>mail_outline</md-icon></span>
+                    <div layout="row" layout-align="center center" flex layout-wrap layout-padding>
+                        <md-checkbox class="filter-checkbox md-primary" ng-repeat="member in projectMembers" ng-click="selectTag($index, 'member')">{{(member._id) ? member.name : member.email}}</md-checkbox>
                     </div>
                 </div>
 				

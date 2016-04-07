@@ -23,8 +23,8 @@
                     </md-input-container>
                 </div>
 			
-				<div layout="row" layout-align="center center" class="tagcloud" layout-wrap>
-				    <span ng-click="selectMember($index, 'invitee')" ng-class="{'available-tag':!member.select, 'selected-tag': member.select}" ng-repeat="member in invitees">{{(member._id) ? member.name : member.email}}<md-icon ng-show="!member._id" class="material-icons non-user-chip cursor-help"><md-tooltip>Messages will be sent via email to this Team Member</md-tooltip>mail_outline</md-icon></span>
+				<div layout="row" layout-align="center center" layout-wrap layout-padding flex>
+                    <md-checkbox ng-click="selectMember($index, 'invitee')" class="filter-checkbox" ng-repeat="member in invitees">{{(member._id) ? member.name : member.email}}</md-checkbox>
 				</div>
 				
             </div>

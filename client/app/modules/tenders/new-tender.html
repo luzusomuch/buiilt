@@ -12,7 +12,9 @@
                 <div layout="column">
                     <p class="md-body-2">This tender belongs to:</p>
                     <div layout="row" layout-align="center center" class="tagcloud-selection" layout-wrap>
-                        <span ng-click="selectProject($index)" ng-class="{'available-tag':!project.select, 'selected-tag': project.select}" ng-repeat="project in availableProjects track by $index">{{project.name}}</span>
+                        <md-radio-group>
+                            <md-radio-button ng-repeat="project in availableProjects" ng-value="$index" ng-click="selectProject($index)" class="md-primary">{{ project.name }}</md-radio-button>
+                        </md-radio-group>
                     </div>
                 </div>
 				
