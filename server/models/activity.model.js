@@ -37,7 +37,7 @@ var ActivitySchema = new Schema({
     members: [{type: Schema.Types.ObjectId, ref: "User"}],
     notMembers: [String],
     createdAt: {type: Date, default: new Date()},
-    updatedAt: type: Date,
+    updatedAt: Date,
     dependencies: [{
         activity: {type: Schema.Types.ObjectId, ref: "Activity"},
         lag: Number, 

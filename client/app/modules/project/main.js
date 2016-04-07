@@ -13,6 +13,13 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
       }
     }
   })
+
+  .state("project.calendar", {
+    url: "/calendar",
+    templateUrl: "/app/modules/project/project-calendar/view.html",
+    controller: "projectCalendarCtrl",
+    authenticate: true
+  })
   
   	//Overview of Single Project
   .state('project.overview', {
