@@ -10,7 +10,6 @@
 				<md-button ng-click="$mdOpenMenu($event)" class="" aria-label="Select a Project">Select a Project <md-icon class="material-icons">arrow_drop_down</md-icon></md-button>
 			 	<md-menu-content width="4">
 					<md-menu-item><md-button ui-sref="projects.open">View All Projects</md-button></md-menu-item>
-					<md-divider></md-divider>
 			   		<md-menu-item ng-show="project.isFavourite" ng-repeat="project in projects"><md-button ui-sref="project.messages.all({id: project._id})">{{project.name}}</md-button></md-menu-item>
 					<md-divider></md-divider>
 					<md-menu-item><md-button ng-click="showModal($event, 'projects-create.html')">Create a New Project</md-button></md-menu-item>
