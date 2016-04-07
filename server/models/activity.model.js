@@ -5,6 +5,7 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var ActivitySchema = new Schema({
+    name: String,
     owner: {type: Schema.Types.ObjectId, ref: "User", required: true},
     project: {type: Schema.Types.ObjectId, ref: "Project", required: true},
     estimated: {
@@ -42,6 +43,8 @@ var ActivitySchema = new Schema({
         lag: Number, 
         lagType: String //maybe hours or days
     }],
+    isMilestone: {type: Boolean, default: false},
+    subActivities: [{type: Schema.Types.ObjectId, ref: "Activity"}]
 });
 
 ActivitySchema.pre('save', function(next) {
