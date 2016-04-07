@@ -310,20 +310,14 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     };
 
     /*Select project for getting member of it's*/
-    $scope.selectProject = function($index) {
-        _.each($scope.projects, function(project) {
-            project.select = false;
-        });
-        $scope.projects[$index].select = !$scope.projects[$index].select;
-        getProjectMembers($scope.projects[$index]._id);
-    };
+    $scope.$watch("selectedProjectIndex", function() {
+        if ($scope.selectedProjectIndex) {
+            getProjectMembers($scope.projects[$scope.selectedProjectIndex]._id);
+        }
+    });
 
     // task section
     $scope.task = {members: []};
-    if ($rootScope.dashboardEditTask) {
-        $scope.task = $rootScope.dashboardEditTask;
-        $scope.task.dateEnd = new Date($scope.task.dateEnd);
-    }
 
     /*Change task due date to a text*/
     angular.forEach($scope.myTasks, function(task) {
@@ -363,29 +357,6 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                 $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "task", number: 1});
             });
         }, function(err) {$scope.showToast("Error");});
-    };
-
-    /*Show edit task modal with selected task*/
-    $scope.showEditTaskModal = function(event, task) {
-        $rootScope.dashboardEditTask = task;
-        $mdDialog.show({
-            targetEvent: event,
-            controller: "dashboardCtrl",
-            resolve: {
-                myTasks: ["taskService", function(taskService) {
-                    return taskService.myTask().$promise;
-                }],
-                myMessages: ["messageService", function(messageService) {
-                    return messageService.myMessages().$promise;
-                }],
-                myFiles: ["fileService" ,function(fileService) {
-                    return fileService.myFiles().$promise;
-                }]
-            },
-            templateUrl: 'app/modules/dashboard/partials/edit-task.html',
-            parent: angular.element(document.body),
-            clickOutsideToClose: false
-        });
     };
 
     /*Show add new task modal*/
@@ -444,25 +415,6 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             return false;
         }
     };
-
-    /*Edit selected task when entered valid form*/
-    $scope.editTaskDetail = function(form) {
-        if (form.$valid) {
-            $scope.task.editType = "edit-task";
-            taskService.update({id: $scope.task._id}, $scope.task).$promise.then(function(res) {
-                $rootScope.dashboardEditTask = null;
-                $scope.showToast("Task Has Been Updated Successfully.");
-                $scope.closeModal();
-            }, function(err) {
-                $scope.showToast("There Has Been An Error...");
-                delete task.editType;
-            });
-        } else {
-            $scope.showToast("There Has Been An Error...");
-            return;
-        }
-    };
-    // end task section
 
     // start message section
     $scope.message = {};

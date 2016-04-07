@@ -13,8 +13,8 @@
 					<p class="md-body-2">Which project should this task be added to:</p>
 					
 					<div layout="row" flex layout-align="center center" layout-wrap layout-padding>
-						<md-radio-group>
-							<md-radio-button ng-repeat="project in projects" ng-click="selectProject($index)" class="md-primary">{{ project.name }}</md-radio-button>
+						<md-radio-group ng-model="selectedProjectIndex">
+							<md-radio-button ng-repeat="project in projects" ng-value="$index" class="md-primary">{{ project.name }}</md-radio-button>
 						</md-radio-group>
 					</div>
 				</div>
@@ -43,10 +43,6 @@
 					<div layout="row" flex layout-align="center center" layout-wrap layout-padding>
 						<md-checkbox class="filter-checkbox md-primary" ng-repeat="member in projectMembers" ng-click="selectMember($index)">{{(member._id) ? member.name : member.email}}</md-checkbox>
 					</div>
-					
-					<!-- <div layout="row" layout-align="center center" class="tagcloud-selection" layout-wrap>
-                        <span ng-click="selectMember($index)" ng-class="{'available-tag':!member.select, 'selected-tag': member.select}" ng-repeat="member in projectMembers">{{(member._id) ? member.name : member.email}}<md-icon ng-show="!member._id" class="material-icons non-user-chip cursor-help"><md-tooltip>Task will be sent via email to this Team Member</md-tooltip>mail_outline</md-icon></span>
-                    </div> -->
 						
                 </div>
                 
