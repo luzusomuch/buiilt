@@ -18,7 +18,12 @@ angular.module('buiiltApp').controller('projectsCtrl', function ($rootScope, $sc
     $scope.teamInvitations = teamInvitations;
 
     $scope.setFavourite = function(project) {
-        project.isFavourite = !project.isFavourite;
+        project.editType = "favouriteProjects";
+        userService.changeProfile({id: $rootScope.currentUser._id}, project).$promise.then(function(res) {
+            project.isFavourite = !project.isFavourite;
+            $scope.showToast((project.isFavourite) ? "Added To Favourite Successfully" : "Unfavourite Successfully");
+            $rootScope.$emit("Project.Favourite", project);
+        }, function(err) {$scope.showToast("Error...");});
     };
 
     /*Create new project then call mixpanel to track current user has created project

@@ -83,6 +83,16 @@ angular.module('buiiltApp')
                 $rootScope.projects[index].status = "archive";
             });
 
+            /*Receive when user choosen project as favourite or unfavourite*/
+            $scope.$on("Project.Favourite", function(ev, data) {
+                var index = $rootScope.currentUser.favouriteProjects.indexOf(data._id);
+                if (index !== -1) 
+                    $rootScope.currentUser.favouriteProjects.splice(index, 1);
+                else
+                    $rootScope.currentUser.favouriteProjects.push(data._id);
+                checkFavouriteProjects($rootScope.currentUser.projects, $rootScope.currentUser.favouriteProjects);
+            });
+
             document.addEventListener('click',function(e) {
                 if (e.target.id == 'sendVerification') {
                     authService.sendVerification().$promise
@@ -144,9 +154,7 @@ angular.module('buiiltApp')
             function checkFavouriteProjects(projects, favouriteProjects) {
                 angular.forEach(projects, function(p) {
                     p.isFavourite = false;
-                    var index = _.findIndex(favouriteProjects, function(project) {
-                        return project._id == p._id
-                    });
+                    var index = favouriteProjects.indexOf(p._id);
                     if (index !== -1) {
                         p.isFavourite = true
                     }
