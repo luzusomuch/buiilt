@@ -39,7 +39,8 @@ var ActivitySchema = new Schema({
     updatedAt: type: Date,
     dependencies: [{
         activity: {type: Schema.Types.ObjectId, ref: "Activity"},
-        lag: Number
+        lag: Number, 
+        lagType: String //maybe hours or days
     }],
 });
 
