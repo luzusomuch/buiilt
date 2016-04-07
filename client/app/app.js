@@ -156,6 +156,8 @@ angular
                     $rootScope.project = {};
                 }
             });
+        } else if (!toState.id) {
+            $rootScope.project = {};
         }
     });
 

@@ -10,7 +10,7 @@ angular.module('buiiltApp')
     	    var originatorEv;
     	  
             $scope.goto = function(newstate) {
-    		      $state.go(newstate, {}, {reload: true});
+    		    $state.go(newstate, {}, {reload: true});
             };
 			
 			$scope.inlineHelp = function() {
