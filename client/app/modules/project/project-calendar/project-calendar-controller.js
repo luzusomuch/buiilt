@@ -6,6 +6,33 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
     $scope.dayFormat = "d";
     $scope.tooltips = true;
 
+    /*Convert all tasks and activities to calendar view*/
+    var allData = {};
+    function convertAllToCalendarView() {
+        $scope.activities = activities;
+        _.each(tasks, function(task) {
+            if (task.element && task.element.type === "task-project") {
+                var dueDateConverted = moment(task.dateEnd).format("YYYY-MM-DD");
+                if (allData[dueDateConverted]) {
+                    allData[dueDateConverted].push({name: task.description});
+                } else {
+                    allData[dueDateConverted] = [{name: task.description}];
+                }
+            }
+        });
+        _.each(activities, function(activity) {
+            if (!activity.isMilestone) {
+                var dueDateConverted = moment(activity.date.end).format("YYYY-MM-DD");
+                if (allData[dueDateConverted]) {
+                    allData[dueDateConverted].push({name: activity.name});
+                } else {
+                    allData[dueDateConverted] = [{name: activity.name}];
+                }
+            }
+        });
+    };
+    convertAllToCalendarView();
+
     $scope.dayClick = function(date) {
         console.log("You clicked " + date);
     };
@@ -18,7 +45,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
         console.log("You clicked (next) month " + data.month + ", " + data.year);
     };
 
-    var holidays = {"2016-04-01": [{"name": "AAAAAAA"}], "2016-04-07": [{name: "BBBBBBB"}]};
+    var holidays = {"2016-04-01": [{"name": "AAAAAAA"}, {name: "CCCCCCCCC"}], "2016-04-07": [{name: "BBBBBBB"}]};
     // You would inject any HTML you wanted for
     // that particular date here.
     var numFmt = function(num) {
@@ -32,7 +59,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
     var loadContentAsync = true;
     $scope.setDayContent = function(date) {
         var key = [date.getFullYear(), numFmt(date.getMonth()+1), numFmt(date.getDate())].join("-");
-        var data = (holidays[key]||[{ name: ""}])[0].name;
+        var data = (allData[key]||[{ name: ""}])[0].name;
         if (loadContentAsync) {
             var deferred = $q.defer();
             $timeout(function() {
@@ -92,15 +119,6 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
         _.remove($scope.membersList, {_id: $rootScope.currentUser._id});
     };
     getProjectMembers();
-
-    function convertAllToCalendarView() {
-        $scope.activities = activities;
-        var allData = _.union(activities, tasks);
-        _.each(allData, function(data) {
-            if (data.element && data.element.type === "task-project") {}
-        })
-    };
-    convertAllToCalendarView();
 
     $scope.activity = {
         dependencies: [],
