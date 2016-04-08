@@ -1,5 +1,6 @@
-angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $scope, $timeout, $q, $state, $mdDialog, $mdToast, projectService, myTasks, myMessages, myFiles, notificationService, taskService, peopleService, messageService, fileService, socket, uploadService) {
-	$rootScope.title = "Dashboard";
+angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $scope, $timeout, $q, $state, $mdDialog, $mdToast, projectService, myTasks, myMessages, myFiles, notificationService, taskService, peopleService, messageService, fileService, socket, uploadService, dialogService) {
+	$scope.step = 1;
+    $rootScope.title = "Dashboard";
 	$scope.myTasks = myTasks;
 	$scope.myMessages = myMessages;
 	$scope.myFiles = myFiles;
@@ -12,6 +13,31 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     $scope.projectFilterTags = angular.copy($scope.projects);
     $scope.currentUser = $rootScope.currentUser;
 	$scope.showFilter = false;
+
+    /*Validate info and allow next in modal*/
+    $scope.next = function(type) {
+        if ($scope.step === 1) {
+            if ($scope.selectedProjectIndex) {
+                $scope.step += 1;
+            } else {
+                dialogService.showToast("Please Select a Project");
+            }
+        } else if ($scope.step === 2) {
+            if (type==="createTask") {
+                if (!$scope.task.description || $scope.task.description.trim().length === 0 || !$scope.task.dateEnd) {
+                    dialogService.showToast("Please Enter Valid Data");
+                    return;
+                }
+                $scope.step += 1;
+            } else if (type==="createThread") {
+                if (!$scope.thread.name || $scope.thread.name.trim().length === 0 || !$scope.thread.message || $scope.thread.message.trim().length === 0) {
+                    dialogService.showToast("Please Enter Valid Data");
+                    return
+                }
+                $scope.step += 1;
+            }
+        }
+    };
 
     $scope.$on('$destroy', function() {
         listenerCleanFn();

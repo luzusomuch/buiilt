@@ -45,7 +45,6 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
         console.log("You clicked (next) month " + data.month + ", " + data.year);
     };
 
-    var holidays = {"2016-04-01": [{"name": "AAAAAAA"}, {name: "CCCCCCCCC"}], "2016-04-07": [{name: "BBBBBBB"}]};
     // You would inject any HTML you wanted for
     // that particular date here.
     var numFmt = function(num) {
@@ -226,6 +225,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                     dialogService.showToast((res.isMilestone) ? "Create Milestone Successfully" : "Create Activity Successfully");
                     dialogService.closeModal();
                     activities.push(res);
+                    convertAllToCalendarView();
                 }, function(err) {dialogService.showToast("Error");});
         } else {
             dialogService.showToast("Check your input again.");

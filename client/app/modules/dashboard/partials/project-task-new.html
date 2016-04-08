@@ -9,17 +9,17 @@
         <md-dialog-content>
             <div class="md-dialog-content" layout="column">
 				
-				<div layout="column">
+				<div layout="column" ng-show="step==1">
 					<p class="md-body-2">Which project should this task be added to:</p>
-					
-					<div layout="row" flex layout-align="center center" layout-wrap layout-padding>
-						<md-radio-group ng-model="selectedProjectIndex">
-							<md-radio-button ng-repeat="project in projects" ng-value="$index" class="md-primary">{{ project.name }}</md-radio-button>
-						</md-radio-group>
-					</div>
+					<md-input-container>
+                        <label for="">Projects List</label>
+                        <md-select ng-model="selectedProjectIndex">
+                            <md-option ng-repeat="project in projects" ng-value="$index">{{project.name}}</md-option>
+                        </md-select>
+                    </md-input-container>
 				</div>
                 
-                <div layout="column">
+                <div layout="column" ng-show="step==2">
                     <p class="md-body-2">Provide a description for the task:</p>
                     <div layout="row">
                         <md-input-container flex="66" flex-offset="15">
@@ -30,20 +30,19 @@
                 </div>
                 
                     
-                <div layout="column">
+                <div layout="column" ng-show="step==2">
                     <p class="md-body-2">Specify a due date for the task:</p>
                     <div layout="row" layout-align="center center" class="tagcloud-selection">
                         <md-datepicker ng-model="task.dateEnd" md-min-date="minDate" md-placeholder="Enter Due Date"></md-datepicker>
                     </div>
                 </div>
                 
-                <div layout="column">
+                <div layout="column" ng-show="step==3">
                     <p class="md-body-2">Assign at least one team member:</p>
                     
 					<div layout="row" flex layout-align="center center" layout-wrap layout-padding>
 						<md-checkbox class="filter-checkbox md-primary" ng-repeat="member in projectMembers" ng-click="selectMember($index)">{{(member._id) ? member.name : member.email}}</md-checkbox>
 					</div>
-						
                 </div>
                 
             </div>
@@ -51,7 +50,10 @@
         
         <md-dialog-actions>
             <md-button ng-click="closeModal()">Cancel</md-button>
-            <md-button type="submit" class="md-primary">Create Task</md-button>
+            <md-button ng-click="step=step-1" ng-hide="step==1">Back</md-button>
+            <md-button ng-click="next('createTask')" ng-hide="step==3">Next</md-button>
+
+            <md-button ng-show="step==3" type="submit" class="md-primary">Create Task</md-button>
         </md-dialog-actions>
     </form>
 </md-dialog>
