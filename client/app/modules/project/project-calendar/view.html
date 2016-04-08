@@ -4,8 +4,12 @@
             <div class="md-toolbar-tools">
                 <h5 layout-margin><span>{{ project.name }} Calendar</span></h5>
                 <span flex></span>
-                <md-button aria-label="Create new Activity Or Milestone" class="md-icon-button" ng-click="showModal($event, 'create-activity-or-milestone.html')">
-                    <md-tooltip md-direction="bottom">Create new Activity or Milestone</md-tooltip>
+                <md-button aria-label="Create new Activity" class="md-icon-button" ng-click="showModal($event, 'create-activity.html')">
+                    <md-tooltip md-direction="bottom">Create new Activity</md-tooltip>
+                    <md-icon class="material-icons">add</md-icon>
+                </md-button>
+                <md-button aria-label="Create new Milestone" class="md-icon-button" ng-click="showModal($event, 'create-milestone.html')">
+                    <md-tooltip md-direction="bottom">Create new Mylestone</md-tooltip>
                     <md-icon class="material-icons">add</md-icon>
                 </md-button>
             </div>

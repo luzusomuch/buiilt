@@ -23,6 +23,7 @@ module.exports = function(app) {
   app.use('/api/devices', require('./api/device'));
   app.use('/api/peoples', require('./api/people'));
   app.use('/api/tenders', require('./api/tender'));
+  app.use('/api/activities', require('./api/activities'));
 
   app.use('/auth', require('./auth'));
 

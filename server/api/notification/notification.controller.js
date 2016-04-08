@@ -5,7 +5,6 @@ var objectID = require('mongoose').Types.ObjectId;
 var User = require('./../../models/user.model');
 var Project = require('./../../models/project.model');
 var Notification = require('./../../models/notification.model');
-var Validator = require('./../../validators/staffPackage');
 var errorsHelper = require('./../../components/helpers/errors');
 var _ = require('lodash');
 var async = require('async');

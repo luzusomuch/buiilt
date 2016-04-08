@@ -1,14 +1,10 @@
-angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout, $q, $rootScope, $scope, $mdDialog, dialogService, $stateParams, socket, $state, people, activityService) {
+angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout, $q, $rootScope, $scope, $mdDialog, dialogService, $stateParams, socket, $state, activityService, people, activities, tasks) {
     $scope.dialogService = dialogService;
     $scope.firstDayOfWeek = 0;
 
     $scope.selectedDate = null;
     $scope.dayFormat = "d";
     $scope.tooltips = true;
-
-    $scope.activity = {
-        isMilestone: false
-    };
 
     $scope.dayClick = function(date) {
         console.log("You clicked " + date);
@@ -97,14 +93,39 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
     };
     getProjectMembers();
 
+    function convertAllToCalendarView() {
+        $scope.activities = activities;
+        var allData = _.union(activities, tasks);
+        _.each(allData, function(data) {
+            if (data.element && data.element.type === "task-project") {}
+        })
+    };
+    convertAllToCalendarView();
+
+    $scope.activity = {
+        dependencies: [],
+        isDependent: false,
+        isMilestone: $rootScope.isMilestone
+    };
+
     /*Show modal with valid name*/
     $scope.showModal = function($event, modalName) {
+        if (modalName === "create-activity.html") 
+            $rootScope.isMilestone = false;
+        else if (modalName === "create-milestone.html") 
+            $rootScope.isMilestone = true;
         $mdDialog.show({
             targetEvent: $event,
             controller: 'projectCalendarCtrl',
             resolve: {
                 people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
                     return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
+                }],
+                activities: ["activityService", "$stateParams", function(activityService, $stateParams) {
+                    return activityService.me({id: $stateParams.id}).$promise;
+                }],
+                tasks: ["taskService", "$stateParams", function(taskService, $stateParams) {
+                    return taskService.getProjectTask({id: $stateParams.id}).$promise;
                 }]
             },
             templateUrl: 'app/modules/project/project-calendar/partials/' + modalName,
@@ -120,25 +141,17 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
     };
 
     /*function to check if activity has valid date for estimated and actual date time*/
-    function checkValidActualAndEstimateDateTime(estimated, actual) {
+    function checkValidActualAndEstimateDateTime(date, time) {
         /*return true when not valid and false when valid*/
-        if (estimated && actual) {
+        if (date && time) {
             var error = true;
-            if (estimated.date.start && moment(estimated.date.start).isValid())
+            if (date.start && moment(date.start).isValid())
                 error = false;
-            if (estimated.date.end && moment(estimated.date.end).isValid()) 
+            if (date.end && moment(date.end).isValid()) 
                 error = false;
-            if (actual.date.end && moment(actual.date.end).isValid()) 
-                error = false;
-            if (actual.date.end && moment(actual.date.end).isValid()) 
-                error = false;
-            if (estimated.time.start && moment(moment(estimated.time.start, "hh:mm"), "hh:mm").isValid())
+            if (time.start && moment(moment(time.start, "hh:mm"), "hh:mm").isValid())
                 error = false
-            if (estimated.time.end && moment(moment(estimated.time.end, "hh:mm"), "hh:mm").isValid())
-                error = false
-            if (actual.time.start && moment(moment(actual.time.start, "hh:mm"), "hh:mm").isValid())
-                error = false
-            if (actual.time.end && moment(moment(actual.time.end, "hh:mm"), "hh:mm").isValid())
+            if (time.end && moment(moment(time.end, "hh:mm"), "hh:mm").isValid())
                 error = false
             return error;
         } else {
@@ -146,15 +159,44 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
         }
     };
 
+    /*Insert another activity id into dependencies list when create new activity
+    only occur when new activity has isDependent property is true*/
+    $scope.addToDependencies = function(activity, lagsUnit, lagsType) {
+        if (!lagsUnit) {
+            dialogService.showToast("Please enter Lags unit");
+            return;
+        }
+        if (!lagsType) {
+            dialogService.showToast("Please enter Lags type");
+            return;
+        }
+        var index = _.findIndex($scope.activity.dependencies, function(dep) {
+            return dep._id == activity._id;
+        });
+        if (index === -1) {
+            activity.lagsUnit = lagsUnit;
+            activity.lagsType = lagsType;
+            $scope.activity.dependencies.push(activity);
+            $scope.lagsType = null;
+            $scope.lagsUnit = null;
+        } else {
+            dialogService.showToast("This activity has already in dependencies list");
+        }
+    };
+
+    $scope.removeFromDependencies = function(index) {
+        $scope.activity.dependencies.splice(index, 1);
+    };
+
     /*Create new activity or milestone*/
     $scope.createActivityOrMilestone = function(form) {
-        console.log($scope.activity);
         if (form.$valid) {
             $scope.activity.newMembers = _.filter($scope.membersList, {select: true});
             var error = false;
             if (!$scope.activity.isMilestone) {
-                error = checkValidActualAndEstimateDateTime($scope.activity.estimated, $scope.activity.actual);
-            } else if ($scope.activity.newMembers.length === 0) {
+                error = checkValidActualAndEstimateDateTime($scope.activity.date, $scope.activity.time);
+            }
+            if ($scope.activity.newMembers.length === 0) {
                 dialogService.showToast("Please select at least 1 member");
                 error = true;
             }
@@ -162,9 +204,12 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
             if (error) {
                 dialogService.showToast("Check your input again.");
             } else
+                console.log($scope.activity);
+                return;
                 activityService.create({id: $stateParams.id}, $scope.activity).$promise.then(function(res) {
-                    dialogService.showToast("Success");
+                    dialogService.showToast((res.isMilestone) ? "Create Milestone Successfully" : "Create Activity Successfully");
                     dialogService.closeModal();
+                    activities.push(res);
                 }, function(err) {dialogService.showToast("Error");});
         } else {
             dialogService.showToast("Check your input again.");

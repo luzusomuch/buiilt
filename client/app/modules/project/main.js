@@ -18,7 +18,15 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
     url: "/calendar",
     templateUrl: "/app/modules/project/project-calendar/view.html",
     controller: "projectCalendarCtrl",
-    authenticate: true
+    authenticate: true,
+    resolve: {
+      activities: function($stateParams, activityService) {
+        return activityService.me({id: $stateParams.id}).$promise;
+      },
+      tasks: function(taskService, $stateParams) {
+        return taskService.getProjectTask({id: $stateParams.id}).$promise;
+      }
+    }
   })
   
   	//Overview of Single Project

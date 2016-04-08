@@ -8,27 +8,15 @@ var ActivitySchema = new Schema({
     name: String,
     owner: {type: Schema.Types.ObjectId, ref: "User", required: true},
     project: {type: Schema.Types.ObjectId, ref: "Project", required: true},
-    estimated: {
-        date: {
-            start: Date,
-            end: Date
-        },
-        time: {
-            start: Date,
-            end: Date
-        }
+    date: {
+        start: Date,
+        end: Date
     },
-    actual: {
-        date: {
-            start: Date,
-            end: Date
-        },
-        time: {
-            start: Date,
-            end: Date
-        }
+    time: {
+        start: Date,
+        end: Date
     },
-    percentageComplete: Number,
+    percentageComplete: {type: Number, default: 0},
     relatedItem: [{
         type: String,
         _id: Schema.Types.ObjectId,

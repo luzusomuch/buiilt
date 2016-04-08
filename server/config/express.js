@@ -39,8 +39,8 @@ module.exports = function(app) {
   app.engine('html', require('ejs').renderFile);
   app.set('view engine', 'html');
   app.use(compression());
-  app.use(bodyParser.urlencoded({limit: '50mb'}));
-  app.use(bodyParser.json({limit: '50mb'}));
+  app.use(bodyParser.urlencoded());
+  app.use(bodyParser.json());
   app.use(methodOverride());
   //express validator middleware
   app.use(expressValidator({
