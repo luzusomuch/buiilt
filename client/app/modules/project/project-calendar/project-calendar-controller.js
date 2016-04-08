@@ -13,16 +13,12 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
         }
     };
 
-    // $scope.eventsTEst = [{title: "TODAY", start: new Date(), end: new Date()}];
-    // $scope.eventSources  = [$scope.eventsTEst];
-
     /*Convert all tasks and activities to calendar view*/
     function convertAllToCalendarView() {
         $scope.events = [];
         $scope.activities = activities;
         _.each(tasks, function(task) {
             if (task.element && task.element.type === "task-project") {
-                // var dueDateConverted = moment(task.dateEnd).format("YYYY-MM-DD");
                 var dateStart, dateEnd;
                 if (task.time) {
                     dateStart = moment(task.dateStart).add(moment(task.time.start).hours(), "hours").add(moment(task.time.end).minutes(), "minutes");
@@ -41,7 +37,6 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 $scope.events.push({title: activity.name, start: moment(dateStart).format("YYYY-MM-DD hh:mm"), end: moment(dateEnd).format("YYYY-MM-DD hh:mm")});   
             }
         });
-        console.log($scope.events);
         $scope.eventSources  = [$scope.events];
     };
     convertAllToCalendarView();

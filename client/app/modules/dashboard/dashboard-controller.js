@@ -35,6 +35,12 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                     return
                 }
                 $scope.step += 1;
+            } else if (type==="createFile") {
+                if (!$scope.uploadFile.file || !$scope.uploadFile.file.filename || $scope.uploadFile.file.filename.trim().length === 0) {
+                    dialogService.showToast("Please Enter Valid Data");
+                    return
+                }
+                $scope.step += 1;
             }
         }
     };
