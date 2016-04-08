@@ -1,73 +1,50 @@
 angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout, $q, $rootScope, $scope, $mdDialog, dialogService, $stateParams, socket, $state, activityService, people, activities, tasks) {
     $scope.dialogService = dialogService;
-    $scope.firstDayOfWeek = 0;
 
-    $scope.selectedDate = null;
-    $scope.dayFormat = "d";
-    $scope.tooltips = true;
+    /*config fullcalendar*/
+    $scope.config = {
+        calendar: {
+            height: 450,
+            header: {
+                left: "month agendaWeek agendaDay",
+                center: "title",
+                right: "today, prev, next"
+            }
+        }
+    };
+
+    // $scope.eventsTEst = [{title: "TODAY", start: new Date(), end: new Date()}];
+    // $scope.eventSources  = [$scope.eventsTEst];
 
     /*Convert all tasks and activities to calendar view*/
-    var allData = {};
     function convertAllToCalendarView() {
+        $scope.events = [];
         $scope.activities = activities;
         _.each(tasks, function(task) {
             if (task.element && task.element.type === "task-project") {
-                var dueDateConverted = moment(task.dateEnd).format("YYYY-MM-DD");
-                if (allData[dueDateConverted]) {
-                    allData[dueDateConverted].push({name: task.description});
+                // var dueDateConverted = moment(task.dateEnd).format("YYYY-MM-DD");
+                var dateStart, dateEnd;
+                if (task.time) {
+                    dateStart = moment(task.dateStart).add(moment(task.time.start).hours(), "hours").add(moment(task.time.end).minutes(), "minutes");
+                    dateEnd = moment(task.dateEnd).add(moment(task.time.end).hours(), "hours").add(moment(task.time.end).minutes(), "minutes");
                 } else {
-                    allData[dueDateConverted] = [{name: task.description}];
+                    dateStart = moment(task.dateStart);
+                    dateEnd = moment(task.dateEnd);
                 }
+                $scope.events.push({title: task.description, start: moment(dateStart).format("YYYY-MM-DD hh:mm"), end: moment(dateEnd).format("YYYY-MM-DD hh:mm")});
             }
         });
         _.each(activities, function(activity) {
             if (!activity.isMilestone) {
-                var dueDateConverted = moment(activity.date.end).format("YYYY-MM-DD");
-                if (allData[dueDateConverted]) {
-                    allData[dueDateConverted].push({name: activity.name});
-                } else {
-                    allData[dueDateConverted] = [{name: activity.name}];
-                }
+                var dateStart = moment(activity.date.start).add(moment(activity.time.start).hours(), "hours").add(moment(activity.time.end).minutes(), "minutes");
+                var dateEnd = moment(activity.date.end).add(moment(activity.time.end).hours(), "hours").add(moment(activity.time.end).minutes(), "minutes");
+                $scope.events.push({title: activity.name, start: moment(dateStart).format("YYYY-MM-DD hh:mm"), end: moment(dateEnd).format("YYYY-MM-DD hh:mm")});   
             }
         });
+        console.log($scope.events);
+        $scope.eventSources  = [$scope.events];
     };
     convertAllToCalendarView();
-
-    $scope.dayClick = function(date) {
-        console.log("You clicked " + date);
-    };
-
-    $scope.prevMonth = function(data) {
-        console.log("You clicked (prev) month " + data.month + ", " + data.year);
-    };
-
-    $scope.nextMonth = function(data) {
-        console.log("You clicked (next) month " + data.month + ", " + data.year);
-    };
-
-    // You would inject any HTML you wanted for
-    // that particular date here.
-    var numFmt = function(num) {
-        num = num.toString();
-        if (num.length < 2) {
-            num = "0" + num;
-        }
-        return num;
-    };
-
-    var loadContentAsync = true;
-    $scope.setDayContent = function(date) {
-        var key = [date.getFullYear(), numFmt(date.getMonth()+1), numFmt(date.getDate())].join("-");
-        var data = (allData[key]||[{ name: ""}])[0].name;
-        if (loadContentAsync) {
-            var deferred = $q.defer();
-            $timeout(function() {
-                deferred.resolve(data);
-            });
-            return deferred.promise;
-        }
-        return data;
-    };
 
     /*Get all project members*/
     function getProjectMembers() {

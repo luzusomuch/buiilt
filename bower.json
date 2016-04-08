@@ -36,8 +36,8 @@
     "angular-material": "master",
     "angular-clipboard": "1.2.1",
     "angular-stripe": "~4.2.8",
-    "material-calendar": "~0.2",
-    "mdPickers": "~0.7.2"
+    "mdPickers": "~0.7.2",
+    "angular-ui-calendar": "latest"
   },
   "resolutions": {
     "angular": "~1.3",

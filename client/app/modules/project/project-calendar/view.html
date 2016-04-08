@@ -17,19 +17,7 @@
             <md-divider layout="row" flex></md-divider>
         
             <div layout="column" layout-padding flex>
-                <calendar-md flex layout layout-fill id="calendar-demo"
-                    calendar-direction="direction"
-                    on-prev-month="prevMonth"
-                    on-next-month="nextMonth"
-                    on-day-click="dayClick"
-                    title-format="'MMMM y'"
-                    ng-model='selectedDate'
-                    day-format="'d'"
-                    day-label-format="'EEE'"
-                    day-label-tooltip-format="'EEEE'"
-                    day-tooltip-format="'fullDate'"
-                    week-starts-on="firstDayOfWeek"
-                    day-content="setDayContent"></calendar-md>
+                <div ui-calendar="config.calendar" ng-model="eventSources"></div>
             </div>
         </div>
     </div>

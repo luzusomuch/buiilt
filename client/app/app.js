@@ -17,7 +17,7 @@ angular.module('buiiltApp', [
     'ngMaterial',
     'angular-clipboard',
     'angular-stripe',
-    "materialCalendar",
+    "ui.calendar",
     "mdPickers"
 ]);
 
