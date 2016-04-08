@@ -19,6 +19,12 @@ exports.create = function(req, res) {
             activity.date.end = data.date.end;
             activity.time.start = data.time.start;
             activity.time.start = data.time.start;
+
+            var dependencies = [];
+            _.each(req.body.dependencies, function(dep) {
+                dependencies.push({activity: dep._id, lag: dep.lagsUnit, lagType: dep.lagsType});
+            });
+            activity.dependencies = dependencies;
         }
         if (req.body.newMembers.length === 0) {
             return res.send(422, {msg: "Please check your new members list"});

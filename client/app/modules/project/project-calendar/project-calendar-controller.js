@@ -204,8 +204,6 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
             if (error) {
                 dialogService.showToast("Check your input again.");
             } else
-                console.log($scope.activity);
-                return;
                 activityService.create({id: $stateParams.id}, $scope.activity).$promise.then(function(res) {
                     dialogService.showToast((res.isMilestone) ? "Create Milestone Successfully" : "Create Activity Successfully");
                     dialogService.closeModal();

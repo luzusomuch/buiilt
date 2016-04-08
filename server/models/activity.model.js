@@ -29,7 +29,8 @@ var ActivitySchema = new Schema({
     dependencies: [{
         activity: {type: Schema.Types.ObjectId, ref: "Activity"},
         lag: Number, 
-        lagType: String //maybe hours or days
+        lagType: String, //maybe hours or days
+        _id: false
     }],
     isMilestone: {type: Boolean, default: false},
     subActivities: [{type: Schema.Types.ObjectId, ref: "Activity"}]
