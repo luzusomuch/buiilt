@@ -10,7 +10,8 @@ var ActivitySchema = new Schema({
     project: {type: Schema.Types.ObjectId, ref: "Project", required: true},
     date: {
         start: Date,
-        end: Date
+        end: Date,
+        duration: Number
     },
     time: {
         start: Date,

@@ -20,15 +20,23 @@
                 <div layout="column">
                     <p class="md-body-2">Select Date and Time for activity</p>
                     <div layout="row">
-                        <div layout-padding flex="50">
+                        <div layout-padding flex="33">
                             <h5>Start Date</h5>
                             <md-datepicker ng-model="activity.date.start" md-placeholder="Enter Start Date"></md-datepicker>
+                        </div>
+                        <div layout-padding>
+                            <h5>Duration (days)</h5>
+                            <md-input-container>
+                                <label for="">Duration (days)</label>
+                                <input type="number" ng-model="activity.date.duration">
+                            </md-input-container>
                         </div>
                         <div layout-padding>
                             <h5>End Date</h5>
                             <md-datepicker ng-model="activity.date.end" md-placeholder="Enter End Date"></md-datepicker>
                         </div>
                     </div>
+                    <p style="color:red" ng-show="dateError">{{dateError}}</p>
 
                     <div layout="row">
                         <div layout-padding flex="50">
