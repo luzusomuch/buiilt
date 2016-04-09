@@ -129,38 +129,47 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
             $scope.membersList[index].select = !$scope.membersList[index].select;
     };
 
-    $scope.$watchGroup(["activity.date.start", "activity.date.end", "activity.date.duration"], function(value) {
-        var startDate = value[0];
-        var endDate = value[1];
-        var duration = value[2];
-        var newStartDate, newEndDate, newDuration;
+    // $scope.$watchGroup(["activity.date.start", "activity.date.end", "activity.date.duration"], function(value) {
+    //     var startDate = value[0];
+    //     var endDate = value[1];
+    //     var duration = value[2];
 
-        if (startDate && duration) {
-            if (duration < 0) {
-                $scope.dateError = "Duration Number Must Greator Than 0";
-            } else {
-                $scope.dateError = null;
-                newEndDate = new Date(moment($scope.activity.date.start).add(duration, "days"));
-            }
-        } else if (endDate && duration) {
-            if (duration < 0) {
-                $scope.dateError = "Duration Number Must Greator Than 0";
-            } else {
-                $scope.dateError = null;
-                newStartDate = new Date(moment($scope.activity.date.end).subtract(duration, "days"));
-            }
-        } else if (startDate && endDate) {
-            if (moment(moment(startDate).format("YYYY-MM-DD")).isSameOrBefore(moment(endDate).format("YYYY-MM-DD"))) {
-                newDuration = moment(moment(endDate)).diff(moment(startDate), 'days');
-                $scope.dateError = null;
-            } else {
-                $scope.dateError = "End Date Must Greator Than Start Date";
-            }
+    //     if (startDate && duration) {
+    //         if (duration < 0) {
+    //             $scope.dateError = "Duration Number Must Greator Than 0";
+    //         } else {
+    //             $scope.dateError = null;
+    //             $scope.activity.date.end = new Date(moment($scope.activity.date.start).add(duration, "days"));
+    //         }
+    //     }
+    //     if (endDate && duration) {
+    //         if (duration < 0) {
+    //             $scope.dateError = "Duration Number Must Greator Than 0";
+    //         } else {
+    //             $scope.dateError = null;
+    //             $scope.activity.date.start = new Date(moment($scope.activity.date.end).subtract(duration, "days"));
+    //         }
+    //     }
+    //     if (startDate && endDate) {
+    //         if (moment(moment(startDate).format("YYYY-MM-DD")).isSameOrBefore(moment(endDate).format("YYYY-MM-DD"))) {
+    //             $scope.activity.date.duration = moment(moment(endDate)).diff(moment(startDate), 'days');
+    //             $scope.dateError = null;
+    //         } else {
+    //             $scope.dateError = "End Date Must Greator Than Start Date";
+    //         }
+    //     }
+    // });
+
+    $scope.getChangeValue = function(type) {
+        console.log($scope.activity.date)
+        if ($scope.activity.date.start && type === "du") {
+            $scope.activity.date.end = new Date(moment($scope.activity.date.start).add($scope.activity.date.duration, "days"));
+        } else if ($scope.activity.date.end && type==="du") {
+            $scope.activity.date.start = new Date(moment($scope.activity.date.end).add($scope.activity.date.duration, "days"));
+        } else if ((type === "st"||type==="et") && $scope.activity.date.end) {
+            $scope.activity.date.duration = moment(moment($scope.activity.date.end)).diff(moment($scope.activity.date.start), 'days');
         }
-        console.log(newStartDate);
-        console.log(newEndDate);
-        console.log(newDuration);
-    });
+    };
 
     /*Insert another activity id into dependencies list when create new activity
     only occur when new activity has isDependent property is true*/

@@ -22,18 +22,18 @@
                     <div layout="row">
                         <div layout-padding flex="33">
                             <h5>Start Date</h5>
-                            <md-datepicker ng-model="activity.date.start" md-placeholder="Enter Start Date"></md-datepicker>
+                            <md-datepicker ng-change="getChangeValue('st')" ng-model="activity.date.start" md-placeholder="Enter Start Date"></md-datepicker>
                         </div>
                         <div layout-padding>
                             <h5>Duration (days)</h5>
                             <md-input-container>
                                 <label for="">Duration (days)</label>
-                                <input type="number" ng-model="activity.date.duration">
+                                <input type="number" ng-change="getChangeValue('du')" ng-model="activity.date.duration">
                             </md-input-container>
                         </div>
                         <div layout-padding>
                             <h5>End Date</h5>
-                            <md-datepicker ng-model="activity.date.end" md-placeholder="Enter End Date"></md-datepicker>
+                            <md-datepicker ng-change="getChangeValue('et')" ng-model="activity.date.end" md-placeholder="Enter End Date"></md-datepicker>
                         </div>
                     </div>
                     <p style="color:red" ng-show="dateError">{{dateError}}</p>
