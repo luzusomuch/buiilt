@@ -8,24 +8,24 @@
         
         <md-dialog-content>
             <div class="md-dialog-content" layout="column" layout-padding>
-                <div layout="column">
+                <div layout="column" ng-show="step==1">
                     <p class="md-body-2">Which project should this file be added to:</p>
-					
-					<div layout="row" flex layout-align="center center" layout-wrap layout-padding>
-						<md-radio-group ng-model="selectedProjectIndex">
-							<md-radio-button ng-repeat="project in projects" ng-value="$index" class="md-primary">{{ project.name }}</md-radio-button>
-						</md-radio-group>
-					</div>
+                    <md-input-container>
+                        <label for="">Projects List</label>
+                        <md-select ng-model="selectedProjectIndex">
+                            <md-option ng-repeat="project in projects" ng-value="$index">{{project.name}}</md-option>
+                        </md-select>
+                    </md-input-container>
                 </div>
 
-                <div layout="column">
+                <div layout="column" ng-show="step==2">
                     <p class="md-body-2">Select the document that you would like to upload:</p>
                     <div layout="row" layout-align="center center" class="tagcloud-selection">
                         <input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/>
                     </div>
                 </div>
                 
-                <div layout="column">
+                <div layout="column" ng-show="step==2">
                     <p class="md-body-2">Provide a name for this file:</p>
                     <div layout="row">
                         <md-input-container flex="66" flex-offset="15">
@@ -35,7 +35,7 @@
                     </div>
                 </div>
                 
-                <div layout="column">
+                <div layout="column" ng-show="step==3">
                     <p class="md-body-2">Select at least one tag that is relevant to this file:</p>
 					
 					<div layout="row" flex layout-align="center center" layout-wrap layout-padding>
@@ -43,7 +43,7 @@
 					</div>
                 </div>
                 
-                <div layout="column">
+                <div layout="column" ng-show="step==3">
                     <p class="md-body-2">Select the team members who are able to view this file:</p>
 					
 					<div layout="row" flex layout-align="center center" layout-wrap layout-padding>
@@ -56,7 +56,11 @@
         
         <md-dialog-actions>
             <md-button ng-click="closeModal()">Cancel</md-button>
-            <md-button type="submit" class="md-primary">Add File</md-button>
+
+            <md-button ng-click="step=step-1" ng-hide="step==1">Back</md-button>
+            <md-button ng-click="next('createDocument')" ng-hide="step==3">Next</md-button>
+
+            <md-button ng-show="step==3" type="submit" class="md-primary">Add File</md-button>
         </md-dialog-actions>
     </form>
 </md-dialog>
