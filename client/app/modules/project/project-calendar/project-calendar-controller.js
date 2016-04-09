@@ -166,8 +166,25 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
             activity.lagsUnit = lagsUnit;
             activity.lagsType = lagsType;
             $scope.activity.dependencies.push(activity);
-            $scope.lagsType = null;
-            $scope.lagsUnit = null;
+            if ($scope.activity.dependencies.length === 1) {
+                if ($scope.activity.date)
+                    $scope.activity.date.start = new Date(activity.date.end);
+                else
+                    $scope.activity.date = {start: new Date(activity.date.end)};
+            } else if ($scope.activity.dependencies.length > 1) {
+                // filter dependencies asc by end date
+                $scope.activity.dependencies.sort(function(a,b) {
+                    if (a.date.end < b.date.end) {
+                        return -1;
+                    }
+                    if (a.date.end > b.date.end) {
+                        return 1;
+                    }
+                    return 0;
+                });
+                // grant the last item in dependencies list end date to current activity 
+                $scope.activity.date.start = new Date($scope.activity.dependencies[$scope.activity.dependencies.length-1].date.end);
+            }
         } else {
             dialogService.showToast("This activity has already in dependencies list");
         }
