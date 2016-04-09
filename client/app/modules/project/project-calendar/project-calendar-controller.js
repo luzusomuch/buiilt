@@ -133,29 +133,33 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
         var startDate = value[0];
         var endDate = value[1];
         var duration = value[2];
+        var newStartDate, newEndDate, newDuration;
 
         if (startDate && duration) {
             if (duration < 0) {
                 $scope.dateError = "Duration Number Must Greator Than 0";
             } else {
                 $scope.dateError = null;
-                $scope.activity.date.end = new Date(moment($scope.activity.date.start).add(duration, "days"));
+                newEndDate = new Date(moment($scope.activity.date.start).add(duration, "days"));
             }
         } else if (endDate && duration) {
             if (duration < 0) {
                 $scope.dateError = "Duration Number Must Greator Than 0";
             } else {
                 $scope.dateError = null;
-                $scope.activity.date.start = new Date(moment($scope.activity.date.end).subtract(duration, "days"));
+                newStartDate = new Date(moment($scope.activity.date.end).subtract(duration, "days"));
             }
         } else if (startDate && endDate) {
             if (moment(moment(startDate).format("YYYY-MM-DD")).isSameOrBefore(moment(endDate).format("YYYY-MM-DD"))) {
-                $scope.activity.date.duration = moment(moment(endDate)).diff(moment(startDate), 'days');
+                newDuration = moment(moment(endDate)).diff(moment(startDate), 'days');
                 $scope.dateError = null;
             } else {
                 $scope.dateError = "End Date Must Greator Than Start Date";
             }
         }
+        console.log(newStartDate);
+        console.log(newEndDate);
+        console.log(newDuration);
     });
 
     /*Insert another activity id into dependencies list when create new activity

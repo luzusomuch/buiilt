@@ -10,7 +10,6 @@ angular.module('buiiltApp', [
     'restangular',
     'lumx',
     '720kb.tooltips',
-    'angucomplete-alt',
     'btford.socket-io',
     'ngTable',
     'angular-filepicker',
