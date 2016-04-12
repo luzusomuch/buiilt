@@ -5,17 +5,17 @@
 	</div>
 
 	<md-list ng-cloak flex>
-		<div ui-sref="projects.open" ng-class="{activemenu: $state.includes('projects.open')}">
+		<div id="im_PsSNOpen" ui-sref="projects.open" ng-class="{activemenu: $state.includes('projects.open')}">
 			<md-list-item md-ink-ripple>
 			    <p layout-padding>Open</p>
 			</md-list-item>
 		</div>
-		<div ui-sref="projects.invitations" ng-class="{activemenu: $state.includes('projects.invitations')}" ng-hide="currentTeam.type == 'architect' || currentTeam.type == 'homeOwner'">
+		<div id="im_PsSNTender" ui-sref="projects.invitations" ng-class="{activemenu: $state.includes('projects.invitations')}" ng-hide="currentTeam.type == 'architect' || currentTeam.type == 'homeOwner'">
 			<md-list-item md-ink-ripple>
 			    <p layout-padding>Invitations to Tender</p>
 			</md-list-item>
 		</div>
-		<div ui-sref="projects.archived" ng-class="{activemenu: $state.includes('projects.archived')}">
+		<div id="im_PsSNArchived" ui-sref="projects.archived" ng-class="{activemenu: $state.includes('projects.archived')}">
 			<md-list-item md-ink-ripple>
 			    <p layout-padding>Archived</p>
 			</md-list-item>

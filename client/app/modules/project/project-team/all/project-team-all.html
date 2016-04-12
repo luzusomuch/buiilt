@@ -6,11 +6,11 @@
 			
 			<md-input-container md-no-float class="md-block md-icon-float" flex style="margin-right: 15px">
 				<md-icon class="material-icons" style="margin-top: 6px;">search</md-icon>
-				<input type="text" name="teamMemberName" ng-model="name" placeholder="Search by team member name...">
+				<input id="im_ProjTeamSearch" type="text" name="teamMemberName" ng-model="name" placeholder="Search by team member name...">
 			</md-input-container>
 			
 			<div>
-				<md-button class="md-icon-button more-filter-button" ng-click="showFilter=!showFilter">
+				<md-button id="im_ProjTeamFilter" class="md-icon-button more-filter-button" ng-click="showFilter=!showFilter">
 					 <md-tooltip md-direction="down">Show Filters</md-tooltip>
 				     <md-icon class="material-icons">filter_list</md-icon>
 		      	</md-button>
@@ -19,7 +19,7 @@
 			<span flex="5"></span>
 			
 			<div ng-show="!isArchive" class="add-fab">
-				<md-button class="md-fab md-mini md-primary" ng-click="showInviteTeamModal($event)">
+				<md-button id="im_ProjTeamAdd" class="md-fab md-mini md-primary" ng-click="showInviteTeamModal($event)">
 					 <md-tooltip md-direction="down">Add a New Team Member</md-tooltip>
 				     <md-icon class="material-icons md-primary">add</md-icon>
 		      	</md-button>
