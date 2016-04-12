@@ -94,7 +94,8 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
     $scope.activity = {
         dependencies: [],
         isDependent: false,
-        isMilestone: $rootScope.isMilestone
+        isMilestone: $rootScope.isMilestone,
+        isBelongToMilestone: false
     };
 
     /*Show modal with valid name*/
@@ -129,45 +130,23 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
             $scope.membersList[index].select = !$scope.membersList[index].select;
     };
 
-    // $scope.$watchGroup(["activity.date.start", "activity.date.end", "activity.date.duration"], function(value) {
-    //     var startDate = value[0];
-    //     var endDate = value[1];
-    //     var duration = value[2];
-
-    //     if (startDate && duration) {
-    //         if (duration < 0) {
-    //             $scope.dateError = "Duration Number Must Greator Than 0";
-    //         } else {
-    //             $scope.dateError = null;
-    //             $scope.activity.date.end = new Date(moment($scope.activity.date.start).add(duration, "days"));
-    //         }
-    //     }
-    //     if (endDate && duration) {
-    //         if (duration < 0) {
-    //             $scope.dateError = "Duration Number Must Greator Than 0";
-    //         } else {
-    //             $scope.dateError = null;
-    //             $scope.activity.date.start = new Date(moment($scope.activity.date.end).subtract(duration, "days"));
-    //         }
-    //     }
-    //     if (startDate && endDate) {
-    //         if (moment(moment(startDate).format("YYYY-MM-DD")).isSameOrBefore(moment(endDate).format("YYYY-MM-DD"))) {
-    //             $scope.activity.date.duration = moment(moment(endDate)).diff(moment(startDate), 'days');
-    //             $scope.dateError = null;
-    //         } else {
-    //             $scope.dateError = "End Date Must Greator Than Start Date";
-    //         }
-    //     }
-    // });
-
+    /*Update start date, end date and duration when changed one*/
     $scope.getChangeValue = function(type) {
-        console.log($scope.activity.date)
         if ($scope.activity.date.start && type === "du") {
             $scope.activity.date.end = new Date(moment($scope.activity.date.start).add($scope.activity.date.duration, "days"));
         } else if ($scope.activity.date.end && type==="du") {
             $scope.activity.date.start = new Date(moment($scope.activity.date.end).add($scope.activity.date.duration, "days"));
         } else if ((type === "st"||type==="et") && $scope.activity.date.end) {
             $scope.activity.date.duration = moment(moment($scope.activity.date.end)).diff(moment($scope.activity.date.start), 'days');
+        }
+
+        if ($scope.activity.date) {
+            if (moment(moment($scope.activity.date.start).format("YYYY-MM-DD")).isAfter(moment($scope.activity.date.end).format("YYYY-MM-DD")))
+                $scope.dateError = "End Date Must Greator Than Stat Date";
+            else if ($scope.activity.duration && $scope.activity.duration <= 0) 
+                $scope.dateError = "Duration Must Greator Than 0";
+            else
+                $scope.dateError = null;
         }
     };
 
@@ -208,6 +187,12 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 // grant the last item in dependencies list end date + 1 to current activity 
                 $scope.activity.date.start = new Date(moment($scope.activity.dependencies[$scope.activity.dependencies.length-1].date.end).add(1, "days"));
             }
+
+            if ($scope.activity.date.duration) {
+                $scope.activity.date.end = new Date(moment($scope.activity.date.start).add($scope.activity.date.duration, "days"));
+            } else if ($scope.activity.date.end) {
+                $scope.activity.date.duration = $scope.activity.date.duration = moment(moment($scope.activity.date.end)).diff(moment($scope.activity.date.start), 'days');
+            }
         } else {
             dialogService.showToast("This activity has already in dependencies list");
         }
@@ -237,6 +222,10 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
             }
             if ($scope.activity.newMembers.length === 0) {
                 dialogService.showToast("Please select at least 1 member");
+                error = true;
+            }
+            if ($scope.activity.isBelongToMilestone && !$scope.activity.selectedMilestone) {
+                dialogService.showToast("Please select a milestone");
                 error = true;
             }
             if (!error && !timeError) {

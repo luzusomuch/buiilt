@@ -34,6 +34,7 @@ var ActivitySchema = new Schema({
         _id: false
     }],
     isMilestone: {type: Boolean, default: false},
+    // When it's a milestone, it'll have this property
     subActivities: [{type: Schema.Types.ObjectId, ref: "Activity"}]
 });
 

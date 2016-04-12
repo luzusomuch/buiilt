@@ -52,7 +52,7 @@
 
                 <div layout="column">
                     <div layout="column" flex>
-                        <p class="md-body-2">Is this activity dependent on another Activity</p>
+                        <p class="md-body-2">Is this activity dependent on another Activity?</p>
                         <md-radio-group ng-model="activity.isDependent">
                             <md-radio-button class="md-primary" ng-value="true">Yes</md-radio-button>
                             <md-radio-button class="md-primary" ng-value="false">No</md-radio-button>
@@ -118,6 +118,25 @@
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+
+                <div layout="column">
+                    <div>
+                        <p>Is this activity belong to a milestone?</p>
+                        <md-radio-group ng-model="activity.isBelongToMilestone">
+                            <md-radio-button class="md-primary" ng-value='false'>No</md-radio-button>
+                            <md-radio-button class="md-primary" ng-value='true'>Yes</md-radio-button>
+                        </md-radio-group>
+                    </div>
+                    <div flex ng-show="activity.isBelongToMilestone">
+                        <p class="md-body-2">Please select a milestone in list below:</p>
+                        <md-input-container flex="100">
+                            <label for="">Milestones List</label>
+                            <md-select ng-model="activity.selectedMilestone">
+                                <md-option ng-repeat="act in activities" ng-show="act.isMilestone" ng-value="act._id">{{act.name}}</md-option>
+                            </md-select>
+                        </md-input-container>
                     </div>
                 </div>
 
