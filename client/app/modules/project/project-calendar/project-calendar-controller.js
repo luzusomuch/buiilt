@@ -9,7 +9,8 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 left: "month agendaWeek agendaDay",
                 center: "title",
                 right: "today, prev, next"
-            }
+            },
+            eventClick: $scope.alertOnEventClick,
         }
     };
 
@@ -31,7 +32,34 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
             }
         });
         _.each(activities, function(activity) {
-            if (!activity.isMilestone) {
+            if (activity.isMilestone) {
+                console.log(activity);
+                var copySubActivities = angular.copy(activity.subActivities);
+                // sort to show start date asc
+                copySubActivities.sort(function(a,b) {
+                    if (a.date.start < b.date.start) {
+                        return -1;
+                    }
+                    if (a.date.start > b.date.start) {
+                        return 1;
+                    }
+                    return 0;
+                });
+                // sort to show end date asc
+                activity.subActivities.sort(function(a,b) {
+                    if (a.date.end < b.date.end) {
+                        return -1;
+                    }
+                    if (a.date.end > b.date.end) {
+                        return 1;
+                    }
+                    return 0;
+                });
+                var dateStart = moment(copySubActivities[0].date.start).add(moment(copySubActivities[0].time.start).hours(), "hours").add(moment(copySubActivities[0].time.end).minutes(), "minutes");
+                var dateEnd = moment(activity.subActivities[activity.subActivities.length-1].date.end).add(moment(activity.subActivities[activity.subActivities.length-1].time.end).hours(), "hours").add(moment(activity.subActivities[activity.subActivities.length-1].time.end).minutes(), "minutes");
+                $scope.events.push({title: activity.name, start: moment(dateStart).format("YYYY-MM-DD hh:mm"), end: moment(dateEnd).format("YYYY-MM-DD hh:mm"), rendering: 'background'});
+                console.log($scope.events);
+            } else {
                 var dateStart = moment(activity.date.start).add(moment(activity.time.start).hours(), "hours").add(moment(activity.time.end).minutes(), "minutes");
                 var dateEnd = moment(activity.date.end).add(moment(activity.time.end).hours(), "hours").add(moment(activity.time.end).minutes(), "minutes");
                 $scope.events.push({title: activity.name, start: moment(dateStart).format("YYYY-MM-DD hh:mm"), end: moment(dateEnd).format("YYYY-MM-DD hh:mm")});   
@@ -40,6 +68,12 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
         $scope.eventSources  = [$scope.events];
     };
     convertAllToCalendarView();
+
+    $scope.alertOnEventClick = function(date, event, view) {
+        console.log(date);
+        console.log(event);
+        console.log(view);
+    };
 
     /*Get all project members*/
     function getProjectMembers() {

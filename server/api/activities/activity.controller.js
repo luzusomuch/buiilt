@@ -41,25 +41,24 @@ exports.create = function(req, res) {
         CheckMembers.check(req.body.newMembers, null, function(result) {
             activity.members = result.members;
             activity.notMembers = result.notMembers;
-            if (req.body.isBelongToMilestone && req.body.selectedMilestone) {
-                Activity.findOne({_id: req.body.selectedMilestone, isMilestone: true}, function(err, milestone) {
-                    if (err) {return res.send(500,err);}
-                    if (!milestone) {return res.send(404, {msg: "Your selected milestone not existed"});}
-                    milestone.subActivities.push(req.body.selectedMilestone);
-                    milestone.save(function(err) {
+            activity.save(function(err) {
+                if (err) {return res.send(500,err);}
+                if (req.body.isBelongToMilestone && req.body.selectedMilestone) {
+                    Activity.findOne({_id: req.body.selectedMilestone, isMilestone: true}, function(err, milestone) {
                         if (err) {return res.send(500,err);}
-                        activity.save(function(err) {
-                            if (err) {return res.send(500,err);}
-                            return res.send(200, activity);
+                        if (!milestone) {return res.send(404, {msg: "Your selected milestone not existed"});}
+                        milestone.subActivities.push(activity._id);
+                        milestone.save(function(err) {
+                            if (err) {
+                                activity.remove();
+                                return res.send(500,err);
+                            } else
+                                return res.send(200, activity);
                         });
                     });
-                });
-            } else {
-                activity.save(function(err) {
-                    if (err) {return res.send(500,err);}
+                } else
                     return res.send(200, activity);
-                });
-            }
+            });
         });
     });
 };
@@ -70,7 +69,9 @@ exports.update = function(req, res) {
 
 /*Get all activities and milestone related to current user*/
 exports.me = function(req, res) {
-    Activity.find({project: req.params.id, $or: [{owner: req.user._id}, {members: req.user._id}]}, function(err, activities) {
+    Activity.find({project: req.params.id, $or: [{owner: req.user._id}, {members: req.user._id}]})
+    .populate("subActivities")
+    .exec(function(err, activities) {
         if (err) {return res.send(500,err);}
         return res.send(200, activities);
     });
