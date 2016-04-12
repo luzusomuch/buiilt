@@ -35,17 +35,17 @@
 			
 			<md-toolbar>
 				<div class="md-toolbar-tools" layout="row" layout-align="center center">
-		  	      	<md-button aria-label="Edit Project Details" class="md-icon-button" ng-click="showEditProjectModal($event)" ng-show="project.projectManager._id == currentUser._id">
+		  	      	<md-button id="im_ProjOverviewEdit" aria-label="Edit Project Details" class="md-icon-button" ng-click="showEditProjectModal($event)" ng-show="project.projectManager._id == currentUser._id">
 					  	<md-tooltip md-direction="top">Edit Project Details</md-tooltip>
 				      	<md-icon class="material-icons">edit</md-icon>
 		  	      	</md-button>
 		
-		  	      	<md-button aria-label="Download a Backup of this Project" class="md-icon-button" ng-click="downloadBackUp()">
+		  	      	<md-button id="im_ProjOverviewBackup" aria-label="Download a Backup of this Project" class="md-icon-button" ng-click="downloadBackUp()">
 					  	<md-tooltip md-direction="top">Download a Backup of this Project</md-tooltip>
 				      	<md-icon class="material-icons">file_download</md-icon>
 		  	      	</md-button>
 		
-		  	      	<md-button aria-label="Archive this Project" class="md-icon-button" ng-show="currentUser._id == project.projectManager._id" ng-click="archiveProject($event)">
+		  	      	<md-button id="im_ProjOverviewArchive" aria-label="Archive this Project" class="md-icon-button" ng-show="currentUser._id == project.projectManager._id" ng-click="archiveProject($event)">
 					  	<md-tooltip md-direction="top">Archive this Project</md-tooltip>
 				      	<md-icon class="material-icons">archive</md-icon>
 		  	      	</md-button>

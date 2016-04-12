@@ -18,42 +18,42 @@
 				<div layout="row">
 					<md-input-container flex>
                         <label>Project Name</label>
-                        <input ng-model="project.name" md-autofocus ng-required>
+                        <input id="im_ProjOverviewEdit_1" ng-model="project.name" md-autofocus />
 					</md-input-container>
 				</div>
 				
 				<div layout="row">
 					<md-input-container flex>
                         <label>Street Address</label>
-                        <input ng-model="project.address">
+                        <input id="im_ProjOverviewEdit_2" ng-model="project.address" />
 				    </md-input-container>
 				</div>
 				
                 <div layout="row">
                     <md-input-container flex="60">
                         <label>Suburb</label>
-                        <input ng-model="project.suburb">
+                        <input id="im_ProjOverviewEdit_3" ng-model="project.suburb" />
                     </md-input-container>
 
                     <md-input-container flex="40">
                         <label>Postcode</label>
-                        <input ng-model="project.postcode">
+                        <input id="im_ProjOverviewEdit_4" ng-model="project.postcode" />
                     </md-input-container>
                 </div>
 				
 				<div layout="row">
 					<md-input-container flex>
                         <label>Project Description</label>
-                        <textarea ng-model="project.description" />
+                        <textarea id="im_ProjOverviewEdit_5" ng-model="project.description" />
 				    </md-input-container>
 				</div>
 				
 			</div>
 		</md-dialog-content>
 		
-        <md-dialog-actions>
+        <md-dialog-actions layout="row">
             <md-button ng-click="closeDialog()">Cancel</md-button>
-            <md-button class="md-primary" type="submit">Save Changes</md-button>
+            <md-button id="im_ProjOverviewEdit_6" class="md-primary" type="submit">Save Changes</md-button>
         </md-dialog-actions>   
 		
 	</form>
