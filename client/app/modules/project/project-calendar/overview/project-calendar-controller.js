@@ -85,7 +85,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 var dateStart = moment(copySubActivities[0].date.start).add(moment(copySubActivities[0].time.start).hours(), "hours").add(moment(copySubActivities[0].time.end).minutes(), "minutes");
                 var dateEnd = moment(activity.subActivities[activity.subActivities.length-1].date.end).add(moment(activity.subActivities[activity.subActivities.length-1].time.end).hours(), "hours").add(moment(activity.subActivities[activity.subActivities.length-1].time.end).minutes(), "minutes");
                 $scope.events.push({title: activity.name, start: moment(dateStart).format("YYYY-MM-DD hh:mm"), end: moment(dateEnd).format("YYYY-MM-DD hh:mm"), rendering: 'background', backgroundColor: "#C0D5DC", url: "/project/"+$stateParams.id+"/calendar/detail/"+activity._id});
-            } else {
+            } else if (!activity.isMilestone) {
                 var dateStart = moment(activity.date.start).add(moment(activity.time.start).hours(), "hours").add(moment(activity.time.end).minutes(), "minutes");
                 var dateEnd = moment(activity.date.end).add(moment(activity.time.end).hours(), "hours").add(moment(activity.time.end).minutes(), "minutes");
                 $scope.events.push({title: activity.name, start: moment(dateStart).format("YYYY-MM-DD hh:mm"), end: moment(dateEnd).format("YYYY-MM-DD hh:mm"), url: "/project/"+$stateParams.id+"/calendar/detail/"+activity._id});   
