@@ -9,8 +9,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 left: "month agendaWeek agendaDay",
                 center: "title",
                 right: "today, prev, next"
-            },
-            eventClick: $scope.alertOnEventClick,
+            }
         }
     };
 
@@ -66,15 +65,6 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
         $scope.eventSources  = [$scope.events];
     };
     convertAllToCalendarView();
-
-    $scope.alertOnEventClick = function(date, event, view) {
-        $scope.$apply(function() {
-            console.log(date);
-            console.log(event);
-            console.log(view);
-            
-        });
-    };
 
     /*Get all project members*/
     function getProjectMembers() {

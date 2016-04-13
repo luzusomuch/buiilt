@@ -1,1 +1,85 @@
-add-activity-to-milestone.html
+<md-dialog aria-label="Add activity to milestone {{activity.name}}" flex="70" id="assignPeopleForm">
+    <form name="form">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Add {{(activity.isAddNew) ? "Activity" : "Activities"}} To Milestone {{activity.name}}</h2>
+            </div>
+        </md-toolbar>
+        
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column" layout-padding>
+                <div layout="column">
+                    <p>Do you want to create new activity for this milestone?</p>
+                    <md-radio-group ng-model="activity.isAddNew">
+                        <md-radio-button ng-value="false">No</md-radio-button>
+                        <md-radio-button ng-value="true">Yes</md-radio-button>
+                    </md-radio-group>
+                </div>
+
+                <div layout="column" ng-show="!activity.isAddNew">
+                    <div layout="column">
+                        <p>Please select activities in a list below: </p>
+                        <div flex layout="row" layout-align="center center" layout-warp layout-padding>
+                            <md-checkbox flex="20" class="filter-checkbox md-primary" ng-repeat="act in availableActivities" ng-click="selectItem($index, 'activity')">{{act.name}}</md-checkbox>
+                        </div>
+                    </div>
+                </div>
+
+                <div layout="column" ng-show="activity.isAddNew">
+                    <div layout="row">
+                        <p class="md-body-2">Please enter activity name</p>
+                        <md-input-container flex>
+                            <label for="">Name</label>
+                            <input type="text" name="name" ng-model="newActivity.name" required>
+                        </md-input-container>
+                    </div>
+    
+                    <div layout="column">
+                        <p class="md-body-2">Select Date and Time for activity</p>
+                        <div layout="row">
+                            <div layout-padding flex="33">
+                                <h5>Start Date</h5>
+                                <md-datepicker ng-change="getChangeValue('st')" ng-model="newActivity.date.start" md-placeholder="Enter Start Date"></md-datepicker>
+                            </div>
+                            <div layout-padding>
+                                <h5>Duration (days)</h5>
+                                <md-input-container>
+                                    <label for="">Duration (days)</label>
+                                    <input type="number" ng-change="getChangeValue('du')" ng-model="newActivity.date.duration">
+                                </md-input-container>
+                            </div>
+                            <div layout-padding>
+                                <h5>End Date</h5>
+                                <md-datepicker ng-change="getChangeValue('et')" ng-model="newActivity.date.end" md-placeholder="Enter End Date"></md-datepicker>
+                            </div>
+                        </div>
+                        <p style="color:red" ng-show="dateError">{{dateError}}</p>
+
+                        <div layout="row">
+                            <div layout-padding flex="50">
+                                <h5>Start Time</h5>
+                                <mdp-time-picker ng-model="newActivity.time.start"></mdp-time-picker>
+                            </div>
+                            <div layout-padding>
+                                <h5>End Time</h5>
+                                <mdp-time-picker ng-model="newActivity.time.end"></mdp-time-picker>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div layout="column">
+                        <p class="md-body-2">Select the team members to include in this {{(activity.isMilestone) ? "milestion" : "activity"}}:</p>
+                        <div flex layout="row" layout-align="center center" layout-warp layout-padding>
+                            <md-checkbox flex="20" class="filter-checkbox md-primary" ng-repeat="member in membersList" ng-click="selectItem($index, 'member')">{{(member._id) ? member.name : member.email}}</md-checkbox>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        
+        <md-dialog-actions>
+            <md-button ng-click="dialogService.closeModal()">Cancel</md-button>
+            <md-button ng-click="submitActivity()" class="md-primary">Submit</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

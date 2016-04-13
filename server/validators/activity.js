@@ -15,6 +15,6 @@ exports.validateCreate = function(req, cb) {
 
     return cb(req.validationErrors(), _.assign(_.pick(req.body, "name", "date", "time"), {
         name: req.body.name,
-        isMilestone: req.body.isMilestone
+        isMilestone: (req.body.isMilestone)?req.body.isMilestone:false
     }));
 };

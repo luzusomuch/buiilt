@@ -71,14 +71,27 @@ exports.update = function(req, res) {
 
         async.parallel([
             function(cb) {
-                if (data.editType === "assign-people" && data.newMembers && data.newMembers.length === 0) {
-                    return res.send(406, {msg: "Please select at least 1 member"});
-                } else {
-                    CheckMembers.check(data.newMembers, activity, function(result) {
-                        activity.members = result.members;
-                        activity.notMembers = result.notMembers;
+                if (data.editType === "assign-people"){
+                    if (data.newMembers && data.newMembers.length === 0) {
+                        return res.send(406, {msg: "Please select at least 1 member"});
+                    } else {
+                        CheckMembers.check(data.newMembers, activity, function(result) {
+                            activity.members = result.members;
+                            activity.notMembers = result.notMembers;
+                            cb();
+                        });
+                    }
+                } else if (data.editType==="insert-activities") {
+                    if (data.newActivities && data.newActivities.length===0) {
+                        return res.send(406, {msg: "Please select at least 1 activity"});
+                    } else {
+                        _.each(data.newActivities, function(act) {
+                            activity.subActivities.push(act._id);
+                        });
                         cb();
-                    });
+                    }
+                } else {
+                    cb();
                 }
             }
         ], function() {
