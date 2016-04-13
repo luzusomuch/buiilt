@@ -27,13 +27,24 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
             if ($scope.step==1) {
                 if (!$scope.activity.name || $scope.activity.name.trim().length === 0) {
                     dialogService.showToast("Enter Milestone Name");
-                } else if ($scope.activity.isBelongToMilestone && !$scope.activity.isBelongToMilestone) {
+                } else if ($scope.activity.isBelongToMilestone && !$scope.activity.selectedMilestone) {
                     dialogService.showToast("Please Select Milestone");
                 } else {
                     $scope.step += 1;
                 }
-            } else if ($step==2) {
-
+            } else if ($scope.step==2) {
+                if (!$scope.activity.date) {
+                    dialogService.showToast("Please Check Your Date");
+                } else if (!$scope.activity.time) {
+                    dialogService.showToast("Please Check Your Time");
+                } else {
+                    if (moment(moment($scope.activity.date.start).format("YYYY-MM-DD")).isAfter(moment($scope.activity.date.end).format("YYYY-MM-DD")))
+                        dialogService.showToast("End Date Must Greator Than Stat Date");
+                    else if (!$scope.activity.time.start || !$scope.activity.time.end) {
+                        dialogService.showToast("Please Check Your Time");
+                    } else
+                        $scope.step += 1;
+                }
             }
         }
     };
