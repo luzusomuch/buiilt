@@ -64,7 +64,30 @@ exports.create = function(req, res) {
 };
 
 exports.update = function(req, res) {
-    console.log(req.body);
+    var data = req.body;
+    Activity.findById(req.params.id, function(err, activity) {
+        if (err) {return res.send(500,err);}
+        if (!activity) {return res.send(404);}
+
+        async.parallel([
+            function(cb) {
+                if (data.editType === "assign-people" && data.newMembers && data.newMembers.length === 0) {
+                    return res.send(406, {msg: "Please select at least 1 member"});
+                } else {
+                    CheckMembers.check(data.newMembers, activity, function(result) {
+                        activity.members = result.members;
+                        activity.notMembers = result.notMembers;
+                        cb();
+                    });
+                }
+            }
+        ], function() {
+            activity.save(function(err) {
+                if (err) {return res.send(500,err);}
+                return res.send(200, activity);
+            });
+        });
+    });
 };
 
 /*Get all activities and milestone related to current user*/

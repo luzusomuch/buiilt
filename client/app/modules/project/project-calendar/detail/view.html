@@ -1,0 +1,24 @@
+<div layout="row" class="detail-view-content" layout-padding>
+    <div flex layout="column">
+        <div layout="column" class="md-whiteframe-1dp overview-view">
+            <div class="md-toolbar-tools">
+                <h5 layout-margin><span>{{ activity.name }}'s detail</span></h5>
+                <span flex></span>
+                <md-button aria-label="Create new Activity" class="md-icon-button" ng-click="showModal($event, 'add-activity-to-milestone.html')" ng-show="activity.isMilestone">
+                    <md-tooltip md-direction="bottom">Add Activity To This Milestone</md-tooltip>
+                    <md-icon class="material-icons">add</md-icon>
+                </md-button>
+                <md-button aria-label="Assign More People" class="md-icon-button" ng-click="showModal($event, 'assign-people.html')">
+                    <md-tooltip md-direction="bottom">Assign More People</md-tooltip>
+                    <md-icon class="material-icons">person_outline</md-icon>
+                </md-button>
+            </div>
+        
+            <md-divider layout="row" flex></md-divider>
+        
+            <div layout="column" layout-padding flex>
+                
+            </div>
+        </div>
+    </div>
+</div>

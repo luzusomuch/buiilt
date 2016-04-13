@@ -7,21 +7,18 @@ var User = require('./../../models/user.model');
     @item is update existed item with current members and not members list
 */
 exports.check = function(members, item, cb) {
-    var result = {members: [], notMembers: []};
+    var result = {
+        members: (item) ? item.members : [], 
+        notMembers: (item) ? item.notMembers : []
+    };
     async.each(members, function(member, callback) {
         User.findOne({email: member.email}, function(err, user) {
             if (err) {callback(err);}
             if (!user) {
-                if (item) 
-                    item.notMembers.push(member.email);
-                else 
-                    result.notMembers.push(member.email);
+                result.notMembers.push(member.email);
                 callback(null);
             } else {
-                if (item)
-                    item.members.push(user._id);
-                else
-                    result.members.push(user._id);
+                result.members.push(user._id);
                 callback(null);
             }
         });

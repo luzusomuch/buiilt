@@ -28,12 +28,11 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                     dateStart = moment(task.dateStart);
                     dateEnd = moment(task.dateEnd);
                 }
-                $scope.events.push({title: task.description, start: moment(dateStart).format("YYYY-MM-DD hh:mm"), end: moment(dateEnd).format("YYYY-MM-DD hh:mm")});
+                $scope.events.push({title: task.description, start: moment(dateStart).format("YYYY-MM-DD hh:mm"), end: moment(dateEnd).format("YYYY-MM-DD hh:mm"), url: "/project/"+$stateParams.id+"/tasks/detail/"+task._id});
             }
         });
         _.each(activities, function(activity) {
             if (activity.isMilestone) {
-                console.log(activity);
                 var copySubActivities = angular.copy(activity.subActivities);
                 // sort to show start date asc
                 copySubActivities.sort(function(a,b) {
@@ -57,12 +56,11 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 });
                 var dateStart = moment(copySubActivities[0].date.start).add(moment(copySubActivities[0].time.start).hours(), "hours").add(moment(copySubActivities[0].time.end).minutes(), "minutes");
                 var dateEnd = moment(activity.subActivities[activity.subActivities.length-1].date.end).add(moment(activity.subActivities[activity.subActivities.length-1].time.end).hours(), "hours").add(moment(activity.subActivities[activity.subActivities.length-1].time.end).minutes(), "minutes");
-                $scope.events.push({title: activity.name, start: moment(dateStart).format("YYYY-MM-DD hh:mm"), end: moment(dateEnd).format("YYYY-MM-DD hh:mm"), rendering: 'background'});
-                console.log($scope.events);
+                $scope.events.push({title: activity.name, start: moment(dateStart).format("YYYY-MM-DD hh:mm"), end: moment(dateEnd).format("YYYY-MM-DD hh:mm"), rendering: 'background', backgroundColor: "#C0D5DC", url: "/project/"+$stateParams.id+"/calendar/detail/"+activity._id});
             } else {
                 var dateStart = moment(activity.date.start).add(moment(activity.time.start).hours(), "hours").add(moment(activity.time.end).minutes(), "minutes");
                 var dateEnd = moment(activity.date.end).add(moment(activity.time.end).hours(), "hours").add(moment(activity.time.end).minutes(), "minutes");
-                $scope.events.push({title: activity.name, start: moment(dateStart).format("YYYY-MM-DD hh:mm"), end: moment(dateEnd).format("YYYY-MM-DD hh:mm")});   
+                $scope.events.push({title: activity.name, start: moment(dateStart).format("YYYY-MM-DD hh:mm"), end: moment(dateEnd).format("YYYY-MM-DD hh:mm"), url: "/project/"+$stateParams.id+"/calendar/detail/"+activity._id});   
             }
         });
         $scope.eventSources  = [$scope.events];
@@ -70,9 +68,12 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
     convertAllToCalendarView();
 
     $scope.alertOnEventClick = function(date, event, view) {
-        console.log(date);
-        console.log(event);
-        console.log(view);
+        $scope.$apply(function() {
+            console.log(date);
+            console.log(event);
+            console.log(view);
+            
+        });
     };
 
     /*Get all project members*/

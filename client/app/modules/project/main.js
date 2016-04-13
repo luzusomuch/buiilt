@@ -16,7 +16,12 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
 
   .state("project.calendar", {
     url: "/calendar",
-    templateUrl: "/app/modules/project/project-calendar/view.html",
+    abstract: true,
+    templateUrl: '/app/modules/project/project-calendar/view.html',
+  })
+  .state("project.calendar.overview", {
+    url: "/overview",
+    templateUrl: "/app/modules/project/project-calendar/overview/view.html",
     controller: "projectCalendarCtrl",
     authenticate: true,
     resolve: {
@@ -26,6 +31,20 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
       tasks: function(taskService, $stateParams) {
         return taskService.getProjectTask({id: $stateParams.id}).$promise;
       }
+    }
+  })
+  .state("project.calendar.activity", {
+    url: "/detail/:activityId",
+    templateUrl: "/app/modules/project/project-calendar/detail/view.html",
+    controller: "projectCalendarDetailCtrl",
+    authenticate: true,
+    resolve: {
+      activity: function($stateParams, activityService) {
+        return activityService.get({id: $stateParams.activityId}).$promise;
+      },
+      activities: function($stateParams, activityService) {
+        return activityService.me({id: $stateParams.id}).$promise;
+      },
     }
   })
   
@@ -40,7 +59,7 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
 	//Team for Single Project
   .state('project.team', {
     url: '/team',
-	abstract: true,
+	  abstract: true,
     templateUrl: '/app/modules/project/project-team/project-team.html',
     controller: 'projectTeamCtrl',
     authenticate : true
