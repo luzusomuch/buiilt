@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $scope, $timeout, $q, $state, $mdDialog, $mdToast, projectService, myTasks, myMessages, myFiles, notificationService, taskService, peopleService, messageService, fileService, socket, uploadService, dialogService) {
+angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $scope, $timeout, $q, $state, $mdDialog, $mdToast, $stateParams, projectService, myTasks, myMessages, myFiles, notificationService, taskService, peopleService, messageService, fileService, socket, uploadService, dialogService) {
 	$scope.step = 1;
     $rootScope.title = "Dashboard";
 	$scope.myTasks = myTasks;
@@ -13,6 +13,18 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     $scope.projectFilterTags = angular.copy($scope.projects);
     $scope.currentUser = $rootScope.currentUser;
 	$scope.showFilter = false;
+
+    /*config fullcalendar*/
+    $scope.config = {
+        calendar: {
+            height: 450,
+            header: {
+                left: "month agendaWeek agendaDay",
+                center: "title",
+                right: "today, prev, next"
+            }
+        }
+    };
 
     /*Validate info and allow next in modal*/
     $scope.next = function(type) {
@@ -77,11 +89,12 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         }
         data.element.notifications = [];
         $scope.myTasks.push(data);
-        sortTask($scope.myTasks);
+        sortTaskAndRenderToCalendar($scope.myTasks);
     });
 
     /*Sort tasks by due date asc*/
-    function sortTask(tasks) {
+    function sortTaskAndRenderToCalendar(tasks) {
+        $scope.events = [];
         tasks.sort(function(a,b) {
             if (a.dateEnd < b.dateEnd) {
                 return -1;
@@ -91,8 +104,22 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             }
             return 0;
         });
+        _.each(tasks, function(task) {
+            if (task.element && task.element.type === "task-project") {
+                var dateStart, dateEnd;
+                if (task.time) {
+                    dateStart = moment(task.dateStart).add(moment(task.time.start).hours(), "hours").add(moment(task.time.end).minutes(), "minutes");
+                    dateEnd = moment(task.dateEnd).add(moment(task.time.end).hours(), "hours").add(moment(task.time.end).minutes(), "minutes");
+                } else {
+                    dateStart = moment(task.dateStart);
+                    dateEnd = moment(task.dateEnd);
+                }
+                $scope.events.push({title: task.description, start: moment(dateStart).format("YYYY-MM-DD hh:mm"), end: moment(dateEnd).format("YYYY-MM-DD hh:mm"), url: "/project/"+$stateParams.id+"/tasks/detail/"+task._id});
+            }
+        });
+        $scope.eventSources = [$scope.events];
     };
-    sortTask($scope.myTasks);
+    sortTaskAndRenderToCalendar($scope.myTasks);
 
     /*
         Get item index in items list
@@ -203,7 +230,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                 });
                 $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "task", isAdd: true, number: notificationTask.length});
             }
-            sortTask($scope.myTasks);
+            sortTaskAndRenderToCalendar($scope.myTasks);
         } else if (data.type==="document") {
             if (data.file.element.type==="document") {
                 var index = getItemIndex($scope.myFiles, data._id);
