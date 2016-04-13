@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $scope, $timeout, $state, teamService, $mdToast, $mdDialog, authService, userService, stripe, projectService, $state, currentUser) {
+angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $scope, $timeout, $state, teamService, $mdToast, $mdDialog, authService, userService, stripe, projectService, $state, currentUser, dialogService) {
     $rootScope.title = "Settings"
     $scope.currentTeam = $rootScope.currentTeam;
     $rootScope.currentUser = null;
@@ -711,4 +711,26 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
     
     getTeamLeader($scope.currentTeam);
 
+    $scope.isEditSchedule = false;
+    $scope.$watch("isEditSchedule", function(value) {
+        // if (value) {
+            _.each($scope.currentTeam.schedule, function(value, key) {
+                if (value.startTime) {
+                    value.startTime = new Date(value.startTime);
+                }
+                if (value.endTime) {
+                    value.endTime = new Date(value.endTime);
+                }
+            });
+        // }
+    });
+
+    $scope.editSchedule = function() {
+        $scope.currentTeam.editType = "change-schedule";
+        teamService.update({id: $scope.currentTeam._id}, $scope.currentTeam).$promise.then(function(res) {
+            $scope.isEditSchedule = false;
+            dialogService.showToast("Change Team Schedule Successfully");
+            $rootScope.$emit("Team.Update", res);
+        }, function(err){dialogService.showToast("Error");});
+    };
 });
