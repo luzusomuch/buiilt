@@ -13,6 +13,31 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
         }
     };
 
+    $scope.step = 1;
+    $scope.next = function(type) {
+        if (type === "milestone") {
+            if ($scope.step==1) {
+                if (!$scope.activity.name || $scope.activity.name.trim().length === 0) {
+                    dialogService.showToast("Enter Milestone Name");
+                } else {
+                    $scope.step += 1;
+                }
+            }
+        } else {
+            if ($scope.step==1) {
+                if (!$scope.activity.name || $scope.activity.name.trim().length === 0) {
+                    dialogService.showToast("Enter Milestone Name");
+                } else if ($scope.activity.isBelongToMilestone && !$scope.activity.isBelongToMilestone) {
+                    dialogService.showToast("Please Select Milestone");
+                } else {
+                    $scope.step += 1;
+                }
+            } else if ($step==2) {
+
+            }
+        }
+    };
+
     /*Convert all tasks and activities to calendar view*/
     function convertAllToCalendarView() {
         $scope.events = [];
@@ -31,25 +56,29 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
             }
         });
         _.each(activities, function(activity) {
-            if (activity.isMilestone) {
+            if (activity.isMilestone && activity.subActivities.length > 0) {
                 var copySubActivities = angular.copy(activity.subActivities);
                 // sort to show start date asc
                 copySubActivities.sort(function(a,b) {
-                    if (a.date.start < b.date.start) {
-                        return -1;
-                    }
-                    if (a.date.start > b.date.start) {
-                        return 1;
+                    if (a.date && b.date) {
+                        if (a.date.start < b.date.start) {
+                            return -1;
+                        }
+                        if (a.date.start > b.date.start) {
+                            return 1;
+                        }
                     }
                     return 0;
                 });
                 // sort to show end date asc
                 activity.subActivities.sort(function(a,b) {
-                    if (a.date.end < b.date.end) {
-                        return -1;
-                    }
-                    if (a.date.end > b.date.end) {
-                        return 1;
+                    if (a.date && b.date) {
+                        if (a.date.end < b.date.end) {
+                            return -1;
+                        }
+                        if (a.date.end > b.date.end) {
+                            return 1;
+                        }
                     }
                     return 0;
                 });

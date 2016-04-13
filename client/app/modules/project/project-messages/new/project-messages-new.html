@@ -9,7 +9,7 @@
 		<md-dialog-content>
 			<div class="md-dialog-content" layout="column">
 				
-				<div layout="column">
+				<div layout="column" ng-show="step==1">
 					<p class="md-body-2">Provide a subject for the message thread:</p>
 	                <div layout="row">
 	                    <md-input-container flex="66" flex-offset="15">
@@ -19,7 +19,7 @@
 					</div>
 				</div>
 				
-				<div layout="column">
+				<div layout="column" ng-show="step==1">
                     <p class="md-body-2">The body of your message:</p>
                     <div layout="row">
                         <md-input-container flex="66" flex-offset="15">
@@ -29,7 +29,7 @@
                     </div>
 				</div>
 				
-				<div layout="column">
+				<div layout="column" ng-show="step==2">
 					<p class="md-body-2">Select the team members to include in this thread:</p>
 					
 					<div layout="row" flex layout-align="center center" layout-wrap layout-padding>
@@ -41,7 +41,11 @@
 		</md-dialog-content>
 		<md-dialog-actions>
 			<md-button ng-click="cancelNewMessageModal()">Cancel</md-button>
-			<md-button type="submit" class="md-primary">Create Message Thread</md-button>
+
+			<md-button ng-click="step=step-1" ng-hide="step==1">Back</md-button>
+            <md-button ng-click="next()" ng-hide="step==2">Next</md-button>
+
+			<md-button type="submit" ng-show="step==2" class="md-primary">Create Message Thread</md-button>
 		</md-dialog-actions>
 	</form>
 </md-dialog>

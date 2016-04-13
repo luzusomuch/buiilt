@@ -8,14 +8,14 @@
 		
 		<md-dialog-content>
 			<div class="md-dialog-content" layout="column" layout-padding>
-				<div layout="column">
+				<div layout="column" ng-show="step==1">
 					<p class="md-body-2">Select the document that you would like to upload:</p>
 	                <div layout="row" layout-align="center center" class="tagcloud-selection">
 	                    <input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/>
 	                </div>
 				</div>
 
-                <div layout="column">
+                <div layout="column" ng-show="step==1">
                     <p class="md-body-2">Provide a name:</p>
                     <div layout="row">
                         <md-input-container flex="66" flex-offset="15">
@@ -25,7 +25,7 @@
                     </div>
                 </div>
 				
-				<div layout="column">
+				<div layout="column" ng-show="step==2">
 					<p class="md-body-2">Select at least one tag that is relevant to this file:</p>
 					
 					<div layout="row" flex layout-align="center center" layout-wrap layout-padding>
@@ -33,11 +33,11 @@
 					</div>
 				</div>
 				
-				<div layout="column">
+				<div layout="column" ng-show="step==2">
 					<p class="md-body-2">Select the team members who are able to view this file:</p>
 					
 					<div layout="row" flex layout-align="center center" layout-wrap layout-padding>
-						<md-checkbox class="filter-checkbox md-primary" ng-repeat="member in projectMembers" ng-click="selectChip($index, 'member')">{{ (member._id) ? member.name : member.email }}</md-checkbox>
+						<md-checkbox flex="20" class="filter-checkbox md-primary" ng-repeat="member in projectMembers" ng-click="selectChip($index, 'member')">{{ (member._id) ? member.name : member.email }}</md-checkbox>
 					</div>
 				</div>
 				
@@ -46,7 +46,11 @@
 		
 		<md-dialog-actions>
 			<md-button ng-click="cancelNewFileModal()">Cancel</md-button>
-			<md-button ng-click="createNewFile()" class="md-primary">Add File</md-button>
+
+			<md-button ng-click="step=step-1" ng-hide="step==1">Back</md-button>
+            <md-button ng-click="next()" ng-hide="step==2">Next</md-button>
+
+			<md-button ng-click="createNewFile()" ng-show="step==2" class="md-primary">Add File</md-button>
 		</md-dialog-actions>
 	</form>
 </md-dialog>

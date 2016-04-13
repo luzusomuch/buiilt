@@ -2,6 +2,18 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
 	$scope.tasks = tasks;
 	$scope.showFilter = false;
 
+    $scope.step = 1;
+    /*check create new task input change move to next step*/
+    $scope.next = function() {
+        if ($scope.step==1) {
+            if (!$scope.task.description || $scope.task.description.trim().length === 0 || !$scope.task.dateEnd) {
+                dialogService.showToast("Check Your Input");
+            } else {
+                $scope.step += 1;
+            }
+        }
+    };
+
     /*Change due date to text and sort it by dateEnd asc*/
     function filterTaskDueDate(tasks) {
         angular.forEach(tasks, function(task) {

@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScope, $scope, $timeout, $mdDialog, peopleService, $stateParams, $state, $mdToast, messageService, threads, people, socket, notificationService) {
+angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScope, $scope, $timeout, $mdDialog, peopleService, $stateParams, $state, $mdToast, messageService, threads, people, socket, notificationService, dialogService) {
 	$rootScope.title = $rootScope.project.name +" messages list";
     $scope.people = people;
 	$scope.threads = threads;
@@ -11,6 +11,18 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
             getLastAccess($scope.threads);
         });
     }
+
+    $scope.step = 1;
+    /*check create new thread input change move to next step*/
+    $scope.next = function() {
+        if ($scope.step==1) {
+            if (!$scope.thread.name || $scope.thread.name.trim().length === 0 || !$scope.thread.message || $scope.thread.message.length ===0) {
+                dialogService.showToast("Check Your Input");
+            } else {
+                $scope.step += 1;
+            }
+        }
+    };
 
     /*Update last access to show recently first*/
     function getLastAccess(threads) {

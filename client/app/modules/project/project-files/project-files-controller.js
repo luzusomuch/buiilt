@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $timeout, $mdDialog, uploadService, files, peopleService, $stateParams, $rootScope, $mdToast, people, $state, socket, fileService, notificationService) {
+angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $timeout, $mdDialog, uploadService, files, peopleService, dialogService, $stateParams, $rootScope, $mdToast, people, $state, socket, fileService, notificationService) {
     $scope.people = people;
 	$scope.files = files;
 	$scope.uploadFile = {
@@ -7,6 +7,18 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
 	};
 	
 	$scope.showFilter = false;
+
+    $scope.step=1;
+    /*check create new task input change move to next step*/
+    $scope.next = function() {
+        if ($scope.step==1) {
+            if (!$scope.uploadFile.file || !$scope.uploadFile.file.filename || $scope.uploadFile.file.filename.trim().length === 0) {
+                dialogService.showToast("Check Your Input");
+            } else {
+                $scope.step += 1;
+            }
+        }
+    };
 
     if ($state.includes("project.files.all")) {
         fileService.getProjectFiles({id: $stateParams.id, type: "file"}).$promise.then(function(res) {
