@@ -18,21 +18,65 @@
                 </div>
 
                 <div layout="column" ng-show="step==1">
-                    <div>
-                        <p>Is this activity belong to a milestone?</p>
-                        <md-radio-group ng-model="activity.isBelongToMilestone">
-                            <md-radio-button class="md-primary" ng-value='false'>No</md-radio-button>
-                            <md-radio-button class="md-primary" ng-value='true'>Yes</md-radio-button>
+                    <div layout="column" flex>
+                        <p class="md-body-2">Is this activity dependent on another Activity?</p>
+                        <md-radio-group ng-model="activity.isDependent">
+                            <md-radio-button class="md-primary" ng-value="true">Yes</md-radio-button>
+                            <md-radio-button class="md-primary" ng-value="false">No</md-radio-button>
                         </md-radio-group>
                     </div>
-                    <div flex ng-show="activity.isBelongToMilestone">
-                        <p class="md-body-2">Please select a milestone in list below:</p>
-                        <md-input-container flex="100">
-                            <label for="">Milestones List</label>
-                            <md-select ng-model="activity.selectedMilestone">
-                                <md-option ng-repeat="act in activities" ng-show="act.isMilestone" ng-value="act._id">{{act.name}}</md-option>
-                            </md-select>
-                        </md-input-container>
+
+                    <div flex layout="row" ng-show="activity.isDependent">
+                        <div flex="70" layout="column">
+                            <p class="md-body-2">Select Activities on List Below:</p>
+                            <md-input-container>
+                                <label for="">Select Activity In List Below</label>
+                                <md-select ng-model="selectedAct">
+                                    <md-option ng-repeat="act in activities" ng-show="!act.isMilestone" ng-value="act">{{act.name}}</md-option>    
+                                </md-select>
+                            </md-input-container>
+                        </div>
+                        <div flex="20">
+                            <md-input-container>
+                                <label for="">Number Of Lags Unit</label>
+                                <input type="text" ng-model="lags">
+                            </md-input-container>
+                        </div>
+                        <div flex="10">
+                            <md-button ng-click="addToDependencies(selectedAct, lags)" type="button" aria-label="Add to dependencies list" class="md-icon-button">
+                                <md-tooltip md-direction="bottom">Add to dependencies list</md-tooltip>
+                                <md-icon class="material-icons">add</md-icon>
+                            </md-button>
+                        </div>
+                    </div>
+
+                    <div flex layout="column" ng-show="activity.isDependent && activity.dependencies.length > 0">
+                        <p class="md-body-2">Your Selected Activities</p>
+                        <table style="width: 100%">
+                            <thead>
+                                <tr>
+                                    <td>#</td>
+                                    <td>Activity Name</td>
+                                    <td>Lags Unit</td>
+                                    <td>Lags Type</td>
+                                    <td>Action</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="dep in activity.dependencies">
+                                    <td>{{$index + 1}}</td>
+                                    <td>{{dep.name}}</td>
+                                    <td>{{dep.lagsUnit}}</td>
+                                    <td>{{dep.lagsType}}</td>
+                                    <td>
+                                        <md-button ng-click="removeFromDependencies($index)" type="button" aria-label="Remove from dependencies list" class="md-icon-button">
+                                            <md-tooltip md-direction="bottom">Remove from dependencies list</md-tooltip>
+                                            <md-icon class="material-icons">remove</md-icon>
+                                        </md-button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
@@ -70,73 +114,21 @@
                 </div>
 
                 <div layout="column" ng-show="step==3">
-                    <div layout="column" flex>
-                        <p class="md-body-2">Is this activity dependent on another Activity?</p>
-                        <md-radio-group ng-model="activity.isDependent">
-                            <md-radio-button class="md-primary" ng-value="true">Yes</md-radio-button>
-                            <md-radio-button class="md-primary" ng-value="false">No</md-radio-button>
+                    <div>
+                        <p>Is this activity belong to a milestone?</p>
+                        <md-radio-group ng-model="activity.isBelongToMilestone">
+                            <md-radio-button class="md-primary" ng-value='false'>No</md-radio-button>
+                            <md-radio-button class="md-primary" ng-value='true'>Yes</md-radio-button>
                         </md-radio-group>
                     </div>
-
-                    <div flex layout="row" ng-show="activity.isDependent">
-                        <div flex="50" layout="column">
-                            <p class="md-body-2">Select Activities on List Below:</p>
-                            <md-input-container>
-                                <label for="">Select Activity In List Below</label>
-                                <md-select ng-model="selectedAct">
-                                    <md-option ng-repeat="act in activities" ng-show="!act.isMilestone" ng-value="act">{{act.name}}</md-option>    
-                                </md-select>
-                            </md-input-container>
-                        </div>
-                        <div flex="20">
-                            <md-input-container>
-                                <label for="">Number Of Lags Unit</label>
-                                <input type="number" ng-model="lagsUnit">
-                            </md-input-container>
-                        </div>
-                        <div flex="20">
-                            <label for="">Lags Type</label>
-                            <md-select ng-model="lagsType">
-                                <md-option value="days">Day(s)</md-option>    
-                                <md-option value="hours">Hour(s)</md-option>    
-                                <md-option value="minutes">Minute(s)</md-option>    
+                    <div flex ng-show="activity.isBelongToMilestone">
+                        <p class="md-body-2">Please select a milestone in list below:</p>
+                        <md-input-container flex="100">
+                            <label for="">Milestones List</label>
+                            <md-select ng-model="activity.selectedMilestone">
+                                <md-option ng-repeat="act in activities" ng-show="act.isMilestone" ng-value="act._id">{{act.name}}</md-option>
                             </md-select>
-                        </div>
-                        <div flex="10">
-                            <md-button ng-click="addToDependencies(selectedAct, lagsUnit, lagsType)" type="button" aria-label="Add to dependencies list" class="md-icon-button">
-                                <md-tooltip md-direction="bottom">Add to dependencies list</md-tooltip>
-                                <md-icon class="material-icons">add</md-icon>
-                            </md-button>
-                        </div>
-                    </div>
-
-                    <div flex layout="column" ng-show="activity.isDependent && activity.dependencies.length > 0">
-                        <p class="md-body-2">Your Selected Activities</p>
-                        <table style="width: 100%">
-                            <thead>
-                                <tr>
-                                    <td>#</td>
-                                    <td>Activity Name</td>
-                                    <td>Lags Unit</td>
-                                    <td>Lags Type</td>
-                                    <td>Action</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr ng-repeat="dep in activity.dependencies">
-                                    <td>{{$index + 1}}</td>
-                                    <td>{{dep.name}}</td>
-                                    <td>{{dep.lagsUnit}}</td>
-                                    <td>{{dep.lagsType}}</td>
-                                    <td>
-                                        <md-button ng-click="removeFromDependencies($index)" type="button" aria-label="Remove from dependencies list" class="md-icon-button">
-                                            <md-tooltip md-direction="bottom">Remove from dependencies list</md-tooltip>
-                                            <md-icon class="material-icons">remove</md-icon>
-                                        </md-button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        </md-input-container>
                     </div>
                 </div>
 
