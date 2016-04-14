@@ -21,7 +21,7 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
   })
   .state("project.calendar.overview", {
     url: "/overview",
-    templateUrl: "/app/modules/project/project-calendar/overview/view.html",
+    templateUrl: "/app/modules/project/project-calendar/overview/project-calendar-overview.html",
     controller: "projectCalendarCtrl",
     authenticate: true,
     resolve: {
@@ -35,7 +35,7 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
   })
   .state("project.calendar.activity", {
     url: "/detail/:activityId",
-    templateUrl: "/app/modules/project/project-calendar/detail/view.html",
+    templateUrl: "/app/modules/project/project-calendar/detail/project-calendar-detail.html",
     controller: "projectCalendarDetailCtrl",
     authenticate: true,
     resolve: {

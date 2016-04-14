@@ -6,26 +6,22 @@
 	  	<div layout="row" layout-align="start center" ng-show="isLoggedIn">
 	  		<md-button ng-class="{'active-module-header': $state.includes('dashboard')}" ui-sref='dashboard.tasks'>Dashboard</md-button>
 			
-			<md-menu id="im_SelectProj">
+			<md-menu id="im_headerSelectProj" ng-class="{'active-module-header': $state.includes('project')}">
 				<md-button ng-click="$mdOpenMenu($event)" class="" aria-label="Select a Project">{{(project._id) ? project.name : "Select a Project"}}<md-icon class="material-icons">arrow_drop_down</md-icon></md-button>
 			 	<md-menu-content width="4">
-					<md-menu-item><md-button id="im_AllProj" ui-sref="projects.open">View All Projects</md-button></md-menu-item>
+					<md-menu-item><md-button id="im_headerAllProj" ui-sref="projects.open"><span class="md-body-2">View All Projects</span></md-button></md-menu-item>
 			   		<md-menu-item ng-show="project.isFavourite" ng-repeat="project in projects"><md-button ui-sref="project.messages.all({id: project._id})">{{project.name}}</md-button></md-menu-item>
 					<md-divider></md-divider>
-					<md-menu-item><md-button id="im_CreateProj" ng-click="showModal($event, 'projects-create.html')">Create a New Project</md-button></md-menu-item>
+					<md-menu-item><md-button id="im_headerCreateProj" ng-click="showModal($event, 'projects-create.html')"><span class="md-body-2">Create a New Project</span></md-button></md-menu-item>
 			 	</md-menu-content>
 			</md-menu>
-			
-		  	<!-- <md-button ng-class="{'active-module-header': $state.includes('projects'), 'active-child-module-header': $state.includes('project')}" ui-sref='projects.open'>Projects</md-button> -->
-			
-			<!-- <md-button ng-class="{'active-module-header': $state.includes('tenders'), 'active-child-module-header': $state.includes('tender')}" ui-sref='tenders.open' ng-hide="currentTeam.type=='homeOwner'">Tenders</md-button> -->
 	  	</div>
 		  
 	  	<span flex></span>
 		  
 	  	<div layout="row" layout-align="end center" ng-show="isLoggedIn">
-		  	<md-button id="im_Settings" ui-sref='settings.user'>Settings</md-button>
-			<md-button id="im_Help" ui-sref='help.start'>Help</md-button>
+		  	<md-button id="im_headerSettings" ng-class="{'active-module-header': $state.includes('settings')}" ui-sref='settings.user'>Settings</md-button>
+			<md-button id="im_headerHelp" ng-class="{'active-module-header': $state.includes('help')}" ui-sref='help.start'>Help</md-button>
 		  	<div sp-notification ng-if="currentUser._id"></div>
 	  	</div>
    </div>
