@@ -9,23 +9,32 @@
         <md-dialog-content>
             <div class="md-dialog-content" layout="column">
 				
-				<div layout="row">
-					<md-input-container flex>
-				        <label>Message Thread Name</label>
-				        <input md-autofocus type="text" ng-model="relatedThread.name" name="name" required/>
-					</md-input-container>
-				</div>
+				<div layout="column">
+                    <p class="md-body-2">Enter your thread name:</p>
+                    <div layout="row">
+                        <md-input-container flex>
+                            <label>Message Thread Name</label>
+                            <input md-autofocus type="text" ng-model="relatedThread.name" name="name" required/>
+                        </md-input-container>
+                    </div>
+                </div>
 
-                <div layout="row">
-                    <md-input-container flex>
-                        <label>Your Message</label>
-                        <textarea ng-model="relatedThread.message" columns="1" md-maxlength="250" rows="5"></textarea>
-                    </md-input-container>
+                <div layout="column">
+                    <p class="md-body-2">Provide your message</p>
+                    <div layout="row">
+                        <md-input-container flex>
+                            <label>Your Message</label>
+                            <textarea ng-model="relatedThread.message" columns="1" md-maxlength="250" rows="5"></textarea>
+                        </md-input-container>
+                    </div>
                 </div>
 			
-				<div layout="row" layout-align="center center" layout-wrap layout-padding flex>
-                    <md-checkbox ng-click="selectMember($index, 'invitee')" class="filter-checkbox" ng-repeat="member in invitees">{{(member._id) ? member.name : member.email}}</md-checkbox>
-				</div>
+				<div layout="column">
+                    <p class="md-body-2">Select at least one member that is relevant to this thread:</p>
+                    <div layout="row" layout-align="center center" layout-wrap layout-padding flex>
+                        <md-checkbox ng-click="selectMember($index, 'invitee')" class="filter-checkbox" ng-repeat="member in invitees">{{(member._id) ? member.name : member.email}}</md-checkbox>
+                    </div>
+                </div>
 				
             </div>
         </md-dialog-content>

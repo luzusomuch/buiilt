@@ -362,10 +362,11 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
             $scope.relatedTask.belongToType = "thread";
             $scope.relatedTask.type = "task-project";
             if ($scope.relatedTask.members.length > 0) {
-                taskService.create({id: $stateParams.id}, $scope.relatedTask).$promise.then(function(relatedTask) {
+                taskService.create({id: $stateParams.id}, $scope.relatedTask).$promise.then(function(res) {
                     $scope.closeModal();
                     $scope.showToast("Related Task Has Been Created Successfully.");
-                    $state.go("project.tasks.detail", {id: $stateParams.id, taskId: relatedTask._id});
+                    $scope.thread.relatedItem.push({type: "task", item: res});
+                    // $state.go("project.tasks.detail", {id: $stateParams.id, taskId: relatedTask._id});
                 }, function(err){$scope.showToast("There Has Been An Error...");});
             } else {
                 $scope.showToast("Please Select At Least 1 Assignee...");
@@ -422,7 +423,8 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
             uploadService.upload({id: $stateParams.id}, $scope.relatedFile).$promise.then(function(res) {
                 $scope.closeModal();
                 $scope.showToast("Related File Has Been Uploaded Successfully.");
-                $state.go("project.files.detail", {id: res.project._id, fileId: res._id});
+                $scope.thread.relatedItem.push({type: "file", item: res});
+                // $state.go("project.files.detail", {id: res.project._id, fileId: res._id});
             }, function(err) {$scope.showToast("There Has Been An Error...");});
         }
     };

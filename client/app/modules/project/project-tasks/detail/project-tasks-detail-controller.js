@@ -281,7 +281,7 @@ angular.module('buiiltApp').controller('projectTaskDetailCtrl', function($rootSc
 
     /*Create new related file with valid tags and members then open specific file*/
     $scope.createRelatedFile = function() {
-        $scope.relatedFile.members = _.filter($scope.invitees, {select: true});
+        $scope.relatedFile.members = $scope.invitees;
         $scope.relatedFile.tags = _.filter($scope.tags, {select: true});
         if ($scope.relatedFile.files.length == 0) {
             $scope.showToast("Please choose at least 1 file");
