@@ -25,7 +25,7 @@
 		  
 	  	<div layout="row" layout-align="end center" ng-show="isLoggedIn">
 		  	<md-button id="im_Settings" ui-sref='settings.user'>Settings</md-button>
-			<md-button id="im_Help" ng-click="showHelpDialog($event)">Help</md-button>
+			<md-button id="im_Help" ui-sref='help.start'>Help</md-button>
 		  	<div sp-notification ng-if="currentUser._id"></div>
 	  	</div>
    </div>
