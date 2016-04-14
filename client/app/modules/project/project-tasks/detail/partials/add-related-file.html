@@ -9,25 +9,28 @@
         <md-dialog-content>
             <div class="md-dialog-content" layout="column">
                 
-                <div layout="row" layout-align="center center">
-                    <div layout-padding>
+                <div layout="column" layout-align="center center">
+                    <p class="md-body-2">Select the document that you would like to upload:</p>
+                    <div layout="row" layout-align="center center" layout-padding>
                         <input filepicker class="filepicker-button" type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/>
                     </div>
                 </div>
 
-                <div layout="row">
-                    <md-input-container flex>
-                        <label>Description</label>
-                        <textarea ng-model="relatedFile.description" required md-maxlength="200" columns="1" rows="5"></textarea>
-                    </md-input-container>
+                <div layout="column">
+                    <p class="md-body-2">Provide a name for this file:</p>
+                    <div layout="row">
+                        <md-input-container flex="66" flex-offset="15">
+                            <label>File Name</label>
+                            <textarea ng-model="relatedFile.file.filename" required md-maxlength="200" columns="1" rows="5"></textarea>
+                        </md-input-container>
+                    </div>
                 </div>
                 
-                <div layout="row" layout-align="center center" layout-wrap layout-padding flex>
-                    <md-checkbox ng-click="selectMember($index, 'tag')" class="filter-checkbox md-primary" ng-repeat="tag in tags">{{tag.name}}</md-checkbox>
-                </div>
-                
-                <div layout="row" layout-align="center center" layout-wrap layout-pading flex>
-                    <md-checkbox ng-click="selectMember($index, 'invitee')" class="filter-checkbox" ng-repeat="member in invitees">{{(member._id) ? member.name : member.email}}</md-checkbox>
+                <div layout="column">
+                    <p class="md-body-2">Select at least one tag that is relevant to this file:</p>
+                    <div layout="row" layout-align="center center" layout-wrap layout-padding flex>
+                        <md-checkbox ng-click="selectMember($index, 'tag')" class="filter-checkbox md-primary" ng-repeat="tag in tags">{{tag.name}}</md-checkbox>
+                    </div>
                 </div>
 				
             </div>

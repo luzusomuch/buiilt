@@ -11,7 +11,7 @@ var ActivitySchema = new Schema({
     date: {
         start: Date,
         end: Date,
-        duration: Number
+        duration: String
     },
     time: {
         start: Date,
