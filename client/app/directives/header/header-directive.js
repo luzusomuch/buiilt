@@ -107,30 +107,10 @@ angular.module('buiiltApp')
             $rootScope.sendVerification = function() {
                 $scope.duration = 0;
             };
-
-            $scope.showHelpDialog = function(event) {
-                $mdDialog.show({
-                    targetEvent: event,
-					controller: ["$scope", "$mdDialog", function($scope, $mdDialog) {
-						
-						$scope.closeDialog = function() {
-				            $mdDialog.hide();
-				        };
-						
-						$scope.inlinePlay = function(topicID) {
-							$mdDialog.hide();
-							inline_manual_player.activateTopic(topicID);
-						};
-						
-						$scope.helpChatSupport = function(){
-							Tawk_API.toggle();
-						};
-			        }],
-                    templateUrl: 'app/directives/header/helpModal.html',
-                    parent: angular.element(document.body),
-                    clickOutsideToClose: false
-                });
-            };
+			
+			$scope.helpChatSupport = function(){
+				Tawk_API.toggle();
+			};
 
             $scope.showModal = function(event, name) {
                 $mdDialog.show({
