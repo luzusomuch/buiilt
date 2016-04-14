@@ -14,15 +14,6 @@
 				     <md-icon class="material-icons">filter_list</md-icon>
 		      	</md-button>
 			</div>
-			
-			<span flex="5"></span>
-			
-			<div class="add-fab">
-				<md-button id="im_DashAddTask" class="md-fab md-mini md-primary" ng-click="showNewTaskModal($event)">
-					 <md-tooltip md-direction="down">Add a New Task</md-tooltip>
-				     <md-icon class="material-icons md-primary">add</md-icon>
-		      	</md-button>
-			</div>
 		</div>
 		
 		<div layout="row" ng-show="showFilter">
@@ -78,4 +69,29 @@
 			</div>
 		</md-list> -->
 	</div>
+</div>
+
+<div>
+	<md-fab-speed-dial ng-cloak md-open="true" md-direction="up" class="md-scale md-fab-bottom-right fab-list" ng-show="!isArchive">
+		 <md-fab-trigger>
+	  	      <md-button id="im_DashCalendarActions" aria-label="Actions" class="md-fab md-primary">
+				  <md-tooltip md-direction="left">Actions...</md-tooltip>
+			      <md-icon class="material-icons" >more_vert</md-icon>
+	  	      </md-button>
+	     </md-fab-trigger>
+		 <md-fab-actions>
+	  	       <md-button id="im_DashCalendarAddTask" aria-label="Add a Task" class="md-fab md-raised md-mini" ng-click="showNewTaskModal($event)">
+				  	<md-tooltip md-direction="left">Add a Task</md-tooltip>
+			      	<md-icon class="material-icons" >check</md-icon>
+	  	      	</md-button>
+		  	    <md-button id="im_DashCalendarAddActivity" aria-label="Add an Activity" class="md-fab md-raised md-mini" ng-click="">
+					  <md-tooltip md-direction="left">Add an Activity</md-tooltip>
+				      <md-icon class="material-icons">event</md-icon>
+		        </md-button>
+		  	    <md-button id="im_DashCalendarAddMilestone" aria-label="Add an Activity" class="md-fab md-raised md-mini" ng-click="">
+					  <md-tooltip md-direction="left">Add a Milestone</md-tooltip>
+				      <md-icon class="material-icons">timeline</md-icon>
+		        </md-button>
+	  	  </md-fab-actions>
+  	</md-fab-speed-dial>
 </div>
