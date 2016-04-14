@@ -48,11 +48,11 @@
 		</div>
 	</md-subheader>
 	
-	<md-list ng-show="showRelatedTasks">
-		<md-list-item class="md-2-line" ng-click="showRelatedTasksModal($event, task)" ng-repeat="task in data.relatedItem" ng-show="task.type == 'task'">
+	<md-list ng-show="showRelatedMessages">
+		<md-list-item class="md-2-line" ng-click="showRelatedTasksModal($event, thread)" ng-repeat="thread in data.relatedItem" ng-show="thread.type == 'thread'">
 		    <div class="md-list-item-text">
-			    <h3>{{task.item.name}}</h3>
-		        <p>{{task.item.description}}</p>
+			    <h3>{{thread.item.name}}</h3>
+		        <p>{{thread.item.description}}</p>
 		    </div>
 		</md-list-item>
 	</md-list>
@@ -80,90 +80,3 @@
 	</md-list>
 	
 </section>
-
-<!-- <md-tabs md-dynamic-height md-center-tabs md-no-ink-bar md-no-ink flex layout-padding>
-    <md-tab>
-		<md-tab-label>
-			<md-tooltip md-direction="bottom">Related Team Members</md-tooltip>
-		    <md-icon class="material-icons">person_outline</md-icon>
-		</md-tab-label>
-        <md-tab-body>
-			<md-list ng-cloak class="main-page-content">
-				<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event, tenderer._id)" ng-repeat="tenderer in data.tenderers" ng-show="data.inviter._id == currentUser._id && !data.element">
-				    <div class="md-list-item-text">
-					    <h3>{{tenderer.name}}</h3>
-				    </div>
-					<md-divider></md-divider>
-				</md-list-item>
-
-				<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event, data.inviter._id)" ng-show="data.inviter._id != currentUser._id && !data.element">
-				    <div class="md-list-item-text">
-					    <h3>{{data.inviter.name}}</h3>
-				    </div>
-					<md-divider></md-divider>
-				</md-list-item>
-
-				<md-list-item class="md-1-line" ng-click="showRelatedTeamMemberModal($event, member._id)" ng-show="data.element" ng-repeat="member in data.members | unique: '_id' track by $index">
-				    <div class="md-list-item-text">
-					    <h3>{{(member._id) ? member.name : member.email}}</h3>
-				    </div>
-					<md-divider></md-divider>
-				</md-list-item>
-
-			</md-list>
-        </md-tab-body>
-    </md-tab>
-
-	<md-tab ng-if="!hideRelatedThread">
-		<md-tab-label>
-			<md-tooltip md-direction="bottom">Related Messages</md-tooltip>
-		    <md-icon class="material-icons">chat_bubble_outline</md-icon>
-		</md-tab-label>
-        <md-tab-body>
-			<md-list ng-cloak class="main-page-content">
-				<md-list-item class="md-2-line" ng-click="showRelatedMessageModal($event, thread.item)" ng-repeat="thread in data.relatedItem" ng-show="thread.type == 'thread'">
-				    <div class="md-list-item-text">
-					    <h3>{{thread.item.name}}</h3>
-				    </div>
-					<md-divider></md-divider>
-				</md-list-item>
-			</md-list>
-        </md-tab-body>
-    </md-tab>
-
-    <md-tab>
-		<md-tab-label>
-			<md-tooltip md-direction="bottom">Related Tasks</md-tooltip>
-		    <md-icon class="material-icons">done_all</md-icon>
-		</md-tab-label>
-        <md-tab-body>
-			<md-list class="main-page-content" ng-cloak>
-				<md-list-item class="md-2-line" ng-click="showRelatedTasksModal($event, task)" ng-repeat="task in data.relatedItem" ng-show="task.type == 'task'">
-				    <div class="md-list-item-text">
-					    <h3>{{task.item.name}}</h3>
-				        <p>{{task.item.description}}</p>
-				    </div>
-					<md-divider></md-divider>
-				</md-list-item>
-			</md-list>
-        </md-tab-body>
-    </md-tab>
-
-    <md-tab>
-		<md-tab-label>
-			<md-tooltip md-direction="bottom">Related Files</md-tooltip>
-		    <md-icon class="material-icons">attach_file</md-icon>
-		</md-tab-label>
-        <md-tab-body>
-			<md-list class="main-page-content" ng-cloak>
-				<md-list-item class="md-2-line" ng-click="showRelatedFilesModal($event, file)" ng-repeat="file in data.relatedItem" ng-show="file.type == 'file'">
-				    <div class="md-list-item-text">
-					    <h3>{{file.item.name}}</h3>
-					    <p>{{file.item.description}}</p>
-				    </div>
-					<md-divider></md-divider>
-				</md-list-item>
-			</md-list>
-        </md-tab-body>
-    </md-tab>
-</md-tabs> -->

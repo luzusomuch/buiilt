@@ -221,13 +221,14 @@ exports.create = function(req,res) {
                         });
                         main.save(function(err) {
                             if (err) {return res.send(500,err);}
-                            if (req.body.belongToType === "thread") 
-                                populateThread(main, res);
-                            else if (req.body.belongToType === "task") {
-                                populateNewTask(main, res, req);
-                            } else if (req.body.belongToType === "file") {
-                                populateFile(main, res);
-                            }
+                            // if (req.body.belongToType === "thread") 
+                            //     populateThread(main, res);
+                            // else if (req.body.belongToType === "task") {
+                            //     populateNewTask(main, res, req);
+                            // } else if (req.body.belongToType === "file") {
+                            //     populateFile(main, res);
+                            // }
+                            populateNewTask(task, res, req);
                         });
                     }
                 });

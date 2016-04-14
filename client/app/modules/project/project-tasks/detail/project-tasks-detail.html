@@ -102,13 +102,13 @@
 			      	<md-icon class="material-icons">person_outline</md-icon>
 	  	      	</md-button>
 				
-				<md-button class="md-icon-button" ng-click="showCreateRelatedFile($event)">
+				<md-button class="md-icon-button" ng-click="showModal($event, 'add-related-file.html')">
 					<md-tooltip md-direction="bottom">Add a Shared File</md-tooltip>
 					<md-icon class="material-icons">attach_file</md-icon>
 				</md-button>
 
-				<md-button class="md-icon-button" ng-click="">
-					<md-tooltip md-direction="bottom">Add a Related Task</md-tooltip>
+				<md-button class="md-icon-button" ng-click="showModal($event, 'add-related-thread.html')">
+					<md-tooltip md-direction="bottom">Add a Related Thread</md-tooltip>
 					<md-icon class="material-icons">chat_bubble_outline</md-icon>
 				</md-button>
 				

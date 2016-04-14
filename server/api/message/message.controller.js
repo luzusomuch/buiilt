@@ -106,6 +106,27 @@ exports.lastAccess = function(req, res) {
 };
 
 /*
+    Get related item of task when create it which related item
+*/
+var getMainItem = function(type) {
+    var _item = {};
+    switch (type) {
+        case 'thread' :
+            _item = Thread;
+            break;
+        case 'task' :
+            _item = Task;
+            break;
+        case "file":
+            _item = File
+            break;
+        default :
+            break;
+    }
+    return _item;
+};
+
+/*
     Create new Thread
 */
 exports.create = function(req,res) {
@@ -141,9 +162,41 @@ exports.create = function(req,res) {
             thread.belongTo.type = req.body.belongToType;
         }
         thread._editUser = user;
+        var mainItem = getMainItem(req.body.belongToType);
         thread.save(function(err){
             if (err) {return res.send(500,err);}
-            populateNewThread(thread, res, req);
+            if (req.body.belongTo) {
+                mainItem.findById(req.body.belongTo, function(err, main) {
+                    if (err || !main) {
+                        thread.remove(function(err) {
+                            return res.send(500, err);
+                        });
+                    } else {
+                        main.activities.push({
+                            user: req.user._id,
+                            type: "related-thread",
+                            createdAt: new Date(),
+                            element: {
+                                item: thread._id,
+                                name: thread.name,
+                                related: true
+                            }
+                        });
+                        data.members.push(req.user._id);
+                        main.relatedItem.push({
+                            type: "thread",
+                            item: {_id: thread._id},
+                            members: data.members
+                        });
+                        main.save(function(err) {
+                            if (err) {return res.send(500,err);}
+                            populateNewThread(thread, res, req);                
+                        });
+                    }
+                });
+            } else {
+                populateNewThread(thread, res, req);
+            }
         });
     });
 };

@@ -215,13 +215,26 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
         if ($scope.activity.date.start && type === "du" && validDuration) {
             var scheduleTime = $rootScope.currentTeam.schedule[daysOfWeek[new Date($scope.activity.date.start).getDay()]];
             if (scheduleTime.startTime && scheduleTime.endTime) {
+                $scope.activity.time = {start: new Date(scheduleTime.startTime)};
+                var workTimeForADay = moment(moment(scheduleTime.endTime)).diff(moment(scheduleTime.startTime), "hours");
                 if (lastChar==="h") {
-                    totalTime = duration;
+                    if (duration <= workTimeForADay) {
+                        // If the duration less then work time then grant activity date end the same as date start
+                        $scope.activity.date.end = new Date(moment($scope.activity.date.start));
+                    } else {
+                        $scope.activity.date.end = new Date(moment($scope.activity.date.start).add(duration/workTimeForADay,"days"));
+                    }
                 } else if (lastChar==="d") {
-                    var workTimeForADay = moment(moment(scheduleTime.endTime)).diff(moment(scheduleTime.startTime), "hours");
-                    totalTime = workTimeForADay * duration;
+                    $scope.activity.date.end = new Date(moment($scope.activity.date.start).add(duration,"days"));
                 }
-                $scope.activity.date.end = new Date(moment($scope.activity.date.start).add(totalTime, "hours"));
+                // Grant end time with activity end date time
+                var scheduleEndTime = $rootScope.currentTeam.schedule[daysOfWeek[new Date($scope.activity.date.end).getDay()]];
+                if (scheduleEndTime.startTime && scheduleEndTime.endTime) {
+                    $scope.activity.time.end = new Date(scheduleEndTime.endTime);
+                } else {
+                    dialogService.showToast("Please Enter Work Time Of Your Team");
+                    $scope.dateError = "Please Enter Work Time Of Your Team";    
+                }
             } else {
                 dialogService.showToast("Please Enter Work Time Of Your Team");
                 $scope.dateError = "Please Enter Work Time Of Your Team";
@@ -229,23 +242,44 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
         } else if ($scope.activity.date.end && type==="du" && validDuration) {
             var scheduleTime = $rootScope.currentTeam.schedule[daysOfWeek[new Date($scope.activity.date.end).getDay()]];
             if (scheduleTime.startTime && scheduleTime.endTime) {
+                $scope.activity.time = {end: scheduleEndTime.endTime};
+                var workTimeForADay = moment(moment(scheduleTime.endTime)).diff(moment(scheduleTime.startTime), "hours");
                 if (lastChar==="h") {
-                    totalTime = duration;
+                    if (duration <= workTimeForADay) {
+                        // If the duration less then work time then grant activity date end the same as date start
+                        $scope.activity.date.start = new Date(moment($scope.activity.date.end));
+                    } else {
+                        $scope.activity.date.start = new Date(moment($scope.activity.date.end).subtract(duration/workTimeForADay,"days"));
+                    }
                 } else if (lastChar==="d") {
-                    var workTimeForADay = moment(moment(scheduleTime.endTime)).diff(moment(scheduleTime.startTime), "hours");
-                    totalTime = workTimeForADay * duration;
+                    $scope.activity.date.start = new Date(moment($scope.activity.date.end).subtract(duration, "days"));
                 }
-                $scope.activity.date.start = new Date(moment($scope.activity.date.end).subtract(totalTime, "hours"));
+                // Grant start time with activity start date time
+                var scheduleStartTime = $rootScope.currentTeam.schedule[daysOfWeek[new Date($scope.activity.date.end).getDay()]];
+                if (scheduleStartTime.startTime && scheduleStartTime.endTime) {
+                    $scope.activity.time.start = new Date(scheduleStartTime.startTime);
+                } else {
+                    dialogService.showToast("Please Enter Work Time Of Your Team");
+                    $scope.dateError = "Please Enter Work Time Of Your Team";    
+                }
             } else {
                 dialogService.showToast("Please Enter Work Time Of Your Team");
                 $scope.dateError = "Please Enter Work Time Of Your Team";
             }
         } else if ((type === "st"||type==="et") && $scope.activity.date.end) {
-            var scheduleTime = $rootScope.currentTeam.schedule[daysOfWeek[new Date($scope.activity.date.end).getDay()]];
-            if (scheduleTime.startTime && scheduleTime.endTime) {
-                var totalDayTimes = moment(moment($scope.activity.date.end)).diff(moment($scope.activity.date.start), 'days') * 24;
-                var workTimeForADay = moment(moment(scheduleTime.endTime)).diff(moment(scheduleTime.startTime), "hours");
-                $scope.activity.date.duration = Math.round((totalDayTimes/workTimeForADay))+"d";
+            var scheduleStartTime = $rootScope.currentTeam.schedule[daysOfWeek[new Date($scope.activity.date.start).getDay()]];
+            var scheduleEndTime = $rootScope.currentTeam.schedule[daysOfWeek[new Date($scope.activity.date.end).getDay()]];
+            if (scheduleStartTime.startTime && scheduleEndTime.endTime) {
+                $scope.activity.time = {
+                    start: new Date(scheduleStartTime.startTime),
+                    end: new Date(scheduleEndTime.endTime)
+                };
+                var totalDay = moment(moment($scope.activity.date.end)).diff(moment($scope.activity.date.start), 'days');
+                if (totalDay*24 <= 24) {
+                    $scope.activity.date.duration = "1d";
+                } else {
+                    $scope.activity.date.duration = totalDay+"d";
+                }
             } else {
                 dialogService.showToast("Please Enter Work Time Of Your Team");
                 $scope.dateError = "Please Enter Work Time Of Your Team";
@@ -255,7 +289,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
         if ($scope.activity.date) {
             if (moment(moment($scope.activity.date.start).format("YYYY-MM-DD")).isAfter(moment($scope.activity.date.end).format("YYYY-MM-DD")))
                 $scope.dateError = "End Date Must Greator Than Stat Date";
-            else if ($scope.activity.duration && $scope.activity.duration <= 0) 
+            else if ($scope.activity.date.duration && $scope.activity.date.duration <= 0) 
                 $scope.dateError = "Duration Must Greator Than 0";
             else if (validDuration && !$scope.dateError) ;
                 $scope.dateError = null;
