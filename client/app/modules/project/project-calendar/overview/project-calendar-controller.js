@@ -197,9 +197,25 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
 
     /*Update start date, end date and duration when changed one*/
     $scope.getChangeValue = function(type) {
-        if ($scope.activity.date.start && type === "du") {
+        var validDuration = true;
+        if (type === "du") {
+            $scope.activity.date.duration = $scope.activity.date.duration.replace(/ /g,'');
+            var lastChar = $scope.activity.date.duration.substr($scope.activity.date.duration.length -1);
+            var duration = $scope.activity.date.duration.substr(0, $scope.activity.date.duration.length -1);
+            if (lastChar !== "d" || lastChar !== "h") {
+                $scope.dateError = "Not Valid Type. Valid Type Is d or h";
+                validDuration = false;
+            }
+            if (duration > 0)
+                validDuration = true;
+            else {
+                validDuration = false;
+                $scope.dateError = "Not Valid Type.";
+            }
+        }
+        if ($scope.activity.date.start && type === "du" && validDuration) {
             $scope.activity.date.end = new Date(moment($scope.activity.date.start).add($scope.activity.date.duration, "days"));
-        } else if ($scope.activity.date.end && type==="du") {
+        } else if ($scope.activity.date.end && type==="du" && validDuration) {
             $scope.activity.date.start = new Date(moment($scope.activity.date.end).add($scope.activity.date.duration, "days"));
         } else if ((type === "st"||type==="et") && $scope.activity.date.end) {
             $scope.activity.date.duration = moment(moment($scope.activity.date.end)).diff(moment($scope.activity.date.start), 'days');
