@@ -36,7 +36,7 @@
                     </div>
                 </div>
 
-                <div layout="column" ng-show="step==2">
+                <div layout="column">
                     <p class="md-body-2">Select Date and Time for activity</p>
                     <div layout="row">
                         <div layout-padding flex="33">
@@ -44,7 +44,7 @@
                             <md-datepicker ng-change="getChangeValue('st')" ng-model="activity.date.start" md-placeholder="Enter Start Date"></md-datepicker>
                         </div>
                         <div layout-padding>
-                            <h5>Duration (days)</h5>
+                            <h5>Duration</h5>
                             <md-input-container>
                                 <label for="">Duration</label>
                                 <input type="text" ng-change="getChangeValue('du')" ng-model="activity.date.duration">
