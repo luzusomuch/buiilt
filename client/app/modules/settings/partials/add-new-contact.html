@@ -1,0 +1,97 @@
+<md-dialog aria-label="Add New Contact" flex="70">
+    <form ng-submit="addContact()" name="form">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Add New Contact</h2>
+            </div>
+        </md-toolbar>
+        
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column" layout-padding>
+                <div layout="column" ng-show="step==1">
+                    <p class="md-body-2">Enter email and phone number to search</p>
+                    <div layout="row">
+                        <md-input-container flex="50">
+                            <label for="">Email</label>
+                            <input type="email" name="email" ng-model="email">
+                        </md-input-container>
+                        <md-input-container flex="30">
+                            <label for="">Phone Number</label>
+                            <input type="text" name="phoneNumber" ng-model="phoneNumber" ng-pattern="/^[0-9]{1,15}$/">
+                        </md-input-container>
+                        <div flex="20">
+                            <md-button ng-click="checkUserInfo(email, phoneNumber)" class="md-fab md-primary" aria-label="Check Entered Information">
+                                <md-tooltip md-direction="left">Check Entered Information</md-tooltip>
+                                <md-icon class="material-icons">check</md-icon>
+                            </md-button>
+                            <md-button ng-show="searchUser=='empty'" ng-click="createNewContact(email, phoneNumber)" class="md-fab md-primary" aria-label="Create New Contact">
+                                <md-tooltip md-direction="left">Create New Contact</md-tooltip>
+                                <md-icon class="material-icons">add</md-icon>
+                            </md-button>
+                        </div>
+                    </div>
+                    <p class="validate-message" ng-show="searchUser=='empty'">Couldn't found any results</p>
+                    <p class="validate-message" ng-show="form.phoneNumber.$error.pattern">Not a valid number</p>
+                    <div layout="row" ng-show="searchUser.email">
+                        <md-list flex>
+                            <md-subheader class="md-no-sticky">Search Result</md-subheader>
+                            <md-list-item class="md-3-line">
+                                <div class="md-list-item-text" layout="column" flex="80">
+                                    <h3>{{searchUser.name}}</h3>
+                                    <p><strong>Email: </strong>{{searchUser.email}} - <strong>Phone Number: </strong> {{searchUser.phoneNumber}}</p>
+                                    <p><strong>Team Name: </strong> {{searchUser.teamName}}</p>
+                                </div>
+                                <md-button ng-click="createNewContact(searchUser.email, searchUser.phoneNumber)" class="md-fab md-primary" aria-label="Add To Contact">
+                                    <md-tooltip md-direction="left">Add To Contact</md-tooltip>
+                                    <md-icon class="material-icons">add</md-icon>
+                                </md-button>
+                                <md-divider></md-divider>
+                            </md-list-item>
+                        </md-list>
+                    </div>
+                </div>
+
+                <div layout="column" ng-show="step==2">
+                    <md-list flex>
+                        <md-subheader class="md-no-sticky">Your New Contacts List</md-subheader>
+                        <md-list-item class="md-3-line" ng-repeat="contact in newContact.contacts">
+                            <div class="md-list-item-text" layout="column" flex="80">
+                                <div layout="row">
+                                    <md-input-container flex="50">
+                                        <label for="">Contact First Name</label>
+                                        <input type="text" ng-model="contact.firstName">
+                                    </md-input-container>
+                                    <md-input-container flex="50">
+                                        <label for="">Contact Last Name</label>
+                                        <input type="text" ng-model="contact.lastName">
+                                    </md-input-container>
+                                </div>
+                                <p><strong>Email: </strong>{{contact.email}} - <strong>Phone Number: </strong> {{contact.phoneNumber}}</p>
+                                <div>
+                                    <md-input-container flex="80">
+                                        <label for="">Team Name</label>
+                                        <input type="text" ng-model="contact.teamName">
+                                    </md-input-container>
+                                </div>
+                            </div>
+                            <md-button ng-click="removeContact($index, 'newContact')" class="md-fab md-primary" aria-label="Add To Contact">
+                                <md-tooltip md-direction="left">Remove From Contacts</md-tooltip>
+                                <md-icon class="material-icons">clear</md-icon>
+                            </md-button>
+                            <md-divider></md-divider>
+                        </md-list-item>
+                    </md-list>
+                </div>
+            </div>
+
+            <md-dialog-actions>
+                <md-button ng-click="dialogService.closeModal()">Cancel</md-button>
+
+                <md-button ng-hide="step==1" ng-click="step = step-1">Back</md-button>
+                <md-button ng-hide="step==2" ng-click="next('addContact')">Next</md-button>
+
+                <md-button ng-show="step==2" type="submit">Add Contact</md-button>
+            </md-dialog-actions>
+        </md-dialog-content>
+    </form>
+</md-dialog>

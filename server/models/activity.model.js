@@ -1,5 +1,4 @@
 'use strict';
-var s3 = require('../components/S3');
 var EventBus = require('./../components/EventBus');
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;

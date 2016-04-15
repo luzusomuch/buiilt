@@ -8,6 +8,9 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
         resolve: {
             currentUser: function(authService) {
                 return authService.getCurrentUser().$promise;
+            },
+            contactBooks: function(contactBookService) {
+                return contactBookService.me().$promise;
             }
         }
     })
@@ -50,6 +53,13 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
     .state("settings.schedule", {
         url: "/schedule",
         templateUrl: "/app/modules/settings/partials/settings-schedule.html",
+        controller: "settingsCtrl",
+        authenticate: true
+    })
+
+    .state("settings.contacts", {
+        url: "/contact",
+        templateUrl: "/app/modules/settings/partials/settings-contact.html",
         controller: "settingsCtrl",
         authenticate: true
     });

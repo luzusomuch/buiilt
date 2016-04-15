@@ -36,7 +36,15 @@ var validationError = function (res, err) {
     Show user profile by id include his team
 */
 exports.getUserProfile = function(req, res) {
-    User.findOne({_id: req.params.id}).populate("team._id").exec(function(err, user) {
+    var condition = {};
+    if (req.query.id) {
+        condition = {_id: req.query._id};
+    } else if (req.query.email && req.query.phoneNumber) {
+        condition = {$or:[{email: req.query.email}, {phoneNumber: req.query.phoneNumber}]};
+    } else {
+        return res.send(404);
+    }
+    User.findOne(condition).populate("team._id").exec(function(err, user) {
         if (err) {return res.send(500,err);}
         else if (!user) {return res.send(404, "The specific user is not existed!");}
         else {

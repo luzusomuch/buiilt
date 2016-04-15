@@ -1,8 +1,10 @@
-angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $scope, $timeout, $state, teamService, $mdToast, $mdDialog, authService, userService, stripe, projectService, $state, currentUser, dialogService) {
+angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $scope, $timeout, $state, teamService, $mdToast, $mdDialog, authService, userService, stripe, projectService, $state, currentUser, dialogService, contactBookService, contactBooks) {
+    $scope.dialogService = dialogService;
     $rootScope.title = "Settings"
     $scope.currentTeam = $rootScope.currentTeam;
     $rootScope.currentUser = null;
     $rootScope.currentUser = $scope.currentUser = currentUser;
+    $scope.contactBooks = contactBooks;
 
     /*Get plan of current user*/
     function getCurrentUserPlan() {
@@ -315,6 +317,9 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                     resolve: {
                         currentUser: ["authService", function(authService) {
                             return authService.getCurrentUser().$promise;
+                        }],
+                        contactBooks: ["contactBookService", function(contactBookService) {
+                            return contactBookService.me().$promise;
                         }]
                     },
                     parent: angular.element(document.body),
@@ -328,6 +333,9 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                     resolve: {
                         currentUser: ["authService", function(authService) {
                             return authService.getCurrentUser().$promise;
+                        }],
+                        contactBooks: ["contactBookService", function(contactBookService) {
+                            return contactBookService.me().$promise;
                         }]
                     },
                     parent: angular.element(document.body),
@@ -466,6 +474,9 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             resolve: {
                 currentUser: ["authService", function(authService) {
                     return authService.getCurrentUser().$promise;
+                }],
+                contactBooks: ["contactBookService", function(contactBookService) {
+                    return contactBookService.me().$promise;
                 }]
             },
             parent: angular.element(document.body),
@@ -482,6 +493,9 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             resolve: {
                 currentUser: ["authService", function(authService) {
                     return authService.getCurrentUser().$promise;
+                }],
+                contactBooks: ["contactBookService", function(contactBookService) {
+                    return contactBookService.me().$promise;
                 }]
             },
             parent: angular.element(document.body),
@@ -503,6 +517,9 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             resolve: {
                 currentUser: ["authService", function(authService) {
                     return authService.getCurrentUser().$promise;
+                }],
+                contactBooks: ["contactBookService", function(contactBookService) {
+                    return contactBookService.me().$promise;
                 }]
             },
             parent: angular.element(document.body),
@@ -643,6 +660,9 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             resolve: {
                 currentUser: ["authService", function(authService) {
                     return authService.getCurrentUser().$promise;
+                }],
+                contactBooks: ["contactBookService", function(contactBookService) {
+                    return contactBookService.me().$promise;
                 }]
             },
             parent: angular.element(document.body),
@@ -725,6 +745,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
         // }
     });
 
+    /*Edit team schedule work time*/
     $scope.editSchedule = function() {
         $scope.currentTeam.editType = "change-schedule";
         teamService.update({id: $scope.currentTeam._id}, $scope.currentTeam).$promise.then(function(res) {
@@ -733,4 +754,61 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             $rootScope.$emit("Team.Update", res);
         }, function(err){dialogService.showToast("Error");});
     };
+
+    /*Check for next function when click next in modal*/
+    $scope.step = 1;
+    $scope.newContact = {
+        contacts: []
+    };
+    $scope.next = function(type) {
+        if ($scope.step==1) {
+            if ($scope.newContact.contacts.length === 0)
+                dialogService.showToast("Please Insert At Least 1 Contact");
+            else 
+                $scope.step += 1;
+        }
+    };
+
+    $scope.checkUserInfo = function(email, phoneNumber) {
+        userService.getUserProfile({email: email, phoneNumber: phoneNumber}).$promise.then(function(res) {
+            $scope.searchUser = res;
+        }, function(err) {
+            $scope.searchUser = "empty";
+        });
+    };
+
+    $scope.createNewContact = function(email, phoneNumber) {
+        var valid = true;
+        _.each($scope.newContact.contacts, function(contact) {
+            if (contact.email === email || contact.phoneNumber === phoneNumber) {
+                valid = false;
+                return false;
+            }
+        });
+        if (valid) {
+            $scope.newContact.contacts.push({email: email, phoneNumber: phoneNumber});
+            dialogService.showToast("Added this user to contact successfully");
+        } else {
+            dialogService.showToast("This contact has already added");
+        }
+    };
+
+    $scope.removeContact = function(index, type) {
+        if (type === "newContact") {
+            $scope.newContact.contacts.splice(index ,1);
+        }
+    };
+
+    $scope.addContact = function() {
+        if ($scope.newContact.contacts.length === 0) {
+            dialogService.showToast("Please enter at least 1 contact");
+        } else {
+            contactBookService.create({}, $scope.newContact).$promise.then(function(res) {
+                console.log(res);
+            }, function(err) {
+                dialogService.showToast("Error");
+            });
+        }
+    };
+
 });

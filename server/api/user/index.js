@@ -12,7 +12,7 @@ router.delete('/:id', auth.hasRole('admin'), controller.destroy);
 router.get('/all', auth.hasRole('admin'), controller.index);
 router.get('/me', auth.isAuthenticated(), controller.me);
 router.get('/get-current-stripe-customer', auth.isAuthenticated(), controller.getCurrentStripeCustomer);
-router.get("/:id/profile", controller.getUserProfile);
+router.get("/profile", controller.getUserProfile);
 router.get('/:id', auth.isAuthenticated(), controller.show);
 router.get('/:id/reset-password', controller.getResetPasswordToken);
 
