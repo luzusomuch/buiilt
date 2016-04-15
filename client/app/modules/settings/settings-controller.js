@@ -804,7 +804,9 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             dialogService.showToast("Please enter at least 1 contact");
         } else {
             contactBookService.create({}, $scope.newContact).$promise.then(function(res) {
-                console.log(res);
+                $scope.contactBooks = _.union($scope.contactBooks, res);
+                dialogService.closeModal();
+                dialogService.showToast("Added New Contacts Successfully");
             }, function(err) {
                 dialogService.showToast("Error");
             });

@@ -45,9 +45,20 @@ exports.create = function(req, res) {
 exports.me = function(req, res) {
     if (req.user.team._id) {
         ContactBook.find({team: req.user.team._id})
+        .populate("user", "_id name email phoneNumber")
         .exec(function(err, contactBooks) {
             if (err) {return res.send(500,err);}
-            return res.send(200, contactBooks);
+            var result = [];
+            _.each(contactBooks, function(contact) {
+                if (contact.user) {
+                    contact.email = contact.user.email;
+                    contact.phoneNumber = contact.user.phoneNumber;
+                    result.push(contact);
+                } else {
+                    result.push(contact);
+                }
+            });
+            return res.send(200, result);
         });
     } else {
         return res.send(200, []);
