@@ -18,7 +18,20 @@ exports.create = function(req, res) {
             User.findOne({email: contact.email}, function(err, user) {
                 if (err) {cb(err);}
                 if (!user) {
-                    cb();
+                    var newContact = new ContactBook({
+                        team: req.user.team._id,
+                        inviter: req.user._id,
+                        name: contact.firstName + contact.lastName,
+                        email: contact.email,
+                        phoneNumber: contact.phoneNumber,
+                        teamName: contact.teamName
+                    });
+                    newContact.save(function(err) {
+                        if (err) {cb(err);}
+                        result.push(newContact);
+                        // NOT DONE
+                        cb();
+                    });
                 } else {
                     var newContact = new ContactBook({
                         team: req.user.team._id,
