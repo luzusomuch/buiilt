@@ -1,0 +1,64 @@
+<md-dialog aria-label="Add New Event" flex="70" id="newActivityForm">
+    <form ng-submit="createActivityOrMilestone(form)" name="form">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Add New Event</h2>
+            </div>
+        </md-toolbar>
+        
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column" layout-padding>
+
+                <div layout="row" ng-show="step==1">
+                    <p class="md-body-2">Please enter event name</p>
+                    <md-input-container flex>
+                        <label for="">Name</label>
+                        <input type="text" name="name" ng-model="activity.name" required>
+                    </md-input-container>
+                </div>
+
+                <div layout="column" ng-show="step==2">
+                    <p class="md-body-2">Select Date and Time for activity</p>
+                    <div layout="row">
+                        <div layout-padding flex="33">
+                            <h5>Start Date</h5>
+                            <md-datepicker ng-model="activity.date.start" md-placeholder="Enter Start Date"></md-datepicker>
+                        </div>
+                        <div layout-padding>
+                            <h5>End Date</h5>
+                            <md-datepicker ng-model="activity.date.end" md-placeholder="Enter End Date"></md-datepicker>
+                        </div>
+                    </div>
+                    <p style="color:red" ng-show="dateError">{{dateError}}</p>
+
+                    <div layout="row">
+                        <div layout-padding flex="50">
+                            <h5>Start Time</h5>
+                            <mdp-time-picker ng-model="activity.time.start"></mdp-time-picker>
+                        </div>
+                        <div layout-padding>
+                            <h5>End Time</h5>
+                            <mdp-time-picker ng-model="activity.time.end"></mdp-time-picker>
+                        </div>
+                    </div>
+                </div>
+
+                <div layout="column" ng-show="step==3">
+                    <p class="md-body-2">Select the team members to include in this {{(activity.isMilestone) ? "milestion" : "activity"}}:</p>
+                    <div layout="row" flex layout-align="center center" layout-wrap layout-padding>
+                        <md-checkbox flex="20" class="filter-checkbox md-primary" ng-repeat="member in membersList" ng-click="selectItem($index, 'member')">{{ (member._id) ? member.name : member.email }}</md-checkbox>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        
+        <md-dialog-actions>
+            <md-button ng-click="dialogService.closeModal()">Cancel</md-button>
+
+            <md-button ng-click="step=step-1" ng-hide="step==1">Back</md-button>
+            <md-button ng-click="next('activity')" ng-hide="step==3">Next</md-button>
+
+            <md-button type="submit" ng-show="step==3" class="md-primary">Submit</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

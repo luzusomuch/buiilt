@@ -61,16 +61,6 @@ var TeamSchema = new Schema({
     fileTags: [String],
     documentTags: [String],
     versionTags: [String],
-    schedule: {
-        // time to work for each day in week
-        monday: {startTime: Date, endTime: Date},
-        tuesday: {startTime: Date, endTime: Date},
-        wednesday: {startTime: Date, endTime: Date},
-        thursday: {startTime: Date, endTime: Date},
-        friday: {startTime: Date, endTime: Date},
-        saturday: {startTime: Date, endTime: Date},
-        sunday: {startTime: Date, endTime: Date}
-    },
     createdAt: {
         type: Date,
         default: Date.now

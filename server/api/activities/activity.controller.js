@@ -24,16 +24,9 @@ exports.create = function(req, res) {
             }
             activity.date.start = data.date.start;
             activity.date.end = data.date.end;
-            activity.date.duration = data.date.duration;
 
             activity.time.start = data.time.start;
             activity.time.end = data.time.end;
-
-            var dependencies = [];
-            _.each(req.body.dependencies, function(dep) {
-                dependencies.push({activity: dep._id, lag: dep.lagsUnit, lagType: dep.lagsType});
-            });
-            activity.dependencies = dependencies;
         }
         if (req.body.newMembers.length === 0) {
             return res.send(422, {msg: "Please check your new members list"});
@@ -43,21 +36,7 @@ exports.create = function(req, res) {
             activity.notMembers = result.notMembers;
             activity.save(function(err) {
                 if (err) {return res.send(500,err);}
-                if (req.body.isBelongToMilestone && req.body.selectedMilestone) {
-                    Activity.findOne({_id: req.body.selectedMilestone, isMilestone: true}, function(err, milestone) {
-                        if (err) {return res.send(500,err);}
-                        if (!milestone) {return res.send(404, {msg: "Your selected milestone not existed"});}
-                        milestone.subActivities.push(activity._id);
-                        milestone.save(function(err) {
-                            if (err) {
-                                activity.remove();
-                                return res.send(500,err);
-                            } else
-                                return res.send(200, activity);
-                        });
-                    });
-                } else
-                    return res.send(200, activity);
+                return res.send(200, activity);
             });
         });
     });

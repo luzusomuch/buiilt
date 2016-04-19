@@ -14,12 +14,12 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
     }
   })
 
-  .state("project.calendar", {
-    url: "/calendar",
+  .state("project.event", {
+    url: "/event",
     abstract: true,
     templateUrl: '/app/modules/project/project-calendar/view.html',
   })
-  .state("project.calendar.overview", {
+  .state("project.event.overview", {
     url: "/overview",
     templateUrl: "/app/modules/project/project-calendar/overview/project-calendar-overview.html",
     controller: "projectCalendarCtrl",
@@ -27,13 +27,10 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
     resolve: {
       activities: function($stateParams, activityService) {
         return activityService.me({id: $stateParams.id}).$promise;
-      },
-      tasks: function(taskService, $stateParams) {
-        return taskService.getProjectTask({id: $stateParams.id}).$promise;
       }
     }
   })
-  .state("project.calendar.activity", {
+  .state("project.event.activity", {
     url: "/detail/:activityId",
     templateUrl: "/app/modules/project/project-calendar/detail/project-calendar-detail.html",
     controller: "projectCalendarDetailCtrl",

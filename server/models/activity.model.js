@@ -9,14 +9,12 @@ var ActivitySchema = new Schema({
     project: {type: Schema.Types.ObjectId, ref: "Project", required: true},
     date: {
         start: Date,
-        end: Date,
-        duration: String
+        end: Date
     },
     time: {
         start: Date,
         end: Date
     },
-    percentageComplete: {type: Number, default: 0},
     relatedItem: [{
         type: String,
         _id: Schema.Types.ObjectId,
@@ -25,16 +23,7 @@ var ActivitySchema = new Schema({
     members: [{type: Schema.Types.ObjectId, ref: "User"}],
     notMembers: [String],
     createdAt: {type: Date, default: new Date()},
-    updatedAt: Date,
-    dependencies: [{
-        activity: {type: Schema.Types.ObjectId, ref: "Activity"},
-        lag: Number, 
-        lagType: String, //maybe hours or days
-        _id: false
-    }],
-    isMilestone: {type: Boolean, default: false},
-    // When it's a milestone, it'll have this property
-    subActivities: [{type: Schema.Types.ObjectId, ref: "Activity"}]
+    updatedAt: Date
 });
 
 ActivitySchema.pre('save', function(next) {

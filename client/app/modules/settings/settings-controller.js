@@ -731,30 +731,6 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
     
     getTeamLeader($scope.currentTeam);
 
-    $scope.isEditSchedule = false;
-    $scope.$watch("isEditSchedule", function(value) {
-        // if (value) {
-            _.each($scope.currentTeam.schedule, function(value, key) {
-                if (value.startTime) {
-                    value.startTime = new Date(value.startTime);
-                }
-                if (value.endTime) {
-                    value.endTime = new Date(value.endTime);
-                }
-            });
-        // }
-    });
-
-    /*Edit team schedule work time*/
-    $scope.editSchedule = function() {
-        $scope.currentTeam.editType = "change-schedule";
-        teamService.update({id: $scope.currentTeam._id}, $scope.currentTeam).$promise.then(function(res) {
-            $scope.isEditSchedule = false;
-            dialogService.showToast("Change Team Schedule Successfully");
-            $rootScope.$emit("Team.Update", res);
-        }, function(err){dialogService.showToast("Error");});
-    };
-
     /*Check for next function when click next in modal*/
     $scope.step = 1;
     $scope.newContact = {

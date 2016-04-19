@@ -512,8 +512,6 @@ exports.update = function (req, res) {
       team.fileTags = req.body.fileTags;
       team.documentTags = req.body.documentTags;
       team.versionTags = req.body.versionTags;
-    } else if (req.body.editType==="change-schedule") {
-      team.schedule = req.body.schedule;
     }
     team._user = req.user;
     team.save(function() {
