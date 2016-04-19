@@ -3,10 +3,14 @@
 var Activity = require('./../../models/activity.model');
 var ActivityValidator = require('./../../validators/activity');
 var User = require('./../../models/user.model');
+var Thread = require('./../../models/user.model');
+var Task = require('./../../models/user.model');
+var File = require('./../../models/user.model');
 var CheckMembers = require("./../../components/helpers/checkMembers");
 var _ = require('lodash');
 var async = require('async');
 var moment = require("moment");
+var mongoose = require("mongoose");
 
 /*Create new activity or milestone*/
 exports.create = function(req, res) {
@@ -92,16 +96,44 @@ exports.me = function(req, res) {
     });
 };
 
+var getMainItem = function(type) {
+    var _item = {};
+    switch (type) {
+        case 'thread' :
+            _item = Thread;
+            break;
+        case 'task' :
+            _item = Task;
+            break;
+        case "file":
+            _item = File
+            break;
+        default :
+            break;
+    }
+    return _item;
+};
+
 /*Get activity detail*/
 exports.get = function(req, res) {
     Activity.findById(req.params.id)
-    .populate("subActivities")
-    .populate("dependencies")
     .populate("members", "_id name email phoneNumber")
     .populate("owner", "_id name email phoneNumber")
-    .exec(function(err, item) {
+    .exec(function(err, activity) {
         if (err) {return res.send(500,err);}
-        if (!item) {return res.send(404, {msg: "The selected item not found"});}
-        return res.send(200, item);
+        if (!activity) {return res.send(404, {msg: "The selected item not found"});}
+        async.each(activity.relatedItem, function(item, cb) {
+            console.log(item);
+            getMainItem(item.type).findById(item.item._id, function(err, data) {
+                console.log(data);
+                if (err || !data) {cb(err);}
+                else {
+                    item.item = data;
+                    cb();
+                }
+            });
+        }, function() {
+            return res.send(200, activity);
+        });
     });
 };

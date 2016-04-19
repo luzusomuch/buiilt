@@ -16,9 +16,9 @@ var ActivitySchema = new Schema({
         end: Date
     },
     relatedItem: [{
-        type: String,
-        _id: Schema.Types.ObjectId,
-        element: {}
+        type: {type: String},
+        item: {},
+        _id: false
     }],
     members: [{type: Schema.Types.ObjectId, ref: "User"}],
     notMembers: [String],

@@ -27,6 +27,9 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
     resolve: {
       activities: function($stateParams, activityService) {
         return activityService.me({id: $stateParams.id}).$promise;
+      },
+      tasks: function(taskService, $stateParams) {
+        return taskService.getProjectTask({id: $stateParams.id}).$promise;
       }
     }
   })

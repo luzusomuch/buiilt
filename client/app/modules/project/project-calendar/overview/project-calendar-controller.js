@@ -1,5 +1,7 @@
-angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout, $q, $rootScope, $scope, $mdDialog, dialogService, $stateParams, socket, $state, activityService, people, activities) {
+angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout, $q, $rootScope, $scope, $mdDialog, dialogService, $stateParams, socket, $state, activityService, people, activities, tasks, uiCalendarConfig) {
     $scope.dialogService = dialogService;
+    $scope.showTask = true;
+    $scope.showEvent = true;
 
     /*config fullcalendar*/
     $scope.config = {
@@ -9,6 +11,40 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 left: "month agendaWeek agendaDay",
                 center: "title",
                 right: "today, prev, next"
+            },
+            selectable: true,
+            eventClick: function(data) {
+                if (data.type==="event") {
+                    $mdDialog.show({
+                        // targetEvent: $event,
+                        controller: ["$scope", "dialogService", "activity", function($scope, dialogService, activity) {
+                            $scope.event = data;
+                            $scope.dialogService = dialogService;
+                            $scope.tasks = [];
+                            $scope.threads = [];
+                            $scope.files = [];
+                            _.each(activity.relatedItem, function(item) {
+                                if (item.type==="thread") {
+                                    $scope.threads.push(item.iten);
+                                } else if (item.type==="task") {
+                                    $scope.tasks.push(item.item);
+                                } else if (item.type==="file") {
+                                    $scope.files.push(item.item);
+                                }
+                            });
+                        }],
+                        resolve: {
+                            activity: ["activityService", "$stateParams", function(activityService, $stateParams) {
+                                return activityService.get({id: data._id}).$promise;
+                            }]
+                        },
+                        templateUrl: 'app/modules/project/project-calendar/partials/event-detail.html',
+                        parent: angular.element(document.body),
+                        clickOutsideToClose: false
+                    });
+                } else if (data.type==="task"){
+                    $state.go("project.tasks.detail", {id: $stateParams.id, taskId: data._id});
+                }
             }
         }
     };
@@ -48,19 +84,39 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
     };
 
     /*Convert all tasks and activities to calendar view*/
-    function convertAllToCalendarView() {
+    $scope.convertAllToCalendarView = function() {
         $scope.events = [];
+        $scope.eventsTask = [];
+        $scope.eventsEvent = [];
         $scope.activities = activities;
+        _.each(tasks, function(task) {
+            if (task.element && task.element.type === "task-project") {
+                var dateStart, dateEnd;
+                if (task.time) {
+                    dateStart = moment(task.dateStart).add(moment(task.time.start).hours(), "hours").add(moment(task.time.end).minutes(), "minutes");
+                    dateEnd = moment(task.dateEnd).add(moment(task.time.end).hours(), "hours").add(moment(task.time.end).minutes(), "minutes");
+                } else {
+                    dateStart = moment(task.dateStart);
+                    dateEnd = moment(task.dateEnd);
+                }
+                $scope.events.push({type: "task", _id: task._id, title: task.description, start: moment(dateStart).format("YYYY-MM-DD hh:mm"), end: moment(dateEnd).format("YYYY-MM-DD hh:mm")});
+                $scope.eventsTask.push({type: "task", _id: task._id, title: task.description, start: moment(dateStart).format("YYYY-MM-DD hh:mm"), end: moment(dateEnd).format("YYYY-MM-DD hh:mm")});
+            }
+        });
         _.each(activities, function(activity) {
             if (!activity.isMilestone) {
                 var dateStart = moment(activity.date.start).add(moment(activity.time.start).hours(), "hours").add(moment(activity.time.end).minutes(), "minutes");
                 var dateEnd = moment(activity.date.end).add(moment(activity.time.end).hours(), "hours").add(moment(activity.time.end).minutes(), "minutes");
-                $scope.events.push({title: activity.name, start: moment(dateStart).format("YYYY-MM-DD hh:mm"), end: moment(dateEnd).format("YYYY-MM-DD hh:mm")});   
+                $scope.events.push({type: "event", _id: activity._id,title: activity.name, start: moment(dateStart).format("YYYY-MM-DD hh:mm"), end: moment(dateEnd).format("YYYY-MM-DD hh:mm")});   
+                $scope.eventsEvent.push({type: "event", _id: activity._id,title: activity.name, start: moment(dateStart).format("YYYY-MM-DD hh:mm"), end: moment(dateEnd).format("YYYY-MM-DD hh:mm")});   
             }
         });
-        $scope.eventSources  = [$scope.events];
+        $scope.eventSources = [$scope.events];
+        $scope.eventSourcesTask = [$scope.eventsTask];
+        $scope.eventSourcesEvent = [$scope.eventsEvent];
+        $scope.eventSourcesEmpty = [];
     };
-    convertAllToCalendarView();
+    $scope.convertAllToCalendarView();
 
     /*Get all project members*/
     function getProjectMembers() {
@@ -125,6 +181,9 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 }],
                 activities: ["activityService", "$stateParams", function(activityService, $stateParams) {
                     return activityService.me({id: $stateParams.id}).$promise;
+                }],
+                tasks: ["taskService", "$stateParams", function(taskService, $stateParams) {
+                    return taskService.getProjectTask({id: $stateParams.id}).$promise;
                 }]
             },
             templateUrl: 'app/modules/project/project-calendar/partials/' + modalName,

@@ -3,12 +3,24 @@
         <div layout="column" class="md-whiteframe-1dp overview-view">
             <div class="md-toolbar-tools">
                 <h5 layout-margin><span>{{ project.name }} Calendar</span></h5>
+                <span flex></span>
+                <md-button ng-class="{'md-primary': showTask}" ng-click="showTask=!showTask; convertAllToCalendarView()" aria-label="Show Task">
+                    <md-tooltip md-direction="bottom">Show Task</md-tooltip>
+                    <md-icon class="material-icons">done</md-icon>
+                </md-button>
+                <md-button ng-class="{'md-primary': showEvent}" ng-click="showEvent=!showEvent; convertAllToCalendarView()" aria-label="Show Event">
+                    <md-tooltip md-direction="bottom">Show Event</md-tooltip>
+                    <md-icon class="material-icons">event</md-icon>
+                </md-button>
 			</div>
         
             <md-divider layout="row" flex></md-divider>
         
             <div layout="column" layout-padding flex>
-                <div ui-calendar="config.calendar" ng-model="eventSources"></div>
+                <div calendar="myCalendar" ui-calendar="config.calendar" ng-model="eventSources" ng-show="showEvent && showTask"></div>
+                <div calendar="myCalendar" ui-calendar="config.calendar" ng-model="eventSourcesEvent" ng-show="showEvent && !showTask"></div>
+                <div calendar="myCalendar" ui-calendar="config.calendar" ng-model="eventSourcesTask" ng-show="!showEvent && showTask"></div>
+                <div calendar="myCalendar" ui-calendar="config.calendar" ng-model="eventSourcesEmpty" ng-show="!showEvent && !showTask"></div>
             </div>
 			
         </div>
@@ -17,17 +29,17 @@
 
 <div>
 	<md-fab-speed-dial ng-cloak md-open="true" md-direction="up" class="md-scale md-fab-bottom-right fab-list" ng-show="!isArchive">
-		 <md-fab-trigger>
-	  	      <md-button id="im_ProjCalendarActions" aria-label="Actions" class="md-fab md-primary">
-				  <md-tooltip md-direction="left">Actions...</md-tooltip>
-			      <md-icon class="material-icons" >more_vert</md-icon>
-	  	      </md-button>
-	     </md-fab-trigger>
-		 <md-fab-actions>
-		  	    <md-button id="im_ProjCalendarAddActivity" aria-label="Add an Event" class="md-fab md-raised md-mini" ng-click="showModal($event, 'create-event.html')">
-					  <md-tooltip md-direction="left">Add an Event</md-tooltip>
-				      <md-icon class="material-icons">event</md-icon>
-		        </md-button>
-	  	 </md-fab-actions>
+	   <md-fab-trigger>
+  	        <md-button id="im_ProjCalendarActions" aria-label="Actions" class="md-fab md-primary">
+			    <md-tooltip md-direction="left">Actions...</md-tooltip>
+			    <md-icon class="material-icons" >more_vert</md-icon>
+  	        </md-button>
+        </md-fab-trigger>
+        <md-fab-actions>
+	  	    <md-button id="im_ProjCalendarAddActivity" aria-label="Add an Event" class="md-fab md-raised md-mini" ng-click="showModal($event, 'create-event.html')">
+                <md-tooltip md-direction="left">Add an Event</md-tooltip>
+                <md-icon class="material-icons">event</md-icon>
+	        </md-button>
+        </md-fab-actions>
   	</md-fab-speed-dial>
 </div>
