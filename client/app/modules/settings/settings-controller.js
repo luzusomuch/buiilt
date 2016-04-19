@@ -804,7 +804,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             dialogService.showToast("Please enter at least 1 contact");
         } else {
             contactBookService.create({}, $scope.newContact).$promise.then(function(res) {
-                $scope.contactBooks = _.union($scope.contactBooks, res);
+                $rootScope.$emit("addContact", res);
                 dialogService.closeModal();
                 dialogService.showToast("Added New Contacts Successfully");
             }, function(err) {
@@ -812,5 +812,13 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
             });
         }
     };
+
+    $scope.$on('$destroy', function() {
+        listenAddContact();
+    });
+
+    var listenAddContact = $rootScope.$on("addContact", function(ev, data) {
+        $scope.contactBooks = _.union($scope.contactBooks, data);
+    });
 
 });

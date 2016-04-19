@@ -332,52 +332,104 @@ exports.createUserWithInviteToken = function(req, res, next) {
                 var token = jwt.sign({_id: user._id}, config.secrets.session, {expiresInMinutes: 60 * 5});
                 async.parallel([
                     function (cb) {
-                        People.findById(packageInvite.package, function(err, people) {
-                            if (err || !people) {cb();}
-                            else {
-                                _.each(people[packageInvite.inviteType], function(tender) {
-                                    if (tender.hasSelect && tender.tenderers[0].email === user.email) {
-                                        isSkipInTender = true;
-                                        tender.tenderers[0]._id = user._id;
-                                        tender.tenderers[0].email = null;
-                                        user.projects.push(packageInvite.project);
-                                        user.markModified("projects");
-                                        user.save();
-                                    }
-                                });
-                                people._editUser = user;
-                                peopleResult = people;
-                                people.save(function(err) {
-                                    if (err) {cb(err);}
-                                    user.projects.push(packageInvite.project);
-                                    user.markModified("projects");
-                                    user.save(cb());
-                                });
-                            }
+                        // Get list of invite tokens related to current sign up user
+                        InviteToken.find({email: packageInvite.to}, function(err, inviteTokens) {
+                            if (err) {cb();}
+                            async.each(inviteTokens, function(inviteToken, callback) {
+                                if (inviteToken.type==="team-invite") {
+                                    var update = {
+                                        "member.$._id" : newUser._id,
+                                        "member.$.status" : 'Active'
+                                    };
+                                    Team.update({_id : inviteToken.element._id,'member.email' : req.body.email},{'$set' : update,'$unset' : {'member.$.email' : 1}},function(err) {
+                                        if (err) {
+                                            user.remove(callback);
+                                        }
+                                        newUser.emailVerified = true;
+                                        newUser.team = {
+                                            _id : inviteToken.element._id,
+                                            role : 'member'
+                                        };
+                                        newUser.save(function() {
+                                            var params = {
+                                                owners : [inviteToken.user],
+                                                fromUser : user._id,
+                                                element : inviteToken.element,
+                                                referenceTo : 'team',
+                                                type : 'team-accept'
+                                            };
+                                            NotificationHelper.create(params,function() {
+                                                inviteToken.remove(callback);
+                                            });
+                                        });
+                                    });
+                                } else {
+                                    callback();
+                                }
+                            }, cb);
                         });
                     },
                     function (cb) {
-                        Tender.findById(packageInvite.package, function(err, tender) {
-                            if (err || !tender) {cb();}
-                            else {
-                                _.each(tender.members, function(member) {
-                                    if (member.email === user.email) {
-                                        member.user = user._id;
-                                        member.email = null;
-                                        if (member.activities && member.activities.length > 0) {
-                                            _.each(member.activities, function(activity) {
-                                                if (activity.type === "send-message" && activity.email && activity.email===user.email) {
-                                                    activity.email = null;
-                                                    activity.user = user._id
-                                                }
-                                            });
-                                        }
+                        // get all package invite related to current sign up user
+                        PackageInvite.find({to: user.email}, function(err, packageInvites) {
+                            if (err) {cb(err);}
+                            async.each(packageInvites, function(invite, callback) {
+                                async.parallel([
+                                    function (cb) {
+                                        // Update project members for current sign up user if existed
+                                        People.findById(invite.package, function(err, people) {
+                                            if (err || !people) {cb();}
+                                            else {
+                                                _.each(people[invite.inviteType], function(tender) {
+                                                    if (tender.hasSelect && tender.tenderers[0].email === user.email) {
+                                                        isSkipInTender = true;
+                                                        tender.tenderers[0]._id = user._id;
+                                                        tender.tenderers[0].email = null;
+                                                        user.projects.push(invite.project);
+                                                        user.markModified("projects");
+                                                        user.save();
+                                                    }
+                                                });
+                                                people._editUser = user;
+                                                peopleResult = people;
+                                                people.save(function(err) {
+                                                    if (err) {cb(err);}
+                                                    user.projects.push(invite.project);
+                                                    user.markModified("projects");
+                                                    user.save(cb());
+                                                });
+                                            }
+                                        });
+                                    },
+                                    function (cb) {
+                                        // Update tender for current sign up user if existed
+                                        Tender.findById(invite.package, function(err, tender) {
+                                            if (err || !tender) {cb();}
+                                            else {
+                                                _.each(tender.members, function(member) {
+                                                    if (member.email === user.email) {
+                                                        member.user = user._id;
+                                                        member.email = null;
+                                                        if (member.activities && member.activities.length > 0) {
+                                                            _.each(member.activities, function(activity) {
+                                                                if (activity.type === "send-message" && activity.email && activity.email===user.email) {
+                                                                    activity.email = null;
+                                                                    activity.user = user._id
+                                                                }
+                                                            });
+                                                        }
+                                                    }
+                                                });
+                                                tender._editUser = user;
+                                                tenderResult = tender;
+                                                tender.save(cb);
+                                            }
+                                        });
                                     }
+                                ], function() {
+                                    invite.remove(callback);
                                 });
-                                tender._editUser = user;
-                                tenderResult = tender;
-                                tender.save(cb);
-                            }
+                            }, cb);
                         });
                     },
                     function (cb) {

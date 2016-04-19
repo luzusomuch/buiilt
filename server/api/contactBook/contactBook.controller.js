@@ -2,7 +2,6 @@
 
 var ContactBook = require('./../../models/contactBook.model');
 var PackageInvite = require('./../../models/packageInvite.model');
-var InviteToken = require('./../../models/inviteToken.model');
 var User = require('./../../models/user.model');
 var _ = require('lodash');
 var async = require('async');
@@ -26,10 +25,10 @@ exports.create = function(req, res) {
                         phoneNumber: contact.phoneNumber,
                         teamName: contact.teamName
                     });
+                    newContact._editUser = req.user;
                     newContact.save(function(err) {
-                        if (err) {cb(err);}
+                        if (err) {console.log(err);cb(err);}
                         result.push(newContact);
-                        // NOT DONE
                         cb();
                     });
                 } else {
