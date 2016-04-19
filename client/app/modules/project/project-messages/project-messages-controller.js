@@ -1,7 +1,9 @@
-angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScope, $scope, $timeout, $mdDialog, peopleService, $stateParams, $state, $mdToast, messageService, threads, people, socket, notificationService, dialogService) {
+angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScope, $scope, $timeout, $mdDialog, peopleService, $stateParams, $state, $mdToast, messageService, threads, people, socket, notificationService, dialogService, activities) {
 	$rootScope.title = $rootScope.project.name +" messages list";
     $scope.people = people;
 	$scope.threads = threads;
+    $scope.activities = activities;
+    $scope.dialogService = dialogService;
 	
 	$scope.showFilter = false;
 
@@ -16,7 +18,7 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
     /*check create new thread input change move to next step*/
     $scope.next = function() {
         if ($scope.step==1) {
-            if (!$scope.thread.name || $scope.thread.name.trim().length === 0 || !$scope.thread.message || $scope.thread.message.length ===0) {
+            if (!$scope.thread.selectedEvent || !$scope.thread.name || $scope.thread.name.trim().length === 0 || !$scope.thread.message || $scope.thread.message.length ===0) {
                 dialogService.showToast("Check Your Input");
             } else {
                 $scope.step += 1;
@@ -222,9 +224,9 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
     getPeopleList();
 	
 	/*Show create new Thead modal*/
-	$scope.showNewMessageModal = function($event) {
+	$scope.showNewMessageModal = function() {
 		$mdDialog.show({
-		  	targetEvent: $event,
+		  	// targetEvent: $event,
 	      	controller: 'projectMessagesCtrl',
 	      	templateUrl: 'app/modules/project/project-messages/new/project-messages-new.html',
 	      	parent: angular.element(document.body),
@@ -235,6 +237,9 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
 		      	}],
                 people: ["peopleService", "$stateParams" ,function(peopleService, $stateParams) {
                     return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
+                }],
+                activities: ["activityService", "$stateParams", function(activityService, $stateParams) {
+                    return activityService.me({id: $stateParams.id}).$promise;
                 }]
 		    }
 	    });
@@ -245,8 +250,18 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
         $mdDialog.cancel();
     };
 
+    /*Receive selected event ID when create new item in calendar if existed*/
+    $scope.attachEventItem = $rootScope.attachEventItem;
+    if ($scope.attachEventItem) {
+        $scope.attachEventItem = $rootScope.attachEventItem;
+        $rootScope.selectedEvent = $scope.attachEventItem.selectedEvent;
+        $rootScope.attachEventItem = null;
+        $scope.showNewMessageModal();
+    }
+
     $scope.thread = {
-        members : []
+        members : [],
+        selectedEvent: ($rootScope.selectedEvent) ? $rootScope.selectedEvent : null
     };
 
     /*Select project members for create new thread*/
@@ -302,6 +317,9 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
                 }],
                 people: ["peopleService", "$stateParams" ,function(peopleService, $stateParams) {
                     return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
+                }],
+                activities: ["activityService", "$stateParams", function(activityService, $stateParams) {
+                    return activityService.me({id: $stateParams.id}).$promise;
                 }]
             },
             templateUrl: 'app/modules/dashboard/partials/reply-message.html',

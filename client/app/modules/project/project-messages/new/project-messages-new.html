@@ -8,6 +8,18 @@
 		
 		<md-dialog-content>
 			<div class="md-dialog-content" layout="column">
+
+				<div layout="column" ng-show="step==1">
+					<p class="md-body-2">Select An Event In List Below:</p>
+					<div layout="row">
+						<md-input-container flex>
+							<label for="">Events List</label>
+							<md-select ng-model="thread.selectedEvent">
+								<md-option ng-repeat="activity in activities" ng-show="!activity.isMilestone" ng-value="activity._id">{{activity.name}}</md-option>
+							</md-select>
+						</md-input-container>
+					</div>
+				</div>
 				
 				<div layout="column" ng-show="step==1">
 					<p class="md-body-2">Provide a subject for the message thread:</p>

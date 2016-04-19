@@ -1,9 +1,11 @@
-angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $timeout, $mdDialog, uploadService, files, peopleService, dialogService, $stateParams, $rootScope, $mdToast, people, $state, socket, fileService, notificationService) {
+angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $timeout, $mdDialog, uploadService, files, peopleService, dialogService, $stateParams, $rootScope, $mdToast, people, $state, socket, fileService, notificationService, activities) {
     $scope.people = people;
 	$scope.files = files;
+    $scope.activities = activities;
 	$scope.uploadFile = {
 		tags:[],
-		members:[]
+		members:[],
+        selectedEvent: ($rootScope.selectedEvent) ? $rootScope.selectedEvent : null
 	};
 	
 	$scope.showFilter = false;
@@ -12,7 +14,7 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
     /*check create new task input change move to next step*/
     $scope.next = function() {
         if ($scope.step==1) {
-            if (!$scope.uploadFile.file || !$scope.uploadFile.file.filename || $scope.uploadFile.file.filename.trim().length === 0) {
+            if (!$scope.uploadFile.selectedEvent || !$scope.uploadFile.file || !$scope.uploadFile.file.filename || $scope.uploadFile.file.filename.trim().length === 0) {
                 dialogService.showToast("Check Your Input");
             } else {
                 $scope.step += 1;
@@ -254,9 +256,9 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
 	};
 	
 	/*Open create new file modal*/
-	$scope.showNewFileModal = function($event) {
+	$scope.showNewFileModal = function() {
 		$mdDialog.show({
-		  	targetEvent: $event,
+		  	// targetEvent: $event,
 	      	controller: 'projectFilesCtrl',
 	      	resolve: {
 		      	files: ["$stateParams", "fileService",function($stateParams, fileService) {
@@ -264,6 +266,9 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
 		      	}],
                 people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
                     return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
+                }],
+                activities: ["activityService", "$stateParams", function(activityService, $stateParams) {
+                    return activityService.me({id: $stateParams.id}).$promise;
                 }]
 		    },
 	      	templateUrl: 'app/modules/project/project-files/new/project-files-new.html',
@@ -271,6 +276,14 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
 	      	clickOutsideToClose: false
 	    });
 	};
+
+    $scope.attachEventItem = $rootScope.attachEventItem;
+    if ($scope.attachEventItem) {
+        $scope.attachEventItem = $rootScope.attachEventItem;
+        $rootScope.selectedEvent = $scope.attachEventItem.selectedEvent;
+        $rootScope.attachEventItem = null;
+        $scope.showNewFileModal();
+    }
 	
     /*Close create new file modal*/
 	$scope.cancelNewFileModal = function() {

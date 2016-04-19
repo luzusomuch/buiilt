@@ -3,6 +3,7 @@
 var User = require('./../../models/user.model');
 var Team = require('./../../models/team.model');
 var Thread = require('./../../models/thread.model');
+var Activity = require('./../../models/activity.model');
 var Task = require('./../../models/task.model');
 var File = require('./../../models/file.model');
 var Notification = require('./../../models/notification.model');
@@ -165,38 +166,56 @@ exports.create = function(req,res) {
         var mainItem = getMainItem(req.body.belongToType);
         thread.save(function(err){
             if (err) {return res.send(500,err);}
-            if (req.body.belongTo) {
-                mainItem.findById(req.body.belongTo, function(err, main) {
-                    if (err || !main) {
-                        thread.remove(function(err) {
-                            return res.send(500, err);
+            Activity.findById(data.selectedEvent, function(err, activity) {
+                if (err) {
+                    thread.remove(function() {
+                        return res.send(500,err);
+                    });
+                } else if (!activity) {
+                    thread.remove(function() {
+                        return res.send(404);
+                    });
+                }
+                activity.relatedItem.push({type: "thread", item: {_id: thread._id}});
+                activity.save(function(err) {
+                    if (err) {
+                        thread.remove(function(){
+                            return res.send(500,err);
                         });
-                    } else {
-                        main.activities.push({
-                            user: req.user._id,
-                            type: "related-thread",
-                            createdAt: new Date(),
-                            element: {
-                                item: thread._id,
-                                name: thread.name,
-                                related: true
+                    } else if (req.body.belongTo) {
+                        mainItem.findById(req.body.belongTo, function(err, main) {
+                            if (err || !main) {
+                                thread.remove(function(err) {
+                                    return res.send(500, err);
+                                });
+                            } else {
+                                main.activities.push({
+                                    user: req.user._id,
+                                    type: "related-thread",
+                                    createdAt: new Date(),
+                                    element: {
+                                        item: thread._id,
+                                        name: thread.name,
+                                        related: true
+                                    }
+                                });
+                                data.members.push(req.user._id);
+                                main.relatedItem.push({
+                                    type: "thread",
+                                    item: {_id: thread._id},
+                                    members: data.members
+                                });
+                                main.save(function(err) {
+                                    if (err) {return res.send(500,err);}
+                                    populateNewThread(thread, res, req);                
+                                });
                             }
                         });
-                        data.members.push(req.user._id);
-                        main.relatedItem.push({
-                            type: "thread",
-                            item: {_id: thread._id},
-                            members: data.members
-                        });
-                        main.save(function(err) {
-                            if (err) {return res.send(500,err);}
-                            populateNewThread(thread, res, req);                
-                        });
+                    } else {
+                        populateNewThread(thread, res, req);
                     }
                 });
-            } else {
-                populateNewThread(thread, res, req);
-            }
+            });
         });
     });
 };

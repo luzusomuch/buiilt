@@ -4,6 +4,7 @@ var User = require("./../models/user.model");
 
 exports.validateCreate = function (req, cb) {
   req.checkBody('name', 'Thread name is required').notEmpty();
+  req.checkBody('selectedEvent', 'Selected event is required').notEmpty();
   var members = [];
   var notMembers = [];
   async.each(req.body.members, function(member, cb) {
@@ -13,7 +14,7 @@ exports.validateCreate = function (req, cb) {
       else {members.push(user._id);cb();}
     })
   }, function() {
-    return cb(req.validationErrors(), _.assign(_.pick(req.body, 'name'),{
+    return cb(req.validationErrors(), _.assign(_.pick(req.body, 'name', 'selectedEvent'),{
       members : members,
       notMembers: notMembers
     }));

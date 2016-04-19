@@ -282,6 +282,9 @@ exports.upload = function(req, res){
             element: {type: data.type}
         });
         if (data.file) {
+            if (!data.selectedEvent) {
+                return res.send(422, {msg: "Selected Event Is Require"});
+            }
             file.name = data.file.filename;
             file.path = data.file.url;
             file.key = data.file.key;

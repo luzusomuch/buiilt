@@ -9,6 +9,18 @@
 		<md-dialog-content>
 			<div class="md-dialog-content" layout="column" layout-padding>
 				<div layout="column" ng-show="step==1">
+					<p class="md-body-2">Select An Event In List Below:</p>
+					<div layout="row">
+						<md-input-container flex>
+							<label for="">Events List</label>
+							<md-select ng-model="uploadFile.selectedEvent">
+								<md-option ng-repeat="activity in activities" ng-show="!activity.isMilestone" ng-value="activity._id">{{activity.name}}</md-option>
+							</md-select>
+						</md-input-container>
+					</div>
+				</div>
+
+				<div layout="column" ng-show="step==1">
 					<p class="md-body-2">Select the document that you would like to upload:</p>
 	                <div layout="row" layout-align="center center" class="tagcloud-selection">
 	                    <input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/>
