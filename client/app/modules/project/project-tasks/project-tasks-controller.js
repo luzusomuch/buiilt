@@ -1,12 +1,14 @@
-angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, $scope, $mdDialog, tasks, taskService, $mdToast, $stateParams, $state, peopleService, people, socket, notificationService) {
-	$scope.tasks = tasks;
+angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, $scope, $mdDialog, tasks, taskService, $mdToast, $stateParams, $state, peopleService, people, socket, notificationService, dialogService, activities) {
+	$scope.dialogService = dialogService;
+    $scope.tasks = tasks;
+    $scope.activities = activities;
 	$scope.showFilter = false;
 
     $scope.step = 1;
     /*check create new task input change move to next step*/
     $scope.next = function() {
         if ($scope.step==1) {
-            if (!$scope.task.description || $scope.task.description.trim().length === 0 || !$scope.task.dateEnd) {
+            if (!$scope.task.selectedEvent || !$scope.task.description || $scope.task.description.trim().length === 0 || !$scope.task.dateEnd) {
                 dialogService.showToast("Check Your Input");
             } else {
                 $scope.step += 1;
@@ -298,9 +300,9 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
     // end filter section
 
     /*Show create new task modal*/
-	$scope.showNewTaskModal = function($event) {
+	$scope.showNewTaskModal = function() {
 		$mdDialog.show({
-		  	targetEvent: $event,
+		  	// targetEvent: $event,
 	      	controller: "projectTasksCtrl",
 	      	resolve: {
 		      	tasks: ["taskService", "$stateParams", function(taskService, $stateParams) {
@@ -308,6 +310,9 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
 		      	}],
 		      	people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
                     return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
+                }],
+                activities: ["activityService", "$stateParams", function(activityService, $stateParams) {
+                    return activityService.me({id: $stateParams.id}).$promise;
                 }]
 		    },
 	      	templateUrl: 'app/modules/project/project-tasks/new/project-tasks-new.html',
@@ -316,7 +321,18 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
 	    });
 	};
 
-	$scope.task = {};
+    /*Receive selected event ID when create new item in calendar if existed*/
+    $scope.attachEventItem = $rootScope.attachEventItem;
+    if ($scope.attachEventItem) {
+        $scope.attachEventItem = $rootScope.attachEventItem;
+        $rootScope.selectedEvent = $scope.attachEventItem.selectedEvent;
+        $rootScope.attachEventItem = null;
+        $scope.showNewTaskModal();
+    }
+
+    $scope.task = {
+        selectedEvent: ($rootScope.selectedEvent) ? $rootScope.selectedEvent : null
+    };
 	$scope.minDate = new Date();
     /*Create new task with valid project members list
     then call mixpanel to track current user has created new task
@@ -325,7 +341,7 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
 		if (form.$valid) {
 		    $scope.task.members = _.filter($scope.projectMembers, {select: true});
 			$scope.task.type = "task-project";
-			if ($scope.task.members.length > 0) {
+			if ($scope.task.members.length > 0 && $scope.task.selectedEvent) {
 				taskService.create({id: $stateParams.id}, $scope.task).$promise.then(function(res) {
 					$scope.cancelNewTaskModal();
 					$scope.showToast("New Task Has Been Created Successfully.");
@@ -335,6 +351,7 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
 					mixpanel.track("New Task Created");
 					
                     $rootScope.$emit("Task.Inserted", res);
+                    $rootScope.selectedEvent = null;
 					$state.go("project.tasks.detail", {id: res.project._id, taskId: res._id});
 				}, function(err) {$scope.showToast("There Has Been An Error...");});
 			} else {

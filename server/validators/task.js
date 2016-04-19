@@ -9,8 +9,8 @@ var User = require("./../models/user.model");
  * @returns {unresolved}validate for creation
  */
 exports.validateCreate = function (req, cb) {
-    // req.checkBody('name', 'Task title is required').notEmpty();
     req.checkBody('description', 'Task description is required').notEmpty();
+    req.checkBody('selectedEvent', 'Selected event is required').notEmpty();
     var members = [];
     var notMembers = [];
     async.each(req.body.members, function(member, cb) {
@@ -20,7 +20,7 @@ exports.validateCreate = function (req, cb) {
             else {members.push(user._id);cb();}
         })
     }, function() {
-        return cb(req.validationErrors(), _.assign(_.pick(req.body, 'dateEnd'),{
+        return cb(req.validationErrors(), _.assign(_.pick(req.body, 'dateEnd', 'selectedEvent'),{
             members : members,
             notMembers: notMembers,
             description: req.body.description,

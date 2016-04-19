@@ -3,6 +3,7 @@
 var User = require('./../../models/user.model');
 var Team = require('./../../models/team.model');
 var Task = require('./../../models/task.model');
+var Activity = require('./../../models/activity.model');
 var Thread = require('./../../models/thread.model');
 var Notification = require('./../../models/notification.model'),
     Project = require('./../../models/project.model'),
@@ -196,45 +197,56 @@ exports.create = function(req,res) {
         var mainItem = getMainItem(req.body.belongToType);
         task.save(function(err) {
             if (err) {return res.send(500,err);}
-            else if (req.body.belongTo) {
-                mainItem.findById(req.body.belongTo, function(err, main) {
-                    if (err || !main) {
+            Activity.findById(data.selectedEvent, function(err, activity) {
+                if (err) {
+                    task.remove(function() {
+                        return res.send(500,err);
+                    });
+                } else if (!activity) {
+                    task.remove(function() {
+                        return res.send(404);
+                    });
+                }
+                activity.relatedItem.push({type: "task", item: {_id: task._id}});
+                activity.save(function(err) {
+                    if (err) {
                         task.remove(function() {
-                            return res.send(500);
+                            return res.send(500,err);
                         });
-                    } else {
-                        main.activities.push({
-                            user: req.user._id,
-                            type: "related-task",
-                            createdAt: new Date(),
-                            element: {
-                                item: task._id,
-                                name: task.description,
-                                related: true
+                    } else if (req.body.belongTo) {
+                        mainItem.findById(req.body.belongTo, function(err, main) {
+                            if (err || !main) {
+                                task.remove(function() {
+                                    return res.send(500);
+                                });
+                            } else {
+                                main.activities.push({
+                                    user: req.user._id,
+                                    type: "related-task",
+                                    createdAt: new Date(),
+                                    element: {
+                                        item: task._id,
+                                        name: task.description,
+                                        related: true
+                                    }
+                                });
+                                data.members.push(req.user._id);
+                                main.relatedItem.push({
+                                    type: "task",
+                                    item: {_id: task._id},
+                                    members: data.members
+                                });
+                                main.save(function(err) {
+                                    if (err) {return res.send(500,err);}
+                                    populateNewTask(task, res, req);
+                                });
                             }
                         });
-                        data.members.push(req.user._id);
-                        main.relatedItem.push({
-                            type: "task",
-                            item: {_id: task._id},
-                            members: data.members
-                        });
-                        main.save(function(err) {
-                            if (err) {return res.send(500,err);}
-                            // if (req.body.belongToType === "thread") 
-                            //     populateThread(main, res);
-                            // else if (req.body.belongToType === "task") {
-                            //     populateNewTask(main, res, req);
-                            // } else if (req.body.belongToType === "file") {
-                            //     populateFile(main, res);
-                            // }
-                            populateNewTask(task, res, req);
-                        });
+                    } else {
+                        populateNewTask(task, res, req);
                     }
                 });
-            } else {
-                populateNewTask(task, res, req);
-            }
+            });
         });
     });
 };

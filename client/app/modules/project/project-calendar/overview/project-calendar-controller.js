@@ -17,7 +17,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 if (data.type==="event") {
                     $mdDialog.show({
                         // targetEvent: $event,
-                        controller: ["$scope", "dialogService", "activity", function($scope, dialogService, activity) {
+                        controller: ["$rootScope", "$scope", "dialogService", "activity", "$stateParams", "$state", function($rootScope, $scope, dialogService, activity, $stateParams, $state) {
                             $scope.event = data;
                             $scope.dialogService = dialogService;
                             $scope.tasks = [];
@@ -32,6 +32,29 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                                     $scope.files.push(item.item);
                                 }
                             });
+
+                            $scope.viewAll = function(type) {
+                                dialogService.closeModal();
+                                if (type==="task") {
+                                    $state.go("project.tasks.all", {id: $stateParams.id});
+                                } else if (type==="thread") {
+                                    $state.go("project.messages.all", {id: $stateParams.id});
+                                } else if (type==="file") {
+                                    $state.go("project.files.all", {id: $stateParams.id});
+                                }
+                            };
+
+                            $scope.attachItem = function(type) {
+                                $rootScope.attachEventItem = {type: type, selectedEvent: data._id};
+                                dialogService.closeModal();
+                                if (type==="task") {
+                                    $state.go("project.tasks.all", {id: $stateParams.id});
+                                } else if (type==="thread") {
+                                    $state.go("project.messages.all", {id: $stateParams.id});
+                                } else if (type==="file") {
+                                    $state.go("project.files.all", {id: $stateParams.id});
+                                }
+                            };
                         }],
                         resolve: {
                             activity: ["activityService", "$stateParams", function(activityService, $stateParams) {

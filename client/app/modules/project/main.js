@@ -10,6 +10,9 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
     resolve: {
       people: function(peopleService, $stateParams) {
         return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
+      },
+      activities: function(activityService, $stateParams) {
+        return activityService.me({id: $stateParams.id}).$promise;
       }
     }
   })
@@ -25,9 +28,6 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
     controller: "projectCalendarCtrl",
     authenticate: true,
     resolve: {
-      activities: function($stateParams, activityService) {
-        return activityService.me({id: $stateParams.id}).$promise;
-      },
       tasks: function(taskService, $stateParams) {
         return taskService.getProjectTask({id: $stateParams.id}).$promise;
       }
@@ -41,10 +41,7 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
     resolve: {
       activity: function($stateParams, activityService) {
         return activityService.get({id: $stateParams.activityId}).$promise;
-      },
-      activities: function($stateParams, activityService) {
-        return activityService.me({id: $stateParams.id}).$promise;
-      },
+      }
     }
   })
   
@@ -107,7 +104,6 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
     url: '/tasks',
 	  abstract: true,
     templateUrl: '/app/modules/project/project-tasks/project-tasks.html',
-    controller: 'projectTasksCtrl',
     authenticate : true,
     resolve: {
       tasks: function(taskService, $stateParams) {
