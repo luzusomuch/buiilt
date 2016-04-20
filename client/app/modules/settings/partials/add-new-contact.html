@@ -1,4 +1,4 @@
-<md-dialog aria-label="Add New Contact" flex="70">
+<md-dialog aria-label="Add New Contact" flex="50">
     <form ng-submit="addContact()" name="form">
         <md-toolbar>
             <div class="md-toolbar-tools">
@@ -8,6 +8,7 @@
         
         <md-dialog-content>
             <div class="md-dialog-content" layout="column" layout-padding>
+				
                 <div layout="column" ng-show="step==1">
                     <p class="md-body-2">Enter email and phone number to search</p>
                     <div layout="row">
@@ -19,20 +20,28 @@
                             <label for="">Phone Number</label>
                             <input type="text" name="phoneNumber" ng-model="phoneNumber" ng-pattern="/^[0-9]{1,15}$/">
                         </md-input-container>
-                        <div flex="20">
-                            <md-button ng-click="checkUserInfo(email, phoneNumber)" class="md-fab md-primary" aria-label="Check Entered Information">
-                                <md-tooltip md-direction="left">Check Entered Information</md-tooltip>
-                                <md-icon class="material-icons">check</md-icon>
-                            </md-button>
-                            <md-button ng-show="searchUser=='empty'" ng-click="createNewContact(email, phoneNumber)" class="md-fab md-primary" aria-label="Create New Contact">
-                                <md-tooltip md-direction="left">Create New Contact</md-tooltip>
-                                <md-icon class="material-icons">add</md-icon>
-                            </md-button>
+                        <div flex>
+                            <md-button ng-click="checkUserInfo(email, phoneNumber)" class="md-primary" aria-label="Check Entered Information">Search</md-button>
+                            <md-button ng-show="searchUser=='empty'" ng-click="createNewContact(email, phoneNumber)" class="md-primary" aria-label="Create New Contact">Create New Contact</md-button>
                         </div>
                     </div>
+					
                     <p class="validate-message" ng-show="searchUser=='empty'">Couldn't found any results</p>
                     <p class="validate-message" ng-show="form.phoneNumber.$error.pattern">Not a valid number</p>
+					
                     <div layout="row" ng-show="searchUser.email">
+						
+						<md-radio-group ng-model="">
+							<div ng-repeat='' class="row">
+						        <div flex layout='row' layout-padding layout-align="start center" >
+						        	<md-radio-button flex ng-value="{{searchUser.name}}" class="md-primary" >{{searchUser.name}}</md-radio-button>
+									<p flex>{{searchUser.email}}</p> 
+									<p flex>{{searchUser.phoneNumber}}</p>
+						        </div>
+						    </div>
+						</md-radio-group>
+					    <md-divider></md-divider>
+						
                         <md-list flex>
                             <md-subheader class="md-no-sticky">Search Result</md-subheader>
                             <md-list-item class="md-3-line">
@@ -41,14 +50,12 @@
                                     <p><strong>Email: </strong>{{searchUser.email}} - <strong>Phone Number: </strong> {{searchUser.phoneNumber}}</p>
                                     <p><strong>Team Name: </strong> {{searchUser.teamName}}</p>
                                 </div>
-                                <md-button ng-click="createNewContact(searchUser.email, searchUser.phoneNumber)" class="md-fab md-primary" aria-label="Add To Contact">
-                                    <md-tooltip md-direction="left">Add To Contact</md-tooltip>
-                                    <md-icon class="material-icons">add</md-icon>
-                                </md-button>
+                                <md-button ng-click="createNewContact(searchUser.email, searchUser.phoneNumber)" class="md-primary" aria-label="Add To Contact">Add This Contact</md-button>
                                 <md-divider></md-divider>
                             </md-list-item>
                         </md-list>
                     </div>
+					
                 </div>
 
                 <div layout="column" ng-show="step==2">

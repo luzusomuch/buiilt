@@ -21,18 +21,11 @@
         <div>
             <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-list">
                 <md-fab-trigger>
-                    <md-button aria-label="Actions" class="md-fab md-primary">
-                        <md-tooltip md-direction="left">Actions...</md-tooltip>
+                    <md-button aria-label="Actions" class="md-fab md-primary" ng-click="showModal($event, 'add-new-contact.html')">
+                        <md-tooltip md-direction="left">Add a New Contact</md-tooltip>
                         <md-icon class="material-icons" >add</md-icon>
                     </md-button>
                 </md-fab-trigger>
-
-                <md-fab-actions>
-                    <md-button aria-label="Edit Company Details" class="md-fab md-raised md-mini md-primary" ng-click="showModal($event, 'add-new-contact.html')">
-                        <md-tooltip md-direction="left">Add New Contact</md-tooltip>
-                        <md-icon class="material-icons">import_contacts</md-icon>
-                    </md-button>
-                </md-fab-actions>
             </md-fab-speed-dial>
         </div>
     </div>
