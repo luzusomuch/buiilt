@@ -5,17 +5,17 @@
                 <h5 layout-margin><span>{{ project.name }} Calendar</span></h5>
                 <span flex></span>
                 <div layout="row">
-                    <md-input-container>
-                        <label for="">Filter</label>
-                        <md-select ng-model="selectedFilters" md-on-close="clearSearchTeam()" multiple>
-                            <md-select-header>
-                            </md-select-header>
-                            <md-optgroup>
-                                <md-option value="showTask">Task</md-option>
-                                <md-option value="showEvent">Event</md-option>
-                            </md-optgroup>
-                        </md-select>
-                    </md-input-container>
+                    <md-menu>
+                        <md-button aria-label="Filter" ng-click="$mdOpenMenu($event)">Filter</md-button>
+                        <md-menu-content width="3">
+                            <md-menu-item>
+                                <md-checkbox class="md-primary" md-prevent-menu-close="md-prevent-menu-close" ng-checked="showTask" ng-click="changeFilter('task')">Task</md-checkbox>
+                            </md-menu-item>
+                            <md-menu-item>
+                                <md-checkbox class="md-primary" md-prevent-menu-close="md-prevent-menu-close" ng-checked="showEvent" ng-click="changeFilter('event')">Event</md-checkbox>
+                            </md-menu-item>
+                        </md-menu-content>
+                    </md-menu>
                 </div>
 			</div>
         

@@ -2,23 +2,15 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($element,
     $scope.dialogService = dialogService;
     $scope.showTask = true;
     $scope.showEvent = true;
-
-    $scope.selectedFilters = ["showTask", "showEvent"];
-    $scope.$watch("selectedFilters", function(value) {
-        if (value.length===0) {
-            $scope.showTask = false;
-            $scope.showEvent = false;
-        } else if (value.length === 2) {
-            $scope.showTask = true;
-            $scope.showEvent = true;
-        } else if (value.length === 1) {
-            if (value[0]==="showTask") 
-                $scope.showEvent = false;
-            else 
-                $scope.showTask = false;
+    
+    // Filter showing task or event in calendar
+    $scope.changeFilter = function(type) {
+        if (type==="task") {
+            $scope.showTask=!$scope.showTask;
+        } else if (type==="event") {
+            $scope.showEvent=!$scope.showEvent;
         }
-
-    });
+    };
 
     /*config fullcalendar*/
     $scope.config = {
