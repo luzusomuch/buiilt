@@ -4,6 +4,26 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
 	$scope.threads = threads;
     $scope.activities = activities;
     $scope.dialogService = dialogService;
+
+    $scope.changeFilter = function(index) {
+        $scope.events[index].select = !$scope.events[index].select;
+        $scope.selectedFilterEventId = ($scope.events[index].select) ? $scope.events[index]._id : null;
+    };
+
+    /*Get events list for filter*/
+    function repairForEventsFilter() {
+        $scope.events = [];
+        _.each($scope.threads, function(thread) {
+            if (thread.event) {
+                var index = _.findIndex($scope.activities, function(act) {
+                    return thread.event==act._id;
+                });
+                $scope.events.push($scope.activities[index]);
+            }
+        });
+        _.uniq($scope.events, "_id");
+    };
+    repairForEventsFilter();
 	
 	$scope.showFilter = false;
 
@@ -135,44 +155,49 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
 
     /*Search thread depend on input value*/
     $scope.search = function(thread) {
-        if ($scope.name && $scope.name.length > 0) {
-            var found = false;
-            if (thread.name.toLowerCase().indexOf($scope.name) > -1 || thread.name.indexOf($scope.name) > -1) {
-                found = true
+        if ($scope.selectedFilterEventId && thread.event && !$scope.showArchived) {
+            if ($scope.selectedFilterEventId==thread.event && !thread.isArchive) {
+                return true;
             }
-            return found;
+            return false;
+        } else if ($scope.selectedFilterEventId && thread.event && $scope.showArchived) {
+            if ($scope.selectedFilterEventId==thread.event && thread.isArchive) {
+                return true;
+            }
+            return false;
+        } else if ($scope.name && $scope.name.length > 0) {
+            if (thread.name.toLowerCase().indexOf($scope.name) > -1 || thread.name.indexOf($scope.name) > -1) {
+                return true;
+            }
+            return false;
         } else if ($scope.recipient && $scope.recipient.length > 0) {
-            var found = false;
             if (thread.members && thread.members.length > 0) {
                 _.each(thread.members, function(member) {
                     if ((member.name.toLowerCase().indexOf($scope.recipient) > -1 || member.name.indexOf($scope.recipient) > -1) || (member.email.toLowerCase().indexOf($scope.recipient) > -1 || member.email.indexOf($scope.recipient) > -1)) {
-                        found = true;
+                        return true;
                     }
                 });
             }
             if (thread.notMembers && thread.notMembers.length > 0) {
                 _.each(thread.notMembers, function(email) {
                     if (email.toLowerCase().indexOf($scope.recipient) > -1) {
-                        found = true;
+                        return true;
                     }
                 });
             }
-            return found;
+            return false;
         } else if ($scope.reply && $scope.reply.length > 0) {
-            var found = false;
             _.each(thread.messages, function(message) {
                 if (message.text.toLowerCase().indexOf($scope.reply) > -1 || message.text.indexOf($scope.reply) > -1) {
-                    found = true;
+                    return true;
                 }
             });
-            return found;
-        } else if ($scope.showArchived) {
-            var found = (thread.isArchive) ? true: false;
-            return found;
-        } else {
-            var found = (!thread.isArchive) ? true : false;
-            return found;
+        } else if ($scope.showArchived && !$scope.selectedFilterEventId) {
+            return (thread.isArchive) ? true: false;
+        } else if(!$scope.showArchived && !$scope.selectedFilterEventId) {
+            return (!thread.isArchive) ? true : false;
         }
+        return false;
     };
 
     /*Get project members list*/

@@ -73,7 +73,7 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
     url: '/messages',
 	  abstract: true,
     templateUrl: '/app/modules/project/project-messages/project-messages.html',
-    controller: 'projectMessagesCtrl',
+    // controller: 'projectMessagesCtrl',
     authenticate : true,
     resolve: {
       threads: function($stateParams, messageService) {
