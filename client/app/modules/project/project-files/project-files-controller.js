@@ -7,6 +7,27 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
 		members:[],
         selectedEvent: ($rootScope.selectedEvent) ? $rootScope.selectedEvent : null
 	};
+    $scope.selectedFilterEventList = [];
+
+    $scope.changeFilter = function(index) {
+        $scope.events[index].select = !$scope.events[index].select;
+        $scope.selectedFilterEventList = _.filter($scope.events, {select: true});
+    };
+
+    /*Get events list for filter*/
+    function repairForEventsFilter() {
+        $scope.events = [];
+        _.each($scope.files, function(file) {
+            if (file.event) {
+                var index = _.findIndex($scope.activities, function(act) {
+                    return file.event==act._id;
+                });
+                $scope.events.push($scope.activities[index]);
+            }
+        });
+        $scope.events = _.uniq($scope.events, "_id");
+    };
+    repairForEventsFilter();
 	
 	$scope.showFilter = false;
 
@@ -49,6 +70,7 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
         if (data.project._id.toString()===$stateParams.id.toString()) {
             data.__v=1;
             $scope.files.push(data);
+            repairForEventsFilter();
         }
     });
 
@@ -83,6 +105,7 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
     /*Receive when owner created file*/
     var listenerCleanFnPush = $rootScope.$on("File.Inserted", function(event, data) {
         $scope.files.push(data);
+        repairForEventsFilter();
     });
 
     /*Receive when file updated then update notification of file increase 1*/
@@ -114,7 +137,23 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
 
     $scope.search = function(file) {
         var found = false;
-        if (($scope.name && $scope.name.length > 0) || ($scope.recipient && $scope.recipient.length > 0)) {
+        if ($scope.selectedFilterEventList.length > 0 && file.event && !$scope.showArchived) {
+            _.each($scope.selectedFilterEventList, function(item) {
+                if (item._id==file.event && !file.isArchive) {
+                    found = true;
+                    return false;
+                }
+            });
+            return found;
+        } else if ($scope.selectedFilterEventList.length > 0 && file.event && $scope.showArchived) {
+            _.each($scope.selectedFilterEventList, function(item) {
+                if (item._id==file.event && file.isArchive) {
+                    found = true
+                    return false;
+                }
+            });
+            return found;
+        } else if (($scope.name && $scope.name.length > 0) || ($scope.recipient && $scope.recipient.length > 0)) {
             if ($scope.name) {
                 if (file.name.toLowerCase().indexOf($scope.name) > -1 || file.name.indexOf($scope.name) > -1) {
                     found = true;
@@ -138,13 +177,14 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
                 }
             })
             return found;
-        } else if ($scope.showArchived) {
+        } else if ($scope.showArchived && $scope.selectedFilterEventList.length ===0) {
             var found = (file.isArchive) ? true: false;
             return found;
-        } else {
+        } else if (!$scope.showArchived && $scope.selectedFilterEventList.length ===0){
             var found = (!file.isArchive) ? true : false;
             return found;
         }
+        return false;
     };
     // end filter section
 

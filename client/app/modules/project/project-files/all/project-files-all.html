@@ -7,6 +7,17 @@
 				<md-icon class="material-icons" style="margin-top: 6px;">search</md-icon>
 				<input type="text" name="fileName" ng-model="name" placeholder="Search by file name...">
 			</md-input-container>
+
+			<div layout="row">
+                <md-menu>
+                    <md-button aria-label="Filter" ng-click="$mdOpenMenu($event)">Filter By Events</md-button>
+                    <md-menu-content width="6">
+                        <md-menu-item ng-repeat="ev in events track by $index">
+                            <md-checkbox class="md-primary" md-prevent-menu-close ng-checked="ev.select" ng-click="changeFilter($index)">{{ev.name}}</md-checkbox>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+            </div>
 			
 			<div>
 				<md-button class="md-icon-button more-filter-button" ng-click="showFilter=!showFilter">

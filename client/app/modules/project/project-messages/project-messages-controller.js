@@ -158,55 +158,58 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
 
     /*Search thread depend on input value*/
     $scope.search = function(thread) {
+        var found = false;
         if ($scope.selectedFilterEventList.length > 0 && thread.event && !$scope.showArchived) {
-            var found = false;
             _.each($scope.selectedFilterEventList, function(item) {
                 if (item._id==thread.event && !thread.isArchive) {
-                    var found = true;
+                    found = true;
                     return false;
                 }
             });
             return found;
         } else if ($scope.selectedFilterEventList.length > 0 && thread.event && $scope.showArchived) {
-            var found = false;
             _.each($scope.selectedFilterEventList, function(item) {
                 if (item._id==thread.event && thread.isArchive) {
-                    var found = true;
+                    found = true;
                     return false;
                 }
             });
             return found;
         } else if ($scope.name && $scope.name.length > 0) {
             if (thread.name.toLowerCase().indexOf($scope.name) > -1 || thread.name.indexOf($scope.name) > -1) {
-                return true;
+                found = true;
             }
-            return false;
+            return found;
         } else if ($scope.recipient && $scope.recipient.length > 0) {
             if (thread.members && thread.members.length > 0) {
                 _.each(thread.members, function(member) {
                     if ((member.name.toLowerCase().indexOf($scope.recipient) > -1 || member.name.indexOf($scope.recipient) > -1) || (member.email.toLowerCase().indexOf($scope.recipient) > -1 || member.email.indexOf($scope.recipient) > -1)) {
-                        return true;
+                        found = true;
                     }
                 });
             }
             if (thread.notMembers && thread.notMembers.length > 0) {
                 _.each(thread.notMembers, function(email) {
                     if (email.toLowerCase().indexOf($scope.recipient) > -1) {
-                        return true;
+                        found = true;
                     }
                 });
             }
-            return false;
+            return found;
         } else if ($scope.reply && $scope.reply.length > 0) {
             _.each(thread.messages, function(message) {
                 if (message.text.toLowerCase().indexOf($scope.reply) > -1 || message.text.indexOf($scope.reply) > -1) {
-                    return true;
+                    found = true;
+                    return false;
                 }
             });
+            return found
         } else if ($scope.showArchived && $scope.selectedFilterEventList.length===0) {
-            return (thread.isArchive) ? true: false;
-        } else if(!$scope.showArchived && !$scope.selectedFilterEventList.length===0) {
-            return (!thread.isArchive) ? true : false;
+            found = (thread.isArchive) ? true: false;
+            return found;
+        } else if(!$scope.showArchived && $scope.selectedFilterEventList.length===0) {
+            found = (!thread.isArchive) ? true : false;
+            return found;
         }
         return false;
     };
