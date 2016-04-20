@@ -80,7 +80,7 @@ var TaskSchema = new Schema({
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
     // This is our latest version, thread must belong to an event
-    event: {type: Schema.Types.ObjectId, ref: "Activity", required: true}
+    event: {type: Schema.Types.ObjectId, ref: "Activity"}
 },{
     strict: true,
     minimize: false

@@ -44,7 +44,10 @@ exports.validateUpdate = function (req, cb) {
                 notMembers: notMembers
             }));
         });
-        
+    } else if (req.body.editType==="change-date-time") {
+        req.checkBody('dateStart', 'Task date start is required').notEmpty();
+        req.checkBody('dateEnd', 'Task date end is required').notEmpty();
+        return cb(req.validationErrors(), _.assign(_.pick(req.body, 'dateStart', 'dateEnd')));
     } else {
         // req.checkBody('name', 'Task title is required').notEmpty();
         req.checkBody('description', 'Task description is required').notEmpty();

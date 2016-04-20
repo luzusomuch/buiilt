@@ -1,4 +1,5 @@
-angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout, $q, $rootScope, $scope, $mdDialog, dialogService, $stateParams, socket, $state, activityService, people, activities, tasks, uiCalendarConfig) {
+angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout, $q, $rootScope, $scope, $mdDialog, dialogService, $stateParams, socket, $state, activityService, people, activities, tasks, taskService) {
+    $rootScope.title = "Calendar View";
     $scope.dialogService = dialogService;
     $scope.showTask = true;
     $scope.showEvent = true;
@@ -22,6 +23,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 right: "today, prev, next"
             },
             selectable: true,
+            editable: true,
             eventClick: function(data) {
                 if (data.type==="event") {
                     $mdDialog.show({
@@ -76,6 +78,33 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                     });
                 } else if (data.type==="task"){
                     $state.go("project.tasks.detail", {id: $stateParams.id, taskId: data._id});
+                }
+            },
+            eventDrop: function(event, delta) {
+                console.log(event);
+                if (event.type==="task") {
+                    var updateTask = {
+                        editType:"change-date-time",
+                        dateStart: new Date(event.start),
+                        dateEnd: new Date(event.end),
+                        _id: event._id
+                    }
+                    taskService.update({id: updateTask._id}, updateTask).$promise.then(function(res) {
+                        dialogService.showToast("Update Task Date Successfully");
+                    }, function(err) {dialogService.showToast("Error");});
+                } else if (event.type==="event") {
+                    event.date = {
+                        start: new Date(event.start),
+                        end: new Date(event.end)
+                    };
+                    var updateEvent = {
+                        editType:"change-date-time",
+                        date: event.date,
+                        _id: event._id
+                    };
+                    activityService.update({id: updateEvent._id}, updateEvent).$promise.then(function(res) {
+                        dialogService.showToast("Update Event Date Time Successfully");
+                    }, function(err) {dialogService.showToast("Error");});
                 }
             }
         }

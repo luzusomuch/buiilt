@@ -40,7 +40,7 @@ function populateTask(task, res, req){
             room: task._id.toString(),
             data: task
         });
-        var owners = _.clone(task.members);
+        var owners = (task.members) ? _.clone(task.members) : [];
         owners.push(task.owner);
         _.remove(owners, {_id: req.user._id});
         var uniqId = mongoose.Types.ObjectId();
@@ -295,6 +295,9 @@ exports.update = function(req,res) {
                 } else if (req.body.editType==="insert-note") {
                     activity.element.content = req.body.note;
                     task.markModified("insertNote")
+                } else if (req.body.editType==="change-date-time") {
+                    task.dateStart = data.dateStart;
+                    task.dateEnd = data.dateEnd;
                 }
                 task.activities.push(activity);
                 task._editUser = user;
