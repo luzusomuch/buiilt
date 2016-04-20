@@ -1,7 +1,18 @@
-angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout, $q, $rootScope, $scope, $mdDialog, dialogService, $stateParams, socket, $state, activityService, people, activities, tasks, uiCalendarConfig) {
+angular.module('buiiltApp').controller('projectCalendarCtrl', function($element, $timeout, $q, $rootScope, $scope, $mdDialog, dialogService, $stateParams, socket, $state, activityService, people, activities, tasks, uiCalendarConfig) {
     $scope.dialogService = dialogService;
     $scope.showTask = true;
     $scope.showEvent = true;
+
+    $scope.vegetables = ['Corn' ,'Onions' ,'Kale' ,'Arugula' ,'Peas', 'Zucchini'];
+      $scope.searchTerm;
+      $scope.clearSearchTerm = function() {
+        $scope.searchTerm = '';
+      };
+      // The md-select directive eats keydown events for some quick select
+      // logic. Since we have a search input here, we don't need that logic.
+      $element.find('input').on('keydown', function(ev) {
+          ev.stopPropagation();
+      });
 
     /*config fullcalendar*/
     $scope.config = {

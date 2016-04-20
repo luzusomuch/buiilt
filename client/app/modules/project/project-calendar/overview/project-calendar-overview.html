@@ -4,14 +4,21 @@
             <div class="md-toolbar-tools">
                 <h5 layout-margin><span>{{ project.name }} Calendar</span></h5>
                 <span flex></span>
-                <md-button ng-class="{'md-primary': showTask}" ng-click="showTask=!showTask; convertAllToCalendarView()" aria-label="Show Task">
-                    <md-tooltip md-direction="bottom">Show Task</md-tooltip>
-                    <md-icon class="material-icons">done</md-icon>
-                </md-button>
-                <md-button ng-class="{'md-primary': showEvent}" ng-click="showEvent=!showEvent; convertAllToCalendarView()" aria-label="Show Event">
-                    <md-tooltip md-direction="bottom">Show Event</md-tooltip>
-                    <md-icon class="material-icons">event</md-icon>
-                </md-button>
+                {{selectedFilters}}
+                <div layout="row">
+                    <md-input-container>
+                        <label for="">Filter</label>
+                        <md-select ng-model="selectedFilters" md-on-close="clearSearchTeam()" multiple>
+                            <md-select-header>
+                                <input type="search" ng-model="searchTerm" placeholder="Search Tasks Or Events">
+                            </md-select-header>
+                            <md-optgroup>
+                                <md-option ng-value="showTask">Task</md-option>
+                                <md-option ng-value="showEvent">Event</md-option>
+                            </md-optgroup>
+                        </md-select>
+                    </md-input-container>
+                </div>
 			</div>
         
             <md-divider layout="row" flex></md-divider>

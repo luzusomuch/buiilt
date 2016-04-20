@@ -1,6 +1,7 @@
 'use strict';
 
 var User = require('./../../models/user.model');
+var Activity = require('./../../models/activity.model');
 var People = require('./../../models/people.model');
 var Team = require('./../../models/team.model');
 var Project = require('./../../models/project.model');
@@ -243,6 +244,9 @@ exports.uploadReversion = function(req, res) {
 exports.upload = function(req, res){
     var data = req.body;
     console.log(data);
+    if (data.type==="file" && !data.selectedEvent) {
+        return res.send(422, {msg: "Selected Event Is Require"});
+    }
     var filesAfterInsert = [];
     var members = [];
     var notMembers = [];
@@ -282,9 +286,6 @@ exports.upload = function(req, res){
             element: {type: data.type}
         });
         if (data.file) {
-            if (!data.selectedEvent) {
-                return res.send(422, {msg: "Selected Event Is Require"});
-            }
             file.name = data.file.filename;
             file.path = data.file.url;
             file.key = data.file.key;
@@ -311,31 +312,50 @@ exports.upload = function(req, res){
         }
         file.save(function(err) {
             if (err) {return res.send(500,err);}
-            if (data.belongTo) {
-                mainItem.findById(req.body.belongTo, function(err, main) {
-                    main.activities.push({
-                        user: req.user._id,
-                        type: "related-file",
-                        createdAt: new Date(),
-                        element: {
-                            item: file._id,
-                            name: file.name,
-                            related: true
-                        }
-                    });
-                    members.push(req.user._id);
-                    main.relatedItem.push({
-                        type: "file",
-                        item: {_id: file._id},
-                        members: members
-                    });
-                    main._editUser = req.user;
-                    main.save(function(err) {
-                        if (err) {return res.send(500,err);}
-                        populateFile(file, res);
-                    });
-                });
-            } else {
+            async.parallel([
+                function (cb) {
+                    if (data.selectedEvent) {
+                        Activity.findById(data.selectedEvent, function(err, activity) {
+                            if (err || !activity) {
+                                file.remove(function() {
+                                    cb(err)   
+                                });
+                            } else {
+                                activity.relatedItem.push({type: "file", item: {_id: file._id}});
+                                activity.save(cb);
+                            }
+                        });
+                    } else {
+                        cb();
+                    }
+                },
+                function (cb) {
+                    if (data.belongTo) {
+                        mainItem.findById(req.body.belongTo, function(err, main) {
+                            main.activities.push({
+                                user: req.user._id,
+                                type: "related-file",
+                                createdAt: new Date(),
+                                element: {
+                                    item: file._id,
+                                    name: file.name,
+                                    related: true
+                                }
+                            });
+                            members.push(req.user._id);
+                            main.relatedItem.push({
+                                type: "file",
+                                item: {_id: file._id},
+                                members: members
+                            });
+                            main._editUser = req.user;
+                            main.save(cb);
+                        });
+                    } else { 
+                        cb();
+                    }
+                }
+            ], function() {
                 File.populate(file,[
                     {path: "project"}
                 ], function(err, file) {
@@ -365,7 +385,7 @@ exports.upload = function(req, res){
                     }
                     return res.send(200, file);
                 });
-            }
+            });
         });
     });
 };
