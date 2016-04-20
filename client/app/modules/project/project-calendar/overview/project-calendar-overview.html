@@ -4,17 +4,15 @@
             <div class="md-toolbar-tools">
                 <h5 layout-margin><span>{{ project.name }} Calendar</span></h5>
                 <span flex></span>
-                {{selectedFilters}}
                 <div layout="row">
                     <md-input-container>
                         <label for="">Filter</label>
                         <md-select ng-model="selectedFilters" md-on-close="clearSearchTeam()" multiple>
                             <md-select-header>
-                                <input type="search" ng-model="searchTerm" placeholder="Search Tasks Or Events">
                             </md-select-header>
                             <md-optgroup>
-                                <md-option ng-value="showTask">Task</md-option>
-                                <md-option ng-value="showEvent">Event</md-option>
+                                <md-option value="showTask">Task</md-option>
+                                <md-option value="showEvent">Event</md-option>
                             </md-optgroup>
                         </md-select>
                     </md-input-container>

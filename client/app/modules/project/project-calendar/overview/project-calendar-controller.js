@@ -3,16 +3,22 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($element,
     $scope.showTask = true;
     $scope.showEvent = true;
 
-    $scope.vegetables = ['Corn' ,'Onions' ,'Kale' ,'Arugula' ,'Peas', 'Zucchini'];
-      $scope.searchTerm;
-      $scope.clearSearchTerm = function() {
-        $scope.searchTerm = '';
-      };
-      // The md-select directive eats keydown events for some quick select
-      // logic. Since we have a search input here, we don't need that logic.
-      $element.find('input').on('keydown', function(ev) {
-          ev.stopPropagation();
-      });
+    $scope.selectedFilters = ["showTask", "showEvent"];
+    $scope.$watch("selectedFilters", function(value) {
+        if (value.length===0) {
+            $scope.showTask = false;
+            $scope.showEvent = false;
+        } else if (value.length === 2) {
+            $scope.showTask = true;
+            $scope.showEvent = true;
+        } else if (value.length === 1) {
+            if (value[0]==="showTask") 
+                $scope.showEvent = false;
+            else 
+                $scope.showTask = false;
+        }
+
+    });
 
     /*config fullcalendar*/
     $scope.config = {
@@ -34,7 +40,6 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($element,
                             $scope.tasks = [];
                             $scope.threads = [];
                             $scope.files = [];
-                            console.log(activity);
                             _.each(activity.relatedItem, function(item) {
                                 if (item.type==="thread") {
                                     $scope.threads.push(item.item);
@@ -44,9 +49,6 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($element,
                                     $scope.files.push(item.item);
                                 }
                             });
-                            console.log($scope.tasks);
-                            console.log($scope.threads);
-                            console.log($scope.files);
 
                             $scope.viewAll = function(type) {
                                 dialogService.closeModal();
