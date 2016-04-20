@@ -34,15 +34,19 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($element,
                             $scope.tasks = [];
                             $scope.threads = [];
                             $scope.files = [];
+                            console.log(activity);
                             _.each(activity.relatedItem, function(item) {
                                 if (item.type==="thread") {
-                                    $scope.threads.push(item.iten);
+                                    $scope.threads.push(item.item);
                                 } else if (item.type==="task") {
                                     $scope.tasks.push(item.item);
                                 } else if (item.type==="file") {
                                     $scope.files.push(item.item);
                                 }
                             });
+                            console.log($scope.tasks);
+                            console.log($scope.threads);
+                            console.log($scope.files);
 
                             $scope.viewAll = function(type) {
                                 dialogService.closeModal();

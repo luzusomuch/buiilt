@@ -3,9 +3,9 @@
 var Activity = require('./../../models/activity.model');
 var ActivityValidator = require('./../../validators/activity');
 var User = require('./../../models/user.model');
-var Thread = require('./../../models/user.model');
-var Task = require('./../../models/user.model');
-var File = require('./../../models/user.model');
+var Thread = require('./../../models/thread.model');
+var Task = require('./../../models/task.model');
+var File = require('./../../models/file.model');
 var CheckMembers = require("./../../components/helpers/checkMembers");
 var _ = require('lodash');
 var async = require('async');
@@ -123,9 +123,7 @@ exports.get = function(req, res) {
         if (err) {return res.send(500,err);}
         if (!activity) {return res.send(404, {msg: "The selected item not found"});}
         async.each(activity.relatedItem, function(item, cb) {
-            console.log(item);
-            getMainItem(item.type).findById(item.item._id, function(err, data) {
-                console.log(data);
+            getMainItem(item.type).findById(item.item._id, "_id name description", function(err, data) {
                 if (err || !data) {cb(err);}
                 else {
                     item.item = data;
