@@ -24,6 +24,13 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
             },
             selectable: true,
             editable: true,
+            eventDurationEditable: true,
+            dayClick: function(day) {
+                console.log(day)
+            },
+            eventResize: function(event, delta) {
+                console.log(event, date);
+            },
             eventClick: function(data) {
                 if (data.type==="event") {
                     $mdDialog.show({
@@ -81,7 +88,6 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 }
             },
             eventDrop: function(event, delta) {
-                console.log(event);
                 if (event.type==="task") {
                     var updateTask = {
                         editType:"change-date-time",
