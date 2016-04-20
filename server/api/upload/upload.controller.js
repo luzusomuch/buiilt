@@ -300,6 +300,7 @@ exports.upload = function(req, res){
                 element: {name: file.name}
             });
             file.members.push(req.user._id);
+            file.event = data.selectedEvent;
         }
         var tags = [];
         _.each(data.tags, function(tag) {

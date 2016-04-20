@@ -77,6 +77,8 @@ var ThreadSchema = new Schema({
         type: Date,
         default: Date.now
     },
+    // This is our latest version, thread must belong to an event
+    event: {type: Schema.Types.ObjectId, ref: "Activity", required: true}
 }, {
     strict: true,
     minimize: false

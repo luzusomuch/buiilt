@@ -175,7 +175,7 @@ exports.create = function(req,res) {
           return errorsHelper.validationErrors(res,err)
         }
         var task = new Task(data);
-        
+        task.event = data.selectedEvent;
         task.project = req.params.id;
         task.owner = user._id;
         task.dateStart = new Date();

@@ -137,6 +137,7 @@ exports.create = function(req,res) {
             return errorsHelper.validationErrors(res,err)
         }
         var thread = new Thread(data);
+        thread.event = data.selectedEvent;
         thread.project = req.params.id;
         thread.owner = user._id;
         thread.element = {type: req.body.type};
