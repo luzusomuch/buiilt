@@ -73,7 +73,6 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
     url: '/messages',
 	  abstract: true,
     templateUrl: '/app/modules/project/project-messages/project-messages.html',
-    // controller: 'projectMessagesCtrl',
     authenticate : true,
     resolve: {
       threads: function($stateParams, messageService) {
@@ -134,7 +133,6 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
     url: '/files',
 	  abstract: true,
     templateUrl: '/app/modules/project/project-files/project-files.html',
-    controller: 'projectFilesCtrl',
     authenticate : true,
     resolve: {
       files: function($stateParams, fileService) {

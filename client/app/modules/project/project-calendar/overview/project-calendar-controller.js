@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('projectCalendarCtrl', function($element, $timeout, $q, $rootScope, $scope, $mdDialog, dialogService, $stateParams, socket, $state, activityService, people, activities, tasks, uiCalendarConfig) {
+angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout, $q, $rootScope, $scope, $mdDialog, dialogService, $stateParams, socket, $state, activityService, people, activities, tasks, uiCalendarConfig) {
     $scope.dialogService = dialogService;
     $scope.showTask = true;
     $scope.showEvent = true;

@@ -3,6 +3,27 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
     $scope.tasks = tasks;
     $scope.activities = activities;
 	$scope.showFilter = false;
+    $scope.selectedFilterEventList = [];
+
+    $scope.changeFilter = function(index) {
+        $scope.events[index].select = !$scope.events[index].select;
+        $scope.selectedFilterEventList = _.filter($scope.events, {select: true});
+    };
+
+    /*Get events list for filter*/
+    function repairForEventsFilter() {
+        $scope.events = [];
+        _.each($scope.tasks, function(task) {
+            if (task.event) {
+                var index = _.findIndex($scope.activities, function(act) {
+                    return task.event==act._id;
+                });
+                $scope.events.push($scope.activities[index]);
+            }
+        });
+        $scope.events = _.uniq($scope.events, "_id");
+    };
+    repairForEventsFilter();
 
     $scope.step = 1;
     /*check create new task input change move to next step*/
@@ -51,6 +72,7 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
             $scope.tasks.push(data);
             $scope.tasks = _.uniq($scope.tasks, "_id");
             filterTaskDueDate($scope.tasks);
+            repairForEventsFilter();
         }
     });
 
@@ -79,6 +101,7 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
         $scope.tasks.push(data);
         $scope.tasks = _.uniq($scope.tasks, "_id");
         filterTaskDueDate($scope.tasks);
+        repairForEventsFilter();
     });
 
     /*Receive when current user open specific task detail
@@ -142,7 +165,23 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
     $scope.search = function(task) {
         var found = false
         var taskDueDate = moment(task.dateEnd).format("YYYY-MM-DD");
-        if ($scope.description && $scope.description.length > 0) {
+        if ($scope.selectedFilterEventList.length > 0 && task.event && !$scope.showCompletedTask) {
+            _.each($scope.selectedFilterEventList, function(item) {
+                if (item._id==task.event && !task.completed) {
+                    found = true;
+                    return false;
+                }
+            });
+            return found;
+        } else if ($scope.selectedFilterEventList.length > 0 && task.event && $scope.showCompletedTask) {
+            _.each($scope.selectedFilterEventList, function(item) {
+                if (item._id==task.event && task.completed) {
+                    found = true
+                    return false;
+                }
+            });
+            return found;
+        } else if ($scope.description && $scope.description.length > 0) {
             if (task.description.toLowerCase().indexOf($scope.description) > -1 || task.description.indexOf($scope.description) > -1) {
                 found = true;
             }
@@ -289,13 +328,14 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
                 }
             });
             return found;
-        } else if ($scope.showCompletedTask) {
+        } else if ($scope.showCompletedTask && $scope.selectedFilterEventList.length === 0) {
             found = (task.completed) ? true : false;
             return found;
-        } else {
+        } else if (!$scope.showCompletedTask && $scope.selectedFilterEventList.length === 0) {
             found = (task.completed && task.__v===0) ? false : true;
             return found;
-        }
+        } 
+        return false;
     };
     // end filter section
 

@@ -4,10 +4,11 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
 	$scope.threads = threads;
     $scope.activities = activities;
     $scope.dialogService = dialogService;
+    $scope.selectedFilterEventList = [];
 
     $scope.changeFilter = function(index) {
         $scope.events[index].select = !$scope.events[index].select;
-        $scope.selectedFilterEventId = ($scope.events[index].select) ? $scope.events[index]._id : null;
+        $scope.selectedFilterEventList = _.filter($scope.events, {select: true});
     };
 
     /*Get events list for filter*/
@@ -21,7 +22,7 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
                 $scope.events.push($scope.activities[index]);
             }
         });
-        _.uniq($scope.events, "_id");
+        $scope.events = _.uniq($scope.events, "_id");
     };
     repairForEventsFilter();
 	
@@ -79,6 +80,7 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
         if (data.project._id.toString()===$stateParams.id.toString()) {
             $scope.threads.push(data);
             $scope.threads = _.uniq($scope.threads, "_id");
+            repairForEventsFilter();
         }
     });
 
@@ -107,6 +109,7 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
     var listenerCleanFnPush = $rootScope.$on("Thread.Inserted", function(event, data) {
         $scope.threads.push(data);
         $scope.threads = _.uniq($scope.threads, "_id"); 
+        repairForEventsFilter();
     });
 
     /*
@@ -155,16 +158,24 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
 
     /*Search thread depend on input value*/
     $scope.search = function(thread) {
-        if ($scope.selectedFilterEventId && thread.event && !$scope.showArchived) {
-            if ($scope.selectedFilterEventId==thread.event && !thread.isArchive) {
-                return true;
-            }
-            return false;
-        } else if ($scope.selectedFilterEventId && thread.event && $scope.showArchived) {
-            if ($scope.selectedFilterEventId==thread.event && thread.isArchive) {
-                return true;
-            }
-            return false;
+        if ($scope.selectedFilterEventList.length > 0 && thread.event && !$scope.showArchived) {
+            var found = false;
+            _.each($scope.selectedFilterEventList, function(item) {
+                if (item._id==thread.event && !thread.isArchive) {
+                    var found = true;
+                    return false;
+                }
+            });
+            return found;
+        } else if ($scope.selectedFilterEventList.length > 0 && thread.event && $scope.showArchived) {
+            var found = false;
+            _.each($scope.selectedFilterEventList, function(item) {
+                if (item._id==thread.event && thread.isArchive) {
+                    var found = true;
+                    return false;
+                }
+            });
+            return found;
         } else if ($scope.name && $scope.name.length > 0) {
             if (thread.name.toLowerCase().indexOf($scope.name) > -1 || thread.name.indexOf($scope.name) > -1) {
                 return true;
@@ -192,9 +203,9 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
                     return true;
                 }
             });
-        } else if ($scope.showArchived && !$scope.selectedFilterEventId) {
+        } else if ($scope.showArchived && $scope.selectedFilterEventList.length===0) {
             return (thread.isArchive) ? true: false;
-        } else if(!$scope.showArchived && !$scope.selectedFilterEventId) {
+        } else if(!$scope.showArchived && !$scope.selectedFilterEventList.length===0) {
             return (!thread.isArchive) ? true : false;
         }
         return false;
