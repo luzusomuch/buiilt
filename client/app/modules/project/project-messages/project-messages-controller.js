@@ -6,9 +6,22 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
     $scope.dialogService = dialogService;
     $scope.selectedFilterEventList = [];
 
-    $scope.changeFilter = function(index) {
-        $scope.events[index].select = !$scope.events[index].select;
+    $scope.changeFilter = function(type, evId) {
+        if (type==="all") {
+            _.each($scope.events, function(ev) {
+                if (!$scope.checkAll) 
+                    ev.select = true;
+                else
+                    ev.select = false;
+            });
+        } else {
+            var index = _.findIndex($scope.events, function(ev) {
+                return ev._id==evId;
+            });
+            $scope.events[index].select = !$scope.events[index].select;
+        }
         $scope.selectedFilterEventList = _.filter($scope.events, {select: true});
+        $scope.checkAll = ($scope.selectedFilterEventList.length===$scope.events.length) ? true : false;
     };
 
     /*Get events list for filter*/

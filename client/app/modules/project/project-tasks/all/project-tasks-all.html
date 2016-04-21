@@ -20,11 +20,11 @@
 	                		</md-input-container>
 	                	</md-menu-item>
 	                	<md-menu-item layout-padding>
-							<md-checkbox class="md-primary" md-prevent-menu-close ng-checked="">All</md-checkbox>
+							<md-checkbox class="md-primary" md-prevent-menu-close ng-checked="checkAll" ng-click="changeFilter('all')">All</md-checkbox>
 						</md-menu-item>
 	                	<md-divider></md-divider>
                         <md-menu-item ng-repeat="ev in events | filter: searchEvent track by $index">
-                            <md-checkbox class="md-primary" md-prevent-menu-close ng-checked="ev.select" ng-click="changeFilter($index)">{{ev.name}}</md-checkbox>
+                            <md-checkbox class="md-primary" md-prevent-menu-close ng-checked="ev.select" ng-click="changeFilter('item', ev._id)">{{ev.name}}</md-checkbox>
                         </md-menu-item>
                     </md-menu-content>
                 </md-menu>
