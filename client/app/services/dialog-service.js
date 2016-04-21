@@ -1,6 +1,7 @@
-angular.module('buiiltApp').service('dialogService', function($mdDialog, $mdToast) {
+angular.module('buiiltApp').service('dialogService', function($mdDialog, $mdToast, $rootScope) {
 	this.closeModal = function() {
-		$mdDialog.hide();
+		$mdDialog.cancel();
+        $rootScope.selectedStartDate = null;
 	};
 
     this.showToast = function(value) {

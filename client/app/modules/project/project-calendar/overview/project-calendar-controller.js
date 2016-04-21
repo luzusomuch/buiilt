@@ -97,10 +97,18 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
             selectable: true,
             editable: true,
             dayClick: function(day) {
-                console.log(day)
-            },
-            eventResize: function(event, delta) {
-                console.log(event, date);
+                $rootScope.selectedStartDate = new Date(day);
+                var confirm = $mdDialog.confirm()
+                    .title('Create new Event or Task?')
+                    .textContent('Please select one type to countinue')
+                    .ariaLabel('Create Item')
+                    .ok('New Event')
+                    .cancel('New Task');
+                $mdDialog.show(confirm).then(function() {
+                    $scope.showModal("create-event.html");
+                }, function() {
+                    $scope.showModal("create-task.html");
+                });
             },
             eventClick: function(data) {
                 if (data.type==="event") {
@@ -222,7 +230,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
     };
 
     /*Convert all tasks and activities to calendar view*/
-    $scope.convertAllToCalendarView = function() {
+    $scope.convertAllToCalendarView = function(isUpdate) {
         $scope.events = [];
         $scope.activities = activities;
         _.each(tasks, function(task) {
@@ -247,6 +255,11 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
         });
         $scope.originalEvents = angular.copy($scope.events);
         $scope.eventSources = [$scope.events];
+
+        if (isUpdate) {
+            uiCalendarConfig.calendars.myCalendar.fullCalendar('removeEvents');
+            uiCalendarConfig.calendars.myCalendar.fullCalendar('addEventSource', $scope.events);
+        }
     };
     $scope.convertAllToCalendarView();
 
@@ -300,12 +313,16 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
     };
     getProjectMembers();
 
-    $scope.activity = {};
+    $scope.activity = {
+        date: {
+            start: ($rootScope.selectedStartDate) ? $rootScope.selectedStartDate : new Date()
+        }
+    };
 
     /*Show modal with valid name*/
-    $scope.showModal = function($event, modalName) {
+    $scope.showModal = function(modalName) {
         $mdDialog.show({
-            targetEvent: $event,
+            // targetEvent: $event,
             controller: 'projectCalendarCtrl',
             resolve: {
                 people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
@@ -362,7 +379,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                         dialogService.showToast((res.isMilestone) ? "Create Milestone Successfully" : "Create Activity Successfully");
                         dialogService.closeModal();
                         activities.push(res);
-                        convertAllToCalendarView();
+                        $scope.convertAllToCalendarView(true);
                     }, function(err) {dialogService.showToast("Error");});
                 }
             } else {
