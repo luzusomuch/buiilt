@@ -46,7 +46,7 @@
 			
 			<md-divider layout="row" flex></md-divider>
 			
-			<md-list ng-cloak flex class="md-whiteframe-1dp content-list">
+			<md-list ng-cloak flex class="content-list">
 				<md-list-item class="md-3-line" ng-repeat="thread in threads | filter: search | unique: '_id' track by $index" ng-show="thread.__v>0" md-ink-ripple>
 			
 					<div ui-sref="project.messages.detail({id: thread.project, messageId: thread._id})" class="md-list-item-text" layout-margin>
