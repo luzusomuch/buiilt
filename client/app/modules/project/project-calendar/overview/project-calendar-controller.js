@@ -205,6 +205,12 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                     $scope.step += 1;
                 }
             }
+        } else if (type==="task") {
+            if (!$scope.task.selectedEvent || !$scope.task.description || !$scope.task.dateEnd) {
+                dialogService.showToast("Check Your Input");
+            } else {
+                $scope.step += 1;
+            }
         } else {
             if ($scope.step==1) {
                 if (!$scope.activity.name || $scope.activity.name.trim().length === 0) {
@@ -389,4 +395,34 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
             dialogService.showToast("Check your input again.");
         }
     };
+
+    $scope.task = {
+        dateStart: ($rootScope.selectedStartDate) ? $rootScope.selectedStartDate : null
+    };
+
+    $scope.createNewTask = function(form) {
+        if (form.$valid) {
+            $scope.task.members = _.filter($scope.membersList, {select: true});
+            $scope.task.type = "task-project";
+            if ($scope.task.members.length > 0 && $scope.task.selectedEvent) {
+                taskService.create({id: $stateParams.id}, $scope.task).$promise.then(function(res) {
+                    dialogService.closeModal();
+                    dialogService.showToast("New Task Has Been Created Successfully.");
+                    
+                    //Track New Task
+                    mixpanel.identify($rootScope.currentUser._id);
+                    mixpanel.track("New Task Created");
+                    
+                    $rootScope.$emit("Task.Inserted", res);
+                    tasks.push(res);
+                    $scope.convertAllToCalendarView(true);
+                }, function(err) {dialogService.showToast("There Has Been An Error...");});
+            } else {
+                dialogService.showToast("Check your input again.");
+            }
+        } else {
+            dialogService.showToast("Check your input again.");
+        }
+    };
+
 });
