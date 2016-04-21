@@ -14,7 +14,8 @@ exports.create = function(req, res) {
     } else {
         var result = [];
         async.each(data.contacts, function(contact, cb) {
-            User.findOne({email: contact.email}, function(err, user) {
+            User.findOne({email: contact.email})
+            .populate("team._id").exec(function(err, user) {
                 if (err) {cb(err);}
                 if (!user) {
                     var newContact = new ContactBook({
@@ -36,10 +37,10 @@ exports.create = function(req, res) {
                         team: req.user.team._id,
                         inviter: req.user._id,
                         user: user._id,
-                        name: contact.firstName + contact.lastName,
+                        name: user.firstName + user.lastName,
                         email: user.email,
                         phoneNumber: (user.phoneNumber) ? user.phoneNumber : contact.phoneNumber,
-                        teamName: contact.teamName
+                        teamName: (user.team._id) ? user.team._id.name : contact.teamName
                     });
                     newContact.save(function(err) {
                         if (err) {cb(err);}
@@ -65,6 +66,7 @@ exports.me = function(req, res) {
                 if (contact.user) {
                     contact.email = contact.user.email;
                     contact.phoneNumber = contact.user.phoneNumber;
+                    contact.name = contact.user.name;
                     result.push(contact);
                 } else {
                     result.push(contact);

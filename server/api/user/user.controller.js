@@ -78,11 +78,28 @@ exports.adminUpdateUserProfile = function(req, res) {
  * restriction: 'admin'
  */
 exports.index = function (req, res) {
-  User.find({}, '-salt -hashedPassword', function (err, users) {
-    if (err)
-      return res.send(500, err);
-    res.json(200, users);
-  });
+    var query = {};
+    if (req.user.role==="admin" && !req.query.email && !req.query.phoneNumber) {
+        query = {};
+    } else if (req.query.email && req.query.phoneNumber) {
+        query = {$or:[{email: req.query.email}, {phoneNumber: new RegExp(req.query.phoneNumber, 'i')}]};
+    } else {
+        return res.send(406, {msg: "Not Allow"});
+    }
+    User.find(query, '-salt -hashedPassword')
+    .populate("team._id").exec(function (err, users) {
+        if (err)
+            return res.send(500, err);
+        var result = [];
+        if (req.user.role==="admin" && !req.query.email && !req.query.phoneNumber) {
+            result = users;
+        } else if (req.query.email && req.query.phoneNumber) {
+            _.each(users, function(user) {
+                result.push({email: user.email, name: user.name, phoneNumber: user.phoneNumber, teamName: (user.team._id)?user.team._id.name:"This user hasn\'t got team"})
+            });
+        }
+        res.json(200, result);
+    });
 };
 
 /**

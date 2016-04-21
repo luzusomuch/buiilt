@@ -1,4 +1,4 @@
-<md-dialog aria-label="Add New Contact" flex="50">
+<md-dialog aria-label="Add New Contact" flex="75">
     <form ng-submit="addContact()" name="form">
         <md-toolbar>
             <div class="md-toolbar-tools">
@@ -14,80 +14,60 @@
                     <div layout="row">
                         <md-input-container flex="50">
                             <label for="">Email</label>
-                            <input type="email" name="email" ng-model="email">
+                            <input type="email" name="email" ng-model="searchNewContact.email">
                         </md-input-container>
                         <md-input-container flex="30">
                             <label for="">Phone Number</label>
-                            <input type="text" name="phoneNumber" ng-model="phoneNumber" ng-pattern="/^[0-9]{1,15}$/">
+                            <input type="text" name="phoneNumber" ng-model="searchNewContact.phoneNumber" ng-pattern="/^[0-9]{1,15}$/">
                         </md-input-container>
-                        <div flex>
-                            <md-button ng-click="checkUserInfo(email, phoneNumber)" class="md-primary" aria-label="Check Entered Information">Search</md-button>
-                            <md-button ng-show="searchUser=='empty'" ng-click="createNewContact(email, phoneNumber)" class="md-primary" aria-label="Create New Contact">Create New Contact</md-button>
-                        </div>
                     </div>
-					
-                    <p class="validate-message" ng-show="searchUser=='empty'">Couldn't found any results</p>
                     <p class="validate-message" ng-show="form.phoneNumber.$error.pattern">Not a valid number</p>
-					
-                    <div layout="row" ng-show="searchUser.email">
-						
-						<md-radio-group ng-model="">
-							<div ng-repeat='' class="row">
-						        <div flex layout='row' layout-padding layout-align="start center" >
-						        	<md-radio-button flex ng-value="{{searchUser.name}}" class="md-primary" >{{searchUser.name}}</md-radio-button>
-									<p flex>{{searchUser.email}}</p> 
-									<p flex>{{searchUser.phoneNumber}}</p>
-						        </div>
-						    </div>
-						</md-radio-group>
-					    <md-divider></md-divider>
-						
-                        <md-list flex>
-                            <md-subheader class="md-no-sticky">Search Result</md-subheader>
-                            <md-list-item class="md-3-line">
-                                <div class="md-list-item-text" layout="column" flex="80">
-                                    <h3>{{searchUser.name}}</h3>
-                                    <p><strong>Email: </strong>{{searchUser.email}} - <strong>Phone Number: </strong> {{searchUser.phoneNumber}}</p>
-                                    <p><strong>Team Name: </strong> {{searchUser.teamName}}</p>
-                                </div>
-                                <md-button ng-click="createNewContact(searchUser.email, searchUser.phoneNumber)" class="md-primary" aria-label="Add To Contact">Add This Contact</md-button>
-                                <md-divider></md-divider>
-                            </md-list-item>
-                        </md-list>
-                    </div>
-					
                 </div>
 
                 <div layout="column" ng-show="step==2">
-                    <md-list flex>
-                        <md-subheader class="md-no-sticky">Your New Contacts List</md-subheader>
-                        <md-list-item class="md-3-line" ng-repeat="contact in newContact.contacts">
-                            <div class="md-list-item-text" layout="column" flex="80">
-                                <div layout="row">
-                                    <md-input-container flex="50">
-                                        <label for="">Contact First Name</label>
-                                        <input type="text" ng-model="contact.firstName">
-                                    </md-input-container>
-                                    <md-input-container flex="50">
-                                        <label for="">Contact Last Name</label>
-                                        <input type="text" ng-model="contact.lastName">
-                                    </md-input-container>
-                                </div>
-                                <p><strong>Email: </strong>{{contact.email}} - <strong>Phone Number: </strong> {{contact.phoneNumber}}</p>
-                                <div>
-                                    <md-input-container flex="80">
-                                        <label for="">Team Name</label>
-                                        <input type="text" ng-model="contact.teamName">
-                                    </md-input-container>
-                                </div>
+                    <div layout="column" ng-show="searchUsers.length > 0">
+                        <h3>Select from the results below</h3>
+                        <md-radio-group ng-model="selectedContact" class="md-primary">
+                            <md-radio-button ng-repeat="user in searchUsers" flex ng-value="user" class="md-primary" >
+                                <span><strong>Name</strong>: {{user.name}}</span> | 
+                                <span><strong>Email</strong>: {{user.email}}</span> | 
+                                <span><strong>Phone Number</strong>: {{user.phoneNumber}}</span> | 
+                                <span><strong>Team Name</strong>: {{user.teamName}}</span>
+                            </md-radio-button>
+                        </md-radio-group>
+                    </div>
+
+                    <md-divider></md-divider>
+
+                    <div layout="column" ng-show="searchUsers.length===0 || showSearchResult">
+                        <h3>Or Create A New Contact</h3>
+                        <md-radio-group ng-model="selectedNewContact">
+                            <md-radio-button flex="15" ng-value="searchNewContact" class="md-primary" >
+                            </md-radio-button>
+                            <div layout="row" flex>
+                                <md-input-container flex="20">
+                                    <label for="">First Name</label>
+                                    <input type="text" ng-model="searchNewContact.firstName">
+                                </md-input-container>
+                                <md-input-container flex="20">
+                                    <label for="">Last Name</label>
+                                    <input type="text" ng-model="searchNewContact.lastName">
+                                </md-input-container>
+                                <md-input-container flex="20">
+                                    <label for="">Email</label>
+                                    <input type="text" ng-model="searchNewContact.email" disabled>
+                                </md-input-container>
+                                <md-input-container flex="20">
+                                    <label for="">Phone Number</label>
+                                    <input type="text" ng-model="searchNewContact.phoneNumber" disabled>
+                                </md-input-container>
+                                <md-input-container flex="20">
+                                    <label for="">Team Name</label>
+                                    <input type="text" ng-model="searchNewContact.teamName">
+                                </md-input-container>
                             </div>
-                            <md-button ng-click="removeContact($index, 'newContact')" class="md-fab md-primary" aria-label="Add To Contact">
-                                <md-tooltip md-direction="left">Remove From Contacts</md-tooltip>
-                                <md-icon class="material-icons">clear</md-icon>
-                            </md-button>
-                            <md-divider></md-divider>
-                        </md-list-item>
-                    </md-list>
+                        </md-radio-group>
+                    </div>
                 </div>
             </div>
 
