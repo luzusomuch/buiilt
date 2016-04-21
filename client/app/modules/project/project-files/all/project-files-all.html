@@ -19,11 +19,17 @@
 	            <md-menu md-position-mode="target-right target">
 	                <md-button aria-label="Events" ng-click="$mdOpenMenu($event)">Events</md-button>
 	                <md-menu-content width="5">
+	                	<md-menu-item>
+	                		<md-input-container>
+	                			<label for="">Enter Event Name</label>
+	                			<input type="text" ng-model="searchEvent.name">
+	                		</md-input-container>
+	                	</md-menu-item>
 						<md-menu-item layout-padding>
 							<md-checkbox class="md-primary" md-prevent-menu-close ng-checked="">All</md-checkbox>
 						</md-menu-item>
 						<md-divider></md-divider>
-	                    <md-menu-item ng-repeat="ev in events track by $index" layout-padding>
+	                    <md-menu-item ng-repeat="ev in events | filter: searchEvent track by $index" layout-padding>
 	                        <md-checkbox class="md-primary" md-prevent-menu-close ng-checked="ev.select" ng-click="changeFilter($index)">{{ev.name}}</md-checkbox>
 	                    </md-menu-item>
 	                </md-menu-content>

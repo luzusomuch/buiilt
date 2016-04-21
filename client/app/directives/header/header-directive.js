@@ -7,8 +7,9 @@ angular.module('buiiltApp')
             $rootScope.projects = [];
             $scope.submitted = false;
     	    $scope.$state = $state;
-    	    var originatorEv;
-    	  
+            $scope.settingsState = ["settings.user", "settings.company", "settings.staff", "settings.billing", "settings.tags", "settings.schedule"];
+            var originatorEv;
+          
             $scope.goto = function(newstate) {
     		    $state.go(newstate, {}, {reload: true});
             };
