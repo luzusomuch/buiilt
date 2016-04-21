@@ -26,7 +26,7 @@
 		</div>
 	</md-subheader>
 	
-	<md-list ng-show="showMembers">
+	<md-list ng-show="showMembers" class="md-dense">
 		<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event, member._id)" ng-show="data.element" ng-repeat="member in data.members | unique: '_id' track by $index">
 		    <div class="md-list-item-text">
 			    <h3>{{(member._id) ? member.name : member.email}}</h3>
@@ -48,7 +48,7 @@
 		</div>
 	</md-subheader>
 	
-	<md-list ng-show="showSharedFiles">
+	<md-list ng-show="showSharedFiles" class="md-dense">
 		<md-list-item class="md-2-line" ng-click="showRelatedFilesModal($event, file)" ng-repeat="file in data.relatedItem" ng-show="file.type == 'file'">
 		    <div class="md-list-item-text">
 			    <p>{{file.item.name}}</p>
@@ -70,7 +70,7 @@
 		</div>
 	</md-subheader>
 	
-	<md-list ng-show="showRelatedTasks">
+	<md-list ng-show="showRelatedTasks" class="md-dense">
 		<md-list-item class="md-2-line" ng-click="showRelatedTasksModal($event, task)" ng-repeat="task in data.relatedItem" ng-show="task.type == 'task'">
 		    <div class="md-list-item-text">
 			    <p>{{task.item.name}}</p>

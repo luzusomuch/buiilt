@@ -1,76 +1,93 @@
-<div layout="column" layout-padding>
-	
-	<div class="filter-card md-whiteframe-1dp" layout="column" layout-margin>
-		
-		<div layout="row">
-			<md-input-container md-no-float flex class="md-block md-icon-float" style="margin-right: 15px">
-				<md-icon class="material-icons" style="margin-top: 6px;">search</md-icon>
-				<input type="text" name="fileName" ng-model="name" placeholder="Search by file name...">
-			</md-input-container>
+<div layout="row" layout-padding>
+    <div layout="column" flex>
+        <div layout="column" class="md-whiteframe-1dp overview-view">
+            
+            <div layout="row" layout-padding>
+			
+				<md-input-container md-no-float class="md-block md-icon-float" flex="100" style="margin-bottom: -15px; margin-top: 10px">
+					<md-icon class="material-icons" style="margin-top: 6px;">search</md-icon>
+					<input type="text" name="fileName" ng-model="name" placeholder="Search by file name...">
+				</md-input-container>
+			
+				<div>
+					<md-button class="md-icon-button more-filter-button" ng-click="showArchived=!showArchived">
+						 <md-tooltip md-direction="down">Show Archived Files</md-tooltip>
+					     <md-icon class="material-icons">history</md-icon>
+			      	</md-button>
+				</div>
 
-			<div layout="row">
-                <md-menu>
-                    <md-button aria-label="Filter" ng-click="$mdOpenMenu($event)">Filter By Events</md-button>
-                    <md-menu-content width="6">
-                        <md-menu-item ng-repeat="ev in events track by $index">
-                            <md-checkbox class="md-primary" md-prevent-menu-close ng-checked="ev.select" ng-click="changeFilter($index)">{{ev.name}}</md-checkbox>
-                        </md-menu-item>
-                    </md-menu-content>
-                </md-menu>
-            </div>
-			
-			<div>
-				<md-button class="md-icon-button more-filter-button" ng-click="showFilter=!showFilter">
-					 <md-tooltip md-direction="down">Show Filters</md-tooltip>
-				     <md-icon class="material-icons">filter_list</md-icon>
-		      	</md-button>
-			</div>
-			
-			<div>
-				<md-button class="md-icon-button more-filter-button" ng-click="showArchived=!showArchived">
-					 <md-tooltip md-direction="down">Show Archived Files</md-tooltip>
-				     <md-icon class="material-icons">history</md-icon>
-		      	</md-button>
-			</div>
-		</div>
-		
-		<div layout="row" ng-show="showFilter" layout-align="center center" layout-wrap layout-padding>
-			<md-checkbox class="filter-checkbox md-primary" ng-repeat="tag in tags" ng-click="selectChip($index, 'tag'); selectFilterTag(tag.name)">{{tag.name}}</md-checkbox>
-		</div>
-		
-	</div>
-	
-	<div layout="column">
-		
-		<div layout="row" layout-wrap>
-			
-			<div flex="33" ng-repeat="file in files | filter: search | unique: '_id' track by $index" ng-show="file.__v > 0">
-				<md-card flex>
-				 	<md-card-content ui-sref="project.files.detail({id: file.project._id, fileId: file._id})" style="cursor: pointer">
-				   		<h4 class="card-header">{{ file.name }}</h4>
-						<p class="md-body-1"><span ng-repeat="tag in file.tags">'{{tag}}' </span></p>
-						<p class="md-body-1" ng-show="file.__v>0" style="color: #2196F3">Updates: {{file.__v}}</p>
-					</md-card-content>
+	            <md-menu md-position-mode="target-right target">
+	                <md-button aria-label="Events" ng-click="$mdOpenMenu($event)">Events</md-button>
+	                <md-menu-content width="5">
+						<md-menu-item layout-padding>
+							<md-checkbox class="md-primary" md-prevent-menu-close ng-checked="">All</md-checkbox>
+						</md-menu-item>
+						<md-divider></md-divider>
+	                    <md-menu-item ng-repeat="ev in events track by $index" layout-padding>
+	                        <md-checkbox class="md-primary" md-prevent-menu-close ng-checked="ev.select" ng-click="changeFilter($index)">{{ev.name}}</md-checkbox>
+	                    </md-menu-item>
+	                </md-menu-content>
+	            </md-menu>
 				
-				 	<md-card-actions layout="row" layout-align="end center">
-						<md-button ng-click="showViewFileModal($event, file)" class="md-icon-button"><md-icon class="material-icons">remove_red_eye</md-icon><md-tooltip md-direction="down">View Current Version</md-tooltip></md-button>
-					</md-card-actions>
-				</md-card>
+	            <md-menu md-position-mode="target-right target">
+	                <md-button aria-label="Events" ng-click="$mdOpenMenu($event)">Recipients</md-button>
+	                <md-menu-content width="5">
+						<md-menu-item layout-padding>
+							<md-checkbox class="md-primary" md-prevent-menu-close ng-checked="">All</md-checkbox>
+						</md-menu-item>
+						<md-divider></md-divider>
+	                    <md-menu-item ng-repeat="" layout-padding>
+	                        <md-checkbox class="md-primary" md-prevent-menu-close ng-checked="" ng-click="">{{ }}</md-checkbox>
+	                    </md-menu-item>
+	                </md-menu-content>
+	            </md-menu>
+				
+	            <md-menu md-position-mode="target-right target">
+	                <md-button aria-label="Events" ng-click="$mdOpenMenu($event)">File Type</md-button>
+	                <md-menu-content width="5">
+						<md-menu-item layout-padding>
+							<md-checkbox class="md-primary" md-prevent-menu-close ng-checked="">All</md-checkbox>
+						</md-menu-item>
+						<md-divider></md-divider>
+	                    <md-menu-item ng-repeat="tag in tags" layout-padding>
+	                        <md-checkbox class="md-primary" md-prevent-menu-close ng-checked="ev.select" ng-click="selectChip($index, 'tag'); selectFilterTag(tag.name)">{{tag.name}}</md-checkbox>
+	                    </md-menu-item>
+	                </md-menu-content>
+	            </md-menu>
+				
 			</div>
 			
-			<div flex="33" ng-repeat="file in files | orderBy: '-createdAt' | filter: search | unique: '_id' track by $index" ng-show="file.__v == 0">
-				<md-card flex>
-				 	<md-card-content ui-sref="project.files.detail({id: file.project._id, fileId: file._id})" style="cursor: pointer">
-				   		<h4 class="card-header">{{ file.name }}</h4>
-						<p class="md-body-1"><span ng-repeat="tag in file.tags">'{{tag}}' </span></p>
+			<md-divider layout="row" flex></md-divider>
+			
+			<md-list ng-cloak flex class="content-list">
+			
+				<md-list-item class="md-3-line" ng-repeat="file in files | filter: search | unique: '_id' track by $index" ng-show="file.__v > 0" md-ink-ripple>
+			
+					<div ui-sref="project.files.detail({id: file.project._id, fileId: file._id})" style="cursor: pointer" class="md-list-item-text" layout-margin>
+						<h3>{{ file.name }}</h3>
+						<h4>Filed Under "<span ng-repeat="tag in file.tags"><span style="text-transform: capitalize">{{tag}}</span></span>"</h4>
+						<p ng-show="file.__v>0" style="color: #2196F3">Updates: {{file.__v}}</p>
+				    </div>
+				
+			        <md-button class="md-secondary" ng-click="showViewFileModal($event, file)"><md-icon class="material-icons">remove_red_eye</md-icon><md-tooltip md-direction="down">View Current Version</md-tooltip></md-button>
+				    <md-divider ng-hide="$last"></md-divider>
+			
+				</md-list-item>
+
+				<md-list-item class="md-3-line" ng-repeat="file in files | orderBy: '-createdAt' | filter: search | unique: '_id' track by $index" ng-show="file.__v == 0" md-ink-ripple>
+	    
+					<div ui-sref="project.files.detail({id: file.project._id, fileId: file._id})" style="cursor: pointer" class="md-list-item-text" layout-margin>
+						<h3>{{ file.name }}</h3>
+						<h4>Filed Under "<span ng-repeat="tag in file.tags"><span style="text-transform: capitalize">{{tag}}</span></span>"</h4>
 						<p class="md-body-1">No New Updates</p>
-					</md-card-content>
-				
-				 	<md-card-actions layout="row" layout-align="end center">
-						<md-button ng-click="showViewFileModal($event, file)" class="md-icon-button"><md-icon class="material-icons">remove_red_eye</md-icon><md-tooltip md-direction="down">View Current Version</md-tooltip></md-button href="../../project-overview/project-overview.html" title="project-overview">
-					</md-card-actions>
-				</md-card>
-			</div>
+				    </div>
+			        <md-button class="md-secondary" ng-click="showViewFileModal($event, file)"><md-icon class="material-icons">remove_red_eye</md-icon><md-tooltip md-direction="down">View Current Version</md-tooltip></md-button>
+				    <md-divider ng-hide="$last"></md-divider>
+	
+				</md-list-item>
+		
+			</md-list>
+			
 		</div>
 	</div>
 </div>

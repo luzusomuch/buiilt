@@ -1,52 +1,58 @@
-<div layout="column" layout-padding>
-	
-	<div class="filter-card md-whiteframe-1dp" layout="column" layout-margin>
+<div layout="row" layout-padding>
+    <div layout="column" flex>
+        <div layout="column" class="md-whiteframe-1dp overview-view">
+			
+            <div layout="row" layout-padding>
 		
-		<div layout="row">
-			
-			<md-input-container md-no-float class="md-block md-icon-float" flex style="margin-right: 15px">
-				<md-icon class="material-icons" style="margin-top: 6px;">search</md-icon>
-				<input id="im_ProjTeamSearch" type="text" name="teamMemberName" ng-model="name" placeholder="Search by team member name...">
-			</md-input-container>
-			
-			<div>
-				<md-button id="im_ProjTeamFilter" class="md-icon-button more-filter-button" ng-click="showFilter=!showFilter">
-					 <md-tooltip md-direction="down">Show Filters</md-tooltip>
-				     <md-icon class="material-icons">filter_list</md-icon>
-		      	</md-button>
+				<md-input-container md-no-float class="md-block md-icon-float" flex="100" style="margin-bottom: -15px; margin-top: 10px">
+					<md-icon class="material-icons" style="margin-top: 3px;">search</md-icon>
+					<input id="im_ProjTeamSearch" type="text" name="teamMemberName" ng-model="name" placeholder="Search team by name...">
+				</md-input-container>
+		
+                <span flex></span>
+		
+                <md-menu md-position-mode="target-right target">
+                    <md-button aria-label="Roles" ng-click="$mdOpenMenu($event)">Roles</md-button>
+                    <md-menu-content width="4">
+						<md-menu-item layout-padding>
+							<md-checkbox class="md-primary" md-prevent-menu-close>All</md-checkbox>
+						</md-menu-item>
+						<md-divider></md-divider>
+                        <md-menu-item ng-repeat="tag in teamMemberTypeTags" layout-padding>
+                            <md-checkbox class="md-primary" md-prevent-menu-close ng-checked="" ng-click="selectTag($index)"><span style="text-transform: capitalize">{{tag.text}}</span></md-checkbox>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+		
 			</div>
+        
+            <md-divider layout="row" flex></md-divider>
 			
-		</div>
-		
-		<div layout="row" ng-show="showFilter" layout-align="center center" layout-padding>
-			<md-checkbox class="filter-checkbox md-primary" ng-repeat="tag in teamMemberTypeTags" ng-click="selectTag($index)">{{tag.text}}</md-checkbox>
-		</div>
-		
-	</div>
+			<md-list ng-cloak flex class="content-list">
+			
+				<md-list-item class="md-2-line" ng-show="!search" ng-repeat="member in membersList | filter :searchMember track by $index">
+			
+					<div class="md-list-item-text" layout-margin>
+						<h3>{{(member._id) ? member.name : member.email}}</h3>
+						<h4>{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}} - {{(member.email) ? member.email : 'No Email Address on File'}}</h4>
+				    </div>
+					
+				    <md-divider ng-hide="$last"></md-divider>
+			
+				</md-list-item>
+
+				<md-list-item class="md-3-line" ng-show="search" ng-repeat="member in searchResults | filter :searchMember track by $index">
+	    
+					<div class="md-list-item-text" layout-margin>
+					    <h3>{{(member._id) ? member.name : member.email}} <span><h5>{{(member.email) ? member.email : 'No Email Address on File'}}</h5></span></h3>
+					    <h4>{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</h4>
+				    </div>
+				    <md-divider ng-hide="$last"></md-divider>
 	
-	<div layout="row" layout-wrap>
+				</md-list-item>
 		
-		<div flex="33" ng-show="!search" ng-repeat="member in membersList | filter :searchMember track by $index">
-			<md-card flex layout="row">
-			 	<md-card-content layout="column">
-			        <h3 class="card-header">{{(member._id) ? member.name : member.email}} <span class="md-body-1">{{ member.type }}</span></h3>	
-			        <p class="md-body-1">{{(member.email) ? member.email : 'No Email Address on File'}}</p> 
-					<p class="md-body-1">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</p>
-				</md-card-content>
-			</md-card>
-			
+			</md-list>
 		</div>
-		
-		<div flex="33" ng-show="search" ng-repeat="member in searchResults | filter :searchMember track by $index" ui-sref="project.team.detail">
-			<md-card flex layout="row">
-			 	<md-card-content layout="column">
-			        <h3 class="md-body-2 card-header">{{(member._id) ? member.name : member.email}} <span class="md-body-1">{{ member.type }}</span></h3>	
-			        <p class="md-body-1">{{(member.email) ? member.email : 'No Email Address on File'}}</p> 
-					<p class="md-body-1">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</p>
-				</md-card-content>
-			</md-card>
-		</div>
-		
 	</div>
 </div>
 

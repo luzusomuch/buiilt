@@ -1,9 +1,13 @@
 <div layout="row" layout-padding>
     <div layout="column" flex>
         <div layout="column" class="md-whiteframe-1dp overview-view">
-            <div class="md-toolbar-tools">
-				
-                <h5 layout-margin><span>{{ project.name }} Calendar</span></h5>
+            
+            <div layout="row" layout-padding>
+		
+				<md-input-container md-no-float class="md-block md-icon-float" flex="100" style="margin-bottom: -15px; margin-top: 10px">
+					<md-icon class="material-icons" style="margin-top: 3px;">search</md-icon>
+					<input id="im_ProjCalendarSearch" type="text" name="calendarSearch" ng-model="" placeholder="Search for an event or task...">
+				</md-input-container>
 				
                 <span flex></span>
 				
@@ -22,6 +26,7 @@
                         </md-menu-item>
                     </md-menu-content>
                 </md-menu>
+				
 			</div>
         
             <md-divider layout="row" flex></md-divider>
@@ -46,9 +51,13 @@
   	        </md-button>
         </md-fab-trigger>
         <md-fab-actions>
-	  	    <md-button id="im_ProjCalendarAddActivity" aria-label="Add an Event" class="md-fab md-raised md-mini" ng-click="showModal($event, 'create-event.html')">
+	  	    <md-button id="im_ProjCalendarAddEvent" aria-label="Add an Event" class="md-fab md-raised md-mini" ng-click="showModal($event, 'create-event.html')">
                 <md-tooltip md-direction="left">Add an Event</md-tooltip>
                 <md-icon class="material-icons">event</md-icon>
+	        </md-button>
+	  	    <md-button id="im_ProjCalendarAddTask" aria-label="Add an Event" class="md-fab md-raised md-mini" ng-click="showModal($event, 'create-task.html')">
+                <md-tooltip md-direction="left">Add a Task</md-tooltip>
+                <md-icon class="material-icons">check</md-icon>
 	        </md-button>
         </md-fab-actions>
   	</md-fab-speed-dial>
