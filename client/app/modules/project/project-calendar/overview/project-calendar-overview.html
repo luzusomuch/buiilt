@@ -6,7 +6,7 @@
 		
 				<md-input-container md-no-float class="md-block md-icon-float" flex="100" style="margin-bottom: -15px; margin-top: 10px">
 					<md-icon class="material-icons" style="margin-top: 3px;">search</md-icon>
-					<input id="im_ProjCalendarSearch" type="text" name="calendarSearch" ng-model="" placeholder="Search for an event or task...">
+					<input id="im_ProjCalendarSearch" type="text" name="calendarSearch" ng-model="searchTerm" ng-change="search()" placeholder="Search for an event or task...">
 				</md-input-container>
 				
                 <span flex></span>
@@ -15,14 +15,14 @@
                     <md-button aria-label="Filter" ng-click="$mdOpenMenu($event)">Types</md-button>
                     <md-menu-content width="4">
 	                    <md-menu-item layout-padding>
-	                        <md-checkbox class="md-primary" md-prevent-menu-close>All</md-checkbox>
+	                        <md-checkbox class="md-primary" md-prevent-menu-close ng-checked="showTask && showEvent" ng-click="changeFilter('all')">All</md-checkbox>
 	                    </md-menu-item>
 						<md-divider></md-divder>
                         <md-menu-item layout-padding>
-                            <md-checkbox class="md-primary" md-prevent-menu-close="md-prevent-menu-close" ng-checked="showTask" ng-click="changeFilter('task')">Tasks</md-checkbox>
+                            <md-checkbox class="md-primary" md-prevent-menu-close ng-checked="showTask" ng-click="changeFilter('task')">Tasks</md-checkbox>
                         </md-menu-item>
                         <md-menu-item layout-padding>
-                            <md-checkbox class="md-primary" md-prevent-menu-close="md-prevent-menu-close" ng-checked="showEvent" ng-click="changeFilter('event')">Events</md-checkbox>
+                            <md-checkbox class="md-primary" md-prevent-menu-close ng-checked="showEvent" ng-click="changeFilter('event')">Events</md-checkbox>
                         </md-menu-item>
                     </md-menu-content>
                 </md-menu>
@@ -32,10 +32,7 @@
             <md-divider layout="row" flex></md-divider>
         
             <div layout="column" layout-padding flex>
-                <div calendar="myCalendar" ui-calendar="config.calendar" ng-model="eventSources" ng-show="showEvent && showTask"></div>
-                <div calendar="myCalendar" ui-calendar="config.calendar" ng-model="eventSourcesEvent" ng-show="showEvent && !showTask"></div>
-                <div calendar="myCalendar" ui-calendar="config.calendar" ng-model="eventSourcesTask" ng-show="!showEvent && showTask"></div>
-                <div calendar="myCalendar" ui-calendar="config.calendar" ng-model="eventSourcesEmpty" ng-show="!showEvent && !showTask"></div>
+                <div class="calendar" ng-model="eventSources" calendar="myCalendar" config="uiConfig.calendar" ui-calendar="uiConfig.calendar"></div>
             </div>
 			
         </div>
