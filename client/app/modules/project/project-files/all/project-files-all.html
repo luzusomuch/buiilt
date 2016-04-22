@@ -19,16 +19,16 @@
 	            <md-menu md-position-mode="target-right target">
 	                <md-button aria-label="Events" ng-click="$mdOpenMenu($event)">Events</md-button>
 	                <md-menu-content width="5">
-	                	<md-menu-item>
-	                		<md-input-container>
-	                			<label for="">Enter Event Name</label>
-	                			<input type="text" ng-model="searchEvent.name">
+	                    <md-menu-item>
+						    <md-button ng-click="changeFilter('all')"><span class="md-subhead">Show All Events</span></md-button>
+							<!-- <md-checkbox class="md-primary" md-prevent-menu-close ng-checked="checkAll" ng-click="changeFilter('all')">All</md-checkbox> -->
+	                    </md-menu-item>
+						<md-divider></md-divider>
+	                	<md-menu-item layout-padding>
+	                		<md-input-container md-no-float>
+	                			<input type="text" ng-model="searchEvent.name" placeholder="Search for an Event">
 	                		</md-input-container>
 	                	</md-menu-item>
-						<md-menu-item layout-padding>
-							<md-checkbox class="md-primary" md-prevent-menu-close ng-checked="checkAll" ng-click="changeFilter('all')">All</md-checkbox>
-						</md-menu-item>
-						<md-divider></md-divider>
 	                    <md-menu-item ng-repeat="ev in events | filter: searchEvent track by $index" layout-padding>
 	                        <md-checkbox class="md-primary" md-prevent-menu-close ng-checked="ev.select" ng-click="changeFilter('item', ev._id)">{{ev.name}}</md-checkbox>
 	                    </md-menu-item>
@@ -38,10 +38,15 @@
 	            <md-menu md-position-mode="target-right target">
 	                <md-button aria-label="Events" ng-click="$mdOpenMenu($event)">Recipients</md-button>
 	                <md-menu-content width="5">
-						<md-menu-item layout-padding>
-							<md-checkbox class="md-primary" md-prevent-menu-close ng-checked="">All</md-checkbox>
-						</md-menu-item>
+	                    <md-menu-item>
+						    <md-button ng-click=""><span class="md-subhead">Show All Recipients</span></md-button>
+	                    </md-menu-item>
 						<md-divider></md-divider>
+	                	<md-menu-item layout-padding>
+	                		<md-input-container md-no-float>
+	                			<input type="text" ng-model="" placeholder="Search for a Recipient">
+	                		</md-input-container>
+	                	</md-menu-item>
 	                    <md-menu-item ng-repeat="" layout-padding>
 	                        <md-checkbox class="md-primary" md-prevent-menu-close ng-checked="" ng-click="">{{ }}</md-checkbox>
 	                    </md-menu-item>
@@ -51,10 +56,15 @@
 	            <md-menu md-position-mode="target-right target">
 	                <md-button aria-label="Events" ng-click="$mdOpenMenu($event)">File Type</md-button>
 	                <md-menu-content width="5">
-						<md-menu-item layout-padding>
-							<md-checkbox class="md-primary" md-prevent-menu-close ng-checked="">All</md-checkbox>
-						</md-menu-item>
+	                    <md-menu-item>
+						    <md-button ng-click=""><span class="md-subhead">Show All File Types</span></md-button>
+	                    </md-menu-item>
 						<md-divider></md-divider>
+	                	<md-menu-item layout-padding>
+	                		<md-input-container md-no-float>
+	                			<input type="text" ng-model="" placeholder="Search for a File Type">
+	                		</md-input-container>
+	                	</md-menu-item>
 	                    <md-menu-item ng-repeat="tag in tags" layout-padding>
 	                        <md-checkbox class="md-primary" md-prevent-menu-close ng-checked="ev.select" ng-click="selectChip($index, 'tag'); selectFilterTag(tag.name)">{{tag.name}}</md-checkbox>
 	                    </md-menu-item>

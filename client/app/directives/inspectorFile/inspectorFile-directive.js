@@ -104,6 +104,17 @@ angular.module('buiiltApp').directive('inspectorFile', function(){
 			        clickOutsideToClose: false
 			    });
 			};
+			
+			$scope.showAssignModal = function ($event) {
+				$mdDialog.show({
+				    targetEvent: $event,
+			        controller: ["$scope", "$state", "$stateParams", 
+                    function($scope, $state, $stateParams){}],
+			        templateUrl: 'app/directives/inspectorFile/assign.html',
+			        parent: angular.element(document.body),
+			        clickOutsideToClose: false
+			    });
+			};
         }
     };
 });

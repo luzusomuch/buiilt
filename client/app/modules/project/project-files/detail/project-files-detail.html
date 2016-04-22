@@ -11,25 +11,16 @@
 					<md-tooltip md-direction="bottom">Back</md-tooltip>
 				</md-button>
 			
-				<p>{{file.name}}</p>
+			    <h5><span>{{file.name}}</span></h5>
 				
 				<span flex></span>
 				
-                <md-button ng-show="isOwnerTeam" ng-click="archive()" aria-label="Compose Message" class="md-icon-button" style="margin-left: 30px">
-                    <md-tooltip md-direction="top">{{(!file.isArchive) ? 'Archive this File' : 'Unarchive this File'}}</md-tooltip>
-                    <md-icon class="material-icons"><i class="material-icons">{{(!file.isArchive) ? 'archive' : 'unarchive'}}</i></md-icon>
-                </md-button>
-				
-                <md-button ng-show="!file.isArchive" aria-label="Upload a Revision" class="md-icon-button" ng-click="showModal($event, 'upload-reversion.html')" style="margin-right: 30px">
+                <!-- <md-button ng-show="!file.isArchive" aria-label="Upload a Revision" class="md-icon-button" ng-click="showModal($event, 'upload-reversion.html')" style="margin-right: 30px">
                     <md-tooltip md-direction="top">Upload a Revision</md-tooltip>
                     <md-icon class="material-icons">file_upload</md-icon>
-                </md-button>
-                <md-button ng-show="!file.isArchive" aria-label="Edit the File Details" class="md-icon-button" ng-click="showModal($event, 'edit-file.html')" style="margin-right: 30px">
-                    <md-tooltip md-direction="top">Edit File Details</md-tooltip>
-                    <md-icon class="material-icons">edit</md-icon>
-                </md-button>
-			
-				<div>
+                </md-button> -->
+                
+				<!-- <div>
 	                <md-menu md-position-mode="target-right target">
 					    <md-button ng-click="openFileHistory($mdOpenMenu, $event)">View File</md-button>
 	                    <md-menu-content width="4">
@@ -41,7 +32,12 @@
 	                        </md-menu-item>
 	                    </md-menu-content>
 	                </md-menu>
-				</div>
+				</div> -->
+					
+                <md-button ng-show="!file.isArchive" aria-label="Edit the File Details" class="md-icon-button" ng-click="showModal($event, 'edit-file.html')">
+                    <md-tooltip md-direction="left">Edit Details</md-tooltip>
+                    <md-icon class="material-icons">edit</md-icon>
+                </md-button>
 			
 		    </div>
 			
@@ -142,20 +138,25 @@
 
 				<span flex></span>
 				
-                <md-button ng-show="!file.isArchive" aria-label="Add a Team Member" class="md-icon-button" ng-click="showModal($event, 'assign.html')" ng-show="!file.belongTo" style="margin-right: 30px">
+                <!-- <md-button ng-show="!file.isArchive" aria-label="Add a Team Member" class="md-icon-button" ng-click="showModal($event, 'assign.html')" ng-show="!file.belongTo">
                     <md-tooltip md-direction="top">Add a Team Member</md-tooltip>
                     <md-icon class="material-icons">person_outline</md-icon>
-                </md-button>
+                </md-button> -->
 				
-                <md-button ng-show="!file.isArchive" aria-label="Add a Team Member" class="md-icon-button" ng-click="showModal($event, 'insert-note.html')" style="margin-right: 30px">
+                <!-- <md-button ng-show="!file.isArchive" aria-label="Add a Team Member" class="md-icon-button" ng-click="showModal($event, 'insert-note.html')">
                     <md-tooltip md-direction="top">Insert A Note</md-tooltip>
                     <md-icon class="material-icons">note_add</md-icon>
-                </md-button>
+                </md-button> -->
 				
-				<md-button class="md-icon-button" ng-click="showCreateRelatedTask($event)">
+				<!-- <md-button class="md-icon-button" ng-click="showCreateRelatedTask($event)">
 					<md-tooltip md-direction="bottom">Add a Related Task</md-tooltip>
 					<md-icon class="material-icons">check</md-icon>
-				</md-button>
+				</md-button> -->
+				
+                <md-button ng-show="isOwnerTeam" ng-click="archive()" aria-label="Compose Message" class="md-icon-button" style="margin-left: 30px">
+                    <md-tooltip md-direction="left">{{(!file.isArchive) ? 'Archive this File' : 'Unarchive this File'}}</md-tooltip>
+                    <md-icon class="material-icons"><i class="material-icons">{{(!file.isArchive) ? 'archive' : 'unarchive'}}</i></md-icon>
+                </md-button>
 				
 			</div>
 

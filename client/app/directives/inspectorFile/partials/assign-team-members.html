@@ -1,0 +1,24 @@
+<md-dialog aria-label="Assign members to {{file.name}}" flex="70">
+    <form ng-submit="assignMember()" name="form">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Assign Additional Members to {{file.name}}</h2>
+            </div>
+        </md-toolbar>
+        
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column">
+				
+				<div layout="row" layout-align="center center" layout-wrap layout-padding flex>
+                    <md-checkbox class="filter-checkbox md-primary" ng-repeat="member in membersList" ng-click="selectMember($index, 'member')">{{(member._id) ? member.name : member.email}}</md-checkbox>
+				</div>
+				
+            </div>
+        </md-dialog-content>
+        
+        <md-dialog-actions>
+            <md-button ng-click="closeModal()">Cancel</md-button>
+            <md-button type="submit" class="md-primary">Assign Members</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

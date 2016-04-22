@@ -1,0 +1,35 @@
+<div layout="row" flex="80" flex-offset="10" layout-padding>
+    <div layout="column" flex>
+        <div layout="column" class="md-whiteframe-1dp overview-view">
+            
+            <div layout="row" layout-padding>
+				<h3><span>Contact Book</span></h3>
+			</div>
+			
+			<md-divider layout="row" flex></md-divider>
+			
+			<md-list ng-cloak flex class="content-list">
+	            <md-list-item class="md-3-line" ng-repeat="contact in contactBooks">
+	                <div class="md-list-item-text" layout="column">
+	                    <h3>{{contact.name}}</h3>
+	                    <p><strong>Email: </strong>{{contact.email}} - <strong>Phone Number: </strong> {{contact.phoneNumber}}</p>
+	                    <p>{{contact.teamName}}</p>
+	                </div>
+	                <md-divider></md-divider>
+	            </md-list-item>
+			</md-list>
+			
+		</div>
+	</div>
+</div>
+			
+<div>
+    <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-list">
+        <md-fab-trigger>
+            <md-button aria-label="Actions" class="md-fab md-primary" ng-click="showModal($event, 'add-new-contact.html')">
+                <md-tooltip md-direction="left">Add a New Contact</md-tooltip>
+                <md-icon class="material-icons" >add</md-icon>
+            </md-button>
+        </md-fab-trigger>
+    </md-fab-speed-dial>
+</div>
