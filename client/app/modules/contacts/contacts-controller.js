@@ -1,9 +1,6 @@
 angular.module('buiiltApp').controller('contactsCtrl', function($rootScope, $scope, $timeout, $state, $mdDialog, $state, userService, dialogService, contactBookService, contactBooks) {
     $scope.dialogService = dialogService;
     $rootScope.title = "Contacts Book"
-    $scope.currentTeam = $rootScope.currentTeam;
-    $rootScope.currentUser = null;
-    $rootScope.currentUser = $scope.currentUser;
     $scope.contactBooks = contactBooks;
 
     /*Show modal with valid name*/
