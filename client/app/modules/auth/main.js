@@ -5,11 +5,6 @@ angular.module('buiiltApp').config(function($stateProvider) {
       templateUrl: '/app/modules/auth/signup/signup.html',
       controller: 'SignupCtrl'
     })
-    .state('signupWithInvite', {
-      url: '/signup-invite?packageInviteToken',
-      templateUrl: '/app/modules/auth/signup-with-invite/signup.html',
-      controller: 'SignupWithInviteCtrl'
-    })
     .state('signin', {
       url: '/signin?action&error',
       templateUrl: '/app/modules/auth/signin/signin.html',

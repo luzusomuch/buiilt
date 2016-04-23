@@ -163,9 +163,11 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
     url: '/documentation',
 	  abstract: true,
     templateUrl: '/app/modules/project/project-documentation/project-documentation.html',
-    controller: 'projectDocumentationCtrl',
     authenticate : true,
     resolve: {
+      documentSets: function($stateParams, documentService) {
+        return documentService.me({id: $stateParams.id}).$promise;
+      },
       documents: function($stateParams, fileService) {
         return fileService.getProjectFiles({id: $stateParams.id, type: "document"}).$promise;
       }

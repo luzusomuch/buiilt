@@ -1,7 +1,66 @@
-angular.module('buiiltApp').controller('projectDocumentationCtrl', function($rootScope, $scope, $mdDialog, documents, uploadService, $mdToast, $stateParams, socket, $state, fileService) {
+angular.module('buiiltApp').controller('projectDocumentationCtrl', function($rootScope, $scope, $mdDialog, documents, uploadService, $mdToast, $stateParams, socket, $state, fileService, documentSets, people, dialogService, documentService) {
     $scope.documents = documents;
+    $scope.documentSets = documentSets;
+    $scope.documentSets.push({name: "Set 1", documents: documents});
+    $scope.dialogService = dialogService;
 	
 	$scope.showFilter = false;
+
+    /*Get project members list*/
+    function getProjectMembers() {
+        $scope.projectMembers = [];
+        _.each($rootScope.roles, function(role) {
+            _.each(people[role], function(tender){
+                if (tender.hasSelect) {
+                    var isLeader = (_.findIndex(tender.tenderers, function(tenderer) {
+                        if (tenderer._id) {
+                            return tenderer._id._id.toString() === $rootScope.currentUser._id.toString();
+                        }
+                    }) !== -1) ? true : false;
+                    if (!isLeader) {
+                        _.each(tender.tenderers, function(tenderer) {
+                            var memberIndex = _.findIndex(tenderer.teamMember, function(member) {
+                                return member._id.toString() === $rootScope.currentUser._id.toString();
+                            });
+                            if (memberIndex !== -1) {
+                                _.each(tenderer.teamMember, function(member) {
+                                    member.select = false;
+                                    $scope.projectMembers.push(member);
+                                });
+                            }
+                        });
+                        if (tender.tenderers[0]._id) {
+                            tender.tenderers[0]._id.select = false;
+                            $scope.projectMembers.push(tender.tenderers[0]._id);
+                        } else {
+                            $scope.projectMembers.push({email: tender.tenderers[0].email, select: false});
+                        }
+                    } else {
+                        $scope.projectMembers.push(tender.tenderers[0]._id);
+                        _.each(tender.tenderers, function(tenderer) {
+                            if (tenderer._id._id.toString() === $rootScope.currentUser._id.toString()) {
+                                _.each(tenderer.teamMember, function(member) {
+                                    member.select = false;
+                                    $scope.projectMembers.push(member);
+                                });
+                            }
+                        });
+                    }
+                }
+            });
+        });
+        _.remove($scope.projectMembers, {_id: $rootScope.currentUser._id});
+        if ($rootScope.selectedDocumentSet) {
+            _.each($rootScope.selectedDocumentSet.members, function(member) {
+                if (member._id) 
+                    _.remove($scope.projectMembers, {_id: member._id});
+            });
+            _.each($rootScope.selectedDocumentSet.notMembers, function(email) {
+                _.remove($scope.projectMembers, {email: email});
+            })
+        }
+    };
+    getProjectMembers();
 
     function setUploadFile(){
         $scope.uploadFile = {
@@ -136,10 +195,35 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
         if (data.type==="file" && data.file.element.type==="document") 
             $rootScope.$emit("Dashboard.Document.Update", data);
     });
+
+    /*Receive when create new set of document*/
+    socket.on("document-set:new", function(data) {
+        if (data.project==$stateParams.id) {
+            $scope.documentSets.push(data);
+        }
+    });
+
+    /*Receive when update a set of document*/
+    socket.on("document-set:update", function(data) {
+        if (data.project==$stateParams.id) {
+            var index = _.findIndex($scope.documentSets, function(set) {
+                if (set._id) {
+                    return set._id==data._id;
+                }
+            });
+            if (index !== -1) {
+                $scope.documentSets[index] = data;
+            }
+        }
+    });
     
-    /*Select document tags to create new document*/
-    $scope.selectChip = function(index) {
-        $scope.tags[index].select = !$scope.tags[index].select;
+    /*Select document tags to create new document
+    Select project members for create new document set*/
+    $scope.selectedItem = function(index, type) {
+        if (type==="member") 
+            $scope.projectMembers[index].select = !$scope.projectMembers[index].select;
+        else
+            $scope.tags[index].select = !$scope.tags[index].select;
     };
 
 	/*Create new document with valid tags
@@ -148,13 +232,13 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
 	$scope.addNewDocument = function(){
         $scope.uploadFile.tags = _.filter($scope.tags, {select: true});
         if ($scope.uploadFile.tags.length === 0) {
-            $scope.showToast("Please Select At Least 1 Document Tag...");
+            dialogService.showToast("Please Select At Least 1 Document Tag...");
             return;
         } else {
             $scope.uploadFile.type="document";
             uploadService.upload({id: $stateParams.id}, $scope.uploadFile).$promise.then(function(res) {
-                $scope.closeModal();
-                $scope.showToast("Document Successfully Uploaded.");
+                dialogService.closeModal();
+                dialogService.showToast("Document Successfully Uploaded.");
                 $rootScope.$emit("Document.Uploaded", res);
 				
 				//Track Document Upload
@@ -165,25 +249,28 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
             }, function(err){$scope.showToast("There Was an Error...");});
         }
 	};
-	
-	/*Show create new document modal*/
-	$scope.showNewDocumentModal = function($event) {
-		$mdDialog.show({
-		  	targetEvent: $event,
-	      	controller: "projectDocumentationCtrl",
-	      	resolve: {
+
+    $scope.showModal = function(modalName, value) {
+        if (modalName==="edit-document-set.html") 
+            $rootScope.selectedDocumentSet = value;
+        $mdDialog.show({
+            controller: "projectDocumentationCtrl",
+            resolve: {
                 documents: ["$stateParams", "fileService", function($stateParams, fileService) {
                     return fileService.getProjectFiles({id: $stateParams.id, type: "document"}).$promise;
                 }],
                 people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
                     return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
+                }],
+                documentSets: ["$stateParams", "documentService", function($stateParams, documentService) {
+                    return documentService.me({id: $stateParams.id}).$promise;
                 }]
             },
-	      	templateUrl: 'app/modules/project/project-documentation/new/project-documentation-new.html',
-	      	parent: angular.element(document.body),
-	      	clickOutsideToClose: false
-	    });
-	};
+            templateUrl: 'app/modules/project/project-documentation/partials/' + modalName,
+            parent: angular.element(document.body),
+            clickOutsideToClose: false
+        });
+    };
 
     /*Open latest document history in new window*/
     $scope.showViewFileModal = function($event, document) {
@@ -195,14 +282,35 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
         }
         win.focus();
     };
-	
-    /*Close opening modal*/
-	$scope.closeModal = function(){
-		$mdDialog.cancel();
-	};
 
-    /*Show a toast dialog with inform*/
-    $scope.showToast = function(value) {
-        $mdToast.show($mdToast.simple().textContent(value).position('bottom','right').hideDelay(3000));
+    $scope.setDocument = {};
+    $scope.addNewSetOfDocument = function(form) {
+        if (form.$valid) {
+            $scope.setDocument.newMembers = _.filter($scope.projectMembers, {select: true});
+            documentService.create({id: $stateParams.id}, $scope.setDocument).$promise.then(function(res) {
+                dialogService.closeModal();
+                dialogService.showToast("Create new set of document successfully");
+            }, function(err){
+                dialogService.showToast("Error");
+            });
+        } else {    
+            dialogService.showToast("Check your input again.");
+        }
+    };
+
+    $scope.selectedDocumentSet = $rootScope.selectedDocumentSet;
+    $scope.updateSetOfDocument = function(form) {
+        if (form.$valid) {
+            $scope.selectedDocumentSet.newMembers = _.filter($scope.projectMembers, {select: true});
+            documentService.update({id: $scope.selectedDocumentSet._id}, $scope.selectedDocumentSet).$promise.then(function(res) {
+                dialogService.closeModal();
+                dialogService.showToast("Update a set of document successfully");
+                $rootScope.selectedDocumentSet = null;
+            }, function(err){
+                dialogService.showToast("Error");
+            });
+        } else {
+            dialogService.showToast("Check your input again.");   
+        }
     };
 });

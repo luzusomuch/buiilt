@@ -25,6 +25,7 @@ module.exports = function(app) {
   app.use('/api/tenders', require('./api/tender'));
   app.use('/api/activities', require('./api/activities'));
   app.use('/api/contactBooks', require('./api/contactBook'));
+  app.use('/api/documents', require('./api/document'));
 
   app.use('/auth', require('./auth'));
 

@@ -5,15 +5,16 @@
 		</div>
 		<md-divider layout="row"></md-divider>
 		<md-list ng-cloak>
-			<div>
-				<md-list-item class="md-2-line">
-					<div class="md-list-item-text" layout="column">
-						<h3>Set Name 1</h3>
-						<p>Assignee 1, Assignee 2, Assignee 3</p>
+			<md-list-item class="md-2-line" ng-repeat="documentSet in documentSets">
+				<div class="md-list-item-text" layout="column">
+					<h3>{{documentSet.name}}</h3>
+					<div ng-show="documentSet.members.length > 0 || documentSet.notMembers.length > 0">
+						<span ng-repeat="member in documentSet.members">{{member.name}} </span>
+						<span ng-repeat="email in documentSet.notMembers">{{email}}</span>
 					</div>
-					<md-button class="md-icon-button md-secondary"><md-icon class="material-icons">settings</md-icon></md-button>
-				</md-list-item>
-			</div>
+				</div>
+				<md-button ng-click="showModal('edit-document-set.html', documentSet)" class="md-icon-button md-secondary"><md-icon class="material-icons">settings</md-icon></md-button>
+			</md-list-item>
 		</md-list>
 	</div>
 
@@ -59,11 +60,11 @@
 	  	      </md-button>
   	      </md-fab-trigger>
 		  <md-fab-actions>
-	  	      <md-button id="im_ProjDocAddSet" aria-label="Create a New Set" class="md-fab md-raised md-mini" ng-click="">
+	  	      <md-button id="im_ProjDocAddSet" aria-label="Create a New Set" class="md-fab md-raised md-mini" ng-click="showModal('new-document-set.html')">
 				  <md-tooltip md-direction="left">Create a New Set</md-tooltip>
 			      <md-icon class="material-icons">create_new_folder</md-icon>
 	  	      </md-button>
-	  	      <md-button id="im_ProjDocAddDoc" aria-label="Add a Document" class="md-fab md-raised md-mini" ng-click="showNewDocumentModal($event)">
+	  	      <md-button id="im_ProjDocAddDoc" aria-label="Add a Document" class="md-fab md-raised md-mini" ng-click="showModal('new-document.html')">
 				  <md-tooltip md-direction="left">Add a Document</md-tooltip>
 			      <md-icon class="material-icons">file_upload</md-icon>
 	  	      </md-button>

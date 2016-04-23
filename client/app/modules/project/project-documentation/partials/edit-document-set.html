@@ -1,0 +1,38 @@
+<md-dialog aria-label="Edit Document Set {{selectedDocumentSet.name}}" flex="70" id="newDocumentDialog">
+    <form ng-submit="updateSetOfDocument(form)" name="form" novalidate>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Edit Document Set {{selectedDocumentSet.name}}</h2>
+            </div>
+        </md-toolbar>
+        
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column" layout-padding>
+                
+                <div layout="column">
+                    <p class="md-body-2">Provide a name for this set of document:</p>
+                    <div layout="row">
+                        <md-input-container flex="66" flex-offset="15">
+                            <label>Name of the set Document...</label>
+                            <input ng-model="selectedDocumentSet.name" required type="text" name="name"></input>
+                        </md-input-container>
+                    </div>
+                </div>
+                    
+                <div layout="column">
+                    <p class="md-body-2">Select at least one project member that is relevant to set of this document:</p>
+                    
+                    <div layout="row" flex layout-align="center center" layout-wrap layout-padding>
+                        <md-checkbox class="filter-checkbox md-primary" ng-repeat="member in projectMembers" ng-click="selectedItem($index, 'member')">{{ (member._id) ? member.name : member.email }}</md-checkbox>
+                    </div>
+                </div>
+                
+            </div>
+        </md-dialog-content>
+        
+        <md-dialog-actions>
+            <md-button ng-click="dialogService.closeModal()">Cancel</md-button>
+            <md-button type="submit" class="md-primary">Edit Set Of Document</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>
