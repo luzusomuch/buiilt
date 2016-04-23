@@ -19,62 +19,18 @@
 	
 	<md-subheader ng-click="showMembers=!showMembers" class="border-top inspector-header md-primary">
 		<div layout="row">
-			<span>TEAM MEMBERS</span>
+			<span>TASK ASSIGNEES</span>
 			<span flex></span>
 			<md-icon class="material-icons accordian-icon md-primary" ng-show="!showMembers">expand_more</md-icon>
 			<md-icon class="material-icons accordian-icon md-primary" ng-show="showMembers">expand_less</md-icon>
 		</div>
 	</md-subheader>
 	
-	<md-list ng-show="showMembers" ng-show="data.members != 'null'">
+	<md-list ng-show="showMembers" ng-show="data.members != 'null'" class="md-dense">
 		<md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event, member._id)" ng-show="data.element" ng-repeat="member in data.members | unique: '_id' track by $index">
 		    <div class="md-list-item-text">
 			    <h3>{{(member._id) ? member.name : member.email}}</h3>
 				<p>Phone Number</p>
-		    </div>
-		</md-list-item>
-	</md-list>
-	
-</section>
-
-<section>
-	
-	<md-subheader ng-click="showRelatedMessages=!showRelatedMessages" class="border-top inspector-header md-primary">
-		<div layout="row">
-			<span>RELATED MESSAGES</span>
-			<span flex></span>
-			<md-icon class="material-icons accordian-icon md-primary" ng-show="!showRelatedMessages">expand_more</md-icon>
-			<md-icon class="material-icons accordian-icon md-primary" ng-show="showRelatedMessages">expand_less</md-icon>
-		</div>
-	</md-subheader>
-	
-	<md-list ng-show="showRelatedMessages">
-		<md-list-item class="md-2-line" ng-click="showRelatedTasksModal($event, thread)" ng-repeat="thread in data.relatedItem" ng-show="thread.type == 'thread'">
-		    <div class="md-list-item-text">
-			    <h3>{{thread.item.name}}</h3>
-		        <p>{{thread.item.description}}</p>
-		    </div>
-		</md-list-item>
-	</md-list>
-	
-</section>
-
-<section>
-	
-	<md-subheader ng-click="showSharedFiles=!showSharedFiles" class="border-top inspector-header md-primary">
-		<div layout="row">
-			<span>SHARED FILES</span>
-			<span flex></span>
-			<md-icon class="material-icons accordian-icon md-primary" ng-show="!showSharedFiles">expand_more</md-icon>
-			<md-icon class="material-icons accordian-icon md-primary" ng-show="showSharedFiles">expand_less</md-icon>
-		</div>
-	</md-subheader>
-	
-	<md-list ng-show="showSharedFiles" ng-show="data.relatedItem != 'null'">
-		<md-list-item class="md-2-line" ng-click="showRelatedFilesModal($event, file)" ng-repeat="file in data.relatedItem" ng-show="file.type == 'file'">
-		    <div class="md-list-item-text">
-			    <h3>{{file.item.name}}</h3>
-			    <p>{{file.item.description}}</p>
 		    </div>
 		</md-list-item>
 	</md-list>

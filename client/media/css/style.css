@@ -691,13 +691,19 @@ div > .fab-toolbar-btn {
 }
 
 .inspector-header {
+	margin-bottom:0px;
+	background-color: white;
+}
+
+.inspector-section {
 	outline: none;
 	cursor: pointer;
-	margin-bottom:0px;
 }
 
 .accordian-icon {
 	margin-top: -5px;
+	outline: none;
+	cursor: pointer;
 }
 
 .overview-view {
@@ -723,10 +729,5 @@ md-card {
 .documentation-view {
 	background-color: white;
 }
-
-.white-background {
-  background-color: white;
-}
-
 
 

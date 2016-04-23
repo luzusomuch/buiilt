@@ -1,11 +1,15 @@
 <section>
 	
-	<md-subheader ng-click="showActivity=!showActivity" class="inspector-header md-primary">
+	<md-subheader  class="inspector-header md-primary">
 		<div layout="row">
-			<span>FILE ACTIVITY</span>
-			<span flex></span>
-			<md-icon class="material-icons accordian-icon md-primary" ng-show="!showActivity">expand_more</md-icon>
-			<md-icon class="material-icons accordian-icon md-primary" ng-show="showActivity">expand_less</md-icon>
+			
+			<div layout="row" class="inspector-section" ng-click="showActivity=!showActivity" flex>
+				FILE ACTIVITY
+				<span flex></span>
+				<md-icon class="material-icons accordian-icon md-primary" ng-show="!showActivity">expand_more</md-icon>
+				<md-icon class="material-icons accordian-icon md-primary" ng-show="showActivity">expand_less</md-icon>
+			</div>
+			
 		</div>
 	</md-subheader>
 	
@@ -17,12 +21,18 @@
 
 <section>
 	
-	<md-subheader ng-click="showMembers=!showMembers" class="border-top inspector-header md-primary">
+	<md-subheader class="border-top inspector-header md-primary">
 		<div layout="row">
-			<span>TEAM MEMBERS</span>
-			<span flex></span>
-			<md-icon class="material-icons accordian-icon md-primary" ng-show="!showMembers">expand_more</md-icon>
-			<md-icon class="material-icons accordian-icon md-primary" ng-show="showMembers">expand_less</md-icon>
+			
+			<md-icon class="material-icons accordian-icon md-primary" style="margin-right: 1vh" ng-click="">add_box</md-icon>
+			
+			<div layout="row" class="inspector-section" ng-click="showMembers=!showMembers" flex>
+				TEAM MEMBERS
+				<span flex></span>
+				<md-icon class="material-icons accordian-icon md-primary" ng-show="!showMembers">expand_more</md-icon>
+				<md-icon class="material-icons accordian-icon md-primary" ng-show="showMembers">expand_less</md-icon>
+			</div>
+			
 		</div>
 	</md-subheader>
 	
@@ -39,19 +49,25 @@
 
 <section>
 	
-	<md-subheader ng-click="showRelatedMessages=!showRelatedMessages" class="border-top inspector-header md-primary">
+	<md-subheader class="border-top inspector-header md-primary">
 		<div layout="row">
-			<span>RELATED MESSAGES</span>
-			<span flex></span>
-			<md-icon class="material-icons accordian-icon md-primary" ng-show="!showRelatedMessages">expand_more</md-icon>
-			<md-icon class="material-icons accordian-icon md-primary" ng-show="showRelatedMessages">expand_less</md-icon>
+			
+			<md-icon class="material-icons accordian-icon md-primary" style="margin-right: 1vh" ng-click="">add_box</md-icon>
+			
+			<div layout="row" class="inspector-section" ng-click="showRelatedMessages=!showRelatedMessages" flex>
+				RELATED MESSAGES
+				<span flex></span>
+				<md-icon class="material-icons accordian-icon md-primary" ng-show="!showRelatedMessages">expand_more</md-icon>
+				<md-icon class="material-icons accordian-icon md-primary" ng-show="showRelatedMessages">expand_less</md-icon>
+			</div>
+			
 		</div>
 	</md-subheader>
 	
 	<md-list ng-show="showRelatedMessages" class="md-dense">
-		<md-list-item class="md-2-line">
+		<md-list-item class="md-2-line" ng-repeat="">
 		    <div class="md-list-item-text">
-			    <p>{{file.item.name}}</p>
+			    <h3>{{file.item.name}}</h3>
 			    <p>{{file.item.description}}</p>
 		    </div>
 		</md-list-item>
@@ -61,12 +77,18 @@
 
 <section>
 	
-	<md-subheader ng-click="showRelatedTasks=!showRelatedTasks" class="border-top inspector-header md-primary">
+	<md-subheader class="border-top inspector-header md-primary">
 		<div layout="row">
-			<span>RELATED TASKS</span>
-			<span flex></span>
-			<md-icon class="material-icons accordian-icon md-primary" ng-show="!showRelatedTasks">expand_more</md-icon>
-			<md-icon class="material-icons accordian-icon md-primary" ng-show="showRelatedTasks">expand_less</md-icon>
+			
+			<md-icon class="material-icons accordian-icon md-primary" style="margin-right: 1vh" ng-click="">add_box</md-icon>
+			
+			<div layout="row" class="inspector-section" ng-click="showRelatedTasks=!showRelatedTasks" flex>
+				RELATED TASKS
+				<span flex></span>
+				<md-icon class="material-icons accordian-icon md-primary" ng-show="!showRelatedTasks">expand_more</md-icon>
+				<md-icon class="material-icons accordian-icon md-primary" ng-show="showRelatedTasks">expand_less</md-icon>
+			</div>
+			
 		</div>
 	</md-subheader>
 	

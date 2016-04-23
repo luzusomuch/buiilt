@@ -19,10 +19,7 @@
 			      	<md-icon class="material-icons">content_paste</md-icon>
 	  	      	</md-button>
 	
-				<md-button ng-show="isOwnerTeam" ng-click="archive()" aria-label="Compose Message" class="md-icon-button">
-				  	<md-tooltip md-direction="bottom">{{(!thread.isArchive) ? 'Archive this Message Thread' : 'Unarchive this Message Thread'}}</md-tooltip>
-			      	<md-icon class="material-icons"><i class="material-icons">{{(!thread.isArchive) ? 'archive' : 'unarchive'}}</i></md-icon>
-	  	      	</md-button>
+				
 		    </div>
 			
 			<md-divider layout="row" flex></md-divider>
@@ -74,20 +71,25 @@
 
 				<span flex></span>
 				
-	  	      	<md-button aria-label="Add a Team Member" class="md-icon-button" ng-click="showAssignTeamMemberModal($event)">
+	  	      	<!-- <md-button aria-label="Add a Team Member" class="md-icon-button" ng-click="showAssignTeamMemberModal($event)">
 					<md-tooltip md-direction="bottom">Add a Team Member</md-tooltip>
 			      	<md-icon class="material-icons">person_outline</md-icon>
-	  	      	</md-button>
+	  	      	</md-button> -->
 				
-				<md-button class="md-icon-button" ng-click="showCreateRelatedFile($event)">
+				<!-- <md-button class="md-icon-button" ng-click="showCreateRelatedFile($event)">
 					<md-tooltip md-direction="bottom">Add a Shared File</md-tooltip>
 					<md-icon class="material-icons">attach_file</md-icon>
-				</md-button>
+				</md-button> -->
 
-				<md-button class="md-icon-button" ng-click="showCreateRelatedTask($event)">
+				<!-- <md-button class="md-icon-button" ng-click="showCreateRelatedTask($event)">
 					<md-tooltip md-direction="bottom">Add a Related Task</md-tooltip>
 					<md-icon class="material-icons">check</md-icon>
-				</md-button>
+				</md-button> -->
+				
+				<md-button ng-show="isOwnerTeam" ng-click="archive()" aria-label="Compose Message" class="md-icon-button">
+				  	<md-tooltip md-direction="left">{{(!thread.isArchive) ? 'Archive this Message' : 'Unarchive this Message'}}</md-tooltip>
+			      	<md-icon class="material-icons"><i class="material-icons">{{(!thread.isArchive) ? 'archive' : 'unarchive'}}</i></md-icon>
+	  	      	</md-button>
 				
 			</div>
 

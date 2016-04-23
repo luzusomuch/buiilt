@@ -41,11 +41,11 @@
 			
 				</md-list-item>
 
-				<md-list-item class="md-3-line" ng-show="search" ng-repeat="member in searchResults | filter :searchMember track by $index">
+				<md-list-item class="md-2-line" ng-show="search" ng-repeat="member in searchResults | filter :searchMember track by $index">
 	    
 					<div class="md-list-item-text" layout-margin>
-					    <h3>{{(member._id) ? member.name : member.email}} <span><h5>{{(member.email) ? member.email : 'No Email Address on File'}}</h5></span></h3>
-					    <h4>{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</h4>
+					    <h3>{{(member._id) ? member.name : member.email}}</h3>
+					    <h4>{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}} - {{(member.email) ? member.email : 'No Email Address on File'}}</h4>
 				    </div>
 				    <md-divider ng-hide="$last"></md-divider>
 	
