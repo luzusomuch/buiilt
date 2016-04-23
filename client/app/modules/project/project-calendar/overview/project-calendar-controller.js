@@ -88,7 +88,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
     /*config fullcalendar*/
     $scope.uiConfig = {
         calendar: {
-            height: 450,
+            height: 'auto',
             header: {
                 left: "month agendaWeek agendaDay",
                 center: "title",
@@ -98,17 +98,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
             editable: true,
             dayClick: function(day) {
                 $rootScope.selectedStartDate = new Date(day);
-                var confirm = $mdDialog.confirm()
-                    .title('Create new Event or Task?')
-                    .textContent('Please select one type to countinue')
-                    .ariaLabel('Create Item')
-                    .ok('New Event')
-                    .cancel('New Task');
-                $mdDialog.show(confirm).then(function() {
-                    $scope.showModal("create-event.html");
-                }, function() {
-                    $scope.showModal("create-task.html");
-                });
+                $scope.showModal("create-task-or-event.html");
             },
             eventClick: function(data) {
                 if (data.type==="event") {
@@ -249,14 +239,14 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                     dateStart = moment(task.dateStart);
                     dateEnd = moment(task.dateEnd);
                 }
-                $scope.events.push({type: "task", _id: task._id, title: task.description, start: moment(dateStart).format("YYYY-MM-DD hh:mm"), end: moment(dateEnd).format("YYYY-MM-DD hh:mm")});
+                $scope.events.push({type: "task", _id: task._id, title: task.description, start: moment(dateStart).format("YYYY-MM-DD hh:mm"), end: moment(dateEnd).format("YYYY-MM-DD hh:mm"), "backgroundColor": "#2196F3", allDay: false});
             }
         });
         _.each(activities, function(activity) {
             if (!activity.isMilestone) {
                 var dateStart = moment(activity.date.start).add(moment(activity.time.start).hours(), "hours").add(moment(activity.time.end).minutes(), "minutes");
                 var dateEnd = moment(activity.date.end).add(moment(activity.time.end).hours(), "hours").add(moment(activity.time.end).minutes(), "minutes");
-                $scope.events.push({type: "event", _id: activity._id,title: activity.name, start: moment(dateStart).format("YYYY-MM-DD hh:mm"), end: moment(dateEnd).format("YYYY-MM-DD hh:mm")});   
+                $scope.events.push({type: "event", _id: activity._id,title: activity.name, start: moment(dateStart).format("YYYY-MM-DD hh:mm"), end: moment(dateEnd).format("YYYY-MM-DD hh:mm"), "backgroundColor": "#0D47A1", allDay: false});   
             }
         });
         $scope.originalEvents = angular.copy($scope.events);
@@ -266,6 +256,12 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
             uiCalendarConfig.calendars.myCalendar.fullCalendar('removeEvents');
             uiCalendarConfig.calendars.myCalendar.fullCalendar('addEventSource', $scope.events);
         }
+
+        $timeout(function() {
+            $(document).ready(function() {
+                $("div.fc-toolbar").children().children("button").removeClass("fc-month-button fc-button fc-state-default fc-corner-left fc-corner-right").addClass("md-primary md-button");
+            });
+        }, 500);
     };
     $scope.convertAllToCalendarView();
 

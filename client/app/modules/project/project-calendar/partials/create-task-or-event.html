@@ -1,0 +1,21 @@
+<md-dialog aria-label="Create task or event" flex="70" id="newActivityForm">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Create task or event</h2>
+        </div>
+    </md-toolbar>
+    
+    <md-dialog-content>
+        <div class="md-dialog-content" layout="column" layout-padding>
+            <div layout="row">
+                <h4>Please click on buttons below to choose ...</h4>
+            </div>
+        </div>
+    </md-dialog-content>
+    
+    <md-dialog-actions>
+        <md-button ng-click="dialogService.closeModal()">Cancel</md-button>
+        <md-button ng-click="showModal('create-task.html')" class="md-primary">Create New Task</md-button>
+        <md-button ng-click="showModal('create-event.html')" class="md-primary">Create New Event</md-button>
+    </md-dialog-actions>
+</md-dialog>
