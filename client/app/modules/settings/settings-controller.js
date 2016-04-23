@@ -680,6 +680,19 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                     $scope.cancelDialog();
                     $scope.showToast("Your password has been changed");
                     }, function(err) {$scope.showToast("There Has Been An Error...");});
+            } else if ($scope.editUserType==="verifyPhoneNumber") {
+                if ($scope.phoneNumberVerifyToken.length > 6) {
+                    dialogService.showToast("Your Token Is Not Valid");
+                } else {
+                    userService.verifyPhoneNumber({token: $scope.phoneNumberVerifyToken}).$promise.then(function(res) {
+                        dialogService.showToast("You have verified your phone number successfully");
+                        dialogService.closeModal();
+                        $scope.currentUser.phoneNumberVerified = true;
+                        $rootScope.currentUser = $scope.currentUser;
+                    }, function(err) {
+                        dialogService.showToast("Error");
+                    });
+                }
             } else {
                 if ($scope.email !== $scope.currentUser.email) {
                     authService.changeEmail($scope.email).then(function() {

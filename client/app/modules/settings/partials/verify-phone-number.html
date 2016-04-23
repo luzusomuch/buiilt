@@ -1,5 +1,5 @@
 <md-dialog aria-label="Verify Phone Number" flex="75">
-    <form ng-submit="verifyPhoneNumber(form)" name="form">
+    <form ng-submit="editUserInfo(form)" name="form">
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2>Verify Phone Number</h2>
@@ -20,7 +20,7 @@
 
             <md-dialog-actions>
                 <md-button ng-click="dialogService.closeModal()">Cancel</md-button>
-                <md-button ng-show="step==2" type="submit">Add Contact</md-button>
+                <md-button type="submit">Add Contact</md-button>
             </md-dialog-actions>
         </md-dialog-content>
     </form>

@@ -22,6 +22,7 @@ router.post('/send-verification', auth.isAuthenticated(), controller.sendVerific
 router.post('/forgot-password', controller.forgotPassword);
 router.post('/reset-password', controller.resetPassword);
 router.post('/buy-plan', auth.isAuthenticated(), controller.buyPlan);
+router.post('/verify-phone-number', auth.isAuthenticated(), controller.verifyPhoneNumber);
 
 router.put('/:id/password', auth.isAuthenticated(), controller.changePassword);
 router.put('/:id/email', auth.isAuthenticated(), controller.changeEmail);

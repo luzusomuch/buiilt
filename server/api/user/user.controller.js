@@ -31,7 +31,7 @@ var client = require("twilio")(config.twilio.sid, config.twilio.token);
 
 function makeid(){
     var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    var possible = "0123456789";
 
     for( var i=0; i < 6; i++ )
         text += possible.charAt(Math.floor(Math.random() * possible.length));
@@ -938,6 +938,24 @@ exports.getCurrentStripeCustomer = function(req, res) {
             return res.send(200, {isRegistered: false});
         }
     });
+};
+
+/*Verify phone number for current user*/
+exports.verifyPhoneNumber = function(req, res) {
+    var user = req.user;
+    if (req.body.token.length > 6) {
+        return res.send(422, {msg: "Your token is not valid"});
+    } else {
+        if (user.phoneNumberVerifyToken===req.body.token) {
+            user.phoneNumberVerified = true;
+        } else {
+            return res.send(422, {msg: "Your token is not valid"});
+        }
+        user.save(function(err) {
+            if (err) {return res.send(500,err);}
+            return res.send(200);
+        });
+    }
 };
 
 /**

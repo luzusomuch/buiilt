@@ -85,6 +85,10 @@ angular.module('buiiltApp').factory('userService', function($resource) {
         createUserWithInviteToken: {
             method: 'POST', 
             params: {action: 'invite-token'}
+        },
+        verifyPhoneNumber: {
+            method: "POST",
+            params: {action: "verify-phone-number"}
         }
     });
 });
