@@ -1,23 +1,28 @@
 angular.module('buiiltApp')
-  .controller('SignupCtrl', function ($rootScope,$scope, authService,$stateParams,inviteTokenService) {
-  $scope.contentHeight = $rootScope.maximunHeight - $rootScope.headerHeight - $rootScope.footerHeight - 130;
+  .controller('SignupCtrl', function ($rootScope, $scope, authService, $stateParams, inviteTokenService, packageInviteService) {
   $scope.user = {
     password : '',
     lastName: '',
     firstName: '',
     repassword : '',
     allowNewsletter: true,
-    type: 'homeOwner',
   };
   $scope.acceptTeam = false;
   $scope.hasInviteToken = ($stateParams.inviteToken) ? true : false;
+  $scope.hasPackageInviteToken = ($stateParams.packageInviteToken) ? true : false;
   if ($scope.hasInviteToken) {
     inviteTokenService.get({id : $stateParams.inviteToken}).$promise
-      .then(function(res) {
-        $scope.user.invite = res;
-        $scope.user.invite;
-        $scope.user.email = res.email;
-      });
+    .then(function(res) {
+      $scope.user.invite = res;
+      $scope.user.invite;
+      $scope.user.email = res.email;
+    });
+  } else if ($scope.hasPackageInviteToken) {
+    packageInviteService.getByPackageInviteToken({id: $stateParams.packageInviteToken})
+    .$promise.then(function(data){
+      $scope.packageInvite = data;
+      $scope.user.email = data.to;
+    });
   }
   $scope.submitted = false;
   $scope.errors = {};
@@ -25,8 +30,10 @@ angular.module('buiiltApp')
   $scope.signup = function (form) {
     $scope.submitted = true;
     if (form.$valid) {
+      if ($scope.hasPackageInviteToken) {
+        $scope.user.packageInviteToken = $stateParams.packageInviteToken;
+      }
       authService.createUser($scope.user).then(function (data) {
-        //show alert
         $scope.success = true;
         $scope.user = {
           allowNewsletter: true

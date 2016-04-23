@@ -178,7 +178,7 @@ function getNotificationNonUser(){
                             inPastHour: "in the past hour",
                             invitee: user.owner,
                             notifications: user.notifications,
-                            link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
+                            link : config.baseUrl + 'signup?packageInviteToken=' + packageInvite._id,
                             subject: "Hourly Notifications Digest"
                         },function(err){console.log(err);});
                     }

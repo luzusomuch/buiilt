@@ -43,7 +43,7 @@ EventBus.onSeries('Tender.Updated', function(tender, next){
                                         inviter: tender.editUser.toJSON(),
                                         invitee: invitee,
                                         project: result.project.toJSON(),
-                                        link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
+                                        link : config.baseUrl + 'signup?packageInviteToken=' + packageInvite._id,
                                         subject: tender.editUser.name + ' has invited you to project ' + result.project.name
                                     }, cb);
                                 });
@@ -53,7 +53,7 @@ EventBus.onSeries('Tender.Updated', function(tender, next){
                                     inviter: tender.editUser.toJSON(),
                                     invitee: invitee,
                                     project: result.project.toJSON(),
-                                    link : config.baseUrl + 'signup-invite?packageInviteToken=' + p._id,
+                                    link : config.baseUrl + 'signup?packageInviteToken=' + p._id,
                                     subject: tender.editUser.name + ' has invited you to project ' + result.project.name
                                 }, cb);
                             }
@@ -88,7 +88,7 @@ EventBus.onSeries('Tender.Updated', function(tender, next){
                                 inviter: tender.editUser.toJSON(),
                                 invitee: member,
                                 project: result.project.toJSON(),
-                                link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
+                                link : config.baseUrl + 'signup?packageInviteToken=' + packageInvite._id,
                                 subject: tender.editUser.name + ' has invited you to project ' + result.project.name
                             }, cb);
                         });
@@ -98,7 +98,7 @@ EventBus.onSeries('Tender.Updated', function(tender, next){
                             inviter: tender.editUser.toJSON(),
                             invitee: member,
                             project: result.project.toJSON(),
-                            link : config.baseUrl + 'signup-invite?packageInviteToken=' + p._id,
+                            link : config.baseUrl + 'signup?packageInviteToken=' + p._id,
                             subject: tender.editUser.name + ' has invited you to project ' + result.project.name
                         }, cb);
                     }

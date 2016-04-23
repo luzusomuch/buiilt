@@ -15,6 +15,7 @@ EventBus.onSeries('ContactBook.Inserted', function(request, next) {
         var packageInvite = new PackageInvite({
             owner: request.editUser._id,
             to: request.email,
+            package: request._id,
             inviteType: "contactBook"
         });
         packageInvite.save(function(err) {
@@ -23,7 +24,7 @@ EventBus.onSeries('ContactBook.Inserted', function(request, next) {
             Mailer.sendMail('invite-non-user-to-be-member.html', from, packageInvite.to, {
                 inviter: request.editUser.toJSON(),
                 invitee: {email: packageInvite.to},
-                link : config.baseUrl + 'signup-invite?packageInviteToken='+packageInvite._id,
+                link : config.baseUrl + 'signup?packageInviteToken='+packageInvite._id,
                 subject: request.editUser.name + ' has invited you to be member of Buiilt'
             },function(err){
                return next();

@@ -59,7 +59,7 @@ EventBus.onSeries('People.Updated', function(req, next){
                             inviter: req.editUser.toJSON(),
                             invitee: saved.to,
                             project: result.project.toJSON(),
-                            link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
+                            link : config.baseUrl + 'signup?packageInviteToken=' + packageInvite._id,
                             subject: req.editUser.name + ' has invited you to project ' + result.project.name
                         },function(err){
                             cb();
@@ -100,7 +100,7 @@ EventBus.onSeries('People.Updated', function(req, next){
                                 request: currentTender,
                                 allowDownload: (latestActivity.element.link) ? true : false,
                                 downloadLink: config.baseUrl + "api/peoples/"+req._id+"/"+packageInvite.inviteType+"/"+currentTender._id+"/"+latestActivity._id+"/"+packageInvite.to+"/download-via-email",
-                                link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
+                                link : config.baseUrl + 'signup?packageInviteToken=' + packageInvite._id,
                                 subject: req.editUser.name + ' has send you an addendum on ' + currentTender.tenderName
                             },function(err){
                                 return cb();
@@ -142,7 +142,7 @@ EventBus.onSeries('People.Updated', function(req, next){
                         inviter: req.editUser.toJSON(),
                         invitee: currentTender.tenderers[0].name,
                         project: result.project.toJSON(),
-                        link : config.baseUrl + 'signup-invite?packageInviteToken=' + packageInvite._id,
+                        link : config.baseUrl + 'signup?packageInviteToken=' + packageInvite._id,
                         subject: req.editUser.name + ' has invited you to project ' + result.project.name
                     },function(err){
                         return next();

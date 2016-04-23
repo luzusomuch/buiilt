@@ -1,6 +1,7 @@
 'use strict';
 
 var User = require('./../../models/user.model');
+var ContactBook = require('./../../models/contactBook.model');
 var Task = require('./../../models/task.model');
 var Thread = require('./../../models/thread.model');
 var File = require('./../../models/file.model');
@@ -118,459 +119,292 @@ exports.index = function (req, res) {
  */
 exports.create = function (req, res, next) {
     var invite = req.body.invite;
-    UserValidator.validateNewUser(req, function(err,data) {
-        if (err) {
-            return res.send(422,{errors: err})
-        }
-        var newUser = new User(data);
-        newUser.provider = 'local';
-        newUser.role = 'user';
-        newUser.name = data.firstName + ' ' + data.lastName;
-        newUser.phoneNumberVerifyToken = makeid();
-        newUser.save(function (err, user) {
-            if (err) {
-                return validationError(res, err);
-            }
-            //update project for user
-            var token = jwt.sign({_id: user._id}, config.secrets.session, {expiresInMinutes: 60 * 5});
-            // If has invite token
-            async.parallel([
-                function(cb) {
-                    if (invite) {
-                        if (invite.type == 'team-invite') {
-                            var update = {
-                                "member.$._id" : newUser._id,
-                                "member.$.status" : 'Active'
-                            };
-                            Team.update({_id : invite.element._id,'member.email' : req.body.email},{'$set' : update,'$unset' : {'member.$.email' : 1}},function(err) {
-                                if (err) {
-                                    user.remove(cb);
-                                }
-                                newUser.emailVerified = true;
-                                newUser.team = {
-                                    _id : invite.element._id,
-                                    role : 'member'
-                                };
-                                newUser.save(function() {
-                                    InviteToken.findById(invite._id, function(err, inviteToken) {
-                                        if (err || !inviteToken) {cb(err);}
-                                        var params = {
-                                            owners : [inviteToken.user],
-                                            fromUser : user._id,
-                                            element : invite.element,
-                                            referenceTo : 'team',
-                                            type : 'team-accept'
-                                        };
-                                        NotificationHelper.create(params,function() {
-                                            inviteToken.remove(cb);
-                                        });
-                                    });
-                                });
-                            });
-                        } else {
-                            cb();
-                        }
-                    } else {
-                        cb();
-                    }
-                },
-                function(cb) {
-                    if (req.body.isMobile) {
-                        PackageInvite.findOne({to: newUser.email}, function(err, packageInvite) {
-                            if (err) {cb(err);}
-                            else if (!packageInvite) {cb(null);}
-                            else {
-                                async.parallel([
-                                    function (callback) {
-                                        People.findById(packageInvite.package, function(err, people) {
-                                            if (err || !people) {callback();}
-                                            else {
-                                                _.each(people[packageInvite.inviteType], function(tender) {
-                                                    if (tender.hasSelect && tender.tenderers[0].email === newUser.email) {
-                                                        tender.tenderers[0]._id = newUser._id;
-                                                        tender.tenderers[0].email = null;
-                                                        newUser.projects.push(packageInvite.project);
-                                                        newUser.markModified("projects");
-                                                        newUser.save();
-                                                    }
-                                                });
-                                                people._editUser = newUser;
-                                                people.save(function(err) {
-                                                    if (err) {callback(err);}
-                                                    newUser.projects.push(packageInvite.project);
-                                                    newUser.markModified("projects");
-                                                    newUser.save(callback());
-                                                });
-                                            }
-                                        });
-                                    },
-                                    function (callback) {
-                                        Tender.findById(packageInvite.package, function(err, tender) {
-                                            if (err || !tender) {callback();}
-                                            else {
-                                                _.each(tender.members, function(member) {
-                                                    if (member.email === newUser.email) {
-                                                        member.user = newUser._id;
-                                                        member.email = null;
-                                                        if (member.activities && member.activities.length > 0) {
-                                                            _.each(member.activities, function(activity) {
-                                                                if (activity.type === "send-message" && activity.email && activity.email===newUser.email) {
-                                                                    activity.email = null;
-                                                                    activity.user = newUser._id
-                                                                }
-                                                            });
-                                                        }
-                                                    }
-                                                });
-                                                tender._editUser = newUser;
-                                                tender.save(callback());
-                                            }
-                                        });
-                                    },
-                                    function (callback) {
-                                        Task.find({}, function(err, tasks) {
-                                            if (err) {callback();}
-                                            async.each(tasks, function(task, cb) {
-                                                if (task.owner && task.description) {
-                                                    var currentUserIndex = _.indexOf(task.notMembers, newUser.email);
-                                                    if (currentUserIndex !== -1) {
-                                                        task.members.push(newUser._id);
-                                                        task.notMembers.splice(currentUserIndex, 1);
-                                                    }
-                                                    task._editUser = newUser;
-                                                    task.save(cb());
-                                                } else {
-                                                    cb();
-                                                }
-                                            },callback);
-                                        });
-                                    },
-                                    function (callback) {
-                                        File.find({}, function(err, files) {
-                                            if (err) {callback();}
-                                            async.each(files, function(file, cb) {
-                                                if (file.owner && file.project) {
-                                                    _.each(file.activities, function(activity) {
-                                                        if (activity.members && activity.acknowledgeUsers) {
-                                                            var memberIndex = _.findIndex(activity.members, function(member) {
-                                                                if (member.email) {
-                                                                    return member.email===newUser.email;
-                                                                }
-                                                            });
-                                                            if (memberIndex !== -1) {
-                                                                activity.members[memberIndex]._id = newUser._id;
-                                                                activity.members[memberIndex].email = null;
-                                                            }
-
-                                                            var acknowUserIndex = _.findIndex(activity.acknowledgeUsers, function(u) {
-                                                                if (u.email) {
-                                                                    return u.email===newUser.email;
-                                                                }
-                                                            });
-                                                            if (acknowUserIndex !== -1) {
-                                                                activity.acknowledgeUsers[acknowUserIndex]._id = newUser._id;
-                                                                activity.acknowledgeUsers[acknowUserIndex].email = null;
-                                                            }
-                                                        }
-                                                    });
-                                                    if (file.element && file.element.type === "document") {
-                                                        if (file.fileHistory && file.fileHistory.length > 0) {
-                                                            _.each(file.fileHistory, function(history) {
-                                                                if (history.members && history.members.length > 0) {
-                                                                    var index = _.findIndex(history.members, function(member) {
-                                                                        if (member.email) {
-                                                                            return member.email===newUser.email;
-                                                                        }
-                                                                    });
-                                                                    if (index !== -1) {
-                                                                        history.members[index]._id = newUser._id;
-                                                                        history.members[index].email = null;
-                                                                    }
-                                                                }
-                                                            });
-                                                        }
-                                                    } else {
-                                                        var currentUserIndex = _.indexOf(file.notMembers, newUser.email);
-                                                        if (currentUserIndex !== -1) {
-                                                            file.members.push(newUser._id);
-                                                            file.notMembers.splice(currentUserIndex, 1);
-                                                        }
-                                                    }
-                                                    file.save(cb());
-                                                } else 
-                                                    cb();
-                                            },callback);
-                                        });
-                                    },
-                                    function (callback) {
-                                        Thread.find({}, function(err, threads) {
-                                            if (err) {callback();}
-                                            async.each(threads, function(thread, cb) {
-                                                var currentUserIndex = _.indexOf(thread.notMembers, newUser.email);
-                                                if (currentUserIndex !== -1) {
-                                                    thread.members.push(newUser._id);
-                                                    thread.notMembers.splice(currentUserIndex, 1);
-                                                }
-                                                thread.save(cb());
-                                            },callback);
-                                        });
-                                    },
-                                ], function(err) {
-                                    if (err) {return res.send(500,err);}
-                                    packageInvite.remove(cb());
-                                });
-                            }
-                        });
-                    } else {
-                        cb();
-                    }
-                }
-            ], function(err) {
-                if (err) {
-                    newUser.remove(function(error) {
-                        return res.send(500,err);
-                    });
-                } else {
-                    client.sendMessage({
-                        to: newUser.phoneNumber,
-                        from: config.twilio.phoneNumber,
-                        body: "Your active code is "+ newUser.phoneNumberVerifyToken
-                    }, function(err, success) {
-                        if (err) {console.log(err);}
-                        return res.json({token: token,emailVerified : true});
-                    });
+    var packageInvite;
+    async.parallel([
+        function (cb) {
+            PackageInvite.findById(req.body.packageInviteToken, function(err, _packageInvite) {
+                if (err || !_packageInvite) {cb();}
+                else {
+                    packageInvite = _packageInvite;
+                    cb();
                 }
             });
-        });
-    });
-};
-
-//create user with invite token
-exports.createUserWithInviteToken = function(req, res, next) {
-    PackageInvite.findById(req.body.packageInviteToken)
-    .populate("owner").exec(function(err, packageInvite) {
-        if (err) {return res.send(500,err);}
-        if (!packageInvite) {return res.send(404);}
-        var newUser = new User();
-        newUser.email = packageInvite.to;
-        newUser.password = req.body.password;
-        newUser.provider = 'local';
-        newUser.role = 'user';
-        newUser.emailVerified = true;
-        newUser.firstName = req.body.firstName;
-        newUser.lastName = req.body.lastName;
-        newUser.name = req.body.firstName + ' ' + req.body.lastName;
-        newUser.save(function(err, user){
-            if (err) {return validationError(res, err);}
-            else {
-                var isSkipInTender = false;
-                var peopleResult, tenderResult;
-                var token = jwt.sign({_id: user._id}, config.secrets.session, {expiresInMinutes: 60 * 5});
-                async.parallel([
-                    function (cb) {
-                        // Get list of invite tokens related to current sign up user
-                        InviteToken.find({email: packageInvite.to}, function(err, inviteTokens) {
-                            if (err) {cb();}
-                            async.each(inviteTokens, function(inviteToken, callback) {
-                                if (inviteToken.type==="team-invite") {
+        }
+    ], function() {
+        if (packageInvite._id && packageInvite.to !== req.body.email) {
+            return res.send(500, {msg: "Not valid email"});
+        } else {
+            UserValidator.validateNewUser(req, function(err, data) {
+                if (err) {return res.send(422, {errors: err});}
+                var newUser = new User(data);
+                newUser.provider = 'local';
+                newUser.role = 'user';
+                newUser.name = data.firstName + ' ' + data.lastName;
+                newUser.phoneNumberVerifyToken = makeid();
+                newUser.save(function(err) {
+                    if (err) {return res.send(500,err);}
+                    var token = jwt.sign({_id: newUser._id}, config.secrets.session, {expiresInMinutes: 60 * 5});
+                    async.parallel([
+                        function (cb) {
+                            if (invite) {
+                                if (invite.type == 'team-invite') {
                                     var update = {
                                         "member.$._id" : newUser._id,
                                         "member.$.status" : 'Active'
                                     };
-                                    Team.update({_id : inviteToken.element._id,'member.email' : req.body.email},{'$set' : update,'$unset' : {'member.$.email' : 1}},function(err) {
+                                    Team.update({_id : invite.element._id,'member.email' : req.body.email},{'$set' : update,'$unset' : {'member.$.email' : 1}},function(err) {
                                         if (err) {
-                                            user.remove(callback);
+                                            newUser.remove(cb);
                                         }
                                         newUser.emailVerified = true;
                                         newUser.team = {
-                                            _id : inviteToken.element._id,
+                                            _id : invite.element._id,
                                             role : 'member'
                                         };
                                         newUser.save(function() {
-                                            var params = {
-                                                owners : [inviteToken.user],
-                                                fromUser : user._id,
-                                                element : inviteToken.element,
-                                                referenceTo : 'team',
-                                                type : 'team-accept'
-                                            };
-                                            NotificationHelper.create(params,function() {
-                                                inviteToken.remove(callback);
+                                            InviteToken.findById(invite._id, function(err, inviteToken) {
+                                                if (err || !inviteToken) {cb(err);}
+                                                var params = {
+                                                    owners : [inviteToken.user],
+                                                    fromUser : newUser._id,
+                                                    element : invite.element,
+                                                    referenceTo : 'team',
+                                                    type : 'team-accept'
+                                                };
+                                                NotificationHelper.create(params,function() {
+                                                    inviteToken.remove(cb);
+                                                });
                                             });
                                         });
                                     });
                                 } else {
-                                    callback();
+                                    cb();
                                 }
-                            }, cb);
-                        });
-                    },
-                    function (cb) {
-                        // get all package invite related to current sign up user
-                        PackageInvite.find({to: user.email}, function(err, packageInvites) {
-                            if (err) {cb(err);}
-                            async.each(packageInvites, function(invite, callback) {
-                                async.parallel([
-                                    function (cb) {
-                                        // Update project members for current sign up user if existed
-                                        People.findById(invite.package, function(err, people) {
-                                            if (err || !people) {cb();}
-                                            else {
-                                                _.each(people[invite.inviteType], function(tender) {
-                                                    if (tender.hasSelect && tender.tenderers[0].email === user.email) {
-                                                        isSkipInTender = true;
-                                                        tender.tenderers[0]._id = user._id;
-                                                        tender.tenderers[0].email = null;
-                                                        user.projects.push(invite.project);
-                                                        user.markModified("projects");
-                                                        user.save();
-                                                    }
-                                                });
-                                                people._editUser = user;
-                                                peopleResult = people;
-                                                people.save(function(err) {
-                                                    if (err) {cb(err);}
-                                                    user.projects.push(invite.project);
-                                                    user.markModified("projects");
-                                                    user.save(cb());
-                                                });
-                                            }
-                                        });
-                                    },
-                                    function (cb) {
-                                        // Update tender for current sign up user if existed
-                                        Tender.findById(invite.package, function(err, tender) {
-                                            if (err || !tender) {cb();}
-                                            else {
-                                                _.each(tender.members, function(member) {
-                                                    if (member.email === user.email) {
-                                                        member.user = user._id;
-                                                        member.email = null;
-                                                        if (member.activities && member.activities.length > 0) {
-                                                            _.each(member.activities, function(activity) {
-                                                                if (activity.type === "send-message" && activity.email && activity.email===user.email) {
-                                                                    activity.email = null;
-                                                                    activity.user = user._id
-                                                                }
-                                                            });
-                                                        }
-                                                    }
-                                                });
-                                                tender._editUser = user;
-                                                tenderResult = tender;
-                                                tender.save(cb);
-                                            }
-                                        });
-                                    }
-                                ], function() {
-                                    invite.remove(callback);
-                                });
-                            }, cb);
-                        });
-                    },
-                    function (cb) {
-                        Task.find({}, function(err, tasks) {
-                            if (err) {cb();}
-                            async.each(tasks, function(task, callback) {
-                                if (task.owner && task.description) {
-                                    var currentUserIndex = _.indexOf(task.notMembers, user.email);
-                                    if (currentUserIndex !== -1) {
-                                        task.members.push(user._id);
-                                        task.notMembers.splice(currentUserIndex, 1);
-                                    }
-                                    task._editUser = user;
-                                    task.save(callback());
+                            } else {
+                                if (newUser.team._id) {
+                                    cb();
                                 } else {
-                                    callback();
-                                }
-                            },cb);
-                        });
-                    },
-                    function (cb) {
-                        File.find({}, function(err, files) {
-                            if (err) {cb();}
-                            async.each(files, function(file, callback) {
-                                if (file.owner && file.project) {
-                                    _.each(file.activities, function(activity) {
-                                        if (activity.members && activity.acknowledgeUsers) {
-                                            var memberIndex = _.findIndex(activity.members, function(member) {
-                                                if (member.email) {
-                                                    return member.email===user.email;
-                                                }
-                                            });
-                                            if (memberIndex !== -1) {
-                                                activity.members[memberIndex]._id = user._id;
-                                                activity.members[memberIndex].email = null;
+                                    InviteToken.find({email: packageInvite.to}, function(err, inviteTokens) {
+                                        if (err) {cb();}
+                                        async.each(inviteTokens, function(inviteToken, callback) {
+                                            if (inviteToken.type==="team-invite") {
+                                                var update = {
+                                                    "member.$._id" : newUser._id,
+                                                    "member.$.status" : 'Active'
+                                                };
+                                                Team.update({_id : inviteToken.element._id,'member.email' : req.body.email},{'$set' : update,'$unset' : {'member.$.email' : 1}},function(err) {
+                                                    if (err) {
+                                                        newUser.remove(callback);
+                                                    }
+                                                    newUser.emailVerified = true;
+                                                    newUser.team = {
+                                                        _id : inviteToken.element._id,
+                                                        role : 'member'
+                                                    };
+                                                    newUser.save(function() {
+                                                        var params = {
+                                                            owners : [inviteToken.user],
+                                                            fromUser : newUser._id,
+                                                            element : inviteToken.element,
+                                                            referenceTo : 'team',
+                                                            type : 'team-accept'
+                                                        };
+                                                        NotificationHelper.create(params,function() {
+                                                            inviteToken.remove(callback);
+                                                        });
+                                                    });
+                                                });
+                                            } else {
+                                                callback();
                                             }
-
-                                            var acknowUserIndex = _.findIndex(activity.acknowledgeUsers, function(u) {
-                                                if (u.email) {
-                                                    return u.email===user.email;
-                                                }
-                                            });
-                                            if (acknowUserIndex !== -1) {
-                                                activity.acknowledgeUsers[acknowUserIndex]._id = user._id;
-                                                activity.acknowledgeUsers[acknowUserIndex].email = null;
-                                            }
-                                        }
+                                        }, cb);
                                     });
-                                    if (file.element && file.element.type === "document") {
-                                        if (file.fileHistory && file.fileHistory.length > 0) {
-                                            _.each(file.fileHistory, function(history) {
-                                                if (history.members && history.members.length > 0) {
-                                                    var index = _.findIndex(history.members, function(member) {
-                                                        if (member.email) {
-                                                            return member.email===user.email;
+                                }
+                            }
+                        },
+                        function (cb) {
+                            // get all package invite related to current sign up user
+                            PackageInvite.find({to: newUser.email}, function(err, packageInvites) {
+                                if (err) {cb(err);}
+                                async.each(packageInvites, function(invite, callback) {
+                                    async.parallel([
+                                        function (cb) {
+                                            if (invite.inviteType==="contactBook") {
+                                                // Update contact book
+                                                ContactBook.findById(invite.package, function(err, contactBook) {
+                                                    if (err || !contactBook) {cb();}
+                                                    else {
+                                                        contactBook.user = newUser._id;
+                                                        contactBook.name = newUser.name;
+                                                        contactBook.phoneNumber = newUser.phoneNumber;
+                                                        contactBook.save(cb);
+                                                    }
+                                                });
+                                            } else {
+                                                // Update project members for current sign up user if existed
+                                                People.findById(invite.package, function(err, people) {
+                                                    if (err || !people) {cb();}
+                                                    else {
+                                                        _.each(people[invite.inviteType], function(tender) {
+                                                            if (tender.hasSelect && tender.tenderers[0].email === newUser.email) {
+                                                                isSkipInTender = true;
+                                                                tender.tenderers[0]._id = newUser._id;
+                                                                tender.tenderers[0].email = null;
+                                                                newUser.projects.push(invite.project);
+                                                                newUser.markModified("projects");
+                                                                newUser.save();
+                                                            }
+                                                        });
+                                                        people._editUser = newUser;
+                                                        peopleResult = people;
+                                                        people.save(function(err) {
+                                                            if (err) {cb(err);}
+                                                            newUser.projects.push(invite.project);
+                                                            newUser.markModified("projects");
+                                                            newUser.save(cb);
+                                                        });
+                                                    }
+                                                });
+                                            }
+                                        },
+                                        function (cb) {
+                                            // Update tender for current sign up user if existed
+                                            Tender.findById(invite.package, function(err, tender) {
+                                                if (err || !tender) {cb();}
+                                                else {
+                                                    _.each(tender.members, function(member) {
+                                                        if (member.email === newUser.email) {
+                                                            member.user = newUser._id;
+                                                            member.email = null;
+                                                            if (member.activities && member.activities.length > 0) {
+                                                                _.each(member.activities, function(activity) {
+                                                                    if (activity.type === "send-message" && activity.email && activity.email===newUser.email) {
+                                                                        activity.email = null;
+                                                                        activity.newUser = newUser._id
+                                                                    }
+                                                                });
+                                                            }
                                                         }
                                                     });
-                                                    if (index !== -1) {
-                                                        history.members[index]._id = user._id;
-                                                        history.members[index].email = null;
-                                                    }
+                                                    tender._editUser = newUser;
+                                                    tenderResult = tender;
+                                                    tender.save(cb);
                                                 }
                                             });
                                         }
-                                    } else {
-                                        var currentUserIndex = _.indexOf(file.notMembers, user.email);
+                                    ], function() {
+                                        invite.remove(callback);
+                                    });
+                                }, cb);
+                            });
+                        },
+                        function (cb) {
+                            Task.find({}, function(err, tasks) {
+                                if (err) {cb();}
+                                async.each(tasks, function(task, callback) {
+                                    if (task.owner && task.description) {
+                                        var currentUserIndex = _.indexOf(task.notMembers, newUser.email);
                                         if (currentUserIndex !== -1) {
-                                            file.members.push(user._id);
-                                            file.notMembers.splice(currentUserIndex, 1);
+                                            task.members.push(newUser._id);
+                                            task.notMembers.splice(currentUserIndex, 1);
                                         }
+                                        task._editUser = newUser;
+                                        task.save(callback());
+                                    } else {
+                                        callback();
                                     }
-                                    file.save(callback());
-                                } else 
-                                    callback();
-                            },cb);
-                        });
-                    },
-                    function (cb) {
-                        Thread.find({}, function(err, threads) {
-                            if (err) {cb();}
-                            async.each(threads, function(thread, callback) {
-                                var currentUserIndex = _.indexOf(thread.notMembers, user.email);
-                                if (currentUserIndex !== -1) {
-                                    thread.members.push(user._id);
-                                    thread.notMembers.splice(currentUserIndex, 1);
-                                }
-                                thread.save(callback());
-                            },cb);
-                        });
-                    },
-                ], function(err) {
-                    if (err) {return res.send(500,err);}
-                    var data = {
-                        token: token,
-                        emailVerified: true,
-                        isSkipInTender: packageInvite.isSkipInTender,
-                        data: (isSkipInTender) ? peopleResult: tenderResult
-                    };
-                    packageInvite.remove(function(err){
-                        if (err) {return res.send(500);}
-                        return res.json(200,data);
+                                },cb);
+                            });
+                        },
+                        function (cb) {
+                            File.find({}, function(err, files) {
+                                if (err) {cb();}
+                                async.each(files, function(file, callback) {
+                                    if (file.owner && file.project) {
+                                        _.each(file.activities, function(activity) {
+                                            if (activity.members && activity.acknowledgeUsers) {
+                                                var memberIndex = _.findIndex(activity.members, function(member) {
+                                                    if (member.email) {
+                                                        return member.email===newUser.email;
+                                                    }
+                                                });
+                                                if (memberIndex !== -1) {
+                                                    activity.members[memberIndex]._id = newUser._id;
+                                                    activity.members[memberIndex].email = null;
+                                                }
+
+                                                var acknowUserIndex = _.findIndex(activity.acknowledgeUsers, function(u) {
+                                                    if (u.email) {
+                                                        return u.email===newUser.email;
+                                                    }
+                                                });
+                                                if (acknowUserIndex !== -1) {
+                                                    activity.acknowledgeUsers[acknowUserIndex]._id = newUser._id;
+                                                    activity.acknowledgeUsers[acknowUserIndex].email = null;
+                                                }
+                                            }
+                                        });
+                                        if (file.element && file.element.type === "document") {
+                                            if (file.fileHistory && file.fileHistory.length > 0) {
+                                                _.each(file.fileHistory, function(history) {
+                                                    if (history.members && history.members.length > 0) {
+                                                        var index = _.findIndex(history.members, function(member) {
+                                                            if (member.email) {
+                                                                return member.email===newUser.email;
+                                                            }
+                                                        });
+                                                        if (index !== -1) {
+                                                            history.members[index]._id = newUser._id;
+                                                            history.members[index].email = null;
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        } else {
+                                            var currentUserIndex = _.indexOf(file.notMembers, newUser.email);
+                                            if (currentUserIndex !== -1) {
+                                                file.members.push(newUser._id);
+                                                file.notMembers.splice(currentUserIndex, 1);
+                                            }
+                                        }
+                                        file.save(callback());
+                                    } else 
+                                        callback();
+                                },cb);
+                            });
+                        },
+                        function (cb) {
+                            Thread.find({}, function(err, threads) {
+                                if (err) {cb();}
+                                async.each(threads, function(thread, callback) {
+                                    var currentUserIndex = _.indexOf(thread.notMembers, newUser.email);
+                                    if (currentUserIndex !== -1) {
+                                        thread.members.push(newUser._id);
+                                        thread.notMembers.splice(currentUserIndex, 1);
+                                    }
+                                    thread.save(callback());
+                                },cb);
+                            });
+                        },
+                    ], function(err) {
+                        if (err) {
+                            newUser.remove(function(error) {
+                                return res.send(500,err);
+                            });
+                        } else {
+                            client.sendMessage({
+                                to: newUser.phoneNumber,
+                                from: config.twilio.phoneNumber,
+                                body: "Your active code is "+ newUser.phoneNumberVerifyToken
+                            }, function(err, success) {
+                                if (err) {console.log(err);}
+                                return res.json({token: token,emailVerified : true});
+                            });
+                        }
                     });
                 });
-            }
-        });
+            });
+        }
     });
 };
 
