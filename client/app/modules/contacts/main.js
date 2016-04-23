@@ -6,9 +6,6 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
     	abstract: true,
     	templateUrl: '/app/modules/contacts/contacts.html',
         resolve: {
-            currentUser: function(authService) {
-                return authService.getCurrentUser().$promise;
-            },
             contactBooks: function(contactBookService) {
                 return contactBookService.me().$promise;
             }
