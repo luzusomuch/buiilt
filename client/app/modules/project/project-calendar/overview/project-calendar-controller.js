@@ -96,6 +96,8 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
             },
             selectable: true,
             editable: true,
+            minTime: "6:00:00",
+            maxTime: "22:00:00",
             dayClick: function(day) {
                 $rootScope.selectedStartDate = new Date(day);
                 $scope.showModal("create-task-or-event.html");
