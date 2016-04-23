@@ -27,6 +27,17 @@ var crypto = require('crypto');
 var mongoose = require("mongoose");
 var stripe = require("stripe")(config.stripe);
 var moment = require("moment");
+var client = require("twilio")(config.twilio.sid, config.twilio.token);
+
+function makeid(){
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for( var i=0; i < 6; i++ )
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+}
 
 var validationError = function (res, err) {
     return res.json(422, err);
@@ -115,6 +126,7 @@ exports.create = function (req, res, next) {
         newUser.provider = 'local';
         newUser.role = 'user';
         newUser.name = data.firstName + ' ' + data.lastName;
+        newUser.phoneNumberVerifyToken = makeid();
         newUser.save(function (err, user) {
             if (err) {
                 return validationError(res, err);
@@ -319,7 +331,14 @@ exports.create = function (req, res, next) {
                         return res.send(500,err);
                     });
                 } else {
-                    return res.json({token: token,emailVerified : true});
+                    client.sendMessage({
+                        to: newUser.phoneNumber,
+                        from: config.twilio.phoneNumber,
+                        body: "Your active code is "+ newUser.phoneNumberVerifyToken
+                    }, function(err, success) {
+                        if (err) {console.log(err);}
+                        return res.json({token: token,emailVerified : true});
+                    });
                 }
             });
         });

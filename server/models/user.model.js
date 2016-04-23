@@ -18,6 +18,7 @@ var UserSchema = new Schema({
     hasChangedEmail: {type: Boolean, default: false},
     expired : Date,
     emailVerifyToken: String,
+    phoneNumberVerifyToken: String,
     role: {
         type: String,
         default: 'user'

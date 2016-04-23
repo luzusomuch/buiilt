@@ -9,6 +9,7 @@ var _ = require('lodash');
 exports.validateNewUser = function(req, callback){
   req.checkBody('email', 'Email is required').notEmpty();
   req.checkBody('password', 'Password is required').notEmpty();
+  req.checkBody('phoneNumber', 'Phone Number is required').notEmpty();
   if(validateEmail(req.body.email)){
     return callback(req.validationErrors(), _.omit(req.body, 'role','teamInviteToken','repasswords','acceptTeam','invite'));
   }

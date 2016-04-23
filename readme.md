@@ -9,6 +9,7 @@ sudo apt-get install graphicsmagick
 + npm install less -g
 + npm install grunt -g
 + npm install grunt-cli -g
++ npm install -g twilio
 + npm install && bower install
 
 - Run project under development mode: `grunt`

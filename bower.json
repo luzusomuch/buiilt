@@ -37,7 +37,8 @@
     "angular-clipboard": "1.2.1",
     "angular-stripe": "~4.2.8",
     "mdPickers": "~0.7.2",
-    "angular-ui-calendar": "latest"
+    "angular-ui-calendar": "latest",
+    "international-phone-number": "~0.0.16"
   },
   "resolutions": {
     "angular": "~1.3",

@@ -55,7 +55,8 @@
     "node-filepicker": "0.1.2",
     "json2csv": "3.0.2",
     "moment": "2.11.1",
-    "stripe": "4.2.0"
+    "stripe": "4.2.0",
+    "twilio-node": "latest"
   },
   "devDependencies": {
     "connect-livereload": "~0.4.0",

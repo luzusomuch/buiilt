@@ -17,7 +17,8 @@ angular.module('buiiltApp', [
     'angular-clipboard',
     'angular-stripe',
     "ui.calendar",
-    "mdPickers"
+    "mdPickers",
+    "internationalPhoneNumber"
 ]);
 
 angular
