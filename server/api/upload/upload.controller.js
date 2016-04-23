@@ -6,6 +6,7 @@ var People = require('./../../models/people.model');
 var Team = require('./../../models/team.model');
 var Project = require('./../../models/project.model');
 var File = require('./../../models/file.model');
+var Document = require('./../../models/document.model');
 var Notification = require('./../../models/notification.model');
 var NotificationHelper = require('./../../components/helpers/notification');
 var _ = require('lodash');
@@ -324,6 +325,14 @@ exports.upload = function(req, res){
                             } else {
                                 activity.relatedItem.push({type: "file", item: {_id: file._id}});
                                 activity.save(cb);
+                            }
+                        });
+                    } else if (file.element.type==="document" && data.selectedDocumentSetId) {
+                        Document.findById(data.selectedDocumentSetId, function(err, document) {
+                            if (err || !document) {cb();}
+                            else {
+                                document.document.push(file._id);
+                                document.save(cb);
                             }
                         });
                     } else {

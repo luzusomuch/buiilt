@@ -233,7 +233,8 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
         $scope.uploadFile.tags = _.filter($scope.tags, {select: true});
         if ($scope.uploadFile.tags.length === 0) {
             dialogService.showToast("Please Select At Least 1 Document Tag...");
-            return;
+        } else if (!$scope.selectedDocumentSetId) {
+            dialogService.showToast("Please select a document set");
         } else {
             $scope.uploadFile.type="document";
             uploadService.upload({id: $stateParams.id}, $scope.uploadFile).$promise.then(function(res) {
