@@ -17,7 +17,6 @@ router.get('/:id', auth.isAuthenticated(), controller.show);
 router.get('/:id/reset-password', controller.getResetPasswordToken);
 
 router.post('/', controller.create);
-router.post('/invite-token', controller.createUserWithInviteToken);
 router.post('/send-verification', auth.isAuthenticated(), controller.sendVerification);
 router.post('/forgot-password', controller.forgotPassword);
 router.post('/reset-password', controller.resetPassword);
