@@ -168,21 +168,43 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                         dialogService.showToast("Update Task Date Successfully");
                     }, function(err) {dialogService.showToast("Error");});
                 } else if (event.type==="event") {
-                    event.date = {
-                        start: new Date(event.start),
-                        end: new Date(event.end)
-                    };
-                    var updateEvent = {
-                        editType:"change-date-time",
-                        date: event.date,
-                        _id: event._id
-                    };
+                    var updateEvent = updateEventDateTime(event, delta);
+                    activityService.update({id: updateEvent._id}, updateEvent).$promise.then(function(res) {
+                        dialogService.showToast("Update Event Date Time Successfully");
+                    }, function(err) {dialogService.showToast("Error");});
+                }
+            },
+            eventResize: function(event, delta) {
+                if (event.type==="event") {
+                    var updateEvent = updateEventDateTime(event, delta);
                     activityService.update({id: updateEvent._id}, updateEvent).$promise.then(function(res) {
                         dialogService.showToast("Update Event Date Time Successfully");
                     }, function(err) {dialogService.showToast("Error");});
                 }
             }
         }
+    };
+
+    function updateEventDateTime(event, delta) {
+        var result;
+        result = {
+            _id: event._id,
+            editType: "change-date-time"
+        };
+        if (delta._data.days !== 0) {
+            result.date = {
+                start: new Date(event.start),
+                end: new Date(event.end)
+            };
+            
+        } 
+        if (delta._data.hours !== 0 || delta._data.minutes !== 0) {
+            result.time = {
+                start: new Date(event.start),
+                end: new Date(event.end)
+            }
+        }
+        return result;
     };
 
     $scope.step = 1;

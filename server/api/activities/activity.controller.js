@@ -74,7 +74,12 @@ exports.update = function(req, res) {
                         cb();
                     }
                 } else if (data.editType==="change-date-time") {
-                    activity.date = data.date;
+                    if (data.date) {
+                        activity.date = data.date;
+                    }
+                    if (data.time) {
+                        activity.time = data.time;
+                    }
                     cb();
                 } else {
                     cb();
