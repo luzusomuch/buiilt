@@ -8,9 +8,6 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
         resolve: {
             currentUser: function(authService) {
                 return authService.getCurrentUser().$promise;
-            },
-            contactBooks: function(contactBookService) {
-                return contactBookService.me().$promise;
             }
         }
     })
@@ -56,11 +53,4 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
         controller: "settingsCtrl",
         authenticate: true
     })
-
-    .state("settings.contacts", {
-        url: "/contact",
-        templateUrl: "/app/modules/settings/partials/settings-contact.html",
-        controller: "settingsCtrl",
-        authenticate: true
-    });
 });
