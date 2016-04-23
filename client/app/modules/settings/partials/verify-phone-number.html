@@ -1,0 +1,27 @@
+<md-dialog aria-label="Verify Phone Number" flex="75">
+    <form ng-submit="verifyPhoneNumber(form)" name="form">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Verify Phone Number</h2>
+            </div>
+        </md-toolbar>
+        
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column" layout-padding>
+                <h4>Please enter your verify token that we have sent in your phone.</h4>                
+                <div layout="column">
+                    <md-input-container flex="66" flex-offset="15">
+                        <label for="">Enter Your Verify Token</label>
+                        <input type="text" ng-model="phoneNumberVerifyToken" name="token" required>
+                    </md-input-container>
+                    <p class="validate-message" ng-show="form.token.$error.required">Verify token is required</p>
+                </div>
+            </div>
+
+            <md-dialog-actions>
+                <md-button ng-click="dialogService.closeModal()">Cancel</md-button>
+                <md-button ng-show="step==2" type="submit">Add Contact</md-button>
+            </md-dialog-actions>
+        </md-dialog-content>
+    </form>
+</md-dialog>

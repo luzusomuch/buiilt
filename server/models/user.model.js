@@ -35,6 +35,7 @@ var UserSchema = new Schema({
     google: {},
     github: {},
     phoneNumber: String,
+    phoneNumberVerified: {type: Boolean, default: false},
     country: String,
     packageToken: String,
     status: {type: String, default: 'offline'},

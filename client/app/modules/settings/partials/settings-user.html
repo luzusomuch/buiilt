@@ -25,6 +25,7 @@
 		<div layout-margin>
 			<p><strong>Phone Number:</strong></p>
 			<p>{{(currentUser.phoneNumber) ? currentUser.phoneNumber : "Add Your Phone Number from the Action button below"}}<p>
+			<p ng-show="!currentUser.phoneNumberVerified">Your phone number is not verified. Your can click <a href="#" ng-click="showModal($event, 'verify-phone-number.html', 'verifyPhoneNumber')">here</a> to enter the verify token.</p>
 		</div>
 		
 		
