@@ -50,7 +50,7 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
             });
         });
         _.remove($scope.projectMembers, {_id: $rootScope.currentUser._id});
-        if ($rootScope.selectedDocumentSet) {
+        if ($rootScope.selectedDocumentSet && !$rootScope.isCopyDocumentSet) {
             _.each($rootScope.selectedDocumentSet.members, function(member) {
                 if (member._id) 
                     _.remove($scope.projectMembers, {_id: member._id});
@@ -253,6 +253,11 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
     $scope.showModal = function(modalName, value) {
         if (modalName==="edit-document-set.html") 
             $rootScope.selectedDocumentSet = value;
+        else if (modalName==="copy-document-set.html") {
+            $rootScope.selectedDocumentSet = value;
+            $rootScope.selectedDocumentSet.name = null;
+            $rootScope.isCopyDocumentSet = true;
+        }
         $mdDialog.show({
             controller: "projectDocumentationCtrl",
             resolve: {
@@ -284,10 +289,14 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
     };
 
     $scope.setDocument = {};
+    $scope.selectedDocumentSet = $rootScope.selectedDocumentSet;
     $scope.addNewSetOfDocument = function(form) {
         if (form.$valid) {
-            $scope.setDocument.newMembers = _.filter($scope.projectMembers, {select: true});
-            documentService.create({id: $stateParams.id}, $scope.setDocument).$promise.then(function(res) {
+            if (!$rootScope.isCopyDocumentSet)
+                $scope.setDocument.newMembers = _.filter($scope.projectMembers, {select: true});
+            else if ($rootScope.isCopyDocumentSet) 
+                $scope.selectedDocumentSet.newMembers = _.filter($scope.projectMembers, {select: true});
+            documentService.create({id: $stateParams.id, isCopy: $rootScope.isCopyDocumentSet}, (!$rootScope.isCopyDocumentSet) ? $scope.setDocument : $scope.selectedDocumentSet).$promise.then(function(res) {
                 dialogService.closeModal();
                 dialogService.showToast("Create new set of document successfully");
             }, function(err){
@@ -298,14 +307,12 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
         }
     };
 
-    $scope.selectedDocumentSet = $rootScope.selectedDocumentSet;
     $scope.updateSetOfDocument = function(form) {
         if (form.$valid) {
             $scope.selectedDocumentSet.newMembers = _.filter($scope.projectMembers, {select: true});
             documentService.update({id: $scope.selectedDocumentSet._id}, $scope.selectedDocumentSet).$promise.then(function(res) {
                 dialogService.closeModal();
                 dialogService.showToast("Update a set of document successfully");
-                $rootScope.selectedDocumentSet = null;
             }, function(err){
                 dialogService.showToast("Error");
             });

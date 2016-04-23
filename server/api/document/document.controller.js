@@ -28,6 +28,12 @@ exports.create = function(req, res) {
         name: data.name,
         project: req.params.id
     });
+    if (req.query.isCopy) {
+        document.documents = [];
+        _.each(data.documents, function(doc) {
+            document.documents.push(doc._id);
+        }); 
+    }
     CheckMembers.check(data.newMembers, null, function(result) {
         document.members = result.members;
         document.notMembers = result.notMembers;

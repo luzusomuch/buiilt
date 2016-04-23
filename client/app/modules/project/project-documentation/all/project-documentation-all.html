@@ -5,15 +5,16 @@
 		</div>
 		<md-divider layout="row"></md-divider>
 		<md-list ng-cloak>
-			<md-list-item class="md-2-line" ng-repeat="documentSet in documentSets">
-				<div class="md-list-item-text" layout="column">
+			<md-list-item  class="md-2-line" ng-repeat="documentSet in documentSets">
+				<div md-ink-ripple class="md-list-item-text" layout="column">
 					<h3>{{documentSet.name}}</h3>
 					<div ng-show="documentSet.members.length > 0 || documentSet.notMembers.length > 0">
-						<span ng-repeat="member in documentSet.members">{{member.name}} </span>
-						<span ng-repeat="email in documentSet.notMembers">{{email}}</span>
+						<span ng-repeat="member in documentSet.members">{{member.name}} - </span>
+						<span ng-repeat="email in documentSet.notMembers">{{email}} - </span>
 					</div>
 				</div>
 				<md-button ng-click="showModal('edit-document-set.html', documentSet)" class="md-icon-button md-secondary"><md-icon class="material-icons">settings</md-icon></md-button>
+				<md-button ng-click="showModal('copy-document-set.html', documentSet)" class="md-icon-button md-secondary"><md-icon class="material-icons">content_copy</md-icon></md-button>
 			</md-list-item>
 		</md-list>
 	</div>
