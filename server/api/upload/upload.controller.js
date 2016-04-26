@@ -247,6 +247,8 @@ exports.upload = function(req, res){
     console.log(data);
     if (data.type==="file" && !data.selectedEvent) {
         return res.send(422, {msg: "Selected Event Is Require"});
+    } else if (data.type==="document" && !data.selectedDocumentSetId) {
+        return res.send(422, {msg: "Please select a document set"});
     }
     var filesAfterInsert = [];
     var members = [];
@@ -311,6 +313,8 @@ exports.upload = function(req, res){
         if (data.belongTo) {
             file.belongTo.item = {_id: data.belongTo};
             file.belongTo.type = data.belongToType;
+        } else if (data.selectedDocumentSetId) {
+            file.documentSet = data.selectedDocumentSetId;
         }
         file.save(function(err) {
             if (err) {return res.send(500,err);}
@@ -331,16 +335,11 @@ exports.upload = function(req, res){
                         Document.findById(data.selectedDocumentSetId, function(err, document) {
                             if (err || !document) {cb();}
                             else {
-                                document.document.push(file._id);
+                                document.documents.push(file._id);
                                 document.save(cb);
                             }
                         });
-                    } else {
-                        cb();
-                    }
-                },
-                function (cb) {
-                    if (data.belongTo) {
+                    } else if (data.belongTo) {
                         mainItem.findById(req.body.belongTo, function(err, main) {
                             main.activities.push({
                                 user: req.user._id,
@@ -361,7 +360,7 @@ exports.upload = function(req, res){
                             main._editUser = req.user;
                             main.save(cb);
                         });
-                    } else { 
+                    } else {
                         cb();
                     }
                 }

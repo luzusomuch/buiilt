@@ -9,10 +9,12 @@
 		<md-dialog-content>
 			<div class="md-dialog-content" layout="column" layout-padding>
 				<div layout="column">
-					<label for="">Please select a document set in list below:</label>
-					<md-select ng-model="selectedDocumentSetId">
-						<md-option ng-show="documentSet._id" ng-value="documentSet._id" ng-repeat="documentSet in documentSets">{{documentSet.name}}</md-option>
-					</md-select>
+					<md-input-container>
+						<label for="">Please select a document set in list below:</label>
+						<md-select ng-model="selectedDocumentSetId">
+							<md-option ng-show="!documentSet.notAllowEditOrCopy" ng-value="documentSet._id" ng-repeat="documentSet in documentSets">{{documentSet.name}}</md-option>
+						</md-select>
+					</md-input-container>
 				</div>
 				
 				<div layout="column">
@@ -29,7 +31,7 @@
 					<p class="md-body-2">Select at least one tag that is relevant to this document:</p>
 					
 					<div layout="row" flex layout-align="center center" layout-wrap layout-padding>
-						<md-checkbox class="filter-checkbox md-primary" ng-repeat="tag in tags" ng-click="selectChip($index)">{{ tag.name }}</md-checkbox>
+						<md-checkbox class="filter-checkbox md-primary" ng-repeat="tag in tags" ng-click="selectedItem($index, 'tag')">{{ tag.name }}</md-checkbox>
 					</div>
 				</div>
 				

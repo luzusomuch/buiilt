@@ -324,8 +324,8 @@ ul.pagination {
 }
 
 .activemenu {
-	font-weight: 600;
-	color: #42A5F5;
+	font-weight: 600 !important;
+	color: #42A5F5 !important;
 }
 
 .activemenu md-list-item {

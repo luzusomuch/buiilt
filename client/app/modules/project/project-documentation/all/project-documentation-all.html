@@ -8,33 +8,35 @@
 		</div>
 		<md-divider layout="row"></md-divider>
 		<md-list ng-cloak>
-			<md-list-item  class="md-2-line" ng-repeat="documentSet in documentSets">
-				<div md-ink-ripple class="md-list-item-text" layout="column">
-					<h3>{{documentSet.name}}</h3>
-					<p ng-show="documentSet.members.length > 0 || documentSet.notMembers.length > 0">
-						<span ng-repeat="member in documentSet.members">{{member.name}}, </span>
-						<span ng-repeat="email in documentSet.notMembers">{{email}}, </span>
-					</p>
-				</div>
-			</md-list-item>
+			<div ng-repeat="documentSet in documentSets" ng-class="{'activemenu': selectedDocumentSet.name==documentSet.name}">
+				<md-list-item ng-click="selectDocumentSet(documentSet)" class="md-2-line">
+					<div md-ink-ripple class="md-list-item-text" layout="column">
+						<h3 ng-class="{'activemenu': selectedDocumentSet.name==documentSet.name}">{{documentSet.name}}</h3>
+						<p ng-show="documentSet.members.length > 0 || documentSet.notMembers.length > 0">
+							<span ng-repeat="member in documentSet.members">{{member.name}}, </span>
+							<span ng-repeat="email in documentSet.notMembers">{{email}}, </span>
+						</p>
+					</div>
+				</md-list-item>
+			</div>
 		</md-list>
 	</div>
 
 	<div flex="70" class="md-whiteframe-1dp documentation-view">
-		<div class="md-toolbar-tools">
-			<h5>Selected Document Set Name</h5>
+		<div class="md-toolbar-tools" ng-show="selectedDocumentSet">
+			<h5>{{selectedDocumentSet.name}}</h5>
 			<span flex></span>
 			
-			<md-button ng-click="showModal('new-document.html')" id="im_ProjDocAddDoc" class="md-icon-button"><md-tooltip md-direction="left">Add a Document to this Set</md-tooltip><md-icon class="material-icons">note_add</md-icon></md-button>
+			<md-button ng-show="!selectedDocumentSet.notAllowEditOrCopy" ng-click="showModal('new-document.html')" id="im_ProjDocAddDoc" class="md-icon-button"><md-tooltip md-direction="left">Add a Document to this Set</md-tooltip><md-icon class="material-icons">note_add</md-icon></md-button>
 			
 			<md-menu md-position-mode="target-right target">
                 <md-button aria-label="Filter" ng-click="$mdOpenMenu($event)" class="md-icon-button"><md-icon class="material-icons">more_vert</md-icon><md-tooltip md-direction="down">More Options</md-tooltip></md-button>
                 <md-menu-content width="5">
-                	<md-menu-item>
-                		<md-button ng-click="showModal('edit-document-set.html', documentSet)"><md-icon class="material-icons">settings</md-icon>Edit This Set</md-button>
+                	<md-menu-item ng-show="!selectedDocumentSet.notAllowEditOrCopy">
+                		<md-button ng-click="showModal('edit-document-set.html', selectedDocumentSet)"><md-icon class="material-icons">settings</md-icon>Edit This Set</md-button>
                 	</md-menu-item>
                 	<md-menu-item>
-                		<md-button ng-click="showModal('copy-document-set.html', documentSet)"><md-icon class="material-icons">content_copy</md-icon>Copy This Set</md-button>
+                		<md-button ng-click="showModal('copy-document-set.html', selectedDocumentSet)"><md-icon class="material-icons">content_copy</md-icon>Copy This Set</md-button>
                 	</md-menu-item>
                 </md-menu-content>
             </md-menu>
@@ -42,9 +44,9 @@
 		</div>
 		<md-divider layout="row"></md-divider>
 		<md-list ng-cloak flex>
-			<div ng-repeat="document in documents | filter: search | unique: '_id' track by $index" ng-show="document.__v>0">
+			<div ng-repeat="document in selectedDocumentSet.documents | filter: search | unique: '_id' track by $index" ng-show="document.__v>0">
 				<md-list-item class="md-3-line" md-ink-ripple>
-					<div ui-sref="project.documentation.detail({id:document.project._id, documentId: document._id})" class="md-list-item-text" layout="column">
+					<div ui-sref="project.documentation.detail({id:document.project, documentId: document._id})" class="md-list-item-text" layout="column">
 			          	<h3>{{document.name}}</h3>
 						<p><span ng-repeat="tag in document.tags">'{{tag}}' </span></p>
 			          	<p ng-show="document.__v > 0" style="color: #2196F3">Updates: {{document.__v}}</p>
@@ -54,9 +56,9 @@
 				<md-divider ng-hide="$last"></md-divider>
 			</div>
 
-			<div ng-repeat="document in documents | orderBy: '-createdAt' | filter: search | unique: '_id' track by $index" ng-show="document.__v==0">
+			<div ng-repeat="document in selectedDocumentSet.documents | orderBy: '-createdAt' | filter: search | unique: '_id' track by $index" ng-show="document.__v==0">
 				<md-list-item class="md-3-line" md-ink-ripple>
-					<div ui-sref="project.documentation.detail({id:document.project._id, documentId: document._id})" class="md-list-item-text" layout="column">
+					<div ui-sref="project.documentation.detail({id:document.project, documentId: document._id})" class="md-list-item-text" layout="column">
 			          	<h3>{{document.name}}</h3>
 						<p><span ng-repeat="tag in document.tags">'{{tag}}' </span></p>
 						<p>No New Updates</p>

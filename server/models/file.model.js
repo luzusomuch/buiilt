@@ -103,7 +103,8 @@ var FileSchema = new Schema({
     }],
     versionTags: [String],
     // This is our latest version, file must belong to an event
-    event: {type: Schema.Types.ObjectId, ref: "Activity"}
+    event: {type: Schema.Types.ObjectId, ref: "Activity"},
+    documentSet: {type: Schema.Types.ObjectId, ref: "document"}
 });
 
 /**

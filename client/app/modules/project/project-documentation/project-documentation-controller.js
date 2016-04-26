@@ -1,8 +1,32 @@
 angular.module('buiiltApp').controller('projectDocumentationCtrl', function($rootScope, $scope, $mdDialog, documents, uploadService, $mdToast, $stateParams, socket, $state, fileService, documentSets, people, dialogService, documentService) {
     $scope.documents = documents;
     $scope.documentSets = documentSets;
-    $scope.documentSets.push({name: "Set 1", documents: documents});
     $scope.dialogService = dialogService;
+
+    /*Check to allow added document set 1*/
+    var allowAddedSet1 = true;
+    _.each($scope.documentSets, function(documentSet) {
+        if (documentSet.name==="Set 1" && documentSet.notAllowEditOrCopy) {
+            allowAddedSet1 = false;
+            return false;
+        }
+    });
+    if (allowAddedSet1) 
+        $scope.documentSets.push({name: "Set 1", documents: [], notAllowEditOrCopy: true});
+
+    /*Add documents to document set 1 which haven't belong to any document set */
+    _.each(documents, function(document) {
+        if (!document.documentSet) {
+            document.project = (document.project._id) ? document.project._id : document.project;
+            $scope.documentSets[$scope.documentSets.length -1].documents.push(document);
+        }
+    });
+
+    $scope.selectedDocumentSetId = $rootScope.selectedDocumentSetId;
+    $scope.selectDocumentSet = function(documentSet) {
+        $scope.selectedDocumentSet = documentSet;
+        $rootScope.selectedDocumentSetId = documentSet._id;
+    };
 	
 	$scope.showFilter = false;
 
@@ -200,6 +224,7 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
     socket.on("document-set:new", function(data) {
         if (data.project==$stateParams.id) {
             $scope.documentSets.push(data);
+            $scope.selectedDocumentSet = data;
         }
     });
 
@@ -213,6 +238,7 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
             });
             if (index !== -1) {
                 $scope.documentSets[index] = data;
+                $scope.selectedDocumentSet = data;
             }
         }
     });
@@ -237,6 +263,7 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
             dialogService.showToast("Please select a document set");
         } else {
             $scope.uploadFile.type="document";
+            $scope.uploadFile.selectedDocumentSetId = $scope.selectedDocumentSetId;
             uploadService.upload({id: $stateParams.id}, $scope.uploadFile).$promise.then(function(res) {
                 dialogService.closeModal();
                 dialogService.showToast("Document Successfully Uploaded.");
@@ -247,7 +274,7 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
 				mixpanel.track("Document Uploaded");
 
                 $state.go("project.documentation.detail", {id: res.project._id, documentId: res._id});
-            }, function(err){$scope.showToast("There Was an Error...");});
+            }, function(err){dialogService.showToast("There Was an Error...");});
         }
 	};
 
@@ -255,7 +282,7 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
         if (modalName==="edit-document-set.html") 
             $rootScope.selectedDocumentSet = value;
         else if (modalName==="copy-document-set.html") {
-            $rootScope.selectedDocumentSet = value;
+            $rootScope.selectedDocumentSet = angular.copy(value);
             $rootScope.selectedDocumentSet.name = null;
             $rootScope.isCopyDocumentSet = true;
         }

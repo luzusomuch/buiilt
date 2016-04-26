@@ -41,7 +41,8 @@ exports.create = function(req, res) {
             if (err) {return res.send(500,err);}
             Document.populate(document, [
                 {path: "owner", select: "_id name email phoneNumber"},
-                {path: "members", select: "_id name email phoneNumber"}
+                {path: "members", select: "_id name email phoneNumber"},
+                {path: "documents", select: "_id name tags project __v"}
             ], function() {
                 var members = document.members;
                 members.push(document.owner);
