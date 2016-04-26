@@ -23,14 +23,8 @@ exports.create = function(req, res) {
             if (moment(moment(data.date.start).format("YYYY-MM-DD")).isAfter(moment(data.date.end).format("YYYY-MM-DD"))) {
                 return res.send(422, {msg: "End Date Must Greator Than Start Date"});
             }
-            if (data.date.duration && data.date.duration <= 0) {
-                return res.send(422, {msg: "Duration Must Greator Than 0"});
-            }
             activity.date.start = data.date.start;
             activity.date.end = data.date.end;
-
-            activity.time.start = data.time.start;
-            activity.time.end = data.time.end;
         }
         if (req.body.newMembers.length === 0) {
             return res.send(422, {msg: "Please check your new members list"});
@@ -76,9 +70,6 @@ exports.update = function(req, res) {
                 } else if (data.editType==="change-date-time") {
                     if (data.date) {
                         activity.date = data.date;
-                    }
-                    if (data.time) {
-                        activity.time = data.time;
                     }
                     cb();
                 } else {

@@ -188,24 +188,14 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
     };
 
     function updateEventDateTime(event, delta) {
-        var result;
-        result = {
+        var result = {
             _id: event._id,
-            editType: "change-date-time"
-        };
-        if (delta._data.days !== 0) {
-            result.date = {
-                start: new Date(event.start),
-                end: new Date(event.end)
-            };
-            
-        } 
-        if (delta._data.hours !== 0 || delta._data.minutes !== 0) {
-            result.time = {
+            editType: "change-date-time",
+            date: {
                 start: new Date(event.start),
                 end: new Date(event.end)
             }
-        }
+        };
         return result;
     };
 
@@ -235,14 +225,10 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
             } else if ($scope.step==2) {
                 if (!$scope.activity.date) {
                     dialogService.showToast("Please Check Your Date");
-                } else if (!$scope.activity.time) {
-                    dialogService.showToast("Please Check Your Time");
                 } else {
                     if (moment(moment($scope.activity.date.start).format("YYYY-MM-DD")).isAfter(moment($scope.activity.date.end).format("YYYY-MM-DD")))
                         dialogService.showToast("End Date Must Greator Than Stat Date");
-                    else if (!$scope.activity.time.start || !$scope.activity.time.end) {
-                        dialogService.showToast("Please Check Your Time");
-                    } else
+                    else
                         $scope.step += 1;
                 }
             }
@@ -268,9 +254,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
         });
         _.each(activities, function(activity) {
             if (!activity.isMilestone) {
-                var dateStart = moment(activity.date.start).add(moment(activity.time.start).hours(), "hours").add(moment(activity.time.end).minutes(), "minutes");
-                var dateEnd = moment(activity.date.end).add(moment(activity.time.end).hours(), "hours").add(moment(activity.time.end).minutes(), "minutes");
-                $scope.events.push({type: "event", _id: activity._id,title: activity.name, start: moment(dateStart).format("YYYY-MM-DD hh:mm"), end: moment(dateEnd).format("YYYY-MM-DD hh:mm"), "backgroundColor": "#0D47A1", allDay: false});   
+                $scope.events.push({type: "event", _id: activity._id,title: activity.name, start: moment(activity.date.start).format("YYYY-MM-DD hh:mm"), end: moment(activity.date.end).format("YYYY-MM-DD hh:mm"), "backgroundColor": "#0D47A1", allDay: true});   
             }
         });
         $scope.originalEvents = angular.copy($scope.events);
@@ -378,17 +362,17 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
         if (form.$valid) {
             $scope.activity.newMembers = _.filter($scope.membersList, {select: true});
             var error = false;
-            var timeError = false;
-            if ($scope.activity.date) {
-                if (moment(moment($scope.activity.date.start).format("YYYY-MM-DD")).isSameOrBefore(moment($scope.activity.date.end).format("YYYY-MM-DD")))
-                    error = false;
-            } else
-                error = true;
-            if ($scope.activity.time) {
-                if (!$scope.activity.time.start || !$scope.activity.time.end) 
-                    timeError = true;
-            } else
-                timeError = true;
+            // var timeError = false;
+            // if ($scope.activity.date) {
+            //     if (moment(moment($scope.activity.date.start).format("YYYY-MM-DD")).isSameOrBefore(moment($scope.activity.date.end).format("YYYY-MM-DD")))
+            //         error = false;
+            // } else
+            //     error = true;
+            // if ($scope.activity.time) {
+            //     if (!$scope.activity.time.start || !$scope.activity.time.end) 
+            //         timeError = true;
+            // } else
+            //     timeError = true;
             if ($scope.activity.newMembers.length === 0) {
                 dialogService.showToast("Please select at least 1 member");
                 error = true;
@@ -397,7 +381,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 dialogService.showToast("Please select a milestone");
                 error = true;
             }
-            if (!error && !timeError) {
+            if (!error) {
                 if ($scope.dateError) {
                     dialogService.showToast("Please Check Your Date Input");
                 } else {

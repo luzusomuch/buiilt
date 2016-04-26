@@ -30,17 +30,6 @@
                         </div>
                     </div>
                     <p style="color:red" ng-show="dateError">{{dateError}}</p>
-
-                    <div layout="row">
-                        <div layout-padding flex="50">
-                            <h5>Start Time</h5>
-                            <mdp-time-picker ng-model="activity.time.start"></mdp-time-picker>
-                        </div>
-                        <div layout-padding>
-                            <h5>End Time</h5>
-                            <mdp-time-picker ng-model="activity.time.end"></mdp-time-picker>
-                        </div>
-                    </div>
                 </div>
 
                 <div layout="column" ng-show="step==3">

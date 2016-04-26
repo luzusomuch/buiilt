@@ -11,10 +11,6 @@ var ActivitySchema = new Schema({
         start: Date,
         end: Date
     },
-    time: {
-        start: Date,
-        end: Date
-    },
     relatedItem: [{
         type: {type: String},
         item: {},
