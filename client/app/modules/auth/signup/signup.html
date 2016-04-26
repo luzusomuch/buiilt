@@ -114,7 +114,6 @@
 				</md-input-container>
 
 				<md-input-container flex="100">
-					<label for="repassword">Your Phone Number</label>
 					<input international-phone-number default-country="au" id="phoneNumber" name="phoneNumber" ng-model="user.phoneNumber" type="text" ng-class="{'invalid' : form.phoneNumber.$invalid && submitted}" required>
 					<p class="validate-message" ng-show="form.phoneNumber.$error.internationalPhoneNumber && submitted">The phone number you have entered not valid...</p>
 					<p class="validate-message" ng-show="form.phoneNumber.$error.required && submitted">Please provide your phone number...</p>
