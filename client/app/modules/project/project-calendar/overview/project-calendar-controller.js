@@ -7,15 +7,16 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
     $scope.search = function() {
         var result = [];
         if ($scope.searchTerm.trim().length > 0) {
+            $scope.searchTerm = $scope.searchTerm.toLowerCase();
             if ($scope.filteredEvents && $scope.filteredEvents.length) {
                 _.each($scope.filteredEvents, function(ev) {
-                    if (ev.title.indexOf($scope.searchTerm) !== -1) {
+                    if (ev.title.indexOf($scope.searchTerm) !== -1 || ev.title.toLowerCase().indexOf($scope.searchTerm) !== -1) {
                         result.push(ev);
                     }
                 });
             } else if ($scope.eventSources && $scope.eventSources[0].length > 0) {
                 _.each($scope.eventSources[0], function(ev) {
-                    if (ev.title.indexOf($scope.searchTerm) !== -1) {
+                    if (ev.title.indexOf($scope.searchTerm) !== -1 || ev.title.toLowerCase().indexOf($scope.searchTerm) !== -1) {
                         result.push(ev);
                     }
                 });
@@ -75,8 +76,9 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
         }
         var result = [];
         if ($scope.searchTerm && $scope.searchTerm.trim().length > 0) {
+            $scope.searchTerm = $scope.searchTerm.toLowerCase();
             _.each($scope.filteredEvents, function(ev) {
-                if (ev.title.indexOf($scope.searchTerm) !== -1) 
+                if (ev.title.indexOf($scope.searchTerm) !== -1 || ev.title.toLowerCase().indexOf($scope.searchTerm) !== -1) 
                     result.push(ev);
             });
             $scope.filteredEvents = result;
