@@ -131,7 +131,7 @@ exports.create = function (req, res, next) {
             });
         }
     ], function() {
-        if (packageInvite._id && packageInvite.to !== req.body.email) {
+        if (packageInvite && packageInvite._id && packageInvite.to !== req.body.email) {
             return res.send(500, {msg: "Not valid email"});
         } else {
             UserValidator.validateNewUser(req, function(err, data) {
@@ -184,7 +184,7 @@ exports.create = function (req, res, next) {
                                 if (newUser.team._id) {
                                     cb();
                                 } else {
-                                    InviteToken.find({email: packageInvite.to}, function(err, inviteTokens) {
+                                    InviteToken.find({email: newUser.email}, function(err, inviteTokens) {
                                         if (err) {cb();}
                                         async.each(inviteTokens, function(inviteToken, callback) {
                                             if (inviteToken.type==="team-invite") {
