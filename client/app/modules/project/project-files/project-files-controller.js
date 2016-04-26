@@ -7,29 +7,58 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
 		members:[],
         selectedEvent: ($rootScope.selectedEvent) ? $rootScope.selectedEvent : null
 	};
-    $scope.selectedFilterEventList = [];
+    $scope.selectedFilterEventsList = [];
+    $scope.selectedFilterAssigneesList = [];
+    $scope.selectedFilterTagsList = [];
 
-    $scope.changeFilter = function(type, isCheckAll, evId) {
-        if (type==="all") {
-            _.each($scope.events, function(ev) {
-                if (!$scope.checkAll) 
-                    ev.select = true;
-                else
+    $scope.changeFilter = function(type, isCheckAll, dataId) {
+        if (type==="event") {
+            if (isCheckAll) {
+                _.each($scope.events, function(ev) {
                     ev.select = false;
-            });
-        } else {
-            var index = _.findIndex($scope.events, function(ev) {
-                return ev._id==evId;
-            });
-            $scope.events[index].select = !$scope.events[index].select;
+                });
+            } else {
+                var index = _.findIndex($scope.events, function(ev) {
+                    return ev._id==dataId;
+                });
+                $scope.events[index].select = !$scope.events[index].select;
+            }
+        } else if (type==="recepient") {
+            if (isCheckAll) {
+                _.each($scope.assignees, function(assignee) {
+                    assignee.select = false;
+                });
+            } else {
+                var index = _.findIndex($scope.assignees, function(assignee) {
+                    return assignee._id==dataId;
+                });
+                $scope.assignees[index].select = !$scope.assignees[index].select;
+            }
+        } else if (type==="tag") {
+            if (isCheckAll) {
+                _.each($scope.tags, function(tag) {
+                    tag.select = false;
+                });
+            } else {
+                var index = _.findIndex($scope.tags, function(tag) {
+                    return tag.name==dataId;
+                });
+                $scope.tags[index].select = !$scope.tags[index].select;
+            }
         }
-        $scope.selectedFilterEventList = _.filter($scope.events, {select: true});
-        $scope.checkAll = ($scope.selectedFilterEventList.length===$scope.events.length) ? true : false;
+        $scope.selectedFilterEventsList = _.filter($scope.events, {select: true});
+        $scope.selectedFilterAssigneesList = _.filter($scope.assignees, {select: true});
+        $scope.selectedFilterTagsList = _.filter($scope.tags, {select: true});
     };
 
     /*Get events list for filter*/
     function repairForEventsFilter() {
         $scope.events = [];
+        $scope.assignees = [];
+        $scope.tags = [];
+        _.each($rootScope.currentTeam.fileTags, function(tag) {
+            $scope.tags.push({name: tag});
+        });
         _.each($scope.files, function(file) {
             if (file.event) {
                 var index = _.findIndex($scope.activities, function(act) {
@@ -37,8 +66,10 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
                 });
                 $scope.events.push($scope.activities[index]);
             }
+            $scope.assignees = _.union($scope.assignees, file.members);
         });
         $scope.events = _.uniq($scope.events, "_id");
+        $scope.assignees = _.uniq($scope.assignees, "_id");
     };
     repairForEventsFilter();
 	
@@ -148,9 +179,134 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
             $scope.filterTags.push(tagName);
     };
 
+    $scope.showArchived = false;
     $scope.search = function(file) {
         var found = false;
-        if ($scope.selectedFilterEventList.length > 0 && file.event && !$scope.showArchived) {
+        if ($scope.selectedFilterEventsList.length > 0 && $scope.selectedFilterAssigneesList.length > 0 && $scope.selectedFilterTagsList.length > 0) {
+            _.each($scope.selectedFilterEventsList, function(event) {
+                if (file.event && event._id==file.event && file.isArchive==$scope.showArchived) {
+                    _.each($scope.selectedFilterAssigneesList, function(assignee) {
+                        if (file.members.length > 0 && _.findIndex(file.members, function(member) {return member._id==assignee._id}) !== -1) {
+                            _.each($scope.selectedFilterTagsList, function(tag) {
+                                if (file.tags.length > 0 && file.tags.indexOf(tag.name) !== -1) {
+                                    if ($scope.name && $scope.name.trim().length > 0) {
+                                        if (file.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+                                            found = true;
+                                        }
+                                    } else {
+                                        found = true;
+                                    }
+                                    return false;
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        } else if ($scope.selectedFilterEventsList.length > 0 && $scope.selectedFilterAssigneesList.length > 0) {
+            _.each($scope.selectedFilterEventsList, function(event) {
+                if (file.event && event._id==file.event && file.isArchive==$scope.showArchived) {
+                    _.each($scope.selectedFilterAssigneesList, function(assignee) {
+                        if (file.members.length > 0 && _.findIndex(file.members, function(member) {return member._id==assignee._id}) !== -1) {
+                            if ($scope.name && $scope.name.trim().length > 0) {
+                                if (file.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+                                    found = true;
+                                }
+                            } else {
+                                found = true;
+                            }
+                            return false;
+                        }
+                    });
+                }
+            });
+        } else if ($scope.selectedFilterEventsList.length > 0 && $scope.selectedFilterTagsList.length > 0) {
+            _.each($scope.selectedFilterEventsList, function(event) {
+                if (file.event && event._id==file.event && file.isArchive==$scope.showArchived) {
+                    _.each($scope.selectedFilterTagsList, function(tag) {
+                        if (file.tags.length > 0 && file.tags.indexOf(tag.name) !== -1) {
+                            if ($scope.name && $scope.name.trim().length > 0) {
+                                if (file.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+                                    found = true;
+                                }
+                            } else {
+                                found = true;
+                            }
+                            return false;
+                        }
+                    });
+                }
+            });
+        } else if ($scope.selectedFilterAssigneesList.length > 0 && $scope.selectedFilterTagsList.length > 0) {
+            _.each($scope.selectedFilterAssigneesList, function(assignee) {
+                if (file.members.length > 0 && _.findIndex(file.members, function(member) {return member._id==assignee._id;}) !== -1 && file.isArchive==$scope.showArchived) {
+                    _.each($scope.selectedFilterTagsList, function(tag) {
+                        if (file.tags.length > 0 && file.tags.indexOf(tag.name) !== -1) {
+                            if ($scope.name && $scope.name.trim().length > 0) {
+                                if (file.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+                                    found = true;
+                                }
+                            } else {
+                                found = true;
+                            }
+                            return false;
+                        }
+                    });
+                }
+            });
+        } else if ($scope.selectedFilterEventsList.length > 0) {
+            _.each($scope.selectedFilterEventsList, function(event) {
+                if (file.event && event._id==file.event && file.isArchive==$scope.showArchived) {
+                    if ($scope.name && $scope.name.trim().length > 0) {
+                        if (file.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+                            found = true;
+                        }
+                    } else {
+                        found = true;
+                    }
+                    return false
+                }
+            });
+        } else if ($scope.selectedFilterTagsList.length > 0) {
+            _.each($scope.selectedFilterTagsList, function(tag) {
+                if (file.isArchive==$scope.showArchived && file.tags.indexOf(tag.name) !== -1) {
+                    if ($scope.name && $scope.name.trim().length > 0) {
+                        if (file.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+                            found = true;
+                        }
+                    } else {
+                        found = true;
+                    }
+                    return false
+                }
+            });
+        } else if ($scope.selectedFilterAssigneesList.length > 0) {
+            _.each($scope.selectedFilterAssigneesList, function(assignee) {
+                if (file.members.length > 0 && _.findIndex(file.members, function(member) {return member._id==assignee._id;}) !== -1 && file.isArchive==$scope.showArchived) {
+                    if ($scope.name && $scope.name.trim().length > 0) {
+                        if (file.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+                            found = true;
+                        }
+                    } else {
+                        found = true;
+                    }
+                    return false
+                }
+            });
+        } else if ($scope.selectedFilterEventsList.length === 0 && $scope.selectedFilterAssigneesList.length === 0 && $scope.selectedFilterTagsList.length === 0) {
+            if (file.isArchive==$scope.showArchived) {
+                if ($scope.name && $scope.name.trim().length > 0) {
+                    if (file.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+                        found = true;
+                    }
+                } else {
+                    found = true;
+                }
+            }
+        }
+        return found;
+
+        /*if ($scope.selectedFilterEventList.length > 0 && file.event && !$scope.showArchived) {
             _.each($scope.selectedFilterEventList, function(item) {
                 if (item._id==file.event && !file.isArchive) {
                     found = true;
@@ -197,17 +353,13 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
             var found = (!file.isArchive) ? true : false;
             return found;
         }
-        return false;
+        return false;*/
     };
     // end filter section
 
     /*Get project members list and file tags list*/
     function getProjectMembers(id) {
         $scope.projectMembers = [];
-        $scope.tags = [];
-        _.each($rootScope.currentTeam.fileTags, function(tag) {
-            $scope.tags.push({name: tag, select: false});
-        });
         _.each($rootScope.roles, function(role) {
             _.each($scope.people[role], function(tender){
                 if (tender.hasSelect) {
