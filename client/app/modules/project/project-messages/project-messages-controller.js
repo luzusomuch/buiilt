@@ -5,28 +5,40 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
     $scope.activities = activities;
     $scope.dialogService = dialogService;
     $scope.selectedFilterEventList = [];
+    $scope.selectedFilterRecepientList = [];
 
-    $scope.changeFilter = function(type, evId) {
-        if (type==="all") {
-            _.each($scope.events, function(ev) {
-                if (!$scope.checkAll) 
-                    ev.select = true;
-                else
+    $scope.changeFilter = function(type, isCheckAll, dataId) {
+        if (type==="event") {
+            if (isCheckAll) {
+                _.each($scope.events, function(ev) {
                     ev.select = false;
-            });
-        } else {
-            var index = _.findIndex($scope.events, function(ev) {
-                return ev._id==evId;
-            });
-            $scope.events[index].select = !$scope.events[index].select;
+                });
+            } else {
+                var index = _.findIndex($scope.events, function(ev) {
+                    return ev._id==dataId;
+                });
+                $scope.events[index].select = !$scope.events[index].select;
+            }
+        } else if (type==="recepient") {
+            if (isCheckAll) {
+                _.each($scope.assignees, function(assignee) {
+                    assignee.select = false;
+                });
+            } else {
+                var index = _.findIndex($scope.assignees, function(assignee) {
+                    return assignee._id==dataId;
+                });
+                $scope.assignees[index].select = !$scope.assignees[index].select;
+            }
         }
         $scope.selectedFilterEventList = _.filter($scope.events, {select: true});
-        $scope.checkAll = ($scope.selectedFilterEventList.length===$scope.events.length) ? true : false;
+        $scope.selectedFilterRecepientList = _.filter($scope.assignees, {select: true});
     };
 
     /*Get events list for filter*/
     function repairForEventsFilter() {
         $scope.events = [];
+        $scope.assignees = [];
         _.each($scope.threads, function(thread) {
             if (thread.event) {
                 var index = _.findIndex($scope.activities, function(act) {
@@ -34,8 +46,10 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
                 });
                 $scope.events.push($scope.activities[index]);
             }
+            $scope.assignees = _.union($scope.assignees, thread.members);
         });
         $scope.events = _.uniq($scope.events, "_id");
+        $scope.assignees = _.uniq($scope.assignees, "_id");
     };
     repairForEventsFilter();
 	
@@ -170,61 +184,64 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
     });
 
     /*Search thread depend on input value*/
+    $scope.showArchived = false;
     $scope.search = function(thread) {
         var found = false;
-        if ($scope.selectedFilterEventList.length > 0 && thread.event && !$scope.showArchived) {
-            _.each($scope.selectedFilterEventList, function(item) {
-                if (item._id==thread.event && !thread.isArchive) {
-                    found = true;
-                    return false;
+        if ($scope.selectedFilterEventList.length > 0 && $scope.selectedFilterRecepientList.length > 0) {
+            _.each($scope.selectedFilterEventList, function(event) {
+                if (thread.event && event._id==thread.event && thread.isArchive==$scope.showArchived) {
+                    _.each($scope.selectedFilterRecepientList, function(assignee) {
+                        if (thread.members.length > 0 && _.findIndex(thread.members, function(member) {return member._id==assignee._id;}) !== -1 && thread.isArchive==$scope.showArchived) {
+                            if ($scope.name && $scope.name.trim().length > 0) {
+                                if (thread.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+                                    found = true;
+                                }
+                            } else {
+                                found = true;
+                            }
+                            return false
+                        }
+                    });
                 }
             });
-            return found;
-        } else if ($scope.selectedFilterEventList.length > 0 && thread.event && $scope.showArchived) {
-            _.each($scope.selectedFilterEventList, function(item) {
-                if (item._id==thread.event && thread.isArchive) {
-                    found = true;
-                    return false;
-                }
-            });
-            return found;
-        } else if ($scope.name && $scope.name.length > 0) {
-            if (thread.name.toLowerCase().indexOf($scope.name) > -1 || thread.name.indexOf($scope.name) > -1) {
-                found = true;
-            }
-            return found;
-        } else if ($scope.recipient && $scope.recipient.length > 0) {
-            if (thread.members && thread.members.length > 0) {
-                _.each(thread.members, function(member) {
-                    if ((member.name.toLowerCase().indexOf($scope.recipient) > -1 || member.name.indexOf($scope.recipient) > -1) || (member.email.toLowerCase().indexOf($scope.recipient) > -1 || member.email.indexOf($scope.recipient) > -1)) {
+        } else if ($scope.selectedFilterEventList.length > 0) {
+            _.each($scope.selectedFilterEventList, function(event) {
+                if (thread.event && event._id==thread.event && thread.isArchive==$scope.showArchived) {
+                    if ($scope.name && $scope.name.trim().length > 0) {
+                        if (thread.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+                            found = true;
+                        }
+                    } else {
                         found = true;
                     }
-                });
-            }
-            if (thread.notMembers && thread.notMembers.length > 0) {
-                _.each(thread.notMembers, function(email) {
-                    if (email.toLowerCase().indexOf($scope.recipient) > -1) {
-                        found = true;
-                    }
-                });
-            }
-            return found;
-        } else if ($scope.reply && $scope.reply.length > 0) {
-            _.each(thread.messages, function(message) {
-                if (message.text.toLowerCase().indexOf($scope.reply) > -1 || message.text.indexOf($scope.reply) > -1) {
-                    found = true;
-                    return false;
+                    return false
                 }
             });
-            return found
-        } else if ($scope.showArchived && $scope.selectedFilterEventList.length===0) {
-            found = (thread.isArchive) ? true: false;
-            return found;
-        } else if(!$scope.showArchived && $scope.selectedFilterEventList.length===0) {
-            found = (!thread.isArchive) ? true : false;
-            return found;
+        } else if ($scope.selectedFilterRecepientList.length > 0) {
+            _.each($scope.selectedFilterRecepientList, function(assignee) {
+                if (thread.members.length > 0 && _.findIndex(thread.members, function(member) {return member._id==assignee._id;}) !== -1 && thread.isArchive==$scope.showArchived) {
+                    if ($scope.name && $scope.name.trim().length > 0) {
+                        if (thread.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+                            found = true;
+                        }
+                    } else {
+                        found = true;
+                    }
+                    return false
+                }
+            });
+        } else if ($scope.selectedFilterRecepientList.length === 0 && $scope.selectedFilterEventList.length === 0) {
+            if (thread.isArchive==$scope.showArchived) {
+                if ($scope.name && $scope.name.trim().length > 0) {
+                    if (thread.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+                        found = true;
+                    }
+                } else {
+                    found = true;
+                }
+            }
         }
-        return false;
+        return found;
     };
 
     /*Get project members list*/

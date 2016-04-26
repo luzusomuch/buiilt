@@ -10,9 +10,9 @@
 				</md-input-container>
 				
 				<div>
-					<md-button id="im_ProjMessagesArchived" class="md-icon-button more-filter-button" ng-click="showArchived=!showArchived" style="margin-left: 30px">
-						 <md-tooltip md-direction="down">Include Archived Messages</md-tooltip>
-					     <md-icon class="material-icons">history</md-icon>
+					<md-button id="im_ProjMessagesArchived" class="md-icon-button more-filter-button" ng-click="showArchived=!showArchived" style="margin-left: 30px" ng-class="{'md-primary': showArchived}">
+					 	<md-tooltip md-direction="down">{{(!showArchived) ? "Include Archived Messages" : "Hide Archived Messages"}}</md-tooltip>
+				     	<md-icon class="material-icons">history</md-icon>
 			      	</md-button>
 				</div>
             
@@ -20,7 +20,7 @@
 	                <md-button aria-label="Filter" ng-click="$mdOpenMenu($event)">Events</md-button>
 	                <md-menu-content width="5">
 	                    <md-menu-item>
-						    <md-button ng-click="changeFilter('all')"><span class="md-subhead">Show All Events</span></md-button>
+						    <md-button ng-click="changeFilter('event', true)"><span class="md-subhead">Show All Events</span></md-button>
 	                    </md-menu-item>
 						<md-divider></md-divider>
 	                	<md-menu-item layout-padding>
@@ -29,7 +29,7 @@
 	                		</md-input-container>
 	                	</md-menu-item>
 	                    <md-menu-item ng-repeat="ev in events | filter: searchEvent track by $index" layout-padding>
-	                        <md-checkbox class="md-primary" md-prevent-menu-close ng-checked="ev.select" ng-click="changeFilter('item', ev._id)"><span style="text-transform: capitalize">{{ev.name}}</span></md-checkbox>
+	                        <md-checkbox class="md-primary" md-prevent-menu-close ng-checked="ev.select" ng-click="changeFilter('event', false, ev._id)"><span style="text-transform: capitalize">{{ev.name}}</span></md-checkbox>
 	                    </md-menu-item>
 	                </md-menu-content>
 	            </md-menu>
@@ -38,16 +38,16 @@
 	                <md-button aria-label="Filter" ng-click="$mdOpenMenu($event)">Recipients</md-button>
 	                <md-menu-content width="5">
 	                    <md-menu-item>
-						    <md-button ng-click=""><span class="md-subhead">Show All Recipients</span></md-button>
+						    <md-button ng-click="changeFilter('recepient', true)"><span class="md-subhead">Show All Recipients</span></md-button>
 	                    </md-menu-item>
 						<md-divider></md-divider>
 	                	<md-menu-item layout-padding>
 	                		<md-input-container md-no-float>
-	                			<input type="text" ng-model="searchEvent.name" placeholder="Search for a Recipient">
+	                			<input type="text" ng-model="searchRecepient.name" placeholder="Search for a Recipient">
 	                		</md-input-container>
 	                	</md-menu-item>
-	                    <md-menu-item ng-repeat="" layout-padding>
-	                        <md-checkbox class="md-primary" md-prevent-menu-close ng-checked="" ng-click=""><span style="text-transform: capitalize">{{ }}</span></md-checkbox>
+	                    <md-menu-item ng-repeat="assignee in assignees | filter: searchRecepient track by $index" layout-padding>
+	                        <md-checkbox class="md-primary" md-prevent-menu-close ng-checked="assignee.select" ng-click="changeFilter('recepient', false, assignee._id)"><span style="text-transform: capitalize">{{assignee.name}}</span></md-checkbox>
 	                    </md-menu-item>
 	                </md-menu-content>
 	            </md-menu>
@@ -57,7 +57,7 @@
 			<md-divider layout="row" flex></md-divider>
 			
 			<md-list ng-cloak flex class="content-list">
-				<md-list-item class="md-3-line" ng-repeat="thread in threads | filter: search | unique: '_id' track by $index" ng-show="thread.__v>0" md-ink-ripple>
+				<md-list-item class="md-3-line" ng-repeat="thread in threads | filter: search | unique: '_id' track by thread._id" ng-show="thread.__v>0" md-ink-ripple>
 			
 					<div ui-sref="project.messages.detail({id: thread.project, messageId: thread._id})" class="md-list-item-text" layout-margin>
 						<h3>{{ thread.name }}</h3>
@@ -70,7 +70,7 @@
 			
 				</md-list-item>
 
-				<md-list-item class="md-3-line" ng-repeat="thread in threads | orderBy: '-updatedAt' | filter: search | unique: '_id' track by $index" ng-show="thread.__v==0" md-ink-ripple>
+				<md-list-item class="md-3-line" ng-repeat="thread in threads | orderBy: '-updatedAt' | filter: search | unique: '_id' track by thread._id" ng-show="thread.__v==0" md-ink-ripple>
 	    
 					<div ui-sref="project.messages.detail({id: thread.project, messageId: thread._id})" class="md-list-item-text" layout-margin>
 					    <h3>{{ thread.name }}</h3>
