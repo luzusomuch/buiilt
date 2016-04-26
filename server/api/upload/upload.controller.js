@@ -9,6 +9,7 @@ var File = require('./../../models/file.model');
 var Document = require('./../../models/document.model');
 var Notification = require('./../../models/notification.model');
 var NotificationHelper = require('./../../components/helpers/notification');
+var CheckMembers = require("./../../components/helpers/checkMembers");
 var _ = require('lodash');
 var async = require('async');
 var config = require('./../../config/environment');
@@ -245,39 +246,26 @@ exports.uploadReversion = function(req, res) {
 exports.upload = function(req, res){
     var data = req.body;
     console.log(data);
-    if (data.type==="file" && !data.selectedEvent) {
+    // new version
+    if (data.type==="document" && !data.selectedDocumentSetId) {
+        return res.send(422, {msg: "Please select a document set"});
+    }
+
+    // old version
+    /*if (data.type==="file" && !data.selectedEvent) {
         return res.send(422, {msg: "Selected Event Is Require"});
     } else if (data.type==="document" && !data.selectedDocumentSetId) {
         return res.send(422, {msg: "Please select a document set"});
-    }
+    }*/
     var filesAfterInsert = [];
     var members = [];
     var notMembers = [];
     var acknowledgeUsers = [];
-    async.parallel([
-        function(callback) {
-            if (data.members && data.members.length > 0) {
-                async.each(data.members, function(member, cb) {
-                    User.findOne({email: member.email}, function(err, user) {
-                        if (err) {console.log(err);cb(err);}
-                        else if (!user) {
-                            acknowledgeUsers.push({email: member.email, isAcknow: false});
-                            notMembers.push(member.email);
-                            cb();
-                        }
-                        else {
-                            acknowledgeUsers.push({_id: user._id, isAcknow: false});
-                            members.push(user._id);
-                            cb();
-                        }
-                    });
-                }, callback);
-            } else {
-                callback();
-            }
-        }
-    ], function(err, result) {
-        if (err) {return res.send(500,err);}
+    CheckMembers.check(data.members, null, function(result) {
+        members = result.members;
+        notMembers = result.notMembers;
+        acknowledgeUsers = _.union(result.members, result.notMembers);
+
         var mainItem = getMainItem(data.belongToType);
         var file = new File({
             owner: req.user._id,

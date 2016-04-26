@@ -305,55 +305,6 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
             }
         }
         return found;
-
-        /*if ($scope.selectedFilterEventList.length > 0 && file.event && !$scope.showArchived) {
-            _.each($scope.selectedFilterEventList, function(item) {
-                if (item._id==file.event && !file.isArchive) {
-                    found = true;
-                    return false;
-                }
-            });
-            return found;
-        } else if ($scope.selectedFilterEventList.length > 0 && file.event && $scope.showArchived) {
-            _.each($scope.selectedFilterEventList, function(item) {
-                if (item._id==file.event && file.isArchive) {
-                    found = true
-                    return false;
-                }
-            });
-            return found;
-        } else if (($scope.name && $scope.name.length > 0) || ($scope.recipient && $scope.recipient.length > 0)) {
-            if ($scope.name) {
-                if (file.name.toLowerCase().indexOf($scope.name) > -1 || file.name.indexOf($scope.name) > -1) {
-                    found = true;
-                }
-            } else if ($scope.recipient) {
-                if (_.findIndex(file.members, function(member) {
-                    return ((member.name.toLowerCase().indexOf($scope.recipient) > -1 || member.name.indexOf($scope.recipient) > -1) || (member.email.toLowerCase().indexOf($scope.recipient) > -1 || member.email.indexOf($scope.recipient) > -1));
-                }) !== -1) {
-                    found = true;
-                } else if (_.findIndex(file.notMembers, function(member) {
-                    return member.indexOf($scope.recipient) > -1;
-                }) !== -1) {
-                    found = true;
-                }
-            } 
-            return found;
-        } else if ($scope.filterTags.length > 0) {
-            _.each($scope.filterTags, function(tag) {
-                if (_.indexOf(file.tags, tag) !== -1) {
-                    found = true;
-                }
-            })
-            return found;
-        } else if ($scope.showArchived && $scope.selectedFilterEventList.length ===0) {
-            var found = (file.isArchive) ? true: false;
-            return found;
-        } else if (!$scope.showArchived && $scope.selectedFilterEventList.length ===0){
-            var found = (!file.isArchive) ? true : false;
-            return found;
-        }
-        return false;*/
     };
     // end filter section
 
@@ -431,18 +382,20 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
     then call mixpanel to track current user has created new file
     and go to new file detail*/
 	$scope.createNewFile = function() {
-        $scope.uploadFile.members = _.filter($scope.projectMembers, {select: true});
-        $scope.uploadFile.tags = _.filter($scope.tags, {select: true});
-		if ($scope.uploadFile.tags.length == 0) {
-			$scope.showToast("Please Select At Least 1 Tag...");
-            return;
-		} else if ($scope.uploadFile.members.length == 0) {
-			$scope.showToast("Please Select At Lease 1 Team Member...");
-            return;
-		} else if (!$scope.uploadFile.file) {
-            $scope.showToast("Please Select A File");
-            return;
-        } else {
+  //       $scope.uploadFile.members = _.filter($scope.projectMembers, {select: true});
+  //       $scope.uploadFile.tags = _.filter($scope.tags, {select: true});
+		// if ($scope.uploadFile.tags.length == 0) {
+		// 	$scope.showToast("Please Select At Least 1 Tag...");
+  //           return;
+		// } else if ($scope.uploadFile.members.length == 0) {
+		// 	$scope.showToast("Please Select At Lease 1 Team Member...");
+  //           return;
+		// } else if (!$scope.uploadFile.file) {
+  //           $scope.showToast("Please Select A File");
+  //           return;
+  //       } else {
+            $scope.uploadFile.members = [];
+            $scope.uploadFile.tags = [];
             $scope.uploadFile.type="file";
 			uploadService.upload({id: $stateParams.id}, $scope.uploadFile).$promise.then(function(res) {
 				$mdDialog.hide();
@@ -457,7 +410,7 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
 			}, function(err) {
 				$scope.showToast("There Has Been An Error...");
 			});
-		}
+		// }
 	};
 	
 	/*Open create new file modal*/
