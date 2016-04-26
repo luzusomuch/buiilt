@@ -132,12 +132,27 @@ var getMainItem = function(type) {
 */
 exports.create = function(req,res) {
     var user = req.user;
-    ThreadValidator.validateCreate(req,function(err,data) {
+    // This is the newest version - create new thread without enter information
+    var thread = new Thread({
+        project: req.params.id,
+        owner: user._id,
+        element: {type: req.body.type},
+        members: [user._id]
+    });
+    thread._editUser = user;
+    thread.save(function(err) {
+        if (err) {return res.send(500,err);}
+        populateNewThread(thread, res, req);
+    });
+    // THis is old version - create new thread had to enter information
+    /*ThreadValidator.validateCreate(req,function(err,data) {
         if (err) {
             return errorsHelper.validationErrors(res,err)
         }
+        console.log(data);
+        return
         var thread = new Thread(data);
-        thread.event = data.selectedEvent;
+        // thread.event = data.selectedEvent;
         thread.project = req.params.id;
         thread.owner = user._id;
         thread.element = {type: req.body.type};
@@ -218,7 +233,7 @@ exports.create = function(req,res) {
                 });
             });
         });
-    });
+    });*/
 };
 
 // Update thread

@@ -346,7 +346,7 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
     and go to the thread detail
     */
 	$scope.addNewThread = function(form) {
-		if (form.$valid) {
+		// if (form.$valid) {
 		    $scope.thread.members = _.filter($scope.projectMembers, {select: true});
 			$scope.thread.type = "project-message";
 			messageService.create({id: $stateParams.id},$scope.thread).$promise.then(function(res) {
@@ -362,7 +362,7 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
 			}, function(err) {
 				$scope.showToast("There Has Been An Error...")
 			});
-		}
+		// }
 	};
 
     /*Show a toast inforation*/

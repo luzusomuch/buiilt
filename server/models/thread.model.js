@@ -27,7 +27,7 @@ var MessageSchema = new Schema({
 var ThreadSchema = new Schema({
     name: {
         type: String,
-        required: true
+        // required: true
     },
     description: {
         type: String

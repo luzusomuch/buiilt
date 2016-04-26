@@ -9,7 +9,7 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
 	};
     $scope.selectedFilterEventList = [];
 
-    $scope.changeFilter = function(type, evId) {
+    $scope.changeFilter = function(type, isCheckAll, evId) {
         if (type==="all") {
             _.each($scope.events, function(ev) {
                 if (!$scope.checkAll) 
