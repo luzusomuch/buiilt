@@ -88,106 +88,109 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
     };
 
     /*config fullcalendar*/
-    $scope.uiConfig = {
-        calendar: {
-            height: 'auto',
-            header: {
-                left: "month agendaWeek agendaDay",
-                center: "title",
-                right: "today, prev, next"
-            },
-            selectable: true,
-            editable: true,
-            minTime: "6:00:00",
-            maxTime: "22:00:00",
-            dayClick: function(day) {
-                $rootScope.selectedStartDate = new Date(day);
-                $scope.showModal("create-task-or-event.html");
-            },
-            eventClick: function(data) {
-                if (data.type==="event") {
-                    $mdDialog.show({
-                        // targetEvent: $event,
-                        controller: ["$rootScope", "$scope", "dialogService", "activity", "$stateParams", "$state", function($rootScope, $scope, dialogService, activity, $stateParams, $state) {
-                            $scope.event = data;
-                            $scope.dialogService = dialogService;
-                            $scope.tasks = [];
-                            $scope.threads = [];
-                            $scope.files = [];
-                            _.each(activity.relatedItem, function(item) {
-                                if (item.type==="thread") {
-                                    $scope.threads.push(item.item);
-                                } else if (item.type==="task") {
-                                    $scope.tasks.push(item.item);
-                                } else if (item.type==="file") {
-                                    $scope.files.push(item.item);
-                                }
-                            });
+    $timeout(function() {
+        var height = $("#overview-view-calendar").outerHeight() - $("#calendar-header").outerHeight();
+        $scope.uiConfig = {
+            calendar: {
+                height: height,
+                header: {
+                    left: "month agendaWeek agendaDay",
+                    center: "title",
+                    right: "today, prev, next"
+                },
+                selectable: true,
+                editable: true,
+                minTime: "6:00:00",
+                maxTime: "22:00:00",
+                dayClick: function(day) {
+                    $rootScope.selectedStartDate = new Date(day);
+                    $scope.showModal("create-task-or-event.html");
+                },
+                eventClick: function(data) {
+                    if (data.type==="event") {
+                        $mdDialog.show({
+                            // targetEvent: $event,
+                            controller: ["$rootScope", "$scope", "dialogService", "activity", "$stateParams", "$state", function($rootScope, $scope, dialogService, activity, $stateParams, $state) {
+                                $scope.event = data;
+                                $scope.dialogService = dialogService;
+                                $scope.tasks = [];
+                                $scope.threads = [];
+                                $scope.files = [];
+                                _.each(activity.relatedItem, function(item) {
+                                    if (item.type==="thread") {
+                                        $scope.threads.push(item.item);
+                                    } else if (item.type==="task") {
+                                        $scope.tasks.push(item.item);
+                                    } else if (item.type==="file") {
+                                        $scope.files.push(item.item);
+                                    }
+                                });
 
-                            $scope.viewAll = function(type) {
-                                dialogService.closeModal();
-                                if (type==="task") {
-                                    $state.go("project.tasks.all", {id: $stateParams.id});
-                                } else if (type==="thread") {
-                                    $state.go("project.messages.all", {id: $stateParams.id});
-                                } else if (type==="file") {
-                                    $state.go("project.files.all", {id: $stateParams.id});
-                                }
-                            };
+                                $scope.viewAll = function(type) {
+                                    dialogService.closeModal();
+                                    if (type==="task") {
+                                        $state.go("project.tasks.all", {id: $stateParams.id});
+                                    } else if (type==="thread") {
+                                        $state.go("project.messages.all", {id: $stateParams.id});
+                                    } else if (type==="file") {
+                                        $state.go("project.files.all", {id: $stateParams.id});
+                                    }
+                                };
 
-                            $scope.attachItem = function(type) {
-                                $rootScope.attachEventItem = {type: type, selectedEvent: data._id};
-                                dialogService.closeModal();
-                                if (type==="task") {
-                                    $state.go("project.tasks.all", {id: $stateParams.id});
-                                } else if (type==="thread") {
-                                    $state.go("project.messages.all", {id: $stateParams.id});
-                                } else if (type==="file") {
-                                    $state.go("project.files.all", {id: $stateParams.id});
-                                }
-                            };
-                        }],
-                        resolve: {
-                            activity: ["activityService", "$stateParams", function(activityService, $stateParams) {
-                                return activityService.get({id: data._id}).$promise;
-                            }]
-                        },
-                        templateUrl: 'app/modules/project/project-calendar/partials/event-detail.html',
-                        parent: angular.element(document.body),
-                        clickOutsideToClose: false
-                    });
-                } else if (data.type==="task"){
-                    $state.go("project.tasks.detail", {id: $stateParams.id, taskId: data._id});
-                }
-            },
-            eventDrop: function(event, delta) {
-                if (event.type==="task") {
-                    var updateTask = {
-                        editType:"change-date-time",
-                        dateStart: new Date(event.start),
-                        dateEnd: new Date(event.end),
-                        _id: event._id
+                                $scope.attachItem = function(type) {
+                                    $rootScope.attachEventItem = {type: type, selectedEvent: data._id};
+                                    dialogService.closeModal();
+                                    if (type==="task") {
+                                        $state.go("project.tasks.all", {id: $stateParams.id});
+                                    } else if (type==="thread") {
+                                        $state.go("project.messages.all", {id: $stateParams.id});
+                                    } else if (type==="file") {
+                                        $state.go("project.files.all", {id: $stateParams.id});
+                                    }
+                                };
+                            }],
+                            resolve: {
+                                activity: ["activityService", "$stateParams", function(activityService, $stateParams) {
+                                    return activityService.get({id: data._id}).$promise;
+                                }]
+                            },
+                            templateUrl: 'app/modules/project/project-calendar/partials/event-detail.html',
+                            parent: angular.element(document.body),
+                            clickOutsideToClose: false
+                        });
+                    } else if (data.type==="task"){
+                        $state.go("project.tasks.detail", {id: $stateParams.id, taskId: data._id});
                     }
-                    taskService.update({id: updateTask._id}, updateTask).$promise.then(function(res) {
-                        dialogService.showToast("Update Task Date Successfully");
-                    }, function(err) {dialogService.showToast("Error");});
-                } else if (event.type==="event") {
-                    var updateEvent = updateEventDateTime(event, delta);
-                    activityService.update({id: updateEvent._id}, updateEvent).$promise.then(function(res) {
-                        dialogService.showToast("Update Event Date Time Successfully");
-                    }, function(err) {dialogService.showToast("Error");});
-                }
-            },
-            eventResize: function(event, delta) {
-                if (event.type==="event") {
-                    var updateEvent = updateEventDateTime(event, delta);
-                    activityService.update({id: updateEvent._id}, updateEvent).$promise.then(function(res) {
-                        dialogService.showToast("Update Event Date Time Successfully");
-                    }, function(err) {dialogService.showToast("Error");});
+                },
+                eventDrop: function(event, delta) {
+                    if (event.type==="task") {
+                        var updateTask = {
+                            editType:"change-date-time",
+                            dateStart: new Date(event.start),
+                            dateEnd: new Date(event.end),
+                            _id: event._id
+                        }
+                        taskService.update({id: updateTask._id}, updateTask).$promise.then(function(res) {
+                            dialogService.showToast("Update Task Date Successfully");
+                        }, function(err) {dialogService.showToast("Error");});
+                    } else if (event.type==="event") {
+                        var updateEvent = updateEventDateTime(event, delta);
+                        activityService.update({id: updateEvent._id}, updateEvent).$promise.then(function(res) {
+                            dialogService.showToast("Update Event Date Time Successfully");
+                        }, function(err) {dialogService.showToast("Error");});
+                    }
+                },
+                eventResize: function(event, delta) {
+                    if (event.type==="event") {
+                        var updateEvent = updateEventDateTime(event, delta);
+                        activityService.update({id: updateEvent._id}, updateEvent).$promise.then(function(res) {
+                            dialogService.showToast("Update Event Date Time Successfully");
+                        }, function(err) {dialogService.showToast("Error");});
+                    }
                 }
             }
-        }
-    };
+        };
+    }, 1000);
 
     function updateEventDateTime(event, delta) {
         var result = {

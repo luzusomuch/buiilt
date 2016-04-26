@@ -1,8 +1,7 @@
 <div layout="row" layout-padding>
     <div layout="column" flex>
-        <div layout="column" class="md-whiteframe-1dp overview-view">
-            
-            <div layout="row" layout-padding>
+        <div layout="column" class="md-whiteframe-1dp" id="overview-view-calendar">
+            <div layout="row" layout-padding id="calendar-header">
 		
 				<md-input-container md-no-float class="md-block md-icon-float" flex="100" style="margin-bottom: -15px; margin-top: 10px">
 					<md-icon class="material-icons" style="margin-top: 3px;">search</md-icon>
@@ -17,7 +16,7 @@
 	                    <md-menu-item layout-padding>
 	                        <md-checkbox class="md-primary" md-prevent-menu-close ng-checked="showTask && showEvent" ng-click="changeFilter('all')">All</md-checkbox>
 	                    </md-menu-item>
-						<md-divider></md-divder>
+						<md-divider></md-divider>
                         <md-menu-item layout-padding>
                             <md-checkbox class="md-primary" md-prevent-menu-close ng-checked="showTask" ng-click="changeFilter('task')">Tasks</md-checkbox>
                         </md-menu-item>
@@ -31,7 +30,7 @@
         
             <md-divider layout="row" flex></md-divider>
         
-            <div layout="column" layout-padding flex>
+            <div layout="column" layout-padding flex id="calendar-content">
                 <div class="calendar" ng-model="eventSources" calendar="myCalendar" config="uiConfig.calendar" ui-calendar="uiConfig.calendar"></div>
             </div>
 			
