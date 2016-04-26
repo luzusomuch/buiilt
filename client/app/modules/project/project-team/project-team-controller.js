@@ -1,8 +1,23 @@
-angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $scope, $timeout, $mdDialog, peopleService, $mdToast, $stateParams, userService, people, $state) {
+angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $scope, $timeout, $mdDialog, peopleService, $mdToast, $stateParams, userService, people, $state, dialogService, contactBooks) {
     $scope.people = people;
+    $scope.dialogService = dialogService;
     $scope.invite = {
         isTender: false
     };
+
+    $scope.querySearch = function(query) {
+        var result = query ? contactBooks.filter(function(contact) {
+            return contact.name.toLowerCase().indexOf(query.toLowerCase()) !== -1;
+        }) : [];
+        return result;
+    };
+
+    $scope.$watch("selectedItem", function(value) {
+        if (value) {
+            $scope.invite.name = value.name;
+            $scope.invite.email = value.email;
+        }
+    });
 	
 	$scope.showFilter = false;
 
@@ -305,13 +320,13 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
                 if ($scope.invite.isInviteTeamMember) {
                     $scope.invite.teamMember = _.filter($scope.teamMembersCanInvite, {select: true});
                     if ($scope.invite.teamMember.length === 0) {
-                        $scope.showToast("Please Specific At Least 1 Team Member...");
+                        dialogService.showToast("Please Specific At Least 1 Team Member...");
                         return;
                     }
                 }
     			peopleService.update({id: $stateParams.id},$scope.invite).$promise.then(function(res){
-    				$scope.showToast("Invititation Has Been Sent Successfully.");
-    	            $scope.cancelInviteTeamModal();
+    				dialogService.showToast("Invititation Has Been Sent Successfully.");
+    	            dialogService.closeModal();
                     $rootScope.$broadcast("Project.Team.Invite", res);
 					
 					//Track Project Team Update
@@ -319,20 +334,15 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
 					mixpanel.track("Member Added to Project Team");
 					
     	        }, function(res){
-    	        	$scope.showToast("There Has Been An Error...")
+    	        	dialogService.showToast("There Has Been An Error...")
     	        });
             } else {
                 $rootScope.currentInviteData = $scope.invite;
                 $state.go("project.tenders.all", {id: $stateParams.id});
-                $scope.cancelInviteTeamModal();
+                dialogService.closeModal();
             }
 		}
 	};
-
-    /*Show toast information*/
-	$scope.showToast = function(value) {
-        $mdToast.show($mdToast.simple().textContent(value).position('bottom','left').hideDelay(3000));
-    };
 
 	/*Show invite team modal*/
 	$scope.showInviteTeamModal = function($event) {
@@ -343,17 +353,15 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
             resolve: {
                 people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
                     return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
+                }],
+                contactBooks: ["contactBookService", function(contactBookService) {
+                    return contactBookService.me().$promise;
                 }]
             },
 	      	templateUrl: 'app/modules/project/project-team/new/project-team-new.html',
 	      	parent: angular.element(document.body),
 	      	clickOutsideToClose: false
 	    });
-	};
-	
-    /*Close opening modal*/
-	$scope.cancelInviteTeamModal = function () {
-		$mdDialog.cancel();
 	};
 
 	loadProjectMembers();

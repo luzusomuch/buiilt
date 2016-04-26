@@ -3,9 +3,9 @@ angular.module('buiiltApp').config(function($stateProvider) {
 	
     .state('dashboard', {
       	url: '/dashboard',
-    	abstract:true,
+    	  abstract:true,
       	templateUrl: '/app/modules/dashboard/dashboard.html',
-      	controller: 'dashboardCtrl',
+      	// controller: 'dashboardCtrl',
       	authenticate : true,
         resolve: {
             myTasks: function(taskService) {

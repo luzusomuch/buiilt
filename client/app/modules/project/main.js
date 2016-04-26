@@ -58,14 +58,18 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
     url: '/team',
 	  abstract: true,
     templateUrl: '/app/modules/project/project-team/project-team.html',
-    controller: 'projectTeamCtrl',
     authenticate : true
   })
   .state('project.team.all', {
     url: '/',
     templateUrl: '/app/modules/project/project-team/all/project-team-all.html',
     controller: 'projectTeamCtrl',
-    authenticate : true
+    authenticate : true, 
+    resolve: {
+      contactBooks: function(contactBookService) {
+        return contactBookService.me().$promise;
+      }
+    }
   })
   
   	//Messages for Single Project
