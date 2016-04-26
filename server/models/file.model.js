@@ -7,7 +7,7 @@ var mongoose = require('mongoose'),
 var FileSchema = new Schema({
     name: {
         type: String, // filename
-        required: true
+        // required: true
     },
     lastAccess: [{
         time: Date,

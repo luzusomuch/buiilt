@@ -25,7 +25,7 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
     $scope.selectedDocumentSetId = $rootScope.selectedDocumentSetId;
     $scope.selectDocumentSet = function(documentSet) {
         $scope.selectedDocumentSet = documentSet;
-        $rootScope.selectedDocumentSetId = documentSet._id;
+        $rootScope.selectedDocumentSetId = $scope.selectedDocumentSetId = documentSet._id;
     };
 	
 	$scope.showFilter = false;
@@ -256,26 +256,27 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
     then call mixpanel to track current user has created new document
     and open document detail*/
 	$scope.addNewDocument = function(){
-        $scope.uploadFile.tags = _.filter($scope.tags, {select: true});
-        if ($scope.uploadFile.tags.length === 0) {
-            dialogService.showToast("Please Select At Least 1 Document Tag...");
-        } else if (!$scope.selectedDocumentSetId) {
-            dialogService.showToast("Please select a document set");
-        } else {
-            $scope.uploadFile.type="document";
-            $scope.uploadFile.selectedDocumentSetId = $scope.selectedDocumentSetId;
-            uploadService.upload({id: $stateParams.id}, $scope.uploadFile).$promise.then(function(res) {
-                dialogService.closeModal();
-                dialogService.showToast("Document Successfully Uploaded.");
-                $rootScope.$emit("Document.Uploaded", res);
-				
-				//Track Document Upload
-				mixpanel.identify($rootScope.currentUser._id);
-				mixpanel.track("Document Uploaded");
+        // $scope.uploadFile.tags = _.filter($scope.tags, {select: true});
+        // if ($scope.uploadFile.tags.length === 0) {
+        //     dialogService.showToast("Please Select At Least 1 Document Tag...");
+        // } else if (!$scope.selectedDocumentSetId) {
+        //     dialogService.showToast("Please select a document set");
+        // } else {
+        $scope.uploadFile.type="document";
+        $scope.uploadFile.tags = [];
+        $scope.uploadFile.selectedDocumentSetId = $scope.selectedDocumentSetId;
+        uploadService.upload({id: $stateParams.id}, $scope.uploadFile).$promise.then(function(res) {
+            dialogService.closeModal();
+            dialogService.showToast("Document Successfully Uploaded.");
+            $rootScope.$emit("Document.Uploaded", res);
+			
+			//Track Document Upload
+			mixpanel.identify($rootScope.currentUser._id);
+			mixpanel.track("Document Uploaded");
 
-                $state.go("project.documentation.detail", {id: res.project._id, documentId: res._id});
-            }, function(err){dialogService.showToast("There Was an Error...");});
-        }
+            $state.go("project.documentation.detail", {id: res.project._id, documentId: res._id});
+        }, function(err){dialogService.showToast("There Was an Error...");});
+        // }
 	};
 
     $scope.showModal = function(modalName, value) {
