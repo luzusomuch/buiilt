@@ -274,7 +274,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
             $(document).ready(function() {
                 $("div.fc-toolbar").children().children("button").removeClass("fc-month-button fc-button fc-state-default fc-corner-left fc-corner-right").addClass("md-primary md-button");
             });
-        }, 500);
+        }, 1500);
     };
     $scope.convertAllToCalendarView();
 
