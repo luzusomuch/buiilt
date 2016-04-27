@@ -107,7 +107,7 @@ exports.index = function (req, res) {
             result = users;
         } else if (req.query.email && req.query.phoneNumber) {
             _.each(users, function(user) {
-                result.push({email: user.email, name: user.name, phoneNumber: user.phoneNumber, teamName: (user.team._id)?user.team._id.name:"This user hasn\'t got team"})
+                result.push({email: user.email, name: user.name, phoneNumber: user.phoneNumber})
             });
         }
         res.json(200, result);

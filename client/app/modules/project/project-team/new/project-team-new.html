@@ -33,15 +33,15 @@
 								No contact matching "{{searchText}}" found.
 							</md-not-found>
 						</md-autocomplete>
-						<!-- <md-input-container flex="25">
-							<label for="">First Name</label>
-							<input type="name" ng-model="invite.name">
-						</md-input-container> -->
-						<md-input-container flex="55">
+						<md-input-container flex="30">
 							<label for="">Email Address</label>
-							<input type="email" ng-model="invite.email">
+							<input type="email" ng-model="invite.email" disabled>
 						</md-input-container>
-						<div flex="15">
+						<md-input-container flex="30">
+							<label for="">Phone Number</label>
+							<input type="text" ng-model="invite.phoneNumber" disabled>
+						</md-input-container>
+						<div flex="5">
 						</div>
 					</div>
 				</div>
@@ -72,11 +72,15 @@
 							<label for="">First Name</label>
 							<input type="name" ng-model="invite.name">
 						</md-input-container> -->
-						<md-input-container flex="55">
+						<md-input-container flex="30">
 							<label for="">Email Address</label>
-							<input type="email" ng-model="invite.email">
+							<input type="email" ng-model="invite.email" disabled>
 						</md-input-container>
-						<div flex="15">
+						<md-input-container flex="30">
+							<label for="">Phone Number</label>
+							<input type="text" ng-model="invite.phoneNumber" disabled>
+						</md-input-container>
+						<div flex="5">
 						</div>
 					</div>
 				</div>

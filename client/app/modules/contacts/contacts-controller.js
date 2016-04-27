@@ -55,8 +55,19 @@ angular.module('buiiltApp').controller('contactsCtrl', function($rootScope, $sco
                         if (index === -1) {
                             $scope.showSearchResult = true;
                         }
+                        _.each($scope.contactBooks, function(contact) {
+                            // remove search result when it already existed in contacts book
+                            var index = _.findIndex($scope.searchUsers, function(user) {
+                                return contact.email==user.email && contact.phoneNumber==user.phoneNumber;
+                            });
+                            if (index !== -1) {
+                                $scope.searchUsers.splice(index, 1);
+                            }
+                        });
+                        $scope.selectedNewContact = $scope.searchUsers.length;
                     }, function(err) {
                         $scope.searchUsers = [];
+                        $scope.selectedNewContact = $scope.searchUsers.length;
                         $scope.step += 1;
                     });
                 }
@@ -66,7 +77,6 @@ angular.module('buiiltApp').controller('contactsCtrl', function($rootScope, $sco
         }
     };
 
-    $scope.selectedNewContact = 0;
 
     $scope.removeContact = function(index, type) {
         if (type === "newContact") {
@@ -90,7 +100,20 @@ angular.module('buiiltApp').controller('contactsCtrl', function($rootScope, $sco
             if ($scope.selectedContact) {
                 $scope.newContact.contacts.push($scope.selectedContact);
             }
-            console.log($scope.newContact);
+            var allowInsert = true;
+            _.each($scope.newContact.contacts, function(contact) {
+                var index = _.findIndex($scope.contactBooks, function(ctBook) {
+                    return contact.email==ctBook.email || contact.phoneNumber==ctBook.phoneNumber;
+                });
+                if (index !== -1) {
+                    allowInsert = false;
+                    return false;
+                }
+            });
+            if (!allowInsert) {
+                dialogService.showToast("Your new contact is already existed");
+                return
+            }
             contactBookService.create({}, $scope.newContact).$promise.then(function(res) {
                 $rootScope.$emit("addContact", res);
                 dialogService.closeModal();
