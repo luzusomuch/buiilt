@@ -18,6 +18,12 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
             $scope.invite.email = value.email;
         }
     });
+
+    $scope.createNewContact = function() {
+        $rootScope.isCreateNewContact = true;
+        $state.go("contacts.all");
+        dialogService.closeModal();
+    };
 	
 	$scope.showFilter = false;
 

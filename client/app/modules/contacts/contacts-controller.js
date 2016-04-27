@@ -3,11 +3,18 @@ angular.module('buiiltApp').controller('contactsCtrl', function($rootScope, $sco
     $rootScope.title = "Contacts Book"
     $scope.contactBooks = contactBooks;
 
+    if ($rootScope.isCreateNewContact) {
+        console.log("AAAAAAAAAAa");
+        $scope.showModal("add-new-contact.html");
+        // $scope.isCreateNewContact = $rootScope.isCreateNewContact;
+        // $rootScope.isCreateNewContact = null;
+    };
+
     /*Show modal with valid name*/
-    $scope.showModal = function($event, name, type) {
-        $rootScope.editUserType = type;
+    $scope.showModal = function(name) {
+        // $rootScope.editUserType = type;
         $mdDialog.show({
-            targetEvent: $event,
+            // targetEvent: $event,
             controller: 'contactsCtrl',
             templateUrl: 'app/modules/settings/partials/'+name,
             resolve: {
@@ -76,6 +83,7 @@ angular.module('buiiltApp').controller('contactsCtrl', function($rootScope, $sco
                 $rootScope.$emit("addContact", res);
                 dialogService.closeModal();
                 dialogService.showToast("Added New Contacts Successfully");
+                $rootScope.isCreateNewContact = null;
             }, function(err) {
                 dialogService.showToast("Error");
             });
