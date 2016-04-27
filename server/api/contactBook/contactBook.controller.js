@@ -21,10 +21,10 @@ exports.create = function(req, res) {
                     var newContact = new ContactBook({
                         team: req.user.team._id,
                         inviter: req.user._id,
-                        name: contact.firstName + contact.lastName,
+                        name: contact.firstName + " " + contact.lastName,
                         email: contact.email,
                         phoneNumber: contact.phoneNumber,
-                        teamName: contact.teamName
+                        // teamName: contact.teamName
                     });
                     newContact._editUser = req.user;
                     newContact.save(function(err) {
@@ -37,10 +37,10 @@ exports.create = function(req, res) {
                         team: req.user.team._id,
                         inviter: req.user._id,
                         user: user._id,
-                        name: user.firstName + user.lastName,
+                        name: user.firstName +" "+ user.lastName,
                         email: user.email,
                         phoneNumber: (user.phoneNumber) ? user.phoneNumber : contact.phoneNumber,
-                        teamName: (user.team._id) ? user.team._id.name : contact.teamName
+                        // teamName: (user.team._id) ? user.team._id.name : contact.teamName
                     });
                     newContact.save(function(err) {
                         if (err) {cb(err);}

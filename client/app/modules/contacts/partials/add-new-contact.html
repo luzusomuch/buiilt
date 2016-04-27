@@ -39,7 +39,7 @@
 						<div layout="column" layout-padding>
 	                        <md-radio-group ng-model="selectedContact" class="md-primary">
 								<div ng-repeat="user in searchUsers" layout="row" layout-padding layout-align="start center">
-									<md-radio-button ng-value="user" class="md-primary"><span style="font-size: 20px">{{user.name}}</span> <span> {{user.email}}, {{user.phoneNumber}} {{user.teamName}}</span></md-radio-button>
+									<md-radio-button ng-value="user" class="md-primary"><span style="font-size: 20px">{{user.name}}</span> <span> {{user.email}}, {{user.phoneNumber}}</span></md-radio-button>
 								</div>
 	                        </md-radio-group>
 						</div>
@@ -47,11 +47,10 @@
                     </div>
 
                     <md-divider></md-divider>
-
                     <div layout="column" ng-show="searchUsers.length===0 || showSearchResult">
-                        <h3>Or Create A New Contact</h3>
+                        <p class="md-body-2">No results found on Buiilt database for that contact. Please add a new contact by completing the details below</p>
                         <md-radio-group ng-model="selectedNewContact">
-                            <md-radio-button flex="15" ng-value="searchNewContact" class="md-primary" >
+                            <md-radio-button flex="15" ng-value="searchUsers.length" class="md-primary" >
                             </md-radio-button>
                             <div layout="row" flex>
                                 <md-input-container flex="20">
@@ -69,10 +68,6 @@
                                 <md-input-container flex="20">
                                     <label for="">Phone Number</label>
                                     <input type="text" ng-model="searchNewContact.phoneNumber" disabled>
-                                </md-input-container>
-                                <md-input-container flex="20">
-                                    <label for="">Team Name</label>
-                                    <input type="text" ng-model="searchNewContact.teamName">
                                 </md-input-container>
                             </div>
                         </md-radio-group>

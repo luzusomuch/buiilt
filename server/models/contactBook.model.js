@@ -10,7 +10,6 @@ var ContactBookSchema = new Schema({
     name: String,
     email: String,
     phoneNumber: String,
-    teamName: String,
     createdAt: {type: Date, default: new Date()},
     updatedAt: Date
 });

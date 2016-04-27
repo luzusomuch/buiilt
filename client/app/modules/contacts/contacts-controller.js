@@ -3,19 +3,29 @@ angular.module('buiiltApp').controller('contactsCtrl', function($rootScope, $sco
     $rootScope.title = "Contacts Book"
     $scope.contactBooks = contactBooks;
 
-    if ($rootScope.isCreateNewContact) {
-        console.log("AAAAAAAAAAa");
-        $scope.showModal("add-new-contact.html");
-    };
-
-    /*Show modal with valid name*/
-    $scope.showModal = function(name) {
-        $rootScope.isCreateNewContact = null;
-        // $rootScope.editUserType = type;
+    $scope.isCreateNewContact = $rootScope.isCreateNewContact;
+    if ($scope.isCreateNewContact) {
         $mdDialog.show({
             // targetEvent: $event,
             controller: 'contactsCtrl',
-            templateUrl: 'app/modules/settings/partials/'+name,
+            templateUrl: 'app/modules/contacts/partials/add-new-contact.html',
+            resolve: {
+                contactBooks: ["contactBookService", function(contactBookService) {
+                    return contactBookService.me().$promise;
+                }]
+            },
+            parent: angular.element(document.body),
+            clickOutsideToClose: false
+        });
+        $rootScope.isCreateNewContact = null;
+    }
+
+    /*Show modal with valid name*/
+    $scope.showModal = function(name) {
+        $mdDialog.show({
+            // targetEvent: $event,
+            controller: 'contactsCtrl',
+            templateUrl: 'app/modules/contacts/partials/'+name,
             resolve: {
                 contactBooks: ["contactBookService", function(contactBookService) {
                     return contactBookService.me().$promise;
@@ -56,6 +66,8 @@ angular.module('buiiltApp').controller('contactsCtrl', function($rootScope, $sco
         }
     };
 
+    $scope.selectedNewContact = 0;
+
     $scope.removeContact = function(index, type) {
         if (type === "newContact") {
             $scope.newContact.contacts.splice(index ,1);
@@ -68,7 +80,7 @@ angular.module('buiiltApp').controller('contactsCtrl', function($rootScope, $sco
         } else {
             $scope.newContact.contacts = [];
             if ($scope.selectedNewContact) {
-                if (!$scope.selectedNewContact.firstName || !$scope.selectedNewContact.lastName || !$scope.selectedNewContact.teamName) {
+                if (!$scope.selectedNewContact.firstName || !$scope.selectedNewContact.lastName) {
                     dialogService.showToast("Check your new contact input");
                     return;
                 } else {
