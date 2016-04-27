@@ -33,7 +33,7 @@
 				<md-list-item class="md-2-line" ng-show="!search" ng-repeat="member in membersList | filter :searchMember track by $index">
 			
 					<div class="md-list-item-text" layout-margin>
-						<h3>{{(member._id) ? member.name : member.email}}</h3>
+						<h3>{{member.name}}</h3>
 						<h4>{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}} - {{(member.email) ? member.email : 'No Email Address on File'}}</h4>
 				    </div>
 					

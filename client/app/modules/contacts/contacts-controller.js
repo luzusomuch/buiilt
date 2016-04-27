@@ -75,21 +75,22 @@ angular.module('buiiltApp').controller('contactsCtrl', function($rootScope, $sco
     };
 
     $scope.addContact = function() {
-        if (!$scope.selectedContact && !$scope.selectedNewContact) {
+        if (!$scope.selectedContact && $scope.selectedNewContact !== 0) {
             dialogService.showToast("Please enter at least 1 contact");
         } else {
             $scope.newContact.contacts = [];
-            if ($scope.selectedNewContact) {
-                if (!$scope.selectedNewContact.firstName || !$scope.selectedNewContact.lastName) {
+            if ($scope.selectedNewContact === 0) {
+                if (!$scope.searchNewContact.firstName || !$scope.searchNewContact.lastName) {
                     dialogService.showToast("Check your new contact input");
                     return;
                 } else {
-                    $scope.newContact.contacts.push($scope.selectedNewContact);
+                    $scope.newContact.contacts.push($scope.searchNewContact);
                 }
             }
             if ($scope.selectedContact) {
                 $scope.newContact.contacts.push($scope.selectedContact);
             }
+            console.log($scope.newContact);
             contactBookService.create({}, $scope.newContact).$promise.then(function(res) {
                 $rootScope.$emit("addContact", res);
                 dialogService.closeModal();
