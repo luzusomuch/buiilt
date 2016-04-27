@@ -7,6 +7,7 @@ var People = require('./../../models/people.model');
 var Tender = require('./../../models/tender.model');
 var InviteToken = require('./../../models/inviteToken.model');
 var Notification = require('./../../models/notification.model');
+var Thread = require('./../../models/thread.model');
 var NotificationHelper = require('./../../components/helpers/notification');
 var EventBus = require('../../components/EventBus');
 var moment = require("moment");
@@ -123,9 +124,25 @@ exports.update = function(req, res) {
                 } else if (data.editType === "attach-scope") {
                     activity.element.description = data.description;
                     activity.element.dateEnd = (moment(moment(tender.dateEnd).format("YYYY-MM-DD")).isSame(moment(data.dateEnd).format("YYYY-MM-DD"))) ? null : data.dateEnd;
-                    tender.description = data.description;
-                    tender.dateEnd = data.dateEnd;
-                    cb();
+                    // tender.description = data.description;
+                    // tender.dateEnd = data.dateEnd;
+                    tender.isCreateScope = true;
+                    async.each(tender.members, function(member, callback) {
+                        var thread = new Thread({
+                            name: tender.name+" "+(member.user) ? member.user : member.name,
+                            project: tender.project,
+                            owner: req.user._id,
+                            element: {type: "tender"},
+                            messages: [{user: req.user._id, text: data.scope, sendAt: new Date()}]
+                        });
+                        if (member.user) {
+                            thread.members = [member.user];
+                        } else {
+                            thread.notMembers = [member.email];
+                        }
+                        thread._editUser=req.user;
+                        thread.save(callback);
+                    },cb);
                 } else if (data.editType === "invite-tenderer") {
                     var members = [];
                     var tenderMembers = tender.members;

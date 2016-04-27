@@ -77,13 +77,12 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
     };
 
     $scope.addScopeOrAddendum = function() {
-        console.log($scope.addScope, $scope.addAddendum);
         if ($scope.addScope) {
             if ($scope.tender.isCreateScope) {
                 dialogService.showToast("You Already Created Scope FOr This Tender");
             } else {
                 if ($scope.tender.scope.trim().length > 0) {
-                    $scope.tender.editType="add-scope";
+                    $scope.tender.editType="attach-scope";
                     $scope.update($scope.tender);
                 } else {
                     dialogService.showToast("Check Your Input");
@@ -92,7 +91,7 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
         } else if ($scope.addAddendum) {
             if ($scope.tender.isCreateScope) {
                 if ($scope.tender.addendum.trim().length > 0) {
-                    $scope.tender.editType="add-addendum";
+                    $scope.tender.editType="attach-addendum";
                     $scope.update($scope.tender);
                 } else {
                     dialogService.showToast("Check Your Input");
