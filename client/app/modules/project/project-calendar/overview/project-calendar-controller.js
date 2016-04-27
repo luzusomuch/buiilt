@@ -103,9 +103,14 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 editable: true,
                 minTime: "6:00:00",
                 maxTime: "22:00:00",
+                ignoreTimezone: false,
                 dayClick: function(day, jsEv, view) {
-                    $rootScope.selectedStartDate = new Date(day);
-                    var momentDay = moment(day).hours();
+                    day = new Date(day);
+                    var tzDifference = day.getTimezoneOffset() //this gives me timezone difference of local and UTC time in minutes
+                    var offsetTime = new Date(day.getTime() + tzDifference * 60 * 1000); //this will calculate time in point of view local time and set date
+                    
+                    $rootScope.selectedStartDate = offsetTime;
+                    var momentDay = moment(offsetTime).hours();
                     if (momentDay===0 && view.name !== "month") {
                         $scope.showModal("create-event.html")
                     } else if (momentDay !== 0 && view.name !== "month") {
@@ -222,9 +227,11 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 }
             }
         } else if (type==="task") {
-            if (!$scope.task.selectedEvent || !$scope.task.description || !$scope.task.dateEnd) {
+            if (!$scope.task.time || !$scope.task.time.start || !$scope.task.time.end || !$scope.task.selectedEvent || !$scope.task.description || !$scope.task.dateEnd) {
                 dialogService.showToast("Check Your Input");
             } else {
+                // $scope.task.time.start = new Date(new Date($scope.task.time.start).getTime() + new Date($scope.task.time.start).getTimezoneOffset() * 60 * 1000);
+                // $scope.task.time.end = new Date(new Date($scope.task.time.end).getTime() + new Date($scope.task.time.end).getTimezoneOffset() * 60 * 1000);
                 $scope.step += 1;
             }
         } else {
@@ -413,8 +420,11 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
     };
 
     $scope.task = {
-        dateStart: ($rootScope.selectedStartDate) ? $rootScope.selectedStartDate : null
+        dateEnd: ($rootScope.selectedStartDate) ? $rootScope.selectedStartDate : null
     };
+    if ($rootScope.selectedStartDate && moment($rootScope.selectedStartDate).hours() > 0) {
+        $scope.task.time = {start: $rootScope.selectedStartDate};
+    }
 
     $scope.createNewTask = function(form) {
         if (form.$valid) {

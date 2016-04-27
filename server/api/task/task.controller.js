@@ -179,6 +179,7 @@ exports.create = function(req,res) {
         task.project = req.params.id;
         task.owner = user._id;
         task.dateStart = (req.body.dateStart) ? req.body.dateStart : new Date();
+        task.time = (req.body.time) ? req.body.time : null;
         task.element = {type: req.body.type};
         if (req.body.dateEnd) {
             task.hasDateEnd = true;

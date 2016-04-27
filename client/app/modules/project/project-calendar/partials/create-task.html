@@ -38,6 +38,20 @@
                         <md-datepicker ng-model="task.dateEnd" md-min-date="minDate" md-placeholder="Enter Due Date"></md-datepicker>
                     </div>
                 </div>
+
+                <div layout="column" ng-show="step==1">
+                    <p class="md-body-2">Specify start time and end time:</p>
+                    <div layout="row" layout-align="center center">
+                        <md-input-container flex="50">
+                            <label for="">Start Time</label>
+                            <input type="time" ng-model="task.time.start" required>
+                        </md-input-container>
+                        <md-input-container flex="50">
+                            <label for="">End Time</label>
+                            <input type="time" ng-model="task.time.end" required>
+                        </md-input-container>
+                    </div>
+                </div>
                 
                 <div layout="column" ng-show="step==2">
                     <p class="md-body-2">Assign at least one team member:</p>
