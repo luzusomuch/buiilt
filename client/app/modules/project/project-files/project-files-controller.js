@@ -190,7 +190,7 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
                             _.each($scope.selectedFilterTagsList, function(tag) {
                                 if (file.tags.length > 0 && file.tags.indexOf(tag.name) !== -1) {
                                     if ($scope.name && $scope.name.trim().length > 0) {
-                                        if (file.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+                                        if (file.name && file.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
                                             found = true;
                                         }
                                     } else {
@@ -209,7 +209,7 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
                     _.each($scope.selectedFilterAssigneesList, function(assignee) {
                         if (file.members.length > 0 && _.findIndex(file.members, function(member) {return member._id==assignee._id}) !== -1) {
                             if ($scope.name && $scope.name.trim().length > 0) {
-                                if (file.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+                                if (file.name && file.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
                                     found = true;
                                 }
                             } else {
@@ -226,7 +226,7 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
                     _.each($scope.selectedFilterTagsList, function(tag) {
                         if (file.tags.length > 0 && file.tags.indexOf(tag.name) !== -1) {
                             if ($scope.name && $scope.name.trim().length > 0) {
-                                if (file.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+                                if (file.name && file.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
                                     found = true;
                                 }
                             } else {
@@ -243,7 +243,7 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
                     _.each($scope.selectedFilterTagsList, function(tag) {
                         if (file.tags.length > 0 && file.tags.indexOf(tag.name) !== -1) {
                             if ($scope.name && $scope.name.trim().length > 0) {
-                                if (file.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+                                if (file.name && file.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
                                     found = true;
                                 }
                             } else {
@@ -258,7 +258,7 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
             _.each($scope.selectedFilterEventsList, function(event) {
                 if (file.event && event._id==file.event && file.isArchive==$scope.showArchived) {
                     if ($scope.name && $scope.name.trim().length > 0) {
-                        if (file.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+                        if (file.name && file.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
                             found = true;
                         }
                     } else {
@@ -271,7 +271,7 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
             _.each($scope.selectedFilterTagsList, function(tag) {
                 if (file.isArchive==$scope.showArchived && file.tags.indexOf(tag.name) !== -1) {
                     if ($scope.name && $scope.name.trim().length > 0) {
-                        if (file.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+                        if (file.name && file.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
                             found = true;
                         }
                     } else {
@@ -284,7 +284,7 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
             _.each($scope.selectedFilterAssigneesList, function(assignee) {
                 if (file.members.length > 0 && _.findIndex(file.members, function(member) {return member._id==assignee._id;}) !== -1 && file.isArchive==$scope.showArchived) {
                     if ($scope.name && $scope.name.trim().length > 0) {
-                        if (file.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+                        if (file.name && file.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
                             found = true;
                         }
                     } else {
@@ -296,7 +296,7 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
         } else if ($scope.selectedFilterEventsList.length === 0 && $scope.selectedFilterAssigneesList.length === 0 && $scope.selectedFilterTagsList.length === 0) {
             if (file.isArchive==$scope.showArchived) {
                 if ($scope.name && $scope.name.trim().length > 0) {
-                    if (file.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+                    if (file.name && file.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
                         found = true;
                     }
                 } else {

@@ -193,7 +193,7 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
                     _.each($scope.selectedFilterRecepientList, function(assignee) {
                         if (thread.members.length > 0 && _.findIndex(thread.members, function(member) {return member._id==assignee._id;}) !== -1 && thread.isArchive==$scope.showArchived) {
                             if ($scope.name && $scope.name.trim().length > 0) {
-                                if (thread.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+                                if (thread.name && thread.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
                                     found = true;
                                 }
                             } else {
@@ -208,7 +208,7 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
             _.each($scope.selectedFilterEventList, function(event) {
                 if (thread.event && event._id==thread.event && thread.isArchive==$scope.showArchived) {
                     if ($scope.name && $scope.name.trim().length > 0) {
-                        if (thread.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+                        if (thread.name && thread.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
                             found = true;
                         }
                     } else {
@@ -221,7 +221,7 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
             _.each($scope.selectedFilterRecepientList, function(assignee) {
                 if (thread.members.length > 0 && _.findIndex(thread.members, function(member) {return member._id==assignee._id;}) !== -1 && thread.isArchive==$scope.showArchived) {
                     if ($scope.name && $scope.name.trim().length > 0) {
-                        if (thread.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+                        if (thread.name && thread.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
                             found = true;
                         }
                     } else {
@@ -233,7 +233,7 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
         } else if ($scope.selectedFilterRecepientList.length === 0 && $scope.selectedFilterEventList.length === 0) {
             if (thread.isArchive==$scope.showArchived) {
                 if ($scope.name && $scope.name.trim().length > 0) {
-                    if (thread.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+                    if (thread.name && thread.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
                         found = true;
                     }
                 } else {
