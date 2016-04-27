@@ -44,7 +44,8 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
                 var index = _.findIndex($scope.activities, function(act) {
                     return thread.event==act._id;
                 });
-                $scope.events.push($scope.activities[index]);
+                if (index !== -1) 
+                    $scope.events.push($scope.activities[index]);
             }
             $scope.assignees = _.union($scope.assignees, thread.members);
         });

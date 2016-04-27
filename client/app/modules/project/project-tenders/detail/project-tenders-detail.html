@@ -10,9 +10,13 @@
 					<md-tooltip md-direction="bottom">Back</md-tooltip>
 				</md-button>
 				
-		        <h5><span>{{thread.name}}</span></h5>
+		        <h5 ng-model="tender.name" contenteditable>{{tender.name}}</h5>
 				
 				<span flex></span>
+
+				<md-button ng-show="showSaveTitleBtn" class="md-primary" aria-label="Save Title" ng-click="changeTitle()">
+					Save Changed!
+				</md-button>
 				
 	  	      	<md-button ng-show="!thread.isArchive" aria-label="Copy Message Address" class="md-icon-button" ng-click="copyMessageAddress(thread._id)">
 					<md-tooltip md-direction="bottom">Copy Message Address</md-tooltip>
@@ -52,10 +56,9 @@
 				
 				<md-divider></md-divider>
 				
-				<div layout="row">
-		  	      	<md-button ng-show="!thread.isArchive" aria-label="Compose Message" class="md-icon-button" ng-click="showReplyModal($event)">
-					  	<md-tooltip md-direction="top">Compose a Message</md-tooltip>
-				      	<md-icon class="material-icons">reply</md-icon>
+				<div layout="row" layout-align="center center">
+		  	      	<md-button aria-label="Add Scope Or Addendum" class="md-primary" ng-click="showModal('add-scope-or-addendum.html')">
+					  	Add Scope Or Addendum
 		  	      	</md-button>
 				</div>
 				
@@ -71,21 +74,6 @@
 
 				<span flex></span>
 				
-	  	      	<!-- <md-button aria-label="Add a Team Member" class="md-icon-button" ng-click="showAssignTeamMemberModal($event)">
-					<md-tooltip md-direction="bottom">Add a Team Member</md-tooltip>
-			      	<md-icon class="material-icons">person_outline</md-icon>
-	  	      	</md-button> -->
-				
-				<!-- <md-button class="md-icon-button" ng-click="showCreateRelatedFile($event)">
-					<md-tooltip md-direction="bottom">Add a Shared File</md-tooltip>
-					<md-icon class="material-icons">attach_file</md-icon>
-				</md-button> -->
-
-				<!-- <md-button class="md-icon-button" ng-click="showCreateRelatedTask($event)">
-					<md-tooltip md-direction="bottom">Add a Related Task</md-tooltip>
-					<md-icon class="material-icons">check</md-icon>
-				</md-button> -->
-				
 				<md-button ng-show="isOwnerTeam" ng-click="archive()" aria-label="Compose Message" class="md-icon-button">
 				  	<md-tooltip md-direction="left">{{(!thread.isArchive) ? 'Archive this Message' : 'Unarchive this Message'}}</md-tooltip>
 			      	<md-icon class="material-icons"><i class="material-icons">{{(!thread.isArchive) ? 'archive' : 'unarchive'}}</i></md-icon>
@@ -97,11 +85,7 @@
 			
 			<div layout="column" class="content">
 				
-				<!-- <div layout="row" class="activity-stream-head" layout-padding>
-					<p>This message was created by <strong>{{thread.owner.name}}</strong> on {{thread.createdAt | date: longDate}}.</p>
-				</div> -->
-				
-				<inspector-message data="thread" hide-related-thread="true" flex></inspector-message>
+				<inspector-message data="tender" hide-related-thread="true" flex></inspector-message>
 				
 			</div>
 			

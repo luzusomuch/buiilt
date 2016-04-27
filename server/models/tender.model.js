@@ -13,10 +13,12 @@ var TenderSchema = new Schema({
     // owner type maybe architects, builders or clients
     ownerType: String,
     project: {type: Schema.Types.ObjectId, ref: "Project", required: true},
+    event: {type: Schema.Types.ObjectId, ref: "Activity"},
     members: [{
         user: {type: Schema.Types.ObjectId, ref: "User"},
         email: String,
         name: String,
+        phoneNumber: String,
         activities: [{
             user: {type: Schema.Types.ObjectId, ref: "User", required: true},
             email: String,

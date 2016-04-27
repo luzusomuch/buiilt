@@ -1,0 +1,34 @@
+<md-dialog aria-label="Add New Scope Or Addendum" flex="70">
+    <form ng-submit="addScopeOrAddendum(form)" name="form">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Add New Scope Or Addendum</h2>
+            </div>
+        </md-toolbar>
+        
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column">
+                <div ng-show="!addScope && !addAddendum">
+                    <p class="md-body-2">Do you want to add new scope or new addendum?</p>
+                </div>
+
+                <div ng-if="addScope" layout="column">
+                    <p class="md-body-2">Please fill in fields below to add a scope</p>
+                </div>
+
+                <div ng-if="addAddendum" layout="column">
+                    <p class="md-body-2">Please fill in fields below to add an addendum</p>
+                </div>
+                
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions>
+            <md-button ng-click="dialogService.closeModal()">Cancel</md-button>
+            
+            <md-button ng-hide="hide" ng-click="addAddendum=false; addScope=true; hide=true" class="md-primary">Add Scope</md-button>
+            <md-button ng-hide="hide" ng-click="addAddendum=true; addScope=false; hide=true" class="md-primary">Add Addendum</md-button>
+
+            <md-button ng-show="addAddendum || addScope" type="submit" class="md-primary">Submit</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

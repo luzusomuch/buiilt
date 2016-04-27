@@ -28,6 +28,11 @@ exports.create = function(req, res) {
     tender.save(function(err) {
         if (err) {return res.send(500,err);}
         else {
+            EventBus.emit('socket:emit', {
+                event: 'tender:new',
+                room: req.user._id.toString(),
+                data: tender
+            });
             return res.send(200, tender);
         }
     });  
@@ -108,6 +113,9 @@ exports.update = function(req, res) {
                             activity.acknowledgeUsers.push({_id:member.email, isAcknow: false});
                         }
                     });
+                    cb();
+                } else if (data.editType==="change-title") {
+                    tender.name = data.name;
                     cb();
                 } else if (data.editType === "distribute-status") {
                     tender.isDistribute = true;
@@ -197,17 +205,17 @@ exports.update = function(req, res) {
     get all tenders package for current user
     if in backend, it'll need query userId
 */
-exports.getAll = function(req, res) {
+exports.getAllByProject = function(req, res) {
     var userId = (req.query.userId) ? req.query.userId : req.user._id;
-    Tender.find({$or:[{owner: userId}, {"members.user": userId}]})
-    .populate("project").exec(function(err, tenders) {
+    Tender.find({status: "open", project: req.params.id, $or:[{owner: userId}, {"members.user": userId}]})
+    .populate("members.user", "_id name email phoneNumber")
+    .exec(function(err, tenders) {
         if (err) {return res.send(500,err);}
         else {
             async.each(tenders, function(tender, cb) {
                 Notification.find({owner: req.user._id, "element._id": tender._id, unread: true, referenceTo: "tender", $or:[{type: "tender-message"}, {type: "tender-submission"}]}, function(err, notifications) {
                     if (err) {cb(err);}
                     else {
-                        tender.members = [];
                         tender.__v = notifications.length;
                         cb();
                     }

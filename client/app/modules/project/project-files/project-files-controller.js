@@ -64,7 +64,8 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
                 var index = _.findIndex($scope.activities, function(act) {
                     return file.event==act._id;
                 });
-                $scope.events.push($scope.activities[index]);
+                if (index !== -1)
+                    $scope.events.push($scope.activities[index]);
             }
             $scope.assignees = _.union($scope.assignees, file.members);
         });

@@ -15,7 +15,7 @@ angular.module('buiiltApp').directive('contenteditable', function($window, $docu
       };
 
       // load init value from DOM
-      ctrl.$setViewValue(element.html());
+      // ctrl.$setViewValue(element.html());
       // var insertBreak;
       // insertBreak = function() {
       //   var br, range, selection;
