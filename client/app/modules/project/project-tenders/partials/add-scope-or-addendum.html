@@ -14,10 +14,22 @@
 
                 <div ng-if="addScope" layout="column">
                     <p class="md-body-2">Please fill in fields below to add a scope</p>
+                    <div layout="column">
+                        <md-input-container>
+                            <label for="">Enter Your Scope</label>
+                            <textarea ng-model="tender.scope" name="scope" id="scope" cols="10" rows="5"></textarea>
+                        </md-input-container>
+                    </div>
                 </div>
 
                 <div ng-if="addAddendum" layout="column">
                     <p class="md-body-2">Please fill in fields below to add an addendum</p>
+                    <div layout="column">
+                        <md-input-container>
+                            <label for="">Enter Your Addendum</label>
+                            <textarea ng-model="tender.addendum" name="scope" id="scope" cols="10" rows="5"></textarea>
+                        </md-input-container>
+                    </div>
                 </div>
                 
             </div>
@@ -25,7 +37,7 @@
         <md-dialog-actions>
             <md-button ng-click="dialogService.closeModal()">Cancel</md-button>
             
-            <md-button ng-hide="hide" ng-click="addAddendum=false; addScope=true; hide=true" class="md-primary">Add Scope</md-button>
+            <md-button ng-hide="hide && !tender.isCreateScope" ng-click="addAddendum=false; addScope=true; hide=true" class="md-primary">Add Scope</md-button>
             <md-button ng-hide="hide" ng-click="addAddendum=true; addScope=false; hide=true" class="md-primary">Add Addendum</md-button>
 
             <md-button ng-show="addAddendum || addScope" type="submit" class="md-primary">Submit</md-button>
