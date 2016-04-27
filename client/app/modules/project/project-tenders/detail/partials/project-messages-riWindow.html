@@ -1,0 +1,37 @@
+<md-dialog aria-label="View Thread {{relatedItem.name}}" flex="70">
+	<form>
+		<md-toolbar>
+			<div class="md-toolbar-tools">
+				<h2>View Thread {{relatedItem.name}}</h2>
+			</div>
+		</md-toolbar>
+		
+		<md-dialog-content>
+			<div class="md-dialog-content" layout="column">
+				
+				<div layout="row" ng-show="relatedItem.messages.length == 0">
+					<md-input-container flex>
+				        <p>This thread hasn't start any conversations</p>
+					</md-input-container>
+				</div>
+				
+				<div layout="row" ng-show="relatedItem.messages.length > 0">
+					<md-list ng-cloak class="main-page-content">
+						<md-list-item class="md-2-line" ng-repeat="message in relatedItem.messages">
+							<div class="md-list-item-text">
+							    <h3><strong>{{message.user.name}}</strong>: {{message.text}}</h3>
+						        <p class="meta-data"><span class="time">{{message.sendAt | date: 'H:mm a'}}</span> <span class="date">{{message.sendAt | date: 'dd/MM/yyyy'}}</span><p>
+						    </div>
+						</md-list-item>
+					</md-list>
+				</div>
+				
+			</div>
+		</md-dialog-content>
+		
+		<md-dialog-actions>
+			<md-button ng-click="closeModal()">Cancel</md-button>
+			<md-button ng-click="goToThisThread(relatedItem.project, relatedItem._id)" class="md-raised md-accent md-hue-1">Go To Thread!</md-button>
+		</md-dialog-actions>
+	</form>
+</md-dialog>
