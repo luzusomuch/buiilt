@@ -103,9 +103,15 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 editable: true,
                 minTime: "6:00:00",
                 maxTime: "22:00:00",
-                dayClick: function(day) {
+                dayClick: function(day, jsEv, view) {
                     $rootScope.selectedStartDate = new Date(day);
-                    $scope.showModal("create-task-or-event.html");
+                    var momentDay = moment(day).hours();
+                    if (momentDay===0 && view.name !== "month") {
+                        $scope.showModal("create-event.html")
+                    } else if (momentDay !== 0 && view.name !== "month") {
+                        $scope.showModal("create-task.html")
+                    } else
+                        $scope.showModal("create-task-or-event.html");
                 },
                 eventClick: function(data) {
                     if (data.type==="event") {

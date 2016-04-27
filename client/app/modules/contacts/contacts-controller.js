@@ -6,12 +6,11 @@ angular.module('buiiltApp').controller('contactsCtrl', function($rootScope, $sco
     if ($rootScope.isCreateNewContact) {
         console.log("AAAAAAAAAAa");
         $scope.showModal("add-new-contact.html");
-        // $scope.isCreateNewContact = $rootScope.isCreateNewContact;
-        // $rootScope.isCreateNewContact = null;
     };
 
     /*Show modal with valid name*/
     $scope.showModal = function(name) {
+        $rootScope.isCreateNewContact = null;
         // $rootScope.editUserType = type;
         $mdDialog.show({
             // targetEvent: $event,
