@@ -1,0 +1,23 @@
+<md-dialog aria-label="Invite Tenderers" flex="70">
+    <form ng-submit="inviteTenderer()" name="form">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Invite Tenderers</h2>
+            </div>
+        </md-toolbar>
+        
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column">
+                <p class="md-body-2">Select At Least 1 Contact To Be Tenderer For This Tender</p>
+                <div layout="row" layout-align="center center" layout-wrap layout-padding flex>
+                    <md-checkbox ng-click="selectItem($index, 'contact')" ng-repeat="contact in contactBooks" class="filter-checkbox md-primary">{{contact.name}}</md-checkbox>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions>
+            <md-button ng-click="dialogService.closeModal()">Cancel</md-button>
+
+            <md-button type="submit" class="md-primary">Submit</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

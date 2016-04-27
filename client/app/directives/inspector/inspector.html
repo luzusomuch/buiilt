@@ -1,0 +1,135 @@
+<section>
+    
+    <md-subheader class="inspector-header md-primary">
+        <div layout="row">
+            
+            <div layout="row" ng-click="showActivity=!showActivity" class="inspector-section" flex>
+                {{type|uppercase}} ACTIVITY
+                <span flex></span>
+                <md-icon class="material-icons accordian-icon md-primary" ng-show="!showActivity">expand_more</md-icon>
+                <md-icon class="material-icons accordian-icon md-primary" ng-show="showActivity">expand_less</md-icon>
+            </div>
+            
+        </div>
+    </md-subheader>
+    
+    <div ng-show="showActivity" class="activity-stream-head" layout-padding>
+        <p>This {{type}} was created by <strong>{{data.owner.name}}</strong> on {{data.createdAt | date: longDate}}</p>
+    </div>
+    
+</section>
+
+<section>
+    
+    <md-subheader class="border-top inspector-header md-primary">
+        <div layout="row">
+            
+            <md-icon class="material-icons accordian-icon md-primary" style="margin-right: 1vh" ng-click="">add_box</md-icon>
+            
+            <div layout="row" ng-click="showMembers=!showMembers" class="inspector-section" flex>
+                TEAM MEMBERS
+                <span flex></span>
+                <md-icon class="material-icons accordian-icon md-primary" ng-show="!showMembers">expand_more</md-icon>
+                <md-icon class="material-icons accordian-icon md-primary" ng-show="showMembers">expand_less</md-icon>
+            </div>
+            
+        </div>
+    </md-subheader>
+    
+    <md-list ng-show="showMembers" class="md-dense">
+        <md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event, member._id)" ng-show="data.element" ng-repeat="member in data.members | unique: '_id' track by $index">
+            <div class="md-list-item-text">
+                <h3>{{(member._id) ? member.name : member.email}}</h3>
+                <p>Phone Number</p>
+            </div>
+        </md-list-item>
+    </md-list>
+    
+</section>
+
+<section>
+    
+    <md-subheader class="border-top inspector-header md-primary">
+        <div layout="row">
+            
+            <md-icon class="material-icons accordian-icon md-primary" style="margin-right: 1vh" ng-click="">add_box</md-icon>
+            
+            <div layout="row" ng-click="showSharedFiles=!showSharedFiles" class="inspector-section" flex>
+                SHARED FILES
+                <span flex></span>
+                <md-icon class="material-icons accordian-icon md-primary" ng-show="!showSharedFiles">expand_more</md-icon>
+                <md-icon class="material-icons accordian-icon md-primary" ng-show="showSharedFiles">expand_less</md-icon>
+            </div>
+            
+        </div>
+    </md-subheader>
+    
+    <md-list ng-show="showSharedFiles" class="md-dense">
+        <md-list-item class="md-2-line" ng-click="showRelatedFilesModal($event, file)" ng-repeat="file in data.relatedItem" ng-show="file.type == 'file'">
+            <div class="md-list-item-text">
+                <p>{{file.item.name}}</p>
+                <p>{{file.item.description}}</p>
+            </div>
+        </md-list-item>
+    </md-list>
+    
+</section>
+
+<section>
+    
+    <md-subheader class="border-top inspector-header md-primary">
+        <div layout="row">
+            
+            <md-icon class="material-icons accordian-icon md-primary" style="margin-right: 1vh" ng-click="">add_box</md-icon>
+            
+            <div layout="row" ng-click="showRelatedTasks=!showRelatedTasks" class="inspector-section" flex>
+                RELATED TASKS
+                <span flex></span>
+                <md-icon class="material-icons accordian-icon md-primary" ng-show="!showRelatedTasks">expand_more</md-icon>
+                <md-icon class="material-icons accordian-icon md-primary" ng-show="showRelatedTasks">expand_less</md-icon>
+            </div>
+            
+        </div>
+    </md-subheader>
+    
+    <md-list ng-show="showRelatedTasks" class="md-dense">
+        <md-list-item class="md-2-line" ng-click="showRelatedTasksModal($event, task)" ng-repeat="task in data.relatedItem" ng-show="task.type == 'task'">
+            <div class="md-list-item-text">
+                <p>{{task.item.name}}</p>
+                <p>{{task.item.description}}</p>
+            </div>
+        </md-list-item>
+    </md-list>
+    
+</section>
+
+<section>
+    <md-subheader class="border-top inspector-header md-primary">
+        <div layout="row">
+            <md-icon ng-click="showModalInTenderPage('invite-tenderer.html')" class="material-icons accordian-icon md-primary" style="margin-right: 1vh" ng-click="">add_box</md-icon>
+            
+            <div layout="row" ng-click="showTenderers=!showTenderers" class="inspector-section" flex>
+                TENDERERS
+                <span flex></span>
+                <md-icon class="material-icons accordian-icon md-primary" ng-show="!showTenderers">expand_more</md-icon>
+                <md-icon class="material-icons accordian-icon md-primary" ng-show="showTenderers">expand_less</md-icon>
+            </div>
+            
+        </div>
+    </md-subheader>
+    
+    <md-list ng-show="showTenderers" class="md-dense">
+        <md-list-item class="md-2-line">
+            <div class="md-list-item-text">
+                <p>{{data.owner.name}}</p>
+                <p>Phone Number: {{data.owner.phoneNumber}} - Email: {{data.owner.email}}</p>
+            </div>
+        </md-list-item>
+        <md-list-item class="md-2-line" ng-click="" ng-repeat="member in data.members">
+            <div class="md-list-item-text">
+                <p>{{(member.user) ? member.user.name : member.name}}</p>
+                <p>Phone Number: {{(member.user) ? member.user.phoneNumber : member.phoneNumber}} - Email: {{(member.user) ? member.user.email : member.email}}</p>
+            </div>
+        </md-list-item>
+    </md-list>
+</section>

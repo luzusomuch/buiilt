@@ -126,7 +126,7 @@ exports.update = function(req, res) {
                     tender.description = data.description;
                     tender.dateEnd = data.dateEnd;
                     cb();
-                } else if (data.editType === "invite-tender") {
+                } else if (data.editType === "invite-tenderer") {
                     var members = [];
                     var tenderMembers = tender.members;
                     async.each(data.newMembers, function(member, cb) {
@@ -136,29 +136,31 @@ exports.update = function(req, res) {
                                 members.push({name:member.name, email: member.email});
                                 tenderMembers.push({email: member.email, name: member.name});
                                 newInvitees.push({email: member.email, name: member.name});
-                                var inviteToken = new InviteToken({
-                                    type: 'tender-invite',
-                                    email: member.email,
-                                    element: {
-                                        project: tender.project,
-                                        type: tender.type
-                                    }
-                                });
-                                inviteToken._editUser = req.user;
-                                inviteToken.save(cb());
+                                cb();
+                                // var inviteToken = new InviteToken({
+                                //     type: 'tender-invite',
+                                //     email: member.email,
+                                //     element: {
+                                //         project: tender.project,
+                                //         type: tender.type
+                                //     }
+                                // });
+                                // inviteToken._editUser = req.user;
+                                // inviteToken.save(cb());
                             } else {
                                 members.push({name:_user.name, email: _user.email});
                                 tenderMembers.push({user: _user._id});
-                                var inviteToken = new InviteToken({
-                                    type: 'project-invite',
-                                    user: _user._id,
-                                    element: {
-                                        project: tender.project,
-                                        type: tender.type
-                                    }
-                                });
-                                inviteToken._editUser = req.user;
-                                inviteToken.save(cb());
+                                cb();
+                                // var inviteToken = new InviteToken({
+                                //     type: 'project-invite',
+                                //     user: _user._id,
+                                //     element: {
+                                //         project: tender.project,
+                                //         type: tender.type
+                                //     }
+                                // });
+                                // inviteToken._editUser = req.user;
+                                // inviteToken.save(cb());
                             }
                         });
                     }, function() {
@@ -233,12 +235,12 @@ exports.getAllByProject = function(req, res) {
 */
 exports.get = function(req, res) {
     Tender.findById(req.params.id)
-    .populate("owner", "_id name email")
-    .populate("members.user", "_id name email")
+    .populate("owner", "_id name email phoneNumber")
+    .populate("members.user", "_id name email phoneNumber")
     .populate("members.activities.user", "_id name email")
     .populate("activities.user", "_id name email")
     .populate("activities.acknowledgeUsers._id", "_id name email")
-    .populate("winner._id", "_id name email")
+    .populate("winner._id", "_id name email phoneNumber")
     .exec(function(err, tender) {
         if (err) {return res.send(500,err);}
         if (!tender) {return res.send(404);}

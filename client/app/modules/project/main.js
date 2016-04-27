@@ -77,7 +77,12 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
     url: '/tenders',
 	  abstract: true,
     templateUrl: '/app/modules/project/project-tenders/project-tenders.html',
-    authenticate : true
+    authenticate : true,
+    resolve: {
+      contactBooks: function(contactBookService) {
+        return contactBookService.me().$promise;
+      }
+    }
   })
   .state('project.tenders.all', {
     url: '/',
@@ -85,9 +90,6 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
     controller: 'projectTendersCtrl',
     authenticate : true, 
     resolve: {
-      contactBooks: function(contactBookService) {
-        return contactBookService.me().$promise;
-      },
       tenders: function(tenderService, $stateParams) {
         return tenderService.getAll({id: $stateParams.id}).$promise;
       }

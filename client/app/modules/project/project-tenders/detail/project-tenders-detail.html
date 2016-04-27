@@ -74,18 +74,13 @@
 
 				<span flex></span>
 				
-				<md-button ng-show="isOwnerTeam" ng-click="archive()" aria-label="Compose Message" class="md-icon-button">
-				  	<md-tooltip md-direction="left">{{(!thread.isArchive) ? 'Archive this Message' : 'Unarchive this Message'}}</md-tooltip>
-			      	<md-icon class="material-icons"><i class="material-icons">{{(!thread.isArchive) ? 'archive' : 'unarchive'}}</i></md-icon>
-	  	      	</md-button>
-				
 			</div>
 
 			<md-divider flex></md-divider>
 			
 			<div layout="column" class="content">
 				
-				<inspector-message data="tender" hide-related-thread="true" flex></inspector-message>
+				<inspector data="tender" type="tender" flex></inspector>
 				
 			</div>
 			
