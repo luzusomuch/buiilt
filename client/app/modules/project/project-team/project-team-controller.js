@@ -16,6 +16,7 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
         if (value) {
             $scope.invite.name = value.name;
             $scope.invite.email = value.email;
+            $scope.invite.phoneNumber = value.phoneNumber;
         }
     });
 

@@ -23,7 +23,7 @@
                     <p class="md-body-2">Select at least one project member that is relevant to set of this document:</p>
                     
                     <div layout="row" flex layout-align="center center" layout-wrap layout-padding>
-                        <md-checkbox class="filter-checkbox md-primary" ng-repeat="member in projectMembers" ng-click="selectedItem($index, 'member')">{{ (member._id) ? member.name : member.email }}</md-checkbox>
+                        <md-checkbox class="filter-checkbox md-primary" ng-repeat="member in projectMembers" ng-click="selectedItem($index, 'member')">{{ member.name }}</md-checkbox>
                     </div>
                 </div>
                 

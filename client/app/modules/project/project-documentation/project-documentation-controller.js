@@ -57,7 +57,7 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
                             tender.tenderers[0]._id.select = false;
                             $scope.projectMembers.push(tender.tenderers[0]._id);
                         } else {
-                            $scope.projectMembers.push({email: tender.tenderers[0].email, select: false});
+                            $scope.projectMembers.push({email: tender.tenderers[0].email, name: tender.tenderers[0].name, phoneNumber: tender.tenderers[0].phoneNumber, select: false});
                         }
                     } else {
                         $scope.projectMembers.push(tender.tenderers[0]._id);

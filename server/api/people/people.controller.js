@@ -127,6 +127,7 @@ exports.invitePeople = function(req, res) {
                                     tender.tenderers.push({
                                         email: invite.email,
                                         name: invite.name,
+                                        phoneNumber: invite.phoneNumber,
                                         teamMember: []
                                     });
                                     people._updatedTender = tender;
