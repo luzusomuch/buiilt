@@ -180,7 +180,66 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                             clickOutsideToClose: false
                         });
                     } else if (data.type==="task"){
-                        $state.go("project.tasks.detail", {id: $stateParams.id, taskId: data._id});
+                        $mdDialog.show({
+                            // targetEvent: $event,
+                            controller: ["$rootScope", "$scope", "dialogService", "activity", "$stateParams", "$state", function($rootScope, $scope, dialogService, activity, $stateParams, $state) {
+								
+								$scope.editDescription = false;
+								$scope.editAssignees = false;
+								$scope.showTasks = false;
+								$scope.showMessages = false;
+								$scope.showFiles = false;
+								$scope.showTenders = false;
+								
+                                $scope.event = data;
+                                $scope.dialogService = dialogService;
+                                $scope.tasks = [];
+                                $scope.threads = [];
+                                $scope.files = [];
+                                _.each(activity.relatedItem, function(item) {
+                                    if (item.type==="thread") {
+                                        $scope.threads.push(item.item);
+                                    } else if (item.type==="task") {
+                                        $scope.tasks.push(item.item);
+                                    } else if (item.type==="file") {
+                                        $scope.files.push(item.item);
+                                    }
+                                });
+
+                                $scope.viewAll = function(type) {
+                                    dialogService.closeModal();
+                                    if (type==="task") {
+                                        $state.go("project.tasks.all", {id: $stateParams.id});
+                                    } else if (type==="thread") {
+                                        $state.go("project.messages.all", {id: $stateParams.id});
+                                    } else if (type==="file") {
+                                        $state.go("project.files.all", {id: $stateParams.id});
+                                    }
+                                };
+
+                                $scope.attachItem = function(type) {
+                                    $rootScope.attachEventItem = {type: type, selectedEvent: data._id};
+                                    dialogService.closeModal();
+                                    if (type==="task") {
+                                        $state.go("project.tasks.all", {id: $stateParams.id});
+                                    } else if (type==="thread") {
+                                        $state.go("project.messages.all", {id: $stateParams.id});
+                                    } else if (type==="file") {
+                                        $state.go("project.files.all", {id: $stateParams.id});
+                                    }
+                                };
+                            }],
+                            resolve: {
+                                activity: ["activityService", "$stateParams", function(activityService, $stateParams) {
+                                    return activityService.get({id: data._id}).$promise;
+                                }]
+                            },
+                            templateUrl: 'app/modules/project/project-calendar/partials/task-detail.html',
+                            parent: angular.element(document.body),
+                            clickOutsideToClose: false
+                        });
+						
+                        // $state.go("project.tasks.detail", {id: $stateParams.id, taskId: data._id});
                     }
                 },
                 eventDrop: function(event, delta) {

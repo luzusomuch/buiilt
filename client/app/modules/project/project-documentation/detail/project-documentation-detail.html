@@ -1,4 +1,79 @@
-<div layout="row" class="detail-view-content">
+<div layout="row" layout-padding>
+	
+	<div layout="column" flex>
+		
+		<div layout="column" class="md-whiteframe-1dp detail-view-main">
+				
+			<div class="md-toolbar-tools">
+				<md-button class="md-icon-button" back-button>
+					<md-icon class="material-icons">arrow_back</md-icon>
+					<md-tooltip md-direction="bottom">Back</md-tooltip>
+				</md-button>
+				
+		        <h5>Document Name</h5>
+					  
+				<span flex></span>
+				
+				<md-menu md-position-mode="target-right target">
+	                <md-button aria-label="Filter" ng-click="$mdOpenMenu($event)">Versions</md-button>
+	                <md-menu-content width="5">
+	                    <md-menu-item layout-padding>
+							<md-button ng-click="null">Version Name</md-button>
+	                    </md-menu-item>
+	                </md-menu-content>
+	            </md-menu>
+				
+				<span flex></span>
+				
+				<md-button class="md-icon-button">
+					<md-icon class="material-icons">open_in_new</md-icon>
+					<md-tooltip md-direction="bottom">Open In New Tab</md-tooltip>
+				</md-button>
+				
+				<md-button class="md-icon-button">
+					<md-icon class="material-icons">file_download</md-icon>
+					<md-tooltip md-direction="bottom">Download File</md-tooltip>
+				</md-button>
+				
+		    </div>
+			
+			<md-divider layout="row" flex></md-divider>
+	
+			<div layout="column" layout-margin flex>
+				<div class="content" scroll-to-bottom="">
+					<div class="item-activity">
+
+						<div layout="row" layout-align="center center" flex class="activity-stream" layout-padding ng-repeat="" ng-class="">
+							<div flex class="activity-detail">
+	
+							</div>
+						</div>
+					</div>
+					<span flex></span>
+				</div>
+				
+				<md-divider></md-divider>
+				
+				<div layout="row">
+		  	      	<md-button ng-show="!thread.isArchive" aria-label="Upload New Version" class="md-icon-button" ng-click="">
+					  	<md-tooltip md-direction="top">Upload a New Version</md-tooltip>
+				      	<md-icon class="material-icons">file_upload</md-icon>
+		  	      	</md-button>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+</div>
+			
+			
+			
+			
+			
+			
+			
+			
+<div layout="row" layout-padding>
 	
 	<div layout="column" flex="70" class="md-whiteframe-1dp" style="position: relative;">
 		
