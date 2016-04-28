@@ -730,4 +730,11 @@ md-card {
 	background-color: white;
 }
 
+.link-decoration {
+	color: #2196F3;
+	text-decoration: underline;
+	cursor: pointer;
+	outline: none;
+}
+
 
