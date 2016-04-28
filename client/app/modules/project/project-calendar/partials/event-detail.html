@@ -11,7 +11,7 @@
 			
 			
 			<div layout="column">
-				<h3 class="md-title">Details</h3>
+				<h3 class="md-title">Details <md-icon class="material-icons">expand_more</md-icon></h3>
 				<p ng-hover="!!editDescription">This is the description of this event. It should be in-line editable so that the user can provide a description about what this event has been added for. Perhaps he wants to be able to describe what the concrete is or something like that. <span ng-show="editDescription" class="md-body-2 link-decoration">Edit</span></p>
 			</div>
 			
@@ -49,7 +49,7 @@
 
 		            <div layout="column">
 						<div layout="row" layout-align="space-between center">
-			                <h3 class="md-title">Messages</h3>
+			                <h3 class="md-title">Messages <md-icon class="material-icons">expand_more</md-icon></h3>
 							<p ng-click="viewAll('thread')" class="md-body-2 link-decoration">View All</p>
 						</div>
 						<md-divider></md-divider>
@@ -67,7 +67,7 @@
 
 		            <div layout="column">
 						<div layout="row" layout-align="space-between center">
-			                <h3 class="md-title md-primary">Files</h3>
+			                <h3 class="md-title md-primary">Files <md-icon class="material-icons">expand_more</md-icon></h3>
 							<p ng-click="viewAll('file')" class="md-body-2 link-decoration">View All</p>
 						</div>
 						<md-divider></md-divider>
@@ -91,7 +91,7 @@
 						<md-button class="md-raised" flex aria-label="Attach Task" ng-click="attachItem('task')">Attach Task</md-button>
 					</div>
 					<div layout="row">
-						<md-button class="md-raised" flex aria-label="Attach Thread" ng-click="attachItem('thread')">Attach Thread</md-button>
+						<md-button class="md-raised" flex aria-label="Attach Thread" ng-click="attachItem('thread')">Attach Message</md-button>
 					</div>
 					<div layout="row">
 						<md-button class="md-raised" flex aria-label="Attach File" ng-click="attachItem('file')">Attach File</md-button>
