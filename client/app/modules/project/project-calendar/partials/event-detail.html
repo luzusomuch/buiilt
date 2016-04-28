@@ -2,8 +2,14 @@
     
     <md-toolbar>
         <div class="md-toolbar-tools">
+			
             <h2>{{event.title}}</h2>
+			
+			<span flex></span>
+			
+			<p class="md-subhead">Start Date - End Date</p>
         </div>
+		
     </md-toolbar>
 	
     <md-dialog-content>
@@ -11,16 +17,12 @@
 			
 			
 			<div layout="column">
-				<h3 class="md-title">Details <md-icon class="material-icons">expand_more</md-icon></h3>
-				<p ng-hover="!!editDescription">This is the description of this event. It should be in-line editable so that the user can provide a description about what this event has been added for. Perhaps he wants to be able to describe what the concrete is or something like that. <span ng-show="editDescription" class="md-body-2 link-decoration">Edit</span></p>
+				<h3 class="md-title">Details</h3>
+				<p ng-mouseenter="editDescription=true" ng-mouseleave="editDescription=false">This is the description of this event. It should be in-line editable so that the user can provide a description about what this event has been added for. Perhaps he wants to be able to describe what the concrete is or something like that. <span ng-show="editDescription" class="md-body-2 link-decoration">Edit</span></p>
 			</div>
 			
 			<div layout="row">
-				<p class="md-subhead">Start Date - End Date <span class="md-body-2 link-decoration">Edit</span></p>
-			</div>
-			
-			<div layout="row">
-				<p class="md-subhead">Assignee 1, Assignee 2, Assignee 3 can view this event. <span class="md-body-2 link-decoration">Edit</span></p>
+				<p class="md-subhead" ng-mouseenter="editAssignees=true" ng-mouseleave="editAssignees=false">Assignee 1, Assignee 2, Assignee 3 can view this event. <span ng-show="editAssignees" class="md-body-2 link-decoration">Edit</span></p>
 			</div>
 			
 			<md-divider></md-divider>
@@ -30,13 +32,17 @@
 				<div layout="column" flex="60">
 					
 				    <div layout="column">
-						<div layout="row" layout-align="space-between center">
-			                <h3 class="md-title">Tasks <md-icon class="material-icons">expand_more</md-icon></h3>
+						<div layout="row" layout-align="space-between center" layout-margin>
+			                <h4 class="md-title header-accordian" ng-click="showTasks=!showTasks">
+								Tasks 
+								<md-icon class="material-icons" ng-show="!showTasks">expand_more</md-icon>
+								<md-icon class="material-icons" ng-show="showTasks">expand_less</md-icon>
+							</h3>
 							<p ng-click="viewAll('task')" class="md-body-2 link-decoration">View All</p>
 						</div>
 						<md-divider></md-divider>
-						<div layout="row">
-			                <md-list flex>
+						<div layout="row" ng-show="showTasks">
+			                <md-list flex class="md-dense">
 			                    <md-list-item class="md-2-line" ng-repeat="task in tasks" ng-click="null">
 			                        <div class="md-list-item-text" layout="column">
 			                            <h3>{{task.description}}</h3>
@@ -48,13 +54,17 @@
 		            </div>
 
 		            <div layout="column">
-						<div layout="row" layout-align="space-between center">
-			                <h3 class="md-title">Messages <md-icon class="material-icons">expand_more</md-icon></h3>
+						<div layout="row" layout-align="space-between center" layout-margin>
+			                <h3 class="md-title header-accordian" ng-click="showMessages=!showMessages">
+								Messages 
+								<md-icon class="material-icons" ng-show="!showMessages">expand_more</md-icon>
+								<md-icon class="material-icons" ng-show="showMessages">expand_less</md-icon>
+							</h3>
 							<p ng-click="viewAll('thread')" class="md-body-2 link-decoration">View All</p>
 						</div>
 						<md-divider></md-divider>
-						<div layout="row">
-			                <md-list flex>
+						<div layout="row" ng-show="showMessages">
+			                <md-list flex class="md-dense">
 			                    <md-list-item class="md-2-line" ng-repeat="thread in threads" ng-click="null">
 			                        <div class="md-list-item-text" layout="column">
 			                            <h3>{{thread.name}}</h3>
@@ -66,13 +76,17 @@
 		            </div>
 
 		            <div layout="column">
-						<div layout="row" layout-align="space-between center">
-			                <h3 class="md-title md-primary">Files <md-icon class="material-icons">expand_more</md-icon></h3>
+						<div layout="row" layout-align="space-between center" layout-margin>
+			                <h3 class="md-title header-accordian" ng-click="showFiles=!showFiles">
+								Files 
+								<md-icon class="material-icons" ng-show="!showFiles">expand_more</md-icon>
+								<md-icon class="material-icons" ng-show="showFiles">expand_less</md-icon>
+							</h3>
 							<p ng-click="viewAll('file')" class="md-body-2 link-decoration">View All</p>
 						</div>
 						<md-divider></md-divider>
-						<div layout="row">
-			                <md-list flex>
+						<div layout="row" ng-show="showFiles">
+			                <md-list flex class="md-dense">
 			                    <md-list-item class="md-2-line" ng-repeat="file in files" ng-click="null">
 			                        <div class="md-list-item-text" layout="column">
 			                            <h3>{{file.name}}</h3>
@@ -82,6 +96,29 @@
 			                </md-list>
 						</div>
 		            </div>
+					
+		            <div layout="column">
+						<div layout="row" layout-align="space-between center" layout-margin>
+			                <h3 class="md-title header-accordian" ng-click="showTenders=!showTenders">
+								Tenders 
+								<md-icon class="material-icons" ng-show="!showTenders">expand_more</md-icon>
+								<md-icon class="material-icons" ng-show="showTenders">expand_less</md-icon>
+							</h3>
+							<p ng-click="viewAll('file')" class="md-body-2 link-decoration">View All</p>
+						</div>
+						<md-divider></md-divider>
+						<div layout="row" ng-show="showTenders">
+			                <md-list flex class="md-dense">
+			                    <md-list-item class="md-2-line" ng-repeat="file in files" ng-click="null">
+			                        <div class="md-list-item-text" layout="column">
+			                            <h3>{{file.name}}</h3>
+										<p>Assignees</p>
+			                        </div>
+			                    </md-list-item>
+			                </md-list>
+						</div>
+		            </div>
+					
 				</div>
 				
 				<span flex></span>

@@ -737,4 +737,9 @@ md-card {
 	outline: none;
 }
 
+.header-accordian {
+	outline: none;
+	cursor: pointer;
+}
+
 

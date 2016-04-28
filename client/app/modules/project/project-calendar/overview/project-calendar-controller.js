@@ -89,7 +89,8 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
 
     /*config fullcalendar*/
     $timeout(function() {
-        var height = $("#calendar-page").outerHeight() - $("#calendar-filter").outerHeight();
+		
+        var height = ($("#calendar-content").outerHeight()/100)*63;
         console.log(height);
         $scope.uiConfig = {
             calendar: {
@@ -123,6 +124,14 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                         $mdDialog.show({
                             // targetEvent: $event,
                             controller: ["$rootScope", "$scope", "dialogService", "activity", "$stateParams", "$state", function($rootScope, $scope, dialogService, activity, $stateParams, $state) {
+								
+								$scope.editDescription = false;
+								$scope.editAssignees = false;
+								$scope.showTasks = false;
+								$scope.showMessages = false;
+								$scope.showFiles = false;
+								$scope.showTenders = false;
+								
                                 $scope.event = data;
                                 $scope.dialogService = dialogService;
                                 $scope.tasks = [];
