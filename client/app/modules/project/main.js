@@ -13,6 +13,9 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
       },
       activities: function(activityService, $stateParams) {
         return activityService.me({id: $stateParams.id}).$promise;
+      },
+      tenders: function(tenderService, $stateParams) {
+        return tenderService.getAll({id: $stateParams.id}).$promise;
       }
     }
   })
@@ -68,9 +71,6 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
     resolve: {
       contactBooks: function(contactBookService) {
         return contactBookService.me().$promise;
-      },
-      tenders: function(tenderService, $stateParams) {
-        return tenderService.getAll({id: $stateParams.id}).$promise;
       }
     }
   })

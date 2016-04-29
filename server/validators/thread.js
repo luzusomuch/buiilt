@@ -3,7 +3,7 @@ var async = require("async");
 var User = require("./../models/user.model");
 
 exports.validateCreate = function (req, cb) {
-  req.checkBody('name', 'Thread name is required').notEmpty();
+  // req.checkBody('name', 'Thread name is required').notEmpty();
   req.checkBody('selectedEvent', 'Selected event is required').notEmpty();
   var members = [];
   var notMembers = [];
@@ -22,7 +22,7 @@ exports.validateCreate = function (req, cb) {
 };
 
 exports.validateUpdate = function (req, cb) {
-  req.checkBody('name', 'Thread name is required').notEmpty();
+  // req.checkBody('name', 'Thread name is required').notEmpty();
   var members = req.thread.members;
   var notMembers = req.thread.notMembers;
   if (req.body.newMembers && req.body.newMembers.length > 0) {

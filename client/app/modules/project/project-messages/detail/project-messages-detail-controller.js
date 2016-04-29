@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q, $rootScope, $scope, $timeout, $stateParams, messageService, $mdToast, $mdDialog, $state, thread, peopleService, taskService, uploadService, people, clipboard, socket, notificationService) {
+angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q, $rootScope, $scope, $timeout, $stateParams, messageService, $mdToast, $mdDialog, $state, thread, peopleService, taskService, uploadService, people, clipboard, socket, notificationService, tenders) {
     /*Check thread owner team*/
     $scope.isOwnerTeam=false;
     if (_.findIndex($rootScope.currentTeam.leader, function(leader) {
@@ -63,7 +63,6 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
         restriction(allowMembers);
         $rootScope.title = thread.name;
         $rootScope.currentUser.isLeader = (_.findIndex($rootScope.currentTeam.leader, function(leader){return leader._id == $rootScope.currentUser._id}) !== -1) ? true: false;
-        getProjectMembers();
 
         var prom = [];
         _.each($scope.thread.activities, function(item) {
@@ -122,51 +121,84 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
     };
 
     /*Get project members list and file tags for create related file*/
-    function getProjectMembers() {
+    function getProjectMembersOrTenderers() {
+        $scope.tender = tenders[0];
         $scope.membersList = [];
         $scope.tags = [];
         _.each($rootScope.currentTeam.fileTags, function(tag) {
             $scope.tags.push({name: tag, select: false});
         });
-        _.each($rootScope.roles, function(role) {
-            _.each($scope.people[role], function(tender){
-                if (tender.hasSelect) {
-                    var isLeader = (_.findIndex(tender.tenderers, function(tenderer) {
-                        if (tenderer._id) {
-                            return tenderer._id._id.toString() === $rootScope.currentUser._id.toString();
-                        }
-                    }) !== -1) ? true : false;
-                    if (!isLeader) {
-                        _.each(tender.tenderers, function(tenderer) {
-                            var memberIndex = _.findIndex(tenderer.teamMember, function(member) {
-                                return member._id.toString() === $rootScope.currentUser._id.toString();
+        if (!$scope.tender || $scope.tender.owner._id==$rootScope.currentUser._id) {
+            _.each($rootScope.roles, function(role) {
+                _.each($scope.people[role], function(tender){
+                    if (tender.hasSelect) {
+                        var isLeader = (_.findIndex(tender.tenderers, function(tenderer) {
+                            if (tenderer._id) {
+                                return tenderer._id._id.toString() === $rootScope.currentUser._id.toString();
+                            }
+                        }) !== -1) ? true : false;
+                        if (!isLeader) {
+                            _.each(tender.tenderers, function(tenderer) {
+                                var memberIndex = _.findIndex(tenderer.teamMember, function(member) {
+                                    return member._id.toString() === $rootScope.currentUser._id.toString();
+                                });
+                                if (memberIndex !== -1) {
+                                    _.each(tenderer.teamMember, function(member) {
+                                        member.select = false;
+                                        $scope.membersList.push(member);
+                                    });
+                                }
                             });
-                            if (memberIndex !== -1) {
-                                _.each(tenderer.teamMember, function(member) {
-                                    member.select = false;
-                                    $scope.membersList.push(member);
-                                });
+                            if (tender.tenderers[0]._id) {
+                                tender.tenderers[0]._id.select = false;
+                                $scope.membersList.push(tender.tenderers[0]._id);
+                            } else {
+                                $scope.membersList.push({email: tender.tenderers[0].email, select: false});
                             }
-                        });
-                        if (tender.tenderers[0]._id) {
-                            tender.tenderers[0]._id.select = false;
-                            $scope.membersList.push(tender.tenderers[0]._id);
                         } else {
-                            $scope.membersList.push({email: tender.tenderers[0].email, select: false});
+                            _.each(tender.tenderers, function(tenderer) {
+                                if (tenderer._id._id.toString() === $rootScope.currentUser._id.toString()) {
+                                    _.each(tenderer.teamMember, function(member) {
+                                        member.select = false;
+                                        $scope.membersList.push(member);
+                                    });
+                                }
+                            });
                         }
-                    } else {
-                        _.each(tender.tenderers, function(tenderer) {
-                            if (tenderer._id._id.toString() === $rootScope.currentUser._id.toString()) {
-                                _.each(tenderer.teamMember, function(member) {
-                                    member.select = false;
-                                    $scope.membersList.push(member);
-                                });
-                            }
-                        });
                     }
+                });
+            });
+        } else {
+            $scope.membersList.push(people[$scope.tender.ownerType][0].tenderers[0]._id);
+            _.each(people[$scope.tender.ownerType][0].tenderers[0].teamMember, function(member) {
+                $scope.membersList.push(member);
+            });
+            var currentTenderIndex = _.findIndex($scope.tender.members, function(member) {
+                if (member.user) {
+                    return member.user._id==$rootScope.currentUser._id;
                 }
             });
-        });
+            if (currentTenderIndex !== -1) {
+                $scope.membersList.push($scope.tender.members[currentTenderIndex].user);
+                if ($scope.tender.members[currentTenderIndex].teamMember) {
+                    _.each($scope.tender.members[currentTenderIndex].teamMember, function(member) {
+                        $scope.membersList.push(member);
+                    });
+                }
+            } else {
+                _.each($scope.tender.members, function(member) {
+                    var memberIndex = _.findIndex(member.teamMember, function(teamMember) {
+                        return teamMember._id.toString() === $rootScope.currentUser._id.toString();
+                    });
+                    if (memberIndex !== -1) {
+                        _.each(member.teamMember, function(teamMember) {
+                            $scope.membersList.push(teamMember);
+                        });
+                        $scope.membersList.push(member.user);
+                    }
+                });
+            }            
+        }
         // get unique member 
         $scope.membersList = _.uniq($scope.membersList, "_id");
 
@@ -188,6 +220,8 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
         _.remove($scope.invitees, {_id: $rootScope.currentUser._id});
     };
 
+    getProjectMembersOrTenderers();
+
     /*Show toast information*/
     $scope.showToast = function(value) {
         $mdToast.show($mdToast.simple().textContent(value).position('bottom','left').hideDelay(3000));
@@ -201,7 +235,7 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
     /*Show modal with specific name*/
     $scope.showModal = function(name, $event) {
         $mdDialog.show({
-            targetEvent: $event,
+            // targetEvent: $event,
             controller: 'projectMessagesDetailCtrl',
             resolve: {
                 thread: ["$stateParams", "messageService", function($stateParams, messageService) {
@@ -209,6 +243,9 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
                 }],
                 people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
                     return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
+                }],
+                tenders: ["tenderService", "$stateParams", function(tenderService, $stateParams) {
+                    return tenderService.getAll({id: $stateParams.id}).$promise;
                 }]
             },
             templateUrl: 'app/modules/project/project-messages/detail/partials/' + name,
@@ -439,6 +476,4 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
         }, function() {
         });
     };
-
-    getProjectMembers();
 });

@@ -24,7 +24,7 @@
     <md-subheader class="border-top inspector-header md-primary">
         <div layout="row">
             
-            <md-icon class="material-icons accordian-icon md-primary" style="margin-right: 1vh" ng-click="">add_box</md-icon>
+            <md-icon class="material-icons accordian-icon md-primary" style="margin-right: 1vh" ng-click="showmodalInThreadPage('assign-team-member.html')">add_box</md-icon>
             
             <div layout="row" ng-click="showMembers=!showMembers" class="inspector-section" flex>
                 TEAM MEMBERS
@@ -103,7 +103,7 @@
     
 </section>
 
-<section>
+<section ng-show="type=='tender'">
     <md-subheader class="border-top inspector-header md-primary">
         <div layout="row">
             <md-icon ng-click="showModalInTenderPage('invite-tenderer.html')" class="material-icons accordian-icon md-primary" style="margin-right: 1vh" ng-click="">add_box</md-icon>

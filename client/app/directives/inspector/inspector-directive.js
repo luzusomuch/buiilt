@@ -38,6 +38,27 @@ angular.module('buiiltApp').directive('inspector', function(){
                     clickOutsideToClose: false
                 });
             };
+
+            $scope.showmodalInThreadPage = function(modalName) {
+                $mdDialog.show({
+                    // targetEvent: $event,
+                    controller: 'projectMessagesDetailCtrl',
+                    resolve: {
+                        thread: ["$stateParams", "messageService", function($stateParams, messageService) {
+                            return messageService.get({id: $stateParams.messageId}).$promise;
+                        }],
+                        people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
+                            return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
+                        }],
+                        tenders: ["tenderService", "$stateParams", function(tenderService, $stateParams) {
+                            return tenderService.getAll({id: $stateParams.id}).$promise;
+                        }]
+                    },
+                    templateUrl: 'app/modules/project/project-messages/detail/partials/' + modalName,
+                    parent: angular.element(document.body),
+                    clickOutsideToClose: false
+                });
+            };
         }
     };
 });
