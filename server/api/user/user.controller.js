@@ -247,7 +247,6 @@ exports.create = function (req, res, next) {
                                                     else {
                                                         _.each(people[invite.inviteType], function(tender) {
                                                             if (tender.hasSelect && tender.tenderers[0].email === newUser.email) {
-                                                                isSkipInTender = true;
                                                                 tender.tenderers[0]._id = newUser._id;
                                                                 tender.tenderers[0].email = null;
                                                                 newUser.projects.push(invite.project);
@@ -256,7 +255,6 @@ exports.create = function (req, res, next) {
                                                             }
                                                         });
                                                         people._editUser = newUser;
-                                                        peopleResult = people;
                                                         people.save(function(err) {
                                                             if (err) {cb(err);}
                                                             newUser.projects.push(invite.project);
@@ -272,53 +270,54 @@ exports.create = function (req, res, next) {
                                             Tender.findById(invite.package, function(err, tender) {
                                                 if (err || !tender) {cb();}
                                                 else {
-                                                    _.each(tender.members, function(member) {
-                                                        if (member.email === newUser.email) {
-                                                            member.user = newUser._id;
-                                                            member.email = null;
-                                                            if (member.activities && member.activities.length > 0) {
-                                                                _.each(member.activities, function(activity) {
-                                                                    if (activity.type === "send-message" && activity.email && activity.email===newUser.email) {
-                                                                        activity.email = null;
-                                                                        activity.newUser = newUser._id
-                                                                    }
-                                                                });
-                                                            }
-                                                            if (tender.isCreateScope) {
-                                                                var thread = new Thread({
-                                                                    name: tender.name +" "+ newUser.name,
-                                                                    owner: tender.owner,
-                                                                    project: tender.project,
-                                                                    element: {type: "tender"},
-                                                                    messages: []
-                                                                });
-                                                                var scopeActivityIndex = _.findIndex(tender.activities, function(activity) {
-                                                                    return activity.type==="attach-scope";
-                                                                });
-                                                                if (scopeActivityIndex !== -1) {
-                                                                    thread.messages.push({user: tender.owner, createdAt: new Date(), text: "Tender Scope: "+tender.activities[scopeActivityIndex].element.scope});
-                                                                }
-                                                                _.each(tender.activities, function(activity) {
-                                                                    if (activity.type==="attach-addendum") {
-                                                                        thread.messages.push({user: tender.owner, createdAt: new Date(), text: "Tender Addendum: "+activity.element.addendum})
-                                                                    }
-                                                                });
-                                                                thread.save(function(err) {
-                                                                    if (err) {cb(err);}
-                                                                    newUser.projects.push(tender.project);
-                                                                    newUser.save(cb);
-                                                                });
-                                                            } else {
-                                                                tender._editUser = newUser;
-                                                                tenderResult = tender;
-                                                                tender.save(function(err) {
-                                                                    if (err) {cb();}
-                                                                    newUser.projects.push(tender.project);
-                                                                    newUser.save(cb);
-                                                                });
-                                                            }
+                                                    var currentUserIndex = _.findIndex(tender.members, function(member) {
+                                                        if (member.email) {
+                                                            return member.email==newUser.email;
                                                         }
                                                     });
+                                                    if (currentUserIndex !== -1) {
+                                                        tender.members[currentUserIndex].user = newUser._id;
+                                                        tender.members[currentUserIndex].email = null;
+                                                    }
+
+                                                    if (tender.isCreateScope) {
+                                                        var thread = new Thread({
+                                                            name: tender.name +" "+ newUser.name,
+                                                            owner: tender.owner,
+                                                            project: tender.project,
+                                                            element: {type: "tender"},
+                                                            members: [newUser._id],
+                                                            messages: []
+                                                        });
+                                                        var scopeActivityIndex = _.findIndex(tender.activities, function(activity) {
+                                                            return activity.type==="attach-scope";
+                                                        });
+                                                        if (scopeActivityIndex !== -1) {
+                                                            thread.messages.push({user: tender.owner, createdAt: new Date(), text: "Tender Scope: "+tender.activities[scopeActivityIndex].element.scope});
+                                                        }
+                                                        _.each(tender.activities, function(activity) {
+                                                            if (activity.type==="attach-addendum") {
+                                                                thread.messages.push({user: tender.owner, createdAt: new Date(), text: "Tender Addendum: "+activity.element.addendum})
+                                                            }
+                                                        });
+                                                        thread._editUser = newUser;
+                                                        thread.save(function(err) {
+                                                            if (err) {cb(err);}
+                                                            newUser.projects.push(tender.project);
+                                                            newUser.save(function(err) {
+                                                                if (err) {cb(err);}
+                                                                tender._editUser = newUser;
+                                                                tender.save(cb);
+                                                            });
+                                                        });
+                                                    } else {
+                                                        tender._editUser = newUser;
+                                                        tender.save(function(err) {
+                                                            if (err) {cb();}
+                                                            newUser.projects.push(tender.project);
+                                                            newUser.save(cb);
+                                                        });
+                                                    }
                                                 }
                                             });
                                         }

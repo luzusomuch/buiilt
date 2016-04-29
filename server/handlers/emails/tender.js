@@ -20,50 +20,34 @@ EventBus.onSeries('Tender.Updated', function(tender, next){
         }
     }, function(err, result) {
         if (err) {return next();}   
-        if (tender._modifiedPaths.indexOf('invite-tender') !== -1) {
+        console.log(tender._modifiedPaths);
+        console.log(tender.newInvitees);
+        if (tender._modifiedPaths.indexOf('invite-tenderer') !== -1) {
             var from = tender.editUser.name + "<"+tender.editUser.email+">";
-            if (tender.isDistribute) {
-                if (tender.newInvitees && tender.newInvitees.length > 0) {
-                    async.each(tender.newInvitees, function(invitee, cb) {
-                        PackageInvite.findOne({project: tender.project, to: invitee.email}, function(err, p) {
-                            if (err) {cb(err);}
-                            if (!p) {
-                                var packageInvite = new PackageInvite({
-                                    owner: tender.editUser._id,
-                                    project: tender.project,
-                                    package: tender._id,
-                                    inviteType : tender.type,
-                                    to: invitee.email,
-                                    user: tender.editUser._id
-                                });
-                                packageInvite.save(function(err) {
-                                    if (err) {cb(err);}
-                                    Mailer.sendMail('invite-non-user-to-tender.html', from, packageInvite.to, {
-                                        team: result.team.toJSON(),
-                                        inviter: tender.editUser.toJSON(),
-                                        invitee: invitee,
-                                        project: result.project.toJSON(),
-                                        link : config.baseUrl + 'signup?packageInviteToken=' + packageInvite._id,
-                                        subject: tender.editUser.name + ' has invited you to project ' + result.project.name
-                                    }, cb);
-                                });
-                            } else {
-                                Mailer.sendMail('invite-non-user-to-tender.html', from, p.to, {
-                                    team: result.team.toJSON(),
-                                    inviter: tender.editUser.toJSON(),
-                                    invitee: invitee,
-                                    project: result.project.toJSON(),
-                                    link : config.baseUrl + 'signup?packageInviteToken=' + p._id,
-                                    subject: tender.editUser.name + ' has invited you to project ' + result.project.name
-                                }, cb);
-                            }
-                        });
-                    }, function() {
-                        return next();
+            if (tender.newInvitees && tender.newInvitees.length > 0) {
+                async.each(tender.newInvitees, function(invitee, cb) {
+                    var packageInvite = new PackageInvite({
+                        owner: tender.editUser._id,
+                        project: tender.project,
+                        package: tender._id,
+                        inviteType : tender.type,
+                        to: invitee.email,
+                        user: tender.editUser._id
                     });
-                } else {
+                    packageInvite.save(function(err) {
+                        if (err) {cb(err);}
+                        Mailer.sendMail('invite-non-user-to-tender.html', from, packageInvite.to, {
+                            team: result.team.toJSON(),
+                            inviter: tender.editUser.toJSON(),
+                            invitee: invitee,
+                            project: result.project.toJSON(),
+                            link : config.baseUrl + 'signup?packageInviteToken=' + packageInvite._id,
+                            subject: tender.editUser.name + ' has invited you to project ' + result.project.name
+                        }, cb);
+                    });
+                }, function() {
                     return next();
-                }
+                });
             } else {
                 return next();
             }

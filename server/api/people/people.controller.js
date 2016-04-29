@@ -488,6 +488,7 @@ function responseWithEachType(people, req, res){
             return res.send(200, people);
         }
     } else {
+        var newRoles = roles;
         if (currentUserRole) 
             newRoles.splice(roles.indexOf(currentUserRole),1);
         _.each(newRoles, function(newRole) {
