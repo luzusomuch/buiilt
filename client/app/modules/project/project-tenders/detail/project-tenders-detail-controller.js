@@ -35,6 +35,7 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
 
     socket.on("tender:update", function(data) {
         $scope.tender = data;
+        console.log($scope.tender);
         originalTenderName = $scope.tender.name;
     });
 

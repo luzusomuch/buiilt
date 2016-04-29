@@ -19,9 +19,6 @@ angular.module('buiiltApp').directive('inspector', function(){
             $scope.showDetail = false;
             $scope.showActivity = true;
 
-            console.log($scope.data);
-            console.log($scope.type);
-
             $scope.showModalInTenderPage = function(modalName) {
                 $mdDialog.show({
                     controller: 'projectTendersDetailCtrl',

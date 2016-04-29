@@ -288,7 +288,11 @@ exports.create = function (req, res, next) {
                                                     });
                                                     tender._editUser = newUser;
                                                     tenderResult = tender;
-                                                    tender.save(cb);
+                                                    tender.save(function(err) {
+                                                        if (err) {cb();}
+                                                        newUser.projects.push(tender.project);
+                                                        newUser.save(cb);
+                                                    });
                                                 }
                                             });
                                         }

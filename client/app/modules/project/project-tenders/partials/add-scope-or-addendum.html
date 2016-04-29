@@ -37,8 +37,8 @@
         <md-dialog-actions>
             <md-button ng-click="dialogService.closeModal()">Cancel</md-button>
             
-            <md-button ng-hide="hide && !tender.isCreateScope" ng-click="addAddendum=false; addScope=true; hide=true" class="md-primary">Add Scope</md-button>
-            <md-button ng-hide="hide" ng-click="addAddendum=true; addScope=false; hide=true" class="md-primary">Add Addendum</md-button>
+            <md-button ng-hide="hide || tender.isCreateScope" ng-click="addAddendum=false; addScope=true; hide=true" class="md-primary">Add Scope</md-button>
+            <md-button ng-hide="hide || !tender.isCreateScope" ng-click="addAddendum=true; addScope=false; hide=true" class="md-primary">Add Addendum</md-button>
 
             <md-button ng-show="addAddendum || addScope" type="submit" class="md-primary">Submit</md-button>
         </md-dialog-actions>

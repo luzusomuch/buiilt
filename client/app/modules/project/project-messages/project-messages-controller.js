@@ -232,7 +232,7 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
                 }
             });
         } else if ($scope.selectedFilterRecepientList.length === 0 && $scope.selectedFilterEventList.length === 0) {
-            if (thread.isArchive==$scope.showArchived) {
+            if (thread.isArchive && thread.isArchive==$scope.showArchived) {
                 if ($scope.name && $scope.name.trim().length > 0) {
                     if (thread.name && thread.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
                         found = true;
@@ -240,6 +240,8 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
                 } else {
                     found = true;
                 }
+            } else {
+                found = true;
             }
         }
         return found;

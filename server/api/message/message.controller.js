@@ -354,7 +354,7 @@ exports.sendMessage = function(req,res) {
 */
 exports.getProjectThread = function(req, res) {
     var userId = (req.query.userId && req.user.role==="admin") ? req.query.userId : req.user._id;
-    Thread.find({project: req.params.id, 'element.type': 'project-message', $or:[{owner: userId},{members: userId}]})
+    Thread.find({project: req.params.id, $or:[{owner: userId}, {members: userId}]})
     .populate('members', '_id name email')
     .populate('owner', '_id name email')
     .populate('messages.user', '_id name email')
