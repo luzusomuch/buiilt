@@ -49,12 +49,12 @@ angular.module('buiiltApp').controller('contactsCtrl', function($rootScope, $sco
                     userService.getAll({email: $scope.searchNewContact.email, phoneNumber: $scope.searchNewContact.phoneNumber}).$promise.then(function(res) {
                         $scope.searchUsers = res;
                         $scope.step += 1;
-                        var index = _.findIndex($scope.searchUsers, function(user) {
-                            return user.email===$scope.searchNewContact.email;
-                        });
-                        if (index === -1) {
-                            $scope.showSearchResult = true;
-                        }
+                        // var index = _.findIndex($scope.searchUsers, function(user) {
+                        //     return user.email===$scope.searchNewContact.email;
+                        // });
+                        // if (index === -1) {
+                        //     $scope.showSearchResult = true;
+                        // }
                         _.each($scope.contactBooks, function(contact) {
                             // remove search result when it already existed in contacts book
                             var index = _.findIndex($scope.searchUsers, function(user) {

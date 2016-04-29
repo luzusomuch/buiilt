@@ -47,7 +47,7 @@
                     </div>
 
                     <md-divider></md-divider>
-                    <div layout="column" ng-show="searchUsers.length===0 || showSearchResult">
+                    <div layout="column" ng-show="searchUsers.length===0">
                         <p class="md-body-2">No results found on Buiilt database for that contact. Please add a new contact by completing the details below</p>
                         <md-radio-group ng-model="selectedNewContact">
                             <md-radio-button flex="15" ng-value="searchUsers.length" class="md-primary" >
