@@ -6,6 +6,7 @@ var User = require('./../../models/user.model');
 var File = require('./../../models/file.model');
 var Thread = require('./../../models/thread.model');
 var Task = require('./../../models/task.model');
+var Tender = require('./../../models/tender.model');
 var _ = require('lodash');
 var async = require('async');
 var EventBus = require('../../components/EventBus');
@@ -488,12 +489,30 @@ function responseWithEachType(people, req, res){
             return res.send(200, people);
         }
     } else {
-        var newRoles = roles;
-        if (currentUserRole) 
-            newRoles.splice(roles.indexOf(currentUserRole),1);
-        _.each(newRoles, function(newRole) {
-            people[newRole] = [];
+        Tender.find({project: req.params.id, status: "open", $or: [{owner: req.user._id}, {"members.user": req.user._id}, {"members.teamMember": req.user._id}]}, function(err, tenders) {
+            if (err || tenders.length === 0) {
+                var newRoles = roles;
+                if (currentUserRole) 
+                    newRoles.splice(roles.indexOf(currentUserRole),1);
+                _.each(newRoles, function(newRole) {
+                    people[newRole] = [];
+                });
+                return res.send(200, people);
+            } else {
+                var availabelTender;
+                _.each(people[tenders[0].ownerType], function(tender) {
+                    if (tender.hasSelect && tender.tenderers[0]._id._id.toString()==tenders[0].owner.toString()) {
+                        availabelTender = tender;
+                        return false;
+                    }
+                });
+                _.each(roles, function(role) {
+                    people[role] = [];
+                });
+                if (availabelTender)
+                    people[tenders[0].ownerType].push(availabelTender);
+                return res.send(200, people);
+            }
         });
-        return res.send(200, people);
     }
 };

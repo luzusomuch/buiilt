@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, $rootScope, $scope, $timeout, $stateParams, $mdDialog, $state, socket, notificationService, tender, dialogService, tenderService, contactBooks) {
+angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, $rootScope, $scope, $timeout, $stateParams, $mdDialog, $state, socket, notificationService, tender, dialogService, tenderService, contactBooks, people) {
     $scope.dialogService = dialogService;
     $scope.currentUser = $rootScope.currentUser;
     $scope.tender = tender;
@@ -15,7 +15,7 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
 
     /*Get invitees list from contact book that haven't in the current
     tender member list*/
-    function getInviteesMayInvite() {
+    function getInviteTypeAndCheckInviteesMayInvite() {
         _.each($scope.tender.members, function(member) {
             var index = _.findIndex($scope.contactBooks, function(contact) {
                 if (member.user) {
@@ -28,8 +28,22 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
                 $scope.contactBooks.splice(index, 1);
             }
         });
+        $scope.availableInviteType = [
+            {value: "builders", text: "Builder"},
+            {value: "subconstractors", text: "Sub constractor"},
+            {value: "consultants", text: "Consultants"}
+        ];
+        if (people.builders[0] && people.builders[0].hasSelect) {
+            $scope.availableInviteType.splice(0, 1);
+        }
+        if ($scope.tender.ownerType==="architects") {
+            var subconstractorIndex = _.findIndex($scope.availableInviteType, function(type) {
+                return type.value==="subconstractors";
+            });
+            $scope.availableInviteType.splice(subconstractorIndex, 1);
+        }
     };
-    getInviteesMayInvite();
+    getInviteTypeAndCheckInviteesMayInvite();
 
     socket.emit("join", tender._id);
 
@@ -54,6 +68,9 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
                 }],
                 contactBooks: ["contactBookService", function(contactBookService) {
                     return contactBookService.me().$promise;
+                }],
+                people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
+                    return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
                 }]
             },
             templateUrl: 'app/modules/project/project-tenders/partials/' + modalName,
@@ -68,12 +85,16 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
     };
 
     $scope.inviteTenderer = function() {
-        $scope.tender.newMembers = _.filter($scope.contactBooks, {select: true});
-        if ($scope.tender.newMembers.length > 0) {
-            $scope.tender.editType="invite-tenderer";
-            $scope.update($scope.tender);
+        if (!$scope.tender.type && !$scope.tender.selectedTenterType) {
+            dialogService.showToast("Please select tender type first");
         } else {
-            dialogService.showToast("Please Select At Least 1 Invitee");
+            $scope.tender.newMembers = _.filter($scope.contactBooks, {select: true});
+            if ($scope.tender.newMembers.length > 0) {
+                $scope.tender.editType="invite-tenderer";
+                $scope.update($scope.tender);
+            } else {
+                dialogService.showToast("Please Select At Least 1 Invitee");
+            }
         }
     };
 

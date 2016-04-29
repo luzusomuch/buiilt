@@ -28,6 +28,9 @@ angular.module('buiiltApp').directive('inspector', function(){
                         }],
                         contactBooks: ["contactBookService", function(contactBookService) {
                             return contactBookService.me().$promise;
+                        }],
+                        people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
+                            return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
                         }]
                     },
                     templateUrl: 'app/modules/project/project-tenders/partials/' + modalName,

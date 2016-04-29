@@ -48,6 +48,9 @@ exports.update = function(req, res) {
     Tender.findById(req.params.id, function(err, tender) {
         if (err) {return res.send(500,err);}
         else if (!tender) {return res.send(404);}
+        if (!tender.type && !data.selectedTenterType && data.editType==="invite-tenderer") {
+            return res.send(422, {msg: "Please select tender type"});
+        }
         var activity = {
             user: req.user._id,
             type: data.editType,
@@ -162,6 +165,7 @@ exports.update = function(req, res) {
                 } else if (data.editType === "invite-tenderer") {
                     var members = [];
                     var tenderMembers = tender.members;
+                    tender.type = data.selectedTenterType;
                     async.each(data.newMembers, function(member, cb) {
                         User.findOne({email: member.email}, function(err, _user) {
                             if (err) {cb(err);}
@@ -192,12 +196,15 @@ exports.update = function(req, res) {
                                             thread.messages.push({user: req.user._id, createdAt: new Date(), text: "Tender Addendum: "+activity.element.addendum})
                                         }
                                     });
-                                }
-                                thread.save(function(err) {
-                                    if (err) {cb(err);}
+                                    thread.save(function(err) {
+                                        if (err) {cb(err);}
+                                        _user.projects.push(tender.project);
+                                        _user.save(cb);
+                                    });
+                                } else {
                                     _user.projects.push(tender.project);
                                     _user.save(cb);
-                                });
+                                }
                             }
                         });
                     }, function() {
@@ -246,12 +253,15 @@ exports.update = function(req, res) {
 */
 exports.getAllByProject = function(req, res) {
     var userId = (req.query.userId) ? req.query.userId : req.user._id;
-    Tender.find({status: "open", project: req.params.id, $or:[{owner: userId}, {"members.user": userId}]})
+    Tender.find({status: "open", project: req.params.id, $or:[{owner: userId}, {"members.user": userId}, {"members.teamMember": userId}]})
     .populate("members.user", "_id name email phoneNumber")
+    .populate("members.teamMember", "_id name email phoneNumber")
+    .populate("owner", "_id name email phoneNumber")
     .exec(function(err, tenders) {
         if (err) {return res.send(500,err);}
         else {
             async.each(tenders, function(tender, cb) {
+                tender.members = [];
                 Notification.find({owner: req.user._id, "element._id": tender._id, unread: true, referenceTo: "tender", $or:[{type: "tender-message"}, {type: "tender-submission"}]}, function(err, notifications) {
                     if (err) {cb(err);}
                     else {
