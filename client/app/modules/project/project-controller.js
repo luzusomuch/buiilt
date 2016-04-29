@@ -1,7 +1,8 @@
-angular.module('buiiltApp').controller('projectCtrl', function($rootScope, $scope, $timeout, $state, projectService, $mdDialog, $stateParams, $mdToast, filepickerService, uploadService, peopleService, people) {
+angular.module('buiiltApp').controller('projectCtrl', function($rootScope, $scope, $timeout, $state, projectService, $mdDialog, $stateParams, $mdToast, filepickerService, uploadService, peopleService, people, tenders) {
 	$scope.project = $rootScope.project;
     $rootScope.title = $scope.project.name + " Overview";
     $scope.people = people;
+    $scope.tenders = tenders;
     var userType;
     _.each($rootScope.roles, function(role) {
         _.each($scope.people[role], function(tender) {
@@ -58,6 +59,9 @@ angular.module('buiiltApp').controller('projectCtrl', function($rootScope, $scop
             resolve: {
                 people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
                     return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
+                }],
+                tenders: ["tenderService", "$stateParams", function(tenderService, $stateParams) {
+                    return tenderService.me({id: $stateParams.id}).$promise;
                 }]
             },
 	        templateUrl: 'app/modules/project/project-overview/partials/project-overview-edit.html',

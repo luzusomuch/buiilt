@@ -4,13 +4,23 @@ angular.module('buiiltApp').directive('projectSidenav', function(){
         restrict: 'EA',
         templateUrl: 'app/directives/projectSidenav/projectSidenav.html',
         scope:{
-            project:'='
+            project:'=',
+            tenders: "="
         },
         controller: function($scope, $rootScope, userService, projectService, $state, $timeout, socket) {
             $scope.errors = {};
             $scope.success = {};
             $scope.$state = $state;
             $scope.showTeamMenu = false;
+
+            function checkShowTendersModule() {
+                if (($scope.tenders[0] && $scope.tenders[0].owner._id==$rootScope.currentUser._id)||$scope.project.projectManager._id==$rootScope.currentUser._id) 
+                    return true;
+                else
+                    return false;
+            };
+
+            $scope.showTendersModule = checkShowTendersModule();
 
             var listenerCleanFn = $rootScope.$on("UpdateCountNumber", function(event, data) {
                 if (data.type==="task") 

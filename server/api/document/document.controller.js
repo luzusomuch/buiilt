@@ -14,6 +14,10 @@ exports.me = function(req, res) {
     .populate("members", "_id name email phoneNumber")
     .exec(function(err, documents) {
         if (err) {return res.send(500,err);}
+        _.each(documents, function(document) {
+            document.members = [];
+            document.notMembers = [];
+        });
         return res.send(200, documents);
     });
 };
