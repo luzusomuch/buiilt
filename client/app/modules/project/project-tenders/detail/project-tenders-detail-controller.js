@@ -111,6 +111,10 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
                 $scope.showSaveTitleBtn = false;
             } else if (tender.editType==="invite-tenderer") 
                 dialogService.showToast("Invite More Tenderer Successfully");
+            else if (tender.editType==="attach-addendum") 
+                dialogService.showToast("Attach Addendum Successfully");
+            else if (tender.editType==="attach-scope") 
+                dialogService.showToast("Attach Scope Successfully");
         }, function(err) {
             dialogService.showToast("Error");
         });

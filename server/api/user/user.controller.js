@@ -284,14 +284,40 @@ exports.create = function (req, res, next) {
                                                                     }
                                                                 });
                                                             }
+                                                            if (tender.isCreateScope) {
+                                                                var thread = new Thread({
+                                                                    name: tender.name +" "+ newUser.name,
+                                                                    owner: tender.owner,
+                                                                    project: tender.project,
+                                                                    element: {type: "tender"},
+                                                                    messages: []
+                                                                });
+                                                                var scopeActivityIndex = _.findIndex(tender.activities, function(activity) {
+                                                                    return activity.type==="attach-scope";
+                                                                });
+                                                                if (scopeActivityIndex !== -1) {
+                                                                    thread.messages.push({user: tender.owner, createdAt: new Date(), text: "Tender Scope: "+tender.activities[scopeActivityIndex].element.scope});
+                                                                }
+                                                                _.each(tender.activities, function(activity) {
+                                                                    if (activity.type==="attach-addendum") {
+                                                                        thread.messages.push({user: tender.owner, createdAt: new Date(), text: "Tender Addendum: "+activity.element.addendum})
+                                                                    }
+                                                                });
+                                                                thread.save(function(err) {
+                                                                    if (err) {cb(err);}
+                                                                    newUser.projects.push(tender.project);
+                                                                    newUser.save(cb);
+                                                                });
+                                                            } else {
+                                                                tender._editUser = newUser;
+                                                                tenderResult = tender;
+                                                                tender.save(function(err) {
+                                                                    if (err) {cb();}
+                                                                    newUser.projects.push(tender.project);
+                                                                    newUser.save(cb);
+                                                                });
+                                                            }
                                                         }
-                                                    });
-                                                    tender._editUser = newUser;
-                                                    tenderResult = tender;
-                                                    tender.save(function(err) {
-                                                        if (err) {cb();}
-                                                        newUser.projects.push(tender.project);
-                                                        newUser.save(cb);
                                                     });
                                                 }
                                             });

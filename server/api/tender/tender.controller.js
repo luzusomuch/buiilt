@@ -104,17 +104,22 @@ exports.update = function(req, res) {
             },
             function(cb) {
                 if (data.editType === "attach-addendum") {
-                    activity.element.name = data.name;
-                    activity.element.description = data.description;
-                    activity.acknowledgeUsers = [];
-                    _.each(tender.members, function(member) {
-                        if (member._id) {
-                            activity.acknowledgeUsers.push({_id:member.user, isAcknow: false});
+                    activity.element.addendum = data.addendum;
+                    Thread.find({name: new RegExp(tender.name, 'i'), project: tender.project, "element.type": "tender", owner: req.user._id}, function(err, threads) {
+                        if (err) {
+                            cb(err);
                         } else {
-                            activity.acknowledgeUsers.push({_id:member.email, isAcknow: false});
+                            async.each(threads, function(thread, callback) {
+                                thread.messages.push({
+                                    user: req.user._id,
+                                    text: "Tender Addendum: "+data.addendum,
+                                    sendAt: new Date()
+                                });
+                                thread._editUser = req.user;
+                                thread.save(callback);
+                            }, cb);
                         }
                     });
-                    cb();
                 } else if (data.editType==="change-title") {
                     tender.name = data.name;
                     cb();
@@ -122,8 +127,7 @@ exports.update = function(req, res) {
                     tender.isDistribute = true;
                     cb();
                 } else if (data.editType === "attach-scope") {
-                    // activity.element.description = data.description;
-                    // activity.element.dateEnd = (moment(moment(tender.dateEnd).format("YYYY-MM-DD")).isSame(moment(data.dateEnd).format("YYYY-MM-DD"))) ? null : data.dateEnd;
+                    activity.element.scope = data.scope;
                     tender.isCreateScope = true;
                     async.each(tender.members, function(member, callback) {
                         var query = {};
@@ -166,31 +170,34 @@ exports.update = function(req, res) {
                                 tenderMembers.push({email: member.email, name: member.name});
                                 newInvitees.push({email: member.email, name: member.name});
                                 cb();
-                                // var inviteToken = new InviteToken({
-                                //     type: 'tender-invite',
-                                //     email: member.email,
-                                //     element: {
-                                //         project: tender.project,
-                                //         type: tender.type
-                                //     }
-                                // });
-                                // inviteToken._editUser = req.user;
-                                // inviteToken.save(cb());
                             } else {
                                 members.push({name:_user.name, email: _user.email});
                                 tenderMembers.push({user: _user._id});
-                                _user.projects.push(tender.project);
-                                _user.save(cb);
-                                // var inviteToken = new InviteToken({
-                                //     type: 'project-invite',
-                                //     user: _user._id,
-                                //     element: {
-                                //         project: tender.project,
-                                //         type: tender.type
-                                //     }
-                                // });
-                                // inviteToken._editUser = req.user;
-                                // inviteToken.save(cb());
+                                if (tender.isCreateScope) {
+                                    var thread = new Thread({
+                                        name: tender.name +" "+ _user.name,
+                                        owner: req.user._id,
+                                        project: tender.project,
+                                        element: {type: "tender"},
+                                        messages: []
+                                    });
+                                    var scopeActivityIndex = _.findIndex(tender.activities, function(activity) {
+                                        return activity.type==="attach-scope";
+                                    });
+                                    if (scopeActivityIndex !== -1) {
+                                        thread.messages.push({user: req.user._id, createdAt: new Date(), text: "Tender Scope: "+tender.activities[scopeActivityIndex].element.scope});
+                                    }
+                                    _.each(tender.activities, function(activity) {
+                                        if (activity.type==="attach-addendum") {
+                                            thread.messages.push({user: req.user._id, createdAt: new Date(), text: "Tender Addendum: "+activity.element.addendum})
+                                        }
+                                    });
+                                }
+                                thread.save(function(err) {
+                                    if (err) {cb(err);}
+                                    _user.projects.push(tender.project);
+                                    _user.save(cb);
+                                });
                             }
                         });
                     }, function() {
