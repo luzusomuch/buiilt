@@ -134,6 +134,7 @@ exports.create = function(req,res) {
     var user = req.user;
     // This is the newest version - create new thread without enter information
     var thread = new Thread({
+        name: "Untitled Thread",
         project: req.params.id,
         owner: user._id,
         element: {type: req.body.type},
@@ -368,7 +369,7 @@ exports.getProjectThread = function(req, res) {
                         var latestNotification = _.last(notifications);
                         thread.element.notificationType = latestNotification.type;
                         thread.element.notificationBy = latestNotification.fromUser;
-                        thread.element.text = _.last(latestNotification.element.messages).text;
+                        thread.element.text = (latestNotification.element.messages.length > 0) ? _.last(latestNotification.element.messages).text : null;
                     }
                     thread.__v = notifications.length;
                     cb();

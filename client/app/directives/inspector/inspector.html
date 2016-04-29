@@ -24,7 +24,7 @@
     <md-subheader class="border-top inspector-header md-primary">
         <div layout="row">
             
-            <md-icon class="material-icons accordian-icon md-primary" style="margin-right: 1vh" ng-click="showmodalInThreadPage('assign-team-member.html')">add_box</md-icon>
+            <md-icon class="material-icons accordian-icon md-primary" style="margin-right: 1vh" ng-click="showModalAssignMember()">add_box</md-icon>
             
             <div layout="row" ng-click="showMembers=!showMembers" class="inspector-section" flex>
                 TEAM MEMBERS
@@ -37,17 +37,51 @@
     </md-subheader>
     
     <md-list ng-show="showMembers" class="md-dense">
+        <md-list-item class="md-2-line">
+            <div class="md-list-item-text">
+                <h3>{{data.owner.name}}</h3>
+                <h4>{{data.owner.phoneNumber}}-{{data.owner.email}}</h4>
+            </div>
+        </md-list-item>
         <md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event, member._id)" ng-show="data.element" ng-repeat="member in data.members | unique: '_id' track by $index">
             <div class="md-list-item-text">
-                <h3>{{(member._id) ? member.name : member.email}}</h3>
-                <p>Phone Number</p>
+                <h3>{{member.name}}</h3>
+                <p>{{member.phoneNumber}}-{{member.email}}</p>
             </div>
         </md-list-item>
     </md-list>
     
 </section>
 
-<section>
+<section ng-hide="type=='thread'">
+    
+    <md-subheader class="border-top inspector-header md-primary">
+        <div layout="row">
+            
+            <md-icon class="material-icons accordian-icon md-primary" style="margin-right: 1vh" ng-click="">add_box</md-icon>
+            
+            <div layout="row" class="inspector-section" ng-click="showRelatedMessages=!showRelatedMessages" flex>
+                RELATED MESSAGES
+                <span flex></span>
+                <md-icon class="material-icons accordian-icon md-primary" ng-show="!showRelatedMessages">expand_more</md-icon>
+                <md-icon class="material-icons accordian-icon md-primary" ng-show="showRelatedMessages">expand_less</md-icon>
+            </div>
+            
+        </div>
+    </md-subheader>
+    
+    <md-list ng-show="showRelatedMessages" class="md-dense">
+        <md-list-item class="md-2-line" ng-repeat="">
+            <div class="md-list-item-text">
+                <h3>{{file.item.name}}</h3>
+                <p>{{file.item.description}}</p>
+            </div>
+        </md-list-item>
+    </md-list>
+    
+</section>
+
+<section ng-hide="type=='file'">
     
     <md-subheader class="border-top inspector-header md-primary">
         <div layout="row">
@@ -75,7 +109,7 @@
     
 </section>
 
-<section>
+<section ng-hide="type=='task'">
     
     <md-subheader class="border-top inspector-header md-primary">
         <div layout="row">

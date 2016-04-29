@@ -270,12 +270,16 @@ exports.upload = function(req, res){
         var file = new File({
             owner: req.user._id,
             project: req.params.id,
-            name: data.name,
             description: data.description,
             members: members,
             notMembers: notMembers,
             element: {type: data.type}
         });
+        if (data.type==="file") {
+            file.name = "Untitled File";
+        } else if (data.type==="document") {
+            file.name = "Untitled Document";
+        }
         if (data.file) {
             file.name = data.file.filename;
             file.path = data.file.url;

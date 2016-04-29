@@ -39,25 +39,46 @@ angular.module('buiiltApp').directive('inspector', function(){
                 });
             };
 
-            $scope.showmodalInThreadPage = function(modalName) {
-                $mdDialog.show({
-                    // targetEvent: $event,
-                    controller: 'projectMessagesDetailCtrl',
-                    resolve: {
-                        thread: ["$stateParams", "messageService", function($stateParams, messageService) {
-                            return messageService.get({id: $stateParams.messageId}).$promise;
-                        }],
-                        people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
-                            return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
-                        }],
-                        tenders: ["tenderService", "$stateParams", function(tenderService, $stateParams) {
-                            return tenderService.getAll({id: $stateParams.id}).$promise;
-                        }]
-                    },
-                    templateUrl: 'app/modules/project/project-messages/detail/partials/' + modalName,
-                    parent: angular.element(document.body),
-                    clickOutsideToClose: false
-                });
+            $scope.showModalAssignMember = function() {
+                if ($scope.type==="thread") {
+                    $mdDialog.show({
+                        // targetEvent: $event,
+                        controller: 'projectMessagesDetailCtrl',
+                        resolve: {
+                            thread: ["$stateParams", "messageService", function($stateParams, messageService) {
+                                return messageService.get({id: $stateParams.messageId}).$promise;
+                            }],
+                            people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
+                                return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
+                            }],
+                            tenders: ["tenderService", "$stateParams", function(tenderService, $stateParams) {
+                                return tenderService.getAll({id: $stateParams.id}).$promise;
+                            }]
+                        },
+                        templateUrl: 'app/modules/project/project-messages/detail/partials/assign-team-member.html',
+                        parent: angular.element(document.body),
+                        clickOutsideToClose: false
+                    });
+                } else if ($scope.type==="file") {
+                    $mdDialog.show({
+                        // targetEvent: $event,
+                        controller: 'projectFileDetailCtrl',
+                        resolve: {
+                            file: ["$stateParams", "fileService", function($stateParams, fileService) {
+                                return fileService.get({id: $stateParams.fileId}).$promise;
+                            }],
+                            people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
+                                return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
+                            }],
+                            tenders: ["tenderService", "$stateParams", function(tenderService, $stateParams) {
+                                return tenderService.getAll({id: $stateParams.id}).$promise;
+                            }]
+                        },
+                        templateUrl: 'app/modules/project/project-files/detail/partials/assign.html',
+                        parent: angular.element(document.body),
+                        clickOutsideToClose: false
+                    });
+                }
             };
         }
     };
