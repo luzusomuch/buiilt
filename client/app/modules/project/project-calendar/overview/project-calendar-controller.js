@@ -91,7 +91,6 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
     $timeout(function() {
 		
         var height = ($("#calendar-content").outerHeight()/100)*63;
-        console.log(height);
         $scope.uiConfig = {
             calendar: {
                 height: height,
@@ -104,7 +103,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 editable: true,
                 minTime: "6:00:00",
                 maxTime: "22:00:00",
-                ignoreTimezone: false,
+                timezone: "Australia/Melbourne",
                 select: function(start, end) {
                     $rootScope.selectedStartDate = new Date(start);
                     $rootScope.selectedEndDate = new Date(end);
@@ -116,7 +115,9 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                     var offsetTime = new Date(day.getTime() + tzDifference * 60 * 1000); //this will calculate time in point of view local time and set date
                     
                     $rootScope.selectedStartDate = offsetTime;
+                    console.log(offsetTime);
                     var momentDay = moment(offsetTime).hours();
+                    console.log(momentDay);
                     if (momentDay===0 && view.name !== "month") {
                         $scope.showModal("create-event.html")
                     } else if (momentDay !== 0 && view.name !== "month") {
@@ -478,6 +479,12 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 if ($scope.dateError) {
                     dialogService.showToast("Please Check Your Date Input");
                 } else {
+                    $scope.activity.date.end = new Date($scope.activity.date.end);
+                    var tzDifference = $scope.activity.date.end.getTimezoneOffset() //this gives me timezone difference of local and UTC time in minutes
+                    var offsetTime = new Date($scope.activity.date.end.getTime() + tzDifference * 60 * 1000); //this will calculate time in point of view local time and set date
+                    $scope.activity.time.end = new Date($scope.activity.time.end);
+                    var tzDifference = $scope.activity.time.end.getTimezoneOffset() //this gives me timezone difference of local and UTC time in minutes
+                    var offsetTime = new Date($scope.activity.time.end.getTime() + tzDifference * 60 * 1000); //this will calculate time in point of view local time and set date
                     activityService.create({id: $stateParams.id}, $scope.activity).$promise.then(function(res) {
                         dialogService.showToast((res.isMilestone) ? "Create Milestone Successfully" : "Create Activity Successfully");
                         dialogService.closeModal();
@@ -497,7 +504,10 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
         dateEnd: ($rootScope.selectedStartDate) ? $rootScope.selectedStartDate : null
     };
     if ($rootScope.selectedStartDate && moment($rootScope.selectedStartDate).hours() > 0) {
-        $scope.task.time = {start: $rootScope.selectedStartDate};
+        day = new Date($rootScope.selectedStartDate);
+        var tzDifference = day.getTimezoneOffset() //this gives me timezone difference of local and UTC time in minutes
+        var offsetTime = new Date(day.getTime() + tzDifference * 60 * 1000); //this will calculate time in point of view local time and set date
+        $scope.task.time = {start: offsetTime};
     }
 
     $scope.createNewTask = function(form) {
