@@ -2,6 +2,7 @@ angular.module('buiiltApp').service('dialogService', function($mdDialog, $mdToas
 	this.closeModal = function() {
 		$mdDialog.cancel();
         $rootScope.selectedStartDate = null;
+        $rootScope.selectedEndDate = null;
         $rootScope.selectedDocumentSet = null;
         $rootScope.isCopyDocumentSet = null;
 	};

@@ -105,6 +105,11 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 minTime: "6:00:00",
                 maxTime: "22:00:00",
                 ignoreTimezone: false,
+                select: function(start, end) {
+                    $rootScope.selectedStartDate = new Date(start);
+                    $rootScope.selectedEndDate = new Date(end);
+                    $scope.showModal("create-event.html");
+                },
                 dayClick: function(day, jsEv, view) {
                     day = new Date(day);
                     var tzDifference = day.getTimezoneOffset() //this gives me timezone difference of local and UTC time in minutes
@@ -412,7 +417,8 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
 
     $scope.activity = {
         date: {
-            start: ($rootScope.selectedStartDate) ? $rootScope.selectedStartDate : new Date()
+            start: ($rootScope.selectedStartDate) ? $rootScope.selectedStartDate : new Date(),
+            end: ($rootScope.selectedEndDate) ? $rootScope.selectedEndDate : new Date().getDate()+1
         }
     };
 
