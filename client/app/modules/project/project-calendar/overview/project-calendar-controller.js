@@ -103,7 +103,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 editable: true,
                 minTime: "6:00:00",
                 maxTime: "22:00:00",
-                timezone: "Australia/Melbourne",
+                timezone: "local",
                 select: function(start, end) {
                     $rootScope.selectedStartDate = new Date(start);
                     $rootScope.selectedEndDate = new Date(end);
@@ -111,13 +111,8 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 },
                 dayClick: function(day, jsEv, view) {
                     day = new Date(day);
-                    var tzDifference = day.getTimezoneOffset() //this gives me timezone difference of local and UTC time in minutes
-                    var offsetTime = new Date(day.getTime() + tzDifference * 60 * 1000); //this will calculate time in point of view local time and set date
-                    
-                    $rootScope.selectedStartDate = offsetTime;
-                    console.log(offsetTime);
-                    var momentDay = moment(offsetTime).hours();
-                    console.log(momentDay);
+                    $rootScope.selectedStartDate = day;
+                    var momentDay = moment(day).hours();
                     if (momentDay===0 && view.name !== "month") {
                         $scope.showModal("create-event.html")
                     } else if (momentDay !== 0 && view.name !== "month") {
@@ -127,6 +122,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 },
                 eventClick: function(data) {
                     if (data.type==="event") {
+                        dialogService.closeModal();
                         $mdDialog.show({
                             // targetEvent: $event,
                             controller: ["$rootScope", "$scope", "dialogService", "activity", "$stateParams", "$state", function($rootScope, $scope, dialogService, activity, $stateParams, $state) {
@@ -186,6 +182,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                             clickOutsideToClose: false
                         });
                     } else if (data.type==="task"){
+                        dialogService.closeModal();
                         $mdDialog.show({
                             // targetEvent: $event,
                             controller: ["$rootScope", "$scope", "dialogService", "activity", "$stateParams", "$state", function($rootScope, $scope, dialogService, activity, $stateParams, $state) {
@@ -245,7 +242,6 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                             clickOutsideToClose: false
                         });
 						
-                        // $state.go("project.tasks.detail", {id: $stateParams.id, taskId: data._id});
                     }
                 },
                 eventDrop: function(event, delta) {
@@ -304,8 +300,6 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
             if (!$scope.task.time || !$scope.task.time.start || !$scope.task.time.end || !$scope.task.selectedEvent || !$scope.task.description || !$scope.task.dateEnd) {
                 dialogService.showToast("Check Your Input");
             } else {
-                // $scope.task.time.start = new Date(new Date($scope.task.time.start).getTime() + new Date($scope.task.time.start).getTimezoneOffset() * 60 * 1000);
-                // $scope.task.time.end = new Date(new Date($scope.task.time.end).getTime() + new Date($scope.task.time.end).getTimezoneOffset() * 60 * 1000);
                 $scope.step += 1;
             }
         } else {
@@ -335,14 +329,14 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
         _.each(tasks, function(task) {
             if (task.element && task.element.type === "task-project") {
                 var dateStart, dateEnd;
-                if (task.time) {
-                    dateStart = moment(task.dateStart).add(moment(task.time.start).hours(), "hours").add(moment(task.time.end).minutes(), "minutes");
-                    dateEnd = moment(task.dateEnd).add(moment(task.time.end).hours(), "hours").add(moment(task.time.end).minutes(), "minutes");
+                if (task.time && task.time.start && task.time.end) {
+                    dateStart = new Date(task.dateStart).setHours(moment(task.time.start).hours(), moment(task.time.start).minutes());
+                    dateEnd = new Date(task.dateEnd).setHours(moment(task.time.end).hours(), moment(task.time.end).minutes());
                 } else {
-                    dateStart = moment(task.dateStart);
-                    dateEnd = moment(task.dateEnd);
+                    dateStart = new Date(task.dateStart);
+                    dateEnd = new Date(task.dateEnd);
                 }
-                $scope.events.push({type: "task", _id: task._id, title: task.description, start: moment(dateStart).format("YYYY-MM-DD hh:mm"), end: moment(dateEnd).format("YYYY-MM-DD hh:mm"), "backgroundColor": "#2196F3", allDay: false});
+                $scope.events.push({type: "task", _id: task._id, title: task.description, start: dateStart, end: dateEnd, "backgroundColor": "#2196F3", allDay: false});
             }
         });
         _.each(activities, function(activity) {
@@ -456,17 +450,6 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
         if (form.$valid) {
             $scope.activity.newMembers = _.filter($scope.membersList, {select: true});
             var error = false;
-            // var timeError = false;
-            // if ($scope.activity.date) {
-            //     if (moment(moment($scope.activity.date.start).format("YYYY-MM-DD")).isSameOrBefore(moment($scope.activity.date.end).format("YYYY-MM-DD")))
-            //         error = false;
-            // } else
-            //     error = true;
-            // if ($scope.activity.time) {
-            //     if (!$scope.activity.time.start || !$scope.activity.time.end) 
-            //         timeError = true;
-            // } else
-            //     timeError = true;
             if ($scope.activity.newMembers.length === 0) {
                 dialogService.showToast("Please select at least 1 member");
                 error = true;
@@ -479,12 +462,6 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 if ($scope.dateError) {
                     dialogService.showToast("Please Check Your Date Input");
                 } else {
-                    $scope.activity.date.end = new Date($scope.activity.date.end);
-                    var tzDifference = $scope.activity.date.end.getTimezoneOffset() //this gives me timezone difference of local and UTC time in minutes
-                    var offsetTime = new Date($scope.activity.date.end.getTime() + tzDifference * 60 * 1000); //this will calculate time in point of view local time and set date
-                    $scope.activity.time.end = new Date($scope.activity.time.end);
-                    var tzDifference = $scope.activity.time.end.getTimezoneOffset() //this gives me timezone difference of local and UTC time in minutes
-                    var offsetTime = new Date($scope.activity.time.end.getTime() + tzDifference * 60 * 1000); //this will calculate time in point of view local time and set date
                     activityService.create({id: $stateParams.id}, $scope.activity).$promise.then(function(res) {
                         dialogService.showToast((res.isMilestone) ? "Create Milestone Successfully" : "Create Activity Successfully");
                         dialogService.closeModal();
@@ -504,10 +481,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
         dateEnd: ($rootScope.selectedStartDate) ? $rootScope.selectedStartDate : null
     };
     if ($rootScope.selectedStartDate && moment($rootScope.selectedStartDate).hours() > 0) {
-        day = new Date($rootScope.selectedStartDate);
-        var tzDifference = day.getTimezoneOffset() //this gives me timezone difference of local and UTC time in minutes
-        var offsetTime = new Date(day.getTime() + tzDifference * 60 * 1000); //this will calculate time in point of view local time and set date
-        $scope.task.time = {start: offsetTime};
+        $scope.task.time = {start: $rootScope.selectedStartDate};
     }
 
     $scope.createNewTask = function(form) {
@@ -515,6 +489,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
             $scope.task.members = _.filter($scope.membersList, {select: true});
             $scope.task.type = "task-project";
             if ($scope.task.members.length > 0 && $scope.task.selectedEvent) {
+                console.log($scope.task);
                 taskService.create({id: $stateParams.id}, $scope.task).$promise.then(function(res) {
                     dialogService.closeModal();
                     dialogService.showToast("New Task Has Been Created Successfully.");
@@ -522,7 +497,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                     //Track New Task
                     mixpanel.identify($rootScope.currentUser._id);
                     mixpanel.track("New Task Created");
-                    
+                    console.log(res);
                     $rootScope.$emit("Task.Inserted", res);
                     tasks.push(res);
                     $scope.convertAllToCalendarView(true);

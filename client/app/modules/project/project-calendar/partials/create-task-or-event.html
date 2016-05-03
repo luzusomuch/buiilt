@@ -1,24 +1,24 @@
 <md-dialog aria-label="Create task or event" flex="30" id="newActivityForm">
-    <md-toolbar>
-        <div class="md-toolbar-tools">
-            <h2>Create a Task or Event</h2>
-        </div>
-    </md-toolbar>
-    
-    <md-dialog-content>
-        <div class="md-dialog-content" layout="column" layout-padding>
-            <div layout="row">
-                <md-button flex ng-click="showModal('create-task.html')" class="md-raised">Create a New Task</md-button>
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Create a Task or Event</h2>
             </div>
-            <div layout="row">
-                <md-button flex ng-click="showModal('create-event.html')" class="md-raised">Create New Event</md-button>
+        </md-toolbar>
+        
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column" layout-padding>
+                <div layout="row">
+                    <md-button flex ng-click="showModal('create-task.html')" class="md-raised">Create a New Task</md-button>
+                </div>
+                <div layout="row">
+                    <md-button flex ng-click="showModal('create-event.html')" class="md-raised">Create New Event</md-button>
+                </div>
             </div>
-        </div>
-    </md-dialog-content>
-    
-    <md-dialog-actions>
-        <md-button ng-click="dialogService.closeModal()">Close</md-button>
+        </md-dialog-content>
         
-        
-    </md-dialog-actions>
+        <md-dialog-actions>
+            <md-button ng-click="closeModal()">Close</md-button>
+        </md-dialog-actions>
+    </form>
 </md-dialog>
