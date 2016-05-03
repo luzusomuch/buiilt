@@ -104,25 +104,31 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 minTime: "6:00:00",
                 maxTime: "22:00:00",
                 timezone: "local",
-                select: function(start, end) {
+                select: function(start, end, jsEv, view) {
                     $rootScope.selectedStartDate = new Date(start);
                     $rootScope.selectedEndDate = new Date(end);
-                    if (!start.hasTime() && !end.hasTime())
-                        $scope.showModal("create-event.html");
-                    else
-                        $scope.showModal("create-task.html");
-                },
-                dayClick: function(day, jsEv, view) {
-                    day = new Date(day);
-                    $rootScope.selectedStartDate = day;
-                    var momentDay = moment(day).hours();
-                    if (momentDay===0 && view.name !== "month") {
-                        $scope.showModal("create-event.html")
-                    } else if (momentDay !== 0 && view.name !== "month") {
-                        $scope.showModal("create-task.html")
-                    } else
+                    if (view.name==="month") {
                         $scope.showModal("create-task-or-event.html");
+                    } else if (!start.hasTime() && !end.hasTime()) {
+                        $scope.showModal("create-event.html");
+                    } else {
+                        $scope.showModal("create-task.html");
+                    }
                 },
+                // dayClick: function(day, jsEv, view) {
+                //     console.log("AAAAAAAAAAAAAA");
+                //     day = new Date(day);
+                //     $rootScope.selectedStartDate = day;
+                //     var momentDay = moment(day).hours();
+                //     console.log(momentDay, view.name);
+                //     if (momentDay===0 && view.name !== "month") {
+                //         $scope.showModal("create-event.html");
+                //     } else if (momentDay !== 0 && view.name !== "month") {
+                //         $scope.showModal("create-task.html");
+                //     } else {
+                //         $scope.showModal("create-task-or-event.html");
+                //     }
+                // },
                 eventClick: function(data) {
                     if (data.type==="event") {
                         $mdDialog.show({
@@ -273,7 +279,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 }
             }
         };
-    }, 1000);
+    }, 500);
 
     function updateEventDateTime(event, delta) {
         var result = {
@@ -479,7 +485,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
     };
 
     $scope.task = {
-        dateEnd: ($rootScope.selectedStartDate) ? $rootScope.selectedStartDate : null
+        dateEnd: ($rootScope.selectedStartDate) ? $rootScope.selectedStartDate : new Date()
     };
     if ($rootScope.selectedStartDate && $rootScope.selectedEndDate) {
         $scope.task.time = {
@@ -498,7 +504,6 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
             $scope.task.members = _.filter($scope.membersList, {select: true});
             $scope.task.type = "task-project";
             if ($scope.task.members.length > 0 && $scope.task.selectedEvent) {
-                console.log($scope.task);
                 taskService.create({id: $stateParams.id}, $scope.task).$promise.then(function(res) {
                     dialogService.closeModal();
                     dialogService.showToast("New Task Has Been Created Successfully.");
@@ -506,7 +511,6 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                     //Track New Task
                     mixpanel.identify($rootScope.currentUser._id);
                     mixpanel.track("New Task Created");
-                    console.log(res);
                     $rootScope.$emit("Task.Inserted", res);
                     tasks.push(res);
                     $scope.convertAllToCalendarView(true);
