@@ -18,9 +18,9 @@
 					Save Changed!
 				</md-button>
 				
-	  	      	<md-button ng-show="!tender.documentSet" aria-label="Copy Message Address" class="md-icon-button" ng-click="showModal('attach-document-set.html')">
-					<md-tooltip md-direction="bottom">Attach Document Set</md-tooltip>
-			      	<md-icon class="material-icons">folder</md-icon>
+	  	      	<md-button ng-show="tender.owner._id==currentUser._id" aria-label="Show Tender Detail" class="md-icon-button" ng-click="showDetail=!showDetail">
+					<md-tooltip md-direction="bottom">Show Tender Detail</md-tooltip>
+			      	<i class="material-icons">info_outline</i>
 	  	      	</md-button>
 	
 				
@@ -29,25 +29,63 @@
 			<md-divider layout="row" flex></md-divider>
 	
 			<div layout="column" layout-margin flex>
-				<div class="content" scroll-to-bottom="thread.activities">
-					<div class="item-activity">
-
-						<div layout="row" layout-align="center center" flex class="activity-stream" layout-padding ng-repeat="activity in thread.activities" ng-class="{related: activity.element.related, 'unread-notification': activity.unread, 'unread-notification-line': activity.unreadLine}">
-							<div flex class="activity-detail">
-	
-								<p ng-switch="activity.type" class="activity-head" style="margin-bottom: 15px; border-bottom: 0.5px solid #EEEEEE">
-									<span class="activity-creator">{{activity.user.name}}</span>
-									<span class="meta-data" ng-switch-when="chat"> at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
+				<div class="content">
+					<div class="detail" ng-show="showDetail">
+						<div layout="row">
+							<md-button aria-label="Add Or Change Event" class="md-primary" ng-click="showFormDetail('event')">{{(!tender.event) ? "Add" : "Change"}} Event</md-button>
+							<md-button aria-label="Add Document Set" class="md-primary" ng-show="!tender.documentSet" ng-click="showFormDetail('attach-document-set')">Add Document Set</md-button>
+							<md-button aria-label="Select Winner" class="md-primary" ng-show="tender.status='open'" ng-click="showFormDetail('select-winner')">Select Winner</md-button>
+						</div>
+						<form ng-submit="changeDetail()">
+							<div layout="column" ng-show="currentEdit=='add-event' || currentEdit=='change-event'">
+								<p class="md-body-2">Please Select Events In List Below</p>
+								<md-input-container>
+									<label for="">Events List</label>
+									<md-select ng-model="tender.selectedEvent">
+										<md-option ng-repeat="ev in events" ng-value="ev._id">{{ev.name}}</md-option>
+									</md-select>
+								</md-input-container>
+							</div>
+							<div layout="column" ng-show="currentEdit=='attach-document-set'">
+								<p class="md-body-2">Please Select Document Sets In List Below</p>
+								<md-input-container>
+									<label for="">Document Sets List</label>
+									<md-select ng-model="tender.documentSetSelected">
+										<md-option ng-repeat="document in documentSets" ng-value="document._id">{{document.name}}</md-option>
+									</md-select>
+								</md-input-container>
+							</div>
+							<div layout="column" ng-show="currentEdit=='select-winner'">
+								<p class="md-body-2">Please Select Tenderers In List Below</p>
+								<md-input-container>
+									<label for="">Tenderers List</label>
+									<md-select ng-model="tender.winnerIndex">
+										<md-option ng-repeat="member in tender.members" ng-value="$index">{{(member.user) ? member.user.name : member.name}}</md-option>
+									</md-select>
+								</md-input-container>
+							</div>
+							<div layout="row" ng-show="currentEdit">
+								<md-button ng-click="showDetail=false; currentEdit=null">Close</md-button>
+								<md-button type="submit" class="md-primary">Save Change</md-button>
+							</div>
+						</form>
+					</div>
+					<div class="item-activity" ng-show="!showDetail">
+						<p class="md-body-2">Tender Main Activities</p>
+						<div layout="row" layout-align="center center" flex class="activity-stream" layout-padding ng-repeat="activity in tender.activities" ng-show="activity.type=='attach-scope' || activity.type=='attach-addendum' || activity.type=='attach-document-set' || activity.type=='select-winner'">
+							<div flex class="activity-detail" ng-switch="activity.type">
+								<p ng-switch-when="attach-scope">
+									<strong>{{activity.user.name}}</strong> has attached scope "{{activity.element.scope}}" at <strong>{{activity.createdAt | date: longDate}}</strong>
 								</p>
-	
-								<span ng-switch="activity.type" class="activity-body md-body">
-									<span ng-switch-when="chat" ng-bind-html="activity.element.message | htmlize"></span>
-								</span>
-					
-								<div layout="row" layout-align="center center" class="tagcloud-selection" layout-wrap ng-show="activity.type =='related-task'">
-									<span ng-class="{'available-tag':!member._id, 'selected-tag': member._id}" ng-repeat="member in activity.element.members">{{(member._id) ? member.name : member.email}}<md-icon ng-show="!member._id" class="material-icons non-user-chip cursor-help"><md-tooltip>Messages will be sent via email to this Team Member</md-tooltip>mail_outline</md-icon></span>
-								</div>
-	
+								<p ng-switch-when="attach-addendum">
+									<strong>{{activity.user.name}}</strong> has attached new addendum "{{activity.element.addendum}}" at <strong>{{activity.createdAt | date: longDate}}</strong>
+								</p>
+								<p ng-switch-when="attach-document-set">
+									<strong>{{activity.user.name}}</strong> has attached document set at <strong>{{activity.createdAt | date: longDate}}</strong>. You can click <a ui-sref="project.documentation.all({id: tender.project})">here</a> to enter it
+								</p>
+								<p ng-switch-when="select-winner">
+									<strong>{{activity.user.name}}</strong> has selected winner for this tender at <strong>{{activity.createdAt | date: longDate}}</strong>
+								</p>
 							</div>
 						</div>
 					</div>

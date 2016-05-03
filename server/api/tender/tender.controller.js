@@ -9,6 +9,8 @@ var InviteToken = require('./../../models/inviteToken.model');
 var Notification = require('./../../models/notification.model');
 var Thread = require('./../../models/thread.model');
 var Document = require('./../../models/document.model');
+var Activity = require('./../../models/activity.model');
+var PackageInvite = require('./../../models/packageInvite.model');
 var NotificationHelper = require('./../../components/helpers/notification');
 var EventBus = require('../../components/EventBus');
 var moment = require("moment");
@@ -234,8 +236,8 @@ exports.update = function(req, res) {
                         }
                     });
                 } else if (data.editType==="attach-document-set") {
-                    tender.documentSet = data.selectedDocumentSet;
-                    Document.findById(data.selectedDocumentSet, function(err, document) {
+                    tender.documentSet = data.documentSetSelected;
+                    Document.findById(data.documentSetSelected, function(err, document) {
                         if (err || !document) {
                             tender.documentSet = null;
                             cb(err);
@@ -250,6 +252,59 @@ exports.update = function(req, res) {
                             });
                             document.save(cb);
                         }
+                    });
+                } else if (data.editType==="add-event" || data.editType==="change-event") {
+                    tender.event = data.selectedEvent;
+                    cb();
+                } else if (data.editType==="select-winner") {
+                    var winnerTenderer = tender.members[data.winnerIndex];
+                    var loserTenderer = tender.members.splice(data.winnerTenderer, 1);
+                    if (winnerTenderer.user) {
+                        tender.winner._id = winnerTenderer.user;
+                    } else {
+                        tender.winner.email = winnerTenderer.email;
+                    }
+                    async.each(loserTenderer, function(tenderer, callback) {
+                        var query = (tenderer.user) ? {_id: tenderer.user} : {email: tenderer.email};
+                        User.findOne(query, function(err, user) {
+                            if (err || !user) {callback(err);}
+                            else {
+                                var projectIndex = user.projects.indexOf(tender.project);
+                                user.projects.splice(projectIndex, 1);
+                                user.save(callback);
+                            }
+                        })   
+                    }, function() {
+                        People.findOne({project: tender.project}, function(err, people) {
+                            if (err || !people) {
+                                cb(err);
+                            } else {
+                                var tenderers = [];
+                                if (winnerTenderer.user) {
+                                    tenderers.push({_id: winnerTenderer.user, teamMember: []});
+                                } else {
+                                    tenderers.push({name: winnerTenderer.name, email: winnerTenderer.email, phoneNumber: winnerTenderer.phoneNumber, teamMember: []});
+                                }
+                                people[tender.type].push({tenderName: tender.name, inviter: tender.owner, inviterType: tender.ownerType, hasSelect: true, tenderers: tenderers});
+                                people.save(function(err) {
+                                    if (err) {cb(err);}
+                                    else {
+                                        if (winnerTenderer.user) {
+                                            cb();
+                                        } else {
+                                            var packageInvite = new PackageInvite({
+                                                owner: req.user._id,
+                                                to: winnerTenderer.email,
+                                                inviteType: tender.type,
+                                                package: tender._id,
+                                                project: tender.project
+                                            });
+                                            packageInvite.save(cb);
+                                        }
+                                    }
+                                });
+                            }
+                        });
                     });
                 } else {
                     cb();

@@ -1,15 +1,17 @@
-angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, $rootScope, $scope, $timeout, $stateParams, $mdDialog, $state, socket, notificationService, tender, dialogService, tenderService, contactBooks, people, documentSets) {
+angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, $rootScope, $scope, $timeout, $stateParams, $mdDialog, $state, socket, notificationService, tender, dialogService, tenderService, contactBooks, people, documentSets, activities) {
     $scope.dialogService = dialogService;
     $scope.currentUser = $rootScope.currentUser;
+    var originalTender = angular.copy(tender);
     $scope.tender = tender;
+    $scope.tender.selectedEvent = tender.event;
     $scope.contactBooks = contactBooks;
     $scope.documentSets = documentSets;
+    $scope.events = _.filter(activities, {isMilestone: false});
     $scope.tender.name = ($scope.tender.name) ? $scope.tender.name : "Please Enter Your Tender Name";
-    var originalTenderName = angular.copy($scope.tender.name);
 
     $scope.showSaveTitleBtn = false;
     $scope.$watch("tender.name", function(value) {
-        if (originalTenderName !== value) {
+        if (originalTender.name !== value) {
             $scope.showSaveTitleBtn = true;
         }
     });
@@ -50,8 +52,8 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
 
     socket.on("tender:update", function(data) {
         $scope.tender = data;
-        console.log($scope.tender);
-        originalTenderName = $scope.tender.name;
+        $scope.tender.selectedEvent = data.event;
+        originalTender = $scope.tender;
     });
 
     $scope.selectItem = function(index, type) {
@@ -128,17 +130,39 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
         }
     };
 
-    $scope.attachDocumentSet = function() {
-        if ($scope.tender.selectedDocumentSet) {
-            if (!$scope.tender.documentSet) {
-                $scope.tender.editType="attach-document-set";
-                $scope.update($scope.tender);
-            } else {
-                dialogService.showToast("This Tender Already Has Document Set");
-            }
-        } else {
-            dialogService.showToast("Please Select Document Set");
+    // $scope.attachDocumentSet = function() {
+    //     if ($scope.tender.selectedDocumentSet) {
+    //         if (!$scope.tender.documentSet) {
+    //             $scope.tender.editType="attach-document-set";
+    //             $scope.update($scope.tender);
+    //         } else {
+    //             dialogService.showToast("This Tender Already Has Document Set");
+    //         }
+    //     } else {
+    //         dialogService.showToast("Please Select Document Set");
+    //     }
+    // };
+
+    $scope.showFormDetail = function(type) {
+        $scope.currentEdit = type;
+        if (type==="event") {
+            $scope.currentEdit = (!$scope.tender.event) ? "add-event" : "change-event";
         }
+    };
+
+    $scope.changeDetail = function() {
+        if ($scope.currentEdit==="attach-document-set" && !$scope.tender.documentSetSelected) {
+            dialogService.showToast("Please Select A Document Set");
+            return;
+        } else if ($scope.currentEdit==="select-winner" && !$scope.tender.winnerIndex) {
+            dialogService.showToast("Please Select A Winner Tenderer");
+            return;
+        } else if (($scope.currentEdit==="add-event" || $scope.currentEdit==="change-event") && !$scope.tender.selectedEvent) {
+            dialogService.showToast("Please Select An Event");
+            return;
+        }
+        $scope.tender.editType=$scope.currentEdit;
+        $scope.update($scope.tender);
     };
 
     $scope.update = function(tender) {
@@ -155,6 +179,12 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
                 dialogService.showToast("Attach Scope Successfully");
             else if (tender.editType==="attach-document-set")
                 dialogService.showToast("Attach Document Set Successfully");
+            else if (tender.editType==="add-event" || tender.editType==="change-event") {
+                dialogService.showToast((tender.editType==="add-event") ? "Add Event Successfully" : "Changed Event Successfully");
+            } else if (tender.editType==="select-winner") {
+                dialogService.showToast("Select Winner Successfully");
+            }
+            $scope.currentEdit = null;
         }, function(err) {
             dialogService.showToast("Error");
         });
