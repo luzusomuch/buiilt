@@ -107,7 +107,10 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 select: function(start, end) {
                     $rootScope.selectedStartDate = new Date(start);
                     $rootScope.selectedEndDate = new Date(end);
-                    $scope.showModal("create-event.html");
+                    if (!start.hasTime() && !end.hasTime())
+                        $scope.showModal("create-event.html");
+                    else
+                        $scope.showModal("create-task.html");
                 },
                 dayClick: function(day, jsEv, view) {
                     day = new Date(day);
@@ -122,7 +125,6 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 },
                 eventClick: function(data) {
                     if (data.type==="event") {
-                        dialogService.closeModal();
                         $mdDialog.show({
                             // targetEvent: $event,
                             controller: ["$rootScope", "$scope", "dialogService", "activity", "$stateParams", "$state", function($rootScope, $scope, dialogService, activity, $stateParams, $state) {
@@ -182,7 +184,6 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                             clickOutsideToClose: false
                         });
                     } else if (data.type==="task"){
-                        dialogService.closeModal();
                         $mdDialog.show({
                             // targetEvent: $event,
                             controller: ["$rootScope", "$scope", "dialogService", "activity", "$stateParams", "$state", function($rootScope, $scope, dialogService, activity, $stateParams, $state) {
@@ -480,8 +481,16 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
     $scope.task = {
         dateEnd: ($rootScope.selectedStartDate) ? $rootScope.selectedStartDate : null
     };
-    if ($rootScope.selectedStartDate && moment($rootScope.selectedStartDate).hours() > 0) {
-        $scope.task.time = {start: $rootScope.selectedStartDate};
+    if ($rootScope.selectedStartDate && $rootScope.selectedEndDate) {
+        $scope.task.time = {
+            start: $rootScope.selectedStartDate,
+            end: $rootScope.selectedEndDate
+        };
+        $scope.task.dateEnd = $rootScope.selectedEndDate;
+    } else if ($rootScope.selectedStartDate && moment($rootScope.selectedStartDate).hours() > 0) {
+        $scope.task.time = {
+            start: $rootScope.selectedStartDate
+        };
     }
 
     $scope.createNewTask = function(form) {
