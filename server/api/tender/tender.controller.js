@@ -8,6 +8,7 @@ var Tender = require('./../../models/tender.model');
 var InviteToken = require('./../../models/inviteToken.model');
 var Notification = require('./../../models/notification.model');
 var Thread = require('./../../models/thread.model');
+var Document = require('./../../models/document.model');
 var NotificationHelper = require('./../../components/helpers/notification');
 var EventBus = require('../../components/EventBus');
 var moment = require("moment");
@@ -50,6 +51,8 @@ exports.update = function(req, res) {
         else if (!tender) {return res.send(404);}
         if (!tender.type && !data.selectedTenterType && data.editType==="invite-tenderer") {
             return res.send(422, {msg: "Please select tender type"});
+        } else if (tender.documentSet && data.editType==="attach-document-set") {
+            return res.send(500, {msg: "This tender is already have document set"});
         }
         var activity = {
             user: req.user._id,
@@ -175,7 +178,7 @@ exports.update = function(req, res) {
                                 newInvitees.push({email: member.email, name: member.name});
                                 cb();
                             } else {
-                                members.push({name:_user.name, email: _user.email});
+                                members.push({name:_user.name, email: _user.email, _id: _user._id});
                                 tenderMembers.push({user: _user._id});
                                 if (tender.isCreateScope) {
                                     var thread = new Thread({
@@ -210,7 +213,43 @@ exports.update = function(req, res) {
                     }, function() {
                         activity.element.members = members;
                         tender.members = tenderMembers;
-                        cb();
+                        /*If tender has document set then add new tenderer to that 
+                        document set member.*/
+                        if (tender.documentSet) {
+                            Document.findById(tender.documentSet, function(err, documentSet) {
+                                if (err || !documentSet) {cb(err);}
+                                else {
+                                    _.each(members, function(member) {
+                                        if (member._id) {
+                                            documentSet.members.push(member._id);
+                                        } else {
+                                            documentSet.notMembers.push(member.email);
+                                        }
+                                    });
+                                    documentSet.save(cb);
+                                }
+                            });
+                        } else {
+                            cb();
+                        }
+                    });
+                } else if (data.editType==="attach-document-set") {
+                    tender.documentSet = data.selectedDocumentSet;
+                    Document.findById(data.selectedDocumentSet, function(err, document) {
+                        if (err || !document) {
+                            tender.documentSet = null;
+                            cb(err);
+                        } else {
+                            document.tender = tender._id;
+                            _.each(tender.members, function(member) {
+                                if (member.user) {
+                                    document.members.push(member.user);
+                                } else {
+                                    document.notMembers.push(member.email);
+                                }
+                            });
+                            document.save(cb);
+                        }
                     });
                 } else {
                     cb();

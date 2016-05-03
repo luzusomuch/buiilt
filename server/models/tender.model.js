@@ -15,6 +15,7 @@ var TenderSchema = new Schema({
     project: {type: Schema.Types.ObjectId, ref: "Project", required: true},
     event: {type: Schema.Types.ObjectId, ref: "Activity"},
     isCreateScope: {type: Boolean, default: false},
+    documentSet: {type: Schema.Types.ObjectId, ref: "Document"},
     members: [{
         user: {type: Schema.Types.ObjectId, ref: "User"},
         email: String,

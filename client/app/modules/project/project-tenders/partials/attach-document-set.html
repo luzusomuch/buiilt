@@ -1,0 +1,30 @@
+<md-dialog aria-label="Attach Document Set" flex="70">
+    <form ng-submit="attachDocumentSet()" name="form">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Attach Document Set</h2>
+            </div>
+        </md-toolbar>
+        
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column">
+                <div layout="column">
+                    <p class="md-body-2">Select Document Set to Attach It to This Tender</p>
+                    <div layout="row" layout-align="center center" layout-wrap layout-padding flex>
+                        <md-input-contaner>
+                            <label for="">Document Set Lists</label>
+                            <md-select ng-model="tender.selectedDocumentSet">
+                                <md-option ng-repeat="set in documentSets" ng-show="!set.tender" ng-value="set._id">{{set.name}}</md-option>
+                            </md-select>
+                        </md-input-contaner>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions>
+            <md-button ng-click="dialogService.closeModal()">Cancel</md-button>
+
+            <md-button type="submit" class="md-primary">Submit</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

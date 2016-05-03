@@ -1,8 +1,9 @@
-angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, $rootScope, $scope, $timeout, $stateParams, $mdDialog, $state, socket, notificationService, tender, dialogService, tenderService, contactBooks, people) {
+angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, $rootScope, $scope, $timeout, $stateParams, $mdDialog, $state, socket, notificationService, tender, dialogService, tenderService, contactBooks, people, documentSets) {
     $scope.dialogService = dialogService;
     $scope.currentUser = $rootScope.currentUser;
     $scope.tender = tender;
     $scope.contactBooks = contactBooks;
+    $scope.documentSets = documentSets;
     $scope.tender.name = ($scope.tender.name) ? $scope.tender.name : "Please Enter Your Tender Name";
     var originalTenderName = angular.copy($scope.tender.name);
 
@@ -71,7 +72,10 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
                 }],
                 people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
                     return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
-                }]
+                }],
+                documentSets: ["$stateParams", "documentService", function($stateParams, documentService) {
+                    return documentService.me({id: $stateParams.id}).$promise;
+                }],
             },
             templateUrl: 'app/modules/project/project-tenders/partials/' + modalName,
             parent: angular.element(document.body),
@@ -124,6 +128,19 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
         }
     };
 
+    $scope.attachDocumentSet = function() {
+        if ($scope.tender.selectedDocumentSet) {
+            if (!$scope.tender.documentSet) {
+                $scope.tender.editType="attach-document-set";
+                $scope.update($scope.tender);
+            } else {
+                dialogService.showToast("This Tender Already Has Document Set");
+            }
+        } else {
+            dialogService.showToast("Please Select Document Set");
+        }
+    };
+
     $scope.update = function(tender) {
         tenderService.update({id: tender._id}, tender).$promise.then(function(res) {
             dialogService.closeModal();
@@ -136,6 +153,8 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
                 dialogService.showToast("Attach Addendum Successfully");
             else if (tender.editType==="attach-scope") 
                 dialogService.showToast("Attach Scope Successfully");
+            else if (tender.editType==="attach-document-set")
+                dialogService.showToast("Attach Document Set Successfully");
         }, function(err) {
             dialogService.showToast("Error");
         });

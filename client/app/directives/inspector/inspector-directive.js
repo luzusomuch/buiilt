@@ -10,14 +10,13 @@ angular.module('buiiltApp').directive('inspector', function(){
         controller: function($scope, $rootScope, projectService, $state, dialogService, $mdDialog) {
             $scope.$state = $state;
             $scope.currentUser = $rootScope.currentUser;
-            // $scope.data.members.push($scope.data.owner);
-            // $scope.data.members.push($scope.currentUser);
-            // $scope.data.members = _.uniq($scope.data.members, "_id");
             $scope.showMembers = false;
             $scope.showRelatedTasks = false;
             $scope.showRelatedMessages = false;
             $scope.showDetail = false;
             $scope.showActivity = true;
+
+            console.log($scope.data);
 
             $scope.showModalInTenderPage = function(modalName) {
                 $mdDialog.show({
@@ -31,7 +30,10 @@ angular.module('buiiltApp').directive('inspector', function(){
                         }],
                         people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
                             return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
-                        }]
+                        }],
+                        documentSets: ["$stateParams", "documentService", function($stateParams, documentService) {
+                            return documentService.me({id: $stateParams.id}).$promise;
+                        }],
                     },
                     templateUrl: 'app/modules/project/project-tenders/partials/' + modalName,
                     parent: angular.element(document.body),

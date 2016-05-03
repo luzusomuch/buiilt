@@ -106,7 +106,10 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
     resolve: {
       tender: function(tenderService, $stateParams) {
         return tenderService.get({id: $stateParams.tenderId}).$promise;
-      }
+      },
+      documentSets: function($stateParams, documentService) {
+        return documentService.me({id: $stateParams.id}).$promise;
+      },
     }
   })
   

@@ -15,8 +15,10 @@ exports.me = function(req, res) {
     .exec(function(err, documents) {
         if (err) {return res.send(500,err);}
         _.each(documents, function(document) {
-            document.members = [];
-            document.notMembers = [];
+            if (document.owner.toString()!==req.user._id.toString()) {
+                document.members = [];
+                document.notMembers = [];
+            }
         });
         return res.send(200, documents);
     });
