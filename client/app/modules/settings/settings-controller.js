@@ -40,9 +40,33 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
     };
     getUserProjects();
 
-    $timeout(function() {
-        /*Check if current user hasn't got a team*/
-        if (!$rootScope.currentTeam._id) {
+    // $timeout(function() {
+        if (!$rootScope.currentUser.phoneNumberVerified) {
+            /*Check that current user has verify their phone number yet*/
+            $mdDialog.show({
+                controller: ["$scope", "dialogService", function($scope, dialogService) {
+                    $scope.editUserInfo = function(form) {
+                        if ($scope.phoneNumberVerifyToken.length > 6) {
+                            dialogService.showToast("Your Token Is Not Valid");
+                        } else {
+                            userService.verifyPhoneNumber({token: $scope.phoneNumberVerifyToken}).$promise.then(function(res) {
+                                dialogService.showToast("You have verified your phone number successfully");
+                                dialogService.closeModal();
+                                $rootScope.currentUser.phoneNumberVerified = true;
+                                $state.reload();
+                            }, function(err) {
+                                dialogService.showToast("Error");
+                            });
+                        }
+                    }
+                }],
+                templateUrl: 'app/modules/settings/partials/verify-phone-number.html',
+                parent: angular.element(document.body),
+                clickOutsideToClose: false,
+                escapeToClose: false
+            });
+        } else if (!$rootScope.currentTeam._id && $rootScope.currentUser.phoneNumberVerified) {
+            /*Check if current user hasn't got a team*/
             teamService.isWaitingTeamAccept().$promise.then(function(data) {
                 /*Check if he has any join request*/
                 $scope.isWaitingTeamAccept = data.data;    
@@ -201,7 +225,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                 }
             });
         }
-    }, 500);
+    // }, 500);
 
     /*Stripe checkout form*/
     var handler = StripeCheckout.configure({

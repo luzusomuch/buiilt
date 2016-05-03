@@ -564,7 +564,7 @@ exports.changeProfile = function(req, res) {
  */
 exports.me = function (req, res, next) {
     var userId = req.user._id;
-    User.findOne({_id: userId}, '-salt -hashedPassword')
+    User.findOne({_id: userId}, '-salt -hashedPassword -changeEmailToken -emailVerifyToken -role -phoneNumberVerifyToken')
     .populate('projects').exec(function (err, user) { // don't ever give out the password or salt
         if (err) {return next(err);}
         if (!user) {return res.json(404);}
