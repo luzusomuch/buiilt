@@ -40,8 +40,8 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
 
     // Only need to check architect and builder team
     function checkAllowCreateTender() {
-        if (people.builders.length > 0 && people.architects.length > 0) {
-            if (people.builders[0].hasSelect || people.architects[0].hasSelect) {
+        if (people.builders.length > 0 || people.architects.length > 0) {
+            if ((people.builders.length > 0 && people.builders[0].hasSelect) || (people.architects.length > 0 && people.architects[0].hasSelect)) {
                 if ((people.builders[0] && people.builders[0].tenderers[0]._id._id==$rootScope.currentUser._id) || (people.architects[0] && people.architects[0].tenderers[0]._id._id==$rootScope.currentUser._id)) {
                     return true;
                 } else {
