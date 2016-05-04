@@ -35,6 +35,7 @@
                 <span ng-switch-when="add-event"> has added event for this {{type}}</span>
                 <!-- Thread section -->
                 <span ng-switch-when="assign"> has added <span ng-repeat="invitee in activity.element.invitees">{{invitee}}, </span> to this {{type}}</span>
+                <span ng-switch-when="edit-thread"> has changed name of this {{type}} to {{activity.element.name}}</span>
             </span>
             <span> on <strong>{{activity.createdAt | date: longDate}}</strong></span>
         </p>

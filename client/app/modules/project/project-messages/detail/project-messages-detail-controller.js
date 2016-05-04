@@ -1,4 +1,5 @@
 angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($cookieStore, $q, $rootScope, $scope, $timeout, $stateParams, messageService, $mdToast, $mdDialog, $state, thread, peopleService, taskService, uploadService, people, clipboard, socket, notificationService, tenders, activities, dialogService, FileUploader) {
+    var originalThread = angular.copy(thread);
     $scope.showDetail = ($rootScope.openDetail) ? true : false;
     $scope.relatedFile = {
         belongTo: thread._id,
@@ -54,6 +55,12 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($co
         dialogService.showToast("Create Related File Successfully");
     };
 
+    $scope.showSaveTitleBtn = false;
+    $scope.$watch("thread.name", function(value) {
+        if (originalThread.name !== value) {
+            $scope.showSaveTitleBtn = true;
+        }
+    });
 
     $scope.activities = activities;
     /*Check thread owner team*/
@@ -165,6 +172,7 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($co
 
     /*Receive when thread updated then mark notifications related to thread as read*/
     socket.on("thread:update", function(data) {
+        originalThread = data;
         $scope.thread = data;
         $scope.thread.selectedEvent = data.event;
         notificationService.markItemsAsRead({id: $stateParams.messageId}).$promise.then();
@@ -406,6 +414,7 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($co
                 dialogService.showToast("Message Thread Has Been Assigned To " +res.name+ " Successfully.");
             } else if (thread.elementType === "edit-thread") {
                 dialogService.showToast("Message Thread Has Been Updated.");
+                $scope.showSaveTitleBtn = false;
             } else if (thread.elementType==="add-event") {
                 dialogService.showToast("Add Event To Message Thread Successfully");
                 $scope.elementType = null;
@@ -581,5 +590,10 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($co
             $scope.thread.elementType = ($scope.elementType) ? $scope.elementType : "change-event";
             $scope.update($scope.thread);
         }
+    };
+
+    $scope.changeTitle = function() {
+        $scope.thread.elementType="edit-thread";
+        $scope.update($scope.thread);
     };
 });

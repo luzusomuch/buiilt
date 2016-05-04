@@ -271,6 +271,9 @@ exports.update = function(req,res) {
                         thread.notMembers = data.notMembers;
                     } else if (req.body.elementType==="add-event" || req.body.elementType==="change-event") {
                         thread.event = req.body.selectedEvent;
+                    } else if (req.body.elementType==="edit-thread") {
+                        thread.name = req.body.name;
+                        activity.element.name = req.body.name;
                     } else {
                         thread.isArchive = req.body.isArchive;
                     }
