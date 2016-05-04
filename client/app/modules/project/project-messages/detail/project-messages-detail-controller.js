@@ -37,6 +37,7 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($co
         reader.readAsDataURL(item._file);
     };
 
+    /*Create related file*/
     $scope.uploadAll = function(){
         var tags = _.map(_.filter($scope.tags, {select: true}), 'name');
         if (tags.length===0) {
@@ -48,8 +49,8 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($co
     };
 
     uploader.onCompleteAll = function () {
-        console.log("COMPLETED");
-        // $scope.createRelatedFile();
+        dialogService.closeModal();
+        dialogService.showToast("Create Related File Successfully");
     };
 
 
@@ -486,9 +487,9 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($co
     };
 
     /*Show create related file modal*/
-    $scope.showCreateRelatedFile = function($event) {
-        $scope.showModal("create-related-file.html", $event);
-    };
+    // $scope.showCreateRelatedFile = function($event) {
+    //     $scope.showModal("create-related-file.html", $event);
+    // };
 
     
 
@@ -509,25 +510,25 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($co
     // };
 
     /*Create related file with valid tags, members*/
-    $scope.createRelatedFile = function() {
-        $scope.relatedFile.members = $scope.invitees;
-        $scope.relatedFile.tags = _.filter($scope.tags, {select: true});
-        if ($scope.relatedFile.tags.length == 0) {
-            $scope.showToast("Please Select At Least 1 Tag...");
-        } else if ($scope.relatedFile.members.length == 0) {
-            $scope.showToast("Please Select At Least 1 Recipient...");
-        } else { 
-            $scope.relatedFile.type="file";
-            console.log($scope.relatedFile);
-            return;
-            // uploadService.upload({id: $stateParams.id}, $scope.relatedFile).$promise.then(function(res) {
-            //     $scope.closeModal();
-            //     $scope.showToast("Related File Has Been Uploaded Successfully.");
-            //     $scope.thread.relatedItem.push({type: "file", item: res});
-            //     // $state.go("project.files.detail", {id: res.project._id, fileId: res._id});
-            // }, function(err) {$scope.showToast("There Has Been An Error...");});
-        }
-    };
+    // $scope.createRelatedFile = function() {
+    //     $scope.relatedFile.members = $scope.invitees;
+    //     $scope.relatedFile.tags = _.filter($scope.tags, {select: true});
+    //     if ($scope.relatedFile.tags.length == 0) {
+    //         $scope.showToast("Please Select At Least 1 Tag...");
+    //     } else if ($scope.relatedFile.members.length == 0) {
+    //         $scope.showToast("Please Select At Least 1 Recipient...");
+    //     } else { 
+    //         $scope.relatedFile.type="file";
+    //         console.log($scope.relatedFile);
+    //         return;
+    //         // uploadService.upload({id: $stateParams.id}, $scope.relatedFile).$promise.then(function(res) {
+    //         //     $scope.closeModal();
+    //         //     $scope.showToast("Related File Has Been Uploaded Successfully.");
+    //         //     $scope.thread.relatedItem.push({type: "file", item: res});
+    //         //     // $state.go("project.files.detail", {id: res.project._id, fileId: res._id});
+    //         // }, function(err) {$scope.showToast("There Has Been An Error...");});
+    //     }
+    // };
 
     /*Archive or unarchive a thread*/
     $scope.archive = function() {

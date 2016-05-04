@@ -265,7 +265,7 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
         $scope.uploadFile.type="document";
         $scope.uploadFile.tags = [];
         $scope.uploadFile.selectedDocumentSetId = $scope.selectedDocumentSetId;
-        uploadService.upload({id: $stateParams.id}, $scope.uploadFile).$promise.then(function(res) {
+        fileService.create({id: $stateParams.id}, $scope.uploadFile).$promise.then(function(res) {
             dialogService.closeModal();
             dialogService.showToast("Document Successfully Uploaded.");
             $rootScope.$emit("Document.Uploaded", res);

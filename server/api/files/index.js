@@ -7,6 +7,7 @@ var auth = require('../../auth/auth.service');
 
 var router = express.Router();
 
+router.post("/:id", auth.isAuthenticated(), controller.create);
 router.get('/my-files', auth.isAuthenticated(), controller.myFiles);
 router.get('/:id', auth.isAuthenticated(), controller.show);
 router.get('/:id/acknowledgement', auth.isAuthenticated(), controller.acknowledgement);

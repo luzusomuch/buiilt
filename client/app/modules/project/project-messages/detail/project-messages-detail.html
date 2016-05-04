@@ -18,16 +18,20 @@
 					<md-tooltip md-direction="bottom">Copy Message Address</md-tooltip>
 			      	<md-icon class="material-icons">content_paste</md-icon>
 	  	      	</md-button>
-	
-				
+	  	      	<md-button ng-show="thread.owner._id==currentUser._id" aria-label="Show Tender Detail" class="md-icon-button" ng-click="showDetail=!showDetail" ng-class="{'md-primary':showDetail}">
+					<md-tooltip md-direction="bottom">Show Thread Detail</md-tooltip>
+			      	<i class="material-icons">info_outline</i>
+	  	      	</md-button>
 		    </div>
 			
 			<md-divider layout="row" flex></md-divider>
 	
 			<div layout="column" layout-margin flex>
-				<div class="content" scroll-to-bottom="thread.activities">
+				<div class="content" ng-show="showDetail">
+					
+				</div>
+				<div ng-show="!showDetail" class="content" scroll-to-bottom="thread.activities">
 					<div class="item-activity">
-
 						<div layout="row" layout-align="center center" flex class="activity-stream" layout-padding ng-repeat="activity in thread.activities" ng-class="{related: activity.element.related, 'unread-notification': activity.unread, 'unread-notification-line': activity.unreadLine}" ng-show="activity.type=='chat' || activity.type=='related-file' || activity.type=='related-task'">
 							<div flex class="activity-detail">
 	

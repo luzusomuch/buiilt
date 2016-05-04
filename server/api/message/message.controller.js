@@ -387,11 +387,11 @@ exports.getProjectThread = function(req, res) {
 */
 exports.getById = function(req, res){
     Thread.findById(req.params.id)
-    .populate('messages.user','_id name email')
-    .populate('messages.mentions','_id name email')
-    .populate('members','_id name email')
-    .populate('owner','_id name email')
-    .populate('activities.user','_id name email')
+    .populate('messages.user','_id name email phoneNumber')
+    .populate('messages.mentions','_id name email phoneNumber')
+    .populate('members','_id name email phoneNumber')
+    .populate('owner','_id name email phoneNumber')
+    .populate('activities.user','_id name email phoneNumber')
     .exec(function(err, thread){
         if (err) {return res.send(500,err);}
         else if (!thread) {return res.send(404);}

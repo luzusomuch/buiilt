@@ -1,5 +1,6 @@
 angular.module('buiiltApp').factory('fileService', function($resource) {
     return $resource('/api/files/:id/:type/:action', {id: '@_id'}, {
+        create: {method: "POST"},
         get: {
             method: 'GET',
         },

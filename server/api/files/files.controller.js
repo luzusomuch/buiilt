@@ -1,6 +1,7 @@
 'use strict';
 var User = require('./../../models/user.model');
 var File = require('./../../models/file.model');
+var Document = require('./../../models/document.model');
 var People = require('./../../models/people.model');
 var Project = require('./../../models/project.model');
 var Notification = require('./../../models/notification.model');
@@ -32,6 +33,53 @@ function populateFile(file, res){
             });
         }
         return res.send(200, file);
+    });
+};
+
+function populateNewFile(file, res) {
+    File.populate(file, [{path: "project"}], function(err, file) {
+        return res.send(200,file);
+    });
+};
+
+exports.create = function(req, res) {
+    var data = req.body;
+    if (data.type==="document" && !data.selectedDocumentSetId) {
+        return res.send(422, {msg: "Please select a document set"});
+    }
+    var file = new File({
+        owner: req.user._id,
+        project: req.params.id,
+        description: data.description,
+        members: [],
+        notMembers: [],
+        element: {type: data.type},
+        tags: _.map(data.tags, "name")
+    });
+    if (data.type==="file") {
+        file.name = "Untitled File";
+    } else if (data.type==="document") {
+        file.name = "Untitled Document";
+    }
+    file.event = data.selectedEvent;
+    file.save(function(err) {
+        if (err) {return res.send(500,err);}
+        if (file.element.type==="document" && data.selectedDocumentSetId) {
+            Document.findById(data.selectedDocumentSetId, function(err, document) {
+                if (err || !document) {
+                    file.remove(function() {
+                        return res.send(500,err);
+                    });
+                } else {
+                    document.documents.push(file._id);
+                    document.save(function() {
+                        populateNewFile(file,res);
+                    });
+                }
+            });
+        } else {
+            populateNewFile(file,res);
+        }
     });
 };
 
