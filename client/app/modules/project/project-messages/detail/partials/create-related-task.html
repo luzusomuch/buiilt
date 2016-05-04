@@ -8,8 +8,20 @@
         
         <md-dialog-content>
             <div class="md-dialog-content" layout="column" layout-padding>
+
+                <div layout="column" ng-show="step==1">
+                    <p class="md-body-2">Select An Event In List Below:</p>
+                    <div layout="row">
+                        <md-input-container flex>
+                            <label for="">Events List</label>
+                            <md-select ng-model="relatedTask.selectedEvent">
+                                <md-option ng-repeat="activity in activities" ng-show="!activity.isMilestone" ng-value="activity._id">{{activity.name}}</md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </div>
 				
-				<div layout="column">
+				<div layout="column" ng-show="step==1">
 					<p class="md-body-2">Provide a description for this task:</p>
 	                <div layout="row">
 	                    <md-input-container flex="66" flex-offset="15">
@@ -19,26 +31,44 @@
 					</div>
 				</div>
 			
-				<div layout="column">
+				<div layout="column" ng-show="step==2">
 					<p class="md-body-2">Specify a due date:</p>
 					<div layout="row" layout-align="center center" class="tagcloud-selection">
 	                   <md-datepicker ng-model="relatedTask.dateEnd" md-min-date="minDate" md-placeholder="Enter Due Date">
 	                   </md-datepicker>
 					</div>
 				</div>
+
+                <div layout="column" ng-show="step==2">
+                    <p class="md-body-2">Specify start time and end time:</p>
+                    <div layout="row" layout-align="center center">
+                        <md-input-container flex="50">
+                            <label for="">Start Time</label>
+                            <input type="time" ng-model="relatedTask.time.start" required>
+                        </md-input-container>
+                        <md-input-container flex="50">
+                            <label for="">End Time</label>
+                            <input type="time" ng-model="relatedTask.time.end" required>
+                        </md-input-container>
+                    </div>
+                </div>
 			
-				<div layout="column">
+				<!-- <div layout="column" ng-show="step==3">
 					<p class="md-body-2">Assign at least one team member:</p>
 					<div layout="row" layout-align="center center" layout-wrap layout-padding flex>
                         <md-checkbox ng-click="selectMember($index, 'invitee')" ng-repeat="member in invitees" class="filter-checkbox md-primary">{{(member._id) ? member.name : member.email}}</md-checkbox>
 					</div>
-				</div>
+				</div> -->
 				
             </div>
         </md-dialog-content>
         <md-dialog-actions>
             <md-button ng-click="closeModal()">Cancel</md-button>
-            <md-button type="submit" class="md-primary">Attach Related Task</md-button>
+
+            <md-button ng-show="step==2" ng-click="step=step-1">Back</md-button>
+            <md-button ng-hide="step==2" ng-click="next('create-related-task')">Next</md-button>
+
+            <md-button type="submit" ng-show="step==2" class="md-primary">Attach Related Task</md-button>
         </md-dialog-actions>
     </form>
 </md-dialog>

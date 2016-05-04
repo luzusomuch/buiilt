@@ -15,6 +15,8 @@ var async = require('async');
 var config = require('./../../config/environment');
 var EventBus = require('../../components/EventBus');
 var mongoose = require("mongoose");
+var formidable = require('formidable');
+var s3 = require('../../components/S3');
 
 var getMainItem = function(type) {
     var _item = {};
@@ -244,96 +246,65 @@ exports.uploadReversion = function(req, res) {
  * @returns {undefined}
  */
 exports.upload = function(req, res){
-    var data = req.body;
-    console.log(data);
-    // new version
-    if (data.type==="document" && !data.selectedDocumentSetId) {
-        return res.send(422, {msg: "Please select a document set"});
-    }
-
-    // old version
-    /*if (data.type==="file" && !data.selectedEvent) {
-        return res.send(422, {msg: "Selected Event Is Require"});
-    } else if (data.type==="document" && !data.selectedDocumentSetId) {
-        return res.send(422, {msg: "Please select a document set"});
-    }*/
-    var filesAfterInsert = [];
-    var members = [];
-    var notMembers = [];
-    var acknowledgeUsers = [];
-    CheckMembers.check(data.members, null, function(result) {
-        members = result.members;
-        notMembers = result.notMembers;
-        acknowledgeUsers = _.union(result.members, result.notMembers);
-
-        var mainItem = getMainItem(data.belongToType);
-        var file = new File({
-            owner: req.user._id,
-            project: req.params.id,
-            description: data.description,
-            members: members,
-            notMembers: notMembers,
-            element: {type: data.type}
-        });
-        if (data.type==="file") {
-            file.name = "Untitled File";
-        } else if (data.type==="document") {
-            file.name = "Untitled Document";
-        }
-        if (data.file) {
-            file.name = data.file.filename;
-            file.path = data.file.url;
-            file.key = data.file.key;
-            file.mimeType = data.file.mimeType;
-            file.size = data.file.size;
-            file.version = data.file.filename;
-            file.server = "s3";
-            file.activities.push({
-                user: req.user._id,
-                createdAt: new Date(),
-                type: "upload-file",
-                element: {name: file.name}
-            });
-            file.members.push(req.user._id);
-            file.event = data.selectedEvent;
-        }
-        var tags = [];
-        _.each(data.tags, function(tag) {
-            tags.push(tag.name);
-        });
-        file.tags = tags;   
-        if (data.belongTo) {
-            file.belongTo.item = {_id: data.belongTo};
-            file.belongTo.type = data.belongToType;
-        } else if (data.selectedDocumentSetId) {
-            file.documentSet = data.selectedDocumentSetId;
-        }
-        file.save(function(err) {
-            if (err) {return res.send(500,err);}
+    // var data = req.body;
+    // console.log(data);
+    var form = new formidable.IncomingForm();
+    form.parse(req, function(err, fields, files) {
+        if (err) {return res.send(500,err);}
+        if (fields && files) {
+            console.log(fields);
+            console.log(files);
+            if (fields.belongToType) {
+                var mainItem = getMainItem(fields.belongToType);
+            }
+            var ownerItem;
             async.parallel([
                 function (cb) {
-                    if (data.selectedEvent) {
-                        Activity.findById(data.selectedEvent, function(err, activity) {
-                            if (err || !activity) {
-                                file.remove(function() {
-                                    cb(err)   
-                                });
-                            } else {
-                                activity.relatedItem.push({type: "file", item: {_id: file._id}});
-                                activity.save(cb);
-                            }
-                        });
-                    } else if (file.element.type==="document" && data.selectedDocumentSetId) {
-                        Document.findById(data.selectedDocumentSetId, function(err, document) {
-                            if (err || !document) {cb();}
+                    if (fields.belongToType) {
+                        mainItem.findById(fields.belongTo, function(err, main) {
+                            if (err || !main) {cb(err);}
                             else {
-                                document.documents.push(file._id);
-                                document.save(cb);
+                                ownerItem = main;
+                                cb();
                             }
                         });
-                    } else if (data.belongTo) {
-                        mainItem.findById(req.body.belongTo, function(err, main) {
-                            main.activities.push({
+                    } else {
+                        cb();
+                    }
+                }
+            ], function() {
+                s3.uploadFile(files.file, function(err, data) {
+                    if (err) {return res.send(500,err);}
+                    var file = new File({
+                        owner: req.user._id,
+                        project: req.params.id,
+                        name: files.file.name,
+                        server: "s3",
+                        size: files.file.size,
+                        version: files.file.name,
+                        mimeType: files.file.type,
+                        tag: fields.tags.split(","),
+                        element: {type: fields.type},
+                        key: files.file.name,
+                        activities: [{
+                            user: req.user._id,
+                            createdAt: new Date(),
+                            type: "upload-file",
+                            element: {name: files.file.name}
+                        }]
+                    });
+                    if (ownerItem) {
+                        file.members = ownerItem.members;
+                        file.notMembers = ownerItem.notMembers;
+                        if (ownerItem.event) {
+                            file.event = ownerItem.event;
+                        }
+                    }
+                    file.save(function(err) {
+                        if (err) {
+                            return res.send(500,err);
+                        } else if (ownerItem) {
+                            ownerItem.activities.push({
                                 user: req.user._id,
                                 type: "related-file",
                                 createdAt: new Date(),
@@ -343,50 +314,170 @@ exports.upload = function(req, res){
                                     related: true
                                 }
                             });
-                            members.push(req.user._id);
-                            main.relatedItem.push({
+                            var members = file.members;
+                            members.push(file.owner);
+                            ownerItem.relatedItem.push({
                                 type: "file",
                                 item: {_id: file._id},
                                 members: members
                             });
-                            main._editUser = req.user;
-                            main.save(cb);
-                        });
-                    } else {
-                        cb();
-                    }
-                }
-            ], function() {
-                File.populate(file,[
-                    {path: "project"}
-                ], function(err, file) {
-                    var randomId = mongoose.Types.ObjectId();
-                    if (file.element.type==="file") {
-                        _.each(acknowledgeUsers, function(user) {
-                            if (file.element.type === "file" && user._id) {
-                                EventBus.emit('socket:emit', {
-                                    event: 'file:new',
-                                    room: user._id.toString(),
-                                    data: JSON.parse(JSON.stringify(file))
-                                });
-                                EventBus.emit('socket:emit', {
-                                    event: 'dashboard:new',
-                                    room: user._id.toString(),
-                                    data: {
-                                        type: file.element.type,
-                                        _id: file._id,
-                                        uniqId: randomId,
-                                        user: req.user,
-                                        file: JSON.parse(JSON.stringify(file)),
-                                        newNotification: {fromUser: req.user, type: "file-assign"}
-                                    }
-                                });
-                            }
-                        });
-                    }
-                    return res.send(200, file);
+                            ownerItem._editUser = req.user;
+                            ownerItem.save(function() {
+                                return res.send(200, file);
+                            });
+                        } else {
+                            return res.send(200,file);
+                        }
+                    });
                 });
+                
             });
-        });
+        } else {
+            return res.send(500,err);
+        }
     });
+    // return;
+    // // new version
+    // if (data.type==="document" && !data.selectedDocumentSetId) {
+    //     return res.send(422, {msg: "Please select a document set"});
+    // }
+
+    // // old version
+    // /*if (data.type==="file" && !data.selectedEvent) {
+    //     return res.send(422, {msg: "Selected Event Is Require"});
+    // } else if (data.type==="document" && !data.selectedDocumentSetId) {
+    //     return res.send(422, {msg: "Please select a document set"});
+    // }*/
+    // var filesAfterInsert = [];
+    // var members = [];
+    // var notMembers = [];
+    // var acknowledgeUsers = [];
+    // CheckMembers.check(data.members, null, function(result) {
+    //     members = result.members;
+    //     notMembers = result.notMembers;
+    //     acknowledgeUsers = _.union(result.members, result.notMembers);
+
+    //     var mainItem = getMainItem(data.belongToType);
+    //     var file = new File({
+    //         owner: req.user._id,
+    //         project: req.params.id,
+    //         description: data.description,
+    //         members: members,
+    //         notMembers: notMembers,
+    //         element: {type: data.type}
+    //     });
+    //     if (data.type==="file") {
+    //         file.name = "Untitled File";
+    //     } else if (data.type==="document") {
+    //         file.name = "Untitled Document";
+    //     }
+    //     if (data.file) {
+    //         file.name = data.file.filename;
+    //         file.path = data.file.url;
+    //         file.key = data.file.key;
+    //         file.mimeType = data.file.mimeType;
+    //         file.size = data.file.size;
+    //         file.version = data.file.filename;
+    //         file.server = "s3";
+    //         file.activities.push({
+    //             user: req.user._id,
+    //             createdAt: new Date(),
+    //             type: "upload-file",
+    //             element: {name: file.name}
+    //         });
+    //         file.members.push(req.user._id);
+    //         file.event = data.selectedEvent;
+    //     }
+    //     var tags = [];
+    //     _.each(data.tags, function(tag) {
+    //         tags.push(tag.name);
+    //     });
+    //     file.tags = tags;   
+    //     if (data.belongTo) {
+    //         file.belongTo.item = {_id: data.belongTo};
+    //         file.belongTo.type = data.belongToType;
+    //     } else if (data.selectedDocumentSetId) {
+    //         file.documentSet = data.selectedDocumentSetId;
+    //     }
+    //     file.save(function(err) {
+    //         if (err) {return res.send(500,err);}
+    //         async.parallel([
+    //             function (cb) {
+    //                 if (data.selectedEvent) {
+    //                     Activity.findById(data.selectedEvent, function(err, activity) {
+    //                         if (err || !activity) {
+    //                             file.remove(function() {
+    //                                 cb(err)   
+    //                             });
+    //                         } else {
+    //                             activity.relatedItem.push({type: "file", item: {_id: file._id}});
+    //                             activity.save(cb);
+    //                         }
+    //                     });
+    //                 } else if (file.element.type==="document" && data.selectedDocumentSetId) {
+    //                     Document.findById(data.selectedDocumentSetId, function(err, document) {
+    //                         if (err || !document) {cb();}
+    //                         else {
+    //                             document.documents.push(file._id);
+    //                             document.save(cb);
+    //                         }
+    //                     });
+    //                 } else if (data.belongTo) {
+    //                     mainItem.findById(req.body.belongTo, function(err, main) {
+    //                         main.activities.push({
+    //                             user: req.user._id,
+    //                             type: "related-file",
+    //                             createdAt: new Date(),
+    //                             element: {
+    //                                 item: file._id,
+    //                                 name: file.name,
+    //                                 related: true
+    //                             }
+    //                         });
+    //                         members.push(req.user._id);
+    //                         main.relatedItem.push({
+    //                             type: "file",
+    //                             item: {_id: file._id},
+    //                             members: members
+    //                         });
+    //                         main._editUser = req.user;
+    //                         main.save(cb);
+    //                     });
+    //                 } else {
+    //                     cb();
+    //                 }
+    //             }
+    //         ], function() {
+    //             File.populate(file,[
+    //                 {path: "project"}
+    //             ], function(err, file) {
+    //                 var randomId = mongoose.Types.ObjectId();
+    //                 if (file.element.type==="file") {
+    //                     _.each(acknowledgeUsers, function(user) {
+    //                         if (file.element.type === "file" && user._id) {
+    //                             EventBus.emit('socket:emit', {
+    //                                 event: 'file:new',
+    //                                 room: user._id.toString(),
+    //                                 data: JSON.parse(JSON.stringify(file))
+    //                             });
+    //                             EventBus.emit('socket:emit', {
+    //                                 event: 'dashboard:new',
+    //                                 room: user._id.toString(),
+    //                                 data: {
+    //                                     type: file.element.type,
+    //                                     _id: file._id,
+    //                                     uniqId: randomId,
+    //                                     user: req.user,
+    //                                     file: JSON.parse(JSON.stringify(file)),
+    //                                     newNotification: {fromUser: req.user, type: "file-assign"}
+    //                                 }
+    //                             });
+    //                         }
+    //                     });
+    //                 }
+    //                 return res.send(200, file);
+    //             });
+    //         });
+    //     });
+    // });
 };

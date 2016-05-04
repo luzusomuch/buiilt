@@ -16,15 +16,25 @@
     <div ng-show="showActivity" class="activity-stream-head" layout-padding>
         <p>This {{type}} was created by <strong>{{data.owner.name}}</strong> on {{data.createdAt | date: longDate}}</p>
     </div>
-    <div ng-show="showActivity" class="activity-stream-head" layout-padding ng-repeat="activity in data.activities" ng-hide="activity.type=='attach-scope' || activity.type=='attach-addendum' || activity.type=='attach-document-set' || activity.type=='select-winner'">
+    <div ng-show="showActivity" class="activity-stream-head" layout-padding ng-repeat="activity in data.activities" ng-hide="activity.type=='attach-scope' || activity.type=='attach-addendum' || activity.type=='attach-document-set' || activity.type=='select-winner' || activity.type=='chat'">
         <p>
             <span><strong>{{activity.user.name}}</strong></span>
             <span ng-switch="activity.type">
-                <span ng-switch-when="change-title"> has change title of this tender</span>
-                <span ng-switch-when="invite-tenderer"> has invited {{activity.element.members.length}} new member(s) for this tender</span>
-                <span ng-switch-when="attach-event"> has attached event for this tender</span>
-                <span ng-switch-when="change-event"> has changed event for this tender</span>
-                <span ng-switch-when="add-event"> has added event for this tender</span>
+                <!-- General section -->
+                <span ng-switch-when="add-event"> has added event for this {{type}}</span>
+                <span ng-switch-when="archive"> has archived this {{type}}</span>
+                <span ng-switch-when="unarchive"> has unarchived this {{type}}</span>
+                <span ng-switch-when="related-thread"> has attached related thread this {{type}}</span>
+                <span ng-switch-when="related-task"> has attached related task this {{type}}</span>
+                <span ng-switch-when="related-file"> has attached related file this {{type}}</span>
+                <!-- Tender section -->
+                <span ng-switch-when="change-title"> has change title of this {{type}}</span>
+                <span ng-switch-when="invite-tenderer"> has invited {{activity.element.members.length}} new member(s) for this {{type}}</span>
+                <span ng-switch-when="attach-event"> has attached event for this {{type}}</span>
+                <span ng-switch-when="change-event"> has changed event for this {{type}}</span>
+                <span ng-switch-when="add-event"> has added event for this {{type}}</span>
+                <!-- Thread section -->
+                <span ng-switch-when="assign"> has added <span ng-repeat="invitee in activity.element.invitees">{{invitee}}, </span> to this {{type}}</span>
             </span>
             <span> on <strong>{{activity.createdAt | date: longDate}}</strong></span>
         </p>
@@ -99,7 +109,7 @@
     <md-subheader class="border-top inspector-header md-primary">
         <div layout="row">
             
-            <md-icon class="material-icons accordian-icon md-primary" style="margin-right: 1vh" ng-click="">add_box</md-icon>
+            <md-icon class="material-icons accordian-icon md-primary" style="margin-right: 1vh" ng-click="createRelatedFile()">add_box</md-icon>
             
             <div layout="row" ng-click="showSharedFiles=!showSharedFiles" class="inspector-section" flex>
                 SHARED FILES
@@ -127,7 +137,7 @@
     <md-subheader class="border-top inspector-header md-primary">
         <div layout="row">
             
-            <md-icon class="material-icons accordian-icon md-primary" style="margin-right: 1vh" ng-click="">add_box</md-icon>
+            <md-icon class="material-icons accordian-icon md-primary" style="margin-right: 1vh" ng-click="createRelatedTask()">add_box</md-icon>
             
             <div layout="row" ng-click="showRelatedTasks=!showRelatedTasks" class="inspector-section" flex>
                 RELATED TASKS

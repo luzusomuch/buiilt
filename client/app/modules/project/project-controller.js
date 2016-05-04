@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('projectCtrl', function($rootScope, $scope, $timeout, $state, projectService, $mdDialog, $stateParams, $mdToast, filepickerService, uploadService, peopleService, people, tenders) {
+angular.module('buiiltApp').controller('projectCtrl', function($rootScope, $scope, $timeout, $state, projectService, $mdDialog, $stateParams, $mdToast, uploadService, peopleService, people, tenders) {
 	$scope.project = $rootScope.project;
     $rootScope.title = $scope.project.name + " Overview";
     $scope.people = people;

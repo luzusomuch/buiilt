@@ -1,5 +1,5 @@
 <md-dialog aria-label="Attach a Related File" flex="70">
-    <form >
+    <form ng-submit="uploadAll()">
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2>Attach a Related File</h2>
@@ -11,7 +11,8 @@
                 <div layout="column">
                     <p class="md-body-2">Select the document that you would like to upload:</p>
                     <div layout="row" layout-align="center center" class="tagcloud-selection">
-                        <input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/>
+                        <input type="file" nv-file-select="" uploader="uploader"/>
+                        <!-- <input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/> -->
                     </div>
                 </div>
                 
@@ -20,7 +21,7 @@
                     <div layout="row">
                         <md-input-container flex="66" flex-offset="15">
                             <label>Name</label>
-                            <input ng-model="relatedFile.file.filename" required type="text" name="name"></input>
+                            <input ng-model="uploader.queue[uploader.queue.length-1].file.name" required type="text" name="name"></input>
                         </md-input-container>
                     </div>
                 </div>
@@ -35,7 +36,7 @@
         </md-dialog-content>
         <md-dialog-actions>
             <md-button ng-click="closeModal()">Cancel</md-button>
-            <md-button ng-click="createRelatedFile()" class="md-primary">Attach Related File</md-button>
+            <md-button type="submit" class="md-primary">Attach Related File</md-button>
         </md-dialog-actions>
     </form>
 </md-dialog>

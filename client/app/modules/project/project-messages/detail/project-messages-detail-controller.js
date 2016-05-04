@@ -1,4 +1,59 @@
-angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q, $rootScope, $scope, $timeout, $stateParams, messageService, $mdToast, $mdDialog, $state, thread, peopleService, taskService, uploadService, people, clipboard, socket, notificationService, tenders) {
+angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($cookieStore, $q, $rootScope, $scope, $timeout, $stateParams, messageService, $mdToast, $mdDialog, $state, thread, peopleService, taskService, uploadService, people, clipboard, socket, notificationService, tenders, activities, dialogService, FileUploader) {
+    $scope.relatedFile = {
+        belongTo: thread._id,
+        belongToType: "thread",
+        type: "file"
+    };
+
+    $scope.safeApply = function (fn) {
+        var phase = this.$root.$$phase;
+        if (phase == '$apply' || phase == '$digest') {
+            if (fn && (typeof (fn) === 'function')) {
+                fn();
+            }
+        } else {
+            this.$apply(fn);
+        }
+    };
+
+    var uploader = $scope.uploader = new FileUploader({
+        url: 'api/uploads/'+$stateParams.id,
+        headers : {
+          Authorization: 'Bearer ' + $cookieStore.get('token')
+        },
+        formData: [$scope.relatedFile]
+    });
+
+    uploader.onProgressAll = function (progress) {
+        $scope.progress = progress;
+    };
+
+    uploader.onAfterAddingFile = function (item) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            item.src = e.target.result;
+            $scope.safeApply();
+        };
+        reader.readAsDataURL(item._file);
+    };
+
+    $scope.uploadAll = function(){
+        var tags = _.map(_.filter($scope.tags, {select: true}), 'name');
+        if (tags.length===0) {
+            dialogService.showToast("Please Select At Least 1 Tag");
+        } else {
+            $scope.uploader.queue[0].formData.push({tags: tags.join()});
+            uploader.uploadAll();
+        }
+    };
+
+    uploader.onCompleteAll = function () {
+        console.log("COMPLETED");
+        // $scope.createRelatedFile();
+    };
+
+
+    $scope.activities = activities;
     /*Check thread owner team*/
     $scope.isOwnerTeam=false;
     if (_.findIndex($rootScope.currentTeam.leader, function(leader) {
@@ -246,7 +301,10 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
                 }],
                 tenders: ["tenderService", "$stateParams", function(tenderService, $stateParams) {
                     return tenderService.getAll({id: $stateParams.id}).$promise;
-                }]
+                }],
+                activities:["activityService", "$stateParams", function(activityService, $stateParams) {
+                    return activityService.me({id: $stateParams.id}).$promise;
+                }],
             },
             templateUrl: 'app/modules/project/project-messages/detail/partials/' + name,
             parent: angular.element(document.body),
@@ -383,10 +441,11 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
     };
 
     /*Show create related task modal*/
+    $scope.relatedTask = {
+        dateEnd: new Date(),
+        time: {}
+    };
     $scope.showCreateRelatedTask = function($event) {
-        $scope.relatedTask = {
-            dateEnd: new Date()
-        };
         $scope.minDate = new Date();
         $scope.showModal("create-related-task.html", $event);
     };
@@ -394,19 +453,26 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
     /*Create related task when have valid member*/
     $scope.createRelatedTask = function(form) {
         if (form.$valid) {
-            $scope.relatedTask.members = _.filter($scope.invitees, {select: true});
+            $scope.relatedTask.members = $scope.thread.members;
+            _.each($scope.thread.notMembers, function(email) {
+                $scope.relatedTask.members.push({email: email});
+            });
             $scope.relatedTask.belongTo = $scope.thread._id;
             $scope.relatedTask.belongToType = "thread";
             $scope.relatedTask.type = "task-project";
+            if (!$scope.relatedTask.time.start || !$scope.relatedTask.time.end || !$scope.relatedTask.dateEnd) {
+                dialogService.showToast("Please Check Your Date Time");
+                return;
+            }
             if ($scope.relatedTask.members.length > 0) {
                 taskService.create({id: $stateParams.id}, $scope.relatedTask).$promise.then(function(res) {
                     $scope.closeModal();
-                    $scope.showToast("Related Task Has Been Created Successfully.");
+                    dialogService.showToast("Related Task Has Been Created Successfully.");
                     $scope.thread.relatedItem.push({type: "task", item: res});
                     // $state.go("project.tasks.detail", {id: $stateParams.id, taskId: relatedTask._id});
-                }, function(err){$scope.showToast("There Has Been An Error...");});
+                }, function(err){dialogService.showToast("There Has Been An Error...");});
             } else {
-                $scope.showToast("Please Select At Least 1 Assignee...");
+                dialogService.showToast("Please Select At Least 1 Assignee...");
                 delete $scope.relatedTask.members;
                 delete $scope.relatedTask.belongTo;
                 delete $scope.relatedTask.type;
@@ -415,7 +481,7 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
                 return false;
             }
         } else {
-            $scope.showToast("There Has Been An Error...");
+            dialogService.showToast("There Has Been An Error...");
         }
     };
 
@@ -424,28 +490,23 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
         $scope.showModal("create-related-file.html", $event);
     };
 
-    $scope.relatedFile = {
-        tags:[],
-        belongTo: $scope.thread._id,
-        belongToType: "thread",
-        type: "file"
-    };
+    
 
-    $scope.pickFile = pickFile;
+    // $scope.pickFile = pickFile;
 
-    $scope.onSuccess = onSuccess;
+    // $scope.onSuccess = onSuccess;
 
-    function pickFile(){
-        filepickerService.pick(
-            // add max files for multiple pick
-            // {maxFiles: 5},
-            onSuccess
-        );
-    };
+    // function pickFile(){
+    //     filepickerService.pick(
+    //         // add max files for multiple pick
+    //         // {maxFiles: 5},
+    //         onSuccess
+    //     );
+    // };
 
-    function onSuccess(file){
-        $scope.relatedFile.file = file;
-    };
+    // function onSuccess(file){
+    //     $scope.relatedFile.file = file;
+    // };
 
     /*Create related file with valid tags, members*/
     $scope.createRelatedFile = function() {
@@ -457,12 +518,14 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
             $scope.showToast("Please Select At Least 1 Recipient...");
         } else { 
             $scope.relatedFile.type="file";
-            uploadService.upload({id: $stateParams.id}, $scope.relatedFile).$promise.then(function(res) {
-                $scope.closeModal();
-                $scope.showToast("Related File Has Been Uploaded Successfully.");
-                $scope.thread.relatedItem.push({type: "file", item: res});
-                // $state.go("project.files.detail", {id: res.project._id, fileId: res._id});
-            }, function(err) {$scope.showToast("There Has Been An Error...");});
+            console.log($scope.relatedFile);
+            return;
+            // uploadService.upload({id: $stateParams.id}, $scope.relatedFile).$promise.then(function(res) {
+            //     $scope.closeModal();
+            //     $scope.showToast("Related File Has Been Uploaded Successfully.");
+            //     $scope.thread.relatedItem.push({type: "file", item: res});
+            //     // $state.go("project.files.detail", {id: res.project._id, fileId: res._id});
+            // }, function(err) {$scope.showToast("There Has Been An Error...");});
         }
     };
 
@@ -476,4 +539,15 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
         }, function() {
         });
     };
+
+    $scope.step=1;
+    $scope.next = function(type) {
+        if ($scope.step==1) {
+            if (type==="create-related-task" && (!$scope.relatedTask.selectedEvent || !$scope.relatedTask.description)) {
+                dialogService.showToast("Check Your Input Again.");
+            } else {
+                $scope.step += 1;
+            }
+        }
+    }
 });

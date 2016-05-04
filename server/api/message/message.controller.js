@@ -134,7 +134,7 @@ exports.create = function(req,res) {
     var user = req.user;
     // This is the newest version - create new thread without enter information
     var thread = new Thread({
-        name: "Untitled Thread",
+        name: (req.body.name) ? req.body.name : "Untitled Thread",
         project: req.params.id,
         owner: user._id,
         element: {type: req.body.type},
