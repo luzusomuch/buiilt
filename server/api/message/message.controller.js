@@ -269,6 +269,8 @@ exports.update = function(req,res) {
                         activity.element.invitees = invitees;
                         thread.members = data.members;
                         thread.notMembers = data.notMembers;
+                    } else if (req.body.elementType==="add-event" || req.body.elementType==="change-event") {
+                        thread.event = req.body.selectedEvent;
                     } else {
                         thread.isArchive = req.body.isArchive;
                     }

@@ -1,5 +1,6 @@
 angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScope, $scope, $timeout, $mdDialog, peopleService, $stateParams, $state, $mdToast, messageService, threads, people, socket, notificationService, dialogService, activities) {
 	$rootScope.title = $rootScope.project.name +" messages list";
+    $rootScope.openDetail = false;
     $scope.people = people;
 	$scope.threads = threads;
     $scope.activities = activities;
@@ -360,7 +361,7 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
 				//Track Message Thread Creation
 				mixpanel.identify($rootScope.currentUser._id);
 				mixpanel.track("New Message Thread Created");
-				
+				$rootScope.openDetail = true;
 				$state.go("project.messages.detail", {id: $stateParams.id, messageId: res._id});
 			}, function(err) {
 				$scope.showToast("There Has Been An Error...")

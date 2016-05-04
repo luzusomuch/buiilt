@@ -28,9 +28,27 @@
 	
 			<div layout="column" layout-margin flex>
 				<div class="content" ng-show="showDetail">
-					
+					<h3>{{thread.name}}'s detail</h3>
+					<div layout="column">
+						<form ng-submit="addOrChangeEvent()">
+							<div layout="column">
+								<p class="md-body-2">Please select event in list below:</p>
+								<div layout="row">
+									<label for="">Events List</label>
+									<md-select ng-model="thread.selectedEvent">
+										<md-option ng-repeat="activity in activities" ng-show="!activity.isMilestone" ng-value="activity._id">{{activity.name}}</md-option>
+									</md-select>
+								</div>
+							</div>
+							<div layout="row">
+								<md-button ng-click="showDetail=false">Cancel<md-button>
+								<md-button type="submit" class="md-primary">Save Changed<md-button>
+							</div>
+						</form>
+					</div>
 				</div>
 				<div ng-show="!showDetail" class="content" scroll-to-bottom="thread.activities">
+					<h3>{{thread.name}}'s activities</h3>
 					<div class="item-activity">
 						<div layout="row" layout-align="center center" flex class="activity-stream" layout-padding ng-repeat="activity in thread.activities" ng-class="{related: activity.element.related, 'unread-notification': activity.unread, 'unread-notification-line': activity.unreadLine}" ng-show="activity.type=='chat' || activity.type=='related-file' || activity.type=='related-task'">
 							<div flex class="activity-detail">

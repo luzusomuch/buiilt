@@ -1,4 +1,5 @@
 angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($cookieStore, $q, $rootScope, $scope, $timeout, $stateParams, messageService, $mdToast, $mdDialog, $state, thread, peopleService, taskService, uploadService, people, clipboard, socket, notificationService, tenders, activities, dialogService, FileUploader) {
+    $scope.showDetail = ($rootScope.openDetail) ? true : false;
     $scope.relatedFile = {
         belongTo: thread._id,
         belongToType: "thread",
@@ -106,6 +107,8 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($co
     };
 
     $scope.thread = thread;
+    $scope.elementType=(!thread.event) ? "add-event" : null;
+    $scope.thread.selectedEvent = thread.event;
 
     filterUnreadActivites($scope.thread);
 
@@ -163,6 +166,7 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($co
     /*Receive when thread updated then mark notifications related to thread as read*/
     socket.on("thread:update", function(data) {
         $scope.thread = data;
+        $scope.thread.selectedEvent = data.event;
         notificationService.markItemsAsRead({id: $stateParams.messageId}).$promise.then();
         threadInitial();
     });
@@ -395,16 +399,21 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($co
     /*Update current thread*/
     $scope.update = function(thread) {
         messageService.update({id: thread._id}, thread).$promise.then(function(res) {
-            $scope.closeModal();
+            dialogService.closeModal();
             $rootScope.$emit("Thread.Update", res);
             if (thread.elementType === "assign") {
-                $scope.showToast("Message Thread Has Been Assigned To " +res.name+ " Successfully.");
+                dialogService.showToast("Message Thread Has Been Assigned To " +res.name+ " Successfully.");
             } else if (thread.elementType === "edit-thread") {
-                $scope.showToast("Message Thread Has Been Updated.");
+                dialogService.showToast("Message Thread Has Been Updated.");
+            } else if (thread.elementType==="add-event") {
+                dialogService.showToast("Add Event To Message Thread Successfully");
+                $scope.elementType = null;
+            } else if (thread.elementType==="change-event") {
+                dialogService.showToast("Change Event Of This Message Thread Successfully");
             } else {
-                $scope.showToast((res.isArchive) ? "This Message Was Archived Successfully" : "This Message Was Unarchived Successfully");
+                dialogService.showToast((res.isArchive) ? "This Message Was Archived Successfully" : "This Message Was Unarchived Successfully");
             }
-        }, function(err) {$scope.showToast("There Has Been An Error...");});
+        }, function(err) {dialogService.showToast("There Has Been An Error...");});
     };
 
     /*Assign more project members to current thread*/
@@ -562,5 +571,14 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($co
                 $scope.step += 1;
             }
         }
-    }
+    };
+
+    $scope.addOrChangeEvent = function() {
+        if (!$scope.thread.selectedEvent) {
+            dialogService.showToast("Please Select An Event");
+        } else {
+            $scope.thread.elementType = ($scope.elementType) ? $scope.elementType : "change-event";
+            $scope.update($scope.thread);
+        }
+    };
 });
