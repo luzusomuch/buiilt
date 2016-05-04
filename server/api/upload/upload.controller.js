@@ -246,8 +246,6 @@ exports.uploadReversion = function(req, res) {
  * @returns {undefined}
  */
 exports.upload = function(req, res){
-    // var data = req.body;
-    // console.log(data);
     var form = new formidable.IncomingForm();
     form.parse(req, function(err, fields, files) {
         if (err) {return res.send(500,err);}
@@ -275,6 +273,7 @@ exports.upload = function(req, res){
             ], function() {
                 s3.uploadFile(files.file, function(err, data) {
                     if (err) {return res.send(500,err);}
+                    var path = s3.getPublicUrl(files.file.name);
                     var file = new File({
                         owner: req.user._id,
                         project: req.params.id,
@@ -286,6 +285,7 @@ exports.upload = function(req, res){
                         tag: fields.tags.split(","),
                         element: {type: fields.type},
                         key: files.file.name,
+                        path: path,
                         activities: [{
                             user: req.user._id,
                             createdAt: new Date(),
@@ -323,6 +323,15 @@ exports.upload = function(req, res){
                             });
                             ownerItem._editUser = req.user;
                             ownerItem.save(function() {
+                                EventBus.emit('socket:emit', {
+                                    event: 'relatedItem:new',
+                                    room: ownerItem._id.toString(),
+                                    data: {
+                                        excuteUser: req.user,
+                                        belongTo: ownerItem._id,
+                                        file: JSON.parse(JSON.stringify(file)),
+                                    }
+                                });
                                 return res.send(200, file);
                             });
                         } else {

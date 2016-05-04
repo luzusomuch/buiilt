@@ -148,6 +148,18 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($co
 
     socket.emit("join", $scope.thread._id);
 
+    // Add get related file for current thread
+    socket.on("relatedItem:new", function(data) {
+        if (data.belongTo.toString()===thread._id.toString()) {
+            $scope.thread.relatedItem.push({type: "file", item: data.file});
+            $scope.thread.activities.push({
+                user: {_id: data.excuteUser._id, name: data.excuteUser.name, email: data.excuteUser.email},
+                type: "related-file",
+                element: {item: data.file._id, name: data.file.name, related: true}
+            });
+        }
+    });
+
     /*Receive when thread updated then mark notifications related to thread as read*/
     socket.on("thread:update", function(data) {
         $scope.thread = data;
