@@ -348,6 +348,7 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($co
 				mixpanel.track("Reply Sent");
 				
                 $rootScope.$emit("Thread.Update", res);
+                $scope.message.text = null;
             }, function(err) {$scope.showToast("There Has Been An Error...");});
         } else {
             $scope.showToast("There Has Been An Error...");

@@ -34,15 +34,17 @@
 							<div layout="column">
 								<p class="md-body-2">Please select event in list below:</p>
 								<div layout="row">
-									<label for="">Events List</label>
-									<md-select ng-model="thread.selectedEvent">
-										<md-option ng-repeat="activity in activities" ng-show="!activity.isMilestone" ng-value="activity._id">{{activity.name}}</md-option>
-									</md-select>
+									<md-input-container flex>
+										<label for="">Events List</label>
+										<md-select ng-model="thread.selectedEvent">
+											<md-option ng-repeat="activity in activities" ng-show="!activity.isMilestone" ng-value="activity._id">{{activity.name}}</md-option>
+										</md-select>
+									</md-input-container>
 								</div>
 							</div>
 							<div layout="row">
-								<md-button ng-click="showDetail=false">Cancel<md-button>
-								<md-button type="submit" class="md-primary">Save Changed<md-button>
+								<md-button ng-click="showDetail=false">Cancel</md-button>
+								<md-button type="submit" class="md-primary">Save Changed</md-button>
 							</div>
 						</form>
 					</div>
@@ -84,10 +86,19 @@
 				<md-divider></md-divider>
 				
 				<div layout="row">
-		  	      	<md-button ng-show="!thread.isArchive" aria-label="Compose Message" class="md-icon-button" ng-click="showReplyModal($event)">
-					  	<md-tooltip md-direction="top">Compose a Message</md-tooltip>
-				      	<md-icon class="material-icons">reply</md-icon>
-		  	      	</md-button>
+					<form ng-submit="sendMessage(form)" flex>
+						<div layout="row">
+							<md-input-container flex="80">
+								<label for="">Enter Your Message Here</label>
+								<textarea ng-model="message.text" columns="1" rows="5" required></textarea>
+							</md-input-container>
+
+				  	      	<md-button type="submit" flex ng-show="!thread.isArchive" aria-label="Compose Message" class="md-icon-button">
+							  	<md-tooltip md-direction="top">Compose a Message</md-tooltip>
+						      	<md-icon class="material-icons">reply</md-icon>
+				  	      	</md-button>
+						</div>
+					</form>
 				</div>
 				
 			</div>
