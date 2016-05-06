@@ -253,12 +253,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 },
                 eventDrop: function(event, delta) {
                     if (event.type==="task") {
-                        var updateTask = {
-                            editType:"change-date-time",
-                            dateStart: new Date(event.start),
-                            dateEnd: new Date(event.end),
-                            _id: event._id
-                        }
+                        var updateTask = updateTaskDateTime(event, delta);
                         taskService.update({id: updateTask._id}, updateTask).$promise.then(function(res) {
                             dialogService.showToast("Update Task Date Successfully");
                         }, function(err) {dialogService.showToast("Error");});
@@ -274,6 +269,11 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                         var updateEvent = updateEventDateTime(event, delta);
                         activityService.update({id: updateEvent._id}, updateEvent).$promise.then(function(res) {
                             dialogService.showToast("Update Event Date Time Successfully");
+                        }, function(err) {dialogService.showToast("Error");});
+                    } else if (event.type==="task") {
+                        var updateTask = updateTaskDateTime(event, delta);
+                        taskService.update({id: updateTask._id}, updateTask).$promise.then(function(res) {
+                            dialogService.showToast("Update Task Date Successfully");
                         }, function(err) {dialogService.showToast("Error");});
                     }
                 }
@@ -292,6 +292,19 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
         };
         return result;
     };
+
+    function updateTaskDateTime(event, delta) {
+        return result = {
+            _id: event._id,
+            editType: "change-date-time",
+            dateStart: new Date(event.start),
+            dateEnd: new Date(event.end),
+            time: {
+                start: new Date(event.start),
+                end: new Date(event.end)
+            }
+        };
+    }
 
     $scope.step = 1;
     $scope.next = function(type) {
@@ -485,19 +498,21 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
     };
 
     $scope.task = {
-        dateEnd: ($rootScope.selectedStartDate) ? $rootScope.selectedStartDate : new Date()
+        dateStart: ($rootScope.selectedStartDate) ? $rootScope.selectedStartDate : new Date(),
+        dateEnd: ($rootScope.selectedEndDate) ? $rootScope.selectedEndDate : new Date()
     };
     if ($rootScope.selectedStartDate && $rootScope.selectedEndDate) {
         $scope.task.time = {
             start: $rootScope.selectedStartDate,
             end: $rootScope.selectedEndDate
         };
-        $scope.task.dateEnd = $rootScope.selectedEndDate;
-    } else if ($rootScope.selectedStartDate && moment($rootScope.selectedStartDate).hours() > 0) {
-        $scope.task.time = {
-            start: $rootScope.selectedStartDate
-        };
-    }
+        // $scope.task.dateEnd = $rootScope.selectedEndDate;
+    } 
+    // else if ($rootScope.selectedStartDate && moment($rootScope.selectedStartDate).hours() > 0) {
+    //     $scope.task.time = {
+    //         start: $rootScope.selectedStartDate
+    //     };
+    // }
 
     $scope.createNewTask = function(form) {
         if (form.$valid) {

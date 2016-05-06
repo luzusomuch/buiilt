@@ -33,9 +33,12 @@
                 
                     
                 <div layout="column" ng-show="step==1">
-                    <p class="md-body-2">Specify a due date for the task:</p>
-                    <div layout="row" layout-align="center center" class="tagcloud-selection">
-                        <md-datepicker ng-model="task.dateEnd" md-min-date="minDate" md-placeholder="Enter Due Date"></md-datepicker>
+                    <p class="md-body-2">Specify Start Date and Due Date for the task:</p>
+                    <div layout="row" layout-align="center center" class="tagcloud-selection" flex="50">
+                        <md-datepicker ng-model="task.dateStart" md-placeholder="Enter Due Date"></md-datepicker>
+                    </div>
+                    <div layout="row" layout-align="center center" class="tagcloud-selection" flex="50">
+                        <md-datepicker ng-model="task.dateEnd" md-placeholder="Enter Due Date"></md-datepicker>
                     </div>
                 </div>
 

@@ -47,7 +47,9 @@ exports.validateUpdate = function (req, cb) {
     } else if (req.body.editType==="change-date-time") {
         req.checkBody('dateStart', 'Task date start is required').notEmpty();
         req.checkBody('dateEnd', 'Task date end is required').notEmpty();
-        return cb(req.validationErrors(), _.assign(_.pick(req.body, 'dateStart', 'dateEnd')));
+        req.checkBody('time.start', 'Task start time is required').notEmpty();
+        req.checkBody('time.end', 'Task end time is required').notEmpty();
+        return cb(req.validationErrors(), _.assign(_.pick(req.body, 'dateStart', 'dateEnd', 'time')));
     } else {
         // req.checkBody('name', 'Task title is required').notEmpty();
         req.checkBody('description', 'Task description is required').notEmpty();

@@ -299,6 +299,10 @@ exports.update = function(req,res) {
                 } else if (req.body.editType==="change-date-time") {
                     task.dateStart = data.dateStart;
                     task.dateEnd = data.dateEnd;
+                    task.time = {
+                        start: data.time.start,
+                        end: data.time.end
+                    }
                 }
                 task.activities.push(activity);
                 task._editUser = user;
