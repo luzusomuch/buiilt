@@ -87,7 +87,7 @@
 				
 				<div layout="row" layout-align="center center">
 		  	      	<md-button aria-label="Add Scope Or Addendum" class="md-primary" ng-click="showModal('add-scope-or-addendum.html')">
-					  	Add Scope Or Addendum
+					  	{{(!tender.isCreateScope) ? "Add Scope" : "Add Addendum"}}
 		  	      	</md-button>
 				</div>
 				
