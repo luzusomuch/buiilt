@@ -59,6 +59,9 @@ angular.module('buiiltApp').directive('inspector', function(){
                     documentSets: ["$stateParams", "documentService", function($stateParams, documentService) {
                         return documentService.me({id: $stateParams.id}).$promise;
                     }],
+                    activities: ["activityService", "$stateParams", function(activityService, $stateParams) {
+                        return activityService.me({id: $stateParams.id}).$promise;
+                    }],
                 };
             }
 
@@ -85,8 +88,10 @@ angular.module('buiiltApp').directive('inspector', function(){
             $scope.showModalInTenderPage = function(modalName) {
                 if ($scope.type==="thread") {
                     templateUrl = 'app/modules/project/project-tenders/partials/' + modalName;
-                } else if (type==="file") {
+                } else if ($scope.type==="file") {
                     templateUrl = 'app/modules/project/project-files/detail/partials/' + modalName;
+                } else if ($scope.type==="tender") {
+                    templateUrl = 'app/modules/project/project-tenders/partials/' + modalName;
                 }
                 $scope.showModal(ctrl, resolve, templateUrl);
             };
@@ -96,6 +101,8 @@ angular.module('buiiltApp').directive('inspector', function(){
                     templateUrl = 'app/modules/project/project-messages/detail/partials/assign-team-member.html';
                 } else if ($scope.type==="file") {
                     templateUrl = "app/modules/project/project-files/detail/partials/assign.html";
+                } else if ($scope.type==="tender") {
+                    templateUrl = "app/modules/project/project-tenders/partials/invite-team-member.html"
                 }
                 $scope.showModal(ctrl, resolve, templateUrl);
             };

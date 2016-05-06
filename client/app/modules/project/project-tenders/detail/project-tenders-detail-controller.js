@@ -78,6 +78,9 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
                 documentSets: ["$stateParams", "documentService", function($stateParams, documentService) {
                     return documentService.me({id: $stateParams.id}).$promise;
                 }],
+                activities: ["activityService", "$stateParams", function(activityService, $stateParams) {
+                    return activityService.me({id: $stateParams.id}).$promise;
+                }],
             },
             templateUrl: 'app/modules/project/project-tenders/partials/' + modalName,
             parent: angular.element(document.body),

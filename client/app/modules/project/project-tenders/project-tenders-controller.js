@@ -42,14 +42,15 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
     function checkAllowCreateTender() {
         var allow = false;
         if (people.builders.length > 0 && people.builders[0].hasSelect) {
-            if (people.builders[0].tenderers[0]._id && people.builders[0].tenderers[0]._id._id==$rootScope.currentUser._id) {
+            if (people.builders[0].tenderers[0]._id && people.builders[0].tenderers[0]._id._id.toString()===$rootScope.currentUser._id.toString()) {
                 allow = true;
             }
         } else if (people.architects.length > 0 && people.architects[0].hasSelect) {
-            if (people.architects[0].tenderers[0]._id && people.architects[0]._id._id==$rootScope.currentUser._id) {
+            if (people.architects[0].tenderers[0]._id && people.architects[0].tenderers[0]._id._id.toString()===$rootScope.currentUser._id.toString()) {
                 allow = true;
             }
         }
+        console.log(allow);
         return allow;
     };
     $scope.allowCreateNewTender = checkAllowCreateTender();
