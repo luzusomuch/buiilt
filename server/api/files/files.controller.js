@@ -60,7 +60,8 @@ exports.create = function(req, res) {
         file.name = "Untitled File";
     } else if (data.type==="document") {
         file.name = "Untitled Document";
-    }
+    } 
+    file.documentSet = data.selectedDocumentSetId;
     file.event = data.selectedEvent;
     file.save(function(err) {
         if (err) {return res.send(500,err);}

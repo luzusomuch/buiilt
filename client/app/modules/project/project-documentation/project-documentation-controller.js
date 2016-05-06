@@ -15,12 +15,15 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
         $scope.documentSets.push({name: "Set 1", documents: [], notAllowEditOrCopy: true});
 
     /*Add documents to document set 1 which haven't belong to any document set */
+    console.log(documents);
     _.each(documents, function(document) {
         if (!document.documentSet) {
+            console.log(document);
             document.project = (document.project._id) ? document.project._id : document.project;
             $scope.documentSets[$scope.documentSets.length -1].documents.push(document);
         }
     });
+    console.log($scope.documentSets);
 
     $scope.selectedDocumentSetId = $rootScope.selectedDocumentSetId;
     $scope.selectDocumentSet = function(documentSet) {
