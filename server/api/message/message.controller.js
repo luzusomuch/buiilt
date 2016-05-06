@@ -141,9 +141,60 @@ exports.create = function(req,res) {
         members: [user._id]
     });
     thread._editUser = user;
+    // console.log(req.body);
+    if (req.body.belongTo) {
+        thread.belongTo.item = {_id: req.body.belongTo};
+        thread.belongTo.type = req.body.belongToType;
+    }
+    var message = {
+        text : req.body.message,
+        user : user,
+        sendAt: new Date()
+    };
+    thread.activities.push({
+        user: req.user._id,
+        type: 'chat',
+        createdAt: new Date(),
+        element: {
+            message: req.body.message
+        }
+    });
+    thread.messages.push(message);
+    var mainItem = getMainItem(req.body.belongToType);
     thread.save(function(err) {
         if (err) {return res.send(500,err);}
-        populateNewThread(thread, res, req);
+        if (req.body.belongTo) {
+            mainItem.findById(req.body.belongTo, function(err, main) {
+                if (err || !main) {
+                    thread.remove(function(err) {
+                        return res.send(500, err);
+                    });
+                } else {
+                    main.activities.push({
+                        user: req.user._id,
+                        type: "related-thread",
+                        createdAt: new Date(),
+                        element: {
+                            item: thread._id,
+                            name: thread.name,
+                            related: true
+                        }
+                    });
+                    data.members.push(req.user._id);
+                    main.relatedItem.push({
+                        type: "thread",
+                        item: {_id: thread._id},
+                        members: data.members
+                    });
+                    main.save(function(err) {
+                        if (err) {return res.send(500,err);}
+                        populateNewThread(thread, res, req);                
+                    });
+                }
+            });
+        } else {
+            populateNewThread(thread, res, req);
+        }
     });
     // THis is old version - create new thread had to enter information
     /*ThreadValidator.validateCreate(req,function(err,data) {

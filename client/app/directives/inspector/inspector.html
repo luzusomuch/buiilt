@@ -39,6 +39,7 @@
                 <!-- File section -->
                 <span ng-show="type=='file'" ng-switch-when="assign"> has added <span ng-repeat="member in activity.element.members">{{member}}, </span> to this {{type}}</span>
                 <span ng-switch-when="insert-note"> has inserted a notice - {{activity.element.content}} to this {{type}}</span>
+                <span ng-switch-when="edit"> has changed <span ng-show="activity.element.name"> name {{activity.element.name}}</span> <span ng-show="activity.element.tags" ng-repeat="tag in activity.element.tags">{{tag.name}}, </span> of this {{type}}</span>
             </span>
             <span> on {{activity.createdAt | date: longDate}}</span>
         </p>
@@ -85,7 +86,7 @@
     <md-subheader class="border-top inspector-header md-primary">
         <div layout="row">
             
-            <md-icon class="material-icons accordian-icon md-primary" style="margin-right: 1vh" ng-click="">add_box</md-icon>
+            <md-icon class="material-icons accordian-icon md-primary" style="margin-right: 1vh" ng-click="createRelatedThread()">add_box</md-icon>
             
             <div layout="row" class="inspector-section" ng-click="showRelatedMessages=!showRelatedMessages" flex>
                 RELATED MESSAGES

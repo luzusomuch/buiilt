@@ -78,6 +78,7 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($cookie
 
     /*Receive when someone updated file that current user is in members list*/
     socket.on("file:update", function(data) {
+        console.log(data);
         $scope.file = data;
         $scope.file.selectedEvent = data.event;
         checkAcknowLedgement($scope.file);
@@ -409,8 +410,8 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($cookie
     /*Create related task with valid members then open task detail*/
     $scope.createRelatedTask = function(form) {
         if (form.$valid) {
-            $scope.relatedTask.members = _.filter($scope.invitees, {select: true});
-            if ($scope.relatedTask.members.length > 0) {
+            // $scope.relatedTask.members = _.filter($scope.invitees, {select: true});
+            // if ($scope.relatedTask.members.length > 0) {
                 $scope.relatedTask.belongTo = $scope.file._id;
                 $scope.relatedTask.belongToType = "file";
                 $scope.relatedTask.type = "project-message";
@@ -419,10 +420,10 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($cookie
                     $scope.showToast("Create Related Task Successfully!");
                     $state.go("project.tasks.detail", {id: $stateParams.id, taskId: relatedTask._id});
                 }, function(err) {$scope.showToast("Error");});
-            } else {
-                $scope.showToast("Please select at least 1 invitee");
-                return;
-            }
+            // } else {
+                // $scope.showToast("Please select at least 1 invitee");
+                // return;
+            // }
         } else {
             $scope.showToast("Please check your input again");
             return;

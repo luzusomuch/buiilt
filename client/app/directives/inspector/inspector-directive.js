@@ -40,7 +40,10 @@ angular.module('buiiltApp').directive('inspector', function(){
                     }],
                     tenders: ["tenderService", "$stateParams", function(tenderService, $stateParams) {
                         return tenderService.getAll({id: $stateParams.id}).$promise;
-                    }]
+                    }],
+                    activities:["activityService", "$stateParams", function(activityService, $stateParams) {
+                        return activityService.me({id: $stateParams.id}).$promise;
+                    }],
                 };
             } else if ($scope.type === "task") {
                 ctrl = "projectTaskDetailCtrl";
@@ -71,7 +74,7 @@ angular.module('buiiltApp').directive('inspector', function(){
                 if ($scope.type==="thread") {
                     templateUrl = "app/modules/project/project-messages/detail/partials/create-related-task.html";
                 } else if ($scope.type==="file") {
-                    templateUrl = "app/modules/project/project-files/detail/partials/assign.html";
+                    templateUrl = "app/modules/project/project-files/detail/partials/add-related-task.html";
                 }
                 $scope.showModal(ctrl, resolve, templateUrl);
             };
@@ -81,6 +84,13 @@ angular.module('buiiltApp').directive('inspector', function(){
                     templateUrl = "app/modules/project/project-messages/detail/partials/create-related-file.html";
                 } else if ($scope.type==="task") {
 
+                }
+                $scope.showModal(ctrl, resolve, templateUrl);
+            };
+
+            $scope.createRelatedThread = function() {
+                if ($scope.type==="file") {
+                    templateUrl = "app/modules/project/project-files/detail/partials/add-related-thread.html"
                 }
                 $scope.showModal(ctrl, resolve, templateUrl);
             };

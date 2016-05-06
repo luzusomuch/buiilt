@@ -8,6 +8,18 @@
         
         <md-dialog-content>
             <div class="md-dialog-content" layout="column">
+
+                <div layout="column" >
+                    <p class="md-body-2">Select An Event In List Below:</p>
+                    <div layout="row">
+                        <md-input-container flex>
+                            <label for="">Events List</label>
+                            <md-select ng-model="relatedTask.selectedEvent">
+                                <md-option ng-repeat="activity in activities" ng-show="!activity.isMilestone" ng-value="activity._id">{{activity.name}}</md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </div>
 				
 				<div layout="row" layout-align="center center">
 					<md-input-container flex>
@@ -21,9 +33,9 @@
 	                   </md-datepicker>
 				</div>
 			
-				<div layout="row" layout-align="center center" layout-wrap layout-padding flex>
+				<!-- <div layout="row" layout-align="center center" layout-wrap layout-padding flex>
                     <md-checkbox class="filter-checkbox md-primary" ng-repeat="member in invitees" ng-click="selectMember($index, 'invitee')">{{(member._id) ? member.name : member.email}}</md-checkbox>
-				</div>
+				</div> -->
 					
             </div>
         </md-dialog-content>

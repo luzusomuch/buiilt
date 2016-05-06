@@ -271,7 +271,7 @@ exports.update = function(req, res) {
             async.parallel([
                 function(cb) {
                     if (data.editType === "edit") {
-                        if (data.tags) {
+                        if (data.tags && data.tags[0].name) {
                             var tags = [];
                             _.each(data.tags, function(tag) {
                                 tags.push(tag.name);
@@ -279,7 +279,7 @@ exports.update = function(req, res) {
                             activity.element.tags = (file.tags.length !== data.tags.length) ? data.tags : null;
                             file.tags = tags;
                         } 
-                        if (data.name) {
+                        if (data.name && data.name !== file.name) {
                             activity.element.name = (file.name.length !== data.name.length) ? data.name : null;
                             file.name = data.name;
                         }
