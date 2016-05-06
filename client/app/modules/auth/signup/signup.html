@@ -10,7 +10,7 @@
 				</div>
 				
 				<div layout="row" layout-align="center center">
-					<p class="validate-message" ng-repeat="(key, msg) in errors" type="danger" close="closeAlert(key)">{{msg.email.message}}</p>
+					<p class="validate-message" ng-repeat="(key, msg) in errors" type="danger" close="closeAlert(key)">{{msg.email.message}}{{msg.phoneNumber.message}}</p>
 				</div>
 				
 				<div layout="row">
@@ -72,7 +72,7 @@
 				</div>
 				
 				<div layout="row" layout-align="center center">
-					<p class="validate-message" ng-repeat="(key, msg) in errors" type="danger" close="closeAlert(key)">{{msg.email.message}}</p>
+					<p class="validate-message" ng-repeat="(key, msg) in errors" type="danger" close="closeAlert(key)">{{msg.email.message}}{{msg.phoneNumber.message}}</p>
 				</div>
 			
 				<div ng-if="hasInviteToken && user.invite.type == 'team-invite'" layout="column" layout-align="center center">

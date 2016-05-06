@@ -124,6 +124,23 @@ UserSchema
     });
 }, 'The specified email address is already in use.');
 
+// Validate phone number is existed
+UserSchema.path('phoneNumber').validate(function(value, respond) {
+    var self = this;
+    this.constructor.findOne({phoneNumber: value}, function(err, user) {
+        if (err) {throw err;}
+        if (user) {
+            if (self.id===user.id) {
+                return respond(true);
+            }else {
+                return respond(false);
+            }
+        } else {
+            respond(true);
+        }
+    });
+}, "The specified phone number is already in use.");
+
 var validatePresenceOf = function (value) {
     return value && value.length;
 };
