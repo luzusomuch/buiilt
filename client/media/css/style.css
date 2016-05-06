@@ -742,4 +742,6 @@ md-card {
 	cursor: pointer;
 }
 
-
+/*p.add-dot:before {
+  content: url(../dot.png);
+}*/

@@ -15,12 +15,12 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
     });
     $scope.tender.name = ($scope.tender.name) ? $scope.tender.name : "Please Enter Your Tender Name";
 
-    $scope.showSaveTitleBtn = false;
-    $scope.$watch("tender.name", function(value) {
-        if (originalTender.name !== value) {
-            $scope.showSaveTitleBtn = true;
-        }
-    });
+    // $scope.showSaveTitleBtn = false;
+    // $scope.$watch("tender.name", function(value) {
+    //     if (originalTender.name !== value) {
+    //         $scope.showSaveTitleBtn = true;
+    //     }
+    // });
 
     /*Get invitees list from contact book that haven't in the current
     tender member list*/
@@ -95,8 +95,12 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
     };
 
     $scope.changeTitle = function() {
-        $scope.tender.editType="change-title";
-        $scope.update($scope.tender);
+        if (!$scope.save) {
+            $scope.save = true;
+        } else {
+            $scope.tender.editType="change-title";
+            $scope.update($scope.tender);
+        }
     };
 
     $scope.querySearch = function(query) {
@@ -211,6 +215,7 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
             dialogService.closeModal();
             if (tender.editType==="change-title") {
                 dialogService.showToast("Changed Tender Title Successfully");
+                $scope.save = false;
                 $scope.showSaveTitleBtn = false;
             } else if (tender.editType==="invite-tenderer") 
                 dialogService.showToast("Invite More Tenderer Successfully");

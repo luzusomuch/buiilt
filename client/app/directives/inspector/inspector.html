@@ -16,9 +16,9 @@
     <div ng-show="showActivity" class="activity-stream-head" layout-padding>
         <p>This {{type}} was created by <strong>{{data.owner.name}}</strong> on {{data.createdAt | date: longDate}}</p>
     </div>
-    <div ng-show="showActivity" class="activity-stream-head" layout-padding ng-repeat="activity in data.activities" ng-hide="activity.type=='attach-scope' || activity.type=='attach-addendum' || activity.type=='attach-document-set' || activity.type=='select-winner' || activity.type=='chat'">
+    <div ng-show="showActivity" layout-padding ng-repeat="activity in data.activities" ng-hide="activity.type=='attach-scope' || activity.type=='attach-addendum' || activity.type=='attach-document-set' || activity.type=='select-winner' || activity.type=='chat'">
         <p>
-            <span><strong>{{activity.user.name}}</strong></span>
+            <i style="font-size:10px; margin-right:5px" class="material-icons">lens</i><span>{{activity.user.name}}</span>
             <span ng-switch="activity.type">
                 <!-- General section -->
                 <span ng-switch-when="add-event"> has added event for this {{type}}</span>
@@ -29,7 +29,7 @@
                 <span ng-switch-when="related-file"> has attached related file this {{type}}</span>
                 <!-- Tender section -->
                 <span ng-switch-when="change-title"> has change title of this {{type}}</span>
-                <span ng-switch-when="invite-tenderer"> has invited {{activity.element.members.length}} new member(s) for this {{type}}</span>
+                <span ng-switch-when="invite-tenderer"> has invited <span ng-repeat="tenderer in activity.element.members">{{tenderer.name}}, </span> for this {{type}}</span>
                 <span ng-switch-when="attach-event"> has attached event for this {{type}}</span>
                 <span ng-switch-when="change-event"> has changed event for this {{type}}</span>
                 <span ng-switch-when="add-event"> has added event for this {{type}}</span>
@@ -37,7 +37,7 @@
                 <span ng-switch-when="assign"> has added <span ng-repeat="invitee in activity.element.invitees">{{invitee}}, </span> to this {{type}}</span>
                 <span ng-switch-when="edit-thread"> has changed name of this {{type}} to {{activity.element.name}}</span>
             </span>
-            <span> on <strong>{{activity.createdAt | date: longDate}}</strong></span>
+            <span> on {{activity.createdAt | date: longDate}}</span>
         </p>
     </div>
     

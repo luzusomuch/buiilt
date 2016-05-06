@@ -10,15 +10,21 @@
 					<md-tooltip md-direction="bottom">Back</md-tooltip>
 				</md-button>
 				
-		        <h5 ng-model="tender.name" contenteditable>{{tender.name}}</h5>
+		        <h5 ng-mouseenter="showSaveTitleBtn=true" ng-mouseleave="showSaveTitleBtn" ng-show="!save">{{tender.name}}</h5>
+
+		        <md-input-container ng-show="save">
+		        	<label for="">Tender Name</label>
+		        	<input type="text" ng-model="tender.name">
+		        </md-input-container>
+
+				<md-button ng-show="showSaveTitleBtn" class="md-primary" aria-label="Save Title" ng-click="changeTitle()">
+					{{(!save) ? "Change Title" : "Save"}}
+				</md-button>
 				
 				<span flex></span>
 
-				<md-button ng-show="showSaveTitleBtn" class="md-primary" aria-label="Save Title" ng-click="changeTitle()">
-					Save Changed!
-				</md-button>
 				
-	  	      	<md-button ng-show="tender.owner._id==currentUser._id" aria-label="Show Tender Detail" class="md-icon-button" ng-click="showDetail=!showDetail">
+	  	      	<md-button ng-show="tender.owner._id==currentUser._id" aria-label="Show Tender Detail" class="md-icon-button" ng-click="showDetail=!showDetail" ng-class="{'md-primary': showDetail}">
 					<md-tooltip md-direction="bottom">Show Tender Detail</md-tooltip>
 			      	<i class="material-icons">info_outline</i>
 	  	      	</md-button>
@@ -31,6 +37,7 @@
 			<div layout="column" layout-margin flex>
 				<div class="content">
 					<div class="detail" ng-show="showDetail">
+						<h3>Tender Detail</h3>
 						<div layout="row">
 							<md-button aria-label="Select Winner" class="md-primary" ng-show="tender.status=='open'" ng-click="showModal('select-winner.html')">Select Winner</md-button>
 						</div>
@@ -61,8 +68,8 @@
 							</div>
 						</form>
 					</div>
-					<div class="item-activity" ng-show="!showDetail">
-						<p class="md-body-2">Tender Main Activities</p>
+					<div class="item-activity">
+						<h3>Tender Main Activities</h3>
 						<div layout="row" layout-align="center center" flex class="activity-stream" layout-padding ng-repeat="activity in tender.activities" ng-show="activity.type=='attach-scope' || activity.type=='attach-addendum' || activity.type=='attach-document-set' || activity.type=='select-winner'">
 							<div flex class="activity-detail" ng-switch="activity.type">
 								<p ng-switch-when="attach-scope">
