@@ -21,7 +21,6 @@ var TenderSchema = new Schema({
         email: String,
         name: String,
         phoneNumber: String,
-        teamMember: [{type: Schema.Types.ObjectId, ref: "User"}],
         activities: [{
             user: {type: Schema.Types.ObjectId, ref: "User", required: true},
             email: String,

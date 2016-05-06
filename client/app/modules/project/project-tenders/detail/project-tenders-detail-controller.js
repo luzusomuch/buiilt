@@ -4,6 +4,7 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
     var originalTender = angular.copy(tender);
     $scope.tender = tender;
     $scope.tender.selectedEvent = tender.event;
+    $scope.tender.newMembers = [];
     $scope.contactBooks = contactBooks;
     $scope.documentSets = documentSets;
     $scope.events = [];
@@ -98,11 +99,43 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
         $scope.update($scope.tender);
     };
 
+    $scope.querySearch = function(query) {
+        var result = query ? contactBooks.filter(function(contact) {
+            return contact.name.toLowerCase().indexOf(query.toLowerCase()) !== -1;
+        }) : [];
+        return result;
+    };
+
+    $scope.tenderer = {};
+    $scope.$watch("selectedItem", function(value) {
+        if (value) {
+            $scope.tenderer.name = value.name;
+            $scope.tenderer.email = value.email;
+            $scope.tenderer.phoneNumber = value.phoneNumber;
+        }
+    });
+
+    $scope.addNewTenderer = function(invitee) {
+        var index = _.findIndex($scope.tender.newMembers, function(member) {
+            return member.email===invitee.email && member.phoneNumber==invitee.phoneNumber;
+        });
+        if (index === -1) {
+            $scope.tender.newMembers.push(invitee);
+            $scope.tenderer = {};
+        } else {
+            dialogService.showToast("This Tenderer Has Added");
+        }
+    };
+
+    $scope.removeTenderer = function(index) {
+        $scope.tender.newMembers.splice(index, 1);
+    };
+
     $scope.inviteTenderer = function() {
         if (!$scope.tender.type && !$scope.tender.selectedTenterType) {
             dialogService.showToast("Please select tender type first");
         } else {
-            $scope.tender.newMembers = _.filter($scope.contactBooks, {select: true});
+            // $scope.tender.newMembers = _.filter($scope.contactBooks, {select: true});
             if ($scope.tender.newMembers.length > 0) {
                 $scope.tender.editType="invite-tenderer";
                 $scope.update($scope.tender);
