@@ -1,5 +1,7 @@
-angular.module('buiiltApp').controller('projectFileDetailCtrl', function($cookieStore, $scope, $rootScope, $timeout, file, $mdDialog, uploadService, fileService, $mdToast, peopleService, $stateParams, messageService, taskService, $state, people, socket, notificationService, tenders, dialogService, FileUploader) {
+angular.module('buiiltApp').controller('projectFileDetailCtrl', function($cookieStore, $scope, $rootScope, $timeout, file, $mdDialog, uploadService, fileService, $mdToast, peopleService, $stateParams, messageService, taskService, $state, people, socket, notificationService, tenders, dialogService, FileUploader, activities) {
     $scope.file = file;
+    $scope.file.selectedEvent = file.event;
+    $scope.activities = activities;
     /*Check if current team is team owner of file*/
     $scope.isOwnerTeam=false;
     if (_.findIndex($rootScope.currentTeam.leader, function(leader) {
@@ -77,6 +79,7 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($cookie
     /*Receive when someone updated file that current user is in members list*/
     socket.on("file:update", function(data) {
         $scope.file = data;
+        $scope.file.selectedEvent = data.event;
         checkAcknowLedgement($scope.file);
         notificationService.markItemsAsRead({id: $stateParams.fileId}).$promise.then();
     });
@@ -234,6 +237,9 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($cookie
                 }],
                 tenders: ["tenderService", "$stateParams", function(tenderService, $stateParams) {
                     return tenderService.getAll({id: $stateParams.id}).$promise;
+                }],
+                activities: ["activityService", "$stateParams", function(activityService, $stateParams) {
+                    return activityService.me({id: $stateParams.id}).$promise;
                 }]
             },
             templateUrl: 'app/modules/project/project-files/detail/partials/' + modalName,
@@ -302,6 +308,20 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($cookie
         }
     };
 
+    $scope.changeTitle = function() {
+        $scope.file.editType="edit";
+        $scope.update($scope.file);
+    };
+
+    $scope.addOrChangeEvent = function() {
+        if (!$scope.file.selectedEvent) {
+            dialogService.showToast("Please Select An Event");
+        } else {
+            $scope.file.editType = ($scope.file.event) ? "change-event" : "add-event";
+            $scope.update($scope.file);
+        }
+    };
+
     /*Update file*/
     $scope.update = function(file) {
         fileService.update({id: file._id}, file).$promise.then(function(res) {
@@ -310,6 +330,7 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($cookie
             switch (file.editType) {
                 case "edit":
                     $scope.showToast("File Information Updated Successfully.");
+                    $scope.showDetail = false;
                 break;
 
                 case "assign":
@@ -326,6 +347,14 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($cookie
 
                 case "unarchive":
                     $scope.showToast("This File Has Been Unarchived Successfully.");
+                break;
+
+                case "change-event":
+                    $scope.showToast("Change Event Successfully.");
+                break;
+
+                case "add-event":
+                    $scope.showToast("Add Event Successfully.");
                 break;
 
                 default:

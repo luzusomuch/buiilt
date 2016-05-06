@@ -271,16 +271,20 @@ exports.update = function(req, res) {
             async.parallel([
                 function(cb) {
                     if (data.editType === "edit") {
-                        var tags = [];
-                        _.each(data.tags, function(tag) {
-                            tags.push(tag.name);
-                        });
-                        activity.element.name = (file.name.length !== data.name.length) ? data.name : null;
-                        activity.element.description = (file.description && file.description.length !== data.description.length) ? data.description : null;
-                        activity.element.tags = (file.tags.length !== data.tags.length) ? data.tags : null;
-                        file.name = data.name;
-                        file.description = data.description;
-                        file.tags = tags;
+                        if (data.tags) {
+                            var tags = [];
+                            _.each(data.tags, function(tag) {
+                                tags.push(tag.name);
+                            });
+                            activity.element.tags = (file.tags.length !== data.tags.length) ? data.tags : null;
+                            file.tags = tags;
+                        } 
+                        if (data.name) {
+                            activity.element.name = (file.name.length !== data.name.length) ? data.name : null;
+                            file.name = data.name;
+                        }
+                        // activity.element.description = (file.description && file.description.length !== data.description.length) ? data.description : null;
+                        // file.description = data.description;
                         cb();
                     } else if (data.editType === "assign") {
                         var members = [];
@@ -307,6 +311,11 @@ exports.update = function(req, res) {
                     } else if (data.editType==="archive" || data.editType==="unarchive") {
                         file.isArchive=req.body.isArchive;
                         file._editType=data.editType;
+                        cb();
+                    } else if (data.editType==="change-event" || data.editType==="add-event") {
+                        file.event = data.selectedEvent;
+                        cb()
+                    } else {
                         cb();
                     }
                 }

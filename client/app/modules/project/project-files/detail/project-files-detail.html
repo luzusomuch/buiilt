@@ -11,7 +11,12 @@
 					<md-tooltip md-direction="bottom">Back</md-tooltip>
 				</md-button>
 			
-			    <h5>{{file.name}}</h5>
+			    <h5 ng-show="!showDetail">{{file.name}}</h5>
+
+			    <md-input-container ng-show="showDetail">
+		        	<label for="">File Name</label>
+		        	<input type="text" ng-model="file.name" ng-blur="changeTitle()">
+		        </md-input-container>
 				
 				<span flex></span>
 				
@@ -34,7 +39,7 @@
 	                </md-menu>
 				</div> -->
 					
-                <md-button ng-show="!file.isArchive" aria-label="Edit the File Details" class="md-icon-button" ng-click="showModal($event, 'edit-file.html')">
+                <md-button ng-show="!file.isArchive" aria-label="Edit the File Details" class="md-icon-button" ng-class="{'md-primary': showDetail}" ng-click="showDetail=!showDetail">
                     <md-tooltip md-direction="left">Edit Details</md-tooltip>
                     <md-icon class="material-icons">edit</md-icon>
                 </md-button>
@@ -43,8 +48,19 @@
 			
 			<md-divider layout="row" flex></md-divider>
 		
-			<div layout="column" layout-margin flex>
-				<div class="content" scroll-to-bottom="thread.activities">
+			<div class="content" layout="column" layout-margin flex>
+				<div ng-show="showDetail">
+					<div layout="column">
+						<md-input-container flex>
+							<label for="">Events List</label>
+							<md-select ng-change="addOrChangeEvent()" ng-model="file.selectedEvent">
+								<md-option ng-repeat="activity in activities" ng-show="!activity.isMilestone" ng-value="activity._id">{{activity.name}}</md-option>
+							</md-select>
+						</md-input-container>
+					</div>
+				</div>
+				<md-divider></md-divider>
+				<div scroll-to-bottom="file.activities">
 					<div class="item-activity">
 					
 						<div layout="row" layout-align="center center" flex class="activity-stream" ng-repeat="activity in file.activities" ng-class="{related: activity.element.related, 'unread-notification': activity.unread, 'unread-notification-line': activity.unreadLine}" ng-show="activity.type=='upload-reversion' || activity.type=='related-thread' || activity.type=='related-task'">
