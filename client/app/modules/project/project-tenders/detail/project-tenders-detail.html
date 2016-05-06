@@ -32,30 +32,30 @@
 				<div class="content">
 					<div class="detail" ng-show="showDetail">
 						<div layout="row">
-							<md-button aria-label="Add Or Change Event" class="md-primary" ng-click="showFormDetail('event')">{{(!tender.event) ? "Add" : "Change"}} Event</md-button>
-							<md-button aria-label="Add Document Set" class="md-primary" ng-show="!tender.documentSet" ng-click="showFormDetail('attach-document-set')">Add Document Set</md-button>
-							<md-button aria-label="Select Winner" class="md-primary" ng-show="tender.status='open'" ng-click="showFormDetail('select-winner')">Select Winner</md-button>
+							<md-button aria-label="Select Winner" class="md-primary" ng-show="tender.status='open'" ng-click="showModal('select-winner.html')">Select Winner</md-button>
 						</div>
 						<form ng-submit="changeDetail()">
-							<div layout="column" ng-show="currentEdit=='add-event' || currentEdit=='change-event'">
+							<div layout="column">
 								<p class="md-body-2">Please Select Events In List Below</p>
 								<md-input-container>
 									<label for="">Events List</label>
-									<md-select ng-model="tender.selectedEvent">
+									<md-select ng-change="changeEventOrDocumentSet('event')" ng-model="tender.selectedEvent">
+										<md-option ng-show="events.length===0">Please create event first</md-option>
 										<md-option ng-repeat="ev in events" ng-value="ev._id">{{ev.name}}</md-option>
 									</md-select>
 								</md-input-container>
 							</div>
-							<div layout="column" ng-show="currentEdit=='attach-document-set'">
+							<div layout="column" ng-show="!tender.documentSet">
 								<p class="md-body-2">Please Select Document Sets In List Below</p>
 								<md-input-container>
 									<label for="">Document Sets List</label>
-									<md-select ng-model="tender.documentSetSelected">
+									<md-select ng-change="changeEventOrDocumentSet('attach-document-set')" ng-model="tender.documentSetSelected">
+										<md-option ng-show="documentSets.length===0">Please create document set first</md-option>
 										<md-option ng-repeat="document in documentSets" ng-value="document._id">{{document.name}}</md-option>
 									</md-select>
 								</md-input-container>
 							</div>
-							<div layout="column" ng-show="currentEdit=='select-winner'">
+							<!-- <div layout="column" ng-show="currentEdit=='select-winner'">
 								<p class="md-body-2">Please Select Tenderers In List Below</p>
 								<md-input-container>
 									<label for="">Tenderers List</label>
@@ -63,9 +63,9 @@
 										<md-option ng-repeat="member in tender.members" ng-value="$index">{{(member.user) ? member.user.name : member.name}}</md-option>
 									</md-select>
 								</md-input-container>
-							</div>
-							<div layout="row" ng-show="currentEdit">
-								<md-button ng-click="showDetail=false; currentEdit=null">Close</md-button>
+							</div> -->
+							<div layout="row">
+								<md-button ng-click="showDetail=false">Close</md-button>
 								<md-button type="submit" class="md-primary">Save Change</md-button>
 							</div>
 						</form>

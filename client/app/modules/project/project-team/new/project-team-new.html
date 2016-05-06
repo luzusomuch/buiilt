@@ -1,5 +1,5 @@
 <md-dialog aria-label="Invite a New Team Member" flex="70" id="newTeamDialog">
-	<form ng-submit="inviteNewTeamMember(form)" name="form">
+	<form ng-submit="inviteNewTeamMember(form)" name="form" novalidate>
 		<md-toolbar>
 			<div class="md-toolbar-tools">
 				<h2>Invite a New Team Member</h2>
@@ -25,7 +25,7 @@
 					<div layout="row">
 						<md-input-container flex="5">
 						</md-input-container>
-						<md-autocomplete flex required md-input-name="autocompleteField" md-selected-item="selectedItem" md-search-text="searchText" md-items="item in querySearch(searchText)" md-item-text="item.name" md-floating-label="Enter Contact Name">
+						<md-autocomplete flex md-input-name="autocompleteField" md-selected-item="selectedItem" md-search-text="searchText" md-items="item in querySearch(searchText)" md-item-text="item.name" md-floating-label="Enter Contact Name">
 							<md-item-template>
 								<span md-highlight-text="searchText">{{item.name}}</span>
 							</md-item-template>
@@ -60,7 +60,7 @@
 					<div layout="row">
 						<md-input-container flex="5">
 						</md-input-container>
-						<md-autocomplete flex required md-input-name="autocompleteField" md-selected-item="selectedItem" md-search-text="searchText" md-items="item in querySearch(searchText)" md-item-text="item.name" md-floating-label="Enter Contact Name">
+						<md-autocomplete flex md-input-name="autocompleteField" md-selected-item="selectedItem" md-search-text="searchText" md-items="item in querySearch(searchText)" md-item-text="item.name" md-floating-label="Enter Contact Name">
 							<md-item-template>
 								<span md-highlight-text="searchText">{{item.name}}</span>
 							</md-item-template>

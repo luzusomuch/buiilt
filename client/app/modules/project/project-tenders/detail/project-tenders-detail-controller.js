@@ -6,7 +6,12 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
     $scope.tender.selectedEvent = tender.event;
     $scope.contactBooks = contactBooks;
     $scope.documentSets = documentSets;
-    $scope.events = _.filter(activities, {isMilestone: false});
+    $scope.events = [];
+    _.each(activities, function(activity) {
+        if (!activity.isMilestone) {
+            $scope.events.push(activity);
+        }
+    });
     $scope.tender.name = ($scope.tender.name) ? $scope.tender.name : "Please Enter Your Tender Name";
 
     $scope.showSaveTitleBtn = false;
@@ -133,39 +138,25 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
         }
     };
 
-    // $scope.attachDocumentSet = function() {
-    //     if ($scope.tender.selectedDocumentSet) {
-    //         if (!$scope.tender.documentSet) {
-    //             $scope.tender.editType="attach-document-set";
-    //             $scope.update($scope.tender);
-    //         } else {
-    //             dialogService.showToast("This Tender Already Has Document Set");
-    //         }
-    //     } else {
-    //         dialogService.showToast("Please Select Document Set");
-    //     }
-    // };
-
-    $scope.showFormDetail = function(type) {
-        $scope.currentEdit = type;
-        if (type==="event") {
-            $scope.currentEdit = (!$scope.tender.event) ? "add-event" : "change-event";
+    $scope.eventOrDocumentSetChangeArray = [];
+    $scope.changeEventOrDocumentSet = function(type) {
+        var editType = type;
+        if (type==="event" && $scope.tender.event) {
+            editType = "change-event";
+        } else if (type==="event" && !$scope.tender.event) {
+            editType = "add-event";
+        }
+        var index = $scope.eventOrDocumentSetChangeArray.indexOf(editType);
+        if (index === -1) {
+            $scope.eventOrDocumentSetChangeArray.push(editType);
         }
     };
 
     $scope.changeDetail = function() {
-        if ($scope.currentEdit==="attach-document-set" && !$scope.tender.documentSetSelected) {
-            dialogService.showToast("Please Select A Document Set");
-            return;
-        } else if ($scope.currentEdit==="select-winner" && !$scope.tender.winnerIndex) {
-            dialogService.showToast("Please Select A Winner Tenderer");
-            return;
-        } else if (($scope.currentEdit==="add-event" || $scope.currentEdit==="change-event") && !$scope.tender.selectedEvent) {
-            dialogService.showToast("Please Select An Event");
-            return;
-        }
-        $scope.tender.editType=$scope.currentEdit;
-        $scope.update($scope.tender);
+        _.each($scope.eventOrDocumentSetChangeArray, function(editType) {
+            $scope.tender.editType=editType;
+            $scope.update($scope.tender);
+        });
     };
 
     $scope.update = function(tender) {
@@ -187,7 +178,6 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
             } else if (tender.editType==="select-winner") {
                 dialogService.showToast("Select Winner Successfully");
             }
-            $scope.currentEdit = null;
         }, function(err) {
             dialogService.showToast("Error");
         });
