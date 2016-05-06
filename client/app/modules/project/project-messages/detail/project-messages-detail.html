@@ -10,13 +10,18 @@
 					<md-tooltip md-direction="bottom">Back</md-tooltip>
 				</md-button>
 				
-		        <h5 ng-model="thread.name" contenteditable>{{thread.name}}</h5>
+		        <h5 ng-show="!showDetail">{{thread.name}}</h5>
+
+		        <md-input-container ng-show="showDetail">
+		        	<label for="">Thread Name</label>
+		        	<input type="text" ng-model="thread.name" ng-blur="changeTitle()">
+		        </md-input-container>
 				
 				<span flex></span>
 
-				<md-button ng-show="showSaveTitleBtn" class="md-primary" aria-label="Save Title" ng-click="changeTitle()">
+				<!-- <md-button ng-show="showSaveTitleBtn" class="md-primary" aria-label="Save Title" ng-click="changeTitle()">
 					Save Changed!
-				</md-button>
+				</md-button> -->
 				
 	  	      	<md-button ng-show="!thread.isArchive" aria-label="Copy Message Address" class="md-icon-button" ng-click="copyMessageAddress(thread._id)">
 					<md-tooltip md-direction="bottom">Copy Message Address</md-tooltip>
@@ -24,37 +29,25 @@
 	  	      	</md-button>
 	  	      	<md-button ng-show="thread.owner._id==currentUser._id" aria-label="Show Tender Detail" class="md-icon-button" ng-click="showDetail=!showDetail" ng-class="{'md-primary':showDetail}">
 					<md-tooltip md-direction="bottom">Show Thread Detail</md-tooltip>
-			      	<i class="material-icons">info_outline</i>
+			      	<i class="material-icons">edit</i>
 	  	      	</md-button>
 		    </div>
 			
 			<md-divider layout="row" flex></md-divider>
 	
-			<div layout="column" layout-margin flex>
-				<div class="content" ng-show="showDetail">
-					<h3>{{thread.name}}'s detail</h3>
+			<div style="height: 63vh" class="content" layout="column" layout-margin flex>
+				<div ng-show="showDetail">
 					<div layout="column">
-						<form ng-submit="addOrChangeEvent()">
-							<div layout="column">
-								<p class="md-body-2">Please select event in list below:</p>
-								<div layout="row">
-									<md-input-container flex>
-										<label for="">Events List</label>
-										<md-select ng-model="thread.selectedEvent">
-											<md-option ng-repeat="activity in activities" ng-show="!activity.isMilestone" ng-value="activity._id">{{activity.name}}</md-option>
-										</md-select>
-									</md-input-container>
-								</div>
-							</div>
-							<div layout="row">
-								<md-button ng-click="showDetail=false">Cancel</md-button>
-								<md-button type="submit" class="md-primary">Save Changed</md-button>
-							</div>
-						</form>
+						<md-input-container flex>
+							<label for="">Events List</label>
+							<md-select ng-change="addOrChangeEvent()" ng-model="thread.selectedEvent">
+								<md-option ng-repeat="activity in activities" ng-show="!activity.isMilestone" ng-value="activity._id">{{activity.name}}</md-option>
+							</md-select>
+						</md-input-container>
 					</div>
 				</div>
-				<div ng-show="!showDetail" class="content" scroll-to-bottom="thread.activities">
-					<h3>{{thread.name}}'s activities</h3>
+				<md-divider></md-divider>
+				<div scroll-to-bottom="thread.activities">
 					<div class="item-activity">
 						<div layout="row" layout-align="center center" flex class="activity-stream" layout-padding ng-repeat="activity in thread.activities" ng-class="{related: activity.element.related, 'unread-notification': activity.unread, 'unread-notification-line': activity.unreadLine}" ng-show="activity.type=='chat' || activity.type=='related-file' || activity.type=='related-task'">
 							<div flex class="activity-detail">
@@ -76,35 +69,27 @@
 									<span ng-switch-when="related-task"><a ui-sref="project.tasks.detail({id: thread.project, threadId: activity.element.item})">View Task</a></span>
 									<span ng-switch-when="related-file"><a ui-sref="project.files.detail({id: thread.project, fileId: activity.element.item})">View File</a></span>
 								</span>
-					
-								<!-- <div layout="row" layout-align="center center" class="tagcloud-selection" layout-wrap ng-show="activity.type =='related-task'">
-									<span ng-class="{'available-tag':!member._id, 'selected-tag': member._id}" ng-repeat="member in activity.element.members">{{(member._id) ? member.name : member.email}}<md-icon ng-show="!member._id" class="material-icons non-user-chip cursor-help"><md-tooltip>Messages will be sent via email to this Team Member</md-tooltip>mail_outline</md-icon></span>
-								</div> -->
-	
 							</div>
 						</div>
 					</div>
 					<span flex></span>
 				</div>
-				
 				<md-divider></md-divider>
-				
-				<div layout="row">
-					<form ng-submit="sendMessage(form)" flex>
-						<div layout="row">
-							<md-input-container flex="80">
-								<label for="">Enter Your Message Here</label>
-								<textarea ng-model="message.text" columns="1" rows="5" required></textarea>
-							</md-input-container>
+			</div>
+			<div layout="row">
+				<form ng-submit="sendMessage(form)" flex>
+					<div layout="row">
+						<md-input-container flex="80">
+							<label for="">Enter Your Message Here</label>
+							<textarea ng-model="message.text" columns="1" rows="4" required></textarea>
+						</md-input-container>
 
-				  	      	<md-button type="submit" flex ng-show="!thread.isArchive" aria-label="Compose Message" class="md-icon-button">
-							  	<md-tooltip md-direction="top">Compose a Message</md-tooltip>
-						      	<md-icon class="material-icons">reply</md-icon>
-				  	      	</md-button>
-						</div>
-					</form>
-				</div>
-				
+			  	      	<md-button type="submit" flex ng-show="!thread.isArchive" aria-label="Compose Message" class="md-icon-button">
+						  	<md-tooltip md-direction="top">Compose a Message</md-tooltip>
+					      	<md-icon class="material-icons">reply</md-icon>
+			  	      	</md-button>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
@@ -114,43 +99,18 @@
 		<div layout="column" class="md-whiteframe-1dp detail-view-inspector">
 				
 			<div class="md-toolbar-tools">
-
 				<span flex></span>
-				
-	  	      	<!-- <md-button aria-label="Add a Team Member" class="md-icon-button" ng-click="showAssignTeamMemberModal($event)">
-					<md-tooltip md-direction="bottom">Add a Team Member</md-tooltip>
-			      	<md-icon class="material-icons">person_outline</md-icon>
-	  	      	</md-button> -->
-				
-				<!-- <md-button class="md-icon-button" ng-click="showCreateRelatedFile($event)">
-					<md-tooltip md-direction="bottom">Add a Shared File</md-tooltip>
-					<md-icon class="material-icons">attach_file</md-icon>
-				</md-button> -->
-
-				<!-- <md-button class="md-icon-button" ng-click="showCreateRelatedTask($event)">
-					<md-tooltip md-direction="bottom">Add a Related Task</md-tooltip>
-					<md-icon class="material-icons">check</md-icon>
-				</md-button> -->
-				
 				<md-button ng-show="isOwnerTeam" ng-click="archive()" aria-label="Compose Message" class="md-icon-button">
 				  	<md-tooltip md-direction="left">{{(!thread.isArchive) ? 'Archive this Message' : 'Unarchive this Message'}}</md-tooltip>
 			      	<md-icon class="material-icons"><i class="material-icons">{{(!thread.isArchive) ? 'archive' : 'unarchive'}}</i></md-icon>
 	  	      	</md-button>
-				
 			</div>
 
 			<md-divider flex></md-divider>
 			
 			<div layout="column" class="content">
-				
-				<!-- <div layout="row" class="activity-stream-head" layout-padding>
-					<p>This message was created by <strong>{{thread.owner.name}}</strong> on {{thread.createdAt | date: longDate}}.</p>
-				</div> -->
-				
 				<inspector data="thread" type="thread" hide-related-thread="true" flex></inspector>
-				
 			</div>
-			
 		</div>
 	</div>
 </div>

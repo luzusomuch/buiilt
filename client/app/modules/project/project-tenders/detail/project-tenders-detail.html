@@ -26,7 +26,7 @@
 				
 	  	      	<md-button ng-show="tender.owner._id==currentUser._id" aria-label="Show Tender Detail" class="md-icon-button" ng-click="showDetail=!showDetail" ng-class="{'md-primary': showDetail}">
 					<md-tooltip md-direction="bottom">Show Tender Detail</md-tooltip>
-			      	<i class="material-icons">info_outline</i>
+			      	<i class="material-icons">edit</i>
 	  	      	</md-button>
 	
 				
@@ -37,7 +37,6 @@
 			<div layout="column" layout-margin flex>
 				<div class="content">
 					<div class="detail" ng-show="showDetail">
-						<h3>Tender Detail</h3>
 						<div layout="row">
 							<md-button aria-label="Select Winner" class="md-primary" ng-show="tender.status=='open'" ng-click="showModal('select-winner.html')">Select Winner</md-button>
 						</div>
@@ -68,8 +67,8 @@
 							</div>
 						</form>
 					</div>
+					<md-divider></md-divider>
 					<div class="item-activity">
-						<h3>Tender Main Activities</h3>
 						<div layout="row" layout-align="center center" flex class="activity-stream" layout-padding ng-repeat="activity in tender.activities" ng-show="activity.type=='attach-scope' || activity.type=='attach-addendum' || activity.type=='attach-document-set' || activity.type=='select-winner'">
 							<div flex class="activity-detail" ng-switch="activity.type">
 								<p ng-switch-when="attach-scope">

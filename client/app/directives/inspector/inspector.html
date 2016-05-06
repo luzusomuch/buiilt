@@ -95,10 +95,10 @@
     </md-subheader>
     
     <md-list ng-show="showRelatedMessages" class="md-dense">
-        <md-list-item class="md-2-line" ng-repeat="">
+        <md-list-item class="md-2-line" ng-repeat="thread in data.relatedItem" ng-show="thread.type == 'thread'">
             <div class="md-list-item-text">
-                <h3>{{file.item.name}}</h3>
-                <p>{{file.item.description}}</p>
+                <h3>{{thread.name}}</h3>
+                <!-- <p>{{file.item.description}}</p> -->
             </div>
         </md-list-item>
     </md-list>
