@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('projectDocumentationCtrl', function($rootScope, $scope, $mdDialog, documents, uploadService, $mdToast, $stateParams, socket, $state, fileService, documentSets, people, dialogService, documentService) {
+angular.module('buiiltApp').controller('projectDocumentationCtrl', function($rootScope, $scope, $mdDialog, documents, uploadService, $mdToast, $stateParams, socket, $state, fileService, documentSets, people, dialogService, documentService, contactBooks) {
     $scope.documents = documents;
     $scope.documentSets = documentSets;
     $scope.dialogService = dialogService;
@@ -15,15 +15,12 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
         $scope.documentSets.push({name: "Set 1", documents: [], notAllowEditOrCopy: true});
 
     /*Add documents to document set 1 which haven't belong to any document set */
-    console.log(documents);
     _.each(documents, function(document) {
         if (!document.documentSet) {
-            console.log(document);
             document.project = (document.project._id) ? document.project._id : document.project;
             $scope.documentSets[$scope.documentSets.length -1].documents.push(document);
         }
     });
-    console.log($scope.documentSets);
 
     $scope.selectedDocumentSetId = $rootScope.selectedDocumentSetId;
     $scope.selectDocumentSet = function(documentSet) {
@@ -32,6 +29,21 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
     };
 	
 	$scope.showFilter = false;
+
+    function getNotMembersName() {
+        _.each($scope.documentSets, function(set) {
+            set.notMembersName = [];
+            _.each(set.notMembers, function(email) {
+                var index = _.findIndex(contactBooks, function(contact) {
+                    return email===contact.email;
+                });
+                if (index !== -1) {
+                    set.notMembersName.push(contactBooks[index].name);
+                }
+            })
+        });
+    }
+    getNotMembersName();
 
     /*Get project members list*/
     function getProjectMembers() {
@@ -228,6 +240,7 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
         if (data.project==$stateParams.id) {
             $scope.documentSets.push(data);
             $scope.selectedDocumentSet = data;
+            getNotMembersName();
         }
     });
 
@@ -242,6 +255,7 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
             if (index !== -1) {
                 $scope.documentSets[index] = data;
                 $scope.selectedDocumentSet = data;
+                getNotMembersName();
             }
         }
     });
@@ -301,6 +315,9 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
                 }],
                 documentSets: ["$stateParams", "documentService", function($stateParams, documentService) {
                     return documentService.me({id: $stateParams.id}).$promise;
+                }],
+                contactBooks: ["contactBookService", function(contactBookService) {
+                    return contactBookService.me().$promise;
                 }]
             },
             templateUrl: 'app/modules/project/project-documentation/partials/' + modalName,

@@ -16,6 +16,9 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
       },
       tenders: function(tenderService, $stateParams) {
         return tenderService.getAll({id: $stateParams.id}).$promise;
+      },
+      contactBooks: function(contactBookService) {
+        return contactBookService.me().$promise;
       }
     }
   })

@@ -55,7 +55,7 @@
 				<md-divider></md-divider>
 				
 				<div layout="row">
-		  	      	<md-button ng-show="!thread.isArchive" aria-label="Upload New Version" class="md-icon-button" ng-click="">
+		  	      	<md-button ng-show="!thread.isArchive" aria-label="Upload New Version" class="md-icon-button" ng-click="showModal($event, 'upload-document-reversion.html')">
 					  	<md-tooltip md-direction="top">Upload a New Version</md-tooltip>
 				      	<md-icon class="material-icons">file_upload</md-icon>
 		  	      	</md-button>

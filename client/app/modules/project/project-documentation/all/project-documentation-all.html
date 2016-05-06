@@ -14,7 +14,7 @@
 						<h3 ng-class="{'activemenu': selectedDocumentSet.name==documentSet.name}">{{documentSet.name}}</h3>
 						<p ng-show="documentSet.members.length > 0 || documentSet.notMembers.length > 0">
 							<span ng-repeat="member in documentSet.members">{{member.name}}, </span>
-							<span ng-repeat="email in documentSet.notMembers">{{email}}, </span>
+							<span ng-repeat="name in documentSet.notMembersName track by $index">{{name}}, </span>
 						</p>
 					</div>
 				</md-list-item>
