@@ -1,5 +1,5 @@
-angular.module('buiiltApp')
-  .controller('SignupCtrl', function ($rootScope, $scope, authService, $stateParams, inviteTokenService, packageInviteService) {
+angular.module('buiiltApp').controller('SignupCtrl', function ($rootScope, $scope, authService, $stateParams, inviteTokenService, packageInviteService) {
+  $rootScope.title = "Sign Up";
   $scope.user = {
     password : '',
     lastName: '',
