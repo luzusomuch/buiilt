@@ -104,15 +104,8 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($cookie
         win.focus();
     };
 
-    /*Get project members list and file tags list*/
-    function getProjectMembersOrTenderers() {
-        $scope.tender = tenders[0];
-        $scope.membersList = [];
-        $scope.tags = [];
-        _.each($rootScope.currentTeam.fileTags, function(tag) {
-            $scope.tags.push({name: tag, select: false});
-        });
-        if ($rootScope.isEditFile) {
+    $scope.$watch("showDetail", function(value) {
+        if (value) {
             _.each($scope.file.tags, function(tag) {
                 var tagIndex = _.findIndex($scope.tags, function(t) {
                     return t.name===tag;
@@ -122,6 +115,26 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($cookie
                 }
             });
         }
+    });
+
+    /*Get project members list and file tags list*/
+    function getProjectMembersOrTenderers() {
+        $scope.tender = tenders[0];
+        $scope.membersList = [];
+        $scope.tags = [];
+        _.each($rootScope.currentTeam.fileTags, function(tag) {
+            $scope.tags.push({name: tag, select: false});
+        });
+        // if ($rootScope.isEditFile) {
+        //     _.each($scope.file.tags, function(tag) {
+        //         var tagIndex = _.findIndex($scope.tags, function(t) {
+        //             return t.name===tag;
+        //         });
+        //         if (tagIndex !== -1) {
+        //             $scope.tags[tagIndex].select = true;
+        //         }
+        //     });
+        // }
         if (!$scope.tender || $scope.tender.owner._id==$rootScope.currentUser._id) {
             _.each($rootScope.roles, function(role) {
                 _.each($scope.people[role], function(tender){
@@ -312,6 +325,13 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($cookie
         $scope.file.editType="edit";
         $scope.update($scope.file);
     };
+
+    $scope.changeTag = function(index) {
+        $scope.tags[index].select = !$scope.tags[index].select;
+        $scope.file.tags = _.filter($scope.tags, {select: true});
+        $scope.file.editType="edit";
+        $scope.update($scope.file);
+    }
 
     $scope.addOrChangeEvent = function() {
         if (!$scope.file.selectedEvent) {

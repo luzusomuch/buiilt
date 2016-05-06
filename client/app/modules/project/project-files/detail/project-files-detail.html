@@ -51,12 +51,21 @@
 			<div class="content" layout="column" layout-margin flex>
 				<div ng-show="showDetail">
 					<div layout="column">
+						<p class="md-body-2">Change Current File Event</p>
 						<md-input-container flex>
 							<label for="">Events List</label>
 							<md-select ng-change="addOrChangeEvent()" ng-model="file.selectedEvent">
 								<md-option ng-repeat="activity in activities" ng-show="!activity.isMilestone" ng-value="activity._id">{{activity.name}}</md-option>
 							</md-select>
 						</md-input-container>
+					</div>
+					<div layout="column">
+						<p class="md-body-2">Change File Tags</p>
+						<div layout="row" layout-align="center center" layout-wrap layout-padding flex>
+	                        <md-checkbox ng-checked="tag.select" class="filter-checkbox md-primary" ng-repeat="tag in tags" ng-click="changeTag($index, 'tag')">
+	                            {{tag.name}}
+	                        </md-checkbox>
+		                </div>
 					</div>
 				</div>
 				<md-divider></md-divider>
