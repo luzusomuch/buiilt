@@ -135,7 +135,6 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
         if (!$scope.tender.type && !$scope.tender.selectedTenterType) {
             dialogService.showToast("Please select tender type first");
         } else {
-            // $scope.tender.newMembers = _.filter($scope.contactBooks, {select: true});
             if ($scope.tender.newMembers.length > 0) {
                 $scope.tender.editType="invite-tenderer";
                 $scope.update($scope.tender);

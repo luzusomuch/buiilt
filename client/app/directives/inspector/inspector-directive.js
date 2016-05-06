@@ -101,8 +101,6 @@ angular.module('buiiltApp').directive('inspector', function(){
                     templateUrl = 'app/modules/project/project-messages/detail/partials/assign-team-member.html';
                 } else if ($scope.type==="file") {
                     templateUrl = "app/modules/project/project-files/detail/partials/assign.html";
-                } else if ($scope.type==="tender") {
-                    templateUrl = "app/modules/project/project-tenders/partials/invite-team-member.html"
                 }
                 $scope.showModal(ctrl, resolve, templateUrl);
             };
