@@ -32,7 +32,7 @@
 				<div class="content">
 					<div class="detail" ng-show="showDetail">
 						<div layout="row">
-							<md-button aria-label="Select Winner" class="md-primary" ng-show="tender.status='open'" ng-click="showModal('select-winner.html')">Select Winner</md-button>
+							<md-button aria-label="Select Winner" class="md-primary" ng-show="tender.status=='open'" ng-click="showModal('select-winner.html')">Select Winner</md-button>
 						</div>
 						<form ng-submit="changeDetail()">
 							<div layout="column">
@@ -55,15 +55,6 @@
 									</md-select>
 								</md-input-container>
 							</div>
-							<!-- <div layout="column" ng-show="currentEdit=='select-winner'">
-								<p class="md-body-2">Please Select Tenderers In List Below</p>
-								<md-input-container>
-									<label for="">Tenderers List</label>
-									<md-select ng-model="tender.winnerIndex">
-										<md-option ng-repeat="member in tender.members" ng-value="$index">{{(member.user) ? member.user.name : member.name}}</md-option>
-									</md-select>
-								</md-input-container>
-							</div> -->
 							<div layout="row">
 								<md-button ng-click="showDetail=false">Close</md-button>
 								<md-button type="submit" class="md-primary">Save Change</md-button>

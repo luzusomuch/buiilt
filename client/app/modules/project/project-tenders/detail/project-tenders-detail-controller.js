@@ -159,7 +159,30 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
         });
     };
 
+    $scope.selectWinner = function() {
+        if (!isNaN($scope.tender.winnerIndex)) {
+            $mdDialog.show($mdDialog.confirm()
+                .title("Do you want to select this tenderer as winner?") 
+                .content("Select "+($scope.tender.members[$scope.tender.winnerIndex].user) ? $scope.tender.members[$scope.tender.winnerIndex].user.name : $scope.tender.members[$scope.tender.winnerIndex].name +" to be winner") 
+                .ariaLabel("Select Winner")
+                .ok("Sure")
+                .cancel("Cancel")
+            ).then(function() {
+                $scope.tender.editType="select-winner";
+                $scope.update($scope.tender);
+            }, function() {
+
+            });
+        } else {
+            dialogService.showToast("Please Select A Tenderer");
+        }
+    };
+
     $scope.update = function(tender) {
+        if (tender.status==="close") {
+            dialogService.showToast("This tender has closed");
+            return;
+        }
         tenderService.update({id: tender._id}, tender).$promise.then(function(res) {
             dialogService.closeModal();
             if (tender.editType==="change-title") {

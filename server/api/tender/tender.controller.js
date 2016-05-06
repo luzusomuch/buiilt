@@ -51,7 +51,9 @@ exports.update = function(req, res) {
     Tender.findById(req.params.id, function(err, tender) {
         if (err) {return res.send(500,err);}
         else if (!tender) {return res.send(404);}
-        if (!tender.type && !data.selectedTenterType && data.editType==="invite-tenderer") {
+        if (tender.status==="close") {
+            return res.send(500, {msg: "This Tender Closed"});
+        } else if (!tender.type && !data.selectedTenterType && data.editType==="invite-tenderer") {
             return res.send(422, {msg: "Please select tender type"});
         } else if (tender.documentSet && data.editType==="attach-document-set") {
             return res.send(500, {msg: "This tender is already have document set"});
@@ -257,6 +259,7 @@ exports.update = function(req, res) {
                     tender.event = data.selectedEvent;
                     cb();
                 } else if (data.editType==="select-winner") {
+                    tender.status = "close";
                     var winnerTenderer = tender.members[data.winnerIndex];
                     var loserTenderer = tender.members.splice(data.winnerTenderer, 1);
                     if (winnerTenderer.user) {
