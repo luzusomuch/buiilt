@@ -11,7 +11,7 @@
 					<md-tooltip md-direction="bottom">Back</md-tooltip>
 				</md-button>
 			
-			    <h5><span>{{file.name}}</span></h5>
+			    <h5>{{file.name}}</h5>
 				
 				<span flex></span>
 				
@@ -119,10 +119,10 @@
 				
 				<md-divider></md-divider>
 				
-				<div layout="row">
-		  	      	<md-button ng-show="!thread.isArchive" aria-label="Compose Message" class="md-icon-button" ng-click="showReplyModal($event)">
-					  	<md-tooltip md-direction="top">Compose a Message</md-tooltip>
-				      	<md-icon class="material-icons">reply</md-icon>
+				<div layout="row" layout-align="center center">
+		  	      	<md-button ng-show="!thread.isArchive" aria-label="Compose Message" class="md-icon-button" ng-click="showModal($event, 'upload-reversion.html')">
+					  	<md-tooltip md-direction="top">Upload Reversion</md-tooltip>
+				      	<md-icon class="material-icons">file_upload</md-icon>
 		  	      	</md-button>
 				</div>
 				

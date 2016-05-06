@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope, $rootScope, $timeout, file, $mdDialog, uploadService, fileService, $mdToast, peopleService, $stateParams, messageService, taskService, $state, people, socket, notificationService, tenders, dialogService) {
+angular.module('buiiltApp').controller('projectFileDetailCtrl', function($cookieStore, $scope, $rootScope, $timeout, file, $mdDialog, uploadService, fileService, $mdToast, peopleService, $stateParams, messageService, taskService, $state, people, socket, notificationService, tenders, dialogService, FileUploader) {
     $scope.file = file;
     /*Check if current team is team owner of file*/
     $scope.isOwnerTeam=false;
@@ -381,75 +381,119 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
     };
 
     // create related file
-    $scope.relatedFile = {
-        files:[],
-        tags:[],
-        belongTo: $scope.file._id,
-        belongToType: "file"
-    };
+    // $scope.relatedFile = {
+    //     files:[],
+    //     tags:[],
+    //     belongTo: $scope.file._id,
+    //     belongToType: "file"
+    // };
 
-    $scope.pickFile = pickFile;
+    // $scope.pickFile = pickFile;
 
-    $scope.onSuccess = onSuccess;
+    // $scope.onSuccess = onSuccess;
 
-    function pickFile(){
-        filepickerService.pick(
-            // add max files for multiple pick
-            // {maxFiles: 5},
-            onSuccess
-        );
-    };
+    // function pickFile(){
+    //     filepickerService.pick(
+    //         // add max files for multiple pick
+    //         // {maxFiles: 5},
+    //         onSuccess
+    //     );
+    // };
 
-    function onSuccess(file, type){
-        file.type = "file";
-        if (type === "related") 
-            $scope.relatedFile.files.push(file);
-        else
-            $scope.fileReversion.files.push(file);
-    };
+    // function onSuccess(file, type){
+    //     file.type = "file";
+    //     if (type === "related") 
+    //         $scope.relatedFile.files.push(file);
+    //     else
+    //         $scope.fileReversion.files.push(file);
+    // };
 
-    /*Create related file with valid tags and members then open it*/
-    $scope.createRelatedFile = function() {
-        $scope.relatedFile.tags = _.filter($scope.tags, {select: true});
-        $scope.relatedFile.members = _.filter($scope.invitees, {select: true});
-        if ($scope.relatedFile.files.length == 0) {
-            $scope.showToast("Please choose at least 1 file");
-        } else if ($scope.relatedFile.tags.length == 0) {
-            $scope.showToast("Please enter at least 1 tags");
-        } else if ($scope.relatedFile.members.length == 0) {
-            $scope.showToast("Please choose at least 1 member");
-        } else { 
-            uploadService.upload({id: $stateParams.id}, $scope.relatedFile).$promise.then(function(res) {
-                $scope.closeModal();
-                $scope.showToast("Upload new related file successfully");
-                $state.go("project.files.detail", {id: res[0].project, fileId: res[0]._id});
-            }, function(err) {$scope.showToast("Error");});
-        }
-    };
+    // /*Create related file with valid tags and members then open it*/
+    // $scope.createRelatedFile = function() {
+    //     $scope.relatedFile.tags = _.filter($scope.tags, {select: true});
+    //     $scope.relatedFile.members = _.filter($scope.invitees, {select: true});
+    //     if ($scope.relatedFile.files.length == 0) {
+    //         $scope.showToast("Please choose at least 1 file");
+    //     } else if ($scope.relatedFile.tags.length == 0) {
+    //         $scope.showToast("Please enter at least 1 tags");
+    //     } else if ($scope.relatedFile.members.length == 0) {
+    //         $scope.showToast("Please choose at least 1 member");
+    //     } else { 
+    //         uploadService.upload({id: $stateParams.id}, $scope.relatedFile).$promise.then(function(res) {
+    //             $scope.closeModal();
+    //             $scope.showToast("Upload new related file successfully");
+    //             $state.go("project.files.detail", {id: res[0].project, fileId: res[0]._id});
+    //         }, function(err) {$scope.showToast("Error");});
+    //     }
+    // };
 
     // upload reversion
     $scope.fileReversion = {
-        files: []
+        // files: []
+    };
+
+    $scope.uploadReversion = {};
+
+    $scope.safeApply = function (fn) {
+        var phase = this.$root.$$phase;
+        if (phase == '$apply' || phase == '$digest') {
+            if (fn && (typeof (fn) === 'function')) {
+                fn();
+            }
+        } else {
+            this.$apply(fn);
+        }
+    };
+
+    var uploader = $scope.uploader = new FileUploader({
+        url: 'api/uploads/'+$stateParams.fileId+'/upload-reversion',
+        headers : {
+          Authorization: 'Bearer ' + $cookieStore.get('token')
+        },
+        formData: [$scope.uploadReversion]
+    });
+
+    uploader.onProgressAll = function (progress) {
+        $scope.progress = progress;
+    };
+
+    uploader.onAfterAddingFile = function (item) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            item.src = e.target.result;
+            $scope.safeApply();
+        };
+        reader.readAsDataURL(item._file);
+    };
+
+    uploader.onCompleteAll = function () {
+        dialogService.closeModal();
+        dialogService.showToast("Upload File Reversion Successfully");
     };
 
     /*Upload file reversion then call mixpanel to track current user
     has uploaded reversion*/
     $scope.uploadReversionFile = function() {
-        if ($scope.fileReversion.files.length === 0) {
-            $scope.showToast("Please Select A File To Upload...");
-            return;
+        if ($scope.uploader.queue.length === 0) {
+            dialogService.showToast("Please Select A File");
         } else {
-            uploadService.uploadReversion({id: $scope.file._id}, $scope.fileReversion).$promise.then(function(res) {
-                $scope.closeModal();
-                $scope.showToast("File Revision Attached Successfully.");
-				
-				//Track File Revision
-				mixpanel.identify($rootScope.currentUser._id);
-				mixpanel.track("File Revision Uploaded");
-				
-                $scope.file = res;
-            }, function(err) {$scope.showToast("There Has Been An Error...");});
+            uploader.uploadAll();
         }
+    //     if ($scope.fileReversion.files.length === 0) {
+    //         $scope.showToast("Please Select A File To Upload...");
+    //         return;
+    //     } else {
+    //         uploadService.uploadReversion({id: $scope.file._id}, $scope.fileReversion).$promise.then(function(res) {
+    //             $scope.closeModal();
+    //             $scope.showToast("File Revision Attached Successfully.");
+				
+				// //Track File Revision
+				// mixpanel.identify($rootScope.currentUser._id);
+				// mixpanel.track("File Revision Uploaded");
+				
+    //             $scope.file = res;
+    //         }, function(err) {$scope.showToast("There Has Been An Error...");});
+    //     }
     };
 
     /*Archive or unarchive file*/

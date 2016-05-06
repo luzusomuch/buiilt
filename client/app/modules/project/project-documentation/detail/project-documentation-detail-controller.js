@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', function($rootScope, $scope, $timeout, document, uploadService, $mdDialog, $mdToast, $stateParams, fileService, socket, notificationService, peopleService) {
+angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', function($cookieStore, $rootScope, $scope, $timeout, document, uploadService, $mdDialog, $mdToast, $stateParams, fileService, socket, notificationService, peopleService, FileUploader, dialogService) {
     $scope.document = document;
 
     /*Check if current team is team owner*/
@@ -210,52 +210,80 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
         win.focus();
     };
 
-    $scope.uploadReversion = {
-        files: [],
-        versionTags: [],
-        teamMembers: [],
+    $scope.uploadReversion = {};
+
+    $scope.safeApply = function (fn) {
+        var phase = this.$root.$$phase;
+        if (phase == '$apply' || phase == '$digest') {
+            if (fn && (typeof (fn) === 'function')) {
+                fn();
+            }
+        } else {
+            this.$apply(fn);
+        }
     };
 
-    function pickFile(){
-        filepickerService.pick(
-            onSuccess
-        );
+    var uploader = $scope.uploader = new FileUploader({
+        url: 'api/uploads/'+$stateParams.documentId+'/upload-reversion',
+        headers : {
+          Authorization: 'Bearer ' + $cookieStore.get('token')
+        },
+        formData: [$scope.uploadReversion]
+    });
+
+    uploader.onProgressAll = function (progress) {
+        $scope.progress = progress;
     };
 
-    function onSuccess(file){
-        $scope.uploadReversion.files.push(file);
+    uploader.onAfterAddingFile = function (item) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            item.src = e.target.result;
+            $scope.safeApply();
+        };
+        reader.readAsDataURL(item._file);
     };
 
-    $scope.pickFile = pickFile;
-
-    $scope.onSuccess = onSuccess;
+    uploader.onCompleteAll = function () {
+        dialogService.closeModal();
+        dialogService.showToast("Upload Document Reversion Successfully");
+    };
 
     /*Upload document reversion with vaid version tags and project members
     then call mixpanel track current user has uploaded document reversion*/
     $scope.uploadReversionDocument = function() {
-        $scope.uploadReversion.versionTags = _.filter($scope.versionTags, {select: true});
-        $scope.uploadReversion.teamMembers = _.filter($scope.projectMembers, {select: true});
-        if ($scope.uploadReversion.files.length === 0) {
-            $scope.showToast("Please Select a File to Upload...");
-            return;
-        } else if ($scope.uploadReversion.versionTags.length===0) {
-            $scope.showToast("Please Select At Least 1 Version Tag");
-            return false;
-        } else if ($scope.uploadReversion.teamMembers.length===0) {
-            $scope.showToast("Please Select At Least 1 Version Team member");
-            return false;
+        var versionTags = _.map(_.filter($scope.versionTags, {select: true}), 'tag');
+        if (versionTags.length===0) {
+            dialogService.showToast("Please Select At Least 1 Version Tag");
+        } else if ($scope.uploader.queue.length===0) {
+            dialogService.showToast("Please Select A Document");
         } else {
-            uploadService.uploadReversion({id: $scope.document._id}, $scope.uploadReversion).$promise.then(function(res) {
-                $scope.closeModal();
-                $scope.showToast("Document Revision Successfully Uploaded.");
-				
-				//Document Revision Uploaded
-				mixpanel.identify($rootScope.currentUser._id);
-				mixpanel.track("Document Revision Uploaded");
-				
-                $rootScope.$broadcast("Document.Updated", res);
-            }, function(err) {$scope.showToast("There Has Been An Error...");});
+            $scope.uploader.queue[0].formData.push({versionTags: versionTags.join()});
+            uploader.uploadAll();
         }
+    //     $scope.uploadReversion.versionTags = _.filter($scope.versionTags, {select: true});
+    //     $scope.uploadReversion.teamMembers = _.filter($scope.projectMembers, {select: true});
+    //     if ($scope.uploadReversion.files.length === 0) {
+    //         $scope.showToast("Please Select a File to Upload...");
+    //         return;
+    //     } else if ($scope.uploadReversion.versionTags.length===0) {
+    //         $scope.showToast("Please Select At Least 1 Version Tag");
+    //         return false;
+    //     } else if ($scope.uploadReversion.teamMembers.length===0) {
+    //         $scope.showToast("Please Select At Least 1 Version Team member");
+    //         return false;
+    //     } else {
+    //         uploadService.uploadReversion({id: $scope.document._id}, $scope.uploadReversion).$promise.then(function(res) {
+    //             $scope.closeModal();
+    //             $scope.showToast("Document Revision Successfully Uploaded.");
+				
+				// //Document Revision Uploaded
+				// mixpanel.identify($rootScope.currentUser._id);
+				// mixpanel.track("Document Revision Uploaded");
+				
+    //             $rootScope.$broadcast("Document.Updated", res);
+    //         }, function(err) {$scope.showToast("There Has Been An Error...");});
+    //     }
     };
 
     /*Show modal with a valid name*/
