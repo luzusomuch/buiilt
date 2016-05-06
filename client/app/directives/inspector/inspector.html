@@ -16,7 +16,7 @@
     <div ng-show="showActivity" class="activity-stream-head" layout-padding>
         <p>This {{type}} was created by <strong>{{data.owner.name}}</strong> on {{data.createdAt | date: longDate}}</p>
     </div>
-    <div ng-show="showActivity" layout-padding ng-repeat="activity in data.activities" ng-hide="activity.type=='attach-scope' || activity.type=='attach-addendum' || activity.type=='attach-document-set' || activity.type=='select-winner' || activity.type=='chat'">
+    <div ng-show="showActivity" layout-padding ng-repeat="activity in data.activities" ng-hide="activity.type=='attach-scope' || activity.type=='attach-addendum' || activity.type=='attach-document-set' || activity.type=='select-winner' || activity.type=='chat' || activity.type=='upload-reversion'">
         <p>
             <i style="font-size:10px; margin-right:5px" class="material-icons">lens</i><span>{{activity.user.name}}</span>
             <span ng-switch="activity.type">
@@ -34,8 +34,11 @@
                 <span ng-switch-when="change-event"> has changed event for this {{type}}</span>
                 <span ng-switch-when="add-event"> has added event for this {{type}}</span>
                 <!-- Thread section -->
-                <span ng-switch-when="assign"> has added <span ng-repeat="invitee in activity.element.invitees">{{invitee}}, </span> to this {{type}}</span>
+                <span ng-show="type=='thread'" ng-switch-when="assign"> has added <span ng-repeat="invitee in activity.element.invitees">{{invitee}}, </span> to this {{type}}</span>
                 <span ng-switch-when="edit-thread"> has changed name of this {{type}} to {{activity.element.name}}</span>
+                <!-- File section -->
+                <span ng-show="type=='file'" ng-switch-when="assign"> has added <span ng-repeat="member in activity.element.members">{{member}}, </span> to this {{type}}</span>
+                <span ng-switch-when="insert-note"> has inserted a notice - {{activity.element.content}} to this {{type}}</span>
             </span>
             <span> on {{activity.createdAt | date: longDate}}</span>
         </p>

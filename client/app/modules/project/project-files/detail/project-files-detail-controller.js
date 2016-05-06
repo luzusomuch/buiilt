@@ -507,4 +507,13 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($cookie
             
         });
     };
+
+    $scope.viewFile = function(activityAndHisToryId) {
+        var index = _.findIndex($scope.file.fileHistory, function(history) {
+            return history.activityAndHisToryId==activityAndHisToryId;
+        });
+        if (index !== -1) {
+            window.open($scope.file.fileHistory[index].link, "_blank").focus();
+        }
+    };
 });
