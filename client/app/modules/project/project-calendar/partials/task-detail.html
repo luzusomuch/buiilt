@@ -17,18 +17,25 @@
 			
 			<div layout="column">
 				<h3 class="md-title">Details</h3>
-				<p ng-show="!showEditDescription" ng-mouseenter="editDescription=true" ng-mouseleave="editDescription=false">{{task.description}} <span ng-show="editDescription" class="md-body-2 link-decoration" ng-click="showEditDescription=true">Edit</span></p>
-				<md-input-container ng-show="showEditDescription">
+				<p ng-show="!showEdit" ng-mouseenter="editDescription=true" ng-mouseleave="editDescription=false">{{task.description}} <span ng-show="editDescription" class="md-body-2 link-decoration" ng-click="showEdit=true">Edit</span></p>
+				<md-input-container ng-show="showEdit">
 					<label for="">Task Description</label>
 					<input type="text" ng-model="task.description" ng-blur="changeDescription()">
 				</md-input-container>
 			</div>
 			
-			<div layout="row">
-				<p class="md-subhead" ng-mouseenter="editAssignees=true" ng-mouseleave="editAssignees=false">
+			<div layout="column">
+				<h3 class="md-title">These Members Who Can See This Task</h3>
+				<p ng-show="!showEdit" class="md-subhead" ng-mouseenter="editAssignees=true" ng-mouseleave="editAssignees=false">
 					<span ng-repeat="member in task.members">{{member.name}}, </span>
 					<span ng-repeat="email in task.notMembers">{{email}}, </span>
-					<span ng-show="editAssignees" class="md-body-2 link-decoration">Edit</span></p>
+					<span ng-show="editAssignees" class="md-body-2 link-decoration" ng-click="showEdit=true">Edit</span>
+				</p>
+				<div layout="column" ng-show="showEdit">
+					<div layout="row" layout-align="center center" layout-wrap layout-padding flex>
+						<md-checkbox ng-click="assignMember($index)" ng-repeat="member in projectMembers" class="filter-checkbox md-primary">{{(member._id) ? member.name : member.email}}</md-checkbox>
+					</div>
+				</div>
 			</div>
 			
 			<md-divider></md-divider>

@@ -91,6 +91,50 @@ angular
         }
     };
 
+    $rootScope.getProjectMembers = function(people) {
+        var membersList = [];
+        _.each($rootScope.roles, function(role) {
+            _.each(people[role], function(tender){
+                if (tender.hasSelect) {
+                    var isLeader = (_.findIndex(tender.tenderers, function(tenderer) {
+                        if (tenderer._id) {
+                            return tenderer._id._id.toString() === $rootScope.currentUser._id.toString();
+                        }
+                    }) !== -1) ? true : false;
+                    if (!isLeader) {
+                        _.each(tender.tenderers, function(tenderer) {
+                            var memberIndex = _.findIndex(tenderer.teamMember, function(member) {
+                                return member._id.toString() === $rootScope.currentUser._id.toString();
+                            });
+                            if (memberIndex !== -1) {
+                                _.each(tenderer.teamMember, function(member) {
+                                    member.select = false;
+                                    membersList.push(member);
+                                });
+                            }
+                        });
+                        if (tender.tenderers[0]._id) {
+                            tender.tenderers[0]._id.select = false;
+                            membersList.push(tender.tenderers[0]._id);
+                        } else {
+                            membersList.push({email: tender.tenderers[0].email, select: false});
+                        }
+                    } else {
+                        _.each(tender.tenderers, function(tenderer) {
+                            if (tenderer._id._id.toString() === $rootScope.currentUser._id.toString()) {
+                                _.each(tenderer.teamMember, function(member) {
+                                    member.select = false;
+                                    membersList.push(member);
+                                });
+                            }
+                        });
+                    }
+                }
+            });
+        });
+        return membersList;
+    };
+
     authService.isLoggedInAsync(function (loggedIn) {
         if (loggedIn) {
             authService.getCurrentUser().$promise.then(function(res){

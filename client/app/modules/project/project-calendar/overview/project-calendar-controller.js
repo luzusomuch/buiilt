@@ -115,20 +115,6 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                         $scope.showModal("create-task.html");
                     }
                 },
-                // dayClick: function(day, jsEv, view) {
-                //     console.log("AAAAAAAAAAAAAA");
-                //     day = new Date(day);
-                //     $rootScope.selectedStartDate = day;
-                //     var momentDay = moment(day).hours();
-                //     console.log(momentDay, view.name);
-                //     if (momentDay===0 && view.name !== "month") {
-                //         $scope.showModal("create-event.html");
-                //     } else if (momentDay !== 0 && view.name !== "month") {
-                //         $scope.showModal("create-task.html");
-                //     } else {
-                //         $scope.showModal("create-task-or-event.html");
-                //     }
-                // },
                 eventClick: function(data) {
                     if (data.type==="event") {
                         $mdDialog.show({
@@ -192,22 +178,55 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                     } else if (data.type==="task"){
                         $mdDialog.show({
                             // targetEvent: $event,
-                            controller: ["$rootScope", "$scope", "dialogService", "socket", "activity", "$stateParams", "$state", "task", function($rootScope, $scope, dialogService, socket, activity, $stateParams, $state, task) {
-                                // socket handle
-                                socket.emit("join", task._id);
-                                socket.on("task:update", function(data) {
-                                    $scope.task = data;
-                                });
-                                // end socket handle
-
+                            controller: ["$rootScope", "$scope", "dialogService", "socket", "activity", "$stateParams", "$state", "task", "people", function($rootScope, $scope, dialogService, socket, activity, $stateParams, $state, task, people) {
                                 $scope.event = data;
                                 $scope.task = task;
                                 $scope.dialogService = dialogService;
                                 $scope.tasks = [];
                                 $scope.threads = [];
                                 $scope.files = [];
-                                console.log(task);
                                 $scope.allowShowList = ["create-task", "edit-task", "change-date-time", "complete-task", "uncomplete-task"];
+                                
+                                // socket handle
+                                socket.emit("join", task._id);
+                                socket.on("task:update", function(data) {
+                                    $scope.task = data;
+                                    getProjectMembers();
+                                });
+                                // end socket handle
+
+                                // get project member
+                                function getProjectMembers(){
+                                    $scope.projectMembers = $rootScope.getProjectMembers(people);
+                                    _.each($scope.task.members, function(member) {
+                                        var index = _.findIndex($scope.projectMembers, function(projectMember){
+                                            if (projectMember._id) {
+                                                return projectMember._id.toString()===member._id.toString();
+                                            }
+                                        });
+                                        if (index !== -1) {
+                                            $scope.projectMembers.splice(index, 1);
+                                        }
+                                    });
+                                    _.each($scope.task.notMembers, function(email) {
+                                        var index = _.findIndex($scope.projectMembers, function(projectMember) {
+                                            if (!projectMembers._id) {
+                                                return projectMember.email==email;
+                                            }
+                                        });
+                                        if (index !== -1) {
+                                            $scope.projectMembers.splice(index, 1);
+                                        }
+                                    });
+                                };
+                                getProjectMembers();
+
+                                $scope.assignMember = function(index) {
+                                    $scope.task.newMembers = [$scope.projectMembers[index]];
+                                    $scope.task.editType="assign";
+                                    $scope.update($scope.task);
+                                };
+
 
                                 $scope.addComment = function() {
                                     if (!$scope.comment || $scope.comment.trim().length===0) {
@@ -236,8 +255,10 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                                             dialogService.showToast("Enter New Comment Successfully");
                                         } else if (task.editType==="edit-task") {
                                             dialogService.showToast("Change Task Description Successfully");
-                                            $scope.showEditDescription = false;
+                                        } else if (task.editType==="assign") {
+                                            dialogService.showToast("Assign Members To Task Successfully");
                                         }
+                                        $scope.showEdit = false;
                                     }, function(err) {
                                         dialogService.showToast("Error");
                                     });
@@ -249,6 +270,9 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                                 }],
                                 task: ["taskService", "$stateParams", function(taskService, $stateParams) {
                                     return taskService.get({id: data._id}).$promise;
+                                }],
+                                people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
+                                    return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
                                 }]
                             },
                             templateUrl: 'app/modules/project/project-calendar/partials/task-detail.html',
@@ -389,49 +413,8 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
 
     /*Get all project members*/
     function getProjectMembers() {
-        $scope.membersList = [];
-        _.each($rootScope.roles, function(role) {
-            _.each(people[role], function(tender){
-                if (tender.hasSelect) {
-                    var isLeader = (_.findIndex(tender.tenderers, function(tenderer) {
-                        if (tenderer._id) {
-                            return tenderer._id._id.toString() === $rootScope.currentUser._id.toString();
-                        }
-                    }) !== -1) ? true : false;
-                    if (!isLeader) {
-                        _.each(tender.tenderers, function(tenderer) {
-                            var memberIndex = _.findIndex(tenderer.teamMember, function(member) {
-                                return member._id.toString() === $rootScope.currentUser._id.toString();
-                            });
-                            if (memberIndex !== -1) {
-                                _.each(tenderer.teamMember, function(member) {
-                                    member.select = false;
-                                    $scope.membersList.push(member);
-                                });
-                            }
-                        });
-                        if (tender.tenderers[0]._id) {
-                            tender.tenderers[0]._id.select = false;
-                            $scope.membersList.push(tender.tenderers[0]._id);
-                        } else {
-                            $scope.membersList.push({email: tender.tenderers[0].email, select: false});
-                        }
-                    } else {
-                        _.each(tender.tenderers, function(tenderer) {
-                            if (tenderer._id._id.toString() === $rootScope.currentUser._id.toString()) {
-                                _.each(tenderer.teamMember, function(member) {
-                                    member.select = false;
-                                    $scope.membersList.push(member);
-                                });
-                            }
-                        });
-                    }
-                }
-            });
-        });
         // get unique member 
-        $scope.membersList = _.uniq($scope.membersList, "_id");
-
+        $scope.membersList = _.uniq($rootScope.getProjectMembers(people), "_id");
         // remove current user from the members list
         _.remove($scope.membersList, {_id: $rootScope.currentUser._id});
     };
