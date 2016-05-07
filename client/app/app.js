@@ -18,7 +18,8 @@ angular.module('buiiltApp', [
     'angular-stripe',
     "ui.calendar",
     "mdPickers",
-    "internationalPhoneNumber"
+    "internationalPhoneNumber",
+    "angular-thumbnails"
 ]);
 
 angular

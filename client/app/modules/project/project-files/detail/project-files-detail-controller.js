@@ -72,6 +72,7 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($cookie
                     });
                     if (index !== -1) {
                         activity.element.link = file.fileHistory[index].link;
+                        activity.element.fileType = (activity.element.link.substr(activity.element.link.length-3, activity.element.link.length).toLowerCase()==="pdf") ? "pdf" : "image";
                     }
                 }
             }

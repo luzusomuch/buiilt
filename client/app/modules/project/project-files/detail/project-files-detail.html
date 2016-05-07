@@ -74,7 +74,6 @@
 				<md-divider></md-divider>
 				<div scroll-to-bottom="file.activities">
 					<div class="item-activity">
-					
 						<div layout="row" layout-align="center center" flex class="activity-stream" ng-repeat="activity in file.activities" ng-class="{related: activity.element.related, 'unread-notification': activity.unread, 'unread-notification-line': activity.unreadLine}" ng-show="activity.type=='upload-reversion' || activity.type=='related-thread' || activity.type=='related-task'">
 				
 							<span flex="5"></span>
@@ -108,7 +107,8 @@
 
 								<p class="activity-footer md-footer" ng-switch="activity.type">
 									<span ng-switch-when="upload-reversion">
-										<img class="image-thumbnail" ng-src="{{activity.element.link}}" alt="">
+										<img class="image-thumbnail" ng-src="{{activity.element.link}}" alt="" ng-show="activity.element.fileType!='pdf'">
+										<!-- <thumbnail file-type="{{activity.element.fileType}}" source="{{activity.element.link}}" max-height="150" max-width="150"></thumbnail> -->
 									</span>
 								</p>
 
