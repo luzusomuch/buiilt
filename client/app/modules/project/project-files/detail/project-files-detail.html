@@ -54,7 +54,7 @@
 						<p class="md-body-2">Change Current File Event</p>
 						<md-input-container flex>
 							<label for="">Events List</label>
-							<md-select ng-change="addOrChangeEvent()" ng-model="file.selectedEvent">
+							<md-select ng-change="addOrChangeEventOrTags('event')" ng-model="file.selectedEvent">
 								<md-option ng-repeat="activity in activities" ng-show="!activity.isMilestone" ng-value="activity._id">{{activity.name}}</md-option>
 							</md-select>
 						</md-input-container>
@@ -62,9 +62,12 @@
 					<div layout="column">
 						<p class="md-body-2">Change File Tags</p>
 						<div layout="row" layout-align="center center" layout-wrap layout-padding flex>
-	                        <md-checkbox ng-checked="tag.select" class="filter-checkbox md-primary" ng-repeat="tag in tags" ng-click="changeTag($index, 'tag')">
+							<md-select ng-change="addOrChangeEventOrTags('tags')" ng-model="file.selectedTag">
+								<md-option ng-repeat="tag in tags" ng-value="tag.name">{{tag.name}}</md-option>
+							</md-select>
+	                        <!-- <md-checkbox ng-checked="tag.select" class="filter-checkbox md-primary" ng-repeat="tag in tags" ng-click="changeTag($index, 'tag')">
 	                            {{tag.name}}
-	                        </md-checkbox>
+	                        </md-checkbox> -->
 		                </div>
 					</div>
 				</div>
@@ -101,6 +104,12 @@
 									<span ng-switch-when="related-thread">"<a ui-sref="project.messages.detail({id: file.project, messageId: activity.element.item})">{{activity.element.name}}</a>"</span>
 
 									<span ng-switch-when="related-task">"<a ui-sref="project.tasks.detail({id: file.project, taskId: activity.element.item})">{{activity.element.name}}</a>"</span>
+								</p>
+
+								<p class="activity-footer md-footer" ng-switch="activity.type">
+									<span ng-switch-when="upload-reversion">
+										<img class="image-thumbnail" ng-src="{{activity.element.link}}" alt="">
+									</span>
 								</p>
 
 		                        <!-- <div layout="row" layout-align="center center" class="tagcloud-selection" ng-show="activity.user._id==currentUser._id && (activity.type==='upload-file' || activity.type==='upload-reversion')">

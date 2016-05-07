@@ -1,6 +1,7 @@
 angular.module('buiiltApp').controller('projectFileDetailCtrl', function($cookieStore, $scope, $rootScope, $timeout, file, $mdDialog, uploadService, fileService, $mdToast, peopleService, $stateParams, messageService, taskService, $state, people, socket, notificationService, tenders, dialogService, FileUploader, activities) {
     $scope.file = file;
     $scope.file.selectedEvent = file.event;
+    $scope.file.selectedTag = (file.tags.length > 0) ? file.tags[0] : null;
     $scope.activities = activities;
     /*Check if current team is team owner of file*/
     $scope.isOwnerTeam=false;
@@ -51,7 +52,8 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($cookie
         }
     };
 
-    /*Check is current user has sent acknowledgement or not*/
+    /*Check is current user has sent acknowledgement or not
+    and also grant file link for activity if it's upload-reversion type*/
     function checkAcknowLedgement(file) {
         _.each(file.activities, function(activity) {
             if (activity.type === "upload-reversion" || activity.type === "upload-file") {
@@ -63,6 +65,14 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($cookie
                     activity.isAcknow = true;
                 } else {
                     activity.isAcknow = false;
+                }
+                if (activity.activityAndHisToryId) {
+                    var index = _.findIndex(file.fileHistory, function(history) {
+                        return history.activityAndHisToryId==activity.activityAndHisToryId;
+                    });
+                    if (index !== -1) {
+                        activity.element.link = file.fileHistory[index].link;
+                    }
                 }
             }
         });
@@ -78,9 +88,9 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($cookie
 
     /*Receive when someone updated file that current user is in members list*/
     socket.on("file:update", function(data) {
-        console.log(data);
         $scope.file = data;
         $scope.file.selectedEvent = data.event;
+        $scope.file.selectedTag = (data.tags.length > 0) ? data.tags[0] : null;
         checkAcknowLedgement($scope.file);
         notificationService.markItemsAsRead({id: $stateParams.fileId}).$promise.then();
     });
@@ -327,19 +337,28 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($cookie
         $scope.update($scope.file);
     };
 
-    $scope.changeTag = function(index) {
-        $scope.tags[index].select = !$scope.tags[index].select;
-        $scope.file.tags = _.filter($scope.tags, {select: true});
-        $scope.file.editType="edit";
-        $scope.update($scope.file);
-    }
+    // $scope.changeTag = function(index) {
+    //     $scope.tags[index].select = !$scope.tags[index].select;
+    //     $scope.file.tags = _.filter($scope.tags, {select: true});
+    //     $scope.file.editType="edit";
+    //     $scope.update($scope.file);
+    // }
 
-    $scope.addOrChangeEvent = function() {
-        if (!$scope.file.selectedEvent) {
-            dialogService.showToast("Please Select An Event");
-        } else {
-            $scope.file.editType = ($scope.file.event) ? "change-event" : "add-event";
-            $scope.update($scope.file);
+    $scope.addOrChangeEventOrTags = function(type) {
+        if (type==="event") {
+            if (!$scope.file.selectedEvent) {
+                dialogService.showToast("Please Select An Event");
+            } else {
+                $scope.file.editType = ($scope.file.event) ? "change-event" : "add-event";
+                $scope.update($scope.file);
+            }
+        } else if (type==="tags") {
+            if (!$scope.file.selectedTag) {
+                dialogService.showToast("Please Select A Tag");
+            } else {
+                $scope.file.editType = "edit";
+                $scope.update($scope.file);
+            }
         }
     };
 

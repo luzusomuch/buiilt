@@ -741,3 +741,8 @@ md-card {
 	outline: none;
 	cursor: pointer;
 }
+
+.image-thumbnail {
+  width: auto;
+  height: 100px;
+}

@@ -271,20 +271,14 @@ exports.update = function(req, res) {
             async.parallel([
                 function(cb) {
                     if (data.editType === "edit") {
-                        if (data.tags && data.tags[0].name) {
-                            var tags = [];
-                            _.each(data.tags, function(tag) {
-                                tags.push(tag.name);
-                            });
-                            activity.element.tags = (file.tags.length !== data.tags.length) ? data.tags : null;
-                            file.tags = tags;
+                        if (data.selectedTag) {
+                            activity.element.tags = [data.selectedTag];
+                            file.tags = [data.selectedTag];
                         } 
                         if (data.name && data.name !== file.name) {
                             activity.element.name = (file.name.length !== data.name.length) ? data.name : null;
                             file.name = data.name;
                         }
-                        // activity.element.description = (file.description && file.description.length !== data.description.length) ? data.description : null;
-                        // file.description = data.description;
                         cb();
                     } else if (data.editType === "assign") {
                         var members = [];
