@@ -29,7 +29,10 @@
 				<div layout="column">
 					<p class="md-body-2">Select at least one tag that is relevant to this file:</p>
 					<div layout="row" layout-align="center center" layout-wrap layout-padding flex>
-                        <md-checkbox ng-click="selectMember($index, 'tag')" ng-repeat="tag in tags" class="filter-checkbox md-primary">{{tag.name}}</md-checkbox>
+                        <md-select ng-model="relatedFile.selectedTag">
+                            <md-option ng-repeat="tag in tags" ng-value="tag.name">{{tag.name}}</md-option>
+                        </md-select>
+                        <!-- <md-checkbox ng-click="selectMember($index, 'tag')" ng-repeat="tag in tags" class="filter-checkbox md-primary">{{tag.name}}</md-checkbox> -->
 					</div>
 				</div>
             </div>

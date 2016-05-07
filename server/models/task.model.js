@@ -84,7 +84,13 @@ var TaskSchema = new Schema({
     time: {
         start: Date,
         end: Date
-    }
+    },
+    comments: [{
+        _id: false,
+        user: {type: Schema.Types.ObjectId, ref: "User"},
+        content: String,
+        sentAt: Date
+    }]
 },{
     strict: true,
     minimize: false

@@ -432,7 +432,7 @@ exports.upload = function(req, res){
                         size: files.file.size,
                         version: files.file.name,
                         mimeType: files.file.type,
-                        tag: fields.tags.split(","),
+                        tag: (fields.selectedTag) ? [fields.selectedTag] : [],
                         element: {type: fields.type},
                         key: files.file.name,
                         path: path,

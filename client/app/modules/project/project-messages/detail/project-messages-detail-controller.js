@@ -1,6 +1,8 @@
 angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($cookieStore, $q, $rootScope, $scope, $timeout, $stateParams, messageService, $mdToast, $mdDialog, $state, thread, peopleService, taskService, uploadService, people, clipboard, socket, notificationService, tenders, activities, dialogService, FileUploader) {
     var originalThread = angular.copy(thread);
     $scope.showDetail = ($rootScope.openDetail) ? true : false;
+
+    // Start Create Related File
     $scope.relatedFile = {
         belongTo: thread._id,
         belongToType: "thread",
@@ -41,11 +43,11 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($co
 
     /*Create related file*/
     $scope.uploadAll = function(){
-        var tags = _.map(_.filter($scope.tags, {select: true}), 'name');
-        if (tags.length===0) {
+        // var tags = _.map(_.filter($scope.tags, {select: true}), 'name');
+        if (!$scope.relatedFile.selectedTag) {
             dialogService.showToast("Please Select At Least 1 Tag");
         } else {
-            $scope.uploader.queue[0].formData.push({tags: tags.join()});
+            $scope.uploader.queue[0].formData.push({selectedTag: $scope.relatedFile.selectedTag});
             uploader.uploadAll();
         }
     };
@@ -54,6 +56,7 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($co
         dialogService.closeModal();
         dialogService.showToast("Create Related File Successfully");
     };
+    // End Create Related File
 
     $scope.showSaveTitleBtn = false;
     $scope.$watch("thread.name", function(value) {

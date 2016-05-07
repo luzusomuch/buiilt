@@ -192,56 +192,51 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                     } else if (data.type==="task"){
                         $mdDialog.show({
                             // targetEvent: $event,
-                            controller: ["$rootScope", "$scope", "dialogService", "activity", "$stateParams", "$state", function($rootScope, $scope, dialogService, activity, $stateParams, $state) {
-								
-								$scope.editDescription = false;
-								$scope.editAssignees = false;
-								$scope.showTasks = false;
-								$scope.showMessages = false;
-								$scope.showFiles = false;
-								$scope.showTenders = false;
-								
+                            controller: ["$rootScope", "$scope", "dialogService", "socket", "activity", "$stateParams", "$state", "task", function($rootScope, $scope, dialogService, socket, activity, $stateParams, $state, task) {
+                                // socket handle
+                                socket.emit("join", task._id);
+                                socket.on("task:update", function(data) {
+                                    $scope.task = data;
+                                });
+                                // end socket handle
+
                                 $scope.event = data;
+                                $scope.task = task;
                                 $scope.dialogService = dialogService;
                                 $scope.tasks = [];
                                 $scope.threads = [];
                                 $scope.files = [];
-                                _.each(activity.relatedItem, function(item) {
-                                    if (item.type==="thread") {
-                                        $scope.threads.push(item.item);
-                                    } else if (item.type==="task") {
-                                        $scope.tasks.push(item.item);
-                                    } else if (item.type==="file") {
-                                        $scope.files.push(item.item);
-                                    }
-                                });
+                                console.log(task);
+                                $scope.allowShowList = ["create-task", "edit-task", "change-date-time", "complete-task", "uncomplete-task"];
 
-                                $scope.viewAll = function(type) {
-                                    dialogService.closeModal();
-                                    if (type==="task") {
-                                        $state.go("project.tasks.all", {id: $stateParams.id});
-                                    } else if (type==="thread") {
-                                        $state.go("project.messages.all", {id: $stateParams.id});
-                                    } else if (type==="file") {
-                                        $state.go("project.files.all", {id: $stateParams.id});
+                                $scope.addComment = function() {
+                                    if (!$scope.comment || $scope.comment.trim().length===0) {
+                                        dialogService.showToast("Please Enter Your Comment");
+                                    } else {
+                                        $scope.task.editType = "enter-comment";
+                                        $scope.task.comment = $scope.comment;
+                                        $scope.update($scope.task);
                                     }
                                 };
 
-                                $scope.attachItem = function(type) {
-                                    $rootScope.attachEventItem = {type: type, selectedEvent: data._id};
-                                    dialogService.closeModal();
-                                    if (type==="task") {
-                                        $state.go("project.tasks.all", {id: $stateParams.id});
-                                    } else if (type==="thread") {
-                                        $state.go("project.messages.all", {id: $stateParams.id});
-                                    } else if (type==="file") {
-                                        $state.go("project.files.all", {id: $stateParams.id});
-                                    }
+                                $scope.update = function(task) {
+                                    taskService.update({id: task._id}, task).$promise.then(function(res) {
+                                        console.log(res);
+                                        if (task.editType==="enter-comment") {
+                                            $scope.comment = null;
+                                            dialogService.showToast("Enter New Comment Successfully");
+                                        }
+                                    }, function(err) {
+                                        dialogService.showToast("Error");
+                                    });
                                 };
                             }],
                             resolve: {
                                 activity: ["activityService", "$stateParams", function(activityService, $stateParams) {
-                                    return activityService.get({id: data._id}).$promise;
+                                    return activityService.me({id: $stateParams.id}).$promise;
+                                }],
+                                task: ["taskService", "$stateParams", function(taskService, $stateParams) {
+                                    return taskService.get({id: data._id}).$promise;
                                 }]
                             },
                             templateUrl: 'app/modules/project/project-calendar/partials/task-detail.html',

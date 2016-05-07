@@ -19,10 +19,10 @@ var moment = require("moment");
 
 function populateThread(thread, res){
     Thread.populate(thread, [
-        {path: "owner", select: "_id email name"},
+        {path: "owner", select: "_id email name phoneNumber"},
         {path: "messages.user", select: "_id email name"},
         {path: "messages.mentions", select: "_id email name"},
-        {path: "members", select: "_id email name"},
+        {path: "members", select: "_id email name phoneNumber"},
         {path: "activities.user", select: "_id email name"}
     ], function(err, thread) {
         return res.send(200, thread);
@@ -31,9 +31,10 @@ function populateThread(thread, res){
 
 function populateTask(task, res, req){
     Task.populate(task, [
-        {path: "owner", select: "_id email name"},
-        {path: "members", select: "_id email name"},
-        {path: "activities.user", select: "_id email name"}
+        {path: "owner", select: "_id email name phoneNumber"},
+        {path: "members", select: "_id email name phoneNumber"},
+        {path: "activities.user", select: "_id email name"},
+        {path: "comments.user", select: "_id email name"}
     ], function(err, task) {
         EventBus.emit('socket:emit', {
             event: 'task:update',
@@ -64,8 +65,8 @@ function populateTask(task, res, req){
 
 function populateNewTask(task, res, req){
     Task.populate(task, [
-        {path: "owner", select: "_id email name"},
-        {path: "members", select: "_id email name"},
+        {path: "owner", select: "_id email name phoneNumber"},
+        {path: "members", select: "_id email name phoneNumber"},
         {path: "activities.user", select: "_id email name"},
         {path: "project"}
     ], function(err, task) {
@@ -147,20 +148,24 @@ exports.destroy = function (req, res) {
 */
 exports.get = function(req, res) {
     Task.findById(req.params.id)
-    .populate('members', '_id name email')
-    .populate('owner', '_id name email')
+    .populate('members', '_id name email phoneNumber')
+    .populate('owner', '_id name email phoneNumber')
     .populate('activities.user','_id name email')
-    .populate("completedBy, '_id name email")
+    .populate("completedBy", "_id name email")
+    .populate("comments.user", "_id name email")
     .exec(function(err, task){
         if (err) {return res.send(500,err);}
         if (!task) {return res.send(404);}
+        console.log(task);
         Notification.find({owner: req.user._id, unread: true, "element._id": task._id}, function(err, notifications) {
             if (err) {return res.send(500,err);}
             task.__v = notifications.length;
-            if (req.query.isAdmin && req.user.role==="admin") {
-                return res.send(200, task);
-            }
-            RelatedItem.responseWithRelated("task", task, req.user, res);
+            return res.send(200, task);
+            // if (req.query.isAdmin && req.user.role==="admin") {
+            //     return res.send(200, task);
+            // }
+            // return res.send(200, task);
+            // RelatedItem.responseWithRelated("task", task, req.user, res);
         });
     });
 };
@@ -271,12 +276,14 @@ exports.update = function(req,res) {
                 task = _.merge(task,data);
                 task.members = data.members;
                 task.notMembers = data.notMembers;
-                var activity = {
-                    user: user._id,
-                    type: req.body.editType,
-                    createdAt: new Date(),
-                    element: {}
-                };
+                if (req.body.editType !== "enter-comment") {
+                    var activity = {
+                        user: user._id,
+                        type: req.body.editType,
+                        createdAt: new Date(),
+                        element: {}
+                    };
+                }
                 if (req.body.editType === "edit-task") {
                     task.description = data.description;
                     task.dateEnd = data.dateEnd;
@@ -303,8 +310,20 @@ exports.update = function(req,res) {
                         start: data.time.start,
                         end: data.time.end
                     }
+                } else if (req.body.editType==="enter-comment") {
+                    var comments = (task.comments) ? task.comments : [];
+                    comments.push({
+                        user: user._id,
+                        sentAt: new Date(),
+                        content: req.body.comment
+                    });
+                    task.comments = comments;
                 }
-                task.activities.push(activity);
+
+                if (req.body.editType!=="enter-comment") {
+                    task.activities.push(activity);
+                }
+
                 task._editUser = user;
                 task.save(function(err) {
                     if (err) {
@@ -324,8 +343,8 @@ exports.update = function(req,res) {
 exports.getTasksByProject = function(req, res) {
     var userId  = (req.query.userId && req.user.role==="admin") ? mongoose.Types.ObjectId(req.query.userId) : req.user._id;
     Task.find({project: req.params.id, $or:[{owner: userId}, {members: userId}]})
-    .populate("owner", "_id name email")
-    .populate("members", "_id name email")
+    .populate("owner", "_id name email phoneNumber")
+    .populate("members", "_id name email phoneNumber")
     .populate("project")
     .exec(function(err, tasks) {
         async.each(tasks, function(task, cb) {

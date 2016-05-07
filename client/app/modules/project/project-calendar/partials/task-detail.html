@@ -1,13 +1,13 @@
-<md-dialog aria-label="{{event.title}}" flex="60" id="taskDetailDialog">
+<md-dialog aria-label="Task Detail" flex="60" id="taskDetailDialog">
     
     <md-toolbar>
         <div class="md-toolbar-tools">
 			
-            <h2>Task</h2>
+            <h2>Task Detail</h2>
 			
 			<span flex></span>
 			
-			<p class="md-subhead">Start Date - End Date</p>
+			<p class="md-subhead">{{task.dateStart | date: 'dd-MM-yyyy'}} - {{task.dateEnd | date: 'dd-MM-yyyy'}}</p>
         </div>
 		
     </md-toolbar>
@@ -15,129 +15,52 @@
     <md-dialog-content>
         <div class="md-dialog-content" layout="column" layout-padding>
 			
-			
 			<div layout="column">
 				<h3 class="md-title">Details</h3>
-				<p ng-mouseenter="editDescription=true" ng-mouseleave="editDescription=false">This is the description of this event. It should be in-line editable so that the user can provide a description about what this event has been added for. Perhaps he wants to be able to describe what the concrete is or something like that. <span ng-show="editDescription" class="md-body-2 link-decoration">Edit</span></p>
+				<p ng-mouseenter="editDescription=true" ng-mouseleave="editDescription=false">{{task.description}} <span ng-show="editDescription" class="md-body-2 link-decoration">Edit</span></p>
 			</div>
 			
 			<div layout="row">
-				<p class="md-subhead" ng-mouseenter="editAssignees=true" ng-mouseleave="editAssignees=false">Assignee 1, Assignee 2, Assignee 3 can view this event. <span ng-show="editAssignees" class="md-body-2 link-decoration">Edit</span></p>
+				<p class="md-subhead" ng-mouseenter="editAssignees=true" ng-mouseleave="editAssignees=false">
+					<span ng-repeat="member in task.members">{{member.name}}, </span>
+					<span ng-repeat="email in task.notMembers">{{email}}, </span>
+					<span ng-show="editAssignees" class="md-body-2 link-decoration">Edit</span></p>
 			</div>
 			
 			<md-divider></md-divider>
 			
-			<div layout="row">
-				
-				<div layout="column" flex="60">
-					
-				    <div layout="column">
-						<div layout="row" layout-align="space-between center" layout-margin>
-			                <h4 class="md-title header-accordian" ng-click="showTasks=!showTasks">
-								Tasks 
-								<md-icon class="material-icons" ng-show="!showTasks">expand_more</md-icon>
-								<md-icon class="material-icons" ng-show="showTasks">expand_less</md-icon>
-							</h3>
-							<p ng-click="viewAll('task')" class="md-body-2 link-decoration">View All</p>
-						</div>
-						<md-divider></md-divider>
-						<div layout="row" ng-show="showTasks">
-			                <md-list flex class="md-dense">
-			                    <md-list-item class="md-2-line" ng-repeat="task in tasks" ng-click="null">
-			                        <div class="md-list-item-text" layout="column">
-			                            <h3>{{task.description}}</h3>
-										<p>Assignees</p>
-			                        </div>
-			                    </md-list-item>
-			                </md-list>
-						</div>
-		            </div>
-
-		            <div layout="column">
-						<div layout="row" layout-align="space-between center" layout-margin>
-			                <h3 class="md-title header-accordian" ng-click="showMessages=!showMessages">
-								Messages 
-								<md-icon class="material-icons" ng-show="!showMessages">expand_more</md-icon>
-								<md-icon class="material-icons" ng-show="showMessages">expand_less</md-icon>
-							</h3>
-							<p ng-click="viewAll('thread')" class="md-body-2 link-decoration">View All</p>
-						</div>
-						<md-divider></md-divider>
-						<div layout="row" ng-show="showMessages">
-			                <md-list flex class="md-dense">
-			                    <md-list-item class="md-2-line" ng-repeat="thread in threads" ng-click="null">
-			                        <div class="md-list-item-text" layout="column">
-			                            <h3>{{thread.name}}</h3>
-										<p>Assignees</p>
-			                        </div>
-			                    </md-list-item>
-			                </md-list>
-						</div>
-		            </div>
-
-		            <div layout="column">
-						<div layout="row" layout-align="space-between center" layout-margin>
-			                <h3 class="md-title header-accordian" ng-click="showFiles=!showFiles">
-								Files 
-								<md-icon class="material-icons" ng-show="!showFiles">expand_more</md-icon>
-								<md-icon class="material-icons" ng-show="showFiles">expand_less</md-icon>
-							</h3>
-							<p ng-click="viewAll('file')" class="md-body-2 link-decoration">View All</p>
-						</div>
-						<md-divider></md-divider>
-						<div layout="row" ng-show="showFiles">
-			                <md-list flex class="md-dense">
-			                    <md-list-item class="md-2-line" ng-repeat="file in files" ng-click="null">
-			                        <div class="md-list-item-text" layout="column">
-			                            <h3>{{file.name}}</h3>
-										<p>Assignees</p>
-			                        </div>
-			                    </md-list-item>
-			                </md-list>
-						</div>
-		            </div>
-					
-		            <div layout="column">
-						<div layout="row" layout-align="space-between center" layout-margin>
-			                <h3 class="md-title header-accordian" ng-click="showTenders=!showTenders">
-								Tenders 
-								<md-icon class="material-icons" ng-show="!showTenders">expand_more</md-icon>
-								<md-icon class="material-icons" ng-show="showTenders">expand_less</md-icon>
-							</h3>
-							<p ng-click="viewAll('file')" class="md-body-2 link-decoration">View All</p>
-						</div>
-						<md-divider></md-divider>
-						<div layout="row" ng-show="showTenders">
-			                <md-list flex class="md-dense">
-			                    <md-list-item class="md-2-line" ng-repeat="file in files" ng-click="null">
-			                        <div class="md-list-item-text" layout="column">
-			                            <h3>{{file.name}}</h3>
-										<p>Assignees</p>
-			                        </div>
-			                    </md-list-item>
-			                </md-list>
-						</div>
-		            </div>
-					
+			<div layout="column">
+				<div class="activity-detail" style="margin-bottom: 15px">
+					<p ng-switch="activity.type" ng-repeat="activity in task.activities" ng-show="allowShowList.indexOf(activity.type) !== -1">
+						<span class="activity-creator">{{activity.user.name}}</span>
+						<span ng-switch-when="create-task"> has created this task at {{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>
+						<span ng-switch-when="edit-task"> has edit description of this task at {{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>
+						<span ng-switch-when="change-date-time"> has changed date time of this task at {{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>
+						<span ng-switch-when="complete-task"> has marked this task as completed at {{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>
+						<span ng-switch-when="uncomplete-task"> has re-opened this task at {{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>
+					</p>
 				</div>
-				
-				<span flex></span>
-				
-				<div layout="column" flex="30">
-					<div layout="row">
-						<md-button class="md-raised" flex aria-label="Attach Task" ng-click="attachItem('task')">Attach Task</md-button>
+
+				<md-divider></md-divider>
+
+				<div class="comment-section" layout="column" style="margin-top: 15px">
+					<div class="comment-content" ng-repeat="comment in task.comments">
+						<p><span class="comment-creator"><strong>{{comment.user.name}}</strong></span> sent at <span class="comment-date">{{comment.sentAt | date: 'hh:mm dd-MM-yyyy'}}</span></p>
+						<p ng-bind-html="comment.content | htmlize"></p>
 					</div>
-					<div layout="row">
-						<md-button class="md-raised" flex aria-label="Attach Thread" ng-click="attachItem('thread')">Attach Message</md-button>
-					</div>
-					<div layout="row">
-						<md-button class="md-raised" flex aria-label="Attach File" ng-click="attachItem('file')">Attach File</md-button>
-					</div>
-					<div layout="row">
-						<md-button class="md-raised" flex aria-label="Attach Tender" ng-click="">Attach Tender</md-button>
+					<div class="add-comment-form">
+						<form ng-submit="addComment(form)">
+							<div layout="row">
+								<md-input-container flex="80">
+									<label for="">Enter Your Comment</label>
+									<textarea name="comment" ng-model="comment" cols="3" rows="5" required></textarea>
+								</md-input-container>
+								<span flex></span>
+								<md-button class="md-primary" type="submit">Comment</md-button>
+							</div>
+						</form>
 					</div>
 				</div>
-					
 			</div>
 			
         </div>
