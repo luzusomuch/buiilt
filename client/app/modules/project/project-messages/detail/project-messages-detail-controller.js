@@ -465,7 +465,7 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($co
                 delete $scope.relatedThread.member;
                 delete $scope.relatedThread.belongTo;
                 delete $scope.relatedThread.type;
-                delete $scope.relatedTask.belongToType;
+                delete $scope.relatedThread.belongToType;
                 return false;
             }
         } else {

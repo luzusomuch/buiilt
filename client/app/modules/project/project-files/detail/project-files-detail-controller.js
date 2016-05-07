@@ -241,12 +241,7 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($cookie
 
     /*Show modal with valid name*/
     $scope.showModal = function($event, modalName) {
-        if (modalName === "add-related-thread.html") {
-            $scope.relatedThread = {};
-        } else if (modalName === "add-related-task.html") {
-            $scope.minDate = new Date();
-            $scope.relatedTask = {};
-        } else if (modalName==="edit-file.html") {
+        if (modalName==="edit-file.html") {
             $rootScope.isEditFile = true;
         }
         $mdDialog.show({
@@ -403,42 +398,63 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($cookie
         }, function(err) {$scope.showToast("There Has Been An Error...");});
     };
 
+    $scope.relatedThread = {};
+
     /*Create related thread with valid members then open thread detail*/
     $scope.createRelatedThread = function(form) {
         if (form.$valid) {
-            $scope.relatedThread.members = _.filter($scope.invitees, {select: true});
-            if ($scope.relatedThread.members.length > 0) {
-                $scope.relatedThread.belongTo = $scope.file._id;
-                $scope.relatedThread.belongToType = "file";
-                $scope.relatedThread.type = "project-message";
-                messageService.create({id: $stateParams.id}, $scope.relatedThread).$promise.then(function(relatedThread) {
-                    $scope.closeModal();
-                    $scope.showToast("Create Related Thread Successfully!");
-                    $state.go("project.messages.detail", {id: $stateParams.id, messageId: relatedThread._id});
-                }, function(err) {$scope.showToast("Error");});
-            } else {
-                $scope.showToast("Please select at least 1 invitee");
-                return;
-            }
+            $scope.relatedThread.members = $scope.file.members;
+            _.each($scope.file.notMembers, function(email) {
+                $scope.relatedThread.members.push({email: email});
+            });
+            // if ($scope.relatedThread.members.length > 0) {
+            $scope.relatedThread.belongTo = $scope.file._id;
+            $scope.relatedThread.belongToType = "file";
+            $scope.relatedThread.type = "project-message";
+            messageService.create({id: $stateParams.id}, $scope.relatedThread).$promise.then(function(relatedThread) {
+                $scope.closeModal();
+                $scope.showToast("Create Related Thread Successfully!");
+                $state.go("project.messages.detail", {id: $stateParams.id, messageId: relatedThread._id});
+            }, function(err) {$scope.showToast("Error");});
+            // } else {
+            //     $scope.showToast("Please select at least 1 invitee");
+            //     return;
+            // }
         } else {
             $scope.showToast("Please check your input again");
             return;
         }
     };
 
+    $scope.relatedTask = {
+        dateStart: new Date(),
+        dateEnd: new Date(),
+        time: {}
+    };
+
     /*Create related task with valid members then open task detail*/
     $scope.createRelatedTask = function(form) {
         if (form.$valid) {
-            // $scope.relatedTask.members = _.filter($scope.invitees, {select: true});
+            if (!$scope.relatedTask.time.start || !$scope.relatedTask.time.end) {
+                dialogService.showToast("Please Select Start Time And End Time");
+                return
+            } else if (!$scope.relatedTask.selectedEvent) {
+                dialogService.showToast("Please Select Event");
+                return;
+            }
+            $scope.relatedTask.members = $scope.file.members;
+            _.each($scope.file.notMembers, function(email) {
+                $scope.relatedTask.members.push({email: email});
+            });
+            $scope.relatedTask.belongTo = $scope.file._id;
+            $scope.relatedTask.belongToType = "file";
+            $scope.relatedTask.type = "project-message";
+            taskService.create({id: $stateParams.id}, $scope.relatedTask).$promise.then(function(relatedTask) {
+                $scope.closeModal();
+                $scope.showToast("Create Related Task Successfully!");
+                $state.go("project.tasks.detail", {id: $stateParams.id, taskId: relatedTask._id});
+            }, function(err) {$scope.showToast("Error");});
             // if ($scope.relatedTask.members.length > 0) {
-                $scope.relatedTask.belongTo = $scope.file._id;
-                $scope.relatedTask.belongToType = "file";
-                $scope.relatedTask.type = "project-message";
-                taskService.create({id: $stateParams.id}, $scope.relatedTask).$promise.then(function(relatedTask) {
-                    $scope.closeModal();
-                    $scope.showToast("Create Related Task Successfully!");
-                    $state.go("project.tasks.detail", {id: $stateParams.id, taskId: relatedTask._id});
-                }, function(err) {$scope.showToast("Error");});
             // } else {
                 // $scope.showToast("Please select at least 1 invitee");
                 // return;

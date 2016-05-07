@@ -39,7 +39,7 @@
                 <!-- File section -->
                 <span ng-show="type=='file'" ng-switch-when="assign"> has added <span ng-repeat="member in activity.element.members">{{member}}, </span> to this {{type}}</span>
                 <span ng-switch-when="insert-note"> has inserted a notice - {{activity.element.content}} to this {{type}}</span>
-                <span ng-switch-when="edit"> has changed <span ng-show="activity.element.name"> name {{activity.element.name}}</span> <span ng-show="activity.element.tags" ng-repeat="tag in activity.element.tags">{{tag.name}}, </span> of this {{type}}</span>
+                <span ng-switch-when="edit"> has changed <span ng-show="activity.element.name"> name {{activity.element.name}}</span> <span ng-show="activity.element.tags" ng-repeat="tag in activity.element.tags">{{(tag.name) ? tag.name : tag}}, </span> of this {{type}}</span>
             </span>
             <span> on {{activity.createdAt | date: longDate}}</span>
         </p>
@@ -99,9 +99,9 @@
     </md-subheader>
     
     <md-list ng-show="showRelatedMessages" class="md-dense">
-        <md-list-item class="md-2-line" ng-repeat="thread in data.relatedItem" ng-show="thread.type == 'thread'">
+        <md-list-item ui-sref="project.messages.detail({id: data.project, messageId: thread.item._id})" class="md-2-line" ng-repeat="thread in data.relatedItem" ng-show="thread.type == 'thread'">
             <div class="md-list-item-text">
-                <h3>{{thread.name}}</h3>
+                <h3>{{thread.item.name}}</h3>
                 <!-- <p>{{file.item.description}}</p> -->
             </div>
         </md-list-item>
@@ -127,7 +127,7 @@
     </md-subheader>
     
     <md-list ng-show="showSharedFiles" class="md-dense">
-        <md-list-item class="md-2-line" ng-click="showRelatedFilesModal($event, file)" ng-repeat="file in data.relatedItem" ng-show="file.type == 'file'">
+        <md-list-item class="md-2-line" ng-click="showRelatedFilesModal($event, file)" ng-repeat="file in data.relatedItem" ng-show="file.type == 'file'" ui-sref="project.files.detail({id: data.project, fileId: file.item._id})">
             <div class="md-list-item-text">
                 <p>{{file.item.name}}</p>
                 <p>{{file.item.description}}</p>
@@ -155,7 +155,7 @@
     </md-subheader>
     
     <md-list ng-show="showRelatedTasks" class="md-dense">
-        <md-list-item class="md-2-line" ng-click="showRelatedTasksModal($event, task)" ng-repeat="task in data.relatedItem" ng-show="task.type == 'task'">
+        <md-list-item class="md-2-line" ng-click="showRelatedTasksModal($event, task)" ng-repeat="task in data.relatedItem" ng-show="task.type == 'task'" ui-sref="project.tasks.detail({id: data.project, taskId: task.item._id})">
             <div class="md-list-item-text">
                 <p>{{task.item.name}}</p>
                 <p>{{task.item.description}}</p>

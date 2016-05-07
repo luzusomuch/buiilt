@@ -28,10 +28,29 @@
 					</md-input-container>
 				</div>
 				
-				<div layout="row" layout-align="center center">
-	                   <md-datepicker ng-model="relatedTask.dateEnd" md-min-date="minDate" md-placeholder="Enter Due Date">
-	                   </md-datepicker>
+				<div layout="column">
+                    <p class="md-body-2">Specify Start Date and Due Date for the task:</p>
+                    <div layout="row" layout-align="center center" class="tagcloud-selection" flex="50">
+                        <md-datepicker ng-model="relatedTask.dateStart" md-placeholder="Enter Due Date"></md-datepicker>
+                    </div>
+                    <div layout="row" layout-align="center center" class="tagcloud-selection" flex="50">
+                        <md-datepicker ng-model="relatedTask.dateEnd" md-placeholder="Enter Due Date"></md-datepicker>
+                    </div>
 				</div>
+
+                <div layout="column">
+                    <p class="md-body-2">Specify start time and end time:</p>
+                    <div layout="row" layout-align="center center">
+                        <md-input-container flex="50">
+                            <label for="">Start Time</label>
+                            <input type="time" ng-model="relatedTask.time.start" required>
+                        </md-input-container>
+                        <md-input-container flex="50">
+                            <label for="">End Time</label>
+                            <input type="time" ng-model="relatedTask.time.end" required>
+                        </md-input-container>
+                    </div>
+                </div>
 			
 				<!-- <div layout="row" layout-align="center center" layout-wrap layout-padding flex>
                     <md-checkbox class="filter-checkbox md-primary" ng-repeat="member in invitees" ng-click="selectMember($index, 'invitee')">{{(member._id) ? member.name : member.email}}</md-checkbox>
