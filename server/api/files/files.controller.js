@@ -14,8 +14,8 @@ var EventBus = require('../../components/EventBus');
 
 function populateFile(file, res){
     File.populate(file, [
-        {path: "owner", select: "_id email name"},
-        {path: "members", select: "_id email name"},
+        {path: "owner", select: "_id email name phoneNumber"},
+        {path: "members", select: "_id email name phoneNumber"},
         {path: "activities.user", select: "_id email name"},
         {path: "activities.acknowledgeUsers._id", select: "_id email name"}
     ], function(err, file) {
@@ -118,8 +118,8 @@ exports.assignMoreMembers = function(req, res) {
         file.save(function(err) {
             if (err) {return res.send(500,err);}
             File.populate(file, [
-                {path: "owner", select: "_id email name"},
-                {path: "members", select: "_id email name"},
+                {path: "owner", select: "_id email name phoneNumber"},
+                {path: "members", select: "_id email name phoneNumber"},
                 {path: "activities.user", select: "_id email name"},
                 {path: "activities.acknowledgeUsers._id", select: "_id email name"},
                 {path: "project"}
@@ -193,9 +193,9 @@ exports.getFilesByProject = function(req, res) {
         query = {project: req.params.id, "element.type": "tender", "belongTo.item._id": mongoose.Types.ObjectId(req.query.tenderId)};
     }
     File.find(query)
-    .populate("owner", "_id name email")
+    .populate("owner", "_id name email phoneNumber")
     .populate("project")
-    .populate("members", "_id name email").exec(function(err, files) {
+    .populate("members", "_id name email phoneNumber").exec(function(err, files) {
         if (err) {return res.send(500,err);}
         async.each(files, function(file, cb) {
             Notification.find({unread: true, owner: userId, "element._id": file._id, referenceTo: req.params.type})
@@ -223,8 +223,8 @@ exports.getFilesByProject = function(req, res) {
 */
 exports.show = function(req, res) {
     File.findById(req.params.id)
-    .populate("owner", "_id name email")
-    .populate("members", "_id name email")
+    .populate("owner", "_id name email phoneNumber")
+    .populate("members", "_id name email phoneNumber")
     .populate("activities.user", "_id name email")
     .populate("activities.acknowledgeUsers._id", "_id name email")
     .exec(function(err, file) {
@@ -320,8 +320,8 @@ exports.update = function(req, res) {
                 file.save(function(err) {
                     if (err) {return res.send(500,err);}
                     File.populate(file, [
-                        {path: "owner", select: "_id email name"},
-                        {path: "members", select: "_id email name"},
+                        {path: "owner", select: "_id email name phoneNumber"},
+                        {path: "members", select: "_id email name phoneNumber"},
                         {path: "activities.user", select: "_id email name"},
                         {path: "activities.acknowledgeUsers._id", select: "_id email name"},
                         {path: "project"}

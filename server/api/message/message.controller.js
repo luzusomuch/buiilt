@@ -18,11 +18,11 @@ var CheckMembers = require("./../../components/helpers/checkMembers");
 
 function populateNewThread(thread, res, req){
     Thread.populate(thread, [
-        {path: "owner", select: "_id email name"},
-        {path: "messages.user", select: "_id email name"},
-        {path: "messages.mentions", select: "_id email name"},
-        {path: "members", select: "_id email name"},
-        {path: "activities.user", select: "_id email name"},
+        {path: "owner", select: "_id email name phoneNumber"},
+        {path: "messages.user", select: "_id email name phoneNumber"},
+        {path: "messages.mentions", select: "_id email name phoneNumber"},
+        {path: "members", select: "_id email name phoneNumber"},
+        {path: "activities.user", select: "_id email name phoneNumber"},
         {path: "project"}
     ], function(err, thread) {
         var uniqId = mongoose.Types.ObjectId();
@@ -53,11 +53,11 @@ function populateNewThread(thread, res, req){
 
 function populateThread(thread, res){
     Thread.populate(thread, [
-        {path: "owner", select: "_id email name"},
-        {path: "messages.user", select: "_id email name"},
-        {path: "messages.mentions", select: "_id email name"},
-        {path: "members", select: "_id email name"},
-        {path: "activities.user", select: "_id email name"}
+        {path: "owner", select: "_id email name phoneNumber"},
+        {path: "messages.user", select: "_id email name phoneNumber"},
+        {path: "messages.mentions", select: "_id email name phoneNumber"},
+        {path: "members", select: "_id email name phoneNumber"},
+        {path: "activities.user", select: "_id email name phoneNumber"}
     ], function(err, thread) {
         if (thread.isArchive) {
             thread.members.push(thread.owner);
