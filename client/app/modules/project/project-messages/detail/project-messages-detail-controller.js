@@ -479,7 +479,9 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($co
     /*Show create related task modal*/
     $scope.relatedTask = {
         dateEnd: new Date(),
-        time: {}
+        dateStart: new Date(),
+        time: {},
+        selectedEvent: $scope.thread.event,
     };
     $scope.showCreateRelatedTask = function($event) {
         $scope.minDate = new Date();

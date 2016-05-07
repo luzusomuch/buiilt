@@ -429,7 +429,8 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($cookie
     $scope.relatedTask = {
         dateStart: new Date(),
         dateEnd: new Date(),
-        time: {}
+        time: {},
+        selectedEvent: $scope.file.event
     };
 
     /*Create related task with valid members then open task detail*/
