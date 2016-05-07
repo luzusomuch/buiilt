@@ -192,6 +192,16 @@ exports.create = function(req,res) {
                         });
                         main.save(function(err) {
                             if (err) {return res.send(500,err);}
+                            EventBus.emit('socket:emit', {
+                                event: 'relatedItem:new',
+                                room: main._id.toString(),
+                                data: {
+                                    type: "thread",
+                                    excuteUser: req.user,
+                                    belongTo: main._id,
+                                    data: thread,
+                                }
+                            });
                             populateNewThread(thread, res, req);                
                         });
                     }

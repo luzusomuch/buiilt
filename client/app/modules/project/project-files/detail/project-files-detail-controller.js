@@ -86,6 +86,18 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($cookie
 
     socket.emit("join", file._id);
 
+    // Add get related item for current file
+    socket.on("relatedItem:new", function(data) {
+        if (data.belongTo.toString()===file._id.toString()) {
+            $scope.file.relatedItem.push({type: data.type, item: data.data});
+            $scope.file.activities.push({
+                user: {_id: data.excuteUser._id, name: data.excuteUser.name, email: data.excuteUser.email},
+                type: "related-"+data.type,
+                element: {item: data.data._id, name: (data.data.name) ? data.data.name : data.data.description, related: true}
+            });
+        }
+    });
+
     /*Receive when someone updated file that current user is in members list*/
     socket.on("file:update", function(data) {
         $scope.file = data;
@@ -416,7 +428,7 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($cookie
             messageService.create({id: $stateParams.id}, $scope.relatedThread).$promise.then(function(relatedThread) {
                 $scope.closeModal();
                 $scope.showToast("Create Related Thread Successfully!");
-                $state.go("project.messages.detail", {id: $stateParams.id, messageId: relatedThread._id});
+                // $state.go("project.messages.detail", {id: $stateParams.id, messageId: relatedThread._id});
             }, function(err) {$scope.showToast("Error");});
             // } else {
             //     $scope.showToast("Please select at least 1 invitee");
@@ -455,7 +467,7 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($cookie
             taskService.create({id: $stateParams.id}, $scope.relatedTask).$promise.then(function(relatedTask) {
                 $scope.closeModal();
                 $scope.showToast("Create Related Task Successfully!");
-                $state.go("project.tasks.detail", {id: $stateParams.id, taskId: relatedTask._id});
+                // $state.go("project.tasks.detail", {id: $stateParams.id, taskId: relatedTask._id});
             }, function(err) {$scope.showToast("Error");});
             // if ($scope.relatedTask.members.length > 0) {
             // } else {

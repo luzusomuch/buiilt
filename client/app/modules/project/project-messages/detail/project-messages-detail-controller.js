@@ -162,7 +162,7 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($co
 
     socket.emit("join", $scope.thread._id);
 
-    // Add get related file for current thread
+    // Add get related item for current thread
     socket.on("relatedItem:new", function(data) {
         if (data.belongTo.toString()===thread._id.toString()) {
             $scope.thread.relatedItem.push({type: data.type, item: data.data});
