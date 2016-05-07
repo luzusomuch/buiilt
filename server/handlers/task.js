@@ -122,6 +122,20 @@ EventBus.onSeries('Task.Updated', function(task, next){
         } else {
             return next();
         }
+    } else if (task._modifiedPaths.indexOf("enterComment") !== -1) {
+        var owners = task.members;
+        owners.push(task.owners);
+        _.remove(owners, task.editUser._id);
+        var params = {
+            owners: owners,
+            fromUser: task.editUser._id,
+            element: task,
+            referenceTo: "task",
+            type: "task-enter-comment"
+        };
+        NotificationHelper.crete(params, function(){
+            return next();
+        });
     } else {
         return next();
     }

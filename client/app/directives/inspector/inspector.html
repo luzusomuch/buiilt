@@ -155,7 +155,7 @@
     </md-subheader>
     
     <md-list ng-show="showRelatedTasks" class="md-dense">
-        <md-list-item class="md-2-line" ng-click="showRelatedTasksModal($event, task)" ng-repeat="task in data.relatedItem" ng-show="task.type == 'task'" ui-sref="project.tasks.detail({id: data.project, taskId: task.item._id})">
+        <md-list-item class="md-2-line" ng-click="showTaskDetailModal($event, task.item._id)" ng-repeat="task in data.relatedItem" ng-show="task.type == 'task'">
             <div class="md-list-item-text">
                 <p>{{task.item.name}}</p>
                 <p>{{task.item.description}}</p>

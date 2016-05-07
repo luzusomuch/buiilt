@@ -318,6 +318,7 @@ exports.update = function(req,res) {
                         content: req.body.comment
                     });
                     task.comments = comments;
+                    task.markModified("enterComment");
                 }
 
                 if (req.body.editType!=="enter-comment") {

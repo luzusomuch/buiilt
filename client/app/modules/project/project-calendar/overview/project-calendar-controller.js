@@ -178,13 +178,9 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                     } else if (data.type==="task"){
                         $mdDialog.show({
                             // targetEvent: $event,
-                            controller: ["$rootScope", "$scope", "dialogService", "socket", "activity", "$stateParams", "$state", "task", "people", function($rootScope, $scope, dialogService, socket, activity, $stateParams, $state, task, people) {
-                                $scope.event = data;
+                            controller: ["$rootScope", "$scope", "dialogService", "socket", "activity", "task", "people", function($rootScope, $scope, dialogService, socket, activity, task, people) {
                                 $scope.task = task;
                                 $scope.dialogService = dialogService;
-                                $scope.tasks = [];
-                                $scope.threads = [];
-                                $scope.files = [];
                                 $scope.allowShowList = ["create-task", "edit-task", "change-date-time", "complete-task", "uncomplete-task"];
                                 
                                 // socket handle

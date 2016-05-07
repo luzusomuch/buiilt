@@ -7,7 +7,7 @@
 			
 			<span flex></span>
 			
-			<p class="md-subhead">{{task.dateStart | date: 'dd-MM-yyyy'}} - {{task.dateEnd | date: 'dd-MM-yyyy'}}</p>
+			<p class="md-subhead">{{task.time.start | date:'hh:mm'}} {{task.dateStart | date: 'dd-MM-yyyy'}} - {{task.time.end | date:'hh:mm'}} {{task.dateEnd | date: 'dd-MM-yyyy'}}</p>
         </div>
 		
     </md-toolbar>
@@ -37,7 +37,7 @@
 					</div>
 				</div>
 			</div>
-			
+
 			<md-divider></md-divider>
 			
 			<div layout="column">
