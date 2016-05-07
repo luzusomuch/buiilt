@@ -17,7 +17,11 @@
 			
 			<div layout="column">
 				<h3 class="md-title">Details</h3>
-				<p ng-mouseenter="editDescription=true" ng-mouseleave="editDescription=false">{{task.description}} <span ng-show="editDescription" class="md-body-2 link-decoration">Edit</span></p>
+				<p ng-show="!showEditDescription" ng-mouseenter="editDescription=true" ng-mouseleave="editDescription=false">{{task.description}} <span ng-show="editDescription" class="md-body-2 link-decoration" ng-click="showEditDescription=true">Edit</span></p>
+				<md-input-container ng-show="showEditDescription">
+					<label for="">Task Description</label>
+					<input type="text" ng-model="task.description" ng-blur="changeDescription()">
+				</md-input-container>
 			</div>
 			
 			<div layout="row">

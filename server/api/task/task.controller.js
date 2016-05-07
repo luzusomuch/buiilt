@@ -286,9 +286,9 @@ exports.update = function(req,res) {
                 }
                 if (req.body.editType === "edit-task") {
                     task.description = data.description;
-                    task.dateEnd = data.dateEnd;
+                    // task.dateEnd = data.dateEnd;
                     activity.element.description = (orginalTask.description.length !== req.body.description.length) ? orginalTask.description : null;
-                    activity.element.dateEnd = (orginalTask.dateEnd !== req.body.dateEnd) ? orginalTask.dateEnd : null;
+                    // activity.element.dateEnd = (orginalTask.dateEnd !== req.body.dateEnd) ? orginalTask.dateEnd : null;
                 } else if (req.body.editType === "assign") {
                     if (orginalTask.members.length < data.members.length) {
                         var members = [];

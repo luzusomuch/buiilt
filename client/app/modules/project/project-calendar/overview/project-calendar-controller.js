@@ -219,12 +219,24 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                                     }
                                 };
 
+                                $scope.changeDescription = function() {
+                                    if ($scope.task.description.trim().length===0) {
+                                        dialogService.showToast("Task Description Must Be Enter");
+                                    } else {
+                                        $scope.task.editType="edit-task";
+                                        $scope.update($scope.task);
+                                    }
+                                };
+
                                 $scope.update = function(task) {
                                     taskService.update({id: task._id}, task).$promise.then(function(res) {
                                         console.log(res);
                                         if (task.editType==="enter-comment") {
                                             $scope.comment = null;
                                             dialogService.showToast("Enter New Comment Successfully");
+                                        } else if (task.editType==="edit-task") {
+                                            dialogService.showToast("Change Task Description Successfully");
+                                            $scope.showEditDescription = false;
                                         }
                                     }, function(err) {
                                         dialogService.showToast("Error");
