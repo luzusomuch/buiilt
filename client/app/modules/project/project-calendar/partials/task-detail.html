@@ -7,14 +7,14 @@
 			
 			<span flex></span>
 			
-			<p class="md-subhead">{{task.time.start | date:'hh:mm'}} {{task.dateStart | date: 'dd-MM-yyyy'}} - {{task.time.end | date:'hh:mm'}} {{task.dateEnd | date: 'dd-MM-yyyy'}}</p>
+			<p class="md-subhead">{{task.time.start | date:'hh:mm a'}} {{task.dateStart | date: 'dd-MM-yyyy'}} - {{task.time.end | date:'hh:mm a'}} {{task.dateEnd | date: 'dd-MM-yyyy'}}</p>
         </div>
 		
     </md-toolbar>
 	
     <md-dialog-content>
         <div class="md-dialog-content" layout="column" layout-padding>
-			
+			<md-button class="md-warn" ng-click="showEdit=false" ng-show="showEdit">Cancel Edit</md-button>
 			<div layout="column">
 				<h3 class="md-title">Details</h3>
 				<p ng-show="!showEdit" ng-mouseenter="editDescription=true" ng-mouseleave="editDescription=false">{{task.description}} <span ng-show="editDescription" class="md-body-2 link-decoration" ng-click="showEdit=true">Edit</span></p>
