@@ -516,23 +516,23 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
 
     $scope.createNewTask = function(form) {
         if (form.$valid) {
+            // if ($scope.task.members.length > 0 && $scope.task.selectedEvent) {
             $scope.task.members = _.filter($scope.membersList, {select: true});
             $scope.task.type = "task-project";
-            if ($scope.task.members.length > 0 && $scope.task.selectedEvent) {
-                taskService.create({id: $stateParams.id}, $scope.task).$promise.then(function(res) {
-                    dialogService.closeModal();
-                    dialogService.showToast("New Task Has Been Created Successfully.");
-                    
-                    //Track New Task
-                    mixpanel.identify($rootScope.currentUser._id);
-                    mixpanel.track("New Task Created");
-                    $rootScope.$emit("Task.Inserted", res);
-                    tasks.push(res);
-                    $scope.convertAllToCalendarView(true);
-                }, function(err) {dialogService.showToast("There Has Been An Error...");});
-            } else {
-                dialogService.showToast("Check your input again.");
-            }
+            taskService.create({id: $stateParams.id}, $scope.task).$promise.then(function(res) {
+                dialogService.closeModal();
+                dialogService.showToast("New Task Has Been Created Successfully.");
+                
+                //Track New Task
+                mixpanel.identify($rootScope.currentUser._id);
+                mixpanel.track("New Task Created");
+                $rootScope.$emit("Task.Inserted", res);
+                tasks.push(res);
+                $scope.convertAllToCalendarView(true);
+            }, function(err) {dialogService.showToast("There Has Been An Error...");});
+            // } else {
+            //     dialogService.showToast("Check your input again.");
+            // }
         } else {
             dialogService.showToast("Check your input again.");
         }

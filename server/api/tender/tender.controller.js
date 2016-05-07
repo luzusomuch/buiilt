@@ -24,7 +24,7 @@ exports.create = function(req, res) {
         owner: req.user._id,
         ownerType: (data.project.projectManager.type === "architect") ? "architects" : "builders",
         project: data.project._id,
-        name: data.name,
+        name: (data.name) ? data.name : "Untitled Tender",
         description: data.description,
         dateEnd: data.dateEnd,
         type: data.type

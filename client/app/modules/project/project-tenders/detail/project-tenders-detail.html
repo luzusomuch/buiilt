@@ -10,16 +10,16 @@
 					<md-tooltip md-direction="bottom">Back</md-tooltip>
 				</md-button>
 				
-		        <h5 ng-mouseenter="showSaveTitleBtn=true" ng-mouseleave="showSaveTitleBtn" ng-show="!save">{{tender.name}}</h5>
+		        <h5 ng-show="!showDetail">{{tender.name}}</h5>
 
-		        <md-input-container ng-show="save">
+		        <md-input-container ng-show="showDetail">
 		        	<label for="">Tender Name</label>
-		        	<input type="text" ng-model="tender.name">
+		        	<input type="text" ng-model="tender.name" ng-blur="changeTitle()">
 		        </md-input-container>
 
-				<md-button ng-show="showSaveTitleBtn" class="md-primary" aria-label="Save Title" ng-click="changeTitle()">
+				<!-- <md-button ng-show="showSaveTitleBtn" class="md-primary" aria-label="Save Title" ng-click="changeTitle()">
 					{{(!save) ? "Change Title" : "Save"}}
-				</md-button>
+				</md-button> -->
 				
 				<span flex></span>
 
@@ -40,14 +40,14 @@
 						<div layout="row">
 							<md-button aria-label="Select Winner" class="md-primary" ng-show="tender.status=='open'" ng-click="showModal('select-winner.html')">Select Winner</md-button>
 						</div>
-						<form ng-submit="changeDetail()">
+						<form>
 							<div layout="column">
 								<p class="md-body-2">Please Select Events In List Below</p>
 								<md-input-container>
 									<label for="">Events List</label>
 									<md-select ng-change="changeEventOrDocumentSet('event')" ng-model="tender.selectedEvent">
-										<md-option ng-show="events.length===0">Please create event first</md-option>
-										<md-option ng-repeat="ev in events" ng-value="ev._id">{{ev.name}}</md-option>
+										<md-option ng-show="activities.length===0">Please create event first</md-option>
+										<md-option ng-repeat="ev in activities" ng-value="ev._id" ng-show="!ev.isMilestone">{{ev.name}}</md-option>
 									</md-select>
 								</md-input-container>
 							</div>
@@ -61,10 +61,10 @@
 									</md-select>
 								</md-input-container>
 							</div>
-							<div layout="row">
+							<!-- <div layout="row">
 								<md-button ng-click="showDetail=false">Close</md-button>
 								<md-button type="submit" class="md-primary">Save Change</md-button>
-							</div>
+							</div> -->
 						</form>
 					</div>
 					<md-divider></md-divider>

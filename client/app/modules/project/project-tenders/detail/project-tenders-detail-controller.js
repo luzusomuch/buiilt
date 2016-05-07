@@ -7,20 +7,7 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
     $scope.tender.newMembers = [];
     $scope.contactBooks = contactBooks;
     $scope.documentSets = documentSets;
-    $scope.events = [];
-    _.each(activities, function(activity) {
-        if (!activity.isMilestone) {
-            $scope.events.push(activity);
-        }
-    });
-    $scope.tender.name = ($scope.tender.name) ? $scope.tender.name : "Please Enter Your Tender Name";
-
-    // $scope.showSaveTitleBtn = false;
-    // $scope.$watch("tender.name", function(value) {
-    //     if (originalTender.name !== value) {
-    //         $scope.showSaveTitleBtn = true;
-    //     }
-    // });
+    $scope.activities = activities;
 
     /*Get invitees list from contact book that haven't in the current
     tender member list*/
@@ -94,15 +81,6 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
         });
     };
 
-    $scope.changeTitle = function() {
-        if (!$scope.save) {
-            $scope.save = true;
-        } else {
-            $scope.tender.editType="change-title";
-            $scope.update($scope.tender);
-        }
-    };
-
     $scope.querySearch = function(query) {
         var result = query ? contactBooks.filter(function(contact) {
             return contact.name.toLowerCase().indexOf(query.toLowerCase()) !== -1;
@@ -148,6 +126,11 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
         }
     };
 
+    $scope.changeTitle = function() {
+        $scope.tender.editType="change-title";
+        $scope.update($scope.tender);
+    };
+
     $scope.addScopeOrAddendum = function() {
         if (!$scope.tender.isCreateScope) {
             if ($scope.tender.scope.trim().length > 0) {
@@ -166,7 +149,6 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
         }
     };
 
-    $scope.eventOrDocumentSetChangeArray = [];
     $scope.changeEventOrDocumentSet = function(type) {
         var editType = type;
         if (type==="event" && $scope.tender.event) {
@@ -174,17 +156,8 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
         } else if (type==="event" && !$scope.tender.event) {
             editType = "add-event";
         }
-        var index = $scope.eventOrDocumentSetChangeArray.indexOf(editType);
-        if (index === -1) {
-            $scope.eventOrDocumentSetChangeArray.push(editType);
-        }
-    };
-
-    $scope.changeDetail = function() {
-        _.each($scope.eventOrDocumentSetChangeArray, function(editType) {
-            $scope.tender.editType=editType;
-            $scope.update($scope.tender);
-        });
+        $scope.tender.editType = editType;
+        $scope.update($scope.tender);
     };
 
     $scope.selectWinner = function() {
