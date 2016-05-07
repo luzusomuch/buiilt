@@ -398,7 +398,9 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($cookie
         }, function(err) {$scope.showToast("There Has Been An Error...");});
     };
 
-    $scope.relatedThread = {};
+    $scope.relatedThread = {
+        selectedEvent: $scope.file.event
+    };
 
     /*Create related thread with valid members then open thread detail*/
     $scope.createRelatedThread = function(form) {

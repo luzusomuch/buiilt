@@ -138,7 +138,8 @@ exports.create = function(req,res) {
         name: (req.body.name) ? req.body.name : "Untitled Thread",
         project: req.params.id,
         owner: user._id,
-        element: {type: req.body.type}
+        element: {type: req.body.type},
+        event: (req.body.selectedEvent) ? req.body.selectedEvent : null
     });
     CheckMembers.check(req.body.members, null, function(result) {
         thread.members = result.members;

@@ -150,6 +150,7 @@ exports.uploadReversion = function(req, res) {
                                 } else {
                                     file.description = req.body.description;
                                 }
+                                file.event = (fields.selectedEvent) ? fields.selectedEvent : null;
                                 file.path = path;
                                 file.key = files.file.name;
                                 file.mimeType = files.file.type;
@@ -477,9 +478,10 @@ exports.upload = function(req, res){
                                     event: 'relatedItem:new',
                                     room: ownerItem._id.toString(),
                                     data: {
+                                        type: file.element.type,
                                         excuteUser: req.user,
                                         belongTo: ownerItem._id,
-                                        file: JSON.parse(JSON.stringify(file)),
+                                        data: JSON.parse(JSON.stringify(file)),
                                     }
                                 });
                                 return res.send(200, file);

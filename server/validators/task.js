@@ -10,7 +10,7 @@ var User = require("./../models/user.model");
  */
 exports.validateCreate = function (req, cb) {
     req.checkBody('description', 'Task description is required').notEmpty();
-    req.checkBody('selectedEvent', 'Selected event is required').notEmpty();
+    // req.checkBody('selectedEvent', 'Selected event is required').notEmpty();
     var members = [];
     var notMembers = [];
     async.each(req.body.members, function(member, cb) {

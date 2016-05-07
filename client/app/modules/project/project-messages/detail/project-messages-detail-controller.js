@@ -6,7 +6,8 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($co
     $scope.relatedFile = {
         belongTo: thread._id,
         belongToType: "thread",
-        type: "file"
+        type: "file",
+        selectedEvent: thread.event
     };
 
     $scope.safeApply = function (fn) {
@@ -164,11 +165,11 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($co
     // Add get related file for current thread
     socket.on("relatedItem:new", function(data) {
         if (data.belongTo.toString()===thread._id.toString()) {
-            $scope.thread.relatedItem.push({type: "file", item: data.file});
+            $scope.thread.relatedItem.push({type: data.type, item: data.data});
             $scope.thread.activities.push({
                 user: {_id: data.excuteUser._id, name: data.excuteUser.name, email: data.excuteUser.email},
-                type: "related-file",
-                element: {item: data.file._id, name: data.file.name, related: true}
+                type: "related-"+data.type,
+                element: {item: data.data._id, name: (data.data.name) ? data.data.name : data.data.description, related: true}
             });
         }
     });
@@ -506,7 +507,7 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($co
                 taskService.create({id: $stateParams.id}, $scope.relatedTask).$promise.then(function(res) {
                     $scope.closeModal();
                     dialogService.showToast("Related Task Has Been Created Successfully.");
-                    $scope.thread.relatedItem.push({type: "task", item: res});
+                    // $scope.thread.relatedItem.push({type: "task", item: res});
                     // $state.go("project.tasks.detail", {id: $stateParams.id, taskId: relatedTask._id});
                 }, function(err){dialogService.showToast("There Has Been An Error...");});
             } else {
