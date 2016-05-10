@@ -33,7 +33,7 @@ exports.responseWithRelated = function(type, data, user, res){
                     break;
 
                     case "file":
-                        File.findById(data.belongTo.item._id, '_id name', function(err, file) {
+                        File.findById(data.belongTo.item._id, '_id name path', function(err, file) {
                             if (err || !file) {cb();}
                             else {
                                 data.belongTo.item = file;
@@ -76,7 +76,7 @@ exports.responseWithRelated = function(type, data, user, res){
                             }
                         });
                     } else if (item.type === "file") {
-                        File.findById(item.item._id, '_id name description activities fileHistory')
+                        File.findById(item.item._id, '_id name path description activities fileHistory')
                         .populate("activities.user")
                         .exec(function(err, _file) {
                             if (err || !_file) {callback();}

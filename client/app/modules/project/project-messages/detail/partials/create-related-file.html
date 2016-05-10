@@ -1,5 +1,5 @@
 <md-dialog aria-label="Attach a Related File" flex="70">
-    <form ng-submit="uploadAll()">
+    <form ng-submit="createRelatedFile()">
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2>Attach a Related File</h2>
@@ -11,8 +11,7 @@
                 <div layout="column">
                     <p class="md-body-2">Select the document that you would like to upload:</p>
                     <div layout="row" layout-align="center center" class="tagcloud-selection">
-                        <input type="file" nv-file-select="" uploader="uploader"/>
-                        <!-- <input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/> -->
+                        <input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/>
                     </div>
                 </div>
                 
@@ -21,7 +20,7 @@
                     <div layout="row">
                         <md-input-container flex="66" flex-offset="15">
                             <label>Name</label>
-                            <input ng-model="uploader.queue[uploader.queue.length-1].file.name" required type="text" name="name"></input>
+                            <input ng-model="relatedFile.file.filename" required type="text" name="name"></input>
                         </md-input-container>
                     </div>
                 </div>
@@ -32,7 +31,6 @@
                         <md-select ng-model="relatedFile.selectedTag">
                             <md-option ng-repeat="tag in tags" ng-value="tag.name">{{tag.name}}</md-option>
                         </md-select>
-                        <!-- <md-checkbox ng-click="selectMember($index, 'tag')" ng-repeat="tag in tags" class="filter-checkbox md-primary">{{tag.name}}</md-checkbox> -->
 					</div>
 				</div>
             </div>

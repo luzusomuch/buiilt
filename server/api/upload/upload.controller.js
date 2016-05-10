@@ -347,106 +347,179 @@ exports.uploadReversion = function(req, res) {
  * @returns {undefined}
  */
 exports.upload = function(req, res){
-    var form = new formidable.IncomingForm();
-    form.parse(req, function(err, fields, files) {
-        if (err) {return res.send(500,err);}
-        if (fields && files) {
-            console.log(fields);
-            console.log(files);
-            if (fields.belongToType) {
-                var mainItem = getMainItem(fields.belongToType);
-            }
-            var ownerItem;
-            async.parallel([
-                function (cb) {
-                    if (fields.belongToType) {
-                        mainItem.findById(fields.belongTo, function(err, main) {
-                            if (err || !main) {cb(err);}
-                            else {
-                                ownerItem = main;
-                                cb();
-                            }
-                        });
-                    } else {
+    var data = req.body;
+
+    if (data.belongToType) {
+        var mainItem = getMainItem(data.belongToType);
+    }
+    var ownerItem;
+    async.parallel([
+        function (cb) {
+            if (data.belongToType) {
+                mainItem.findById(data.belongTo, function(err, main) {
+                    if (err || !main) {cb(err);}
+                    else {
+                        ownerItem = main;
                         cb();
                     }
-                }
-            ], function() {
-                s3.uploadFile(files.file, function(err, data) {
-                    if (err) {return res.send(500,err);}
-                    var path = s3.getPublicUrl(files.file.name);
-                    var file = new File({
-                        owner: req.user._id,
-                        project: req.params.id,
-                        name: files.file.name,
-                        server: "s3",
-                        size: files.file.size,
-                        version: files.file.name,
-                        mimeType: files.file.type,
-                        tag: (fields.selectedTag) ? [fields.selectedTag] : [],
-                        element: {type: fields.type},
-                        key: files.file.name,
-                        path: path,
-                        activities: [{
-                            user: req.user._id,
-                            createdAt: new Date(),
-                            type: "upload-file",
-                            element: {name: files.file.name}
-                        }]
-                    });
-                    if (ownerItem) {
-                        file.members = ownerItem.members;
-                        file.notMembers = ownerItem.notMembers;
-                        if (ownerItem.event) {
-                            file.event = ownerItem.event;
-                        }
-                    }
-                    file.save(function(err) {
-                        if (err) {
-                            return res.send(500,err);
-                        } else if (ownerItem) {
-                            ownerItem.activities.push({
-                                user: req.user._id,
-                                type: "related-file",
-                                createdAt: new Date(),
-                                element: {
-                                    item: file._id,
-                                    name: file.name,
-                                    related: true
-                                }
-                            });
-                            var members = file.members;
-                            members.push(file.owner);
-                            ownerItem.relatedItem.push({
-                                type: "file",
-                                item: {_id: file._id},
-                                members: members
-                            });
-                            ownerItem._editUser = req.user;
-                            ownerItem.save(function() {
-                                EventBus.emit('socket:emit', {
-                                    event: 'relatedItem:new',
-                                    room: ownerItem._id.toString(),
-                                    data: {
-                                        type: file.element.type,
-                                        excuteUser: req.user,
-                                        belongTo: ownerItem._id,
-                                        data: JSON.parse(JSON.stringify(file)),
-                                    }
-                                });
-                                return res.send(200, file);
-                            });
-                        } else {
-                            return res.send(200,file);
-                        }
-                    });
                 });
-                
-            });
-        } else {
-            return res.send(500,err);
+            } else {
+                cb();
+            }
         }
+    ], function(err) {
+        if (err) {return res.send(500,err);}
+        var file = new File({
+            owner: req.user._id,
+            project: req.params.id,
+            name: data.file.filename,
+            server: "s3",
+            size: data.file.size,
+            version: data.file.filename,
+            mimeType: data.file.type,
+            tag: (data.selectedTag) ? [data.selectedTag] : [],
+            element: {type: data.type},
+            key: data.file.key,
+            path: data.file.url,
+            activities: [{
+                user: req.user._id,
+                createdAt: new Date(),
+                type: "upload-file",
+                element: {name: data.file.filename}
+            }]
+        });
+        if (ownerItem) {
+            file.members = ownerItem.members;
+            file.notMembers = ownerItem.notMembers;
+            if (ownerItem.event) {
+                file.event = ownerItem.event;
+            }
+        }
+        file.save(function(err) {
+            if (err) {
+                return res.send(500,err);
+            } else if (ownerItem) {
+                ownerItem.activities.push({
+                    user: req.user._id,
+                    type: "related-file",
+                    createdAt: new Date(),
+                    element: {
+                        item: file._id,
+                        name: file.name,
+                        related: true
+                    }
+                });
+                var members = file.members;
+                members.push(file.owner);
+                ownerItem.relatedItem.push({
+                    type: "file",
+                    item: {_id: file._id},
+                    members: members
+                });
+                ownerItem._editUser = req.user;
+                ownerItem.save(function() {
+                    EventBus.emit('socket:emit', {
+                        event: 'relatedItem:new',
+                        room: ownerItem._id.toString(),
+                        data: {
+                            type: file.element.type,
+                            excuteUser: req.user,
+                            belongTo: ownerItem._id,
+                            data: JSON.parse(JSON.stringify(file)),
+                        }
+                    });
+                    return res.send(200, file);
+                });
+            } else {
+                return res.send(200,file);
+            }
+        });
     });
+
+
+    
+    // var form = new formidable.IncomingForm();
+    // form.parse(req, function(err, fields, files) {
+    //     if (err) {return res.send(500,err);}
+    //     if (fields && files) {
+    //         console.log(fields);
+    //         console.log(files);
+            
+    //             s3.uploadFile(files.file, function(err, data) {
+    //                 if (err) {return res.send(500,err);}
+    //                 var path = s3.getPublicUrl(files.file.name);
+    //                 var file = new File({
+    //                     owner: req.user._id,
+    //                     project: req.params.id,
+    //                     name: files.file.name,
+    //                     server: "s3",
+    //                     size: files.file.size,
+    //                     version: files.file.name,
+    //                     mimeType: files.file.type,
+    //                     tag: (fields.selectedTag) ? [fields.selectedTag] : [],
+    //                     element: {type: fields.type},
+    //                     key: files.file.name,
+    //                     path: path,
+    //                     activities: [{
+    //                         user: req.user._id,
+    //                         createdAt: new Date(),
+    //                         type: "upload-file",
+    //                         element: {name: files.file.name}
+    //                     }]
+    //                 });
+    //                 if (ownerItem) {
+    //                     file.members = ownerItem.members;
+    //                     file.notMembers = ownerItem.notMembers;
+    //                     if (ownerItem.event) {
+    //                         file.event = ownerItem.event;
+    //                     }
+    //                 }
+    //                 file.save(function(err) {
+    //                     if (err) {
+    //                         return res.send(500,err);
+    //                     } else if (ownerItem) {
+    //                         ownerItem.activities.push({
+    //                             user: req.user._id,
+    //                             type: "related-file",
+    //                             createdAt: new Date(),
+    //                             element: {
+    //                                 item: file._id,
+    //                                 name: file.name,
+    //                                 related: true
+    //                             }
+    //                         });
+    //                         var members = file.members;
+    //                         members.push(file.owner);
+    //                         ownerItem.relatedItem.push({
+    //                             type: "file",
+    //                             item: {_id: file._id},
+    //                             members: members
+    //                         });
+    //                         ownerItem._editUser = req.user;
+    //                         ownerItem.save(function() {
+    //                             EventBus.emit('socket:emit', {
+    //                                 event: 'relatedItem:new',
+    //                                 room: ownerItem._id.toString(),
+    //                                 data: {
+    //                                     type: file.element.type,
+    //                                     excuteUser: req.user,
+    //                                     belongTo: ownerItem._id,
+    //                                     data: JSON.parse(JSON.stringify(file)),
+    //                                 }
+    //                             });
+    //                             return res.send(200, file);
+    //                         });
+    //                     } else {
+    //                         return res.send(200,file);
+    //                     }
+    //                 });
+    //             });
+                
+    //         });
+    //     } else {
+    //         return res.send(500,err);
+    //     }
+    // });
     // return;
     // // new version
     // if (data.type==="document" && !data.selectedDocumentSetId) {

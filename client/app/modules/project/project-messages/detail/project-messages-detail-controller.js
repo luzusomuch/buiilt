@@ -1,63 +1,6 @@
-angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($cookieStore, $q, $rootScope, $scope, $timeout, $stateParams, messageService, $mdToast, $mdDialog, $state, thread, peopleService, taskService, uploadService, people, clipboard, socket, notificationService, tenders, activities, dialogService, FileUploader) {
+angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q, $rootScope, $scope, $timeout, $stateParams, messageService, $mdToast, $mdDialog, $state, thread, peopleService, taskService, uploadService, people, clipboard, socket, notificationService, tenders, activities, dialogService) {
     var originalThread = angular.copy(thread);
     $scope.showDetail = ($rootScope.openDetail) ? true : false;
-
-    // Start Create Related File
-    $scope.relatedFile = {
-        belongTo: thread._id,
-        belongToType: "thread",
-        type: "file",
-        selectedEvent: thread.event
-    };
-
-    $scope.safeApply = function (fn) {
-        var phase = this.$root.$$phase;
-        if (phase == '$apply' || phase == '$digest') {
-            if (fn && (typeof (fn) === 'function')) {
-                fn();
-            }
-        } else {
-            this.$apply(fn);
-        }
-    };
-
-    var uploader = $scope.uploader = new FileUploader({
-        url: 'api/uploads/'+$stateParams.id,
-        headers : {
-          Authorization: 'Bearer ' + $cookieStore.get('token')
-        },
-        formData: [$scope.relatedFile]
-    });
-
-    uploader.onProgressAll = function (progress) {
-        $scope.progress = progress;
-    };
-
-    uploader.onAfterAddingFile = function (item) {
-        var reader = new FileReader();
-        reader.onload = function (e) {
-            item.src = e.target.result;
-            $scope.safeApply();
-        };
-        reader.readAsDataURL(item._file);
-    };
-
-    /*Create related file*/
-    $scope.uploadAll = function(){
-        // var tags = _.map(_.filter($scope.tags, {select: true}), 'name');
-        if (!$scope.relatedFile.selectedTag) {
-            dialogService.showToast("Please Select At Least 1 Tag");
-        } else {
-            $scope.uploader.queue[0].formData.push({selectedTag: $scope.relatedFile.selectedTag});
-            uploader.uploadAll();
-        }
-    };
-
-    uploader.onCompleteAll = function () {
-        dialogService.closeModal();
-        dialogService.showToast("Create Related File Successfully");
-    };
-    // End Create Related File
 
     $scope.showSaveTitleBtn = false;
     $scope.$watch("thread.name", function(value) {
@@ -142,17 +85,24 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($co
         });
         $q.all(prom).then(function(data) {
             _.each($scope.thread.activities, function(activity) {
-                if (activity.type === "related-task" && activity.element.item && _.findIndex(data, function(task) {
-                    return task._id.toString()===activity.element.item.toString();
-                }) !== -1) {
-                    var taskIndex = _.findIndex(data, function(task) {
+                if (activity.type === "related-task" && activity.element.item) {
+                    var index = _.findIndex(data, function(task) {
                         return task._id.toString()===activity.element.item.toString();
                     });
-                    activity.element.name = data[taskIndex].description;
-                    activity.element.members = data[taskIndex].members;
-                    _.each(data[taskIndex].notMembers, function(member) {
-                        activity.element.members.push({email: member});
+                    if (index !== -1) {
+                        activity.element.name = data[index].description;
+                        activity.element.members = data[index].members;
+                        _.each(data[index].notMembers, function(member) {
+                            activity.element.members.push({email: member});
+                        });
+                    }
+                } else if (activity.type==="related-file" && activity.element.item) {
+                    var index = _.findIndex($scope.thread.relatedItem, function(item) {
+                        return item.item._id.toString()===activity.element.item.toString();
                     });
+                    if (index !== -1) {
+                        activity.element.path = $scope.thread.relatedItem[index].item.path;
+                    }
                 }
             });
         });
@@ -169,7 +119,7 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($co
             $scope.thread.activities.push({
                 user: {_id: data.excuteUser._id, name: data.excuteUser.name, email: data.excuteUser.email},
                 type: "related-"+data.type,
-                element: {item: data.data._id, name: (data.data.name) ? data.data.name : data.data.description, related: true}
+                element: {item: data.data._id, path: (data.data.path) ? data.data.path : null, name: (data.data.name) ? data.data.name : data.data.description, related: true}
             });
         }
     });
@@ -524,49 +474,46 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($co
         }
     };
 
-    /*Show create related file modal*/
-    // $scope.showCreateRelatedFile = function($event) {
-    //     $scope.showModal("create-related-file.html", $event);
-    // };
+    // Create related file
+    $scope.relatedFile = {
+        belongTo: thread._id,
+        belongToType: "thread",
+        type: "file",
+        selectedEvent: thread.event
+    };
 
-    
+    $scope.pickFile = pickFile;
 
-    // $scope.pickFile = pickFile;
+    $scope.onSuccess = onSuccess;
 
-    // $scope.onSuccess = onSuccess;
+    function pickFile(){
+        filepickerService.pick(
+            onSuccess
+        );
+    };
 
-    // function pickFile(){
-    //     filepickerService.pick(
-    //         // add max files for multiple pick
-    //         // {maxFiles: 5},
-    //         onSuccess
-    //     );
-    // };
-
-    // function onSuccess(file){
-    //     $scope.relatedFile.file = file;
-    // };
+    function onSuccess(file){
+        $scope.relatedFile.file = file;
+    };
 
     /*Create related file with valid tags, members*/
-    // $scope.createRelatedFile = function() {
-    //     $scope.relatedFile.members = $scope.invitees;
-    //     $scope.relatedFile.tags = _.filter($scope.tags, {select: true});
-    //     if ($scope.relatedFile.tags.length == 0) {
-    //         $scope.showToast("Please Select At Least 1 Tag...");
-    //     } else if ($scope.relatedFile.members.length == 0) {
-    //         $scope.showToast("Please Select At Least 1 Recipient...");
-    //     } else { 
-    //         $scope.relatedFile.type="file";
-    //         console.log($scope.relatedFile);
-    //         return;
-    //         // uploadService.upload({id: $stateParams.id}, $scope.relatedFile).$promise.then(function(res) {
-    //         //     $scope.closeModal();
-    //         //     $scope.showToast("Related File Has Been Uploaded Successfully.");
-    //         //     $scope.thread.relatedItem.push({type: "file", item: res});
-    //         //     // $state.go("project.files.detail", {id: res.project._id, fileId: res._id});
-    //         // }, function(err) {$scope.showToast("There Has Been An Error...");});
-    //     }
-    // };
+    $scope.createRelatedFile = function() {
+        $scope.relatedFile.members = $scope.thread.members;
+        _.each($scope.thread.notMembers, function(email) {
+            $scope.relatedFile.members.push({email: email});
+        });
+        if (!$scope.relatedFile.selectedTag) {
+            dialogService.showToast("Please Select At Least 1 Tag...");
+        } else { 
+            uploadService.upload({id: $stateParams.id}, $scope.relatedFile).$promise.then(function(res) {
+                dialogService.closeModal();
+                dialogService.showToast("Related File Has Been Uploaded Successfully.");
+            }, function(err) {
+                dialogService.showToast("There Has Been An Error...");
+            });
+        }
+    };
+    // End Create Related File
 
     /*Archive or unarchive a thread*/
     $scope.archive = function() {

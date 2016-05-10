@@ -246,29 +246,6 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
                 dialogService.showToast("Error");
             })
         }
-    //     $scope.uploadReversion.versionTags = _.filter($scope.versionTags, {select: true});
-    //     $scope.uploadReversion.teamMembers = _.filter($scope.projectMembers, {select: true});
-    //     if ($scope.uploadReversion.files.length === 0) {
-    //         $scope.showToast("Please Select a File to Upload...");
-    //         return;
-    //     } else if ($scope.uploadReversion.versionTags.length===0) {
-    //         $scope.showToast("Please Select At Least 1 Version Tag");
-    //         return false;
-    //     } else if ($scope.uploadReversion.teamMembers.length===0) {
-    //         $scope.showToast("Please Select At Least 1 Version Team member");
-    //         return false;
-    //     } else {
-    //         uploadService.uploadReversion({id: $scope.document._id}, $scope.uploadReversion).$promise.then(function(res) {
-    //             $scope.closeModal();
-    //             $scope.showToast("Document Revision Successfully Uploaded.");
-				
-				// //Document Revision Uploaded
-				// mixpanel.identify($rootScope.currentUser._id);
-				// mixpanel.track("Document Revision Uploaded");
-				
-    //             $rootScope.$broadcast("Document.Updated", res);
-    //         }, function(err) {$scope.showToast("There Has Been An Error...");});
-    //     }
     };
 
     /*Show modal with a valid name*/
