@@ -4,7 +4,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
     .state('dashboard', {
       	url: '/dashboard',
     	  abstract:true,
-      	templateUrl: '/app/modules/dashboard/dashboard.html',
+      	template: "<ui-view></ui-view>",
       	// controller: 'dashboardCtrl',
       	authenticate : true,
         resolve: {

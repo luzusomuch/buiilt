@@ -1,70 +1,75 @@
-<div layout="column" layout-padding>
-	
-	<div class="filter-card md-whiteframe-1dp" layout="column" layout-margin>
+<div layout="row">
+	<dashboard-sidenav tasks="myTasks" messages="myMessages" files="myFiles" layout="column" flex="15">	
+	</dashboard-sidenav>
+
+	<div layout="column" flex="85" style="height: 90vh; overflow: scroll">
 		
-		<div layout="row">
+		<div class="filter-card md-whiteframe-1dp" layout="column" layout-margin>
 			
-			<md-input-container flex md-no-float class="md-block md-icon-float">
-				<md-icon class="material-icons" style="margin-top: 6px;">search</md-icon>
-				<input id="im_DashSearchFiles" type="text" name="fileName" ng-model="name" placeholder="Search by file name...">
-			</md-input-container>
+			<div layout="row">
+				
+				<md-input-container flex md-no-float class="md-block md-icon-float">
+					<md-icon class="material-icons" style="margin-top: 6px;">search</md-icon>
+					<input id="im_DashSearchFiles" type="text" name="fileName" ng-model="name" placeholder="Search by file name...">
+				</md-input-container>
+				
+				<div>
+					<md-button id="im_DashFilterFiles" class="md-icon-button more-filter-button" ng-click="showFilter=!showFilter">
+						 <md-tooltip md-direction="down">Show Filters</md-tooltip>
+					     <md-icon class="material-icons">filter_list</md-icon>
+			      	</md-button>
+				</div>
+				
+			</div>
 			
-			<div>
-				<md-button id="im_DashFilterFiles" class="md-icon-button more-filter-button" ng-click="showFilter=!showFilter">
-					 <md-tooltip md-direction="down">Show Filters</md-tooltip>
-				     <md-icon class="material-icons">filter_list</md-icon>
+			<div layout="row" layout-align="center center" ng-show="showFilter" layout-wrap> 
+				<md-checkbox class="filter-checkbox md-primary" ng-repeat="tag in fileTags" ng-click="selectChip($index, 'file'); selectFileFilterTag(tag.name)">{{ tag.name }}</md-checkbox>
+			</div>
+			
+		</div>
+		
+		<div layout="column" layout-margin>
+			
+			<div ng-show="myFiles.length == 0" layout="column" layout-align="center center" class="dashboard-empty">
+				<h3>No Files Here</h3>
+				
+			</div>
+			
+			<md-list ng-cloak class="md-whiteframe-1dp content-list" ng-show="myFiles.length > 0">
+				<div ng-repeat="file in myFiles |filter: searchFile track by $index" ng-show="file.element.type=='file'">
+					<md-list-item class="md-3-line" md-ink-ripple layout-padding>
+			
+						<div ng-click="openLocation(file, 'file')" class="md-list-item-text">
+					
+							<h3>{{ file.name }}  - {{file.project.name}}</h3>
+							<h4>Tags: <span ng-repeat="tag in file.tags">{{tag}} </span></h4>
+			                <p style="color: #2196F3">
+			                    Updates: {{file.element.notifications.length}}
+			                </p>
+					
+				        </div>
+	
+				        <div>
+							<md-button ng-click="showViewFileModal($event, file)"><md-icon class="material-icons">remove_red_eye</md-icon><md-tooltip md-direction="down">View File</md-tooltip></md-button>
+				        </div>
+				
+					</md-list-item>
+					<md-divider ng-hide="$last"></md-divider>
+				</div>
+		
+			</md-list>
+			
+		</div>
+	</div>
+	
+	<div>
+	  <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-list" style="position: fixed;">
+		  <md-fab-trigger>
+				<md-button id="im_DashAddFile" class="md-fab md-primary" ng-click="showNewFileModal($event)">
+					 <md-tooltip md-direction="left">Add a New File</md-tooltip>
+				     <md-icon class="material-icons md-primary">add</md-icon>
 		      	</md-button>
-			</div>
-			
-		</div>
-		
-		<div layout="row" layout-align="center center" ng-show="showFilter" layout-wrap> 
-			<md-checkbox class="filter-checkbox md-primary" ng-repeat="tag in fileTags" ng-click="selectChip($index, 'file'); selectFileFilterTag(tag.name)">{{ tag.name }}</md-checkbox>
-		</div>
-		
+	      </md-fab-trigger>
+	  </md-fab-speed-dial>
 	</div>
-	
-	<div layout="column">
-		
-		<div ng-show="myFiles.length == 0" layout="column" layout-align="center center" class="dashboard-empty">
-			<h3>No Files Here</h3>
-			
-		</div>
-		
-		<md-list ng-cloak class="md-whiteframe-1dp content-list" ng-show="myFiles.length > 0">
-			<div ng-repeat="file in myFiles |filter: searchFile track by $index" ng-show="file.element.type=='file'">
-				<md-list-item class="md-3-line" md-ink-ripple layout-padding>
-		
-					<div ng-click="openLocation(file, 'file')" class="md-list-item-text">
-				
-						<h3>{{ file.name }}  - {{file.project.name}}</h3>
-						<h4>Tags: <span ng-repeat="tag in file.tags">{{tag}} </span></h4>
-		                <p style="color: #2196F3">
-		                    Updates: {{file.element.notifications.length}}
-		                </p>
-				
-			        </div>
-
-			        <div>
-						<md-button ng-click="showViewFileModal($event, file)"><md-icon class="material-icons">remove_red_eye</md-icon><md-tooltip md-direction="down">View File</md-tooltip></md-button>
-			        </div>
-			
-				</md-list-item>
-				<md-divider ng-hide="$last"></md-divider>
-			</div>
-	
-		</md-list>
-		
-	</div>
-</div>
-
-<div>
-  <md-fab-speed-dial ng-cloak md-open="false" md-direction="up" class="md-scale md-fab-bottom-right fab-list" style="position: fixed;">
-	  <md-fab-trigger>
-			<md-button id="im_DashAddFile" class="md-fab md-primary" ng-click="showNewFileModal($event)">
-				 <md-tooltip md-direction="left">Add a New File</md-tooltip>
-			     <md-icon class="material-icons md-primary">add</md-icon>
-	      	</md-button>
-      </md-fab-trigger>
-  </md-fab-speed-dial>
 </div>

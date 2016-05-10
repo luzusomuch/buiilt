@@ -1,14 +1,14 @@
 'use strict';
 angular.module('buiiltApp').directive('dashboardSidenav', function(){
     return {
-        restrict: 'EA',
+        restrict: 'E',
         templateUrl: 'app/directives/dashboardSidenav/dashboardSidenav.html',
         scope:{
             tasks:'=',
             messages: "=",
             files: "="
         },
-        controller: function($scope, $rootScope, $location, $state, socket) {
+        controller: function($scope, $rootScope, $state) {
 			$scope.$state = $state;
             
             /*Count total in dashboard side nav*/
@@ -27,7 +27,8 @@ angular.module('buiiltApp').directive('dashboardSidenav', function(){
                 } else if (file.element.type==="document") {
                     $scope.totalDocumentUpdates += 1;
                 }
-            })
+            });
+            console.log($scope.messages);
             $scope.totalMessagesUpdate = $scope.messages.length;
 
             /*Update count total in dashboard side nav*/
