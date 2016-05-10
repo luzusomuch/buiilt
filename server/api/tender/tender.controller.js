@@ -177,11 +177,12 @@ exports.update = function(req, res) {
                         User.findOne({email: member.email}, function(err, _user) {
                             if (err) {cb(err);}
                             else if (!_user) {
-                                members.push({name:member.name, email: member.email});
-                                tenderMembers.push({email: member.email, name: member.name});
-                                newInvitees.push({email: member.email, name: member.name});
+                                newInvitees.push({email: member.email, name: member.name, phoneNumber: member.phoneNumber});
+                                members.push({name:member.name, email: member.email, phoneNumber: member.phoneNumber});
+                                tenderMembers.push({email: member.email, name: member.name, phoneNumber: member.phoneNumber});
                                 cb();
                             } else {
+                                newInvitees.push({_id: _user._id, email: _user.email, name: _user.name, phoneNumber: _user.phoneNumber});
                                 members.push({name:_user.name, email: _user.email, _id: _user._id});
                                 tenderMembers.push({user: _user._id});
                                 if (tender.isCreateScope) {

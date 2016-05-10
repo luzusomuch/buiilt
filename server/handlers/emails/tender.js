@@ -7,6 +7,7 @@ var EventBus = require('./../../components/EventBus');
 var User = require('./../../models/user.model');
 var PackageInvite = require('./../../models/packageInvite.model');
 var config = require('./../../config/environment');
+var Client = require("twilio")(config.twilio.sid, config.twilio.token);
 var async = require('async');
 var _ = require('lodash');
 
@@ -20,31 +21,53 @@ EventBus.onSeries('Tender.Updated', function(tender, next){
         }
     }, function(err, result) {
         if (err) {return next();}   
-        console.log(tender._modifiedPaths);
-        console.log(tender.newInvitees);
         if (tender._modifiedPaths.indexOf('invite-tenderer') !== -1) {
             var from = tender.editUser.name + "<"+tender.editUser.email+">";
             if (tender.newInvitees && tender.newInvitees.length > 0) {
                 async.each(tender.newInvitees, function(invitee, cb) {
-                    var packageInvite = new PackageInvite({
-                        owner: tender.editUser._id,
-                        project: tender.project,
-                        package: tender._id,
-                        inviteType : tender.type,
-                        to: invitee.email,
-                        user: tender.editUser._id
-                    });
-                    packageInvite.save(function(err) {
-                        if (err) {cb(err);}
-                        Mailer.sendMail('invite-non-user-to-tender.html', from, packageInvite.to, {
+                    if (!invitee._id) {
+                        var packageInvite = new PackageInvite({
+                            owner: tender.editUser._id,
+                            project: tender.project,
+                            package: tender._id,
+                            inviteType : tender.type,
+                            to: invitee.email,
+                            user: tender.editUser._id
+                        });
+                        packageInvite.save(function(err) {
+                            if (err) {cb(err);}
+                            Mailer.sendMail('invite-non-user-to-tender.html', from, packageInvite.to, {
+                                tender: tender.toJSON(),
+                                team: result.team.toJSON(),
+                                inviter: tender.editUser.toJSON(),
+                                invitee: invitee,
+                                project: result.project.toJSON(),
+                                link : config.baseUrl + 'signup?packageInviteToken=' + packageInvite._id,
+                                subject: tender.editUser.name + ' has invited you to be tenderer of project ' + result.project.name
+                            }, function() {
+                                // Send SMS notification for inactive user
+                                Client.sendMessage({
+                                    to: invitee.phoneNumber,
+                                    from: config.twilio.phoneNumber,
+                                    body: tender.editUser.name + " has invited you to be tenderer of project " + result.project.name
+                                }, function(err, success) {
+                                    console.log(err);
+                                    console.log(success);
+                                    return next();
+                                });
+                            });
+                        });
+                    } else {
+                        Mailer.sendMail('invite-user-to-tender.html', from, invitee.email, {
+                            tender: tender.toJSON(),
                             team: result.team.toJSON(),
                             inviter: tender.editUser.toJSON(),
                             invitee: invitee,
                             project: result.project.toJSON(),
-                            link : config.baseUrl + 'signup?packageInviteToken=' + packageInvite._id,
-                            subject: tender.editUser.name + ' has invited you to project ' + result.project.name
+                            link : config.baseUrl + 'project/'+result.project._id+'/overview',
+                            subject: tender.editUser.name + ' has invited you to be tenderer of project ' + result.project.name
                         }, cb);
-                    });
+                    }
                 }, function() {
                     return next();
                 });

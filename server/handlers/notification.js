@@ -33,10 +33,10 @@ EventBus.onSeries('Notification.Inserted', function(notification, next) {
                     PushNotificationHelper.getData(notification.element.project, notification.element._id, n.fromUser.name + " has completed the task " +  notification.element.description, notification.owner, "task", function() {
                         return next();
                     });
-                } else if (notification.type==="invite-to-project") {
+                } else if (notification.type==="invite-to-project" || notification.type==="invite-to-tender") {
                     Project.findById(notification.element.project, function(err, p) {
                         if (err || !p) {return next();}
-                        PushNotificationHelper.getData(notification.element.project, notification.element._id, n.fromUser.name + " has invited you to join their project " + p.name, notification.owner, "project", function() {
+                        PushNotificationHelper.getData(notification.element.project, notification.element._id, n.fromUser.name + (notification.type==="invite-to-project") ? " has invited you to join their project " : " has invited you to be tenderer for project " + p.name, notification.owner, "project", function() {
                             return next();
                         });
                     });

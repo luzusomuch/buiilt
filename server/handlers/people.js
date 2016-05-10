@@ -4,10 +4,8 @@ var _ = require('lodash');
 var EventBus = require('./../components/EventBus');
 var User = require('./../models/user.model');
 var NotificationHelper = require('./../components/helpers/notification');
-var PushNotificationHelper = require('./../components/helpers/PushNotification');
 var config = require('./../config/environment');
 var async = require('async');
-var _ = require('lodash');
 var mongoose = require('mongoose');
 
 EventBus.onSeries('People.Updated', function(req, next) {
