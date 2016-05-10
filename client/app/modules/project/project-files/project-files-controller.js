@@ -161,6 +161,9 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
         });
         if (index !== -1 && data.user._id.toString()!==$rootScope.currentUser._id.toString() && ($scope.files[index] && $scope.files[index].uniqId!==data.uniqId)) {
             $scope.files[index].uniqId = data.uniqId;
+            if ($scope.files[index].__v===0) {
+                $rootScope.$emit("UpdateCountNumber", {type: "file", isAdd: true});
+            }
             $scope.files[index].__v+=1;
         }
     });

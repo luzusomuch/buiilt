@@ -40,6 +40,10 @@ EventBus.onSeries('Notification.Inserted', function(notification, next) {
                             return next();
                         });
                     });
+                } else if (notification.type==="document-upload-reversion" || notification.type==="file-upload-reversion") {
+                    PushNotificationHelper.getData(notification.element.project, notification.element._id, n.fromUser.name + " has uploaded reversion of " +  notification.element.name, notification.owner, notification.element.element.type, function() {
+                        return next();
+                    });
                 } else {
                     return next();
                 }
