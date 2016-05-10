@@ -20,15 +20,16 @@ EventBus.onSeries('ContactBook.Inserted', function(request, next) {
         });
         packageInvite.save(function(err) {
             if (err) {return next();}
-            var from = request.editUser.name + "<"+request.editUser.email+">";
-            Mailer.sendMail('invite-non-user-to-be-member.html', from, packageInvite.to, {
-                inviter: request.editUser.toJSON(),
-                invitee: {email: packageInvite.to},
-                link : config.baseUrl + 'signup?packageInviteToken='+packageInvite._id,
-                subject: request.editUser.name + ' has invited you to be member of Buiilt'
-            },function(err){
-               return next();
-            });
+            return next();
+            // var from = request.editUser.name + "<"+request.editUser.email+">";
+            // Mailer.sendMail('invite-non-user-to-be-member.html', from, packageInvite.to, {
+            //     inviter: request.editUser.toJSON(),
+            //     invitee: {email: packageInvite.to},
+            //     link : config.baseUrl + 'signup?packageInviteToken='+packageInvite._id,
+            //     subject: request.editUser.name + ' has invited you to be member of Buiilt'
+            // },function(err){
+            //    return next();
+            // });
         });
     } else {
         return next();

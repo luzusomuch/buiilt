@@ -1,5 +1,6 @@
 angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', function($rootScope, $scope, $timeout, document, uploadService, $mdDialog, $mdToast, $stateParams, fileService, socket, notificationService, peopleService, dialogService) {
     $scope.document = document;
+    $scope.document.currentPath = document.path
 
     /*Check if current team is team owner*/
     $scope.isOwnerTeam=false;
@@ -204,12 +205,6 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
         $mdOpenMenu(event);
     };
 
-    /*Open selected history detail in new window*/
-    $scope.openHistoryDetail = function($event, history) {
-        var win = window.open(history.link, "_blank");
-        win.focus();
-    };
-
     $scope.uploadReversion = {};
 
     $scope.pickFile = pickFile;
@@ -274,16 +269,6 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
         $mdToast.show($mdToast.simple().textContent(value).position('bottom','right').hideDelay(3000));
     };
 
-    /*Download selected file history*/
-    $scope.download = function(name, link) {
-        filepicker.exportFile(
-            {url: link, filename: name},
-            function(Blob){
-                console.log(Blob.url);
-            }
-        );
-    };
-
     /*Show invite more members to reversion*/
     $scope.showInviteMoreMemberModal = function($event, activity) {
         $rootScope.activity = activity;
@@ -329,6 +314,23 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
             });
         }, function() {
             
+        });
+    };
+
+    var historyName;
+    $scope.changeVersion = function(history) {
+        console.log(history);
+        $scope.document.currentPath = history.link;
+        historyName = history.version;
+    };
+
+    $scope.openDocumentInNewTab = function() {
+        window.open($scope.document.currentPath, "_blank").focus();
+    };
+
+    $scope.downloadDocument = function() {
+        filepicker.exportFile({
+            url: $scope.document.currentPath, filename: (historyName) ? historyName : $scope.document.name
         });
     };
 });

@@ -10,27 +10,27 @@
 					<md-tooltip md-direction="bottom">Back</md-tooltip>
 				</md-button>
 				
-		        <h5>Document Name</h5>
+		        <h5>{{document.name}}</h5>
 					  
 				<span flex></span>
 				
 				<md-menu md-position-mode="target-right target">
 	                <md-button aria-label="Filter" ng-click="$mdOpenMenu($event)">Versions</md-button>
 	                <md-menu-content width="5">
-	                    <md-menu-item layout-padding>
-							<md-button ng-click="null">Version Name</md-button>
+	                    <md-menu-item layout-padding ng-repeat="history in document.fileHistory">
+							<md-button ng-click="changeVersion(history)">{{history.version}}</md-button>
 	                    </md-menu-item>
 	                </md-menu-content>
 	            </md-menu>
 				
 				<span flex></span>
 				
-				<md-button class="md-icon-button">
+				<md-button ng-click="openDocumentInNewTab()" class="md-icon-button">
 					<md-icon class="material-icons">open_in_new</md-icon>
 					<md-tooltip md-direction="bottom">Open In New Tab</md-tooltip>
 				</md-button>
 				
-				<md-button class="md-icon-button">
+				<md-button ng-click="downloadDocument()" class="md-icon-button">
 					<md-icon class="material-icons">file_download</md-icon>
 					<md-tooltip md-direction="bottom">Download File</md-tooltip>
 				</md-button>
@@ -40,16 +40,8 @@
 			<md-divider layout="row" flex></md-divider>
 	
 			<div layout="column" layout-margin flex>
-				<div class="content" scroll-to-bottom="">
-					<div class="item-activity">
-
-						<div layout="row" layout-align="center center" flex class="activity-stream" layout-padding ng-repeat="" ng-class="">
-							<div flex class="activity-detail">
-	
-							</div>
-						</div>
-					</div>
-					<span flex></span>
+				<div class="content">
+					<div flex file-picker-previewer type="filepicker-preview" url="{{document.currentPath}}" style="height: 100%;"> </div>
 				</div>
 				
 				<md-divider></md-divider>
@@ -64,114 +56,4 @@
 			</div>
 		</div>
 	</div>
-</div>
-			
-			
-			
-			
-			
-			
-			
-			
-<div layout="row" layout-padding>
-	
-	<div layout="column" flex="70" class="md-whiteframe-1dp" style="position: relative;">
-		
-		<div class="detail-header" layout="row" layout-padding>
-			
-			<div layout="column" layout-align="center center">
-	            <md-button class="md-icon-button" back-button><i class="material-icons">arrow_back</i></md-button>
-			</div>
-			
-			<p>{{document.name}}</p>
-			<span flex></span>
-            <md-menu md-position-mode="target-right target">
-                <md-button ng-click="openFileHistory($mdOpenMenu, $event)">View Document</md-button>
-                <md-menu-content width="4">
-                    <md-menu-item ng-show="document.fileHistory.length==0">
-                        <md-button>No versions yet</md-button>
-                    </md-menu-item>
-                    <md-menu-item ng-click="openHistoryDetail($event, history)" ng-repeat="history in document.fileHistory track by $index">
-                        <md-button>{{history.createdAt | date: 'dd/MM/yyyy'}} - {{history.version}} - Tags: {{history.versionTags[0]}} </md-button>
-                    </md-menu-item>
-                </md-menu-content>
-            </md-menu>
-	    </div>
-		
-		<div class="main-page-content" layout-padding style="padding-bottom:50px" scroll-to-bottom="document.activities">
-            <div class="item-activity">
-				
-                <div layout="row" flex class="activity-stream-head">
-                    <p>This document was created by <strong>{{document.owner.name}}</strong> on {{document.createdAt | date: 'dd/MM/yyyy hh:mm a'}}.</p>
-                </div>
-				
-                <div layout="row" layout-align="center center" flex class="activity-stream" ng-repeat="activity in document.activities" ng-class="{related: activity.element.related, 'unread-notification': activity.unread, 'unread-notification-line': activity.unreadLine}">
-                    
-					<span flex="5"></span>
-                    
-					<div class="icon-type" ng-switch="activity.type">
-                        <md-icon ng-switch-when="upload-reversion" class="material-icons md-primary">attach_file</md-icon>
-                        <md-icon ng-switch-when="upload-file" class="material-icons md-primary">attach_file</md-icon>
-                        <md-icon ng-switch-when="archive" class="material-icons md-primary">archive</md-icon>
-                        <md-icon ng-switch-when="unarchive" class="material-icons md-primary">unarchive</md-icon>
-                    
-					</div>
-                    <span flex="5"></span>
-
-                    <div flex class="activity-detail">
-                        <p ng-switch="activity.type" class="activity-header" style="margin-bottom: 15px; border-bottom: 0.5px solid #EEEEEE">
-                            <span class="activity-creator">{{activity.user.name}}</span>
-
-                            <span class="meta-data" ng-switch-when="upload-reversion"> uploaded a new revision at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
-
-                            <span class="meta-data" ng-switch-when="upload-file"> uploaded a new file at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
-
-                            <span class="meta-data" ng-switch-when="archive"> archived this document at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
-
-                            <span class="meta-data" ng-switch-when="unarchive"> unarchived this document at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
-                        </p>
-
-                        <p ng-switch="activity.type" class="activity-body md-body">
-                            <span ng-switch-when="upload-reversion" layout="column">Document Version: {{activity.element.name}}.</span>
-                            <span ng-switch-when="upload-reversion" layout="column">Document Version Tag: {{activity.element.versionTags[0]}}.</span>
-                            <span ng-switch-when="upload-file" layout="column">Description: {{activity.element.description}}</span>
-                        </p>
-
-                        <div flex layout="row" layout-align="center center" class="tagcloud-selection" ng-show="activity.user._id==currentUser._id && (activity.type==='upload-file' || activity.type==='upload-reversion')">
-                            <span ng-repeat="user in activity.acknowledgeUsers" ng-class="{'available-tag':!user.isAcknow, 'selected-tag':user.isAcknow}">{{(user._id) ? user._id.name : user.email}}</span>
-                        </div>
-
-                        <!-- <div ng-show="document.owner._id==currentUser._id && activity.type=='upload-reversion'">
-                            <md-button class="md-primary" ng-click="showInviteMoreMemberModal($event, activity)">Assign This Version to Others</md-button>
-                        </div>    -->                     
-
-                        <div ng-show="activity.user._id==currentUser._id && activity.type=='upload-reversion'">
-                            <md-button class="md-primary" ng-click="showInviteMoreMemberModal($event, activity)">Assign This Version to Others</md-button>
-                        </div>   
-
-                        <div layout="row" layout-align="center center" ng-show="activity.user._id!=currentUser._id && !activity.isAcknow && (activity.type==='upload-file' || activity.type==='upload-reversion')">
-                            <md-button ng-click="acknowledgement(activity)" class="md-primary">Acknowledge This Version</md-button>
-                        </div>
-                    </div>
-					
-                </div>
-				
-            </div>
-		</div>
-		
-		<md-toolbar class="fab-toolbar-btn">
-			<div class="md-toolbar-tools" layout="row" layout-align="end center">
-                <md-button ng-show="isOwnerTeam" ng-click="archive()" aria-label="Compose Message" class="md-icon-button" style="margin-left: 30px">
-                    <md-tooltip md-direction="top">{{(!document.isArchive) ? 'Archive this Document' : 'Unarchive this Document'}}</md-tooltip>
-                    <md-icon class="material-icons"><i class="material-icons">{{(!document.isArchive) ? 'archive' : 'unarchive'}}</i></md-icon>
-                </md-button>
-				<span flex></span>
-                <md-button aria-label="Upload a Document Revision" class="md-icon-button" ng-click="showModal($event, 'upload-document-reversion.html')" ng-show="isOwnerTeam && !document.isArchive" style="margin-right: 30px">
-                    <md-tooltip md-direction="top">Upload a Document Version</md-tooltip>
-                    <md-icon class="material-icons">file_upload</md-icon>
-                </md-button>
-			</div>
-		</md-toolbar>
-		
-	</div>	
 </div>
