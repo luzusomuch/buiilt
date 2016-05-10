@@ -122,20 +122,23 @@ FileSchema.virtual('fileUrl')
  * Pre-save hook
  */
 FileSchema.pre('save', function(next) {
-  this.wasNew = this.isNew;
-  this.editType = this._editType;
-  this.editUser = this._editUser;
-  if (!this.isNew){
-    this.createdAt = new Date();
-  }
-  next();
+    this.wasNew = this.isNew;
+    this._modifiedPaths = this.modifiedPaths();
+    this.editUser = this._editUser;
+    if (!this.isNew){
+        this.createdAt = new Date();
+    }
+    next();
 });
 
 FileSchema.post('save', function(doc){
-  var evtName = this.wasNew ? 'File.Inserted' : 'File.Updated';
-  doc.editType = this._editType;
-  doc.editUser = this._editUser;
-  EventBus.emit(evtName, doc);
+    var evtName = this.wasNew ? 'File.Inserted' : 'File.Updated';
+    if (this._modifiedPaths) {
+        doc._modifiedPaths = this._modifiedPaths
+    }
+    doc.editType = this._editType;
+    doc.editUser = this._editUser;
+    EventBus.emit(evtName, doc);
 });
 
 module.exports = mongoose.model('File', FileSchema);

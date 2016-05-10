@@ -298,7 +298,7 @@ exports.uploadReversion = function(req, res) {
                 file.version = data.filename;
                 file.fileHistory.push(history);
                 file.activities.push(activity);
-                file._editType = "uploadReversion";
+                file.markModified("uploadReversion");
                 file._editUser = req.user;
                 file.save(function(err) {
                     if (err) {return res.send(500,err);}
