@@ -3,13 +3,14 @@
  */
 'use strict';
 
+var config = require('./../../config/environment');
+var Client = require("twilio")(config.twilio.sid, config.twilio.token);
 var Mailer = require('./../../components/Mailer');
 var Team = require('./../../models/team.model');
 var Project = require('./../../models/project.model');
 var EventBus = require('./../../components/EventBus');
 var User = require('./../../models/user.model');
 var PackageInvite = require('./../../models/packageInvite.model');
-var config = require('./../../config/environment');
 var async = require('async');
 var _ = require('lodash');
 
@@ -145,7 +146,14 @@ EventBus.onSeries('People.Updated', function(req, next){
                         link : config.baseUrl + 'signup?packageInviteToken=' + packageInvite._id,
                         subject: req.editUser.name + ' has invited you to project ' + result.project.name
                     },function(err){
-                        return next();
+                        // Send SMS notification for inactive user
+                        Client.sendMessage({
+                            to: currentTender.tenderers[0].phoneNumber,
+                            from: config.twilio.phoneNumber,
+                            body: req.editUser.name + " has invited you to project" + result.project.name
+                        }, function(err, success) {
+                            return next();
+                        });
                     });
                 }); 
             } else if (currentTender && currentTender.hasSelect && currentTender.tenderers[0]._id) {
