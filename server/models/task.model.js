@@ -116,6 +116,9 @@ TaskSchema.post('save', function (doc) {
     if (this._original) {
         doc._oldAssignees = this._original.members.slice(0);
     }
+    if (this._original) {
+        doc._oldAssigneesUnactive = this._original.notMembers.slice(0);
+    }
     doc.editUser = this._editUser;
     EventBus.emit(evtName, doc);
 });

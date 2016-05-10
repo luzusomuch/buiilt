@@ -206,7 +206,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                                     });
                                     _.each($scope.task.notMembers, function(email) {
                                         var index = _.findIndex($scope.projectMembers, function(projectMember) {
-                                            if (!projectMembers._id) {
+                                            if (!$scope.projectMembers._id) {
                                                 return projectMember.email==email;
                                             }
                                         });

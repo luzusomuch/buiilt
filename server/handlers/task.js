@@ -49,20 +49,20 @@ EventBus.onSeries('Task.Updated', function(task, next){
     } else if (task._modifiedPaths.indexOf('assignees') != -1) {
         async.parallel([
             function(callback) {
-                if (task._oldAssignees.length > 0) {
+                if (task._oldAssignees) {
                     var owners = task.members.slice();
                     async.each(task._oldAssignees, function (assignee, cb) {
                         if (task.members.indexOf(assignee) == -1) {
-                        owners.push(assignee);
-                        var params = {
-                            owners: owners,
-                            fromUser: task.editUser,
-                            element: task,
-                            referenceTo: 'task',
-                            type: 'task-revoke'
-                        };
+                            owners.push(assignee);
+                            var params = {
+                                owners: owners,
+                                fromUser: task.editUser,
+                                element: task,
+                                referenceTo: 'task',
+                                type: 'task-revoke'
+                            };
 
-                        NotificationHelper.create(params, cb);
+                            NotificationHelper.create(params, cb);
                         } else{
                             return cb();
                         }           
@@ -79,7 +79,7 @@ EventBus.onSeries('Task.Updated', function(task, next){
                 }
             },
             function(callback) {
-                if (task._oldAssignees.length > 0) {
+                if (task._oldAssignees) {
                     task._oldAssignees = task._oldAssignees.map(function (e) { return e.toString(); });
                     async.each(task.members, function(assignee, cb) {
                         if (task._oldAssignees.indexOf(assignee.toString()) != -1) {
