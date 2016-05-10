@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', function($cookieStore, $rootScope, $scope, $timeout, document, uploadService, $mdDialog, $mdToast, $stateParams, fileService, socket, notificationService, peopleService, FileUploader, dialogService) {
+angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', function($rootScope, $scope, $timeout, document, uploadService, $mdDialog, $mdToast, $stateParams, fileService, socket, notificationService, peopleService, dialogService) {
     $scope.document = document;
 
     /*Check if current team is team owner*/
@@ -212,41 +212,20 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
 
     $scope.uploadReversion = {};
 
-    $scope.safeApply = function (fn) {
-        var phase = this.$root.$$phase;
-        if (phase == '$apply' || phase == '$digest') {
-            if (fn && (typeof (fn) === 'function')) {
-                fn();
-            }
-        } else {
-            this.$apply(fn);
-        }
+    $scope.pickFile = pickFile;
+
+    $scope.onSuccess = onSuccess;
+
+    function pickFile(){
+        filepickerService.pick(
+            onSuccess
+        );
     };
 
-    var uploader = $scope.uploader = new FileUploader({
-        url: 'api/uploads/'+$stateParams.documentId+'/upload-reversion',
-        headers : {
-          Authorization: 'Bearer ' + $cookieStore.get('token')
-        },
-        formData: [$scope.uploadReversion]
-    });
+    $scope.uploadReversion = {};
 
-    uploader.onProgressAll = function (progress) {
-        $scope.progress = progress;
-    };
-
-    uploader.onAfterAddingFile = function (item) {
-        var reader = new FileReader();
-        reader.onload = function (e) {
-            item.src = e.target.result;
-            $scope.safeApply();
-        };
-        reader.readAsDataURL(item._file);
-    };
-
-    uploader.onCompleteAll = function () {
-        dialogService.closeModal();
-        dialogService.showToast("Upload Document Reversion Successfully");
+    function onSuccess(file){
+        $scope.uploadReversion.file = file;
     };
 
     /*Upload document reversion with vaid version tags and project members
@@ -255,11 +234,17 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
         var versionTags = _.map(_.filter($scope.versionTags, {select: true}), 'tag');
         if (versionTags.length===0) {
             dialogService.showToast("Please Select At Least 1 Version Tag");
-        } else if ($scope.uploader.queue.length===0) {
+        } else if (!$scope.uploadReversion.file) {
             dialogService.showToast("Please Select A Document");
         } else {
-            $scope.uploader.queue[0].formData.push({versionTags: versionTags.join()});
-            uploader.uploadAll();
+            $scope.uploadReversion.file.versionTags = versionTags.join();
+            uploadService.uploadReversion({id: $stateParams.documentId}, $scope.uploadReversion).$promise.then(function(res) {
+                dialogService.closeModal();
+                dialogService.showToast("Document Reversion Successfully Uploaded");
+                $rootScope.$broadcast("Document.Updated", res);
+            }, function(err) {
+                dialogService.showToast("Error");
+            })
         }
     //     $scope.uploadReversion.versionTags = _.filter($scope.versionTags, {select: true});
     //     $scope.uploadReversion.teamMembers = _.filter($scope.projectMembers, {select: true});

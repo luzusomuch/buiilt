@@ -107,8 +107,7 @@
 
 								<p class="activity-footer md-footer" ng-switch="activity.type">
 									<span ng-switch-when="upload-reversion">
-										<img class="image-thumbnail" ng-src="{{activity.element.link}}" alt="" ng-show="activity.element.fileType!='pdf'">
-										<!-- <thumbnail file-type="{{activity.element.fileType}}" source="{{activity.element.link}}" max-height="150" max-width="150"></thumbnail> -->
+										<div flex file-picker-previewer type="filepicker-preview" url="{{activity.element.link}}" style="height:200px;"> </div>
 									</span>
 								</p>
 

@@ -12,18 +12,17 @@ angular.module('buiiltApp', [
     '720kb.tooltips',
     'btford.socket-io',
     'ngTable',
-    'angularFileUpload',
+    'angular-filepicker',
     'ngMaterial',
     'angular-clipboard',
     'angular-stripe',
     "ui.calendar",
     "mdPickers",
-    "internationalPhoneNumber",
-    "angular-thumbnails"
+    "internationalPhoneNumber"
 ]);
 
 angular
-.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider, $sceDelegateProvider, cfpLoadingBarProvider, stripeProvider) {
+.module('buiiltApp').config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider, $sceDelegateProvider, cfpLoadingBarProvider, stripeProvider, filepickerProvider) {
     $sceDelegateProvider.resourceUrlWhitelist(['^(?:http(?:s)?:\/\/)?(?:[^\.]+\.)?\(vimeo|youtube)\.com(/.*)?$', 'self']);
     $urlRouterProvider.otherwise('/signin');
 
@@ -32,10 +31,15 @@ angular
 
     //angular loading bar
     cfpLoadingBarProvider.includeSpinner = true;
+
+    // angular-filepicker
+    filepickerProvider.setKey('AM6Wn3DzwRimryydBnsj7z');
+    // mixpanel
     // $mixpanelProvider.apiKey('e6d853e9a8af11b4aa36ea63291ead38'); // your token is different than your API key
-    // for testing mode
+
+    // stripe payment for testing mode
     stripeProvider.setPublishableKey('pk_test_WGKFaZu6dXITEIxoyVI8DrVa');
-    // for live mode
+    // stripe payment for live mode
     // stripeProvider.setPublishableKey('pk_live_INyU3RmhNGx4GSBQUjuqZne9');
 })
 .config(function($mdThemingProvider) {

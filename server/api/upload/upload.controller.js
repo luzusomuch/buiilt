@@ -73,321 +73,271 @@ function populateFile(file, res){
     Upload file or document reversion
 */
 exports.uploadReversion = function(req, res) {
-    var form = new formidable.IncomingForm();
-    form.parse(req, function(err, fields, files) {
-        if (err) {return res.send(500,err);}
-        else if (fields && files) {
-            console.log(fields);
-            console.log(files);
-            File.findById(req.params.id, function(err, file) {
-                if (err || !file) {
-                    return res.send(500,err);
-                } else {
-                    var acknowledgeUsers = [];
-                    async.parallel([
-                        function (cb) {
-                            if (file.element==="file" || file.element.type==="tender") {
-                                _.each(file.members, function(member) {
-                                    acknowledgeUsers.push({_id: member, isAcknow: false});
-                                });
-                                _.each(file.notMembers, function(member) {
-                                    acknowledgeUsers.push({email: member, isAcknow: false});
-                                });
-                                acknowledgeUsers.push({_id: file.owner, isAcknow: false});
-                                _.remove(acknowledgeUsers, {_id: req.user._id});
-                                cb();
-                            } else if (file.element.type==="document") {
-                                if (file.documentSet) {
-                                    Document.findById(file.documentSet, function(err, document) {
-                                        if (err || !document) {
-                                            cb(err);
-                                        } else {
-                                            _.each(document.members, function(member) {
-                                                acknowledgeUsers.push({_id: member, isAcknow: false});
-                                            });
-                                            _.each(document.notMembers, function(email) {
-                                                acknowledgeUsers.push({email: email, isAcknow: false});
-                                            });
-                                            cb();
-                                        }
-                                    });
-                                } else {
-                                    cb();
-                                }
-                            } else {
-                                cb();
-                            }
-                        }
-                    ], function(err) {
-                        if (err) {return res.send(500,err);}
-                        s3.uploadFile(files.file, function(err, data) {
-                            if (err) {return res.send(500,err);}
-                            else {
-                                var activityAndHisToryId = mongoose.Types.ObjectId();
-                                var path = s3.getPublicUrl(files.file.name);
-                                var history = {
-                                    link: path,
-                                    version: files.file.name,
-                                    createdAt: new Date(),
-                                    activityAndHisToryId: activityAndHisToryId
-                                };  
-                                var activity = {
-                                    type: "upload-reversion",
-                                    user: req.user._id,
-                                    createdAt: new Date(),
-                                    acknowledgeUsers: acknowledgeUsers,
-                                    element: {
-                                        name: files.file.name,
-                                    },
-                                    activityAndHisToryId: activityAndHisToryId
-                                };
-                                if (file.element.type==="document") {
-                                    activity.members = acknowledgeUsers;
-                                    history.members = acknowledgeUsers;
-                                    file.versionTags = fields.versionTags.split();
-                                    history.versionTags = file.versionTags;
-                                    activity.element.versionTags = file.versionTags;
-                                } else {
-                                    file.description = req.body.description;
-                                }
-                                file.event = (fields.selectedEvent) ? fields.selectedEvent : null;
-                                file.path = path;
-                                file.key = files.file.name;
-                                file.mimeType = files.file.type;
-                                file.size = files.file.size;
-                                file.version = files.file.name;
-                                file.fileHistory.push(history);
-                                file.activities.push(activity);
-                                file._editType = "uploadReversion";
-                                file._editUser = req.user;
-                                file.save(function(err) {
-                                    File.populate(file, [
-                                        {path: "owner", select: "_id email name"},
-                                        {path: "members", select: "_id email name"},
-                                        {path: "activities.user", select: "_id email name"},
-                                        {path: "activities.acknowledgeUsers._id", select: "_id email name"},
-                                        {path: "project"}
-                                    ], function(err, file) {
-                                        if (file.element.type === "file") {
-                                            EventBus.emit('socket:emit', {
-                                                event: 'file:update',
-                                                room: file._id.toString(),
-                                                data: JSON.parse(JSON.stringify(file))
-                                            });
-                                        } else {
-                                            EventBus.emit('socket:emit', {
-                                                event: 'document:update',
-                                                room: file._id.toString(),
-                                                data: JSON.parse(JSON.stringify(file))
-                                            });
-                                        }
-                                        var randomId = mongoose.Types.ObjectId();
-                                        _.each(acknowledgeUsers, function(user) {
-                                            if (file.element.type === "file" && user._id) {
-                                                EventBus.emit('socket:emit', {
-                                                    event: 'dashboard:new',
-                                                    room: user._id.toString(),
-                                                    data: {
-                                                        type: file.element.type,
-                                                        _id: file._id,
-                                                        uniqId: randomId,
-                                                        user: req.user,
-                                                        file: JSON.parse(JSON.stringify(file)),
-                                                        newNotification: {randomId: randomId, fromUser: req.user, type: "file-upload-reversion"}
-                                                    }
-                                                });
-                                            } else if (file.element.type === "document" && user._id) {
-                                                EventBus.emit('socket:emit', {
-                                                    event: 'dashboard:new',
-                                                    room: user._id.toString(),
-                                                    data: {
-                                                        type: file.element.type,
-                                                        _id: file._id,
-                                                        uniqId: randomId,
-                                                        user: req.user,
-                                                        file: JSON.parse(JSON.stringify(file)),
-                                                        newNotification: {randomId: randomId, fromUser: req.user, type: "document-upload-reversion"}
-                                                    }
-                                                });
-                                            }
-                                        });
-                                        return res.send(200, file);
-                                    });
-                                });
-                            }
-                        });
-                    });
-                }
-            })
-        } else {
-            return res.send(500);
-        }
-    });
-    // return;
-    // var newFile = req.body.files[0];
-    // File.findById(req.params.id, function(err, file) {
+    // var form = new formidable.IncomingForm();
+    // form.parse(req, function(err, fields, files) {
     //     if (err) {return res.send(500,err);}
-    //     else if (!file) {return res.send(404, "The specific file is not existed");}
-    //     else {
-    //         var acknowledgeUsers = [];
-    //         async.parallel([
-    //             function(cb) {
-    //                 if (file.element.type === "file" || file.element.type === "tender") {
-    //                     _.each(file.members, function(member) {
-    //                         acknowledgeUsers.push({_id: member, isAcknow: false});
-    //                     });
-    //                     _.each(file.notMembers, function(member) {
-    //                         acknowledgeUsers.push({email: member, isAcknow: false});
-    //                     });
-    //                     acknowledgeUsers.push({_id: file.owner, isAcknow: false});
-    //                     _.remove(acknowledgeUsers, {_id: req.user._id});
-    //                     cb();
-    //                 } else {
-    //                     People.findOne({project: file.project}, function(err, people) {
-    //                         if (err || !people) {cb();}
+    //     else if (fields && files) {
+    //         console.log(fields);
+    //         console.log(files);
+    //         File.findById(req.params.id, function(err, file) {
+    //             if (err || !file) {
+    //                 return res.send(500,err);
+    //             } else {
+    //                 var acknowledgeUsers = [];
+    //                 async.parallel([
+    //                     function (cb) {
+    //                         if (file.element==="file" || file.element.type==="tender") {
+    //                             _.each(file.members, function(member) {
+    //                                 acknowledgeUsers.push({_id: member, isAcknow: false});
+    //                             });
+    //                             _.each(file.notMembers, function(member) {
+    //                                 acknowledgeUsers.push({email: member, isAcknow: false});
+    //                             });
+    //                             acknowledgeUsers.push({_id: file.owner, isAcknow: false});
+    //                             _.remove(acknowledgeUsers, {_id: req.user._id});
+    //                             cb();
+    //                         } else if (file.element.type==="document") {
+    //                             if (file.documentSet) {
+    //                                 Document.findById(file.documentSet, function(err, document) {
+    //                                     if (err || !document) {
+    //                                         cb(err);
+    //                                     } else {
+    //                                         _.each(document.members, function(member) {
+    //                                             acknowledgeUsers.push({_id: member, isAcknow: false});
+    //                                         });
+    //                                         _.each(document.notMembers, function(email) {
+    //                                             acknowledgeUsers.push({email: email, isAcknow: false});
+    //                                         });
+    //                                         cb();
+    //                                     }
+    //                                 });
+    //                             } else {
+    //                                 cb();
+    //                             }
+    //                         } else {
+    //                             cb();
+    //                         }
+    //                     }
+    //                 ], function(err) {
+    //                     if (err) {return res.send(500,err);}
+    //                     s3.uploadFile(files.file, function(err, data) {
+    //                         if (err) {return res.send(500,err);}
     //                         else {
-    //                             var roles = ["builders", "clients", "architects", "subcontractors", "consultants"];
-    //                             _.each(roles, function(role) {
-    //                                 _.each(people[role], function(tender) {
-    //                                     if (tender.hasSelect && tender.tenderers[0]._id) {
-    //                                         if (_.findIndex(req.body.teamMembers, function(member) {
-    //                                             if (member._id) {
-    //                                                 return member._id.toString()===tender.tenderers[0]._id.toString();
-    //                                             }
-    //                                         }) !== -1) {
-    //                                             acknowledgeUsers.push({_id: tender.tenderers[0]._id, isAcknow: false});
-    //                                             if (tender.tenderers[0].teamMember.length > 0) {
-    //                                                 _.each(tender.tenderers[0].teamMember, function(member) {
-    //                                                     acknowledgeUsers.push({_id: member, isAcknow: false});
-    //                                                 });
-    //                                             }
-    //                                         } else {
-    //                                             _.each(tender.tenderers[0].teamMember, function(member) {
-    //                                                 if (_.findIndex(req.body.teamMembers, function(item) {
-    //                                                     if (item._id) 
-    //                                                         return item._id.toString()===member.toString();
-    //                                                 }) !== -1) {
-    //                                                     acknowledgeUsers.push({_id: member, isAcknow: false});
+    //                             var activityAndHisToryId = mongoose.Types.ObjectId();
+    //                             var path = s3.getPublicUrl(files.file.name);
+    //                             var history = {
+    //                                 link: path,
+    //                                 version: files.file.name,
+    //                                 createdAt: new Date(),
+    //                                 activityAndHisToryId: activityAndHisToryId
+    //                             };  
+    //                             var activity = {
+    //                                 type: "upload-reversion",
+    //                                 user: req.user._id,
+    //                                 createdAt: new Date(),
+    //                                 acknowledgeUsers: acknowledgeUsers,
+    //                                 element: {
+    //                                     name: files.file.name,
+    //                                 },
+    //                                 activityAndHisToryId: activityAndHisToryId
+    //                             };
+    //                             if (file.element.type==="document") {
+    //                                 activity.members = acknowledgeUsers;
+    //                                 history.members = acknowledgeUsers;
+    //                                 file.versionTags = fields.versionTags.split();
+    //                                 history.versionTags = file.versionTags;
+    //                                 activity.element.versionTags = file.versionTags;
+    //                             } else {
+    //                                 file.description = req.body.description;
+    //                             }
+    //                             file.event = (fields.selectedEvent) ? fields.selectedEvent : null;
+    //                             file.path = path;
+    //                             file.key = files.file.name;
+    //                             file.mimeType = files.file.type;
+    //                             file.size = files.file.size;
+    //                             file.version = files.file.name;
+    //                             file.fileHistory.push(history);
+    //                             file.activities.push(activity);
+    //                             file._editType = "uploadReversion";
+    //                             file._editUser = req.user;
+    //                             file.save(function(err) {
+    //                                 File.populate(file, [
+    //                                     {path: "owner", select: "_id email name"},
+    //                                     {path: "members", select: "_id email name"},
+    //                                     {path: "activities.user", select: "_id email name"},
+    //                                     {path: "activities.acknowledgeUsers._id", select: "_id email name"},
+    //                                     {path: "project"}
+    //                                 ], function(err, file) {
+    //                                     if (file.element.type === "file") {
+    //                                         EventBus.emit('socket:emit', {
+    //                                             event: 'file:update',
+    //                                             room: file._id.toString(),
+    //                                             data: JSON.parse(JSON.stringify(file))
+    //                                         });
+    //                                     } else {
+    //                                         EventBus.emit('socket:emit', {
+    //                                             event: 'document:update',
+    //                                             room: file._id.toString(),
+    //                                             data: JSON.parse(JSON.stringify(file))
+    //                                         });
+    //                                     }
+    //                                     var randomId = mongoose.Types.ObjectId();
+    //                                     _.each(acknowledgeUsers, function(user) {
+    //                                         if (file.element.type === "file" && user._id) {
+    //                                             EventBus.emit('socket:emit', {
+    //                                                 event: 'dashboard:new',
+    //                                                 room: user._id.toString(),
+    //                                                 data: {
+    //                                                     type: file.element.type,
+    //                                                     _id: file._id,
+    //                                                     uniqId: randomId,
+    //                                                     user: req.user,
+    //                                                     file: JSON.parse(JSON.stringify(file)),
+    //                                                     newNotification: {randomId: randomId, fromUser: req.user, type: "file-upload-reversion"}
+    //                                                 }
+    //                                             });
+    //                                         } else if (file.element.type === "document" && user._id) {
+    //                                             EventBus.emit('socket:emit', {
+    //                                                 event: 'dashboard:new',
+    //                                                 room: user._id.toString(),
+    //                                                 data: {
+    //                                                     type: file.element.type,
+    //                                                     _id: file._id,
+    //                                                     uniqId: randomId,
+    //                                                     user: req.user,
+    //                                                     file: JSON.parse(JSON.stringify(file)),
+    //                                                     newNotification: {randomId: randomId, fromUser: req.user, type: "document-upload-reversion"}
     //                                                 }
     //                                             });
     //                                         }
-    //                                     } else if (tender.hasSelect && tender.tenderers[0].email) {
-    //                                         if (_.findIndex(req.body.teamMembers, function(member) {
-    //                                             if (member.email) {
-    //                                                 return member.email.toString()===tender.tenderers[0].email.toString();
-    //                                             }
-    //                                         }) !== -1) {
-    //                                             acknowledgeUsers.push({email: tender.tenderers[0].email, isAcknow: false});
-    //                                         }
-    //                                     }
+    //                                     });
+    //                                     return res.send(200, file);
     //                                 });
     //                             });
-    //                             cb();
     //                         }
     //                     });
-    //                 }
-    //             }
-    //         ], function(err) {
-    //             if (err) {return res.send(500,err);}
-    //             var activityAndHisToryId = mongoose.Types.ObjectId();
-    //             var history = {
-    //                 description: file.description,
-    //                 link: newFile.url,
-    //                 version: newFile.filename,
-    //                 createdAt: new Date(),
-    //                 activityAndHisToryId: activityAndHisToryId
-    //             };  
-    //             var activity = {
-    //                 type: "upload-reversion",
-    //                 user: req.user._id,
-    //                 createdAt: new Date(),
-    //                 acknowledgeUsers: acknowledgeUsers,
-    //                 element: {
-    //                     name: newFile.filename,
-    //                     description: req.body.description,
-    //                 },
-    //                 activityAndHisToryId: activityAndHisToryId
-    //             };
-    //             if (file.element.type==="document") {
-    //                 activity.members = acknowledgeUsers;
-    //                 history.members = acknowledgeUsers;
-    //                 var versionTags = [];
-    //                 _.each(req.body.versionTags, function(tag) {
-    //                     versionTags.push(tag.tag);
     //                 });
-    //                 file.versionTags = versionTags;
-    //                 history.versionTags = versionTags;
-    //                 activity.element.versionTags = versionTags;
-    //             } else {
-    //                 file.description = req.body.description;
     //             }
-    //             file.path = newFile.url;
-    //             file.key = newFile.key;
-    //             file.mimeType = newFile.mimeType;
-    //             file.size = newFile.size;
-    //             file.version = newFile.filename;
-    //             file.fileHistory.push(history);
-    //             file.activities.push(activity);
-    //             file._editType = "uploadReversion";
-    //             file._editUser = req.user;
-    //             file.save(function(err) {
-    //                 if (err) {return res.send(500,err);}
-    //                 File.populate(file, [
-    //                     {path: "owner", select: "_id email name"},
-    //                     {path: "members", select: "_id email name"},
-    //                     {path: "activities.user", select: "_id email name"},
-    //                     {path: "activities.acknowledgeUsers._id", select: "_id email name"},
-    //                     {path: "project"}
-    //                 ], function(err, file) {
-    //                     if (file.element.type === "file") {
-    //                         EventBus.emit('socket:emit', {
-    //                             event: 'file:update',
-    //                             room: file._id.toString(),
-    //                             data: JSON.parse(JSON.stringify(file))
-    //                         });
-    //                     } else {
-    //                         EventBus.emit('socket:emit', {
-    //                             event: 'document:update',
-    //                             room: file._id.toString(),
-    //                             data: JSON.parse(JSON.stringify(file))
-    //                         });
-    //                     }
-    //                     var randomId = mongoose.Types.ObjectId();
-    //                     _.each(acknowledgeUsers, function(user) {
-    //                         if (file.element.type === "file" && user._id) {
-    //                             EventBus.emit('socket:emit', {
-    //                                 event: 'dashboard:new',
-    //                                 room: user._id.toString(),
-    //                                 data: {
-    //                                     type: file.element.type,
-    //                                     _id: file._id,
-    //                                     uniqId: randomId,
-    //                                     user: req.user,
-    //                                     file: JSON.parse(JSON.stringify(file)),
-    //                                     newNotification: {randomId: randomId, fromUser: req.user, type: "file-upload-reversion"}
-    //                                 }
-    //                             });
-    //                         } else if (file.element.type === "document" && user._id) {
-    //                             EventBus.emit('socket:emit', {
-    //                                 event: 'dashboard:new',
-    //                                 room: user._id.toString(),
-    //                                 data: {
-    //                                     type: file.element.type,
-    //                                     _id: file._id,
-    //                                     uniqId: randomId,
-    //                                     user: req.user,
-    //                                     file: JSON.parse(JSON.stringify(file)),
-    //                                     newNotification: {randomId: randomId, fromUser: req.user, type: "document-upload-reversion"}
-    //                                 }
-    //                             });
-    //                         }
-    //                     });
-    //                     return res.send(200, file);
-    //                 });
-    //             });
-    //         });
+    //         })
+    //     } else {
+    //         return res.send(500);
     //     }
     // });
+    var data = req.body.file;
+    File.findById(req.params.id, function(err, file) {
+        if (err) {return res.send(500,err);}
+        else if (!file) {return res.send(404, "The specific file is not existed");}
+        else {
+            var acknowledgeUsers = [];
+            async.parallel([
+                function (cb) {
+                    if (file.element==="file" || file.element.type==="tender") {
+                        _.each(file.members, function(member) {
+                            acknowledgeUsers.push({_id: member, isAcknow: false});
+                        });
+                        _.each(file.notMembers, function(member) {
+                            acknowledgeUsers.push({email: member, isAcknow: false});
+                        });
+                        acknowledgeUsers.push({_id: file.owner, isAcknow: false});
+                        _.remove(acknowledgeUsers, {_id: req.user._id});
+                        cb();
+                    } else if (file.element.type==="document") {
+                        if (file.documentSet) {
+                            Document.findById(file.documentSet, function(err, document) {
+                                if (err || !document) {
+                                    cb(err);
+                                } else {
+                                    _.each(document.members, function(member) {
+                                        acknowledgeUsers.push({_id: member, isAcknow: false});
+                                    });
+                                    _.each(document.notMembers, function(email) {
+                                        acknowledgeUsers.push({email: email, isAcknow: false});
+                                    });
+                                    cb();
+                                }
+                            });
+                        } else {
+                            cb();
+                        }
+                    } else {
+                        cb();
+                    }
+                }
+            ], function(err) {
+                if (err) {return res.send(500,err);}
+                var activityAndHisToryId = mongoose.Types.ObjectId();
+                var history = {
+                    link: data.url,
+                    version: data.filename,
+                    createdAt: new Date(),
+                    activityAndHisToryId: activityAndHisToryId
+                };  
+                var activity = {
+                    type: "upload-reversion",
+                    user: req.user._id,
+                    createdAt: new Date(),
+                    acknowledgeUsers: acknowledgeUsers,
+                    element: {
+                        name: data.filename,
+                    },
+                    activityAndHisToryId: activityAndHisToryId
+                };
+                if (file.element.type==="document") {
+                    activity.members = acknowledgeUsers;
+                    history.members = acknowledgeUsers;
+                    file.versionTags = data.versionTags.split();
+                    history.versionTags = file.versionTags;
+                    activity.element.versionTags = file.versionTags;
+                } else {
+                    file.description = data.description;
+                }
+                file.path = data.url;
+                file.key = data.key;
+                file.mimeType = data.mimeType;
+                file.size = data.size;
+                file.version = data.filename;
+                file.fileHistory.push(history);
+                file.activities.push(activity);
+                file._editType = "uploadReversion";
+                file._editUser = req.user;
+                file.save(function(err) {
+                    if (err) {return res.send(500,err);}
+                    File.populate(file, [
+                        {path: "owner", select: "_id email name"},
+                        {path: "members", select: "_id email name"},
+                        {path: "activities.user", select: "_id email name"},
+                        {path: "activities.acknowledgeUsers._id", select: "_id email name"},
+                        {path: "project"}
+                    ], function(err, file) {
+                        EventBus.emit('socket:emit', {
+                            event: file.element.type+':update',
+                            room: file._id.toString(),
+                            data: JSON.parse(JSON.stringify(file))
+                        });
+
+                        var randomId = mongoose.Types.ObjectId();
+                        _.each(acknowledgeUsers, function(user) {
+                            if ((file.element.type==="document" || file.element.type==="file") && user._id) {
+                                EventBus.emit('socket:emit', {
+                                    event: 'dashboard:new',
+                                    room: user._id.toString(),
+                                    data: {
+                                        type: file.element.type,
+                                        _id: file._id,
+                                        uniqId: randomId,
+                                        user: req.user,
+                                        file: JSON.parse(JSON.stringify(file)),
+                                        newNotification: {randomId: randomId, fromUser: req.user, type: file.element.type+"-upload-reversion"}
+                                    }
+                                });
+                            }
+                        });
+                        return res.send(200, file);
+                    });
+                });
+            });
+        }
+    });
 };
 
 /**
