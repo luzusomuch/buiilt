@@ -125,6 +125,7 @@ FileSchema.pre('save', function(next) {
     this.wasNew = this.isNew;
     this._modifiedPaths = this.modifiedPaths();
     this.editUser = this._editUser;
+    this.editType = this._editType;
     if (!this.isNew){
         this.createdAt = new Date();
     }

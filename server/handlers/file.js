@@ -3,6 +3,7 @@
 var EventBus = require('./../components/EventBus');
 var User = require('./../models/user.model');
 var Project = require('./../models/project.model');
+var Document = require('./../models/document.model');
 var People = require('./../models/people.model');
 var Notification = require('./../models/notification.model');
 var NotificationHelper = require('./../components/helpers/notification');
@@ -34,24 +35,22 @@ EventBus.onSeries('File.Inserted', function(file, next) {
 });
 
 EventBus.onSeries('File.Updated', function(file, next) {
-    if (file.editType === "uploadReversion") {
-        if (file.element.type === "document") {
-            var latestHistory = _.last(file.fileHistory);
-            async.each(latestHistory.members, function(member, callback) {
-                if (member._id) {
+    if (file._editType==="uploadReversion") {
+        if (file.element.type === "document" && file.documentSet) {
+            Document.findById(file.documentSet, function(err, documentSet) {
+                if (err||!documentSet) {return next();}
+                else {
                     var params = {
-                        owners : [member._id],
+                        owners : documentSet.members,
                         fromUser : file.editUser._id,
                         element : file,
                         referenceTo : 'document',
                         type : 'document-upload-reversion'
                     };
-                    NotificationHelper.create(params, callback);
-                } else {
-                    callback();
+                    NotificationHelper.create(params, function() {
+                        return next();
+                    });
                 }
-            }, function() {
-                return next();
             });
         } else if (file.element.type === "file" || file.element.type === "tender") {
             if (file.members.length > 0) {
@@ -70,7 +69,7 @@ EventBus.onSeries('File.Updated', function(file, next) {
         } else {
             return next();
         }
-    } else if (file.editType==="sendAcknowledge") {
+    } else if (file._editType==="sendAcknowledge") {
         if (file.element.type==="file" || file.element.type==="tender") {
             if (file.members.length > 0) {
                 _.remove(file.members, file.editUser._id);
@@ -100,7 +99,7 @@ EventBus.onSeries('File.Updated', function(file, next) {
         } else {
             return next();
         }
-    } else if (file.editType==="insert-note") {
+    } else if (file._editType==="insert-note") {
         var owners = _.clone(file.members);
         owners.push(file.owner);
         _.remove(owners, file.editUser._id);
@@ -115,7 +114,7 @@ EventBus.onSeries('File.Updated', function(file, next) {
         NotificationHelper.create(params, function() {
             return next();
         });
-    } else if (file.editType==="archive") {
+    } else if (file._editType==="archive") {
         Notification.find({"element._id": file._id, unread: true}, function(err, notifications) {
             if (err) {return next();}
             async.each(notifications, function(n, cb) {

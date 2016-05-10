@@ -190,25 +190,28 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
     then check if document is existed in documents list
     after that update count number and update notifications list*/
     var listenerCleanFnPushFromDashboard = $rootScope.$on("Dashboard.Document.Update", function(event, data) {
+        console.log(data);
         if (data.file.project._id.toString()===$stateParams.id.toString()) {
             var index = _.findIndex($scope.documents, function(document) {
                 return document._id.toString()===data.file._id.toString();
             });
+            console.log(index);
             if (index !== -1 && ($scope.documents[index] && $scope.documents[index].uniqId!==data.uniqId)) {
                 $scope.documents[index].uniqId = data.uniqId;
-                $scope.documents[index].__v+=1;
+                console.log($scope.documents[index]);
                 if ($scope.documents[index].__v===0) {
                     $rootScope.$broadcast("UpdateCountNumber", {type: "document", isAdd: true, number: 1});
                 }
-            } else if (index === -1) {
-                data.file.__v = 1;
-                data.file.uniqId = data.uniqId;
-                $scope.documents.push(data.file);
-                var notificationDocuments = _.filter($scope.documents, function(document) {
-                    return document.__v > 0;
-                });
-                $rootScope.$broadcast("UpdateCountNumber", {type: "document", isList: true, number: notificationDocuments.length});
-            }
+                $scope.documents[index].__v+=1;
+            } //else if (index === -1) {
+            //     data.file.__v = 1;
+            //     data.file.uniqId = data.uniqId;
+            //     $scope.documents.push(data.file);
+            //     var notificationDocuments = _.filter($scope.documents, function(document) {
+            //         return document.__v > 0;
+            //     });
+            //     $rootScope.$broadcast("UpdateCountNumber", {type: "document", isList: true, number: notificationDocuments.length});
+            // }
         }
     });
 
@@ -231,7 +234,7 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
 
     /*Receive when updated document*/
     socket.on("dashboard:new", function(data) {
-        if (data.type==="file" && data.file.element.type==="document") 
+        if (data.type==="document" && data.file.element.type==="document") 
             $rootScope.$emit("Dashboard.Document.Update", data);
     });
 

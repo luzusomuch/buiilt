@@ -300,11 +300,11 @@ exports.update = function(req, res) {
                         });
                     } else if (data.editType==="insert-note") {
                         activity.element.content = req.body.note;
-                        file.markModified("insert-note");
+                        file._editType="insert-note";
                         cb();
                     } else if (data.editType==="archive" || data.editType==="unarchive") {
                         file.isArchive=req.body.isArchive;
-                        file.markModified(data.editType);
+                        file._editType=data.editType;
                         cb();
                     } else if (data.editType==="change-event" || data.editType==="add-event") {
                         file.event = data.selectedEvent;
@@ -427,7 +427,7 @@ exports.acknowledgement = function(req, res) {
                 } else {
                     file.activities[currentActivityIndex].acknowledgeUsers.push({_id: req.user._id, isAcknow: true});
                 }
-                file.markModified("sendAcknowledge");
+                file._editType="sendAcknowledge";
                 file._editUser = req.user;
                 file.save(function(err) {
                     if (err) {return res.send(500,err);}
