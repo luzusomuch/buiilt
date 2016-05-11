@@ -417,7 +417,9 @@ exports.upload = function(req, res){
                     members: members
                 });
                 ownerItem._editUser = req.user;
+                ownerItem.markModified("create-related-item");
                 ownerItem.save(function() {
+                    // Response related file to the parent item
                     EventBus.emit('socket:emit', {
                         event: 'relatedItem:new',
                         room: ownerItem._id.toString(),
@@ -427,6 +429,27 @@ exports.upload = function(req, res){
                             belongTo: ownerItem._id,
                             data: JSON.parse(JSON.stringify(file)),
                         }
+                    });
+
+                    // Update count number of parent item
+                    var owners = _.clone(ownerItem.members);
+                    owners.push(ownerItem.owner);
+                    _.remove(owners, req.user._id);
+                    owners = _.map(_.groupBy(owners,function(doc){
+                        return doc;
+                    }),function(grouped){
+                        return grouped[0];
+                    });
+                    _.each(owners, function(user) {
+                        EventBus.emit('socket:emit', {
+                            event: 'dashboard:new',
+                            room: user.toString(),
+                            data: {
+                                type: "related-item",
+                                excuteUser: req.user,
+                                belongTo: ownerItem._id
+                            }
+                        });
                     });
                     return res.send(200, file);
                 });

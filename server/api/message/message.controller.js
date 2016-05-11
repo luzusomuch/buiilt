@@ -211,96 +211,6 @@ exports.create = function(req,res) {
             }
         });
     });
-    // THis is old version - create new thread had to enter information
-    /*ThreadValidator.validateCreate(req,function(err,data) {
-        if (err) {
-            return errorsHelper.validationErrors(res,err)
-        }
-        console.log(data);
-        return
-        var thread = new Thread(data);
-        // thread.event = data.selectedEvent;
-        thread.project = req.params.id;
-        thread.owner = user._id;
-        thread.element = {type: req.body.type};
-        thread.members.push(req.user._id);
-        _.uniq(thread.members);
-        var message = {
-            text : req.body.message,
-            user : user,
-            sendAt: new Date()
-        };
-        thread.activities = [];
-        thread.messages = [];
-        thread.activities.push({
-            user: req.user._id,
-            type: 'chat',
-            createdAt: new Date(),
-            element: {
-                message: req.body.message
-            }
-        });
-        thread.messages.push(message);
-        if (req.body.belongTo) {
-            thread.belongTo.item = {_id: req.body.belongTo};
-            thread.belongTo.type = req.body.belongToType;
-        }
-        thread._editUser = user;
-        var mainItem = getMainItem(req.body.belongToType);
-        thread.save(function(err){
-            if (err) {return res.send(500,err);}
-            Activity.findById(data.selectedEvent, function(err, activity) {
-                if (err) {
-                    thread.remove(function() {
-                        return res.send(500,err);
-                    });
-                } else if (!activity) {
-                    thread.remove(function() {
-                        return res.send(404);
-                    });
-                }
-                activity.relatedItem.push({type: "thread", item: {_id: thread._id}});
-                activity.save(function(err) {
-                    if (err) {
-                        thread.remove(function(){
-                            return res.send(500,err);
-                        });
-                    } else if (req.body.belongTo) {
-                        mainItem.findById(req.body.belongTo, function(err, main) {
-                            if (err || !main) {
-                                thread.remove(function(err) {
-                                    return res.send(500, err);
-                                });
-                            } else {
-                                main.activities.push({
-                                    user: req.user._id,
-                                    type: "related-thread",
-                                    createdAt: new Date(),
-                                    element: {
-                                        item: thread._id,
-                                        name: thread.name,
-                                        related: true
-                                    }
-                                });
-                                data.members.push(req.user._id);
-                                main.relatedItem.push({
-                                    type: "thread",
-                                    item: {_id: thread._id},
-                                    members: data.members
-                                });
-                                main.save(function(err) {
-                                    if (err) {return res.send(500,err);}
-                                    populateNewThread(thread, res, req);                
-                                });
-                            }
-                        });
-                    } else {
-                        populateNewThread(thread, res, req);
-                    }
-                });
-            });
-        });
-    });*/
 };
 
 // Update thread
@@ -559,7 +469,6 @@ exports.destroy = function (req, res) {
     This code is old version, use to reply a thread via email 
 */
 exports.replyMessage = function(req, res) {
-    console.log(req.body);
     var splited = req.body.recipient.split("@");
     Thread.findById(splited[0], function(err, thread) {
         if (err) {

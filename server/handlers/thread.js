@@ -41,6 +41,7 @@ EventBus.onSeries('Thread.Inserted', function(thread, next) {
 });
 
 EventBus.onSeries('Thread.Updated', function(thread, next) {
+    console.log(thread._modifiedPaths);
     if (thread._modifiedPaths.indexOf("archive") !== -1) {
         Notification.find({"element._id": thread._id, unread: true}, function(err, notifications) {
             if (err) {return next();}
@@ -50,6 +51,25 @@ EventBus.onSeries('Thread.Updated', function(thread, next) {
             }, function() {
                 return next();
             });
+        });
+    } else if (thread._modifiedPaths.indexOf("create-related-item") !== -1) {
+        var owners = _.clone(thread.members);
+        owners.push(thread.owner);
+        _.remove(owners, thread.editUser._id);
+        owners = _.map(_.groupBy(owners,function(doc){
+            return doc;
+        }),function(grouped){
+            return grouped[0];
+        });
+        var params = {
+            owners : owners,
+            fromUser : thread.editUser._id,
+            element : thread,
+            referenceTo : 'thread',
+            type : 'related-item'
+        };
+        NotificationHelper.create(params,function() {
+            return next();
         });
     } else if (thread.members.length > 0 || thread.oldUsers.length > 0) {
         async.waterfall([
@@ -111,7 +131,6 @@ EventBus.onSeries('Thread.Updated', function(thread, next) {
 
 EventBus.onSeries('Thread.NewMessage', function(thread, next) {
     var owners = _.clone(thread.members);
-    console.log(owners);
     if (owners.length > 0 && owners[0]._id) {
         var newOwners = [];
         _.each(owners, function(owner) {

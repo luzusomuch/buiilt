@@ -57,13 +57,13 @@
 			<md-divider layout="row" flex></md-divider>
 			
 			<md-list ng-cloak flex class="content-list">
-				<md-list-item class="md-3-line" ng-repeat="thread in threads | filter: search | unique: '_id' track by thread._id" md-ink-ripple>
+				<md-list-item class="md-3-line" ng-repeat="thread in threads | filter: search | unique: '_id' track by thread._id" ng-show="thread.__v>0" md-ink-ripple>
 			
 					<div ui-sref="project.messages.detail({id: thread.project, messageId: thread._id})" class="md-list-item-text" layout-margin>
 						<h3>{{ thread.name }}<i class="material-icons" ng-show="thread.element.type=='tender'">warning</i></h3>
 						<h4>Assignees: <span ng-repeat="member in thread.members track by $index">{{member.name}}, </span><span ng-repeat="member in thread.notMembers track by $index">{{member}}</span></h4>
 						<p ng-show="thread.__v > 0" style="color: #2196F3">Updates: {{thread.__v}}</p>
-					    <p ng-show="thread.__v == 0">No New Updates</p>
+					    <!-- <p ng-show="thread.__v == 0">No New Updates</p> -->
 				    </div>
 				
 			        <md-button class="md-secondary" ng-click="showReplyModal($event, thread)"><md-icon class="material-icons">reply</md-icon><md-tooltip md-direction="down">Compose a Reply</md-tooltip></md-button>
@@ -71,7 +71,7 @@
 			
 				</md-list-item>
 
-				<!-- <md-list-item class="md-3-line" ng-repeat="thread in threads | orderBy: '-updatedAt' | filter: search | unique: '_id' track by thread._id" ng-show="thread.__v==0" md-ink-ripple>
+				<md-list-item class="md-3-line" ng-repeat="thread in threads | orderBy: '-updatedAt' | filter: search | unique: '_id' track by thread._id" ng-show="thread.__v==0" md-ink-ripple>
 	    
 					<div ui-sref="project.messages.detail({id: thread.project, messageId: thread._id})" class="md-list-item-text" layout-margin>
 					    <h3>{{ thread.name }}</h3>
@@ -80,7 +80,7 @@
 			        <md-button class="md-secondary" ng-click="showReplyModal($event, thread)"><md-icon class="material-icons">reply</md-icon><md-tooltip md-direction="down">Compose a Reply</md-tooltip></md-button>
 				    <md-divider ng-hide="$last"></md-divider>
 	
-				</md-list-item> -->
+				</md-list-item>
 		
 			</md-list>
 			

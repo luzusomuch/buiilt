@@ -529,7 +529,7 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
     $scope.step=1;
     $scope.next = function(type) {
         if ($scope.step==1) {
-            if (type==="create-related-task" && (!$scope.relatedTask.selectedEvent || !$scope.relatedTask.description)) {
+            if (type==="create-related-task" && !$scope.relatedTask.description) {
                 dialogService.showToast("Check Your Input Again.");
             } else {
                 $scope.step += 1;

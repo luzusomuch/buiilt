@@ -13,7 +13,6 @@ EventBus.onSeries("Thread.Inserted", function(thread, next) {
 });
 
 EventBus.onSeries('Thread.NewMessage', function(req, next) {
-    console.log(req.notMembers);
     if (req.notMembers.length > 0) {
         async.each(req.notMembers, function(email, callback) {
             Mailer.sendMail('new-message.html', req.message.user.name + "<" + req._id+"@mg.buiilt.com.au" + ">", email, {

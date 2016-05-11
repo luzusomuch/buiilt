@@ -156,7 +156,6 @@ exports.get = function(req, res) {
     .exec(function(err, task){
         if (err) {return res.send(500,err);}
         if (!task) {return res.send(404);}
-        console.log(task);
         Notification.find({owner: req.user._id, unread: true, "element._id": task._id}, function(err, notifications) {
             if (err) {return res.send(500,err);}
             task.__v = notifications.length;
@@ -203,28 +202,28 @@ exports.create = function(req,res) {
         var mainItem = getMainItem(req.body.belongToType);
         task.save(function(err) {
             if (err) {return res.send(500,err);}
-            Activity.findById(data.selectedEvent, function(err, activity) {
-                if (err) {
-                    task.remove(function() {
-                        return res.send(500,err);
-                    });
-                } else if (!activity) {
-                    task.remove(function() {
-                        return res.send(404);
-                    });
-                }
-                activity.relatedItem.push({type: "task", item: {_id: task._id}});
-                activity.save(function(err) {
-                    if (err) {
-                        task.remove(function() {
-                            return res.send(500,err);
+            async.parallel([
+                function (cb) {
+                    if (data.selectedEvent) {
+                        Activity.findById(data.selectedEvent, function(err, activity) {
+                            if (err) {
+                                task.remove(cb);
+                            } else if (!activity) {
+                                task.remove(cb);
+                            } else {
+                                activity.relatedItem.push({type: "task", item: {_id: task._id}});
+                                activity.save(cb);
+                            }
                         });
-                    } else if (req.body.belongTo) {
+                    } else {
+                        cb();
+                    }
+                },
+                function (cb) {
+                    if (req.body.belongTo) {
                         mainItem.findById(req.body.belongTo, function(err, main) {
                             if (err || !main) {
-                                task.remove(function() {
-                                    return res.send(500);
-                                });
+                                task.remove(cb);
                             } else {
                                 main.activities.push({
                                     user: req.user._id,
@@ -242,26 +241,58 @@ exports.create = function(req,res) {
                                     item: {_id: task._id},
                                     members: data.members
                                 });
+                                main._editUser = req.user;
+                                if (req.body.belongToType==="file") {
+                                    main._editType==="create-related-item";
+                                } else {
+                                    main.markModified("create-related-item");
+                                }
                                 main.save(function(err) {
-                                    if (err) {return res.send(500,err);}
+                                    if (err) {return cb(err);}
+                                    else {
+                                        // Response related task to the parent item
                                         EventBus.emit('socket:emit', {
-                                        event: 'relatedItem:new',
-                                        room: main._id.toString(),
-                                        data: {
-                                            type: "task",
-                                            excuteUser: req.user,
-                                            belongTo: main._id,
-                                            data: task,
-                                        }
-                                    });
-                                    populateNewTask(task, res, req);
+                                            event: 'relatedItem:new',
+                                            room: main._id.toString(),
+                                            data: {
+                                                type: "task",
+                                                excuteUser: req.user,
+                                                belongTo: main._id,
+                                                data: task,
+                                            }
+                                        });
+                                        // Update count number of parent item
+                                        var owners = _.clone(main.members);
+                                        owners.push(main.owner);
+                                        _.remove(owners, req.user._id);
+                                        owners = _.map(_.groupBy(owners,function(doc){
+                                            return doc;
+                                        }),function(grouped){
+                                            return grouped[0];
+                                        });
+                                        _.each(owners, function(user) {
+                                            EventBus.emit('socket:emit', {
+                                                event: 'dashboard:new',
+                                                room: user.toString(),
+                                                data: {
+                                                    type: "related-item",
+                                                    excuteUser: req.user,
+                                                    belongTo: main._id
+                                                }
+                                            });
+                                        });
+                                        cb();
+                                    }
                                 });
                             }
                         });
                     } else {
-                        populateNewTask(task, res, req);
+                        cb();
                     }
-                });
+                }
+            ], function(err) {
+                if (err) {return res.send(500,err);}
+                populateNewTask(task, res, req);
             });
         });
     });

@@ -128,10 +128,35 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
         }
     });
     
-    /*Receive when update a thread*/
+    /*
+    Receive when send reply, create related file or task in thread
+    then count update number
+    */
     socket.on("dashboard:new", function(data) {
-        if (data.type==="thread") 
-            $rootScope.$emit("Dashboard.Thread.Update", data);
+        if (data.type==="thread") {
+            var index = _.findIndex($scope.threads, function(thread) {
+                return thread._id.toString()===data.thread._id.toString();
+            });
+            if (index !== -1 && ($scope.threads[index] && $scope.threads[index].uniqId!==data.uniqId)) {
+                if (data.isReplyViaEmail || (!data.isReplyViaEmail && data.user._id.toString()!==$rootScope.currentUser._id.toString())) {
+                    if ($scope.threads[index].__v===0) {
+                        $rootScope.$emit("UpdateCountNumber", {type: "message", isAdd: true});
+                    }
+                    $scope.threads[index].uniqId = data.uniqId;
+                    $scope.threads[index].__v+=1;
+                }
+            }
+        } else if (data.type==="related-item") {
+            var index = _.findIndex($scope.threads, function(thread) {
+                return thread._id.toString()===data.belongTo.toString();
+            });
+            if (index !==-1) {
+                if ($scope.threads[index].__v===0) {
+                    $rootScope.$emit("UpdateCountNumber", {type: "message", isAdd: true});
+                }
+                $scope.threads[index].__v+=1;
+            }
+        }
     });
 
     /*Receive when owner created thread*/
@@ -141,50 +166,15 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
         repairForEventsFilter();
     });
 
-    /*
-    Receive when opened thread detail and check if it's belong to threads list
-    then change it notification number to 0
-    */
-    var listenerCleanFnRead = $rootScope.$on("Thread.Read", function(event, data) {
-        var index = _.findIndex($scope.threads, function(thread) {
-            return thread._id.toString()===data._id.toString();
-        });
-        if (index !== -1) {
-            $scope.threads[index].__v=0;
-        }
-    });
-
     /*Receive when sent a reply in reply modal and change thread notification to 0*/
     var listenerCleanFnAcknow = $rootScope.$on("Project-Message-Update", function(event, index) {
         $scope.threads[index].element.notificationType = null;
         $scope.threads[index].__v = 0;
     });
 
-    /*
-    Receive when updated thread, check updated thread notification number
-    if notification number is 0 then increase count total by 1
-    then keep countinue increase notification number by 1
-    */
-    var listenerCleanFnPushFromDashboard = $rootScope.$on("Dashboard.Thread.Update", function(event, data) {
-        var index = _.findIndex($scope.threads, function(thread) {
-            return thread._id.toString()===data.thread._id.toString();
-        });
-        if (index !== -1 && ($scope.threads[index] && $scope.threads[index].uniqId!==data.uniqId)) {
-            if (data.isReplyViaEmail || (!data.isReplyViaEmail && data.user._id.toString()!==$rootScope.currentUser._id.toString())) {
-                if ($scope.threads[index].__v===0) {
-                    $rootScope.$emit("UpdateCountNumber", {type: "message", isAdd: true});
-                }
-                $scope.threads[index].uniqId = data.uniqId;
-                $scope.threads[index].__v+=1;
-            }
-        }
-    });
-
     $scope.$on('$destroy', function() {
         listenerCleanFnPush();
-        listenerCleanFnRead();
         listenerCleanFnAcknow();
-        listenerCleanFnPushFromDashboard();
     });
 
     /*Search thread depend on input value*/
