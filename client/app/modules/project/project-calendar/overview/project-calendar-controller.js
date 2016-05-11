@@ -223,7 +223,6 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                                     $scope.update($scope.task);
                                 };
 
-
                                 $scope.addComment = function() {
                                     if (!$scope.comment || $scope.comment.trim().length===0) {
                                         dialogService.showToast("Please Enter Your Comment");
@@ -243,9 +242,22 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                                     }
                                 };
 
+                                $scope.completeTask = function() {
+                                    $scope.task.completed = !$scope.task.completed;
+                                    if ($scope.task.completed) {
+                                        $scope.task.completedBy = $rootScope.currentUser._id;
+                                        $scope.task.editType = "complete-task";
+                                        $scope.task.completedAt = new Date();
+                                    } else {
+                                        $scope.task.completedBy = null;
+                                        $scope.task.editType = "uncomplete-task";
+                                        $scope.task.completedAt = null;
+                                    }
+                                    $scope.update($scope.task);
+                                };
+
                                 $scope.update = function(task) {
                                     taskService.update({id: task._id}, task).$promise.then(function(res) {
-                                        console.log(res);
                                         if (task.editType==="enter-comment") {
                                             $scope.comment = null;
                                             dialogService.showToast("Enter New Comment Successfully");
@@ -253,6 +265,10 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                                             dialogService.showToast("Change Task Description Successfully");
                                         } else if (task.editType==="assign") {
                                             dialogService.showToast("Assign Members To Task Successfully");
+                                        } else if (task.editType==="complete-task") {
+                                            dialogService.showToast("Mark Task As Completed Successfully");
+                                        } else if (task.editType==="uncomplete-task") {
+                                            dialogService.showToast("Re-open Task Successfully");
                                         }
                                         $scope.showEdit = false;
                                     }, function(err) {

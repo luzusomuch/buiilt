@@ -41,24 +41,31 @@ function populateTask(task, res, req){
             room: task._id.toString(),
             data: task
         });
-        var owners = (task.members) ? _.clone(task.members) : [];
-        owners.push(task.owner);
-        _.remove(owners, {_id: req.user._id});
-        var uniqId = mongoose.Types.ObjectId();
-        _.each(owners, function(owner) {
-            EventBus.emit("socket:emit", {
-                event: "dashboard:new",
-                room: owner._id.toString(),
-                data: {
-                    type: "task",
-                    _id: task._id,
-                    task: task,
-                    user: req.user,
-                    uniqId: uniqId,
-                    newNotification: {fromUser: req.user, type: "task-update"}
-                }
+        if (req.body.editType==="complete-task" || req.body.editType==="uncomplete-task" || req.body.editType==="enter-comment") {
+            var owners = (task.members) ? _.clone(task.members) : [];
+            owners.push(task.owner);
+            _.remove(owners, {_id: req.user._id});
+            owners = _.map(_.groupBy(owners,function(doc){
+                return doc._id;
+            }),function(grouped){
+                return grouped[0];
             });
-        });
+            var uniqId = mongoose.Types.ObjectId();
+            _.each(owners, function(owner) {
+                EventBus.emit("socket:emit", {
+                    event: "dashboard:new",
+                    room: owner._id.toString(),
+                    data: {
+                        type: "task",
+                        _id: task._id,
+                        task: task,
+                        user: req.user,
+                        uniqId: uniqId,
+                        newNotification: {fromUser: req.user, type: "task-update"}
+                    }
+                });
+            });
+        }
         return res.send(200, task);
     });
 };
@@ -156,7 +163,7 @@ exports.get = function(req, res) {
     .exec(function(err, task){
         if (err) {return res.send(500,err);}
         if (!task) {return res.send(404);}
-        Notification.find({owner: req.user._id, unread: true, "element._id": task._id}, function(err, notifications) {
+        Notification.find({owner: req.user._id, unread: true, "element._id": task._id, $or:[{type: "task-completed"}, {type: "task-reopened"}, {type: "task-enter-comment"}]}, function(err, notifications) {
             if (err) {return res.send(500,err);}
             task.__v = notifications.length;
             return res.send(200, task);

@@ -15,20 +15,24 @@
     <md-dialog-content>
         <div class="md-dialog-content" layout="column" layout-padding>
 			<md-button class="md-warn" ng-click="showEdit=false" ng-show="showEdit">Cancel Edit</md-button>
-			<div layout="column">
-				<h3 class="md-title">Details</h3>
-				<p ng-show="!showEdit" ng-mouseenter="editDescription=true" ng-mouseleave="editDescription=false">{{task.description}} <span ng-show="editDescription" class="md-body-2 link-decoration" ng-click="showEdit=true">Edit</span></p>
-				<md-input-container ng-show="showEdit">
-					<label for="">Task Description</label>
-					<input type="text" ng-model="task.description" ng-blur="changeDescription()">
-				</md-input-container>
+			<div layout="row">
+				<div layout="column">
+					<h3 class="md-title">Details</h3>
+					<p ng-show="!showEdit" ng-mouseenter="editDescription=true" ng-mouseleave="editDescription=false">{{task.description}} <span ng-show="editDescription" class="md-body-2 link-decoration" ng-click="showEdit=true">Edit</span></p>
+					<md-input-container ng-show="showEdit">
+						<label for="">Task Description</label>
+						<input type="text" ng-model="task.description" ng-blur="changeDescription()">
+					</md-input-container>
+				</div>
+				<span flex></span>
+				<md-button ng-click="completeTask()" ng-class="{'md-primary': !task.completed, 'md-warm': task.completed}">{{(!task.completed) ? "Mark As Complete" : "Re-open Task"}}</md-button>
 			</div>
 			
 			<div layout="column">
 				<h3 class="md-title">These Members Who Can See This Task</h3>
 				<p ng-show="!showEdit" class="md-subhead" ng-mouseenter="editAssignees=true" ng-mouseleave="editAssignees=false">
-					<span ng-repeat="member in task.members">{{member.name}}, </span>
-					<span ng-repeat="email in task.notMembers">{{email}}, </span>
+					<span ng-repeat="member in task.members track by $index">{{member.name}}, </span>
+					<span ng-repeat="email in task.notMembers track by $index">{{email}}, </span>
 					<span ng-show="editAssignees" class="md-body-2 link-decoration" ng-click="showEdit=true">Edit</span>
 				</p>
 				<div layout="column" ng-show="showEdit">
