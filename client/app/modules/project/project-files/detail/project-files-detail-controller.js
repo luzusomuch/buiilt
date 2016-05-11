@@ -454,9 +454,6 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
             if (!$scope.relatedTask.time.start || !$scope.relatedTask.time.end) {
                 dialogService.showToast("Please Select Start Time And End Time");
                 return
-            } else if (!$scope.relatedTask.selectedEvent) {
-                dialogService.showToast("Please Select Event");
-                return;
             }
             $scope.relatedTask.members = $scope.file.members;
             _.each($scope.file.notMembers, function(email) {

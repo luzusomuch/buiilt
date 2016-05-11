@@ -32,18 +32,18 @@ function populateNewThread(thread, res, req){
                 room: member._id.toString(),
                 data: thread
             });
-            EventBus.emit('socket:emit', {
-                event: 'dashboard:new',
-                room: member._id.toString(),
-                data: {
-                    type: "thread",
-                    _id: thread._id,
-                    thread: thread,
-                    user: req.user,
-                    uniqId: uniqId,
-                    newNotification: {fromUser: req.user, type: "thread-assign"}
-                }
-            });
+            // EventBus.emit('socket:emit', {
+            //     event: 'dashboard:new',
+            //     room: member._id.toString(),
+            //     data: {
+            //         type: "thread",
+            //         _id: thread._id,
+            //         thread: thread,
+            //         user: req.user,
+            //         uniqId: uniqId,
+            //         newNotification: {fromUser: req.user, type: "thread-assign"}
+            //     }
+            // });
             cb();
         }, function(){
             return res.send(200, thread);
@@ -190,6 +190,10 @@ exports.create = function(req,res) {
                             item: {_id: thread._id},
                             members: result.members
                         });
+                        main._editUser = req.user;
+                        if (req.body.belongToType==="file") {
+                            main._editType="create-related-item";
+                        }
                         main.save(function(err) {
                             if (err) {return res.send(500,err);}
                             EventBus.emit('socket:emit', {
@@ -201,6 +205,27 @@ exports.create = function(req,res) {
                                     belongTo: main._id,
                                     data: thread,
                                 }
+                            });
+
+                            // Update count number of parent item
+                            var owners = _.clone(main.members);
+                            owners.push(main.owner);
+                            _.remove(owners, req.user._id);
+                            owners = _.map(_.groupBy(owners,function(doc){
+                                return doc;
+                            }),function(grouped){
+                                return grouped[0];
+                            });
+                            _.each(owners, function(user) {
+                                EventBus.emit('socket:emit', {
+                                    event: 'dashboard:new',
+                                    room: user.toString(),
+                                    data: {
+                                        type: "related-item",
+                                        excuteUser: req.user,
+                                        belongTo: main._id
+                                    }
+                                });
                             });
                             populateNewThread(thread, res, req);                
                         });

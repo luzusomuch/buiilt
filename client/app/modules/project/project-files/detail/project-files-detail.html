@@ -105,11 +105,7 @@
 									<span ng-switch-when="related-task">"<a ui-sref="project.tasks.detail({id: file.project, taskId: activity.element.item})">{{activity.element.name}}</a>"</span>
 								</p>
 
-								<p class="activity-footer md-footer" ng-switch="activity.type">
-									<span ng-switch-when="upload-reversion">
-										<div flex file-picker-previewer type="filepicker-preview" url="{{activity.element.link}}" style="height:200px;"> </div>
-									</span>
-								</p>
+								<div ng-show="activity.type=='upload-reversion'" flex file-picker-previewer type="filepicker-preview" url="{{activity.element.link}}" style="height:200px;"></div>
 
 		                        <!-- <div layout="row" layout-align="center center" class="tagcloud-selection" ng-show="activity.user._id==currentUser._id && (activity.type==='upload-file' || activity.type==='upload-reversion')">
 		                            <span ng-repeat="user in activity.acknowledgeUsers" ng-class="{'available-tag':!user.isAcknow, 'selected-tag':user.isAcknow}">{{(user._id) ? user._id.name : user.email}}</span>

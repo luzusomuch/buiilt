@@ -76,8 +76,7 @@
 			
 			<md-list ng-cloak flex class="content-list">
 			
-				<md-list-item class="md-3-line" ng-repeat="file in files | filter: search | unique: '_id' track by $index" md-ink-ripple>
-			
+				<md-list-item class="md-3-line" ng-repeat="file in files | filter: search | unique: '_id' track by $index" md-ink-ripple ng-show="file.__v>0">
 					<div ui-sref="project.files.detail({id: file.project._id, fileId: file._id})" style="cursor: pointer" class="md-list-item-text" layout-margin>
 						<h3>{{ file.name }}</h3>
 						<h4>Filed Under "<span ng-repeat="tag in file.tags"><span style="text-transform: capitalize">{{tag}}</span></span>"</h4>
@@ -87,7 +86,17 @@
 				
 			        <md-button class="md-secondary" ng-click="showViewFileModal($event, file)"><md-icon class="material-icons">remove_red_eye</md-icon><md-tooltip md-direction="down">View Current Version</md-tooltip></md-button>
 				    <md-divider ng-hide="$last"></md-divider>
-			
+				</md-list-item>
+
+				<md-list-item class="md-3-line" ng-repeat="file in files | filter: search | unique: '_id' track by $index" md-ink-ripple ng-show="file.__v==0">
+					<div ui-sref="project.files.detail({id: file.project._id, fileId: file._id})" style="cursor: pointer" class="md-list-item-text" layout-margin>
+						<h3>{{ file.name }}</h3>
+						<h4>Filed Under "<span ng-repeat="tag in file.tags"><span style="text-transform: capitalize">{{tag}}</span></span>"</h4>
+						<p ng-show="file.__v==0" class="md-body-1">No New Updates</p>
+				    </div>
+				
+			        <md-button class="md-secondary" ng-click="showViewFileModal($event, file)"><md-icon class="material-icons">remove_red_eye</md-icon><md-tooltip md-direction="down">View Current Version</md-tooltip></md-button>
+				    <md-divider ng-hide="$last"></md-divider>
 				</md-list-item>
 		
 			</md-list>

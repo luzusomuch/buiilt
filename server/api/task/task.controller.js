@@ -243,7 +243,7 @@ exports.create = function(req,res) {
                                 });
                                 main._editUser = req.user;
                                 if (req.body.belongToType==="file") {
-                                    main._editType==="create-related-item";
+                                    main._editType="create-related-item";
                                 } else {
                                     main.markModified("create-related-item");
                                 }

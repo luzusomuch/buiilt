@@ -129,21 +129,21 @@ exports.assignMoreMembers = function(req, res) {
                     room: file._id.toString(),
                     data: JSON.parse(JSON.stringify(file))
                 });
-                var uniqId = mongoose.Types.ObjectId();
-                _.each(newMembers, function(user) {
-                    EventBus.emit('socket:emit', {
-                        event: 'dashboard:new',
-                        room: user.toString(),
-                        data: {
-                            type: file.element.type,
-                            _id: file._id,
-                            uniqId: uniqId,
-                            user: req.user,
-                            file: JSON.parse(JSON.stringify(file)),
-                            newNotification: {fromUser: req.user, type: "document-upload-reversion"}
-                        }
-                    });
-                });
+                // var uniqId = mongoose.Types.ObjectId();
+                // _.each(newMembers, function(user) {
+                //     EventBus.emit('socket:emit', {
+                //         event: 'dashboard:new',
+                //         room: user.toString(),
+                //         data: {
+                //             type: file.element.type,
+                //             _id: file._id,
+                //             uniqId: uniqId,
+                //             user: req.user,
+                //             file: JSON.parse(JSON.stringify(file)),
+                //             newNotification: {fromUser: req.user, type: "document-upload-reversion"}
+                //         }
+                //     });
+                // });
                 return res.send(200, file);
             });
         });
@@ -342,24 +342,24 @@ exports.update = function(req, res) {
                                     room: file._id.toString(),
                                     data: JSON.parse(JSON.stringify(file))
                                 });
-                                var owners = _.clone(file.members);
-                                owners.push(file.owner);
-                                _.remove(owners, {_id: req.user._id});
-                                var uniqId = mongoose.Types.ObjectId();
-                                _.each(owners, function(owner) {
-                                    EventBus.emit('socket:emit', {
-                                        event: 'dashboard:new',
-                                        room: owner._id.toString(),
-                                        data: {
-                                            type: file.element.type,
-                                            _id: file._id,
-                                            uniqId: uniqId,
-                                            user: req.user,
-                                            file: JSON.parse(JSON.stringify(file)),
-                                            newNotification: {fromUser: req.user, type: "document-upload-reversion"}
-                                        }
-                                    });
-                                });
+                                // var owners = _.clone(file.members);
+                                // owners.push(file.owner);
+                                // _.remove(owners, {_id: req.user._id});
+                                // var uniqId = mongoose.Types.ObjectId();
+                                // _.each(owners, function(owner) {
+                                //     EventBus.emit('socket:emit', {
+                                //         event: 'dashboard:new',
+                                //         room: owner._id.toString(),
+                                //         data: {
+                                //             type: file.element.type,
+                                //             _id: file._id,
+                                //             uniqId: uniqId,
+                                //             user: req.user,
+                                //             file: JSON.parse(JSON.stringify(file)),
+                                //             newNotification: {fromUser: req.user, type: "document-upload-reversion"}
+                                //         }
+                                //     });
+                                // });
                             }
                         } else {
                             if (file.isArchive) {
