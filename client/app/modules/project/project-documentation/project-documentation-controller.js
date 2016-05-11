@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('projectDocumentationCtrl', function($rootScope, $scope, $mdDialog, documents, uploadService, $mdToast, $stateParams, socket, $state, fileService, documentSets, people, dialogService, documentService, contactBooks) {
+angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, $rootScope, $scope, $mdDialog, documents, uploadService, $mdToast, $stateParams, socket, $state, fileService, documentSets, people, dialogService, documentService, contactBooks) {
     $scope.documents = documents;
     $scope.documentSets = documentSets;
     $scope.dialogService = dialogService;
@@ -30,27 +30,40 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
         return index;
     };
 
-    /*Check to allow added document set 1*/
-    var allowAddedSet1 = true;
-    _.each($scope.documentSets, function(documentSet) {
-        if (documentSet.name==="Set 1" && documentSet.notAllowEditOrCopy) {
-            allowAddedSet1 = false;
-            return false;
-        }
-    });
-    if (allowAddedSet1) 
-        $scope.documentSets.push({name: "Set 1", documents: [], notAllowEditOrCopy: true});
+    function documentSetInitial() {
+        /*Check to allow added document set 1*/
+        var allowAddedSet1 = true;
+        _.each($scope.documentSets, function(documentSet) {
+            if (documentSet.name==="Set 1" && documentSet.notAllowEditOrCopy) {
+                allowAddedSet1 = false;
+                return false;
+            }
+        });
+        if (allowAddedSet1) 
+            $scope.documentSets.push({name: "Set 1", documents: [], notAllowEditOrCopy: true});
 
-    /*Add documents to document set 1 which haven't belong to any document set */
-    _.each(documents, function(document) {
-        if (!document.documentSet) {
-            document.project = (document.project._id) ? document.project._id : document.project;
-            $scope.documentSets[$scope.documentSets.length -1].documents.push(document);
-        }
-    });
+        /*Add documents to document set 1 which haven't belong to any document set */
+        _.each($scope.documents, function(document) {
+            if (!document.documentSet) {
+                document.project = (document.project._id) ? document.project._id : document.project;
+                $scope.documentSets[$scope.documentSets.length -1].documents.push(document);
+            }
+        });
+    }
+    documentSetInitial();
+
+    if ($state.includes("project.documentation.all")) {
+        var prom = [documentService.me({id: $stateParams.id}).$promise, fileService.getProjectFiles({id: $stateParams.id, type: "document"}).$promise];
+        $q.all(prom).then(function(data) {
+            $scope.documentSets = data[0];
+            $scope.documents = data[1];
+            documentSetInitial();
+        });
+    }
 
     $scope.selectedDocumentSetId = $rootScope.selectedDocumentSetId;
     $scope.selectDocumentSet = function(documentSet) {
+        console.log(documentSet);
         $scope.selectedDocumentSet = documentSet;
         $rootScope.selectedDocumentSetId = $scope.selectedDocumentSetId = documentSet._id;
     };
@@ -201,33 +214,6 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
     var listenerCleanFnPush = $rootScope.$on("Document.Uploaded", function(event, data) {
         $scope.documents.push(data);
     });
-    console.log($rootScope.updatedDoc);
-
-    /*Receive when user open document detail then update this document notification
-    to 0*/
-    var listenerCleanFnRead = $rootScope.$on("Document.Read", function(event, data) {
-        $rootScope.updatedDoc = data;
-        // var docIndex = getItemIndex(data, "document");
-        // if (data.documentSet) {
-        //     $scope.documentSets[getItemIndex(data, "documentSet")].documents[getItemIndex(data, "document")].__v=0;
-        // } else {
-        //     $scope.documents[getItemIndex(data, "document")].__v=0;
-        // }
-
-        if (data.documentSet) {
-            index = _.findIndex($scope.documentSets, function(set) {
-                if (set._id) 
-                    return set._id.toString()===data.documentSet.toString();
-            });
-        } else {
-            index = _.findIndex($scope.documents, function(document) {
-                return document._id.toString()===data._id.toString();
-            });
-            if (index !== -1) {
-                $scope.documents[index].__v=0;
-            }
-        }
-    });
 
     /*Receive when updated document then check if document is belong to current project
     then check if document is existed in documents list
@@ -270,7 +256,6 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($roo
 
     $scope.$on('$destroy', function() {
         listenerCleanFnPush();
-        listenerCleanFnRead();
         listenerCleanFnPushFromDashboard();
     });
 

@@ -20,7 +20,6 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
     fileService.lastAccess({id: $stateParams.documentId}).$promise.then(function(data) {
         if ($scope.document.__v > 0) {
             $rootScope.$broadcast("UpdateCountNumber", {type: "document", number: 1});
-            $rootScope.$emit("Document.Read", document);
         }
     });
     
