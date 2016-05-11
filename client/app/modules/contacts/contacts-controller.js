@@ -104,7 +104,8 @@ angular.module('buiiltApp').controller('contactsCtrl', function($rootScope, $sco
             var allowInsert = true;
             _.each($scope.newContact.contacts, function(contact) {
                 var index = _.findIndex($scope.contactBooks, function(ctBook) {
-                    return contact.email==ctBook.email || contact.phoneNumber==ctBook.phoneNumber;
+                    if (ctBook.email && ctBook.phoneNumber) 
+                        return contact.email==ctBook.email || contact.phoneNumber==ctBook.phoneNumber;
                 });
                 if (index !== -1) {
                     allowInsert = false;

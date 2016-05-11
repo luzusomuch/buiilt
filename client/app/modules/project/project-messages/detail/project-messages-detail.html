@@ -53,7 +53,7 @@
 							<div flex class="activity-detail">
 	
 								<p ng-switch="activity.type" class="activity-head" style="margin-bottom: 15px; border-bottom: 0.5px solid #EEEEEE">
-									<span class="activity-creator">{{activity.user.name}}</span>
+									<span class="activity-creator">{{(activity.user) ? activity.user.name : activity.email}}</span>
 									<span class="meta-data" ng-switch-when="chat"> has replied to this thread at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
 									<span class="meta-data" ng-switch-when="related-task"> has created related task for this thread at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
 									<span class="meta-data" ng-switch-when="related-file"> has created related file for this thread at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>

@@ -233,17 +233,16 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
                 });
             }            
         }
-        // get unique member 
-        $scope.membersList = _.uniq($scope.membersList, "_id");
-
         // filter members list again
         _.each(thread.members, function(member) {
             _.remove($scope.membersList, {_id: member._id});
         });
+        _.each(thread.notMembers, function(email) {
+            _.remove($scope.membersList, {email: email});
+        })
 
         // remove current user from the members list
         _.remove($scope.membersList, {_id: $rootScope.currentUser._id});
-
         // get invitees for related item
         $scope.invitees = angular.copy($scope.thread.members);
         _.each($scope.thread.notMembers, function(member) {
@@ -350,6 +349,7 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
     Select available project team members to add to current thread
     Select current thread members to be new members when add new related item*/
     $scope.selectMember = function(index, type) {
+        console.log($scope.membersList);
         if (type === "member") {
             $scope.membersList[index].select = !$scope.membersList[index].select;
         } else if (type === "tag") {

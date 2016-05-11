@@ -15,6 +15,7 @@ var EventBus = require('./../components/EventBus');
  */
 
 var MessageSchema = new Schema({
+    email: String,
     user : {
         type : Schema.Types.ObjectId,
         ref : 'User'
@@ -52,7 +53,8 @@ var ThreadSchema = new Schema({
     }],
     notMembers: [String],
     activities: [{
-        user: {type: Schema.Types.ObjectId, ref: "User", required: true},
+        email: String,
+        user: {type: Schema.Types.ObjectId, ref: "User"},
         type: {type: String}, 
         createdAt: Date, 
         element: {}

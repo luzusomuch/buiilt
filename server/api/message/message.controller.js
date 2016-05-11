@@ -559,50 +559,71 @@ exports.destroy = function (req, res) {
     This code is old version, use to reply a thread via email 
 */
 exports.replyMessage = function(req, res) {
-    var splited = req.body.recipient.split("-");
-    var messageType = splited[1].substr(0,splited[1].lastIndexOf("@"));
+    console.log(req.body);
+    var splited = req.body.recipient.split("@");
     Thread.findById(splited[0], function(err, thread) {
-        if (err) {return res.send(500,err);}
+        if (err) {
+            return res.send(500,err);
+        }
         else if (!thread) {return res.send(404, {message: "The specific thread is not existed"});}
         else {
-            User.findOne({email: req.body.sender}, function(err, user) {
-                if (err) 
-                    return res.send(500,err);
-                else if (!user) {
-                    thread.messages.push({
-                        email: req.body.sender,
-                        text: req.body["stripped-text"],
-                        mentions: [],
-                        sendAt: new Date()
-                    });
-                } else {
-                    thread.messages.push({
-                        user: user._id,
-                        text: req.body["stripped-text"],
-                        mentions: [],
-                        sendAt: new Date()
-                    });
+            var message = {
+                text: req.body["stripped-text"],
+                mentions: [],
+                sendAt: new Date()
+            };
+            var activity = {
+                type: 'chat',
+                createdAt: new Date(),
+                element: {
+                    message: req.body["stripped-text"]
                 }
+            }
+            User.findOne({email: req.body.sender}, function(err, user) {
+                if (err) {
+                    return res.send(500,err);
+                }
+                else if (!user) {
+                    message.email = req.body.sender;
+                    activity.email = req.body.sender;
+                } else {
+                    message.user = user._id;
+                    activity.user = user._id;
+                }
+                thread.messages.push(message);
+                thread.activities.push(activity);
                 thread._editUser = user;
                 thread.save(function(err) {
-                    if (err) 
+                    if (err) {
                         return res.send(500,err);
-                    Thread.populate(thread,[
-                        {path : 'members', select: '_id email name'},
-                        {path : 'messages.user', select: '_id email name'},
-                        {path : 'messages.mentions', select: '_id email name'},
-                        {path : 'owner', select: '_id email name'}
-                    ],function(err,thread) {
+                    }
+                    Thread.populate(thread, [
+                        {path: "project"},
+                        {path: "members", select: "_id name email"},
+                        {path: "owner", select: "_id name email"}
+                    ], function(err, thread) {
                         if (err) {
-                            return res.send(422,err);
-                        } else {
-                            EventBus.emit('socket:emit', {
-                                event: 'message:new',
-                                room: thread._id.toString(),
-                                data: thread
-                            });
-                            return res.json(thread)
+                            return res.send(500,err);
                         }
+                        var owners = thread.members;
+                        owners.push(thread.owner);
+                        var uniqId = mongoose.Types.ObjectId();
+                        _.each(owners, function(user) {
+                            EventBus.emit('socket:emit', {
+                                event: 'dashboard:new',
+                                room: user._id.toString(),
+                                data: {
+                                    isReplyViaEmail: true,
+                                    type: "thread",
+                                    _id: thread._id,
+                                    thread: thread,
+                                    uniqId: uniqId,
+                                    user: req.user,
+                                    newNotification: {fromUser: req.user, message: req.body["stripped-text"], type: "thread-message"}
+                                }
+                            });
+                        });
+                        populateThread(thread, res);
                     });
                 });
             });

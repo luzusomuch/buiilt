@@ -77,6 +77,11 @@
                 <p>{{member.phoneNumber}}-{{member.email}}</p>
             </div>
         </md-list-item>
+        <md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event, member._id)" ng-show="data.element" ng-repeat="member in data.notMembers | unique: '_id' track by $index">
+            <div class="md-list-item-text">
+                <h3>{{member}}</h3>
+            </div>
+        </md-list-item>
     </md-list>
     
 </section>

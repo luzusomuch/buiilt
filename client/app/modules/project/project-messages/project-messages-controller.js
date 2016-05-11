@@ -169,12 +169,14 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
         var index = _.findIndex($scope.threads, function(thread) {
             return thread._id.toString()===data.thread._id.toString();
         });
-        if (index !== -1 && data.user._id.toString()!==$rootScope.currentUser._id.toString() && ($scope.threads[index] && $scope.threads[index].uniqId!==data.uniqId)) {
-            if ($scope.threads[index].__v===0) {
-                $rootScope.$emit("UpdateCountNumber", {type: "message", isAdd: true});
+        if (index !== -1 && ($scope.threads[index] && $scope.threads[index].uniqId!==data.uniqId)) {
+            if (data.isReplyViaEmail || (!data.isReplyViaEmail && data.user._id.toString()!==$rootScope.currentUser._id.toString())) {
+                if ($scope.threads[index].__v===0) {
+                    $rootScope.$emit("UpdateCountNumber", {type: "message", isAdd: true});
+                }
+                $scope.threads[index].uniqId = data.uniqId;
+                $scope.threads[index].__v+=1;
             }
-            $scope.threads[index].uniqId = data.uniqId;
-            $scope.threads[index].__v+=1;
         }
     });
 

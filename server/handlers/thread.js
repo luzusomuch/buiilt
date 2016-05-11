@@ -111,7 +111,8 @@ EventBus.onSeries('Thread.Updated', function(thread, next) {
 
 EventBus.onSeries('Thread.NewMessage', function(thread, next) {
     var owners = _.clone(thread.members);
-    if (owners[0]._id) {
+    console.log(owners);
+    if (owners.length > 0 && owners[0]._id) {
         var newOwners = [];
         _.each(owners, function(owner) {
             newOwners.push(owner._id);
