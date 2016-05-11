@@ -117,6 +117,15 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
         if (!$scope.tender.type && !$scope.tender.selectedTenterType) {
             dialogService.showToast("Please select tender type first");
         } else {
+            var index = _.findIndex($scope.tender.newMembers, function(member) {
+                return member.email===$scope.tenderer.email && member.phoneNumber==$scope.tenderer.phoneNumber;
+            });
+            if (index === -1) {
+                $scope.tender.newMembers.push({name: $scope.tenderer.name, email: $scope.tenderer.email, phoneNumber: $scope.tenderer.phoneNumber});
+            } else {
+                dialogService.showToast("This Tenderer Has Added");
+                return;
+            }
             if ($scope.tender.newMembers.length > 0) {
                 $scope.tender.editType="invite-tenderer";
                 $scope.update($scope.tender);

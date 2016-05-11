@@ -2,6 +2,7 @@
 
 var Document = require('./../../models/document.model');
 var User = require('./../../models/user.model');
+var Notification = require('./../../models/notification.model');
 var _ = require('lodash');
 var async = require('async');
 var moment = require("moment");
@@ -14,13 +15,29 @@ exports.me = function(req, res) {
     .populate("members", "_id name email phoneNumber")
     .exec(function(err, documents) {
         if (err) {return res.send(500,err);}
-        _.each(documents, function(document) {
+        async.each(documents, function(document, callback) {
             if (document.owner.toString()!==req.user._id.toString()) {
                 document.members = [];
                 document.notMembers = [];
             }
+            async.each(document.documents, function(doc, cb) {
+                Notification.find({unread: true, owner: req.user._id, "element._id": doc._id, referenceTo: "document"})
+                .populate("fromUser", "_id name email").exec(function(err, notifications) {
+                    if (err) {cb(err);}
+                    else {
+                        if (notifications.length > 0) {
+                            var latestNotification = _.last(notifications);
+                            doc.element.notificationType = latestNotification.type;
+                            doc.element.notificationBy = latestNotification.fromUser;
+                        }
+                        doc.__v = notifications.length;
+                        cb();
+                    }
+                });
+            },callback);
+        }, function() {
+            return res.send(200, documents);
         });
-        return res.send(200, documents);
     });
 };
 

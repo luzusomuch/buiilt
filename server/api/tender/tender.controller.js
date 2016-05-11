@@ -172,7 +172,9 @@ exports.update = function(req, res) {
                 } else if (data.editType === "invite-tenderer") {
                     var members = [];
                     var tenderMembers = tender.members;
-                    tender.type = data.selectedTenterType;
+                    if (data.selectedTenterType) 
+                        tender.type = data.selectedTenterType;
+                    
                     async.each(data.newMembers, function(member, cb) {
                         User.findOne({email: member.email}, function(err, _user) {
                             if (err) {cb(err);}

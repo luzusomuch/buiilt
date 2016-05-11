@@ -15,15 +15,13 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
     }
 
     getAcvititiesAndHistoriesByUser($scope.document);
-
-    /*Update count total after 0.5s*/
-    $timeout(function() {
-        $rootScope.$broadcast("UpdateCountNumber", {type: "document", number: 1});
-    },500);
     
     /*Update last access for current document*/
     fileService.lastAccess({id: $stateParams.documentId}).$promise.then(function(data) {
-        $rootScope.$emit("Document.Read", document);
+        if ($scope.document.__v > 0) {
+            $rootScope.$broadcast("UpdateCountNumber", {type: "document", number: 1});
+            $rootScope.$emit("Document.Read", document);
+        }
     });
     
     /*Mark all notifications related to document as read*/
