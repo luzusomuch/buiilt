@@ -16,6 +16,11 @@ EventBus.onSeries('File.Inserted', function(file, next) {
     if (file.element.type === "file") {
         if (file.members.length > 0) {
             var owners = _.clone(file.members);
+            owners = _.map(_.groupBy(owners,function(doc){
+                return doc;
+            }),function(grouped){
+                return grouped[0];
+            });
             _.remove(owners, file.owner);
             var params = {
                 owners : owners,
@@ -35,7 +40,6 @@ EventBus.onSeries('File.Inserted', function(file, next) {
 });
 
 EventBus.onSeries('File.Updated', function(file, next) {
-    console.log(file._editType);
     if (file._editType==="uploadReversion") {
         if (file.element.type === "document" && file.documentSet) {
             Document.findById(file.documentSet, function(err, documentSet) {
@@ -48,7 +52,6 @@ EventBus.onSeries('File.Updated', function(file, next) {
                         return grouped[0];
                     });
                     _.remove(owners, file.editUser._id);
-                    console.log(owners);
                     var params = {
                         owners : documentSet.members,
                         fromUser : file.editUser._id,
@@ -62,7 +65,6 @@ EventBus.onSeries('File.Updated', function(file, next) {
                 }
             });
         } else if (file.element.type === "file" || file.element.type === "tender") {
-            console.log(file.members);
             if (file.members.length > 0) {
                 var params = {
                     owners : file.members,
@@ -135,7 +137,6 @@ EventBus.onSeries('File.Updated', function(file, next) {
             });
         });
     } else if (file._editType==="create-related-item") {
-        console.log("CREATE RELATED ITEM FOR FILE")
         var owners = _.clone(file.members);
         owners.push(file.owner);
         owners = _.map(_.groupBy(owners,function(doc){
@@ -144,7 +145,6 @@ EventBus.onSeries('File.Updated', function(file, next) {
             return grouped[0];
         });
         _.remove(owners, file.editUser._id);
-        console.log(owners);
         var params = {
             owners: owners,
             fromUser: file.editUser._id,

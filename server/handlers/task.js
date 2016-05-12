@@ -34,8 +34,12 @@ EventBus.onSeries('Task.Updated', function(task, next){
         if (task.members.indexOf(task.owner) == -1) {
             owners.push(task.owner);
         }
+        owners = _.map(_.groupBy(owners,function(doc){
+            return doc;
+        }),function(grouped){
+            return grouped[0];
+        });
         _.remove(owners, task.editUser._id);
-
         var params = {
             owners : owners,
             fromUser : task.editUser,
@@ -124,7 +128,12 @@ EventBus.onSeries('Task.Updated', function(task, next){
         }
     } else if (task._modifiedPaths.indexOf("enterComment") !== -1) {
         var owners = task.members;
-        owners.push(task.owners);
+        owners.push(task.owner);
+        owners = _.map(_.groupBy(owners,function(doc){
+            return doc;
+        }),function(grouped){
+            return grouped[0];
+        });
         _.remove(owners, task.editUser._id);
         var params = {
             owners: owners,
@@ -133,7 +142,7 @@ EventBus.onSeries('Task.Updated', function(task, next){
             referenceTo: "task",
             type: "task-enter-comment"
         };
-        NotificationHelper.crete(params, function(){
+        NotificationHelper.create(params, function(){
             return next();
         });
     } else {
