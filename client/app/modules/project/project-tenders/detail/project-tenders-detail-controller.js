@@ -104,6 +104,7 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
         if (index === -1) {
             $scope.tender.newMembers.push(invitee);
             $scope.tenderer = {};
+            $scope.searchText = null;
         } else {
             dialogService.showToast("This Tenderer Has Added");
         }

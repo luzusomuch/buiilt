@@ -13,19 +13,51 @@
                     <md-radio-group ng-model="tender.selectedTenterType">
                         <md-radio-button ng-repeat="type in availableInviteType" ng-value="type.value" class="md-primary">{{type.text}}</md-radio-button>
                     </md-radio-group>
-                    <!-- <div flex="100">
-                        <md-input-container flex="100">
-                            <label for="">Select Tender Type</label>
-                            <md-select ng-model="tender.selectedTenterType">
-                                <md-option ng-repeat="type in availableInviteType" ng-value="type.value"> {{type.text}}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>
-                     -->
-                    <!-- </div> -->
                 </div>
                 <div layout="column">
                     <p class="md-body-2">Select At Least 1 Contact To Be Tenderer For This Tender</p>
+                    <div layout="column" ng-show="tender.newMembers.length > 0">
+                        <div layout="row" ng-repeat="member in tender.newMembers">
+                            <div flex="5">
+                            </div>
+
+                            <md-input-container flex>
+                                <label for="">Contact Name</label>
+                                <input type="text" ng-model="member.name" disabled>
+                            </md-input-container>
+
+                            <md-input-container flex="30">
+                                <label for="">Contact Email</label>
+                                <input type="text" ng-model="member.email" disabled>
+                            </md-input-container>
+
+                            <md-input-container flex="30">
+                                <label for="">Contact Phone Number</label>
+                                <input type="text" ng-model="member.phoneNumber" disabled>
+                            </md-input-container>
+
+                            <div flex="5">
+                                <md-button class="md-icon-button md-warn" aria-label="Remove Tenderer" ng-click="removeTenderer($index)">
+                                    <md-tooltip md-direction="bottom">Remove Tenderer</md-tooltip>
+                                    <i class="material-icons">clear</i>
+                                </md-button>
+                            </div>
+                        </div>
+                        <!-- <md-list>
+                            <md-list-item class="md-2-line" ng-repeat="member in tender.newMembers">
+                                <div class="md-list-item-text">
+                                    <h4>{{member.name}}</h4>
+                                    <p>{{member.email}} - {{member.phoneNumber}}</p>
+                                </div>
+                                <md-button class="md-icon-button md-warn" ng-click="removeTenderer($index)">
+                                    <md-tooltip md-direction="bottom">Remove Tenderer</md-tooltip>
+                                    <i class="material-icons">clear</i>
+                                </md-button>
+                                <md-divider></md-divider>
+                            </md-list-item>
+                        </md-list> -->
+                    </div>
+
                     <div layout="row">
                         <md-input-container flex="5">
                         </md-input-container>
@@ -52,25 +84,7 @@
                             </md-button>
                         </div>
                     </div>
-                    <div layout="column" ng-show="tender.newMembers.length > 0">
-                        <p class="md-body-2">List Of Invited Tenderers</p>
-                        <md-list>
-                            <md-list-item class="md-2-line" ng-repeat="member in tender.newMembers">
-                                <div class="md-list-item-text">
-                                    <h4>{{member.name}}</h4>
-                                    <p>{{member.email}} - {{member.phoneNumber}}</p>
-                                </div>
-                                <md-button class="md-icon-button md-warn" ng-click="removeTenderer($index)">
-                                    <md-tooltip md-direction="bottom">Remove Tenderer</md-tooltip>
-                                    <i class="material-icons">clear</i>
-                                </md-button>
-                                <md-divider></md-divider>
-                            </md-list-item>
-                        </md-list>
-                    </div>
-                    <!-- <div layout="row" layout-align="center center" layout-wrap layout-padding flex>
-                        <md-checkbox ng-click="selectItem($index, 'contact')" ng-repeat="contact in contactBooks" class="filter-checkbox md-primary">{{contact.name}}</md-checkbox>
-                    </div> -->
+                    
                 </div>
             </div>
         </md-dialog-content>
