@@ -327,6 +327,19 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
             {text: "sub contractor", value: "subcontractors"},
             {text: "home owner", value: "clients"}
         ];
+
+        // Remove project member from contacts book
+        _.each($scope.membersList, function(member) {
+            console.log(member);
+            var index = _.findIndex(contactBooks, function(contact) {
+                return contact.email===member.email || contact.phoneNumber===member.phoneNumber;
+            });
+            console.log(index);
+            if (index !== -1) {
+                contactBooks.splice(index ,1);
+            }
+        });
+        // Remove current user team type from team member can invite types list
         _.remove($scope.teamMemberTypeTags, {value: $rootScope.currentUser.type});
 	};
 
