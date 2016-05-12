@@ -1,4 +1,7 @@
 angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q, $rootScope, $scope, $timeout, $stateParams, messageService, $mdToast, $mdDialog, $state, thread, peopleService, taskService, uploadService, people, clipboard, socket, notificationService, tenders, activities, dialogService) {
+    // dynamic height for related file thumbnail
+    $scope.imageHeight = $("div.content").innerHeight() - $("div.content").innerHeight() * 0.2;
+
     var originalThread = angular.copy(thread);
     $scope.showDetail = ($rootScope.openDetail) ? true : false;
 

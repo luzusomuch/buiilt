@@ -35,7 +35,7 @@
 			
 			<md-divider layout="row" flex></md-divider>
 	
-			<div style="height: 63vh" class="content" layout="column" layout-margin flex>
+			<div class="content" layout="column" layout-margin flex>
 				<div ng-show="showDetail">
 					<div layout="column">
 						<md-input-container flex>
@@ -69,7 +69,7 @@
 									<span ng-switch-when="related-task"><a ui-sref="project.tasks.detail({id: thread.project, threadId: activity.element.item})">View Task</a></span>
 									<span ng-switch-when="related-file"><a ui-sref="project.files.detail({id: thread.project, fileId: activity.element.item})">View File</a></span>
 									<!-- <div ng-switch-when="related-file" flex file-picker-previewer type="filepicker-preview" url="{{activity.element.path}}" style="height:200px;"> </div> -->
-									<img ng-switch-when="related-file" file-picker-thumbnail url="{{activity.element.path}}" src="" alt="" style="width: 200px; height: auto">
+									<img ng-switch-when="related-file" file-picker-thumbnail url="{{activity.element.path}}" src="" alt="" style="width: auto; height: {{imageHeight}}px">
 								</span>
 							</div>
 						</div>

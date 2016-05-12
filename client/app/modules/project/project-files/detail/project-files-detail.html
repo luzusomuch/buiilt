@@ -84,7 +84,7 @@
 									<span ng-switch-when="related-task">"<a ui-sref="project.tasks.detail({id: file.project, taskId: activity.element.item})">{{activity.element.name}}</a>"</span>
 								</p>
 
-								<img ng-show="activity.type=='upload-reversion'" file-picker-thumbnail url="{{activity.element.link}}" src="" alt="" style="width: 200px; height: auto">
+								<img ng-show="activity.type=='upload-reversion'" file-picker-thumbnail url="{{activity.element.link}}" src="" alt="" style="width: auto; height: {{imageHeight}}px">
 
 								<!-- <div ng-show="activity.type=='upload-reversion'" flex file-picker-previewer type="filepicker-preview" url="{{activity.element.link}}" style="height:200px;"></div> -->
 
