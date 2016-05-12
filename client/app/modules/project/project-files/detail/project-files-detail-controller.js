@@ -485,8 +485,8 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
     $scope.uploadReversion = {};
 
     function onSuccess(file){
-        file.type = "file";
         $scope.uploadReversion.file = file;
+        $scope.uploadReversionFile();
     };
 
 
@@ -503,6 +503,7 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
                 mixpanel.identify($rootScope.currentUser._id);
                 mixpanel.track("File Reversion Uploaded");
 
+                $scope.uploadReversion = {};
                 $scope.file = res;
             }, function(err) {
                 dialogService.showToast("Error");

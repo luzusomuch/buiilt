@@ -19,25 +19,6 @@
 		        </md-input-container>
 				
 				<span flex></span>
-				
-                <!-- <md-button ng-show="!file.isArchive" aria-label="Upload a Revision" class="md-icon-button" ng-click="showModal($event, 'upload-reversion.html')" style="margin-right: 30px">
-                    <md-tooltip md-direction="top">Upload a Revision</md-tooltip>
-                    <md-icon class="material-icons">file_upload</md-icon>
-                </md-button> -->
-                
-				<!-- <div>
-	                <md-menu md-position-mode="target-right target">
-					    <md-button ng-click="openFileHistory($mdOpenMenu, $event)">View File</md-button>
-	                    <md-menu-content width="4">
-	                        <md-menu-item ng-click="openHistoryDetail($event, {name: file.name, description: file.description, link: file.path})">
-	                            <md-button>Current Version: {{file.createdAt | date: 'dd-MM-yyyy'}}</md-button>
-	                        </md-menu-item>
-	                        <md-menu-item ng-click="openHistoryDetail($event, history)" ng-repeat="history in file.fileHistory">
-	                            <md-button>Version {{$index+1}}: {{history.createdAt | date: 'dd-MM-yyyy'}}</md-button>
-	                        </md-menu-item>
-	                    </md-menu-content>
-	                </md-menu>
-				</div> -->
 					
                 <md-button ng-show="!file.isArchive" aria-label="Edit the File Details" class="md-icon-button" ng-class="{'md-primary': showDetail}" ng-click="showDetail=!showDetail">
                     <md-tooltip md-direction="left">Edit Details</md-tooltip>
@@ -48,7 +29,7 @@
 			
 			<md-divider layout="row" flex></md-divider>
 		
-			<div class="content" layout="column" layout-margin flex>
+			<div layout="column" layout-margin flex>
 				<div ng-show="showDetail">
 					<div layout="column">
 						<p class="md-body-2">Change Current File Event</p>
@@ -65,14 +46,12 @@
 							<md-select ng-change="addOrChangeEventOrTags('tags')" ng-model="file.selectedTag">
 								<md-option ng-repeat="tag in tags" ng-value="tag.name">{{tag.name}}</md-option>
 							</md-select>
-	                        <!-- <md-checkbox ng-checked="tag.select" class="filter-checkbox md-primary" ng-repeat="tag in tags" ng-click="changeTag($index, 'tag')">
-	                            {{tag.name}}
-	                        </md-checkbox> -->
 		                </div>
 					</div>
+					<md-divider></md-divider>
 				</div>
-				<md-divider></md-divider>
-				<div scroll-to-bottom="file.activities">
+
+				<div class="content" scroll-to-bottom="file.activities">
 					<div class="item-activity">
 						<div layout="row" layout-align="center center" flex class="activity-stream" ng-repeat="activity in file.activities" ng-class="{related: activity.element.related, 'unread-notification': activity.unread, 'unread-notification-line': activity.unreadLine}" ng-show="activity.type=='upload-reversion' || activity.type=='related-thread' || activity.type=='related-task'">
 				
@@ -122,11 +101,13 @@
 				
 				<md-divider></md-divider>
 				
-				<div layout="row" layout-align="center center">
-		  	      	<md-button ng-show="!thread.isArchive" aria-label="Compose Message" class="md-icon-button" ng-click="showModal($event, 'upload-reversion.html')">
+				<div layout="column" layout-align="center center">
+		  	      	<!-- <md-button ng-show="!thread.isArchive" aria-label="Compose Message" class="md-icon-button" ng-click="showModal($event, 'upload-reversion.html')">
 					  	<md-tooltip md-direction="top">Upload Reversion</md-tooltip>
 				      	<md-icon class="material-icons">file_upload</md-icon>
-		  	      	</md-button>
+		  	      	</md-button> -->
+		  	      	<p class="md-body-2">Select or Drop File Here To Update Reversion</p>
+		  	      	<input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false"/>
 				</div>
 				
 			</div>
@@ -141,21 +122,6 @@
 
 				<span flex></span>
 				
-                <!-- <md-button ng-show="!file.isArchive" aria-label="Add a Team Member" class="md-icon-button" ng-click="showModal($event, 'assign.html')" ng-show="!file.belongTo">
-                    <md-tooltip md-direction="top">Add a Team Member</md-tooltip>
-                    <md-icon class="material-icons">person_outline</md-icon>
-                </md-button> -->
-				
-                <!-- <md-button ng-show="!file.isArchive" aria-label="Add a Team Member" class="md-icon-button" ng-click="showModal($event, 'insert-note.html')">
-                    <md-tooltip md-direction="top">Insert A Note</md-tooltip>
-                    <md-icon class="material-icons">note_add</md-icon>
-                </md-button> -->
-				
-				<!-- <md-button class="md-icon-button" ng-click="showCreateRelatedTask($event)">
-					<md-tooltip md-direction="bottom">Add a Related Task</md-tooltip>
-					<md-icon class="material-icons">check</md-icon>
-				</md-button> -->
-				
                 <md-button ng-show="isOwnerTeam" ng-click="archive()" aria-label="Compose Message" class="md-icon-button" style="margin-left: 30px">
                     <md-tooltip md-direction="left">{{(!file.isArchive) ? 'Archive this File' : 'Unarchive this File'}}</md-tooltip>
                     <md-icon class="material-icons"><i class="material-icons">{{(!file.isArchive) ? 'archive' : 'unarchive'}}</i></md-icon>
@@ -167,20 +133,12 @@
 			
 			<div layout="column" class="content">
 				
-				<!-- <div layout="row" class="activity-stream-head" layout-padding>
-					<p>This message was created by <strong>{{thread.owner.name}}</strong> on {{thread.createdAt | date: longDate}}.</p>
-				</div> -->
-				
 				<inspector data="file" type="file" hide-related-thread="true" flex></inspector>
 				
 			</div>
 			
 		</div>
-	</div>
-	
-		
-	<!-- <related-items data="file" flex="30"></related-items> -->
-		
+	</div>		
 </div>
 			
 	
