@@ -68,7 +68,8 @@
 								<span ng-switch="activity.type" class="activity-footer md-footer">
 									<span ng-switch-when="related-task"><a ui-sref="project.tasks.detail({id: thread.project, threadId: activity.element.item})">View Task</a></span>
 									<span ng-switch-when="related-file"><a ui-sref="project.files.detail({id: thread.project, fileId: activity.element.item})">View File</a></span>
-									<div ng-switch-when="related-file" flex file-picker-previewer type="filepicker-preview" url="{{activity.element.path}}" style="height:200px;"> </div>
+									<!-- <div ng-switch-when="related-file" flex file-picker-previewer type="filepicker-preview" url="{{activity.element.path}}" style="height:200px;"> </div> -->
+									<img ng-switch-when="related-file" file-picker-thumbnail url="{{activity.element.path}}" src="" alt="" style="width: 200px; height: auto">
 								</span>
 							</div>
 						</div>
