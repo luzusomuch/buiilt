@@ -198,7 +198,7 @@ exports.getFilesByProject = function(req, res) {
     .populate("members", "_id name email phoneNumber").exec(function(err, files) {
         if (err) {return res.send(500,err);}
         async.each(files, function(file, cb) {
-            Notification.find({unread: true, owner: userId, "element._id": file._id, referenceTo: req.params.type})
+            Notification.find({unread: true, owner: userId, "element._id": file._id, referenceTo: req.params.type, $or:[{type: "document-upload-reversion"}, {type: "file-upload-reversion"}, {type: "related-item"}]})
             .populate("fromUser", "_id name email").exec(function(err, notifications) {
                 if (err) {cb(err);}
                 else {
