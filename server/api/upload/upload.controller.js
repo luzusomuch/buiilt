@@ -316,6 +316,12 @@ exports.uploadReversion = function(req, res) {
                         });
 
                         var randomId = mongoose.Types.ObjectId();
+                        acknowledgeUsers = _.map(_.groupBy(acknowledgeUsers,function(doc){
+                            return doc._id;
+                        }),function(grouped){
+                            return grouped[0];
+                        });
+                        _.remove(acknowledgeUsers, {_id: req.user._id});
                         _.each(acknowledgeUsers, function(user) {
                             if ((file.element.type==="document" || file.element.type==="file") && user._id) {
                                 EventBus.emit('socket:emit', {

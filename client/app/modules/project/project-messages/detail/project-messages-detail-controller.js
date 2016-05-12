@@ -416,11 +416,6 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
                 }, function(err) {$scope.showToast("Error");});
             } else {
                 $scope.showToast("Please select at least 1 invitee");
-                delete $scope.relatedThread.member;
-                delete $scope.relatedThread.belongTo;
-                delete $scope.relatedThread.type;
-                delete $scope.relatedThread.belongToType;
-                return false;
             }
         } else {
             $scope.showToast("Please check your input again!");
@@ -457,16 +452,9 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
                 taskService.create({id: $stateParams.id}, $scope.relatedTask).$promise.then(function(res) {
                     $scope.closeModal();
                     dialogService.showToast("Related Task Has Been Created Successfully.");
-                    // $scope.thread.relatedItem.push({type: "task", item: res});
-                    // $state.go("project.tasks.detail", {id: $stateParams.id, taskId: relatedTask._id});
                 }, function(err){dialogService.showToast("There Has Been An Error...");});
             } else {
                 dialogService.showToast("Please Select At Least 1 Assignee...");
-                delete $scope.relatedTask.members;
-                delete $scope.relatedTask.belongTo;
-                delete $scope.relatedTask.type;
-                delete $scope.relatedTask.belongToType;
-
                 return false;
             }
         } else {

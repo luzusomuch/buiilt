@@ -41,6 +41,14 @@ EventBus.onSeries('File.Updated', function(file, next) {
             Document.findById(file.documentSet, function(err, documentSet) {
                 if (err||!documentSet) {return next();}
                 else {
+                    var owners = documentSet.members;
+                    owners = _.map(_.groupBy(owners,function(doc){
+                        return doc;
+                    }),function(grouped){
+                        return grouped[0];
+                    });
+                    _.remove(owners, file.editUser._id);
+                    console.log(owners);
                     var params = {
                         owners : documentSet.members,
                         fromUser : file.editUser._id,
@@ -54,6 +62,7 @@ EventBus.onSeries('File.Updated', function(file, next) {
                 }
             });
         } else if (file.element.type === "file" || file.element.type === "tender") {
+            console.log(file.members);
             if (file.members.length > 0) {
                 var params = {
                     owners : file.members,

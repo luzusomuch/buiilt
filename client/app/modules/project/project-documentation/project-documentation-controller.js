@@ -58,12 +58,12 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
             $scope.documentSets = data[0];
             $scope.documents = data[1];
             documentSetInitial();
+            getLastAccess($scope.documents);
         });
     }
 
     $scope.selectedDocumentSetId = $rootScope.selectedDocumentSetId;
     $scope.selectDocumentSet = function(documentSet) {
-        console.log(documentSet);
         $scope.selectedDocumentSet = documentSet;
         $rootScope.selectedDocumentSetId = $scope.selectedDocumentSetId = documentSet._id;
     };
@@ -154,12 +154,12 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
     };
     setUploadFile();
 
-    if ($state.includes("project.documentation.all")) {
-        fileService.getProjectFiles({id: $stateParams.id, type: "document"}).$promise.then(function(res) {
-            $scope.documents = res;
-            getLastAccess($scope.documents);
-        });
-    }
+    // if ($state.includes("project.documentation.all")) {
+    //     fileService.getProjectFiles({id: $stateParams.id, type: "document"}).$promise.then(function(res) {
+    //         $scope.documents = res;
+    //         getLastAccess($scope.documents);
+    //     });
+    // }
 
     /*Get last access of user for each document to show recently open first*/
     function getLastAccess(documents) {
@@ -215,48 +215,8 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
         $scope.documents.push(data);
     });
 
-    /*Receive when updated document then check if document is belong to current project
-    then check if document is existed in documents list
-    after that update count number and update notifications list*/
-    var listenerCleanFnPushFromDashboard = $rootScope.$on("Dashboard.Document.Update", function(event, data) {
-        var index;
-        if (data.file.project._id.toString()===$stateParams.id.toString()) {
-            if (data.file.documentSet) {
-                index = _.findIndex($scope.documentSets, function(set) {
-                    if (set._id) {
-                        return set._id.toString()===data.file.documentSet.toString();
-                    }
-                });
-                if (index !== -1) {
-                    var documentIndex = _.findIndex($scope.documentSets[index].documents, function(doc) {
-                        return doc._id.toString()===data.file._id.toString();
-                    });
-                    if (documentIndex!==-1 && ($scope.documentSets[index].documents[documentIndex] && $scope.documentSets[index].documents[documentIndex].uniqId!==data.uniqId)) {
-                        $scope.documentSets[index].documents[documentIndex].uniqId = data.uniqId;
-                        if ($scope.documentSets[index].documents[documentIndex].__v===0) {
-                            $rootScope.$broadcast("UpdateCountNumber", {type: "document", isAdd: true, number: 1});
-                        }
-                        $scope.documentSets[index].documents[documentIndex].__v+=1;
-                    }
-                }
-            } else {
-                index = _.findIndex($scope.documents, function(document) {
-                    return document._id.toString()===data.file._id.toString();
-                });
-                if (index !== -1 && ($scope.documents[index] && $scope.documents[index].uniqId!==data.uniqId)) {
-                    $scope.documents[index].uniqId = data.uniqId;
-                    if ($scope.documents[index].__v===0) {
-                        $rootScope.$broadcast("UpdateCountNumber", {type: "document", isAdd: true, number: 1});
-                    }
-                    $scope.documents[index].__v+=1;
-                }
-            }
-        }
-    });
-
     $scope.$on('$destroy', function() {
         listenerCleanFnPush();
-        listenerCleanFnPushFromDashboard();
     });
 
     /*Receive when archived document then move it to archived list*/
@@ -272,8 +232,41 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
 
     /*Receive when updated document*/
     socket.on("dashboard:new", function(data) {
-        if (data.type==="document" && data.file.element.type==="document") 
-            $rootScope.$emit("Dashboard.Document.Update", data);
+        if (data.type==="document" && data.file.element.type==="document") {
+            var index;
+            if (data.file.project._id.toString()===$stateParams.id.toString()) {
+                if (data.file.documentSet) {
+                    index = _.findIndex($scope.documentSets, function(set) {
+                        if (set._id) {
+                            return set._id.toString()===data.file.documentSet.toString();
+                        }
+                    });
+                    if (index !== -1) {
+                        var documentIndex = _.findIndex($scope.documentSets[index].documents, function(doc) {
+                            return doc._id.toString()===data.file._id.toString();
+                        });
+                        if (documentIndex!==-1 && ($scope.documentSets[index].documents[documentIndex] && $scope.documentSets[index].documents[documentIndex].uniqId!==data.uniqId)) {
+                            $scope.documentSets[index].documents[documentIndex].uniqId = data.uniqId;
+                            if ($scope.documentSets[index].documents[documentIndex].__v===0) {
+                                $rootScope.$broadcast("UpdateCountNumber", {type: "document", isAdd: true, number: 1});
+                            }
+                            $scope.documentSets[index].documents[documentIndex].__v+=1;
+                        }
+                    }
+                } else {
+                    index = _.findIndex($scope.documents, function(document) {
+                        return document._id.toString()===data.file._id.toString();
+                    });
+                    if (index !== -1 && ($scope.documents[index] && $scope.documents[index].uniqId!==data.uniqId)) {
+                        $scope.documents[index].uniqId = data.uniqId;
+                        if ($scope.documents[index].__v===0) {
+                            $rootScope.$broadcast("UpdateCountNumber", {type: "document", isAdd: true, number: 1});
+                        }
+                        $scope.documents[index].__v+=1;
+                    }
+                }
+            }
+        }
     });
 
     /*Receive when create new set of document*/
