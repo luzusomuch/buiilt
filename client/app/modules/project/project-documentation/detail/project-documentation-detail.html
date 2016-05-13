@@ -22,7 +22,7 @@
 	                <md-button aria-label="Filter" ng-click="$mdOpenMenu($event)">Versions</md-button>
 	                <md-menu-content width="5">
 	                    <md-menu-item layout-padding ng-repeat="history in document.fileHistory">
-							<md-button ng-click="changeVersion('dropdown', history)">{{history.version}}</md-button>
+							<md-button ng-click="changeVersion('dropdown', history)">Version {{$index+1}} of {{document.fileHistory.length}}</md-button>
 	                    </md-menu-item>
 	                </md-menu-content>
 	            </md-menu>

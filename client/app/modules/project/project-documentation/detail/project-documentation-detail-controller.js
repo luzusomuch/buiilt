@@ -317,7 +317,6 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
     };
 
     var historyName;
-    console.log($scope.document);
     $scope.changeVersion = function(type, history, nextOrPrevious) {
         if (type==="dropdown") {
             $scope.document.currentPath = history.link;
@@ -326,7 +325,6 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
             var index = _.findIndex($scope.document.fileHistory, function(history) {
                 return history.link==$scope.document.currentPath;
             });
-            console.log(index);
             if (nextOrPrevious==="next") {
                 index+=1;
                 if (index === $scope.document.fileHistory.length) {
