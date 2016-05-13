@@ -10,7 +10,11 @@
 					<md-tooltip md-direction="bottom">Back</md-tooltip>
 				</md-button>
 				
-		        <h5>{{document.name}}</h5>
+		        <h5 ng-show="!showEdit">{{document.name}}</h5>
+		        <md-input-container ng-show="showEdit">
+		        	<label for="">Document Name</label>
+		        	<input type="text" ng-model="document.name" ng-blur="changeName()">
+		        </md-input-container>
 					  
 				<span flex></span>
 				
@@ -24,6 +28,11 @@
 	            </md-menu>
 				
 				<span flex></span>
+
+				<md-button ng-show="document.owner._id==currentUser._id" ng-click="showEdit=!showEdit" class="md-icon-button">
+					<md-icon class="material-icons">edit</md-icon>
+					<md-tooltip md-direction="bottom">Edit Document</md-tooltip>
+				</md-button>
 				
 				<md-button ng-click="openDocumentInNewTab()" class="md-icon-button">
 					<md-icon class="material-icons">open_in_new</md-icon>

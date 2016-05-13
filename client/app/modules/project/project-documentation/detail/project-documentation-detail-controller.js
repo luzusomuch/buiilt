@@ -1,6 +1,7 @@
 angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', function($rootScope, $scope, $timeout, document, uploadService, $mdDialog, $mdToast, $stateParams, fileService, socket, notificationService, peopleService, dialogService) {
     $scope.document = document;
     $scope.document.currentPath = document.path
+    $scope.currentUser = $rootScope.currentUser;
 
     /*Check if current team is team owner*/
     $scope.isOwnerTeam=false;
@@ -77,7 +78,7 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
             if (activity.type === "upload-reversion" || activity.type === "upload-file") {
                 if (_.findIndex(activity.acknowledgeUsers, function(item) {
                     if (item._id) {
-                        return item._id._id == $rootScope.currentUser._id && item.isAcknow;
+                        return item._id._id == $scope.currentUser._id && item.isAcknow;
                     }
                 }) !== -1) {
                     activity.isAcknow = true;
@@ -101,13 +102,13 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
 
     /*Checking activities and file histories that belong to current user*/
     function getAcvititiesAndHistoriesByUser(document) {
-        if (document.owner._id.toString()!==$rootScope.currentUser._id.toString()) {
+        if (document.owner._id.toString()!==$scope.currentUser._id.toString()) {
             var activities = [];
             var fileHistory = [];
             _.each(document.fileHistory, function(history) {
                 if (_.findIndex(history.members, function(member) {
                     if (member._id)
-                        return member._id.toString()===$rootScope.currentUser._id.toString();
+                        return member._id.toString()===$scope.currentUser._id.toString();
                 }) !== -1) {
                     fileHistory.push(history);
                 }
@@ -116,7 +117,7 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
                 if (activity.type==="upload-reversion") {
                     if (_.findIndex(activity.members, function(member) {
                         if (member._id)
-                            return member._id.toString()===$rootScope.currentUser._id.toString();
+                            return member._id.toString()===$scope.currentUser._id.toString();
                     }) !== -1) {
                         activities.push(activity);
                     }
@@ -138,13 +139,13 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
                     if (tender.hasSelect) {
                         var isLeader = (_.findIndex(tender.tenderers, function(tenderer) {
                             if (tenderer._id) {
-                                return tenderer._id._id.toString() === $rootScope.currentUser._id.toString();
+                                return tenderer._id._id.toString() === $scope.currentUser._id.toString();
                             }
                         }) !== -1) ? true : false;
                         if (!isLeader) {
                             _.each(tender.tenderers, function(tenderer) {
                                 var memberIndex = _.findIndex(tenderer.teamMember, function(member) {
-                                    return member._id.toString() === $rootScope.currentUser._id.toString();
+                                    return member._id.toString() === $scope.currentUser._id.toString();
                                 });
                                 if (memberIndex !== -1) {
                                     _.each(tenderer.teamMember, function(member) {
@@ -162,7 +163,7 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
                         } else {
                             $scope.projectMembers.push(tender.tenderers[0]._id);
                             _.each(tender.tenderers, function(tenderer) {
-                                if (tenderer._id._id.toString() === $rootScope.currentUser._id.toString()) {
+                                if (tenderer._id._id.toString() === $scope.currentUser._id.toString()) {
                                     _.each(tenderer.teamMember, function(member) {
                                         member.select = false;
                                         $scope.projectMembers.push(member);
@@ -173,7 +174,7 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
                     }
                 });
             });
-            _.remove($scope.projectMembers, {_id: $rootScope.currentUser._id});
+            _.remove($scope.projectMembers, {_id: $scope.currentUser._id});
             if ($rootScope.activity) {
                 _.each($rootScope.activity.members, function(member) {
                     if (member._id) 
@@ -317,7 +318,6 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
 
     var historyName;
     $scope.changeVersion = function(history) {
-        console.log(history);
         $scope.document.currentPath = history.link;
         historyName = history.version;
     };
@@ -330,5 +330,23 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
         filepicker.exportFile({
             url: $scope.document.currentPath, filename: (historyName) ? historyName : $scope.document.name
         });
+    };
+
+    $scope.changeName = function() {
+        if (document.owner._id!==$scope.currentUser._id) {
+            dialogService.showToast("Not Allow");
+            return;
+        }
+        if ($scope.document.name.trim().length===0) {
+            dialogService.showToast("Please Enter Document Name");
+        } else {
+            $scope.document.editType="edit";
+            fileService.update({id: document._id}, $scope.document).$promise.then(function(res) {
+                dialogService.showToast("Change Document Name Successfully");
+                $scope.showEdit = false;
+            }, function(err){
+                dialogService.showToast("Error");
+            });
+        }
     };
 });
