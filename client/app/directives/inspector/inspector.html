@@ -65,12 +65,12 @@
     </md-subheader>
     
     <md-list ng-show="showMembers" class="md-dense">
-        <md-list-item class="md-2-line">
+        <!-- <md-list-item class="md-2-line">
             <div class="md-list-item-text">
                 <h3>{{data.owner.name}}</h3>
                 <h4>{{data.owner.phoneNumber}}-{{data.owner.email}}</h4>
             </div>
-        </md-list-item>
+        </md-list-item> -->
         <md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event, member._id)" ng-show="data.element" ng-repeat="member in data.members | unique: '_id' track by $index">
             <div class="md-list-item-text">
                 <h3>{{member.name}}</h3>

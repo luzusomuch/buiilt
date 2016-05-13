@@ -218,26 +218,27 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
 
     function onSuccess(file){
         $scope.uploadReversion.file = file;
+        $scope.uploadReversionDocument();
     };
 
     /*Upload document reversion with vaid version tags and project members
     then call mixpanel track current user has uploaded document reversion*/
     $scope.uploadReversionDocument = function() {
-        var versionTags = _.map(_.filter($scope.versionTags, {select: true}), 'tag');
-        if (versionTags.length===0) {
-            dialogService.showToast("Please Select At Least 1 Version Tag");
-        } else if (!$scope.uploadReversion.file) {
-            dialogService.showToast("Please Select A Document");
-        } else {
-            $scope.uploadReversion.file.versionTags = versionTags.join();
+        // var versionTags = _.map(_.filter($scope.versionTags, {select: true}), 'tag');
+        // if (versionTags.length===0) {
+            // dialogService.showToast("Please Select At Least 1 Version Tag");
+        // } else if (!$scope.uploadReversion.file) {
+            // dialogService.showToast("Please Select A Document");
+        // } else {
+            // $scope.uploadReversion.file.versionTags = versionTags.join();
             uploadService.uploadReversion({id: $stateParams.documentId}, $scope.uploadReversion).$promise.then(function(res) {
                 dialogService.closeModal();
                 dialogService.showToast("Document Reversion Successfully Uploaded");
                 $rootScope.$broadcast("Document.Updated", res);
             }, function(err) {
                 dialogService.showToast("Error");
-            })
-        }
+            });
+        // }
     };
 
     /*Show modal with a valid name*/

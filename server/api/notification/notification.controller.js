@@ -126,8 +126,8 @@ exports.countTotalForIOS = function(req, res) {
         if (!notifications) {return res.send(404);}
         async.each(notifications, function(notification, cb) {
             Project.findById(notification.element.project, function(err,project) {
-                if (err) {console.log(err);cb();}
-                if (!project) {console.log("no project"); cb();}
+                if (err) {console.log(err);return cb();}
+                if (!project) {console.log("no project");return cb();}
                 else {
                     notification.element.project = project;
                     cb();

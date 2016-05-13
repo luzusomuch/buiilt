@@ -213,7 +213,17 @@ exports.getFilesByProject = function(req, res) {
             });
         }, function(err){
             if (err) {return res.send(500,err);}
-            return res.send(200,files);
+            if (req.params.type==="document") {
+                var result = [];
+                _.each(files, function(file) {
+                    if (!file.documentSet) {
+                        result.push(file);
+                    }
+                });
+                return res.send(200, result);
+            } else {
+                return res.send(200,files);
+            }
         });
     });
 };  

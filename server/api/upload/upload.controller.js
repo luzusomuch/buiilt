@@ -223,6 +223,7 @@ exports.uploadReversion = function(req, res) {
     //         return res.send(500);
     //     }
     // });
+console.log(req.body);
     var data = req.body.file;
     File.findById(req.params.id, function(err, file) {
         if (err) {return res.send(500,err);}
@@ -285,9 +286,9 @@ exports.uploadReversion = function(req, res) {
                 if (file.element.type==="document") {
                     activity.members = acknowledgeUsers;
                     history.members = acknowledgeUsers;
-                    file.versionTags = data.versionTags.split();
-                    history.versionTags = file.versionTags;
-                    activity.element.versionTags = file.versionTags;
+                    // file.versionTags = data.versionTags.split();
+                    // history.versionTags = file.versionTags;
+                    // activity.element.versionTags = file.versionTags;
                 } else {
                     file.description = data.description;
                 }
