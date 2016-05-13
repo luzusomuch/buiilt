@@ -2,8 +2,9 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
 	$rootScope.title = $rootScope.project.name +" Tenders";
     $scope.dialogService = dialogService;
     $scope.tenders = tenders;
-    $scope.selectedFilterEventsList = [];
-    $scope.selectedFilterTenderersList = [];
+    $scope.status = 'open';
+    var selectedFilterEventsList = [];
+    var selectedFilterTenderersList = [];
 
     /*Show modal with valid name*/
     $scope.showModal = function(modalName) {
@@ -53,6 +54,138 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
     };
     $scope.allowCreateNewTender = checkAllowCreateTender();
 
+    function tenderInitial() {
+        $scope.tenderers = [];
+        $scope.events = [];
+        _.each($scope.tenders, function(tender) {
+            // Get all tenderers of tenders list
+            _.each(tender.members, function(member) {
+                if ((member.email&&member.name) || member.user) {
+                    if (member.user) {
+                        $scope.tenderers.push(member.user);
+                    } else {
+                        $scope.tenderers.push({email: member.email, phoneNumber: member.phoneNumber, name: member.name});
+                    }
+                }
+            });
+            // Get all events of tenders list
+            if (tender.event) {
+                $scope.events.push(tender.event);
+            }
+        });
+
+        // get unique tenderers and events
+        $scope.tenderers = _.uniq($scope.tenderers, "email");
+        $scope.events = _.uniq($scope.events, "_id");
+    };
+    tenderInitial();
+
+    $scope.changeFilter = function(type, isCheckAll, filterValue) {
+        if (type==="tenderer") {
+            if (isCheckAll) {
+                _.each($scope.tenderers, function(tenderer) {
+                    tenderer.select = false;
+                });
+            } else {
+                var index = _.findIndex($scope.tenderers, function(tenderer) {
+                    return tenderer.email===filterValue;
+                });
+                if (index !== -1) {
+                    $scope.tenderers[index].select = !$scope.tenderers[index].select;
+                }
+            }
+            selectedFilterTenderersList = _.filter($scope.tenderers, {select: true});
+        } else if (type==="event") {
+            if (isCheckAll) {
+                _.each($scope.events, function(ev) {
+                    ev.select = false;
+                });
+            } else {
+                var index = _.findIndex($scope.events, function(ev) {
+                    return ev._id.toString()===filterValue.toString();
+                });
+                if (index !== -1) {
+                    $scope.events[index].select = !$scope.events[index].select;
+                }
+            }
+            selectedFilterEventsList = _.filter($scope.events, {select: true});
+        }
+    };
+
+    $scope.search = function(tender) {
+        var found = false;
+        if (selectedFilterEventsList.length > 0 && selectedFilterTenderersList.length > 0) {
+            if (tender.status===$scope.status && tender.event && tender.members.length > 0) {
+                _.each(selectedFilterEventsList, function(ev) {
+                    if (tender.event && tender.event._id==ev._id) {
+                        _.each(selectedFilterTenderersList, function(tenderer) {
+                            if (_.findIndex(tender.members, function(member) { 
+                                if (member.user)  
+                                    return member.user.email==tenderer.email;
+                                else
+                                    return member.email==tenderer.email;
+                            }) !== -1) {
+                                if ($scope.name && $scope.name.trim().length > 0) {
+                                    if (tender.name && tender.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+                                        found = true;
+                                    } 
+                                } else {
+                                    found = true;
+                                }
+                                return false;
+                            }
+                        });
+                    }
+                });
+            }
+        } else if (selectedFilterEventsList.length > 0) {
+            if (tender.status===$scope.status && tender.event) {
+                _.each(selectedFilterEventsList, function(ev) {
+                    if (tender.event._id==ev._id) {
+                        if ($scope.name && $scope.name.trim().length > 0) {
+                            if (tender.name && tender.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+                                found = true;
+                            }
+                        } else {
+                            found = true
+                        }
+                        return false;
+                    }
+                });
+            }
+        } else if (selectedFilterTenderersList.length > 0) {
+            if (tender.status===$scope.status && tender.members.length > 0) {
+                _.each(selectedFilterTenderersList, function(tenderer) {
+                    if (_.findIndex(tender.members, function(member) { 
+                        if (member.user)  
+                            return member.user.email==tenderer.email;
+                        else
+                            return member.email==tenderer.email;
+                    }) !== -1) {
+                        if ($scope.name && $scope.name.trim().length > 0) {
+                            if (tender.name && tender.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+                                found = true;
+                            }
+                        } else {
+                            found = true;
+                        }
+                        return false;
+                    }
+                });
+            }
+        } else if (selectedFilterTenderersList.length===0 && selectedFilterEventsList.length===0) {
+            if (tender.status===$scope.status) {
+                if ($scope.name && $scope.name.trim.length > 0) {
+                    if (tender.name && tender.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+                        found = true;
+                    }
+                } else {
+                    found = true;
+                }
+            }
+        }
+        return found;
+    };
 
     socket.on("tender:new", function(data) {
         if (data.project==$stateParams.id) {

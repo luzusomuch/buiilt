@@ -182,48 +182,54 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
     $scope.search = function(thread) {
         var found = false;
         if ($scope.selectedFilterEventList.length > 0 && $scope.selectedFilterRecepientList.length > 0) {
-            _.each($scope.selectedFilterEventList, function(event) {
-                if (thread.event && event._id==thread.event && thread.isArchive==$scope.showArchived) {
-                    _.each($scope.selectedFilterRecepientList, function(assignee) {
-                        if (thread.members.length > 0 && _.findIndex(thread.members, function(member) {return member._id==assignee._id;}) !== -1 && thread.isArchive==$scope.showArchived) {
-                            if ($scope.name && $scope.name.trim().length > 0) {
-                                if (thread.name && thread.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+            if (thread.isArchive==$scope.showArchived) {
+                _.each($scope.selectedFilterEventList, function(event) {
+                    if (thread.event && event._id==thread.event) {
+                        _.each($scope.selectedFilterRecepientList, function(assignee) {
+                            if (thread.members.length > 0 && _.findIndex(thread.members, function(member) {return member._id==assignee._id;}) !== -1) {
+                                if ($scope.name && $scope.name.trim().length > 0) {
+                                    if (thread.name && thread.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+                                        found = true;
+                                    }
+                                } else {
                                     found = true;
                                 }
-                            } else {
+                                return false
+                            }
+                        });
+                    }
+                });
+            }
+        } else if ($scope.selectedFilterEventList.length > 0) {
+            if (thread.isArchive==$scope.showArchived) {
+                _.each($scope.selectedFilterEventList, function(event) {
+                    if (thread.event && event._id==thread.event) {
+                        if ($scope.name && $scope.name.trim().length > 0) {
+                            if (thread.name && thread.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
                                 found = true;
                             }
-                            return false
-                        }
-                    });
-                }
-            });
-        } else if ($scope.selectedFilterEventList.length > 0) {
-            _.each($scope.selectedFilterEventList, function(event) {
-                if (thread.event && event._id==thread.event && thread.isArchive==$scope.showArchived) {
-                    if ($scope.name && $scope.name.trim().length > 0) {
-                        if (thread.name && thread.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+                        } else {
                             found = true;
                         }
-                    } else {
-                        found = true;
+                        return false
                     }
-                    return false
-                }
-            });
+                });
+            }
         } else if ($scope.selectedFilterRecepientList.length > 0) {
-            _.each($scope.selectedFilterRecepientList, function(assignee) {
-                if (thread.members.length > 0 && _.findIndex(thread.members, function(member) {return member._id==assignee._id;}) !== -1 && thread.isArchive==$scope.showArchived) {
-                    if ($scope.name && $scope.name.trim().length > 0) {
-                        if (thread.name && thread.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+            if (thread.isArchive==$scope.showArchived) {
+                _.each($scope.selectedFilterRecepientList, function(assignee) {
+                    if (thread.members.length > 0 && _.findIndex(thread.members, function(member) {return member._id==assignee._id;}) !== -1) {
+                        if ($scope.name && $scope.name.trim().length > 0) {
+                            if (thread.name && thread.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+                                found = true;
+                            }
+                        } else {
                             found = true;
                         }
-                    } else {
-                        found = true;
+                        return false
                     }
-                    return false
-                }
-            });
+                });
+            }
         } else if ($scope.selectedFilterRecepientList.length === 0 && $scope.selectedFilterEventList.length === 0) {
             if (thread.isArchive && thread.isArchive==$scope.showArchived) {
                 if ($scope.name && $scope.name.trim().length > 0) {

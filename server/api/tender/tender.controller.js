@@ -353,15 +353,18 @@ exports.update = function(req, res) {
 */
 exports.getAllByProject = function(req, res) {
     var userId = (req.query.userId) ? req.query.userId : req.user._id;
-    Tender.find({status: "open", project: req.params.id, $or:[{owner: userId}, {"members.user": userId}, {"members.teamMember": userId}]})
+    Tender.find({project: req.params.id, $or:[{owner: userId}, {"members.user": userId}, {"members.teamMember": userId}]})
     .populate("members.user", "_id name email phoneNumber")
     .populate("members.teamMember", "_id name email phoneNumber")
     .populate("owner", "_id name email phoneNumber")
+    .populate("event", "_id name")
     .exec(function(err, tenders) {
         if (err) {return res.send(500,err);}
         else {
             async.each(tenders, function(tender, cb) {
-                tender.members = [];
+                if (tender.owner._id.toString()!==req.user._id.toString()) {
+                    tender.members = [];
+                }
                 Notification.find({owner: req.user._id, "element._id": tender._id, unread: true, referenceTo: "tender", $or:[{type: "tender-message"}, {type: "tender-submission"}]}, function(err, notifications) {
                     if (err) {cb(err);}
                     else {

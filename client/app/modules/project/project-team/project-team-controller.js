@@ -330,11 +330,9 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
 
         // Remove project member from contacts book
         _.each($scope.membersList, function(member) {
-            console.log(member);
             var index = _.findIndex(contactBooks, function(contact) {
                 return contact.email===member.email || contact.phoneNumber===member.phoneNumber;
             });
-            console.log(index);
             if (index !== -1) {
                 contactBooks.splice(index ,1);
             }
