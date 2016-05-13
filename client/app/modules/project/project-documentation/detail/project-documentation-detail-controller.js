@@ -317,9 +317,29 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
     };
 
     var historyName;
-    $scope.changeVersion = function(history) {
-        $scope.document.currentPath = history.link;
-        historyName = history.version;
+    console.log($scope.document);
+    $scope.changeVersion = function(type, history, nextOrPrevious) {
+        if (type==="dropdown") {
+            $scope.document.currentPath = history.link;
+            historyName = history.version;
+        } else if (type==="button") {
+            var index = _.findIndex($scope.document.fileHistory, function(history) {
+                return history.link==$scope.document.currentPath;
+            });
+            console.log(index);
+            if (nextOrPrevious==="next") {
+                index+=1;
+                if (index === $scope.document.fileHistory.length) {
+                    index = 0;                    
+                }
+            } else {
+                index-=1;
+                if (index < 0) {
+                    index = $scope.document.fileHistory.length-1;
+                }
+            }
+            $scope.document.currentPath = $scope.document.fileHistory[index].link;
+        }
     };
 
     $scope.openDocumentInNewTab = function() {

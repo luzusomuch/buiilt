@@ -22,12 +22,14 @@
 	                <md-button aria-label="Filter" ng-click="$mdOpenMenu($event)">Versions</md-button>
 	                <md-menu-content width="5">
 	                    <md-menu-item layout-padding ng-repeat="history in document.fileHistory">
-							<md-button ng-click="changeVersion(history)">{{history.version}}</md-button>
+							<md-button ng-click="changeVersion('dropdown', history)">{{history.version}}</md-button>
 	                    </md-menu-item>
 	                </md-menu-content>
 	            </md-menu>
 				
 				<span flex></span>
+
+				<input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false" data-fp-drag-class="filepicker-drag"/>
 
 				<md-button ng-show="document.owner._id==currentUser._id" ng-click="showEdit=!showEdit" class="md-icon-button">
 					<md-icon class="material-icons">edit</md-icon>
@@ -49,20 +51,32 @@
 			<md-divider layout="row" flex></md-divider>
 	
 			<div layout="column" layout-margin flex>
-				<div class="content">
-					<div flex file-picker-previewer type="filepicker-preview" url="{{document.currentPath}}" style="height: 100%;"> </div>
+				<div class="content" layout="row">
+					<div flex="10">
+						<md-button class="md-icon-button" ng-click="changeVersion('button', null, 'back')">
+							<md-icon class="material-icons">skip_previous</md-icon>
+							<md-tooltip md-direction="bottom">Previous Version</md-tooltip>
+						</md-button>
+					</div>
+					<div flex="80" file-picker-previewer type="filepicker-preview" url="{{document.currentPath}}" style="height: 100%;"> </div>
+					<div flex="10">
+						<md-button class="md-icon-button" ng-click="changeVersion('button', null, 'next')">
+							<md-icon class="material-icons">skip_next</md-icon>
+							<md-tooltip md-direction="bottom">Next Version</md-tooltip>
+						</md-button>
+					</div>
 				</div>
 				
-				<md-divider></md-divider>
+				<!-- <md-divider></md-divider> -->
 				
-				<div layout="column" layout-align="center center">
-					<p class="md-body-2">Upload Document Reversion</p>
-					<input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false" data-fp-drag-class="filepicker-drag"/>
+				<!-- <div layout="column" layout-align="center center"> -->
+					<!-- <p class="md-body-2">Upload Document Reversion</p>
+					<input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false" data-fp-drag-class="filepicker-drag"/> -->
 		  	      	<!-- <md-button ng-show="!thread.isArchive" aria-label="Upload New Version" class="md-icon-button" ng-click="showModal($event, 'upload-document-reversion.html')">
 					  	<md-tooltip md-direction="top">Upload a New Version</md-tooltip>
 				      	<md-icon class="material-icons">file_upload</md-icon>
 		  	      	</md-button> -->
-				</div>
+				<!-- </div> -->
 				
 			</div>
 		</div>
