@@ -41,7 +41,7 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
         } else {
             $scope.teamMemberTypeTags[index].select = !$scope.teamMemberTypeTags[index].select;
         }
-        var availableSearchTypes = _.filter($scope.teamMemberTypeTags, {select: true});
+        var availableSearchTypes = $scope.availableSearchTypes = _.filter($scope.teamMemberTypeTags, {select: true});
         if (availableSearchTypes.length > 0) {
             $scope.search = true;
             _.each(availableSearchTypes, function(type) {
