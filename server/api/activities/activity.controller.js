@@ -7,6 +7,7 @@ var Thread = require('./../../models/thread.model');
 var Task = require('./../../models/task.model');
 var File = require('./../../models/file.model');
 var People = require('./../../models/people.model');
+var Tender = require('./../../models/tender.model');
 var CheckMembers = require("./../../components/helpers/checkMembers");
 var _ = require('lodash');
 var async = require('async');
@@ -189,15 +190,62 @@ exports.get = function(req, res) {
     .exec(function(err, activity) {
         if (err) {return res.send(500,err);}
         if (!activity) {return res.send(404, {msg: "The selected item not found"});}
-        async.each(activity.relatedItem, function(item, cb) {
-            getMainItem(item.type).findById(item.item._id, "_id name description", function(err, data) {
-                if (err || !data) {cb(err);}
-                else {
-                    item.item = data;
-                    cb();
-                }
-            });
-        }, function() {
+        activity.relatedItem = [];
+        async.parallel([
+            function (cb) {
+                Task.find({project: activity.project, event: activity._id, $or:[{owner: req.user._id}, {members: req.user._id}]}, "_id description event project", function(err, tasks) {
+                    if (err) {return cb(err);}
+                    else {
+                        _.each(tasks, function(task) {
+                            if (task.event && task.event.toString()===activity._id.toString()) {
+                                activity.relatedItem.push({type: "task", item: task});
+                            }
+                        });
+                        cb(null);
+                    }
+                });
+            }, 
+            function (cb) {
+                File.find({project: activity.project, event: activity._id, $or:[{owner: req.user._id}, {members: req.user._id}]}, "_id name event project", function(err, files) {
+                    if (err) {return cb(err);}
+                    else {
+                        _.each(files, function(file) {
+                            if (file.event && file.event.toString()===activity._id.toString()) {
+                                activity.relatedItem.push({type: "file", item: file});
+                            }
+                        });
+                        cb(null);
+                    }
+                });
+            },
+            function (cb) {
+                Tender.find({project: activity.project, event: activity._id, $or:[{owner: req.user._id}, {"members.user": req.user._id}]}, "_id name event project", function(err, tenders) {
+                    if (err) {return cb(err);}
+                    else {
+                        _.each(tenders, function(tender) {
+                            if (tender.event && tender.event.toString()===activity._id.toString()) {
+                                activity.relatedItem.push({type: "tender", item: tender});
+                            }
+                        });
+                        cb(null);
+                    }
+                });
+            },
+            function (cb) {
+                Thread.find({project: activity.project, event: activity._id, $or:[{owner: req.user._id}, {members: req.user._id}]}, "_id name event project", function(err, threads) {
+                    if (err) {return cb(err);}
+                    else {
+                        _.each(threads, function(thread) {
+                            if (thread.event && thread.event.toString()===activity._id.toString()) {
+                                activity.relatedItem.push({type: "thread", item: thread});
+                            }
+                        });
+                        cb(null);
+                    }
+                });
+            }
+        ], function(err) {
+            if (err) {return res.send(500,err);}
             return res.send(200, activity);
         });
     });

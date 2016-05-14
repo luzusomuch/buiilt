@@ -142,6 +142,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                                 $scope.tasks = [];
                                 $scope.threads = [];
                                 $scope.files = [];
+                                $scope.tenders = [];
                                 _.each(activity.relatedItem, function(item) {
                                     if (item.type==="thread") {
                                         $scope.threads.push(item.item);
@@ -149,6 +150,8 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                                         $scope.tasks.push(item.item);
                                     } else if (item.type==="file") {
                                         $scope.files.push(item.item);
+                                    } else if (item.type==="tender") {
+                                        $scope.tenders.push(item.item);
                                     }
                                 });
 
@@ -160,6 +163,8 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                                         $state.go("project.messages.all", {id: $stateParams.id});
                                     } else if (type==="file") {
                                         $state.go("project.files.all", {id: $stateParams.id});
+                                    } else if (type==="tender") {
+                                        $state.go("project.tenders.all", {id: $stateParams.id});
                                     }
                                 };
 

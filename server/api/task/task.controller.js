@@ -211,22 +211,6 @@ exports.create = function(req,res) {
             if (err) {return res.send(500,err);}
             async.parallel([
                 function (cb) {
-                    if (data.selectedEvent) {
-                        Activity.findById(data.selectedEvent, function(err, activity) {
-                            if (err) {
-                                task.remove(cb);
-                            } else if (!activity) {
-                                task.remove(cb);
-                            } else {
-                                activity.relatedItem.push({type: "task", item: {_id: task._id}});
-                                activity.save(cb);
-                            }
-                        });
-                    } else {
-                        cb();
-                    }
-                },
-                function (cb) {
                     if (req.body.belongTo) {
                         mainItem.findById(req.body.belongTo, function(err, main) {
                             if (err || !main) {

@@ -42,7 +42,6 @@
 			                    <md-list-item class="md-2-line" ng-repeat="task in tasks" ng-click="null">
 			                        <div class="md-list-item-text" layout="column">
 			                            <h3>{{task.description}}</h3>
-										<p>Assignees</p>
 			                        </div>
 			                    </md-list-item>
 			                </md-list>
@@ -64,7 +63,6 @@
 			                    <md-list-item class="md-2-line" ng-repeat="thread in threads" ng-click="null">
 			                        <div class="md-list-item-text" layout="column">
 			                            <h3>{{thread.name}}</h3>
-										<p>Assignees</p>
 			                        </div>
 			                    </md-list-item>
 			                </md-list>
@@ -86,29 +84,27 @@
 			                    <md-list-item class="md-2-line" ng-repeat="file in files" ng-click="null">
 			                        <div class="md-list-item-text" layout="column">
 			                            <h3>{{file.name}}</h3>
-										<p>Assignees</p>
 			                        </div>
 			                    </md-list-item>
 			                </md-list>
 						</div>
 		            </div>
 					
-		            <div layout="column">
+		            <div layout="column" ng-show="allowCreateTender">
 						<div layout="row" layout-align="space-between center" layout-margin>
 			                <h3 class="md-title header-accordian" ng-click="showTenders=!showTenders">
 								Tenders 
 								<md-icon class="material-icons" ng-show="!showTenders">expand_more</md-icon>
 								<md-icon class="material-icons" ng-show="showTenders">expand_less</md-icon>
 							</h3>
-							<p ng-click="viewAll('file')" class="md-body-2 link-decoration">View All</p>
+							<p ng-click="viewAll('tender')" class="md-body-2 link-decoration">View All</p>
 						</div>
 						<md-divider></md-divider>
 						<div layout="row" ng-show="showTenders">
 			                <md-list flex class="md-dense">
-			                    <md-list-item class="md-2-line" ng-repeat="file in files" ng-click="null">
+			                    <md-list-item class="md-2-line" ng-repeat="tender in tenders" ng-click="null">
 			                        <div class="md-list-item-text" layout="column">
-			                            <h3>{{file.name}}</h3>
-										<p>Assignees</p>
+			                            <h3>{{tender.name}}</h3>
 			                        </div>
 			                    </md-list-item>
 			                </md-list>
