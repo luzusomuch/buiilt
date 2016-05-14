@@ -99,12 +99,6 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                     center: "title",
                     right: "today, prev, next"
                 },
-                views: {
-                    myAgenda: {
-                        type: "agenda",
-                        buttonText: "My Agenda"
-                    }
-                },
                 selectable: true,
                 editable: true,
                 minTime: "6:00:00",
@@ -184,16 +178,27 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                     } else if (data.type==="task"){
                         $mdDialog.show({
                             // targetEvent: $event,
-                            controller: ["$rootScope", "$scope", "dialogService", "socket", "activity", "task", "people", function($rootScope, $scope, dialogService, socket, activity, task, people) {
+                            controller: ["$timeout", "$rootScope", "$scope", "dialogService", "socket", "activity", "task", "people", "notificationService", 
+                            function($timeout, $rootScope, $scope, dialogService, socket, activity, task, people, notificationService) {
                                 $scope.task = task;
                                 $scope.dialogService = dialogService;
                                 $scope.allowShowList = ["create-task", "edit-task", "change-date-time", "complete-task", "uncomplete-task"];
+
+                                $timeout(function() {
+                                    if ($scope.task.__v > 0) {
+                                        notificationService.markItemsAsRead({id: task._id}).$promise.then(function() {
+                                            $rootScope.$emit("Task.Read", task);
+                                            $rootScope.$emit("UpdateCountNumber", {type: "task", number: (task.__v>0)?1:0});
+                                        });
+                                    }
+                                }, 500);
                                 
                                 // socket handle
                                 socket.emit("join", task._id);
                                 socket.on("task:update", function(data) {
                                     $scope.task = data;
                                     getProjectMembers();
+                                    notificationService.markItemsAsRead({id: task._id}).$promise.then();
                                 });
                                 // end socket handle
 
@@ -395,7 +400,8 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
     $scope.convertAllToCalendarView = function(isUpdate) {
         $scope.events = [];
         $scope.activities = activities;
-        _.each(tasks, function(task) {
+        $scope.tasks = tasks;
+        _.each($scope.tasks, function(task) {
             if (task.element && task.element.type === "task-project") {
                 var dateStart, dateEnd;
                 if (task.time && task.time.start && task.time.end) {
@@ -405,7 +411,9 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                     dateStart = new Date(task.dateStart);
                     dateEnd = new Date(task.dateEnd);
                 }
-                $scope.events.push({type: "task", _id: task._id, title: task.description, start: dateStart, end: dateEnd, "backgroundColor": "#2196F3", allDay: false});
+                var title = task.description + "-";
+                title += (task.__v > 0) ? task.__v+" Updates" : "No Update";
+                $scope.events.push({type: "task", _id: task._id, title: title, start: dateStart, end: dateEnd, "backgroundColor": "#2196F3", allDay: false});
             }
         });
         _.each(activities, function(activity) {
@@ -420,12 +428,6 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
             uiCalendarConfig.calendars.myCalendar.fullCalendar('removeEvents');
             uiCalendarConfig.calendars.myCalendar.fullCalendar('addEventSource', $scope.events);
         }
-
-        $timeout(function() {
-            $(document).ready(function() {
-                $("div.fc-toolbar").children().children("button").removeClass("fc-month-button fc-button fc-state-default fc-corner-left fc-corner-right").addClass("md-primary md-button");
-            });
-        }, 1500);
     };
     $scope.convertAllToCalendarView();
 
@@ -545,5 +547,31 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
             dialogService.showToast("Check your input again.");
         }
     };
+
+    socket.on("dashboard:new", function(data) {
+        if (data.type==="task") {
+            var index = _.findIndex($scope.tasks, function(task) {
+                return task._id.toString()===data.task._id.toString();
+            });
+            if (index !==-1 && data.user._id.toString()!==$rootScope.currentUser._id.toString() && $scope.tasks[index].uniqId!=data.uniqId) {
+                if ($scope.tasks[index].__v===0) {
+                    $rootScope.$emit("UpdateCountNumber", {type: "task", isAdd: true});
+                }
+                $scope.tasks[index].uniqId=data.uniqId;
+                $scope.tasks[index].__v+=1;
+                $scope.convertAllToCalendarView(true);
+            }
+        }
+    });
+
+    $rootScope.$on("Task.Read", function(ev, data) {
+        var index = _.findIndex($scope.tasks, function(task) {
+            return task._id.toString()===data._id.toString();
+        });
+        if (index !== -1) {
+            $scope.tasks[index].__v=0;
+            $scope.convertAllToCalendarView(true);
+        }
+    });
 
 });
