@@ -15,11 +15,11 @@
                     <md-button aria-label="Roles" ng-click="$mdOpenMenu($event)">Roles</md-button>
                     <md-menu-content width="4">
 						<md-menu-item layout-padding>
-							<md-checkbox class="md-primary" md-prevent-menu-close>All</md-checkbox>
+							<md-button ng-click="selectTag(null , 'all')"><span class="md-subhead">Show All Type</span></md-button>
 						</md-menu-item>
 						<md-divider></md-divider>
                         <md-menu-item ng-repeat="tag in teamMemberTypeTags" layout-padding>
-                            <md-checkbox class="md-primary" md-prevent-menu-close ng-checked="" ng-click="selectTag($index)"><span style="text-transform: capitalize">{{tag.text}}</span></md-checkbox>
+                            <md-checkbox class="md-primary" md-prevent-menu-close ng-checked="tag.select" ng-click="selectTag($index)"><span style="text-transform: capitalize">{{tag.text}}</span></md-checkbox>
                         </md-menu-item>
                     </md-menu-content>
                 </md-menu>

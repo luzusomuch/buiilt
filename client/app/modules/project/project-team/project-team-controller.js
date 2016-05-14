@@ -32,9 +32,15 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
     $scope.search = false;
 
     /*Select team tags for search*/
-    $scope.selectTag = function(index) {
+    $scope.selectTag = function(index, type) {
         $scope.searchResults = [];
-        $scope.teamMemberTypeTags[index].select = !$scope.teamMemberTypeTags[index].select;
+        if (type==="all") {
+            _.each($scope.teamMemberTypeTags, function(type) {
+                type.select = false;
+            });
+        } else {
+            $scope.teamMemberTypeTags[index].select = !$scope.teamMemberTypeTags[index].select;
+        }
         var availableSearchTypes = _.filter($scope.teamMemberTypeTags, {select: true});
         if (availableSearchTypes.length > 0) {
             $scope.search = true;
