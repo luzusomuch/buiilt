@@ -1,6 +1,7 @@
 angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', function($rootScope, $scope, $timeout, document, uploadService, $mdDialog, $mdToast, $stateParams, fileService, socket, notificationService, peopleService, dialogService) {
     $scope.document = document;
-    $scope.document.currentPath = document.path
+    $scope.document.currentPath = $scope.document.fileHistory[$scope.document.fileHistory.length-1].link;
+    $scope.document.currentVersion = $scope.document.fileHistory.length;
     $scope.currentUser = $rootScope.currentUser;
 
     /*Check if current team is team owner*/
@@ -317,9 +318,10 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
     };
 
     var historyName;
-    $scope.changeVersion = function(type, history, nextOrPrevious) {
+    $scope.changeVersion = function(type, history, nextOrPrevious, $index) {
         if (type==="dropdown") {
             $scope.document.currentPath = history.link;
+            $scope.document.currentVersion = $index;
             historyName = history.version;
         } else if (type==="button") {
             var index = _.findIndex($scope.document.fileHistory, function(history) {
@@ -337,6 +339,7 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
                 }
             }
             $scope.document.currentPath = $scope.document.fileHistory[index].link;
+            $scope.document.currentVersion = index+1;
         }
     };
 

@@ -19,10 +19,10 @@
 				<span flex></span>
 				
 				<md-menu md-position-mode="target-right target">
-	                <md-button aria-label="Filter" ng-click="$mdOpenMenu($event)">Versions</md-button>
+	                <md-button aria-label="Filter" ng-click="$mdOpenMenu($event)">Version {{document.currentVersion}} of {{document.fileHistory.length}}</md-button>
 	                <md-menu-content width="5">
 	                    <md-menu-item layout-padding ng-repeat="history in document.fileHistory">
-							<md-button ng-click="changeVersion('dropdown', history)">Version {{$index+1}} of {{document.fileHistory.length}}</md-button>
+							<md-button ng-click="changeVersion('dropdown', history, null, $index+1)">Version {{$index+1}} of {{document.fileHistory.length}}</md-button>
 	                    </md-menu-item>
 	                </md-menu-content>
 	            </md-menu>
