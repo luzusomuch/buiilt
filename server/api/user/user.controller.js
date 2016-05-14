@@ -821,6 +821,24 @@ exports.verifyPhoneNumber = function(req, res) {
     }
 };
 
+/*Get all notifications for current user and use to */
+exports.getAllNotifications = function(req, res) {
+    var count = 0;
+    Notification.find({owner: req.user._id, unread: true}, function(err, notifications) {
+        if (err) {
+            return res.send(500,err);
+        } else {
+            var allowNotificationTypes = ["document-upload-reversion", "task-completed", "task-reopened", "task-enter-comment", "file-upload-reversion", "related-item", "thread-message"];
+            _.each(notifications, function(n){
+                if (allowNotificationTypes.indexOf(n.type) !== -1) {
+                    count+=1;
+                }
+            });
+            return res.send(200, {total: count});
+        }
+    });
+};
+
 /**
  * Authentication callback
  */
