@@ -72,6 +72,26 @@
 				
 			</div>
 			
+			<div layout="row" layout-align="center center">
+                <p ng-show="!name && selectedFilterEventsList.length==0 && selectedFilterAssigneesList.length==0 && selectedFilterTagsList.length==0">Displaying All Results</p>
+                <p ng-show="name || selectedFilterEventsList.length > 0 || selectedFilterAssigneesList.length > 0 || selectedFilterTagsList.length > 0">
+                    Displaying Results where 
+                    <span ng-show="name">Name is "{{name}}"</span> 
+                    <span ng-show="name && (selectedFilterEventsList.length > 0 || selectedFilterAssigneesList.length > 0 || selectedFilterTagsList.length > 0)"> and </span> 
+                    <span ng-show="selectedFilterEventsList.length > 0">Event is 
+                    	<span ng-repeat="tag in selectedFilterEventsList">"{{tag.name}}", </span>
+                	</span>
+                	<span ng-show="(name || selectedFilterEventsList.length > 0) && selectedFilterAssigneesList.length > 0"> and </span>
+                	<span ng-show="selectedFilterAssigneesList.length > 0">Member Name is 
+                    	<span ng-repeat="tag in selectedFilterAssigneesList">"{{tag.name}}", </span>
+                	</span>
+					<span ng-show="(selectedFilterEventsList.length > 0 || selectedFilterAssigneesList.length > 0) && selectedFilterTagsList.length > 0"> and </span>
+                	<span ng-show="selectedFilterTagsList.length > 0">File Tag is 
+                    	<span ng-repeat="tag in selectedFilterTagsList">"{{tag.name}}", </span>
+                	</span>
+                </p>
+            </div>
+
 			<md-divider layout="row" flex></md-divider>
 			
 			<md-list ng-cloak flex class="content-list">

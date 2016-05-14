@@ -200,77 +200,85 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
     $scope.search = function(file) {
         var found = false;
         if ($scope.selectedFilterEventsList.length > 0 && $scope.selectedFilterAssigneesList.length > 0 && $scope.selectedFilterTagsList.length > 0) {
-            _.each($scope.selectedFilterEventsList, function(event) {
-                if (file.event && event._id==file.event && file.isArchive==$scope.showArchived) {
-                    _.each($scope.selectedFilterAssigneesList, function(assignee) {
-                        if (file.members.length > 0 && _.findIndex(file.members, function(member) {return member._id==assignee._id}) !== -1) {
-                            _.each($scope.selectedFilterTagsList, function(tag) {
-                                if (file.tags.length > 0 && file.tags.indexOf(tag.name) !== -1) {
-                                    if ($scope.name && $scope.name.trim().length > 0) {
-                                        if (file.name && file.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+            if (file.isArchive==$scope.showArchived && file.event && file.members.length > 0 && file.tags.length > 0) {
+                _.each($scope.selectedFilterEventsList, function(event) {
+                    if (event._id==file.event) {
+                        _.each($scope.selectedFilterAssigneesList, function(assignee) {
+                            if (_.findIndex(file.members, function(member) {return member._id==assignee._id}) !== -1) {
+                                _.each($scope.selectedFilterTagsList, function(tag) {
+                                    if (file.tags.indexOf(tag.name) !== -1) {
+                                        if ($scope.name && $scope.name.trim().length > 0) {
+                                            if (file.name && file.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+                                                found = true;
+                                            }
+                                        } else {
                                             found = true;
                                         }
-                                    } else {
+                                        return false;
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        } else if ($scope.selectedFilterEventsList.length > 0 && $scope.selectedFilterAssigneesList.length > 0) {
+            if (file.isArchive==$scope.showArchived && file.event && file.members.length > 0) {
+                _.each($scope.selectedFilterEventsList, function(event) {
+                    if (event._id==file.event) {
+                        _.each($scope.selectedFilterAssigneesList, function(assignee) {
+                            if (_.findIndex(file.members, function(member) {return member._id==assignee._id}) !== -1) {
+                                if ($scope.name && $scope.name.trim().length > 0) {
+                                    if (file.name && file.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
                                         found = true;
                                     }
-                                    return false;
-                                }
-                            });
-                        }
-                    });
-                }
-            });
-        } else if ($scope.selectedFilterEventsList.length > 0 && $scope.selectedFilterAssigneesList.length > 0) {
-            _.each($scope.selectedFilterEventsList, function(event) {
-                if (file.event && event._id==file.event && file.isArchive==$scope.showArchived) {
-                    _.each($scope.selectedFilterAssigneesList, function(assignee) {
-                        if (file.members.length > 0 && _.findIndex(file.members, function(member) {return member._id==assignee._id}) !== -1) {
-                            if ($scope.name && $scope.name.trim().length > 0) {
-                                if (file.name && file.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+                                } else {
                                     found = true;
                                 }
-                            } else {
-                                found = true;
+                                return false;
                             }
-                            return false;
-                        }
-                    });
-                }
-            });
+                        });
+                    }
+                });
+            }
         } else if ($scope.selectedFilterEventsList.length > 0 && $scope.selectedFilterTagsList.length > 0) {
-            _.each($scope.selectedFilterEventsList, function(event) {
-                if (file.event && event._id==file.event && file.isArchive==$scope.showArchived) {
-                    _.each($scope.selectedFilterTagsList, function(tag) {
-                        if (file.tags.length > 0 && file.tags.indexOf(tag.name) !== -1) {
-                            if ($scope.name && $scope.name.trim().length > 0) {
-                                if (file.name && file.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+            if (file.isArchive==$scope.showArchived && file.event && file.tags.length > 0) {
+                _.each($scope.selectedFilterEventsList, function(event) {
+                    if (event._id==file.event) {
+                        _.each($scope.selectedFilterTagsList, function(tag) {
+                            if (file.tags.indexOf(tag.name) !== -1) {
+                                if ($scope.name && $scope.name.trim().length > 0) {
+                                    if (file.name && file.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+                                        found = true;
+                                    }
+                                } else {
                                     found = true;
                                 }
-                            } else {
-                                found = true;
+                                return false;
                             }
-                            return false;
-                        }
-                    });
-                }
-            });
+                        });
+                    }
+                });
+            }
         } else if ($scope.selectedFilterAssigneesList.length > 0 && $scope.selectedFilterTagsList.length > 0) {
-            _.each($scope.selectedFilterAssigneesList, function(assignee) {
-                if (file.members.length > 0 && _.findIndex(file.members, function(member) {return member._id==assignee._id;}) !== -1 && file.isArchive==$scope.showArchived) {
-                    _.each($scope.selectedFilterTagsList, function(tag) {
-                        if (file.tags.length > 0 && file.tags.indexOf(tag.name) !== -1) {
-                            if ($scope.name && $scope.name.trim().length > 0) {
-                                if (file.name && file.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+            if (file.isArchive==$scope.showArchived && file.members.length > 0 && file.tags.length > 0) {
+                _.each($scope.selectedFilterAssigneesList, function(assignee) {
+                    if (_.findIndex(file.members, function(member) {return member._id==assignee._id;}) !== -1 && file.isArchive==$scope.showArchived) {
+                        _.each($scope.selectedFilterTagsList, function(tag) {
+                            if (file.tags.indexOf(tag.name) !== -1) {
+                                if ($scope.name && $scope.name.trim().length > 0) {
+                                    if (file.name && file.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
+                                        found = true;
+                                    }
+                                } else {
                                     found = true;
                                 }
-                            } else {
-                                found = true;
+                                return false;
                             }
-                            return false;
-                        }
-                    });
-                }
-            });
+                        });
+                    }
+                });
+            }
         } else if ($scope.selectedFilterEventsList.length > 0) {
             _.each($scope.selectedFilterEventsList, function(event) {
                 if (file.event && event._id==file.event && file.isArchive==$scope.showArchived) {
