@@ -95,9 +95,15 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
             calendar: {
                 height: height,
                 header: {
-                    left: "month agendaWeek agendaDay",
+                    left: "month agendaWeek agendaDay myAgenda",
                     center: "title",
                     right: "today, prev, next"
+                },
+                views: {
+                    myAgenda: {
+                        type: "agenda",
+                        buttonText: "My Agenda"
+                    }
                 },
                 selectable: true,
                 editable: true,

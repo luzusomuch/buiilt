@@ -172,6 +172,14 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
                     }
                 });
             });
+            // check privilage to invite project member
+            $scope.isLeader = false;
+            if ($rootScope.currentUser.type!=="consultants"||$rootScope.currentUser.type!=="subcontractors") {
+                if (people[$rootScope.currentUser.type][0].tenderers[0]._id && people[$rootScope.currentUser.type][0].tenderers[0]._id._id.toString()===$rootScope.currentUser._id.toString()) {
+                    $scope.isLeader = true;
+                }
+            }
+            // end check
         } else {
             /*Add tender owner, his team and tenderer, his team to project member*/
             people[$scope.tender.ownerType][0].tenderers[0]._id.type = $scope.tender.ownerType;

@@ -6,6 +6,7 @@ var User = require('./../../models/user.model');
 var Thread = require('./../../models/thread.model');
 var Task = require('./../../models/task.model');
 var File = require('./../../models/file.model');
+var People = require('./../../models/people.model');
 var CheckMembers = require("./../../components/helpers/checkMembers");
 var _ = require('lodash');
 var async = require('async');
@@ -87,11 +88,78 @@ exports.update = function(req, res) {
 
 /*Get all activities and milestone related to current user*/
 exports.me = function(req, res) {
-    Activity.find({project: req.params.id, $or: [{owner: req.user._id}, {members: req.user._id}]})
+    var user = req.user;
+    Activity.find({project: req.params.id})
     .populate("subActivities")
     .exec(function(err, activities) {
         if (err) {return res.send(500,err);}
-        return res.send(200, activities);
+        var result = [];
+        var roles = ["builders", "architects", "clients", "subcontractors", "consultants"];
+        async.each(activities, function(activity, cb) {
+            if (!activity.isMilestone) {
+                People.findOne({project: activity.project})
+                .populate("project")
+                .exec(function(err, people) {
+                    if (err || !people) {return cb(err);}
+                    else {
+                        var allow = false;
+                        if (activity.owner.toString()===user._id.toString()) {
+                            allow = true;
+                        } else {
+                            var currentTender;
+                            var currentRole;
+                            _.each(roles, function(role) {
+                                _.each(people[role], function(tender) {
+                                    if (tender.tenderers[0]._id && tender.tenderers[0]._id.toString()===user._id.toString()) {
+                                        currentRole = role;
+                                        currentTender = tender;
+                                        return false;
+                                    } else if (tender.tenderers[0]._id && tender.tenderers[0]._id.toString()!==user._id.toString()) {
+                                        var index = _.findIndex(tender.tenderers[0].teamMember, function(member) {
+                                            return member.toString()===user._id.toString();
+                                        });
+                                        if (index !== -1) {
+                                            currentRole = role;
+                                            currentTender = tender;
+                                            return false;
+                                        }
+                                    } else {
+
+                                    }
+                                });
+                                if (currentTender) {
+                                    return false;
+                                }
+                            });
+                            if (currentTender) {
+                                if (people.project.projectManager.type==="builder") {
+                                    if (currentTender.inviter.toString()===activity.owner.toString()) {
+                                        allow = true;
+                                    }
+                                } else if (people.project.projectManager.type==="architect" || people.project.projectManager.type==="homeOwner") {
+                                    if (currentRole==="subcontractors") {
+                                        allow = false;
+                                    } else if (currentTender.inviter.toString()===activity.owner.toString()) {
+                                        allow = true;
+                                    }
+                                }
+                            }
+                        }
+                        if (allow) {
+                            result.push(activity);
+                            cb();
+                        } else {
+                            cb();
+                        }
+                    }
+                });
+            } else {
+                cb(null);
+            }
+        }, function(err) {
+            if (err) {return res.send(500,err);}
+            return res.send(200, result);
+        });
     });
 };
 

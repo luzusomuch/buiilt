@@ -56,7 +56,7 @@ EventBus.onSeries('People.Updated', function(req, next){
                     packageInvite.save(function(err,saved){
                         if (err) {cb(err);}
                         Mailer.sendMail('invite-non-user-to-tender.html', from, saved.to, {
-                            team: result.team.toJSON(),
+                            team: (result.team) ? result.team.toJSON() : null,
                             inviter: req.editUser.toJSON(),
                             invitee: saved.to,
                             project: result.project.toJSON(),
@@ -94,7 +94,7 @@ EventBus.onSeries('People.Updated', function(req, next){
                         if (err || !packageInvite) {cb();}
                         else {
                             Mailer.sendMail('send-addendum-to-non-user.html', from, packageInvite.to, {
-                                team: result.team.toJSON(),
+                                team: (result.team) ? result.team.toJSON() : null,
                                 inviter: req.editUser.toJSON(),
                                 invitee: packageInvite.to,
                                 project: result.project.toJSON(),
@@ -139,7 +139,7 @@ EventBus.onSeries('People.Updated', function(req, next){
                 packageInvite.save(function(err) {
                     if (err) {return next();}
                     Mailer.sendMail('invite-non-user-to-project.html', from, packageInvite.to, {
-                        team: result.team.toJSON(),
+                        team: (result.team) ? result.team.toJSON() : null,
                         inviter: req.editUser.toJSON(),
                         invitee: currentTender.tenderers[0].name,
                         project: result.project.toJSON(),
@@ -160,7 +160,7 @@ EventBus.onSeries('People.Updated', function(req, next){
                 User.findById(currentTender.tenderers[0]._id, function(err, user) {
                     if (err || !user) {return next();}
                     Mailer.sendMail('invite-user-to-project.html', from, user.email, {
-                        team: result.team.toJSON(),
+                        team: (result.team) ? result.team.toJSON() : null,
                         inviter: req.editUser.toJSON(),
                         invitee: user,
                         project: result.project.toJSON(),
