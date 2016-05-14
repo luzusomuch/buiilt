@@ -3,8 +3,8 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
     $scope.dialogService = dialogService;
     $scope.tenders = tenders;
     $scope.status = 'open';
-    var selectedFilterEventsList = [];
-    var selectedFilterTenderersList = [];
+    $scope.selectedFilterEventsList = [];
+    $scope.selectedFilterTenderersList = [];
 
     /*Show modal with valid name*/
     $scope.showModal = function(modalName) {
@@ -94,7 +94,7 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
                     $scope.tenderers[index].select = !$scope.tenderers[index].select;
                 }
             }
-            selectedFilterTenderersList = _.filter($scope.tenderers, {select: true});
+            $scope.selectedFilterTenderersList = _.filter($scope.tenderers, {select: true});
         } else if (type==="event") {
             if (isCheckAll) {
                 _.each($scope.events, function(ev) {
@@ -108,17 +108,17 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
                     $scope.events[index].select = !$scope.events[index].select;
                 }
             }
-            selectedFilterEventsList = _.filter($scope.events, {select: true});
+            $scope.selectedFilterEventsList = _.filter($scope.events, {select: true});
         }
     };
 
     $scope.search = function(tender) {
         var found = false;
-        if (selectedFilterEventsList.length > 0 && selectedFilterTenderersList.length > 0) {
+        if ($scope.selectedFilterEventsList.length > 0 && $scope.selectedFilterTenderersList.length > 0) {
             if (tender.status===$scope.status && tender.event && tender.members.length > 0) {
-                _.each(selectedFilterEventsList, function(ev) {
+                _.each($scope.selectedFilterEventsList, function(ev) {
                     if (tender.event && tender.event._id==ev._id) {
-                        _.each(selectedFilterTenderersList, function(tenderer) {
+                        _.each($scope.selectedFilterTenderersList, function(tenderer) {
                             if (_.findIndex(tender.members, function(member) { 
                                 if (member.user)  
                                     return member.user.email==tenderer.email;
@@ -138,9 +138,9 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
                     }
                 });
             }
-        } else if (selectedFilterEventsList.length > 0) {
+        } else if ($scope.selectedFilterEventsList.length > 0) {
             if (tender.status===$scope.status && tender.event) {
-                _.each(selectedFilterEventsList, function(ev) {
+                _.each($scope.selectedFilterEventsList, function(ev) {
                     if (tender.event._id==ev._id) {
                         if ($scope.name && $scope.name.trim().length > 0) {
                             if (tender.name && tender.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
@@ -153,9 +153,9 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
                     }
                 });
             }
-        } else if (selectedFilterTenderersList.length > 0) {
+        } else if ($scope.selectedFilterTenderersList.length > 0) {
             if (tender.status===$scope.status && tender.members.length > 0) {
-                _.each(selectedFilterTenderersList, function(tenderer) {
+                _.each($scope.selectedFilterTenderersList, function(tenderer) {
                     if (_.findIndex(tender.members, function(member) { 
                         if (member.user)  
                             return member.user.email==tenderer.email;
@@ -173,7 +173,7 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
                     }
                 });
             }
-        } else if (selectedFilterTenderersList.length===0 && selectedFilterEventsList.length===0) {
+        } else if ($scope.selectedFilterTenderersList.length===0 && $scope.selectedFilterEventsList.length===0) {
             if (tender.status===$scope.status) {
                 if ($scope.name && $scope.name.trim.length > 0) {
                     if (tender.name && tender.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {

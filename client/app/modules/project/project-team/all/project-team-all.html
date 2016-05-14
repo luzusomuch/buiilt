@@ -29,7 +29,7 @@
             <div layout="row" layout-align="center center">
                 <p ng-show="!name && !search">Displaying All Results</p>
                 <p ng-show="name || search">
-                    Displaying Results where <span ng-show="name">Name is {{name}}</span> <span ng-show="name && search"> and </span> <span ng-show="availableSearchTypes.length > 0">Role is <span ng-repeat="tag in availableSearchTypes">'{{tag.text}}', </span></span>
+                    Displaying Results where <span ng-show="name">Name is "{{name}}"</span> <span ng-show="name && search"> and </span> <span ng-show="availableSearchTypes.length > 0">Role is <span ng-repeat="tag in availableSearchTypes">"{{tag.text}}", </span></span>
                 </p>
             </div>
         
