@@ -322,13 +322,13 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
     };
 
     /*Receive selected event ID when create new item in calendar if existed*/
-    $scope.attachEventItem = $rootScope.attachEventItem;
-    if ($scope.attachEventItem) {
-        $scope.attachEventItem = $rootScope.attachEventItem;
-        $rootScope.selectedEvent = $scope.attachEventItem.selectedEvent;
-        $rootScope.attachEventItem = null;
-        $scope.showNewMessageModal();
-    }
+    // $scope.attachEventItem = $rootScope.attachEventItem;
+    // if ($scope.attachEventItem) {
+    //     $scope.attachEventItem = $rootScope.attachEventItem;
+    //     $rootScope.selectedEvent = $scope.attachEventItem.selectedEvent;
+    //     $rootScope.attachEventItem = null;
+    //     $scope.showNewMessageModal();
+    // }
 
     $scope.thread = {
         members : [],

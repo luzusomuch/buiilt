@@ -447,13 +447,13 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
 	    });
 	};
 
-    $scope.attachEventItem = $rootScope.attachEventItem;
-    if ($scope.attachEventItem) {
-        $scope.attachEventItem = $rootScope.attachEventItem;
-        $rootScope.selectedEvent = $scope.attachEventItem.selectedEvent;
-        $rootScope.attachEventItem = null;
-        $scope.showNewFileModal();
-    }
+    // $scope.attachEventItem = $rootScope.attachEventItem;
+    // if ($scope.attachEventItem) {
+    //     $scope.attachEventItem = $rootScope.attachEventItem;
+    //     $rootScope.selectedEvent = $scope.attachEventItem.selectedEvent;
+    //     $rootScope.attachEventItem = null;
+    //     $scope.showNewFileModal();
+    // }
 	
     /*Close create new file modal*/
 	$scope.cancelNewFileModal = function() {

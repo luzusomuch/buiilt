@@ -119,16 +119,25 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                     if (data.type==="event") {
                         $mdDialog.show({
                             // targetEvent: $event,
-                            controller: ["$rootScope", "$scope", "dialogService", "activity", "$stateParams", "$state", function($rootScope, $scope, dialogService, activity, $stateParams, $state) {
+                            controller: ["$rootScope", "$scope", "dialogService", "activity", "$stateParams", "$state", "activity", "tenderService", "messageService", "fileService", "taskService", "people", "$mdDialog",
+                            function($rootScope, $scope, dialogService, activity, $stateParams, $state, activity, tenderService, messageService, fileService, taskService, people, $mdDialog) {
+                                // Only need to check architect and builder team
+                                function checkAllowCreateTender() {
+                                    if (people.builders.length > 0 && people.builders[0].hasSelect) {
+                                        if (people.builders[0].tenderers[0]._id && people.builders[0].tenderers[0]._id._id.toString()===$rootScope.currentUser._id.toString()) {
+                                            return true;
+                                        }
+                                    }
+                                    if (people.architects.length > 0 && people.architects[0].hasSelect) {
+                                        if (people.architects[0].tenderers[0]._id && people.architects[0].tenderers[0]._id._id.toString()===$rootScope.currentUser._id.toString()) {
+                                            return true;
+                                        }
+                                    }
+                                };
+
+                                $scope.allowCreateTender = checkAllowCreateTender();
 								
-								$scope.editDescription = false;
-								$scope.editAssignees = false;
-								$scope.showTasks = false;
-								$scope.showMessages = false;
-								$scope.showFiles = false;
-								$scope.showTenders = false;
-								
-                                $scope.event = data;
+                                $scope.event = activity;
                                 $scope.dialogService = dialogService;
                                 $scope.tasks = [];
                                 $scope.threads = [];
@@ -155,20 +164,88 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                                 };
 
                                 $scope.attachItem = function(type) {
-                                    $rootScope.attachEventItem = {type: type, selectedEvent: data._id};
-                                    dialogService.closeModal();
+                                    // $rootScope.attachEventItem = {type: type, selectedEvent: data._id};
+                                    // dialogService.closeModal();
+                                    // if (type==="task") {
+                                    //     $state.go("project.tasks.all", {id: $stateParams.id});
+                                    // } else if (type==="thread") {
+                                    //     $state.go("project.messages.all", {id: $stateParams.id});
+                                    // } else if (type==="file") {
+                                    //     $state.go("project.files.all", {id: $stateParams.id});
+                                    // }
                                     if (type==="task") {
-                                        $state.go("project.tasks.all", {id: $stateParams.id});
+                                        $rootScope.selectedEvent = activity._id;
+                                        $mdDialog.show({
+                                            // targetEvent: $event,
+                                            controller: 'projectCalendarCtrl',
+                                            resolve: {
+                                                people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
+                                                    return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
+                                                }],
+                                                activities: ["activityService", "$stateParams", function(activityService, $stateParams) {
+                                                    return activityService.me({id: $stateParams.id}).$promise;
+                                                }],
+                                                tasks: ["taskService", "$stateParams", function(taskService, $stateParams) {
+                                                    return taskService.getProjectTask({id: $stateParams.id}).$promise;
+                                                }]
+                                            },
+                                            templateUrl: 'app/modules/project/project-calendar/partials/create-task.html',
+                                            parent: angular.element(document.body),
+                                            clickOutsideToClose: false
+                                        });
                                     } else if (type==="thread") {
-                                        $state.go("project.messages.all", {id: $stateParams.id});
+                                        var newThread = {
+                                            type: "project-message",
+                                            members: [],
+                                            selectedEvent: activity._id
+                                        };
+                                        messageService.create({id: activity.project}, newThread).$promise.then(function(res) {
+                                            dialogService.closeModal();
+                                            dialogService.showToast("Create New Thread Successfully");
+                                            $rootScope.$emit("Thread.Inserted", res);
+                                            $state.go("project.messages.detail", {id: activity.project, messageId: res._id});
+                                        }, function(err) {
+                                            dialogService.showToast("Error");
+                                        });
                                     } else if (type==="file") {
-                                        $state.go("project.files.all", {id: $stateParams.id});
+                                        var newFile = {
+                                            type: "file",
+                                            members: [],
+                                            tags: [],
+                                            selectedEvent: activity._id
+                                        };
+                                        fileService.create({id: activity.project}, newFile).$promise.then(function(res) {
+                                            dialogService.closeModal();
+                                            dialogService.showToast("Create New File Successfully");
+                                            $state.go("project.files.detail", {id: activity.project, fileId: res._id});
+                                        }, function(err) {
+                                            dialogService.showToast("Error");
+                                        });
+                                    } else if (type==="tender") {
+                                        if (!$scope.allowCreateTender) {
+                                            dialogService.showToast("Not Allow");
+                                        } else {
+                                            var newTender = {
+                                                project: $rootScope.project,
+                                                selectedEvent: activity._id
+                                            };
+                                            tenderService.create(newTender).$promise.then(function(res) {
+                                                dialogService.closeModal();
+                                                dialogService.showToast("Create New Tender Successfully");
+                                                $state.go("project.tenders.detail", {id: res.project, tenderId: res._id});
+                                            }, function(err) {
+                                                dialogService.showToast("Error");
+                                            });
+                                        }
                                     }
                                 };
                             }],
                             resolve: {
-                                activity: ["activityService", "$stateParams", function(activityService, $stateParams) {
+                                activity: ["activityService", function(activityService) {
                                     return activityService.get({id: data._id}).$promise;
+                                }],
+                                people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
+                                    return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
                                 }]
                             },
                             templateUrl: 'app/modules/project/project-calendar/partials/event-detail.html',
@@ -508,6 +585,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
     };
 
     $scope.task = {
+        selectedEvent: ($rootScope.selectedEvent) ? $rootScope.selectedEvent : null,
         dateStart: ($rootScope.selectedStartDate) ? $rootScope.selectedStartDate : new Date(),
         dateEnd: ($rootScope.selectedEndDate) ? $rootScope.selectedEndDate : new Date()
     };
@@ -539,6 +617,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 $rootScope.$emit("Task.Inserted", res);
                 tasks.push(res);
                 $scope.convertAllToCalendarView(true);
+                $rootScope.selectedEvent = null;
             }, function(err) {dialogService.showToast("There Has Been An Error...");});
             // } else {
             //     dialogService.showToast("Check your input again.");

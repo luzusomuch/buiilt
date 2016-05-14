@@ -375,13 +375,13 @@ angular.module('buiiltApp').controller('projectTasksCtrl', function($rootScope, 
 	};
 
     /*Receive selected event ID when create new item in calendar if existed*/
-    $scope.attachEventItem = $rootScope.attachEventItem;
-    if ($scope.attachEventItem) {
-        $scope.attachEventItem = $rootScope.attachEventItem;
-        $rootScope.selectedEvent = $scope.attachEventItem.selectedEvent;
-        $rootScope.attachEventItem = null;
-        $scope.showNewTaskModal();
-    }
+    // $scope.attachEventItem = $rootScope.attachEventItem;
+    // if ($scope.attachEventItem) {
+    //     $scope.attachEventItem = $rootScope.attachEventItem;
+    //     $rootScope.selectedEvent = $scope.attachEventItem.selectedEvent;
+    //     $rootScope.attachEventItem = null;
+    //     $scope.showNewTaskModal();
+    // }
 
     $scope.task = {
         selectedEvent: ($rootScope.selectedEvent) ? $rootScope.selectedEvent : null

@@ -1,13 +1,13 @@
-<md-dialog aria-label="{{event.title}}" flex="60" id="eventDetailDialog">
+<md-dialog aria-label="{{event.name}}" flex="60" id="eventDetailDialog">
     
     <md-toolbar>
         <div class="md-toolbar-tools">
 			
-            <h2>{{event.title}}</h2>
+            <h2>{{event.name}}</h2>
 			
 			<span flex></span>
 			
-			<p class="md-subhead">Start Date - End Date</p>
+			<p class="md-subhead">{{event.date.start | date: 'dd-MM-yyyy'}} - {{event.date.end | date: 'dd-MM-yyyy'}}</p>
         </div>
 		
     </md-toolbar>
@@ -129,8 +129,8 @@
 					<div layout="row">
 						<md-button class="md-raised" flex aria-label="Attach File" ng-click="attachItem('file')">Attach File</md-button>
 					</div>
-					<div layout="row">
-						<md-button class="md-raised" flex aria-label="Attach Tender" ng-click="">Attach Tender</md-button>
+					<div layout="row" ng-show="allowCreateTender">
+						<md-button class="md-raised" flex aria-label="Attach Tender" ng-click="attachItem('tender')">Attach Tender</md-button>
 					</div>
 				</div>
 					

@@ -27,7 +27,8 @@ exports.create = function(req, res) {
         name: (data.name) ? data.name : "Untitled Tender",
         description: data.description,
         dateEnd: data.dateEnd,
-        type: data.type
+        type: data.type,
+        event: data.selectedEvent
     });
     tender.save(function(err) {
         if (err) {return res.send(500,err);}
