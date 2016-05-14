@@ -53,6 +53,22 @@
 	            </md-menu>
 				
 			</div>
+
+			<div layout="row" layout-align="center center">
+                <p ng-show="!name && selectedFilterEventList.length==0 && selectedFilterRecepientList.length==0">Displaying All Results</p>
+                <p ng-show="name || selectedFilterEventList.length > 0 || selectedFilterRecepientList.length > 0">
+                    Displaying Results where 
+                    <span ng-show="name">Name is "{{name}}"</span> 
+                    <span ng-show="name && (selectedFilterEventList.length > 0 || selectedFilterRecepientList.length > 0)"> and </span> 
+                    <span ng-show="selectedFilterEventList.length > 0">Event is 
+                    	<span ng-repeat="tag in selectedFilterEventList">"{{tag.name}}", </span>
+                	</span>
+                	<span ng-show="(name || selectedFilterEventList.length > 0) && selectedFilterRecepientList.length > 0"> and </span>
+                	<span ng-show="selectedFilterRecepientList.length > 0">Member Name is 
+                    	<span ng-repeat="tag in selectedFilterRecepientList">"{{tag.name}}", </span>
+                	</span>
+                </p>
+            </div>
 			
 			<md-divider layout="row" flex></md-divider>
 			
