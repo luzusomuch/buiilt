@@ -47,6 +47,9 @@ exports.update = function(req, res) {
     Activity.findById(req.params.id, function(err, activity) {
         if (err) {return res.send(500,err);}
         if (!activity) {return res.send(404);}
+        if (activity.owner.toString()!==req.user._id.toString()) {
+            return res.send(500, {msg: "Not Allow To Excute"});
+        }
 
         async.parallel([
             function(cb) {
@@ -73,6 +76,9 @@ exports.update = function(req, res) {
                     if (data.date) {
                         activity.date = data.date;
                     }
+                    cb();
+                } else if (data.editType==="change-description") {
+                    activity.description = data.description;
                     cb();
                 } else {
                     cb();

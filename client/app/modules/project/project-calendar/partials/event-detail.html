@@ -16,9 +16,15 @@
         <div class="md-dialog-content" layout="column" layout-padding>
 			
 			
-			<div layout="column">
+			<div layout="column" ng-mouseenter="editDescription=true" ng-mouseleave="editDescription=false">
 				<h3 class="md-title">Details</h3>
-				<p ng-mouseenter="editDescription=true" ng-mouseleave="editDescription=false">This is the description of this event. It should be in-line editable so that the user can provide a description about what this event has been added for. Perhaps he wants to be able to describe what the concrete is or something like that. <span ng-show="editDescription" class="md-body-2 link-decoration">Edit</span></p>
+				<p ng-show="!showEdit">{{event.description}}</p>
+				<span ng-show="editDescription && !showEdit" ng-click="showEdit=true" class="md-body-2 link-decoration">Edit</span>
+
+				<md-input-container ng-show="showEdit">
+					<label for="">Event Description</label>
+					<input type="text" ng-model="event.description" ng-blur="changeDescription()">
+				</md-input-container>
 			</div>
 			
 			<md-divider></md-divider>

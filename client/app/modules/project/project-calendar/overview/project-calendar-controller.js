@@ -119,8 +119,8 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                     if (data.type==="event") {
                         $mdDialog.show({
                             // targetEvent: $event,
-                            controller: ["$rootScope", "$scope", "dialogService", "activity", "$stateParams", "$state", "activity", "tenderService", "messageService", "fileService", "taskService", "people", "$mdDialog",
-                            function($rootScope, $scope, dialogService, activity, $stateParams, $state, activity, tenderService, messageService, fileService, taskService, people, $mdDialog) {
+                            controller: ["$rootScope", "$scope", "dialogService", "activity", "$stateParams", "$state", "activity", "tenderService", "messageService", "fileService", "taskService", "people", "$mdDialog", "activityService",
+                            function($rootScope, $scope, dialogService, activity, $stateParams, $state, activity, tenderService, messageService, fileService, taskService, people, $mdDialog, activityService) {
                                 // Only need to check architect and builder team
                                 function checkAllowCreateTender() {
                                     if (people.builders.length > 0 && people.builders[0].hasSelect) {
@@ -154,6 +154,20 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                                         $scope.tenders.push(item.item);
                                     }
                                 });
+
+                                $scope.changeDescription = function(){
+                                    if ($scope.event.description.trim().length===0) {
+                                        dialogService.showToast("Please Enter Description");
+                                    } else {
+                                        $scope.event.editType="change-description";
+                                        activityService.update({id: $scope.event._id}, $scope.event).$promise.then(function(res) {
+                                            dialogService.showToast("Change Description Successfully");
+                                            $scope.showEdit = false;
+                                        }, function(err) {
+                                            dialogService.showToast("Error");
+                                        });
+                                    }
+                                };
 
                                 $scope.viewAll = function(type) {
                                     $rootScope.selectedFilterEvent = activity._id;
