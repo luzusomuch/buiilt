@@ -77,6 +77,17 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
         // get unique tenderers and events
         $scope.tenderers = _.uniq($scope.tenderers, "email");
         $scope.events = _.uniq($scope.events, "_id");
+
+        if ($rootScope.selectedFilterEvent) {
+            var index = _.findIndex($scope.events, function(ev) {
+                return ev._id.toString()===$rootScope.selectedFilterEvent.toString();
+            });
+            $scope.events[index].select = true;
+            $rootScope.selectedFilterEvent = null;
+        } else {
+            $rootScope.refreshData($scope.events);
+        }
+        $scope.selectedFilterEventsList = _.filter($scope.events, {select: true});
     };
     tenderInitial();
 

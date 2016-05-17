@@ -5,6 +5,7 @@ var mongoose = require('mongoose'),
 
 var ActivitySchema = new Schema({
     name: String,
+    description: String,
     owner: {type: Schema.Types.ObjectId, ref: "User", required: true},
     project: {type: Schema.Types.ObjectId, ref: "Project", required: true},
     date: {

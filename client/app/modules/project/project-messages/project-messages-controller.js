@@ -51,7 +51,17 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
             $scope.assignees = _.union($scope.assignees, thread.members);
         });
         $scope.events = _.uniq($scope.events, "_id");
+        if ($rootScope.selectedFilterEvent) {
+            var index = _.findIndex($scope.events, function(ev) {
+                return ev._id.toString()===$rootScope.selectedFilterEvent.toString();
+            });
+            $scope.events[index].select = true;
+            $rootScope.selectedFilterEvent = null;
+        } else {
+            $rootScope.refreshData($scope.events);
+        }
         $scope.assignees = _.uniq($scope.assignees, "_id");
+        $scope.selectedFilterEventList = _.filter($scope.events, {select: true});
     };
     repairForEventsFilter();
 	

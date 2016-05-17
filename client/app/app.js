@@ -96,6 +96,12 @@ angular
         }
     };
 
+    $rootScope.refreshData = function(arrayItems) {
+        _.each(arrayItems, function(item) {
+            item.select = false;
+        });
+    };
+
     $rootScope.getProjectMembers = function(people) {
         var membersList = [];
         _.each($rootScope.roles, function(role) {

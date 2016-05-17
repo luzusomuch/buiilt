@@ -156,6 +156,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                                 });
 
                                 $scope.viewAll = function(type) {
+                                    $rootScope.selectedFilterEvent = activity._id;
                                     dialogService.closeModal();
                                     if (type==="task") {
                                         $state.go("project.tasks.all", {id: $stateParams.id});
@@ -165,6 +166,19 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                                         $state.go("project.files.all", {id: $stateParams.id});
                                     } else if (type==="tender") {
                                         $state.go("project.tenders.all", {id: $stateParams.id});
+                                    }
+                                };
+
+                                $scope.view = function(type, item) {
+                                    dialogService.closeModal();
+                                    if (type==="thread") {
+                                        $state.go("project.messages.detail", {id: $stateParams.id, messageId: item._id});
+                                    } else if (type==="file") {
+                                        $state.go("project.files.detail", {id: $stateParams.id, fileId: item._id});
+                                    } else if (type==="tender") {
+                                        $state.go("project.tenders.detail", {id: $stateParams.id, tenderId: item._id});
+                                    } else if (type==="task") {
+                                        viewTaskDetail(item);
                                     }
                                 };
 
@@ -258,133 +272,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                             clickOutsideToClose: false
                         });
                     } else if (data.type==="task"){
-                        $mdDialog.show({
-                            // targetEvent: $event,
-                            controller: ["$timeout", "$rootScope", "$scope", "dialogService", "socket", "activity", "task", "people", "notificationService", 
-                            function($timeout, $rootScope, $scope, dialogService, socket, activity, task, people, notificationService) {
-                                $scope.task = task;
-                                $scope.dialogService = dialogService;
-                                $scope.allowShowList = ["create-task", "edit-task", "change-date-time", "complete-task", "uncomplete-task"];
-
-                                $timeout(function() {
-                                    if ($scope.task.__v > 0) {
-                                        notificationService.markItemsAsRead({id: task._id}).$promise.then(function() {
-                                            $rootScope.$emit("Task.Read", task);
-                                            $rootScope.$emit("UpdateCountNumber", {type: "task", number: (task.__v>0)?1:0});
-                                        });
-                                    }
-                                }, 500);
-                                
-                                // socket handle
-                                socket.emit("join", task._id);
-                                socket.on("task:update", function(data) {
-                                    $scope.task = data;
-                                    getProjectMembers();
-                                    notificationService.markItemsAsRead({id: task._id}).$promise.then();
-                                });
-                                // end socket handle
-
-                                // get project member
-                                function getProjectMembers(){
-                                    $scope.projectMembers = $rootScope.getProjectMembers(people);
-                                    _.each($scope.task.members, function(member) {
-                                        var index = _.findIndex($scope.projectMembers, function(projectMember){
-                                            if (projectMember._id) {
-                                                return projectMember._id.toString()===member._id.toString();
-                                            }
-                                        });
-                                        if (index !== -1) {
-                                            $scope.projectMembers.splice(index, 1);
-                                        }
-                                    });
-                                    _.each($scope.task.notMembers, function(email) {
-                                        var index = _.findIndex($scope.projectMembers, function(projectMember) {
-                                            if (!$scope.projectMembers._id) {
-                                                return projectMember.email==email;
-                                            }
-                                        });
-                                        if (index !== -1) {
-                                            $scope.projectMembers.splice(index, 1);
-                                        }
-                                    });
-                                };
-                                getProjectMembers();
-
-                                $scope.assignMember = function(index) {
-                                    $scope.task.newMembers = [$scope.projectMembers[index]];
-                                    $scope.task.editType="assign";
-                                    $scope.update($scope.task);
-                                };
-
-                                $scope.addComment = function() {
-                                    if (!$scope.comment || $scope.comment.trim().length===0) {
-                                        dialogService.showToast("Please Enter Your Comment");
-                                    } else {
-                                        $scope.task.editType = "enter-comment";
-                                        $scope.task.comment = $scope.comment;
-                                        $scope.update($scope.task);
-                                    }
-                                };
-
-                                $scope.changeDescription = function() {
-                                    if ($scope.task.description.trim().length===0) {
-                                        dialogService.showToast("Task Description Must Be Enter");
-                                    } else {
-                                        $scope.task.editType="edit-task";
-                                        $scope.update($scope.task);
-                                    }
-                                };
-
-                                $scope.completeTask = function() {
-                                    $scope.task.completed = !$scope.task.completed;
-                                    if ($scope.task.completed) {
-                                        $scope.task.completedBy = $rootScope.currentUser._id;
-                                        $scope.task.editType = "complete-task";
-                                        $scope.task.completedAt = new Date();
-                                    } else {
-                                        $scope.task.completedBy = null;
-                                        $scope.task.editType = "uncomplete-task";
-                                        $scope.task.completedAt = null;
-                                    }
-                                    $scope.update($scope.task);
-                                };
-
-                                $scope.update = function(task) {
-                                    taskService.update({id: task._id}, task).$promise.then(function(res) {
-                                        if (task.editType==="enter-comment") {
-                                            $scope.comment = null;
-                                            dialogService.showToast("Enter New Comment Successfully");
-                                        } else if (task.editType==="edit-task") {
-                                            dialogService.showToast("Change Task Description Successfully");
-                                        } else if (task.editType==="assign") {
-                                            dialogService.showToast("Assign Members To Task Successfully");
-                                        } else if (task.editType==="complete-task") {
-                                            dialogService.showToast("Mark Task As Completed Successfully");
-                                        } else if (task.editType==="uncomplete-task") {
-                                            dialogService.showToast("Re-open Task Successfully");
-                                        }
-                                        $scope.showEdit = false;
-                                    }, function(err) {
-                                        dialogService.showToast("Error");
-                                    });
-                                };
-                            }],
-                            resolve: {
-                                activity: ["activityService", "$stateParams", function(activityService, $stateParams) {
-                                    return activityService.me({id: $stateParams.id}).$promise;
-                                }],
-                                task: ["taskService", "$stateParams", function(taskService, $stateParams) {
-                                    return taskService.get({id: data._id}).$promise;
-                                }],
-                                people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
-                                    return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
-                                }]
-                            },
-                            templateUrl: 'app/modules/project/project-calendar/partials/task-detail.html',
-                            parent: angular.element(document.body),
-                            clickOutsideToClose: false
-                        });
-						
+                        viewTaskDetail(data);
                     }
                 },
                 eventDrop: function(event, delta) {
@@ -630,6 +518,135 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
         } else {
             dialogService.showToast("Check your input again.");
         }
+    };
+
+    function viewTaskDetail(data) {
+        $mdDialog.show({
+            // targetEvent: $event,
+            controller: ["$timeout", "$rootScope", "$scope", "dialogService", "socket", "activity", "task", "people", "notificationService", 
+            function($timeout, $rootScope, $scope, dialogService, socket, activity, task, people, notificationService) {
+                $scope.task = task;
+                $scope.dialogService = dialogService;
+                $scope.allowShowList = ["create-task", "edit-task", "change-date-time", "complete-task", "uncomplete-task"];
+
+                $timeout(function() {
+                    if ($scope.task.__v > 0) {
+                        notificationService.markItemsAsRead({id: task._id}).$promise.then(function() {
+                            $rootScope.$emit("Task.Read", task);
+                            $rootScope.$emit("UpdateCountNumber", {type: "task", number: (task.__v>0)?1:0});
+                        });
+                    }
+                }, 500);
+                
+                // socket handle
+                socket.emit("join", task._id);
+                socket.on("task:update", function(data) {
+                    $scope.task = data;
+                    getProjectMembers();
+                    notificationService.markItemsAsRead({id: task._id}).$promise.then();
+                });
+                // end socket handle
+
+                // get project member
+                function getProjectMembers(){
+                    $scope.projectMembers = $rootScope.getProjectMembers(people);
+                    _.each($scope.task.members, function(member) {
+                        var index = _.findIndex($scope.projectMembers, function(projectMember){
+                            if (projectMember._id) {
+                                return projectMember._id.toString()===member._id.toString();
+                            }
+                        });
+                        if (index !== -1) {
+                            $scope.projectMembers.splice(index, 1);
+                        }
+                    });
+                    _.each($scope.task.notMembers, function(email) {
+                        var index = _.findIndex($scope.projectMembers, function(projectMember) {
+                            if (!$scope.projectMembers._id) {
+                                return projectMember.email==email;
+                            }
+                        });
+                        if (index !== -1) {
+                            $scope.projectMembers.splice(index, 1);
+                        }
+                    });
+                };
+                getProjectMembers();
+
+                $scope.assignMember = function(index) {
+                    $scope.task.newMembers = [$scope.projectMembers[index]];
+                    $scope.task.editType="assign";
+                    $scope.update($scope.task);
+                };
+
+                $scope.addComment = function() {
+                    if (!$scope.comment || $scope.comment.trim().length===0) {
+                        dialogService.showToast("Please Enter Your Comment");
+                    } else {
+                        $scope.task.editType = "enter-comment";
+                        $scope.task.comment = $scope.comment;
+                        $scope.update($scope.task);
+                    }
+                };
+
+                $scope.changeDescription = function() {
+                    if ($scope.task.description.trim().length===0) {
+                        dialogService.showToast("Task Description Must Be Enter");
+                    } else {
+                        $scope.task.editType="edit-task";
+                        $scope.update($scope.task);
+                    }
+                };
+
+                $scope.completeTask = function() {
+                    $scope.task.completed = !$scope.task.completed;
+                    if ($scope.task.completed) {
+                        $scope.task.completedBy = $rootScope.currentUser._id;
+                        $scope.task.editType = "complete-task";
+                        $scope.task.completedAt = new Date();
+                    } else {
+                        $scope.task.completedBy = null;
+                        $scope.task.editType = "uncomplete-task";
+                        $scope.task.completedAt = null;
+                    }
+                    $scope.update($scope.task);
+                };
+
+                $scope.update = function(task) {
+                    taskService.update({id: task._id}, task).$promise.then(function(res) {
+                        if (task.editType==="enter-comment") {
+                            $scope.comment = null;
+                            dialogService.showToast("Enter New Comment Successfully");
+                        } else if (task.editType==="edit-task") {
+                            dialogService.showToast("Change Task Description Successfully");
+                        } else if (task.editType==="assign") {
+                            dialogService.showToast("Assign Members To Task Successfully");
+                        } else if (task.editType==="complete-task") {
+                            dialogService.showToast("Mark Task As Completed Successfully");
+                        } else if (task.editType==="uncomplete-task") {
+                            dialogService.showToast("Re-open Task Successfully");
+                        }
+                        $scope.showEdit = false;
+                    }, function(err) {
+                        dialogService.showToast("Error");
+                    });
+                };
+            }],
+            resolve: {
+                activity: ["activityService", "$stateParams", function(activityService, $stateParams) {
+                    return activityService.me({id: $stateParams.id}).$promise;
+                }],
+                task: ["taskService", "$stateParams", function(taskService, $stateParams) {
+                    return taskService.get({id: data._id}).$promise;
+                }],
+                people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
+                    return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
+                }]
+            },
+            templateUrl: 'app/modules/project/project-calendar/partials/task-detail.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: false
+        });
     };
 
     socket.on("dashboard:new", function(data) {
