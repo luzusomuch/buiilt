@@ -108,7 +108,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                     $rootScope.selectedStartDate = new Date(start);
                     $rootScope.selectedEndDate = new Date(end);
                     if (view.name==="month") {
-                        $scope.showModal("create-task-or-event.html");
+                        $scope.showModal("create-event.html");
                     } else if (!start.hasTime() && !end.hasTime()) {
                         $scope.showModal("create-event.html");
                     } else {
