@@ -22,25 +22,42 @@ exports.create = function(req, res) {
     var data = req.body;
     var tender = new Tender({
         owner: req.user._id,
-        ownerType: (data.project.projectManager.type === "architect") ? "architects" : "builders",
-        project: data.project._id,
         name: (data.name) ? data.name : "Untitled Tender",
         description: data.description,
         dateEnd: data.dateEnd,
         type: data.type,
         event: data.selectedEvent
     });
-    tender.save(function(err) {
-        if (err) {return res.send(500,err);}
-        else {
-            EventBus.emit('socket:emit', {
-                event: 'tender:new',
-                room: req.user._id.toString(),
-                data: tender
-            });
-            return res.send(200, tender);
+    async.parallel([
+        function(cb) {
+            if (data.project._id) {
+                tender.project = data.project._id;
+                tender.ownerType = (data.project.projectManager.type === "architect") ? "architects" : "builders";
+                cb();
+            } else {
+                Project.findById(data.project, function(err, project) {
+                    if (err || !project) {cb()}
+                    else {
+                        tender.project = project._id;
+                        tender.ownerType = (project.projectManager.type === "architect") ? "architects" : "builders";
+                        cb();
+                    }
+                });
+            }
         }
-    });  
+    ], function() {
+        tender.save(function(err) {
+            if (err) {return res.send(500,err);}
+            else {
+                EventBus.emit('socket:emit', {
+                    event: 'tender:new',
+                    room: req.user._id.toString(),
+                    data: tender
+                });
+                return res.send(200, tender);
+            }
+        });  
+    });
 };
 
 /*

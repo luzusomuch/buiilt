@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $scope, $timeout, $q, $state, $mdDialog, $mdToast, $stateParams, projectService, myTasks, myMessages, myFiles, notificationService, taskService, peopleService, messageService, fileService, socket, uploadService, dialogService, activities, myDocuments) {
+angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $scope, $timeout, $q, $state, $mdDialog, $mdToast, $stateParams, projectService, myTasks, myMessages, myFiles, notificationService, taskService, peopleService, messageService, fileService, socket, uploadService, dialogService, activities, myDocuments, uiCalendarConfig) {
 	$scope.step = 1;
     $rootScope.title = "Dashboard";
 	$scope.myTasks = myTasks;
@@ -71,7 +71,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                     } else if (!start.hasTime() && !end.hasTime()) {
                         $scope.showModal("create-event.html");
                     } else {
-                        $scope.showModal("create-task.html");
+                        $scope.showModal("project-task-new.html");
                     }
                 },
                 eventClick: function(data) {
@@ -401,7 +401,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             }
         } else if ($scope.step === 2) {
             if (type==="createTask") {
-                if (!$scope.task.description || $scope.task.description.trim().length === 0 || !$scope.task.dateEnd) {
+                if (!$scope.task.description || $scope.task.description.trim().length === 0 || !$scope.task.dateEnd || !$scope.task.dateStart || !$scope.task.time.start || !$scope.task.time.end) {
                     dialogService.showToast("Please Enter Valid Data");
                     return;
                 }
@@ -725,7 +725,18 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     });
 
     // task section
-    $scope.task = {members: []};
+    $scope.task = {
+        members: [],
+        dateStart: ($rootScope.selectedStartDate) ? $rootScope.selectedStartDate : new Date(),
+        dateEnd: ($rootScope.selectedEndDate) ? $rootScope.selectedEndDate : new Date(),
+        time: {}
+    };
+    if ($rootScope.selectedStartDate && $rootScope.selectedEndDate) {
+        $scope.task.time = {
+            start: $rootScope.selectedStartDate,
+            end: $rootScope.selectedEndDate
+        }
+    }
 
     /*Change task due date to a text*/
     // angular.forEach($scope.myTasks, function(task) {
