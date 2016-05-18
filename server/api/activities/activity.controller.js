@@ -96,8 +96,11 @@ exports.update = function(req, res) {
 /*Get all activities and milestone related to current user*/
 exports.me = function(req, res) {
     var user = req.user;
-    Activity.find({project: req.params.id})
-    .populate("subActivities")
+    var condition = {};
+    if (req.params.id!=="me") {
+        condition = {project: req.params.id};
+    }
+    Activity.find(condition)
     .exec(function(err, activities) {
         if (err) {return res.send(500,err);}
         var result = [];

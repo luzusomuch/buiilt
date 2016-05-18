@@ -1,9 +1,11 @@
-angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $scope, $timeout, $q, $state, $mdDialog, $mdToast, $stateParams, projectService, myTasks, myMessages, myFiles, notificationService, taskService, peopleService, messageService, fileService, socket, uploadService, dialogService) {
+angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $scope, $timeout, $q, $state, $mdDialog, $mdToast, $stateParams, projectService, myTasks, myMessages, myFiles, notificationService, taskService, peopleService, messageService, fileService, socket, uploadService, dialogService, activities, myDocuments) {
 	$scope.step = 1;
     $rootScope.title = "Dashboard";
 	$scope.myTasks = myTasks;
 	$scope.myMessages = myMessages;
 	$scope.myFiles = myFiles;
+    $scope.activities = activities;
+    console.log(myDocuments);
     $scope.projects = [];
     _.each($rootScope.projects, function(project) {
         if (project.status==="waiting") {
@@ -15,16 +17,19 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
 	$scope.showFilter = false;
 
     /*config fullcalendar*/
-    $scope.config = {
-        calendar: {
-            height: 450,
-            header: {
-                left: "month agendaWeek agendaDay",
-                center: "title",
-                right: "today, prev, next"
+    $timeout(function(){
+        var height = ($("#calendar-content").outerHeight()/100)*63;
+        $scope.uiConfig = {
+            calendar: {
+                height: "auto",
+                header: {
+                    left: "month agendaWeek agendaDay",
+                    center: "title",
+                    right: "today, prev, next"
+                }
             }
-        }
-    };
+        };
+    }, 500);
 
     /*Validate info and allow next in modal*/
     $scope.next = function(type) {
@@ -89,37 +94,41 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         }
         data.element.notifications = [];
         $scope.myTasks.push(data);
-        sortTaskAndRenderToCalendar($scope.myTasks);
+        renderTasksAndEventsToCalendar(true);
     });
 
     /*Sort tasks by due date asc*/
-    function sortTaskAndRenderToCalendar(tasks) {
+    function renderTasksAndEventsToCalendar(isUpdate) {
         $scope.events = [];
-        tasks.sort(function(a,b) {
-            if (a.dateEnd < b.dateEnd) {
-                return -1;
-            } 
-            if (a.dateEnd > b.dateEnd) {
-                return 1;
-            }
-            return 0;
-        });
-        _.each(tasks, function(task) {
+        _.each($scope.myTasks, function(task) {
             if (task.element && task.element.type === "task-project") {
                 var dateStart, dateEnd;
-                if (task.time) {
-                    dateStart = moment(task.dateStart).add(moment(task.time.start).hours(), "hours").add(moment(task.time.end).minutes(), "minutes");
-                    dateEnd = moment(task.dateEnd).add(moment(task.time.end).hours(), "hours").add(moment(task.time.end).minutes(), "minutes");
+                if (task.time && task.time.start && task.time.end) {
+                    dateStart = new Date(task.dateStart).setHours(moment(task.time.start).hours(), moment(task.time.start).minutes());
+                    dateEnd = new Date(task.dateEnd).setHours(moment(task.time.end).hours(), moment(task.time.end).minutes());
                 } else {
-                    dateStart = moment(task.dateStart);
-                    dateEnd = moment(task.dateEnd);
+                    dateStart = new Date(task.dateStart);
+                    dateEnd = new Date(task.dateEnd);
                 }
-                $scope.events.push({title: task.description, start: moment(dateStart).format("YYYY-MM-DD hh:mm"), end: moment(dateEnd).format("YYYY-MM-DD hh:mm"), url: "/project/"+$stateParams.id+"/tasks/detail/"+task._id});
+                var title = task.description + "-";
+                title += (task.__v > 0) ? task.__v+" Updates" : "No Update";
+                $scope.events.push({type: "task", _id: task._id, title: title, start: dateStart, end: dateEnd, "backgroundColor": "#2196F3", allDay: false});
             }
         });
+        _.each($scope.activities, function(activity) {
+            if (!activity.isMilestone) {
+                $scope.events.push({type: "event", _id: activity._id,title: activity.name, start: moment(activity.date.start).format("YYYY-MM-DD hh:mm"), end: moment(activity.date.end).format("YYYY-MM-DD hh:mm"), "backgroundColor": "#0D47A1", allDay: true});   
+            }
+        });
+        $scope.originalEvents = angular.copy($scope.events);
         $scope.eventSources = [$scope.events];
+
+        if (isUpdate) {
+            uiCalendarConfig.calendars.myCalendar.fullCalendar('removeEvents');
+            uiCalendarConfig.calendars.myCalendar.fullCalendar('addEventSource', $scope.events);
+        }
     };
-    sortTaskAndRenderToCalendar($scope.myTasks);
+    renderTasksAndEventsToCalendar();
 
     /*
         Get item index in items list
@@ -230,7 +239,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                 });
                 $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "task", isAdd: true, number: notificationTask.length});
             }
-            sortTaskAndRenderToCalendar($scope.myTasks);
+            renderTasksAndEventsToCalendar(true);
         } else if (data.type==="document") {
             if (data.file.element.type==="document") {
                 var index = getItemIndex($scope.myFiles, data._id);

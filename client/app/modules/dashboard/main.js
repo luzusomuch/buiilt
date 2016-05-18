@@ -3,7 +3,7 @@ angular.module('buiiltApp').config(function($stateProvider) {
 	
     .state('dashboard', {
       	url: '/dashboard',
-    	  abstract:true,
+        abstract:true,
       	template: "<ui-view></ui-view>",
       	// controller: 'dashboardCtrl',
       	authenticate : true,
@@ -16,6 +16,12 @@ angular.module('buiiltApp').config(function($stateProvider) {
             },
             myFiles: function(fileService) {
                 return fileService.myFiles().$promise;
+            },
+            activities: function(activityService, $rootScope) {
+                return activityService.me({id: "me"}).$promise;
+            },
+            myDocuments: function($stateParams, documentService) {
+                return documentService.me({id: "me"}).$promise;
             }
         }
     })

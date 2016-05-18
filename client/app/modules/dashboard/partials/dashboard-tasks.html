@@ -29,10 +29,16 @@
 					<md-checkbox class="filter-checkbox md-primary" ng-repeat="tag in dueDate" ng-click="selectFilterTag($index, 'dueDate')">{{ tag.text }}</md-checkbox>
 				</div>
 			</div>
+
+			<md-divider></md-divider>
+
+			<div layout="column" layout-padding flex id="calendar-content">
+                <div class="calendar" ng-model="eventSources" calendar="myCalendar" config="uiConfig.calendar" ui-calendar="uiConfig.calendar"></div>
+            </div>
 		</div>
 		
-		<div layout="column">
-			<div ui-calendar="config.calendar" ng-model="eventSources"></div>
+		<!-- <div layout="column">
+			<div ui-calendar="config.calendar" ng-model="eventSources"></div> -->
 			<!-- <md-list ng-cloak class="md-whiteframe-1dp content-list">
 				<div ng-repeat="task in myTasks | filter: searchTask | unique: '_id' track by $index" ng-show="task.element.notifications.length > 0">
 					<md-list-item class="md-2-line" md-ink-ripple layout-padding>
@@ -72,7 +78,7 @@
 			
 				</div>
 			</md-list> -->
-		</div>
+		<!-- </div> -->
 	</div>
 	
 	<div>

@@ -10,7 +10,13 @@ var CheckMembers = require("./../../components/helpers/checkMembers");
 var EventBus = require('../../components/EventBus');
 
 exports.me = function(req, res) {
-    Document.find({project: req.params.id, $or: [{owner: req.user._id}, {members: req.user._id}]})
+    var condition = {};
+    if (req.params.id!=="me") {
+        condition = {project: req.params.id, $or: [{owner: req.user._id}, {members: req.user._id}]};
+    } else {
+        condition = {$or: [{owner: req.user._id}, {members: req.user._id}]};
+    }
+    Document.find(condition)
     .populate("documents")
     .populate("members", "_id name email phoneNumber")
     .exec(function(err, documents) {
@@ -36,7 +42,25 @@ exports.me = function(req, res) {
                 });
             },callback);
         }, function() {
-            return res.send(200, documents);
+            if (req.params.id!=="me") {
+                return res.send(200, documents);
+            } else {
+                var result = [];
+                _.each(documents, function(document) {
+                    var docs = [];
+                    _.each(document.documents, function(doc) {
+                        if (doc.__v > 0) {
+                            docs.push(doc);
+                        }
+                    });
+                    document.documents = docs;
+                    document.__v = document.documents.length;
+                    if (document.__v > 0) {
+                        result.push(document);
+                    }
+                });
+                return res.send(200, result);
+            }
         });
     });
 };
