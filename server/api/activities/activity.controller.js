@@ -28,9 +28,9 @@ exports.create = function(req, res) {
             activity.date.start = data.date.start;
             activity.date.end = data.date.end;
         }
-        if (req.body.newMembers.length === 0) {
-            return res.send(422, {msg: "Please check your new members list"});
-        }
+        // if (req.body.newMembers.length === 0) {
+        //     return res.send(422, {msg: "Please check your new members list"});
+        // }
         CheckMembers.check(req.body.newMembers, null, function(result) {
             activity.members = result.members;
             activity.notMembers = result.notMembers;

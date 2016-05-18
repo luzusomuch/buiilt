@@ -367,16 +367,17 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 } else {
                     $scope.step += 1;
                 }
-            } else if ($scope.step==2) {
-                if (!$scope.activity.date) {
-                    dialogService.showToast("Please Check Your Date");
-                } else {
-                    if (moment(moment($scope.activity.date.start).format("YYYY-MM-DD")).isAfter(moment($scope.activity.date.end).format("YYYY-MM-DD")))
-                        dialogService.showToast("End Date Must Greator Than Stat Date");
-                    else
-                        $scope.step += 1;
-                }
-            }
+            } 
+            // else if ($scope.step==2) {
+            //     if (!$scope.activity.date) {
+            //         dialogService.showToast("Please Check Your Date");
+            //     } else {
+            //         if (moment(moment($scope.activity.date.start).format("YYYY-MM-DD")).isAfter(moment($scope.activity.date.end).format("YYYY-MM-DD")))
+            //             dialogService.showToast("End Date Must Greator Than Stat Date");
+            //         else
+            //             $scope.step += 1;
+            //     }
+            // }
         }
     };
 
@@ -463,17 +464,17 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
     $scope.createActivityOrMilestone = function(form) {
         if (form.$valid) {
             $scope.activity.newMembers = _.filter($scope.membersList, {select: true});
-            var error = false;
-            if ($scope.activity.newMembers.length === 0) {
-                dialogService.showToast("Please select at least 1 member");
-                error = true;
-            }
-            if ($scope.activity.isBelongToMilestone && !$scope.activity.selectedMilestone) {
-                dialogService.showToast("Please select a milestone");
-                error = true;
-            }
-            if (!error) {
-                if ($scope.dateError) {
+            // var error = false;
+            // if ($scope.activity.newMembers.length === 0) {
+            //     dialogService.showToast("Please select at least 1 member");
+            //     error = true;
+            // }
+            // if ($scope.activity.isBelongToMilestone && !$scope.activity.selectedMilestone) {
+            //     dialogService.showToast("Please select a milestone");
+            //     error = true;
+            // }
+            // if (!error) {
+                if (!$scope.activity.date.start || !$scope.activity.date.end) {
                     dialogService.showToast("Please Check Your Date Input");
                 } else {
                     activityService.create({id: $stateParams.id}, $scope.activity).$promise.then(function(res) {
@@ -483,9 +484,9 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                         $scope.convertAllToCalendarView(true);
                     }, function(err) {dialogService.showToast("Error");});
                 }
-            } else {
-                dialogService.showToast("Check your input again.");
-            }
+            // } else {
+            //     dialogService.showToast("Check your input again.");
+            // }
         } else {
             dialogService.showToast("Check your input again.");
         }

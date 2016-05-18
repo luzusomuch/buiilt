@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $scope, $timeout, $q, $state, $mdDialog, $mdToast, $stateParams, projectService, myTasks, myMessages, myFiles, notificationService, taskService, peopleService, messageService, fileService, socket, uploadService, dialogService, activities, myDocuments, uiCalendarConfig) {
+angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $scope, $timeout, $q, $state, $mdDialog, $mdToast, $stateParams, projectService, myTasks, myMessages, myFiles, notificationService, taskService, peopleService, messageService, fileService, socket, uploadService, dialogService, activities, myDocuments, uiCalendarConfig, activityService) {
 	$scope.step = 1;
     $rootScope.title = "Dashboard";
 	$scope.myTasks = myTasks;
@@ -394,31 +394,41 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
 
     /*Validate info and allow next in modal*/
     $scope.next = function(type) {
-        if ($scope.step === 1) {
-            if ($scope.selectedProjectIndex) {
-                $scope.step += 1;
-            } else {
-                dialogService.showToast("Please Select a Project");
+        if (type!=="activity") {
+            if ($scope.step === 1) {
+                if ($scope.selectedProjectIndex) {
+                    $scope.step += 1;
+                } else {
+                    dialogService.showToast("Please Select a Project");
+                }
+            } else if ($scope.step === 2) {
+                if (type==="createTask") {
+                    if (!$scope.task.description || $scope.task.description.trim().length === 0 || !$scope.task.dateEnd || !$scope.task.dateStart || !$scope.task.time.start || !$scope.task.time.end) {
+                        dialogService.showToast("Please Enter Valid Data");
+                        return;
+                    }
+                    $scope.step += 1;
+                } else if (type==="createThread") {
+                    if (!$scope.thread.name || $scope.thread.name.trim().length === 0 || !$scope.thread.message || $scope.thread.message.trim().length === 0) {
+                        dialogService.showToast("Please Enter Valid Data");
+                        return
+                    }
+                    $scope.step += 1;
+                } else if (type==="createFile" || type==="createDocument") {
+                    if (!$scope.uploadFile.file || !$scope.uploadFile.file.filename || $scope.uploadFile.file.filename.trim().length === 0) {
+                        dialogService.showToast("Please Enter Valid Data");
+                        return
+                    }
+                    $scope.step += 1;
+                }
             }
-        } else if ($scope.step === 2) {
-            if (type==="createTask") {
-                if (!$scope.task.description || $scope.task.description.trim().length === 0 || !$scope.task.dateEnd || !$scope.task.dateStart || !$scope.task.time.start || !$scope.task.time.end) {
-                    dialogService.showToast("Please Enter Valid Data");
-                    return;
-                }
-                $scope.step += 1;
-            } else if (type==="createThread") {
-                if (!$scope.thread.name || $scope.thread.name.trim().length === 0 || !$scope.thread.message || $scope.thread.message.trim().length === 0) {
-                    dialogService.showToast("Please Enter Valid Data");
-                    return
-                }
-                $scope.step += 1;
-            } else if (type==="createFile" || type==="createDocument") {
-                if (!$scope.uploadFile.file || !$scope.uploadFile.file.filename || $scope.uploadFile.file.filename.trim().length === 0) {
-                    dialogService.showToast("Please Enter Valid Data");
-                    return
-                }
-                $scope.step += 1;
+        } else {
+            if ($scope.step==1 && !$scope.activity.selectedProject) {
+                dialogService.showToast("Please Check Your Input");
+            } else if ($scope.step==2 && (!$scope.activity.name || $scope.activity.name.trim().length===0)) {
+                dialogService.showToast("Please Check Your Input")
+            } else {
+                $scope.step+=1;
             }
         }
     };
@@ -1445,5 +1455,31 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
 
     $scope.selectDocumentSet = function(document) {
         $scope.selectedDocumentSet = document;
+    };
+
+    $scope.activity = {
+        newMembers: [],
+        date: {
+            start: ($rootScope.selectedStartDate) ? $rootScope.selectedStartDate : new Date(),
+            end: ($rootScope.selectedEndDate) ? $rootScope.selectedEndDate : new Date()
+        }
+    };
+    $scope.createEvent = function(form) {
+        if (form.$valid) {
+            if (!$scope.activity.date.start || !$scope.activity.date.end) {
+                dialogService.showToast("Please Enter Start Date End Date");
+            } else {
+                activityService.create({id: $scope.activity.selectedProject}, $scope.activity).$promise.then(function(res) {
+                    dialogService.closeModal();
+                    dialogService.showToast("Create New Event Successfully");
+                    $scope.activities.push(res);
+                    renderTasksAndEventsToCalendar(true);
+                }, function(err) {
+                    dialogService.showToast("Error");
+                });
+            }
+        } else {
+            dialogService.showToast("Please Check Your Input");
+        }
     };
 });
