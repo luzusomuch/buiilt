@@ -17,10 +17,10 @@ angular.module('buiiltApp').config(function($stateProvider) {
             myFiles: function(fileService) {
                 return fileService.myFiles().$promise;
             },
-            activities: function(activityService, $rootScope) {
+            activities: function(activityService) {
                 return activityService.me({id: "me"}).$promise;
             },
-            myDocuments: function($stateParams, documentService) {
+            myDocuments: function(documentService) {
                 return documentService.me({id: "me"}).$promise;
             }
         }

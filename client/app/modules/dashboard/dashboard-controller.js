@@ -19,6 +19,35 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     $scope.currentUser = $rootScope.currentUser;
 	$scope.showFilter = false;
 
+    /*Show modal with valid modal name*/
+    $rootScope.showModal = $scope.showModal = function(name) {
+        $mdDialog.show({
+            controller: "dashboardCtrl",
+            resolve: {
+                myTasks: ["taskService", function(taskService) {
+                    return taskService.myTask().$promise;
+                }],
+                myMessages: ["messageService", function(messageService) {
+                    return messageService.myMessages().$promise;
+                }],
+                myFiles: ["fileService" ,function(fileService) {
+                    return fileService.myFiles().$promise;
+                }],
+                activities: ["activityService", function(activityService) {
+                    return activityService.me({id: "me"}).$promise;
+                }],
+                myDocuments: ["documentService", function(documentService) {
+                    return documentService.me({id: "me"}).$promise;
+                }]
+            },
+            templateUrl: 'app/modules/dashboard/partials/' + name,
+            parent: angular.element(document.body),
+            clickOutsideToClose: false
+        });
+    };
+
+    // Calendar section
+
     /*config fullcalendar*/
     $timeout(function(){
         var height = ($("#calendar-content").outerHeight()/100)*63;
@@ -29,10 +58,338 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                     left: "month agendaWeek agendaDay",
                     center: "title",
                     right: "today, prev, next"
-                }
+                },
+                selectable: true,
+                minTime: "6:00:00",
+                maxTime: "22:00:00",
+                timezone: "local",
+                select: function(start, end, jsEv, view) {
+                    $rootScope.selectedStartDate = new Date(start);
+                    $rootScope.selectedEndDate = new Date(end);
+                    if (view.name==="month") {
+                        $scope.showModal("create-event.html");
+                    } else if (!start.hasTime() && !end.hasTime()) {
+                        $scope.showModal("create-event.html");
+                    } else {
+                        $scope.showModal("create-task.html");
+                    }
+                },
+                eventClick: function(data) {
+                    if (data.type==="event") {
+                        $mdDialog.show({
+                            // targetEvent: $event,
+                            controller: ["$rootScope", "$scope", "dialogService", "activity", "$stateParams", "$state", "activity", "tenderService", "messageService", "fileService", "taskService", "people", "$mdDialog", "activityService",
+                            function($rootScope, $scope, dialogService, activity, $stateParams, $state, activity, tenderService, messageService, fileService, taskService, people, $mdDialog, activityService) {
+                                // Only need to check architect and builder team
+                                function checkAllowCreateTender() {
+                                    if (people.builders.length > 0 && people.builders[0].hasSelect) {
+                                        if (people.builders[0].tenderers[0]._id && people.builders[0].tenderers[0]._id._id.toString()===$rootScope.currentUser._id.toString()) {
+                                            return true;
+                                        }
+                                    }
+                                    if (people.architects.length > 0 && people.architects[0].hasSelect) {
+                                        if (people.architects[0].tenderers[0]._id && people.architects[0].tenderers[0]._id._id.toString()===$rootScope.currentUser._id.toString()) {
+                                            return true;
+                                        }
+                                    }
+                                };
+
+                                $scope.allowCreateTender = checkAllowCreateTender();
+                                
+                                $scope.event = activity;
+                                $scope.dialogService = dialogService;
+                                $scope.tasks = [];
+                                $scope.threads = [];
+                                $scope.files = [];
+                                $scope.tenders = [];
+                                _.each(activity.relatedItem, function(item) {
+                                    if (item.type==="thread") {
+                                        $scope.threads.push(item.item);
+                                    } else if (item.type==="task") {
+                                        $scope.tasks.push(item.item);
+                                    } else if (item.type==="file") {
+                                        $scope.files.push(item.item);
+                                    } else if (item.type==="tender") {
+                                        $scope.tenders.push(item.item);
+                                    }
+                                });
+
+                                $scope.changeDescription = function(){
+                                    if ($scope.event.description.trim().length===0) {
+                                        dialogService.showToast("Please Enter Description");
+                                    } else {
+                                        $scope.event.editType="change-description";
+                                        activityService.update({id: $scope.event._id}, $scope.event).$promise.then(function(res) {
+                                            dialogService.showToast("Change Description Successfully");
+                                            $scope.showEdit = false;
+                                        }, function(err) {
+                                            dialogService.showToast("Error");
+                                        });
+                                    }
+                                };
+
+                                $scope.viewAll = function(type) {
+                                    $rootScope.selectedFilterEvent = activity._id;
+                                    dialogService.closeModal();
+                                    if (type==="task") {
+                                        $state.go("project.tasks.all", {id: data.project});
+                                    } else if (type==="thread") {
+                                        $state.go("project.messages.all", {id: data.project});
+                                    } else if (type==="file") {
+                                        $state.go("project.files.all", {id: data.project});
+                                    } else if (type==="tender") {
+                                        $state.go("project.tenders.all", {id: data.project});
+                                    }
+                                };
+
+                                $scope.view = function(type, item) {
+                                    dialogService.closeModal();
+                                    if (type==="thread") {
+                                        $state.go("project.messages.detail", {id: data.project, messageId: item._id});
+                                    } else if (type==="file") {
+                                        $state.go("project.files.detail", {id: data.project, fileId: item._id});
+                                    } else if (type==="tender") {
+                                        $state.go("project.tenders.detail", {id: data.project, tenderId: item._id});
+                                    } else if (type==="task") {
+                                        viewTaskDetail(item);
+                                    }
+                                };
+
+                                $scope.attachItem = function(type) {
+                                    if (type==="task") {
+                                        $rootScope.selectedEvent = activity._id;
+                                        $rootScope.showModal("project-task-new.html");
+                                        $rootScope.selectedProjectId = activity.project;
+                                    } else if (type==="thread") {
+                                        var newThread = {
+                                            type: "project-message",
+                                            members: [],
+                                            selectedEvent: activity._id
+                                        };
+                                        messageService.create({id: activity.project}, newThread).$promise.then(function(res) {
+                                            dialogService.closeModal();
+                                            dialogService.showToast("Create New Thread Successfully");
+                                            $rootScope.$emit("Thread.Inserted", res);
+                                            $state.go("project.messages.detail", {id: activity.project, messageId: res._id});
+                                        }, function(err) {
+                                            dialogService.showToast("Error");
+                                        });
+                                    } else if (type==="file") {
+                                        var newFile = {
+                                            type: "file",
+                                            members: [],
+                                            tags: [],
+                                            selectedEvent: activity._id
+                                        };
+                                        fileService.create({id: activity.project}, newFile).$promise.then(function(res) {
+                                            dialogService.closeModal();
+                                            dialogService.showToast("Create New File Successfully");
+                                            $state.go("project.files.detail", {id: activity.project, fileId: res._id});
+                                        }, function(err) {
+                                            dialogService.showToast("Error");
+                                        });
+                                    } else if (type==="tender") {
+                                        if (!$scope.allowCreateTender) {
+                                            dialogService.showToast("Not Allow");
+                                        } else {
+                                            var newTender = {
+                                                project: data.project,
+                                                selectedEvent: activity._id
+                                            };
+                                            tenderService.create(newTender).$promise.then(function(res) {
+                                                dialogService.closeModal();
+                                                dialogService.showToast("Create New Tender Successfully");
+                                                $state.go("project.tenders.detail", {id: res.project, tenderId: res._id});
+                                            }, function(err) {
+                                                dialogService.showToast("Error");
+                                            });
+                                        }
+                                    }
+                                };
+                            }],
+                            resolve: {
+                                activity: ["activityService", function(activityService) {
+                                    return activityService.get({id: data._id}).$promise;
+                                }],
+                                people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
+                                    return peopleService.getInvitePeople({id: data.project}).$promise;
+                                }]
+                            },
+                            templateUrl: 'app/modules/project/project-calendar/partials/event-detail.html',
+                            parent: angular.element(document.body),
+                            clickOutsideToClose: false
+                        });
+                    } else if (data.type==="task"){
+                        viewTaskDetail(data);
+                    }
+                },
             }
         };
     }, 500);
+
+    /*Render tasks and events list to calendar view*/
+    function renderTasksAndEventsToCalendar(isUpdate) {
+        $scope.events = [];
+        _.each($scope.myTasks, function(task) {
+            if (task.element && task.element.type === "task-project") {
+                var dateStart, dateEnd;
+                if (task.time && task.time.start && task.time.end) {
+                    dateStart = new Date(task.dateStart).setHours(moment(task.time.start).hours(), moment(task.time.start).minutes());
+                    dateEnd = new Date(task.dateEnd).setHours(moment(task.time.end).hours(), moment(task.time.end).minutes());
+                } else {
+                    dateStart = new Date(task.dateStart);
+                    dateEnd = new Date(task.dateEnd);
+                }
+                var title = task.description + "-";
+                title += (task.__v > 0) ? task.__v+" Updates" : "No Update";
+                $scope.events.push({type: "task", _id: task._id, title: title, project: task.project, start: dateStart, end: dateEnd, "backgroundColor": "#2196F3", allDay: false});
+            }
+        });
+        _.each($scope.activities, function(activity) {
+            if (!activity.isMilestone) {
+                $scope.events.push({type: "event", _id: activity._id, project: activity.project, title: activity.name, start: moment(activity.date.start).format("YYYY-MM-DD hh:mm"), end: moment(activity.date.end).format("YYYY-MM-DD hh:mm"), "backgroundColor": "#0D47A1", allDay: true});   
+            }
+        });
+        $scope.originalEvents = angular.copy($scope.events);
+        $scope.eventSources = [$scope.events];
+
+        if (isUpdate) {
+            uiCalendarConfig.calendars.myCalendar.fullCalendar('removeEvents');
+            uiCalendarConfig.calendars.myCalendar.fullCalendar('addEventSource', $scope.events);
+        }
+    };
+    renderTasksAndEventsToCalendar();
+
+    function viewTaskDetail(data) {
+        $mdDialog.show({
+            // targetEvent: $event,
+            controller: ["$timeout", "$rootScope", "$scope", "dialogService", "socket", "activity", "task", "people", "notificationService", 
+            function($timeout, $rootScope, $scope, dialogService, socket, activity, task, people, notificationService) {
+                $scope.task = task;
+                $scope.dialogService = dialogService;
+                $scope.allowShowList = ["create-task", "edit-task", "change-date-time", "complete-task", "uncomplete-task"];
+
+                $timeout(function() {
+                    if ($scope.task.__v > 0) {
+                        notificationService.markItemsAsRead({id: task._id}).$promise.then(function() {
+                            $rootScope.$emit("Task.Read", task);
+                            $rootScope.$emit("UpdateCountNumber", {type: "task", number: (task.__v>0)?1:0});
+                        });
+                    }
+                }, 500);
+                
+                // socket handle
+                socket.emit("join", task._id);
+                socket.on("task:update", function(data) {
+                    $scope.task = data;
+                    getProjectMembers();
+                    notificationService.markItemsAsRead({id: task._id}).$promise.then();
+                });
+                // end socket handle
+
+                // get project member
+                function getProjectMembers(){
+                    $scope.projectMembers = $rootScope.getProjectMembers(people);
+                    _.each($scope.task.members, function(member) {
+                        var index = _.findIndex($scope.projectMembers, function(projectMember){
+                            if (projectMember._id) {
+                                return projectMember._id.toString()===member._id.toString();
+                            }
+                        });
+                        if (index !== -1) {
+                            $scope.projectMembers.splice(index, 1);
+                        }
+                    });
+                    _.each($scope.task.notMembers, function(email) {
+                        var index = _.findIndex($scope.projectMembers, function(projectMember) {
+                            if (!$scope.projectMembers._id) {
+                                return projectMember.email==email;
+                            }
+                        });
+                        if (index !== -1) {
+                            $scope.projectMembers.splice(index, 1);
+                        }
+                    });
+                };
+                getProjectMembers();
+
+                $scope.assignMember = function(index) {
+                    $scope.task.newMembers = [$scope.projectMembers[index]];
+                    $scope.task.editType="assign";
+                    $scope.update($scope.task);
+                };
+
+                $scope.addComment = function() {
+                    if (!$scope.comment || $scope.comment.trim().length===0) {
+                        dialogService.showToast("Please Enter Your Comment");
+                    } else {
+                        $scope.task.editType = "enter-comment";
+                        $scope.task.comment = $scope.comment;
+                        $scope.update($scope.task);
+                    }
+                };
+
+                $scope.changeDescription = function() {
+                    if ($scope.task.description.trim().length===0) {
+                        dialogService.showToast("Task Description Must Be Enter");
+                    } else {
+                        $scope.task.editType="edit-task";
+                        $scope.update($scope.task);
+                    }
+                };
+
+                $scope.completeTask = function() {
+                    $scope.task.completed = !$scope.task.completed;
+                    if ($scope.task.completed) {
+                        $scope.task.completedBy = $rootScope.currentUser._id;
+                        $scope.task.editType = "complete-task";
+                        $scope.task.completedAt = new Date();
+                    } else {
+                        $scope.task.completedBy = null;
+                        $scope.task.editType = "uncomplete-task";
+                        $scope.task.completedAt = null;
+                    }
+                    $scope.update($scope.task);
+                };
+
+                $scope.update = function(task) {
+                    taskService.update({id: task._id}, task).$promise.then(function(res) {
+                        if (task.editType==="enter-comment") {
+                            $scope.comment = null;
+                            dialogService.showToast("Enter New Comment Successfully");
+                        } else if (task.editType==="edit-task") {
+                            dialogService.showToast("Change Task Description Successfully");
+                        } else if (task.editType==="assign") {
+                            dialogService.showToast("Assign Members To Task Successfully");
+                        } else if (task.editType==="complete-task") {
+                            dialogService.showToast("Mark Task As Completed Successfully");
+                        } else if (task.editType==="uncomplete-task") {
+                            dialogService.showToast("Re-open Task Successfully");
+                        }
+                        $scope.showEdit = false;
+                    }, function(err) {
+                        dialogService.showToast("Error");
+                    });
+                };
+            }],
+            resolve: {
+                activity: ["activityService", "$stateParams", function(activityService, $stateParams) {
+                    return activityService.me({id: data.project}).$promise;
+                }],
+                task: ["taskService", "$stateParams", function(taskService, $stateParams) {
+                    return taskService.get({id: data._id}).$promise;
+                }],
+                people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
+                    return peopleService.getInvitePeople({id: data.project}).$promise;
+                }]
+            },
+            templateUrl: 'app/modules/project/project-calendar/partials/task-detail.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: false
+        });
+    };
+
+    // End calendar section
 
     /*Validate info and allow next in modal*/
     $scope.next = function(type) {
@@ -100,38 +457,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         renderTasksAndEventsToCalendar(true);
     });
 
-    /*Sort tasks by due date asc*/
-    function renderTasksAndEventsToCalendar(isUpdate) {
-        $scope.events = [];
-        _.each($scope.myTasks, function(task) {
-            if (task.element && task.element.type === "task-project") {
-                var dateStart, dateEnd;
-                if (task.time && task.time.start && task.time.end) {
-                    dateStart = new Date(task.dateStart).setHours(moment(task.time.start).hours(), moment(task.time.start).minutes());
-                    dateEnd = new Date(task.dateEnd).setHours(moment(task.time.end).hours(), moment(task.time.end).minutes());
-                } else {
-                    dateStart = new Date(task.dateStart);
-                    dateEnd = new Date(task.dateEnd);
-                }
-                var title = task.description + "-";
-                title += (task.__v > 0) ? task.__v+" Updates" : "No Update";
-                $scope.events.push({type: "task", _id: task._id, title: title, start: dateStart, end: dateEnd, "backgroundColor": "#2196F3", allDay: false});
-            }
-        });
-        _.each($scope.activities, function(activity) {
-            if (!activity.isMilestone) {
-                $scope.events.push({type: "event", _id: activity._id,title: activity.name, start: moment(activity.date.start).format("YYYY-MM-DD hh:mm"), end: moment(activity.date.end).format("YYYY-MM-DD hh:mm"), "backgroundColor": "#0D47A1", allDay: true});   
-            }
-        });
-        $scope.originalEvents = angular.copy($scope.events);
-        $scope.eventSources = [$scope.events];
-
-        if (isUpdate) {
-            uiCalendarConfig.calendars.myCalendar.fullCalendar('removeEvents');
-            uiCalendarConfig.calendars.myCalendar.fullCalendar('addEventSource', $scope.events);
-        }
-    };
-    renderTasksAndEventsToCalendar();
+    
 
     /*
         Get item index in items list
@@ -380,6 +706,17 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         $scope.projectMembers[index].select = !$scope.projectMembers[index].select;
     };
 
+    /*Check if user is create new task via event detail*/
+    if ($rootScope.selectedProjectId) {
+        var index = _.findIndex($scope.projects, function(project) {
+            return project._id.toString()===$rootScope.selectedProjectId;
+        });
+        if (index !== -1) {
+            $scope.selectedProjectIndex = index;
+            $rootScope.selectedProjectId = null;
+        }
+    }
+
     /*Select project for getting member of it's*/
     $scope.$watch("selectedProjectIndex", function() {
         if ($scope.selectedProjectIndex) {
@@ -391,18 +728,18 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     $scope.task = {members: []};
 
     /*Change task due date to a text*/
-    angular.forEach($scope.myTasks, function(task) {
-        var taskDueDate = moment(task.dateEnd).format("YYYY-MM-DD");
-        if (task.dateEnd) {
-            if (moment(taskDueDate).isSame(moment().format("YYYY-MM-DD"))) {
-                task.dueDate = "Today";
-            } else if (moment(taskDueDate).isSame(moment().add(1, "days").format("YYYY-MM-DD"))) {
-                task.dueDate = "Tomorrow";
-            } else if (moment(taskDueDate).isSame(moment().subtract(1, "days").format("YYYY-MM-DD"))) {
-                task.dueDate = "Yesterday";
-            }
-        }
-    });
+    // angular.forEach($scope.myTasks, function(task) {
+    //     var taskDueDate = moment(task.dateEnd).format("YYYY-MM-DD");
+    //     if (task.dateEnd) {
+    //         if (moment(taskDueDate).isSame(moment().format("YYYY-MM-DD"))) {
+    //             task.dueDate = "Today";
+    //         } else if (moment(taskDueDate).isSame(moment().add(1, "days").format("YYYY-MM-DD"))) {
+    //             task.dueDate = "Tomorrow";
+    //         } else if (moment(taskDueDate).isSame(moment().subtract(1, "days").format("YYYY-MM-DD"))) {
+    //             task.dueDate = "Yesterday";
+    //         }
+    //     }
+    // });
 
     /*
     Mark selected task as completed or un-completed
@@ -410,25 +747,25 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     2.If mark uncomplete then set completed by null and completed at null
     Then remove current task from tasks list and update count number
     */
-    $scope.markComplete = function(task, index) {
-        task.completed = !task.completed;
-        if (task.completed) {
-            task.completedBy = $rootScope.currentUser._id;
-            task.editType = "complete-task";
-            task.completedAt = new Date();
-        } else {
-            task.completedBy = null;
-            task.editType = "uncomplete-task";
-            task.completedAt = null;
-        }
-        taskService.update({id: task._id}, task).$promise.then(function(res) {
-            $scope.showToast((res.completed)?"Task Has Been Marked Completed.":"Task Has Been Marked Incomplete.");
-            notificationService.markItemsAsRead({id: res._id}).$promise.then(function() {
-                $scope.myTasks.splice(index ,1);
-                $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "task", number: 1});
-            });
-        }, function(err) {$scope.showToast("Error");});
-    };
+    // $scope.markComplete = function(task, index) {
+    //     task.completed = !task.completed;
+    //     if (task.completed) {
+    //         task.completedBy = $rootScope.currentUser._id;
+    //         task.editType = "complete-task";
+    //         task.completedAt = new Date();
+    //     } else {
+    //         task.completedBy = null;
+    //         task.editType = "uncomplete-task";
+    //         task.completedAt = null;
+    //     }
+    //     taskService.update({id: task._id}, task).$promise.then(function(res) {
+    //         $scope.showToast((res.completed)?"Task Has Been Marked Completed.":"Task Has Been Marked Incomplete.");
+    //         notificationService.markItemsAsRead({id: res._id}).$promise.then(function() {
+    //             $scope.myTasks.splice(index ,1);
+    //             $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "task", number: 1});
+    //         });
+    //     }, function(err) {$scope.showToast("Error");});
+    // };
 
     /*Show add new task modal*/
     $scope.showNewTaskModal = function(event) {

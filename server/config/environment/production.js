@@ -37,5 +37,10 @@ module.exports = {
   stripe: "sk_live_9d6kYbFx1FTtUnpICVhLkV1d",
   logentries : {
     token : process.env.LOGENTRIES_TOKEN
+  },
+  twilio: {
+    sid: "AC3047a0e98a207deaf2a09e79d259d745",
+    token: "ee5377c0f01a40ea6a0931d12ccb24d5",
+    phoneNumber: "+61400106280"
   }
 };

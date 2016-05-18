@@ -95,7 +95,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
             calendar: {
                 height: height,
                 header: {
-                    left: "month agendaWeek agendaDay myAgenda",
+                    left: "month agendaWeek agendaDay",
                     center: "title",
                     right: "today, prev, next"
                 },
