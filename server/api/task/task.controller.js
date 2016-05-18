@@ -166,6 +166,7 @@ exports.get = function(req, res) {
         Notification.find({owner: req.user._id, unread: true, "element._id": task._id, $or:[{type: "task-completed"}, {type: "task-reopened"}, {type: "task-enter-comment"}]}, function(err, notifications) {
             if (err) {return res.send(500,err);}
             task.__v = notifications.length;
+            console.log(task.__v);
             return res.send(200, task);
             // if (req.query.isAdmin && req.user.role==="admin") {
             //     return res.send(200, task);
@@ -419,25 +420,26 @@ exports.myTask = function(req,res) {
         async.each(tasks, function(task, cb) {
             task.element.notifications = [];
             task.element.limitNotifications = [];
-            Notification.find({owner: user._id, "element._id": task._id, unread: true})
+            Notification.find({owner: user._id, "element._id": task._id, unread: true, $or:[{type: "task-completed"}, {type: "task-reopened"}, {type: "task-enter-comment"}]})
             .populate("fromUser", "_id name email").exec(function(err, notifications) {
                 if (err) {cb(err);}
-                var index = 1;
-                _.each(notifications, function(notification) {
-                    if (notification.element._id.toString()===task._id.toString()) {
-                        task.element.notifications.push({
-                            fromUser: notification.fromUser,
-                            type: notification.type
-                        });
-                        if (index === 1) {
-                           task.element.limitNotifications.push({
-                                fromUser: notification.fromUser,
-                                type: notification.type
-                            }); 
-                        }
-                        index+=1
-                    }
-                });
+                task.__v = notifications.length;
+                // var index = 1;
+                // _.each(notifications, function(notification) {
+                //     if (notification.element._id.toString()===task._id.toString()) {
+                //         task.element.notifications.push({
+                //             fromUser: notification.fromUser,
+                //             type: notification.type
+                //         });
+                //         if (index === 1) {
+                //            task.element.limitNotifications.push({
+                //                 fromUser: notification.fromUser,
+                //                 type: notification.type
+                //             }); 
+                //         }
+                //         index+=1
+                //     }
+                // });
                 cb();
             });
         }, function() {

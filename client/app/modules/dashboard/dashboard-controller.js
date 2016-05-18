@@ -266,6 +266,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             controller: ["$timeout", "$rootScope", "$scope", "dialogService", "socket", "activity", "task", "people", "notificationService", 
             function($timeout, $rootScope, $scope, dialogService, socket, activity, task, people, notificationService) {
                 $scope.task = task;
+                console.log(task);
                 $scope.dialogService = dialogService;
                 $scope.allowShowList = ["create-task", "edit-task", "change-date-time", "complete-task", "uncomplete-task"];
 
@@ -274,6 +275,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                         notificationService.markItemsAsRead({id: task._id}).$promise.then(function() {
                             $rootScope.$emit("Task.Read", task);
                             $rootScope.$emit("UpdateCountNumber", {type: "task", number: (task.__v>0)?1:0});
+                            $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "task", number: 1});
                         });
                     }
                 }, 500);
@@ -779,27 +781,27 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     // };
 
     /*Show add new task modal*/
-    $scope.showNewTaskModal = function(event) {
-        $rootScope.isRemoveCurrentUser = false;
-        $mdDialog.show({
-            targetEvent: event,
-            controller: "dashboardCtrl",
-            resolve: {
-                myTasks: ["taskService", function(taskService) {
-                    return taskService.myTask().$promise;
-                }],
-                myMessages: ["messageService", function(messageService) {
-                    return messageService.myMessages().$promise;
-                }],
-                myFiles: ["fileService" ,function(fileService) {
-                    return fileService.myFiles().$promise;
-                }]
-            },
-            templateUrl: 'app/modules/dashboard/partials/project-task-new.html',
-            parent: angular.element(document.body),
-            clickOutsideToClose: false
-        });
-    };
+    // $scope.showNewTaskModal = function(event) {
+    //     $rootScope.isRemoveCurrentUser = false;
+    //     $mdDialog.show({
+    //         targetEvent: event,
+    //         controller: "dashboardCtrl",
+    //         resolve: {
+    //             myTasks: ["taskService", function(taskService) {
+    //                 return taskService.myTask().$promise;
+    //             }],
+    //             myMessages: ["messageService", function(messageService) {
+    //                 return messageService.myMessages().$promise;
+    //             }],
+    //             myFiles: ["fileService" ,function(fileService) {
+    //                 return fileService.myFiles().$promise;
+    //             }]
+    //         },
+    //         templateUrl: 'app/modules/dashboard/partials/project-task-new.html',
+    //         parent: angular.element(document.body),
+    //         clickOutsideToClose: false
+    //     });
+    // };
 
     /*
     Create new task if enter a valid form with selected project members
@@ -855,6 +857,12 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                 }],
                 myFiles: ["fileService" ,function(fileService) {
                     return fileService.myFiles().$promise;
+                }],
+                activities: ["activityService", function(activityService) {
+                    return activityService.me({id: "me"}).$promise;
+                }],
+                myDocuments: ["documentService", function(documentService) {
+                    return documentService.me({id: "me"}).$promise;
                 }]
             },
             templateUrl: 'app/modules/dashboard/partials/reply-message.html',
@@ -864,27 +872,27 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     };
 
     /*Show create new thread modal*/
-    $scope.showNewThreadModal = function(event) {
-        $rootScope.isRemoveCurrentUser = true;
-        $mdDialog.show({
-            targetEvent: event,
-            controller: "dashboardCtrl",
-            resolve: {
-                myTasks: ["taskService", function(taskService) {
-                    return taskService.myTask().$promise;
-                }],
-                myMessages: ["messageService", function(messageService) {
-                    return messageService.myMessages().$promise;
-                }],
-                myFiles: ["fileService" ,function(fileService) {
-                    return fileService.myFiles().$promise;
-                }]
-            },
-            templateUrl: 'app/modules/dashboard/partials/new-thread.html',
-            parent: angular.element(document.body),
-            clickOutsideToClose: false
-        });
-    };
+    // $scope.showNewThreadModal = function(event) {
+    //     $rootScope.isRemoveCurrentUser = true;
+    //     $mdDialog.show({
+    //         targetEvent: event,
+    //         controller: "dashboardCtrl",
+    //         resolve: {
+    //             myTasks: ["taskService", function(taskService) {
+    //                 return taskService.myTask().$promise;
+    //             }],
+    //             myMessages: ["messageService", function(messageService) {
+    //                 return messageService.myMessages().$promise;
+    //             }],
+    //             myFiles: ["fileService" ,function(fileService) {
+    //                 return fileService.myFiles().$promise;
+    //             }]
+    //         },
+    //         templateUrl: 'app/modules/dashboard/partials/new-thread.html',
+    //         parent: angular.element(document.body),
+    //         clickOutsideToClose: false
+    //     });
+    // };
 
     /*
     Send a reply in selected thread
@@ -920,36 +928,36 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         }
     };
 
-    $scope.thread = {members: []};
+    // $scope.thread = {members: []};
     /*
     Add new thread if form is valid with selected project members then
     call mixpanel to track that current user has created new thread
     and go to created thread detail immedietly
     */
-    $scope.addNewThread = function(form) {
-        if (form.$valid) {
-            $scope.thread.members = _.filter($scope.projectMembers, {select: true});
-            $scope.thread.type = "project-message";
-            messageService.create({id: $scope.selectedProjectId},$scope.thread).$promise.then(function(res) {
-                $scope.closeModal();
-                $scope.showToast("New Message Thread Created Successfully.");
+    // $scope.addNewThread = function(form) {
+    //     if (form.$valid) {
+    //         $scope.thread.members = _.filter($scope.projectMembers, {select: true});
+    //         $scope.thread.type = "project-message";
+    //         messageService.create({id: $scope.selectedProjectId},$scope.thread).$promise.then(function(res) {
+    //             $scope.closeModal();
+    //             $scope.showToast("New Message Thread Created Successfully.");
                 
-                //Track Message Thread Creation
-                mixpanel.identify($rootScope.currentUser._id);
-                mixpanel.track("New Message Thread Created");
+    //             //Track Message Thread Creation
+    //             mixpanel.identify($rootScope.currentUser._id);
+    //             mixpanel.track("New Message Thread Created");
 
-                $rootScope.isRemoveCurrentUser = false;
-                _.each($scope.projects, function(project) {
-                    project.select = false;
-                });
-                $state.go("project.messages.detail", {id: res.project._id, messageId: res._id});
-            }, function(err) {
-                $scope.showToast("There Has Been An Error...")
-            });
-        } else {
-            $scope.showToast("Error");
-        }
-    };
+    //             $rootScope.isRemoveCurrentUser = false;
+    //             _.each($scope.projects, function(project) {
+    //                 project.select = false;
+    //             });
+    //             $state.go("project.messages.detail", {id: res.project._id, messageId: res._id});
+    //         }, function(err) {
+    //             $scope.showToast("There Has Been An Error...")
+    //         });
+    //     } else {
+    //         $scope.showToast("Error");
+    //     }
+    // };
     // end message section
 
     // start file section
@@ -964,50 +972,50 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     };
 
     /*Open create new file modal*/
-    $scope.showNewFileModal = function(event) {
-        $rootScope.isRemoveCurrentUser = true;
-        $mdDialog.show({
-            targetEvent: event,
-            controller: "dashboardCtrl",
-            resolve: {
-                myTasks: ["taskService", function(taskService) {
-                    return taskService.myTask().$promise;
-                }],
-                myMessages: ["messageService", function(messageService) {
-                    return messageService.myMessages().$promise;
-                }],
-                myFiles: ["fileService" ,function(fileService) {
-                    return fileService.myFiles().$promise;
-                }]
-            },
-            templateUrl: 'app/modules/dashboard/partials/new-file.html',
-            parent: angular.element(document.body),
-            clickOutsideToClose: false
-        });
-    };
+    // $scope.showNewFileModal = function(event) {
+    //     $rootScope.isRemoveCurrentUser = true;
+    //     $mdDialog.show({
+    //         targetEvent: event,
+    //         controller: "dashboardCtrl",
+    //         resolve: {
+    //             myTasks: ["taskService", function(taskService) {
+    //                 return taskService.myTask().$promise;
+    //             }],
+    //             myMessages: ["messageService", function(messageService) {
+    //                 return messageService.myMessages().$promise;
+    //             }],
+    //             myFiles: ["fileService" ,function(fileService) {
+    //                 return fileService.myFiles().$promise;
+    //             }]
+    //         },
+    //         templateUrl: 'app/modules/dashboard/partials/new-file.html',
+    //         parent: angular.element(document.body),
+    //         clickOutsideToClose: false
+    //     });
+    // };
 	
     /*Open create new document modal*/
-    $scope.showNewDocumentModal = function(event) {
-        $rootScope.isRemoveCurrentUser = true;
-        $mdDialog.show({
-            targetEvent: event,
-            controller: "dashboardCtrl",
-            resolve: {
-                myTasks: ["taskService", function(taskService) {
-                    return taskService.myTask().$promise;
-                }],
-                myMessages: ["messageService", function(messageService) {
-                    return messageService.myMessages().$promise;
-                }],
-                myFiles: ["fileService" ,function(fileService) {
-                    return fileService.myFiles().$promise;
-                }]
-            },
-            templateUrl: 'app/modules/dashboard/partials/new-document.html',
-            parent: angular.element(document.body),
-            clickOutsideToClose: false
-        });
-    };
+    // $scope.showNewDocumentModal = function(event) {
+    //     $rootScope.isRemoveCurrentUser = true;
+    //     $mdDialog.show({
+    //         targetEvent: event,
+    //         controller: "dashboardCtrl",
+    //         resolve: {
+    //             myTasks: ["taskService", function(taskService) {
+    //                 return taskService.myTask().$promise;
+    //             }],
+    //             myMessages: ["messageService", function(messageService) {
+    //                 return messageService.myMessages().$promise;
+    //             }],
+    //             myFiles: ["fileService" ,function(fileService) {
+    //                 return fileService.myFiles().$promise;
+    //             }]
+    //         },
+    //         templateUrl: 'app/modules/dashboard/partials/new-document.html',
+    //         parent: angular.element(document.body),
+    //         clickOutsideToClose: false
+    //     });
+    // };
 
     /*Download selected file with file picker*/
     $scope.download = function() {
@@ -1019,70 +1027,70 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         );
     };
 
-    $scope.uploadFile = {
-        tags:[],
-        members:[]
-    };
+    // $scope.uploadFile = {
+    //     tags:[],
+    //     members:[]
+    // };
 
-    $scope.pickFile = pickFile;
+    // $scope.pickFile = pickFile;
 
-    $scope.onSuccess = onSuccess;
+    // $scope.onSuccess = onSuccess;
 
-    function pickFile(){
-        filepickerService.pick(
-            onSuccess
-        );
-    };
+    // function pickFile(){
+    //     filepickerService.pick(
+    //         onSuccess
+    //     );
+    // };
 
-    function onSuccess(file){
-        $scope.uploadFile.file = file;
-    };
+    // function onSuccess(file){
+    //     $scope.uploadFile.file = file;
+    // };
 
     /*
     Create new file with valid form included project members, tags
     If success, call mixpanel to track current user has created new file
     and go to created file detail
     */
-    $scope.createNewFile = function(form) {
-        if (form.$valid) {
-            $scope.uploadFile.members = _.filter($scope.projectMembers, {select: true});
-            $scope.uploadFile.tags = _.filter($scope.fileTags, {select: true});
-            if ($scope.uploadFile.tags.length == 0) {
-                $scope.showToast("Please Select At Least 1 Tag...");
-            } else if ($scope.uploadFile.members.length == 0) {
-                $scope.showToast("Please Select At Lease 1 Team Member...");
-            } else if (!$scope.uploadFile.file) {
-                $scope.showToast("Please Select A File");
-                return;
-            } else {
-                $scope.uploadFile.type = "file";
-                uploadService.upload({id: $scope.selectedProjectId}, $scope.uploadFile).$promise.then(function(res) {
-                    $mdDialog.hide();
-                    $scope.showToast("File Has Been Uploaded Successfully.");
+    // $scope.createNewFile = function(form) {
+    //     if (form.$valid) {
+    //         $scope.uploadFile.members = _.filter($scope.projectMembers, {select: true});
+    //         $scope.uploadFile.tags = _.filter($scope.fileTags, {select: true});
+    //         if ($scope.uploadFile.tags.length == 0) {
+    //             $scope.showToast("Please Select At Least 1 Tag...");
+    //         } else if ($scope.uploadFile.members.length == 0) {
+    //             $scope.showToast("Please Select At Lease 1 Team Member...");
+    //         } else if (!$scope.uploadFile.file) {
+    //             $scope.showToast("Please Select A File");
+    //             return;
+    //         } else {
+    //             $scope.uploadFile.type = "file";
+    //             uploadService.upload({id: $scope.selectedProjectId}, $scope.uploadFile).$promise.then(function(res) {
+    //                 $mdDialog.hide();
+    //                 $scope.showToast("File Has Been Uploaded Successfully.");
                     
-                    //Track New File
-                    mixpanel.identify($rootScope.currentUser._id);
-                    mixpanel.track("New File Created");
+    //                 //Track New File
+    //                 mixpanel.identify($rootScope.currentUser._id);
+    //                 mixpanel.track("New File Created");
 
-                    _.each($scope.fileTags, function(tag) {
-                        tag.select = false;
-                    });
+    //                 _.each($scope.fileTags, function(tag) {
+    //                     tag.select = false;
+    //                 });
 
-                    _.each($scope.projects, function(project) {
-                        project.select = false;
-                    });
+    //                 _.each($scope.projects, function(project) {
+    //                     project.select = false;
+    //                 });
 
-                    $rootScope.isRemoveCurrentUser = true;
+    //                 $rootScope.isRemoveCurrentUser = true;
 
-                    $state.go("project.files.detail", {id: res.project._id, fileId: res._id});
+    //                 $state.go("project.files.detail", {id: res.project._id, fileId: res._id});
                     
-                }, function(err) {
-                    $scope.showToast("There Has Been An Error...");
-                });
-            }
-        } else 
-            $scope.showToast("Check your input again");
-    };
+    //             }, function(err) {
+    //                 $scope.showToast("There Has Been An Error...");
+    //             });
+    //         }
+    //     } else 
+    //         $scope.showToast("Check your input again");
+    // };
     // end file section
 	
     /*Go to item detail*/
@@ -1405,44 +1413,44 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     };
 
     // filter for document
-    $scope.documentTags = [];
-    _.each($rootScope.currentTeam.documentTags, function(tag) {
-        $scope.documentTags.push({name: tag, select: false});
-    });
+    // $scope.documentTags = [];
+    // _.each($rootScope.currentTeam.documentTags, function(tag) {
+    //     $scope.documentTags.push({name: tag, select: false});
+    // });
 
-    $scope.filterTags = [];
-    $scope.selectDocumentFilterTag = function(tagName) {
-        var tagIndex = _.indexOf($scope.filterTags, tagName);
-        if (tagIndex !== -1) {
-            $scope.filterTags.splice(tagIndex, 1);
-        } else 
-            $scope.filterTags.push(tagName);
-    };
+    // $scope.filterTags = [];
+    // $scope.selectDocumentFilterTag = function(tagName) {
+    //     var tagIndex = _.indexOf($scope.filterTags, tagName);
+    //     if (tagIndex !== -1) {
+    //         $scope.filterTags.splice(tagIndex, 1);
+    //     } else 
+    //         $scope.filterTags.push(tagName);
+    // };
 
-    $scope.filterDocument = function(document) {
-        var found = false;
-        if ($scope.name && $scope.name.length > 0) {
-            if (document.name.toLowerCase().indexOf($scope.name) > -1 || document.name.indexOf($scope.name) > -1) {
-                found = true;
-            }
-            return found;
-        } else if ($scope.filterTags.length > 0) {
-            _.each($scope.filterTags, function(tag) {
-                if (_.indexOf(document.tags, tag) !== -1) {
-                    found = true;
-                }
-            });
-            return found;
-        } else if ($scope.projectsFilter.length > 0) {
-            _.each($scope.projectsFilter, function(project) {
-                if (project._id.toString()===document.project.toString()) {
-                    found = true;
-                }
-            });
-            return found;
-        } else 
-            return true;
-    };
+    // $scope.filterDocument = function(document) {
+    //     var found = false;
+    //     if ($scope.name && $scope.name.length > 0) {
+    //         if (document.name.toLowerCase().indexOf($scope.name) > -1 || document.name.indexOf($scope.name) > -1) {
+    //             found = true;
+    //         }
+    //         return found;
+    //     } else if ($scope.filterTags.length > 0) {
+    //         _.each($scope.filterTags, function(tag) {
+    //             if (_.indexOf(document.tags, tag) !== -1) {
+    //                 found = true;
+    //             }
+    //         });
+    //         return found;
+    //     } else if ($scope.projectsFilter.length > 0) {
+    //         _.each($scope.projectsFilter, function(project) {
+    //             if (project._id.toString()===document.project.toString()) {
+    //                 found = true;
+    //             }
+    //         });
+    //         return found;
+    //     } else 
+    //         return true;
+    // };
 
     $scope.selectDocumentSet = function(document) {
         $scope.selectedDocumentSet = document;

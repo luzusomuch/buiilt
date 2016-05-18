@@ -15,18 +15,13 @@ angular.module('buiiltApp').directive('dashboardSidenav', function(){
             /*Count total in dashboard side nav*/
             $scope.totalTaskUpdates = 0;
             _.each($scope.tasks, function(task) {
-                if (task.element.notifications.length > 0) {
-                    $scope.totalTaskUpdates += 1;
+                if (task.__v > 0) {
+                    $scope.totalTaskUpdates +=1;
                 }
             });
 
             $scope.totalFileUpdates = $scope.files.length;
             $scope.totalDocumentUpdates = $scope.documents.length;
-            // _.each($scope.files, function(file) {
-            //     if (file.element.type==="file") {
-            //         $scope.totalFileUpdates += 1;
-            //     }
-            // });
             $scope.totalMessagesUpdate = $scope.messages.length;
 
             /*Update count total in dashboard side nav*/
