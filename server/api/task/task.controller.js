@@ -424,22 +424,6 @@ exports.myTask = function(req,res) {
             .populate("fromUser", "_id name email").exec(function(err, notifications) {
                 if (err) {cb(err);}
                 task.__v = notifications.length;
-                // var index = 1;
-                // _.each(notifications, function(notification) {
-                //     if (notification.element._id.toString()===task._id.toString()) {
-                //         task.element.notifications.push({
-                //             fromUser: notification.fromUser,
-                //             type: notification.type
-                //         });
-                //         if (index === 1) {
-                //            task.element.limitNotifications.push({
-                //                 fromUser: notification.fromUser,
-                //                 type: notification.type
-                //             }); 
-                //         }
-                //         index+=1
-                //     }
-                // });
                 cb();
             });
         }, function() {

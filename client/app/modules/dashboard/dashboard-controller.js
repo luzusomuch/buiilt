@@ -266,7 +266,6 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             controller: ["$timeout", "$rootScope", "$scope", "dialogService", "socket", "activity", "task", "people", "notificationService", 
             function($timeout, $rootScope, $scope, dialogService, socket, activity, task, people, notificationService) {
                 $scope.task = task;
-                console.log(task);
                 $scope.dialogService = dialogService;
                 $scope.allowShowList = ["create-task", "edit-task", "change-date-time", "complete-task", "uncomplete-task"];
 
@@ -546,29 +545,21 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                 $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "message", isAdd: true, number: $scope.myMessages.length});
             }
         } else if (data.type==="task") {
-            _.uniq(data.task.members, "_id");
             var index = getItemIndex($scope.myTasks, data._id);
             if (index !== -1 && $scope.myTasks[index].uniqId!=data.uniqId && data.user._id.toString()!==$rootScope.currentUser._id.toString()) {
                 $scope.myTasks[index].uniqId = data.uniqId;
-                $scope.myTasks[index].element.notifications.push(data.newNotification);
-                var notificationTask = _.filter($scope.myTasks, function(task) {
-                    return task.element.notifications.length > 0;
-                });
-                if ($scope.myTasks[index].element.notifications.length===0) {
-                    $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "task", isAdd: true, number: notificationTask.length});
+                if ($scope.myTasks[index].__v===0) {
+                    $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "task", isAdd: true, number: 1});
                 }
+                $scope.myTasks[index].__v +=1;
             } else if (index===-1) {
-                data.task.element.notifications = [];
-                data.task.element.notifications.push(data.newNotification);
+                data.task.__v = 1;
                 if (data.user._id.toString()===$rootScope.currentUser._id.toString()) {
                     data.task.element.notifications=[];
                 }
                 data.task.uniqId = data.uniqId;
                 $scope.myTasks.push(data.task);
-                var notificationTask = _.filter($scope.myTasks, function(task) {
-                    return task.element.notifications.length > 0;
-                });
-                $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "task", isAdd: true, number: notificationTask.length});
+                $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "task", isAdd: true, number: 1});
             }
             renderTasksAndEventsToCalendar(true);
         } else if (data.type==="document") {

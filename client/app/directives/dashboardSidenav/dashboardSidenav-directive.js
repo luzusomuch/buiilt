@@ -27,7 +27,7 @@ angular.module('buiiltApp').directive('dashboardSidenav', function(){
             /*Update count total in dashboard side nav*/
             var listenerCleanFn = $rootScope.$on("DashboardSidenav-UpdateNumber", function(event, data) {
                 if (data.type==="task") {
-                    $scope.totalTaskUpdates = (data.isAdd) ? data.number : $scope.totalTaskUpdates-1;
+                    $scope.totalTaskUpdates = (data.isAdd) ? $scope.totalTaskUpdates+1 : $scope.totalTaskUpdates-1;
                 } else if (data.type==="file") {
                     $scope.totalFileUpdates = (data.isAdd) ? data.number : $scope.totalFileUpdates-data.number;
                 } else if (data.type==="document") {
