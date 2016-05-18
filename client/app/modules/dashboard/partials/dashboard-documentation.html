@@ -1,10 +1,10 @@
 <div layout="row">
-	<dashboard-sidenav tasks="myTasks" messages="myMessages" files="myFiles" layout="column" flex="15">	
+	<dashboard-sidenav tasks="myTasks" messages="myMessages" files="myFiles" documents="myDocuments" layout="column" flex="15">	
 	</dashboard-sidenav>
 
-	<div layout="column" flex="85" style="height: 90vh; overflow: scroll">
+	<div layout="row" flex="85" style="height: 90vh; overflow: scroll">
 		
-		<div class="filter-card md-whiteframe-1dp" layout="column" layout-margin>
+		<!-- <div class="filter-card md-whiteframe-1dp" layout="column" layout-margin>
 			
 			<div layout="row">
 				
@@ -26,16 +26,45 @@
 				<md-checkbox class="filter-checkbox md-primary" ng-repeat="tag in documentTags" ng-click="selectChip($index, 'document');selectDocumentFilterTag(tag.name)">{{ tag.name }}</md-checkbox>
 			</div>
 			
+		</div> -->
+		<div flex="30" class="md-whiteframe-1dp documentation-view">
+			<div class="md-toolbar-tools">
+				<h5>Document Sets</h5>
+			</div>
+			<md-divider layout="row"></md-divider>
+			<md-list ng-cloak>
+				<div ng-repeat="document in myDocuments" ng-class="{'activemenu': selectedDocumentSet.name==document.name}">
+					<md-list-item ng-click="selectDocumentSet(document)" class="md-2-line">
+						<div md-ink-ripple class="md-list-item-text" layout="column">
+							<h3 ng-class="{'activemenu': selectedDocumentSet.name==document.name}">{{document.name}}</h3>
+							<p ng-show="document.members.length > 0 || document.notMembers.length > 0">
+								<span ng-repeat="member in document.members">{{member.name}}, </span>
+								<span ng-repeat="name in document.notMembersName track by $index">{{name}}, </span>
+							</p>
+						</div>
+					</md-list-item>
+				</div>
+			</md-list>
 		</div>
 		
-		<div layout="column" layout-margin>
-			
-			<div ng-show="myFiles.length == 0" layout="column" layout-align="center center" class="dashboard-empty">
-				<h4>No Documents Here</h4>
+		<div flex="70" class="md-whiteframe-1dp documentation-view">
+			<div class="md-toolbar-tools" ng-show="selectedDocumentSet">
+				<h5>{{selectedDocumentSet.name}}</h5>
 			</div>
-	
-			<md-list ng-cloak class="md-whiteframe-1dp content-list" ng-show="myFiles.length > 0">
-				<div ng-repeat="file in myFiles | filter: filterDocument track by $index" ng-show="file.element.type=='document'">
+			<md-divider layout="row"></md-divider>
+			<md-list ng-cloak>
+				<div ng-repeat="document in selectedDocumentSet.documents | filter: search | unique: '_id' track by $index">
+					<md-list-item class="md-3-line" md-ink-ripple>
+						<div ui-sref="project.documentation.detail({id:document.project, documentId: document._id})" class="md-list-item-text" layout="column">
+				          	<h3>{{document.name}}</h3>
+							<p><span ng-repeat="tag in document.tags">'{{tag}}' </span></p>
+				          	<p style="color: #2196F3">Updates: {{document.__v}}</p>
+				        </div>
+				        <md-button ng-show="document.fileHistory.length > 0" class="md-secondary" ng-click="showViewFileModal($event, document)"><md-icon class="material-icons">remove_red_eye</md-icon><md-tooltip md-direction="down">View Document</md-tooltip></md-button>
+					</md-list-item>
+					<md-divider ng-hide="$last"></md-divider>
+				</div>
+				<!-- <div ng-repeat="file in myFiles | filter: filterDocument track by $index" ng-show="file.element.type=='document'">
 					<md-list-item class="md-2-line" md-ink-ripple layout-padding>
 			
 						<div ng-click="openLocation(file, 'document')" class="md-list-item-text">
@@ -51,7 +80,7 @@
 				
 					</md-list-item>
 					<md-divider ng-hide="$last"></md-divider>
-				</div>
+				</div> -->
 			</md-list>
 		</div>	
 	</div>

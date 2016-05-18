@@ -6,7 +6,8 @@ angular.module('buiiltApp').directive('dashboardSidenav', function(){
         scope:{
             tasks:'=',
             messages: "=",
-            files: "="
+            files: "=",
+            documents: "="
         },
         controller: function($scope, $rootScope, $state) {
 			$scope.$state = $state;
@@ -19,16 +20,13 @@ angular.module('buiiltApp').directive('dashboardSidenav', function(){
                 }
             });
 
-            $scope.totalFileUpdates = 0;
-            $scope.totalDocumentUpdates = 0
-            _.each($scope.files, function(file) {
-                if (file.element.type==="file") {
-                    $scope.totalFileUpdates += 1;
-                } else if (file.element.type==="document") {
-                    $scope.totalDocumentUpdates += 1;
-                }
-            });
-            console.log($scope.messages);
+            $scope.totalFileUpdates = $scope.files.length;
+            $scope.totalDocumentUpdates = $scope.documents.length;
+            // _.each($scope.files, function(file) {
+            //     if (file.element.type==="file") {
+            //         $scope.totalFileUpdates += 1;
+            //     }
+            // });
             $scope.totalMessagesUpdate = $scope.messages.length;
 
             /*Update count total in dashboard side nav*/

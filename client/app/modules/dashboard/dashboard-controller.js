@@ -5,7 +5,10 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
 	$scope.myMessages = myMessages;
 	$scope.myFiles = myFiles;
     $scope.activities = activities;
-    console.log(myDocuments);
+    $scope.myDocuments = myDocuments;
+    if ($scope.myDocuments.length > 0) {
+        $scope.selectedDocumentSet = $scope.myDocuments[0];
+    }
     $scope.projects = [];
     _.each($rootScope.projects, function(project) {
         if (project.status==="waiting") {
@@ -1091,5 +1094,9 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             return found;
         } else 
             return true;
+    };
+
+    $scope.selectDocumentSet = function(document) {
+        $scope.selectedDocumentSet = document;
     };
 });

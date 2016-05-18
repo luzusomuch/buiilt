@@ -470,7 +470,7 @@ exports.myFiles = function(req, res) {
     var result = [];
     var notifications = [];
     var files = [];
-    Notification.find({owner: req.user._id, unread: true, $or:[{referenceTo: 'file'}, {referenceTo: 'document'}]})
+    Notification.find({owner: req.user._id, unread: true, referenceTo: 'file'})
     .populate("fromUser", "_id name email").exec(function(err, notifications) {
         if (err) {return res.send(500,err);}
         notifications = notifications;
@@ -511,19 +511,19 @@ exports.myFiles = function(req, res) {
                         index += 1;
                     }
                 });
-                if (file.element.type==="document"&&file.owner.toString()!==req.user._id.toString()) {
-                    var fileHistory = [];
-                    _.each(file.fileHistory, function(h) {
-                        if (_.findIndex(h.members, function(m) {
-                            if (m._id) {
-                                return m._id.toString()===req.user._id.toString();
-                            }
-                        }) !== -1) {
-                            fileHistory.push(h);
-                        }
-                    });
-                    file.fileHistory = fileHistory;
-                }
+                // if (file.element.type==="document"&&file.owner.toString()!==req.user._id.toString()) {
+                //     var fileHistory = [];
+                //     _.each(file.fileHistory, function(h) {
+                //         if (_.findIndex(h.members, function(m) {
+                //             if (m._id) {
+                //                 return m._id.toString()===req.user._id.toString();
+                //             }
+                //         }) !== -1) {
+                //             fileHistory.push(h);
+                //         }
+                //     });
+                //     file.fileHistory = fileHistory;
+                // }
             });
             return res.send(200, uniqueFilesList);
         });
