@@ -240,7 +240,7 @@ exports.show = function(req, res) {
     .exec(function(err, file) {
         if (err) 
             return res.send(500, err);
-        Notification.find({"element._id": file._id, owner: req.user._id, unread: true}, function(err, notifications) {
+        Notification.find({"element._id": file._id, owner: req.user._id, unread: true, $or:[{type: "document-upload-reversion"}, {type: "file-upload-reversion"}, {type: "related-item"}]}, function(err, notifications) {
             if (err) {return res.send(500,err);}
             file.__v = notifications.length;
             if (file.element.type==="document"&&file.owner._id.toString()!==req.user._id.toString()) {
@@ -470,7 +470,7 @@ exports.myFiles = function(req, res) {
     var result = [];
     var notifications = [];
     var files = [];
-    Notification.find({owner: req.user._id, unread: true, referenceTo: 'file'})
+    Notification.find({owner: req.user._id, unread: true, referenceTo: 'file', $or:[{type: "file-upload-reversion"}, {type: "related-item"}]})
     .populate("fromUser", "_id name email").exec(function(err, notifications) {
         if (err) {return res.send(500,err);}
         notifications = notifications;

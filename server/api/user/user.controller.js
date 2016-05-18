@@ -569,7 +569,7 @@ exports.me = function (req, res, next) {
         if (err) {return next(err);}
         if (!user) {return res.json(404);}
         async.each(user.projects, function(project, cb) {
-            Notification.find({owner: user._id, unread: true, "element.project": project._id, $or:[{referenceTo: "task"}, {referenceTo: "thread"}, {referenceTo: "file"}, {referenceTo: "document"}]}, function(err, notifications) {
+            Notification.find({owner: user._id, unread: true, "element.project": project._id, $or:[{type: "task-enter-comment"}, {type: "task-completed"}, {type: "task-reopened"}, {type: "thread-message"}, {type: "file-upload-reversion"}, {type: "document-upload-reversion"}, {type: "related-item"}]}, function(err, notifications) {
                 if (err) {cb();}
                 else {
                     var tasks = [];
@@ -581,9 +581,9 @@ exports.me = function (req, res, next) {
                             tasks.push(notification);
                         } else if (notification.referenceTo === "thread") {
                             threads.push(notification);
-                        } else if (notification.referenceTo === "file" && !req.query.isMobile) {
+                        } else if (notification.referenceTo === "file") {
                             files.push(notification);
-                        } else if (notification.referenceTo === "document" && !req.query.isMobile) {
+                        } else if (notification.referenceTo === "document") {
                             documents.push(notification);
                         }
                     });

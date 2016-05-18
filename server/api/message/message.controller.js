@@ -402,7 +402,7 @@ exports.getById = function(req, res){
         if (err) {return res.send(500,err);}
         else if (!thread) {return res.send(404);}
         else {
-            Notification.find({owner: req.user._id, unread: true, "element._id": thread._id}, function(err, notifications) {
+            Notification.find({owner: req.user._id, unread: true, "element._id": thread._id, $or: [{type: "thread-message"}, {type: "related-item"}]}, function(err, notifications) {
                 if (err) {return res.send(500,err);}
                 thread.__v = notifications.length;
                 RelatedItem.responseWithRelated("thread", thread, req.user, res);
@@ -419,7 +419,7 @@ exports.myThread = function(req,res) {
     var notifications = [];
     var threads = [];
     var query = Notification.find(
-        {owner : user._id,unread : true, referenceTo : 'thread'}
+        {owner : user._id,unread : true, referenceTo : 'thread', $or: [{type: "thread-message"}, {type: "related-item"}]}
     );
     query.populate("fromUser", "_id email name").exec(function(err, notifications) {
         if (err) {return res.send(500,err);}
