@@ -823,7 +823,7 @@ exports.verifyPhoneNumber = function(req, res) {
 
 /*Get all notifications for current user and use to */
 exports.getAllNotifications = function(req, res) {
-    var count = 0;
+    var count = 0;  
     Notification.find({owner: req.user._id, unread: true}, function(err, notifications) {
         if (err) {
             return res.send(500,err);
