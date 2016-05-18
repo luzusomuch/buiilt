@@ -80,10 +80,14 @@ exports.getData = function(projectId, id, message, user, type, cb){
         if (devices && devices.length > 0) {
             async.each(devices, function(device, callback){
                 if (device.platform == 'ios') {
-                    Notification.find({owner: user, unread:true, $or:[{type: "thread-message"}, {type: "thread-assign"}, {type: "task-completed"}, {type: "task-assign"}, {type: "task-reopened"}, {type: "invite-to-project"}]}, function(err, notifications){
+                    Notification.find({owner: user, unread:true, $or:[{type: "task-enter-comment"}, {type: "task-completed"}, {type: "task-reopened"}, {type: "thread-message"}, {type: "file-upload-reversion"}, {type: "document-upload-reversion"}, {type: "related-item"}, {type: "invite-to-project"}]}, function(err, notifications){
                         if (err) {console.log(err);callback(err);}
                         else {
-                            var totalBadge = notifications.length;
+                            var totalBadge = _.map(_.groupBy(notifications,function(doc){
+                                return doc.element._id;
+                            }),function(grouped){
+                              return grouped[0];
+                            });
                             agent.createMessage()
                             .device(device.deviceToken)
                             .alert(message)
