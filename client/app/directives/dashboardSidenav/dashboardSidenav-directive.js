@@ -31,7 +31,7 @@ angular.module('buiiltApp').directive('dashboardSidenav', function(){
                 } else if (data.type==="file") {
                     $scope.totalFileUpdates = (data.isAdd) ? data.number : $scope.totalFileUpdates-data.number;
                 } else if (data.type==="document") {
-                    $scope.totalDocumentUpdates = (data.isAdd) ? data.number : $scope.totalDocumentUpdates-data.number;
+                    $scope.totalDocumentUpdates = (data.isAdd) ? $scope.totalDocumentUpdates+1 : $scope.totalDocumentUpdates-1;
                 } else if (data.type==="message") {
                     $scope.totalMessagesUpdate = (data.isAdd) ? data.number : $scope.totalMessagesUpdate-data.number;
                 }

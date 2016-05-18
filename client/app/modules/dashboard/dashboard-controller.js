@@ -573,29 +573,47 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             }
             renderTasksAndEventsToCalendar(true);
         } else if (data.type==="document") {
+            console.log(data);
             if (data.file.element.type==="document") {
-                var index = getItemIndex($scope.myFiles, data._id);
-                if (index !== -1 && $scope.myFiles[index].uniqId!=data.uniqId) {
-                    $scope.myFiles[index].uniqId=data.uniqId;
-                    $scope.myFiles[index].element.notifications.push(data.newNotification);
-                    var notificationFile = _.filter($scope.myFiles, function(file) {
-                        return file.element.type==="document";
+                var index = getItemIndex($scope.myDocuments, data.documentSet._id);
+                console.log(index);
+                if (index !== -1) {
+                    $scope.myDocuments[index].__v +=1;
+                    var fileIndex = _.findIndex($scope.myDocuments[index].documents, function(doc) {
+                        return doc._id.toString()===data.file._id.toString();
                     });
-                    if ($scope.myFiles[index].element.notifications.length===0) {
-                        $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "document", isAdd: true, number: notificationFile.length});
+                    console.log(fileIndex);
+                    if (fileIndex!==-1) {
+                        $scope.myDocuments[index].documents[fileIndex].__v+=1;
+                    } else if (fileIndex===-1) {
+                        data.file.__v = 1;
+                        $scope.myDocuments[index].documents.push(data.file);
+                        $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "document", isAdd: true, number: 1});
                     }
+                    // $scope.myFiles[index].uniqId=data.uniqId;
+                    // $scope.myFiles[index].element.notifications.push(data.newNotification);
+                    // var notificationFile = _.filter($scope.myFiles, function(file) {
+                    //     return file.element.type==="document";
+                    // });
+                    // if ($scope.myFiles[index].element.notifications.length===0) {
+                    //     $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "document", isAdd: true, number: notificationFile.length});
+                    // }
                 } else if (index === -1) {
-                    data.file.element.notifications = [];
-                    data.file.element.notifications.push(data.newNotification);
-                    if (data.user._id.toString()===$rootScope.currentUser._id.toString()) {
-                        data.file.element.notifications=[];
-                    }
-                    data.file.uniqId=data.uniqId;
-                    $scope.myFiles.push(data.file);
-                    var notificationFile = _.filter($scope.myFiles, function(file) {
-                        return file.element.type==="document";
-                    });
-                    $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "document", isAdd: true, number: notificationFile.length});
+                    data.documentSet.__v = 1;
+                    data.file.__v = 1;
+                    data.documentSet.documents.push(data.file);
+                    $scope.myDocuments.push(data.documentset);
+                    // data.file.element.notifications = [];
+                    // data.file.element.notifications.push(data.newNotification);
+                    // if (data.user._id.toString()===$rootScope.currentUser._id.toString()) {
+                    //     data.file.element.notifications=[];
+                    // }
+                    // data.file.uniqId=data.uniqId;
+                    // $scope.myFiles.push(data.file);
+                    // var notificationFile = _.filter($scope.myFiles, function(file) {
+                    //     return file.element.type==="document";
+                    // });
+                    $rootScope.$emit("DashboardSidenav-UpdateNumber", {type: "document", isAdd: true, number: 1});
                 }
             }
         } else if (data.type==="file") {

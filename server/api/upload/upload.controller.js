@@ -230,6 +230,7 @@ console.log(req.body);
         else if (!file) {return res.send(404, "The specific file is not existed");}
         else {
             var acknowledgeUsers = [];
+            var documentSet;
             async.parallel([
                 function (cb) {
                     if (file.element.type==="file" || file.element.type==="tender") {
@@ -254,6 +255,7 @@ console.log(req.body);
                                     _.each(document.notMembers, function(email) {
                                         acknowledgeUsers.push({email: email, isAcknow: false});
                                     });
+                                    documentSet = document;
                                     cb();
                                 }
                             });
@@ -334,6 +336,7 @@ console.log(req.body);
                                         uniqId: randomId,
                                         user: req.user,
                                         file: JSON.parse(JSON.stringify(file)),
+                                        documentSet: (documentSet) ? documentSet : null,
                                         newNotification: {randomId: randomId, fromUser: req.user, type: file.element.type+"-upload-reversion"}
                                     }
                                 });
