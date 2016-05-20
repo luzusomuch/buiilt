@@ -9,6 +9,28 @@ var moment = require("moment");
 var CheckMembers = require("./../../components/helpers/checkMembers");
 var EventBus = require('../../components/EventBus');
 
+exports.get = function(req, res) {
+    Document.findById(req.params.id)
+    .populate("documents").exec(function(err, document) {
+        if (err) {return res.send(500,err);}
+        else if (!document) {return res.send(404, {msg: "This Document Set Not Exist"});}
+        else {
+            async.each(document.documents, function(doc, cb) {
+                Notification.find({unread: true, owner: req.user._id, "element._id": doc._id, referenceTo: "document"})
+                .populate("fromUser", "_id name email").exec(function(err, notifications) {
+                    if (err) {cb(err);}
+                    else {
+                        doc.__v = notifications.length;
+                        cb();
+                    }
+                });
+            }, function() {
+                return res.send(200, document);
+            });
+        }
+    });
+};
+
 exports.me = function(req, res) {
     var condition = {};
     if (req.params.id!=="me") {
@@ -45,6 +67,7 @@ exports.me = function(req, res) {
             if (req.params.id!=="me") {
                 return res.send(200, documents);
             } else {
+                // Get all document set by selected project for ionic app
                 var result = [];
                 _.each(documents, function(document) {
                     var docs = [];

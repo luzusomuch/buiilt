@@ -36,24 +36,6 @@ function isAuthenticated() {
     });
 }
 
-function isInProjectInvite(){
-  return compose()
-    .use(isAuthenticated())
-    .use(function(req, res, next) {
-      Project.findById(req.params.id, function (err, project) {
-        if (err) { return res.send(401);}
-        else {
-          if (project.requestedHomeBuilders._id == req.user._id) {
-            next();
-          }
-          else {
-            return res.send('home');
-          }
-        }
-      });
-    });
-}
-
 /**
  * Checks if the user role meets the minimum requirements of the route
  */
@@ -90,7 +72,6 @@ function setTokenCookie(req, res) {
 }
 
 exports.isAuthenticated = isAuthenticated;
-exports.isInProjectInvite = isInProjectInvite;
 exports.hasRole = hasRole;
 exports.signToken = signToken;
 exports.setTokenCookie = setTokenCookie;
