@@ -136,11 +136,15 @@ exports.create = function (req, res, next) {
         } else {
             UserValidator.validateNewUser(req, function(err, data) {
                 if (err) {return res.send(422, {errors: err});}
+                var phoneNumberVerifyToken = makeid();
                 var newUser = new User(data);
                 newUser.provider = 'local';
                 newUser.role = 'user';
                 newUser.name = data.firstName + ' ' + data.lastName;
-                newUser.phoneNumberVerifyToken = makeid();
+                newUser.phoneNumberVerifyToken = phoneNumberVerifyToken;
+                if (req.body.isMobile) {
+                    newUser.password = phoneNumberVerifyToken;
+                }
                 newUser.save(function(err) {
                     if (err) {return res.send(500,err);}
                     var token = jwt.sign({_id: newUser._id}, config.secrets.session, {expiresInMinutes: 60 * 5});
@@ -421,13 +425,14 @@ exports.create = function (req, res, next) {
                                 return res.send(500,err);
                             });
                         } else {
+                            var message = (req.body.isMobile) ? "Your Login Password Is: "+newUser.phoneNumberVerifyToken : "Your active code is "+ newUser.phoneNumberVerifyToken;
                             client.sendMessage({
                                 to: newUser.phoneNumber,
                                 from: config.twilio.phoneNumber,
-                                body: "Your active code is "+ newUser.phoneNumberVerifyToken
+                                body: message
                             }, function(err, success) {
                                 if (err) {console.log(err);}
-                                return res.json({token: token,emailVerified : true});
+                                return res.json({token: token,emailVerified : (req.body.isMobile) ? false : true});
                             });
                         }
                     });
