@@ -49,7 +49,8 @@ var UserSchema = new Schema({
         exp_month: String,
         exp_year: String,
         cvc: String
-    }
+    },
+    phoneNumberLoginToken: String
 }, {
     strict: true,
     minimize: false

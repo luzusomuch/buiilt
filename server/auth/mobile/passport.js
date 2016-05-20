@@ -5,9 +5,9 @@ var User = require('./../../models/user.model');
 exports.setup = function () {
   passport.use(new LocalStrategy({
       usernameField: 'phoneNumber',
-      passwordField: 'password' // this is the virtual field on the model
+      passwordField: 'phoneNumberLoginToken' // this is the virtual field on the model
     },
-    function(phoneNumber, password, done) {
+    function(phoneNumber, phoneNumberLoginToken, done) {
       User.findOne({
         phoneNumber: phoneNumber
       }, function(err, user) {
@@ -16,8 +16,8 @@ exports.setup = function () {
         if (!user) {
           return done(null, false, { message: 'This phone number is not registered.' });
         }
-        if (!user.authenticate(password)) {
-          return done(null, false, { message: 'This password is not correct.' });
+        if (user.phoneNumberLoginToken!==phoneNumberLoginToken) {
+          return done(null, false, { message: 'This token is not correct.' });
         }
         user.hasChangedEmail = false;
         user.save(function() {

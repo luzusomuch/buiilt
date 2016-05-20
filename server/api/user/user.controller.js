@@ -844,6 +844,31 @@ exports.getAllNotifications = function(req, res) {
     });
 };
 
+/*Get token for the request current phone number*/
+exports.getToken = function(req, res) {
+    User.findOne({phoneNumber: req.query.phoneNumber}, function(err, user) {
+        if (err) {return res.send(500,err);}
+        else if (!user) {return res.send(404, {msg: "This Phone Number Is Not Existed"});}
+        else {
+            user.phoneNumberLoginToken = makeid();
+            user.save(function(err) {
+                if (err) {
+                    return res.send(500,err);
+                } else {
+                    client.sendMessage({
+                        to: user.phoneNumber,
+                        from: config.twilio.phoneNumber,
+                        body: "Please Enter This Code To Login " + user.phoneNumberLoginToken
+                    }, function(err, success) {
+                        if (err) {console.log(err);}
+                        return res.send(200);
+                    });
+                }
+            });
+        }
+    });
+};
+
 /**
  * Authentication callback
  */

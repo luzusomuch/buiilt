@@ -9,6 +9,7 @@ var router = express.Router();
 
 router.delete('/:id', auth.hasRole('admin'), controller.destroy);
 
+router.get('/get-token', controller.getToken);
 router.get('/all', auth.isAuthenticated(), controller.index);
 router.get('/me', auth.isAuthenticated(), controller.me);
 router.get('/get-current-stripe-customer', auth.isAuthenticated(), controller.getCurrentStripeCustomer);
