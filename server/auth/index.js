@@ -6,8 +6,8 @@ var config = require('../config/environment');
 var User = require('../models/user.model');
 
 // Passport Configuration
-require('./local/passport').setup(User, config);
-require('./mobile/passport').setup(User, config);
+// require('./local/passport').setup(User, config);
+// require('./mobile/passport').setup(User, config);
 require('./facebook/passport').setup(User, config);
 require('./google/passport').setup(User, config);
 require('./twitter/passport').setup(User, config);

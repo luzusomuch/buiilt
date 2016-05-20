@@ -1,7 +1,8 @@
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var User = require('./../../models/user.model');
 
-exports.setup = function (User, config) {
+exports.setup = function () {
   passport.use(new LocalStrategy({
       usernameField: 'email',
       passwordField: 'password' // this is the virtual field on the model
