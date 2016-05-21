@@ -17,8 +17,8 @@ angular.module('buiiltApp', [
     'angular-clipboard',
     'angular-stripe',
     "ui.calendar",
-    "mdPickers",
-    "internationalPhoneNumber"
+    "internationalPhoneNumber",
+    "ng.deviceDetector"
 ]);
 
 angular

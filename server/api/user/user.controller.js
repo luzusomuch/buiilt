@@ -144,6 +144,7 @@ exports.create = function (req, res, next) {
                 newUser.phoneNumberVerifyToken = phoneNumberVerifyToken;
                 if (req.body.isMobile) {
                     newUser.password = phoneNumberVerifyToken;
+                    newUser.phoneNumberVerified = true;
                 }
                 newUser.save(function(err) {
                     if (err) {return res.send(500,err);}
