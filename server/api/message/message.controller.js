@@ -152,20 +152,22 @@ exports.create = function(req,res) {
             thread.belongTo.item = {_id: req.body.belongTo};
             thread.belongTo.type = req.body.belongToType;
         }
-        var message = {
-            text : req.body.message,
-            user : user,
-            sendAt: new Date()
-        };
-        thread.activities.push({
-            user: req.user._id,
-            type: 'chat',
-            createdAt: new Date(),
-            element: {
-                message: req.body.message
-            }
-        });
-        thread.messages.push(message);
+        if (req.body.message) {
+            var message = {
+                text : req.body.message,
+                user : user,
+                sendAt: new Date()
+            };
+            thread.activities.push({
+                user: req.user._id,
+                type: 'chat',
+                createdAt: new Date(),
+                element: {
+                    message: req.body.message
+                }
+            });
+            thread.messages.push(message);
+        }
         var mainItem = getMainItem(req.body.belongToType);
         thread.save(function(err) {
             if (err) {return res.send(500,err);}
