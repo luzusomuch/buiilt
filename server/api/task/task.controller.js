@@ -77,8 +77,10 @@ function populateNewTask(task, res, req){
         {path: "activities.user", select: "_id email name"},
         {path: "project"}
     ], function(err, task) {
-        var uniqId = mongoose.Types.ObjectId()
-        async.each(task.members, function(member, cb) {
+        var uniqId = mongoose.Types.ObjectId();
+        var members = _.clone(task.members);
+        _.remove(members, {_id: req.user._id});
+        async.each(members, function(member, cb) {
             EventBus.emit('socket:emit', {
                 event: 'task:new',
                 room: member._id.toString(),

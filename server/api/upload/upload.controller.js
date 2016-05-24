@@ -398,74 +398,102 @@ exports.upload = function(req, res){
                 element: {name: data.file.filename}
             }]
         });
-        if (ownerItem) {
-            file.members = ownerItem.members;
-            file.notMembers = ownerItem.notMembers;
-            if (ownerItem.event) {
-                file.event = ownerItem.event;
-            }
-        }
-        file.save(function(err) {
-            if (err) {
-                return res.send(500,err);
-            } else if (ownerItem) {
-                ownerItem.activities.push({
-                    user: req.user._id,
-                    type: "related-file",
-                    createdAt: new Date(),
-                    element: {
-                        item: file._id,
-                        name: file.name,
-                        related: true
+        async.parallel([
+            function(cb) {
+                if (ownerItem) {
+                    file.members = ownerItem.members;
+                    file.notMembers = ownerItem.notMembers;
+                    if (ownerItem.event) {
+                        file.event = ownerItem.event;
                     }
-                });
-                var members = file.members;
-                members.push(file.owner);
-                ownerItem.relatedItem.push({
-                    type: "file",
-                    item: {_id: file._id},
-                    members: members
-                });
-                ownerItem._editUser = req.user;
-                ownerItem.markModified("create-related-item");
-                ownerItem.save(function() {
-                    // Response related file to the parent item
-                    EventBus.emit('socket:emit', {
-                        event: 'relatedItem:new',
-                        room: ownerItem._id.toString(),
-                        data: {
-                            type: file.element.type,
-                            excuteUser: req.user,
-                            belongTo: ownerItem._id,
-                            data: JSON.parse(JSON.stringify(file)),
+                    cb();
+                } else if (data.members && data.members.length > 0) {
+                    CheckMembers.check(req.body.members, null, function(result) {
+                        file.members = result.members;
+                        file.notMembers = result.notMembers;
+                        cb();
+                    });
+                } else {
+                    cb();
+                }
+            }
+        ], function() {
+            file.save(function(err) {
+                if (err) {
+                    return res.send(500,err);
+                } else if (ownerItem) {
+                    ownerItem.activities.push({
+                        user: req.user._id,
+                        type: "related-file",
+                        createdAt: new Date(),
+                        element: {
+                            item: file._id,
+                            name: file.name,
+                            related: true
                         }
                     });
-
-                    // Update count number of parent item
-                    var owners = _.clone(ownerItem.members);
-                    owners.push(ownerItem.owner);
-                    _.remove(owners, req.user._id);
-                    owners = _.map(_.groupBy(owners,function(doc){
-                        return doc;
-                    }),function(grouped){
-                        return grouped[0];
+                    var members = file.members;
+                    members.push(file.owner);
+                    ownerItem.relatedItem.push({
+                        type: "file",
+                        item: {_id: file._id},
+                        members: members
                     });
-                    _.each(owners, function(user) {
+                    ownerItem._editUser = req.user;
+                    ownerItem.markModified("create-related-item");
+                    ownerItem.save(function() {
+                        // Response related file to the parent item
                         EventBus.emit('socket:emit', {
-                            event: 'dashboard:new',
-                            room: user.toString(),
+                            event: 'relatedItem:new',
+                            room: ownerItem._id.toString(),
                             data: {
-                                type: "related-item",
+                                type: file.element.type,
                                 excuteUser: req.user,
-                                belongTo: ownerItem._id
+                                belongTo: ownerItem._id,
+                                data: JSON.parse(JSON.stringify(file)),
                             }
                         });
+
+                        // Update count number of parent item
+                        var owners = _.clone(ownerItem.members);
+                        owners.push(ownerItem.owner);
+                        _.remove(owners, req.user._id);
+                        owners = _.map(_.groupBy(owners,function(doc){
+                            return doc;
+                        }),function(grouped){
+                            return grouped[0];
+                        });
+                        _.each(owners, function(user) {
+                            EventBus.emit('socket:emit', {
+                                event: 'dashboard:new',
+                                room: user.toString(),
+                                data: {
+                                    type: "related-item",
+                                    excuteUser: req.user,
+                                    belongTo: ownerItem._id
+                                }
+                            });
+                        });
+                        return res.send(200, file);
                     });
-                    return res.send(200, file);
-                });
-            } else {
-                return res.send(200,file);
-            }
+                } else {
+                    File.populate(file, [
+                        {path: "project"},
+                        {path: "members", select: "_id name email phoneNumber"}
+                    ], function(err, file) {
+                        var members = _.clone(file.members);
+                        _.remove(members, {_id: req.user._id});
+                        _.each(members, function(member) {
+                            EventBus.emit('socket:emit', {
+                                event: 'file:new',
+                                room: member._id.toString(),
+                                data: JSON.parse(JSON.stringify(file))
+                            });
+                        });
+                        return res.send(200,file);
+                    });
+                }
+            });
         });
     });
 

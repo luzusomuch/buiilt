@@ -26,6 +26,8 @@ function populateNewThread(thread, res, req){
         {path: "project"}
     ], function(err, thread) {
         var uniqId = mongoose.Types.ObjectId();
+        var members = _.clone(thread.members);
+        _.remove(members, {_id: req.user._id});
         async.each(thread.members, function(member, cb) {
             EventBus.emit('socket:emit', {
                 event: 'thread:new',
