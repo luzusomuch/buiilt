@@ -1,7 +1,6 @@
 angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q, $rootScope, $scope, $timeout, $stateParams, messageService, $mdToast, $mdDialog, $state, thread, peopleService, taskService, uploadService, people, clipboard, socket, notificationService, tenders, activities, dialogService) {
     /*Close opening modal*/
     $scope.closeModal = function() {
-        console.log($rootScope.firstTimeEdit);
         if ($rootScope.firstTimeEdit)
             $scope.removeThread();
         else 
@@ -338,6 +337,10 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
     /*Edit thread detail*/
     $scope.editMessage = function(form) {
         if (form.$valid) {
+            $scope.thread.newMembers = _.filter($scope.membersList, {select: true});
+            if ($rootScope.firstTimeEdit && $scope.thread.newMembers.length===0) {
+                return dialogService.showToast("Please Select At Least 1 Member");
+            }
             $scope.thread.elementType = "edit-thread";
             $scope.update($scope.thread);
             // messageService.update({id: $scope.thread._id}, $scope.thread).$promise.then(function(res) {

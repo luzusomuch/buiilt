@@ -53,7 +53,7 @@ function populateNewThread(thread, res, req){
     });
 };
 
-function populateThread(thread, res){
+function populateThread(thread, res, req){
     Thread.populate(thread, [
         {path: "owner", select: "_id email name phoneNumber"},
         {path: "messages.user", select: "_id email name phoneNumber"},
@@ -61,9 +61,33 @@ function populateThread(thread, res){
         {path: "members", select: "_id email name phoneNumber"},
         {path: "activities.user", select: "_id email name phoneNumber"}
     ], function(err, thread) {
+        // get uniq available user may receive socket
+        var members = _.clone(thread.members);
+        members.push(thread.owner);
+        if (req.user) {
+            _.remove(members, {_id: req.user._id});
+        }
+        members = _.map(_.groupBy(members,function(doc){
+            return doc._id;
+        }),function(grouped){
+            return grouped[0];
+        });
+
+        // Response socket to the available user
+        if (req.editType && req.editType==="assign") {
+            Thread.populate(thread, [{path: "project"}], function(err, newThread) {
+                _.each(members, function(member) {
+                    EventBus.emit('socket:emit', {
+                        event: 'thread:new',
+                        room: member._id.toString(),
+                        data: newThread
+                    });
+                });
+            });
+        }
+
         if (thread.isArchive) {
-            thread.members.push(thread.owner);
-            _.each(thread.members, function(m) {
+            _.each(members, function(m) {
                 EventBus.emit('socket:emit', {
                     event: 'thread:archive',
                     room: m._id.toString(),
@@ -255,6 +279,7 @@ exports.update = function(req,res) {
                 if (err) {
                     return errorsHelper.validationErrors(res,err)
                 } else {
+                    var editType;
                     thread = _.merge(thread,data);
                     var activity = {
                         user: req.user._id,
@@ -263,6 +288,7 @@ exports.update = function(req,res) {
                         element: {}
                     };
                     if (req.body.elementType==="assign") {
+                        editType = "assign";
                         var invitees = [];
                         _.each(req.body.newMembers, function(member) {
                             if (member.name) {
@@ -279,6 +305,27 @@ exports.update = function(req,res) {
                     } else if (req.body.elementType==="edit-thread") {
                         thread.name = req.body.name;
                         activity.element.name = req.body.name;
+                        if (req.body.newMembers.length > 0) {
+                            thread.members = data.members;
+                            thread.notMembers = data.notMembers;
+                            editType = "assign";
+                            var invitees = [];
+                            _.each(req.body.newMembers, function(member){
+                                if (member.name) {
+                                    invitees.push(member.name);
+                                } else {
+                                    invitees.push(member.email);
+                                }
+                            });
+                            thread.activities.push({
+                                user: req.user._id,
+                                type: "assign",
+                                createdAt: new Date(),
+                                element: {
+                                    invitees: invitees
+                                }
+                            });
+                        }
                     } else {
                         thread.isArchive = req.body.isArchive;
                     }
@@ -290,7 +337,8 @@ exports.update = function(req,res) {
                         if (err) {
                             return res.send(500,err)
                         }
-                        populateThread(thread, res);
+                        req.editType = editType;
+                        populateThread(thread, res, req);
                     });
                 }
             });
@@ -351,7 +399,7 @@ exports.sendMessage = function(req,res) {
                                     }
                                 });
                             });
-                            populateThread(thread, res);
+                            populateThread(thread, res, req);
                         });
                     }
                 });
@@ -580,7 +628,7 @@ exports.replyMessage = function(req, res) {
                                 }
                             });
                         });
-                        populateThread(thread, res);
+                        populateThread(thread, res, req);
                     });
                 });
             });
