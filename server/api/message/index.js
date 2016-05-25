@@ -6,7 +6,7 @@ var config = require('../../config/environment');
 var auth = require('../../auth/auth.service');
 
 var router = express.Router();
-router.delete('/:id', auth.hasRole('admin'), controller.destroy);
+router.delete('/:id', auth.isAuthenticated(), controller.destroy);
 router.post('/reply-message', controller.replyMessage);
 router.post('/:id', auth.isAuthenticated(), controller.create);
 router.post('/:id/message', auth.isAuthenticated(), controller.sendMessage);

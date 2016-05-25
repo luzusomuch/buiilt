@@ -9,7 +9,7 @@
         <md-dialog-content>
             <div class="md-dialog-content" layout="column" layout-padding>
 				
-				<div layout="column">
+				<div layout="column" ng-show="step==1">
 					<p class="md-body-2">Name for the message thread:</p>
 	                <div layout="row">
 	                    <md-input-container flex="66" flex-offset="15">
@@ -19,14 +19,11 @@
 					</div>
                 </div>
 
-				<div layout="column">
-					<p class="md-body-2">Description of message thread:</p>
-	                <div layout="row">
-	                    <md-input-container flex="66" flex-offset="15">
-	                        <label>Description</label>
-	                        <textarea ng-model="thread.description" columns="1" md-maxlength="250" rows="5" required></textarea>
-	                    </md-input-container>
-					</div>
+				<div layout="column" ng-show="step==2">
+                    <p class="md-body-2">Select who you would like to assign to this message thread:</p>
+                    <div layout="row" layout-align="center center" layout-wrap layout-padding flex>
+                        <md-checkbox ng-click="selectMember($index, 'member')" ng-repeat="member in membersList" class="filter-checkbox md-primary">{{(member._id) ? member.name : member.email}}</md-checkbox>
+                    </div>
                 </div>
                 
             </div>
@@ -34,7 +31,11 @@
         
         <md-dialog-actions>
             <md-button ng-click="closeModal()">Cancel</md-button>
-            <md-button type="submit" class="md-primary">Save Edits</md-button>
+
+            <md-button ng-click="step=step-1" ng-show="step==2">Back</md-button>
+            <md-button ng-click="next('edit-thread')" ng-hide="step==2">Next</md-button>
+
+            <md-button type="submit" class="md-primary" ng-show="step==2">Save Edits</md-button>
         </md-dialog-actions>
     </form>
 </md-dialog>

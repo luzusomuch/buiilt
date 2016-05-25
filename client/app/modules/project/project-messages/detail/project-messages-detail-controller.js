@@ -1,9 +1,50 @@
 angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q, $rootScope, $scope, $timeout, $stateParams, messageService, $mdToast, $mdDialog, $state, thread, peopleService, taskService, uploadService, people, clipboard, socket, notificationService, tenders, activities, dialogService) {
+    /*Close opening modal*/
+    $scope.closeModal = function() {
+        console.log($rootScope.firstTimeEdit);
+        if ($rootScope.firstTimeEdit)
+            $scope.removeThread();
+        else 
+            dialogService.closeModal();
+    };
+
+    /*Show modal with specific name*/
+    $scope.showModal = function(name, $event) {
+        $mdDialog.show({
+            // targetEvent: $event,
+            controller: 'projectMessagesDetailCtrl',
+            resolve: {
+                thread: ["$stateParams", "messageService", function($stateParams, messageService) {
+                    return messageService.get({id: $stateParams.messageId}).$promise;
+                }],
+                people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
+                    return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
+                }],
+                tenders: ["tenderService", "$stateParams", function(tenderService, $stateParams) {
+                    return tenderService.getAll({id: $stateParams.id}).$promise;
+                }],
+                activities:["activityService", "$stateParams", function(activityService, $stateParams) {
+                    return activityService.me({id: $stateParams.id}).$promise;
+                }],
+            },
+            templateUrl: 'app/modules/project/project-messages/detail/partials/' + name,
+            parent: angular.element(document.body),
+            clickOutsideToClose: false
+        });
+    };
+
     // dynamic height for related file thumbnail
     $scope.imageHeight = $("div.content").innerHeight() - $("div.content").innerHeight() * 0.2;
 
     var originalThread = angular.copy(thread);
-    $scope.showDetail = ($rootScope.openDetail) ? true : false;
+    // $scope.showDetail = ($rootScope.openDetail) ? true : false;
+
+    // If current thread just created then show edit modal
+    if ($rootScope.openDetail) {
+        $rootScope.firstTimeEdit = true;
+        $rootScope.openDetail = null;
+        $scope.showModal("edit-message-modal.html", null);
+    }
 
     $scope.showSaveTitleBtn = false;
     $scope.$watch("thread.name", function(value) {
@@ -263,36 +304,6 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
         $mdToast.show($mdToast.simple().textContent(value).position('bottom','left').hideDelay(3000));
     };
 
-    /*Close opening modal*/
-    $scope.closeModal = function() {
-        $mdDialog.cancel();
-    };
-
-    /*Show modal with specific name*/
-    $scope.showModal = function(name, $event) {
-        $mdDialog.show({
-            // targetEvent: $event,
-            controller: 'projectMessagesDetailCtrl',
-            resolve: {
-                thread: ["$stateParams", "messageService", function($stateParams, messageService) {
-                    return messageService.get({id: $stateParams.messageId}).$promise;
-                }],
-                people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
-                    return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
-                }],
-                tenders: ["tenderService", "$stateParams", function(tenderService, $stateParams) {
-                    return tenderService.getAll({id: $stateParams.id}).$promise;
-                }],
-                activities:["activityService", "$stateParams", function(activityService, $stateParams) {
-                    return activityService.me({id: $stateParams.id}).$promise;
-                }],
-            },
-            templateUrl: 'app/modules/project/project-messages/detail/partials/' + name,
-            parent: angular.element(document.body),
-            clickOutsideToClose: false
-        });
-    };
-
     /*Show reply modal*/
     $scope.showReplyModal = function($event) {
         $scope.message = {};
@@ -320,7 +331,7 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
     };
 
     /*Show edit thread detail modal*/
-    $scope.showEditMessageModal = function($event) {
+    $scope.showEditThreadModal = function($event) {
         $scope.showModal("edit-message-modal.html", $event);
     };
 
@@ -522,6 +533,8 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
         if ($scope.step==1) {
             if (type==="create-related-task" && !$scope.relatedTask.description) {
                 dialogService.showToast("Check Your Input Again.");
+            } else if (type==="edit-thread" && !$scope.thread.name) {
+                dialogService.showToast("Check Your Input Again.");
             } else {
                 $scope.step += 1;
             }
@@ -540,5 +553,17 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
     $scope.changeTitle = function() {
         $scope.thread.elementType="edit-thread";
         $scope.update($scope.thread);
+    };
+
+    // Remove thread when click cancel if its the first time edit
+    $scope.removeThread = function() {
+        messageService.delete({id: thread._id}).$promise.then(function() {
+            dialogService.closeModal();
+            dialogService.showToast("Thread Has Been Removed");
+            $rootScope.$emit("Thread.Remove", thread._id);
+            $state.go("project.messages.all", {id: $stateParams.id});
+        }, function(error) {
+            dialogService.showToast("Error When Delete");
+        });
     };
 });

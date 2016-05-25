@@ -5,6 +5,7 @@ angular.module('buiiltApp').service('dialogService', function($mdDialog, $mdToas
         $rootScope.selectedEndDate = null;
         $rootScope.selectedDocumentSet = null;
         $rootScope.isCopyDocumentSet = null;
+        $rootScope.firstTimeEdit = null;
 	};
 
     this.showToast = function(value) {

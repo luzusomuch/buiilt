@@ -483,15 +483,34 @@ exports.myThread = function(req,res) {
     Require admin role
 */
 exports.destroy = function (req, res) {
-    Thread.findByIdAndRemove(req.params.id, function (err, thread) {
-        if (err) {
-            return res.send(500, err);
+    var allow = false;
+    Thread.findById(req.params.id, function(err, thread) {
+        if (err) {return res.send(500,err);}
+        else if (!thread) {return res.send(404);}
+        else if (req.user.role==="admin") {
+            allow = true;
+        } else if (req.user._id.toString()===thread.owner.toString()) {
+            allow = true;
         }
-        Thread.find({}, function(err,threads){
-            if (err) {return res.send(500,err);}
-            return res.send(200, threads);
-        });
+
+        if (allow) {
+            thread.remove(function(err) {
+                if (err) {return res.send(500,err);}
+                return res.send(200, []);
+            });
+        } else {
+            return res.send(500, {msg: "Not Allowed"});
+        }
     });
+    // Thread.findByIdAndRemove(req.params.id, function (err, thread) {
+    //     if (err) {
+    //         return res.send(500, err);
+    //     }
+    //     Thread.find({}, function(err,threads){
+    //         if (err) {return res.send(500,err);}
+    //         return res.send(200, threads);
+    //     });
+    // });
 };
 
 /*
