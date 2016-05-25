@@ -146,7 +146,7 @@ exports.show = function(req, res){
         if(err){ return res.send(500, err); }
         else {
             // req.project = project;
-            Notification.find({owner: req.user._id, unread: true, "element.project": project._id, $or:[{referenceTo: "task"}, {referenceTo: "thread"}, {referenceTo: "file"}, {referenceTo: "document"}]}, function(err, notifications) {
+            Notification.find({owner: req.user._id, unread: true, "element.project": project._id, $or:[{type: "task-enter-comment"}, {type: "task-completed"}, {type: "task-reopened"}, {type: "thread-message"}, {type: "file-upload-reversion"}, {type: "document-upload-reversion"}, {type: "related-item"}]}, function(err, notifications) {
                 if (err) {return res.send(500,err);}
                 else {
                     var tasks = [];

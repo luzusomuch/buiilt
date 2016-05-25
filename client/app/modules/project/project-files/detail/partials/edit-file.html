@@ -33,9 +33,18 @@
                 </div>
 
                 <div layout="column" ng-show="step==3">
-                    <p class="md-body-2">Select who you would like to assign to this file:</p>
-                    <div layout="row" layout-align="center center" layout-wrap layout-padding flex>
-                        <md-checkbox class="filter-checkbox md-primary" ng-repeat="member in membersList" ng-click="selectMember($index, 'member')">{{(member._id) ? member.name : member.email}}</md-checkbox>
+                    <div>
+                        <p class="md-body-2">Current Members Of This File</p>
+                        <div layout="row" layout-align="center center" layout-wrap layout-padding flex>
+                            <md-checkbox class="filter-checkbox md-primary" ng-repeat="member in file.members" ng-checked="true">{{(member._id) ? member.name : member.email}}</md-checkbox>
+                            <md-checkbox class="filter-checkbox md-primary" ng-repeat="email in file.notMembers" ng-checked="true">{{email}}</md-checkbox>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="md-body-2">Select who you would like to assign to this file:</p>
+                        <div layout="row" layout-align="center center" layout-wrap layout-padding flex>
+                            <md-checkbox class="filter-checkbox md-primary" ng-repeat="member in membersList" ng-click="selectMember($index, 'member')">{{(member._id) ? member.name : member.email}}</md-checkbox>
+                        </div>
                     </div>
                 </div>
 				

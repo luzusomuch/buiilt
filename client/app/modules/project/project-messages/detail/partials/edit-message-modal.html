@@ -20,9 +20,18 @@
                 </div>
 
 				<div layout="column" ng-show="step==2">
-                    <p class="md-body-2">Select who you would like to assign to this message thread:</p>
-                    <div layout="row" layout-align="center center" layout-wrap layout-padding flex>
-                        <md-checkbox ng-click="selectMember($index, 'member')" ng-repeat="member in membersList" class="filter-checkbox md-primary">{{(member._id) ? member.name : member.email}}</md-checkbox>
+                    <div>
+                        <p class="md-body-2">Current Members Of This Thread</p>
+                        <div layout="row" layout-align="center center" layout-wrap layout-padding flex>
+                            <md-checkbox class="filter-checkbox md-primary" ng-repeat="member in thread.members" ng-checked="true">{{(member._id) ? member.name : member.email}}</md-checkbox>
+                            <md-checkbox class="filter-checkbox md-primary" ng-repeat="email in thread.notMembers" ng-checked="true">{{email}}</md-checkbox>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="md-body-2">Select who you would like to assign to this message thread:</p>
+                        <div layout="row" layout-align="center center" layout-wrap layout-padding flex>
+                            <md-checkbox ng-click="selectMember($index, 'member')" ng-repeat="member in membersList" class="filter-checkbox md-primary">{{(member._id) ? member.name : member.email}}</md-checkbox>
+                        </div>
                     </div>
                 </div>
                 

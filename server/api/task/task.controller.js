@@ -86,18 +86,18 @@ function populateNewTask(task, res, req){
                 room: member._id.toString(),
                 data: task
             });
-            EventBus.emit('socket:emit', {
-                event: 'dashboard:new',
-                room: member._id.toString(),
-                data: {
-                    type: "task",
-                    _id: task._id,
-                    task: task,
-                    user: req.user,
-                    uniqId: uniqId,
-                    newNotification: {fromUser: req.user, type: "task-assign"}
-                }
-            });
+            // EventBus.emit('socket:emit', {
+            //     event: 'dashboard:new',
+            //     room: member._id.toString(),
+            //     data: {
+            //         type: "task",
+            //         _id: task._id,
+            //         task: task,
+            //         user: req.user,
+            //         uniqId: uniqId,
+            //         newNotification: {fromUser: req.user, type: "task-assign"}
+            //     }
+            // });
             cb();
         }, function() {
             return res.send(200, task);

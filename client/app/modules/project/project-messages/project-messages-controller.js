@@ -117,6 +117,7 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
     */
     socket.on("thread:new", function(data) {
         if (data.project._id.toString()===$stateParams.id.toString()) {
+            data.__v = 1;
             $scope.threads.push(data);
             $scope.threads = _.uniq($scope.threads, "_id");
             repairForEventsFilter();
@@ -258,8 +259,6 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
                 } else {
                     found = true;
                 }
-            } else {
-                found = true;
             }
         }
         return found;
