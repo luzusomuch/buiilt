@@ -8,28 +8,45 @@
         
         <md-dialog-content>
             <div class="md-dialog-content" layout="column">
-                <div layout="row">
+                <div layout="row" ng-show="step==1">
                     <md-input-container flex>
                         <label>File Name</label>
                         <input input="text" ng-model="file.name" name="name" required/>
                     </md-input-container>
                 </div>
                 
-				<div layout="column">
-					<p class="md-body-2">Select any relevant file tags:</p>
-	                <div layout="row" layout-align="center center" layout-wrap layout-padding flex>
-                        <md-checkbox ng-checked="tag.select" class="filter-checkbox md-primary" ng-repeat="tag in tags" ng-click="selectMember($index, 'tag')">
-                            {{tag.name}}
-                        </md-checkbox>
-	                </div>
+				<div layout="column" ng-show="step==1">
+					<p class="md-body-2">Select a relevant file tags:</p>
+	                <md-select ng-model="file.selectedTag">
+                        <md-option ng-repeat="tag in tags" ng-value="tag.name">{{tag.name}}</md-option>
+                    </md-select>
 				</div>
+
+                <div layout="column" ng-show="step==2">
+                    <p class="md-body-2">Select Or Change Current File Event</p>
+                    <md-input-container flex>
+                        <label for="">Events List</label>
+                        <md-select ng-model="file.selectedEvent">
+                            <md-option ng-repeat="activity in activities" ng-show="!activity.isMilestone" ng-value="activity._id">{{activity.name}}</md-option>
+                        </md-select>
+                    </md-input-container>
+                </div>
+
+                <div layout="column" ng-show="step==3">
+                    <p class="md-body-2">Select who you would like to assign to this file:</p>
+                    <div layout="row" layout-align="center center" layout-wrap layout-padding flex>
+                        <md-checkbox class="filter-checkbox md-primary" ng-repeat="member in membersList" ng-click="selectMember($index, 'member')">{{(member._id) ? member.name : member.email}}</md-checkbox>
+                    </div>
+                </div>
 				
             </div>
         </md-dialog-content>
         
         <md-dialog-actions>
             <md-button ng-click="closeModal()">Cancel</md-button>
-            <md-button type="submit" class="md-primary">Save Edits</md-button>
+            <md-button ng-click="step=step-1" ng-show="step!=1">Back</md-button>
+            <md-button ng-click="next('edit-file')" ng-show="step!=3">Next</md-button>
+            <md-button type="submit" class="md-primary" ng-show="step==3">Save Edits</md-button>
         </md-dialog-actions>
     </form>
 </md-dialog>

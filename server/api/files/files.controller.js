@@ -278,19 +278,75 @@ exports.update = function(req, res) {
                 createdAt: new Date(),
                 element: {}
             };
+            var editType;
             async.parallel([
                 function(cb) {
                     if (data.editType === "edit") {
-                        if (data.selectedTag) {
-                            activity.element.tags = [data.selectedTag];
-                            file.tags = [data.selectedTag];
-                        } 
-                        if (data.name && data.name !== file.name) {
-                            activity.element.name = (file.name.length !== data.name.length) ? data.name : null;
-                            file.name = data.name;
-                        }
-                        cb();
+                        async.parallel([
+                            function (callback) {
+                                if (data.newMembers && data.newMembers.length > 0) {
+                                    editType = "assign";
+                                    var members = [];
+                                    async.each(data.newMembers, function(member, cb) {
+                                        members.push(member.email);
+                                        User.findOne({email: member.email}, function(err, user) {
+                                            if (err) {cb();}
+                                            else if (!user) {
+                                                file.notMembers.push(member.email);
+                                                cb();
+                                            } else {
+                                                file.members.push(user._id);
+                                                cb();
+                                            }
+                                        });
+                                    }, function() {
+                                        file.activities.push({
+                                            user: req.user._id,
+                                            type: "assign",
+                                            createdAt: new Date(),
+                                            element: {members: members}
+                                        });
+                                        callback();
+                                    });
+                                } else {
+                                    callback();
+                                }
+                            },
+                            function (callback) {
+                                if (data.selectedTag && file.tags[0] !== data.selectedTag) {
+                                    activity.element.tags = [data.selectedTag];
+                                    file.tags = [data.selectedTag];
+                                    callback();
+                                } else {
+                                    callback();
+                                }
+                            },
+                            function (callback) {
+                                if (data.name && data.name !== file.name) {
+                                    activity.element.name = (file.name.length !== data.name.length) ? data.name : null;
+                                    file.name = data.name;
+                                    callback();
+                                } else {
+                                    callback();
+                                }
+                            },
+                            function (callback) {
+                                if (data.selectedEvent && file.event != data.selectedEvent) {
+                                    file.activities.push({
+                                        user: req.user._id,
+                                        type: (!file.event) ? "add-event" : "change-event",
+                                        createdAt: new Date(),
+                                        element: {}
+                                    });
+                                    file.event = data.selectedEvent;
+                                    callback();
+                                } else {
+                                    callback();
+                                }
+                            }
+                        ], cb);
                     } else if (data.editType === "assign") {
+                        editType = assign;
                         var members = [];
                         async.each(data.newMembers, function(member, cb) {
                             members.push(member.email);
@@ -337,9 +393,29 @@ exports.update = function(req, res) {
                         {path: "project"}
                     ], function(err, file) {
                         if (file.element.type === "file") {
+                            // Get uniq available file members
+                            var members = _.clone(file.members);
+                            members.push(file.owner);
+                            _.remove(members, {_id: req.user._id});
+                            members = _.map(_.groupBy(members,function(doc){
+                                return doc._id;
+                            }),function(grouped){
+                                return grouped[0];
+                            });
+
+                            if (editType==="assign") {
+                                _.each(members, function(member) {
+                                    EventBus.emit('socket:emit', {
+                                        event: 'file:new',
+                                        room: member._id.toString(),
+                                        data: JSON.parse(JSON.stringify(file))
+                                    });
+                                });
+                            }
+
                             if (file.isArchive) {
-                                file.members.push(file.owner);
-                                _.each(file.members, function(member) {
+                                members.push(req.user);
+                                _.each(members, function(member) {
                                     EventBus.emit('socket:emit', {
                                         event: 'file:archive',
                                         room: member._id.toString(),
@@ -459,7 +535,7 @@ exports.acknowledgement = function(req, res) {
 exports.deleteFile = function(req, res) {
     File.findByIdAndRemove(req.params.id, function(err, file) {
         if (err) {return res.send(500,err);}
-        return res.send(200);
+        return res.send(200, []);
     });
 };
 

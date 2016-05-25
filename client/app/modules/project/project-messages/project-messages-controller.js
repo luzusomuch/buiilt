@@ -169,6 +169,15 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
         }
     });
 
+    var listenerCleanFnRemove = $rootScope.$on("Thread.Remove", function(id) {
+        var index = _.findIndex($scope.threads, function(thread) {
+            return thread._id==id;
+        });
+        if (index !== -1) {
+            $scope.threads.splice(index, 1);
+        }
+    });
+
     /*Receive when owner created thread*/
     var listenerCleanFnPush = $rootScope.$on("Thread.Inserted", function(event, data) {
         $scope.threads.push(data);

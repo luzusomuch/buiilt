@@ -2,6 +2,69 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
     // dynamic height for reversion file thumbnail
     $scope.imageHeight = $("div.content").innerHeight() - $("div.content").innerHeight() * 0.2;
 
+    /*Show modal with valid name*/
+    $scope.showModal = function($event, modalName) {
+        if (modalName==="edit-file.html") {
+            $rootScope.isEditFile = true;
+        }
+        $mdDialog.show({
+            // targetEvent: $event,
+            controller: 'projectFileDetailCtrl',
+            resolve: {
+                file: ["$stateParams", "fileService", function($stateParams, fileService) {
+                    return fileService.get({id: $stateParams.fileId}).$promise;
+                }],
+                people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
+                    return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
+                }],
+                tenders: ["tenderService", "$stateParams", function(tenderService, $stateParams) {
+                    return tenderService.getAll({id: $stateParams.id}).$promise;
+                }],
+                activities: ["activityService", "$stateParams", function(activityService, $stateParams) {
+                    return activityService.me({id: $stateParams.id}).$promise;
+                }]
+            },
+            templateUrl: 'app/modules/project/project-files/detail/partials/' + modalName,
+            parent: angular.element(document.body),
+            clickOutsideToClose: false
+        });
+    };
+
+    /*Close opening modal*/
+    $scope.closeModal = function() {
+        if ($rootScope.firstTimeEdit) {
+            fileService.delete({id: file._id}).$promise.then(function() {
+                dialogService.closeModal();
+                dialogService.showToast("File Has Been Removed");
+                $rootScope.$emit("File.Remove", file._id);
+                $state.go("project.files.all", {id: $stateParams.id});
+            }, function(err) {
+                dialogService.showToast("Error When Delete File");
+            });
+        } else {
+            $mdDialog.cancel();
+        }
+    };
+
+    if ($rootScope.openDetail) {
+        $rootScope.firstTimeEdit = true;
+        $rootScope.openDetail = false;
+        $scope.showModal(null, "edit-file.html");
+    }
+
+    $scope.step=1;
+    $scope.next = function(type) {
+        if (type==="edit-file") {
+            if ($scope.step==1 && (!$scope.file.name || !$scope.file.selectedTag)) {
+                dialogService.showToast("Check Your Data");
+            } else if ($scope.step==2 && !$scope.file.selectedEvent) {
+                dialogService.showToast("Check Your Data");
+            } else {
+                $scope.step +=1;
+            }
+        }
+    };
+
     $scope.file = file;
     $scope.file.selectedEvent = file.event;
     $scope.file.selectedTag = (file.tags.length > 0) ? file.tags[0] : null;
@@ -255,39 +318,6 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
     };
     getProjectMembersOrTenderers();
 
-    /*Show modal with valid name*/
-    $scope.showModal = function($event, modalName) {
-        if (modalName==="edit-file.html") {
-            $rootScope.isEditFile = true;
-        }
-        $mdDialog.show({
-            targetEvent: $event,
-            controller: 'projectFileDetailCtrl',
-            resolve: {
-                file: ["$stateParams", "fileService", function($stateParams, fileService) {
-                    return fileService.get({id: $stateParams.fileId}).$promise;
-                }],
-                people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
-                    return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
-                }],
-                tenders: ["tenderService", "$stateParams", function(tenderService, $stateParams) {
-                    return tenderService.getAll({id: $stateParams.id}).$promise;
-                }],
-                activities: ["activityService", "$stateParams", function(activityService, $stateParams) {
-                    return activityService.me({id: $stateParams.id}).$promise;
-                }]
-            },
-            templateUrl: 'app/modules/project/project-files/detail/partials/' + modalName,
-            parent: angular.element(document.body),
-            clickOutsideToClose: false
-        });
-    };
-
-    /*Close opening modal*/
-    $scope.closeModal = function() {
-        $mdDialog.cancel();
-    };
-
     /*Show a toast with an inform*/
     $scope.showToast = function(value) {
         $mdToast.show($mdToast.simple().textContent(value).position('bottom','right').hideDelay(3000));
@@ -296,12 +326,12 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
     /*Edit selected file detail*/
     $scope.editFile = function(form) {
         if (form.$valid) {
-            $scope.file.tags = _.filter($scope.tags, {select: true});
-            if ($scope.file.tags.length > 0) {
+            $scope.file.newMembers = _.filter($scope.membersList, {select: true});
+            if ($scope.file.newMembers.length === 0 && $rootScope.firstTimeEdit) {
+                dialogService.showToast("Please Select At Least 1 Member...");
+            } else {
                 $scope.file.editType = "edit";
                 $scope.update($scope.file);
-            } else {
-                dialogService.showToast("Please Select At Least 1 Tag...");
             }
         } else {
             $scope.showToast("There Was An Error Saving Your Changes...");
@@ -377,7 +407,7 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
     $scope.update = function(file) {
         fileService.update({id: file._id}, file).$promise.then(function(res) {
             $scope.file = file;
-            $scope.closeModal();
+            dialogService.closeModal();
             switch (file.editType) {
                 case "edit":
                     $scope.showToast("File Information Updated Successfully.");

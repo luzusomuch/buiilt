@@ -20,7 +20,7 @@
 				
 				<span flex></span>
 					
-                <md-button ng-show="!file.isArchive" aria-label="Edit the File Details" class="md-icon-button" ng-class="{'md-primary': showDetail}" ng-click="showDetail=!showDetail">
+                <md-button ng-show="!file.isArchive" aria-label="Edit the File Details" class="md-icon-button" ng-class="{'md-primary': showDetail}" ng-click="showModal($event, 'edit-file.html')">
                     <md-tooltip md-direction="left">Edit Details</md-tooltip>
                     <md-icon class="material-icons">edit</md-icon>
                 </md-button>

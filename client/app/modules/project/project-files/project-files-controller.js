@@ -428,7 +428,7 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
 			//Track New File
 			mixpanel.identify($rootScope.currentUser._id);
 			mixpanel.track("New File Created");
-			
+			$rootScope.openDetail = true;
             $rootScope.$emit("File.Inserted", res);
             $state.go("project.files.detail", {id: res.project._id, fileId: res._id});
 		}, function(err) {
