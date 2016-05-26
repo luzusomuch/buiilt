@@ -50,8 +50,10 @@ exports.validateUpdate = function (req, cb) {
         req.checkBody('time.start', 'Task start time is required').notEmpty();
         req.checkBody('time.end', 'Task end time is required').notEmpty();
         return cb(req.validationErrors(), _.assign(_.pick(req.body, 'dateStart', 'dateEnd', 'time')));
+    } else if (req.body.editType==="enter-comment") {
+        req.checkBody("comment", "Comment is required").notEmpty();
+        return cb(req.validationErrors(), _.assign(_.pick(req.body)));
     } else {
-        // req.checkBody('name', 'Task title is required').notEmpty();
         req.checkBody('description', 'Task description is required').notEmpty();
         req.checkBody('dateEnd', 'Task end date is required').notEmpty();
         return cb(req.validationErrors(), _.assign(_.pick(req.body, 'description','completed','completedBy','completedAt','dateEnd'),{

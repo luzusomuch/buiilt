@@ -160,7 +160,7 @@ exports.get = function(req, res) {
     .populate('members', '_id name email phoneNumber')
     .populate('owner', '_id name email phoneNumber')
     .populate('activities.user','_id name email')
-    .populate("completedBy", "_id name email")
+    // .populate("completedBy", "_id name email")
     .populate("comments.user", "_id name email")
     .exec(function(err, task){
         if (err) {return res.send(500,err);}
@@ -309,16 +309,16 @@ exports.update = function(req,res) {
                     return errorsHelper.validationErrors(res,err)
                 }
                 task = _.merge(task,data);
-                task.members = data.members;
-                task.notMembers = data.notMembers;
-                if (req.body.editType !== "enter-comment") {
-                    var activity = {
-                        user: user._id,
-                        type: req.body.editType,
-                        createdAt: new Date(),
-                        element: {}
-                    };
-                }
+                // task.members = data.members;
+                // task.notMembers = data.notMembers;
+                
+                var activity = {
+                    user: user._id,
+                    type: req.body.editType,
+                    createdAt: new Date(),
+                    element: {}
+                };
+                
                 if (req.body.editType === "edit-task") {
                     task.description = data.description;
                     // task.dateEnd = data.dateEnd;
@@ -326,6 +326,8 @@ exports.update = function(req,res) {
                     // activity.element.dateEnd = (orginalTask.dateEnd !== req.body.dateEnd) ? orginalTask.dateEnd : null;
                 } else if (req.body.editType === "assign") {
                     if (orginalTask.members.length < data.members.length) {
+                        task.members = data.members;
+                        task.notMembers = data.notMembers;
                         var members = [];
                         _.each(req.body.newMembers, function(member) {
                             members.push(member.name);
@@ -346,6 +348,7 @@ exports.update = function(req,res) {
                         end: data.time.end
                     }
                 } else if (req.body.editType==="enter-comment") {
+                    activity.element.comment = req.body.comment;
                     var comments = (task.comments) ? task.comments : [];
                     comments.push({
                         user: user._id,
@@ -356,9 +359,7 @@ exports.update = function(req,res) {
                     task.markModified("enterComment");
                 }
 
-                if (req.body.editType!=="enter-comment") {
-                    task.activities.push(activity);
-                }
+                task.activities.push(activity);
 
                 task._editUser = user;
                 task.save(function(err) {
