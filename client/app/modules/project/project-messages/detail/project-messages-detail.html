@@ -10,12 +10,7 @@
 					<md-tooltip md-direction="bottom">Back</md-tooltip>
 				</md-button>
 				
-		        <h5 ng-show="!showDetail">{{thread.name}}</h5>
-
-		        <md-input-container ng-show="showDetail">
-		        	<label for="">Thread Name</label>
-		        	<input type="text" ng-model="thread.name" ng-blur="changeTitle()">
-		        </md-input-container>
+		        <h5>{{thread.name}}</h5>
 				
 				<span flex></span>
 
@@ -27,16 +22,35 @@
 					<md-tooltip md-direction="bottom">Copy Message Address</md-tooltip>
 			      	<md-icon class="material-icons">content_paste</md-icon>
 	  	      	</md-button>
-	  	      	<md-button ng-show="thread.owner._id==currentUser._id" aria-label="Show Tender Detail" class="md-icon-button" ng-click="showEditThreadModal($event)" ng-class="{'md-primary':showDetail}">
+				
+	  	      	<md-button ng-show="thread.owner._id==currentUser._id" aria-label="Show Message Detail" class="md-icon-button" ng-click="showDetail=!showDetail" ng-class="{'md-primary':showDetail}">
 					<md-tooltip md-direction="bottom">Show Thread Detail</md-tooltip>
 			      	<i class="material-icons">edit</i>
 	  	      	</md-button>
 		    </div>
 			
 			<md-divider layout="row" flex></md-divider>
+			
+			<div ng-show="showDetail" layout-padding class="md-secondary">
+				
+				<div layout="row" layout-align="space-around center">
+					
+					<md-button class="md-button md-primary" ng-click="showEditThreadModal($event)">Edit Name</md-button>
+					
+					<md-input-container flex="30">
+							<label for="">Event</label>
+							<md-select ng-change="addOrChangeEvent()" ng-model="thread.selectedEvent">
+								<md-option ng-repeat="activity in activities" ng-show="!activity.isMilestone" ng-value="activity._id">{{activity.name}}</md-option>
+							</md-select>
+					</md-input-container>
+				</div>
+				
+			</div>
+			
+			<md-divider layout="row" ng-show="showDetail" flex></md-divider>
 	
 			<div class="content" layout="column" layout-margin flex>
-				<div ng-show="showDetail">
+				<!-- <div ng-show="showDetail">
 					<div layout="column">
 						<md-input-container flex>
 							<label for="">Events List</label>
@@ -46,7 +60,7 @@
 						</md-input-container>
 					</div>
 				</div>
-				<md-divider></md-divider>
+				<md-divider></md-divider> -->
 				<div scroll-to-bottom="thread.activities">
 					<div class="item-activity">
 						<div layout="row" layout-align="center center" flex class="activity-stream" layout-padding ng-repeat="activity in thread.activities" ng-class="{related: activity.element.related, 'unread-notification': activity.unread, 'unread-notification-line': activity.unreadLine}" ng-show="activity.type=='chat' || activity.type=='related-file' || activity.type=='related-task'">
@@ -54,9 +68,9 @@
 	
 								<p ng-switch="activity.type" class="activity-head" style="margin-bottom: 15px; border-bottom: 0.5px solid #EEEEEE">
 									<span class="activity-creator">{{(activity.user) ? activity.user.name : activity.email}}</span>
-									<span class="meta-data" ng-switch-when="chat"> has replied to this thread at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
-									<span class="meta-data" ng-switch-when="related-task"> has created related task for this thread at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
-									<span class="meta-data" ng-switch-when="related-file"> has created related file for this thread at <span class="date-time">{{activity.createdAt | date:'hh:mm a'}}, {{activity.createdAt |date:'dd-MM-yyyy'}}</span>:</span>
+									<span class="meta-data" ng-switch-when="chat"> replied to this thread on <span class="date-time">{{activity.createdAt |date:'dd-MM-yyyy'}} at {{activity.createdAt | date:'hh:mm a'}}</span>:</span>
+									<span class="meta-data" ng-switch-when="related-task"> created a related task for this thread on <span class="date-time">{{activity.createdAt |date:'dd-MM-yyyy'}} at {{activity.createdAt | date:'hh:mm a'}}</span>:</span>
+									<span class="meta-data" ng-switch-when="related-file"> created a related file for this thread on <span class="date-time">{{activity.createdAt |date:'dd-MM-yyyy'}} at {{activity.createdAt | date:'hh:mm a'}}</span>:</span>
 								</p>
 	
 								<span ng-switch="activity.type" class="activity-body md-body">
@@ -79,9 +93,9 @@
 				<md-divider></md-divider>
 			</div>
 			<div layout="row">
-				<form ng-submit="sendMessage(form)" flex>
-					<div layout="row">
-						<md-input-container flex="80">
+				<form ng-submit="sendMessage(form)">
+					<div layout="row" flex="80" flex-offset="10">
+						<md-input-container>
 							<label for="">Enter Your Message Here</label>
 							<textarea ng-model="message.text" columns="1" rows="4" required></textarea>
 						</md-input-container>

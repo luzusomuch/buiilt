@@ -1,5 +1,7 @@
 angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q, $rootScope, $scope, $timeout, $stateParams, messageService, $mdToast, $mdDialog, $state, thread, peopleService, taskService, uploadService, people, clipboard, socket, notificationService, tenders, activities, dialogService) {
-    /*Close opening modal*/
+    $scope.showDetail = false;
+	
+	/*Close opening modal*/
     $scope.closeModal = function() {
         if ($rootScope.firstTimeEdit)
             $scope.removeThread();

@@ -78,7 +78,7 @@
 				<md-list-item class="md-2-line" ng-repeat="thread in threads | filter: search | unique: '_id' track by thread._id" ng-show="thread.__v>0" md-ink-ripple>
 					
 					<div class="md-avatar">
-						<md-icon class="material-icons md-avatar md-primary" style="margin-top: 30px">fiber_manual_record</md-icon>
+						<md-icon class="material-icons md-avatar md-primary" style="margin-top: 12px">fiber_manual_record</md-icon>
 					</div>
 			
 					<div ui-sref="project.messages.detail({id: thread.project, messageId: thread._id})" class="md-list-item-text" layout-margin>

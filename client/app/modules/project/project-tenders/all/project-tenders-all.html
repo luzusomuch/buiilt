@@ -78,7 +78,7 @@
 				<md-list-item class="md-2-line" ng-repeat="tender in tenders | filter: search | unique: '_id' track by $index" md-ink-ripple>
 				
 					<div class="md-avatar">
-						<md-icon ng-show="(tender.__v > 0)" class="material-icons md-avatar md-primary" style="margin-top: 30px">fiber_manual_record</md-icon>
+						<md-icon ng-show="(tender.__v > 0)" class="material-icons md-avatar md-primary" style="margin-top: 12px">fiber_manual_record</md-icon>
 					</div>
 					
 					<div ui-sref="project.tenders.detail({id: tender.project, tenderId: tender._id})" class="md-list-item-text" layout-margin>
