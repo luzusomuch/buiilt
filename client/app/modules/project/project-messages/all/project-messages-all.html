@@ -53,46 +53,57 @@
 	            </md-menu>
 				
 			</div>
-
-			<div layout="row" layout-align="center center">
-                <p ng-show="!name && selectedFilterEventList.length==0 && selectedFilterRecepientList.length==0">Displaying All Results</p>
-                <p ng-show="name || selectedFilterEventList.length > 0 || selectedFilterRecepientList.length > 0">
-                    Displaying Results where 
-                    <span ng-show="name">Name is "{{name}}"</span> 
-                    <span ng-show="name && (selectedFilterEventList.length > 0 || selectedFilterRecepientList.length > 0)"> and </span> 
-                    <span ng-show="selectedFilterEventList.length > 0">Event is 
-                    	<span ng-repeat="tag in selectedFilterEventList">"{{tag.name}}", </span>
-                	</span>
-                	<span ng-show="(name || selectedFilterEventList.length > 0) && selectedFilterRecepientList.length > 0"> and </span>
-                	<span ng-show="selectedFilterRecepientList.length > 0">Member Name is 
-                    	<span ng-repeat="tag in selectedFilterRecepientList">"{{tag.name}}", </span>
-                	</span>
-                </p>
-            </div>
 			
 			<md-divider layout="row" flex></md-divider>
 			
+			<md-subheader class="md-primary">
+                <p ng-show="!name && selectedFilterEventList.length==0 && selectedFilterRecepientList.length==0">Displaying All Messages</p>
+                <p ng-show="name || selectedFilterEventList.length > 0 || selectedFilterRecepientList.length > 0">
+                    Displaying Messages where 
+                    <span ng-show="name">Name is "{{name}}"</span> 
+                    <span ng-show="name && (selectedFilterEventList.length > 0 || selectedFilterRecepientList.length > 0)"> and </span> 
+                    <span ng-show="selectedFilterEventList.length > 0">Event is 
+                    	<span ng-repeat="tag in selectedFilterEventList" style="text-transform: capitalize">"{{tag.name}}"<span ng-hide="$last">, </span></span>
+                	</span>
+                	<span ng-show="(name || selectedFilterEventList.length > 0) && selectedFilterRecepientList.length > 0"> and </span>
+                	<span ng-show="selectedFilterRecepientList.length > 0">Recipient is 
+                    	<span ng-repeat="tag in selectedFilterRecepientList" style="text-transform: capitalize">"{{tag.name}}"<span ng-hide="$last">, </span></span>
+                	</span>
+                </p>
+			</md-subheader>
+			
+			<md-divider></md-divider>
+			
 			<md-list ng-cloak flex class="content-list">
-				<md-list-item class="md-3-line" ng-repeat="thread in threads | filter: search | unique: '_id' track by thread._id" ng-show="thread.__v>0" md-ink-ripple>
+				<md-list-item class="md-2-line" ng-repeat="thread in threads | filter: search | unique: '_id' track by thread._id" ng-show="thread.__v>0" md-ink-ripple>
+					
+					<div class="md-avatar">
+						<md-icon class="material-icons md-avatar md-primary" style="margin-top: 30px">fiber_manual_record</md-icon>
+					</div>
 			
 					<div ui-sref="project.messages.detail({id: thread.project, messageId: thread._id})" class="md-list-item-text" layout-margin>
-						<h3>{{ thread.name }}<i class="material-icons" ng-show="thread.element.type=='tender'">warning</i></h3>
-						<h4>Assignees: <span ng-repeat="member in thread.members track by $index">{{member.name}}, </span><span ng-repeat="member in thread.notMembers track by $index">{{member}}</span></h4>
-						<p ng-show="thread.__v > 0" style="color: #2196F3">Updates: {{thread.__v}}</p>
-					    <!-- <p ng-show="thread.__v == 0">No New Updates</p> -->
+						<h3>{{ thread.name }}</h3>
+						<h4>Assignees: <span ng-repeat="member in thread.members track by $index">{{member.name}}<span ng-hide="$last">, </span></span><span ng-repeat="member in thread.notMembers track by $index">{{member}}</span></h4>
 				    </div>
-				
+					
+					<md-icon ng-show="thread.element.type=='tender'" class="material-icons md-secondary"><md-tooltip md-direction="left">This message is attached to a Tender</md-tooltip>attach_money</md-icon>
 			        <md-button class="md-secondary" ng-click="showReplyModal($event, thread)"><md-icon class="material-icons">reply</md-icon><md-tooltip md-direction="down">Compose a Reply</md-tooltip></md-button>
 				    <md-divider ng-hide="$last"></md-divider>
 			
 				</md-list-item>
 
-				<md-list-item class="md-3-line" ng-repeat="thread in threads | orderBy: '-updatedAt' | filter: search | unique: '_id' track by thread._id" ng-show="thread.__v==0" md-ink-ripple>
+				<md-list-item class="md-2-line" ng-repeat="thread in threads | orderBy: '-updatedAt' | filter: search | unique: '_id' track by thread._id" ng-show="thread.__v==0" md-ink-ripple>
+				
+					
+					<div class="md-avatar">
+					</div>
 	    
 					<div ui-sref="project.messages.detail({id: thread.project, messageId: thread._id})" class="md-list-item-text" layout-margin>
 					    <h3>{{ thread.name }}</h3>
-					    <h4>Assignees: <span ng-repeat="member in thread.members track by $index">{{member.name}}, </span><span ng-repeat="member in thread.notMembers track by $index">{{member}}</span></h4>
+					    <h4>Assignees: <span ng-repeat="member in thread.members track by $index">{{member.name}}<span ng-hide="$last">, </span></span><span ng-repeat="member in thread.notMembers track by $index">{{member}}</span></h4>
 				    </div>
+					
+					<md-icon ng-show="thread.element.type=='tender'" class="material-icons md-secondary"><md-tooltip md-direction="left">This message is attached to a Tender</md-tooltip>attach_money</md-icon>
 			        <md-button class="md-secondary" ng-click="showReplyModal($event, thread)"><md-icon class="material-icons">reply</md-icon><md-tooltip md-direction="down">Compose a Reply</md-tooltip></md-button>
 				    <md-divider ng-hide="$last"></md-divider>
 	

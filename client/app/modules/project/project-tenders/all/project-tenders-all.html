@@ -53,31 +53,37 @@
 	            </md-menu>
 				
 			</div>
-
-			<div layout="row" layout-align="center center">
-                <p ng-show="!name && selectedFilterEventsList.length==0 && selectedFilterTenderersList.length==0">Displaying All Results</p>
-                <p ng-show="name || selectedFilterEventsList.length > 0 || selectedFilterTenderersList.length > 0">
-                    Displaying Results where 
-                    <span ng-show="name">Name is "{{name}}"</span> 
-                    <span ng-show="name && (selectedFilterEventsList.length > 0 || selectedFilterTenderersList.length > 0)"> and </span> 
-                    <span ng-show="selectedFilterEventsList.length > 0">Event is 
-                    	<span ng-repeat="tag in selectedFilterEventsList">"{{tag.name}}", </span>
-                	</span>
-                	<span ng-show="(name || selectedFilterEventsList.length > 0) && selectedFilterTenderersList.length > 0"> and </span>
-                	<span ng-show="selectedFilterTenderersList.length > 0">Tenderer Name is 
-                    	<span ng-repeat="tag in selectedFilterTenderersList">"{{tag.name}}", </span>
-                	</span>
-                </p>
-            </div>
 			
 			<md-divider layout="row" flex></md-divider>
 			
+			<md-subheader class="md-primary">
+                <p ng-show="!name && selectedFilterEventsList.length==0 && selectedFilterTenderersList.length==0">Displaying All Tenders</p>
+                <p ng-show="name || selectedFilterEventsList.length > 0 || selectedFilterTenderersList.length > 0">
+                    Displaying Tenders where 
+                    <span ng-show="name">Name is "{{name}}"</span> 
+                    <span ng-show="name && (selectedFilterEventsList.length > 0 || selectedFilterTenderersList.length > 0)"> and </span> 
+                    <span ng-show="selectedFilterEventsList.length > 0">Event is 
+                    	<span ng-repeat="tag in selectedFilterEventsList" style="text-trasnform: capitalize">"{{tag.name}}"<span ng-hide="$last">, </span></span>
+                	</span>
+                	<span ng-show="(name || selectedFilterEventsList.length > 0) && selectedFilterTenderersList.length > 0"> and </span>
+                	<span ng-show="selectedFilterTenderersList.length > 0">Tenderer Name is 
+                    	<span ng-repeat="tag in selectedFilterTenderersList" style="text-trasnform: capitalize">"{{tag.name}}"<span ng-hide="$last">, </span></span>
+                	</span>
+                </p>
+			</md-subheader>
+			
+			<md-divider></md-divider>
+			
 			<md-list ng-cloak flex class="content-list">
 				<md-list-item class="md-2-line" ng-repeat="tender in tenders | filter: search | unique: '_id' track by $index" md-ink-ripple>
+				
+					<div class="md-avatar">
+						<md-icon ng-show="(tender.__v > 0)" class="material-icons md-avatar md-primary" style="margin-top: 30px">fiber_manual_record</md-icon>
+					</div>
+					
 					<div ui-sref="project.tenders.detail({id: tender.project, tenderId: tender._id})" class="md-list-item-text" layout-margin>
 						<h3>{{ tender.name }}</h3>
-						<h4>Tenderers: <span ng-repeat="member in tender.members track by $index">{{(member.user) ? member.user.name : member.name}}, </span></h4>
-						<p ng-class="{'md-primary': tender.__v > 0}">{{(tender.__v > 0) ? tender.__v + "Update" : "No Update"}}</p>
+						<h4>Tenderers: <span ng-repeat="member in tender.members track by $index">{{(member.user) ? member.user.name : member.name}}<span ng-hide="$last">, </span></span></h4>
 				    </div>
 					
 				    <md-divider ng-hide="$last"></md-divider>

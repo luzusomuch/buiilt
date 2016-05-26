@@ -50,7 +50,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
 
     /*config fullcalendar*/
     $timeout(function(){
-        var height = ($("#calendar-content").outerHeight()/100)*63;
+        var height = ($("#calendar-content").outerHeight()/100)*72;
         $scope.uiConfig = {
             calendar: {
                 height: "auto",

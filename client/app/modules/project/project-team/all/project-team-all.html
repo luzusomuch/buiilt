@@ -14,8 +14,8 @@
                 <md-menu md-position-mode="target-right target">
                     <md-button aria-label="Roles" ng-click="$mdOpenMenu($event)">Roles</md-button>
                     <md-menu-content width="4">
-						<md-menu-item layout-padding>
-							<md-button ng-click="selectTag(null , 'all')"><span class="md-subhead">Show All Type</span></md-button>
+						<md-menu-item>
+							<md-button ng-click="selectTag(null , 'all')"><span class="md-subhead">Show All Roles</span></md-button>
 						</md-menu-item>
 						<md-divider></md-divider>
                         <md-menu-item ng-repeat="tag in teamMemberTypeTags" layout-padding>
@@ -25,35 +25,46 @@
                 </md-menu>
 		
 			</div>
-
-            <div layout="row" layout-align="center center">
-                <p ng-show="!name && !search">Displaying All Results</p>
-                <p ng-show="name || search">
-                    Displaying Results where <span ng-show="name">Name is "{{name}}"</span> <span ng-show="name && search"> and </span> <span ng-show="availableSearchTypes.length > 0">Role is <span ng-repeat="tag in availableSearchTypes">"{{tag.text}}", </span></span>
-                </p>
-            </div>
         
             <md-divider layout="row" flex></md-divider>
+			
+			<md-subheader class="md-primary">
+                <p ng-show="!name && !search">Displaying All Project Team Members</p>
+                <p ng-show="name || search">
+                    Displaying Project Team Members where <span ng-show="name">Name is "{{name}}"</span> <span ng-show="name && search"> and </span> <span ng-show="availableSearchTypes.length > 0">Role is <span ng-repeat="tag in availableSearchTypes" style="text-transform: capitalize">"{{tag.text}}"<span ng-hide="$last">, </span></span></span>
+				</p>
+			</md-subheader>
+			
+			<md-divider></md-divider>
 			
 			<md-list ng-cloak flex class="content-list" ng-show="membersList.length > 0">
 			
 				<md-list-item class="md-2-line" ng-show="!search" ng-repeat="member in membersList | filter :searchMember track by $index">
-			
+				
+					<div class="md-avatar">
+					</div>
+					
 					<div class="md-list-item-text" layout-margin>
 						<h3>{{member.name}}</h3>
-						<h4>{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}} - {{(member.email) ? member.email : 'No Email Address on File'}}</h4>
+						<h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
 				    </div>
 					
+					<p class="md-secondary">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</p>
 				    <md-divider ng-hide="$last"></md-divider>
 			
 				</md-list-item>
 
 				<md-list-item class="md-2-line" ng-show="search" ng-repeat="member in searchResults | filter :searchMember track by $index">
+				
+					<div class="md-avatar">
+					</div>
 	    
 					<div class="md-list-item-text" layout-margin>
 					    <h3>{{(member._id) ? member.name : member.email}}</h3>
-					    <h4>{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}} - {{(member.email) ? member.email : 'No Email Address on File'}}</h4>
+					    <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
 				    </div>
+					
+					<p class="md-secondary">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</p>
 				    <md-divider ng-hide="$last"></md-divider>
 	
 				</md-list-item>
