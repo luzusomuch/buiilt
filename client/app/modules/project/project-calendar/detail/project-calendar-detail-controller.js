@@ -191,7 +191,7 @@ angular.module("buiiltApp").controller("projectCalendarDetailCtrl", function($ro
                     dialogService.showToast("Inserted New Activity Into Milestone Successfully");
                     dialogService.closeModal();
                     $scope.activity.subActivities.push(res);
-                }, function(err) {dialogService.showToast("Error");});
+                }, function(err) {dialogService.showToast("There Has Been An Error...");});
             } else {
                 dialogService.showToast("Please Check Your Input...");
             }
