@@ -101,18 +101,11 @@
 						</div>
 					</div>
 				</div>
-				
-				<md-divider></md-divider>
-				
-				<div layout="column" layout-align="center center">
-		  	      	<!-- <md-button ng-show="!thread.isArchive" aria-label="Compose Message" class="md-icon-button" ng-click="showModal($event, 'upload-reversion.html')">
-					  	<md-tooltip md-direction="top">Upload Reversion</md-tooltip>
-				      	<md-icon class="material-icons">file_upload</md-icon>
-		  	      	</md-button> -->
-		  	      	<p class="md-body-2">Select or Drop File Here To Update Reversion</p>
-		  	      	<input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-multiple="false" data-fp-drag-class="filepicker-drag"/>
-				</div>
-				
+			</div>
+			<md-divider></md-divider>
+			
+			<div layout="row" layout-align="center center" layout-padding>
+				<input filepicker type="filepicker" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfile)" data-fp-button-class="md-button md-raised md-primary" data-fp-button-text="Upload a New Version"/>
 			</div>
 		</div>
 	</div>
