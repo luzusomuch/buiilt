@@ -53,29 +53,33 @@
 			<md-divider layout="row" ng-show="showDetail" flex></md-divider>
 	
 	
-			<div layout="column" layout-margin flex>
-				<div class="content">
+			<div class="content" layout="column" layout-margin flex>
+				<!-- <div class="content"> -->
 					
 					<div class="item-activity">
 						<div layout="row" layout-align="center center" flex class="activity-stream" layout-padding ng-repeat="activity in tender.activities" ng-show="activity.type=='attach-scope' || activity.type=='attach-addendum' || activity.type=='attach-document-set' || activity.type=='select-winner'">
-							<div flex class="activity-detail" ng-switch="activity.type">
-								<p ng-switch-when="attach-scope">
-									<strong>{{activity.user.name}}</strong> has attached scope "{{activity.element.scope}}" at <strong>{{activity.createdAt | date: longDate}}</strong>
+							<div flex class="activity-detail">
+								<p ng-switch="activity.type" ng-switch="activity.type" class="activity-head" style="margin-bottom: 15px; border-bottom: 0.5px solid #EEEEEE">
+									<span class="activity-creator">{{(activity.user) ? activity.user.name : activity.email}}</span>
+
+									<span class="meta-data" ng-switch-when="attach-scope"> has attached scope at <span class="date-time">{{activity.createdAt |date:'dd-MM-yyyy'}} at {{activity.createdAt | date:'hh:mm a'}}</span>:</span>
+
+									<span class="meta-data" ng-switch-when="attach-addendum"> has attached addendum at <span class="date-time">{{activity.createdAt |date:'dd-MM-yyyy'}} at {{activity.createdAt | date:'hh:mm a'}}</span>:</span>
+
+									<span class="meta-data" ng-switch-when="attach-document-set"> has attached document set at <span class="date-time">{{activity.createdAt |date:'dd-MM-yyyy'}} at {{activity.createdAt | date:'hh:mm a'}}</span>:</span>
+
+									<span class="meta-data" ng-switch-when="select-winner"> has selected winner for this tender at <span class="date-time">{{activity.createdAt |date:'dd-MM-yyyy'}} at {{activity.createdAt | date:'hh:mm a'}}</span>:</span>
 								</p>
-								<p ng-switch-when="attach-addendum">
-									<strong>{{activity.user.name}}</strong> has attached new addendum "{{activity.element.addendum}}" at <strong>{{activity.createdAt | date: longDate}}</strong>
-								</p>
-								<p ng-switch-when="attach-document-set">
-									<strong>{{activity.user.name}}</strong> has attached document set at <strong>{{activity.createdAt | date: longDate}}</strong>. You can click <a ui-sref="project.documentation.all({id: tender.project})">here</a> to enter it
-								</p>
-								<p ng-switch-when="select-winner">
-									<strong>{{activity.user.name}}</strong> has selected winner for this tender at <strong>{{activity.createdAt | date: longDate}}</strong>
-								</p>
+
+								<span ng-switch="activity.type" class="activity-body md-body">
+									<span ng-switch-when="attach-scope">{{activity.element.scope}}</span>
+									<span ng-switch-when="attach-addendum">{{activity.element.addendum}}</span>
+								</span>
 							</div>
 						</div>
 					</div>
 					<span flex></span>
-				</div>
+				<!-- </div> -->
 			</div>
 			
 			<md-divider></md-divider>
