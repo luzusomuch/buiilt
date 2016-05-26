@@ -51,7 +51,10 @@
 			<md-divider layout="row" flex></md-divider>
 	
 			<div layout="column" layout-margin flex>
-				<div class="content" layout="row">
+				<div class="content" ng-show="document.fileHistory.length===0" layout-align="center center">
+					This document hasn't got any versions
+				</div>
+				<div class="content" layout="row" ng-show="document.fileHistory.length > 0">
 					<div flex="10">
 						<md-button class="md-icon-button" ng-click="changeVersion('button', null, 'back')">
 							<md-icon class="material-icons">skip_previous</md-icon>

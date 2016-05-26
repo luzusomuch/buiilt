@@ -1,6 +1,6 @@
 angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', function($rootScope, $scope, $timeout, document, uploadService, $mdDialog, $mdToast, $stateParams, fileService, socket, notificationService, peopleService, dialogService) {
     $scope.document = document;
-    $scope.document.currentPath = $scope.document.fileHistory[$scope.document.fileHistory.length-1].link;
+    $scope.document.currentPath = ($scope.document.fileHistory.length > 0) ? $scope.document.fileHistory[$scope.document.fileHistory.length-1].link : null;
     $scope.document.currentVersion = $scope.document.fileHistory.length;
     $scope.currentUser = $rootScope.currentUser;
 
