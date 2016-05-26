@@ -21,7 +21,9 @@
 				</div>
 				
 				<div layout="column" ng-show="invite.type == 'addClient' || invite.type == 'addArchitect'">
-					<p class="md-body-2">Please provide the first name and email for your <span ng-show="invite.type == 'addClient'">Client</span><span ng-show="invite.type == 'addArchitect'">Architect</span>:</p>
+					<p class="md-body-2">Please search for the name of the <span ng-show="invite.type == 'addClient'">Client</span><span ng-show="invite.type == 'addArchitect'">Architect</span> you would like to invite:</p>
+					<p class="md-body-1">You can add a new <span ng-show="invite.type == 'addClient'">Client</span><span ng-show="invite.type == 'addArchitect'">Architect</span> to your Contact Book by clicking the "Create a New Contact" button below left.</p>
+					
 					<div layout="row">
 						<md-input-container flex="5">
 						</md-input-container>
@@ -55,7 +57,8 @@
 				</div>
 				
 				<div layout="column" ng-show="invite.type == 'addBuilder' || invite.type == 'addConsultant' || invite.type == 'addSubcontractor'">
-					<p class="md-body-2">Please provide the first name and email for the <span ng-show="invite.type == 'addBuilder'">Builder</span><span ng-show="invite.type == 'addConsultant'">Consultant</span><span ng-show="invite.type == 'addSubcontractor'">Subcontractor</span> you would like to invite:</p>
+					<p class="md-body-2">Please search for the name of the <span ng-show="invite.type == 'addBuilder'">Builder</span><span ng-show="invite.type == 'addConsultant'">Consultant</span><span ng-show="invite.type == 'addSubcontractor'">Subcontractor</span> you would like to invite:</p>
+					<p class="md-body-1">You can add a new <span ng-show="invite.type == 'addBuilder'">Builder</span><span ng-show="invite.type == 'addConsultant'">Consultant</span><span ng-show="invite.type == 'addSubcontractor'">Subcontractor</span> to your Contact Book by clicking the "Create a New Contact" button below left.</p>
 					
 					<div layout="row">
 						<md-input-container flex="5">
@@ -89,6 +92,7 @@
 		
 		<md-dialog-actions>
 			<md-button ng-click="createNewContact()">Create a New Contact</md-button>
+			<span flex></span>
 			<md-button ng-click="dialogService.closeModal()">Cancel</md-button>
 			<md-button type="submit" class="md-primary">Add Contact to Project</md-button>
 		</md-dialog-actions>
