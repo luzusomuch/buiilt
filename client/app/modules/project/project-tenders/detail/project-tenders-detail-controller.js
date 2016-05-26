@@ -4,6 +4,7 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
     var originalTender = angular.copy(tender);
     $scope.tender = tender;
     $scope.tender.selectedEvent = tender.event;
+    $scope.tender.documentSetSelected = tender.documentSet;
     $scope.tender.newMembers = [];
     $scope.contactBooks = contactBooks;
     $scope.documentSets = documentSets;
@@ -150,6 +151,7 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
     socket.on("tender:update", function(data) {
         $scope.tender = data;
         $scope.tender.selectedEvent = data.event;
+        $scope.tender.documentSetSelected = data.documentSet;
         originalTender = $scope.tender;
     });
 
@@ -213,9 +215,13 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
         }
     };
 
-    $scope.changeTitle = function() {
-        $scope.tender.editType="change-title";
-        $scope.update($scope.tender);
+    $scope.changeTitle = function(form) {
+        if (form.$valid) {
+            $scope.tender.editType="change-title";
+            $scope.update($scope.tender);
+        } else {
+            dialogService.showToast("Check Your Data");
+        }
     };
 
     $scope.addScopeOrAddendum = function() {

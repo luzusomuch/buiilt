@@ -398,7 +398,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 }
                 var title = task.description + "-";
                 title += (task.__v > 0) ? task.__v+" Updates" : "No Update";
-                $scope.events.push({type: "task", _id: task._id, title: title, start: dateStart, end: dateEnd, "backgroundColor": "#2196F3", allDay: false});
+                $scope.events.push({type: "task", _id: task._id, title: title, start: dateStart, end: dateEnd, "backgroundColor": (task.__v > 0) ? "#2196F3" : "#FFC107", allDay: false});
             }
         });
         _.each(activities, function(activity) {

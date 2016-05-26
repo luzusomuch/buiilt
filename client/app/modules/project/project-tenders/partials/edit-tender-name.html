@@ -1,0 +1,25 @@
+<md-dialog aria-label="Edit Tender Detail" flex="70">
+    <form ng-submit="changeTitle(form)" name="form">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Edit Tender Detail</h2>
+            </div>
+        </md-toolbar>
+        
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column">
+                <div layout="column" ng-show="step==1">
+                    <p class="md-body-2">Your Tender Name</p>
+                    <md-input-container>
+                        <label for="">Tender Name</label>
+                        <input type="text" name="name" ng-model="tender.name" md-autofocus required>
+                    </md-input-container>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions>
+            <md-button ng-click="dialogService.closeModal()">Cancel</md-button>
+            <md-button type="submit" class="md-primary">Submit</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>
