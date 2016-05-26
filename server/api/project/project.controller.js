@@ -671,7 +671,7 @@ exports.backup = function(req, res) {
                                     threadsData.push({"Thread Name": thread.name, "Assignees": threadMembers, "Activity Time": changeDateToMiniFormat(thread.createdAt), "Activity Description": "This message thread was created on "+changeDateToFullFormat(thread.createdAt), "Activity Detail": "N/A"});
                                     _.each(thread.activities, function(activity) {
                                         if (activity.type==="chat") {
-                                            threadsData.push({"Thread Name": thread.name, "Assignees": threadMembers, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": activity.user.name + " replied to this message thread at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(thread.createdAt), "Activity Detail": activity.element.message});
+                                            threadsData.push({"Thread Name": thread.name, "Assignees": threadMembers, "Activity Time": changeDateToMiniFormat(activity.createdAt), "Activity Description": (activity.user) ? activity.user.name : activity.email + " replied to this message thread at " +moment(activity.createdAt).format("hh:mm")+ " " +changeDateToFullFormat(thread.createdAt), "Activity Detail": activity.element.message});
                                         } else if (activity.type==="assign") {
                                             var assignees="";
                                             _.each(activity.element.invitees, function(assignee) {

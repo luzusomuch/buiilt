@@ -61,8 +61,8 @@ angular.module('buiiltApp').controller('projectCtrl', function($rootScope, $scop
                     return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
                 }],
                 tenders: ["tenderService", "$stateParams", function(tenderService, $stateParams) {
-                    return tenderService.me({id: $stateParams.id}).$promise;
-                }]
+                    return tenderService.getAll({id: $stateParams.id}).$promise;
+                }],
             },
 	        templateUrl: 'app/modules/project/project-overview/partials/project-overview-edit.html',
 	        parent: angular.element(document.body),
