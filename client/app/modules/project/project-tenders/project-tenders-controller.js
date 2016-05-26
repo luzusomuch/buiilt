@@ -186,7 +186,7 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
             }
         } else if ($scope.selectedFilterTenderersList.length===0 && $scope.selectedFilterEventsList.length===0) {
             if (tender.status===$scope.status) {
-                if ($scope.name && $scope.name.trim.length > 0) {
+                if ($scope.name && $scope.name.trim().length > 0) {
                     if (tender.name && tender.name.toLowerCase().indexOf($scope.name.toLowerCase()) !== -1) {
                         found = true;
                     }
