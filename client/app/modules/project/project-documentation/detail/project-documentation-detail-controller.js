@@ -3,6 +3,8 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
     $scope.document.currentPath = ($scope.document.fileHistory.length > 0) ? $scope.document.fileHistory[$scope.document.fileHistory.length-1].link : null;
     $scope.document.currentVersion = $scope.document.fileHistory.length;
     $scope.currentUser = $rootScope.currentUser;
+	
+	$scope.showDetail = false;
 
     /*Check if current team is team owner*/
     $scope.isOwnerTeam=false;
