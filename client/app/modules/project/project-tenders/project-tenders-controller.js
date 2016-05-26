@@ -32,6 +32,7 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
             tenderService.create(data).$promise.then(function(res) {
                 dialogService.closeModal();
                 dialogService.showToast("Add New Tender Successfully");
+                $rootScope.openDetail = true;
                 $state.go("project.tenders.detail", {id: res.project, tenderId: res._id});
             }, function(err) {
                 dialogService.showToast("Error");
@@ -201,6 +202,19 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
     socket.on("tender:new", function(data) {
         if (data.project==$stateParams.id) {
             $scope.tenders.push(data);
+        }
+    });
+
+    $scope.$on("$destroy", function() {
+        functionRmTenders();
+    });
+
+    var functionRmTenders = $rootScope.$on("Tender.Remove", function(ev, data) {
+        var index = _.findIndex($scope.tenders, function(tender) {
+            return tender._id.toString()===data.toString();
+        });
+        if (index !== -1) {
+            $scope.tenders.splice(index ,1);
         }
     });
 }); 

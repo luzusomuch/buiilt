@@ -10,6 +10,109 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
     $scope.activities = activities;
 	$scope.showDetail = false;
 
+    /*Show modal with valid name*/
+    $scope.showModal = function(modalName) {
+        $mdDialog.show({
+            controller: 'projectTendersDetailCtrl',
+            resolve: {
+                tender: ["tenderService", "$stateParams", function(tenderService, $stateParams) {
+                    return tenderService.get({id: $stateParams.tenderId}).$promise;
+                }],
+                contactBooks: ["contactBookService", function(contactBookService) {
+                    return contactBookService.me().$promise;
+                }],
+                people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
+                    return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
+                }],
+                documentSets: ["$stateParams", "documentService", function($stateParams, documentService) {
+                    return documentService.me({id: $stateParams.id}).$promise;
+                }],
+                activities: ["activityService", "$stateParams", function(activityService, $stateParams) {
+                    return activityService.me({id: $stateParams.id}).$promise;
+                }],
+            },
+            templateUrl: 'app/modules/project/project-tenders/partials/' + modalName,
+            parent: angular.element(document.body),
+            clickOutsideToClose: false
+        });
+    };
+
+    /*Close opening modal*/
+    $scope.closeModal = function() {
+        if ($rootScope.firstTimeEdit)
+            tenderService.delete({id: tender._id}).$promise.then(function() {
+                dialogService.closeModal();
+                dialogService.showToast("Tender Has Been Removed");
+                $rootScope.$emit("Tender.Remove", tender._id);
+                $state.go("project.tenders.all", {id: $stateParams.id});
+            }, function(err) {
+                dialogService.showToast("Error When Delete Tender");
+            });
+        else 
+            dialogService.closeModal();
+    };
+
+    if ($rootScope.openDetail) {
+        $rootScope.openDetail = null;
+        $rootScope.firstTimeEdit = true;
+        $scope.showModal("edit-tender.html");
+    }
+
+    $scope.step =1;
+    $scope.next = function(type) {
+        if (type==="edit-tender") {
+            if ($scope.step==1 && (!$scope.tender.name || !$scope.tender.selectedEvent)) {
+                dialogService.showToast("Check Your Data");
+            } else if ($scope.step==2 && !$scope.tender.isAddScopeLater && !$scope.tender.scope) {
+                dialogService.showToast("Check Your Data");
+            } else {
+                $scope.step+=1;
+            }
+        }
+    };
+
+    $scope.editTenderAfterCreate = function() {
+        if (!$scope.tender.isAddDocumentSetLater && !$scope.tender.documentSetSelected) {
+            dialogService.showToast("Check Your Data");
+        } else {
+            var prom = [];
+            if (originalTender.name!==$scope.tender.name) {
+                $scope.tender.editType="change-title";
+                var editTender = angular.copy($scope.tender);
+                delete editTender.documentSetSelected;
+                prom.push(tenderService.update({id: tender._id}, editTender).$promise);
+            } 
+
+            if ($scope.tender.selectedEvent) {
+                $scope.tender.editType = "add-event";
+                var editTender = angular.copy($scope.tender);
+                delete editTender.documentSetSelected;
+                prom.push(tenderService.update({id: tender._id}, editTender).$promise);
+            }
+
+            if (!$scope.tender.isAddScopeLater && $scope.tender.scope.trim().length > 0) {
+                $scope.tender.editType = "attach-scope";
+                var editTender = angular.copy($scope.tender);
+                delete editTender.documentSetSelected;
+                prom.push(tenderService.update({id: tender._id}, editTender).$promise);
+            }
+
+            if (!$scope.tender.isAddDocumentSetLater && $scope.tender.documentSetSelected) {
+                $scope.tender.editType = "attach-document-set";
+                var editTender = angular.copy($scope.tender);
+                prom.push(tenderService.update({id: tender._id}, editTender).$promise);
+            }
+            if (prom.length > 0) {
+                $q.all(prom).then(function() {
+                    dialogService.showToast("Updated Tender Successfully");
+                    dialogService.closeModal();
+                }, function() {
+                    dialogService.showToast("Error");
+                });
+            }
+        }
+    };
+
     /*Get invitees list from contact book that haven't in the current
     tender member list*/
     function getInviteTypeAndCheckInviteesMayInvite() {
@@ -53,33 +156,6 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
     $scope.selectItem = function(index, type) {
         if (type==="contact") 
             $scope.contactBooks[index].select = !$scope.contactBooks[index].select;
-    };
-
-    /*Show modal with valid name*/
-    $scope.showModal = function(modalName) {
-        $mdDialog.show({
-            controller: 'projectTendersDetailCtrl',
-            resolve: {
-                tender: ["tenderService", "$stateParams", function(tenderService, $stateParams) {
-                    return tenderService.get({id: $stateParams.tenderId}).$promise;
-                }],
-                contactBooks: ["contactBookService", function(contactBookService) {
-                    return contactBookService.me().$promise;
-                }],
-                people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
-                    return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
-                }],
-                documentSets: ["$stateParams", "documentService", function($stateParams, documentService) {
-                    return documentService.me({id: $stateParams.id}).$promise;
-                }],
-                activities: ["activityService", "$stateParams", function(activityService, $stateParams) {
-                    return activityService.me({id: $stateParams.id}).$promise;
-                }],
-            },
-            templateUrl: 'app/modules/project/project-tenders/partials/' + modalName,
-            parent: angular.element(document.body),
-            clickOutsideToClose: false
-        });
     };
 
     $scope.querySearch = function(query) {

@@ -700,10 +700,17 @@ exports.updateTenderInvitee = function(req, res) {
     Require admin role
 */
 exports.delete = function(req, res) {
-    Tender.findByIdAndRemove(req.params.id, function (err, tender) {
+    Tender.findById(req.params.id, function (err, tender) {
         if (err) {
             return res.send(500, err);
         }
-        return res.send(200);
+        if (tender.owner.toString()===req.user._id.toString() || req.user.role==="admin") {
+            tender.remove(function(err) {
+                if (err) {return res.send(500,err);}
+                return res.send(200);
+            });
+        } else {
+            return res.send(500, {msg: "Not Allow"});
+        }
     });
 };
