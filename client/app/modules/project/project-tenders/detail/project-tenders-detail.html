@@ -10,22 +10,12 @@
 					<md-tooltip md-direction="bottom">Back</md-tooltip>
 				</md-button>
 				
-		        <h5 ng-show="!showDetail">{{tender.name}}</h5>
-
-		        <md-input-container ng-show="showDetail">
-		        	<label for="">Tender Name</label>
-		        	<input type="text" ng-model="tender.name" ng-blur="changeTitle()">
-		        </md-input-container>
-
-				<!-- <md-button ng-show="showSaveTitleBtn" class="md-primary" aria-label="Save Title" ng-click="changeTitle()">
-					{{(!save) ? "Change Title" : "Save"}}
-				</md-button> -->
+		        <h5>{{tender.name}}</h5>
 				
 				<span flex></span>
 
-				
 	  	      	<md-button ng-show="tender.owner._id==currentUser._id" aria-label="Show Tender Detail" class="md-icon-button" ng-click="showDetail=!showDetail" ng-class="{'md-primary': showDetail}">
-					<md-tooltip md-direction="bottom">Show Tender Detail</md-tooltip>
+					<md-tooltip md-direction="left">Edit Tender Details</md-tooltip>
 			      	<i class="material-icons">edit</i>
 	  	      	</md-button>
 	
@@ -33,12 +23,41 @@
 		    </div>
 			
 			<md-divider layout="row" flex></md-divider>
+			
+			<div ng-show="showDetail" layout-padding class="md-secondary">
+				
+				<div layout="row" layout-align="space-around center">
+					<md-button class="md-button md-primary">Edit Name</md-button>
+					
+					<md-input-container flex="30">
+					        <label>Event</label>
+							<md-select ng-change="changeEventOrDocumentSet('event')" ng-model="tender.selectedEvent">
+								<md-option ng-show="activities.length===0">Please create event first</md-option>
+								<md-option ng-repeat="ev in activities" ng-value="ev._id" ng-show="!ev.isMilestone">{{ev.name}}</md-option>
+							</md-select>
+					</md-input-container>
+				
+					<md-input-container flex="30">
+					        <label>Documentation Set</label>
+							<md-select ng-change="changeEventOrDocumentSet('attach-document-set')" ng-model="tender.documentSetSelected">
+								<md-option ng-show="documentSets.length===0">Please create document set first</md-option>
+								<md-option ng-repeat="document in documentSets" ng-value="document._id">{{document.name}}</md-option>
+							</md-select>
+					</md-input-container>
+					
+					<md-button ng-disabled="true" class="md-button  md-primary" ng-disabled="tender.status!=='open'" ng-click="showModal('select-winner.html')">Select a Winner</md-button>
+				</div>
+				
+			</div>
+			
+			<md-divider layout="row" ng-show="showDetail" flex></md-divider>
+	
 	
 			<div layout="column" layout-margin flex>
 				<div class="content">
-					<div class="detail" ng-show="showDetail">
+					<!-- <div class="detail" ng-show="showDetail">
 						<div layout="row">
-							<md-button aria-label="Select Winner" class="md-primary" ng-show="tender.status=='open'" ng-click="showModal('select-winner.html')">Select Winner</md-button>
+							<md-button aria-label="Select Winner" class="md-primary" >Select Winner</md-button>
 						</div>
 						<form>
 							<div layout="column">
@@ -61,13 +80,15 @@
 									</md-select>
 								</md-input-container>
 							</div>
-							<!-- <div layout="row">
+							<div layout="row">
 								<md-button ng-click="showDetail=false">Close</md-button>
 								<md-button type="submit" class="md-primary">Save Change</md-button>
-							</div> -->
+							</div>
 						</form>
-					</div>
-					<md-divider></md-divider>
+					</div> -->
+					
+					
+					
 					<div class="item-activity">
 						<div layout="row" layout-align="center center" flex class="activity-stream" layout-padding ng-repeat="activity in tender.activities" ng-show="activity.type=='attach-scope' || activity.type=='attach-addendum' || activity.type=='attach-document-set' || activity.type=='select-winner'">
 							<div flex class="activity-detail" ng-switch="activity.type">

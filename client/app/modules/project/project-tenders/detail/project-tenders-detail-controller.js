@@ -8,6 +8,7 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
     $scope.contactBooks = contactBooks;
     $scope.documentSets = documentSets;
     $scope.activities = activities;
+	$scope.showDetail = false;
 
     /*Get invitees list from contact book that haven't in the current
     tender member list*/
