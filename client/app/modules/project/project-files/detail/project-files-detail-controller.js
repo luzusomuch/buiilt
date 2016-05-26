@@ -416,7 +416,7 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
             switch (file.editType) {
                 case "edit":
                     $scope.showToast("File Information Updated Successfully.");
-                    $scope.showDetail = false;
+                    // $scope.showDetail = false;
                 break;
 
                 case "assign":
