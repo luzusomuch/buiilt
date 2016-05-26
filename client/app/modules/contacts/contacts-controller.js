@@ -44,13 +44,13 @@ angular.module('buiiltApp').controller('contactsCtrl', function($rootScope, $sco
         if ($scope.step==1) {
             if (type==="addContact") {
                 if (!$scope.searchNewContact.email || !$scope.searchNewContact.phoneNumber)
-                    dialogService.showToast("Please Insert At Least 1 Contact");
+                    dialogService.showToast("Please Insert At Least One Contact...");
                 else {
                     var currentSearchIndex = _.findIndex($scope.contactBooks, function(ct) {
                         return ct.email==$scope.searchNewContact.email || ct.phoneNumber==$scope.searchNewContact.phoneNumber;
                     });
                     if (currentSearchIndex !== -1) {
-                        dialogService.showToast("This Contact Has Already Existed");
+                        dialogService.showToast("This Contact Already Exists...");
                     } else {
                         userService.getAll({email: $scope.searchNewContact.email, phoneNumber: $scope.searchNewContact.phoneNumber}).$promise.then(function(res) {
                             $scope.searchUsers = res;
@@ -87,12 +87,12 @@ angular.module('buiiltApp').controller('contactsCtrl', function($rootScope, $sco
 
     $scope.addContact = function() {
         if (!$scope.selectedContact && $scope.selectedNewContact !== 0) {
-            dialogService.showToast("Please enter at least 1 contact");
+            dialogService.showToast("Please Enter At Least One Contact...");
         } else {
             $scope.newContact.contacts = [];
             if ($scope.selectedNewContact === 0) {
                 if (!$scope.searchNewContact.firstName || !$scope.searchNewContact.lastName) {
-                    dialogService.showToast("Check your new contact input");
+                    dialogService.showToast("Please Check Your Inputs Again...");
                     return;
                 } else {
                     $scope.newContact.contacts.push($scope.searchNewContact);
@@ -113,16 +113,16 @@ angular.module('buiiltApp').controller('contactsCtrl', function($rootScope, $sco
                 }
             });
             if (!allowInsert) {
-                dialogService.showToast("Your new contact is already existed");
+                dialogService.showToast("This Contact Already Exists...");
                 return
             }
             contactBookService.create({}, $scope.newContact).$promise.then(function(res) {
                 $rootScope.$emit("addContact", res);
                 dialogService.closeModal();
-                dialogService.showToast("Added New Contacts Successfully");
+                dialogService.showToast("New Contact Added Successfully.");
                 $rootScope.isCreateNewContact = null;
             }, function(err) {
-                dialogService.showToast("Error");
+                dialogService.showToast("There Has Been An Error...");
             });
         }
     };
