@@ -1,4 +1,6 @@
 angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, $rootScope, $scope, $mdDialog, documents, uploadService, $mdToast, $stateParams, socket, $state, fileService, documentSets, people, dialogService, documentService, contactBooks) {
+    $scope.contentHeight = $rootScope.maximunHeight - $("header").innerHeight() - 30;
+
     $scope.documents = documents;
     $scope.documentSets = documentSets;
     $scope.dialogService = dialogService;

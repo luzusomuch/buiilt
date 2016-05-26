@@ -1,6 +1,6 @@
 <div layout="row" layout-padding>
 	
-	<div layout="column" flex="70">
+	<div layout="column" flex="70" style="height:{{contentHeight}}px">
 		
 		<div layout="column" class="md-whiteframe-1dp detail-view-main">
 				
@@ -93,9 +93,9 @@
 			<form ng-submit="sendMessage(form)">
 				<div layout="row" layout-padding>
 					
-					<md-input-container flex>
+					<md-input-container flex style="margin: 0px !important">
 						<label for="">Enter Your Message Here</label>
-						<textarea ng-model="message.text" columns="1" rows="4" required></textarea>
+						<textarea id="messageArea" ng-model="message.text" columns="1" rows="4" required></textarea>
 					</md-input-container>
 
 		  	      	<md-button type="submit" ng-show="!thread.isArchive" aria-label="Compose Message" class="md-icon-button">
@@ -108,7 +108,7 @@
 		</div>
 	</div>
 
-	<div layout="column" flex="30">
+	<div layout="column" flex="30" style="height: {{contentHeight}}px">
 		
 		<div layout="column" class="md-whiteframe-1dp detail-view-inspector">
 				

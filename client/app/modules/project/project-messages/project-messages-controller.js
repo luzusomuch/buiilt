@@ -1,5 +1,5 @@
 angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScope, $scope, $timeout, $mdDialog, peopleService, $stateParams, $state, $mdToast, messageService, threads, people, socket, notificationService, dialogService, activities) {
-	$rootScope.title = $rootScope.project.name +" messages list";
+    $rootScope.title = $rootScope.project.name +" messages list";
     $rootScope.openDetail = false;
     $scope.people = people;
 	$scope.threads = threads;
