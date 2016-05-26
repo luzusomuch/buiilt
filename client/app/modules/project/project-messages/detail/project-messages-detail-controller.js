@@ -401,7 +401,7 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
             } else {
                 dialogService.showToast((res.isArchive) ? "This Message Was Archived Successfully" : "This Message Was Unarchived Successfully");
             }
-            $scope.showDetail = false;
+            // $scope.showDetail = false;
         }, function(err) {dialogService.showToast("There Has Been An Error...");});
     };
 
