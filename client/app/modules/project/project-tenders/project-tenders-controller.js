@@ -26,16 +26,16 @@ angular.module('buiiltApp').controller('projectTendersCtrl', function($rootScope
 
     $scope.addNewTender = function() {
         if (!checkAllowCreateTender()) {
-            dialogService.showToast("Not Allow To Excute This Function");
+            dialogService.showToast("You Do Not Have Permission to Create a Tender.");
         } else {
             var data = {project: $rootScope.project};
             tenderService.create(data).$promise.then(function(res) {
                 dialogService.closeModal();
-                dialogService.showToast("Add New Tender Successfully");
+                dialogService.showToast("New Tender Created Successfully.");
                 $rootScope.openDetail = true;
                 $state.go("project.tenders.detail", {id: res.project, tenderId: res._id});
             }, function(err) {
-                dialogService.showToast("Error");
+                dialogService.showToast("There Has Been An Error...");
             });
         }
     };
