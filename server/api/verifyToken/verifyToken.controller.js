@@ -52,7 +52,7 @@ exports.create = function(req, res) {
                             client.sendMessage({
                                 to: newVefiryToken.phoneNumber,
                                 from: config.twilio.phoneNumber,
-                                body: "Please Enter This Code To Verify " + newVefiryToken.token
+                                body: "Your Verification PIN is " + newVefiryToken.token + ". From buiilt.com.au"
                             }, function(err, success) {
                                 if (err) {console.log(err);}
                                 return res.send(200);
@@ -63,7 +63,7 @@ exports.create = function(req, res) {
                     client.sendMessage({
                         to: verifyToken.phoneNumber,
                         from: config.twilio.phoneNumber,
-                        body: "Please Enter This Code To Verify " + verifyToken.token
+                        body: "Your Verification PIN is " + verifyToken.token + ". From buiilt.com.au"
                     }, function(err, success) {
                         if (err) {console.log(err);}
                         return res.send(200);

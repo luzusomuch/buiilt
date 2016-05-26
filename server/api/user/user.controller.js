@@ -855,7 +855,7 @@ exports.getAllNotifications = function(req, res) {
 exports.getToken = function(req, res) {
     User.findOne({phoneNumber: req.query.phoneNumber}, function(err, user) {
         if (err) {return res.send(500,err);}
-        else if (!user) {return res.send(404, {msg: "This Phone Number Is Not Existed"});}
+        else if (!user) {return res.send(404, {msg: "This Phone Number Does Not Exist..."});}
         else {
             user.phoneNumberLoginToken = makeid();
             user.save(function(err) {
@@ -865,7 +865,7 @@ exports.getToken = function(req, res) {
                     client.sendMessage({
                         to: user.phoneNumber,
                         from: config.twilio.phoneNumber,
-                        body: "Please Enter This Code To Login " + user.phoneNumberLoginToken
+                        body: "Your Verification PIN is " + user.phoneNumberLoginToken + ". From buiilt.com.au"
                     }, function(err, success) {
                         if (err) {console.log(err);}
                         return res.send(200);
