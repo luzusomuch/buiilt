@@ -53,7 +53,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
         var height = ($("#calendar-content").outerHeight()/100)*72;
         $scope.uiConfig = {
             calendar: {
-                height: "auto",
+                height: height,
                 header: {
                     left: "month agendaWeek agendaDay",
                     center: "title",

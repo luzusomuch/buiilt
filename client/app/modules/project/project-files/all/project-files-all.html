@@ -71,48 +71,54 @@
 	            </md-menu>
 				
 			</div>
-			
-			<div layout="row" layout-align="center center">
-                <p ng-show="!name && selectedFilterEventsList.length==0 && selectedFilterAssigneesList.length==0 && selectedFilterTagsList.length==0">Displaying All Results</p>
-                <p ng-show="name || selectedFilterEventsList.length > 0 || selectedFilterAssigneesList.length > 0 || selectedFilterTagsList.length > 0">
-                    Displaying Results where 
-                    <span ng-show="name">Name is "{{name}}"</span> 
-                    <span ng-show="name && (selectedFilterEventsList.length > 0 || selectedFilterAssigneesList.length > 0 || selectedFilterTagsList.length > 0)"> and </span> 
-                    <span ng-show="selectedFilterEventsList.length > 0">Event is 
-                    	<span ng-repeat="tag in selectedFilterEventsList">"{{tag.name}}", </span>
-                	</span>
-                	<span ng-show="(name || selectedFilterEventsList.length > 0) && selectedFilterAssigneesList.length > 0"> and </span>
-                	<span ng-show="selectedFilterAssigneesList.length > 0">Member Name is 
-                    	<span ng-repeat="tag in selectedFilterAssigneesList">"{{tag.name}}", </span>
-                	</span>
-					<span ng-show="(selectedFilterEventsList.length > 0 || selectedFilterAssigneesList.length > 0) && selectedFilterTagsList.length > 0"> and </span>
-                	<span ng-show="selectedFilterTagsList.length > 0">File Tag is 
-                    	<span ng-repeat="tag in selectedFilterTagsList">"{{tag.name}}", </span>
-                	</span>
-                </p>
-            </div>
 
 			<md-divider layout="row" flex></md-divider>
 			
+			<md-subheader class="md-primary">
+                <p ng-show="!name && selectedFilterEventsList.length==0 && selectedFilterAssigneesList.length==0 && selectedFilterTagsList.length==0">Displaying All Files</p>
+                <p ng-show="name || selectedFilterEventsList.length > 0 || selectedFilterAssigneesList.length > 0 || selectedFilterTagsList.length > 0">
+                    Displaying Files where 
+                    <span ng-show="name">Name is "{{name}}"</span> 
+                    <span ng-show="name && (selectedFilterEventsList.length > 0 || selectedFilterAssigneesList.length > 0 || selectedFilterTagsList.length > 0)"> and </span> 
+                    <span ng-show="selectedFilterEventsList.length > 0">Event is 
+                    	<span ng-repeat="tag in selectedFilterEventsList" style="text-transform: capitalize">"{{tag.name}}"<span ng-hide="$last">, </span></span>
+                	</span>
+                	<span ng-show="(name || selectedFilterEventsList.length > 0) && selectedFilterAssigneesList.length > 0"> and </span>
+                	<span ng-show="selectedFilterAssigneesList.length > 0">Member Name is 
+                    	<span ng-repeat="tag in selectedFilterAssigneesList" style="text-transform: capitalize">"{{tag.name}}"<span ng-hide="$last">, </span></span>
+                	</span>
+					<span ng-show="(selectedFilterEventsList.length > 0 || selectedFilterAssigneesList.length > 0) && selectedFilterTagsList.length > 0"> and </span>
+                	<span ng-show="selectedFilterTagsList.length > 0">File Tag is 
+                    	<span ng-repeat="tag in selectedFilterTagsList" style="text-transform: capitalize">"{{tag.name}}"<span ng-hide="$last">, </span></span>
+                	</span>
+                </p>
+			</md-subheader>
+			
+			<md-divider></md-divider>
+			
 			<md-list ng-cloak flex class="content-list">
 			
-				<md-list-item class="md-3-line" ng-repeat="file in files | filter: search | unique: '_id' track by $index" md-ink-ripple ng-show="file.__v>0">
+				<md-list-item class="md-2-line" ng-repeat="file in files | filter: search | unique: '_id' track by $index" md-ink-ripple ng-show="file.__v>0">
+					<div class="md-avatar">
+						<md-icon class="material-icons md-avatar md-primary" style="margin-top: 30px">fiber_manual_record</md-icon>
+					</div>
+					
 					<div ui-sref="project.files.detail({id: file.project._id, fileId: file._id})" style="cursor: pointer" class="md-list-item-text" layout-margin>
 						<h3>{{ file.name }}</h3>
 						<h4>Filed Under "<span ng-repeat="tag in file.tags"><span style="text-transform: capitalize">{{tag}}</span></span>"</h4>
-						<p ng-show="file.__v>0" style="color: #2196F3">Updates: {{file.__v}}</p>
-						<p ng-show="file.__v==0" class="md-body-1">No New Updates</p>
 				    </div>
 				
-			        <md-button class="md-secondary" ng-click="showViewFileModal($event, file)"><md-icon class="material-icons">remove_red_eye</md-icon><md-tooltip md-direction="down">View Current Version</md-tooltip></md-button>
+			        <md-button class="md-secondary" ng-click="showViewFileModal($event, file)"><md-icon class="material-icon">remove_red_eye</md-icon><md-tooltip md-direction="down">View Current Version</md-tooltip></md-button>
 				    <md-divider ng-hide="$last"></md-divider>
 				</md-list-item>
 
-				<md-list-item class="md-3-line" ng-repeat="file in files | filter: search | unique: '_id' track by $index" md-ink-ripple ng-show="file.__v==0">
+				<md-list-item class="md-2-line" ng-repeat="file in files | filter: search | unique: '_id' track by $index" md-ink-ripple ng-show="file.__v==0">
+					<div class="md-avatar">
+					</div>
+					
 					<div ui-sref="project.files.detail({id: file.project._id, fileId: file._id})" style="cursor: pointer" class="md-list-item-text" layout-margin>
 						<h3>{{ file.name }}</h3>
 						<h4>Filed Under "<span ng-repeat="tag in file.tags"><span style="text-transform: capitalize">{{tag}}</span></span>"</h4>
-						<p ng-show="file.__v==0" class="md-body-1">No New Updates</p>
 				    </div>
 				
 			        <md-button class="md-secondary" ng-click="showViewFileModal($event, file)"><md-icon class="material-icons">remove_red_eye</md-icon><md-tooltip md-direction="down">View Current Version</md-tooltip></md-button>
