@@ -13,10 +13,6 @@
 		        <h5>{{thread.name}}</h5>
 				
 				<span flex></span>
-
-				<!-- <md-button ng-show="showSaveTitleBtn" class="md-primary" aria-label="Save Title" ng-click="changeTitle()">
-					Save Changed!
-				</md-button> -->
 				
 	  	      	<md-button ng-show="!thread.isArchive" aria-label="Copy Message Address" class="md-icon-button" ng-click="copyMessageAddress(thread._id)">
 					<md-tooltip md-direction="bottom">Copy Message Address</md-tooltip>
@@ -90,23 +86,25 @@
 					</div>
 					<span flex></span>
 				</div>
-				<md-divider></md-divider>
 			</div>
-			<div layout="row">
-				<form ng-submit="sendMessage(form)">
-					<div layout="row" flex="80" flex-offset="10">
-						<md-input-container>
-							<label for="">Enter Your Message Here</label>
-							<textarea ng-model="message.text" columns="1" rows="4" required></textarea>
-						</md-input-container>
+			
+			<md-divider></md-divider>
+			
+			<form ng-submit="sendMessage(form)">
+				<div layout="row" layout-padding>
+					
+					<md-input-container flex>
+						<label for="">Enter Your Message Here</label>
+						<textarea ng-model="message.text" columns="1" rows="4" required></textarea>
+					</md-input-container>
 
-			  	      	<md-button type="submit" flex ng-show="!thread.isArchive" aria-label="Compose Message" class="md-icon-button">
-						  	<md-tooltip md-direction="top">Compose a Message</md-tooltip>
-					      	<md-icon class="material-icons">reply</md-icon>
-			  	      	</md-button>
-					</div>
-				</form>
-			</div>
+		  	      	<md-button type="submit" ng-show="!thread.isArchive" aria-label="Compose Message" class="md-icon-button">
+				      	<md-icon class="material-icons">send</md-icon>
+		  	      	</md-button>
+					
+				</div>
+			</form>
+			
 		</div>
 	</div>
 
