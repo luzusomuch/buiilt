@@ -1,4 +1,6 @@
 angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q, $rootScope, $scope, $timeout, $stateParams, messageService, $mdToast, $mdDialog, $state, thread, peopleService, taskService, uploadService, people, clipboard, socket, notificationService, tenders, activities, dialogService) {
+    $scope.contentHeight = $rootScope.maximunHeight - $("header").innerHeight() - 10;
+
     $scope.showDetail = false;
 	
 	/*Close opening modal*/
@@ -325,6 +327,9 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
 				
                 $rootScope.$emit("Thread.Update", res);
                 $scope.message.text = null;
+                $timeout(function() {
+                    $("#messageArea").css({"height": "29px"});
+                }, 1000);
             }, function(err) {$scope.showToast("There Has Been An Error...");});
         } else {
             $scope.showToast("There Has Been An Error...");

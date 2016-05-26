@@ -1,6 +1,6 @@
 <div layout="row" layout-margin>
 	
-	<div flex="30" class="md-whiteframe-1dp documentation-view">
+	<div flex="30" class="md-whiteframe-1dp documentation-view" style="height: {{contentHeight}}px">
 		<div class="md-toolbar-tools">
 			<h5>Document Sets</h5>
 			<span flex></span>
@@ -22,7 +22,7 @@
 		</md-list>
 	</div>
 
-	<div flex="70" class="md-whiteframe-1dp documentation-view">
+	<div flex="70" class="md-whiteframe-1dp documentation-view" style="height: {{contentHeight}}px">
 		<div class="md-toolbar-tools" ng-show="selectedDocumentSet">
 			<h5>{{selectedDocumentSet.name}}</h5>
 			<span flex></span>
