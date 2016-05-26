@@ -55,39 +55,6 @@
 	
 			<div layout="column" layout-margin flex>
 				<div class="content">
-					<!-- <div class="detail" ng-show="showDetail">
-						<div layout="row">
-							<md-button aria-label="Select Winner" class="md-primary" >Select Winner</md-button>
-						</div>
-						<form>
-							<div layout="column">
-								<p class="md-body-2">Please Select Events In List Below</p>
-								<md-input-container>
-									<label for="">Events List</label>
-									<md-select ng-change="changeEventOrDocumentSet('event')" ng-model="tender.selectedEvent">
-										<md-option ng-show="activities.length===0">Please create event first</md-option>
-										<md-option ng-repeat="ev in activities" ng-value="ev._id" ng-show="!ev.isMilestone">{{ev.name}}</md-option>
-									</md-select>
-								</md-input-container>
-							</div>
-							<div layout="column" ng-show="!tender.documentSet">
-								<p class="md-body-2">Please Select Document Sets In List Below</p>
-								<md-input-container>
-									<label for="">Document Sets List</label>
-									<md-select ng-change="changeEventOrDocumentSet('attach-document-set')" ng-model="tender.documentSetSelected">
-										<md-option ng-show="documentSets.length===0">Please create document set first</md-option>
-										<md-option ng-repeat="document in documentSets" ng-value="document._id">{{document.name}}</md-option>
-									</md-select>
-								</md-input-container>
-							</div>
-							<div layout="row">
-								<md-button ng-click="showDetail=false">Close</md-button>
-								<md-button type="submit" class="md-primary">Save Change</md-button>
-							</div>
-						</form>
-					</div> -->
-					
-					
 					
 					<div class="item-activity">
 						<div layout="row" layout-align="center center" flex class="activity-stream" layout-padding ng-repeat="activity in tender.activities" ng-show="activity.type=='attach-scope' || activity.type=='attach-addendum' || activity.type=='attach-document-set' || activity.type=='select-winner'">
@@ -109,16 +76,16 @@
 					</div>
 					<span flex></span>
 				</div>
-				
-				<md-divider></md-divider>
-				
-				<div layout="row" layout-align="center center">
-		  	      	<md-button aria-label="Add Scope Or Addendum" class="md-primary" ng-click="showModal('add-scope-or-addendum.html')">
-					  	{{(!tender.isCreateScope) ? "Add Scope" : "Add Addendum"}}
-		  	      	</md-button>
-				</div>
-				
 			</div>
+			
+			<md-divider></md-divider>
+			
+			<div layout="row" layout-align="center center">
+	  	      	<md-button aria-label="Add Scope Or Addendum" class="md-primary" ng-click="showModal('add-scope-or-addendum.html')">
+				  	{{(!tender.isCreateScope) ? "Add Scope" : "Add Addendum"}}
+	  	      	</md-button>
+			</div>
+			
 		</div>
 	</div>
 
