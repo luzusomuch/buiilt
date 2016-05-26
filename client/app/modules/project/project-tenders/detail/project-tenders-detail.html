@@ -74,6 +74,7 @@
 								<span ng-switch="activity.type" class="activity-body md-body">
 									<span ng-switch-when="attach-scope">{{activity.element.scope}}</span>
 									<span ng-switch-when="attach-addendum">{{activity.element.addendum}}</span>
+									<span ng-switch-when="attach-document-set">You can click <a ui-sref="project.documentation.all({id: tender.project})">here</a> to enter it</span>
 								</span>
 							</div>
 						</div>
