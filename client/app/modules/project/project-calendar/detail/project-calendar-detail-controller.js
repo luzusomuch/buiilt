@@ -136,7 +136,7 @@ angular.module("buiiltApp").controller("projectCalendarDetailCtrl", function($ro
             $scope.activity.editType = "assign-people";
             $scope.update($scope.activity);
         } else {
-            dialogService.showToast("Please select at least 1 members");
+            dialogService.showToast("Please Add At Least One Assignee...");
         }
     };
 
@@ -168,11 +168,11 @@ angular.module("buiiltApp").controller("projectCalendarDetailCtrl", function($ro
             $scope.newActivity.selectedMilestone = $stateParams.activityId;
             $scope.newActivity.newMembers = _.filter($scope.membersList, {select: true});
             if (!$scope.newActivity.name || $scope.newActivity.name.trim().length === 0) {
-                dialogService.showToast("Activity name is required");
+                dialogService.showToast("Activity Name Is Required...");
                 return;
             }
             if ($scope.newActivity.newMembers.length === 0) {
-                dialogService.showToast("Please Select At Least 1 Member");
+                dialogService.showToast("Please Select At Least One Assignee...");
                 error = true;
             }
             if ($scope.newActivity.date) {
@@ -193,7 +193,7 @@ angular.module("buiiltApp").controller("projectCalendarDetailCtrl", function($ro
                     $scope.activity.subActivities.push(res);
                 }, function(err) {dialogService.showToast("Error");});
             } else {
-                dialogService.showToast("Please Check Your Input");
+                dialogService.showToast("Please Check Your Input...");
             }
         } else {
             $scope.activity.newActivities = _.filter($scope.availableActivities, {select: true});
@@ -210,11 +210,11 @@ angular.module("buiiltApp").controller("projectCalendarDetailCtrl", function($ro
     $scope.update = function(activity) {
         activityService.update({id: activity._id}, activity).$promise.then(function(res) {
             if (activity.editType==="assign-people") {
-                dialogService.showToast("Assign more people successfully!");
+                dialogService.showToast("Activity Has Been Updated Successfully.");
             } else if (activity.editType==="insert-activities") {
-                dialogService.showToast("Inserted Activities Successfully");
+                dialogService.showToast("Activity Has Been Updated Successfully.");
             }
             dialogService.closeModal();
-        }, function(err) {dialogService.showToast("Error");});
+        }, function(err) {dialogService.showToast("There Has Been An Error...");});
     };
 });

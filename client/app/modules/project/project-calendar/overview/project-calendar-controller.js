@@ -157,14 +157,14 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
 
                                 $scope.changeDescription = function(){
                                     if ($scope.event.description.trim().length===0) {
-                                        dialogService.showToast("Please Enter Description");
+                                        dialogService.showToast("Please Enter an Event Description...");
                                     } else {
                                         $scope.event.editType="change-description";
                                         activityService.update({id: $scope.event._id}, $scope.event).$promise.then(function(res) {
-                                            dialogService.showToast("Change Description Successfully");
+                                            dialogService.showToast("Event Description Changed Successfully.");
                                             $scope.showEdit = false;
                                         }, function(err) {
-                                            dialogService.showToast("Error");
+                                            dialogService.showToast("There Has Been An Error...");
                                         });
                                     }
                                 };
@@ -234,11 +234,11 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                                         };
                                         messageService.create({id: activity.project}, newThread).$promise.then(function(res) {
                                             dialogService.closeModal();
-                                            dialogService.showToast("Create New Thread Successfully");
+                                            dialogService.showToast("New Thread Created Successfully.");
                                             $rootScope.$emit("Thread.Inserted", res);
                                             $state.go("project.messages.detail", {id: activity.project, messageId: res._id});
                                         }, function(err) {
-                                            dialogService.showToast("Error");
+                                            dialogService.showToast("There Has Been An Error...");
                                         });
                                     } else if (type==="file") {
                                         var newFile = {
@@ -249,14 +249,14 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                                         };
                                         fileService.create({id: activity.project}, newFile).$promise.then(function(res) {
                                             dialogService.closeModal();
-                                            dialogService.showToast("Create New File Successfully");
+                                            dialogService.showToast("New File Created Successfully.");
                                             $state.go("project.files.detail", {id: activity.project, fileId: res._id});
                                         }, function(err) {
-                                            dialogService.showToast("Error");
+                                            dialogService.showToast("There Has Been An Error...");
                                         });
                                     } else if (type==="tender") {
                                         if (!$scope.allowCreateTender) {
-                                            dialogService.showToast("Not Allow");
+                                            dialogService.showToast("You Are Not Allowed to Attach This to a Tender");
                                         } else {
                                             var newTender = {
                                                 project: $rootScope.project,
@@ -264,10 +264,10 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                                             };
                                             tenderService.create(newTender).$promise.then(function(res) {
                                                 dialogService.closeModal();
-                                                dialogService.showToast("Create New Tender Successfully");
+                                                dialogService.showToast("New Tender Created Successfully.");
                                                 $state.go("project.tenders.detail", {id: res.project, tenderId: res._id});
                                             }, function(err) {
-                                                dialogService.showToast("Error");
+                                                dialogService.showToast("There Has Been An Error...");
                                             });
                                         }
                                     }
@@ -293,26 +293,26 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                     if (event.type==="task") {
                         var updateTask = updateTaskDateTime(event, delta);
                         taskService.update({id: updateTask._id}, updateTask).$promise.then(function(res) {
-                            dialogService.showToast("Update Task Date Successfully");
-                        }, function(err) {dialogService.showToast("Error");});
+                            dialogService.showToast("Task Has Been Updated Successfully.");
+                        }, function(err) {dialogService.showToast("There Has Been An Error...");});
                     } else if (event.type==="event") {
                         var updateEvent = updateEventDateTime(event, delta);
                         activityService.update({id: updateEvent._id}, updateEvent).$promise.then(function(res) {
-                            dialogService.showToast("Update Event Date Time Successfully");
-                        }, function(err) {dialogService.showToast("Error");});
+                            dialogService.showToast("Event Has Been Updated Successfully.");
+                        }, function(err) {dialogService.showToast("There Has Been An Error...");});
                     }
                 },
                 eventResize: function(event, delta) {
                     if (event.type==="event") {
                         var updateEvent = updateEventDateTime(event, delta);
                         activityService.update({id: updateEvent._id}, updateEvent).$promise.then(function(res) {
-                            dialogService.showToast("Update Event Date Time Successfully");
-                        }, function(err) {dialogService.showToast("Error");});
+                            dialogService.showToast("Event Has Been Updated Successfully.");
+                        }, function(err) {dialogService.showToast("There Has Been An Error...");});
                     } else if (event.type==="task") {
                         var updateTask = updateTaskDateTime(event, delta);
                         taskService.update({id: updateTask._id}, updateTask).$promise.then(function(res) {
-                            dialogService.showToast("Update Task Date Successfully");
-                        }, function(err) {dialogService.showToast("Error");});
+                            dialogService.showToast("Task Has Been Updated Successfully.");
+                        }, function(err) {dialogService.showToast("There Has Been An Error...");});
                     }
                 }
             }
@@ -475,20 +475,20 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
             // }
             // if (!error) {
                 if (!$scope.activity.date.start || !$scope.activity.date.end) {
-                    dialogService.showToast("Please Check Your Date Input");
+                    dialogService.showToast("Please Check Your Dates...");
                 } else {
                     activityService.create({id: $stateParams.id}, $scope.activity).$promise.then(function(res) {
-                        dialogService.showToast((res.isMilestone) ? "Create Milestone Successfully" : "Create Activity Successfully");
+                        dialogService.showToast((res.isMilestone) ? "Create Milestone Successfully" : "Activity Has Been Created Successfully");
                         dialogService.closeModal();
                         activities.push(res);
                         $scope.convertAllToCalendarView(true);
-                    }, function(err) {dialogService.showToast("Error");});
+                    }, function(err) {dialogService.showToast("There Has Been An Error...");});
                 }
             // } else {
             //     dialogService.showToast("Check your input again.");
             // }
         } else {
-            dialogService.showToast("Check your input again.");
+            dialogService.showToast("Please Check Your Inputs - Something Is Missing...");
         }
     };
 
@@ -531,7 +531,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
             //     dialogService.showToast("Check your input again.");
             // }
         } else {
-            dialogService.showToast("Check your input again.");
+            dialogService.showToast("Please Check Your Input Again - Something Is Missing...");
         }
     };
 
@@ -596,7 +596,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
 
                 $scope.addComment = function() {
                     if (!$scope.comment || $scope.comment.trim().length===0) {
-                        dialogService.showToast("Please Enter Your Comment");
+                        dialogService.showToast("Please Provide a Comment...");
                     } else {
                         $scope.task.editType = "enter-comment";
                         $scope.task.comment = $scope.comment;
@@ -606,7 +606,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
 
                 $scope.changeDescription = function() {
                     if ($scope.task.description.trim().length===0) {
-                        dialogService.showToast("Task Description Must Be Enter");
+                        dialogService.showToast("Please Provide a Task Descrition...");
                     } else {
                         $scope.task.editType="edit-task";
                         $scope.update($scope.task);
@@ -631,19 +631,19 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                     taskService.update({id: task._id}, task).$promise.then(function(res) {
                         if (task.editType==="enter-comment") {
                             $scope.comment = null;
-                            dialogService.showToast("Enter New Comment Successfully");
+                            dialogService.showToast("New Comment Has Been Added.");
                         } else if (task.editType==="edit-task") {
-                            dialogService.showToast("Change Task Description Successfully");
+                            dialogService.showToast("Task Description Has Been Updated.");
                         } else if (task.editType==="assign") {
-                            dialogService.showToast("Assign Members To Task Successfully");
+                            dialogService.showToast("Assignees Added to Task Successfully.");
                         } else if (task.editType==="complete-task") {
-                            dialogService.showToast("Mark Task As Completed Successfully");
+                            dialogService.showToast("Task Has Been Marked Complete.");
                         } else if (task.editType==="uncomplete-task") {
-                            dialogService.showToast("Re-open Task Successfully");
+                            dialogService.showToast("Task Has Been Marked Incomplete.");
                         }
                         $scope.showEdit = false;
                     }, function(err) {
-                        dialogService.showToast("Error");
+                        dialogService.showToast("There Has Been An Error...");
                     });
                 };
             }],
