@@ -1,6 +1,9 @@
 angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope, $rootScope, $timeout, file, $mdDialog, uploadService, fileService, $mdToast, peopleService, $stateParams, messageService, taskService, $state, people, socket, notificationService, tenders, dialogService, activities) {
     // dynamic height for reversion file thumbnail
     $scope.imageHeight = $("div.content").innerHeight() - $("div.content").innerHeight() * 0.2;
+	
+	$scope.showDetail = false;
+	
 
     /*Show modal with valid name*/
     $scope.showModal = function($event, modalName) {
