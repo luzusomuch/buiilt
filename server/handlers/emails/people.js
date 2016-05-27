@@ -144,13 +144,13 @@ EventBus.onSeries('People.Updated', function(req, next){
                         invitee: currentTender.tenderers[0].name,
                         project: result.project.toJSON(),
                         link : config.baseUrl + 'signup?packageInviteToken=' + packageInvite._id,
-                        subject: req.editUser.name + ' invited you to project ' + result.project.name
+                        subject: req.editUser.name + ' invited you to their project, ' + result.project.name
                     },function(err){
                         // Send SMS notification for inactive user
                         Client.sendMessage({
                             to: currentTender.tenderers[0].phoneNumber,
                             from: config.twilio.phoneNumber,
-                            body: req.editUser.name + " invited you to their project on buiilt. Sign Up with your mobile number - http://buiilt.com.au/app"
+                            body: req.editUser.name + " invited you to their project. Sign Up with your mobile number - http://buiilt.com.au/app"
                         }, function(err, success) {
                             return next();
                         });
@@ -165,7 +165,7 @@ EventBus.onSeries('People.Updated', function(req, next){
                         invitee: user,
                         project: result.project.toJSON(),
                         link : config.baseUrl + 'project/'+result.project._id+'/overview',
-                        subject: req.editUser.name + ' has invited you to project ' + result.project.name
+                        subject: req.editUser.name + ' invited you to their project, ' + result.project.name
                     },function(err){
                         return next();
                     });
