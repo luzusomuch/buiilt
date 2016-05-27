@@ -14,7 +14,7 @@
     </md-subheader>
     
     <div ng-show="showActivity" class="activity-stream-head" layout-padding>
-        <p>This {{type}} was created by <strong>{{data.owner.name}}</strong> on {{data.createdAt | date: longDate}}</p>
+        <p>This {{type}} was created by <strong>{{data.owner.name}}</strong> on {{data.createdAt | date: 'dd MMMM yyyy'}} at {{data.createdAt | date: 'hh:mm a'}}</p>
     </div>
     <div ng-show="showActivity" layout-padding ng-repeat="activity in data.activities" ng-hide="activity.type=='attach-scope' || activity.type=='attach-addendum' || activity.type=='attach-document-set' || activity.type=='select-winner' || activity.type=='chat' || activity.type=='upload-reversion'">
         <p style="font-size: 12px; margin-top: 0px; margin-bottom: 0px; padding-bottom: 0px; padding-top: 0px">
@@ -38,7 +38,7 @@
                 <span ng-switch-when="insert-note"> attached a note to this {{type}}.</span>
                 <span ng-switch-when="edit"><span ng-show="activity.element.name"> changed the name of this {{type}} to {{activity.element.name}}</span> <span ng-show="activity.element.tags" ng-repeat="tag in activity.element.tags"> filed this {{type}} under '{{(tag.name) ? tag.name : tag}}'</span></span>
             </span>
-            <span> on {{activity.createdAt | date: longDate}} at {{time}}</span>
+            <span> on {{activity.createdAt | date: 'dd MMMM yyyy'}} at {{activity.createdAt | date: 'hh:mm a'}}</span>
         </p>
     </div>
     
