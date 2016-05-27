@@ -200,7 +200,51 @@ exports.update = function(req, res) {
                                 newInvitees.push({email: member.email, name: member.name, phoneNumber: member.phoneNumber});
                                 members.push({name:member.name, email: member.email, phoneNumber: member.phoneNumber});
                                 tenderMembers.push({email: member.email, name: member.name, phoneNumber: member.phoneNumber});
-                                cb();
+
+                                if (tender.isCreateScope) {
+                                    var thread = new Thread({
+                                        name: tender.name +" "+ member.name,
+                                        owner: req.user._id,
+                                        project: tender.project,
+                                        element: {type: "tender"},
+                                        messages: [],
+                                        notMembers: [member.email]
+                                    });
+                                    var scopeActivityIndex = _.findIndex(tender.activities, function(activity) {
+                                        return activity.type==="attach-scope";
+                                    });
+                                    if (scopeActivityIndex !== -1) {
+                                        thread.messages.push({user: req.user._id, createdAt: new Date(), text: "Tender Scope: "+tender.activities[scopeActivityIndex].element.scope});
+                                        thread.activities.push({
+                                            user: req.user._id, 
+                                            type: "chat", 
+                                            createdAt: new Date, 
+                                            element: {
+                                                message: "Tender Scope: "+tender.activities[scopeActivityIndex].element.scope
+                                            }
+                                        });
+                                    }
+                                    _.each(tender.activities, function(activity) {
+                                        if (activity.type==="attach-addendum") {
+                                            thread.messages.push({user: req.user._id, createdAt: new Date(), text: "Tender Addendum: "+activity.element.addendum})
+                                            thread.activities.push({
+                                                user: req.user._id, 
+                                                type: "chat", 
+                                                createdAt: new Date, 
+                                                element: {
+                                                    message: "Tender Addendum: "+activity.element.addendum
+                                                }
+                                            });
+                                        }
+                                    });
+                                    thread._editUser = req.user;
+                                    thread.save(function(err) {
+                                        if (err) {cb(err);}
+                                        cb();
+                                    });
+                                } else {
+                                    cb();
+                                }
                             } else {
                                 newInvitees.push({_id: _user._id, email: _user.email, name: _user.name, phoneNumber: _user.phoneNumber});
                                 members.push({name:_user.name, email: _user.email, _id: _user._id});
@@ -211,19 +255,37 @@ exports.update = function(req, res) {
                                         owner: req.user._id,
                                         project: tender.project,
                                         element: {type: "tender"},
-                                        messages: []
+                                        messages: [],
+                                        members: [_user._id]
                                     });
                                     var scopeActivityIndex = _.findIndex(tender.activities, function(activity) {
                                         return activity.type==="attach-scope";
                                     });
                                     if (scopeActivityIndex !== -1) {
                                         thread.messages.push({user: req.user._id, createdAt: new Date(), text: "Tender Scope: "+tender.activities[scopeActivityIndex].element.scope});
+                                        thread.activities.push({
+                                            user: req.user._id, 
+                                            type: "chat", 
+                                            createdAt: new Date, 
+                                            element: {
+                                                message: "Tender Scope: "+tender.activities[scopeActivityIndex].element.scope
+                                            }
+                                        });
                                     }
                                     _.each(tender.activities, function(activity) {
                                         if (activity.type==="attach-addendum") {
-                                            thread.messages.push({user: req.user._id, createdAt: new Date(), text: "Tender Addendum: "+activity.element.addendum})
+                                            thread.messages.push({user: req.user._id, createdAt: new Date(), text: "Tender Addendum: "+activity.element.addendum});
+                                            thread.activities.push({
+                                                user: req.user._id, 
+                                                type: "chat", 
+                                                createdAt: new Date, 
+                                                element: {
+                                                    message: "Tender Addendum: "+activity.element.addendum
+                                                }
+                                            });
                                         }
                                     });
+                                    thread._editUser = req.user;
                                     thread.save(function(err) {
                                         if (err) {cb(err);}
                                         _user.projects.push(tender.project);

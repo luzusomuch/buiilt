@@ -116,6 +116,7 @@ angular.module('buiiltApp').controller('contactsCtrl', function($rootScope, $sco
                 dialogService.showToast("This Contact Already Exists...");
                 return
             }
+            
             contactBookService.create({}, $scope.newContact).$promise.then(function(res) {
                 $rootScope.$emit("addContact", res);
                 dialogService.closeModal();
