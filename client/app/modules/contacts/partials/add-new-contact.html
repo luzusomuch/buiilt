@@ -1,8 +1,10 @@
-<md-dialog aria-label="Add New Contact" flex="75">
+<md-dialog aria-label="Add New Contact" flex="70">
     <form ng-submit="addContact()" name="form">
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2>Add New Contact</h2>
+				<span flex></span>
+				<md-button ng-click="dialogService.closeModal()" class="md-icon-button"><md-icon class="material-icons"><md-tooltip md-direction="left">Cancel</md-tooltip>close</md-icon></md-button>
             </div>
         </md-toolbar>
         
@@ -10,7 +12,6 @@
             <div class="md-dialog-content" layout="column" layout-padding>
 				
                 <div layout="column" ng-show="step==1">
-					
                     <p class="md-body-2">Enter the email address and mobile phone number for the contact you would like to create...</p>
 					
                     <div layout="row">
@@ -18,8 +19,9 @@
                             <label for="">Email</label>
                             <input type="email" name="email" ng-model="searchNewContact.email">
                         </md-input-container>
+						
                         <md-input-container flex>
-                            <label for="">Phone Number</label>
+                            <label for="">Mobile Phone Number</label>
                             <input type="text" name="phoneNumber" ng-model="searchNewContact.phoneNumber" ng-pattern="/^[0-9]{1,15}$/">
                         </md-input-container>
                     </div>
@@ -30,59 +32,59 @@
 
                 <div layout="column" ng-show="step==2">
 					
-                    <div layout="column" ng-show="searchUsers.length > 0">
+                    <div layout="column" ng-show="searchUsers.length > 0" layout-padding>
+                        <p class="md-body-2">We have found the following people in our database. If the contact you are searching for appears here, select their name and click "Add Contact".</p>
 						
-						<div layout="row" layout-padding>
-	                        <p class="md-body-2">We have found the following people in our database. If the contact you are searching for appears here, select their name and click "Add Contact".</p>
-						</div>
-						
-						<div layout="column" layout-padding>
+						<div layout="column">
 	                        <md-radio-group ng-model="selectedContact" class="md-primary">
-								<div ng-repeat="user in searchUsers" layout="row" layout-padding layout-align="start center">
-									<md-radio-button ng-value="user" class="md-primary"><span style="font-size: 20px">{{user.name}}</span> <span> {{user.email}}, {{user.phoneNumber}}</span></md-radio-button>
+								<div ng-repeat="user in searchUsers" layout="row" layout-align="start center">
+									<md-radio-button ng-value="user" class="md-primary"><span>{{user.name}} - {{user.email}}, {{user.phoneNumber}}</span></md-radio-button>
 								</div>
 	                        </md-radio-group>
 						</div>
-						
                     </div>
+					
+                    <div layout="column" ng-show="searchUsers.length===0" layout-padding>
+						<p class="md-body-2">We haven't found any matches for the details you entered. Please create a new contact by completing their details below:</p>
+						
+                        <div layout="row" flex="80">
+                            <md-input-container flex="50">
+                                <label for="">First Name</label>
+                                <input type="text" ng-model="searchNewContact.firstName">
+                            </md-input-container>
+                            <md-input-container flex="50">
+                                <label for="">Last Name</label>
+                                <input type="text" ng-model="searchNewContact.lastName">
+                            </md-input-container>
+						</div>
+						<div layout="row" flex="80">
+                            <md-input-container flex="50">
+                                <label for="">Email</label>
+                                <input type="text" ng-model="searchNewContact.email" disabled>
+                            </md-input-container>
+                            <md-input-container flex="50">
+                                <label for="">Phone Number</label>
+                                <input type="text" ng-model="searchNewContact.phoneNumber" disabled>
+                            </md-input-container>
+                        </div>
+                        
+                        <!-- <md-radio-group ng-model="selectedNewContact">
 
-                    <md-divider></md-divider>
-                    <div layout="column" ng-show="searchUsers.length===0">
-                        <p class="md-body-2">No results found on Buiilt database for that contact. Please add a new contact by completing the details below</p>
-                        <md-radio-group ng-model="selectedNewContact">
                             <md-radio-button flex="15" ng-value="searchUsers.length" class="md-primary" >
                             </md-radio-button>
-                            <div layout="row" flex>
-                                <md-input-container flex="20">
-                                    <label for="">First Name</label>
-                                    <input type="text" ng-model="searchNewContact.firstName">
-                                </md-input-container>
-                                <md-input-container flex="20">
-                                    <label for="">Last Name</label>
-                                    <input type="text" ng-model="searchNewContact.lastName">
-                                </md-input-container>
-                                <md-input-container flex="20">
-                                    <label for="">Email</label>
-                                    <input type="text" ng-model="searchNewContact.email" disabled>
-                                </md-input-container>
-                                <md-input-container flex="20">
-                                    <label for="">Phone Number</label>
-                                    <input type="text" ng-model="searchNewContact.phoneNumber" disabled>
-                                </md-input-container>
-                            </div>
-                        </md-radio-group>
+
+                        </md-radio-group> -->
+							
                     </div>
                 </div>
             </div>
 
             <md-dialog-actions>
-                <md-button ng-click="dialogService.closeModal()">Cancel</md-button>
-
                 <md-button ng-hide="step==1" ng-click="step = step-1">Back</md-button>
-                <md-button ng-hide="step==2" ng-click="next('addContact')">Next</md-button>
-
-                <md-button ng-show="step==2" type="submit">Add Contact</md-button>
+                <md-button ng-hide="step==2" class="md-primary" ng-click="next('addContact')">Next</md-button>
+                <md-button ng-show="step==2" class="md-primary" type="submit">Add Contact</md-button>
             </md-dialog-actions>
+			
         </md-dialog-content>
     </form>
 </md-dialog>
