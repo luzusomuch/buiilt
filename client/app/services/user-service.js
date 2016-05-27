@@ -89,6 +89,10 @@ angular.module('buiiltApp').factory('userService', function($resource) {
         verifyPhoneNumber: {
             method: "POST",
             params: {action: "verify-phone-number"}
+        },
+        getPhoneNumberVerifyPinAgain: {
+            method: "GET",
+            params: {action: "get-phone-number-verify-pin-again"}
         }
     });
 });

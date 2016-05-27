@@ -876,6 +876,22 @@ exports.getToken = function(req, res) {
     });
 };
 
+exports.getPhoneNumberVerifyPinAgain = function(req, res) {
+    var user = req.user;
+    user.phoneNumberVerifyToken = makeid();
+    user.save(function(err) {
+        if (err) {return res.send(500,err);}
+        client.sendMessage({
+            to: user.phoneNumber,
+            from: config.twilio.phoneNumber,
+            body: "Your Verification PIN is " + user.phoneNumberVerifyToken + ". From buiilt.com.au"
+        }, function(err, success) {
+            if (err) {console.log(err);}
+            return res.send(200);
+        });
+    });
+};
+
 /**
  * Authentication callback
  */

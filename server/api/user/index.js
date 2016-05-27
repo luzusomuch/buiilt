@@ -15,6 +15,7 @@ router.get('/me', auth.isAuthenticated(), controller.me);
 router.get('/get-current-stripe-customer', auth.isAuthenticated(), controller.getCurrentStripeCustomer);
 router.get("/get-all-notifications", auth.isAuthenticated(), controller.getAllNotifications);
 router.get("/profile", controller.getUserProfile);
+router.get("/get-phone-number-verify-pin-again", auth.isAuthenticated(), controller.getPhoneNumberVerifyPinAgain);
 router.get('/:id', auth.isAuthenticated(), controller.show);
 router.get('/:id/reset-password', controller.getResetPasswordToken);
 

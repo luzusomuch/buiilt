@@ -44,7 +44,7 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
         if (!$rootScope.currentUser.phoneNumberVerified) {
             /*Check that current user has verify their phone number yet*/
             $mdDialog.show({
-                controller: ["$scope", "dialogService", function($scope, dialogService) {
+                controller: ["$scope", "dialogService", "userService", function($scope, dialogService, userService) {
                     $scope.editUserInfo = function(form) {
                         if ($scope.phoneNumberVerifyToken.length > 6) {
                             dialogService.showToast("Your Token Is Not Valid");
@@ -58,7 +58,15 @@ angular.module('buiiltApp').controller('settingsCtrl', function($rootScope, $sco
                                 dialogService.showToast("Error");
                             });
                         }
-                    }
+                    };
+
+                    $scope.sendVerifyAgain = function() {
+                        userService.getPhoneNumberVerifyPinAgain().$promise.then(function() {
+                            dialogService.showToast("New PIN Has Sent To Your Phone Number");
+                        }, function() {
+                            dialogService.showToast("Error When Receive New PIN");
+                        });
+                    };
                 }],
                 templateUrl: 'app/modules/settings/partials/verify-phone-number.html',
                 parent: angular.element(document.body),
