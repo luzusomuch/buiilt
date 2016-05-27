@@ -99,7 +99,7 @@ exports.create = function(req, res) {
                 //         });
                 //     });
                 //     console.log(members);
-                });
+                // });
             });
         });
     });
