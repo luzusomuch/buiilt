@@ -3,6 +3,8 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
     $scope.dialogService = dialogService;
     $scope.showTask = true;
     $scope.showEvent = true;
+	
+	$scope.showDetail = false;
 
     $scope.search = function() {
         var result = [];
