@@ -373,7 +373,6 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
     Select available project team members to add to current thread
     Select current thread members to be new members when add new related item*/
     $scope.selectMember = function(index, type) {
-        console.log($scope.membersList);
         if (type === "member") {
             $scope.membersList[index].select = !$scope.membersList[index].select;
         } else if (type === "tag") {
@@ -385,6 +384,9 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
 
     /*Update current thread*/
     $scope.update = function(thread) {
+        if (thread.elementType==="assign" && thread.element.type==="tender") {
+            return dialogService.showToast("Not Allow");
+        }
         messageService.update({id: thread._id}, thread).$promise.then(function(res) {
             dialogService.closeModal();
             $rootScope.$emit("Thread.Update", res);
@@ -460,6 +462,9 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
 
     /*Create related task when have valid member*/
     $scope.createRelatedTask = function(form) {
+        if ($scope.thread.element.type==="tender") {
+            return dialogService.showToast("Not Allow");
+        }
         if (form.$valid) {
             $scope.relatedTask.members = $scope.thread.members;
             _.each($scope.thread.notMembers, function(email) {
@@ -510,6 +515,9 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
 
     /*Create related file with valid tags, members*/
     $scope.createRelatedFile = function() {
+        if ($scope.thread.element.type==="tender") {
+            return dialogService.showToast("Not Allow");
+        }
         $scope.relatedFile.members = $scope.thread.members;
         _.each($scope.thread.notMembers, function(email) {
             $scope.relatedFile.members.push({email: email});

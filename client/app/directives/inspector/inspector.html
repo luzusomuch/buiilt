@@ -49,7 +49,7 @@
     <md-subheader class="border-top inspector-header md-primary">
         <div layout="row">
             
-            <md-icon class="material-icons accordian-icon md-primary" style="margin-right: 1vh" ng-click="showModalAssignMember()">add_box</md-icon>
+            <md-icon ng-hide="data.element.type==='tender'" class="material-icons accordian-icon md-primary" style="margin-right: 1vh" ng-click="showModalAssignMember()">add_box</md-icon>
             
             <div layout="row" ng-click="showMembers=!showMembers" class="inspector-section" flex>
                 TEAM MEMBERS
@@ -104,7 +104,7 @@
     
 </section>
 
-<section ng-hide="type=='file'||type=='tender'">
+<section ng-hide="type=='file'||type=='tender'||data.element.type==='tender'">
     
     <md-subheader class="border-top inspector-header md-primary">
         <div layout="row">
@@ -132,7 +132,7 @@
     
 </section>
 
-<section ng-hide="type=='task'||type=='tender'">
+<section ng-hide="type=='task'||type=='tender'||data.element.type=='tender'">
     
     <md-subheader class="border-top inspector-header md-primary">
         <div layout="row">
