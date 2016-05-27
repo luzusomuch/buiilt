@@ -1,6 +1,6 @@
 <div layout="row" layout-margin>
 	
-	<div flex="30" class="md-whiteframe-1dp documentation-view" style="height: {{contentHeight}}px">
+	<div flex="30" class="md-whiteframe-1dp documentation-view" style="height: {{contentHeight}}px; overflow: auto">
 		<div class="md-toolbar-tools">
 			<h5>Document Sets</h5>
 			<span flex></span>
@@ -22,7 +22,7 @@
 		</md-list>
 	</div>
 
-	<div flex="70" class="md-whiteframe-1dp documentation-view" style="height: {{contentHeight}}px">
+	<div flex="70" class="md-whiteframe-1dp documentation-view" style="height: {{contentHeight}}px; overflow: auto">
 		<div class="md-toolbar-tools" ng-show="selectedDocumentSet">
 			<h5>{{selectedDocumentSet.name}}</h5>
 			<span flex></span>
@@ -39,7 +39,7 @@
                 		<md-button ng-click="showModal('copy-document-set.html', selectedDocumentSet)"><md-icon class="material-icons">content_copy</md-icon>Copy This Set</md-button>
                 	</md-menu-item>
                 	<md-menu-item>
-                		<md-button ng-show="!selectedDocumentSet.notAllowEditOrCopy" ng-click="showModal('bulk-upload.html')"><md-icon class="material-icons">cloud_upload</md-icon>Bulk Upload to This Set</md-button>
+                		<md-button ng-show="!selectedDocumentSet.notAllowEditOrCopy" ng-click="uploadBulkDocuments()"><md-icon class="material-icons">cloud_upload</md-icon>Bulk Upload to This Set</md-button>
                 	</md-menu-item>
                 </md-menu-content>
             </md-menu>

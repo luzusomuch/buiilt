@@ -464,16 +464,26 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
         if (!$rootScope.selectedDocumentSetId) {
             return dialogService.showToast("Please Select Document Set To Countinue");
         }
-        if ($scope.bulkDocument.documents.length === 0) {
-            dialogService.showToast("Please Select At Least 1 Document");
-        } else {
-            uploadService.uploadBulkDocument({id: $rootScope.selectedDocumentSetId}, $scope.bulkDocument).$promise.then(function(res) {
-                dialogService.showToast("Upload Bulk Document Successfully");
-                dialogService.closeModal();
-                $rootScope.$emit("BulkDocument.Uploaded", res);
-            }, function(err) {
-                dialogService.showToast("Error When Upload Bulk Document");
-            });
-        }
+        filepicker.pickMultiple(
+            {
+                services: ["computer", "DROPBOX", "gmail", "skydrive", "GOOGLE_DRIVE"],
+            },
+            function(Blobs){
+                $scope.bulkDocument.documents = Blobs;
+                if ($scope.bulkDocument.documents.length === 0) {
+                    dialogService.showToast("Please Select At Least 1 Document");
+                } else {
+                    uploadService.uploadBulkDocument({id: $rootScope.selectedDocumentSetId}, $scope.bulkDocument).$promise.then(function(res) {
+                        dialogService.showToast("Upload Bulk Document Successfully");
+                        dialogService.closeModal();
+                        $rootScope.$emit("BulkDocument.Uploaded", res);
+                    }, function(err) {
+                        dialogService.showToast("Error When Upload Bulk Document");
+                    });
+                }
+            },
+            function(error){
+                dialogService.showToast(error);
+        });
     };
 });
