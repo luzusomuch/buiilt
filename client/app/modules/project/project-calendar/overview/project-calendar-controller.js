@@ -387,9 +387,10 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
     };
 
     /*Convert all tasks and activities to calendar view*/
+    $scope.activities = activities;
     $scope.convertAllToCalendarView = function(isUpdate) {
+        console.log(activities);
         $scope.events = [];
-        $scope.activities = activities;
         $scope.tasks = tasks;
         _.each($scope.tasks, function(task) {
             if (task.element && task.element.type === "task-project") {

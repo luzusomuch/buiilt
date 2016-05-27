@@ -37,6 +37,69 @@ exports.create = function(req, res) {
             activity.save(function(err) {
                 if (err) {return res.send(500,err);}
                 return res.send(200, activity);
+                // var roles = ["builders", "architects", "clients", "subcontractors", "consultants"];
+                // People.findOne({project: activity.project}, function(err, people) {
+                //     if (err || !people) {return res.send(200,activity);}
+                //     var currentRole;
+                //     var members = [];
+                //     _.each(roles, function(role) {
+                //         _.each(people[role], function(tender) {
+                //             if (role==="subcontractors" || role==="consultants") {
+                //                 if (tender.inviter.toString()===req.user._id.toString()) {
+                //                     _.each(tender.tenderers, function(tenderer){
+                //                         if (tenderer._id) {
+                //                             members.push(tenderer._id);
+                //                             if (tenderer.teamMember.length > 0) {
+                //                                 _.each(tenderer.teamMember, function(member) {
+                //                                     members.push(member);
+                //                                 });
+                //                             }
+                //                         }
+                //                     });
+                //                 }
+                //             } else {
+                //                 if (tender.hasSelect && tender.tenderers[0]._id && tender.tenderers[0]._id.toString()===req.user._id.toString()) {
+                //                     members.push(tender.tenderers[0]._id);
+                //                     if (role==="builders") {
+                //                         var builderTeamAllow = ["subcontractors", "consultants"];
+                //                         _.each(builderTeamAllow, function(team) {
+                //                             _.each(people[team], function(tender) {
+                //                                 if (tender.hasSelect && tender.inviter.toString()===req.user._id.toString()) {
+                //                                     _.each(tender.tenderers, function(tenderer) {
+                //                                         if (tenderer._id) {
+                //                                             members.push(tenderer._id);
+                //                                             if (tenderer.teamMember.length > 0) {
+                //                                                 _.each(tenderer.teamMember, function(member) {
+                //                                                     members.push(member);
+                //                                                 });
+                //                                             }
+                //                                         }
+                //                                     })
+                //                                 }
+                //                             });
+                //                         });
+                //                     } else {
+                //                         _.each(people.consultants, function(tender) {
+                //                             if (tender.hasSelect && tender.inviter.toString()===req.user._id.toString()) {
+                //                                 _.each(tender.tenderers, function(tenderer) {
+                //                                     if (tenderer._id) {
+                //                                         members.push(tenderer._id);
+                //                                         if (tenderer.teamMember.length > 0) {
+                //                                             _.each(tenderer.teamMember, function(member) {
+                //                                                 members.push(member);
+                //                                             });
+                //                                         }
+                //                                     }
+                //                                 })
+                //                             }
+                //                         });
+                //                     }
+                //                 }
+                //             }
+                //         });
+                //     });
+                //     console.log(members);
+                });
             });
         });
     });
