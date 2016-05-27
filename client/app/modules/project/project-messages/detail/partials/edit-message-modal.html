@@ -3,6 +3,8 @@
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2>Edit {{thread.name}}</h2>
+				<span flex></span>
+				<md-button ng-click="closeModal()" class="md-icon-button"><md-icon class="material-icons">close</md-icon></md-button>
             </div>
         </md-toolbar>
         
@@ -39,12 +41,10 @@
         </md-dialog-content>
         
         <md-dialog-actions>
-            <md-button ng-click="closeModal()">Cancel</md-button>
-
             <md-button ng-click="step=step-1" ng-show="step==2">Back</md-button>
-            <md-button ng-click="next('edit-thread')" ng-hide="step==2">Next</md-button>
+            <md-button ng-click="next('edit-thread')" class="md-primary" ng-hide="step==2">Next</md-button>
 
-            <md-button type="submit" class="md-primary" ng-show="step==2">Save Edits</md-button>
+            <md-button type="submit" class="md-primary" ng-show="step==2">Save</md-button>
         </md-dialog-actions>
     </form>
 </md-dialog>
