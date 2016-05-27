@@ -17,31 +17,28 @@
         <p>This {{type}} was created by <strong>{{data.owner.name}}</strong> on {{data.createdAt | date: longDate}}</p>
     </div>
     <div ng-show="showActivity" layout-padding ng-repeat="activity in data.activities" ng-hide="activity.type=='attach-scope' || activity.type=='attach-addendum' || activity.type=='attach-document-set' || activity.type=='select-winner' || activity.type=='chat' || activity.type=='upload-reversion'">
-        <p>
-            <i style="font-size:10px; margin-right:5px" class="material-icons">lens</i><span>{{activity.user.name}}</span>
+        <p style="font-size: 12px; margin-top: 0px; margin-bottom: 0px; padding-bottom: 0px; padding-top: 0px">
+			<span>{{activity.user.name}}</span>
             <span ng-switch="activity.type">
                 <!-- General section -->
-                <span ng-switch-when="add-event"> has added event for this {{type}}</span>
-                <span ng-switch-when="archive"> has archived this {{type}}</span>
-                <span ng-switch-when="unarchive"> has unarchived this {{type}}</span>
-                <span ng-switch-when="related-thread"> has attached related thread this {{type}}</span>
-                <span ng-switch-when="related-task"> has attached related task this {{type}}</span>
-                <span ng-switch-when="related-file"> has attached related file this {{type}}</span>
+                <span ng-switch-when="add-event"> attached this {{type}} to the event, {{event.name}}</span>
+                <span ng-switch-when="archive"> archived this {{type}}</span>
+                <span ng-switch-when="unarchive"> unarchived this {{type}}</span>
                 <!-- Tender section -->
-                <span ng-switch-when="change-title"> has change title of this {{type}}</span>
-                <span ng-switch-when="invite-tenderer"> has invited <span ng-repeat="tenderer in activity.element.members">{{tenderer.name}}, </span> for this {{type}}</span>
-                <span ng-switch-when="attach-event"> has attached event for this {{type}}</span>
-                <span ng-switch-when="change-event"> has changed event for this {{type}}</span>
-                <span ng-switch-when="add-event"> has added event for this {{type}}</span>
+                <span ng-switch-when="change-title"> change the title of this {{type}} to {{title}}</span>
+                <span ng-switch-when="invite-tenderer"> invited <span ng-repeat="tenderer in activity.element.members">{{tenderer.name}}<span ng-hide="$last">, </span></span></span>
+                <span ng-switch-when="attach-event"> attached this {{type}} to the event, {{event.name}}</span>
+                <span ng-switch-when="change-event"> changed the event for this {{type}} to {{event.name}}</span>
+                <span ng-switch-when="add-event"> attached this {{type}} to the event, {{event.name}}</span>
                 <!-- Thread section -->
-                <span ng-show="type=='thread'" ng-switch-when="assign"> has added <span ng-repeat="invitee in activity.element.invitees">{{invitee}}, </span> to this {{type}}</span>
-                <span ng-switch-when="edit-thread"> has changed name of this {{type}} to {{activity.element.name}}</span>
+                <span ng-show="type=='thread'" ng-switch-when="assign"> assigned <span ng-repeat="invitee in activity.element.invitees">{{invitee}}<span ng-hide="$last">, </span></span> to this {{type}}</span>
+                <span ng-switch-when="edit-thread"> changed the name of this {{type}} to {{activity.element.name}}.</span>
                 <!-- File section -->
-                <span ng-show="type=='file'" ng-switch-when="assign"> has added <span ng-repeat="member in activity.element.members">{{member}}, </span> to this {{type}}</span>
-                <span ng-switch-when="insert-note"> has inserted a notice - {{activity.element.content}} to this {{type}}</span>
-                <span ng-switch-when="edit"> has changed <span ng-show="activity.element.name"> name {{activity.element.name}}</span> <span ng-show="activity.element.tags" ng-repeat="tag in activity.element.tags">{{(tag.name) ? tag.name : tag}}, </span> of this {{type}}</span>
+                <span ng-show="type=='file'" ng-switch-when="assign"> assigned <span ng-repeat="member in activity.element.members">{{member}}<span ng-hide="$last">, </span></span> to this {{type}}</span>
+                <span ng-switch-when="insert-note"> attached a note to this {{type}}.</span>
+                <span ng-switch-when="edit"><span ng-show="activity.element.name"> changed the name of this {{type}} to {{activity.element.name}}</span> <span ng-show="activity.element.tags" ng-repeat="tag in activity.element.tags"> filed this {{type}} under '{{(tag.name) ? tag.name : tag}}'</span></span>
             </span>
-            <span> on {{activity.createdAt | date: longDate}}</span>
+            <span> on {{activity.createdAt | date: longDate}} at {{time}}</span>
         </p>
     </div>
     
@@ -65,12 +62,6 @@
     </md-subheader>
     
     <md-list ng-show="showMembers" class="md-dense">
-        <!-- <md-list-item class="md-2-line">
-            <div class="md-list-item-text">
-                <h3>{{data.owner.name}}</h3>
-                <h4>{{data.owner.phoneNumber}}-{{data.owner.email}}</h4>
-            </div>
-        </md-list-item> -->
         <md-list-item class="md-2-line" ng-click="showRelatedTeamMemberModal($event, member._id)" ng-show="data.element" ng-repeat="member in data.members | unique: '_id' track by $index">
             <div class="md-list-item-text">
                 <h3>{{member.name}}</h3>
@@ -107,7 +98,6 @@
         <md-list-item ui-sref="project.messages.detail({id: data.project, messageId: thread.item._id})" class="md-2-line" ng-repeat="thread in data.relatedItem" ng-show="thread.type == 'thread'">
             <div class="md-list-item-text">
                 <h3>{{thread.item.name}}</h3>
-                <!-- <p>{{file.item.description}}</p> -->
             </div>
         </md-list-item>
     </md-list>
