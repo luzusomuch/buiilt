@@ -43,13 +43,13 @@ EventBus.onSeries('Tender.Updated', function(tender, next){
                                 invitee: invitee,
                                 project: result.project.toJSON(),
                                 link : config.baseUrl + 'signup?packageInviteToken=' + packageInvite._id,
-                                subject: tender.editUser.name + ' has invited you to be tenderer of project ' + result.project.name
+                                subject: tender.editUser.name + ' invited you to tender their project, ' + result.project.name
                             }, function() {
                                 // Send SMS notification for inactive user
                                 Client.sendMessage({
                                     to: invitee.phoneNumber,
                                     from: config.twilio.phoneNumber,
-                                    body: tender.editUser.name + " has invited you to be tenderer of project " + result.project.name
+                                    body: tender.editUser.name + " invited you to tender their project. Sign Up with your mobile - http://buiilt.com.au/app"
                                 }, function(err, success) {
                                     console.log(err);
                                     console.log(success);
@@ -65,7 +65,7 @@ EventBus.onSeries('Tender.Updated', function(tender, next){
                             invitee: invitee,
                             project: result.project.toJSON(),
                             link : config.baseUrl + 'project/'+result.project._id+'/overview',
-                            subject: tender.editUser.name + ' has invited you to be tenderer of project ' + result.project.name
+                            subject: tender.editUser.name + ' invited you to tender their project, ' + result.project.name
                         }, cb);
                     }
                 }, function() {
