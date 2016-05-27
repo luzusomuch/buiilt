@@ -1,0 +1,31 @@
+<md-dialog aria-label="Edit {{thread.name}}" flex="70">
+    <form ng-submit="changeTitle(form)" name="form">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Edit {{thread.name}}</h2>
+                <span flex></span>
+                <md-button ng-click="closeModal()" class="md-icon-button"><md-icon class="material-icons">close</md-icon></md-button>
+            </div>
+        </md-toolbar>
+        
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column" layout-padding>
+                
+                <div layout="column" ng-show="step==1">
+                    <p class="md-body-2">Name for the message thread:</p>
+                    <div layout="row">
+                        <md-input-container flex="66" flex-offset="15">
+                            <label>Name</label>
+                            <input type="text" name="name" ng-model="thread.name" required>
+                        </md-input-container>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        
+        <md-dialog-actions>
+            <md-button ng-click="dialogService.closeModal()">Back</md-button>
+            <md-button type="submit" class="md-primary">Save</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

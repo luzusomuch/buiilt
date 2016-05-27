@@ -70,6 +70,7 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
         }
     };
 
+    var originalFile = angular.copy(file);
     $scope.file = file;
     $scope.file.selectedEvent = file.event;
     $scope.file.selectedTag = (file.tags.length > 0) ? file.tags[0] : null;
@@ -172,6 +173,7 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
 
     /*Receive when someone updated file that current user is in members list*/
     socket.on("file:update", function(data) {
+        originalFile = angular.copy(data);
         $scope.file = data;
         $scope.file.selectedEvent = data.event;
         $scope.file.selectedTag = (data.tags.length > 0) ? data.tags[0] : null;
@@ -378,9 +380,13 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
         }
     };
 
-    $scope.changeTitle = function() {
-        $scope.file.editType="edit";
-        $scope.update($scope.file);
+    $scope.changeTitle = function(form) {
+        if (form.$valid && $scope.file.name !== originalFile.name) {
+            $scope.file.editType="edit";
+            $scope.update($scope.file);
+        } else {
+            dialogService.showToast("Check Your Data");
+        }
     };
 
     // $scope.changeTag = function(index) {

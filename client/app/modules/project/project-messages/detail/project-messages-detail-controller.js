@@ -568,9 +568,13 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
         }
     };
 
-    $scope.changeTitle = function() {
-        $scope.thread.elementType="edit-thread";
-        $scope.update($scope.thread);
+    $scope.changeTitle = function(form) {
+        if (form.$valid && $scope.thread.name!==originalThread.name) {
+            $scope.thread.elementType="edit-thread";
+            $scope.update($scope.thread);
+        } else {
+            dialogService.showToast("Check Your Data");
+        }
     };
 
     // Remove thread when click cancel if its the first time edit

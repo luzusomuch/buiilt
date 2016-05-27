@@ -151,10 +151,10 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
     socket.emit("join", tender._id);
 
     socket.on("tender:update", function(data) {
+        originalTender = angular.copy(data);
         $scope.tender = data;
         $scope.tender.selectedEvent = data.event;
         $scope.tender.documentSetSelected = data.documentSet;
-        originalTender = $scope.tender;
     });
 
     $scope.selectItem = function(index, type) {
@@ -218,11 +218,11 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
     };
 
     $scope.changeTitle = function(form) {
-        if (form.$valid) {
+        if (form.$valid && $scope.tender.name!==originalTender.name) {
             $scope.tender.editType="change-title";
             $scope.update($scope.tender);
         } else {
-            dialogService.showToast("Please Provide a Tender Title...");
+            dialogService.showToast("Please Provide another Tender Title...");
         }
     };
 
