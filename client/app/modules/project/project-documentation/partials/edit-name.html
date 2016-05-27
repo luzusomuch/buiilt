@@ -1,8 +1,8 @@
-<md-dialog aria-label="Edit {{file.name}}" flex="70">
-    <form ng-submit="changeTitle(form)" name="form">
+<md-dialog aria-label="Edit {{document.name}}" flex="70">
+    <form ng-submit="changeName(form)" name="form">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2>Edit {{file.name}}</h2>
+                <h2>Edit {{document.name}}</h2>
                 <span flex></span>
                 <md-button ng-click="closeModal()" class="md-icon-button"><md-icon class="material-icons">close</md-icon></md-button>
             </div>
@@ -12,11 +12,11 @@
             <div class="md-dialog-content" layout="column" layout-padding>
                 
                 <div layout="column">
-                    <p class="md-body-2">Name for the file:</p>
+                    <p class="md-body-2">Name for the document:</p>
                     <div layout="row">
                         <md-input-container flex="66" flex-offset="15">
                             <label>Name</label>
-                            <input type="text" name="name" ng-model="file.name" required>
+                            <input type="text" name="name" ng-model="document.name" required>
                         </md-input-container>
                     </div>
                 </div>

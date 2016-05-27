@@ -1,6 +1,8 @@
 angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', function($rootScope, $scope, $timeout, document, uploadService, $mdDialog, $mdToast, $stateParams, fileService, socket, notificationService, peopleService, dialogService) {
     $scope.contentHeight = $rootScope.maximunHeight - $("header").innerHeight() - 10;
 
+    var originalDocument = angular.copy(document);
+    $scope.dialogService = dialogService;
     $scope.document = document;
     $scope.document.currentPath = ($scope.document.fileHistory.length > 0) ? $scope.document.fileHistory[$scope.document.fileHistory.length-1].link : null;
     $scope.document.currentVersion = $scope.document.fileHistory.length;
@@ -99,6 +101,7 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
 
     /*Receive when someone updated document*/
     socket.on("document:update", function(data) {
+        originalDocument = angular.copy(data);
         $scope.document = data;
         getAcvititiesAndHistoriesByUser($scope.document);
         checkAcknowLedgement($scope.document);
@@ -357,8 +360,10 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
 
     $scope.changeName = function() {
         if (document.owner._id!==$scope.currentUser._id) {
-            dialogService.showToast("Not Allow");
-            return;
+            return dialogService.showToast("Not Allow");
+        }
+        if ($scope.document.name===originalDocument.name) {
+            return dialogService.showToast("Please Enter Another Name");
         }
         if ($scope.document.name.trim().length===0) {
             dialogService.showToast("Please Enter Document Name");
@@ -366,10 +371,26 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
             $scope.document.editType="edit";
             fileService.update({id: document._id}, $scope.document).$promise.then(function(res) {
                 dialogService.showToast("Change Document Name Successfully");
+                dialogService.closeModal();
                 $scope.showEdit = false;
             }, function(err){
                 dialogService.showToast("Error");
             });
         }
+    };
+
+    $scope.showModalInPartials = function($event, modalName) {
+        $mdDialog.show({
+            targetEvent: $event,
+            controller: 'projectDocumentationDetailCtrl',
+            resolve: {
+                document: ["$stateParams", "fileService", function($stateParams, fileService) {
+                    return fileService.get({id: $stateParams.documentId}).$promise;
+                }]
+            },
+            templateUrl: 'app/modules/project/project-documentation/partials/' + modalName,
+            parent: angular.element(document.body),
+            clickOutsideToClose: false
+        });
     };
 });

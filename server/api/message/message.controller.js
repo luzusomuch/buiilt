@@ -305,7 +305,7 @@ exports.update = function(req,res) {
                     } else if (req.body.elementType==="edit-thread") {
                         thread.name = req.body.name;
                         activity.element.name = req.body.name;
-                        if (req.body.newMembers.length > 0) {
+                        if (req.body.newMembers && req.body.newMembers.length > 0) {
                             thread.members = data.members;
                             thread.notMembers = data.notMembers;
                             editType = "assign";
