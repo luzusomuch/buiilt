@@ -478,7 +478,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                     dialogService.showToast("Please Check Your Dates...");
                 } else {
                     activityService.create({id: $stateParams.id}, $scope.activity).$promise.then(function(res) {
-                        dialogService.showToast((res.isMilestone) ? "Create Milestone Successfully" : "Activity Has Been Created Successfully");
+                        dialogService.showToast((res.isMilestone) ? "Create Milestone Successfully" : "Event Has Been Created Successfully.");
                         dialogService.closeModal();
                         activities.push(res);
                         $scope.convertAllToCalendarView(true);

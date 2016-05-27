@@ -7,7 +7,8 @@
 			
 			<span flex></span>
 			
-			<p class="md-subhead">{{event.date.start | date: 'dd-MM-yyyy'}} - {{event.date.end | date: 'dd-MM-yyyy'}}</p>
+			<!-- <p class="md-subhead">{{event.date.start | date: 'dd-MM-yyyy'}} - {{event.date.end | date: 'dd-MM-yyyy'}}</p> -->
+			<md-button class="md-icon-button"><md-icon ng-click="dialogService.closeModal()"><md-tooltip md-direction="left">Cancel</md-tooltip>close</md-icon></md-button>
         </div>
 		
     </md-toolbar>
@@ -16,7 +17,7 @@
         <div class="md-dialog-content" layout="column" layout-padding>
 			
 			
-			<div layout="column" ng-mouseenter="editDescription=true" ng-mouseleave="editDescription=false">
+			<!-- <div layout="column" ng-mouseenter="editDescription=true" ng-mouseleave="editDescription=false">
 				<h3 class="md-title">Details</h3>
 				<p ng-show="!showEdit">{{event.description}}</p>
 				<span ng-show="editDescription && !showEdit" ng-click="showEdit=true" class="md-body-2 link-decoration">Edit</span>
@@ -25,30 +26,32 @@
 					<label for="">Event Description</label>
 					<input type="text" ng-model="event.description" ng-blur="changeDescription()">
 				</md-input-container>
-			</div>
+			</div> -->
 			
-			<md-divider></md-divider>
+			<!-- <md-divider></md-divider> -->
 			
 			<div layout="row">
 				
-				<div layout="column" flex="60">
+				<div layout="column" flex="65">
 					
 				    <div layout="column">
 						<div layout="row" layout-align="space-between center" layout-margin>
-			                <h4 class="md-title header-accordian" ng-click="showTasks=!showTasks">
+			                <h4 class="header-accordian" ng-click="showTasks=!showTasks">
 								Tasks 
 								<md-icon class="material-icons" ng-show="!showTasks">expand_more</md-icon>
 								<md-icon class="material-icons" ng-show="showTasks">expand_less</md-icon>
-							</h3>
+							</h4>
 							<!-- <p ng-click="viewAll('task')" class="md-body-2 link-decoration">View All</p> -->
 						</div>
 						<md-divider></md-divider>
 						<div layout="row" ng-show="showTasks">
 			                <md-list flex class="md-dense">
 			                    <md-list-item class="md-2-line" ng-repeat="task in tasks" ng-click="view('task', task)">
+									<div class="md-avatar"></div>
 			                        <div class="md-list-item-text" layout="column">
 			                            <h3>{{task.description}}</h3>
 			                        </div>
+									<md-divider></md-divider>
 			                    </md-list-item>
 			                </md-list>
 						</div>
@@ -56,20 +59,22 @@
 
 		            <div layout="column">
 						<div layout="row" layout-align="space-between center" layout-margin>
-			                <h3 class="md-title header-accordian" ng-click="showMessages=!showMessages">
+			                <h4 class="header-accordian" ng-click="showMessages=!showMessages">
 								Messages 
 								<md-icon class="material-icons" ng-show="!showMessages">expand_more</md-icon>
 								<md-icon class="material-icons" ng-show="showMessages">expand_less</md-icon>
-							</h3>
+							</h4>
 							<p ng-click="viewAll('thread')" class="md-body-2 link-decoration">View All</p>
 						</div>
 						<md-divider></md-divider>
 						<div layout="row" ng-show="showMessages">
 			                <md-list flex class="md-dense">
 			                    <md-list-item class="md-2-line" ng-repeat="thread in threads" ng-click="view('thread', thread)">
+									<div class="md-avatar"></div>
 			                        <div class="md-list-item-text" layout="column">
 			                            <h3>{{thread.name}}</h3>
 			                        </div>
+									<md-divider></md-divider>
 			                    </md-list-item>
 			                </md-list>
 						</div>
@@ -77,20 +82,22 @@
 
 		            <div layout="column">
 						<div layout="row" layout-align="space-between center" layout-margin>
-			                <h3 class="md-title header-accordian" ng-click="showFiles=!showFiles">
+			                <h4 class="header-accordian" ng-click="showFiles=!showFiles">
 								Files 
 								<md-icon class="material-icons" ng-show="!showFiles">expand_more</md-icon>
 								<md-icon class="material-icons" ng-show="showFiles">expand_less</md-icon>
-							</h3>
+							</h4>
 							<p ng-click="viewAll('file')" class="md-body-2 link-decoration">View All</p>
 						</div>
 						<md-divider></md-divider>
 						<div layout="row" ng-show="showFiles">
 			                <md-list flex class="md-dense">
 			                    <md-list-item class="md-2-line" ng-repeat="file in files" ng-click="view('file', file)">
+									<div class="md-avatar"></div>
 			                        <div class="md-list-item-text" layout="column">
 			                            <h3>{{file.name}}</h3>
 			                        </div>
+									<md-divider></md-divider>
 			                    </md-list-item>
 			                </md-list>
 						</div>
@@ -98,20 +105,22 @@
 					
 		            <div layout="column" ng-show="allowCreateTender">
 						<div layout="row" layout-align="space-between center" layout-margin>
-			                <h3 class="md-title header-accordian" ng-click="showTenders=!showTenders">
+			                <h4 class="header-accordian" ng-click="showTenders=!showTenders">
 								Tenders 
 								<md-icon class="material-icons" ng-show="!showTenders">expand_more</md-icon>
 								<md-icon class="material-icons" ng-show="showTenders">expand_less</md-icon>
-							</h3>
+							</h4>
 							<p ng-click="viewAll('tender')" class="md-body-2 link-decoration">View All</p>
 						</div>
 						<md-divider></md-divider>
 						<div layout="row" ng-show="showTenders">
 			                <md-list flex class="md-dense">
 			                    <md-list-item class="md-2-line" ng-repeat="tender in tenders" ng-click="view('tender', tender)">
+									<div class="md-avatar"></div>
 			                        <div class="md-list-item-text" layout="column">
 			                            <h3>{{tender.name}}</h3>
 			                        </div>
+									<md-divider></md-divider>
 			                    </md-list-item>
 			                </md-list>
 						</div>
@@ -121,7 +130,7 @@
 				
 				<span flex></span>
 				
-				<div layout="column" flex="30">
+				<div layout="column" flex="25">
 					<div layout="row">
 						<md-button class="md-raised" flex aria-label="Attach Task" ng-click="attachItem('task')">Attach Task</md-button>
 					</div>
@@ -140,8 +149,4 @@
 			
         </div>
     </md-dialog-content>
-	
-    <md-dialog-actions>
-        <md-button ng-click="dialogService.closeModal()">Close</md-button>
-	</md-dialog-actions>
 </md-dialog>
