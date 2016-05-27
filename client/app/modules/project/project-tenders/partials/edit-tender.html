@@ -1,61 +1,80 @@
-<md-dialog aria-label="Edit Tender Detail" flex="70">
+<md-dialog aria-label="Edit Tender Detail" flex="60">
     <form ng-submit="editTenderAfterCreate()" name="form">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2>Edit Tender Detail</h2>
+                <h2>Edit Tender Details</h2>
+				<span flex></span>
+				<md-button ng-click="closeModal()" class="md-icon-button"><md-tooltip md-direction="left">Cancel</md-tooltip><md-icon class="material-icons">close</md-icon></md-button>
             </div>
         </md-toolbar>
         
         <md-dialog-content>
-            <div class="md-dialog-content" layout="column">
+		
+			<div class="md-dialog-content" layout="column">
+				
                 <div layout="column" ng-show="step==1">
-                    <p class="md-body-2">Please Enter Your Tender Name</p>
-                    <md-input-container>
-                        <label for="">Tender Name</label>
-                        <input type="text" ng-model="tender.name">
-                    </md-input-container>
+                    <p class="md-body-2">Please enter your tender name:</p>
+                    <div layout="row">
+						<md-input-container flex="80" flex-offset="10">
+	                        <label for="">Tender Name</label>
+	                        <input type="text" ng-model="tender.name">
+	                    </md-input-container>
+                    </div>
                 </div>
+				
                 <div layout="column" ng-show="step==1">
-                    <label>Event</label>
-                    <md-select ng-change="tender.selectedEvent" ng-model="tender.selectedEvent">
-                        <md-option ng-show="activities.length===0">Please create event first</md-option>
-                        <md-option ng-repeat="ev in activities" ng-value="ev._id" ng-show="!ev.isMilestone">{{ev.name}}</md-option>
-                    </md-select>
+                    <p class="md-body-2">Attach your tender to an event:</p>
+                    <div layout="row">
+	                    <md-input-container flex="80" flex-offset="10">
+	                        <label>Event</label>
+							<md-select ng-change="tender.selectedEvent" ng-model="tender.selectedEvent">
+		                        <md-option ng-show="activities.length===0">Please create an event first</md-option>
+		                        <md-option ng-repeat="ev in activities" ng-value="ev._id" ng-show="!ev.isMilestone">{{ev.name}}</md-option>
+		                    </md-select>
+	                    </md-input-container>
+                    </div>
                 </div>
-
+				
                 <div layout="column" ng-show="step==2">
-                    <md-checkbox aria-label="Add Scope Later" ng-model="tender.isAddScopeLater">
-                        Add Scope Later
-                    </md-checkbox>
-                    <div ng-show="!tender.isAddScopeLater">
-                        <md-input-container>
+                    <p class="md-body-2">Please provide a scope for your tender:</p>
+					<div layout="row" layout-align="center center">
+						<md-checkbox aria-label="Add Scope Later" class="md-primary" ng-model="tender.isAddScopeLater">Add Scope Later</md-checkbox>
+					</div>
+					
+                    <div layout="row" ng-show="!tender.isAddScopeLater">
+						<md-input-container flex="80" flex-offset="10">
                             <label for="">Tender Scope</label>
                             <input type="text" ng-model="tender.scope">
                         </md-input-container>
                     </div>
                 </div>
-
+				
                 <div layout="column" ng-show="step==3">
-                    <md-checkbox aria-label="Add Scope Later" ng-model="tender.isAddDocumentSetLater">
-                        Add Document Set Later
-                    </md-checkbox>
-                    <div ng-show="!tender.isAddDocumentSetLater">
-                        <label>Documentation Set</label>
-                        <md-select ng-model="tender.documentSetSelected">
-                            <md-option ng-show="documentSets.length===0">Please create document set first</md-option>
-                            <md-option ng-repeat="document in documentSets" ng-value="document._id">{{document.name}}</md-option>
-                        </md-select>
+                    <p class="md-body-2">Which document set should we add to the tender:</p>
+					<div layout="row" layout-align="center center">
+						<md-checkbox aria-label="Add Scope Later" ng-model="tender.isAddDocumentSetLater">Add Document Set Later</md-checkbox>
+					</div>
+					
+                    <div layout="row" ng-show="!tender.isAddDocumentSetLater">
+	                    <md-input-container flex="80" flex-offset="10">
+	                        <label>Documentation Set</label>
+							<md-select ng-model="tender.documentSetSelected" flex="80" flex-offset="10">
+	                            <md-option ng-show="documentSets.length===0">Please create document set first</md-option>
+	                            <md-option ng-repeat="document in documentSets" ng-value="document._id">{{document.name}}</md-option>
+	                        </md-select>
+	                    </md-input-container>
                     </div>
                 </div>
-            </div>
+				
+			</div>
+				
         </md-dialog-content>
+		
         <md-dialog-actions>
-            <md-button ng-click="closeModal()">Cancel</md-button>
-
             <md-button ng-show="step!=1" ng-click="step=step-1">Back</md-button>
-            <md-button ng-show="step!=3" ng-click="next('edit-tender')">Next</md-button>
-
-            <md-button type="submit" ng-show="step==3" class="md-primary">Submit</md-button>
+            <md-button ng-show="step!=3" class="md-primary" ng-click="next('edit-tender')">Next</md-button>
+            <md-button type="submit" ng-show="step==3" class="md-primary">Save</md-button>
         </md-dialog-actions>
+		
     </form>
 </md-dialog>
