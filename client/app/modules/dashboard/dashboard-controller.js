@@ -270,7 +270,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             function($timeout, $rootScope, $scope, dialogService, socket, activity, task, people, notificationService) {
                 $scope.task = task;
                 $scope.dialogService = dialogService;
-                $scope.allowShowList = ["create-task", "edit-task", "change-date-time", "complete-task", "uncomplete-task"];
+                $scope.allowShowList = ["create-task", "edit-task", "change-date-time", "complete-task", "uncomplete-task", "enter-comment"];
 
                 $timeout(function() {
                     if ($scope.task.__v > 0) {

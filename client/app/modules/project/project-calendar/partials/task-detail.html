@@ -43,21 +43,23 @@
 				<div class="activity-detail">
 					<p ng-switch="activity.type" ng-repeat="activity in task.activities" ng-show="allowShowList.indexOf(activity.type) !== -1">
 						<span class="activity-creator">{{activity.user.name}}</span>
-						<span ng-switch-when="create-task"> created this task on {{activity.createdAt |date:'dd-MM-yyyy'}} at {{activity.createdAt | date:'hh:mm a'}}.</span>
-						<span ng-switch-when="edit-task"> edited the description on {{activity.createdAt |date:'dd-MM-yyyy'}} at {{activity.createdAt | date:'hh:mm a'}}.</span>
-						<span ng-switch-when="change-date-time"> edited the times on {{activity.createdAt |date:'dd-MM-yyyy'}} at {{activity.createdAt | date:'hh:mm a'}}.</span>
-						<span ng-switch-when="complete-task"> marked this complete on {{activity.createdAt |date:'dd-MM-yyyy'}} at {{activity.createdAt | date:'hh:mm a'}}.</span>
-						<span ng-switch-when="uncomplete-task"> marked this incomplete on {{activity.createdAt |date:'dd-MM-yyyy'}} at {{activity.createdAt | date:'hh:mm a'}}.</span>
+						<span ng-switch-when="create-task"> created this task on {{activity.createdAt |date:'dd MMMM yyyy'}} at {{activity.createdAt | date:'hh:mm a'}}.</span>
+						<span ng-switch-when="edit-task"> edited the description on {{activity.createdAt |date:'dd MMMM yyyy'}} at {{activity.createdAt | date:'hh:mm a'}}.</span>
+						<span ng-switch-when="change-date-time"> edited the times on {{activity.createdAt |date:'dd MMMM yyyy'}} at {{activity.createdAt | date:'hh:mm a'}}.</span>
+						<span ng-switch-when="complete-task"> marked this complete on {{activity.createdAt |date:'dd MMMM yyyy'}} at {{activity.createdAt | date:'hh:mm a'}}.</span>
+						<span ng-switch-when="uncomplete-task"> marked this incomplete on {{activity.createdAt |date:'dd MMMM yyyy'}} at {{activity.createdAt | date:'hh:mm a'}}.</span>
+						<span ng-switch-when="enter-comment"> commented on this task on {{activity.createdAt |date:'dd MMMM yyyy'}} at {{activity.createdAt | date:'hh:mm a'}}:</span>
+						<span ng-switch-when="enter-comment" ng-bind-html="activity.element.comment"></span>
 					</p>
 				</div>
 
 				<md-divider></md-divider>
 
 				<div class="comment-section" layout="column" style="margin-top: 15px">
-					<div class="comment-content" ng-repeat="comment in task.comments">
+					<!-- <div class="comment-content" ng-repeat="comment in task.comments">
 						<p><span class="comment-creator"><strong>{{comment.user.name}}</strong></span> sent at <span class="comment-date">{{comment.sentAt | date: 'hh:mm dd-MM-yyyy'}}</span></p>
 						<p ng-bind-html="comment.content | htmlize"></p>
-					</div>
+					</div> -->
 					<div class="add-comment-form">
 						<form ng-submit="addComment(form)">
 							<div layout="row">

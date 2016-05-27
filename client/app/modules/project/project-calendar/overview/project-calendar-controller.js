@@ -547,7 +547,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
             function($timeout, $rootScope, $scope, dialogService, socket, activity, task, people, notificationService) {
                 $scope.task = task;
                 $scope.dialogService = dialogService;
-                $scope.allowShowList = ["create-task", "edit-task", "change-date-time", "complete-task", "uncomplete-task"];
+                $scope.allowShowList = ["create-task", "edit-task", "change-date-time", "complete-task", "uncomplete-task", "enter-comment"];
 
                 $timeout(function() {
                     if ($scope.task.__v > 0) {
