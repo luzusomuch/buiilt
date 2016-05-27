@@ -461,6 +461,9 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
     };
 
     $scope.uploadBulkDocuments = function() {
+        if (!$rootScope.selectedDocumentSetId) {
+            return dialogService.showToast("Please Select Document Set To Countinue");
+        }
         if ($scope.bulkDocument.documents.length === 0) {
             dialogService.showToast("Please Select At Least 1 Document");
         } else {

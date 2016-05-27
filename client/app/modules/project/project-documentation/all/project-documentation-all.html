@@ -39,7 +39,7 @@
                 		<md-button ng-click="showModal('copy-document-set.html', selectedDocumentSet)"><md-icon class="material-icons">content_copy</md-icon>Copy This Set</md-button>
                 	</md-menu-item>
                 	<md-menu-item>
-                		<md-button ng-click="showModal('bulk-upload.html')"><md-icon class="material-icons">cloud_upload</md-icon>Bulk Upload to This Set</md-button>
+                		<md-button ng-show="!selectedDocumentSet.notAllowEditOrCopy" ng-click="showModal('bulk-upload.html')"><md-icon class="material-icons">cloud_upload</md-icon>Bulk Upload to This Set</md-button>
                 	</md-menu-item>
                 </md-menu-content>
             </md-menu>
