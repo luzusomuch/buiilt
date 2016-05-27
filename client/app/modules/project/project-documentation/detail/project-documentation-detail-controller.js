@@ -220,8 +220,6 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
         );
     };
 
-    $scope.uploadReversion = {};
-
     function onSuccess(file){
         $scope.uploadReversion.file = file;
         $scope.uploadReversionDocument();

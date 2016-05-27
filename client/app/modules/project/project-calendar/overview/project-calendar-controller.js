@@ -238,6 +238,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                                             dialogService.closeModal();
                                             dialogService.showToast("New Thread Created Successfully.");
                                             $rootScope.$emit("Thread.Inserted", res);
+                                            $rootScope.openDetail = true;
                                             $state.go("project.messages.detail", {id: activity.project, messageId: res._id});
                                         }, function(err) {
                                             dialogService.showToast("There Has Been An Error...");
@@ -252,6 +253,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                                         fileService.create({id: activity.project}, newFile).$promise.then(function(res) {
                                             dialogService.closeModal();
                                             dialogService.showToast("New File Created Successfully.");
+                                            $rootScope.openDetail = true;
                                             $state.go("project.files.detail", {id: activity.project, fileId: res._id});
                                         }, function(err) {
                                             dialogService.showToast("There Has Been An Error...");
@@ -267,6 +269,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                                             tenderService.create(newTender).$promise.then(function(res) {
                                                 dialogService.closeModal();
                                                 dialogService.showToast("New Tender Created Successfully.");
+                                                $rootScope.openDetail = true;
                                                 $state.go("project.tenders.detail", {id: res.project, tenderId: res._id});
                                             }, function(err) {
                                                 dialogService.showToast("There Has Been An Error...");

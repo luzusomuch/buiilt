@@ -214,11 +214,39 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
 
     /*Receive when owner created new document*/
     var listenerCleanFnPush = $rootScope.$on("Document.Uploaded", function(event, data) {
-        $scope.documents.push(data);
+        if (data.documentSet) {
+            var index = _.findIndex($scope.documentSets, function(set) {
+                if (set._id) {
+                    return set._id.toString()===data.documentSet.toString();
+                }
+            });
+            if (index !== -1) {
+                $scope.documentSets[index].documents.push(data);
+            }
+        } else {
+            $scope.documents.push(data);
+        }
+    });
+
+    // Reveice when owner uploaded bulk of documents
+    var listenerCleanFnPushBulkDoc = $rootScope.$on("BulkDocument.Uploaded", function(event, data) {
+        if (data[0].documentSet) {
+            var index = _.findIndex($scope.documentSets, function(set) {
+                if (set._id) {
+                    return set._id.toString()=== data[0].documentSet.toString();
+                }
+            });
+            if (index !== -1) {
+                $scope.documentSets[index].documents = _.union($scope.documentSets[index].documents, data);
+            }
+        } else {
+            $scope.documents = _.union($scope.documents, data);
+        }
     });
 
     $scope.$on('$destroy', function() {
         listenerCleanFnPush();
+        listenerCleanFnPushBulkDoc();
     });
 
     /*Receive when archived document then move it to archived list*/
@@ -253,6 +281,10 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
                                 $rootScope.$broadcast("UpdateCountNumber", {type: "document", isAdd: true, number: 1});
                             }
                             $scope.documentSets[index].documents[documentIndex].__v+=1;
+                        } else if (documentIndex === -1) {
+                            data.file.__v = 1;
+                            $scope.documentSets[index].documents.push(data.file);
+                            $rootScope.$broadcast("UpdateCountNumber", {type: "document", isAdd: true, number: 1});
                         }
                     }
                 } else {
@@ -265,6 +297,10 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
                             $rootScope.$broadcast("UpdateCountNumber", {type: "document", isAdd: true, number: 1});
                         }
                         $scope.documents[index].__v+=1;
+                    } else if (index===-1) {
+                        data.file.__v = 1;
+                        $scope.documents.push(data);
+                        $rootScope.$broadcast("UpdateCountNumber", {type: "document", isAdd: true, number: 1});
                     }
                 }
             }
@@ -403,6 +439,38 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
             });
         } else {
             dialogService.showToast("Check your input again.");   
+        }
+    };
+
+    $scope.bulkDocument = {
+        documents: []
+    };
+
+    $scope.pickFile = pickFile;
+
+    $scope.onSuccess = onSuccess;
+
+    function pickFile(){
+        filepickerService.pick(
+            onSuccess
+        );
+    };
+
+    function onSuccess(files){
+        $scope.bulkDocument.documents = files;
+    };
+
+    $scope.uploadBulkDocuments = function() {
+        if ($scope.bulkDocument.documents.length === 0) {
+            dialogService.showToast("Please Select At Least 1 Document");
+        } else {
+            uploadService.uploadBulkDocument({id: $rootScope.selectedDocumentSetId}, $scope.bulkDocument).$promise.then(function(res) {
+                dialogService.showToast("Upload Bulk Document Successfully");
+                dialogService.closeModal();
+                $rootScope.$emit("BulkDocument.Uploaded", res);
+            }, function(err) {
+                dialogService.showToast("Error When Upload Bulk Document");
+            });
         }
     };
 });

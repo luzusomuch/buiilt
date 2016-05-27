@@ -726,3 +726,105 @@ exports.upload = function(req, res){
     //     });
     // });
 };
+
+exports.uploadBulkDocument = function(req, res) {
+    var data = req.body;
+    if (!data.documents || data.documents.length===0) {
+        return res.send(500,{msg: "Check Your Data"});
+    } else {
+        Document.findById(req.params.id, function(err, documentSet) {
+            if (err) {
+                return res.send(500,err);
+            } else if (!documentSet) {
+                return res.send(404, {msg: "This Document Set Not Existed"});
+            } else {
+                // Get available user in selected document set
+                var acknowledgeUsers = [{_id: documentSet.owner, isAcknow: false}];
+                _.each(documentSet.members, function(member) {
+                    acknowledgeUsers.push({_id: member, isAcknow: false});
+                });
+                _.each(documentSet.notMembers, function(email) {
+                    acknowledgeUsers.push({email: email, isAcknow: false});
+                });
+
+                var result = [];
+                async.each(data.documents, function(doc, cb) {
+                    var activityAndHisToryId = mongoose.Types.ObjectId();
+                    var file = new File({
+                        owner: req.user._id,
+                        project: documentSet.project,
+                        name: doc.filename,
+                        server: "s3",
+                        size: doc.size,
+                        version: doc.filename,
+                        mimeType: doc.type,
+                        tag: (data.selectedTag) ? [data.selectedTag] : [],
+                        element: {type: "document"},
+                        key: doc.key,
+                        path: doc.url,
+                        activities: [{
+                            type: "upload-reversion",
+                            user: req.user._id,
+                            createdAt: new Date(),
+                            acknowledgeUsers: acknowledgeUsers,
+                            element: {
+                                name: doc.filename,
+                            },
+                            activityAndHisToryId: activityAndHisToryId
+                        }],
+                        fileHistory: [{
+                            link: doc.url,
+                            version: doc.filename,
+                            createdAt: new Date(),
+                            activityAndHisToryId: activityAndHisToryId
+                        }],
+                        documentSet: documentSet._id
+                    });
+                    file._editType = "uploadBulkDocument";
+                    file._editUser = req.user;
+                    file.save(function(err) {
+                        if (err) {return cb(err);}
+                        File.populate(file, [
+                            {path: "owner", select: "_id email name"},
+                            {path: "members", select: "_id email name"},
+                            {path: "activities.user", select: "_id email name"},
+                            {path: "activities.acknowledgeUsers._id", select: "_id email name"},
+                            {path: "project"}
+                        ], function(err, file) {
+                            var randomId = mongoose.Types.ObjectId();
+                            acknowledgeUsers = _.map(_.groupBy(acknowledgeUsers,function(doc){
+                                return doc._id;
+                            }),function(grouped){
+                                return grouped[0];
+                            });
+                            _.remove(acknowledgeUsers, {_id: req.user._id});
+                            _.each(acknowledgeUsers, function(user) {
+                                if (file.element.type==="document" && user._id) {
+                                    EventBus.emit('socket:emit', {
+                                        event: 'dashboard:new',
+                                        room: user._id.toString(),
+                                        data: {
+                                            type: file.element.type,
+                                            _id: file._id,
+                                            uniqId: randomId,
+                                            user: req.user,
+                                            file: JSON.parse(JSON.stringify(file)),
+                                            documentSet: (documentSet) ? documentSet : null,
+                                            newNotification: {randomId: randomId, fromUser: req.user, type: file.element.type+"-upload-reversion"}
+                                        }
+                                    });
+                                }
+                            });
+                            result.push(file);
+                            documentSet.documents.push(file._id);
+                            documentSet.save(cb);
+                        });
+                    });
+                }, function(err) {
+                    if (err) {return res.send(500,err);}
+                    return res.send(200, result);
+                });
+            }
+        });
+    }
+};

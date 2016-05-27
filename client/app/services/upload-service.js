@@ -16,6 +16,14 @@ angular.module('buiiltApp').factory('uploadService', function($resource) {
                 id: '@id',
                 action: 'upload-reversion'
             }
+        },
+        uploadBulkDocument: {
+            method: "POST",
+            params: {
+                id: "@id",
+                action: "upload-bulk-document"
+            },
+            isArray: true
         }
     });
 });

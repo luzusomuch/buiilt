@@ -34,6 +34,30 @@ EventBus.onSeries('File.Inserted', function(file, next) {
             });
         } else
             return next();
+    } else if (file.element.type==="document" && file._editType==="uploadBulkDocument") {
+        Document.findById(file.documentSet, function(err, documentSet) {
+            if (err||!documentSet) {return next();}
+            else {
+                var owners = documentSet.members;
+                owners = _.map(_.groupBy(owners,function(doc){
+                    return doc;
+                }),function(grouped){
+                    return grouped[0];
+                });
+                owners.push(documentSet.owner);
+                _.remove(owners, file.editUser._id);
+                var params = {
+                    owners : documentSet.members,
+                    fromUser : file.editUser._id,
+                    element : file,
+                    referenceTo : 'document',
+                    type : 'document-upload-reversion'
+                };
+                NotificationHelper.create(params, function() {
+                    return next();
+                });
+            }
+        });
     } else {
         return next();
     }

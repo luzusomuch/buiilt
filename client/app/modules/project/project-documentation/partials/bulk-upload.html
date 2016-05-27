@@ -1,0 +1,26 @@
+<md-dialog aria-label="Bulk Upload" flex="70" id="newDocumentDialog">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Bulk Upload {{selectedDocumentSet.name}}</h2>
+            </div>
+        </md-toolbar>
+        
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column" layout-padding>
+                <div layout="column">
+                    <p class="md-body-2">Select documents that you would like to upload:</p>
+                    <div layout="row" layout-align="center center" class="tagcloud-selection">
+                        <input filepicker type="filepicker-dragdrop" data-fp-services="computer, DROPBOX, gmail, skydrive, GOOGLE_DRIVE" on-success="onSuccess(event.fpfiles)" data-fp-multiple="true"/>
+                    </div>
+                </div>
+                
+            </div>
+        </md-dialog-content>
+        
+        <md-dialog-actions>
+            <md-button ng-click="dialogService.closeModal()">Cancel</md-button>
+            <md-button ng-click="uploadBulkDocuments()" class="md-primary">Add Document</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

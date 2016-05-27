@@ -9,5 +9,6 @@ var router = express.Router();
 
 router.post('/:id', auth.isAuthenticated(), controller.upload);
 router.post('/:id/upload-reversion', auth.isAuthenticated(), controller.uploadReversion);
+router.post('/:id/upload-bulk-document', auth.isAuthenticated(), controller.uploadBulkDocument);
 
 module.exports = router;
