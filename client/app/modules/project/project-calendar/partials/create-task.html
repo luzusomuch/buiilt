@@ -1,18 +1,30 @@
-<md-dialog aria-label="Create a New Task" flex="70" id="newTaskDialog">
+<md-dialog aria-label="Create a New Task" flex="60" id="newTaskDialog">
     <form ng-submit="createNewTask(form)" name="form">
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2>Create a New Task</h2>
+				<span flex></span>
+				<md-button ng-click="dialogService.closeModal()" class="md-icon-button"><md-icon class="material-icons"><md-tooltip md-direction="left">Cancel</md-tooltip>close</md-icon></md-button>
             </div>
         </md-toolbar>
         
         <md-dialog-content>
             <div class="md-dialog-content" layout="column">
+				
+                <div layout="column" ng-show="step==1">
+                    <p class="md-body-2">Provide a description for the task:</p>
+                    <div layout="row">
+                        <md-input-container flex="80" flex-offset="10">
+                            <label>Task Description</label>
+                            <textarea ng-model="task.description" name="description" md-maxlength="300" required rows="3" columns="1"></textarea>
+                        </md-input-container>
+                    </div>
+                </div>
 
                 <div layout="column" ng-show="step==1">
-                    <p class="md-body-2">Select An Event In List Below:</p>
+                    <p class="md-body-2">Attach this task to an event:</p>
                     <div layout="row">
-                        <md-input-container flex>
+                        <md-input-container flex="80" flex-offset="10">
                             <label for="">Events List</label>
                             <md-select ng-model="task.selectedEvent">
                                 <md-option ng-repeat="activity in activities" ng-show="!activity.isMilestone" ng-value="activity._id">{{activity.name}}</md-option>
@@ -20,42 +32,40 @@
                         </md-input-container>
                     </div>
                 </div>
-                
-                <div layout="column" ng-show="step==1">
-                    <p class="md-body-2">Provide a description for the task:</p>
-                    <div layout="row">
-                        <md-input-container flex="66" flex-offset="15">
-                            <label>Task Description</label>
-                            <textarea ng-model="task.description" name="description" md-maxlength="300" required rows="3" columns="1"></textarea>
-                        </md-input-container>
-                    </div>
-                </div>
-                
-                    
-                <div layout="column" ng-show="step==1">
-                    <p class="md-body-2">Specify Start Date and Due Date for the task:</p>
-                    <div layout="row" layout-align="center center" class="tagcloud-selection" flex="50">
-                        <md-datepicker ng-model="task.dateStart" md-placeholder="Enter Due Date"></md-datepicker>
-                    </div>
-                    <div layout="row" layout-align="center center" class="tagcloud-selection" flex="50">
-                        <md-datepicker ng-model="task.dateEnd" md-placeholder="Enter Due Date"></md-datepicker>
-                    </div>
-                </div>
-
-                <div layout="column" ng-show="step==1">
-                    <p class="md-body-2">Specify start time and end time:</p>
-                    <div layout="row" layout-align="center center">
-                        <md-input-container flex="50">
-                            <label for="">Start Time</label>
-                            <input type="time" ng-model="task.time.start" required>
-                        </md-input-container>
-                        <md-input-container flex="50">
-                            <label for="">End Time</label>
-                            <input type="time" ng-model="task.time.end" required>
-                        </md-input-container>
-                    </div>
-                </div>
-                
+				
+				<div layout="row" ng-show="step==1">
+					<div layout="column" flex="50" layout-padding>
+	                    <p class="md-body-2">Specify a start date and time for the task:</p>
+						
+	                    <div layout="row" layout-align="center center">
+	                        <md-datepicker ng-model="task.dateStart" md-placeholder="Enter Due Date" flex="80"></md-datepicker>
+	                    </div>
+						
+						<div layout="row" layout-align="center center">
+	                        <md-input-container flex="80">
+	                            <label for="">Start Time</label>
+	                            <input type="time" ng-model="task.time.start" required>
+	                        </md-input-container>
+						</div>
+						
+					</div>
+					
+					<div layout="column" flex="50" layout-padding>
+						<p class="md-body-2" layout="row">Specify an end date and time for the task:</p>
+						
+	                    <div layout="row" layout-align="center center">
+	                        <md-datepicker ng-model="task.dateEnd" md-placeholder="Enter Due Date" flex="80"></md-datepicker>
+	                    </div>
+						
+						<div layout="row" layout-align="center center">
+	                        <md-input-container flex="80">
+	                            <label for="">End Time</label>
+	                            <input type="time" ng-model="task.time.end" required>
+	                        </md-input-container>
+						</div>
+					</div>
+				</div>
+				
                 <div layout="column" ng-show="step==2">
                     <p class="md-body-2">Assign at least one team member:</p>
                     
@@ -68,11 +78,8 @@
         </md-dialog-content>
         
         <md-dialog-actions>
-            <md-button ng-click="dialogService.closeModal()">Cancel</md-button>
-
             <md-button ng-click="step=step-1" ng-hide="step==1">Back</md-button>
-            <md-button ng-click="next('task')" ng-hide="step==2">Next</md-button>
-            
+            <md-button ng-click="next('task')" class="md-primary" ng-hide="step==2">Next</md-button>
             <md-button type="submit" ng-show="step==2" class="md-primary">Create Task</md-button>
         </md-dialog-actions>
     </form>
