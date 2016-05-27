@@ -1,5 +1,5 @@
 angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, $rootScope, $scope, $timeout, $stateParams, $mdDialog, $state, socket, notificationService, tender, dialogService, tenderService, contactBooks, people, documentSets, activities) {
-    $scope.contentHeight = $rootScope.maximunHeight - $("header").innerHeight() - 10;
+    $scope.contentHeight = $rootScope.maximunHeight - $("header").innerHeight();
     
     $scope.dialogService = dialogService;
     $scope.currentUser = $rootScope.currentUser;
