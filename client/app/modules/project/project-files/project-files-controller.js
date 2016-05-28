@@ -171,7 +171,7 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
 
     /*Receive when current user open file detail
     then update that file notification to 0*/
-    var listenerCleanFnRead = $rootScope.$on("File.Read", function(event, data) {
+    $rootScope.$on("File.Read", function(event, data) {
         var index = _.findIndex($scope.files, function(file) {
             return file._id.toString()===data._id.toString();
         });
@@ -196,7 +196,7 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
 
     $scope.$on('$destroy', function() {
         listenerCleanFnPush();
-        listenerCleanFnRead();
+        // listenerCleanFnRead();
         // listenerCleanFnPushFromDashboard();
     });
 

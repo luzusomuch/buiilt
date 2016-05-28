@@ -93,9 +93,8 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
     // }, 500);
 
     /*Update last access for current user*/
-    fileService.lastAccess({id: $stateParams.fileId}).$promise.then(function(data) {
-        $rootScope.$emit("File.Read", file);
-    });
+    $rootScope.$emit("File.Read", file);
+    fileService.lastAccess({id: $stateParams.fileId}).$promise;
 
     /*Mark all notifications related to current file as read*/
     $timeout(function() {
@@ -511,7 +510,7 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
             });
             $scope.relatedTask.belongTo = $scope.file._id;
             $scope.relatedTask.belongToType = "file";
-            $scope.relatedTask.type = "project-message";
+            $scope.relatedTask.type = "task-project";
             taskService.create({id: $stateParams.id}, $scope.relatedTask).$promise.then(function(relatedTask) {
                 $scope.closeModal();
                 $scope.showToast("Create Related Task Successfully!");
