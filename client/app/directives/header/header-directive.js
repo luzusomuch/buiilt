@@ -113,7 +113,7 @@ angular.module('buiiltApp')
 				Tawk_API.toggle();
 			};
 
-            $scope.showModal = function(event, name) {
+            $scope.showModalCreateEvent = function(event) {
                 $mdDialog.show({
                     targetEvent: event,
                     controller: 'projectsCtrl',
@@ -125,7 +125,7 @@ angular.module('buiiltApp')
                             return inviteTokenService.getProjectsInvitation().$promise;
                         }]
                     },
-                    templateUrl: (name === "projects-create.html" ? 'app/modules/projects/projects-create/projects-create.html' : ""),
+                    templateUrl: 'app/modules/projects/projects-create/projects-create.html',
                     parent: angular.element(document.body),
                     clickOutsideToClose:false
                 });

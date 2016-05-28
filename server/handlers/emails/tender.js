@@ -49,7 +49,7 @@ EventBus.onSeries('Tender.Updated', function(tender, next){
                                 Client.sendMessage({
                                     to: invitee.phoneNumber,
                                     from: config.twilio.phoneNumber,
-                                    body: tender.editUser.name + " invited you to tender their project. Sign Up with your mobile - http://buiilt.com.au/app"
+                                    body: tender.editUser.name + " invited you to tender their project. Sign Up with your mobile - http://buiilt.com.au/appPage"
                                 }, function(err, success) {
                                     console.log(err);
                                     console.log(success);
