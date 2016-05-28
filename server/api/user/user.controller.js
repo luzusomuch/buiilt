@@ -368,7 +368,7 @@ exports.create = function (req, res, next) {
                                                 }
 
                                                 var acknowUserIndex = _.findIndex(activity.acknowledgeUsers, function(u) {
-                                                    if (u.email) {
+                                                    if (u && u.email) {
                                                         return u.email===newUser.email;
                                                     }
                                                 });
