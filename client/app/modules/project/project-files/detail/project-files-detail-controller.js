@@ -88,9 +88,9 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
     }
 
     /*Update count total after 0.5s*/
-    $timeout(function() {
-        $rootScope.$emit("UpdateCountNumber", {type: "file", number: (file.__v>0)?1:0});
-    }, 500);
+    // $timeout(function() {
+    //     $rootScope.$emit("UpdateCountNumber", {type: "file", number: (file.__v>0)?1:0});
+    // }, 500);
 
     /*Update last access for current user*/
     fileService.lastAccess({id: $stateParams.fileId}).$promise.then(function(data) {
@@ -158,6 +158,12 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
     $scope.currentUser = $rootScope.currentUser;
 
     socket.emit("join", file._id);
+
+    socket.on("dashboard:new", function(data) {
+        if (data.type==="file" && data.file.element.type==="file") {
+            $rootScope.$emit("File.Read", data.file);
+        }
+    });
 
     // Add get related item for current file
     socket.on("relatedItem:new", function(data) {

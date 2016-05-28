@@ -171,14 +171,17 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
 
     /*Receive when current user open file detail
     then update that file notification to 0*/
-    // var listenerCleanFnRead = $rootScope.$on("File.Read", function(event, data) {
-    //     var index = _.findIndex($scope.files, function(file) {
-    //         return file._id.toString()===data._id.toString();
-    //     });
-    //     if (index !== -1) {
-    //         $scope.files[index].__v=0;
-    //     }
-    // });
+    var listenerCleanFnRead = $rootScope.$on("File.Read", function(event, data) {
+        var index = _.findIndex($scope.files, function(file) {
+            return file._id.toString()===data._id.toString();
+        });
+        if (index !== -1) {
+            if ($scope.files[index].__v > 0) {
+                $rootScope.$emit("UpdateCountNumber", {type: "file", number: 1});
+            }
+            $scope.files[index].__v=0;
+        }
+    });
 
     /*Receive when owner created file*/
     var listenerCleanFnPush = $rootScope.$on("File.Inserted", function(event, data) {
