@@ -387,9 +387,9 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
     };
 
     /*Convert all tasks and activities to calendar view*/
-    $scope.activities = activities;
     $scope.convertAllToCalendarView = function(isUpdate) {
-        console.log(activities);
+        $rootScope.activities = ($rootScope.activities) ? $rootScope.activities : activities;
+        $scope.activities = $rootScope.activities;
         $scope.events = [];
         $scope.tasks = tasks;
         _.each($scope.tasks, function(task) {
@@ -407,7 +407,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 $scope.events.push({type: "task", _id: task._id, title: title, start: dateStart, end: dateEnd, "backgroundColor": (task.__v > 0) ? "#FFC107" : "#2196F3", allDay: false});
             }
         });
-        _.each(activities, function(activity) {
+        _.each($scope.activities, function(activity) {
             if (!activity.isMilestone) {
                 $scope.events.push({type: "event", _id: activity._id,title: activity.name, start: moment(activity.date.start).format("YYYY-MM-DD hh:mm"), end: moment(activity.date.end).format("YYYY-MM-DD hh:mm"), "backgroundColor": "#0D47A1", allDay: true});   
             }
@@ -486,7 +486,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                     activityService.create({id: $stateParams.id}, $scope.activity).$promise.then(function(res) {
                         dialogService.showToast((res.isMilestone) ? "Create Milestone Successfully" : "Event Has Been Created Successfully.");
                         dialogService.closeModal();
-                        activities.push(res);
+                        $rootScope.activities.push(res);
                         $scope.convertAllToCalendarView(true);
                     }, function(err) {dialogService.showToast("There Has Been An Error...");});
                 }

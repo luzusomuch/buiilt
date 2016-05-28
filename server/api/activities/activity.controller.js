@@ -38,7 +38,7 @@ exports.create = function(req, res) {
                 if (err) {return res.send(500,err);}
                 return res.send(200, activity);
                 // var roles = ["builders", "architects", "clients", "subcontractors", "consultants"];
-                // People.findOne({project: activity.project}, function(err, people) {
+                // People.findOne({project: activity.project}).populate("project").exec(function(err, people) {
                 //     if (err || !people) {return res.send(200,activity);}
                 //     var currentRole;
                 //     var members = [];
