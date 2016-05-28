@@ -37,6 +37,8 @@ EventBus.onSeries('Thread.Inserted', function(thread, next) {
                 return next();
             }
         });
+    } else {
+        return next();
     }
 });
 

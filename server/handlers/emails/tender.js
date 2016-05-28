@@ -23,6 +23,7 @@ EventBus.onSeries('Tender.Updated', function(tender, next){
         if (err) {return next();}   
         if (tender._modifiedPaths.indexOf('invite-tenderer') !== -1) {
             var from = tender.editUser.name + "<"+tender.editUser.email+">";
+            console.log(tender.newInvitees);
             if (tender.newInvitees && tender.newInvitees.length > 0) {
                 async.each(tender.newInvitees, function(invitee, cb) {
                     if (!invitee._id) {
