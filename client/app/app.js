@@ -24,6 +24,23 @@ angular.module('buiiltApp', [
 angular
 .module('buiiltApp').config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider, $sceDelegateProvider, cfpLoadingBarProvider, stripeProvider, filepickerProvider) {
     $sceDelegateProvider.resourceUrlWhitelist(['^(?:http(?:s)?:\/\/)?(?:[^\.]+\.)?\(vimeo|youtube)\.com(/.*)?$', 'self']);
+    
+    $stateProvider
+    .state('app', {
+        url: '/appPage',
+        controller: function($rootScope, deviceDetector){
+            $rootScope.title = "App Page";
+            var raw = deviceDetector.raw;
+            if (raw.os.android) {
+                window.location.href = "https://play.google.com/store/apps/details?id=com.buiilt.hoanvu";
+            } else if (raw.os.ios) {
+                window.location.href = "https://itunes.apple.com/us/app/buiilt/id1036694486?l=vi&ls=1&mt=8";
+            } else {
+                window.location.href="/signin";
+            }
+        },
+    });
+
     $urlRouterProvider.otherwise('/signin');
 
     $locationProvider.html5Mode(true);

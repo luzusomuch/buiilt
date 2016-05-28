@@ -41,7 +41,6 @@ angular.module('buiiltApp').controller('tenderDocumentDetailCtrl', function($roo
             targetEvent: $event,
             controller: function($scope) {
                 $scope.history = history;
-                console.log($scope.history);
                 $scope.closeModal = function() {
                     $mdDialog.cancel();
                 };

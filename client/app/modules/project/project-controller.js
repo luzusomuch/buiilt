@@ -38,7 +38,6 @@ angular.module('buiiltApp').controller('projectCtrl', function($rootScope, $scop
 				mixpanel.track("Project Details Updated");
 				
             }, function(err) {
-                console.log(err);
                 $scope.showToast("There Has Been An Error...");
             });
         } else {
