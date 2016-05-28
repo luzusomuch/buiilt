@@ -117,7 +117,10 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
     */
     socket.on("thread:new", function(data) {
         if (data.project._id.toString()===$stateParams.id.toString()) {
-            data.__v = 1;
+            data.__v = 0;
+            if (data.project._id) {
+                data.project = data.project._id;
+            }
             $scope.threads.push(data);
             $scope.threads = _.uniq($scope.threads, "_id");
             repairForEventsFilter();
@@ -190,6 +193,18 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
     var listenerCleanFnAcknow = $rootScope.$on("Project-Message-Update", function(event, index) {
         $scope.threads[index].element.notificationType = null;
         $scope.threads[index].__v = 0;
+    });
+
+    var listenerCleanRead = $rootScope.$on("Thread.Read", function(ev, thread) {
+        var index = _.findIndex($scope.threads, function(thread) {
+            return thread._id.toString()===thread._id.toString();
+        });
+        if (index !== -1) {
+            if ($scope.threads[index].__v > 0) {
+                $rootScope.$emit("UpdateCountNumber", {type: "message", number: 1});
+            }
+            $scope.threads[index].__v=0;
+        }
     });
 
     $scope.$on('$destroy', function() {

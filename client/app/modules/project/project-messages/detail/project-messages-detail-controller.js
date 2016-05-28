@@ -70,13 +70,19 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
     }
 
     /*Update count total notifications*/
-    $timeout(function() {
-        $rootScope.$emit("UpdateCountNumber", {type: "message", number: (thread.__v>0)?1:0});
-    }, 500);
+    // $timeout(function() {
+    //     $rootScope.$emit("UpdateCountNumber", {type: "message", number: (thread.__v>0)?1:0});
+    // }, 500);
 
     /*Update last access of current user*/
     messageService.lastAccess({id: $stateParams.messageId}).$promise.then(function(data) {
         $rootScope.$emit("Thread.Read", thread);
+    });
+
+    socket.on("dashboard:new", function(data) {
+        if (data.type==="thread" && data.thread._id.toString()===thread._id.toString()) {
+            $rootScope.$emit("Thread.Read", data.thread);
+        }
     });
 
     /*Mark as notifications related to thread as read after 3s

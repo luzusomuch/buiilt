@@ -160,7 +160,7 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
     socket.emit("join", file._id);
 
     socket.on("dashboard:new", function(data) {
-        if (data.type==="file" && data.file.element.type==="file") {
+        if (data.type==="file" && data.file.element.type==="file" && data.file._id.toString()===file._id.toString()) {
             $rootScope.$emit("File.Read", data.file);
         }
     });

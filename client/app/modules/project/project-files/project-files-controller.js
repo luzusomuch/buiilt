@@ -125,7 +125,7 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
     /*Receive when new file inserted and current user assigned as file members*/
     socket.on("file:new", function(data) {
         if (data.project._id.toString()===$stateParams.id.toString()) {
-            data.__v=1;
+            data.__v=0;
             $scope.files.push(data);
             repairForEventsFilter();
         }
@@ -196,7 +196,7 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
 
     $scope.$on('$destroy', function() {
         listenerCleanFnPush();
-        // listenerCleanFnRead();
+        listenerCleanFnRead();
         // listenerCleanFnPushFromDashboard();
     });
 
