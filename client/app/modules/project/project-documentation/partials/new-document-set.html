@@ -3,6 +3,8 @@
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2>Add New Set Of Document</h2>
+				<span flex></span>
+				<md-button ng-click="closeModal()" class="md-icon-button"><md-icon class="material-icons">close</md-icon></md-button>
             </div>
         </md-toolbar>
         
@@ -31,8 +33,7 @@
         </md-dialog-content>
         
         <md-dialog-actions>
-            <md-button ng-click="dialogService.closeModal()">Cancel</md-button>
-            <md-button type="submit" class="md-primary">Add Set Of Document</md-button>
+            <md-button type="submit" class="md-primary">Add Document Set</md-button>
         </md-dialog-actions>
     </form>
 </md-dialog>
