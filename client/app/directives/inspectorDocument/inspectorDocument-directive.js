@@ -63,7 +63,6 @@ angular.module('buiiltApp').directive('inspectorDocument', function(){
                     controller: ["$scope", "$state", "$stateParams",
                     function($scope, $state, $stateParams) {
                         $scope.file = file;
-                        console.log($scope.file);
                         $scope.goToThisFile = function() {
                             $scope.closeModal();
                             $state.go("project.files.detail", {id: $stateParams.id, fileId: file.item._id});

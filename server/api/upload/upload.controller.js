@@ -249,6 +249,7 @@ console.log(req.body);
                                 if (err || !document) {
                                     cb(err);
                                 } else {
+                                    acknowledgeUsers.push({_id: document.owner});
                                     _.each(document.members, function(member) {
                                         acknowledgeUsers.push({_id: member, isAcknow: false});
                                     });

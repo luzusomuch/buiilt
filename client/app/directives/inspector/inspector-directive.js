@@ -68,8 +68,6 @@ angular.module('buiiltApp').directive('inspector', function(){
                 };
             }
 
-            console.log($scope.data);
-
             $scope.createRelatedTask = function() {
                 if ($scope.type==="thread") {
                     templateUrl = "app/modules/project/project-messages/detail/partials/create-related-task.html";
@@ -195,7 +193,6 @@ angular.module('buiiltApp').directive('inspector', function(){
 
                         $scope.update = function(task) {
                             taskService.update({id: task._id}, task).$promise.then(function(res) {
-                                console.log(res);
                                 if (task.editType==="enter-comment") {
                                     $scope.comment = null;
                                     dialogService.showToast("Enter New Comment Successfully");

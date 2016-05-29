@@ -150,7 +150,7 @@ EventBus.onSeries('People.Updated', function(req, next){
                         Client.sendMessage({
                             to: currentTender.tenderers[0].phoneNumber,
                             from: config.twilio.phoneNumber,
-                            body: req.editUser.name + " invited you to their project. Sign Up with your mobile number - http://buiilt.com.au/app"
+                            body: req.editUser.name + " invited you to their project. Sign Up with your mobile number - http://buiilt.com.au/appPage"
                         }, function(err, success) {
                             return next();
                         });

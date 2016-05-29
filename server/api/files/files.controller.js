@@ -124,11 +124,11 @@ exports.assignMoreMembers = function(req, res) {
                 {path: "activities.acknowledgeUsers._id", select: "_id email name"},
                 {path: "project"}
             ], function(err, file) {
-                EventBus.emit('socket:emit', {
-                    event: 'document:update',
-                    room: file._id.toString(),
-                    data: JSON.parse(JSON.stringify(file))
-                });
+                // EventBus.emit('socket:emit', {
+                //     event: 'document:update',
+                //     room: file._id.toString(),
+                //     data: JSON.parse(JSON.stringify(file))
+                // });
                 // var uniqId = mongoose.Types.ObjectId();
                 // _.each(newMembers, function(user) {
                 //     EventBus.emit('socket:emit', {
@@ -403,15 +403,15 @@ exports.update = function(req, res) {
                                 return grouped[0];
                             });
 
-                            if (editType==="assign") {
-                                _.each(members, function(member) {
-                                    EventBus.emit('socket:emit', {
-                                        event: 'file:new',
-                                        room: member._id.toString(),
-                                        data: JSON.parse(JSON.stringify(file))
-                                    });
-                                });
-                            }
+                            // if (editType==="assign") {
+                            //     _.each(members, function(member) {
+                            //         EventBus.emit('socket:emit', {
+                            //             event: 'file:new',
+                            //             room: member._id.toString(),
+                            //             data: JSON.parse(JSON.stringify(file))
+                            //         });
+                            //     });
+                            // }
 
                             if (file.isArchive) {
                                 members.push(req.user);

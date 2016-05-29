@@ -244,9 +244,41 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
         }
     });
 
+    var listenerCleanRead = $rootScope.$on("Document.Read", function(ev, data) {
+        if (data.documentSet) {
+            var index = _.findIndex($scope.documentSets, function(set) {
+                if (set._id) {
+                    return set._id.toString()=== data.documentSet.toString();
+                }
+            });
+            if (index !== -1) {
+                var docIndex = _.findIndex($scope.documentSets[index].documents, function(doc) {
+                    return doc._id.toString()===data._id.toString();
+                });
+                if (docIndex!==-1) {
+                    if ($scope.documentSets[index].documents[docIndex].__v > 0) {
+                        $rootScope.$broadcast("UpdateCountNumber", {type: "document", number: 1});
+                    }
+                    $scope.documentSets[index].documents[docIndex].__v = 0;
+                }
+            }
+        } else {
+            var index = _.findIndex($scope.documents, function(doc) {
+                return doc._id.toString()===data._id.toString();
+            });
+            if (index !== -1) {
+                if ($scope.documents[index].__v > 0) {
+                    $rootScope.$broadcast("UpdateCountNumber", {type: "document", number: 1});
+                }
+                $scope.documents[index].__v = 0;
+            }
+        }
+    });
+
     $scope.$on('$destroy', function() {
         listenerCleanFnPush();
         listenerCleanFnPushBulkDoc();
+        listenerCleanRead();
     });
 
     /*Receive when archived document then move it to archived list*/

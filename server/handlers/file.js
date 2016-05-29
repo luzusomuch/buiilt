@@ -70,6 +70,7 @@ EventBus.onSeries('File.Updated', function(file, next) {
                 if (err||!documentSet) {return next();}
                 else {
                     var owners = documentSet.members;
+                    owners.push(documentSet.owner);
                     owners = _.map(_.groupBy(owners,function(doc){
                         return doc;
                     }),function(grouped){

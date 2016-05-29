@@ -239,7 +239,7 @@ exports.update = function(req, res) {
                                     });
                                     thread._editUser = req.user;
                                     thread.save(function(err) {
-                                        if (err) {cb(err);}
+                                        if (err) {return cb(err);}
                                         cb();
                                     });
                                 } else {
@@ -287,7 +287,7 @@ exports.update = function(req, res) {
                                     });
                                     thread._editUser = req.user;
                                     thread.save(function(err) {
-                                        if (err) {cb(err);}
+                                        if (err) {return cb(err);}
                                         _user.projects.push(tender.project);
                                         _user.save(cb);
                                     });

@@ -368,7 +368,7 @@ exports.create = function (req, res, next) {
                                                 }
 
                                                 var acknowUserIndex = _.findIndex(activity.acknowledgeUsers, function(u) {
-                                                    if (u.email) {
+                                                    if (u && u.email) {
                                                         return u.email===newUser.email;
                                                     }
                                                 });
@@ -836,17 +836,23 @@ exports.verifyPhoneNumber = function(req, res) {
 /*Get all notifications for current user and use to */
 exports.getAllNotifications = function(req, res) {
     var count = 0;  
-    Notification.find({owner: req.user._id, unread: true}, function(err, notifications) {
+    Notification.find({owner: req.user._id, unread: true, $or:[{type: "task-enter-comment"}, {type: "task-completed"}, {type: "task-reopened"}, {type: "thread-message"}, {type: "file-upload-reversion"}, {type: "document-upload-reversion"}, {type: "related-item"}]}, function(err, notifications) {
         if (err) {
-            return res.send(500,err);
+            return res.send(500,err); 
         } else {
-            var allowNotificationTypes = ["document-upload-reversion", "task-completed", "task-reopened", "task-enter-comment", "file-upload-reversion", "related-item", "thread-message"];
-            _.each(notifications, function(n){
-                if (allowNotificationTypes.indexOf(n.type) !== -1) {
-                    count+=1;
-                }
+            async.each(notifications, function(n, callback){
+                Project.findById(n.element.project, function(err, project) {
+                    if (err || !project) {callback();}
+                    else if (project.status==="waiting") {
+                        count+=1;
+                        callback()
+                    } else {
+                        callback()
+                    }
+                });
+            }, function() {
+                return res.send(200, {total: count});
             });
-            return res.send(200, {total: count});
         }
     });
 };

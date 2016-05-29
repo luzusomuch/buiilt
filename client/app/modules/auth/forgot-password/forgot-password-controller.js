@@ -21,7 +21,6 @@ angular.module('buiiltApp')
         },3000);
       }, function (res) {
           angular.forEach(res.data.errors, function (error, field) {
-            console.log(field);
             if ($scope.form[field]) {
               $scope.form[field].$setValidity('mongoose', false);
               $scope.errors[field] = error.message;
