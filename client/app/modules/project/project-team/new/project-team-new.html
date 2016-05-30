@@ -3,6 +3,8 @@
 		<md-toolbar>
 			<div class="md-toolbar-tools">
 				<h2>Invite a New Team Member</h2>
+				<span flex></span>
+				<md-button class="md-icon-button" ng-click="dialogService.closeModal()"><md-tooltip md-direction="left">Close</md-tooltip><md-icon class="material-icons">close</md-icon></md-button>
 			</div>
 		</md-toolbar>
 		
@@ -93,7 +95,6 @@
 		<md-dialog-actions>
 			<md-button ng-click="createNewContact()">Create a New Contact</md-button>
 			<span flex></span>
-			<md-button ng-click="dialogService.closeModal()">Cancel</md-button>
 			<md-button type="submit" class="md-primary">Add Contact to Project</md-button>
 		</md-dialog-actions>
 	</form>

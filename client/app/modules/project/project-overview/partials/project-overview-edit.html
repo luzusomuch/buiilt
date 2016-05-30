@@ -3,6 +3,8 @@
 		<md-toolbar>
 			<div class="md-toolbar-tools">
 				<h2>Edit the Project Details</h2>
+				<span flex></span>
+				<md-button class="md-icon-button" ng-click="closeDialog()"><md-tooltip md-direction="left">Close</md-tooltip><md-icon class="material-icons">close</md-icon></md-button>
 			</div>
 		</md-toolbar>
 		
@@ -52,7 +54,6 @@
 		</md-dialog-content>
 		
         <md-dialog-actions layout="row">
-            <md-button ng-click="closeDialog()">Cancel</md-button>
             <md-button id="im_ProjOverviewEdit_6" class="md-primary" type="submit">Save Changes</md-button>
         </md-dialog-actions>   
 		
