@@ -16,6 +16,10 @@ angular.module('buiiltApp')
         ioSocket: ioSocket
       });
 
+      socket.disconnect = function() {
+        ioSocket.disconnect();
+      };
+
       return socket;
     }
   ]);

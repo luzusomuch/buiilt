@@ -11,6 +11,7 @@ angular.module('buiiltApp').directive('inspector', function(){
             $scope.$state = $state;
             $scope.currentUser = $rootScope.currentUser;
             $scope.showActivity = true;
+
             var ctrl, resolve, templateUrl;
 
             if ($scope.type==="thread") {

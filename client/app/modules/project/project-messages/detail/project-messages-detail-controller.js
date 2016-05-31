@@ -32,7 +32,8 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
             },
             templateUrl: 'app/modules/project/project-messages/detail/partials/' + name,
             parent: angular.element(document.body),
-            clickOutsideToClose: false
+            clickOutsideToClose: false,
+            escapeToClose: false
         });
     };
 

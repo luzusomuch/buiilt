@@ -36,7 +36,8 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
             },
             templateUrl: 'app/modules/project/project-tenders/partials/' + modalName,
             parent: angular.element(document.body),
-            clickOutsideToClose: false
+            clickOutsideToClose: false,
+            escapeToClose: false
         });
     };
 

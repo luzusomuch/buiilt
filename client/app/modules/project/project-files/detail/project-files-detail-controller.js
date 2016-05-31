@@ -6,15 +6,16 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
 
 	$scope.showDetail = false;
 	
-
     /*Show modal with valid name*/
     $scope.showModal = function($event, modalName) {
+        socket.emit("leave", file._id);
         if (modalName==="edit-file.html") {
             $rootScope.isEditFile = true;
         }
         $mdDialog.show({
             // targetEvent: $event,
-            controller: 'projectFileDetailCtrl',
+            // scope:$scope,
+            controller: "projectFileDetailCtrl",
             resolve: {
                 file: ["$stateParams", "fileService", function($stateParams, fileService) {
                     return fileService.get({id: $stateParams.fileId}).$promise;
@@ -31,7 +32,8 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
             },
             templateUrl: 'app/modules/project/project-files/detail/partials/' + modalName,
             parent: angular.element(document.body),
-            clickOutsideToClose: false
+            clickOutsideToClose: false,
+            escapeToClose: false
         });
     };
 
@@ -166,7 +168,8 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
 
     // Add get related item for current file
     socket.on("relatedItem:new", function(data) {
-        if (data.belongTo.toString()===file._id.toString()) {
+        if (data.belongTo.toString()===$scope.file._id.toString() && $scope.file.uniqId!=data.uniqId) {
+            $scope.file.uniqId = data.uniqId;
             $scope.file.relatedItem.push({type: data.type, item: data.data});
             $scope.file.activities.push({
                 user: {_id: data.excuteUser._id, name: data.excuteUser.name, email: data.excuteUser.email},

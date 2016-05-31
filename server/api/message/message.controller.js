@@ -224,6 +224,7 @@ exports.create = function(req,res) {
                         }
                         main.save(function(err) {
                             if (err) {return res.send(500,err);}
+                            var uniqId = mongoose.Types.ObjectId();
                             EventBus.emit('socket:emit', {
                                 event: 'relatedItem:new',
                                 room: main._id.toString(),
@@ -232,6 +233,7 @@ exports.create = function(req,res) {
                                     excuteUser: req.user,
                                     belongTo: main._id,
                                     data: thread,
+                                    uniqId: uniqId
                                 }
                             });
 

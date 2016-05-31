@@ -19,19 +19,12 @@ function populateFile(file, res){
         {path: "activities.user", select: "_id email name"},
         {path: "activities.acknowledgeUsers._id", select: "_id email name"}
     ], function(err, file) {
-        if (file.element.type === "file") {
-            EventBus.emit('socket:emit', {
-                event: 'file:update',
-                room: file._id.toString(),
-                data: JSON.parse(JSON.stringify(file))
-            });
-        } else {
-            EventBus.emit('socket:emit', {
-                event: 'document:update',
-                room: file._id.toString(),
-                data: JSON.parse(JSON.stringify(file))
-            });
-        }
+        file.uniqId = mongoose.Types.ObjectId();
+        EventBus.emit('socket:emit', {
+            event: file.element.type+':update',
+            room: file._id.toString(),
+            data: JSON.parse(JSON.stringify(file))
+        });
         return res.send(200, file);
     });
 };

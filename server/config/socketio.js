@@ -57,16 +57,18 @@ function onConnect(socket) {
   socket.on('join', function (id) {
     console.log('user join room [%s] socket id [%s]', id, socket.id);
     socket.userId = id;
+    // console.log(socket);
+
     socket.join(id);
-    listOnlineUser.push(socket.userId);
-    uniqueUserList = _.uniq(listOnlineUser);
-    _.each(uniqueUserList, function(user){
-      EventBus.emit('socket:emit', {
-        event: 'onlineUser',
-        room: user,
-        data: uniqueUserList
-      });
-    });
+    // listOnlineUser.push(socket.userId);
+    // uniqueUserList = _.uniq(listOnlineUser);
+    // _.each(uniqueUserList, function(user){
+    //   EventBus.emit('socket:emit', {
+    //     event: 'onlineUser',
+    //     room: user,
+    //     data: uniqueUserList
+    //   });
+    // });
   });
 
   //new TwilioSocket(socket);
@@ -107,19 +109,24 @@ module.exports = function (socketio) {
     socket.on('disconnect', function () {
       onDisconnect(socket);
       console.info('[%s] DISCONNECTED', socket.address);
-      if (socket.userId) {
-        var abc = _.remove(uniqueUserList, function(item){
-          return item == socket.userId.toString();
-        });
-        _.each(uniqueUserList, function(user) {
-          EventBus.emit('socket:emit', {
-            event: 'onlineUser',
-            room: user,
-            data: uniqueUserList
-          });
-        });
-      }
+      // if (socket.userId) {
+      //   var abc = _.remove(uniqueUserList, function(item){
+      //     return item == socket.userId.toString();
+      //   });
+      //   _.each(uniqueUserList, function(user) {
+      //     EventBus.emit('socket:emit', {
+      //       event: 'onlineUser',
+      //       room: user,
+      //       data: uniqueUserList
+      //     });
+      //   });
+      // }
     });
+
+    // socket.on("leave", function(id) {
+    //   console.log(socketio.sockets.in(id));
+    //   socketio.sockets.in(id).emit("leave");
+    // });
 
     // Call onConnect.
     onConnect(socket);

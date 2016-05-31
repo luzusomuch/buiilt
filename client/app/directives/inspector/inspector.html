@@ -16,7 +16,7 @@
     <div ng-show="showActivity" class="activity-stream-head" layout-padding>
         <p>This {{type}} was created by <strong>{{data.owner.name}}</strong> on {{data.createdAt | date: 'dd MMMM yyyy'}} at {{data.createdAt | date: 'hh:mm a'}}</p>
     </div>
-    <div ng-show="showActivity" layout-padding ng-repeat="activity in data.activities" ng-hide="activity.type=='attach-scope' || activity.type=='attach-addendum' || activity.type=='attach-document-set' || activity.type=='select-winner' || activity.type=='chat' || activity.type=='upload-reversion'">
+    <div ng-show="showActivity" layout-padding ng-repeat="activity in data.activities" ng-hide="activity.type=='attach-scope' || activity.type=='attach-addendum' || activity.type=='attach-document-set' || activity.type=='select-winner' || activity.type=='chat' || activity.type=='upload-reversion' || activity.type=='related-file' || activity.type=='related-thread' || activity.type=='related-task'">
         <p style="font-size: 12px; margin-top: 0px; margin-bottom: 0px; padding-bottom: 0px; padding-top: 0px">
 			<span>{{activity.user.name}}</span>
             <span ng-switch="activity.type">
