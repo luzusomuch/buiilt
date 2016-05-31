@@ -365,6 +365,8 @@ exports.update = function(req,res) {
                     });
                     task.comments = comments;
                     task.markModified("enterComment");
+                } else if (req.body.editType==="change-event" || req.body.editType==="add-event") {
+                    task.event = req.body.selectedEvent;
                 }
 
                 task.activities.push(activity);

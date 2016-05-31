@@ -16,7 +16,13 @@
 			
 			<div layout="row">
 				<md-icon class="material-icons md-primary" ng-show="task.completed" style="margin-right: 10px">check_circle</md-icon>
-				<h3 class="md-headline" style="margin-top: 4px">{{task.description}}</h3>
+				<h3 ng-show="!editDescription" class="md-headline" style="margin-top: 4px">{{task.description}}</h3>
+
+				<md-input-container ng-show="editDescription">
+					<label for="">Task Description</label>
+					<input type="text" ng-model="task.description" ng-blur="changeDescription()">
+				</md-input-container>
+
 				<span flex></span>
 				<md-button class="md-icon-button" ng-click="showDetail=!showDetail"><md-icon class="material-icons"><md-tooltip md-direction="left">Edit Task</md-tooltip>edit</md-icon></md-button>
 			</div>
@@ -26,15 +32,19 @@
 			</div>
 			
 			<md-divider></md-divider>
-			
-			<div ng-show="showDetail" layout="row" layout-align="space-around center">
-				<md-button ng-show="task.owner._id==currentUser._id">Edit Description</md-button>
-				<md-button>Edit Assignees</md-button>
-				<md-button ng-click="" ng-show="task.owner._id==currentUser._id">Edit Event</md-button>
+
+			<div layout="row" ng-show="editAssignee" layout-align="center center" layout-wrap layout-padding flex>
+				<p class="md-body-2">Select Member That You Want To Assign</p>
+				<md-checkbox ng-click="assignMember($index)" ng-repeat="member in projectMembers" class="filter-checkbox md-primary">{{(member._id) ? member.name : member.email}}</md-checkbox>
 			</div>
 			
-			<div layout="row" ng-show="showEdit" layout-align="center center" layout-wrap layout-padding flex>
-				<md-checkbox ng-click="assignMember($index)" ng-repeat="member in projectMembers" class="filter-checkbox md-primary">{{(member._id) ? member.name : member.email}}</md-checkbox>
+			<div ng-show="showDetail" layout="row" layout-align="space-around center">
+				<md-button ng-click="editDescription=!editDescription" ng-show="task.owner._id==currentUser._id">Edit Description</md-button>
+				<md-button ng-click="editAssignee=!editAssignee">Edit Assignees</md-button>
+				<md-select ng-show="task.owner._id==currentUser._id" ng-change="changeOrAddEvent()" ng-model="task.selectedEvent">
+					<md-option ng-repeat="ev in activities" ng-value="ev._id">{{ev.name}}</md-option>
+				</md-select>
+				<!-- <md-button ng-click="" ng-show="task.owner._id==currentUser._id">Edit Event</md-button> -->
 			</div>
 			
 			<md-divider ng-show="showDetail"></md-divider>

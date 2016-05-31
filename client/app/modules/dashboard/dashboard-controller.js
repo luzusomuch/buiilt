@@ -268,7 +268,10 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             // targetEvent: $event,
             controller: ["$timeout", "$rootScope", "$scope", "dialogService", "socket", "activity", "task", "people", "notificationService", 
             function($timeout, $rootScope, $scope, dialogService, socket, activity, task, people, notificationService) {
+                var originalTask = angular.copy(task);
                 $scope.task = task;
+                $scope.task.selectedEvent = task.event;
+                $scope.activities = activity;
                 $scope.dialogService = dialogService;
                 $scope.allowShowList = ["create-task", "edit-task", "change-date-time", "complete-task", "uncomplete-task", "enter-comment"];
 
@@ -285,7 +288,9 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                 // socket handle
                 socket.emit("join", task._id);
                 socket.on("task:update", function(data) {
+                    originalTask = angular.copy(task);
                     $scope.task = data;
+                    $scope.task.selectedEvent = data.event;
                     getProjectMembers();
                     notificationService.markItemsAsRead({id: task._id}).$promise.then();
                 });
@@ -333,6 +338,15 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                     }
                 };
 
+                $scope.changeOrAddEvent = function() {
+                    if (originalTask.event) {
+                        $scope.task.editType="change-event"
+                    } else {
+                        $scope.task.editType="add-event";
+                    }
+                    $scope.update($scope.task);
+                };
+
                 $scope.changeDescription = function() {
                     if ($scope.task.description.trim().length===0) {
                         dialogService.showToast("Please Enter a Task Description...");
@@ -362,6 +376,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                             $scope.comment = null;
                             dialogService.showToast("Your Comment Has Been Added.");
                         } else if (task.editType==="edit-task") {
+                            $scope.editDescription=false;
                             dialogService.showToast("Task Description Updated Successfully.");
                         } else if (task.editType==="assign") {
                             dialogService.showToast("Assignees Added to the Task Successfully.");
@@ -369,6 +384,10 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                             dialogService.showToast("Task Has Been Marked Completed.");
                         } else if (task.editType==="uncomplete-task") {
                             dialogService.showToast("Task Has Been Marked Incomplete.");
+                        } else if (task.editType==="add-event") {
+                            dialogService.showToast("Add Event Successfully");
+                        } else if (task.editType==="change-event") {
+                            dialogService.showToast("Change Event Successfully");
                         }
                         $scope.showEdit = false;
                     }, function(err) {
