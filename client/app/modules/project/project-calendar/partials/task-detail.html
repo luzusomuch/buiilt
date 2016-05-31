@@ -18,7 +18,7 @@
 				<md-icon class="material-icons md-primary" ng-show="task.completed" style="margin-right: 10px">check_circle</md-icon>
 				<h3 ng-show="!editDescription" class="md-headline" style="margin-top: 4px">{{task.description}}</h3>
 
-				<md-input-container ng-show="editDescription">
+				<md-input-container ng-show="editDescription" flex="60">
 					<label for="">Task Description</label>
 					<input type="text" ng-model="task.description" ng-blur="changeDescription()">
 				</md-input-container>
@@ -51,9 +51,9 @@
 			
 			<div layout="column">
 				<div class="item-activity">
-					<div layout="row" layout-align="center center" flex class="activity-stream" layout-padding ng-repeat="activity in task.activities" ng-show="allowShowList.indexOf(activity.type) !== -1">
+					<div layout="row" layout-align="center center" flex class="activity-stream" layout-padding ng-repeat="activity in task.activities" ng-show="allowShowList.indexOf(activity.type) !== -1" style="padding: 0px">
 						<div class="activity-detail" flex>
-							<p ng-switch="activity.type" class="activity-head" style="margin-bottom: 15px; border-bottom: 0.5px solid #EEEEEE">
+							<p ng-switch="activity.type" class="activity-head" style="border-bottom: 0.5px solid #EEEEEE">
 								<span class="activity-creator">{{(activity.user) ? activity.user.name : activity.email}}</span>
 								<span class="meta-data" ng-switch-when="create-task"> created this task on <span class="date-time">{{activity.createdAt |date:'dd MMMM yyyy'}} at {{activity.createdAt | date:'hh:mm a'}}</span>:</span>
 
