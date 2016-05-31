@@ -395,6 +395,11 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
 
     // End calendar section
 
+    $scope.selectProject = function(index) {
+        $scope.selectedProjectIndex = index;
+        getProjectMembers($scope.projects[index]._id);
+    };
+
     /*Validate info and allow next in modal*/
     $scope.next = function(type) {
         if (type!=="activity") {
@@ -715,17 +720,18 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
             return project._id.toString()===$rootScope.selectedProjectId;
         });
         if (index !== -1) {
-            $scope.selectedProjectIndex = index;
+            $scope.selectProject(index);
+            // $scope.selectedProjectIndex = index;
             $rootScope.selectedProjectId = null;
         }
     }
 
     /*Select project for getting member of it's*/
-    $scope.$watch("selectedProjectIndex", function() {
-        if ($scope.selectedProjectIndex) {
-            getProjectMembers($scope.projects[$scope.selectedProjectIndex]._id);
-        }
-    });
+    // $scope.$watch("selectedProjectIndex", function() {
+    //     if ($scope.selectedProjectIndex) {
+    //         getProjectMembers($scope.projects[$scope.selectedProjectIndex]._id);
+    //     }
+    // });
 
     // task section
     $scope.task = {

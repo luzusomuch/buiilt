@@ -13,7 +13,7 @@
 					<p class="md-body-2">Which project should this task be added to:</p>
 					<md-input-container>
                         <label for="">Projects List</label>
-                        <md-select ng-model="selectedProjectIndex">
+                        <md-select ng-change="selectProject(selectedProjectIndex)" ng-model="selectedProjectIndex">
                             <md-option ng-repeat="project in projects" ng-value="$index">{{project.name}}</md-option>
                         </md-select>
                     </md-input-container>
