@@ -271,80 +271,100 @@ exports.create = function(req,res) {
 // Update thread
 exports.update = function(req,res) {
     var user = req.user;
-    Thread.findById(req.params.id, function(err, thread) {
-        if (err) {return res.send(500,err);}
-        else if (!thread) {return res.send(404, "The specific message is not existed");}
-        else if (req.body.elementType !== "unarchive" && thread.isArchive) {return res.send(500, {message: "This thread is archived"});}
-        else {
-            req.thread = thread;
-            ThreadValidator.validateUpdate(req,function(err,data) {
-                if (err) {
-                    return errorsHelper.validationErrors(res,err)
-                } else {
-                    var editType;
-                    thread = _.merge(thread,data);
-                    var activity = {
-                        user: req.user._id,
-                        type: req.body.elementType,
-                        createdAt: new Date(),
-                        element: {}
-                    };
-                    if (req.body.elementType==="assign") {
-                        editType = "assign";
-                        var invitees = [];
-                        _.each(req.body.newMembers, function(member) {
-                            if (member.name) {
-                                invitees.push(member.name);
-                            } else {
-                                invitees.push(member.email);
-                            }
-                        });
-                        activity.element.invitees = invitees;
-                        thread.members = data.members;
-                        thread.notMembers = data.notMembers;
-                    } else if (req.body.elementType==="add-event" || req.body.elementType==="change-event") {
-                        thread.event = req.body.selectedEvent;
-                    } else if (req.body.elementType==="edit-thread") {
-                        thread.name = req.body.name;
-                        activity.element.name = req.body.name;
-                        if (req.body.newMembers && req.body.newMembers.length > 0) {
-                            thread.members = data.members;
-                            thread.notMembers = data.notMembers;
+    var event;
+    async.parallel([
+        function (cb) {
+            if (req.body.elementType==="add-event" || req.body.elementType==="change-event") {
+                Activity.findById(req.body.selectedEvent, function(err, activity) {
+                    if (err || !activity) {
+                        return cb(err);
+                    } else {
+                        event = activity;
+                        cb();
+                    }
+                })
+            } else {
+                cb();
+            }
+        }
+    ], function() {
+        Thread.findById(req.params.id, function(err, thread) {
+            if (err) {return res.send(500,err);}
+            else if (!thread) {return res.send(404, "The specific message is not existed");}
+            else if (req.body.elementType !== "unarchive" && thread.isArchive) {return res.send(500, {message: "This thread is archived"});}
+            else {
+                req.thread = thread;
+                ThreadValidator.validateUpdate(req,function(err,data) {
+                    if (err) {
+                        return errorsHelper.validationErrors(res,err)
+                    } else {
+                        var editType;
+                        thread = _.merge(thread,data);
+                        var activity = {
+                            user: req.user._id,
+                            type: req.body.elementType,
+                            createdAt: new Date(),
+                            element: {}
+                        };
+                        if (req.body.elementType==="assign") {
                             editType = "assign";
                             var invitees = [];
-                            _.each(req.body.newMembers, function(member){
+                            _.each(req.body.newMembers, function(member) {
                                 if (member.name) {
                                     invitees.push(member.name);
                                 } else {
                                     invitees.push(member.email);
                                 }
                             });
-                            thread.activities.push({
-                                user: req.user._id,
-                                type: "assign",
-                                createdAt: new Date(),
-                                element: {
-                                    invitees: invitees
-                                }
-                            });
+                            activity.element.invitees = invitees;
+                            thread.members = data.members;
+                            thread.notMembers = data.notMembers;
+                        } else if (req.body.elementType==="add-event" || req.body.elementType==="change-event") {
+                            thread.event = req.body.selectedEvent;
+                            activity.element.event = event.name;
+                        } else if (req.body.elementType==="edit-thread") {
+                            thread.name = req.body.name;
+                            activity.element.name = req.body.name;
+                            if (req.body.newMembers && req.body.newMembers.length > 0) {
+                                thread.members = data.members;
+                                thread.notMembers = data.notMembers;
+                                editType = "assign";
+                                var invitees = [];
+                                _.each(req.body.newMembers, function(member){
+                                    if (member.name) {
+                                        invitees.push(member.name);
+                                    } else {
+                                        invitees.push(member.email);
+                                    }
+                                });
+                                thread.activities.push({
+                                    user: req.user._id,
+                                    type: "assign",
+                                    createdAt: new Date(),
+                                    element: {
+                                        invitees: invitees
+                                    }
+                                });
+                            }
+                        } else {
+                            thread.isArchive = req.body.isArchive;
                         }
-                    } else {
-                        thread.isArchive = req.body.isArchive;
+                        
+                        thread.activities.push(activity);
+                        thread.markModified(req.body.elementType);
+                        thread._editUser = req.user;
+                        thread.save(function(err) {
+                            if (err) {
+                                return res.send(500,err)
+                            }
+                            req.editType = editType;
+                            populateThread(thread, res, req);
+                        });
                     }
-                    
-                    thread.activities.push(activity);
-                    thread.markModified(req.body.elementType);
-                    thread._editUser = req.user;
-                    thread.save(function(err) {
-                        if (err) {
-                            return res.send(500,err)
-                        }
-                        req.editType = editType;
-                        populateThread(thread, res, req);
-                    });
-                }
-            });
-        }
+                });
+            }
+        });
+        
     });
 };
 

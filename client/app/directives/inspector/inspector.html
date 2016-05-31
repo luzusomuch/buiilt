@@ -28,8 +28,8 @@
                 <span ng-switch-when="change-title"> change the title of this {{type}} to {{title}}</span>
                 <span ng-switch-when="invite-tenderer"> invited <span ng-repeat="tenderer in activity.element.members">{{tenderer.name}}<span ng-hide="$last">, </span></span></span>
                 <span ng-switch-when="attach-event"> attached this {{type}} to the event, {{event.name}}</span>
-                <span ng-switch-when="change-event"> changed the event for this {{type}} to {{event.name}}</span>
-                <span ng-switch-when="add-event"> attached this {{type}} to the event, {{event.name}}</span>
+                <span ng-switch-when="change-event"> changed the event {{activity.element.event}} for this {{type}} to {{event.name}}</span>
+                <span ng-switch-when="add-event"> attached this {{type}} to the event, {{activity.element.event}}</span>
                 <!-- Thread section -->
                 <span ng-show="type=='thread'" ng-switch-when="assign"> assigned <span ng-repeat="invitee in activity.element.invitees">{{invitee}}<span ng-hide="$last">, </span></span> to this {{type}}</span>
                 <span ng-switch-when="edit-thread"> changed the name of this {{type}} to {{activity.element.name}}.</span>

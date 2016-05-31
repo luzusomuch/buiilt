@@ -1,5 +1,6 @@
 'use strict';
 var User = require('./../../models/user.model');
+var Activity = require('./../../models/activity.model');
 var File = require('./../../models/file.model');
 var Document = require('./../../models/document.model');
 var People = require('./../../models/people.model');
@@ -261,219 +262,240 @@ exports.show = function(req, res) {
 */
 exports.update = function(req, res) {
     var data = req.body;
-    File.findById(req.params.id, function(err, file) {
-        if (err) {return res.send(500,err);}
-        else if (!file) {return res.send(404, "We Can Not Find The Requested File...");}
-        else if (req.body.editType !== "unarchive" && file.isArchive) {return res.send(500, {message: "This file is archived"});}
-        else {
-            var activity = {
-                user: req.user._id,
-                type: req.body.editType,
-                createdAt: new Date(),
-                element: {}
-            };
-            var editType;
-            async.parallel([
-                function(cb) {
-                    if (data.editType === "edit") {
-                        async.parallel([
-                            function (callback) {
-                                if (data.newMembers && data.newMembers.length > 0) {
-                                    editType = "assign";
-                                    var members = [];
-                                    async.each(data.newMembers, function(member, cb) {
-                                        members.push(member.email);
-                                        User.findOne({email: member.email}, function(err, user) {
-                                            if (err) {cb();}
-                                            else if (!user) {
-                                                file.notMembers.push(member.email);
-                                                cb();
-                                            } else {
-                                                file.members.push(user._id);
-                                                cb();
-                                            }
-                                        });
-                                    }, function() {
-                                        file.activities.push({
-                                            user: req.user._id,
-                                            type: "assign",
-                                            createdAt: new Date(),
-                                            element: {members: members}
-                                        });
-                                        callback();
-                                    });
-                                } else {
-                                    callback();
-                                }
-                            },
-                            function (callback) {
-                                if (data.selectedTag && file.tags[0] !== data.selectedTag) {
-                                    activity.element.tags = [data.selectedTag];
-                                    file.tags = [data.selectedTag];
-                                    callback();
-                                } else {
-                                    callback();
-                                }
-                            },
-                            function (callback) {
-                                if (data.name && data.name !== file.name) {
-                                    activity.element.name = (file.name.length !== data.name.length) ? data.name : null;
-                                    file.name = data.name;
-                                    callback();
-                                } else {
-                                    callback();
-                                }
-                            },
-                            function (callback) {
-                                if (data.selectedEvent && file.event != data.selectedEvent) {
-                                    file.activities.push({
-                                        user: req.user._id,
-                                        type: (!file.event) ? "add-event" : "change-event",
-                                        createdAt: new Date(),
-                                        element: {}
-                                    });
-                                    file.event = data.selectedEvent;
-                                    callback();
-                                } else {
-                                    callback();
-                                }
-                            }
-                        ], cb);
-                    } else if (data.editType === "assign") {
-                        editType = assign;
-                        var members = [];
-                        async.each(data.newMembers, function(member, cb) {
-                            members.push(member.email);
-                            User.findOne({email: member.email}, function(err, user) {
-                                if (err) {cb();}
-                                else if (!user) {
-                                    file.notMembers.push(member.email);
-                                    cb();
-                                } else {
-                                    file.members.push(user._id);
-                                    cb();
-                                }
-                            });
-                        }, function() {
-                            activity.element.members = members;
-                            cb();
-                        });
-                    } else if (data.editType==="insert-note") {
-                        activity.element.content = req.body.note;
-                        file._editType="insert-note";
-                        cb();
-                    } else if (data.editType==="archive" || data.editType==="unarchive") {
-                        file.isArchive=req.body.isArchive;
-                        file._editType=data.editType;
-                        cb();
-                    } else if (data.editType==="change-event" || data.editType==="add-event") {
-                        file.event = data.selectedEvent;
-                        cb()
+    var event;
+    async.parallel([
+        function (cb) {
+            if (req.body.editType==="add-event" || req.body.editType==="change-event") {
+                Activity.findById(req.body.selectedEvent, function(err, activity) {
+                    if (err || !activity) {
+                        return cb(err);
                     } else {
+                        event = activity;
                         cb();
                     }
-                }
-            ], function(err, result) {
-                if (err) {return res.send(500,err);}
-                file.activities.push(activity);
-                file._editUser =  req.user;
-                file.save(function(err) {
-                    if (err) {return res.send(500,err);}
-                    File.populate(file, [
-                        {path: "owner", select: "_id email name phoneNumber"},
-                        {path: "members", select: "_id email name phoneNumber"},
-                        {path: "activities.user", select: "_id email name"},
-                        {path: "activities.acknowledgeUsers._id", select: "_id email name"},
-                        {path: "project"}
-                    ], function(err, file) {
-                        if (file.element.type === "file") {
-                            // Get uniq available file members
-                            var members = _.clone(file.members);
-                            members.push(file.owner);
-                            _.remove(members, {_id: req.user._id});
-                            members = _.map(_.groupBy(members,function(doc){
-                                return doc._id;
-                            }),function(grouped){
-                                return grouped[0];
+                });
+            } else {
+                cb();
+            }
+        }
+    ], function() {
+        File.findById(req.params.id, function(err, file) {
+            if (err) {return res.send(500,err);}
+            else if (!file) {return res.send(404, "We Can Not Find The Requested File...");}
+            else if (req.body.editType !== "unarchive" && file.isArchive) {return res.send(500, {message: "This file is archived"});}
+            else {
+                var activity = {
+                    user: req.user._id,
+                    type: req.body.editType,
+                    createdAt: new Date(),
+                    element: {}
+                };
+                var editType;
+                async.parallel([
+                    function(cb) {
+                        if (data.editType === "edit") {
+                            async.parallel([
+                                function (callback) {
+                                    if (data.newMembers && data.newMembers.length > 0) {
+                                        editType = "assign";
+                                        var members = [];
+                                        async.each(data.newMembers, function(member, cb) {
+                                            members.push(member.email);
+                                            User.findOne({email: member.email}, function(err, user) {
+                                                if (err) {cb();}
+                                                else if (!user) {
+                                                    file.notMembers.push(member.email);
+                                                    cb();
+                                                } else {
+                                                    file.members.push(user._id);
+                                                    cb();
+                                                }
+                                            });
+                                        }, function() {
+                                            file.activities.push({
+                                                user: req.user._id,
+                                                type: "assign",
+                                                createdAt: new Date(),
+                                                element: {members: members}
+                                            });
+                                            callback();
+                                        });
+                                    } else {
+                                        callback();
+                                    }
+                                },
+                                function (callback) {
+                                    if (data.selectedTag && file.tags[0] !== data.selectedTag) {
+                                        activity.element.tags = [data.selectedTag];
+                                        file.tags = [data.selectedTag];
+                                        callback();
+                                    } else {
+                                        callback();
+                                    }
+                                },
+                                function (callback) {
+                                    if (data.name && data.name !== file.name) {
+                                        activity.element.name = (file.name.length !== data.name.length) ? data.name : null;
+                                        file.name = data.name;
+                                        callback();
+                                    } else {
+                                        callback();
+                                    }
+                                },
+                                function (callback) {
+                                    if (data.selectedEvent && file.event != data.selectedEvent) {
+                                        console.log(event);
+                                        file.activities.push({
+                                            user: req.user._id,
+                                            type: (!file.event) ? "add-event" : "change-event",
+                                            createdAt: new Date(),
+                                            element: {event: event.name}
+                                        });
+                                        file.event = data.selectedEvent;
+                                        callback();
+                                    } else {
+                                        callback();
+                                    }
+                                }
+                            ], cb);
+                        } else if (data.editType === "assign") {
+                            editType = assign;
+                            var members = [];
+                            async.each(data.newMembers, function(member, cb) {
+                                members.push(member.email);
+                                User.findOne({email: member.email}, function(err, user) {
+                                    if (err) {cb();}
+                                    else if (!user) {
+                                        file.notMembers.push(member.email);
+                                        cb();
+                                    } else {
+                                        file.members.push(user._id);
+                                        cb();
+                                    }
+                                });
+                            }, function() {
+                                activity.element.members = members;
+                                cb();
                             });
-
-                            // if (editType==="assign") {
-                            //     _.each(members, function(member) {
-                            //         EventBus.emit('socket:emit', {
-                            //             event: 'file:new',
-                            //             room: member._id.toString(),
-                            //             data: JSON.parse(JSON.stringify(file))
-                            //         });
-                            //     });
-                            // }
-
-                            if (file.isArchive) {
-                                members.push(req.user);
-                                _.each(members, function(member) {
-                                    EventBus.emit('socket:emit', {
-                                        event: 'file:archive',
-                                        room: member._id.toString(),
-                                        data: JSON.parse(JSON.stringify(file))
-                                    });
-                                });
-                            } else {
-                                EventBus.emit('socket:emit', {
-                                    event: 'file:update',
-                                    room: file._id.toString(),
-                                    data: JSON.parse(JSON.stringify(file))
-                                });
-                                // var owners = _.clone(file.members);
-                                // owners.push(file.owner);
-                                // _.remove(owners, {_id: req.user._id});
-                                // var uniqId = mongoose.Types.ObjectId();
-                                // _.each(owners, function(owner) {
-                                //     EventBus.emit('socket:emit', {
-                                //         event: 'dashboard:new',
-                                //         room: owner._id.toString(),
-                                //         data: {
-                                //             type: file.element.type,
-                                //             _id: file._id,
-                                //             uniqId: uniqId,
-                                //             user: req.user,
-                                //             file: JSON.parse(JSON.stringify(file)),
-                                //             newNotification: {fromUser: req.user, type: "document-upload-reversion"}
-                                //         }
-                                //     });
-                                // });
-                            }
+                        } else if (data.editType==="insert-note") {
+                            activity.element.content = req.body.note;
+                            file._editType="insert-note";
+                            cb();
+                        } else if (data.editType==="archive" || data.editType==="unarchive") {
+                            file.isArchive=req.body.isArchive;
+                            file._editType=data.editType;
+                            cb();
+                        } else if (data.editType==="change-event" || data.editType==="add-event") {
+                            file.event = data.selectedEvent;
+                            activity.element.event = event.name;
+                            cb()
                         } else {
-                            if (file.isArchive) {
-                                var members = [];
-                                _.each(file.fileHistory, function(history) {
-                                    _.each(history.members, function(member) {
-                                        if (member._id) {
-                                            members.push(member._id);
-                                        }
-                                    });
+                            cb();
+                        }
+                    }
+                ], function(err, result) {
+                    if (err) {return res.send(500,err);}
+                    file.activities.push(activity);
+                    file._editUser =  req.user;
+                    file.save(function(err) {
+                        if (err) {return res.send(500,err);}
+                        File.populate(file, [
+                            {path: "owner", select: "_id email name phoneNumber"},
+                            {path: "members", select: "_id email name phoneNumber"},
+                            {path: "activities.user", select: "_id email name"},
+                            {path: "activities.acknowledgeUsers._id", select: "_id email name"},
+                            {path: "project"}
+                        ], function(err, file) {
+                            if (file.element.type === "file") {
+                                // Get uniq available file members
+                                var members = _.clone(file.members);
+                                members.push(file.owner);
+                                _.remove(members, {_id: req.user._id});
+                                members = _.map(_.groupBy(members,function(doc){
+                                    return doc._id;
+                                }),function(grouped){
+                                    return grouped[0];
                                 });
-                                members.push(req.user._id);
-                                members = _.uniq(members);
-                                _.each(members, function(member) {
+
+                                // if (editType==="assign") {
+                                //     _.each(members, function(member) {
+                                //         EventBus.emit('socket:emit', {
+                                //             event: 'file:new',
+                                //             room: member._id.toString(),
+                                //             data: JSON.parse(JSON.stringify(file))
+                                //         });
+                                //     });
+                                // }
+
+                                if (file.isArchive) {
+                                    members.push(req.user);
+                                    _.each(members, function(member) {
+                                        EventBus.emit('socket:emit', {
+                                            event: 'file:archive',
+                                            room: member._id.toString(),
+                                            data: JSON.parse(JSON.stringify(file))
+                                        });
+                                    });
+                                } else {
                                     EventBus.emit('socket:emit', {
-                                        event: 'document:archive',
-                                        room: member.toString(),
+                                        event: 'file:update',
+                                        room: file._id.toString(),
                                         data: JSON.parse(JSON.stringify(file))
                                     });
-                                });
+                                    // var owners = _.clone(file.members);
+                                    // owners.push(file.owner);
+                                    // _.remove(owners, {_id: req.user._id});
+                                    // var uniqId = mongoose.Types.ObjectId();
+                                    // _.each(owners, function(owner) {
+                                    //     EventBus.emit('socket:emit', {
+                                    //         event: 'dashboard:new',
+                                    //         room: owner._id.toString(),
+                                    //         data: {
+                                    //             type: file.element.type,
+                                    //             _id: file._id,
+                                    //             uniqId: uniqId,
+                                    //             user: req.user,
+                                    //             file: JSON.parse(JSON.stringify(file)),
+                                    //             newNotification: {fromUser: req.user, type: "document-upload-reversion"}
+                                    //         }
+                                    //     });
+                                    // });
+                                }
                             } else {
-                                EventBus.emit('socket:emit', {
-                                    event: 'document:update',
-                                    room: file._id.toString(),
-                                    data: JSON.parse(JSON.stringify(file))
-                                });
+                                if (file.isArchive) {
+                                    var members = [];
+                                    _.each(file.fileHistory, function(history) {
+                                        _.each(history.members, function(member) {
+                                            if (member._id) {
+                                                members.push(member._id);
+                                            }
+                                        });
+                                    });
+                                    members.push(req.user._id);
+                                    members = _.uniq(members);
+                                    _.each(members, function(member) {
+                                        EventBus.emit('socket:emit', {
+                                            event: 'document:archive',
+                                            room: member.toString(),
+                                            data: JSON.parse(JSON.stringify(file))
+                                        });
+                                    });
+                                } else {
+                                    EventBus.emit('socket:emit', {
+                                        event: 'document:update',
+                                        room: file._id.toString(),
+                                        data: JSON.parse(JSON.stringify(file))
+                                    });
+                                }
                             }
-                        }
 
-                        RelatedItem.responseWithRelated("file", file, req.user, res);
+                            RelatedItem.responseWithRelated("file", file, req.user, res);
+                        });
                     });
                 });
-            });
-        }
+            }
+        });
+
     });
 };
 
