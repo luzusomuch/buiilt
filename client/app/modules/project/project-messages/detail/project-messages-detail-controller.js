@@ -121,7 +121,11 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
     filterUnreadActivites($scope.thread);
 
     $scope.people = people;
-    $scope.thread.members.push(thread.owner);
+    if (_.filter($scope.thread.members, function(member) {
+        return member._id.toString()===$scope.thread.owner._id.toString();
+    }) === -1) {
+        $scope.thread.members.push(thread.owner);
+    }
     var allowMembers = angular.copy(thread.members);
     allowMembers.push(thread.owner);
 

@@ -8,8 +8,15 @@
         
         <md-dialog-content>
             <div class="md-dialog-content" layout="column" layout-padding>
+                <div>
+                    <p class="md-body-2">Current Members Of This Thread</p>
+                    <div layout="row" layout-align="center center" layout-wrap layout-padding flex>
+                        <span ng-repeat="member in thread.members">{{member.name}}, </span>
+                        <span ng-repeat="email in thread.notMembers">{{email}}, </span>
+                    </div>
+                </div>
 				
-				<div layout="column">
+				<div layout="column" ng-show="membersList.length > 0">
 					<p class="md-body-2">Select who you would like to assign to this message thread:</p>
 					<div layout="row" layout-align="center center" layout-wrap layout-padding flex>
                         <md-checkbox ng-click="selectMember($index, 'member')" ng-repeat="member in membersList" class="filter-checkbox md-primary">{{(member._id) ? member.name : member.email}}</md-checkbox>

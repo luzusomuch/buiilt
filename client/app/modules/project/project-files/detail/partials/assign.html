@@ -8,8 +8,16 @@
         
         <md-dialog-content>
             <div class="md-dialog-content" layout="column">
+                <div>
+                    <p class="md-body-2">Current Members Of This File</p>
+                    <div layout="row" layout-align="center center" layout-wrap layout-padding flex>
+                        <span ng-repeat="member in file.members">{{member.name}}, </span>
+                        <span ng-repeat="email in file.notMembers">{{email}}, </span>
+                    </div>
+                </div>
 				
-				<div layout="row" layout-align="center center" layout-wrap layout-padding flex>
+				<div layout="row" layout-align="center center" layout-wrap layout-padding flex ng-show="membersList.length > 0">
+                    <p class="md-body-2">Select Members You Want To Assign</p>
                     <md-checkbox class="filter-checkbox md-primary" ng-repeat="member in membersList" ng-click="selectMember($index, 'member')">{{(member._id) ? member.name : member.email}}</md-checkbox>
 				</div>
 				

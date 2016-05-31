@@ -20,8 +20,16 @@
                         </md-input-container>
                     </div>
                 </div>
+
+                <div>
+                    <p class="md-body-2">Current Members Of This Document Set</p>
+                    <div layout="row" layout-align="center center" layout-wrap layout-padding flex>
+                        <span ng-repeat="member in selectedDocumentSet.members">{{member.name}}, </span>
+                        <span ng-repeat="name in selectedDocumentSet.notMembersName">{{name}}, </span>
+                    </div>
+                </div>
                     
-                <div layout="column">
+                <div layout="column" ng-show="projectMembers.length > 0">
                     <p class="md-body-2">Select at least one project member that is relevant to set of this document:</p>
                     
                     <div layout="row" flex layout-align="center center" layout-wrap layout-padding>

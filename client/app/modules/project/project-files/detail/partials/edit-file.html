@@ -38,8 +38,12 @@
                     <div>
                         <p class="md-body-2">Current Members Of This File</p>
                         <div layout="row" layout-align="center center" layout-wrap layout-padding flex>
-                            <md-checkbox class="filter-checkbox md-primary" ng-repeat="member in file.members" ng-checked="true">{{(member._id) ? member.name : member.email}}</md-checkbox>
-                            <md-checkbox class="filter-checkbox md-primary" ng-repeat="email in file.notMembers" ng-checked="true">{{email}}</md-checkbox>
+                            <span>{{file.owner.name}}</span>
+                            <span ng-repeat="member in file.members">, {{member.name}}</span>
+                            <span ng-repeat="email in file.notMembers">, {{email}}</span>
+
+                            <!-- <md-checkbox class="filter-checkbox md-primary" ng-repeat="member in file.members" ng-checked="true">{{(member._id) ? member.name : member.email}}</md-checkbox>
+                            <md-checkbox class="filter-checkbox md-primary" ng-repeat="email in file.notMembers" ng-checked="true">{{email}}</md-checkbox> -->
                         </div>
                     </div>
                     <div>
