@@ -360,7 +360,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 }
             }
         } else if (type==="task") {
-            if (!$scope.task.time || !$scope.task.time.start || !$scope.task.time.end || !$scope.task.selectedEvent || !$scope.task.description || !$scope.task.dateEnd) {
+            if (!$scope.task.time || !$scope.task.time.start || !$scope.task.time.end || !$scope.task.description || !$scope.task.dateEnd) {
                 dialogService.showToast("Check Your Input");
             } else {
                 $scope.step += 1;

@@ -64,8 +64,6 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
         if (type==="edit-file") {
             if ($scope.step==1 && (!$scope.file.name || !$scope.file.selectedTag)) {
                 dialogService.showToast("Check Your Data");
-            } else if ($scope.step==2 && !$scope.file.selectedEvent) {
-                dialogService.showToast("Check Your Data");
             } else {
                 $scope.step +=1;
             }
