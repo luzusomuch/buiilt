@@ -275,10 +275,36 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
         }
     });
 
+    var listenerRemove = $rootScope.$on("Document.Remove", function(ev, data) {
+        if (data.documentSet) {
+            var index = _.findIndex($scope.documentSets, function(set) {
+                if (set._id) {
+                    return set._id.toString()===data.documentSet.toString();
+                }
+            });
+            if (index !== -1) {
+                var docIndex = _.findIndex($scope.documentSets[index].documents, function(doc) {
+                    return doc._id.toString()===data._id.toString();
+                });
+                if (docIndex !== -1) {
+                    $scope.documentSets[index].documents.splice(docIndex, 1);
+                }
+            }
+        } else {
+            var docIndex = _.findIndex($scope.documents, function(doc) {
+                return doc._id.toString()===data._id.toString();
+            });
+            if (docIndex !== -1) {
+                $scope.documents.splice(docIndex, 1);
+            }
+        }
+    });
+
     $scope.$on('$destroy', function() {
         listenerCleanFnPush();
         listenerCleanFnPushBulkDoc();
         listenerCleanRead();
+        listenerRemove();
     });
 
     /*Receive when archived document then move it to archived list*/
@@ -395,6 +421,7 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
 			mixpanel.identify($rootScope.currentUser._id);
 			mixpanel.track("Document Uploaded");
 
+            $rootScope.openDetail = true;
             $state.go("project.documentation.detail", {id: res.project._id, documentId: res._id});
         }, function(err){dialogService.showToast("There Was an Error...");});
         // }

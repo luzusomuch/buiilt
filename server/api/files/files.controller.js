@@ -233,6 +233,7 @@ exports.show = function(req, res) {
     .exec(function(err, file) {
         if (err) 
             return res.send(500, err);
+        if (!file) {return res.send(404);}
         Notification.find({"element._id": file._id, owner: req.user._id, unread: true, $or:[{type: "document-upload-reversion"}, {type: "file-upload-reversion"}, {type: "related-item"}]}, function(err, notifications) {
             if (err) {return res.send(500,err);}
             file.__v = notifications.length;

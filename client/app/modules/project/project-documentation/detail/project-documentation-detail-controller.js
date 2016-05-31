@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', function($rootScope, $scope, $timeout, document, uploadService, $mdDialog, $mdToast, $stateParams, fileService, socket, notificationService, peopleService, dialogService) {
+angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', function($rootScope, $scope, $timeout, document, uploadService, $mdDialog, $mdToast, $stateParams, $state, fileService, socket, notificationService, peopleService, dialogService) {
     $scope.contentHeight = $rootScope.maximunHeight - $("header").innerHeight() - 10;
 
     var originalDocument = angular.copy(document);
@@ -267,7 +267,18 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
 
     /*Close opening modal*/
     $scope.closeModal = function() {
-        $mdDialog.cancel();
+        if ($rootScope.firstTimeEdit) {
+            fileService.delete({id: document._id}).$promise.then(function() {
+                dialogService.closeModal();
+                dialogService.showToast("Document Has Been Removed");
+                $rootScope.$emit("Document.Remove", document);
+                $state.go("project.documentation.all", {id: $stateParams.id});
+            }, function(err) {
+                dialogService.showToast("Error When Delete File");
+            });
+        } else {
+            $mdDialog.cancel();
+        }
     };
 
     /*Show a toast dialog*/
@@ -394,4 +405,10 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
             clickOutsideToClose: false
         });
     };
+
+    if ($rootScope.openDetail) {
+        $rootScope.firstTimeEdit = true;
+        $rootScope.openDetail = false;
+        $scope.showModalInPartials(null, "edit-name.html");
+    }
 });
