@@ -1,8 +1,10 @@
-<md-dialog aria-label="Create a New Task" flex="70">
+<md-dialog aria-label="Create a New Task" flex="60">
     <form ng-submit="createNewTask(form)" name="form">
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2>Create a New Task</h2>
+				<span flex></span>
+				<md-button class="md-icon-button" ng-click="dialogService.closeModal()"><md-tooltip md-direction="left">Close</md-tooltip><md-icon class="material-icons">close</md-icon></md-button>
             </div>
         </md-toolbar>
         
@@ -63,10 +65,7 @@
         </md-dialog-content>
         
         <md-dialog-actions>
-            <md-button ng-click="closeModal()">Cancel</md-button>
-            <md-button ng-click="step=step-1" ng-hide="step==1">Back</md-button>
-            <md-button ng-click="next('createTask')" ng-hide="step==3">Next</md-button>
-
+            <md-button ng-click="next('createTask')" class="md-primary" ng-hide="step==3">Next</md-button>
             <md-button ng-show="step==3" type="submit" class="md-primary">Create Task</md-button>
         </md-dialog-actions>
     </form>

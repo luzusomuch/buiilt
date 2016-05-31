@@ -354,7 +354,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
         if (type === "milestone") {
             if ($scope.step==1) {
                 if (!$scope.activity.name || $scope.activity.name.trim().length === 0) {
-                    dialogService.showToast("Enter Milestone Name");
+                    dialogService.showToast("Enter Event Name");
                 } else {
                     $scope.step += 1;
                 }
@@ -368,7 +368,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
         } else {
             if ($scope.step==1) {
                 if (!$scope.activity.name || $scope.activity.name.trim().length === 0) {
-                    dialogService.showToast("Enter Milestone Name");
+                    dialogService.showToast("Enter Event Name");
                 } else {
                     $scope.step += 1;
                 }

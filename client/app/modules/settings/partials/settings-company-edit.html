@@ -3,6 +3,8 @@
 		<md-toolbar>
 			<div class="md-toolbar-tools">
 				<h2>Edit Your Company Details</h2>
+				<span flex></span>
+				<md-button class="md-icon-button" ng-click="cancelDialog()"><md-tooltip md-direction="left">Close</md-tooltip><md-icon class="material-icons">close</md-icon></md-button>
 			</div>
 		</md-toolbar>
 		
@@ -53,7 +55,6 @@
 			</div>
 			
 			<md-dialog-actions>
-				<md-button ng-click="cancelDialog()">Cancel</md-button>
                 <md-button type="submit">Save Edits</md-button>
 			</md-dialog-actions>
 			

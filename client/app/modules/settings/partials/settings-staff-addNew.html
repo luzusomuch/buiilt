@@ -3,6 +3,8 @@
 		<md-toolbar>
 			<div class="md-toolbar-tools">
 				<h2>Add a New Staff Member</h2>
+				<span flex></span>
+				<md-button class="md-icon-button" ng-click="cancelDialog()"><md-tooltip md-direction="left">Close</md-tooltip><md-icon class="material-icons">close</md-icon></md-button>
 			</div>
 		</md-toolbar>
 		
@@ -36,7 +38,6 @@
 			</div>
 			
 			<md-dialog-actions>
-				<md-button ng-click="cancelDialog()">Cancel</md-button>
                 <md-button class="md-primary" type="submit">Add New Team Members</md-button>
 			</md-dialog-actions>
 			

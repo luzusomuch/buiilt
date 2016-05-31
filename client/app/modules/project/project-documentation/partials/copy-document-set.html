@@ -3,6 +3,8 @@
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2>Copy Document Set</h2>
+				<span flex></span>
+				<md-button class="md-icon-button" ng-click="dialogService.closeModal()"><md-tooltip md-direction="left">Close</md-tooltip><md-icon class="material-icons">close</md-icon></md-button>
             </div>
         </md-toolbar>
         
@@ -10,7 +12,7 @@
             <div class="md-dialog-content" layout="column" layout-padding>
                 
                 <div layout="column">
-                    <p class="md-body-2">Provide a name for this set of document:</p>
+                    <p class="md-body-2">Provide a new name for the copy:</p>
                     <div layout="row">
                         <md-input-container flex="66" flex-offset="15">
                             <label>Name of the set Document...</label>
@@ -31,8 +33,7 @@
         </md-dialog-content>
         
         <md-dialog-actions>
-            <md-button ng-click="dialogService.closeModal()">Cancel</md-button>
-            <md-button type="submit" class="md-primary">Copy Set Of This Document</md-button>
+            <md-button type="submit" class="md-primary">Copy Document Set</md-button>
         </md-dialog-actions>
     </form>
 </md-dialog>
