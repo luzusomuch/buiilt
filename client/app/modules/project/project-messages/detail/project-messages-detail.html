@@ -57,7 +57,7 @@
 					</div>
 				</div>
 				<md-divider></md-divider> -->
-				<div scroll-to-bottom="thread.activities">
+				<div scroll-to-bottom="thread.activities" class="content">
 					<div class="item-activity">
 						<div layout="row" layout-align="center center" flex class="activity-stream" layout-padding ng-repeat="activity in thread.activities" ng-class="{related: activity.element.related, 'unread-notification': activity.unread, 'unread-notification-line': activity.unreadLine}" ng-show="activity.type=='chat' || activity.type=='related-file' || activity.type=='related-task'">
 							<div flex class="activity-detail">
