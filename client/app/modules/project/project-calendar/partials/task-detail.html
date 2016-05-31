@@ -28,9 +28,9 @@
 			<md-divider></md-divider>
 			
 			<div ng-show="showDetail" layout="row" layout-align="space-around center">
-				<md-button>Edit Description</md-button>
+				<md-button ng-show="task.owner._id==currentUser._id">Edit Description</md-button>
 				<md-button>Edit Assignees</md-button>
-				<p>Edit Event</p>
+				<md-button ng-click="" ng-show="task.owner._id==currentUser._id">Edit Event</md-button>
 			</div>
 			
 			<div layout="row" ng-show="showEdit" layout-align="center center" layout-wrap layout-padding flex>
@@ -40,8 +40,30 @@
 			<md-divider ng-show="showDetail"></md-divider>
 			
 			<div layout="column">
-				<div class="activity-detail">
-					<p ng-switch="activity.type" ng-repeat="activity in task.activities" ng-show="allowShowList.indexOf(activity.type) !== -1">
+				<div class="item-activity">
+					<div layout="row" layout-align="center center" flex class="activity-stream" layout-padding ng-repeat="activity in task.activities" ng-show="allowShowList.indexOf(activity.type) !== -1">
+						<div class="activity-detail" flex>
+							<p ng-switch="activity.type" class="activity-head" style="margin-bottom: 15px; border-bottom: 0.5px solid #EEEEEE">
+								<span class="activity-creator">{{(activity.user) ? activity.user.name : activity.email}}</span>
+								<span class="meta-data" ng-switch-when="create-task"> created this task on <span class="date-time">{{activity.createdAt |date:'dd MMMM yyyy'}} at {{activity.createdAt | date:'hh:mm a'}}</span>:</span>
+
+								<span class="meta-data" ng-switch-when="edit-task"> edited description of task on <span class="date-time">{{activity.createdAt |date:'dd MMMM yyyy'}} at {{activity.createdAt | date:'hh:mm a'}}</span>:</span>
+
+								<span class="meta-data" ng-switch-when="change-date-time"> edited the times on <span class="date-time">{{activity.createdAt |date:'dd MMMM yyyy'}} at {{activity.createdAt | date:'hh:mm a'}}</span>:</span>
+
+								<span class="meta-data" ng-switch-when="complete-task"> mark task as completed on <span class="date-time">{{activity.createdAt |date:'dd-MM-yyyy'}} at {{activity.createdAt | date:'hh:mm a'}}</span>:</span>
+
+								<span class="meta-data" ng-switch-when="uncomplete-task"> re-opened task on <span class="date-time">{{activity.createdAt |date:'dd-MM-yyyy'}} at {{activity.createdAt | date:'hh:mm a'}}</span>:</span>
+
+								<span class="meta-data" ng-switch-when="enter-comment"> replied to this task on <span class="date-time">{{activity.createdAt |date:'dd-MM-yyyy'}} at {{activity.createdAt | date:'hh:mm a'}}</span>:</span>
+							</p>
+
+							<span ng-switch="activity.type" class="activity-body md-body">
+								<span ng-switch-when="enter-comment" ng-bind-html="activity.element.comment | htmlize"></span>
+							</span>
+						</div>
+					</div>
+					<!-- <p ng-switch="activity.type" ng-repeat="activity in task.activities" ng-show="allowShowList.indexOf(activity.type) !== -1">
 						<span class="activity-creator">{{activity.user.name}}</span>
 						<span ng-switch-when="create-task"> created this task on {{activity.createdAt |date:'dd MMMM yyyy'}} at {{activity.createdAt | date:'hh:mm a'}}.</span>
 						<span ng-switch-when="edit-task"> edited the description on {{activity.createdAt |date:'dd MMMM yyyy'}} at {{activity.createdAt | date:'hh:mm a'}}.</span>
@@ -50,7 +72,7 @@
 						<span ng-switch-when="uncomplete-task"> marked this incomplete on {{activity.createdAt |date:'dd MMMM yyyy'}} at {{activity.createdAt | date:'hh:mm a'}}.</span>
 						<span ng-switch-when="enter-comment"> commented on this task on {{activity.createdAt |date:'dd MMMM yyyy'}} at {{activity.createdAt | date:'hh:mm a'}}:</span>
 						<span ng-switch-when="enter-comment" ng-bind-html="activity.element.comment"></span>
-					</p>
+					</p> -->
 				</div>
 
 				<md-divider></md-divider>
