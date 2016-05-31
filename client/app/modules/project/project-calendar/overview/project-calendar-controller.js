@@ -670,6 +670,17 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
         });
     };
 
+    socket.on("task:change-date-time", function(task) {
+        var index = _.findIndex($scope.tasks, function(t) {
+            return t._id.toString()===task._id.toString();
+        });
+        if (index !== -1) {
+            task.__v = $scope.tasks[index].__v;
+            $scope.tasks[index] = task;
+            $scope.convertAllToCalendarView(true);
+        }
+    });
+
     socket.on("dashboard:new", function(data) {
         if (data.type==="task") {
             var index = _.findIndex($scope.tasks, function(task) {

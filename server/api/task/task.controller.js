@@ -41,16 +41,16 @@ function populateTask(task, res, req){
             room: task._id.toString(),
             data: task
         });
+        var owners = (task.members) ? _.clone(task.members) : [];
+        owners.push(task.owner);
+        _.remove(owners, {_id: req.user._id});
+        owners = _.map(_.groupBy(owners,function(doc){
+            return doc._id;
+        }),function(grouped){
+            return grouped[0];
+        });
+        var uniqId = mongoose.Types.ObjectId();
         if (req.body.editType==="complete-task" || req.body.editType==="uncomplete-task" || req.body.editType==="enter-comment") {
-            var owners = (task.members) ? _.clone(task.members) : [];
-            owners.push(task.owner);
-            _.remove(owners, {_id: req.user._id});
-            owners = _.map(_.groupBy(owners,function(doc){
-                return doc._id;
-            }),function(grouped){
-                return grouped[0];
-            });
-            var uniqId = mongoose.Types.ObjectId();
             _.each(owners, function(owner) {
                 EventBus.emit("socket:emit", {
                     event: "dashboard:new",
@@ -63,6 +63,14 @@ function populateTask(task, res, req){
                         uniqId: uniqId,
                         newNotification: {fromUser: req.user, type: "task-update"}
                     }
+                });
+            });
+        } else if (req.body.editType==="change-date-time") {
+            _.each(owners, function(owner) {
+                EventBus.emit("socket:emit", {
+                    event: "task:change-date-time",
+                    room: owner._id.toString(),
+                    data: task
                 });
             });
         }
