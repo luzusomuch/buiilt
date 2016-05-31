@@ -244,7 +244,7 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
         }
     });
 
-    var listenerCleanRead = $rootScope.$on("Document.Read", function(ev, data) {
+    $rootScope.$on("Document.Read", function(ev, data) {
         if (data.documentSet) {
             var index = _.findIndex($scope.documentSets, function(set) {
                 if (set._id) {
@@ -303,7 +303,7 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
     $scope.$on('$destroy', function() {
         listenerCleanFnPush();
         listenerCleanFnPushBulkDoc();
-        listenerCleanRead();
+        // listenerCleanRead();
         listenerRemove();
     });
 

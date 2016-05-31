@@ -93,8 +93,9 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
     // }, 500);
 
     /*Update last access for current user*/
-    $rootScope.$emit("File.Read", file);
-    fileService.lastAccess({id: $stateParams.fileId}).$promise;
+    fileService.lastAccess({id: $stateParams.fileId}).$promise.then(function() {
+        $rootScope.$emit("File.Read", file);
+    });
 
     /*Mark all notifications related to current file as read*/
     $timeout(function() {

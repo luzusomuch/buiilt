@@ -196,8 +196,8 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
     });
 
     var listenerCleanRead = $rootScope.$on("Thread.Read", function(ev, thread) {
-        var index = _.findIndex($scope.threads, function(thread) {
-            return thread._id.toString()===thread._id.toString();
+        var index = _.findIndex($scope.threads, function(t) {
+            return t._id.toString()===thread._id.toString();
         });
         if (index !== -1) {
             if ($scope.threads[index].__v > 0) {

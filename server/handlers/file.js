@@ -78,7 +78,7 @@ EventBus.onSeries('File.Updated', function(file, next) {
                     });
                     _.remove(owners, file.editUser._id);
                     var params = {
-                        owners : documentSet.members,
+                        owners : owners,
                         fromUser : file.editUser._id,
                         element : file,
                         referenceTo : 'document',
