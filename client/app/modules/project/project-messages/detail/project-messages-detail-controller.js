@@ -187,7 +187,9 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
         originalThread = data;
         $scope.thread = data;
         $scope.thread.selectedEvent = data.event;
-        notificationService.markItemsAsRead({id: $stateParams.messageId}).$promise.then();
+        if ($stateParams.messageId.toString()===data._id.toString()) {
+            notificationService.markItemsAsRead({id: $stateParams.messageId}).$promise.then();
+        }
         threadInitial();
     });
 

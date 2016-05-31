@@ -106,7 +106,9 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
         $scope.document = data;
         getAcvititiesAndHistoriesByUser($scope.document);
         checkAcknowLedgement($scope.document);
-        notificationService.markItemsAsRead({id: $stateParams.documentId}).$promise.then();
+        if (data._id.toString()===$stateParams.documentId.toString()) {
+            notificationService.markItemsAsRead({id: $stateParams.documentId}).$promise.then();
+        }
     });
 
     /*Checking activities and file histories that belong to current user*/

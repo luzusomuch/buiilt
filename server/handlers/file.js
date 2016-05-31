@@ -16,6 +16,7 @@ EventBus.onSeries('File.Inserted', function(file, next) {
     if (file.element.type === "file") {
         if (file.members.length > 0) {
             var owners = _.clone(file.members);
+            owners.push(file.owner);
             owners = _.map(_.groupBy(owners,function(doc){
                 return doc;
             }),function(grouped){

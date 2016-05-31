@@ -43,7 +43,6 @@ EventBus.onSeries('Thread.Inserted', function(thread, next) {
 });
 
 EventBus.onSeries('Thread.Updated', function(thread, next) {
-    console.log(thread._modifiedPaths);
     if (thread._modifiedPaths.indexOf("archive") !== -1) {
         Notification.find({"element._id": thread._id, unread: true}, function(err, notifications) {
             if (err) {return next();}
@@ -133,6 +132,7 @@ EventBus.onSeries('Thread.Updated', function(thread, next) {
 
 EventBus.onSeries('Thread.NewMessage', function(thread, next) {
     var owners = _.clone(thread.members);
+    owners.push(thread.owner);
     if (owners.length > 0 && owners[0]._id) {
         var newOwners = [];
         _.each(owners, function(owner) {
@@ -145,6 +145,7 @@ EventBus.onSeries('Thread.NewMessage', function(thread, next) {
     }),function(grouped){
         return grouped[0];
     });
+
     _.remove(uniqOwners, thread.message.user._id);
     var params = {
         owners : uniqOwners,

@@ -185,7 +185,9 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
         $scope.file.selectedEvent = data.event;
         $scope.file.selectedTag = (data.tags.length > 0) ? data.tags[0] : null;
         checkAcknowLedgement($scope.file);
-        notificationService.markItemsAsRead({id: $stateParams.fileId}).$promise.then();
+        if ($stateParams.fileId.toString()===data._id.toString()) {
+            notificationService.markItemsAsRead({id: $stateParams.fileId}).$promise.then();
+        }
     });
 
     /*Send acknowledgement to reversion owner*/

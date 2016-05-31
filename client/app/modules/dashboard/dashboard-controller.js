@@ -287,12 +287,14 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                 
                 // socket handle
                 socket.emit("join", task._id);
-                socket.on("task:update", function(data) {
+                socket.on("task:update", function(task) {
                     originalTask = angular.copy(task);
-                    $scope.task = data;
-                    $scope.task.selectedEvent = data.event;
+                    $scope.task = task;
+                    $scope.task.selectedEvent = task.event;
                     getProjectMembers();
-                    notificationService.markItemsAsRead({id: task._id}).$promise.then();
+                    if (data._id.toString()===task._id.toString()) {
+                        notificationService.markItemsAsRead({id: task._id}).$promise.then();
+                    }
                 });
                 // end socket handle
 

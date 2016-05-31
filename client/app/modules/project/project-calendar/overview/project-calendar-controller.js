@@ -544,8 +544,8 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
     function viewTaskDetail(data) {
         $mdDialog.show({
             // targetEvent: $event,
-            controller: ["$timeout", "$rootScope", "$scope", "dialogService", "socket", "activity", "task", "people", "notificationService", 
-            function($timeout, $rootScope, $scope, dialogService, socket, activity, task, people, notificationService) {
+            controller: ["$timeout", "$rootScope", "$scope", "$stateParams", "dialogService", "socket", "activity", "task", "people", "notificationService", 
+            function($timeout, $rootScope, $scope, $stateParams, dialogService, socket, activity, task, people, notificationService) {
                 var originalTask = angular.copy(task);
                 $scope.task = task;
                 $scope.task.selectedEvent = task.event;
@@ -565,12 +565,14 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 
                 // socket handle
                 socket.emit("join", task._id);
-                socket.on("task:update", function(data) {
+                socket.on("task:update", function(task) {
                     originalTask = angular.copy(task);
-                    $scope.task = data;
+                    $scope.task = task;
                     $scope.task.selectedEvent = task.event;
                     getProjectMembers();
-                    notificationService.markItemsAsRead({id: task._id}).$promise.then();
+                    if (task._id.toString()===data._id.toString()) {
+                        notificationService.markItemsAsRead({id: task._id}).$promise.then();
+                    }
                 });
                 // end socket handle
 
