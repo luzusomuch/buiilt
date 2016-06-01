@@ -64,11 +64,20 @@ exports.me = function(req, res) {
                 });
             },callback);
         }, function() {
+            var result = [];
             if (req.params.id!=="me") {
+                _.each(documents, function(set) {
+                    var totalChangeOfSet = 0;
+                    _.each(set.documents, function(doc) {
+                        if (doc.__v > 0) {
+                            totalChangeOfSet += 1;
+                        }
+                    });
+                    set.__v = totalChangeOfSet;
+                });
                 return res.send(200, documents);
             } else {
                 // Get all document set by selected project for ionic app
-                var result = [];
                 _.each(documents, function(document) {
                     var docs = [];
                     _.each(document.documents, function(doc) {

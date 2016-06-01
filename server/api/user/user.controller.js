@@ -613,6 +613,11 @@ exports.me = function (req, res, next) {
                     }),function(grouped){
                       return grouped[0];
                     });
+                    uniqDocuments = _.map(_.groupBy(uniqDocuments, function(doc) {
+                        return doc.element.documentSet;
+                    }), function(grouped) {
+                        return grouped[0];
+                    });
                     project.element = {
                         task: uniqTasks.length,
                         thread: uniqThreads.length,
