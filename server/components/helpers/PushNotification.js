@@ -91,7 +91,7 @@ exports.getData = function(projectId, id, message, user, type, cb){
                             agent.createMessage()
                             .device(device.deviceToken)
                             .alert(message)
-                            .badge(totalBadge)
+                            .badge(totalBadge.length)
                             .set("push", true)
                             .set("relatedto", type)
                             .set("id", id)
