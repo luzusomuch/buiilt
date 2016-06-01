@@ -184,6 +184,11 @@ exports.show = function(req, res){
                     }),function(grouped){
                         return grouped[0];
                     });
+                    uniqDocuments = _.map(_.groupBy(documents,function(doc){
+                        return doc.element.documentSet;
+                    }),function(grouped){
+                        return grouped[0];
+                    });
                     project.element = {
                         totalTasks: uniqTasks.length,
                         totalMessages: uniqThreads.length,
