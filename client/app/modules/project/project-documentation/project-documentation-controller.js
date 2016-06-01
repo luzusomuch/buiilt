@@ -542,7 +542,7 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
                 }
             },
             function(error){
-                dialogService.showToast(error);
+                dialogService.showToast("No Documentation Was Uploaded");
         });
     };
 });
