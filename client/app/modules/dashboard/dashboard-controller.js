@@ -227,9 +227,60 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                         viewTaskDetail(data);
                     }
                 },
+                eventDrop: function(event, delta) {
+                    if (event.type==="task") {
+                        var updateTask = updateTaskDateTime(event, delta);
+                        taskService.update({id: updateTask._id}, updateTask).$promise.then(function(res) {
+                            dialogService.showToast("Task Has Been Updated Successfully.");
+                        }, function(err) {dialogService.showToast("There Has Been An Error...");});
+                    } else if (event.type==="event") {
+                        var updateEvent = updateEventDateTime(event, delta);
+                        activityService.update({id: updateEvent._id}, updateEvent).$promise.then(function(res) {
+                            dialogService.showToast("Event Has Been Updated Successfully.");
+                        }, function(err) {dialogService.showToast("There Has Been An Error...");});
+                    }
+                },
+                eventResize: function(event, delta) {
+                    if (event.type==="event") {
+                        var updateEvent = updateEventDateTime(event, delta);
+                        activityService.update({id: updateEvent._id}, updateEvent).$promise.then(function(res) {
+                            dialogService.showToast("Event Has Been Updated Successfully.");
+                        }, function(err) {dialogService.showToast("There Has Been An Error...");});
+                    } else if (event.type==="task") {
+                        var updateTask = updateTaskDateTime(event, delta);
+                        taskService.update({id: updateTask._id}, updateTask).$promise.then(function(res) {
+                            dialogService.showToast("Task Has Been Updated Successfully.");
+                        }, function(err) {dialogService.showToast("There Has Been An Error...");});
+                    }
+                }
             }
         };
     }, 500);
+
+    function updateEventDateTime(event, delta) {
+        var result = {
+            _id: event._id,
+            editType: "change-date-time",
+            date: {
+                start: new Date(event.start),
+                end: new Date(event.end)
+            }
+        };
+        return result;
+    };
+
+    function updateTaskDateTime(event, delta) {
+        return result = {
+            _id: event._id,
+            editType: "change-date-time",
+            dateStart: new Date(event.start),
+            dateEnd: new Date(event.end),
+            time: {
+                start: new Date(event.start),
+                end: new Date(event.end)
+            }
+        };
+    }
 
     /*Render tasks and events list to calendar view*/
     function renderTasksAndEventsToCalendar(isUpdate) {
@@ -245,12 +296,12 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
                     dateEnd = new Date(task.dateEnd);
                 }
                 var title = task.description;
-                $scope.events.push({type: "task", _id: task._id, title: title, project: (task.project._id) ? task.project._id : task.project, start: dateStart, end: dateEnd, "backgroundColor": (task.__v > 0) ? "#FFC107" : "#2196F3", allDay: false});
+                $scope.events.push({type: "task", _id: task._id, title: title, project: (task.project._id) ? task.project._id : task.project, start: dateStart, end: dateEnd, "backgroundColor": (task.__v > 0) ? "#FFC107" : "#2196F3", allDay: false, editable: true});
             }
         });
         _.each($scope.activities, function(activity) {
             if (!activity.isMilestone) {
-                $scope.events.push({type: "event", _id: activity._id, project: activity.project, title: activity.name, start: moment(activity.date.start).format("YYYY-MM-DD hh:mm"), end: moment(activity.date.end).format("YYYY-MM-DD hh:mm"), "backgroundColor": "#0D47A1", allDay: true});   
+                $scope.events.push({type: "event", _id: activity._id, project: activity.project, title: activity.name, start: moment(activity.date.start).format("YYYY-MM-DD hh:mm"), end: moment(activity.date.end).format("YYYY-MM-DD hh:mm"), "backgroundColor": "#0D47A1", allDay: true, editable: (activity.owner==$rootScope.currentUser._id) ? true : false});   
             }
         });
         $scope.originalEvents = angular.copy($scope.events);

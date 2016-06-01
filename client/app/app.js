@@ -119,6 +119,19 @@ angular
         });
     };
 
+    $rootScope.getNotMemberName = function(contacts, notMemberEmails) {
+        var notMemberNames = [];
+        _.each(notMemberNames, function(email) {
+            var index = _.findIndex(contacts, function(contact) {
+                return email===contact.email;
+            });
+            if (index !== -1) {
+                notMemberNames.push(contacts[index].name);
+            }
+        });
+        return notMemberNames;
+    };
+
     $rootScope.getProjectMembers = function(people) {
         var membersList = [];
         _.each($rootScope.roles, function(role) {
