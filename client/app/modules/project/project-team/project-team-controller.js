@@ -225,7 +225,11 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
             }
         }
 
-
+        $scope.builderTeam = _.filter($scope.membersList, {type: "builders"});
+        $scope.clientTeam = _.filter($scope.membersList, {type: "clients"});
+        $scope.architectTeam = _.filter($scope.membersList, {type: "architects"});
+        $scope.subcontractorTeam = _.filter($scope.membersList, {type: "subcontractors"});
+        $scope.consultantTeam = _.filter($scope.membersList, {type: "consultants"});
 
         if ($scope.people.project.projectManager.type === "builder") {
             switch($rootScope.currentUser.type) {

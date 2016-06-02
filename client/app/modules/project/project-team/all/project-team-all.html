@@ -36,40 +36,94 @@
 			</md-subheader>
 			
 			<md-divider></md-divider>
-			
-			<md-list ng-cloak flex class="content-list" ng-show="membersList.length > 0">
-			
-				<md-list-item class="md-2-line" ng-show="!search" ng-repeat="member in membersList | filter :searchMember track by $index">
-				
-					<div class="md-avatar">
-					</div>
-					
-					<div class="md-list-item-text" layout-margin>
-						<h3>{{member.name}}</h3>
-						<h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
-				    </div>
-					
-					<p class="md-secondary">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</p>
-				    <md-divider ng-hide="$last"></md-divider>
-			
-				</md-list-item>
 
-				<md-list-item class="md-2-line" ng-show="search" ng-repeat="member in searchResults | filter :searchMember track by $index">
-				
-					<div class="md-avatar">
-					</div>
-	    
-					<div class="md-list-item-text" layout-margin>
-					    <h3>{{(member._id) ? member.name : member.email}}</h3>
-					    <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
-				    </div>
-					
-					<p class="md-secondary">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</p>
-				    <md-divider ng-hide="$last"></md-divider>
-	
-				</md-list-item>
-		
-			</md-list>
+            <div ng-show="search">
+                <md-list ng-cloak flex class="content-list">
+                    <md-list-item class="md-2-line" ng-repeat="member in searchResults | filter :searchMember track by $index">
+                    
+                        <div class="md-avatar">
+                        </div>
+                        
+                        <div class="md-list-item-text" layout-margin>
+                            <h3>{{(member._id) ? member.name : member.email}}</h3>
+                            <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
+                        </div>
+                        
+                        <p class="md-secondary">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</p>
+                        <md-divider ng-hide="$last"></md-divider>
+                    
+                    </md-list-item>
+                </md-list>
+            </div>
+			
+
+            <div ng-show="!search">
+                <!-- Builder Team Section -->
+                <md-subheader class="md-primary" ng-show="builderTeam.length > 0">Builder Team</md-subheader>
+                <md-list ng-cloak flex class="content-list" ng-show="builderTeam.length > 0">
+                    <md-list-item class="md-2-line" ng-repeat="member in builderTeam | filter :searchMember track by $index">
+                        <div class="md-list-item-text" layout-margin>
+                            <h3>{{member.name}}</h3>
+                            <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
+                        </div>
+                        
+                        <p class="md-secondary">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</p>
+                        <md-divider ng-hide="$last"></md-divider>
+                    </md-list-item>
+                </md-list>
+                
+                <!-- Client Team Section -->
+                <md-subheader class="md-primary" ng-show="clientTeam.length > 0">Client Team</md-subheader>
+                <md-list ng-cloak flex class="content-list" ng-show="clientTeam.length > 0">
+                    <md-list-item class="md-2-line" ng-repeat="member in clientTeam | filter :searchMember track by $index">
+                        <div class="md-list-item-text" layout-margin>
+                            <h3>{{member.name}}</h3>
+                            <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
+                        </div>
+                        <p class="md-secondary">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</p>
+                        <md-divider ng-hide="$last"></md-divider>
+                    </md-list-item>
+                </md-list>
+
+                <!-- Architect Team Section -->
+                <md-subheader class="md-primary" ng-show="architectTeam.length > 0">Architect Team</md-subheader>
+                <md-list ng-cloak flex class="content-list" ng-show="architectTeam.length > 0">
+                    <md-list-item class="md-2-line" ng-repeat="member in architectTeam | filter :searchMember track by $index">
+                        <div class="md-list-item-text" layout-margin>
+                            <h3>{{member.name}}</h3>
+                            <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
+                        </div>
+                        <p class="md-secondary">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</p>
+                        <md-divider ng-hide="$last"></md-divider>
+                    </md-list-item>
+                </md-list>
+
+                <!-- Subcontractor Team Section -->
+                <md-subheader class="md-primary" ng-show="subcontractorTeam.length > 0">Subcontractor Team</md-subheader>
+                <md-list ng-cloak flex class="content-list" ng-show="subcontractorTeam.length > 0">
+                    <md-list-item class="md-2-line" ng-repeat="member in subcontractorTeam | filter :searchMember track by $index">
+                        <div class="md-list-item-text" layout-margin>
+                            <h3>{{member.name}}</h3>
+                            <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
+                        </div>
+                        <p class="md-secondary">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</p>
+                        <md-divider ng-hide="$last"></md-divider>
+                    </md-list-item>
+                </md-list>
+
+                <!-- Subcontractor Team Section -->
+                <md-subheader class="md-primary" ng-show="consultantTeam.length > 0">Consultant Team</md-subheader>
+                <md-list ng-cloak flex class="content-list" ng-show="consultantTeam.length > 0">
+                    <md-list-item class="md-2-line" ng-repeat="member in consultantTeam | filter :searchMember track by $index">
+                        <div class="md-list-item-text" layout-margin>
+                            <h3>{{member.name}}</h3>
+                            <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
+                        </div>
+                        <p class="md-secondary">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</p>
+                        <md-divider ng-hide="$last"></md-divider>
+                    </md-list-item>
+                </md-list>
+            </div>
 
             <md-list flex class="content-list" ng-show="membersList.length === 0">
                 <md-list-item class="md-2-line">
