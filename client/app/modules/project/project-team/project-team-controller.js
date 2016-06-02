@@ -109,12 +109,13 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
         $scope.tender = tenders[0];
         $scope.membersList = [];
         /*If current user is project manager, add himself to project members list*/
-        if (!$scope.tender || $scope.people.project.projectManager._id.toString()===$rootScope.currentUser._id.toString()) {
+        if (!$scope.tender || ($scope.tender.winner && $scope.tender.winner._id.toString()===$rootScope.currentUser._id.toString()) || $scope.people.project.projectManager._id.toString()===$rootScope.currentUser._id.toString()) {
             if ($scope.people.project.projectManager._id.toString()===$rootScope.currentUser._id.toString()) {
                 var role = ($scope.people.project.projectManager.type === "builder") ? "builders" : "architects";
                 $scope.membersList.push({_id: $rootScope.currentUser._id, name: $rootScope.currentUser.name, email: $rootScope.currentUser.email, phoneNumber: ($rootScope.currentUser.phoneNumber) ? $rootScope.currentUser.phoneNumber : null, type: $rootScope.currentUser.type});
             }
             _.each($rootScope.roles, function(role) {
+                // This function use to get current user role in project
                 _.each($scope.people[role], function(tender) {
                     if (_.findIndex(tender.tenderers, function(tenderer) {
                         if (tenderer._id) {
@@ -122,12 +123,14 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
                         }
                     }) != -1) {
                         $rootScope.currentUser.type = role;
+                        return false;
                     } else {
                         _.each(tender.tenderers, function(tenderer) {
                             if (_.findIndex(tenderer.teamMember, function(member) {
                                 return member._id == $rootScope.currentUser._id;
                             }) != -1) {
                                 $rootScope.currentUser.type = role;
+                                return false;
                             }
                         });
                     }
@@ -174,17 +177,20 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
             });
             // check privilage to invite project member
             $scope.isLeader = false;
-            if ($rootScope.currentUser.type!=="consultants"||$rootScope.currentUser.type!=="subcontractors") {
-                if (people[$rootScope.currentUser.type][0].tenderers[0]._id && people[$rootScope.currentUser.type][0].tenderers[0]._id._id.toString()===$rootScope.currentUser._id.toString()) {
-                    $scope.isLeader = true;
-                }
-            }
+            _.each($rootScope.roles, function(role) {
+                _.each($scope.people[role], function(tender) {
+                    if (tender.hasSelect && tender.tenderers[0]._id && tender.tenderers[0]._id._id.toString()===$rootScope.currentUser._id) {
+                        $scope.isLeader = true;
+                        return;
+                    }
+                });
+            });
             // end check
         } else {
             /*Add tender owner, his team and tenderer, his team to project member*/
-            people[$scope.tender.ownerType][0].tenderers[0]._id.type = $scope.tender.ownerType;
-            $scope.membersList.push(people[$scope.tender.ownerType][0].tenderers[0]._id);
-            _.each(people[$scope.tender.ownerType][0].tenderers[0].teamMember, function(member) {
+            $scope.people[$scope.tender.ownerType][0].tenderers[0]._id.type = $scope.tender.ownerType;
+            $scope.membersList.push($scope.people[$scope.tender.ownerType][0].tenderers[0]._id);
+            _.each($scope.people[$scope.tender.ownerType][0].tenderers[0].teamMember, function(member) {
                 member.type = $scope.tender.ownerType;
                 $scope.membersList.push(member);
             });
@@ -218,6 +224,8 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
                 });
             }
         }
+
+
 
         if ($scope.people.project.projectManager.type === "builder") {
             switch($rootScope.currentUser.type) {
@@ -309,28 +317,28 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
         }
 
         // filter for availableUserType
-        var onceTimeInviteeRoles = ["builders", "clients", "architects"];
-        _.each(onceTimeInviteeRoles, function(role) {
-            var removeType;
-            switch (role) {
-                case "builders": 
-                    removeType = "addBuilder";
-                break;
-                case "clients":
-                    removeType = "addClient";
-                break;
-                case "architects":
-                    removeType = "addArchitect";
-                break;
-                default:
-                break;
-            };
-            _.each($scope.people[role], function(tender) {
-                if (tender.hasSelect) {
-                    _.remove($scope.availableUserType, {value: removeType});
-                }
-            });
-        });
+        // var onceTimeInviteeRoles = ["builders", "clients", "architects"];
+        // _.each(onceTimeInviteeRoles, function(role) {
+        //     var removeType;
+        //     switch (role) {
+        //         case "builders": 
+        //             removeType = "addBuilder";
+        //         break;
+        //         case "clients":
+        //             removeType = "addClient";
+        //         break;
+        //         case "architects":
+        //             removeType = "addArchitect";
+        //         break;
+        //         default:
+        //         break;
+        //     };
+        //     _.each($scope.people[role], function(tender) {
+        //         if (tender.hasSelect) {
+        //             _.remove($scope.availableUserType, {value: removeType});
+        //         }
+        //     });
+        // });
 
         // Add filter for team type
         $scope.teamMemberTypeTags = [

@@ -120,6 +120,7 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
     /*Get invitees list from contact book that haven't in the current
     tender member list*/
     function getInviteTypeAndCheckInviteesMayInvite() {
+        // remive current members of this tender from contact books
         _.each($scope.tender.members, function(member) {
             var index = _.findIndex($scope.contactBooks, function(contact) {
                 if (member.user) {
@@ -132,14 +133,25 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
                 $scope.contactBooks.splice(index, 1);
             }
         });
+        // remove project members from contact books
+        var projectMembers = $rootScope.getProjectMembers(people);
+        _.each(projectMembers, function(member) {
+            var index = _.findIndex($scope.contactBooks, function(contact) {
+                return member.email==contact.email || member.phoneNumber==contact.phoneNumber;
+            });
+            if (index !== -1) {
+                $scope.contactBooks.splice(index, 1);
+            }
+        });
+
         $scope.availableInviteType = [
             {value: "builders", text: "Builder"},
             {value: "subconstractors", text: "Sub constractor"},
             {value: "consultants", text: "Consultants"}
         ];
-        if (people.builders[0] && people.builders[0].hasSelect) {
-            $scope.availableInviteType.splice(0, 1);
-        }
+        // if (people.builders[0] && people.builders[0].hasSelect) {
+        //     $scope.availableInviteType.splice(0, 1);
+        // }
         if ($scope.tender.ownerType==="architects") {
             var subconstractorIndex = _.findIndex($scope.availableInviteType, function(type) {
                 return type.value==="subconstractors";
@@ -164,7 +176,7 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
     };
 
     $scope.querySearch = function(query) {
-        var result = query ? contactBooks.filter(function(contact) {
+        var result = query ? $scope.contactBooks.filter(function(contact) {
             return contact.name.toLowerCase().indexOf(query.toLowerCase()) !== -1;
         }) : [];
         return result;
@@ -258,9 +270,10 @@ angular.module('buiiltApp').controller('projectTendersDetailCtrl', function($q, 
 
     $scope.selectWinner = function() {
         if (!isNaN($scope.tender.winnerIndex)) {
+        var selectWinnerName = ($scope.tender.members[$scope.tender.winnerIndex].user) ? $scope.tender.members[$scope.tender.winnerIndex].user.name : $scope.tender.members[$scope.tender.winnerIndex].name;
             $mdDialog.show($mdDialog.confirm()
                 .title("Do you want to select this tenderer as the winner?") 
-                .content("Select "+($scope.tender.members[$scope.tender.winnerIndex].user) ? $scope.tender.members[$scope.tender.winnerIndex].user.name : $scope.tender.members[$scope.tender.winnerIndex].name +" to be winner") 
+                .content("Select "+ selectWinnerName +" to be winner") 
                 .ariaLabel("Select Winner")
                 .ok("Yes")
                 .cancel("Cancel")
