@@ -152,6 +152,9 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
                                     _.each(tenderer.teamMember, function(member) {
                                         member.type = role;
                                         member.role = "team-member";
+                                        if (tenderer.archivedTeamMembers && tenderer.archivedTeamMembers.indexOf(member._id) !== -1) {
+                                            member.archive = true;
+                                        }
                                         $scope.membersList.push(member);
                                     });
                                 }
@@ -171,6 +174,9 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
                                     _.each(tenderer.teamMember, function(member) {
                                         member.type = role;
                                         member.role = "team-member";
+                                        if (tenderer.archivedTeamMembers && tenderer.archivedTeamMembers.indexOf(member._id) !== -1) {
+                                            member.archive = true;
+                                        }
                                         $scope.membersList.push(member);
                                     });
                                 }
@@ -468,15 +474,22 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
     });
 
     $scope.archiveMember = function(member) {
-        if ($scope.isLeader) {
-            peopleService.archiveMember({id: $scope.people._id}, member).$promise.then(function(res) {
-                member.archive = !member.archive;
-                dialogService.showToast("Successfully");
-            }, function(err) {
-                dialogService.showToast("Error");
-            });
-        } else {
-            dialogService.showToast("Not Allow");
-        }
+        var title = (!member.archive) ? "Archive Member" : "Unarchive Member";
+        var content = "Do You Want To ";
+        content += (!member.archive) ? "Archive " + member.name : "Unarchive " + member.name;
+        $mdDialog.show($mdDialog.confirm().title(title).textContent(content).ariaLabel(title).ok("Sure").cancel("Cancel")).then(function() {
+            if ($scope.isLeader) {
+                peopleService.archiveMember({id: $scope.people._id}, member).$promise.then(function(res) {
+                    member.archive = !member.archive;
+                    dialogService.showToast("Successfully");
+                }, function(err) {
+                    dialogService.showToast("Error");
+                });
+            } else {
+                dialogService.showToast("Not Allow");
+            }
+        }, function() {
+
+        });
     };
 });
