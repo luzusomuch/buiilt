@@ -132,6 +132,30 @@ angular
         return notMemberNames;
     };
 
+    $rootScope.checkPrivilageInProjectMember = function(people) {
+        var allow = false;
+        _.each($rootScope.roles, function(role) {
+            _.each(people[role], function(tender) {
+                if (tender.tenderers[0]._id && tender.tenderers[0]._id._id.toString()===$rootScope.currentUser._id.toString()) {
+                    allow = !tender.archive;
+                    return false;
+                } else {
+                    var index = _.findIndex(tender.tenderers[0].teamMember, function(member) {
+                        return member._id.toString()===$rootScope.currentUser._id;
+                    });
+                    if (index !== -1 && (!tender.tenderers[0].archivedTeamMembers || (tender.tenderers[0].archivedTeamMembers && tender.tenderers[0].archivedTeamMembers.indexOf($rootScope.currentUser._id) === -1))) {
+                        allow = true;
+                        return false;
+                    }
+                }
+            });
+            if (allow) {
+                return false;
+            }
+        });
+        return allow;
+    };
+
     $rootScope.getProjectMembers = function(people) {
         var membersList = [];
         _.each($rootScope.roles, function(role) {

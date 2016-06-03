@@ -5,6 +5,8 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
         isTender: false
     };
 
+    $scope.hasPrivilageInProjectMember = $rootScope.checkPrivilageInProjectMember($scope.people);
+
     $scope.querySearch = function(query) {
         var result = query ? contactBooks.filter(function(contact) {
             return contact.name.toLowerCase().indexOf(query.toLowerCase()) !== -1;
@@ -440,25 +442,29 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
 
 	/*Show invite team modal*/
 	$scope.showInviteTeamModal = function($event) {
-        $scope.invite.event = $event;
-		$mdDialog.show({
-		  	targetEvent: $event,
-	      	controller: 'projectTeamCtrl',
-            resolve: {
-                people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
-                    return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
-                }],
-                contactBooks: ["contactBookService", function(contactBookService) {
-                    return contactBookService.me().$promise;
-                }],
-                tenders: ["tenderService", "$stateParams", function(tenderService, $stateParams) {
-                    return tenderService.getAll({id: $stateParams.id}).$promise;
-                }]
-            },
-	      	templateUrl: 'app/modules/project/project-team/new/project-team-new.html',
-	      	parent: angular.element(document.body),
-	      	clickOutsideToClose: false
-	    });
+        if ($scope.hasPrivilageInProjectMember) {
+            $scope.invite.event = $event;
+    		$mdDialog.show({
+    		  	targetEvent: $event,
+    	      	controller: 'projectTeamCtrl',
+                resolve: {
+                    people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
+                        return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
+                    }],
+                    contactBooks: ["contactBookService", function(contactBookService) {
+                        return contactBookService.me().$promise;
+                    }],
+                    tenders: ["tenderService", "$stateParams", function(tenderService, $stateParams) {
+                        return tenderService.getAll({id: $stateParams.id}).$promise;
+                    }]
+                },
+    	      	templateUrl: 'app/modules/project/project-team/new/project-team-new.html',
+    	      	parent: angular.element(document.body),
+    	      	clickOutsideToClose: false
+    	    });
+        } else {
+            dialogService.showToast("Not Allow");
+        }
 	};
 
 	loadProjectMembers();
@@ -478,7 +484,7 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
         var content = "Do You Want To ";
         content += (!member.archive) ? "Archive " + member.name : "Unarchive " + member.name;
         $mdDialog.show($mdDialog.confirm().title(title).textContent(content).ariaLabel(title).ok("Sure").cancel("Cancel")).then(function() {
-            if ($scope.isLeader) {
+            if ($scope.isLeader && $scope.hasPrivilageInProjectMember) {
                 peopleService.archiveMember({id: $scope.people._id}, member).$promise.then(function(res) {
                     member.archive = !member.archive;
                     dialogService.showToast("Successfully");
