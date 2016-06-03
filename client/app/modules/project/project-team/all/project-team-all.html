@@ -25,8 +25,8 @@
                 </md-menu>
 		
 			</div>
-        
-            <md-divider layout="row" flex></md-divider>
+			
+			<md-divider></md-divider>
 			
 			<md-subheader class="md-primary">
                 <p ng-show="!name && !search">Displaying All Project Team Members</p>
@@ -59,9 +59,14 @@
 
             <div ng-show="!search">
                 <!-- Builder Team Section -->
-                <md-subheader class="md-primary" ng-show="builderTeam.length > 0">Builder Team</md-subheader>
+                <md-subheader ng-show="builderTeam.length > 0">Builders</md-subheader>
+				<md-divider></md-divider>
                 <md-list ng-cloak flex class="content-list" ng-show="builderTeam.length > 0">
                     <md-list-item class="md-2-line" ng-repeat="member in builderTeam | filter :searchMember track by $index">
+					
+                        <div class="md-avatar">
+                        </div>
+						
                         <div class="md-list-item-text" layout-margin>
                             <h3>{{member.name}}</h3>
                             <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
@@ -73,9 +78,14 @@
                 </md-list>
                 
                 <!-- Client Team Section -->
-                <md-subheader class="md-primary" ng-show="clientTeam.length > 0">Client Team</md-subheader>
+                <md-subheader ng-show="clientTeam.length > 0">Clients</md-subheader>
+				<md-divider></md-divider>
                 <md-list ng-cloak flex class="content-list" ng-show="clientTeam.length > 0">
                     <md-list-item class="md-2-line" ng-repeat="member in clientTeam | filter :searchMember track by $index">
+					
+                        <div class="md-avatar">
+                        </div>
+						
                         <div class="md-list-item-text" layout-margin>
                             <h3>{{member.name}}</h3>
                             <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
@@ -86,9 +96,14 @@
                 </md-list>
 
                 <!-- Architect Team Section -->
-                <md-subheader class="md-primary" ng-show="architectTeam.length > 0">Architect Team</md-subheader>
+                <md-subheader ng-show="architectTeam.length > 0">Architects</md-subheader>
+				<md-divider></md-divider>
                 <md-list ng-cloak flex class="content-list" ng-show="architectTeam.length > 0">
                     <md-list-item class="md-2-line" ng-repeat="member in architectTeam | filter :searchMember track by $index">
+					
+                        <div class="md-avatar">
+                        </div>
+						
                         <div class="md-list-item-text" layout-margin>
                             <h3>{{member.name}}</h3>
                             <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
@@ -99,9 +114,14 @@
                 </md-list>
 
                 <!-- Subcontractor Team Section -->
-                <md-subheader class="md-primary" ng-show="subcontractorTeam.length > 0">Subcontractor Team</md-subheader>
+                <md-subheader ng-show="subcontractorTeam.length > 0">Subcontractors</md-subheader>
+				<md-divider></md-divider>
                 <md-list ng-cloak flex class="content-list" ng-show="subcontractorTeam.length > 0">
                     <md-list-item class="md-2-line" ng-repeat="member in subcontractorTeam | filter :searchMember track by $index">
+					
+                        <div class="md-avatar">
+                        </div>
+						
                         <div class="md-list-item-text" layout-margin>
                             <h3>{{member.name}}</h3>
                             <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
@@ -111,10 +131,15 @@
                     </md-list-item>
                 </md-list>
 
-                <!-- Subcontractor Team Section -->
-                <md-subheader class="md-primary" ng-show="consultantTeam.length > 0">Consultant Team</md-subheader>
+                <!-- Consultants Team Section -->
+                <md-subheader ng-show="consultantTeam.length > 0">Consultants</md-subheader>
+				<md-divider></md-divider>
                 <md-list ng-cloak flex class="content-list" ng-show="consultantTeam.length > 0">
                     <md-list-item class="md-2-line" ng-repeat="member in consultantTeam | filter :searchMember track by $index">
+					
+                        <div class="md-avatar">
+                        </div>
+						
                         <div class="md-list-item-text" layout-margin>
                             <h3>{{member.name}}</h3>
                             <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
