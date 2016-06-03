@@ -154,6 +154,7 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
                                     _.each(tenderer.teamMember, function(member) {
                                         member.type = role;
                                         member.role = "team-member";
+                                        member.inviter = tender.tenderers[0]._id._id;
                                         if (tenderer.archivedTeamMembers && tenderer.archivedTeamMembers.indexOf(member._id) !== -1) {
                                             member.archive = true;
                                         }
@@ -163,11 +164,13 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
                             });
                             if (tender.tenderers[0]._id) {
                                 tender.tenderers[0]._id.type = role;
-                                tender.tenderers[0].archive = tender.archive;
+                                tender.tenderers[0]._id.archive = tender.archive;
+                                tender.tenderers[0]._id.inviter = tender.inviter._id;
                                 $scope.membersList.push(tender.tenderers[0]._id);
                             } else {
                                 tender.tenderers[0].type = role;
                                 tender.tenderers[0].archive = tender.archive;
+                                tender.tenderers[0].inviter = tender.inviter._id;
                                 $scope.membersList.push(tender.tenderers[0]);
                             }
                         } else {
@@ -176,6 +179,7 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
                                     _.each(tenderer.teamMember, function(member) {
                                         member.type = role;
                                         member.role = "team-member";
+                                        member.inviter = tender.tenderers[0]._id._id;
                                         if (tenderer.archivedTeamMembers && tenderer.archivedTeamMembers.indexOf(member._id) !== -1) {
                                             member.archive = true;
                                         }
@@ -484,7 +488,7 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
         var content = "Do You Want To ";
         content += (!member.archive) ? "Archive " + member.name : "Unarchive " + member.name;
         $mdDialog.show($mdDialog.confirm().title(title).textContent(content).ariaLabel(title).ok("Sure").cancel("Cancel")).then(function() {
-            if ($scope.isLeader && $scope.hasPrivilageInProjectMember) {
+            if ($scope.isLeader && $scope.hasPrivilageInProjectMember && member.inviter==$rootScope.currentUser._id) {
                 peopleService.archiveMember({id: $scope.people._id}, member).$promise.then(function(res) {
                     member.archive = !member.archive;
                     dialogService.showToast("Successfully");

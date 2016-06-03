@@ -6,6 +6,8 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
 	
 	$scope.showDetail = false;
 
+    $scope.hasPrivilageInProjectMember = $rootScope.checkPrivilageInProjectMember(people);
+
     $scope.search = function() {
         var result = [];
         if ($scope.searchTerm.trim().length > 0) {
@@ -107,14 +109,16 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 maxTime: "22:00:00",
                 timezone: "local",
                 select: function(start, end, jsEv, view) {
-                    $rootScope.selectedStartDate = new Date(start);
-                    $rootScope.selectedEndDate = new Date(end);
-                    if (view.name==="month") {
-                        $scope.showModal("create-event.html");
-                    } else if (!start.hasTime() && !end.hasTime()) {
-                        $scope.showModal("create-event.html");
-                    } else {
-                        $scope.showModal("create-task.html");
+                    if ($scope.hasPrivilageInProjectMember) {
+                        $rootScope.selectedStartDate = new Date(start);
+                        $rootScope.selectedEndDate = new Date(end);
+                        if (view.name==="month") {
+                            $scope.showModal("create-event.html");
+                        } else if (!start.hasTime() && !end.hasTime()) {
+                            $scope.showModal("create-event.html");
+                        } else {
+                            $scope.showModal("create-task.html");
+                        }
                     }
                 },
                 eventClick: function(data) {
@@ -136,6 +140,8 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                                         }
                                     }
                                 };
+
+                                $scope.hasPrivilageInProjectMember = $rootScope.checkPrivilageInProjectMember(people);
 
                                 $scope.allowCreateTender = checkAllowCreateTender();
 								
@@ -208,73 +214,77 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                                     // } else if (type==="file") {
                                     //     $state.go("project.files.all", {id: $stateParams.id});
                                     // }
-                                    if (type==="task") {
-                                        $rootScope.selectedEvent = activity._id;
-                                        $mdDialog.show({
-                                            // targetEvent: $event,
-                                            controller: 'projectCalendarCtrl',
-                                            resolve: {
-                                                people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
-                                                    return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
-                                                }],
-                                                activities: ["activityService", "$stateParams", function(activityService, $stateParams) {
-                                                    return activityService.me({id: $stateParams.id}).$promise;
-                                                }],
-                                                tasks: ["taskService", "$stateParams", function(taskService, $stateParams) {
-                                                    return taskService.getProjectTask({id: $stateParams.id}).$promise;
-                                                }]
-                                            },
-                                            templateUrl: 'app/modules/project/project-calendar/partials/create-task.html',
-                                            parent: angular.element(document.body),
-                                            clickOutsideToClose: false
-                                        });
-                                    } else if (type==="thread") {
-                                        var newThread = {
-                                            type: "project-message",
-                                            members: [],
-                                            selectedEvent: activity._id
-                                        };
-                                        messageService.create({id: activity.project}, newThread).$promise.then(function(res) {
-                                            dialogService.closeModal();
-                                            dialogService.showToast("New Thread Created Successfully.");
-                                            $rootScope.$emit("Thread.Inserted", res);
-                                            $rootScope.openDetail = true;
-                                            $state.go("project.messages.detail", {id: activity.project, messageId: res._id});
-                                        }, function(err) {
-                                            dialogService.showToast("There Has Been An Error...");
-                                        });
-                                    } else if (type==="file") {
-                                        var newFile = {
-                                            type: "file",
-                                            members: [],
-                                            tags: [],
-                                            selectedEvent: activity._id
-                                        };
-                                        fileService.create({id: activity.project}, newFile).$promise.then(function(res) {
-                                            dialogService.closeModal();
-                                            dialogService.showToast("New File Created Successfully.");
-                                            $rootScope.openDetail = true;
-                                            $state.go("project.files.detail", {id: activity.project, fileId: res._id});
-                                        }, function(err) {
-                                            dialogService.showToast("There Has Been An Error...");
-                                        });
-                                    } else if (type==="tender") {
-                                        if (!$scope.allowCreateTender) {
-                                            dialogService.showToast("You Are Not Allowed to Attach This to a Tender");
-                                        } else {
-                                            var newTender = {
-                                                project: $rootScope.project,
+                                    if ($scope.hasPrivilageInProjectMember) {
+                                        if (type==="task") {
+                                            $rootScope.selectedEvent = activity._id;
+                                            $mdDialog.show({
+                                                // targetEvent: $event,
+                                                controller: 'projectCalendarCtrl',
+                                                resolve: {
+                                                    people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
+                                                        return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
+                                                    }],
+                                                    activities: ["activityService", "$stateParams", function(activityService, $stateParams) {
+                                                        return activityService.me({id: $stateParams.id}).$promise;
+                                                    }],
+                                                    tasks: ["taskService", "$stateParams", function(taskService, $stateParams) {
+                                                        return taskService.getProjectTask({id: $stateParams.id}).$promise;
+                                                    }]
+                                                },
+                                                templateUrl: 'app/modules/project/project-calendar/partials/create-task.html',
+                                                parent: angular.element(document.body),
+                                                clickOutsideToClose: false
+                                            });
+                                        } else if (type==="thread") {
+                                            var newThread = {
+                                                type: "project-message",
+                                                members: [],
                                                 selectedEvent: activity._id
                                             };
-                                            tenderService.create(newTender).$promise.then(function(res) {
+                                            messageService.create({id: activity.project}, newThread).$promise.then(function(res) {
                                                 dialogService.closeModal();
-                                                dialogService.showToast("New Tender Created Successfully.");
+                                                dialogService.showToast("New Thread Created Successfully.");
+                                                $rootScope.$emit("Thread.Inserted", res);
                                                 $rootScope.openDetail = true;
-                                                $state.go("project.tenders.detail", {id: res.project, tenderId: res._id});
+                                                $state.go("project.messages.detail", {id: activity.project, messageId: res._id});
                                             }, function(err) {
                                                 dialogService.showToast("There Has Been An Error...");
                                             });
+                                        } else if (type==="file") {
+                                            var newFile = {
+                                                type: "file",
+                                                members: [],
+                                                tags: [],
+                                                selectedEvent: activity._id
+                                            };
+                                            fileService.create({id: activity.project}, newFile).$promise.then(function(res) {
+                                                dialogService.closeModal();
+                                                dialogService.showToast("New File Created Successfully.");
+                                                $rootScope.openDetail = true;
+                                                $state.go("project.files.detail", {id: activity.project, fileId: res._id});
+                                            }, function(err) {
+                                                dialogService.showToast("There Has Been An Error...");
+                                            });
+                                        } else if (type==="tender") {
+                                            if (!$scope.allowCreateTender) {
+                                                dialogService.showToast("You Are Not Allowed to Attach This to a Tender");
+                                            } else {
+                                                var newTender = {
+                                                    project: $rootScope.project,
+                                                    selectedEvent: activity._id
+                                                };
+                                                tenderService.create(newTender).$promise.then(function(res) {
+                                                    dialogService.closeModal();
+                                                    dialogService.showToast("New Tender Created Successfully.");
+                                                    $rootScope.openDetail = true;
+                                                    $state.go("project.tenders.detail", {id: res.project, tenderId: res._id});
+                                                }, function(err) {
+                                                    dialogService.showToast("There Has Been An Error...");
+                                                });
+                                            }
                                         }
+                                    } else {
+                                        dialogService.showToast("Not Allow");
                                     }
                                 };
                             }],
@@ -404,12 +414,12 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 }
                 var title = task.description;
 				
-                $scope.events.push({type: "task", _id: task._id, title: title, start: dateStart, end: dateEnd, "backgroundColor": (task.__v > 0) ? "#FFC107" : "#2196F3", allDay: false});
+                $scope.events.push({type: "task", _id: task._id, title: title, start: dateStart, end: dateEnd, "backgroundColor": (task.__v > 0) ? "#FFC107" : "#2196F3", allDay: false, editable: $scope.hasPrivilageInProjectMember});
             }
         });
         _.each($scope.activities, function(activity) {
             if (!activity.isMilestone) {
-                $scope.events.push({type: "event", _id: activity._id,title: activity.name, start: moment(activity.date.start).format("YYYY-MM-DD hh:mm"), end: moment(activity.date.end).format("YYYY-MM-DD hh:mm"), "backgroundColor": "#0D47A1", allDay: true});   
+                $scope.events.push({type: "event", _id: activity._id,title: activity.name, start: moment(activity.date.start).format("YYYY-MM-DD hh:mm"), end: moment(activity.date.end).format("YYYY-MM-DD hh:mm"), "backgroundColor": "#0D47A1", allDay: true, editable: $scope.hasPrivilageInProjectMember});   
             }
         });
         $scope.originalEvents = angular.copy($scope.events);
@@ -553,6 +563,7 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 $scope.currentUser = $rootScope.currentUser;
                 $scope.dialogService = dialogService;
                 $scope.allowShowList = ["create-task", "edit-task", "change-date-time", "complete-task", "uncomplete-task", "enter-comment"];
+                $scope.hasPrivilageInProjectMember = $rootScope.checkPrivilageInProjectMember(people);
 
                 $timeout(function() {
                     if ($scope.task.__v > 0) {
@@ -628,17 +639,21 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 // };
 
                 $scope.completeTask = function() {
-                    $scope.task.completed = !$scope.task.completed;
-                    if ($scope.task.completed) {
-                        $scope.task.completedBy = $rootScope.currentUser._id;
-                        $scope.task.editType = "complete-task";
-                        $scope.task.completedAt = new Date();
+                    if ($scope.hasPrivilageInProjectMember) {
+                        $scope.task.completed = !$scope.task.completed;
+                        if ($scope.task.completed) {
+                            $scope.task.completedBy = $rootScope.currentUser._id;
+                            $scope.task.editType = "complete-task";
+                            $scope.task.completedAt = new Date();
+                        } else {
+                            $scope.task.completedBy = null;
+                            $scope.task.editType = "uncomplete-task";
+                            $scope.task.completedAt = null;
+                        }
+                        $scope.update($scope.task);
                     } else {
-                        $scope.task.completedBy = null;
-                        $scope.task.editType = "uncomplete-task";
-                        $scope.task.completedAt = null;
+                        dialogService.showToast("Not Allow");
                     }
-                    $scope.update($scope.task);
                 };
 
                 $scope.changeOrAddEvent = function() {
@@ -658,28 +673,32 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                 };
 
                 $scope.update = function(task) {
-                    taskService.update({id: task._id}, task).$promise.then(function(res) {
-                        if (task.editType==="enter-comment") {
-                            $scope.comment = null;
-                            dialogService.showToast("New Comment Has Been Added.");
-                        } else if (task.editType==="edit-task") {
-                            $scope.editDescription=false;
-                            dialogService.showToast("Task Description Has Been Updated.");
-                        } else if (task.editType==="assign") {
-                            dialogService.showToast("Assignees Added to Task Successfully.");
-                        } else if (task.editType==="complete-task") {
-                            dialogService.showToast("Task Has Been Marked Complete.");
-                        } else if (task.editType==="uncomplete-task") {
-                            dialogService.showToast("Task Has Been Marked Incomplete.");
-                        } else if (task.editType==="add-event") {
-                            dialogService.showToast("Add Event Successfully");
-                        } else if (task.editType==="change-event") {
-                            dialogService.showToast("Change Event Successfully");
-                        }
-                        $scope.showEdit = false;
-                    }, function(err) {
-                        dialogService.showToast("There Has Been An Error...");
-                    });
+                    if ($scope.hasPrivilageInProjectMember) {
+                        taskService.update({id: task._id}, task).$promise.then(function(res) {
+                            if (task.editType==="enter-comment") {
+                                $scope.comment = null;
+                                dialogService.showToast("New Comment Has Been Added.");
+                            } else if (task.editType==="edit-task") {
+                                $scope.editDescription=false;
+                                dialogService.showToast("Task Description Has Been Updated.");
+                            } else if (task.editType==="assign") {
+                                dialogService.showToast("Assignees Added to Task Successfully.");
+                            } else if (task.editType==="complete-task") {
+                                dialogService.showToast("Task Has Been Marked Complete.");
+                            } else if (task.editType==="uncomplete-task") {
+                                dialogService.showToast("Task Has Been Marked Incomplete.");
+                            } else if (task.editType==="add-event") {
+                                dialogService.showToast("Add Event Successfully");
+                            } else if (task.editType==="change-event") {
+                                dialogService.showToast("Change Event Successfully");
+                            }
+                            $scope.showEdit = false;
+                        }, function(err) {
+                            dialogService.showToast("There Has Been An Error...");
+                        });
+                    } else {
+                        dialogService.showToast("Not Allow");
+                    }
                 };
             }],
             resolve: {

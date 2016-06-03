@@ -75,7 +75,7 @@
 
                         <div class="md-secondary">
                             <span>{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</span>
-                            <md-button class="md-primary" ng-show="isLeader && member._id!=currentUser._id && hasPrivilageInProjectMember" ng-click="archiveMember(member)">{{(!member.archive) ? "Archive" : "Unarchive"}}</md-button>
+                            <md-button class="md-primary" ng-show="isLeader && member._id!=currentUser._id && hasPrivilageInProjectMember && member.inviter==currentUser._id" ng-click="archiveMember(member)">{{(!member.archive) ? "Archive" : "Unarchive"}}</md-button>
                         </div>
 
                         <md-divider ng-hide="$last"></md-divider>
@@ -94,7 +94,7 @@
 
                         <div class="md-secondary">
                             <span>{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</span>
-                            <md-button class="md-primary" ng-show="isLeader && member._id!=currentUser._id && hasPrivilageInProjectMember" ng-click="archiveMember(member)">{{(!member.archive) ? "Archive" : "Unarchive"}}</md-button>
+                            <md-button class="md-primary" ng-show="isLeader && member._id!=currentUser._id && hasPrivilageInProjectMember && member.inviter==currentUser._id" ng-click="archiveMember(member)">{{(!member.archive) ? "Archive" : "Unarchive"}}</md-button>
                         </div>
 
                         <md-divider ng-hide="$last"></md-divider>
@@ -118,7 +118,7 @@
 
                         <div class="md-secondary">
                             <span>{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</span>
-                            <md-button class="md-primary" ng-show="isLeader && member._id!=currentUser._id && hasPrivilageInProjectMember" ng-click="archiveMember(member)">{{(!member.archive) ? "Archive" : "Unarchive"}}</md-button>
+                            <md-button class="md-primary" ng-show="isLeader && member._id!=currentUser._id && hasPrivilageInProjectMember && member.inviter==currentUser._id" ng-click="archiveMember(member)">{{(!member.archive) ? "Archive" : "Unarchive"}}</md-button>
                         </div>
                         <md-divider ng-hide="$last"></md-divider>
                     </md-list-item>
@@ -136,7 +136,7 @@
 
                         <div class="md-secondary">
                             <span>{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</span>
-                            <md-button class="md-primary" ng-show="isLeader && member._id!=currentUser._id && hasPrivilageInProjectMember" ng-click="archiveMember(member)">{{(!member.archive) ? "Archive" : "Unarchive"}}</md-button>
+                            <md-button class="md-primary" ng-show="isLeader && member._id!=currentUser._id && hasPrivilageInProjectMember && member.inviter==currentUser._id" ng-click="archiveMember(member)">{{(!member.archive) ? "Archive" : "Unarchive"}}</md-button>
                         </div>
                         <md-divider ng-hide="$last"></md-divider>
                     </md-list-item>
@@ -159,7 +159,7 @@
 
                         <div class="md-secondary">
                             <span>{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</span>
-                            <md-button class="md-primary" ng-show="isLeader && member._id!=currentUser._id" ng-click="archiveMember(member) && hasPrivilageInProjectMember">{{(!member.archive) ? "Archive" : "Unarchive"}}</md-button>
+                            <md-button class="md-primary" ng-show="isLeader && member._id!=currentUser._id && hasPrivilageInProjectMember && member.inviter==currentUser._id" ng-click="archiveMember(member)">{{(!member.archive) ? "Archive" : "Unarchive"}}</md-button>
                         </div>
                         <md-divider ng-hide="$last"></md-divider>
                     </md-list-item>
@@ -177,7 +177,7 @@
 
                         <div class="md-secondary">
                             <span>{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</span>
-                            <md-button class="md-primary" ng-show="isLeader && member._id!=currentUser._id && hasPrivilageInProjectMember" ng-click="archiveMember(member)">{{(!member.archive) ? "Archive" : "Unarchive"}}</md-button>
+                            <md-button class="md-primary" ng-show="isLeader && member._id!=currentUser._id && hasPrivilageInProjectMember && member.inviter==currentUser._id" ng-click="archiveMember(member)">{{(!member.archive) ? "Archive" : "Unarchive"}}</md-button>
                         </div>
                         <md-divider ng-hide="$last"></md-divider>
                     </md-list-item>
@@ -200,7 +200,7 @@
 
                         <div class="md-secondary">
                             <span>{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</span>
-                            <md-button class="md-primary" ng-show="isLeader && member._id!=currentUser._id && hasPrivilageInProjectMember" ng-click="archiveMember(member)">{{(!member.archive) ? "Archive" : "Unarchive"}}</md-button>
+                            <md-button class="md-primary" ng-show="isLeader && member._id!=currentUser._id && hasPrivilageInProjectMember && member.inviter==currentUser._id" ng-click="archiveMember(member)">{{(!member.archive) ? "Archive" : "Unarchive"}}</md-button>
                         </div>
                         <md-divider ng-hide="$last"></md-divider>
                     </md-list-item>
@@ -218,7 +218,7 @@
 
                         <div class="md-secondary">
                             <span>{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</span>
-                            <md-button class="md-primary" ng-show="isLeader && member._id!=currentUser._id && hasPrivilageInProjectMember" ng-click="archiveMember(member)">{{(!member.archive) ? "Archive" : "Unarchive"}}</md-button>
+                            <md-button class="md-primary" ng-show="isLeader && member._id!=currentUser._id && hasPrivilageInProjectMember && member.inviter==currentUser._id" ng-click="archiveMember(member)">{{(!member.archive) ? "Archive" : "Unarchive"}}</md-button>
                         </div>
                         <md-divider ng-hide="$last"></md-divider>
                     </md-list-item>
@@ -241,7 +241,7 @@
 
                         <div class="md-secondary">
                             <span>{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</span>
-                            <md-button class="md-primary" ng-show="isLeader && member._id!=currentUser._id && hasPrivilageInProjectMember" ng-click="archiveMember(member)">{{(!member.archive) ? "Archive" : "Unarchive"}}</md-button>
+                            <md-button class="md-primary" ng-show="isLeader && member._id!=currentUser._id && hasPrivilageInProjectMember && member.inviter==currentUser._id" ng-click="archiveMember(member)">{{(!member.archive) ? "Archive" : "Unarchive"}}</md-button>
                         </div>
                         <md-divider ng-hide="$last"></md-divider>
                     </md-list-item>
@@ -259,7 +259,7 @@
 
                         <div class="md-secondary">
                             <span>{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</span>
-                            <md-button class="md-primary" ng-show="isLeader && member._id!=currentUser._id && hasPrivilageInProjectMember" ng-click="archiveMember(member)">{{(!member.archive) ? "Archive" : "Unarchive"}}</md-button>
+                            <md-button class="md-primary" ng-show="isLeader && member._id!=currentUser._id && hasPrivilageInProjectMember && member.inviter==currentUser._id" ng-click="archiveMember(member)">{{(!member.archive) ? "Archive" : "Unarchive"}}</md-button>
                         </div>
                         <md-divider ng-hide="$last"></md-divider>
                     </md-list-item>

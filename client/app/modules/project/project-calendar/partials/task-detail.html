@@ -5,7 +5,7 @@
 			
             <h2>Task Detail</h2>
 			<span flex></span>
-			<md-button ng-click="completeTask()">{{(!task.completed) ? "Mark Task Complete" : "Mark Task Incomplete"}}</md-button>
+			<md-button ng-show="hasPrivilageInProjectMember" ng-click="completeTask()">{{(!task.completed) ? "Mark Task Complete" : "Mark Task Incomplete"}}</md-button>
 			<md-button ng-click="dialogService.closeModal()" class="md-icon-button"><md-icon class="material-icons"><md-tooltip md-direction="left">Close</md-tooltip>close</md-icon></md-button>
 			
         </div>
@@ -24,7 +24,7 @@
 				</md-input-container>
 
 				<span flex></span>
-				<md-button class="md-icon-button" ng-click="showDetail=!showDetail"><md-icon class="material-icons"><md-tooltip md-direction="left">Edit Task</md-tooltip>edit</md-icon></md-button>
+				<md-button ng-show="hasPrivilageInProjectMember" class="md-icon-button" ng-click="showDetail=!showDetail"><md-icon class="material-icons"><md-tooltip md-direction="left">Edit Task</md-tooltip>edit</md-icon></md-button>
 			</div>
 			
 			<div layout="row">
@@ -87,7 +87,7 @@
 
 				<md-divider></md-divider>
 
-				<div class="comment-section" layout="column" style="margin-top: 15px">
+				<div class="comment-section" layout="column" style="margin-top: 15px" ng-show="hasPrivilageInProjectMember">
 					<!-- <div class="comment-content" ng-repeat="comment in task.comments">
 						<p><span class="comment-creator"><strong>{{comment.user.name}}</strong></span> sent at <span class="comment-date">{{comment.sentAt | date: 'hh:mm dd-MM-yyyy'}}</span></p>
 						<p ng-bind-html="comment.content | htmlize"></p>
