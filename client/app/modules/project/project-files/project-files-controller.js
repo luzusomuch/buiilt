@@ -1,4 +1,6 @@
 angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $timeout, $mdDialog, uploadService, files, peopleService, dialogService, $stateParams, $rootScope, $mdToast, people, $state, socket, fileService, notificationService, activities) {
+    $scope.hasPrivilageInProjectMember = $rootScope.checkPrivilageInProjectMember(people);
+
     $scope.dialogService = dialogService;
     $scope.people = people;
 	$scope.files = files;
@@ -421,6 +423,9 @@ angular.module('buiiltApp').controller('projectFilesCtrl', function($scope, $tim
     then call mixpanel to track current user has created new file
     and go to new file detail*/
 	$scope.createNewFile = function() {
+        if (!$scope.hasPrivilageInProjectMember) {
+            return dialogService.showToast("Not Allow");
+        }
         $scope.uploadFile.members = [];
         $scope.uploadFile.tags = [];
         $scope.uploadFile.type="file";

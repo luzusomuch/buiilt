@@ -265,7 +265,7 @@ exports.update = function(req, res) {
     var event;
     async.parallel([
         function (cb) {
-            if (req.body.editType==="add-event" || req.body.editType==="change-event") {
+            if (data.editType==="add-event" || data.editType==="change-event" || (data.editType==="edit" && data.selectedEvent)) {
                 Activity.findById(req.body.selectedEvent, function(err, activity) {
                     if (err || !activity) {
                         return cb(err);
@@ -278,7 +278,10 @@ exports.update = function(req, res) {
                 cb();
             }
         }
-    ], function() {
+    ], function(err) {
+        if (err) {
+            return res.send(500,err);
+        }
         File.findById(req.params.id, function(err, file) {
             if (err) {return res.send(500,err);}
             else if (!file) {return res.send(404, "We Can Not Find The Requested File...");}
@@ -344,7 +347,6 @@ exports.update = function(req, res) {
                                 },
                                 function (callback) {
                                     if (data.selectedEvent && file.event != data.selectedEvent) {
-                                        console.log(event);
                                         file.activities.push({
                                             user: req.user._id,
                                             type: (!file.event) ? "add-event" : "change-event",

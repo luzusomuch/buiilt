@@ -1,4 +1,6 @@
 angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope, $rootScope, $timeout, file, $mdDialog, uploadService, fileService, $mdToast, peopleService, $stateParams, messageService, taskService, $state, people, socket, notificationService, tenders, dialogService, activities) {
+    $scope.hasPrivilageInProjectMember = $rootScope.checkPrivilageInProjectMember(people);
+
     // dynamic height for reversion file thumbnail
     $scope.imageHeight = $("div.content").innerHeight() - $("div.content").innerHeight() * 0.2;
 	// dynamic height for file view
@@ -75,6 +77,7 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
     $scope.file.selectedEvent = file.event;
     $scope.file.selectedTag = (file.tags.length > 0) ? file.tags[0] : null;
     $scope.activities = activities;
+    $scope.dialogService = dialogService;
     /*Check if current team is team owner of file*/
     $scope.isOwnerTeam=false;
     if (_.findIndex($rootScope.currentTeam.leader, function(leader) {
@@ -425,6 +428,9 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
 
     /*Update file*/
     $scope.update = function(file) {
+        if (!$scope.hasPrivilageInProjectMember) {
+            return dialogService.showToast("Not Allow");
+        }
         fileService.update({id: file._id}, file).$promise.then(function(res) {
             $scope.file = file;
             dialogService.closeModal();
@@ -470,6 +476,9 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
 
     /*Create related thread with valid members then open thread detail*/
     $scope.createRelatedThread = function(form) {
+        if (!$scope.hasPrivilageInProjectMember) {
+            return dialogService.showToast("Not Allow");
+        }
         if (form.$valid) {
             $scope.relatedThread.members = $scope.file.members;
             _.each($scope.file.notMembers, function(email) {
@@ -503,6 +512,9 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
 
     /*Create related task with valid members then open task detail*/
     $scope.createRelatedTask = function(form) {
+        if (!$scope.hasPrivilageInProjectMember) {
+            return dialogService.showToast("Not Allow");
+        }
         if (form.$valid) {
             if (!$scope.relatedTask.time.start || !$scope.relatedTask.time.end) {
                 dialogService.showToast("Please Select Start Time And End Time");
@@ -546,6 +558,9 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
     /*Upload file reversion then call mixpanel to track current user
     has uploaded reversion*/
     $scope.uploadReversionFile = function() {
+        if (!$scope.hasPrivilageInProjectMember) {
+            return dialogService.showToast("Not Allow");
+        }
         if (!$scope.uploadReversion.file) {
             dialogService.showToast("Please Select A File");
         } else {
@@ -565,6 +580,9 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
 
     /*Archive or unarchive file*/
     $scope.archive = function() {
+        if (!$scope.hasPrivilageInProjectMember) {
+            return dialogService.showToast("Not Allow");
+        }
         var confirm = $mdDialog.confirm().title((!$scope.file.isArchive) ? "Archive?" : "Unarchive?").ok("Yes").cancel("No");
         $mdDialog.show(confirm).then(function() {
             $scope.file.editType = (!$scope.file.isArchive) ? "archive" : "unarchive";
