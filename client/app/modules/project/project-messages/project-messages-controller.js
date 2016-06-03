@@ -8,6 +8,8 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
     $scope.selectedFilterEventList = [];
     $scope.selectedFilterRecepientList = [];
 
+    $scope.hasPrivilageInProjectMember = $rootScope.checkPrivilageInProjectMember(people);
+
     $scope.changeFilter = function(type, isCheckAll, dataId) {
         if (type==="event") {
             if (isCheckAll) {
@@ -381,7 +383,7 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
     and go to the thread detail
     */
 	$scope.addNewThread = function(form) {
-		// if (form.$valid) {
+        if ($scope.hasPrivilageInProjectMember) {
 		    $scope.thread.members = _.filter($scope.projectMembers, {select: true});
 			$scope.thread.type = "project-message";
 			messageService.create({id: $stateParams.id},$scope.thread).$promise.then(function(res) {
@@ -397,7 +399,9 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
 			}, function(err) {
 				$scope.showToast("There Has Been An Error...")
 			});
-		// }
+        } else {
+            dialogService.showToast("Not Allow");
+        }
 	};
 
     /*Show a toast inforation*/
@@ -411,25 +415,29 @@ angular.module('buiiltApp').controller('projectMessagesCtrl', function($rootScop
     }
     /*Show reply message modal with a messages list*/
     $scope.showReplyModal = function(event, message) {
-        $rootScope.projectSelectedMessage = message;
-        $mdDialog.show({
-            targetEvent: event,
-            controller: "projectMessagesCtrl",
-            resolve: {
-                threads: ["$stateParams","messageService" ,function($stateParams, messageService) {
-                    return messageService.getProjectThread({id: $stateParams.id}).$promise;
-                }],
-                people: ["peopleService", "$stateParams" ,function(peopleService, $stateParams) {
-                    return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
-                }],
-                activities: ["activityService", "$stateParams", function(activityService, $stateParams) {
-                    return activityService.me({id: $stateParams.id}).$promise;
-                }]
-            },
-            templateUrl: 'app/modules/dashboard/partials/reply-message.html',
-            parent: angular.element(document.body),
-            clickOutsideToClose: false
-        });
+        if ($scope.hasPrivilageInProjectMember) {
+            $rootScope.projectSelectedMessage = message;
+            $mdDialog.show({
+                targetEvent: event,
+                controller: "projectMessagesCtrl",
+                resolve: {
+                    threads: ["$stateParams","messageService" ,function($stateParams, messageService) {
+                        return messageService.getProjectThread({id: $stateParams.id}).$promise;
+                    }],
+                    people: ["peopleService", "$stateParams" ,function(peopleService, $stateParams) {
+                        return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
+                    }],
+                    activities: ["activityService", "$stateParams", function(activityService, $stateParams) {
+                        return activityService.me({id: $stateParams.id}).$promise;
+                    }]
+                },
+                templateUrl: 'app/modules/dashboard/partials/reply-message.html',
+                parent: angular.element(document.body),
+                clickOutsideToClose: false
+            });
+        } else {
+            dialogService.showToast("Not Allow");
+        }
     };
 
     /*Close opening modal*/

@@ -19,7 +19,7 @@
 			      	<md-icon class="material-icons">content_paste</md-icon>
 	  	      	</md-button>
 				
-	  	      	<md-button ng-show="thread.owner._id==currentUser._id" aria-label="Show Message Detail" class="md-icon-button" ng-click="showDetail=!showDetail" ng-class="{'md-primary':showDetail}">
+	  	      	<md-button ng-show="thread.owner._id==currentUser._id && hasPrivilageInProjectMember" aria-label="Show Message Detail" class="md-icon-button" ng-click="showDetail=!showDetail" ng-class="{'md-primary':showDetail}">
 					<md-tooltip md-direction="bottom">Show Thread Detail</md-tooltip>
 			      	<i class="material-icons">edit</i>
 	  	      	</md-button>

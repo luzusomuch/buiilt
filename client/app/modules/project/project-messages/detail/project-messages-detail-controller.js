@@ -1,4 +1,6 @@
 angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q, $rootScope, $scope, $timeout, $stateParams, messageService, $mdToast, $mdDialog, $state, thread, peopleService, taskService, uploadService, people, clipboard, socket, notificationService, tenders, activities, dialogService) {
+    $scope.hasPrivilageInProjectMember = $rootScope.checkPrivilageInProjectMember(people);
+
     $scope.contentHeight = $rootScope.maximunHeight - $("header").innerHeight() - 10;
 
     $scope.showDetail = false;
@@ -329,6 +331,9 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
     /*Check message text is valid then submit to server
     if success, call mixpanel track current user has sent reply*/
     $scope.sendMessage = function() {
+        if (!$scope.hasPrivilageInProjectMember) {
+            return dialogService.showToast("Not Allow");
+        }
         if ($scope.message.text && $scope.message.text.trim() != '' && $scope.message.text.length > 0) {
             messageService.sendMessage({id: $scope.thread._id}, $scope.message).$promise.then(function(res) {
                 $scope.closeModal();
@@ -397,6 +402,9 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
 
     /*Update current thread*/
     $scope.update = function(thread) {
+        if (!$scope.hasPrivilageInProjectMember) {
+            return dialogService.showToast("Not Allow");
+        }
         if (thread.elementType==="assign" && thread.element.type==="tender") {
             return dialogService.showToast("Not Allow");
         }
@@ -475,7 +483,7 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
 
     /*Create related task when have valid member*/
     $scope.createRelatedTask = function(form) {
-        if ($scope.thread.element.type==="tender") {
+        if ($scope.thread.element.type==="tender" || !$scope.hasPrivilageInProjectMember) {
             return dialogService.showToast("Not Allow");
         }
         if (form.$valid) {
@@ -528,7 +536,7 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
 
     /*Create related file with valid tags, members*/
     $scope.createRelatedFile = function() {
-        if ($scope.thread.element.type==="tender") {
+        if ($scope.thread.element.type==="tender" || !$scope.hasPrivilageInProjectMember) {
             return dialogService.showToast("Not Allow");
         }
         $scope.relatedFile.members = $scope.thread.members;
@@ -550,6 +558,9 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
 
     /*Archive or unarchive a thread*/
     $scope.archive = function() {
+        if (!$scope.hasPrivilageInProjectMember) {
+            return dialogService.showToast("Not Allow");
+        }
         var confirm = $mdDialog.confirm().title((!$scope.thread.isArchive) ? "Archive?" : "Unarchive?").ok("Yes").cancel("No");
         $mdDialog.show(confirm).then(function() {
             $scope.thread.elementType = (!$scope.thread.isArchive) ? "archive" : "unarchive";
