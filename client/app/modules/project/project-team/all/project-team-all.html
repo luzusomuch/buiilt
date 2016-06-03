@@ -62,11 +62,31 @@
                 <md-subheader ng-show="builderTeam.length > 0">Builders</md-subheader>
 				<md-divider></md-divider>
                 <md-list ng-cloak flex class="content-list" ng-show="builderTeam.length > 0">
-                    <md-list-item class="md-2-line" ng-repeat="member in builderTeam | filter :searchMember track by $index">
+                    <!-- list of builders whose not archived -->
+                    <md-list-item class="md-2-line" ng-repeat="member in builderTeam | filter :searchMember track by $index" ng-show="!member.archive">
 					
                         <div class="md-avatar">
                         </div>
 						
+                        <div class="md-list-item-text" layout-margin>
+                            <h3>{{member.name}}</h3>
+                            <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
+                        </div>
+
+                        <div class="md-secondary">
+                            <span>{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</span>
+                            <md-button class="md-primary" ng-show="isLeader && member._id!=currentUser._id" ng-click="archiveMember(member)">{{(!member.archive) ? "Archive" : "Unarchive"}}</md-button>
+                        </div>
+
+                        <md-divider ng-hide="$last"></md-divider>
+                    </md-list-item>
+
+                    <!-- list of builders whose archived -->
+                    <md-list-item class="md-2-line" ng-repeat="member in builderTeam | filter :searchMember track by $index" ng-show="member.archive">
+                    
+                        <div class="md-avatar">
+                        </div>
+                        
                         <div class="md-list-item-text" layout-margin>
                             <h3>{{member.name}}</h3>
                             <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
@@ -85,11 +105,30 @@
                 <md-subheader ng-show="clientTeam.length > 0">Clients</md-subheader>
 				<md-divider></md-divider>
                 <md-list ng-cloak flex class="content-list" ng-show="clientTeam.length > 0">
-                    <md-list-item class="md-2-line" ng-repeat="member in clientTeam | filter :searchMember track by $index">
+                    <!-- list of clients whose has un archived -->
+                    <md-list-item class="md-2-line" ng-repeat="member in clientTeam | filter :searchMember track by $index" ng-show="!member.archive">
 					
                         <div class="md-avatar">
                         </div>
 						
+                        <div class="md-list-item-text" layout-margin>
+                            <h3>{{member.name}}</h3>
+                            <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
+                        </div>
+
+                        <div class="md-secondary">
+                            <span>{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</span>
+                            <md-button class="md-primary" ng-show="isLeader && member._id!=currentUser._id" ng-click="archiveMember(member)">{{(!member.archive) ? "Archive" : "Unarchive"}}</md-button>
+                        </div>
+                        <md-divider ng-hide="$last"></md-divider>
+                    </md-list-item>
+
+                    <!-- list of clients whose has archived -->
+                    <md-list-item class="md-2-line" ng-repeat="member in clientTeam | filter :searchMember track by $index" ng-show="member.archive">
+                    
+                        <div class="md-avatar">
+                        </div>
+                        
                         <div class="md-list-item-text" layout-margin>
                             <h3>{{member.name}}</h3>
                             <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
@@ -107,11 +146,30 @@
                 <md-subheader ng-show="architectTeam.length > 0">Architects</md-subheader>
 				<md-divider></md-divider>
                 <md-list ng-cloak flex class="content-list" ng-show="architectTeam.length > 0">
-                    <md-list-item class="md-2-line" ng-repeat="member in architectTeam | filter :searchMember track by $index">
+                    <!-- Unarchived architects list -->
+                    <md-list-item class="md-2-line" ng-repeat="member in architectTeam | filter :searchMember track by $index" ng-show="!member.archive">
 					
                         <div class="md-avatar">
                         </div>
 						
+                        <div class="md-list-item-text" layout-margin>
+                            <h3>{{member.name}}</h3>
+                            <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
+                        </div>
+
+                        <div class="md-secondary">
+                            <span>{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</span>
+                            <md-button class="md-primary" ng-show="isLeader && member._id!=currentUser._id" ng-click="archiveMember(member)">{{(!member.archive) ? "Archive" : "Unarchive"}}</md-button>
+                        </div>
+                        <md-divider ng-hide="$last"></md-divider>
+                    </md-list-item>
+
+                    <!-- Archived architects list -->
+                    <md-list-item class="md-2-line" ng-repeat="member in architectTeam | filter :searchMember track by $index" ng-show="member.archive">
+                    
+                        <div class="md-avatar">
+                        </div>
+                        
                         <div class="md-list-item-text" layout-margin>
                             <h3>{{member.name}}</h3>
                             <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
@@ -129,11 +187,30 @@
                 <md-subheader ng-show="subcontractorTeam.length > 0">Subcontractors</md-subheader>
 				<md-divider></md-divider>
                 <md-list ng-cloak flex class="content-list" ng-show="subcontractorTeam.length > 0">
-                    <md-list-item class="md-2-line" ng-repeat="member in subcontractorTeam | filter :searchMember track by $index">
+                    <!-- Unarchived Subcontractors list -->
+                    <md-list-item class="md-2-line" ng-repeat="member in subcontractorTeam | filter :searchMember track by $index" ng-show="!member.archive">
 					
                         <div class="md-avatar">
                         </div>
 						
+                        <div class="md-list-item-text" layout-margin>
+                            <h3>{{member.name}}</h3>
+                            <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
+                        </div>
+
+                        <div class="md-secondary">
+                            <span>{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</span>
+                            <md-button class="md-primary" ng-show="isLeader && member._id!=currentUser._id" ng-click="archiveMember(member)">{{(!member.archive) ? "Archive" : "Unarchive"}}</md-button>
+                        </div>
+                        <md-divider ng-hide="$last"></md-divider>
+                    </md-list-item>
+
+                    <!-- Archived Subcontractors list -->
+                    <md-list-item class="md-2-line" ng-repeat="member in subcontractorTeam | filter :searchMember track by $index" ng-show="member.archive">
+                    
+                        <div class="md-avatar">
+                        </div>
+                        
                         <div class="md-list-item-text" layout-margin>
                             <h3>{{member.name}}</h3>
                             <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
@@ -151,11 +228,30 @@
                 <md-subheader ng-show="consultantTeam.length > 0">Consultants</md-subheader>
 				<md-divider></md-divider>
                 <md-list ng-cloak flex class="content-list" ng-show="consultantTeam.length > 0">
-                    <md-list-item class="md-2-line" ng-repeat="member in consultantTeam | filter :searchMember track by $index">
+                    <!-- Unarchived Consultants List -->
+                    <md-list-item class="md-2-line" ng-repeat="member in consultantTeam | filter :searchMember track by $index" ng-show="!member.archive">
 					
                         <div class="md-avatar">
                         </div>
 						
+                        <div class="md-list-item-text" layout-margin>
+                            <h3>{{member.name}}</h3>
+                            <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
+                        </div>
+
+                        <div class="md-secondary">
+                            <span>{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</span>
+                            <md-button class="md-primary" ng-show="isLeader && member._id!=currentUser._id" ng-click="archiveMember(member)">{{(!member.archive) ? "Archive" : "Unarchive"}}</md-button>
+                        </div>
+                        <md-divider ng-hide="$last"></md-divider>
+                    </md-list-item>
+
+                    <!-- Archived Consultants List -->
+                    <md-list-item class="md-2-line" ng-repeat="member in consultantTeam | filter :searchMember track by $index" ng-show="member.archive">
+                    
+                        <div class="md-avatar">
+                        </div>
+                        
                         <div class="md-list-item-text" layout-margin>
                             <h3>{{member.name}}</h3>
                             <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
