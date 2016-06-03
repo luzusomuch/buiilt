@@ -32,6 +32,9 @@ var tender = {
         teamMember: [
             {type: Schema.Types.ObjectId, ref: 'User'}
         ],
+        archivedTeamMembers: [
+            {type: Schema.Types.ObjectId, ref: "User"}
+        ],
         name: String,
         phoneNumber: String,
         email: {type: String},
@@ -54,6 +57,7 @@ var tender = {
     addendums: [addendum],
     inviterType: String,
     hasSelect: {type: Boolean, default: false},
+    archive: {type: Boolean, default: false},
     createdAt: {type: Date}
 };
 

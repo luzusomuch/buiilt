@@ -35,6 +35,40 @@ var populatePaths = [
     {path: "project"}
 ];
 
+exports.archiveMember = function(req, res) {
+    var data = req.body;
+    People.findById(req.params.id, function(err, people) {
+        if (err) {return res.send(500,err);}
+        if (!people) {return res.send(404);}
+        _.each(people[data.role], function(tender) {
+            if (data.type==="team-member") {
+                // if current user is leader and he mark their member as archive
+                if (tender.tenderers[0]._id && tender.tenderers[0]._id.toString()===req.user._id.toString()) {
+                    var index = _.findIndex(tender.tenderers[0].teamMember, function(member) {
+                        return member.toString()===data.selectedUserId.toString();
+                    });
+                    if (index !== -1) {
+                        var archivedTeamMembers = (tender.tenderers[0].archivedTeamMembers) ? tender.tenderers[0].archivedTeamMembers : [];
+                        archivedTeamMembers.push(tender.tenderers[0].teamMember[index]);
+                        tender.tenderers[0].archivedTeamMembers = archivedTeamMembers;
+                        return false;
+                    }
+                }
+            } else {
+                // if the current user is inviter and he mark selected tender as archive
+                if (tender.tenderers[0]._id && data.selectedUserId && tender.tenderers[0]._id.toString()===data.selectedUserId.toString() && tender.inviter.toString()===req.user._id.toString()) {
+                    tender.archive = true;
+                    return false;
+                } else if (tender.tenderers[0].email && data.selectedUserEmail && tender.tenderers[0].email===data.selectedUserEmail && tender.inviter.toString()===req.user._id.toString()) {
+                    tender.archive = true;
+                    return false;
+                }
+            }
+        });
+        console.log(people[data.role]);
+    });
+};
+
 /*
     invite users to project team
 */

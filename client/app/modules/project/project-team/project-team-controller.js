@@ -157,9 +157,11 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
                             });
                             if (tender.tenderers[0]._id) {
                                 tender.tenderers[0]._id.type = role;
+                                tender.tenderers[0].archive = tender.archive;
                                 $scope.membersList.push(tender.tenderers[0]._id);
                             } else {
                                 tender.tenderers[0].type = role;
+                                tender.tenderers[0].archive = tender.archive;
                                 $scope.membersList.push(tender.tenderers[0]);
                             }
                         } else {

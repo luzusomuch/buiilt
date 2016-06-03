@@ -66,6 +66,8 @@
                             <h3>{{member.name}}</h3>
                             <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
                         </div>
+
+                        <button class="md-secondary" ng-show="isLeader">{{(!member.archive) ? "Archive" : "Unarchive"}}</button>
                         
                         <p class="md-secondary">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</p>
                         <md-divider ng-hide="$last"></md-divider>
@@ -80,6 +82,9 @@
                             <h3>{{member.name}}</h3>
                             <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
                         </div>
+
+                        <button class="md-secondary" ng-show="isLeader">{{(!member.archive) ? "Archive" : "Unarchive"}}</button>
+
                         <p class="md-secondary">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</p>
                         <md-divider ng-hide="$last"></md-divider>
                     </md-list-item>
@@ -93,6 +98,9 @@
                             <h3>{{member.name}}</h3>
                             <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
                         </div>
+
+                        <button class="md-secondary" ng-show="isLeader">{{(!member.archive) ? "Archive" : "Unarchive"}}</button>
+
                         <p class="md-secondary">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</p>
                         <md-divider ng-hide="$last"></md-divider>
                     </md-list-item>
@@ -106,6 +114,9 @@
                             <h3>{{member.name}}</h3>
                             <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
                         </div>
+
+                        <button class="md-secondary" ng-show="isLeader">{{(!member.archive) ? "Archive" : "Unarchive"}}</button>
+
                         <p class="md-secondary">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</p>
                         <md-divider ng-hide="$last"></md-divider>
                     </md-list-item>
@@ -119,6 +130,9 @@
                             <h3>{{member.name}}</h3>
                             <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
                         </div>
+
+                        <button class="md-secondary" ng-show="isLeader">{{(!member.archive) ? "Archive" : "Unarchive"}}</button>
+
                         <p class="md-secondary">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</p>
                         <md-divider ng-hide="$last"></md-divider>
                     </md-list-item>

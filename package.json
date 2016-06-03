@@ -17,8 +17,6 @@
     "express-validator": "^2.1.1",
     "express-winston": "~0.2.9",
     "glob": "~4.0.5",
-    "imagemin-jpegtran": "^4.1.0",
-    "imagemin-pngquant": "^4.1.0",
     "jsonwebtoken": "^0.3.0",
     "lodash": "~2.4.1",
     "method-override": "~1.0.0",
@@ -55,8 +53,7 @@
     "node-filepicker": "0.1.2",
     "json2csv": "3.0.2",
     "moment": "2.11.1",
-    "stripe": "4.2.0",
-    "twilio-node": "latest"
+    "stripe": "4.2.0"
   },
   "devDependencies": {
     "connect-livereload": "~0.4.0",
@@ -74,7 +71,7 @@
     "grunt-contrib-jshint": "~0.10.0",
     "grunt-contrib-less": "^0.11.0",
     "grunt-contrib-uglify": "~0.4.0",
-    "grunt-contrib-watch": "~0.6.1",
+    "grunt-contrib-watch": "^1.0.0",
     "grunt-dom-munger": "^3.4.0",
     "grunt-env": "~0.4.1",
     "grunt-express-server": "~0.4.17",
