@@ -144,6 +144,7 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
     /*Get project members list*/
     function getProjectMembers(id) {
         peopleService.getInvitePeople({id: id}).$promise.then(function(res) {
+            $scope.hasPrivilageInProjectMember = $rootScope.checkPrivilageInProjectMember(res);
             $scope.projectMembers = [];
             _.each($rootScope.roles, function(role) {
                 _.each(res[role], function(tender){
@@ -241,6 +242,9 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
             // dialogService.showToast("Please Select A Document");
         // } else {
             // $scope.uploadReversion.file.versionTags = versionTags.join();
+            if (!$scope.hasPrivilageInProjectMember) {
+                return dialogService.showToast("Not Allow");
+            }
             uploadService.uploadReversion({id: $stateParams.documentId}, $scope.uploadReversion).$promise.then(function(res) {
                 dialogService.closeModal();
                 dialogService.showToast("Document Reversion Successfully Uploaded");
@@ -373,7 +377,7 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
     };
 
     $scope.changeName = function() {
-        if (document.owner._id!==$scope.currentUser._id) {
+        if (document.owner._id!==$scope.currentUser._id || !$scope.hasPrivilageInProjectMember) {
             return dialogService.showToast("Not Allow");
         }
         if ($scope.document.name===originalDocument.name) {

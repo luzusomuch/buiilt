@@ -1,4 +1,6 @@
 angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, $rootScope, $scope, $mdDialog, documents, uploadService, $mdToast, $stateParams, socket, $state, fileService, documentSets, people, dialogService, documentService, contactBooks) {
+    $scope.hasPrivilageInProjectMember = $rootScope.checkPrivilageInProjectMember(people);
+
     $scope.contentHeight = $rootScope.maximunHeight - $("header").innerHeight() - 30;
 
     $scope.documents = documents;
@@ -422,6 +424,9 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
         // } else if (!$scope.selectedDocumentSetId) {
         //     dialogService.showToast("Please select a document set");
         // } else {
+        if (!$scope.hasPrivilageInProjectMember) {
+            return dialogService.showToast("Not Allow");
+        }
         $scope.uploadFile.type="document";
         $scope.uploadFile.tags = [];
         $scope.uploadFile.selectedDocumentSetId = $scope.selectedDocumentSetId;
@@ -484,6 +489,9 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
     $scope.setDocument = {};
     $scope.selectedDocumentSet = $rootScope.selectedDocumentSet;
     $scope.addNewSetOfDocument = function(form) {
+        if (!$scope.hasPrivilageInProjectMember) {
+            return dialogService.showToast("Not Allow");
+        }
         if (form.$valid) {
             if (!$rootScope.isCopyDocumentSet)
                 $scope.setDocument.newMembers = _.filter($scope.projectMembers, {select: true});
@@ -501,6 +509,9 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
     };
 
     $scope.updateSetOfDocument = function(form) {
+        if (!$scope.hasPrivilageInProjectMember) {
+            return dialogService.showToast("Not Allow");
+        }
         if (form.$valid) {
             $scope.selectedDocumentSet.newMembers = _.filter($scope.projectMembers, {select: true});
             documentService.update({id: $scope.selectedDocumentSet._id}, $scope.selectedDocumentSet).$promise.then(function(res) {
@@ -535,6 +546,9 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
     $scope.uploadBulkDocuments = function() {
         if (!$rootScope.selectedDocumentSetId) {
             return dialogService.showToast("Please Select Document Set To Countinue");
+        }
+        if (!$scope.hasPrivilageInProjectMember) {
+            return dialogService.showToast("Not Allow");
         }
         filepicker.pickMultiple(
             {
