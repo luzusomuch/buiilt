@@ -151,6 +151,7 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
                                 if (memberIndex !== -1) {
                                     _.each(tenderer.teamMember, function(member) {
                                         member.type = role;
+                                        member.role = "team-member";
                                         $scope.membersList.push(member);
                                     });
                                 }
@@ -169,6 +170,7 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
                                 if (tenderer._id._id.toString() === $rootScope.currentUser._id.toString()) {
                                     _.each(tenderer.teamMember, function(member) {
                                         member.type = role;
+                                        member.role = "team-member";
                                         $scope.membersList.push(member);
                                     });
                                 }
@@ -464,4 +466,17 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
     $scope.$on('$destroy', function() {
         updateProjectTeam();
     });
+
+    $scope.archiveMember = function(member) {
+        if ($scope.isLeader) {
+            peopleService.archiveMember({id: $scope.people._id}, member).$promise.then(function(res) {
+                member.archive = !member.archive;
+                dialogService.showToast("Successfully");
+            }, function(err) {
+                dialogService.showToast("Error");
+            });
+        } else {
+            dialogService.showToast("Not Allow");
+        }
+    };
 });

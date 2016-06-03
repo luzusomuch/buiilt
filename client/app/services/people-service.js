@@ -15,6 +15,12 @@ angular.module('buiiltApp').factory('peopleService', function($resource) {
             params: {
                 action: 'get-invite-people'
             }
+        },
+        archiveMember: {
+            method: "PUT",
+            params: {
+                action: "archive"
+            }
         }
     });
 });

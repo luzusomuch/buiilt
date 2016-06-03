@@ -40,32 +40,41 @@ exports.archiveMember = function(req, res) {
     People.findById(req.params.id, function(err, people) {
         if (err) {return res.send(500,err);}
         if (!people) {return res.send(404);}
-        _.each(people[data.role], function(tender) {
-            if (data.type==="team-member") {
+        _.each(people[data.type], function(tender) {
+            if (data.role==="team-member") {
                 // if current user is leader and he mark their member as archive
                 if (tender.tenderers[0]._id && tender.tenderers[0]._id.toString()===req.user._id.toString()) {
                     var index = _.findIndex(tender.tenderers[0].teamMember, function(member) {
-                        return member.toString()===data.selectedUserId.toString();
+                        return member.toString()===data._id.toString();
                     });
                     if (index !== -1) {
                         var archivedTeamMembers = (tender.tenderers[0].archivedTeamMembers) ? tender.tenderers[0].archivedTeamMembers : [];
-                        archivedTeamMembers.push(tender.tenderers[0].teamMember[index]);
+                        if (!data.archive) {
+                            archivedTeamMembers.push(tender.tenderers[0].teamMember[index]);
+                        } else {
+                            if (archivedTeamMembers.indexOf(data._id.toString()) !== -1) {
+                                archivedTeamMembers.splice(archivedTeamMembers.indexOf(data._id.toString(), 1));
+                            }
+                        }
                         tender.tenderers[0].archivedTeamMembers = archivedTeamMembers;
                         return false;
                     }
                 }
             } else {
                 // if the current user is inviter and he mark selected tender as archive
-                if (tender.tenderers[0]._id && data.selectedUserId && tender.tenderers[0]._id.toString()===data.selectedUserId.toString() && tender.inviter.toString()===req.user._id.toString()) {
-                    tender.archive = true;
+                if (tender.tenderers[0]._id && data._id && tender.tenderers[0]._id.toString()===data._id.toString() && tender.inviter.toString()===req.user._id.toString()) {
+                    tender.archive = !tender.archive;
                     return false;
-                } else if (tender.tenderers[0].email && data.selectedUserEmail && tender.tenderers[0].email===data.selectedUserEmail && tender.inviter.toString()===req.user._id.toString()) {
-                    tender.archive = true;
+                } else if (tender.tenderers[0].email && data.email && tender.tenderers[0].email===data.email && tender.inviter.toString()===req.user._id.toString()) {
+                    tender.archive = !tender.archive;
                     return false;
                 }
             }
         });
-        console.log(people[data.role]);
+        people.save(function(err) {
+            if (err) {return res.send(500,err);}
+            return res.send(200);
+        });
     });
 };
 
