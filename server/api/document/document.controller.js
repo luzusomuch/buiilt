@@ -48,6 +48,8 @@ exports.me = function(req, res) {
         if (err) {return res.send(500,err);}
         async.each(documents, function(document, callback) {
             async.parallel([
+                // check if current user is document set owner or belong to owner team
+                // then show all member of document set
                 function (cb) {
                     People.findOne({project: document.project}, function(err, people) {
                         if (err || !people) {
@@ -55,7 +57,6 @@ exports.me = function(req, res) {
                         } else {
                             var isOwnerTeam = false;
                             if (document.owner.toString()!==req.user._id.toString()) {
-                                console.log("AAAAAAAA");
                                 _.each(roles, function(role) {
                                     _.each(people[role], function(tender) {
                                         if (tender.tenderers[0]._id && tender.tenderers[0]._id.toString()===document.owner.toString() && tender.tenderers[0]._id.toString()===req.user._id.toString()) {
@@ -71,10 +72,8 @@ exports.me = function(req, res) {
                                     }
                                 });
                             } else if (document.owner.toString()===req.user._id.toString()) {
-                                console.log("BBBBBBBBb");
                                 isOwnerTeam = true;
                             }
-                            console.log(isOwnerTeam);
                             if (!isOwnerTeam) {
                                 document.members = [];
                                 document.notMembers = [];
@@ -83,6 +82,7 @@ exports.me = function(req, res) {
                         }
                     });
                 }, 
+                // Get all unread notifications related to current user
                 function (cb) {
                     async.each(document.documents, function(doc, cb) {
                         Notification.find({unread: true, owner: req.user._id, "element._id": doc._id, referenceTo: "document"})

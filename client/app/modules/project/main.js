@@ -79,42 +79,42 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
   })
   
 	//Tenders for Single Project
-  .state('project.tenders', {
-    url: '/tenders',
-	  abstract: true,
-    templateUrl: '/app/modules/project/project-tenders/project-tenders.html',
-    authenticate : true,
-    resolve: {
-      contactBooks: function(contactBookService) {
-        return contactBookService.me().$promise;
-      }
-    }
-  })
-  .state('project.tenders.all', {
-    url: '/',
-    templateUrl: '/app/modules/project/project-tenders/all/project-tenders-all.html',
-    controller: 'projectTendersCtrl',
-    authenticate : true, 
-    resolve: {
-      tenders: function(tenderService, $stateParams) {
-        return tenderService.getAll({id: $stateParams.id}).$promise;
-      }
-    }
-  })
-  .state("project.tenders.detail", {
-    url: "tender/:tenderId",
-    templateUrl: "/app/modules/project/project-tenders/detail/project-tenders-detail.html",
-    controller: "projectTendersDetailCtrl",
-    authenticate: true,
-    resolve: {
-      tender: function(tenderService, $stateParams) {
-        return tenderService.get({id: $stateParams.tenderId}).$promise;
-      },
-      documentSets: function($stateParams, documentService) {
-        return documentService.me({id: $stateParams.id}).$promise;
-      },
-    }
-  })
+  // .state('project.tenders', {
+  //   url: '/tenders',
+	 //  abstract: true,
+  //   templateUrl: '/app/modules/project/project-tenders/project-tenders.html',
+  //   authenticate : true,
+  //   resolve: {
+  //     contactBooks: function(contactBookService) {
+  //       return contactBookService.me().$promise;
+  //     }
+  //   }
+  // })
+  // .state('project.tenders.all', {
+  //   url: '/',
+  //   templateUrl: '/app/modules/project/project-tenders/all/project-tenders-all.html',
+  //   controller: 'projectTendersCtrl',
+  //   authenticate : true, 
+  //   resolve: {
+  //     tenders: function(tenderService, $stateParams) {
+  //       return tenderService.getAll({id: $stateParams.id}).$promise;
+  //     }
+  //   }
+  // })
+  // .state("project.tenders.detail", {
+  //   url: "tender/:tenderId",
+  //   templateUrl: "/app/modules/project/project-tenders/detail/project-tenders-detail.html",
+  //   controller: "projectTendersDetailCtrl",
+  //   authenticate: true,
+  //   resolve: {
+  //     tender: function(tenderService, $stateParams) {
+  //       return tenderService.get({id: $stateParams.tenderId}).$promise;
+  //     },
+  //     documentSets: function($stateParams, documentService) {
+  //       return documentService.me({id: $stateParams.id}).$promise;
+  //     },
+  //   }
+  // })
   
   	//Messages for Single Project
   .state('project.messages', {
@@ -147,34 +147,34 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
   })
   
   	//Tasks for Single Project
-  .state('project.tasks', {
-    url: '/tasks',
-	  abstract: true,
-    templateUrl: '/app/modules/project/project-tasks/project-tasks.html',
-    authenticate : true,
-    resolve: {
-      tasks: function(taskService, $stateParams) {
-        return taskService.getProjectTask({id: $stateParams.id}).$promise;
-      }
-    }
-  })
-  .state('project.tasks.all', {
-    url: '',
-    templateUrl: '/app/modules/project/project-tasks/all/project-tasks-all.html',
-    controller: 'projectTasksCtrl',
-    authenticate : true
-  })
-  .state('project.tasks.detail', {
-    url: '/detail/:taskId',
-    templateUrl: '/app/modules/project/project-tasks/detail/project-tasks-detail.html',
-    controller: 'projectTaskDetailCtrl',
-    authenticate : true,
-    resolve: {
-      task: function($stateParams, taskService) {
-        return taskService.get({id: $stateParams.taskId}).$promise;
-      }
-    }
-  })
+  // .state('project.tasks', {
+  //   url: '/tasks',
+	 //  abstract: true,
+  //   templateUrl: '/app/modules/project/project-tasks/project-tasks.html',
+  //   authenticate : true,
+  //   resolve: {
+  //     tasks: function(taskService, $stateParams) {
+  //       return taskService.getProjectTask({id: $stateParams.id}).$promise;
+  //     }
+  //   }
+  // })
+  // .state('project.tasks.all', {
+  //   url: '',
+  //   templateUrl: '/app/modules/project/project-tasks/all/project-tasks-all.html',
+  //   controller: 'projectTasksCtrl',
+  //   authenticate : true
+  // })
+  // .state('project.tasks.detail', {
+  //   url: '/detail/:taskId',
+  //   templateUrl: '/app/modules/project/project-tasks/detail/project-tasks-detail.html',
+  //   controller: 'projectTaskDetailCtrl',
+  //   authenticate : true,
+  //   resolve: {
+  //     task: function($stateParams, taskService) {
+  //       return taskService.get({id: $stateParams.taskId}).$promise;
+  //     }
+  //   }
+  // })
   
   	//Files for Single Project
   .state('project.files', {
