@@ -39,17 +39,17 @@
 
             <div ng-show="search">
                 <md-list ng-cloak flex class="content-list">
-                    <md-list-item class="md-2-line" ng-repeat="member in searchResults | filter :searchMember track by $index">
+                    <md-list-item class="md-3-line" ng-repeat="member in searchResults | filter :searchMember track by $index">
                     
                         <div class="md-avatar">
                         </div>
                         
-                        <div class="md-list-item-text" layout-margin>
+                        <div class="md-list-item-text" layout-margin layout>
                             <h3>{{(member._id) ? member.name : member.email}}</h3>
-                            <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
+                            <h4 class="md-body-2">{{(member.email) ? member.email : 'No Email Address on File'}}</h4> 
+							<h4 class="md-body-2">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</h4>
                         </div>
-                        
-                        <p class="md-secondary">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</p>
+						
                         <md-divider ng-hide="$last"></md-divider>
                     
                     </md-list-item>
@@ -63,39 +63,35 @@
 				<md-divider></md-divider>
                 <md-list ng-cloak flex class="content-list" ng-show="builderTeam.length > 0">
                     <!-- list of builders whose not archived -->
-                    <md-list-item class="md-2-line" ng-repeat="member in builderTeam | filter :searchMember track by $index" ng-show="!member.archive">
+                    <md-list-item class="md-3-line" ng-repeat="member in builderTeam | filter :searchMember track by $index" ng-show="!member.archive">
 					
                         <div class="md-avatar">
                         </div>
 						
                         <div class="md-list-item-text" layout-margin>
                             <h3>{{member.name}}</h3>
-                            <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
+                            <h4 class="md-body-2">{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
+							<h4 class="md-body-2">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</h4>
                         </div>
-
-                        <div class="md-secondary">
-                            <span>{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</span>
-                            <md-button class="md-primary" ng-show="isLeader && member._id!=currentUser._id && hasPrivilageInProjectMember && member.inviter==currentUser._id" ng-click="archiveMember(member)">{{(!member.archive) ? "Archive" : "Unarchive"}}</md-button>
-                        </div>
+                            
+                        <md-button class="md-secondary md-icon-button" ng-show="isLeader && member._id!=currentUser._id" ng-click="archiveMember(member)"><md-tooltip md-direction="left">{{(!member.archive) ? "Archive this Team Member" : "Unarchive this Team Member"}}</md-tooltip><md-icon class="material-icons">{{(!member.archive) ? "archive" : "unarchive"}}</md-icon></md-button>
 
                         <md-divider ng-hide="$last"></md-divider>
                     </md-list-item>
 
                     <!-- list of builders whose archived -->
-                    <md-list-item class="md-2-line" ng-repeat="member in builderTeam | filter :searchMember track by $index" ng-show="member.archive">
+                    <md-list-item class="md-3-line" ng-repeat="member in builderTeam | filter :searchMember track by $index" ng-show="member.archive">
                     
                         <div class="md-avatar">
                         </div>
                         
                         <div class="md-list-item-text" layout-margin>
-                            <h3>{{member.name}}</h3>
-                            <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
+                            <h3 style="text-decoration: line-through">{{member.name}}</h3>
+                            <h4 style="text-decoration: line-through" class="md-body-1">{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
+							<h4 style="text-decoration: line-through" class="md-body-1">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</h4>
                         </div>
-
-                        <div class="md-secondary">
-                            <span>{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</span>
-                            <md-button class="md-primary" ng-show="isLeader && member._id!=currentUser._id && hasPrivilageInProjectMember && member.inviter==currentUser._id" ng-click="archiveMember(member)">{{(!member.archive) ? "Archive" : "Unarchive"}}</md-button>
-                        </div>
+                            
+                        <md-button class="md-secondary md-icon-button" ng-show="isLeader && member._id!=currentUser._id" ng-click="archiveMember(member)"><md-tooltip md-direction="left">{{(!member.archive) ? "Archive this Team Member" : "Unarchive this Team Member"}}</md-tooltip><md-icon class="material-icons">{{(!member.archive) ? "archive" : "unarchive"}}</md-icon></md-button>
 
                         <md-divider ng-hide="$last"></md-divider>
                     </md-list-item>
@@ -106,39 +102,37 @@
 				<md-divider></md-divider>
                 <md-list ng-cloak flex class="content-list" ng-show="clientTeam.length > 0">
                     <!-- list of clients whose has un archived -->
-                    <md-list-item class="md-2-line" ng-repeat="member in clientTeam | filter :searchMember track by $index" ng-show="!member.archive">
+                    <md-list-item class="md-3-line" ng-repeat="member in clientTeam | filter :searchMember track by $index" ng-show="!member.archive">
 					
                         <div class="md-avatar">
                         </div>
 						
                         <div class="md-list-item-text" layout-margin>
                             <h3>{{member.name}}</h3>
-                            <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
+                            <h4 class="md-body-1">{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
+							<h4 class="md-body-1">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</h4>
                         </div>
-
-                        <div class="md-secondary">
-                            <span>{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</span>
-                            <md-button class="md-primary" ng-show="isLeader && member._id!=currentUser._id && hasPrivilageInProjectMember && member.inviter==currentUser._id" ng-click="archiveMember(member)">{{(!member.archive) ? "Archive" : "Unarchive"}}</md-button>
-                        </div>
-                        <md-divider ng-hide="$last"></md-divider>
+                            
+                        <md-button class="md-secondary md-icon-button" ng-show="isLeader && member._id!=currentUser._id" ng-click="archiveMember(member)"><md-tooltip md-direction="left">{{(!member.archive) ? "Archive this Team Member" : "Unarchive this Team Member"}}</md-tooltip><md-icon class="material-icons">{{(!member.archive) ? "archive" : "unarchive"}}</md-icon></md-button>
+                        
+						<md-divider ng-hide="$last"></md-divider>
                     </md-list-item>
 
                     <!-- list of clients whose has archived -->
-                    <md-list-item class="md-2-line" ng-repeat="member in clientTeam | filter :searchMember track by $index" ng-show="member.archive">
+                    <md-list-item class="md-3-line" ng-repeat="member in clientTeam | filter :searchMember track by $index" ng-show="member.archive">
                     
                         <div class="md-avatar">
                         </div>
                         
                         <div class="md-list-item-text" layout-margin>
-                            <h3>{{member.name}}</h3>
-                            <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
+                            <h3 style="text-decoration: line-through">{{member.name}}</h3>
+                            <h4 style="text-decoration: line-through" class="md-body-1">{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
+							<h4 style="text-decoration: line-through" class="md-body-1">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</h4>
                         </div>
-
-                        <div class="md-secondary">
-                            <span>{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</span>
-                            <md-button class="md-primary" ng-show="isLeader && member._id!=currentUser._id && hasPrivilageInProjectMember && member.inviter==currentUser._id" ng-click="archiveMember(member)">{{(!member.archive) ? "Archive" : "Unarchive"}}</md-button>
-                        </div>
-                        <md-divider ng-hide="$last"></md-divider>
+                            
+                        <md-button class="md-secondary md-icon-button" ng-show="isLeader && member._id!=currentUser._id" ng-click="archiveMember(member)"><md-tooltip md-direction="left">{{(!member.archive) ? "Archive this Team Member" : "Unarchive this Team Member"}}</md-tooltip><md-icon class="material-icons">{{(!member.archive) ? "archive" : "unarchive"}}</md-icon></md-button>
+                        
+						<md-divider ng-hide="$last"></md-divider>
                     </md-list-item>
                 </md-list>
 
@@ -147,39 +141,37 @@
 				<md-divider></md-divider>
                 <md-list ng-cloak flex class="content-list" ng-show="architectTeam.length > 0">
                     <!-- Unarchived architects list -->
-                    <md-list-item class="md-2-line" ng-repeat="member in architectTeam | filter :searchMember track by $index" ng-show="!member.archive">
+                    <md-list-item class="md-3-line" ng-repeat="member in architectTeam | filter :searchMember track by $index" ng-show="!member.archive">
 					
                         <div class="md-avatar">
                         </div>
 						
                         <div class="md-list-item-text" layout-margin>
                             <h3>{{member.name}}</h3>
-                            <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
+                            <h4 class="md-body-1">{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
+							<h4 class="md-body-1">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</h4>
                         </div>
-
-                        <div class="md-secondary">
-                            <span>{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</span>
-                            <md-button class="md-primary" ng-show="isLeader && member._id!=currentUser._id && hasPrivilageInProjectMember && member.inviter==currentUser._id" ng-click="archiveMember(member)">{{(!member.archive) ? "Archive" : "Unarchive"}}</md-button>
-                        </div>
-                        <md-divider ng-hide="$last"></md-divider>
+                            
+                        <md-button class="md-secondary md-icon-button" ng-show="isLeader && member._id!=currentUser._id" ng-click="archiveMember(member)"><md-tooltip md-direction="left">{{(!member.archive) ? "Archive this Team Member" : "Unarchive this Team Member"}}</md-tooltip><md-icon class="material-icons">{{(!member.archive) ? "archive" : "unarchive"}}</md-icon></md-button>
+                        
+						<md-divider ng-hide="$last"></md-divider>
                     </md-list-item>
 
                     <!-- Archived architects list -->
-                    <md-list-item class="md-2-line" ng-repeat="member in architectTeam | filter :searchMember track by $index" ng-show="member.archive">
+                    <md-list-item class="md-3-line" ng-repeat="member in architectTeam | filter :searchMember track by $index" ng-show="member.archive">
                     
                         <div class="md-avatar">
                         </div>
                         
                         <div class="md-list-item-text" layout-margin>
-                            <h3>{{member.name}}</h3>
-                            <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
+                            <h3 style="text-decoration: line-through">{{member.name}}</h3>
+                            <h4 style="text-decoration: line-through" class="md-body-1">{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
+							<h4 style="text-decoration: line-through" class="md-body-1">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</h4>
                         </div>
-
-                        <div class="md-secondary">
-                            <span>{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</span>
-                            <md-button class="md-primary" ng-show="isLeader && member._id!=currentUser._id && hasPrivilageInProjectMember && member.inviter==currentUser._id" ng-click="archiveMember(member)">{{(!member.archive) ? "Archive" : "Unarchive"}}</md-button>
-                        </div>
-                        <md-divider ng-hide="$last"></md-divider>
+                            
+                        <md-button class="md-secondary md-icon-button" ng-show="isLeader && member._id!=currentUser._id" ng-click="archiveMember(member)"><md-tooltip md-direction="left">{{(!member.archive) ? "Archive this Team Member" : "Unarchive this Team Member"}}</md-tooltip><md-icon class="material-icons">{{(!member.archive) ? "archive" : "unarchive"}}</md-icon></md-button>
+                        
+						<md-divider ng-hide="$last"></md-divider>
                     </md-list-item>
                 </md-list>
 
@@ -188,39 +180,37 @@
 				<md-divider></md-divider>
                 <md-list ng-cloak flex class="content-list" ng-show="subcontractorTeam.length > 0">
                     <!-- Unarchived Subcontractors list -->
-                    <md-list-item class="md-2-line" ng-repeat="member in subcontractorTeam | filter :searchMember track by $index" ng-show="!member.archive">
+                    <md-list-item class="md-3-line" ng-repeat="member in subcontractorTeam | filter :searchMember track by $index" ng-show="!member.archive">
 					
                         <div class="md-avatar">
                         </div>
 						
                         <div class="md-list-item-text" layout-margin>
                             <h3>{{member.name}}</h3>
-                            <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
+                            <h4 class="md-body-1">{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
+							<h4 class="md-body-1">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</h4>
                         </div>
-
-                        <div class="md-secondary">
-                            <span>{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</span>
-                            <md-button class="md-primary" ng-show="isLeader && member._id!=currentUser._id && hasPrivilageInProjectMember && member.inviter==currentUser._id" ng-click="archiveMember(member)">{{(!member.archive) ? "Archive" : "Unarchive"}}</md-button>
-                        </div>
-                        <md-divider ng-hide="$last"></md-divider>
+                            
+                        <md-button class="md-secondary md-icon-button" ng-show="isLeader && member._id!=currentUser._id" ng-click="archiveMember(member)"><md-tooltip md-direction="left">{{(!member.archive) ? "Archive this Team Member" : "Unarchive this Team Member"}}</md-tooltip><md-icon class="material-icons">{{(!member.archive) ? "archive" : "unarchive"}}</md-icon></md-button>
+                        
+						<md-divider ng-hide="$last"></md-divider>
                     </md-list-item>
 
                     <!-- Archived Subcontractors list -->
-                    <md-list-item class="md-2-line" ng-repeat="member in subcontractorTeam | filter :searchMember track by $index" ng-show="member.archive">
+                    <md-list-item class="md-3-line" ng-repeat="member in subcontractorTeam | filter :searchMember track by $index" ng-show="member.archive">
                     
                         <div class="md-avatar">
                         </div>
                         
                         <div class="md-list-item-text" layout-margin>
-                            <h3>{{member.name}}</h3>
-                            <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
+                            <h3 style="text-decoration: line-through">{{member.name}}</h3>
+                            <h4 style="text-decoration: line-through" class="md-body-1">{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
+							<h4 style="text-decoration: line-through" class="md-body-1">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</h4>
                         </div>
-
-                        <div class="md-secondary">
-                            <span>{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</span>
-                            <md-button class="md-primary" ng-show="isLeader && member._id!=currentUser._id && hasPrivilageInProjectMember && member.inviter==currentUser._id" ng-click="archiveMember(member)">{{(!member.archive) ? "Archive" : "Unarchive"}}</md-button>
-                        </div>
-                        <md-divider ng-hide="$last"></md-divider>
+                            
+                        <md-button class="md-secondary md-icon-button" ng-show="isLeader && member._id!=currentUser._id" ng-click="archiveMember(member)"><md-tooltip md-direction="left">{{(!member.archive) ? "Archive this Team Member" : "Unarchive this Team Member"}}</md-tooltip><md-icon class="material-icons">{{(!member.archive) ? "archive" : "unarchive"}}</md-icon></md-button>
+                        
+						<md-divider ng-hide="$last"></md-divider>
                     </md-list-item>
                 </md-list>
 
@@ -229,39 +219,37 @@
 				<md-divider></md-divider>
                 <md-list ng-cloak flex class="content-list" ng-show="consultantTeam.length > 0">
                     <!-- Unarchived Consultants List -->
-                    <md-list-item class="md-2-line" ng-repeat="member in consultantTeam | filter :searchMember track by $index" ng-show="!member.archive">
+                    <md-list-item class="md-3-line" ng-repeat="member in consultantTeam | filter :searchMember track by $index" ng-show="!member.archive">
 					
                         <div class="md-avatar">
                         </div>
 						
                         <div class="md-list-item-text" layout-margin>
                             <h3>{{member.name}}</h3>
-                            <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
+                            <h4 class="md-body-1">{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
+							<h4 class="md-body-1">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</h4>
                         </div>
-
-                        <div class="md-secondary">
-                            <span>{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</span>
-                            <md-button class="md-primary" ng-show="isLeader && member._id!=currentUser._id && hasPrivilageInProjectMember && member.inviter==currentUser._id" ng-click="archiveMember(member)">{{(!member.archive) ? "Archive" : "Unarchive"}}</md-button>
-                        </div>
-                        <md-divider ng-hide="$last"></md-divider>
+                            
+                        <md-button class="md-secondary md-icon-button" ng-show="isLeader && member._id!=currentUser._id" ng-click="archiveMember(member)"><md-tooltip md-direction="left">{{(!member.archive) ? "Archive this Team Member" : "Unarchive this Team Member"}}</md-tooltip><md-icon class="material-icons">{{(!member.archive) ? "archive" : "unarchive"}}</md-icon></md-button>
+                        
+						<md-divider ng-hide="$last"></md-divider>
                     </md-list-item>
 
                     <!-- Archived Consultants List -->
-                    <md-list-item class="md-2-line" ng-repeat="member in consultantTeam | filter :searchMember track by $index" ng-show="member.archive">
+                    <md-list-item class="md-3-line" ng-repeat="member in consultantTeam | filter :searchMember track by $index" ng-show="member.archive">
                     
                         <div class="md-avatar">
                         </div>
                         
                         <div class="md-list-item-text" layout-margin>
-                            <h3>{{member.name}}</h3>
-                            <h4>{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
+                            <h3 style="text-decoration: line-through">{{member.name}}</h3>
+                            <h4 style="text-decoration: line-through" class="md-body-1">{{(member.email) ? member.email : 'No Email Address on File'}}</h4>
+							<h4 style="text-decoration: line-through" class="md-body-1">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</h4>
                         </div>
-
-                        <div class="md-secondary">
-                            <span>{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</span>
-                            <md-button class="md-primary" ng-show="isLeader && member._id!=currentUser._id && hasPrivilageInProjectMember && member.inviter==currentUser._id" ng-click="archiveMember(member)">{{(!member.archive) ? "Archive" : "Unarchive"}}</md-button>
-                        </div>
-                        <md-divider ng-hide="$last"></md-divider>
+                            
+                        <md-button class="md-secondary md-icon-button" ng-show="isLeader && member._id!=currentUser._id" ng-click="archiveMember(member)"><md-tooltip md-direction="left">{{(!member.archive) ? "Archive this Team Member" : "Unarchive this Team Member"}}</md-tooltip><md-icon class="material-icons">{{(!member.archive) ? "archive" : "unarchive"}}</md-icon></md-button>
+                        
+						<md-divider ng-hide="$last"></md-divider>
                     </md-list-item>
                 </md-list>
             </div>

@@ -487,16 +487,16 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
         var title = (!member.archive) ? "Archive Member" : "Unarchive Member";
         var content = "Do You Want To ";
         content += (!member.archive) ? "Archive " + member.name : "Unarchive " + member.name;
-        $mdDialog.show($mdDialog.confirm().title(title).textContent(content).ariaLabel(title).ok("Sure").cancel("Cancel")).then(function() {
+        $mdDialog.show($mdDialog.confirm().title(title).textContent(content).ariaLabel(title).ok("Yes").cancel("Cancel")).then(function() {
             if ($scope.isLeader && $scope.hasPrivilageInProjectMember && member.inviter==$rootScope.currentUser._id) {
                 peopleService.archiveMember({id: $scope.people._id}, member).$promise.then(function(res) {
                     member.archive = !member.archive;
-                    dialogService.showToast("Successfully");
+                    dialogService.showToast((member.archive) ? "You Have Arhived This Team Member." : "You Have Unarhived This Team Member.");
                 }, function(err) {
-                    dialogService.showToast("Error");
+                    dialogService.showToast("There Has Been An Error...");
                 });
             } else {
-                dialogService.showToast("Not Allow");
+                dialogService.showToast("This Action is Not Allowed...");
             }
         }, function() {
 
