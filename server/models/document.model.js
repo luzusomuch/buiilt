@@ -12,6 +12,7 @@ var DocumentSchema = new Schema({
     tender: {type: Schema.Types.ObjectId, ref: "Tender"},
     notMembers: [String],
     createdAt: {type: Date, default: new Date()},
+    archive: {type: Boolean, default: false},
     updatedAt: Date
 });
 

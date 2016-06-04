@@ -6,6 +6,7 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
     $scope.documents = documents;
     $scope.documentSets = documentSets;
     $scope.dialogService = dialogService;
+    $scope.currentUser = $rootScope.currentUser;
 
     function getItemIndex(document, type) {
         var index, setIndex;
@@ -473,9 +474,13 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
         if (modalName==="edit-document-set.html") 
             $rootScope.selectedDocumentSet = value;
         else if (modalName==="copy-document-set.html") {
-            $rootScope.selectedDocumentSet = angular.copy(value);
-            $rootScope.selectedDocumentSet.name = null;
-            $rootScope.isCopyDocumentSet = true;
+            if (!value.archive) {
+                $rootScope.selectedDocumentSet = angular.copy(value);
+                $rootScope.selectedDocumentSet.name = null;
+                $rootScope.isCopyDocumentSet = true;
+            } else {
+                return dialogService.showToast("Not Allow");
+            }
         }
         $mdDialog.show({
             controller: "projectDocumentationCtrl",
@@ -533,7 +538,7 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
     };
 
     $scope.updateSetOfDocument = function(form) {
-        if (!$scope.hasPrivilageInProjectMember) {
+        if (!$scope.hasPrivilageInProjectMember || $rootScope.selectedDocumentSet.archive) {
             return dialogService.showToast("Not Allow");
         }
         if (form.$valid) {
@@ -568,10 +573,10 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
     };
 
     $scope.uploadBulkDocuments = function() {
-        if (!$rootScope.selectedDocumentSetId) {
+        if (!$scope.selectedDocumentSet._id) {
             return dialogService.showToast("Please Select Document Set To Countinue");
         }
-        if (!$scope.hasPrivilageInProjectMember) {
+        if (!$scope.hasPrivilageInProjectMember || $scope.selectedDocumentSet.archive) {
             return dialogService.showToast("Not Allow");
         }
         filepicker.pickMultiple(
@@ -594,6 +599,22 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
             },
             function(error){
                 dialogService.showToast("No Documentation Was Uploaded");
+        });
+    };
+
+    // Archive or unarchive selected document set
+    $scope.archive = function() {
+        if (!$scope.selectedDocumentSet._id) {
+            return dialogService.showToast("Please Select Document Set To Countinue");
+        }
+        if (!$scope.hasPrivilageInProjectMember && $scope.selectedDocumentSet.owner._id!=$rootScope.currentUser._id) {
+            return dialogService.showToast("Not Allow");
+        }
+        $scope.selectedDocumentSet.editType= (!$scope.selectedDocumentSet.archive) ? "archive" : "unarchive";
+        documentService.update({id: $scope.selectedDocumentSet._id}, $scope.selectedDocumentSet).$promise.then(function(success) {
+            dialogService.showToast((!$scope.selectedDocumentSet.archive) ? "Archive Document Set Successfully" : "Unarchive Document Set Successfully");
+        }, function(err) {
+            dialogService.showToast("Error");
         });
     };
 });

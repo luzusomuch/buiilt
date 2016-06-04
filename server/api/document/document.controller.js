@@ -43,6 +43,7 @@ exports.me = function(req, res) {
     }
     Document.find(condition)
     .populate("documents")
+    .populate("owner", "_id name email phoneNumber")
     .populate("members", "_id name email phoneNumber")
     .exec(function(err, documents) {
         if (err) {return res.send(500,err);}
@@ -181,12 +182,46 @@ exports.update = function(req, res) {
     Document.findById(req.params.id, function(err, document) {
         if (err) 
             return res.send(500);
-        else if (!document) 
+        if (!document) 
             return res.send(404);
-        document.name = data.name;
-        CheckMembers.check(data.newMembers, document, function(result) {
-            document.members = result.members;
-            document.notMembers = result.notMembers;
+        if (document.archive && data.editType!=="unarchive") {
+            return res.send(500, {msg: "This Document Set Was Archived"});
+        }
+        async.parallel([
+            // Update document set name while new data not the same as old
+            function (cb) {
+                if (data.name && data.name.trim()!==document.name.trim()) {
+                    document.name = data.name;
+                    cb();
+                } else {
+                    cb();
+                }
+            },
+            // Update document set member while existed new members
+            function (cb) {
+                if (data.newMembers && data.newMembers.length > 0) {
+                    CheckMembers.check(data.newMembers, document, function(result) {
+                        document.members = result.members;
+                        document.notMembers = result.notMembers;
+                        cb();
+                    });
+                } else {
+                    cb();
+                }
+            },
+            function (cb) {
+                if (data.editType==="archive" || data.editType==="unarchive") {
+                    document.archive = (data.editType==="archive") ? true : false;
+                    if (data.editType==="archive") {
+                        document.members = [];
+                        document.notMembers = [];
+                    }
+                    cb();
+                } else {
+                    cb();
+                }
+            }
+        ], function() {
             document.save(function(err) {
                 if (err) 
                     return res.send(500,err);
@@ -195,16 +230,31 @@ exports.update = function(req, res) {
                     {path: "members", select: "_id name email phoneNumber"},
                     {path: "documents", select: "_id name tags project __v"}
                 ], function() {
-                    var members = document.members;
-                    members.push(document.owner);
-                    _.each(members, function(member) {
-                        EventBus.emit('socket:emit', {
-                            event: 'document-set:update',
-                            room: member._id.toString(),
-                            data: document
+                    document.__v = 0;
+                    async.each(document.documents, function(doc, cb) {
+                        Notification.find({unread: true, owner: req.user._id, "element._id": doc._id, referenceTo: "document"})
+                        .populate("fromUser", "_id name email").exec(function(err, notifications) {
+                            if (err) {cb(err);}
+                            else {
+                                doc.__v = notifications.length;
+                                if (doc.__v > 0) {
+                                    document.__v +=1;
+                                }
+                                cb();
+                            }
                         });
+                    },function() {
+                        var members = _.clone(document.members);
+                        members.push(document.owner);
+                        _.each(members, function(member) {
+                            EventBus.emit('socket:emit', {
+                                event: 'document-set:update',
+                                room: member._id.toString(),
+                                data: document
+                            });
+                        });
+                        return res.send(200);
                     });
-                    return res.send(200, document);
                 });
             });
         });
