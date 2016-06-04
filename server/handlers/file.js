@@ -47,8 +47,9 @@ EventBus.onSeries('File.Inserted', function(file, next) {
                 });
                 owners.push(documentSet.owner);
                 _.remove(owners, file.editUser._id);
+                console.log(owners);
                 var params = {
-                    owners : documentSet.members,
+                    owners : owners,
                     fromUser : file.editUser._id,
                     element : file,
                     referenceTo : 'document',

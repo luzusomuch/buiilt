@@ -39,17 +39,17 @@ angular.module('buiiltApp').config(function($stateProvider, $urlRouterProvider) 
       }
     }
   })
-  .state("project.event.activity", {
-    url: "/detail/:activityId",
-    templateUrl: "/app/modules/project/project-calendar/detail/project-calendar-detail.html",
-    controller: "projectCalendarDetailCtrl",
-    authenticate: true,
-    resolve: {
-      activity: function($stateParams, activityService) {
-        return activityService.get({id: $stateParams.activityId}).$promise;
-      }
-    }
-  })
+  // .state("project.event.activity", {
+  //   url: "/detail/:activityId",
+  //   templateUrl: "/app/modules/project/project-calendar/detail/project-calendar-detail.html",
+  //   controller: "projectCalendarDetailCtrl",
+  //   authenticate: true,
+  //   resolve: {
+  //     activity: function($stateParams, activityService) {
+  //       return activityService.get({id: $stateParams.activityId}).$promise;
+  //     }
+  //   }
+  // })
   
   	//Overview of Single Project
   .state('project.overview', {

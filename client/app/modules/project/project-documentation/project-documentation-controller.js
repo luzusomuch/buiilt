@@ -145,19 +145,6 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
     };
     getProjectMembers();
 
-    function setUploadFile(){
-        $scope.uploadFile = {
-            tags:[],
-            members: []
-        };
-        $scope.allowUploadDocument = ($rootScope.project.projectManager._id == $rootScope.currentUser._id) ? true : false;
-        $scope.tags = [];
-        _.each($rootScope.currentTeam.documentTags, function(tag) {
-            $scope.tags.push({name: tag, select: false});
-        });
-    };
-    setUploadFile();
-
     // if ($state.includes("project.documentation.all")) {
     //     fileService.getProjectFiles({id: $stateParams.id, type: "document"}).$promise.then(function(res) {
     //         $scope.documents = res;
@@ -232,6 +219,9 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
 
     // Reveice when owner uploaded bulk of documents
     var listenerCleanFnPushBulkDoc = $rootScope.$on("BulkDocument.Uploaded", function(event, data) {
+        _.each(data, function(item) {
+            item.project = (item.project._id) ? item.project._id : item.project;
+        });
         if (data[0].documentSet) {
             var index = _.findIndex($scope.documentSets, function(set) {
                 if (set._id) {
@@ -414,36 +404,51 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
             $scope.tags[index].select = !$scope.tags[index].select;
     };
 
+    /*THis section is use for create new document*/
+    // function setUploadFile(){
+    //     $scope.uploadFile = {
+    //         tags:[],
+    //         members: []
+    //     };
+    //     $scope.allowUploadDocument = ($rootScope.project.projectManager._id == $rootScope.currentUser._id) ? true : false;
+    //     $scope.tags = [];
+    //     _.each($rootScope.currentTeam.documentTags, function(tag) {
+    //         $scope.tags.push({name: tag, select: false});
+    //     });
+    // };
+    // setUploadFile();
+
 	/*Create new document with valid tags
     then call mixpanel to track current user has created new document
     and open document detail*/
-	$scope.addNewDocument = function(){
-        // $scope.uploadFile.tags = _.filter($scope.tags, {select: true});
-        // if ($scope.uploadFile.tags.length === 0) {
-        //     dialogService.showToast("Please Select At Least 1 Document Tag...");
-        // } else if (!$scope.selectedDocumentSetId) {
-        //     dialogService.showToast("Please select a document set");
-        // } else {
-        if (!$scope.hasPrivilageInProjectMember) {
-            return dialogService.showToast("Not Allow");
-        }
-        $scope.uploadFile.type="document";
-        $scope.uploadFile.tags = [];
-        $scope.uploadFile.selectedDocumentSetId = $scope.selectedDocumentSetId;
-        fileService.create({id: $stateParams.id}, $scope.uploadFile).$promise.then(function(res) {
-            dialogService.closeModal();
-            dialogService.showToast("Document Successfully Uploaded.");
-            $rootScope.$emit("Document.Uploaded", res);
+	// $scope.addNewDocument = function(){
+ //        // $scope.uploadFile.tags = _.filter($scope.tags, {select: true});
+ //        // if ($scope.uploadFile.tags.length === 0) {
+ //        //     dialogService.showToast("Please Select At Least 1 Document Tag...");
+ //        // } else if (!$scope.selectedDocumentSetId) {
+ //        //     dialogService.showToast("Please select a document set");
+ //        // } else {
+ //        if (!$scope.hasPrivilageInProjectMember) {
+ //            return dialogService.showToast("Not Allow");
+ //        }
+ //        $scope.uploadFile.type="document";
+ //        $scope.uploadFile.tags = [];
+ //        $scope.uploadFile.selectedDocumentSetId = $scope.selectedDocumentSetId;
+ //        fileService.create({id: $stateParams.id}, $scope.uploadFile).$promise.then(function(res) {
+ //            dialogService.closeModal();
+ //            dialogService.showToast("Document Successfully Uploaded.");
+ //            $rootScope.$emit("Document.Uploaded", res);
 			
-			//Track Document Upload
-			mixpanel.identify($rootScope.currentUser._id);
-			mixpanel.track("Document Uploaded");
+	// 		//Track Document Upload
+	// 		mixpanel.identify($rootScope.currentUser._id);
+	// 		mixpanel.track("Document Uploaded");
 
-            $rootScope.openDetail = true;
-            $state.go("project.documentation.detail", {id: res.project._id, documentId: res._id});
-        }, function(err){dialogService.showToast("There Was an Error...");});
-        // }
-	};
+ //            $rootScope.openDetail = true;
+ //            $state.go("project.documentation.detail", {id: res.project._id, documentId: res._id});
+ //        }, function(err){dialogService.showToast("There Was an Error...");});
+ //        // }
+	// };
+    /*End section create new document*/
 
     $scope.showModal = function(modalName, value) {
         if (modalName==="edit-document-set.html") 
