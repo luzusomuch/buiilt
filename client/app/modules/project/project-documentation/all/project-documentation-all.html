@@ -29,7 +29,7 @@
 			<h5>{{selectedDocumentSet.name}}</h5>
 			<span flex></span>
 			
-			<md-button ng-show="!selectedDocumentSet.notAllowEditOrCopy" ng-click="addNewDocument()" id="im_ProjDocAddDoc" class="md-icon-button"><md-tooltip md-direction="left">Add a Document to this Set</md-tooltip><md-icon class="material-icons">note_add</md-icon></md-button>
+			<md-button ng-show="!selectedDocumentSet.notAllowEditOrCopy" ng-click="uploadBulkDocuments()" id="im_ProjDocAddDoc" class="md-icon-button"><md-tooltip md-direction="left">Add Documents</md-tooltip><md-icon class="material-icons">cloud_upload</md-icon></md-button>
 			
 			<md-menu md-position-mode="target-right target">
                 <md-button aria-label="Filter" ng-click="$mdOpenMenu($event)" class="md-icon-button"><md-icon class="material-icons">more_vert</md-icon><md-tooltip md-direction="down">More Options</md-tooltip></md-button>
@@ -40,9 +40,9 @@
                 	<md-menu-item>
                 		<md-button ng-click="showModal('copy-document-set.html', selectedDocumentSet)"><md-icon class="material-icons">content_copy</md-icon>Copy This Set</md-button>
                 	</md-menu-item>
-                	<md-menu-item>
+                	<!-- <md-menu-item>
                 		<md-button ng-show="!selectedDocumentSet.notAllowEditOrCopy" ng-click="uploadBulkDocuments()"><md-icon class="material-icons">cloud_upload</md-icon>Bulk Upload to This Set</md-button>
-                	</md-menu-item>
+                	</md-menu-item> -->
                 </md-menu-content>
             </md-menu>
 			
