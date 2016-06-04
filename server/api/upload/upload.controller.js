@@ -8,8 +8,8 @@ var Project = require('./../../models/project.model');
 var File = require('./../../models/file.model');
 var Document = require('./../../models/document.model');
 var Notification = require('./../../models/notification.model');
-var NotificationHelper = require('./../../components/helpers/notification');
 var CheckMembers = require("./../../components/helpers/checkMembers");
+var PushNotification = require("./../../components/helpers/PushNotification");
 var _ = require('lodash');
 var async = require('async');
 var config = require('./../../config/environment');
@@ -823,7 +823,16 @@ exports.uploadBulkDocument = function(req, res) {
                     });
                 }, function(err) {
                     if (err) {return res.send(500,err);}
-                    return res.send(200, result);
+                    var owners = _.clone(documentSet.members);
+                    owners.push(documentSet.owner);
+                    _.remove(owners, req.user._id);
+                    async.each(owners, function(owner, callback) {
+                        PushNotification.getData(documentSet.project, result[0]._id, req.user.name + " added "+result.length+" new documents to " +  documentSet.name, owner, "document", function() {
+                            callback();
+                        });
+                    }, function() {
+                        return res.send(200, result);
+                    });
                 });
             }
         });

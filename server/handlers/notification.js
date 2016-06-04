@@ -41,9 +41,13 @@ EventBus.onSeries('Notification.Inserted', function(notification, next) {
                         });
                     });
                 } else if (notification.type==="document-upload-reversion" || notification.type==="file-upload-reversion") {
-                    PushNotificationHelper.getData(notification.element.project, notification.element._id, n.fromUser.name + " uploaded a revision of " +  notification.element.name, notification.owner, notification.element.element.type, function() {
+                    if ((notification.type==="document-upload-reversion" && notification.element.fileHistory.length!==1) || notification.type==="file-upload-reversion") {
+                        PushNotificationHelper.getData(notification.element.project, notification.element._id, n.fromUser.name + " uploaded a revision of " +  notification.element.name, notification.owner, notification.element.element.type, function() {
+                            return next();
+                        });
+                    } else {
                         return next();
-                    });
+                    }
                 } else {
                     return next();
                 }
