@@ -12,6 +12,9 @@ var gcm = require('node-gcm'),
     require projectId, elementId, message, user and type
 */
 exports.getData = function(projectId, id, message, user, type, cb){
+    console.log(user);
+    console.log(type);
+    console.log(message);
     agent
         .set('pfx file', __dirname+'/../../cert/Certificates.p12')
         .set('passphrase', '123456')

@@ -66,7 +66,26 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
         });
     }
 
-    $scope.selectedDocumentSetId = $rootScope.selectedDocumentSetId;
+    if ($rootScope.selectedDocumentSetId) {
+        $scope.selectedDocumentSetId = $rootScope.selectedDocumentSetId;
+        $rootScope.selectedDocumentSetId = null;
+        var index = _.findIndex($scope.documentSets, function(set) {
+            if (set._id) {
+                return set._id.toString()===$scope.selectedDocumentSetId.toString();
+            }
+        });
+        if (index !==- 1) {
+            $scope.lastestSelectedDocumentSet = $scope.documentSets[index];
+        }
+    };
+
+    $scope.$watch("lastestSelectedDocumentSet", function(value) {
+        if (value) {
+            $scope.selectedDocumentSet = value;
+        }
+    });
+
+
     $scope.selectDocumentSet = function(documentSet) {
         $scope.selectedDocumentSet = documentSet;
         $rootScope.selectedDocumentSetId = $scope.selectedDocumentSetId = documentSet._id;
