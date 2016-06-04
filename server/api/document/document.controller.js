@@ -2,12 +2,14 @@
 
 var Document = require('./../../models/document.model');
 var User = require('./../../models/user.model');
+var People = require('./../../models/people.model');
 var Notification = require('./../../models/notification.model');
 var _ = require('lodash');
 var async = require('async');
 var moment = require("moment");
 var CheckMembers = require("./../../components/helpers/checkMembers");
 var EventBus = require('../../components/EventBus');
+var config = require('../../config/environment');
 
 exports.get = function(req, res) {
     Document.findById(req.params.id)
@@ -32,6 +34,7 @@ exports.get = function(req, res) {
 };
 
 exports.me = function(req, res) {
+    var roles = config.roles;
     var condition = {};
     if (req.params.id!=="me") {
         condition = {project: req.params.id, $or: [{owner: req.user._id}, {members: req.user._id}]};
@@ -44,25 +47,60 @@ exports.me = function(req, res) {
     .exec(function(err, documents) {
         if (err) {return res.send(500,err);}
         async.each(documents, function(document, callback) {
-            if (document.owner.toString()!==req.user._id.toString()) {
-                document.members = [];
-                document.notMembers = [];
-            }
-            async.each(document.documents, function(doc, cb) {
-                Notification.find({unread: true, owner: req.user._id, "element._id": doc._id, referenceTo: "document"})
-                .populate("fromUser", "_id name email").exec(function(err, notifications) {
-                    if (err) {cb(err);}
-                    else {
-                        if (notifications.length > 0) {
-                            var latestNotification = _.last(notifications);
-                            doc.element.notificationType = latestNotification.type;
-                            doc.element.notificationBy = latestNotification.fromUser;
+            async.parallel([
+                function (cb) {
+                    People.findOne({project: document.project}, function(err, people) {
+                        if (err || !people) {
+                            cb();
+                        } else {
+                            var isOwnerTeam = false;
+                            if (document.owner.toString()!==req.user._id.toString()) {
+                                console.log("AAAAAAAA");
+                                _.each(roles, function(role) {
+                                    _.each(people[role], function(tender) {
+                                        if (tender.tenderers[0]._id && tender.tenderers[0]._id.toString()===document.owner.toString() && tender.tenderers[0]._id.toString()===req.user._id.toString()) {
+                                            isOwnerTeam = true;
+                                            return false;
+                                        } else if (tender.tenderers[0].teamMember.indexOf(req.user._id.toString()) !== -1 && (tender.tenderers[0]._id && tender.tenderers[0]._id.toString()===document.owner.toString())) {
+                                            isOwnerTeam = true;
+                                            return false;
+                                        }
+                                    });
+                                    if (isOwnerTeam) {
+                                        return false;
+                                    }
+                                });
+                            } else if (document.owner.toString()===req.user._id.toString()) {
+                                console.log("BBBBBBBBb");
+                                isOwnerTeam = true;
+                            }
+                            console.log(isOwnerTeam);
+                            if (!isOwnerTeam) {
+                                document.members = [];
+                                document.notMembers = [];
+                            }
+                            cb();
                         }
-                        doc.__v = notifications.length;
-                        cb();
-                    }
-                });
-            },callback);
+                    });
+                }, 
+                function (cb) {
+                    async.each(document.documents, function(doc, cb) {
+                        Notification.find({unread: true, owner: req.user._id, "element._id": doc._id, referenceTo: "document"})
+                        .populate("fromUser", "_id name email").exec(function(err, notifications) {
+                            if (err) {cb(err);}
+                            else {
+                                if (notifications.length > 0) {
+                                    var latestNotification = _.last(notifications);
+                                    doc.element.notificationType = latestNotification.type;
+                                    doc.element.notificationBy = latestNotification.fromUser;
+                                }
+                                doc.__v = notifications.length;
+                                cb();
+                            }
+                        });
+                    },cb);
+                }
+            ], callback);
         }, function() {
             var result = [];
             if (req.params.id!=="me") {

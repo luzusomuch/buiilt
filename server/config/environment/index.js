@@ -72,7 +72,9 @@ var all = {
 		  
   Bucket: 'buiilt',
 
-  ssl: process.env.SSL || false
+  ssl: process.env.SSL || false,
+
+  roles: ["builders", "clients", "architects", "contractors", "consultants"]
 
   // s3Options: {
   //           accessKeyId: 'AKIAI7KKFT6PBJRLBZKQ',
