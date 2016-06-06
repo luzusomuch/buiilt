@@ -7,9 +7,6 @@
 			<md-button class="md-icon-button" ng-click="showModal('new-document-set.html')"><md-icon class="material-icons">create_new_folder</md-icon><md-tooltip md-direction="left">Create a New Document Set</md-tooltip></md-button>
 		</div>
 		<md-divider layout="row"></md-divider>
-
-		<md-subheader>Unarchived Documents Set</md-subheader>
-		<md-divider></md-divider>
 		<md-list ng-cloak>
 			<md-list-item ng-repeat="documentSet in documentSets" ng-class="{'activemenu': selectedDocumentSet.name==documentSet.name}" ng-click="selectDocumentSet(documentSet)" class="md-2-line" ng-show="!documentSet.archive">
 				<div md-ink-ripple class="md-list-item-text" layout="column">
@@ -24,7 +21,7 @@
 			</md-list-item>
 		</md-list>
 
-		<md-subheader>Unarchived Documents Set</md-subheader>
+		<md-subheader>Archived Sets</md-subheader>
 		<md-divider></md-divider>
 		<md-list ng-cloak>
 			<md-list-item ng-repeat="documentSet in documentSets" ng-class="{'activemenu': selectedDocumentSet.name==documentSet.name}" ng-click="selectDocumentSet(documentSet)" class="md-2-line" ng-show="documentSet.archive">
