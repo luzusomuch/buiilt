@@ -57,13 +57,13 @@ exports.me = function(req, res) {
                             cb();
                         } else {
                             var isOwnerTeam = false;
-                            if (document.owner.toString()!==req.user._id.toString()) {
+                            if (document.owner._id.toString()!==req.user._id.toString()) {
                                 _.each(roles, function(role) {
                                     _.each(people[role], function(tender) {
-                                        if (tender.tenderers[0]._id && tender.tenderers[0]._id.toString()===document.owner.toString() && tender.tenderers[0]._id.toString()===req.user._id.toString()) {
+                                        if (tender.tenderers[0]._id && tender.tenderers[0]._id.toString()===document.owner._id.toString() && tender.tenderers[0]._id.toString()===req.user._id.toString()) {
                                             isOwnerTeam = true;
                                             return false;
-                                        } else if (tender.tenderers[0].teamMember.indexOf(req.user._id.toString()) !== -1 && (tender.tenderers[0]._id && tender.tenderers[0]._id.toString()===document.owner.toString())) {
+                                        } else if (tender.tenderers[0].teamMember.indexOf(req.user._id.toString()) !== -1 && (tender.tenderers[0]._id && tender.tenderers[0]._id.toString()===document.owner._id.toString())) {
                                             isOwnerTeam = true;
                                             return false;
                                         }
@@ -72,7 +72,7 @@ exports.me = function(req, res) {
                                         return false;
                                     }
                                 });
-                            } else if (document.owner.toString()===req.user._id.toString()) {
+                            } else if (document.owner._id.toString()===req.user._id.toString()) {
                                 isOwnerTeam = true;
                             }
                             if (!isOwnerTeam) {
@@ -187,6 +187,9 @@ exports.update = function(req, res) {
         if (document.archive && data.editType!=="unarchive") {
             return res.send(500, {msg: "This Document Set Was Archived"});
         }
+        if (data.editType==="unarchive" && (!data.newMembers || data.newMembers.length === 0)) {
+            return res.send(500, {msg: "Please Select At Least 1 Member"});
+        }
         async.parallel([
             // Update document set name while new data not the same as old
             function (cb) {
@@ -215,8 +218,14 @@ exports.update = function(req, res) {
                     if (data.editType==="archive") {
                         document.members = [];
                         document.notMembers = [];
+                        cb();
+                    } else {
+                        CheckMembers.check(data.newMembers, document, function(result) {
+                            document.members = result.members;
+                            document.notMembers = result.notMembers;
+                            cb();
+                        });
                     }
-                    cb();
                 } else {
                     cb();
                 }
