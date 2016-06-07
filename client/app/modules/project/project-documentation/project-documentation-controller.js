@@ -54,6 +54,11 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
                 $scope.documentSets[$scope.documentSets.length -1].documents.push(document);
             }
         });
+
+        /*Convert not member email to name base on contact books*/
+        _.each($scope.documentSets, function(set) {
+            set.notMembersName = $rootScope.getNotMemberName(contactBooks, set.notMembers);
+        });
     }
     documentSetInitial();
 
@@ -93,21 +98,6 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
     };
 	
 	$scope.showFilter = false;
-
-    function getNotMembersName() {
-        _.each($scope.documentSets, function(set) {
-            set.notMembersName = [];
-            _.each(set.notMembers, function(email) {
-                var index = _.findIndex(contactBooks, function(contact) {
-                    return email===contact.email;
-                });
-                if (index !== -1) {
-                    set.notMembersName.push(contactBooks[index].name);
-                }
-            })
-        });
-    }
-    getNotMembersName();
 
     /*Get project members list*/
     function getProjectMembers() {
@@ -348,44 +338,6 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
                         // $rootScope.$broadcast("UpdateCountNumber", {type: "document", isAdd: true, number: 1});
                     }
                 }
-                // if (data.file.documentSet) {
-                //     index = _.findIndex($scope.documentSets, function(set) {
-                //         if (set._id) {
-                //             return set._id.toString()===data.file.documentSet.toString();
-                //         }
-                //     });
-                //     if (index !== -1) {
-                //         var documentIndex = _.findIndex($scope.documentSets[index].documents, function(doc) {
-                //             return doc._id.toString()===data.file._id.toString();
-                //         });
-                //         if (documentIndex!==-1 && ($scope.documentSets[index].documents[documentIndex] && $scope.documentSets[index].documents[documentIndex].uniqId!==data.uniqId)) {
-                //             $scope.documentSets[index].documents[documentIndex].uniqId = data.uniqId;
-                //             if ($scope.documentSets[index].documents[documentIndex].__v===0) {
-                //                 $rootScope.$broadcast("UpdateCountNumber", {type: "document", isAdd: true, number: 1});
-                //             }
-                //             $scope.documentSets[index].documents[documentIndex].__v+=1;
-                //         } else if (documentIndex === -1) {
-                //             data.file.__v = 1;
-                //             $scope.documentSets[index].documents.push(data.file);
-                //             $rootScope.$broadcast("UpdateCountNumber", {type: "document", isAdd: true, number: 1});
-                //         }
-                //     }
-                // } else {
-                //     index = _.findIndex($scope.documents, function(document) {
-                //         return document._id.toString()===data.file._id.toString();
-                //     });
-                //     if (index !== -1 && ($scope.documents[index] && $scope.documents[index].uniqId!==data.uniqId)) {
-                //         $scope.documents[index].uniqId = data.uniqId;
-                //         if ($scope.documents[index].__v===0) {
-                //             $rootScope.$broadcast("UpdateCountNumber", {type: "document", isAdd: true, number: 1});
-                //         }
-                //         $scope.documents[index].__v+=1;
-                //     } else if (index===-1) {
-                //         data.file.__v = 1;
-                //         $scope.documents.push(data);
-                //         $rootScope.$broadcast("UpdateCountNumber", {type: "document", isAdd: true, number: 1});
-                //     }
-                // }
             }
         }
     });
@@ -393,9 +345,9 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
     /*Receive when create new set of document*/
     socket.on("document-set:new", function(data) {
         if (data.project==$stateParams.id) {
+            data.notMembersName = $rootScope.getNotMemberName(contactBooks, data.notMembers);
             $scope.documentSets.push(data);
             $scope.selectedDocumentSet = data;
-            getNotMembersName();
         }
     });
 
@@ -410,7 +362,9 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
             if (index !== -1) {
                 $scope.documentSets[index] = data;
                 $scope.selectedDocumentSet = data;
-                getNotMembersName();
+                _.each($scope.documentSets, function(set) {
+                    set.notMembersName = $rootScope.getNotMemberName(contactBooks, set.notMembers);
+                });
             }
         }
     });

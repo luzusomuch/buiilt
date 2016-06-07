@@ -14,7 +14,7 @@
 						<md-icon ng-show="documentSet.__v > 0" class="material-icons md-avatar md-primary" style="margin-top: 12px">fiber_manual_record</md-icon> {{documentSet.name}}
 					</h3>
 					<p ng-show="documentSet.members.length > 0 || documentSet.notMembers.length > 0">
-						<span ng-repeat="member in documentSet.members">{{member.name}}, </span>
+						<span ng-repeat="member in documentSet.members track by $index">{{member.name}}, </span>
 						<span ng-repeat="name in documentSet.notMembersName track by $index">{{name}}, </span>
 					</p>
 				</div>

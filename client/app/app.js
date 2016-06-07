@@ -121,7 +121,7 @@ angular
 
     $rootScope.getNotMemberName = function(contacts, notMemberEmails) {
         var notMemberNames = [];
-        _.each(notMemberNames, function(email) {
+        _.each(notMemberEmails, function(email) {
             var index = _.findIndex(contacts, function(contact) {
                 return email===contact.email;
             });
