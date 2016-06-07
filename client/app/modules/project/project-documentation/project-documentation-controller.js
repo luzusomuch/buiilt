@@ -610,11 +610,26 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
         if (!$scope.hasPrivilageInProjectMember && $scope.selectedDocumentSet.owner._id!=$rootScope.currentUser._id) {
             return dialogService.showToast("Not Allow");
         }
-        $scope.selectedDocumentSet.editType= (!$scope.selectedDocumentSet.archive) ? "archive" : "unarchive";
-        documentService.update({id: $scope.selectedDocumentSet._id}, $scope.selectedDocumentSet).$promise.then(function(success) {
-            dialogService.showToast((!$scope.selectedDocumentSet.archive) ? "Archive Document Set Successfully" : "Unarchive Document Set Successfully");
-        }, function(err) {
-            dialogService.showToast("Error");
-        });
+
+        if (!$scope.selectedDocumentSet.archive) {
+            $mdDialog.show($mdDialog.confirm()
+                .title("Archive Document Set")
+                .content("Do You Want To Archive This Document Set? Your Project Team Member Will No Longer Be Able To View It...")
+                .ariaLabel("Archive")
+                .ok("OK")
+                .cancel("Cancel")
+            ).then(function(ok) {
+                $scope.selectedDocumentSet.editType= (!$scope.selectedDocumentSet.archive) ? "archive" : "unarchive";
+                documentService.update({id: $scope.selectedDocumentSet._id}, $scope.selectedDocumentSet).$promise.then(function(success) {
+                    dialogService.showToast((!$scope.selectedDocumentSet.archive) ? "Archive Document Set Successfully" : "Unarchive Document Set Successfully");
+                }, function(err) {
+                    dialogService.showToast("Error");
+                });
+            }, function(cancel) {
+
+            });
+        } else {
+                        
+        }
     };
 });
