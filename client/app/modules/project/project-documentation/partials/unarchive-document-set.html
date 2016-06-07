@@ -1,0 +1,32 @@
+<md-dialog aria-label="Unarchive Document Set {{selectedDocumentSet.name}}" flex="70" id="unarchiveDocumentSetDialog">
+    <form ng-submit="unarchiveDocumentSet(form)" name="form" novalidate>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Unarchive Document Set {{selectedDocumentSet.name}}</h2>
+				<span flex></span>
+				<md-button class="md-icon-button" ng-click="dialogService.closeModal()"><md-tooltip md-direction="left">Close</md-tooltip><md-icon class="material-icons">close</md-icon></md-button>
+            </div>
+        </md-toolbar>
+        
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column" layout-padding>
+            	<div layout="column" ng-show="projectMembers.length === 0">
+            		<p class="md-body-2">There aren't available members for assign to this set</p>
+            	</div>
+                    
+                <div layout="column" ng-show="projectMembers.length > 0">
+                    <p class="md-body-2">Select at least one project member that is relevant to set of this document:</p>
+                    
+                    <div layout="row" flex layout-align="center center" layout-wrap layout-padding>
+                        <md-checkbox class="filter-checkbox md-primary" ng-repeat="member in projectMembers" ng-click="member.select=!member.select">{{ (member._id) ? member.name : member.email }}</md-checkbox>
+                    </div>
+                </div>
+                
+            </div>
+        </md-dialog-content>
+        
+        <md-dialog-actions>
+            <md-button type="submit" class="md-primary">Save</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

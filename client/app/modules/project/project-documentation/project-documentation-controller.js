@@ -613,7 +613,7 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
 
         if (!$scope.selectedDocumentSet.archive) {
             $mdDialog.show($mdDialog.confirm()
-                .title("Archive Document Set")
+                .title("Archive Document Set?")
                 .content("Do You Want To Archive This Document Set? Your Project Team Member Will No Longer Be Able To View It...")
                 .ariaLabel("Archive")
                 .ok("OK")
@@ -621,7 +621,7 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
             ).then(function(ok) {
                 $scope.selectedDocumentSet.editType= (!$scope.selectedDocumentSet.archive) ? "archive" : "unarchive";
                 documentService.update({id: $scope.selectedDocumentSet._id}, $scope.selectedDocumentSet).$promise.then(function(success) {
-                    dialogService.showToast((!$scope.selectedDocumentSet.archive) ? "Archive Document Set Successfully" : "Unarchive Document Set Successfully");
+                    dialogService.showToast((!$scope.selectedDocumentSet.archive) ? "Archived Document Set Successfully" : "Unarchived Document Set Successfully");
                 }, function(err) {
                     dialogService.showToast("Error");
                 });
@@ -629,7 +629,42 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
 
             });
         } else {
-                        
+            if ($rootScope.selectedDocumentSetId) {
+                $mdDialog.show({
+                    controller: ["$scope", "$rootScope", "dialogService", "documentService", "people", "documentSet", function($scope, $rootScope, dialogService, documentService, people, documentSet) {
+                        $scope.projectMembers = $rootScope.getProjectMembers(people);
+                        _.remove($scope.projectMembers, {_id: $rootScope.currentUser._id});
+
+                        $scope.unarchiveDocumentSet = function() {
+                            documentSet.newMembers = _.filter($scope.projectMembers, {select: true});
+                            if (documentSet.newMembers.length > 0) {
+                                documentSet.editType = "unarchive";
+                                documentService.update({id: documentSet._id}, documentSet).$promise.then(function(ok) {
+                                    dialogService.closeModal();
+                                    dialogService.showToast("Unarchive Successfully");
+                                }, function(err) {
+                                    dialogService.showToast("Error");
+                                });
+                            } else {    
+                                dialogService.showToast("Please Select At Least 1 Member");
+                            }
+                        };
+                    }],
+                    resolve: {
+                        people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
+                            return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
+                        }],
+                        documentSet: ["$rootScope", "documentService", function($rootScope, documentService) {
+                            return documentService.get({id: $rootScope.selectedDocumentSetId}).$promise;
+                        }]
+                    },
+                    templateUrl: 'app/modules/project/project-documentation/partials/unarchive-document-set.html',
+                    parent: angular.element(document.body),
+                    clickOutsideToClose: false
+                });  
+            } else {
+                dialogService.showToast("Please Select A Document Set");
+            }
         }
     };
 });

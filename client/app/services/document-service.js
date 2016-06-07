@@ -8,6 +8,9 @@ angular.module('buiiltApp').factory('documentService', function($resource) {
                 action: "me"
             },
             isArray: true
+        },
+        get: {
+            method: "GET"
         }
     });
 });
