@@ -568,16 +568,16 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
         if (!$scope.selectedDocumentSet.archive) {
             $mdDialog.show($mdDialog.confirm()
                 .title("Archive Document Set?")
-                .content("Do You Want To Archive This Document Set? Your Project Team Member Will No Longer Be Able To View It...")
+                .content("Archive This Set? Team Members will no longer be able to view it.")
                 .ariaLabel("Archive")
                 .ok("OK")
                 .cancel("Cancel")
             ).then(function(ok) {
                 $scope.selectedDocumentSet.editType= (!$scope.selectedDocumentSet.archive) ? "archive" : "unarchive";
                 documentService.update({id: $scope.selectedDocumentSet._id}, $scope.selectedDocumentSet).$promise.then(function(success) {
-                    dialogService.showToast((!$scope.selectedDocumentSet.archive) ? "Archived Document Set Successfully" : "Unarchived Document Set Successfully");
+                    dialogService.showToast((!$scope.selectedDocumentSet.archive) ? "Document Set Archived Successfully." : "Unarchived Document Set Successfully");
                 }, function(err) {
-                    dialogService.showToast("Error");
+                    dialogService.showToast("There Has Been An Error...");
                 });
             }, function(cancel) {
 
@@ -595,9 +595,9 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
                                 documentSet.editType = "unarchive";
                                 documentService.update({id: documentSet._id}, documentSet).$promise.then(function(ok) {
                                     dialogService.closeModal();
-                                    dialogService.showToast("Unarchive Successfully");
+                                    dialogService.showToast("Document Set Unarchived Successfully.");
                                 }, function(err) {
-                                    dialogService.showToast("Error");
+                                    dialogService.showToast("There Has Been An Error...");
                                 });
                             } else {    
                                 dialogService.showToast("Please Select At Least 1 Member");
