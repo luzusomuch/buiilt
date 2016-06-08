@@ -108,7 +108,6 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
 
     /*Get all project members*/
 	function loadProjectMembers() {
-        console.log($scope.people);
         $scope.membersList = [];
         /*If current user is project manager, add himself to project members list*/
         if ($scope.people.project.projectManager._id.toString()===$rootScope.currentUser._id.toString()) {

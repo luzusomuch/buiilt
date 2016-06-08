@@ -74,7 +74,7 @@
 							<h4 class="md-body-2">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</h4>
                         </div>
                             
-                        <md-button class="md-secondary md-icon-button" ng-show="isLeader && member._id!=currentUser._id" ng-click="archiveMember(member)"><md-tooltip md-direction="left">{{(!member.archive) ? "Archive this Team Member" : "Unarchive this Team Member"}}</md-tooltip><md-icon class="material-icons">{{(!member.archive) ? "archive" : "unarchive"}}</md-icon></md-button>
+                        <md-button class="md-secondary md-icon-button" ng-show="isLeader && member._id!=currentUser._id && member.inviter==currentUser._id" ng-click="archiveMember(member)"><md-tooltip md-direction="left">{{(!member.archive) ? "Archive this Team Member" : "Unarchive this Team Member"}}</md-tooltip><md-icon class="material-icons">{{(!member.archive) ? "archive" : "unarchive"}}</md-icon></md-button>
 
                         <md-divider ng-hide="$last"></md-divider>
                     </md-list-item>
@@ -91,7 +91,7 @@
 							<h4 style="text-decoration: line-through" class="md-body-1">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</h4>
                         </div>
                             
-                        <md-button class="md-secondary md-icon-button" ng-show="isLeader && member._id!=currentUser._id" ng-click="archiveMember(member)"><md-tooltip md-direction="left">{{(!member.archive) ? "Archive this Team Member" : "Unarchive this Team Member"}}</md-tooltip><md-icon class="material-icons">{{(!member.archive) ? "archive" : "unarchive"}}</md-icon></md-button>
+                        <md-button class="md-secondary md-icon-button" ng-show="isLeader && member._id!=currentUser._id && member.inviter==currentUser._id" ng-click="archiveMember(member)"><md-tooltip md-direction="left">{{(!member.archive) ? "Archive this Team Member" : "Unarchive this Team Member"}}</md-tooltip><md-icon class="material-icons">{{(!member.archive) ? "archive" : "unarchive"}}</md-icon></md-button>
 
                         <md-divider ng-hide="$last"></md-divider>
                     </md-list-item>
@@ -113,7 +113,7 @@
 							<h4 class="md-body-1">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</h4>
                         </div>
                             
-                        <md-button class="md-secondary md-icon-button" ng-show="isLeader && member._id!=currentUser._id" ng-click="archiveMember(member)"><md-tooltip md-direction="left">{{(!member.archive) ? "Archive this Team Member" : "Unarchive this Team Member"}}</md-tooltip><md-icon class="material-icons">{{(!member.archive) ? "archive" : "unarchive"}}</md-icon></md-button>
+                        <md-button class="md-secondary md-icon-button" ng-show="isLeader && member._id!=currentUser._id && member.inviter==currentUser._id" ng-click="archiveMember(member)"><md-tooltip md-direction="left">{{(!member.archive) ? "Archive this Team Member" : "Unarchive this Team Member"}}</md-tooltip><md-icon class="material-icons">{{(!member.archive) ? "archive" : "unarchive"}}</md-icon></md-button>
                         
 						<md-divider ng-hide="$last"></md-divider>
                     </md-list-item>
@@ -130,7 +130,7 @@
 							<h4 style="text-decoration: line-through" class="md-body-1">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</h4>
                         </div>
                             
-                        <md-button class="md-secondary md-icon-button" ng-show="isLeader && member._id!=currentUser._id" ng-click="archiveMember(member)"><md-tooltip md-direction="left">{{(!member.archive) ? "Archive this Team Member" : "Unarchive this Team Member"}}</md-tooltip><md-icon class="material-icons">{{(!member.archive) ? "archive" : "unarchive"}}</md-icon></md-button>
+                        <md-button class="md-secondary md-icon-button" ng-show="isLeader && member._id!=currentUser._id && member.inviter==currentUser._id" ng-click="archiveMember(member)"><md-tooltip md-direction="left">{{(!member.archive) ? "Archive this Team Member" : "Unarchive this Team Member"}}</md-tooltip><md-icon class="material-icons">{{(!member.archive) ? "archive" : "unarchive"}}</md-icon></md-button>
                         
 						<md-divider ng-hide="$last"></md-divider>
                     </md-list-item>
@@ -152,7 +152,7 @@
 							<h4 class="md-body-1">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</h4>
                         </div>
                             
-                        <md-button class="md-secondary md-icon-button" ng-show="isLeader && member._id!=currentUser._id" ng-click="archiveMember(member)"><md-tooltip md-direction="left">{{(!member.archive) ? "Archive this Team Member" : "Unarchive this Team Member"}}</md-tooltip><md-icon class="material-icons">{{(!member.archive) ? "archive" : "unarchive"}}</md-icon></md-button>
+                        <md-button class="md-secondary md-icon-button" ng-show="isLeader && member._id!=currentUser._id && member.inviter==currentUser._id" ng-click="archiveMember(member)"><md-tooltip md-direction="left">{{(!member.archive) ? "Archive this Team Member" : "Unarchive this Team Member"}}</md-tooltip><md-icon class="material-icons">{{(!member.archive) ? "archive" : "unarchive"}}</md-icon></md-button>
                         
 						<md-divider ng-hide="$last"></md-divider>
                     </md-list-item>
@@ -169,7 +169,7 @@
 							<h4 style="text-decoration: line-through" class="md-body-1">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</h4>
                         </div>
                             
-                        <md-button class="md-secondary md-icon-button" ng-show="isLeader && member._id!=currentUser._id" ng-click="archiveMember(member)"><md-tooltip md-direction="left">{{(!member.archive) ? "Archive this Team Member" : "Unarchive this Team Member"}}</md-tooltip><md-icon class="material-icons">{{(!member.archive) ? "archive" : "unarchive"}}</md-icon></md-button>
+                        <md-button class="md-secondary md-icon-button" ng-show="isLeader && member._id!=currentUser._id && member.inviter==currentUser._id" ng-click="archiveMember(member)"><md-tooltip md-direction="left">{{(!member.archive) ? "Archive this Team Member" : "Unarchive this Team Member"}}</md-tooltip><md-icon class="material-icons">{{(!member.archive) ? "archive" : "unarchive"}}</md-icon></md-button>
                         
 						<md-divider ng-hide="$last"></md-divider>
                     </md-list-item>
@@ -191,7 +191,7 @@
 							<h4 class="md-body-1">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</h4>
                         </div>
                             
-                        <md-button class="md-secondary md-icon-button" ng-show="isLeader && member._id!=currentUser._id" ng-click="archiveMember(member)"><md-tooltip md-direction="left">{{(!member.archive) ? "Archive this Team Member" : "Unarchive this Team Member"}}</md-tooltip><md-icon class="material-icons">{{(!member.archive) ? "archive" : "unarchive"}}</md-icon></md-button>
+                        <md-button class="md-secondary md-icon-button" ng-show="isLeader && member._id!=currentUser._id && member.inviter==currentUser._id" ng-click="archiveMember(member)"><md-tooltip md-direction="left">{{(!member.archive) ? "Archive this Team Member" : "Unarchive this Team Member"}}</md-tooltip><md-icon class="material-icons">{{(!member.archive) ? "archive" : "unarchive"}}</md-icon></md-button>
                         
 						<md-divider ng-hide="$last"></md-divider>
                     </md-list-item>
@@ -208,7 +208,7 @@
 							<h4 style="text-decoration: line-through" class="md-body-1">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</h4>
                         </div>
                             
-                        <md-button class="md-secondary md-icon-button" ng-show="isLeader && member._id!=currentUser._id" ng-click="archiveMember(member)"><md-tooltip md-direction="left">{{(!member.archive) ? "Archive this Team Member" : "Unarchive this Team Member"}}</md-tooltip><md-icon class="material-icons">{{(!member.archive) ? "archive" : "unarchive"}}</md-icon></md-button>
+                        <md-button class="md-secondary md-icon-button" ng-show="isLeader && member._id!=currentUser._id && member.inviter==currentUser._id" ng-click="archiveMember(member)"><md-tooltip md-direction="left">{{(!member.archive) ? "Archive this Team Member" : "Unarchive this Team Member"}}</md-tooltip><md-icon class="material-icons">{{(!member.archive) ? "archive" : "unarchive"}}</md-icon></md-button>
                         
 						<md-divider ng-hide="$last"></md-divider>
                     </md-list-item>
@@ -230,7 +230,7 @@
 							<h4 class="md-body-1">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</h4>
                         </div>
                             
-                        <md-button class="md-secondary md-icon-button" ng-show="isLeader && member._id!=currentUser._id" ng-click="archiveMember(member)"><md-tooltip md-direction="left">{{(!member.archive) ? "Archive this Team Member" : "Unarchive this Team Member"}}</md-tooltip><md-icon class="material-icons">{{(!member.archive) ? "archive" : "unarchive"}}</md-icon></md-button>
+                        <md-button class="md-secondary md-icon-button" ng-show="isLeader && member._id!=currentUser._id && member.inviter==currentUser._id" ng-click="archiveMember(member)"><md-tooltip md-direction="left">{{(!member.archive) ? "Archive this Team Member" : "Unarchive this Team Member"}}</md-tooltip><md-icon class="material-icons">{{(!member.archive) ? "archive" : "unarchive"}}</md-icon></md-button>
                         
 						<md-divider ng-hide="$last"></md-divider>
                     </md-list-item>
@@ -247,7 +247,7 @@
 							<h4 style="text-decoration: line-through" class="md-body-1">{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}}</h4>
                         </div>
                             
-                        <md-button class="md-secondary md-icon-button" ng-show="isLeader && member._id!=currentUser._id" ng-click="archiveMember(member)"><md-tooltip md-direction="left">{{(!member.archive) ? "Archive this Team Member" : "Unarchive this Team Member"}}</md-tooltip><md-icon class="material-icons">{{(!member.archive) ? "archive" : "unarchive"}}</md-icon></md-button>
+                        <md-button class="md-secondary md-icon-button" ng-show="isLeader && member._id!=currentUser._id && member.inviter==currentUser._id" ng-click="archiveMember(member)"><md-tooltip md-direction="left">{{(!member.archive) ? "Archive this Team Member" : "Unarchive this Team Member"}}</md-tooltip><md-icon class="material-icons">{{(!member.archive) ? "archive" : "unarchive"}}</md-icon></md-button>
                         
 						<md-divider ng-hide="$last"></md-divider>
                     </md-list-item>
