@@ -338,7 +338,7 @@ function filterCurrentTender(tenders, user) {
                 });
                 if (currentMemberIndex !== -1) {
                     currentTender = tender;
-                    currentTenderer.tenderers = [tenderer];
+                    currentTender.tenderers = [tenderer];
                 }
             });
         }

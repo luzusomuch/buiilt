@@ -220,54 +220,14 @@ angular.module('buiiltApp').controller('projectMessagesDetailCtrl', function($q,
             $scope.tags.push({name: tag, select: false});
         });
 
-
-        // _.each($rootScope.roles, function(role) {
-        //     _.each(people[role], function(tender){
-        //         if (tender.hasSelect) {
-        //             var isLeader = (_.findIndex(tender.tenderers, function(tenderer) {
-        //                 if (tenderer._id) {
-        //                     return tenderer._id._id.toString() === $rootScope.currentUser._id.toString();
-        //                 }
-        //             }) !== -1) ? true : false;
-        //             if (!isLeader) {
-        //                 _.each(tender.tenderers, function(tenderer) {
-        //                     var memberIndex = _.findIndex(tenderer.teamMember, function(member) {
-        //                         return member._id.toString() === $rootScope.currentUser._id.toString();
-        //                     });
-        //                     if (memberIndex !== -1) {
-        //                         _.each(tenderer.teamMember, function(member) {
-        //                             member.select = false;
-        //                             $scope.membersList.push(member);
-        //                         });
-        //                     }
-        //                 });
-        //                 if (tender.tenderers[0]._id) {
-        //                     tender.tenderers[0]._id.select = false;
-        //                     $scope.membersList.push(tender.tenderers[0]._id);
-        //                 } else {
-        //                     $scope.membersList.push({email: tender.tenderers[0].email, select: false});
-        //                 }
-        //             } else {
-        //                 _.each(tender.tenderers, function(tenderer) {
-        //                     if (tenderer._id._id.toString() === $rootScope.currentUser._id.toString()) {
-        //                         _.each(tenderer.teamMember, function(member) {
-        //                             member.select = false;
-        //                             $scope.membersList.push(member);
-        //                         });
-        //                     }
-        //                 });
-        //             }
-        //         }
-        //     });
-        // });
-
         // filter members list again
         _.each(thread.members, function(member) {
             _.remove($scope.membersList, {_id: member._id});
         });
         _.each(thread.notMembers, function(email) {
             _.remove($scope.membersList, {email: email});
-        })
+        });
+        _.remove($scope.membersList, {_id: thread.owner._id});
 
         // remove current user from the members list
         _.remove($scope.membersList, {_id: $rootScope.currentUser._id});
