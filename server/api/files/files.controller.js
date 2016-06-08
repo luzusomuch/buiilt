@@ -361,7 +361,7 @@ exports.update = function(req, res) {
                                 }
                             ], cb);
                         } else if (data.editType === "assign") {
-                            editType = assign;
+                            editType = "assign";
                             var members = [];
                             async.each(data.newMembers, function(member, cb) {
                                 members.push(member.email);
