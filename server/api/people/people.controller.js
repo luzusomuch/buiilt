@@ -104,33 +104,42 @@ exports.invitePeople = function(req, res) {
                     if (tendererIndex !== -1) {
                         currentTeam = tender.tenderers[tendererIndex].teamMember;
                         return false;
+                    } else {
+                        var tenderMemberIndex = tender.tenderers[0].teamMember.indexOf(req.user._id);
+                        if (tenderMemberIndex !== -1) {
+                            currentTeam = tender.tenderers[0].teamMember;
+                        }
                     }
                 });
-                async.each(invite.teamMember, function(member, cb) {
-                    currentTeam.push(member._id);
-                    newInviteeSignUpAlready.push(member._id);
-                    User.findById(member._id, function(err, user) {
-                        if (err || !user) {cb();}
-                        else {
-                            user.projects.push(people.project);
-                            user.markModified('projects');
-                            user.save(cb());
-                        }
-                    });
-                }, function() {
-                    people[invite.inviterType].teamMember = currentTeam;
-                    people._newInviteeSignUpAlready = newInviteeSignUpAlready;
-                    people._newInviteType = invite.inviterType;
-                    people.markModified('invitePeople');
-                    people._editUser = req.user;
-                    people.save(function(err) {
-                        if (err) {return res.send(500,err);}
-                        People.populate(people, populatePaths
-                        , function(err, people) {
-                            return responseWithEachType(people, req, res);
+                if (currentTeam) {
+                    async.each(invite.teamMember, function(member, cb) {
+                        currentTeam.push(member._id);
+                        newInviteeSignUpAlready.push(member._id);
+                        User.findById(member._id, function(err, user) {
+                            if (err || !user) {cb();}
+                            else {
+                                user.projects.push(people.project);
+                                user.markModified('projects');
+                                user.save(cb());
+                            }
+                        });
+                    }, function() {
+                        people[invite.inviterType].teamMember = currentTeam;
+                        people._newInviteeSignUpAlready = newInviteeSignUpAlready;
+                        people._newInviteType = invite.inviterType;
+                        people.markModified('invitePeople');
+                        people._editUser = req.user;
+                        people.save(function(err) {
+                            if (err) {return res.send(500,err);}
+                            People.populate(people, populatePaths
+                            , function(err, people) {
+                                return responseWithEachType(people, req, res);
+                            });
                         });
                     });
-                });
+                } else {
+                    return res.send(500, {msg: "Not Allow"});
+                }
             } else {
                 var type;
                 switch (invite.type) {
