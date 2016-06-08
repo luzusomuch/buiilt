@@ -623,3 +623,12 @@ exports.myFiles = function(req, res) {
         });
     });
 };
+
+exports.getPublicS3Link = function(req, res) {
+    File.findById(req.params.id, function(err, file) {
+        if (err) {return res.send(500,err);}
+        if (!file) {return res.send(404);}
+        var publicUrl = s3.getPublicUrl(file.key);
+        return res.send(200, {publicUrl: publicUrl});
+    });
+};

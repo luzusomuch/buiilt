@@ -11,6 +11,7 @@ router.post("/:id", auth.isAuthenticated(), controller.create);
 router.get('/my-files', auth.isAuthenticated(), controller.myFiles);
 router.get('/:id', auth.isAuthenticated(), controller.show);
 router.get('/:id/acknowledgement', auth.isAuthenticated(), controller.acknowledgement);
+router.get('/:id/get-public-s3-link', auth.isAuthenticated(), controller.getPublicS3Link);
 router.get('/:id/last-access', auth.isAuthenticated(), controller.lastAccess);
 router.get('/:id/:type/project-files', auth.isAuthenticated(), controller.getFilesByProject);
 router.put("/:id", auth.isAuthenticated(), controller.update);
